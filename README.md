@@ -1,6 +1,6 @@
 # datashare-client
 
-[![Circle CI](https://circleci.com/gh/ICIJ/datashare-client.png?style=shield&circle-token=8eeca3ff612e883bd07464b23551fab215d1129d)](https://circleci.com/gh/ICIJ/datashare-client)
+[![Circle CI](https://circleci.com/gh/ICIJ/datashare-client.png?style=shield&circle-token=bb83a70d5a43a31c6fd38d797f015b9419c15ffe)](https://circleci.com/gh/ICIJ/datashare-client)
 
 ## Build Setup
 
