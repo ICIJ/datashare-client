@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <div class="search">
-      <input type="search" placeholder="Search..." name="search">
+      <input type="search" :placeholder="$t('search.placeholder')" name="search">
     </div>
   </div>
 </template>
