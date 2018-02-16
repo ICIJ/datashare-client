@@ -2,9 +2,9 @@ import Vue from 'vue'
 import App from '@/components/App'
 
 describe('App.vue', () => {
-  it('should render correct contents', () => {
+  it('should display search bar', () => {
     const Constructor = Vue.extend(App)
     const vm = new Constructor().$mount()
-    expect(vm.$el.textContent.trim()).to.equal('Hello world')
+    expect(vm.$el.querySelector('div.search > input').getAttribute('placeholder')).to.equal('Search...')
   })
 })

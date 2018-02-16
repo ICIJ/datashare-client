@@ -1,6 +1,8 @@
 <template>
   <div class="app">
-    Hello world
+    <div class="search">
+      <input type="search" placeholder="Search..." name="search">
+    </div>
   </div>
 </template>
 
