@@ -7,7 +7,7 @@ import messages from './messages'
 Vue.use(VueI18n)
 Vue.config.productionTip = false
 
-const i18n = new VueI18n({locale: 'en', messages})
+const i18n = new VueI18n({locale: 'en', fallbackLocale: 'en', messages})
 
 /* eslint-disable no-new */
 new Vue({
