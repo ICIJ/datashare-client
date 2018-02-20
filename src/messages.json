@@ -1,12 +1,14 @@
 {
   "en": {
     "search": {
-      "placeholder": "Search..."
+      "placeholder": "Search in documents...",
+      "buttonlabel": "Search"
     }
   },
   "fr": {
     "search": {
-      "placeholder": "Rechercher..."
+      "placeholder": "Rechercher dans les documents...",
+      "buttonlabel": "Rechercher"
     }
   }
 }
