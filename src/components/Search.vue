@@ -27,10 +27,12 @@ export default {
       esClient.search({
         index: 'datashare-local',
         type: 'doc',
+        size: 200,
         body: {
           query: {
-            match: {
-              content: this.searchQuery
+            multi_match: {
+              query: that.searchQuery,
+              fields: ['content', 'mention', 'path']
             }
           }
         }
