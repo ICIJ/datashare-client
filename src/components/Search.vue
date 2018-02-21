@@ -1,11 +1,18 @@
 <template>
   <div class="search">
-    <input v-model="searchQuery" v-on:keyup.enter="search" type="search" :placeholder="$t('search.placeholder')"
-           name="search">
-    <button v-on:click="search">{{ $t('search.buttonlabel') }}</button>
+    <div class="search-bar">
+      <input v-model="searchQuery" v-on:keyup.enter="search" type="search" :placeholder="$t('search.placeholder')" name="search" size="32 ">
+      <button v-on:click="search">{{ $t('search.buttonlabel') }}</button>
+    </div>
     <search-results v-bind:results="searchResults" />
   </div>
 </template>
+
+<style scoped>
+  .search-bar {
+    padding: 3em;
+  }
+</style>
 
 <script>
 import es from 'elasticsearch-browser'
@@ -31,9 +38,25 @@ export default {
         size: 200,
         body: {
           query: {
-            multi_match: {
-              query: that.searchQuery,
-              fields: ['content', 'mention', 'path']
+            bool: {
+              should: [
+                {
+                  has_child: {
+                    type: 'NamedEntity',
+                    query: {
+                      match: {
+                        mention: that.searchQuery
+                      }
+                    },
+                    inner_hits: {
+                      size: 10
+                    }
+                  }
+                },
+                {
+                  match: {content: that.searchQuery}
+                }
+              ]
             }
           },
           highlight: {
@@ -42,7 +65,8 @@ export default {
                 fragment_size: 150,
                 number_of_fragments: 10,
                 pre_tags: ['<b>'],
-                post_tags: ['</b>'] }
+                post_tags: ['</b>']
+              }
             }
           }
         }
