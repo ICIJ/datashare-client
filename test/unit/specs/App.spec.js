@@ -12,7 +12,7 @@ describe('App.vue', () => {
 
     const vm = new Constructor({i18n}).$mount()
 
-    expect(vm.$el.querySelector('div.search > button').textContent).to.equal('Search')
+    expect(vm.$el.querySelector('div.search button').textContent).to.equal('Search')
   })
 
   it('should display search bar in french', () => {
@@ -20,6 +20,6 @@ describe('App.vue', () => {
 
     const vm = new Constructor({i18n: new VueI18n({locale: 'fr', messages})}).$mount()
 
-    expect(vm.$el.querySelector('div.search > button').textContent).to.equal('Rechercher')
+    expect(vm.$el.querySelector('div.search button').textContent).to.equal('Rechercher')
   })
 })
