@@ -2,13 +2,21 @@
   "en": {
     "search": {
       "placeholder": "Search in documents...",
-      "buttonlabel": "Search"
+      "buttonlabel": "Search",
+      "results": {
+        "match": "match in doc",
+        "entities": "nb entities"
+      }
     }
   },
   "fr": {
     "search": {
       "placeholder": "Rechercher dans les documents...",
-      "buttonlabel": "Rechercher"
+      "buttonlabel": "Rechercher",
+      "results": {
+        "match": "dans le doc",
+        "entities": "nb entités"
+      }
     }
   }
 }
