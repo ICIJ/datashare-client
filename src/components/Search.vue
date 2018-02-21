@@ -1,6 +1,7 @@
 <template>
   <div class="search">
-    <input v-model="searchQuery" type="search" :placeholder="$t('search.placeholder')" name="search">
+    <input v-model="searchQuery" v-on:keyup.enter="search" type="search" :placeholder="$t('search.placeholder')"
+           name="search">
     <button v-on:click="search">{{ $t('search.buttonlabel') }}</button>
     <search-results v-bind:results="searchResults" />
   </div>
@@ -33,6 +34,15 @@ export default {
             multi_match: {
               query: that.searchQuery,
               fields: ['content', 'mention', 'path']
+            }
+          },
+          highlight: {
+            fields: {
+              content: {
+                fragment_size: 150,
+                number_of_fragments: 10,
+                pre_tags: ['<b>'],
+                post_tags: ['</b>'] }
             }
           }
         }
