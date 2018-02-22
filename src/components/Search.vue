@@ -98,7 +98,7 @@ export default {
           },
           aggs: {
             mentions: {
-              terms: {field: 'mention_norm'},
+              terms: {field: 'mention_norm', size: 30},
               aggs: {
                 docs: {
                   cardinality: {
