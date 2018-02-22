@@ -5,7 +5,8 @@
       "buttonlabel": "Search",
       "results": {
         "match": "match in doc",
-        "entities": "nb entities"
+        "entities": "nb entities",
+        "results": "%{total} document(s) found for \"%{query}\""
       }
     }
   },
@@ -15,7 +16,8 @@
       "buttonlabel": "Rechercher",
       "results": {
         "match": "dans le doc",
-        "entities": "nb entités"
+        "entities": "nb entités",
+        "results": "%{total} document(s) trouvé(s) pour \"%{query}\""
       }
     }
   }

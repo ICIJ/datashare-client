@@ -4,7 +4,7 @@
       <input v-model="searchQuery" v-on:keyup.enter="search" type="search" :placeholder="$t('search.placeholder')" name="search" size="32 ">
       <button v-on:click="search">{{ $t('search.buttonlabel') }}</button>
     </div>
-    <search-results v-bind:results="searchResults" />
+    <search-results v-bind:results="searchResults" v-bind:query="lastQuery"/>
   </div>
 </template>
 
@@ -27,7 +27,7 @@ export default {
   components: {SearchResults},
   name: 'search',
   data () {
-    return {searchQuery: '', searchResults: []}
+    return {searchQuery: '', lastQuery: '', searchResults: []}
   },
   methods: {
     search () {
@@ -71,10 +71,11 @@ export default {
           }
         }
       }).then(function (resp) {
-        that.searchResults = resp.hits.hits
+        that.searchResults = resp.hits
       }, function (err) {
         console.trace(err.message)
       })
+      that.lastQuery = that.searchQuery
       this.searchQuery = ''
     }
   }
