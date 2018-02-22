@@ -4,7 +4,7 @@
       <input v-model="searchQuery" v-on:keyup.enter="search" type="search" :placeholder="$t('search.placeholder')" name="search" size="32 ">
       <button v-on:click="search">{{ $t('search.buttonlabel') }}</button>
     </div>
-    <search-results v-bind:results="searchResults" v-bind:query="lastQuery"/>
+    <search-results v-bind:results="searchResults" :query.sync="lastQuery"/>
   </div>
 </template>
 
@@ -114,6 +114,14 @@ export default {
       }, function (err) {
         console.trace(err.message)
       })
+    }
+  },
+  watch: {
+    lastQuery (newQuery, oldQuery) {
+      if (oldQuery === '' && newQuery !== '') {
+        this.searchQuery = newQuery
+        this.search()
+      }
     }
   }
 }

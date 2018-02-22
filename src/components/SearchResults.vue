@@ -16,7 +16,7 @@
     </div>
     <div v-else>
       <div class="item" v-for="item in results.mentions.buckets" :key="item.key">
-        {{item.key}}<span class="aggregation">{{item.doc_count}} occurences, {{item.docs.value}} documents</span>
+        <a href="#" @click="$emit('update:query', item.key)">{{item.key}}</a><span class="aggregation">{{item.doc_count}} occurences, {{item.docs.value}} documents</span>
       </div>
     </div>
   </div>
