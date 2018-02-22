@@ -29,54 +29,91 @@ export default {
   data () {
     return {searchQuery: '', lastQuery: '', searchResults: []}
   },
+  created: function () {
+    this.aggregate()
+  },
   methods: {
     search () {
-      var that = this
+      if (''.localeCompare(this.searchQuery) === 0) {
+        this.lastQuery = ''
+        this.aggregate()
+      } else {
+        const that = this
+        esClient.search({
+          index: 'datashare-local',
+          type: 'doc',
+          size: 200,
+          body: {
+            query: {
+              bool: {
+                should: [
+                  {
+                    has_child: {
+                      type: 'NamedEntity',
+                      query: {
+                        match: {
+                          mention: that.searchQuery
+                        }
+                      },
+                      inner_hits: {
+                        size: 10
+                      }
+                    }
+                  },
+                  {
+                    match: {content: that.searchQuery}
+                  }
+                ]
+              }
+            },
+            highlight: {
+              fields: {
+                content: {
+                  fragment_size: 150,
+                  number_of_fragments: 10,
+                  pre_tags: ['<b>'],
+                  post_tags: ['</b>']
+                }
+              }
+            }
+          }
+        }).then(function (resp) {
+          that.searchResults = resp.hits
+        }, function (err) {
+          console.trace(err.message)
+        })
+        that.lastQuery = that.searchQuery
+        this.searchQuery = ''
+      }
+    },
+    aggregate: function () {
+      const that = this
       esClient.search({
         index: 'datashare-local',
         type: 'doc',
-        size: 200,
+        size: 0,
         body: {
           query: {
-            bool: {
-              should: [
-                {
-                  has_child: {
-                    type: 'NamedEntity',
-                    query: {
-                      match: {
-                        mention: that.searchQuery
-                      }
-                    },
-                    inner_hits: {
-                      size: 10
-                    }
-                  }
-                },
-                {
-                  match: {content: that.searchQuery}
-                }
-              ]
-            }
+            constant_score: {filter: {term: {type: 'NamedEntity'}}}
           },
-          highlight: {
-            fields: {
-              content: {
-                fragment_size: 150,
-                number_of_fragments: 10,
-                pre_tags: ['<b>'],
-                post_tags: ['</b>']
+          aggs: {
+            mentions: {
+              terms: {field: 'mention_norm'},
+              aggs: {
+                docs: {
+                  cardinality: {
+                    field: 'join'
+                  }
+                }
               }
             }
           }
         }
       }).then(function (resp) {
-        that.searchResults = resp.hits
+        that.searchResults = resp.aggregations
       }, function (err) {
         console.trace(err.message)
       })
-      that.lastQuery = that.searchQuery
-      this.searchQuery = ''
     }
   }
 }
