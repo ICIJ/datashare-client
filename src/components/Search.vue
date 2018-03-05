@@ -19,7 +19,7 @@ import es from 'elasticsearch-browser'
 import SearchResults from './SearchResults'
 
 var esClient = new es.Client({
-  host: 'elasticsearch:9200',
+  host: process.env.CONFIG.es_host,
   log: 'trace'
 })
 
@@ -40,7 +40,7 @@ export default {
       } else {
         const that = this
         esClient.search({
-          index: 'datashare-local',
+          index: process.env.CONFIG.es_index,
           type: 'doc',
           size: 200,
           body: {
@@ -89,7 +89,7 @@ export default {
     aggregate: function () {
       const that = this
       esClient.search({
-        index: 'datashare-local',
+        index: process.env.CONFIG.es_index,
         type: 'doc',
         size: 0,
         body: {
