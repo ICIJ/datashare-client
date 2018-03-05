@@ -19,7 +19,7 @@ import es from 'elasticsearch-browser'
 import SearchResults from './SearchResults'
 
 var esClient = new es.Client({
-  host: process.env.CONFIG.es_host,
+  host: process.env.CONFIG.es_host || window.location.hostname + ':9200',
   log: 'trace'
 })
 
