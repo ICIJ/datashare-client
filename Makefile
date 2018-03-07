@@ -12,3 +12,6 @@ install:
 
 test:
 		npm run test
+
+unit:
+		npm run unit

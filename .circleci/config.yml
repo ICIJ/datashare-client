@@ -14,10 +14,10 @@ jobs:
       - checkout
       - run:
           name: update npm
-          command: 'sudo npm install -g npm@latest'
+          command: 'sudo npm install -g npm@latest yarn@latest'
       - run:
-          name: npm install
-          command: npm install
+          name: make install
+          command: make install
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
@@ -25,4 +25,4 @@ jobs:
 
       - run:
           name: run tests
-          command: npm run unit
+          command: make unit
