@@ -1,5 +1,5 @@
 <template>
-  <label class="input-group m-0">
+  <label class="input-group m-0 language-chooser">
     <span class="input-group-prepend">
       <span class="input-group-text">
         <font-awesome-icon icon="globe"/>
@@ -8,7 +8,7 @@
         </span>
       </span>
     </span>
-    <select v-model="language" @change="onChange" class="language-chooser custom-select">
+    <select v-model="language" @change="onChange" class="custom-select">
       <option selected value="en">English</option>
       <option value="fr">Français</option>
     </select>

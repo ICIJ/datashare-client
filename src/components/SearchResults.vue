@@ -1,7 +1,7 @@
 <template>
   <div class="search-results list">
     <div v-if="''.localeCompare(query) !== 0">
-      <h3>{{$t('search.results.results', {total: results.total, query})}}</h3>
+      <h3>{{ $t('search.results.results', {total: results.total, query}) }}</h3>
       <div class="item" v-for="item in results.hits" :key="item._id">
         document : {{item._source.path}}
         <div class="named-entities">
@@ -14,7 +14,7 @@
         </div>
       </div>
     </div>
-    <div v-else>
+    <div v-else-if="results.mentions">
       <div class="item" v-for="item in results.mentions.buckets" :key="item.key">
         <a href="#" @click="$emit('update:query', item.key)">{{item.key}}</a><span class="aggregation">{{item.doc_count}} occurences, {{item.docs.value}} documents</span>
       </div>
