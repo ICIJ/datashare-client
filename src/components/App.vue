@@ -1,7 +1,7 @@
 <template>
   <div class="app">
-    <language-chooser/>
-    <search/>
+    <language-chooser />
+    <search />
   </div>
 </template>
 
@@ -14,9 +14,10 @@ import LanguageChooser from './LanguageChooser'
 import Search from './Search'
 
 export default {
+  name: 'App',
   components: {
     Search,
-    LanguageChooser},
-  name: 'App'
+    LanguageChooser
+  }
 }
 </script>

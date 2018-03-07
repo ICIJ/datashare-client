@@ -1,8 +1,9 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import App from './App'
+
 import router from './router'
 import messages from './messages'
+import App from './components/App'
 
 Vue.use(VueI18n)
 Vue.config.productionTip = false
@@ -15,5 +16,5 @@ new Vue({
   el: '#app',
   router,
   components: { App },
-  template: '<App/>'
+  template: '<router-view></router-view>'
 })
