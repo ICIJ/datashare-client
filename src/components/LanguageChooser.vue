@@ -1,10 +1,18 @@
 <template>
-  <div class="language-chooser">
-    <select v-model="language" @change="onChange">
+  <label class="input-group m-0">
+    <span class="input-group-prepend">
+      <span class="input-group-text">
+        <font-awesome-icon icon="globe"/>
+        <span class="pl-2 d-none d-lg-inline">
+          Language
+        </span>
+      </span>
+    </span>
+    <select v-model="language" @change="onChange" class="language-chooser custom-select">
       <option selected value="en">English</option>
-      <option value="fr">French</option>
+      <option value="fr">Français</option>
     </select>
-  </div>
+  </label>
 </template>
 
 <script>
@@ -18,6 +26,7 @@ export default {
   methods: {
     onChange (event) {
       this.$root.$i18n.locale = event.target.value
+      this.$emit('changed', event.target.value)
     }
   }
 }
