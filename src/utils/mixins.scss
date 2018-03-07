@@ -1,0 +1,37 @@
+@mixin keyframes($animationName) {
+  @-webkit-keyframes #{$animationName} {
+    @content;
+  }
+  @-moz-keyframes #{$animationName} {
+    @content;
+  }
+  @-o-keyframes #{$animationName} {
+    @content;
+  }
+  @keyframes #{$animationName} {
+    @content;
+  }
+}
+
+@mixin animation($animation) {
+  -webkit-animation:$animation;
+  -moz-animation:$animation;
+  -o-animation:$animation;
+  animation:$animation;
+}
+
+@mixin animation-delay-loop($from:0, $to:10, $delay: 300ms) {
+  @for $i from $from through $to {
+      &:nth-child(#{$i}) {
+        animation-delay: $i * $delay;
+      }
+  }
+}
+
+@mixin vendor-prefix($name, $argument) {
+  -webkit-#{$name}: #{$argument};
+  -ms-#{$name}: #{$argument};
+  -moz-#{$name}: #{$argument};
+  -o-#{$name}: #{$argument};
+  #{$name}: #{$argument};
+}
