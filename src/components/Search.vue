@@ -20,7 +20,7 @@ import SearchResults from './SearchResults'
 
 var esClient = new es.Client({
   host: process.env.CONFIG.es_host || window.location.hostname + ':9200',
-  log: null
+  log: process.env.CONFIG.es_log || 'trace'
 })
 
 export default {
