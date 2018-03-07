@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Router from 'vue-router'
 
 import App from '@/components/App'
-import Doc from '@/components/Doc'
+import Document from '@/components/Document'
 import Search from '@/components/Search'
 
 Vue.use(Router)
@@ -21,9 +21,9 @@ export default new Router({
           props: (route) => route.query
         },
         {
-          name: 'doc',
-          path: 'doc/:_id/',
-          component: Doc,
+          name: 'document',
+          path: 'd/:_id/',
+          component: Document,
           props: true
         }
       ]

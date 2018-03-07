@@ -3,7 +3,7 @@
     <div v-if="query">
       <h3>{{ $t('search.results.results', {total: results.total, query}) }}</h3>
       <div class="search-results__item mb-4" v-for="item in results.hits" :key="item._id">
-        <router-link :to="{ name: 'doc', params: { _id: item._id } }">
+        <router-link :to="{ name: 'document', params: { _id: item._id } }">
           <font-awesome-icon icon="file-alt" />
           {{ item._source.path }}
         </router-link>
