@@ -152,7 +152,7 @@ export default {
         clear:both;
         margin:0;
         background: darken(theme-color('icij'), 10);
-        transition: transform 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+        transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
 
         &:after {
           z-index:10;
@@ -163,6 +163,7 @@ export default {
           left:0;
           right:0;
           content:"";
+          pointer-events: none;
           @include gradient-y(rgba(black, 0.2), rgba(black, 0));
         }
 

@@ -8,7 +8,6 @@
 <style lang="scss">
   .app {
     margin-top: $app-nav-height;
-    padding-top: $spacer;
   }
 </style>
 

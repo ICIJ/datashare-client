@@ -1,18 +1,14 @@
 <template>
   <div class="search">
-    <div class="search-bar">
-      <input v-model="searchQuery" v-on:keyup.enter="search" type="search" :placeholder="$t('search.placeholder')" name="search" size="32 ">
-      <button v-on:click="search">{{ $t('search.buttonlabel') }}</button>
-    </div>
-    <search-results v-bind:results="searchResults" :query.sync="lastQuery"/>
+    <form class="search-bar container-fluid bg-dark py-2 input-group" @submit="search">
+      <input v-model="searchQuery" type="search" :placeholder="$t('search.placeholder')" name="search" size="32 " class="form-control">
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-primary">{{ $t('search.buttonlabel') }}</button>
+      </div>
+    </form>
+    <search-results v-bind:results="searchResults" :query.sync="lastQuery" class="container-fluid py-2" />
   </div>
 </template>
-
-<style scoped>
-  .search-bar {
-    padding: 3em;
-  }
-</style>
 
 <script>
 import es from 'elasticsearch-browser'
