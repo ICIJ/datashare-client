@@ -1,17 +1,13 @@
 <template>
   <div class="search">
-    <form class="search-bar container-fluid bg-dark py-2 input-group" @submit="search">
-      <input v-model="searchQuery" type="search" :placeholder="$t('search.placeholder')" name="search" size="32 " class="form-control">
-      <div class="input-group-append">
-        <button type="submit" class="btn btn-primary">{{ $t('search.buttonlabel') }}</button>
-      </div>
-    </form>
-    <search-results v-bind:results="searchResults" :query.sync="lastQuery" class="container-fluid py-2" />
+    <search-bar />
+    <search-results :results="searchResults" :query.sync="query"  class="container-fluid py-2" />
   </div>
 </template>
 
 <script>
 import es from 'elasticsearch-browser'
+import SearchBar from './SearchBar'
 import SearchResults from './SearchResults'
 
 var esClient = new es.Client({
@@ -19,21 +15,30 @@ var esClient = new es.Client({
 })
 
 export default {
-  components: {SearchResults},
-  name: 'search',
-  data () {
-    return {searchQuery: '', lastQuery: '', searchResults: []}
+  name: 'Search',
+  components: {
+    SearchResults,
+    SearchBar
   },
-  created: function () {
-    this.aggregate()
+  props: ['query'],
+  data () {
+    return {
+      searchResults: []
+    }
+  },
+  watch: {
+    '$route' () {
+      this.search()
+    }
+  },
+  mounted: function () {
+    this.search()
   },
   methods: {
-    search () {
-      if (''.localeCompare(this.searchQuery) === 0) {
-        this.lastQuery = ''
+    search (query = this.query) {
+      if (!query) {
         this.aggregate()
       } else {
-        const that = this
         esClient.search({
           index: process.env.CONFIG.es_index,
           type: 'doc',
@@ -47,7 +52,7 @@ export default {
                       type: 'NamedEntity',
                       query: {
                         match: {
-                          mention: that.searchQuery
+                          mention: query
                         }
                       },
                       inner_hits: {
@@ -56,7 +61,9 @@ export default {
                     }
                   },
                   {
-                    match: {content: that.searchQuery}
+                    match: {
+                      content: query
+                    }
                   }
                 ]
               }
@@ -66,21 +73,18 @@ export default {
                 content: {
                   fragment_size: 150,
                   number_of_fragments: 10,
-                  pre_tags: ['<b>'],
-                  post_tags: ['</b>']
+                  pre_tags: ['<mark>'],
+                  post_tags: ['</mark>']
                 }
               }
             }
           }
-        }).then(function (resp) {
-          that.searchResults = resp.hits
+        }).then(resp => {
+          this.searchResults = resp.hits
         })
-        that.lastQuery = that.searchQuery
-        this.searchQuery = ''
       }
     },
     aggregate: function () {
-      const that = this
       esClient.search({
         index: process.env.CONFIG.es_index,
         type: 'doc',
@@ -102,17 +106,9 @@ export default {
             }
           }
         }
-      }).then(function (resp) {
-        that.searchResults = resp.aggregations
+      }).then(resp => {
+        this.searchResults = resp.aggregations
       })
-    }
-  },
-  watch: {
-    lastQuery (newQuery, oldQuery) {
-      if (oldQuery === '' && newQuery !== '') {
-        this.searchQuery = newQuery
-        this.search()
-      }
     }
   }
 }

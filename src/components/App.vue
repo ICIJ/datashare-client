@@ -1,7 +1,7 @@
 <template>
   <div class="app">
     <app-nav />
-    <search />
+    <router-view />
   </div>
 </template>
 
@@ -13,13 +13,9 @@
 
 <script>
 import AppNav from './AppNav'
-import Search from './Search'
 
 export default {
   name: 'App',
-  components: {
-    AppNav,
-    Search
-  }
+  components: { AppNav }
 }
 </script>
