@@ -6,7 +6,7 @@
       </transition>
       <div class="app__nav__container">
         <div class="clearfix app__nav__container__main">
-          <router-link class="app__nav__container__main__brand" :to="{'name': 'home'}">
+          <router-link class="app__nav__container__main__brand" :to="{ name: 'home' }">
             <div class="sr-only">
               ICIJ
             </div>

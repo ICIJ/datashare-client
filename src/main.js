@@ -4,9 +4,7 @@ import 'es6-promise/auto'
 
 import router from './router'
 import messages from './messages'
-import App from './components/App'
 import FontAwesomeIcon from './components/FontAwesomeIcon'
-
 
 import '@/main.scss'
 
@@ -21,8 +19,7 @@ const i18n = new VueI18n({locale: 'en', fallbackLocale: 'en', messages})
 /* eslint-disable no-new */
 new Vue({
   i18n,
-  el: '#app',
   router,
-  components: { App },
+  el: '#app',
   template: '<router-view></router-view>'
 })

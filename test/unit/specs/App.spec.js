@@ -26,7 +26,7 @@ describe('App.vue', () => {
   it('should display search bar in french', () => {
     const Constructor = Vue.extend(App)
 
-    const vm = new Constructor({i18n: new VueI18n({locale: 'fr', messages, router})}).$mount()
+    const vm = new Constructor({router, i18n: new VueI18n({locale: 'fr', messages})}).$mount()
 
     expect(vm.$el.querySelector('div.search button').textContent).to.equal('Rechercher')
   })

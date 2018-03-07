@@ -20,7 +20,7 @@ import SearchResults from './SearchResults'
 
 var esClient = new es.Client({
   host: process.env.CONFIG.es_host || window.location.hostname + ':9200',
-  log: 'trace'
+  log: null
 })
 
 export default {
@@ -79,8 +79,6 @@ export default {
           }
         }).then(function (resp) {
           that.searchResults = resp.hits
-        }, function (err) {
-          console.trace(err.message)
         })
         that.lastQuery = that.searchQuery
         this.searchQuery = ''
@@ -111,8 +109,6 @@ export default {
         }
       }).then(function (resp) {
         that.searchResults = resp.aggregations
-      }, function (err) {
-        console.trace(err.message)
       })
     }
   },
