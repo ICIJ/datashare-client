@@ -3,8 +3,5 @@ const merge = require('webpack-merge')
 const devEnv = require('./dev.env')
 
 module.exports = merge(devEnv, {
-  NODE_ENV: '"testing"',
-  CONFIG: {
-    es_log: "'error'"
-  }
+  NODE_ENV: '"testing"'
 })

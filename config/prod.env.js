@@ -1,7 +1,8 @@
 'use strict'
 
 const CONFIG = {
-  es_index: '"datashare-local"'
+  es_index: '"datashare-local"',
+  es_log: '"error"'
 }
 
 module.exports = {
