@@ -109,25 +109,24 @@ export default {
         background: theme-color('icij');
         min-height: $app-nav-height;
 
-        &:before {
-          content:"";
-          background: url('~images/icij-white@2x.png') no-repeat 0 0;
-          background-size: cover;
-          width: $app-nav-brand-height;
-          height: $app-nav-brand-height;
-          position: absolute;
-          top: $spacer;
-          left: $spacer;
-          z-index: $zindex-fixed + 20;
-          border:1px solid white;
-        }
-
         &__brand, &__brand:hover, &__brand:focus {
           color: inherit;
+          position: relative;
           display: inline-block;
-          padding:$spacer ;
-          padding-left: $app-nav-brand-height + $spacer * 2;
+          margin-left: $spacer;
+          margin-top: $spacer;
           pointer-events: auto;
+
+          &:before {
+            content:"";
+            background: url('~images/icij-white@2x.png') no-repeat 0 0;
+            background-size: cover;
+            width: $app-nav-brand-height;
+            height: $app-nav-brand-height;
+            display: inline-block;
+            z-index: $zindex-fixed + 20;
+            border:1px solid white;
+          }
 
           & > * {
             font-size: 2rem;

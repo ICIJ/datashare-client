@@ -6,13 +6,9 @@
 </template>
 
 <script>
-import es from 'elasticsearch-browser'
+import client from '@/api/client'
 import SearchBar from './SearchBar'
 import SearchResults from './SearchResults'
-
-var esClient = new es.Client({
-  host: process.env.CONFIG.es_host || window.location.hostname + ':9200'
-})
 
 export default {
   name: 'Search',
@@ -39,7 +35,7 @@ export default {
       if (!query) {
         this.aggregate()
       } else {
-        esClient.search({
+        client.search({
           index: process.env.CONFIG.es_index,
           type: 'doc',
           size: 200,
@@ -85,7 +81,7 @@ export default {
       }
     },
     aggregate: function () {
-      esClient.search({
+      client.search({
         index: process.env.CONFIG.es_index,
         type: 'doc',
         size: 0,
