@@ -5,6 +5,8 @@ import router from './router'
 import messages from './messages'
 import App from './components/App'
 
+import '@/main.scss'
+
 Vue.use(VueI18n)
 Vue.config.productionTip = false
 

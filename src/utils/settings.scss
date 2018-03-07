@@ -1,7 +1,7 @@
-$body-bg: #f7f5f5;
+$body-bg: #fff;
 
 $theme-colors: (
-  primary: #CE7C60,
+  primary: #F8B700,
   icij: #852308,
   tradewind: #68BEB0,
   cuttysark: #50676b,
@@ -9,7 +9,7 @@ $theme-colors: (
   secondary: #F0F0F0,
   success: #28a745,
   info: #17a2b8,
-  warning: #F8B700,
+  warning: #F4EDEA,
   danger: #dc3545,
   light: white,
   dark: black
@@ -22,7 +22,6 @@ $headings-font-family: "Lato", $font-family-serif;
 $headings-font-weight: 700;
 $text-muted: #717171;
 
-$fade-bg: #EBE6E3;
 $input-focus-border-color: map-get($theme-colors, 'secondary');
 $link-hover-color: darken(map-get($theme-colors, 'warning'), 10%);
 

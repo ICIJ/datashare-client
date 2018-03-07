@@ -15,6 +15,7 @@
     "build": "node build/build.js"
   },
   "dependencies": {
+    "bootstrap": "^4.0.0",
     "elasticsearch-browser": "^14.1.0",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",
