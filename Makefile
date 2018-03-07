@@ -10,8 +10,5 @@ dist:
 install:
 		yarn || npm install
 
-test:
-		npm run test
-
 unit:
 		npm run unit
