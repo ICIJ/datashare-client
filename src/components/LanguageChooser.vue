@@ -11,7 +11,9 @@
 export default {
   name: 'language-chooser',
   data () {
-    return {language: 'en'}
+    return {
+      language: 'en'
+    }
   },
   methods: {
     onChange (event) {
