@@ -1,4 +1,4 @@
-// Custom API form datashare
+// Custom API for datashare
 // @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/extending_core_components.html
 export default function docPlugin (Client, config, components) {
   // Get a doc
