@@ -23,7 +23,5 @@ jobs:
           paths:
             - ./node_modules
       - run:
-          command: sleep 10 # test to let ES be up
-      - run:
           name: run tests
           command: make unit
