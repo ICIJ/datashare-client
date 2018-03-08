@@ -11,7 +11,6 @@ import App from '@/components/App'
 Vue.use(VueI18n)
 
 const i18n = new VueI18n({locale: 'en', messages})
-// Font Awesome component must be available everywhere
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 describe('App.vue', () => {

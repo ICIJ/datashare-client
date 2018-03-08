@@ -21,6 +21,7 @@
     "bootstrap": "^4.0.0",
     "elasticsearch-browser": "^14.1.0",
     "es6-promise": "^4.2.4",
+    "karma-chrome-launcher": "^2.2.0",
     "lodash": "^4.17.5",
     "node-sass": "^4.7.2",
     "sass-loader": "^6.0.6",

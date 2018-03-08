@@ -36,7 +36,7 @@ export default {
       if (!query) {
         this.aggregate()
       } else {
-        client.search({
+        return client.search({
           index: process.env.CONFIG.es_index,
           type: 'doc',
           size: 200,
