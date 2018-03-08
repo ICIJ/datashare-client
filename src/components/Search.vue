@@ -10,6 +10,7 @@ import client from '@/api/client'
 import Response from '@/api/Response'
 import SearchBar from './SearchBar'
 import SearchResults from './SearchResults'
+import * as bodybuilder from 'bodybuilder'
 
 export default {
   name: 'Search',
@@ -86,23 +87,11 @@ export default {
         index: process.env.CONFIG.es_index,
         type: 'doc',
         size: 0,
-        body: {
-          query: {
-            constant_score: {filter: {term: {type: 'NamedEntity'}}}
-          },
-          aggs: {
-            mentions: {
-              terms: {field: 'mentionNorm', size: 30},
-              aggs: {
-                docs: {
-                  cardinality: {
-                    field: 'join'
-                  }
-                }
-              }
-            }
-          }
-        }
+        body: bodybuilder().query('term', 'type', 'NamedEntity')
+          .aggregation('terms', 'mentionNorm', 'mentions', a => {
+            return a.aggregation('cardinality', 'join', 'docs')
+          })
+          .build()
       }).then(resp => {
         this.searchResponse = resp.aggregations
       })
