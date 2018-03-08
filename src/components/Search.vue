@@ -10,7 +10,7 @@ import client from '@/api/client'
 import Response from '@/api/Response'
 import SearchBar from './SearchBar'
 import SearchResults from './SearchResults'
-import * as bodybuilder from 'bodybuilder'
+import bodybuilder from 'bodybuilder'
 
 export default {
   name: 'Search',
@@ -41,42 +41,10 @@ export default {
           index: process.env.CONFIG.es_index,
           type: 'doc',
           size: 200,
-          body: {
-            query: {
-              bool: {
-                should: [
-                  {
-                    has_child: {
-                      type: 'NamedEntity',
-                      query: {
-                        match: {
-                          mention: query
-                        }
-                      },
-                      inner_hits: {
-                        size: 10
-                      }
-                    }
-                  },
-                  {
-                    match: {
-                      content: query
-                    }
-                  }
-                ]
-              }
-            },
-            highlight: {
-              fields: {
-                content: {
-                  fragment_size: 150,
-                  number_of_fragments: 10,
-                  pre_tags: ['<mark>'],
-                  post_tags: ['</mark>']
-                }
-              }
-            }
-          }
+          body: bodybuilder().orQuery('match', 'content', query).orQuery('has_child', 'type', 'NamedEntity', {'inner_hits': {'size': 10}}, q => {
+            return q.query('match', 'mention', query)
+          }).rawOption('highlight', {fields: {content: {fragment_size: 150, number_of_fragments: 10, pre_tags: ['<mark>'], post_tags: ['</mark>']}}})
+            .build()
         }).then(raw => {
           this.searchResponse = new Response(raw)
         })
