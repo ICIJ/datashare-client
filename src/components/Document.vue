@@ -1,6 +1,7 @@
 <template>
-  <div class="document">
-    {{ document }}
+  <div class="document container py-4" v-if="document">
+    <h3>{{ document.basename }}</h3>
+    <p class="text-muted">{{ document.source.path }}</p>
   </div>
 </template>
 
@@ -9,7 +10,7 @@ import client from '@/api/client'
 
 export default {
   name: 'Document',
-  props: ['_id'],
+  props: ['id'],
   data () {
     return {
       document: null
@@ -23,15 +24,15 @@ export default {
     }
   },
   beforeRouteUpdate (to, from, next) {
-    client.getDoc(to.params._id, (error, document) => {
+    client.getDocument(to.params.id, (error, document) => {
       this.setDoc(error, document)
       next()
     })
   },
   beforeRouteEnter (to, from, next) {
-    client.getDoc(to.params._id, (error, document) => {
+    client.getDocument(to.params.id, (error, document) => {
       // Return false if the document is not found, else, assign the document
-      next(error || !document.found ? false : vm => { vm.setDoc(error, document) })
+      next(error ? false : vm => { vm.setDoc(null, document) })
     })
   }
 }

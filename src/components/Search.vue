@@ -1,12 +1,13 @@
 <template>
   <div class="search">
     <search-bar />
-    <search-results :results="searchResults" :query.sync="query"  class="container-fluid py-2" />
+    <search-results :response="searchResponse" :query.sync="query"  class="container-fluid py-2" />
   </div>
 </template>
 
 <script>
 import client from '@/api/client'
+import Response from '@/api/Response'
 import SearchBar from './SearchBar'
 import SearchResults from './SearchResults'
 
@@ -19,7 +20,7 @@ export default {
   props: ['query'],
   data () {
     return {
-      searchResults: []
+      searchResponse: []
     }
   },
   watch: {
@@ -75,8 +76,8 @@ export default {
               }
             }
           }
-        }).then(resp => {
-          this.searchResults = resp.hits
+        }).then(raw => {
+          this.searchResponse = new Response(raw)
         })
       }
     },
@@ -103,7 +104,7 @@ export default {
           }
         }
       }).then(resp => {
-        this.searchResults = resp.aggregations
+        this.searchResponse = resp.aggregations
       })
     }
   }

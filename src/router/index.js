@@ -22,7 +22,7 @@ export default new Router({
         },
         {
           name: 'document',
-          path: 'd/:_id/',
+          path: 'd/:id/',
           component: Document,
           props: true
         }
