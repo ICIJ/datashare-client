@@ -2,7 +2,7 @@ import last from 'lodash/last'
 import EsDoc from './EsDoc'
 
 export default class Document extends EsDoc {
-  get basename() {
+  get basename () {
     return last(this.source.path.split('/'))
   }
   get innerHits () {
