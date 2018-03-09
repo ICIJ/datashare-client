@@ -41,8 +41,8 @@ export default {
           index: process.env.CONFIG.es_index,
           type: 'doc',
           size: 200,
-          body: bodybuilder().orQuery('match', 'content', query).orQuery('has_child', 'type', 'NamedEntity', {'inner_hits': {'size': 10}}, q => {
-            return q.query('match', 'mention', query)
+          body: bodybuilder().orQuery('match', 'content', query).orQuery('has_child', 'type', 'NamedEntity', {'inner_hits': {'size': 10}}, sub => {
+            return sub.query('match', 'mention', query)
           }).rawOption('highlight', {fields: {content: {fragment_size: 150, number_of_fragments: 10, pre_tags: ['<mark>'], post_tags: ['</mark>']}}})
             .build()
         }).then(raw => {
@@ -56,8 +56,8 @@ export default {
         type: 'doc',
         size: 0,
         body: bodybuilder().query('term', 'type', 'NamedEntity')
-          .aggregation('terms', 'mentionNorm', 'mentions', a => {
-            return a.aggregation('cardinality', 'join', 'docs')
+          .aggregation('terms', 'mentionNorm', 'mentions', sub => {
+            return sub.aggregation('cardinality', 'join', 'docs')
           })
           .build()
       }).then(resp => {
