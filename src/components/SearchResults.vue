@@ -1,6 +1,6 @@
 <template>
   <div class="search-results">
-    <div v-if="query">
+    <div v-if="query && response.hits.length > 0">
       <h3>{{ $t('search.results.results', {total: response.total, query}) }}</h3>
       <div class="search-results__item mb-4" v-for="doc in response.hits" :key="doc.id">
         <router-link :to="{ name: 'document', params: { id: doc.id } }">
@@ -25,6 +25,9 @@
         </router-link>
         <span class="aggregation">{{item.doc_count}} occurences, {{item.docs.value}} documents</span>
       </div>
+    </div>
+    <div v-else>
+      <h3>{{ $t('search.results.no-result', { query }) }}</h3>
     </div>
   </div>
 </template>

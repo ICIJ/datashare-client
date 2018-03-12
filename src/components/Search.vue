@@ -21,16 +21,13 @@ export default {
   props: ['query'],
   data () {
     return {
-      searchResponse: []
+      searchResponse: new Response({hits: {hits: []}})
     }
   },
   watch: {
     '$route' () {
       this.search()
     }
-  },
-  mounted: function () {
-    this.search()
   },
   methods: {
     search (query = this.query) {

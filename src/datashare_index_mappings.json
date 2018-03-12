@@ -1,0 +1,76 @@
+{
+    "doc": {
+      "properties": {
+        "content": {
+          "type": "text",
+          "index_options": "offsets"
+        },
+        "extractionDate": {
+          "type": "date",
+          "format": "date_time"
+        },
+        "extractionLevel": {
+          "type": "integer"
+        },
+        "path": {
+          "type": "text"
+        },
+        "contentLength": {
+          "type": "integer"
+        },
+        "contentEncoding": {
+          "type": "keyword"
+        },
+        "parentDocument": {
+          "type": "keyword"
+        },
+        "contentType": {
+          "type": "text"
+        },
+        "language": {
+          "type": "keyword"
+        },
+        "metadata": {
+          "type": "object"
+        },
+
+        "type": {
+          "type": "keyword"
+        },
+
+        "join": {
+          "type": "join",
+          "relations": {
+            "Document": "NamedEntity"
+          }
+        },
+
+        "mention": {
+          "type": "text",
+          "index_options": "docs"
+        },
+        "mentionNorm": {
+          "type": "keyword"
+        },
+        "category": {
+          "type": "keyword"
+        },
+        "documentId": {
+          "type": "keyword"
+        },
+        "offset": {
+          "type": "integer"
+        },
+        "extractor": {
+          "type": "keyword"
+        },
+        "extractorLanguage": {
+          "type": "keyword"
+        },
+        "partsOfSpeech": {
+          "type": "text",
+          "index_options": "docs"
+        }
+      }
+    }
+}
