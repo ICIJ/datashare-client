@@ -1,9 +1,9 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import 'es6-promise/auto'
+import {mount, createLocalVue} from 'vue-test-utils'
 import elasticsearch from 'elasticsearch-browser'
 import esMapping from '@/datashare_index_mappings.json'
-
 import messages from '@/messages'
 import router from '@/router'
 
@@ -17,6 +17,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 describe('Search.vue', () => {
   var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
+  var wrapped = null
   before(done => {
     es.indices.create({index: process.env.CONFIG.es_index})
     es.indices.putMapping({index: process.env.CONFIG.es_index, type: 'doc', body: esMapping}).then(() => { done() })
@@ -24,20 +25,21 @@ describe('Search.vue', () => {
   after(done => {
     es.indices.delete({index: process.env.CONFIG.es_index}).then(() => { done() })
   })
+  beforeEach(() => {
+    const localVue = createLocalVue()
+    localVue.use(router)
+    localVue.use(VueI18n)
+    wrapped = mount(Search, {i18n})
+  })
 
   it('should display no document found', done => {
-    const Constructor = Vue.extend(Search)
-    const vm = new Constructor({i18n, router}).$mount()
-
-    vm.query = 'foo'
-    var p = vm.search()
-    p.then(() => {
-      Vue.nextTick(() => {
-        expect(vm.$el.querySelector('.search-results h3').textContent).to.equal('No document found for "foo"')
-        done()
-      })
+    wrapped.vm.query = 'foo'
+    wrapped.vm.search().then(() => {
+      expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('No document found for "foo"')
+      done()
     })
   })
+
   //
   // it('should display one document found', done => {
   //   es.insert(new Document("bar").withContent('this is bar document'))
