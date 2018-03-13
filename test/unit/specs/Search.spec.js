@@ -26,7 +26,7 @@ describe('Search.vue', () => {
     await es.indices.delete({index: process.env.CONFIG.es_index})
   })
   beforeEach(async () => {
-    await es.deleteByQuery({index: process.env.CONFIG.es_index, body: {query: {match_all: {}}}})
+    await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', body: {query: {match_all: {}}}})
     const localVue = createLocalVue()
     localVue.use(VueI18n)
     wrapped = mount(Search, {i18n, router})
@@ -35,6 +35,7 @@ describe('Search.vue', () => {
   it('should display no document found', async () => {
     wrapped.vm.query = 'foo'
     await wrapped.vm.search()
+    await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('No document found for "foo"')
   })
@@ -55,17 +56,26 @@ describe('Search.vue', () => {
     wrapped.vm.query = 'bar'
 
     await wrapped.vm.search()
-
     await Vue.nextTick()
+
     expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('2 documents found for "bar"')
     expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(2)
   })
 
   it('NER aggregation: should display empty list', async () => {
     await wrapped.vm.aggregate()
-
     await Vue.nextTick()
+
     expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(0)
+  })
+
+  it('NER aggregation: should display one named entity', async () => {
+    await letData(es).have(new IndexedDocument('docs/naz.txt').withContent('this is a naz document').withNer('naz')).commit()
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('1 occurences, 1 documents')
   })
 })
 
@@ -79,9 +89,14 @@ class IndexedDocument {
     this.join = {name: 'Document'}
     this.type = 'Document'
     this.metadata = {}
+    this.nerList = []
   }
   withContent (content) {
     this.content = content
+    return this
+  }
+  withNer (mention) {
+    this.nerList.push(mention)
     return this
   }
 }
@@ -94,13 +109,30 @@ class IndexBuilder {
     this.document = document
     return this
   }
-  async commit (done) {
-    this.index.create({
+  async commit () {
+    var docId = this.document.path
+    await this.index.create({
       index: process.env.CONFIG.es_index,
       type: 'doc',
       refresh: true,
-      id: this.document.path,
+      id: docId,
       body: this.document
-    }).then(() => { done() })
+    })
+    for (var i = 0; i < this.document.nerList.length; i++) {
+      let ner = this.document.nerList[i]
+      await this.index.create({
+        index: process.env.CONFIG.es_index,
+        type: 'doc',
+        refresh: true,
+        id: ner,
+        routing: docId,
+        body: {
+          mention: ner,
+          mentionNorm: ner,
+          type: 'NamedEntity',
+          join: {name: 'NamedEntity', parent: docId}
+        }
+      })
+    }
   }
 }
