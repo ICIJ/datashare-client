@@ -18,60 +18,54 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 describe('Search.vue', () => {
   var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
   var wrapped = null
-  before(done => {
-    es.indices.create({index: process.env.CONFIG.es_index})
-    es.indices.putMapping({index: process.env.CONFIG.es_index, type: 'doc', body: esMapping}).then(() => { done() })
+  before(async () => {
+    await es.indices.create({index: process.env.CONFIG.es_index})
+    await es.indices.putMapping({index: process.env.CONFIG.es_index, type: 'doc', body: esMapping})
   })
-  after(done => {
-    es.indices.delete({index: process.env.CONFIG.es_index}).then(() => { done() })
+  after(async () => {
+    await es.indices.delete({index: process.env.CONFIG.es_index})
   })
-  beforeEach(done => {
-    es.deleteByQuery({index: process.env.CONFIG.es_index, body: {query: {match_all: {}}}}).then(() => { done() })
+  beforeEach(async () => {
+    await es.deleteByQuery({index: process.env.CONFIG.es_index, body: {query: {match_all: {}}}})
     const localVue = createLocalVue()
     localVue.use(VueI18n)
     wrapped = mount(Search, {i18n, router})
   })
 
-  it('should display no document found', done => {
+  it('should display no document found', async () => {
     wrapped.vm.query = 'foo'
-    wrapped.vm.search().then(() => {
-      expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('No document found for "foo"')
-      done()
-    })
+    await wrapped.vm.search()
+
+    expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('No document found for "foo"')
   })
 
-  it('should display one document found', done => {
-    letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit(done)
+  it('should display one document found', async () => {
+    await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
     wrapped.vm.query = 'bar'
-    wrapped.vm.search().then(() => {
-      Vue.nextTick(() => {
-        expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('1 document found for "bar"')
-        expect(wrapped.vm.$el.querySelector('.search-results .fragment').innerHTML).to.equal('this is <mark>bar</mark> document')
-        done()
-      })
-    })
+    await wrapped.vm.search()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('1 document found for "bar"')
+    expect(wrapped.vm.$el.querySelector('.search-results .fragment').innerHTML).to.equal('this is <mark>bar</mark> document')
   })
 
-  it('should display two documents found', done => {
-    letData(es).have(new IndexedDocument('docs/bar1.txt').withContent('this is bar 1 document')).commit(done)
-    letData(es).have(new IndexedDocument('docs/bar2.txt').withContent('this is bar 2 document')).commit(done)
+  it('should display two documents found', async () => {
+    await letData(es).have(new IndexedDocument('docs/bar1.txt').withContent('this is bar 1 document')).commit()
+    await letData(es).have(new IndexedDocument('docs/bar2.txt').withContent('this is bar 2 document')).commit()
     wrapped.vm.query = 'bar'
-    wrapped.vm.search().then(() => {
-      Vue.nextTick(() => {
-        expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('2 documents found for "bar"')
-        expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(2)
-        done()
-      })
-    })
+
+    await wrapped.vm.search()
+
+    await Vue.nextTick()
+    expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('2 documents found for "bar"')
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(2)
   })
 
-  it('NER aggregation: should display empty list', done => {
-    wrapped.vm.aggregate().then(() => {
-      Vue.nextTick(() => {
-        expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(0)
-        done()
-      })
-    })
+  it('NER aggregation: should display empty list', async () => {
+    await wrapped.vm.aggregate()
+
+    await Vue.nextTick()
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(0)
   })
 })
 
@@ -100,7 +94,7 @@ class IndexBuilder {
     this.document = document
     return this
   }
-  commit (done) {
+  async commit (done) {
     this.index.create({
       index: process.env.CONFIG.es_index,
       type: 'doc',
