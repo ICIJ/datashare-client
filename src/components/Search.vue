@@ -32,7 +32,7 @@ export default {
   methods: {
     search (query = this.query) {
       if (!query) {
-        this.aggregate()
+        return this.aggregate()
       } else {
         return client.search({
           index: process.env.CONFIG.es_index,
@@ -48,7 +48,7 @@ export default {
       }
     },
     aggregate: function () {
-      client.search({
+      return client.search({
         index: process.env.CONFIG.es_index,
         type: 'doc',
         size: 0,

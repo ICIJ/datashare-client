@@ -65,39 +65,48 @@ describe('Search.vue', () => {
     })
   })
 
-  function letData (index) {
-    return new IndexBuilder(index)
-  }
-
-  class IndexedDocument {
-    constructor (path) {
-      this.path = path
-      this.join = {name: 'Document'}
-      this.type = 'Document'
-      this.metadata = {}
-    }
-    withContent (content) {
-      this.content = content
-      return this
-    }
-  }
-
-  class IndexBuilder {
-    constructor (index) {
-      this.index = index
-    }
-    have (document) {
-      this.document = document
-      return this
-    }
-    commit (done) {
-      this.index.create({
-        index: process.env.CONFIG.es_index,
-        type: 'doc',
-        refresh: true,
-        id: this.document.path,
-        body: this.document
-      }).then(() => { done() })
-    }
-  }
+  it('NER aggregation: should display empty list', done => {
+    wrapped.vm.aggregate().then(() => {
+      Vue.nextTick(() => {
+        expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(0)
+        done()
+      })
+    })
+  })
 })
+
+function letData (index) {
+  return new IndexBuilder(index)
+}
+
+class IndexedDocument {
+  constructor (path) {
+    this.path = path
+    this.join = {name: 'Document'}
+    this.type = 'Document'
+    this.metadata = {}
+  }
+  withContent (content) {
+    this.content = content
+    return this
+  }
+}
+
+class IndexBuilder {
+  constructor (index) {
+    this.index = index
+  }
+  have (document) {
+    this.document = document
+    return this
+  }
+  commit (done) {
+    this.index.create({
+      index: process.env.CONFIG.es_index,
+      type: 'doc',
+      refresh: true,
+      id: this.document.path,
+      body: this.document
+    }).then(() => { done() })
+  }
+}
