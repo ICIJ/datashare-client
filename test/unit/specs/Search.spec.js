@@ -25,7 +25,8 @@ describe('Search.vue', () => {
   after(done => {
     es.indices.delete({index: process.env.CONFIG.es_index}).then(() => { done() })
   })
-  beforeEach(() => {
+  beforeEach(done => {
+    es.deleteByQuery({index: process.env.CONFIG.es_index, body: {query: {match_all: {}}}}).then(() => { done() })
     const localVue = createLocalVue()
     localVue.use(VueI18n)
     wrapped = mount(Search, {i18n, router})
@@ -46,6 +47,19 @@ describe('Search.vue', () => {
       Vue.nextTick(() => {
         expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('1 document found for "bar"')
         expect(wrapped.vm.$el.querySelector('.search-results .fragment').innerHTML).to.equal('this is <mark>bar</mark> document')
+        done()
+      })
+    })
+  })
+
+  it('should display two documents found', done => {
+    letData(es).have(new IndexedDocument('docs/bar1.txt').withContent('this is bar 1 document')).commit(done)
+    letData(es).have(new IndexedDocument('docs/bar2.txt').withContent('this is bar 2 document')).commit(done)
+    wrapped.vm.query = 'bar'
+    wrapped.vm.search().then(() => {
+      Vue.nextTick(() => {
+        expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('2 documents found for "bar"')
+        expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(2)
         done()
       })
     })
