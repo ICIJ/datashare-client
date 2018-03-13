@@ -6,7 +6,7 @@
       "results": {
         "match": "match in doc",
         "entities": "nb entities",
-        "results": "%{total} document(s) found for \"%{query}\"",
+        "results": "%{total} document%{s} found for \"%{query}\"",
         "no-result": "No document found for \"%{query}\""
       }
     }
@@ -18,7 +18,7 @@
       "results": {
         "match": "dans le doc",
         "entities": "nb entités",
-        "results": "%{total} document(s) trouvé(s) pour \"%{query}\"",
+        "results": "%{total} document%{s} trouvé%{s} pour \"%{query}\"",
         "no-result": "Aucun document trouvé pour \"%{query}\""
       }
     }

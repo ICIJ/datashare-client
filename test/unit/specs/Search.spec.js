@@ -27,9 +27,8 @@ describe('Search.vue', () => {
   })
   beforeEach(() => {
     const localVue = createLocalVue()
-    localVue.use(router)
     localVue.use(VueI18n)
-    wrapped = mount(Search, {i18n})
+    wrapped = mount(Search, {i18n, router})
   })
 
   it('should display no document found', done => {
@@ -40,19 +39,51 @@ describe('Search.vue', () => {
     })
   })
 
-  //
-  // it('should display one document found', done => {
-  //   es.insert(new Document("bar").withContent('this is bar document'))
-  //
-  //   var p = wvm.vm.search('bar')
-  //
-  //   p.then(() => {
-  //     Vue.nextTick(() => {
-  //       console.log(wvm.vm.$el.outerHTML)
-  //       expect(wvm.vm.$el.querySelector('.search-results h3')).to.equal('1 document found for "bar"')
-  //       expect(wvm.vm.$el.querySelector('.search-results .fragment')).to.equal('this is <mark>bar</mark> document')
-  //       done()
-  //     })
-  //   })
-  // })
+  it('should display one document found', done => {
+    letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit(done)
+    wrapped.vm.query = 'bar'
+    wrapped.vm.search().then(() => {
+      Vue.nextTick(() => {
+        expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('1 document found for "bar"')
+        expect(wrapped.vm.$el.querySelector('.search-results .fragment').innerHTML).to.equal('this is <mark>bar</mark> document')
+        done()
+      })
+    })
+  })
+
+  function letData (index) {
+    return new IndexBuilder(index)
+  }
+
+  class IndexedDocument {
+    constructor (path) {
+      this.path = path
+      this.join = {name: 'Document'}
+      this.type = 'Document'
+      this.metadata = {}
+    }
+    withContent (content) {
+      this.content = content
+      return this
+    }
+  }
+
+  class IndexBuilder {
+    constructor (index) {
+      this.index = index
+    }
+    have (document) {
+      this.document = document
+      return this
+    }
+    commit (done) {
+      this.index.create({
+        index: process.env.CONFIG.es_index,
+        type: 'doc',
+        refresh: true,
+        id: this.document.path,
+        body: this.document
+      }).then(() => { done() })
+    }
+  }
 })
