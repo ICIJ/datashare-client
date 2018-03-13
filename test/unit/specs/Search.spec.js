@@ -77,6 +77,15 @@ describe('Search.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(1)
     expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('1 occurences, 1 documents')
   })
+
+  it('NER aggregation: should display two named entities in one document', async () => {
+    await letData(es).have(new IndexedDocument('docs/qux.txt').withContent('this is a document')
+      .withNer('qux').withNer('foo')).commit()
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(2)
+  })
 })
 
 function letData (index) {
