@@ -75,7 +75,7 @@ describe('Search.vue', () => {
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(1)
-    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('1 occurences, 1 documents')
+    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('1 occurrences, 1 documents')
   })
 
   it('NER aggregation: should display two named entities in one document', async () => {
@@ -86,10 +86,30 @@ describe('Search.vue', () => {
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(2)
   })
+
+  it('NER aggregation: should display one named entity in two documents', async () => {
+    await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER document contain 2 NER').withNer('NER', 2).withNer('NER', 25)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('another document with NER').withNer('NER', 22)).commit()
+
+    debugger
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(1)
+    // TODO: BUG ! this should be '3 occurrences, 2 documents'
+    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('3 occurrences, 1 documents')
+  })
 })
 
 function letData (index) {
   return new IndexBuilder(index)
+}
+
+class IndexedNe {
+  constructor (mention, offset) {
+    this.mention = mention
+    this.offset = offset
+  }
 }
 
 class IndexedDocument {
@@ -104,8 +124,8 @@ class IndexedDocument {
     this.content = content
     return this
   }
-  withNer (mention) {
-    this.nerList.push(mention)
+  withNer (mention, offset = 1) {
+    this.nerList.push(new IndexedNe(mention, offset))
     return this
   }
 }
@@ -133,11 +153,12 @@ class IndexBuilder {
         index: process.env.CONFIG.es_index,
         type: 'doc',
         refresh: true,
-        id: ner,
+        id: ner.mention + ner.offset,
         routing: docId,
         body: {
-          mention: ner,
-          mentionNorm: ner,
+          mention: ner.mention,
+          mentionNorm: ner.mention,
+          offset: ner.offset,
           type: 'NamedEntity',
           join: {name: 'NamedEntity', parent: docId}
         }
