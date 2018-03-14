@@ -91,13 +91,11 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER document contain 2 NER').withNer('NER', 2).withNer('NER', 25)).commit()
     await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('another document with NER').withNer('NER', 22)).commit()
 
-    debugger
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(1)
-    // TODO: BUG ! this should be '3 occurrences, 2 documents'
-    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('3 occurrences in 1 document')
+    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('3 occurrences in 2 documents')
   })
 })
 
@@ -158,6 +156,7 @@ class IndexBuilder {
         body: {
           mention: ner.mention,
           mentionNorm: ner.mention,
+          documentId: docId,
           offset: ner.offset,
           type: 'NamedEntity',
           join: {name: 'NamedEntity', parent: docId}
