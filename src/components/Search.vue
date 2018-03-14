@@ -29,6 +29,9 @@ export default {
       this.search()
     }
   },
+  created () {
+    this.aggregate()
+  },
   methods: {
     search (query = this.query) {
       if (!query) {

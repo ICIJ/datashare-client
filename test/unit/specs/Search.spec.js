@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
+import noop from 'lodash/noop'
 import 'es6-promise/auto'
 import {mount, createLocalVue} from 'vue-test-utils'
 import elasticsearch from 'elasticsearch-browser'
@@ -30,6 +31,7 @@ describe('Search.vue', () => {
     await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', body: {query: {match_all: {}}}})
     const localVue = createLocalVue()
     localVue.use(VueI18n)
+    Search.created = noop
     wrapped = mount(Search, {i18n, router})
   })
 
