@@ -24,13 +24,13 @@ export default {
     }
   },
   beforeRouteUpdate (to, from, next) {
-    client.getDocument(to.params.id, (error, document) => {
+    client.getEsDoc(to.params.id, (error, document) => {
       this.setDoc(error, document)
       next()
     })
   },
   beforeRouteEnter (to, from, next) {
-    client.getDocument(to.params.id, (error, document) => {
+    client.getEsDoc(to.params.id, (error, document) => {
       // Return false if the document is not found, else, assign the document
       next(error ? false : vm => { vm.setDoc(null, document) })
     })
