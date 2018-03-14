@@ -4,7 +4,7 @@
     <div class="container-fluid">
       <div class="row">
         <div class="col-md-3 bg-light border-right">
-          <aggregations-panel class="m-2" />
+          <aggregations-panel class="my-4" />
         </div>
         <div class="col-md-9">
           <search-results v-if="searchResponse" :response="searchResponse" :query.sync="query" class="m-2" />

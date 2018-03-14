@@ -69,7 +69,7 @@ export default {
         size: 0,
         body: bodybuilder()
           .query('term', 'type', 'NamedEntity')
-          .aggregation('terms', 'mentionNorm', 'mentions', {'size': 30}, sub => {
+          .aggregation('terms', 'mentionNorm', 'mentions', {'size': 15}, sub => {
             return sub.aggregation('cardinality', 'join#Document', 'docs')
           })
           .build()
@@ -80,3 +80,12 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .aggregations-panel {
+    &__mentions {
+      max-height: 15rem;
+      overflow: auto;
+    }
+  }
+</style>

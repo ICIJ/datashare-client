@@ -26,7 +26,7 @@
         "match": "dans le doc",
         "entities": "nb entités",
         "results": "1 document trouvé pour \"%{query}\" | %{total} documents trouvés pour \"%{query}\"",
-        "no-result": "Aucun document trouvé pour \"%{query}\"",
+        "no-result": "Aucun document trouvé pour \"%{query}\""
       }
     }
   }
