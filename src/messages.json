@@ -6,9 +6,10 @@
       "results": {
         "match": "match in doc",
         "entities": "nb entities",
-        "results": "%{total} document%{s} found for \"%{query}\"",
-        "no-result": "No document found for \"%{query}\"",
-        "aggs": "%{nbo} occurrence%{os} in %{nbd} document%{ds}"
+        "results": "1 document found for \"%{query}\" | %{total} documents found for \"%{query}\"",
+        "no-result": "No documents found for \"%{query}\"",
+        "aggs-occurrence": "1 occurrence | %{nb} occurrences",
+        "aggs-document": "in 1 document | in %{nb} documents"
       }
     }
   },
@@ -19,9 +20,10 @@
       "results": {
         "match": "dans le doc",
         "entities": "nb entités",
-        "results": "%{total} document%{s} trouvé%{s} pour \"%{query}\"",
+        "results": "1 document trouvé pour \"%{query}\" | %{total} documents trouvés pour \"%{query}\"",
         "no-result": "Aucun document trouvé pour \"%{query}\"",
-        "aggs": "%{nbo} occurrence%{os} dans %{nbd} document%{ds}"
+        "aggs-occurrence": "1 occurrence | %{nb} occurrences",
+        "aggs-document": "dans 1 document | dans %{nb} documents"
       }
     }
   }

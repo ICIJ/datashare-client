@@ -40,7 +40,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('No document found for "foo"')
+    expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('No documents found for "foo"')
   })
 
   it('should display one document found', async () => {
