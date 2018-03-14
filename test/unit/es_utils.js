@@ -55,7 +55,6 @@ class IndexBuilder {
         body: {
           mention: ner.mention,
           mentionNorm: ner.mention,
-          documentId: docId,
           offset: ner.offset,
           type: 'NamedEntity',
           join: {name: 'NamedEntity', parent: docId}
