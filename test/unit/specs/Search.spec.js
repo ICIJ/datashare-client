@@ -75,7 +75,7 @@ describe('Search.vue', () => {
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(1)
-    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('1 occurrences in 1 documents')
+    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('1 occurrence in 1 document')
   })
 
   it('NER aggregation: should display two named entities in one document', async () => {
@@ -97,7 +97,7 @@ describe('Search.vue', () => {
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(1)
     // TODO: BUG ! this should be '3 occurrences, 2 documents'
-    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('3 occurrences in 1 documents')
+    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('3 occurrences in 1 document')
   })
 })
 

@@ -1,7 +1,7 @@
 <template>
   <div class="search-results">
     <div v-if="query && response.hits.length > 0">
-      <h3>{{ $t('search.results.results', {total: response.hits.length, query, s: response.hits.length > 1 ? 's': ''}) }}</h3>
+      <h3>{{ $t('search.results.results', {total: response.hits.length, query, s: s(response.hits.length)}) }}</h3>
       <div class="search-results__item mb-4" v-for="doc in response.hits" :key="doc.id">
         <router-link :to="{ name: 'document', params: { id: doc.id } }">
           <font-awesome-icon icon="file-alt" />
@@ -23,7 +23,8 @@
         <router-link :to="{ name: 'search', query: { query: item.key }}">
           {{item.key}}
         </router-link>
-        <span class="aggregation">{{ $t('search.results.aggs', {nbo: item.doc_count, nbd: item.docs.value}) }}</span>
+        <span class="aggregation">{{ $t('search.results.aggs', {nbo: item.doc_count, nbd: item.docs.value,
+          os: s(item.doc_count), ds: s(item.docs.value)}) }}</span>
       </div>
     </div>
     <div v-else>
@@ -35,7 +36,12 @@
 <script>
 export default {
   name: 'SearchResults',
-  props: ['response', 'query']
+  props: ['response', 'query'],
+  methods: {
+    s (nb) {
+      return nb > 1 ? 's' : ''
+    }
+  }
 }
 </script>
 

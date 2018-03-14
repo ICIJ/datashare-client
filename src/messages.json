@@ -8,7 +8,7 @@
         "entities": "nb entities",
         "results": "%{total} document%{s} found for \"%{query}\"",
         "no-result": "No document found for \"%{query}\"",
-        "aggs": "%{nbo} occurrences in %{nbd} documents"
+        "aggs": "%{nbo} occurrence%{os} in %{nbd} document%{ds}"
       }
     }
   },
@@ -21,7 +21,7 @@
         "entities": "nb entités",
         "results": "%{total} document%{s} trouvé%{s} pour \"%{query}\"",
         "no-result": "Aucun document trouvé pour \"%{query}\"",
-        "aggs": "%{nbo} occurrences dans %{nbd} documents"
+        "aggs": "%{nbo} occurrence%{os} dans %{nbd} document%{ds}"
       }
     }
   }
