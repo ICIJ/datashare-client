@@ -23,7 +23,7 @@
         <router-link :to="{ name: 'search', query: { query: item.key }}">
           {{item.key}}
         </router-link>
-        <span class="aggregation">{{item.doc_count}} occurrences, {{item.docs.value}} documents</span>
+        <span class="aggregation">{{ $t('search.results.aggs', {nbo: item.doc_count, nbd: item.docs.value}) }}</span>
       </div>
     </div>
     <div v-else>
