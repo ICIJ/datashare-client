@@ -13,8 +13,8 @@
       "results": {
         "match": "match in doc",
         "entities": "nb entities",
-        "results": "%{total} document%{s} found for \"%{query}\"",
-        "no-result": "No document found for \"%{query}\""
+        "results": "1 document found for \"%{query}\" | %{total} documents found for \"%{query}\"",
+        "no-result": "No documents found for \"%{query}\""
       }
     }
   },
