@@ -64,40 +64,4 @@ describe('Search.vue', () => {
     expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('2 documents found for "bar"')
     expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(2)
   })
-
-  it('NER aggregation: should display empty list', async () => {
-    await wrapped.vm.aggregate()
-    await Vue.nextTick()
-
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(0)
-  })
-
-  it('NER aggregation: should display one named entity', async () => {
-    await letData(es).have(new IndexedDocument('docs/naz.txt').withContent('this is a naz document').withNer('naz')).commit()
-    await wrapped.vm.aggregate()
-    await Vue.nextTick()
-
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(1)
-    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('1 occurrence in 1 document')
-  })
-
-  it('NER aggregation: should display two named entities in one document', async () => {
-    await letData(es).have(new IndexedDocument('docs/qux.txt').withContent('this is a document')
-      .withNer('qux').withNer('foo')).commit()
-    await wrapped.vm.aggregate()
-    await Vue.nextTick()
-
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(2)
-  })
-
-  it('NER aggregation: should display one named entity in two documents', async () => {
-    await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER document contain 2 NER').withNer('NER', 2).withNer('NER', 25)).commit()
-    await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('another document with NER').withNer('NER', 22)).commit()
-
-    await wrapped.vm.aggregate()
-    await Vue.nextTick()
-
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(1)
-    expect(wrapped.vm.$el.querySelector('span.aggregation').textContent).to.equal('3 occurrences in 2 documents')
-  })
 })

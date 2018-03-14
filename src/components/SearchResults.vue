@@ -18,14 +18,6 @@
         </div>
       </div>
     </div>
-    <div v-else-if="response.mentions">
-      <div class="search-results__item" v-for="item in response.mentions.buckets" :key="item.key">
-        <router-link :to="{ name: 'search', query: { query: item.key }}">
-          {{item.key}}
-        </router-link>
-        <span class="aggregation">{{ $tc('search.results.aggs-occurrence', item.doc_count, {nb: item.doc_count}) }} {{ $tc('search.results.aggs-document', item.docs.value, {nb: item.docs.value}) }}</span>
-      </div>
-    </div>
     <div v-else>
       <h3>{{ $t('search.results.no-result', { query }) }}</h3>
     </div>
@@ -40,11 +32,4 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .fragments, .named-entities, .aggregation {
-    color: #7f7f7f;
-    margin-left: 1em;
-  }
-  .fragment, .named-entity {
-    margin-left: 5px;
-  }
 </style>

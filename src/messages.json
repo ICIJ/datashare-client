@@ -1,15 +1,20 @@
 {
   "en": {
+    "aggregations": {
+      "mentions": {
+        "item": "%{occurrences} in %{documents}",
+        "occurrence": "no occurrences | one occurrence | {count} occurrences",
+        "document": "no documents | one document | {count} documents"
+      }
+    },
     "search": {
       "placeholder": "Search in documents...",
       "buttonlabel": "Search",
       "results": {
         "match": "match in doc",
         "entities": "nb entities",
-        "results": "1 document found for \"%{query}\" | %{total} documents found for \"%{query}\"",
-        "no-result": "No documents found for \"%{query}\"",
-        "aggs-occurrence": "1 occurrence | %{nb} occurrences",
-        "aggs-document": "in 1 document | in %{nb} documents"
+        "results": "%{total} document%{s} found for \"%{query}\"",
+        "no-result": "No document found for \"%{query}\""
       }
     }
   },
@@ -22,8 +27,6 @@
         "entities": "nb entités",
         "results": "1 document trouvé pour \"%{query}\" | %{total} documents trouvés pour \"%{query}\"",
         "no-result": "Aucun document trouvé pour \"%{query}\"",
-        "aggs-occurrence": "1 occurrence | %{nb} occurrences",
-        "aggs-document": "dans 1 document | dans %{nb} documents"
       }
     }
   }

@@ -1,20 +1,33 @@
 <template>
   <div class="search">
     <search-bar />
-    <search-results :response="searchResponse" :query.sync="query"  class="container-fluid py-2" />
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3 bg-light border-right">
+          <aggregations-panel class="m-2" />
+        </div>
+        <div class="col-md-9">
+          <search-results v-if="searchResponse" :response="searchResponse" :query.sync="query" class="m-2" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import client from '@/api/client'
 import Response from '@/api/Response'
+// Components
+import AggregationsPanel from './AggregationsPanel'
 import SearchBar from './SearchBar'
 import SearchResults from './SearchResults'
+// Vendors
 import bodybuilder from 'bodybuilder'
 
 export default {
   name: 'Search',
   components: {
+    AggregationsPanel,
     SearchResults,
     SearchBar
   },
@@ -30,39 +43,35 @@ export default {
     }
   },
   created () {
-    this.aggregate()
+    this.search()
   },
   methods: {
     search (query = this.query) {
-      if (!query) {
-        return this.aggregate()
-      } else {
-        return client.search({
-          index: process.env.CONFIG.es_index,
-          type: 'doc',
-          size: 200,
-          body: bodybuilder().orQuery('match', 'content', query).orQuery('has_child', 'type', 'NamedEntity', {'inner_hits': {'size': 10}}, sub => {
-            return sub.query('match', 'mention', query)
-          }).rawOption('highlight', {fields: {content: {fragment_size: 150, number_of_fragments: 10, pre_tags: ['<mark>'], post_tags: ['</mark>']}}})
-            .build()
-        }).then(raw => {
-          this.searchResponse = new Response(raw)
-        })
-      }
-    },
-    aggregate: function () {
       return client.search({
         index: process.env.CONFIG.es_index,
         type: 'doc',
-        size: 0,
-        body: bodybuilder().query('term', 'type', 'NamedEntity')
-          .aggregation('terms', 'mentionNorm', 'mentions', {'size': 30}, sub => {
-            return sub.aggregation('cardinality', 'join#Document', 'docs')
+        size: 200,
+        body: bodybuilder()
+          .orQuery('match', 'content', query)
+          .orQuery('has_child', 'type', 'NamedEntity', {
+            'inner_hits': {
+              'size': 30
+            }
+          }, sub => {
+            return sub.query('match', 'mention', query)
+          })
+          .rawOption('highlight', {
+            fields: {
+              content: {
+                fragment_size: 150,
+                number_of_fragments: 10,
+                pre_tags: ['<mark>'],
+                post_tags: ['</mark>']
+              }
+            }
           })
           .build()
-      }).then(resp => {
-        this.searchResponse = resp.aggregations
-      })
+      }).then(raw => { this.searchResponse = new Response(raw) })
     }
   }
 }

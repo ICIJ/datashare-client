@@ -15,6 +15,9 @@ export default class Response {
       return Response.instantiate(hit)
     })
   }
+  get aggregations () {
+    return this[_raw].aggregations || {}
+  }
   static instantiate (hit) {
     const Type = find(Response.types, Type => Type.match(hit))
     return new Type(hit)
