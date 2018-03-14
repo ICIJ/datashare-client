@@ -57,7 +57,7 @@ export default {
         size: 0,
         body: bodybuilder().query('term', 'type', 'NamedEntity')
           .aggregation('terms', 'mentionNorm', 'mentions', sub => {
-            return sub.aggregation('cardinality', 'documentId', 'docs')
+            return sub.aggregation('cardinality', 'join#Document', 'docs')
           })
           .build()
       }).then(resp => {
