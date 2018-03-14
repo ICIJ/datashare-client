@@ -50,7 +50,7 @@ describe('Search.vue', () => {
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('1 document found for "bar"')
-    expect(wrapped.vm.$el.querySelector('.search-results .fragment').innerHTML).to.equal('this is <mark>bar</mark> document')
+    expect(wrapped.vm.$el.querySelector('.search-results .fragments').innerHTML).to.equal('this is <mark>bar</mark> document')
   })
 
   it('should display two documents found', async () => {

@@ -2,20 +2,27 @@
   <div class="search-results">
     <div v-if="query && response.hits.length > 0">
       <h3>{{ $tc('search.results.results', response.hits.length, {total: response.hits.length, query}) }}</h3>
-      <div class="search-results__item mb-4" v-for="doc in response.hits" :key="doc.id">
-        <router-link :to="{ name: 'document', params: { id: doc.id } }">
+      <div class="search-results__item mt-5" v-for="doc in response.hits" :key="doc.id">
+        <h4>
+          <router-link :to="{ name: 'document', params: { id: doc.id } }">
+            {{ doc.basename }}
+          </router-link>
+        </h4>
+
+        <div class="fragments" v-html="doc.highlight.content.join(' [...] ')"></div>
+
+        <ul class="named-entities list-inline">
+          <li class="named-entity list-inline-item pr-3" v-for="ne in doc.innerHits.NamedEntity.hits.hits" :key="ne._source.id" :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
+            <router-link :to="{ name: 'document', params: { id: doc.id } }">
+              {{ ne._source.mention}}
+            </router-link>
+          </li>
+        </ul>
+
+        <router-link :to="{ name: 'document', params: { id: doc.id } }" class="text-muted">
           <font-awesome-icon icon="file-alt" />
           {{ doc.source.path }}
         </router-link>
-
-        <div class="named-entities">
-          {{$t('search.results.entities')}}: <b>{{ doc.innerHits.NamedEntity.hits.total }}</b>
-          <span class="named-entity" v-for="ne in doc.innerHits.NamedEntity.hits.hits" :key="ne._id">{{ne._source.mention}} ({{ne._source.category}}/{{ne._source.extractor}}/{{ne._source.offset}})</span>
-        </div>
-        <div class="fragments">
-          {{$t('search.results.match')}}:
-          <span class="fragment" v-for="fragment in doc.highlight.content" v-html="fragment" :key="fragment"></span>
-        </div>
       </div>
     </div>
     <div v-else>
