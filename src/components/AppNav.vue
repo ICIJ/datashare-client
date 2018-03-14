@@ -17,7 +17,7 @@
         </div>
         <ul class="app__nav__container__menu list-unstyled" :class="{ 'app__nav__container__menu--collapse': collapseMenu }">
           <li class="list-unstyled-item app__nav__container__menu__item p-3">
-            <language-chooser @changed="toggleMenu"></language-chooser>
+            <language-chooser @changed="toggleMenu" />
           </li>
           <li class="list-unstyled-item app__nav__container__menu__item">
             <a href="https://www.icij.org/investigations/paradise-papers/" target="_blank">
