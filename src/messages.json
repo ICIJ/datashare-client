@@ -19,6 +19,13 @@
     }
   },
   "fr": {
+    "aggregations": {
+      "mentions": {
+        "item": "%{occurrences} dans %{documents}",
+        "occurrence": "aucune occurrence | une occurrence | {count} occurrences",
+        "document": "aucun document | un document | {count} documents"
+      }
+    },
     "search": {
       "placeholder": "Rechercher dans les documents...",
       "buttonlabel": "Rechercher",
