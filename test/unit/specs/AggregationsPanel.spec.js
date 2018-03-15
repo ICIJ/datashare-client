@@ -71,4 +71,16 @@ describe('AggregationsPanel.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.aggregations-panel__mentions__item').length).to.equal(1)
     expect(trim(wrapped.vm.$el.querySelector('.aggregations-panel__mentions__item__description').textContent)).to.equal('3 occurrences in 2 documents')
   })
+
+  it('NER aggregation: should display two named entities in two documents', async () => {
+    await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER1 document').withNer('NER1', 2)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER2 doc with NER2 NER2 NER1')
+      .withNer('NER2', 2).withNer('NER2', 16).withNer('NER2', 21).withNer('NER1', 26)).commit()
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.aggregations-panel__mentions__item').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelector('.aggregations-panel__mentions__item__key').textContent.trim()).to.equal('NER1')
+  })
 })
