@@ -1,11 +1,11 @@
 <template>
   <div class="aggregations-panel card card-default">
     <div class="card-header">
-      In the documents
+      {{ $t('aggregations.inthedocs') }}
     </div>
     <form class="card-body py-2">
       <div class="input-group">
-        <input class="form-control form-control-sm" type="search" placeholder="Search for people, companies, etc" />
+        <input class="form-control form-control-sm" type="search" :placeholder="$t('aggregations.placeholder')" />
         <div class="input-group-append">
           <button type="submit" class="btn btn-icij">
             <font-awesome-icon icon="search" />
@@ -31,7 +31,7 @@
     </div>
     <div class="card-footer">
       <router-link class="btn btn-primary btn-block" to="/">
-        Explore more
+        {{ $t('aggregations.more') }}
       </router-link>
     </div>
   </div>

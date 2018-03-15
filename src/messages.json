@@ -5,7 +5,10 @@
         "item": "%{occurrences} in %{documents}",
         "occurrence": "no occurrences | one occurrence | {count} occurrences",
         "document": "no documents | one document | {count} documents"
-      }
+      },
+      "more": "Explore more",
+      "placeholder": "Search for people, companies, etc",
+      "inthedocs": "In the documents"
     },
     "search": {
       "placeholder": "Search in documents...",
@@ -24,7 +27,10 @@
         "item": "%{occurrences} dans %{documents}",
         "occurrence": "aucune occurrence | une occurrence | {count} occurrences",
         "document": "aucun document | un document | {count} documents"
-      }
+      },
+      "more": "Explorer plus",
+      "placeholder": "Rechercher des personnes, entreprises, etc.",
+      "inthedocs": "Dans les documents"
     },
     "search": {
       "placeholder": "Rechercher dans les documents...",
