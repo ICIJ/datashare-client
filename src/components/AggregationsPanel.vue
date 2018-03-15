@@ -69,7 +69,7 @@ export default {
         size: 0,
         body: bodybuilder()
           .query('term', 'type', 'NamedEntity')
-          .aggregation('terms', 'mentionNorm', 'mentions', {'size': 15, order: {docs: 'desc'}}, sub => {
+          .aggregation('terms', 'mentionNorm', 'mentions', {'size': 15, order: [{docs: 'desc'}, {_count: 'desc'}]}, sub => {
             return sub.aggregation('cardinality', 'join#Document', 'docs')
           })
           .build()

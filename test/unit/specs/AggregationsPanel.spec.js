@@ -36,14 +36,14 @@ describe('AggregationsPanel.vue', () => {
     wrapped = mount(AggregationsPanel, {i18n, router})
   })
 
-  it('NER aggregation: should display empty list', async () => {
+  it('should display empty list', async () => {
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.aggregations-panel__mentions__item').length).to.equal(0)
   })
 
-  it('NER aggregation: should display one named entity', async () => {
+  it('should display one named entity', async () => {
     await letData(es).have(new IndexedDocument('docs/naz.txt').withContent('this is a naz document').withNer('naz')).commit()
     await wrapped.vm.aggregate()
     await Vue.nextTick()
@@ -52,7 +52,7 @@ describe('AggregationsPanel.vue', () => {
     expect(trim(wrapped.vm.$el.querySelector('.aggregations-panel__mentions__item__description').textContent)).to.equal('one occurrence in one document')
   })
 
-  it('NER aggregation: should display two named entities in one document', async () => {
+  it('should display two named entities in one document', async () => {
     await letData(es).have(new IndexedDocument('docs/qux.txt').withContent('this is a document')
       .withNer('qux').withNer('foo')).commit()
     await wrapped.vm.aggregate()
@@ -61,7 +61,7 @@ describe('AggregationsPanel.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.aggregations-panel__mentions__item').length).to.equal(2)
   })
 
-  it('NER aggregation: should display one named entity in two documents', async () => {
+  it('should display one named entity in two documents', async () => {
     await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER document contain 2 NER').withNer('NER', 2).withNer('NER', 25)).commit()
     await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('another document with NER').withNer('NER', 22)).commit()
 
@@ -72,15 +72,17 @@ describe('AggregationsPanel.vue', () => {
     expect(trim(wrapped.vm.$el.querySelector('.aggregations-panel__mentions__item__description').textContent)).to.equal('3 occurrences in 2 documents')
   })
 
-  it('NER aggregation: should display two named entities in two documents', async () => {
+  it('should display three named entities in two documents with right order', async () => {
     await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER1 document').withNer('NER1', 2)).commit()
-    await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER2 doc with NER2 NER2 NER1')
-      .withNer('NER2', 2).withNer('NER2', 16).withNer('NER2', 21).withNer('NER1', 26)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER2 doc with NER2 NER2 NER1 and NER3')
+      .withNer('NER2', 2).withNer('NER2', 16).withNer('NER2', 21).withNer('NER1', 26).withNer('NER3', 35)).commit()
 
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.aggregations-panel__mentions__item').length).to.equal(2)
-    expect(wrapped.vm.$el.querySelector('.aggregations-panel__mentions__item__key').textContent.trim()).to.equal('NER1')
+    expect(wrapped.vm.$el.querySelectorAll('.aggregations-panel__mentions__item').length).to.equal(3)
+    expect(wrapped.vm.$el.querySelectorAll('.aggregations-panel__mentions__item__key')[0].textContent.trim()).to.equal('NER1')
+    expect(wrapped.vm.$el.querySelectorAll('.aggregations-panel__mentions__item__key')[1].textContent.trim()).to.equal('NER2')
+    expect(wrapped.vm.$el.querySelectorAll('.aggregations-panel__mentions__item__key')[2].textContent.trim()).to.equal('NER3')
   })
 })
