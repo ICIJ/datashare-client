@@ -24,16 +24,13 @@ export default {
     }
   },
   beforeRouteUpdate (to, from, next) {
-    console.log('#############', to.query.routing)
     client.getEsDoc(to.params.id, to.query.routing, (error, document) => {
       this.setDoc(error, document)
       next()
     })
   },
   beforeRouteEnter (to, from, next) {
-    console.log('#############', to.query.routing)
     client.getEsDoc(to.params.id, to.query.routing, (error, document) => {
-      // Return false if the document is not found, else, assign the document
       next(error ? false : vm => { vm.setDoc(null, document) })
     })
   }
