@@ -64,4 +64,25 @@ describe('Search.vue', () => {
     expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('2 documents found for "bar"')
     expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(2)
   })
+
+  it('should make a link without routing for a document', async () => {
+    await letData(es).have(new IndexedDocument('doc.txt').withContent('this is a document')).commit()
+    wrapped.vm.query = 'document'
+
+    await wrapped.vm.search()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelector('.search-results__item__link').href).to.match(/doc.txt$/)
+  })
+
+  it('should make a link with routing for a child document', async () => {
+    await letData(es).have(new IndexedDocument('parent.txt').withContent('this is a parent document')).commit()
+    await letData(es).have(new IndexedDocument('child.txt').withContent('this is a children document').withParent('parent.txt')).commit()
+    wrapped.vm.query = 'children'
+
+    await wrapped.vm.search()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelector('.search-results__item__link').href).to.match(/child.txt\?routing=parent.txt/)
+  })
 })

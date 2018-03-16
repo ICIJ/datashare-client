@@ -10,11 +10,9 @@ export function docPlugin (Client, config, components) {
   // Currently we supporte only to type of data: Document & NamedEntity.
   // Both have a dedicated class, children of EsDoc
 
-  Client.prototype.getEsDoc = function (id, cb = noop) {
-    return this.transport.request({
-      method: 'GET',
-      path: `${process.env.CONFIG.es_index}/doc/${id}`
-    }, (err, raw) => cb(err, Response.instantiate(raw)))
+  Client.prototype.getEsDoc = function (id, routing = null, cb = noop) {
+    return this.get({index: process.env.CONFIG.es_index, type: 'doc', id: id, routing: routing},
+      (err, raw) => cb(err, Response.instantiate(raw)))
   }
 }
 
