@@ -19,6 +19,17 @@
         "results": "1 document found for \"%{query}\" | %{total} documents found for \"%{query}\"",
         "no-result": "No documents found for \"%{query}\""
       }
+    },
+    "file": {
+      "name": "File name",
+      "path": "File path",
+      "id": "File id",
+      "creation_date": "Creation date",
+      "size": "File size",
+      "content_language": "Content language",
+      "content_type": "Content type",
+      "content_encoding": "Content encoding",
+      "tree_level": "Tree level"
     }
   },
   "fr": {
@@ -41,6 +52,17 @@
         "results": "1 document trouvé pour \"%{query}\" | %{total} documents trouvés pour \"%{query}\"",
         "no-result": "Aucun document trouvé pour \"%{query}\""
       }
+    },
+    "file": {
+      "name": "Nom du fichier",
+      "path": "Chemin du fichier",
+      "id": "Identifiant",
+      "creation_date": "Date de création",
+      "size": "Taille",
+      "content_language": "Language",
+      "content_type": "Type",
+      "content_encoding": "Encodage",
+      "tree_level": "Niveau d'imbrication"
     }
   }
 }

@@ -16,6 +16,7 @@
 </template>
 
 <script>
+import moment from 'moment'
 export default {
   name: 'language-chooser',
   data () {
@@ -23,9 +24,13 @@ export default {
       language: 'en'
     }
   },
+  created () {
+    moment.locale(this.language)
+  },
   methods: {
     onChange (event) {
       this.$root.$i18n.locale = event.target.value
+      moment.locale(event.target.value)
       this.$emit('changed', event.target.value)
     }
   }

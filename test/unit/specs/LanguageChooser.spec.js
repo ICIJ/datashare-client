@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import 'es6-promise/auto'
+import moment from 'moment'
 
 import messages from '@/messages'
 import router from '@/router'
@@ -30,5 +31,16 @@ describe('LanguageChooser.vue', () => {
     vm.onChange({target: {value: 'fr'}})
 
     expect(vm.$i18n.locale).to.equal('fr')
+  })
+
+  it('should change moment locale', () => {
+    let dateIso = '2018-03-19T13:14:15Z'
+    const Constructor = Vue.extend(LanguageChooser)
+    const vm = new Constructor({i18n, router}).$mount()
+    expect(moment(dateIso).format('LL')).to.equal('March 19, 2018')
+
+    vm.onChange({target: {value: 'fr'}})
+
+    expect(moment(dateIso).format('LL')).to.equal('19 mars 2018')
   })
 })
