@@ -15,14 +15,13 @@
 </template>
 
 <script>
-import client from '@/api/client'
 import Response from '@/api/Response'
 // Components
 import AggregationsPanel from './AggregationsPanel'
 import SearchBar from './SearchBar'
 import SearchResults from './SearchResults'
-// Vendors
-import bodybuilder from 'bodybuilder'
+// Store helpers
+import { mapState } from 'vuex'
 
 export default {
   name: 'Search',
@@ -32,11 +31,6 @@ export default {
     SearchBar
   },
   props: ['query'],
-  data () {
-    return {
-      searchResponse: new Response({hits: {hits: []}})
-    }
-  },
   watch: {
     '$route' () {
       this.search()
@@ -45,33 +39,17 @@ export default {
   created () {
     this.search()
   },
+  computed: {
+    ...mapState('search', {
+      q: state => state.q,
+      searchResponse: state => {
+        return state.response === null ? new Response({hits: {hits: []}}) : state.response
+      }
+    })
+  },
   methods: {
     search (query = this.query) {
-      return client.search({
-        index: process.env.CONFIG.es_index,
-        type: 'doc',
-        size: 200,
-        body: bodybuilder()
-          .orQuery('match', 'content', query)
-          .orQuery('has_child', 'type', 'NamedEntity', {
-            'inner_hits': {
-              'size': 30
-            }
-          }, sub => {
-            return sub.query('match', 'mention', query)
-          })
-          .rawOption('highlight', {
-            fields: {
-              content: {
-                fragment_size: 150,
-                number_of_fragments: 10,
-                pre_tags: ['<mark>'],
-                post_tags: ['</mark>']
-              }
-            }
-          })
-          .build()
-      }).then(raw => { this.searchResponse = new Response(raw) })
+      return this.$store.dispatch('search/query', query)
     }
   }
 }

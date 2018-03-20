@@ -4,9 +4,11 @@ import noop from 'lodash/noop'
 import 'es6-promise/auto'
 import {mount, createLocalVue} from 'vue-test-utils'
 import elasticsearch from 'elasticsearch-browser'
+
 import esMapping from '@/datashare_index_mappings.json'
 import messages from '@/messages'
 import router from '@/router'
+import store from '@/store'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Search from '@/components/Search'
@@ -32,7 +34,7 @@ describe('Search.vue', () => {
     const localVue = createLocalVue()
     localVue.use(VueI18n)
     Search.created = noop
-    wrapped = mount(Search, {i18n, router})
+    wrapped = mount(Search, {i18n, router, store})
   })
 
   it('should display no document found', async () => {
