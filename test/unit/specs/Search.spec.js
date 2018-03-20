@@ -38,7 +38,7 @@ describe('Search.vue', () => {
   })
 
   it('should display no document found', async () => {
-    wrapped.vm.query = 'foo'
+    wrapped.vm.q = 'foo'
     await wrapped.vm.search()
     await Vue.nextTick()
 
@@ -47,7 +47,7 @@ describe('Search.vue', () => {
 
   it('should display one document found', async () => {
     await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
-    wrapped.vm.query = 'bar'
+    wrapped.vm.q = 'bar'
     await wrapped.vm.search()
     await Vue.nextTick()
 
@@ -58,7 +58,7 @@ describe('Search.vue', () => {
   it('should display two documents found', async () => {
     await letData(es).have(new IndexedDocument('docs/bar1.txt').withContent('this is bar 1 document')).commit()
     await letData(es).have(new IndexedDocument('docs/bar2.txt').withContent('this is bar 2 document')).commit()
-    wrapped.vm.query = 'bar'
+    wrapped.vm.q = 'bar'
 
     await wrapped.vm.search()
     await Vue.nextTick()
@@ -69,7 +69,7 @@ describe('Search.vue', () => {
 
   it('should make a link without routing for a document', async () => {
     await letData(es).have(new IndexedDocument('doc.txt').withContent('this is a document')).commit()
-    wrapped.vm.query = 'document'
+    wrapped.vm.q = 'document'
 
     await wrapped.vm.search()
     await Vue.nextTick()
@@ -80,7 +80,7 @@ describe('Search.vue', () => {
   it('should make a link with routing for a child document', async () => {
     await letData(es).have(new IndexedDocument('parent.txt').withContent('this is a parent document')).commit()
     await letData(es).have(new IndexedDocument('child.txt').withContent('this is a children document').withParent('parent.txt')).commit()
-    wrapped.vm.query = 'children'
+    wrapped.vm.q = 'children'
 
     await wrapped.vm.search()
     await Vue.nextTick()

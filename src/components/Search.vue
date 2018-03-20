@@ -7,7 +7,7 @@
           <aggregations-panel class="my-4" />
         </div>
         <div class="col-md-9">
-          <search-results v-if="searchResponse" :response="searchResponse" :query.sync="query" class="m-2" />
+          <search-results v-if="searchResponse" :response="searchResponse" :query.sync="q" class="m-2" />
         </div>
       </div>
     </div>
@@ -29,7 +29,7 @@ export default {
     SearchResults,
     SearchBar
   },
-  props: ['query'],
+  props: ['q'],
   watch: {
     '$route' () {
       this.search()
@@ -40,12 +40,12 @@ export default {
   },
   computed: {
     ...mapState('search', {
-      q: state => state.q,
+      query: state => state.query,
       searchResponse: state => state.response
     })
   },
   methods: {
-    search (query = this.query) {
+    search (query = this.q) {
       return this.$store.dispatch('search/query', query)
     }
   }

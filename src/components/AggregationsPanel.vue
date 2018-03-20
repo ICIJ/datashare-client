@@ -15,7 +15,7 @@
       </div>
     </form>
     <div class="list-group list-group-flush aggregations-panel__mentions">
-      <router-link class="list-group-item aggregations-panel__mentions__item" v-for="item in mentions.buckets" :key="item.key" :to="{ name: 'search', query: { query: item.key }}" >
+      <router-link class="list-group-item aggregations-panel__mentions__item" v-for="item in mentions.buckets" :key="item.key" :to="{ name: 'search', query: { q: item.key }}" >
         <span class="badge badge-pill badge-primary mr-1 text-uppercase aggregations-panel__mentions__item__key">
           {{ item.key }}
         </span>

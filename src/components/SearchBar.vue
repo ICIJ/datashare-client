@@ -18,7 +18,7 @@ export default {
   methods: {
     submit () {
       // Change the route!
-      this.$router.push({name: 'search', query: {query: this.query}})
+      this.$router.push({name: 'search', query: {q: this.query}})
       // And emit an event for those listening...
       this.$emit('submit', this.query)
     }

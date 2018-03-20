@@ -1,6 +1,5 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import 'es6-promise/auto'
 
 import messages from '@/messages'
 import router from '@/router'

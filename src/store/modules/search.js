@@ -4,15 +4,17 @@ import Response from '@/api/Response'
 import bodybuilder from 'bodybuilder'
 
 const state = {
-  q: '',
+  query: '',
   response: Response.none()
 }
 
-const getters = { }
+const getters = {
+
+}
 
 const mutations = {
-  query (state, q) {
-    state.q = q
+  query (state, query) {
+    state.query = query
     state.response = Response.none()
   },
   buildResponse (state, raw) {
@@ -21,22 +23,22 @@ const mutations = {
 }
 
 const actions = {
-  query ({ commit }, q) {
+  query ({ commit }, query) {
     // Update current  query before processing the search
-    commit('query', q)
+    commit('query', query)
     // Return a promise
     return client.search({
       index: process.env.CONFIG.es_index,
       type: 'doc',
       size: 200,
       body: bodybuilder()
-        .orQuery('match', 'content', q)
+        .orQuery('match', 'content', query)
         .orQuery('has_child', 'type', 'NamedEntity', {
           'inner_hits': {
             'size': 30
           }
         }, sub => {
-          return sub.query('match', 'mention', q)
+          return sub.query('match', 'mention', query)
         })
         .rawOption('highlight', {
           fields: {
