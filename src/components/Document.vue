@@ -9,18 +9,30 @@
       <dt>{{ $t('file.id') }}</dt>
       <dd>{{ document.id }}</dd>
 
-      <dt v-if="document.source.metadata.tika_metadata_creation_date">{{ $t('file.creation_date') }}</dt>
-      <dd v-if="document.source.metadata.tika_metadata_creation_date">{{ creationDate }}</dd>
-      <dt v-if="document.source.contentLength !== '-1'">{{ $t('file.size') }}</dt>
-      <dd v-if="document.source.contentLength !== '-1'">{{ document.source.contentLength }}</dd>
-      <dt v-if="document.source.language !== 'UNKNOWN'">{{ $t('file.content_language') }}</dt>
-      <dd v-if="document.source.language !== 'UNKNOWN'">{{ document.source.language }}</dd>
-      <dt v-if="document.source.contentType !== 'unknown'">{{ $t('file.content_type') }}</dt>
-      <dd v-if="document.source.contentType !== 'unknown'">{{ document.source.contentType }}</dd>
-      <dt v-if="document.source.contentEncoding !== 'unknown'">{{ $t('file.content_encoding') }}</dt>
-      <dd v-if="document.source.contentEncoding !== 'unknown'">{{ document.source.contentEncoding }}</dd>
-      <dt v-if="document.source.extractionLevel > 0">{{ $t('file.tree_level') }}</dt>
-      <dd v-if="document.source.extractionLevel > 0">{{ document.source.extractionLevel }}</dd>
+      <template v-if="document.source.metadata.tika_metadata_creation_date">
+        <dt>{{ $t('file.creation_date') }}</dt>
+        <dd>{{ creationDate }}</dd>
+      </template>
+      <template v-if="document.source.contentLength !== '-1'">
+        <dt>{{ $t('file.size') }}</dt>
+        <dd>{{ document.source.contentLength }}</dd>
+      </template>
+      <template v-if="document.source.language !== 'UNKNOWN'">
+        <dt>{{ $t('file.content_language') }}</dt>
+        <dd>{{ document.source.language }}</dd>
+      </template>
+      <template v-if="document.source.contentType !== 'unknown'">
+        <dt>{{ $t('file.content_type') }}</dt>
+        <dd>{{ document.source.contentType }}</dd>
+      </template>
+      <template v-if="document.source.contentEncoding !== 'unknown'">
+        <dt>{{ $t('file.content_encoding') }}</dt>
+        <dd>{{ document.source.contentEncoding }}</dd>
+      </template>
+      <template v-if="document.source.extractionLevel > 0">
+        <dt>{{ $t('file.tree_level') }}</dt>
+        <dd>{{ document.source.extractionLevel }}</dd>
+      </template>
     </dl>
   </div>
 </template>
