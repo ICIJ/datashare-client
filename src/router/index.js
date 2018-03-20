@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import App from '@/components/App'
-import Document from '@/components/Document'
+import DocumentView from '@/components/DocumentView'
 import Search from '@/components/Search'
 
 Vue.use(VueRouter)
@@ -23,7 +23,7 @@ export default new VueRouter({
         {
           name: 'document',
           path: 'd/:id/',
-          component: Document,
+          component: DocumentView,
           props: true
         }
       ]

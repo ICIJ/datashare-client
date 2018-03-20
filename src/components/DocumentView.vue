@@ -42,7 +42,7 @@ import moment from 'moment'
 import client from '@/api/client'
 
 export default {
-  name: 'Document',
+  name: 'document-view',
   props: ['id', 'routing'],
   data () {
     return {
