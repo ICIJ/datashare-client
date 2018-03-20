@@ -5,7 +5,7 @@ import bodybuilder from 'bodybuilder'
 
 const state = {
   q: '',
-  response: null
+  response: Response.none()
 }
 
 const getters = { }
@@ -13,7 +13,7 @@ const getters = { }
 const mutations = {
   query (state, q) {
     state.q = q
-    state.response = null
+    state.response = Response.none()
   },
   buildResponse (state, raw) {
     state.response = new Response(raw)
@@ -52,7 +52,6 @@ const actions = {
     }).then(raw => { commit('buildResponse', raw) })
   }
 }
-
 
 export default {
   namespaced: true,

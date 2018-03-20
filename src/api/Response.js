@@ -22,6 +22,9 @@ export default class Response {
     const Type = find(Response.types, Type => Type.match(hit))
     return new Type(hit)
   }
+  static none () {
+    return new Response({hits: {hits: []}})
+  }
   static get types () {
     return [Document, NamedEntity]
   }

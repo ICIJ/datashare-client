@@ -15,7 +15,6 @@
 </template>
 
 <script>
-import Response from '@/api/Response'
 // Components
 import AggregationsPanel from './AggregationsPanel'
 import SearchBar from './SearchBar'
@@ -42,9 +41,7 @@ export default {
   computed: {
     ...mapState('search', {
       q: state => state.q,
-      searchResponse: state => {
-        return state.response === null ? new Response({hits: {hits: []}}) : state.response
-      }
+      searchResponse: state => state.response
     })
   },
   methods: {
