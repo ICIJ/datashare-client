@@ -3,6 +3,7 @@ import VueI18n from 'vue-i18n'
 
 import router from './router'
 import messages from './messages'
+import store from './store'
 import FontAwesomeIcon from './components/FontAwesomeIcon'
 
 import '@/main.scss'
@@ -19,6 +20,7 @@ const i18n = new VueI18n({locale: 'en', fallbackLocale: 'en', messages})
 new Vue({
   i18n,
   router,
+  store,
   el: '#app',
   template: '<router-view></router-view>'
 })
