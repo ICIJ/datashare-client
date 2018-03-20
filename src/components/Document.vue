@@ -13,9 +13,9 @@
         <dt>{{ $t('file.creation_date') }}</dt>
         <dd>{{ creationDate }}</dd>
       </template>
-      <template v-if="document.source.contentLength !== '-1'">
+      <template v-if="document.source.contentLength !== -1">
         <dt>{{ $t('file.size') }}</dt>
-        <dd>{{ document.source.contentLength }}</dd>
+        <dd>{{ document.humanSize }}</dd>
       </template>
       <template v-if="document.source.language !== 'UNKNOWN'">
         <dt>{{ $t('file.content_language') }}</dt>
