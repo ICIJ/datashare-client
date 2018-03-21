@@ -2,37 +2,37 @@
   <div class="document container py-4" v-if="document">
     <h3>{{ document.basename }}</h3>
     <div class="document__meta">
-      <dl>
-        <dt>{{ $t('file.name') }}</dt>
-        <dd>{{ document.basename }}</dd>
-        <dt>{{ $t('file.path') }}</dt>
-        <dd>{{ document.source.path }}</dd>
-        <dt>{{ $t('file.id') }}</dt>
-        <dd>{{ document.id }}</dd>
+      <dl class="row">
+        <dt class="col-sm-3">{{ $t('file.name') }}</dt>
+        <dd class="col-sm-9">{{ document.basename }}</dd>
+        <dt class="col-sm-3">{{ $t('file.path') }}</dt>
+        <dd class="col-sm-9">{{ document.source.path }}</dd>
+        <dt class="col-sm-3">{{ $t('file.id') }}</dt>
+        <dd class="col-sm-9">{{ document.id }}</dd>
 
         <template v-if="document.source.metadata.tika_metadata_creation_date">
-          <dt>{{ $t('file.creation_date') }}</dt>
-          <dd>{{ creationDate }}</dd>
+          <dt class="col-sm-3">{{ $t('file.creation_date') }}</dt>
+          <dd class="col-sm-9">{{ creationDate }}</dd>
         </template>
         <template v-if="document.source.contentLength !== -1">
-          <dt>{{ $t('file.size') }}</dt>
-          <dd>{{ document.humanSize }}</dd>
+          <dt class="col-sm-3">{{ $t('file.size') }}</dt>
+          <dd class="col-sm-9">{{ document.humanSize }}</dd>
         </template>
         <template v-if="document.source.language !== 'UNKNOWN'">
-          <dt>{{ $t('file.content_language') }}</dt>
-          <dd>{{ document.source.language }}</dd>
+          <dt class="col-sm-3">{{ $t('file.content_language') }}</dt>
+          <dd class="col-sm-9">{{ document.source.language }}</dd>
         </template>
         <template v-if="document.source.contentType !== 'unknown'">
-          <dt>{{ $t('file.content_type') }}</dt>
-          <dd>{{ document.source.contentType }}</dd>
+          <dt class="col-sm-3">{{ $t('file.content_type') }}</dt>
+          <dd class="col-sm-9">{{ document.source.contentType }}</dd>
         </template>
         <template v-if="document.source.contentEncoding !== 'unknown'">
-          <dt>{{ $t('file.content_encoding') }}</dt>
-          <dd>{{ document.source.contentEncoding }}</dd>
+          <dt class="col-sm-3">{{ $t('file.content_encoding') }}</dt>
+          <dd class="col-sm-9">{{ document.source.contentEncoding }}</dd>
         </template>
         <template v-if="document.source.extractionLevel > 0">
-          <dt>{{ $t('file.tree_level') }}</dt>
-          <dd>{{ document.source.extractionLevel }}</dd>
+          <dt class="col-sm-3">{{ $t('file.tree_level') }}</dt>
+          <dd class="col-sm-9">{{ document.source.extractionLevel }}</dd>
         </template>
       </dl>
     </div>
