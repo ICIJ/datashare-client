@@ -40,6 +40,7 @@ const actions = {
         }, sub => {
           return sub.query('match', 'mention', query)
         })
+        .rawOption('_source', {includes: ['*'], excludes: ['content']})
         .rawOption('highlight', {
           fields: {
             content: {
