@@ -1,39 +1,44 @@
 <template>
   <div class="document container py-4" v-if="document">
     <h3>{{ document.basename }}</h3>
-    <dl>
-      <dt>{{ $t('file.name') }}</dt>
-      <dd>{{ document.basename }}</dd>
-      <dt>{{ $t('file.path') }}</dt>
-      <dd>{{ document.source.path }}</dd>
-      <dt>{{ $t('file.id') }}</dt>
-      <dd>{{ document.id }}</dd>
+    <div class="document__meta">
+      <dl>
+        <dt>{{ $t('file.name') }}</dt>
+        <dd>{{ document.basename }}</dd>
+        <dt>{{ $t('file.path') }}</dt>
+        <dd>{{ document.source.path }}</dd>
+        <dt>{{ $t('file.id') }}</dt>
+        <dd>{{ document.id }}</dd>
 
-      <template v-if="document.source.metadata.tika_metadata_creation_date">
-        <dt>{{ $t('file.creation_date') }}</dt>
-        <dd>{{ creationDate }}</dd>
-      </template>
-      <template v-if="document.source.contentLength !== -1">
-        <dt>{{ $t('file.size') }}</dt>
-        <dd>{{ document.humanSize }}</dd>
-      </template>
-      <template v-if="document.source.language !== 'UNKNOWN'">
-        <dt>{{ $t('file.content_language') }}</dt>
-        <dd>{{ document.source.language }}</dd>
-      </template>
-      <template v-if="document.source.contentType !== 'unknown'">
-        <dt>{{ $t('file.content_type') }}</dt>
-        <dd>{{ document.source.contentType }}</dd>
-      </template>
-      <template v-if="document.source.contentEncoding !== 'unknown'">
-        <dt>{{ $t('file.content_encoding') }}</dt>
-        <dd>{{ document.source.contentEncoding }}</dd>
-      </template>
-      <template v-if="document.source.extractionLevel > 0">
-        <dt>{{ $t('file.tree_level') }}</dt>
-        <dd>{{ document.source.extractionLevel }}</dd>
-      </template>
-    </dl>
+        <template v-if="document.source.metadata.tika_metadata_creation_date">
+          <dt>{{ $t('file.creation_date') }}</dt>
+          <dd>{{ creationDate }}</dd>
+        </template>
+        <template v-if="document.source.contentLength !== -1">
+          <dt>{{ $t('file.size') }}</dt>
+          <dd>{{ document.humanSize }}</dd>
+        </template>
+        <template v-if="document.source.language !== 'UNKNOWN'">
+          <dt>{{ $t('file.content_language') }}</dt>
+          <dd>{{ document.source.language }}</dd>
+        </template>
+        <template v-if="document.source.contentType !== 'unknown'">
+          <dt>{{ $t('file.content_type') }}</dt>
+          <dd>{{ document.source.contentType }}</dd>
+        </template>
+        <template v-if="document.source.contentEncoding !== 'unknown'">
+          <dt>{{ $t('file.content_encoding') }}</dt>
+          <dd>{{ document.source.contentEncoding }}</dd>
+        </template>
+        <template v-if="document.source.extractionLevel > 0">
+          <dt>{{ $t('file.tree_level') }}</dt>
+          <dd>{{ document.source.extractionLevel }}</dd>
+        </template>
+      </dl>
+    </div>
+    <div class="document__text">
+      {{document.source.content}}
+    </div>
   </div>
 </template>
 
@@ -74,3 +79,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.document {
+  .document__text {
+    white-space: pre;
+  }
+}
+</style>
