@@ -20,7 +20,7 @@
         "no-result": "No documents found for \"%{query}\""
       }
     },
-    "file": {
+    "document": {
       "name": "File name",
       "path": "File path",
       "id": "File id",
@@ -29,8 +29,12 @@
       "content_language": "Content language",
       "content_type": "Content type",
       "content_encoding": "Content encoding",
-      "tree_level": "Tree level"
+      "tree_level": "Tree level",
+      "details": "Details",
+      "extracted_text": "Extracted text",
+      "preview": "Preview"
     }
+
   },
   "fr": {
     "aggregations": {
@@ -53,7 +57,7 @@
         "no-result": "Aucun document trouvé pour \"%{query}\""
       }
     },
-    "file": {
+    "document": {
       "name": "Nom du fichier",
       "path": "Chemin du fichier",
       "id": "Identifiant",
@@ -62,7 +66,10 @@
       "content_language": "Language",
       "content_type": "Type",
       "content_encoding": "Encodage",
-      "tree_level": "Niveau d'imbrication"
+      "tree_level": "Niveau d'imbrication",
+      "details": "Details",
+      "extracted_text": "Texte",
+      "preview": "Prévisualisation  "
     }
   }
 }

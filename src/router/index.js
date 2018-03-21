@@ -22,7 +22,7 @@ export default new VueRouter({
         },
         {
           name: 'document',
-          path: 'd/:id/',
+          path: 'd/:id/:tab?',
           component: DocumentView,
           props: true
         }
