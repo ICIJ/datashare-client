@@ -10,7 +10,7 @@ import store from '@/store'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import DocumentView from '@/components/DocumentView'
-import {IndexedDocument, letData} from '../es_utils'
+import {IndexedDocument, letData} from 'test/unit/es_utils'
 
 Vue.use(VueI18n)
 const i18n = new VueI18n({locale: 'en', messages})

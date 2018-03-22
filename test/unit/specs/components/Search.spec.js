@@ -12,7 +12,7 @@ import store from '@/store'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Search from '@/components/Search'
-import {IndexedDocument, letData} from '../es_utils'
+import {IndexedDocument, letData} from 'test/unit/es_utils'
 
 Vue.use(VueI18n)
 

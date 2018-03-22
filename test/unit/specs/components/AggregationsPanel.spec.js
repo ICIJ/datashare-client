@@ -11,7 +11,7 @@ import router from '@/router'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import AggregationsPanel from '@/components/AggregationsPanel'
-import {IndexedDocument, letData} from '../es_utils'
+import {IndexedDocument, letData} from 'test/unit/es_utils'
 
 Vue.use(VueI18n)
 
