@@ -112,4 +112,16 @@ export default {
 .text-pre-wrap {
   white-space: pre-wrap;
 }
+.ner {
+  border-bottom: 1px dotted;
+  &.organization {
+    background-color: rgba(108, 204, 255, 0.63);
+  }
+  &.person {
+    background-color: rgba(149, 255, 129, 0.63);
+  }
+  &.location {
+    background-color: rgb(255, 225, 165);
+  }
+}
 </style>
