@@ -62,21 +62,14 @@
 
 <script>
 import moment from 'moment'
-import client from '@/api/client'
+import {mapState} from 'vuex'
 
 export default {
   name: 'document-view',
   props: ['id', 'tab'],
-  data () {
-    return {
-      document: null
-    }
-  },
   methods: {
-    setDoc (err, document) {
-      if (!err) {
-        this.$set(this, 'document', document)
-      }
+    getDoc () {
+      return this.$store.dispatch('document/get', this.id)
     }
   },
   computed: {
@@ -85,18 +78,17 @@ export default {
     },
     activeTab () {
       return this.tab === undefined ? 'details' : this.tab
-    }
-  },
-  beforeRouteUpdate (to, from, next) {
-    client.getEsDoc(to.params.id, to.query.routing, (error, document) => {
-      this.setDoc(error, document)
-      next()
+    },
+    ...mapState('document', {
+      document: state => state.doc
     })
   },
   beforeRouteEnter (to, from, next) {
-    client.getEsDoc(to.params.id, to.query.routing, (error, document) => {
-      next(error ? false : vm => { vm.setDoc(null, document) })
-    })
+    next(vm => vm.getDoc())
+  },
+  beforeRouteUpdate (to, from, next) {
+    this.getDoc()
+    next()
   }
 }
 </script>
