@@ -1,4 +1,4 @@
-import elasticsearch from 'elasticsearch-browser'
+import es from 'elasticsearch-browser'
 
 // Custom API for datashare
 // @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/extending_core_components.html
@@ -12,7 +12,7 @@ export function docPlugin (Client, config, components) {
   }
 }
 
-const client = new elasticsearch.Client({
+const client = new es.Client({
   host: process.env.CONFIG.es_host || window.location.hostname + ':9200',
   // Use the custom api
   plugins: [ docPlugin ]

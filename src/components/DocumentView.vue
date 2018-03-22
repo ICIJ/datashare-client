@@ -26,7 +26,7 @@
 
           <template v-if="document.source.metadata.tika_metadata_creation_date">
             <dt class="col-sm-3">{{ $t('document.creation_date') }}</dt>
-            <dd class="col-sm-9">{{ creationDate }}</dd>
+            <dd class="col-sm-9">{{ document.creationDate }}</dd>
           </template>
           <template v-if="document.source.contentLength !== -1">
             <dt class="col-sm-3">{{ $t('document.size') }}</dt>
@@ -61,7 +61,6 @@
 </template>
 
 <script>
-import moment from 'moment'
 import {mapState} from 'vuex'
 
 export default {
@@ -73,9 +72,6 @@ export default {
     }
   },
   computed: {
-    creationDate () {
-      return moment(this.document.source.metadata.tika_metadata_creation_date).format('LLL')
-    },
     activeTab () {
       return this.tab === undefined ? 'details' : this.tab
     },
@@ -84,9 +80,11 @@ export default {
     })
   },
   beforeRouteEnter (to, from, next) {
+    console.log('route enter')
     next(vm => vm.getDoc())
   },
   beforeRouteUpdate (to, from, next) {
+    console.log('route update')
     this.getDoc()
     next()
   }

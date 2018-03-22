@@ -12,15 +12,21 @@ const mutations = {
     state.doc = null
   },
   doc (state, raw) {
-    state.doc = Response.instantiate(raw)
+    if (raw !== null) {
+      state.doc = Response.instantiate(raw)
+    } else {
+      state.doc = null
+    }
   }
 }
 
 const actions = {
   get ({commit}, id) {
     commit('id', id)
-    return client.getEsDoc(id, id)
-      .then(raw => { commit('doc', raw) })
+    return client.getEsDoc(id, id).then(
+      raw => commit('doc', raw),
+      _ => commit('doc', null)
+    )
   }
 }
 

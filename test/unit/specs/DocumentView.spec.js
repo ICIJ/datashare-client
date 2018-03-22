@@ -33,6 +33,15 @@ describe('DocumentView.vue', () => {
     wrapped = mount(DocumentView, {i18n, router, store})
   })
 
+  it('should display an empty page when document is not found', async () => {
+    wrapped.vm.id = 'notfound'
+
+    await wrapped.vm.getDoc()
+    await Vue.nextTick()
+
+    expect(wrapped.isEmpty()).to.equal(true)
+  })
+
   it('should display a document', async () => {
     await letData(es).have(new IndexedDocument('foo.txt').withContent('this is foo document')).commit()
     wrapped.vm.id = 'foo.txt'

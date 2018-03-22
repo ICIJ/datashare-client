@@ -1,5 +1,6 @@
 import last from 'lodash/last'
 import EsDoc from './EsDoc'
+import moment from 'moment'
 
 export default class Document extends EsDoc {
   get basename () {
@@ -10,6 +11,9 @@ export default class Document extends EsDoc {
   }
   get highlight () {
     return this.raw.highlight
+  }
+  get creationDate () {
+    return moment(this.source.metadata.tika_metadata_creation_date).format('LLL')
   }
   get humanSize () {
     if (this.source.contentLength === -1) return 'unknown'
