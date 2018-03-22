@@ -6,7 +6,7 @@ export const state = {
   response: Response.none()
 }
 
-const mutations = {
+export const mutations = {
   query (state, query) {
     state.query = query
     state.response = Response.none()
