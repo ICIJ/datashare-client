@@ -60,6 +60,7 @@
 
 <script>
 import {mapState} from 'vuex'
+import sortBy from 'lodash/sortBy'
 
 export default {
   name: 'document-view',
@@ -76,13 +77,12 @@ export default {
   computed: {
     ...mapState('document', {
       document: state => state.doc,
-      namedEntities: state => state.namedEntities
+      namedEntities: state => sortBy(state.namedEntities, ne => ne.source.offset)
     }),
     markedSourceContent () {
       if (this.document) {
         let docContent = this.document.source.content
         for (var i = this.namedEntities.length - 1; i >= 0; i--) {
-          debugger
           let ne = this.namedEntities[i]
           docContent = docContent.substr(0, ne.source.offset) + `<mark>${ne.source.mention}</mark>` + docContent.substr(ne.source.offset + ne.source.mention.length)
         }
@@ -90,15 +90,17 @@ export default {
       }
     }
   },
-  beforeRouteEnter (to, from, next) {
+  beforeRouteEnter (to, _from, next) {
     next(vm => {
       vm.$set(vm, 'tab', to.query.tab || 'details')
       vm.getDoc()
     })
   },
-  beforeRouteUpdate (to, from, next) {
+  beforeRouteUpdate (to, _from, next) {
     this.$set(this, 'tab', to.query.tab || 'details')
-    this.getDoc()
+    if (to.params.id !== _from.params.id || to.params.routing !== _from.params.routing) {
+      this.getDoc()
+    }
     next()
   }
 }
