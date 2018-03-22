@@ -34,7 +34,6 @@
       "extracted_text": "Extracted text",
       "preview": "Preview"
     }
-
   },
   "fr": {
     "aggregations": {
@@ -69,7 +68,7 @@
       "tree_level": "Niveau d'imbrication",
       "details": "Details",
       "extracted_text": "Texte",
-      "preview": "Prévisualisation  "
+      "preview": "Prévisualisation"
     }
   }
 }
