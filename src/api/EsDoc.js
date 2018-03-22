@@ -14,7 +14,7 @@ export default class EsDoc {
       routing: raw._routing,
       version: raw._version,
       type: raw._type,
-      source: raw._source
+      source: raw._source || {}
     })
   }
   get raw () {

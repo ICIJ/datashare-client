@@ -1,7 +1,7 @@
 import client from '@/api/client'
 import Response from '@/api/Response'
 
-const state = {
+export const state = {
   query: '',
   response: Response.none()
 }
@@ -16,7 +16,7 @@ const mutations = {
   }
 }
 
-const actions = {
+export const actions = {
   query ({ commit }, query) {
     commit('query', query)
     return client.searchDocs(query).then(raw => { commit('buildResponse', raw) })
