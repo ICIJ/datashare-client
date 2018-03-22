@@ -67,12 +67,16 @@ describe('DocumentView.vue', () => {
 
   it('should mark named entities', async () => {
     await letData(es).have(new IndexedDocument('mydoc.txt').withContent('a NER doc with 2 NER2')
-      .withNer('NER', 2).withNer('NER2', 17)).commit()
+      .withNer('NER', 2, 'CATEGORY1').withNer('NER2', 17, 'CATEGORY2')).commit()
     wrapped.vm.id = 'mydoc.txt'
 
     await wrapped.vm.getDoc()
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('mark').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelectorAll('mark')[0].textContent).to.equal('NER')
+    expect(wrapped.vm.$el.querySelectorAll('mark')[0].classList.contains('category1')).to.equal(true)
+    expect(wrapped.vm.$el.querySelectorAll('mark')[1].textContent).to.equal('NER2')
+    expect(wrapped.vm.$el.querySelectorAll('mark')[1].classList.contains('category2')).to.equal(true)
   })
 })

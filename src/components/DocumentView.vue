@@ -84,7 +84,9 @@ export default {
         let docContent = this.document.source.content
         for (var i = this.namedEntities.length - 1; i >= 0; i--) {
           let ne = this.namedEntities[i]
-          docContent = docContent.substr(0, ne.source.offset) + `<mark>${ne.source.mention}</mark>` + docContent.substr(ne.source.offset + ne.source.mention.length)
+          docContent = docContent.substr(0, ne.source.offset) +
+            `<mark class="ner ${ne.category}">${ne.source.mention}</mark>` +
+            docContent.substr(ne.source.offset + ne.source.mention.length)
         }
         return docContent
       }

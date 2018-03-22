@@ -3,9 +3,10 @@ function letData (index) {
 }
 
 class IndexedNe {
-  constructor (mention, offset) {
+  constructor (mention, offset, category = 'ORGANIZATION') {
     this.mention = mention
     this.offset = offset
+    this.category = category
   }
 }
 
@@ -21,8 +22,8 @@ class IndexedDocument {
     this.content = content
     return this
   }
-  withNer (mention, offset = 1) {
-    this.nerList.push(new IndexedNe(mention, offset))
+  withNer (mention, offset = 1, category = 'ORGANIZATION') {
+    this.nerList.push(new IndexedNe(mention, offset, category))
     return this
   }
   withParent (parentId) {
@@ -67,6 +68,7 @@ class IndexBuilder {
           mention: ner.mention,
           mentionNorm: ner.mention,
           offset: ner.offset,
+          category: ner.category,
           type: 'NamedEntity',
           join: {name: 'NamedEntity', parent: docId}
         }

@@ -1,4 +1,7 @@
 import EsDoc from './EsDoc'
 
 export default class NamedEntity extends EsDoc {
+  get category () {
+    return this.source.category.toLowerCase()
+  }
 }
