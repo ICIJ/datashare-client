@@ -16,6 +16,7 @@ export function docPlugin (Client, config, components) {
     return this.search({
       index: process.env.CONFIG.es_index,
       type: 'doc',
+      size: 200,
       routing: routing,
       body: body
     })
