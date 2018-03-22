@@ -85,6 +85,6 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results__item__link').href).to.match(/child.txt\?routing=parent.txt/)
+    expect(wrapped.vm.$el.querySelector('.search-results__item__link').href).to.match(/child.txt\/parent.txt/)
   })
 })

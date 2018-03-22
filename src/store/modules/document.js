@@ -2,13 +2,13 @@ import client from '@/api/client'
 import Response from '@/api/Response'
 
 const state = {
-  id: null,
+  idAndRouting: null,
   doc: null
 }
 
 const mutations = {
-  id (state, id) {
-    state.id = id
+  idAndRouting (state, idAndRouting) {
+    state.idAndRouting = idAndRouting
     state.doc = null
   },
   doc (state, raw) {
@@ -21,9 +21,9 @@ const mutations = {
 }
 
 const actions = {
-  get ({commit}, id) {
-    commit('id', id)
-    return client.getEsDoc(id, id).then(
+  get ({commit}, idAndRouting) {
+    commit('idAndRouting', idAndRouting)
+    return client.getEsDoc(idAndRouting.id, idAndRouting.routing).then(
       raw => commit('doc', raw),
       _ => commit('doc', null)
     )

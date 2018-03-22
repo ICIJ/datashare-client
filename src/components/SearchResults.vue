@@ -4,7 +4,7 @@
       <h3>{{ $tc('search.results.results', response.hits.length, {total: response.hits.length, query}) }}</h3>
       <div class="search-results__item mt-5" v-for="doc in response.hits" :key="doc.id">
         <h4>
-          <router-link :to="{ name: 'document', params: { id: doc.id }, query: { routing: doc.routing } }">
+          <router-link :to="{ name: 'document', params: { id: doc.id, routing: doc.routing } }">
             {{ doc.basename }}
           </router-link>
         </h4>
@@ -19,7 +19,7 @@
           </li>
         </ul>
 
-        <router-link :to="{ name: 'document', params: { id: doc.id }, query: { routing: doc.routing } }" class="search-results__item__link text-muted">
+        <router-link :to="{ name: 'document', params: { id: doc.id, routing: doc.routing } }" class="search-results__item__link text-muted">
           <font-awesome-icon icon="file-alt" />
           {{ doc.source.path }}
         </router-link>

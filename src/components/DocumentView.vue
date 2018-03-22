@@ -3,19 +3,19 @@
     <h3>{{ document.basename }}</h3>
     <nav>
       <div class="nav nav-tabs">
-        <router-link :to="{ name: 'document', params: { id: document.id, tab:'details'}, query: { routing: document.routing }}" class="nav-item nav-link" v-bind:class="{active: activeTab === 'details'}">
+        <router-link :to="{ name: 'document', params: { id: document.id, routing: document.routing}, query: { tab: 'details' }}" class="nav-item nav-link" v-bind:class="{active: tab === 'details'}">
           {{$t('document.details')}}
         </router-link>
-        <router-link :to="{ name: 'document', params: { id: document.id, tab:'text'}, query: { routing: document.routing }}" class="nav-item nav-link" v-bind:class="{active: activeTab === 'text'}">
+        <router-link :to="{ name: 'document', params: { id: document.id, routing: document.routing}, query: { tab: 'text' }}" class="nav-item nav-link" v-bind:class="{active: tab === 'text'}">
           {{$t('document.extracted_text')}}
         </router-link>
-        <router-link :to="{ name: 'document', params: { id: document.id, tab:'preview'}, query: { routing: document.routing }}" class="nav-item nav-link" v-bind:class="{active: activeTab === 'preview'}">
+        <router-link :to="{ name: 'document', params: { id: document.id, routing: document.routing}, query: { tab: 'preview' }}" class="nav-item nav-link" v-bind:class="{active: tab === 'preview'}">
           {{$t('document.preview')}}
         </router-link>
       </div>
     </nav>
     <div class="tab-content">
-      <div class="tab-pane" v-bind:class="{active: activeTab === 'details'}">
+      <div class="tab-pane" v-bind:class="{active: tab === 'details'}">
         <dl class="row">
           <dt class="col-sm-3">{{ $t('document.name') }}</dt>
           <dd class="col-sm-9">{{ document.basename }}</dd>
@@ -50,10 +50,10 @@
           </template>
         </dl>
       </div>
-      <div class="tab-pane text-pre-wrap" v-bind:class="{active: activeTab === 'text'}">
+      <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}">
         {{document.source.content}}
       </div>
-      <div class="tab-pane" v-bind:class="{active: activeTab === 'preview'}">
+      <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
         Not available
       </div>
     </div>
@@ -65,26 +65,28 @@ import {mapState} from 'vuex'
 
 export default {
   name: 'document-view',
-  props: ['id', 'tab'],
+  props: ['id', 'routing'],
+  data () {
+    return {tab: 'details'}
+  },
   methods: {
     getDoc () {
-      return this.$store.dispatch('document/get', this.id)
+      return this.$store.dispatch('document/get', {id: this.id, routing: this.routing})
     }
   },
   computed: {
-    activeTab () {
-      return this.tab === undefined ? 'details' : this.tab
-    },
     ...mapState('document', {
       document: state => state.doc
     })
   },
   beforeRouteEnter (to, from, next) {
-    console.log('route enter')
-    next(vm => vm.getDoc())
+    next(vm => {
+      vm.$set(vm, 'tab', to.query.tab || 'details')
+      vm.getDoc()
+    })
   },
   beforeRouteUpdate (to, from, next) {
-    console.log('route update')
+    this.$set(this, 'tab', to.query.tab || 'details')
     this.getDoc()
     next()
   }

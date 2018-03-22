@@ -52,4 +52,16 @@ describe('DocumentView.vue', () => {
     expect(wrapped.vm.$el.querySelector('h3').textContent).to.equal('foo.txt')
     expect(wrapped.vm.$el.querySelectorAll('dd')[2].textContent).to.equal('foo.txt')
   })
+
+  it('should display a child document', async () => {
+    await letData(es).have(new IndexedDocument('parent.txt').withContent('this is a parent document')).commit()
+    await letData(es).have(new IndexedDocument('child.txt').withContent('this is a children document').withParent('parent.txt')).commit()
+    wrapped.vm.id = 'child.txt'
+    wrapped.vm.routing = 'parent.txt'
+
+    await wrapped.vm.getDoc()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelector('h3').textContent).to.equal('child.txt')
+  })
 })
