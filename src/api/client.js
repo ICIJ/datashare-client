@@ -11,6 +11,15 @@ export function docPlugin (Client, config, components) {
   Client.prototype.getEsDoc = function (id, routing = null) {
     return this.get({index: process.env.CONFIG.es_index, type: 'doc', id: id, routing: routing})
   }
+  Client.prototype.getNamedEntities = function (docId, routing = null) {
+    var body = bodybuilder().query('parent_id', {type: 'NamedEntity', id: docId}).build()
+    return this.search({
+      index: process.env.CONFIG.es_index,
+      type: 'doc',
+      routing: routing,
+      body: body
+    })
+  }
 }
 
 export function searchPlugin (Client, config, components) {

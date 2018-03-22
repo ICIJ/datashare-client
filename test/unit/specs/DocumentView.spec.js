@@ -64,4 +64,15 @@ describe('DocumentView.vue', () => {
 
     expect(wrapped.vm.$el.querySelector('h3').textContent).to.equal('child.txt')
   })
+
+  it('should mark named entities', async () => {
+    await letData(es).have(new IndexedDocument('mydoc.txt').withContent('a NER doc with 2 NER2')
+      .withNer('NER', 2).withNer('NER2', 17)).commit()
+    wrapped.vm.id = 'mydoc.txt'
+
+    await wrapped.vm.getDoc()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('mark').length).to.equal(2)
+  })
 })

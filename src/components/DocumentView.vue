@@ -50,9 +50,7 @@
           </template>
         </dl>
       </div>
-      <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}">
-        {{document.source.content}}
-      </div>
+      <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
         Not available
       </div>
@@ -72,12 +70,25 @@ export default {
   methods: {
     getDoc () {
       return this.$store.dispatch('document/get', {id: this.id, routing: this.routing})
+        .then(() => this.$store.dispatch('document/getNamedEntities'))
     }
   },
   computed: {
     ...mapState('document', {
-      document: state => state.doc
-    })
+      document: state => state.doc,
+      namedEntities: state => state.namedEntities
+    }),
+    markedSourceContent () {
+      if (this.document) {
+        let docContent = this.document.source.content
+        for (var i = this.namedEntities.length - 1; i >= 0; i--) {
+          debugger
+          let ne = this.namedEntities[i]
+          docContent = docContent.substr(0, ne.source.offset) + `<mark>${ne.source.mention}</mark>` + docContent.substr(ne.source.offset + ne.source.mention.length)
+        }
+        return docContent
+      }
+    }
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
