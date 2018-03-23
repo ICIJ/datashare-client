@@ -30,7 +30,7 @@ export default {
 </script>
 
 <template>
-  <div class="facet-named-entity card card-default" v-if="facet">
+  <div class="facet-named-entity card card-default">
     <div class="card-header">
       {{ facet.name }}
     </div>

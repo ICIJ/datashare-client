@@ -2,7 +2,6 @@ import 'es6-promise/auto'
 
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import noop from 'lodash/noop'
 import trim from 'lodash/trim'
 import find from 'lodash/find'
 import elasticsearch from 'elasticsearch-browser'
@@ -37,9 +36,14 @@ describe('FacetNamedEntity.vue', () => {
     await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', body: {query: {match_all: {}}}})
     const localVue = createLocalVue()
     localVue.use(VueI18n)
-    FacetNamedEntity.created = noop
-    wrapped = mount(FacetNamedEntity, {i18n, router, store})
-    wrapped.setProps({facet: find(store.state.aggregation.facets, {name: 'named-entity'})})
+    wrapped = mount(FacetNamedEntity, {
+      i18n,
+      router,
+      store,
+      propsData: {
+        facet: find(store.state.aggregation.facets, {name: 'named-entity'})
+      }
+    })
   })
 
   it('should display empty list', async () => {
