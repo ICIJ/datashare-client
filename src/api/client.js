@@ -30,7 +30,10 @@ export function searchPlugin (Client, config, components) {
       type: 'doc',
       size: 200,
       body: bodybuilder()
-        .orQuery('match', 'content', query)
+        .orQuery('query_string', {
+          query,
+          default_field: 'content'
+        })
         .orQuery('has_child', 'type', 'NamedEntity', {
           'inner_hits': {
             'size': 30
