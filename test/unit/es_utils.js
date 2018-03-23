@@ -15,11 +15,16 @@ class IndexedDocument {
     this.path = path
     this.join = {name: 'Document'}
     this.type = 'Document'
+    this.contentType = null
     this.metadata = {}
     this.nerList = []
   }
   withContent (content) {
     this.content = content
+    return this
+  }
+  withContentType (contentType) {
+    this.contentType = contentType
     return this
   }
   withNer (mention, offset = 1, category = 'ORGANIZATION') {
