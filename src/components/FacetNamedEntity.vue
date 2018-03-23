@@ -9,7 +9,7 @@ export default {
       response: Response.none()
     }
   },
-  created() {
+  created () {
     this.aggregate()
   },
   watchers: {
@@ -50,12 +50,12 @@ export default {
         </div>
       </div>
     </form>
-    <div class="list-group list-group-flush aggregations-panel__mentions">
-      <router-link class="list-group-item aggregations-panel__mentions__item" v-for="item in mentions.buckets" :key="item.key" :to="{ name: 'search', query: { q: item.key }}" >
-        <span class="badge badge-pill badge-primary mr-1 text-uppercase aggregations-panel__mentions__item__key">
+    <div class="list-group list-group-flush facet-named-entity__mentions">
+      <router-link class="list-group-item facet-named-entity__mentions__item" v-for="item in mentions.buckets" :key="item.key" :to="{ name: 'search', query: { q: item.key }}" >
+        <span class="badge badge-pill badge-primary mr-1 text-uppercase facet-named-entity__mentions__item__key">
           {{ item.key }}
         </span>
-        <span class="text-secondary small aggregations-panel__mentions__item__description">
+        <span class="text-secondary small facet-named-entity__mentions__item__description">
           {{
             $t('aggregations.mentions.item', {
               occurrences: $tc('aggregations.mentions.occurrence', item.doc_count, { count: item.doc_count }),
@@ -74,7 +74,7 @@ export default {
 </template>
 
 <style lang="scss" scoped>
-  .aggregations-panel {
+  .facet-named-entity {
     &__mentions {
       max-height: 15rem;
       overflow: auto;
