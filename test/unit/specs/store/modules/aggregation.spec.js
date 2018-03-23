@@ -1,12 +1,13 @@
-import { state, actions, getters } from '@/store/modules/aggregation'
+import { state, actions, getters, mutations } from '@/store/modules/aggregation'
 import esMapping from '@/datashare_index_mappings.json'
 
 import elasticsearch from 'elasticsearch-browser'
 import Vuex from 'vuex'
+import cloneDeep from 'lodash/cloneDeep'
 
 import {IndexedDocument, letData} from 'test/unit/es_utils'
 
-const store = new Vuex.Store({ state, actions, getters })
+let store = null
 
 describe('store/module/aggregation', () => {
   var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
@@ -18,6 +19,8 @@ describe('store/module/aggregation', () => {
     await es.indices.delete({index: process.env.CONFIG.es_index})
   })
   beforeEach(async () => {
+    // Recreate the store before every test to preserve the intial step
+    store = new Vuex.Store({ state: cloneDeep(state), actions, getters, mutations })
     await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}}})
   })
 
@@ -40,6 +43,24 @@ describe('store/module/aggregation', () => {
 
   it('should have a facet with a build method', () => {
     expect(store.state.facets[0].body).to.respondTo('build')
+  })
+
+  it('should add a facet', () => {
+    expect(store.state.facets).to.have.lengthOf(1)
+    store.commit('addFacet', { name: 'test', type: null, body: null })
+    expect(store.state.facets).to.have.lengthOf(2)
+  })
+
+  it('should throw an error while adding a invalid facet', () => {
+    expect(() => {
+      store.commit('addFacet', { name: 'test', type: null })
+    }).to.throw()
+  })
+
+  it('should throw an error while adding an existing facet', () => {
+    expect(() => {
+      store.commit('addFacet', { name: 'content-type', type: null, body: null })
+    }).to.throw()
   })
 
   it('should count 2 pdf documents', async () => {
