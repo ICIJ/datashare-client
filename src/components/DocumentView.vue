@@ -60,7 +60,7 @@
 
 <script>
 import {mapState} from 'vuex'
-import sortBy from 'lodash/sortBy'
+import sortedUniqBy from 'lodash/sortedUniqBy'
 
 export default {
   name: 'document-view',
@@ -77,7 +77,7 @@ export default {
   computed: {
     ...mapState('document', {
       document: state => state.doc,
-      namedEntities: state => sortBy(state.namedEntities, ne => ne.source.offset)
+      namedEntities: state => sortedUniqBy(state.namedEntities, ne => ne.source.offset)
     }),
     markedSourceContent () {
       if (this.document) {
