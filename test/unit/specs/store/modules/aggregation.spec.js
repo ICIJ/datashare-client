@@ -18,7 +18,7 @@ describe('store/module/aggregation', () => {
     await es.indices.delete({index: process.env.CONFIG.es_index})
   })
   beforeEach(async () => {
-    await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', body: {query: {match_all: {}}}})
+    await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}}})
   })
 
   it('should define a `content-type` facet correctly', () => {
@@ -26,12 +26,28 @@ describe('store/module/aggregation', () => {
     expect(store.state.facets[0].type).to.equal('FacetText')
   })
 
+  it('should find a `content-type` facet using object', () => {
+    expect(store.getters.getFacet({ name: 'content-type' })).to.not.equal(undefined)
+  })
+
+  it('should find a `content-type` facet using function', () => {
+    expect(store.getters.getFacet(f => f.name === 'content-type')).to.not.equal(undefined)
+  })
+
+  it('should not find a `yolo-type` facet', () => {
+    expect(store.getters.getFacet({ name: 'yo-type' })).to.equal(undefined)
+  })
+
+  it('should have a facet with a build method', () => {
+    expect(store.state.facets[0].body).to.respondTo('build')
+  })
+
   it('should count 2 pdf documents', async () => {
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('application/pdf')).commit()
     await letData(es).have(new IndexedDocument('foo.pdf').withContentType('application/pdf')).commit()
 
     const response = await store.dispatch('query', {name: 'content-type'})
-    expect(response.aggregations.contentType.buckets.length).to.equal(1)
+    expect(response.aggregations.contentType.buckets).to.have.lengthOf(1)
     expect(response.aggregations.contentType.buckets[0].doc_count).to.equal(2)
   })
 
@@ -41,7 +57,7 @@ describe('store/module/aggregation', () => {
     await letData(es).have(new IndexedDocument('foo.js').withContentType('text/javascript')).commit()
 
     const response = await store.dispatch('query', {name: 'content-type'})
-    expect(response.aggregations.contentType.buckets.length).to.equal(2)
+    expect(response.aggregations.contentType.buckets).to.have.lengthOf(2)
     expect(response.aggregations.contentType.buckets[0].doc_count).to.equal(2)
     expect(response.aggregations.contentType.buckets[1].doc_count).to.equal(1)
   })
@@ -52,6 +68,28 @@ describe('store/module/aggregation', () => {
 
     const response = await store.dispatch('query', {name: 'content-type'})
     expect(response.aggregations.contentType.buckets[0].doc_count).to.equal(2)
-    expect(response.hits.length).to.equal(0)
+    expect(response.hits).to.have.lengthOf(0)
+  })
+
+  it('should create 3 buckets from 3 documents', async () => {
+    await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('index.css').withContentType('text/css')).commit()
+
+    const response = await store.dispatch('query', {name: 'content-type'})
+    expect(response.aggregations.contentType.buckets).to.have.lengthOf(3)
+  })
+
+  it('should create 3 buckets from 7 documents', async () => {
+    await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('list.js').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('show.js').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('list.html').withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('index.css').withContentType('text/css')).commit()
+    await letData(es).have(new IndexedDocument('list.css').withContentType('text/css')).commit()
+
+    const response = await store.dispatch('query', {name: 'content-type'})
+    expect(response.aggregations.contentType.buckets).to.have.lengthOf(3)
   })
 })
