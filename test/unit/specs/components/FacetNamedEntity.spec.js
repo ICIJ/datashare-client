@@ -1,16 +1,21 @@
+import 'es6-promise/auto'
+
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import noop from 'lodash/noop'
 import trim from 'lodash/trim'
-import 'es6-promise/auto'
-import {mount, createLocalVue} from 'vue-test-utils'
+import find from 'lodash/find'
 import elasticsearch from 'elasticsearch-browser'
+
+import {mount, createLocalVue} from 'vue-test-utils'
+
 import esMapping from '@/datashare_index_mappings.json'
 import messages from '@/messages'
 import router from '@/router'
+import store from '@/store'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import AggregationsPanel from '@/components/AggregationsPanel'
+import FacetNamedEntity from '@/components/FacetNamedEntity'
 import {IndexedDocument, letData} from 'test/unit/es_utils'
 
 Vue.use(VueI18n)
@@ -18,7 +23,7 @@ Vue.use(VueI18n)
 const i18n = new VueI18n({locale: 'en', messages})
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
-describe('AggregationsPanel.vue', () => {
+describe('FacetNamedEntity.vue', () => {
   var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
   var wrapped = null
   before(async () => {
@@ -32,8 +37,8 @@ describe('AggregationsPanel.vue', () => {
     await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', body: {query: {match_all: {}}}})
     const localVue = createLocalVue()
     localVue.use(VueI18n)
-    AggregationsPanel.created = noop
-    wrapped = mount(AggregationsPanel, {i18n, router})
+    wrapped = mount(FacetNamedEntity, {i18n, router, store})
+    wrapped.setProps({facet: find(store.state.aggregation.facets, {name: 'named-entity'})})
   })
 
   it('should display empty list', async () => {

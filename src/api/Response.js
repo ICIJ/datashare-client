@@ -1,5 +1,6 @@
-import map from 'lodash/map'
 import find from 'lodash/find'
+import get from 'lodash/get'
+import map from 'lodash/map'
 
 import Document from './Document'
 import NamedEntity from './NamedEntity'
@@ -9,6 +10,9 @@ const _raw = Symbol('raw')
 export default class Response {
   constructor (raw) {
     this[_raw] = raw
+  }
+  get (path, defaultValue) {
+    return get(this, path, defaultValue)
   }
   get hits () {
     return map(this[_raw].hits.hits, hit => {

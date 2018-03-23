@@ -1,17 +1,29 @@
 import client from '@/api/client'
 import Response from '@/api/Response'
 import FacetText from '@/components/FacetText'
+import FacetNamedEntity from '@/components/FacetNamedEntity'
 
 import bodybuilder from 'bodybuilder'
 import every from 'lodash/every'
 import find from 'lodash/find'
 
 export const state = {
+  global: true,
   facets: [
     {
       name: 'content-type',
       type: FacetText.name,
       body: bodybuilder().agg('terms', 'contentType', 'contentType')
+    },
+    {
+      name: 'named-entity',
+      type: FacetNamedEntity.name,
+      body: bodybuilder()
+        .query('term', 'type', 'NamedEntity')
+        .agg('terms', 'mentionNorm', 'mentions', {
+          'size': 15,
+          'order': [ {'docs': 'desc'}, {'_count': 'desc'} ]
+        }, sub => sub.agg('cardinality', 'join#Document', 'docs'))
     }
   ]
 }

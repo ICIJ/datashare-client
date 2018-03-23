@@ -46,9 +46,9 @@ describe('store/module/aggregation', () => {
   })
 
   it('should add a facet', () => {
-    expect(store.state.facets).to.have.lengthOf(1)
+    expect(store.state.facets).to.have.lengthOf(state.facets.length)
     store.commit('addFacet', { name: 'test', type: null, body: null })
-    expect(store.state.facets).to.have.lengthOf(2)
+    expect(store.state.facets).to.have.lengthOf(state.facets.length + 1)
   })
 
   it('should throw an error while adding a invalid facet', () => {
