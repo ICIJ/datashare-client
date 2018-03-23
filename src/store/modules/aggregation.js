@@ -13,11 +13,13 @@ export const state = {
     {
       name: 'content-type',
       type: FacetText.name,
-      body: bodybuilder().agg('terms', 'contentType', 'contentType')
+      key: 'contentType',
+      body: bodybuilder().agg('terms', 'metadata.tika_metadata_content_type.keyword', 'contentType')
     },
     {
       name: 'named-entity',
       type: FacetNamedEntity.name,
+      key: 'mentions',
       body: bodybuilder()
         .query('term', 'type', 'NamedEntity')
         .agg('terms', 'mentionNorm', 'mentions', {

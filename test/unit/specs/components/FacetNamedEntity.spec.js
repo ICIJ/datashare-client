@@ -46,7 +46,7 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__mentions__item').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item').length).to.equal(0)
   })
 
   it('should display one named entity', async () => {
@@ -54,8 +54,8 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__mentions__item').length).to.equal(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet-named-entity__mentions__item__description').textContent)).to.equal('one occurrence in one document')
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item').length).to.equal(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet-named-entity__items__item__description').textContent)).to.equal('one occurrence in one document')
   })
 
   it('should display two named entities in one document', async () => {
@@ -64,7 +64,7 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__mentions__item').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item').length).to.equal(2)
   })
 
   it('should display one named entity in two documents', async () => {
@@ -74,8 +74,8 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__mentions__item').length).to.equal(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet-named-entity__mentions__item__description').textContent)).to.equal('3 occurrences in 2 documents')
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item').length).to.equal(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet-named-entity__items__item__description').textContent)).to.equal('3 occurrences in 2 documents')
   })
 
   it('should display three named entities in two documents with right order', async () => {
@@ -86,9 +86,9 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__mentions__item').length).to.equal(3)
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__mentions__item__key')[0].textContent.trim()).to.equal('NER1')
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__mentions__item__key')[1].textContent.trim()).to.equal('NER2')
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__mentions__item__key')[2].textContent.trim()).to.equal('NER3')
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item').length).to.equal(3)
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item__key')[0].textContent.trim()).to.equal('NER1')
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item__key')[1].textContent.trim()).to.equal('NER2')
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item__key')[2].textContent.trim()).to.equal('NER3')
   })
 })

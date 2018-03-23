@@ -1,6 +1,6 @@
 <template>
   <div class="aggregations-panel">
-    <component v-for="facet in facets" :key="facet.name" :is="facet.type" v-bind="{ facet }"></component>
+    <component class="mb-4" v-for="facet in facets" :key="facet.name" :is="facet.type" v-bind="{ facet }"></component>
   </div>
 </template>
 

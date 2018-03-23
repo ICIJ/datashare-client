@@ -15,8 +15,9 @@ class IndexedDocument {
     this.path = path
     this.join = {name: 'Document'}
     this.type = 'Document'
-    this.contentType = null
-    this.metadata = {}
+    this.metadata = {
+      tika_metadata_content_type: null
+    }
     this.nerList = []
   }
   withContent (content) {
@@ -24,7 +25,7 @@ class IndexedDocument {
     return this
   }
   withContentType (contentType) {
-    this.contentType = contentType
+    this.metadata.tika_metadata_content_type = contentType
     return this
   }
   withNer (mention, offset = 1, category = 'ORGANIZATION') {
