@@ -12,11 +12,6 @@ export default {
   created () {
     this.aggregate()
   },
-  watchers: {
-    facet () {
-      this.aggregate()
-    }
-  },
   computed: {
     mentions () {
       return this.response.get('aggregations.mentions', {})
