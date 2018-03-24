@@ -80,15 +80,15 @@ describe('DocumentView.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('mark')[1].classList.contains('category2')).to.equal(true)
   })
 
-  // it('should display a document with named entities and escaped HTML', async () => {
-  //   await letData(es).have(new IndexedDocument('html_doc.txt').withContent('a foo document <with>HTML</with>')
-  //     .withNer('foo', 2)).commit()
-  //   wrapped.vm.id = 'foo.txt'
-  //
-  //   await wrapped.vm.getDoc()
-  //   await Vue.nextTick()
-  //
-  //   expect(wrapped.vm.$el.querySelector('.text-pre-wrap').innerHTML).to.equal(
-  //     'a <mark class="ner organization">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;')
-  // })
+  it('should display a document with named entities and escaped HTML', async () => {
+    await letData(es).have(new IndexedDocument('html_doc.txt').withContent('a foo document <with>HTML</with>')
+      .withNer('foo', 2)).commit()
+    wrapped.vm.id = 'html_doc.txt'
+
+    await wrapped.vm.getDoc()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelector('.text-pre-wrap').innerHTML).to.equal(
+      'a <mark class="ner organization">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;')
+  })
 })

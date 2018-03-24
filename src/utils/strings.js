@@ -16,11 +16,10 @@ export function sliceIndexes (str, indexes) {
   return result
 }
 
-export function highlight (str, marks, beginFun = (m => '<mark>'), endFun = (m => '</mark>'), restFun = identity) {
-  let docContentSlices = sliceIndexes(str, map(marks, m => m.offset))
+export function highlight (str, marks, markFun = (m => `<mark>${m.content}</mark>`), restFun = identity, contentFun = (m => m.content)) {
+  let docContentSlices = sliceIndexes(str, map(marks, m => m.index))
   let docContentMarked = map(zipObject(takeRight(docContentSlices, marks.length), marks), (mark, slice) => {
-    return beginFun(mark) + mark.mention + endFun(mark) + restFun(slice.substring(mark.mention.length))
+    return markFun(mark) + restFun(slice.substring(contentFun(mark).length))
   })
   return docContentSlices[0] + docContentMarked.join('')
-  // return `<mark class="ner ${ne.category}">${ne.source.mention}</mark>` + escape(s.substring(ne.source.mention.length))
 }

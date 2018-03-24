@@ -57,25 +57,25 @@ describe('highlight', () => {
   })
 
   it('should return one mark at the beginning of the string', () => {
-    expect(highlight('say hi to the world', [{mention: 'say', offset: 0}])).to.equal('<mark>say</mark> hi to the world')
+    expect(highlight('say hi to the world', [{content: 'say', index: 0}])).to.equal('<mark>say</mark> hi to the world')
   })
 
   it('should return one mark', () => {
-    expect(highlight('say hi to the world', [{mention: 'hi', offset: 4}])).to.equal('say <mark>hi</mark> to the world')
+    expect(highlight('say hi to the world', [{content: 'hi', index: 4}])).to.equal('say <mark>hi</mark> to the world')
   })
 
   it('should return 3 marks', () => {
-    expect(highlight('say hi to the world', [{mention: 'say', offset: 0}, {mention: 'hi', offset: 4}, {mention: 'world', offset: 14}]))
+    expect(highlight('say hi to the world', [{content: 'say', index: 0}, {content: 'hi', index: 4}, {content: 'world', index: 14}]))
       .to.equal('<mark>say</mark> <mark>hi</mark> to the <mark>world</mark>')
   })
 
-  it('should return one mark with custom begin/end function', () => {
-    expect(highlight('say hi to the world', [{mention: 'hi', offset: 4}], m => `<b class="${m.mention}">`, m => '</b>'))
-      .to.equal('say <b class="hi">hi</b> to the world')
+  it('should return one mark with custom mark function', () => {
+    expect(highlight('say hi to the world', [{content: 'hi', category: 'cat', index: 4}], m => `<b class="${m.category}">${m.content}</b>`))
+      .to.equal('say <b class="cat">hi</b> to the world')
   })
 
   it('should return one mark with custom rest function', () => {
-    expect(highlight('say hi to </the> world', [{mention: 'hi', offset: 4}], m => '', m => '', r => escape(r)))
+    expect(highlight('say hi to </the> world', [{content: 'hi', index: 4}], m => m.content, r => escape(r)))
       .to.equal('say hi to &lt;/the&gt; world')
   })
 })

@@ -61,6 +61,8 @@
 <script>
 import {mapState} from 'vuex'
 import sortedUniqBy from 'lodash/sortedUniqBy'
+import escape from 'lodash/escape'
+import {highlight} from '../utils/strings'
 
 export default {
   name: 'document-view',
@@ -81,14 +83,8 @@ export default {
     }),
     markedSourceContent () {
       if (this.document) {
-        let docContent = this.document.source.content
-        for (var i = this.namedEntities.length - 1; i >= 0; i--) {
-          let ne = this.namedEntities[i]
-          docContent = docContent.substr(0, ne.source.offset) +
-            `<mark class="ner ${ne.category}">${ne.source.mention}</mark>` +
-            docContent.substr(ne.source.offset + ne.source.mention.length)
-        }
-        return docContent
+        return highlight(this.document.source.content, this.namedEntities,
+          m => `<mark class="ner ${m.category}">${m.source.mention}</mark>`, r => escape(r), m => m.source.mention)
       }
     }
   },
