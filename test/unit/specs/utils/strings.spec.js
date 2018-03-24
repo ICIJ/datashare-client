@@ -1,4 +1,5 @@
 import {sliceIndexes, highlight} from '@/utils/strings.js'
+import {escape} from 'lodash'
 
 describe('sliceIndexes', () => {
   it('should return empty list when input is empty string', () => {
@@ -66,5 +67,15 @@ describe('highlight', () => {
   it('should return 3 marks', () => {
     expect(highlight('say hi to the world', [{mention: 'say', offset: 0}, {mention: 'hi', offset: 4}, {mention: 'world', offset: 14}]))
       .to.equal('<mark>say</mark> <mark>hi</mark> to the <mark>world</mark>')
+  })
+
+  it('should return one mark with custom begin/end function', () => {
+    expect(highlight('say hi to the world', [{mention: 'hi', offset: 4}], m => `<b class="${m.mention}">`, m => '</b>'))
+      .to.equal('say <b class="hi">hi</b> to the world')
+  })
+
+  it('should return one mark with custom rest function', () => {
+    expect(highlight('say hi to </the> world', [{mention: 'hi', offset: 4}], m => '', m => '', r => escape(r)))
+      .to.equal('say hi to &lt;/the&gt; world')
   })
 })

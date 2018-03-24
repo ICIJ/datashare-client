@@ -1,4 +1,4 @@
-import {map, escape, zipObject, takeRight} from 'lodash'
+import {map, zipObject, takeRight, identity} from 'lodash'
 
 export function sliceIndexes (str, indexes) {
   if (str.length === 0) return []
@@ -16,10 +16,10 @@ export function sliceIndexes (str, indexes) {
   return result
 }
 
-export function highlight (str, marks, beginFun = (m => '<mark>'), endFun = (m => '</mark>')) {
+export function highlight (str, marks, beginFun = (m => '<mark>'), endFun = (m => '</mark>'), restFun = identity) {
   let docContentSlices = sliceIndexes(str, map(marks, m => m.offset))
-  let docContentMarked = map(zipObject(takeRight(docContentSlices, marks.length), marks), (m, s) => {
-    return beginFun(m) + m.mention + endFun(m) + escape(s.substring(m.mention.length))
+  let docContentMarked = map(zipObject(takeRight(docContentSlices, marks.length), marks), (mark, slice) => {
+    return beginFun(mark) + mark.mention + endFun(mark) + restFun(slice.substring(mark.mention.length))
   })
   return docContentSlices[0] + docContentMarked.join('')
   // return `<mark class="ner ${ne.category}">${ne.source.mention}</mark>` + escape(s.substring(ne.source.mention.length))
