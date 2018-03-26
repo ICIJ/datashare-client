@@ -7,4 +7,7 @@ export default class NamedEntity extends EsDoc {
   get index () {
     return this.source.offset
   }
+  static get esName () {
+    return 'NamedEntity'
+  }
 }

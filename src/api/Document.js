@@ -23,4 +23,7 @@ export default class Document extends EsDoc {
     let unit = ['B', 'kB', 'MB', 'GB', 'TB'][unitIndex]
     return unitIndex === 0 ? `${size} B` : `${value} ${unit} (${size} B)`
   }
+  static get esName () {
+    return 'Document'
+  }
 }

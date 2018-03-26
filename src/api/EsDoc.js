@@ -21,6 +21,6 @@ export default class EsDoc {
     return this[_raw]
   }
   static match (hit) {
-    return hit._source.type === this.name
+    return hit._source.type === (this.esName || this.name)
   }
 }
