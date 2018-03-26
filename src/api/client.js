@@ -41,7 +41,10 @@ export function searchPlugin (Client, config, components) {
         }, sub => {
           return sub.query('match', 'mention', query)
         })
-        .rawOption('_source', {includes: ['*'], excludes: ['content']})
+        .rawOption('_source', {
+          includes: ['*'],
+          excludes: ['content']
+        })
         .rawOption('highlight', {
           fields: {
             content: {
