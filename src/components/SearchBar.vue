@@ -12,7 +12,7 @@ export default {
   name: 'SearchBar',
   data () {
     return {
-      query: ''
+      query: this.$store.state.search.query
     }
   },
   methods: {

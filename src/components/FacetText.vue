@@ -24,6 +24,9 @@ export default {
           this.response = r
         })
       }
+    },
+    add (item) {
+      this.$store.dispatch('search/addFacet', this.facet.param(item))
     }
   }
 }
@@ -35,9 +38,11 @@ export default {
       {{ facet.name }}
     </div>
     <div class="list-group list-group-flush facet-text__items">
-      <router-link class="list-group-item facet-text__items__item py-1" v-for="item in items" :key="item.key" :to="{ name: 'search', query: { q: item.key }}" >
-        {{ item.key }}
-      </router-link>
+      <div class="list-group-item facet-text__items__item p-0" v-for="item in items" :key="item.key">
+        <button class="btn btn-link btn-xs" @click="add(item)">
+          {{ item.key }}
+        </button>
+      </div>
     </div>
   </div>
 </template>

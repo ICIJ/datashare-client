@@ -14,12 +14,14 @@ export const state = {
       name: 'content-type',
       type: FacetText.name,
       key: 'contentType',
+      param: (item) => ({ field: 'contentType', value: item.key }),
       body: bodybuilder().agg('terms', 'contentType', 'contentType')
     },
     {
       name: 'named-entity',
       type: FacetNamedEntity.name,
       key: 'mentions',
+      param: (item) => item.key,
       body: bodybuilder()
         .query('term', 'type', 'NamedEntity')
         .agg('terms', 'mentionNorm', 'mentions', {

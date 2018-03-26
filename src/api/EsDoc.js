@@ -1,4 +1,5 @@
 import extend from 'lodash/extend'
+import get from 'lodash/get'
 
 const _raw = Symbol('raw')
 
@@ -16,6 +17,9 @@ export default class EsDoc {
       type: raw._type,
       source: raw._source || {}
     })
+  }
+  get (path, defaultValue) {
+    return get(this, path, defaultValue)
   }
   get raw () {
     return this[_raw]
