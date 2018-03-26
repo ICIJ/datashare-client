@@ -14,7 +14,7 @@ export const state = {
       name: 'content-type',
       type: FacetText.name,
       key: 'contentType',
-      body: bodybuilder().agg('terms', 'metadata.tika_metadata_content_type.keyword', 'contentType')
+      body: bodybuilder().agg('terms', 'contentType', 'contentType')
     },
     {
       name: 'named-entity',

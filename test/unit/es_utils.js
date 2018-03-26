@@ -26,6 +26,10 @@ class IndexedDocument {
   }
   withContentType (contentType) {
     this.metadata.tika_metadata_content_type = contentType
+    this.contentType = contentType.split(';')[0].trim()
+    if (contentType.indexOf('charset') > 0) {
+      this.contentEncoding = contentType.split('=')[1].trim()
+    }
     return this
   }
   withNer (mention, offset = 1, category = 'ORGANIZATION') {

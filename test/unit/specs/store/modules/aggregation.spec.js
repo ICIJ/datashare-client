@@ -72,6 +72,13 @@ describe('store/module/aggregation', () => {
     expect(response.aggregations.contentType.buckets[0].doc_count).to.equal(2)
   })
 
+  it('should use contentType (without charset)', async () => {
+    await letData(es).have(new IndexedDocument('bar.txt').withContentType('text/plain; charset=UTF-8')).commit()
+
+    const response = await store.dispatch('query', {name: 'content-type'})
+    expect(response.aggregations.contentType.buckets[0].key).to.equal('text/plain')
+  })
+
   it('should count 2 pdf and 1 javascript documents', async () => {
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('application/pdf')).commit()
     await letData(es).have(new IndexedDocument('foo.pdf').withContentType('application/pdf')).commit()
