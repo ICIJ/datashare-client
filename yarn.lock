@@ -1119,9 +1119,9 @@ body-parser@1.18.2, body-parser@^1.16.1:
     raw-body "2.3.2"
     type-is "~1.6.15"
 
-bodybuilder@^2.2.7:
-  version "2.2.7"
-  resolved "https://registry.yarnpkg.com/bodybuilder/-/bodybuilder-2.2.7.tgz#125a6259c34c8b62c24312d02045a952aded214a"
+bodybuilder@^2.2.10:
+  version "2.2.10"
+  resolved "https://registry.yarnpkg.com/bodybuilder/-/bodybuilder-2.2.10.tgz#00b61cce09be519dd31ba180d336bc24d2291c78"
   dependencies:
     lodash "^4.9.0"
 

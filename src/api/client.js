@@ -28,19 +28,23 @@ export function searchPlugin (Client, config, components) {
   Client.prototype.searchDocs = function (query, facets = []) {
     // We're going to build the body step by step
     const body = bodybuilder()
-    // Add facet one by one as "might"
-    // TODO: ensure the filter is working!
-    each(facets, facet => body.andFilter('term', facet.field, facet.values[0]))
-    // Add the query string to the body
-    body.orQuery('query_string', { query, default_field: 'content' })
-    // Add match for namedentity containing the query string
-    body.orQuery('has_child', 'type', 'NamedEntity', {
-      'inner_hits': {
-        'size': 30
-      }
-    }, sub => {
-      return sub.query('match', 'mention', query)
-    })
+    // Add facet one by one as a MUST filter
+    each(facets, facet => body.addFilter('terms', facet.field, facet.values))
+    // Create a top-level "MUST query" which contain a "SHOULD query" including
+    // a query_string and NamedEntity. If we don't add a `match_all` query,
+    // Bodybuilder ignores the query context, a MUST, and replace it by the none
+    // mentioned in the nested query.
+    //
+    // @TODO: Test this!!
+    body.query('match_all').addQuery('bool', b => b
+      // Add the query string to the body
+      .orQuery('query_string', { query, default_field: 'content' })
+      // Add match for namedentity containing the query string
+      .orQuery('has_child', 'type', 'NamedEntity', {
+        'inner_hits': {
+          'size': 30
+        }
+      }, sub => sub.query('match', 'mention', query)))
     // Add an option to exclude the content
     body.rawOption('_source', { includes: ['*'], excludes: ['content'] })
     // Add an option to highlight fragments in the results
