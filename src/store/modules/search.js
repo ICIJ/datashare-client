@@ -30,6 +30,9 @@ export const getters = {
         return facet.field === field && facet.reverse
       })
     }
+  },
+  findFacet (state) {
+    return field => find(state.facets, { field })
   }
 }
 
