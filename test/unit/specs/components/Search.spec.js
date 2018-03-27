@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import noop from 'lodash/noop'
+import trim from 'lodash/trim'
 import 'es6-promise/auto'
 import {mount, createLocalVue} from 'vue-test-utils'
 import elasticsearch from 'elasticsearch-browser'
@@ -42,7 +43,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('No documents found for "foo"')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results h4').textContent)).to.equal('No documents found for "foo"')
   })
 
   it('should display one document found', async () => {
@@ -51,8 +52,8 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('1 document found for "bar"')
-    expect(wrapped.vm.$el.querySelector('.search-results .fragments').innerHTML).to.equal('this is <mark>bar</mark> document')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results h4').textContent)).to.equal('1 document found for "bar"')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__items__item__fragments').innerHTML)).to.equal('this is <mark>bar</mark> document')
   })
 
   it('should display two documents found', async () => {
@@ -63,8 +64,8 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results h3').textContent).to.equal('2 documents found for "bar"')
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__item').length).to.equal(2)
+    expect(trim(wrapped.vm.$el.querySelector('.search-results h4').textContent)).to.equal('2 documents found for "bar"')
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__items__item').length).to.equal(2)
   })
 
   it('should make a link without routing for a document', async () => {
@@ -74,7 +75,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results__item__link').href).to.match(/doc.txt$/)
+    expect(wrapped.vm.$el.querySelector('.search-results__items__item__link').href).to.match(/doc.txt$/)
   })
 
   it('should make a link with routing for a child document', async () => {
@@ -85,6 +86,6 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results__item__link').href).to.match(/child.txt\/parent.txt/)
+    expect(wrapped.vm.$el.querySelector('.search-results__items__item__link').href).to.match(/child.txt\/parent.txt/)
   })
 })

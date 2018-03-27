@@ -23,3 +23,25 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .aggregations-panel {
+
+    .card {
+
+      .card-header h6 {
+        font-weight: bolder;
+        margin-bottom: 0;
+        padding-top: $spacer * .25;
+      }
+
+      & > .list-group, & > .card-body {
+        font-size: 0.9em;
+        color: $body-color;
+        background: white;
+        max-height: 15rem;
+        overflow: auto;
+      }
+    }
+  }
+</style>

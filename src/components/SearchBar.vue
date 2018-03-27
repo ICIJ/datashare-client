@@ -1,5 +1,5 @@
 <template>
-  <form class="search-bar container-fluid bg-dark py-2 input-group" @submit.prevent="submit">
+  <form class="search-bar container-fluid py-2 input-group" @submit.prevent="submit">
     <input v-model="query" type="search" :placeholder="$t('search.placeholder')" class="form-control">
     <div class="input-group-append">
       <button type="submit" class="btn btn-icij">{{ $t('search.buttonlabel') }}</button>

@@ -1,5 +1,5 @@
 <template>
-  <headroom :z-index="1000">
+  <headroom :z-index="1000" :offset="50">
     <header class="app__nav" :class="{ 'app__nav--collapse': collapseMenu }">
       <transition name="fade">
         <div class="app__nav__mask" v-if="!collapseMenu" @click="toggleMenu"></div>
@@ -9,6 +9,9 @@
           <router-link class="app__nav__container__main__brand" :to="{ name: 'search' }">
             <div class="sr-only">
               ICIJ
+            </div>
+            <div>
+              Datashare
             </div>
           </router-link>
           <button class="btn btn-link btn-lg float-right mt-2 app__nav__container__main__hamburger" @click="toggleMenu">
@@ -71,11 +74,11 @@ export default {
     z-index: $zindex-fixed;
     position: relative;
     width:100%;
-    color:white;
+    color:$body-color;
     width: auto;
     min-height: $app-nav-height;
-    background: darken(theme-color('icij'), 0);
-    box-shadow: 0 0 5px rgba(black, 0.4);
+    background: $body-bg;
+    box-shadow: 0 0 5px 3px rgba(black, 0.05);
 
     &--collapse, &--collapse &__container__main {
       transition: background 600ms, box-shadow 600ms;
@@ -92,7 +95,7 @@ export default {
     }
 
     &__mask {
-      background: rgba(white, 0.5);
+      background: rgba(black, 0.5);
       position: fixed;
       top:0;
       left:0;
@@ -106,7 +109,7 @@ export default {
 
         position:relative;
         z-index: $zindex-fixed + 30;
-        background: theme-color('icij');
+        background:white;
         min-height: $app-nav-height;
 
         &__brand, &__brand:hover, &__brand:focus {
@@ -121,6 +124,7 @@ export default {
             content:"";
             background: url('~images/icij-white@2x.png') no-repeat 0 0;
             background-size: cover;
+            filter: invert(100%);
             width: $app-nav-brand-height;
             height: $app-nav-brand-height;
             display: inline-block;
@@ -129,9 +133,12 @@ export default {
           }
 
           & > * {
-            font-size: 2rem;
+            font-size: 1.5rem;
             display: inline-block;
             line-height: $line-height-base;
+            position: absolute;
+            left: 150%;
+            top: 0;
           }
         }
 
@@ -150,7 +157,7 @@ export default {
         right:0;
         clear:both;
         margin:0;
-        background: darken(theme-color('icij'), 10);
+        background: darken($body-bg, 10);
         transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
 
         &:after {
@@ -175,20 +182,20 @@ export default {
         }
 
         &__item {
-          border-bottom: 1px solid rgba(white, 0.1);
+          border-bottom: 1px solid rgba($body-color, 0.1);
 
           & > a {
             display: block;
             padding: $spacer;
-            color: white;
+            color: inherit;
 
             &:hover {
-              background: rgba(white, 0.1);
+              background: rgba($body-color, 0.1);
             }
           }
 
           &__new {
-            color: rgba(white, 0.2);
+            color: rgba($body-color, 0.2);
           }
         }
       }

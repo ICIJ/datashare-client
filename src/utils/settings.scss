@@ -12,7 +12,9 @@ $theme-colors: (
   warning: #F4EDEA,
   danger: #dc3545,
   light: #F0F0F0,
-  dark: darken(#852308, 10)
+  dark: darken(#852308, 10),
+  darker: darken(#852308, 20),
+  darkest: darken(#852308, 25)
 );
 
 $font-family-sans-serif: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;

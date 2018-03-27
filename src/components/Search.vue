@@ -1,13 +1,13 @@
 <template>
   <div class="search">
-    <search-bar />
-    <div class="container-fluid search__body">
-      <div class="row">
+    <div class="container-fluid px-0 search__body">
+      <div class="row no-gutters">
         <div class="col search__body__aggregations-panel">
-          <aggregations-panel class="my-4" />
+          <aggregations-panel class="p-4" />
         </div>
         <div class="col search__body__search-results">
-          <search-results v-if="searchResponse" :response="searchResponse" :query.sync="q" class="m-2" />
+          <search-bar />
+          <search-results v-if="searchResponse" :response="searchResponse" :query.sync="q" />
         </div>
       </div>
     </div>
@@ -55,8 +55,18 @@ export default {
 <style lang="scss">
   .search {
     &__body {
+
       &__aggregations-panel {
         max-width: 350px;
+        min-height: calc(100vh - #{$app-nav-height});
+        background: theme-color('light');
+      }
+
+      &__search-results {
+        max-width: 660px;
+        border-left: 1px solid $gray-200;
+        border-right: 1px solid $gray-200;
+        padding-top: $spacer;
       }
     }
   }

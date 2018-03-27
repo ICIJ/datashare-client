@@ -51,9 +51,9 @@ export default {
 </script>
 
 <template>
-  <div class="facet-text card card-default" :class="{ 'facet-text--reversed': isReversed() }">
+  <div class="facet-text card" :class="{ 'facet-text--reversed': isReversed() }">
     <div class="card-header">
-      <h6 class="float-left mb-0 py-1">
+      <h6 class="float-left">
         {{ facet.label || facet.name }}
       </h6>
       <span v-if="hasValues()" class="float-right btn-group">
@@ -80,8 +80,6 @@ export default {
   .facet-text {
 
     &__items {
-      max-height: 15rem;
-      overflow: auto;
 
       &__item {
 
