@@ -3,7 +3,7 @@
     <div class="container-fluid px-0 search__body">
       <div class="row no-gutters">
         <div class="col search__body__aggregations-panel">
-          <aggregations-panel class="p-4" />
+          <aggregations-panel />
         </div>
         <div class="col search__body__search-results">
           <search-bar />
@@ -57,9 +57,9 @@ export default {
     &__body {
 
       &__aggregations-panel {
-        max-width: 350px;
+        max-width: 320px;
         min-height: calc(100vh - #{$app-nav-height});
-        background: theme-color('light');
+        background: $aggregations-panel-bg;
       }
 
       &__search-results {

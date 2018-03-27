@@ -6,7 +6,8 @@ export default {
   props: ['facet'],
   data () {
     return {
-      response: Response.none()
+      response: Response.none(),
+      collapseItems: false
     }
   },
   created () {
@@ -15,6 +16,9 @@ export default {
   computed: {
     items () {
       return this.response.get(`aggregations.${this.facet.key}.buckets`, [])
+    },
+    headerIcon () {
+      return this.collapseItems ? 'caret-right' : 'caret-down'
     }
   },
   methods: {
@@ -45,6 +49,9 @@ export default {
     },
     invert () {
       this.$store.dispatch('search/invertFacet', this.facet.key)
+    },
+    toggleItems () {
+      this.collapseItems = !this.collapseItems
     }
   }
 }
@@ -53,17 +60,18 @@ export default {
 <template>
   <div class="facet-text card" :class="{ 'facet-text--reversed': isReversed() }">
     <div class="card-header">
-      <h6 class="float-left">
-        {{ facet.label || facet.name }}
-      </h6>
       <span v-if="hasValues()" class="float-right btn-group">
         <button class="btn btn-sm btn-outline-secondary py-0" @click="invert" :class="{ 'active': isReversed() }">
           <font-awesome-icon icon="eye-slash" />
           Invert
         </button>
       </span>
+      <h6 @click="toggleItems">
+        <font-awesome-icon :icon="headerIcon" />
+        {{ facet.label || facet.name }}
+      </h6>
     </div>
-    <div class="list-group list-group-flush facet-text__items">
+    <div class="list-group list-group-flush facet-text__items" v-if="!collapseItems">
       <div class="list-group-item facet-text__items__item p-0" v-for="item in items" :key="item.key" :class="{ 'facet-text__items__item--active': hasValue(item) }">
         <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
           <span class="badge badge-primary float-right">
