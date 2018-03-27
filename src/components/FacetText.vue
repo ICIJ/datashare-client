@@ -74,7 +74,7 @@ export default {
     <div class="list-group list-group-flush facet-text__items" v-if="!collapseItems">
       <div class="list-group-item facet-text__items__item p-0" v-for="item in items" :key="item.key" :class="{ 'facet-text__items__item--active': hasValue(item) }">
         <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
-          <span class="badge badge-primary float-right">
+          <span class="badge badge-pill badge-light float-right">
             {{ item.doc_count }}
           </span>
           {{ item.key }}
@@ -90,10 +90,22 @@ export default {
     &__items {
 
       &__item {
+        position: relative;
+        overflow: hidden;
 
         &--active {
           font-weight: bolder;
-          background: $mark-bg;
+
+          &:before {
+            content: "";
+            background: theme-color('primary');
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 3px;
+            box-shadow: 0 0 10px 0 theme-color('primary');
+          }
 
           .facet-text--reversed & {
             text-decoration: line-through;
