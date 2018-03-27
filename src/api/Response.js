@@ -12,7 +12,7 @@ export default class Response {
     this[_raw] = raw
   }
   get (path, defaultValue) {
-    return get(this, path, defaultValue)
+    return get(this[_raw], path, defaultValue)
   }
   get hits () {
     return map(this[_raw].hits.hits, hit => {

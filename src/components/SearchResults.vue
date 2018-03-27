@@ -1,7 +1,7 @@
 <template>
   <div class="search-results">
     <div v-if="query && response.hits.length > 0">
-      <h3>{{ $tc('search.results.results', response.hits.length, {total: response.hits.length, query}) }}</h3>
+      <h3>{{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total'), query}) }}</h3>
       <div class="search-results__item mt-5" v-for="doc in response.hits" :key="doc.id">
         <h4>
           <router-link :to="{ name: 'document', params: { id: doc.id, routing: doc.routing } }">
