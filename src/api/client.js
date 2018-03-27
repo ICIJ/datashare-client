@@ -29,7 +29,13 @@ export function searchPlugin (Client, config, components) {
     // We're going to build the body step by step
     const body = bodybuilder()
     // Add facet one by one as a MUST filter
-    each(facets, facet => body.addFilter('terms', facet.field, facet.values))
+    each(facets, facet => {
+      if (facet.reverse) {
+        return body.notFilter('terms', facet.field, facet.values)
+      } else {
+        return body.addFilter('terms', facet.field, facet.values)
+      }
+    })
     // Create a top-level "MUST query" which contain a "SHOULD query" including
     // a query_string and NamedEntity. If we don't add a `match_all` query,
     // Bodybuilder ignores the query context, a MUST, and replace it by the none

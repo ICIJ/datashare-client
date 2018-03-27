@@ -32,7 +32,7 @@ export default {
 <template>
   <div class="facet-named-entity card card-default">
     <div class="card-header">
-      {{ facet.name }}
+      {{ facet.label || facet.name }}
     </div>
     <div class="list-group list-group-flush facet-named-entity__items">
       <router-link class="list-group-item facet-named-entity__items__item" v-for="item in items" :key="item.key" :to="{ name: 'search', query: { q: item.key }}" >

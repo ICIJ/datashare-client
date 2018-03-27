@@ -7,7 +7,8 @@ import faExternalLinkAlt from '@fortawesome/fontawesome-free-solid/faExternalLin
 import faGlobe from '@fortawesome/fontawesome-free-solid/faGlobe'
 import faFileAlt from '@fortawesome/fontawesome-free-solid/faFileAlt'
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
+import faEyeSlash from '@fortawesome/fontawesome-free-solid/faEyeSlash'
 // And add them to the library
-fontawesome.library.add(faBars, faExternalLinkAlt, faGlobe, faFileAlt, faSearch)
+fontawesome.library.add(faBars, faExternalLinkAlt, faGlobe, faFileAlt, faSearch, faEyeSlash)
 
 export default FontAwesomeIcon
