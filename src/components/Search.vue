@@ -1,12 +1,12 @@
 <template>
   <div class="search">
     <search-bar />
-    <div class="container-fluid">
+    <div class="container-fluid search__body">
       <div class="row">
-        <div class="col-md-3 bg-light border-right">
+        <div class="col search__body__aggregations-panel">
           <aggregations-panel class="my-4" />
         </div>
-        <div class="col-md-9">
+        <div class="col search__body__search-results">
           <search-results v-if="searchResponse" :response="searchResponse" :query.sync="q" class="m-2" />
         </div>
       </div>
@@ -51,3 +51,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .search {
+    &__body {
+      &__aggregations-panel {
+        max-width: 350px;
+      }
+    }
+  }
+</style>
