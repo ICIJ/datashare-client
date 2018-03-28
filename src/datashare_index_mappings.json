@@ -30,6 +30,12 @@
         "language": {
           "type": "keyword"
         },
+        "status": {
+          "type": "keyword"
+        },
+        "nerTags": {
+          "type": "keyword"
+        },
         "metadata": {
           "type": "object"
         },
