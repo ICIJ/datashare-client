@@ -30,16 +30,16 @@ export default {
       }
     },
     addValue (item) {
-      this.$store.dispatch('search/addFacetValue', this.facet.param(item))
+      this.$store.dispatch('search/addFacetValue', this.facet.itemParam(item))
     },
     removeValue (item) {
-      this.$store.dispatch('search/removeFacetValue', this.facet.param(item))
+      this.$store.dispatch('search/removeFacetValue', this.facet.itemParam(item))
     },
     toggleValue (item) {
       return this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
     },
     hasValue (item) {
-      return this.$store.getters['search/hasFacetValue'](this.facet.param(item))
+      return this.$store.getters['search/hasFacetValue'](this.facet.itemParam(item))
     },
     hasValues () {
       return this.$store.getters['search/hasFacetValues'](this.facet.key)
@@ -77,7 +77,7 @@ export default {
           <span class="badge badge-pill badge-light float-right">
             {{ item.doc_count }}
           </span>
-          {{ item.key }}
+          {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
         </a>
       </div>
     </div>

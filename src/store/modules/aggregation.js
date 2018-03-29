@@ -2,10 +2,12 @@ import client from '@/api/client'
 import Response from '@/api/Response'
 import FacetText from '@/components/FacetText'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
+import types from '@/utils/types.json'
 
 import bodybuilder from 'bodybuilder'
 import every from 'lodash/every'
 import find from 'lodash/find'
+import get from 'lodash/get'
 
 export const state = {
   global: true,
@@ -15,7 +17,8 @@ export const state = {
       label: 'File Types',
       key: 'contentType',
       type: FacetText.name,
-      param: (item) => ({ field: 'contentType', value: item.key }),
+      itemParam: (item) => ({ field: 'contentType', value: item.key }),
+      itemLabel: (item) => get(types, [item.key, 'label'], item.key),
       body: bodybuilder().agg('terms', 'contentType', 'contentType')
     },
     {
@@ -23,7 +26,7 @@ export const state = {
       label: 'Named Entites',
       key: 'mentions',
       type: FacetNamedEntity.name,
-      param: (item) => item.key,
+      itemParam: (item) => item.key,
       body: bodybuilder()
         .query('term', 'type', 'NamedEntity')
         .agg('terms', 'mentionNorm', 'mentions', {
@@ -62,7 +65,7 @@ export const actions = {
       index: process.env.CONFIG.es_index,
       type: 'doc',
       size: 0,
-      body: getters.getFacet(facetPredicate).body.build()
+      body: getters.getFacet(facetPredicate).body.size(2).build()
     }).then(raw => new Response(raw))
   }
 }
