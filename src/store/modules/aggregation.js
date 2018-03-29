@@ -22,6 +22,13 @@ export const state = {
       body: bodybuilder().agg('terms', 'contentType', 'contentType')
     },
     {
+      name: 'language',
+      key: 'language',
+      type: FacetText.name,
+      itemParam: (item) => ({ field: 'language', value: item.key }),
+      body: bodybuilder().agg('terms', 'language', 'language')
+    },
+    {
       name: 'named-entity',
       label: 'Named Entites',
       key: 'mentions',
