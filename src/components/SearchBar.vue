@@ -15,10 +15,18 @@ export default {
       query: this.$store.state.search.query
     }
   },
+  mounted () {
+    this.$store.subscribe((mutation) => {
+      if (mutation.type === 'search/query') {
+        this.query = mutation.payload
+      }
+    })
+  },
   methods: {
     submit () {
-      // Change the route!
-      this.$router.push({name: 'search', query: {q: this.query}})
+      // Change the route after update the store with the new query
+      this.$store.commit('search/query', this.query)
+      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
       // And emit an event for those listening...
       this.$emit('submit', this.query)
     }

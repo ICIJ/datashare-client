@@ -7,7 +7,7 @@
         </div>
         <div class="col search__body__search-results">
           <search-bar />
-          <search-results v-if="searchResponse" :response="searchResponse" :query.sync="q" />
+          <search-results v-if="searchResponse" :response="searchResponse" :query.sync="query" />
         </div>
       </div>
     </div>
@@ -19,7 +19,7 @@
 import AggregationsPanel from './AggregationsPanel'
 import SearchBar from './SearchBar'
 import SearchResults from './SearchResults'
-// Store helpers
+
 import { mapState } from 'vuex'
 
 export default {
@@ -29,11 +29,10 @@ export default {
     SearchResults,
     SearchBar
   },
-  props: ['q'],
-  watch: {
-    '$route' () {
-      this.search()
-    }
+  beforeRouteUpdate (to, from, next) {
+    this.$store.dispatch('search/updateFromRouteQuery', to.query)
+      .then(this.search)
+      .then(next)
   },
   created () {
     this.search()

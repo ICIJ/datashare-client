@@ -5,6 +5,8 @@ import App from '@/components/App'
 import DocumentView from '@/components/DocumentView'
 import Search from '@/components/Search'
 
+import store from '@/store'
+
 Vue.use(VueRouter)
 
 export default new VueRouter({
@@ -17,8 +19,10 @@ export default new VueRouter({
           name: 'search',
           path: '',
           component: Search,
-          // Copy all query parameters to component's props
-          props: (route) => route.query
+          beforeEnter: (to, from, next) => {
+            store.dispatch('search/updateFromRouteQuery', to.query)
+            next()
+          }
         },
         {
           name: 'document',

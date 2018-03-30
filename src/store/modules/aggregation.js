@@ -17,7 +17,7 @@ export const state = {
       label: 'File Types',
       key: 'contentType',
       type: FacetText.name,
-      itemParam: (item) => ({ field: 'contentType', value: item.key }),
+      itemParam: (item) => ({ name: 'content-type', value: item.key }),
       itemLabel: (item) => get(types, [item.key, 'label'], item.key),
       body: bodybuilder().agg('terms', 'contentType', 'contentType')
     },
@@ -25,7 +25,7 @@ export const state = {
       name: 'language',
       key: 'language',
       type: FacetText.name,
-      itemParam: (item) => ({ field: 'language', value: item.key }),
+      itemParam: (item) => ({ name: 'language', value: item.key }),
       body: bodybuilder().agg('terms', 'language', 'language')
     },
     {

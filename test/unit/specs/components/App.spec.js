@@ -18,7 +18,6 @@ describe('App.vue', () => {
     const Constructor = Vue.extend(App)
 
     const vm = new Constructor({i18n, router, store}).$mount()
-
     expect(vm.$el.querySelector('form.search-bar button').textContent).to.equal('Search')
   })
 

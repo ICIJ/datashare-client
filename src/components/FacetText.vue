@@ -31,27 +31,37 @@ export default {
     },
     addValue (item) {
       this.$store.dispatch('search/addFacetValue', this.facet.itemParam(item))
+      this.refreshRoute()
     },
     removeValue (item) {
       this.$store.dispatch('search/removeFacetValue', this.facet.itemParam(item))
+      this.refreshRoute()
     },
     toggleValue (item) {
-      return this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
+      this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
+      this.refreshRoute()
+    },
+    invert () {
+      this.$store.dispatch('search/invertFacet', this.facet.name)
+      this.refreshRoute()
     },
     hasValue (item) {
       return this.$store.getters['search/hasFacetValue'](this.facet.itemParam(item))
     },
     hasValues () {
-      return this.$store.getters['search/hasFacetValues'](this.facet.key)
+      return this.$store.getters['search/hasFacetValues'](this.facet.name)
     },
     isReversed () {
-      return this.$store.getters['search/isFacetReversed'](this.facet.key)
-    },
-    invert () {
-      this.$store.dispatch('search/invertFacet', this.facet.key)
+      return this.$store.getters['search/isFacetReversed'](this.facet.name)
     },
     toggleItems () {
       this.collapseItems = !this.collapseItems
+    },
+    refreshRoute () {
+      this.$router.push({
+        name: 'search',
+        query: this.$store.getters['search/toRouteQuery']
+      })
     }
   }
 }

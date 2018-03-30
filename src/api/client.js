@@ -2,6 +2,8 @@ import es from 'elasticsearch-browser'
 import bodybuilder from 'bodybuilder'
 import each from 'lodash/each'
 
+import store from '@/store'
+
 // Custom API for datashare
 // @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/extending_core_components.html
 export function docPlugin (Client, config, components) {
@@ -29,11 +31,14 @@ export function searchPlugin (Client, config, components) {
     // We're going to build the body step by step
     const body = bodybuilder()
     // Add facet one by one as a MUST filter
-    each(facets, facet => {
-      if (facet.reverse) {
-        return body.notFilter('terms', facet.field, facet.values)
+    each(facets, facetValue => {
+      // Find the facet's definition for the given value
+      const facet = store.getters['aggregation/getFacet']({ name: facetValue.name })
+      // A reversed facetValue means we want to exclude the value
+      if (facetValue.reverse) {
+        return body.notFilter('terms', facet.key, facetValue.values)
       } else {
-        return body.addFilter('terms', facet.field, facet.values)
+        return body.addFilter('terms', facet.key, facetValue.values)
       }
     })
     // Create a top-level "MUST query" which contain a "SHOULD query" including
