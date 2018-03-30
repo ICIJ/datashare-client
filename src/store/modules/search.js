@@ -50,7 +50,10 @@ export const getters = {
         const facet = find(rootState.aggregation.facets, { name: facetValue.name })
         // We don't add facetValue that match with any existing facets
         // defined in the `aggregation` store.
-        if (facet) memo[`f[${facet.name}]`] = facetValue.values
+        if (facet) {
+          const key = facetValue.reverse ? `f[-${facet.name}]` : `f[${facet.name}]`
+          memo[key] = facetValue.values
+        }
         return memo
       }, {})
     }
@@ -94,11 +97,11 @@ export const mutations = {
       }
     }
   },
-  invertFacet (state, name) {
+  invertFacet (state, name, toggler = null) {
     // Look for facet for this name
     const existingFacet = find(state.facets, { name })
     if (existingFacet) {
-      existingFacet.reverse = !existingFacet.reverse
+      existingFacet.reverse = toggler !== null ? toggler : !existingFacet.reverse
     }
   }
 }
@@ -129,14 +132,17 @@ export const actions = {
     each(rootState.aggregation.facets, facet => {
       // The facet key are formatted in the URL as follow.
       // See `query-string` for more info about query string format.
-      const key = `f[${facet.name}]`
-      // Add the data if the value exist
-      if (query.hasOwnProperty(key)) {
-        // Because the values are grouped for each query parameter and because
-        // the `addFacetValue` also accept an array of value, we can directly
-        // use the query values.
-        commit('addFacetValue', facet.itemParam({ key: query[key] }))
-      }
+      each([`f[${facet.name}]`, `f[-${facet.name}]`], (key, index) => {
+        // Add the data if the value exist
+        if (query.hasOwnProperty(key)) {
+          // Because the values are grouped for each query parameter and because
+          // the `addFacetValue` also accept an array of value, we can directly
+          // use the query values.
+          commit('addFacetValue', facet.itemParam({ key: query[key] }))
+          // Invert the facet if we are using the second key (for reverse facet)
+          commit('invertFacet', facet.name, index > 0)
+        }
+      })
     })
   }
 }
