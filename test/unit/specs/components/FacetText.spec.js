@@ -2,6 +2,8 @@ import 'es6-promise/auto'
 
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
+import VueProgressBar from 'vue-progressbar'
+
 import find from 'lodash/find'
 import elasticsearch from 'elasticsearch-browser'
 
@@ -12,12 +14,15 @@ import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 
+import ContentPlaceholder from '@/components/ContentPlaceholder'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import FacetText from '@/components/FacetText'
 
 Vue.use(VueI18n)
+Vue.use(VueProgressBar, { color: '#852308' })
 
 const i18n = new VueI18n({locale: 'en', messages})
+Vue.component('content-placeholder', ContentPlaceholder)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 describe('FacetText.vue', () => {

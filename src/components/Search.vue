@@ -7,7 +7,12 @@
         </div>
         <div class="col search__body__search-results">
           <search-bar />
-          <search-results v-if="searchResponse" :response="searchResponse" :query.sync="query" />
+          <search-results v-if="isReady" :response="searchResponse" :query.sync="query" />
+          <div v-else>
+            <content-placeholder />
+            <content-placeholder />
+            <content-placeholder />
+          </div>
         </div>
       </div>
     </div>
@@ -24,6 +29,11 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Search',
+  data () {
+    return {
+      isReady: false
+    }
+  },
   components: {
     AggregationsPanel,
     SearchResults,
@@ -45,7 +55,17 @@ export default {
   },
   methods: {
     search (query = this.q) {
+      this.isReady = false
       return this.$store.dispatch('search/query', query)
+        .then(() => {
+          this.isReady = true
+        })
+    }
+  },
+  watch: {
+    isReady (isReady) {
+      const method = isReady ? 'finish' : 'start'
+      this.$Progress[method]()
     }
   }
 }

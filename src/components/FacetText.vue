@@ -7,7 +7,8 @@ export default {
   data () {
     return {
       response: Response.none(),
-      collapseItems: false
+      collapseItems: false,
+      isReady: false
     }
   },
   created () {
@@ -19,22 +20,32 @@ export default {
     },
     headerIcon () {
       return this.collapseItems ? 'caret-right' : 'caret-down'
+    },
+    placeholderRows () {
+      return [
+        {
+          height: '1em',
+          boxes: [[0, '70%'], ['20%', '10%']]
+        }
+      ]
     }
   },
   methods: {
     aggregate () {
       if (this.facet) {
+        this.isReady = false
         return this.$store.dispatch('aggregation/query', this.facet).then(r => {
           this.response = r
+          this.isReady = true
         })
       }
     },
     addValue (item) {
-      this.$store.dispatch('search/addFacetValue', this.facet.itemParam(item))
+      this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
       this.refreshRoute()
     },
     removeValue (item) {
-      this.$store.dispatch('search/removeFacetValue', this.facet.itemParam(item))
+      this.$store.commit('search/removeFacetValue', this.facet.itemParam(item))
       this.refreshRoute()
     },
     toggleValue (item) {
@@ -42,7 +53,7 @@ export default {
       this.refreshRoute()
     },
     invert () {
-      this.$store.dispatch('search/invertFacet', this.facet.name)
+      this.$store.commit('search/invertFacet', this.facet.name)
       this.refreshRoute()
     },
     hasValue (item) {
@@ -90,6 +101,11 @@ export default {
           {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
         </a>
       </div>
+      <div v-if="!isReady">
+        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
+        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
+        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
+      </div>
     </div>
   </div>
 </template>
@@ -119,6 +135,11 @@ export default {
 
           .facet-text--reversed & {
             text-decoration: line-through;
+
+            &:before {
+              background: $body-color;
+              box-shadow: 0 0 10px 0 $body-color;
+            }
           }
         }
 

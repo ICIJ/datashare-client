@@ -140,7 +140,7 @@ export const actions = {
           // use the query values.
           commit('addFacetValue', facet.itemParam({ key: query[key] }))
           // Invert the facet if we are using the second key (for reverse facet)
-          commit('invertFacet', facet.name, index > 0)
+          if (index) commit('invertFacet', facet.name, true)
         }
       })
     })

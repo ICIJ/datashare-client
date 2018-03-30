@@ -1,17 +1,22 @@
+import 'es6-promise/auto'
+
+import moment from 'moment'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import 'es6-promise/auto'
-import moment from 'moment'
+import VueProgressBar from 'vue-progressbar'
 
 import messages from '@/messages'
 import router from '@/router'
 
+import ContentPlaceholder from '@/components/ContentPlaceholder'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import LanguageChooser from '@/components/LanguageChooser'
 
 Vue.use(VueI18n)
+Vue.use(VueProgressBar, { color: '#852308' })
 
 const i18n = new VueI18n({locale: 'en', messages})
+Vue.component('coontent-placeholder', ContentPlaceholder)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 describe('LanguageChooser.vue', () => {
