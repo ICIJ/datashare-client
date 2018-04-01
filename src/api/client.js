@@ -27,9 +27,9 @@ export function docPlugin (Client, config, components) {
 }
 
 export function searchPlugin (Client, config, components) {
-  Client.prototype.searchDocs = function (query, facets = []) {
+  Client.prototype.searchDocs = function (query, facets = [], from = 0, size = 25) {
     // We're going to build the body step by step
-    const body = bodybuilder()
+    const body = bodybuilder().from(from).size(size)
     // Add facet one by one as a MUST filter
     each(facets, facetValue => {
       // Find the facet's definition for the given value
@@ -73,7 +73,6 @@ export function searchPlugin (Client, config, components) {
     return this.search({
       index: process.env.CONFIG.es_index,
       type: 'doc',
-      size: 200,
       body: body.build()
     })
   }
