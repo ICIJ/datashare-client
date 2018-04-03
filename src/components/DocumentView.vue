@@ -1,20 +1,28 @@
 <template>
-  <div class="document container py-4" v-if="document">
-    <h3>{{ document.basename }}</h3>
-    <nav>
-      <div class="nav nav-tabs">
-        <router-link :to="{ name: 'document', params: { id: document.id, routing: document.routing}, query: { tab: 'details' }}" class="nav-item nav-link" v-bind:class="{active: tab === 'details'}">
-          {{$t('document.details')}}
-        </router-link>
-        <router-link :to="{ name: 'document', params: { id: document.id, routing: document.routing}, query: { tab: 'text' }}" class="nav-item nav-link" v-bind:class="{active: tab === 'text'}">
-          {{$t('document.extracted_text')}}
-        </router-link>
-        <router-link :to="{ name: 'document', params: { id: document.id, routing: document.routing}, query: { tab: 'preview' }}" class="nav-item nav-link" v-bind:class="{active: tab === 'preview'}">
-          {{$t('document.preview')}}
-        </router-link>
-      </div>
-    </nav>
-    <div class="tab-content">
+  <div class="document" v-if="document">
+    <div class="document__header">
+      <h3>{{ document.basename }}</h3>
+      <nav class="document__header__nav">
+        <ul class="list-inline">
+          <li class="document__header__nav__item list-inline-item">
+            <a @click="tab = 'details'" :class="{active: tab === 'details'}">
+              {{$t('document.details')}}
+            </a>
+          </li>
+          <li class="document__header__nav__item list-inline-item">
+            <a @click="tab = 'text'" :class="{active: tab === 'text'}">
+              {{$t('document.extracted_text')}}
+            </a>
+          </li>
+          <li class="document__header__nav__item list-inline-item">
+            <a @click="tab = 'preview'" :class="{active: tab === 'preview'}">
+              {{$t('document.preview')}}
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="tab-content document__content">
       <div class="tab-pane" v-bind:class="{active: tab === 'details'}">
         <dl class="row">
           <dt class="col-sm-3">{{ $t('document.name') }}</dt>
@@ -68,12 +76,13 @@ export default {
   name: 'document-view',
   props: ['id', 'routing'],
   data () {
-    return {tab: 'details'}
+    return {
+      tab: 'details'
+    }
   },
   methods: {
-    getDoc () {
-      return this.$store.dispatch('document/get', {id: this.id, routing: this.routing})
-        .then(() => this.$store.dispatch('document/getNamedEntities'))
+    getDoc (params = { id: this.id, routing: this.routing }) {
+      return this.$store.dispatch('document/get', params).then(() => this.$store.dispatch('document/getNamedEntities'))
     }
   },
   computed: {
@@ -90,34 +99,71 @@ export default {
   },
   beforeRouteEnter (to, _from, next) {
     next(vm => {
-      vm.$set(vm, 'tab', to.query.tab || 'details')
-      vm.getDoc()
+      vm.getDoc(to.params)
     })
   },
   beforeRouteUpdate (to, _from, next) {
-    this.$set(this, 'tab', to.query.tab || 'details')
-    if (to.params.id !== _from.params.id || to.params.routing !== _from.params.routing) {
-      this.getDoc()
-    }
+    this.getDoc(to.params)
     next()
   }
 }
 </script>
 
 <style lang="scss">
-.text-pre-wrap {
-  white-space: pre-wrap;
-}
-.ner {
-  border-bottom: 1px dotted;
-  &.organization {
-    background-color: rgba(108, 204, 255, 0.63);
+.document {
+
+  &__header {
+    background: theme-color('dark');
+    color: white;
+    padding: $spacer * 2 $spacer;
+    padding-bottom: 0;
+
+    &__nav {
+      padding-top: $spacer;
+
+      & &__item  {
+        margin:0;
+
+        a {
+          display: inline-block;
+          color: white;
+          border-bottom: 3px solid transparent;
+          text-transform: uppercase;
+          padding: $spacer * .75 $spacer;
+          margin: 0;
+          cursor: pointer;
+
+          &:hover {
+            background:rgba(white, .05);
+          }
+
+          &.active {
+            font-weight: bold;
+            border-color: theme-color('primary');
+          }
+        }
+      }
+    }
   }
-  &.person {
-    background-color: rgba(149, 255, 129, 0.63);
+
+  &__content {
+    padding: $spacer * 2 $spacer;
   }
-  &.location {
-    background-color: rgb(255, 225, 165);
+
+  .text-pre-wrap {
+    white-space: pre-wrap;
+  }
+  .ner {
+    border-bottom: 1px dotted;
+    &.organization {
+      background-color: rgba(108, 204, 255, 0.63);
+    }
+    &.person {
+      background-color: rgba(149, 255, 129, 0.63);
+    }
+    &.location {
+      background-color: rgb(255, 225, 165);
+    }
   }
 }
 </style>

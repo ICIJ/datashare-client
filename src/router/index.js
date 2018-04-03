@@ -20,15 +20,22 @@ export default new VueRouter({
           path: '',
           component: Search,
           beforeEnter: (to, from, next) => {
-            store.dispatch('search/updateFromRouteQuery', to.query)
+            // This allow to restore the search's state from localStorage
+            // even if we are loading this route from a children (where no
+            // query paramters are given).
+            if (to.name === 'search') {
+              store.dispatch('search/updateFromRouteQuery', to.query)
+            }
             next()
-          }
-        },
-        {
-          name: 'document',
-          path: 'd/:id/:routing?',
-          component: DocumentView,
-          props: true
+          },
+          children: [
+            {
+              name: 'document',
+              path: 'd/:id/:routing?',
+              component: DocumentView,
+              props: true
+            }
+          ]
         }
       ]
     }

@@ -6,7 +6,7 @@
           <aggregations-panel />
         </div>
         <div class="col search__body__search-results">
-          <search-bar />
+          <search-bar class="search__body__search-results__bar" />
           <search-results v-if="isReady" :response="searchResponse" :query.sync="query" />
           <div v-else>
             <content-placeholder />
@@ -14,6 +14,7 @@
             <content-placeholder />
           </div>
         </div>
+        <router-view class="col search__body__document"></router-view>
       </div>
     </div>
   </div>
@@ -40,9 +41,11 @@ export default {
     SearchBar
   },
   beforeRouteUpdate (to, from, next) {
-    this.$store.dispatch('search/updateFromRouteQuery', to.query)
-      .then(this.search)
-      .then(next)
+    if (to.name === 'search') {
+      this.$store.dispatch('search/updateFromRouteQuery', to.query).then(this.search).then(next)
+    } else {
+      next()
+    }
   },
   created () {
     this.search()
@@ -82,10 +85,20 @@ export default {
       }
 
       &__search-results {
-        max-width: 660px;
+        position: sticky;
+        top:0;
+        max-width: 550px;
+        max-height: 100vh;
+        overflow: auto;
         border-left: 1px solid $gray-200;
         border-right: 1px solid $gray-200;
-        padding-top: $spacer;
+
+        &__bar {
+          position: sticky;
+          top:0;
+          background: white;
+          z-index: 100;
+        }
       }
     }
   }

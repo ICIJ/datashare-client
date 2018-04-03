@@ -1,12 +1,12 @@
 <template>
   <div class="search-results">
     <div v-if="query && response.hits.length > 0">
-      <h4 class="search-results__header">
+      <h4 class="search-results__header mb-0">
         {{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total'), query}) }}
       </h4>
       <div class="search-results__items">
-        <div class="search-results__items__item" v-for="doc in response.hits" :key="doc.id">
-          <h5>
+        <div class="search-results__items__item" v-for="doc in response.hits" :key="doc.id" :class="{ 'search-results__items__item--active': isActive(doc) }">
+          <h5 class="h6">
             <router-link :to="{ name: 'document', params: { id: doc.id, routing: doc.routing } }">
               {{ doc.basename }}
             </router-link>
@@ -38,9 +38,16 @@
 </template>
 
 <script>
+import get from 'lodash/get'
+
 export default {
   name: 'SearchResults',
-  props: ['response', 'query']
+  props: ['response', 'query'],
+  methods: {
+    isActive (doc) {
+      return get(this.$store.state, 'document.doc.id') === doc.id
+    }
+  }
 }
 </script>
 
@@ -48,7 +55,7 @@ export default {
   .search-results {
 
     &__header {
-      padding: $spacer;
+      padding: 0 $spacer;
       border-bottom: 1px solid $gray-200;
     }
 
@@ -57,6 +64,21 @@ export default {
       &__item {
         padding: $spacer;
         border-bottom: 1px solid $gray-200;
+
+        &--active {
+          position: relative;
+
+          &:before {
+            content: "";
+            background: theme-color('primary');
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 3px;
+            box-shadow: 0 0 10px 0 theme-color('primary');
+          }
+        }
 
         &__fragments {
           font-size: 0.9em;

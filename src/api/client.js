@@ -63,7 +63,7 @@ export function searchPlugin (Client, config, components) {
       fields: {
         content: {
           fragment_size: 150,
-          number_of_fragments: 10,
+          number_of_fragments: 3,
           pre_tags: ['<mark>'],
           post_tags: ['</mark>']
         }

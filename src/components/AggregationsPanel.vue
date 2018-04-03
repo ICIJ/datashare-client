@@ -32,6 +32,9 @@ export default {
 
       .card-header {
         background: $aggregations-panel-bg;
+        position: sticky;
+        top:0;
+        z-index: 100;
       }
 
       .card-header h6 {
