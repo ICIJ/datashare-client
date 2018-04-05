@@ -42,6 +42,12 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     if (to.name === 'search') {
+      // Query is empty
+      if ([null, undefined, ''].indexOf(to.query.q) > -1) {
+        // Redirect to landing page
+        return next({ name: 'landing' })
+      }
+      // Update the search's store using route query
       this.$store.dispatch('search/updateFromRouteQuery', to.query).then(this.search).then(next)
     } else {
       next()
@@ -85,20 +91,11 @@ export default {
       }
 
       &__search-results {
-        position: sticky;
-        top:0;
+        position: relative;
         max-width: 550px;
-        max-height: 100vh;
         overflow: auto;
         border-left: 1px solid $gray-200;
         border-right: 1px solid $gray-200;
-
-        &__bar {
-          position: sticky;
-          top:0;
-          background: white;
-          z-index: 100;
-        }
       }
     }
   }

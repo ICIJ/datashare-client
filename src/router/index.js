@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import App from '@/components/App'
 import DocumentView from '@/components/DocumentView'
+import Landing from '@/components/Landing'
 import Search from '@/components/Search'
 
 import store from '@/store'
@@ -20,6 +21,11 @@ export default new VueRouter({
           path: '',
           component: Search,
           beforeEnter: (to, from, next) => {
+            // Not a child route and Query is empty
+            if (to.name === 'search' && [null, undefined, ''].indexOf(to.query.q) > -1) {
+              // Redirect to landing page
+              return next({ name: 'landing' })
+            }
             // This allow to restore the search's state from localStorage
             // even if we are loading this route from a children (where no
             // query paramters are given).
@@ -36,6 +42,11 @@ export default new VueRouter({
               props: true
             }
           ]
+        },
+        {
+          name: 'landing',
+          path: '',
+          component: Landing
         }
       ]
     }
