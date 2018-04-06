@@ -48,7 +48,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results h4').textContent)).to.equal('No documents found for "foo"')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header').textContent)).to.equal('No documents found')
   })
 
   it('should display one document found', async () => {
@@ -57,7 +57,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results h4').textContent)).to.equal('1 document found for "bar"')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header').textContent)).to.equal('1 document found')
     expect(trim(wrapped.vm.$el.querySelector('.search-results-item__fragments').innerHTML)).to.equal('this is <mark>bar</mark> document')
   })
 
@@ -69,7 +69,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results h4').textContent)).to.equal('2 documents found for "bar"')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header').textContent)).to.equal('2 documents found')
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(2)
   })
 

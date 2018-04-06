@@ -16,8 +16,8 @@
       "results": {
         "match": "match in doc",
         "entities": "nb entities",
-        "results": "1 document found for \"%{query}\" | %{total} documents found for \"%{query}\"",
-        "no-result": "No documents found for \"%{query}\""
+        "results": "1 document found | %{total} documents found",
+        "no-result": "No documents found"
       }
     },
     "document": {
