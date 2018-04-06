@@ -1,7 +1,7 @@
 <template>
   <div class="search-results">
     <div v-if="query && response.hits.length > 0">
-      <h4 class="search-results__header mb-0">
+      <h4 class="search-results__header">
         {{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total'), query}) }}
       </h4>
       <div class="search-results__items">
@@ -45,7 +45,7 @@ export default {
   props: ['response', 'query'],
   methods: {
     isActive (doc) {
-      return get(this.$store.state, 'document.doc.id') === doc.id
+      return this.$route.name === 'document' && get(this.$store.state, 'document.doc.id') === doc.id
     }
   }
 }
@@ -55,7 +55,7 @@ export default {
   .search-results {
 
     &__header {
-      padding: 0 $spacer;
+      padding: $spacer;
       border-bottom: 1px solid $gray-200;
     }
 

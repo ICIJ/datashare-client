@@ -14,6 +14,7 @@
               Datashare
             </div>
           </router-link>
+          <search-bar class="app__nav__container__main__search-bar" v-if="isntLanding()" />
           <button class="btn btn-link btn-lg float-right mt-2 app__nav__container__main__hamburger" @click="toggleMenu">
             <font-awesome-icon icon="bars" size="2x" />
           </button>
@@ -49,12 +50,14 @@
 <script>
 import { headroom } from 'vue-headroom'
 import LanguageChooser from './LanguageChooser'
+import SearchBar from './SearchBar'
 
 export default {
   name: 'AppNav',
   components: {
     headroom,
-    LanguageChooser
+    LanguageChooser,
+    SearchBar
   },
   data () {
     return {
@@ -64,6 +67,9 @@ export default {
   methods: {
     toggleMenu () {
       this.collapseMenu = !this.collapseMenu
+    },
+    isntLanding () {
+      return this.$route.name !== 'landing'
     }
   }
 }
@@ -106,7 +112,6 @@ export default {
     &__container {
 
       &__main {
-
         position:relative;
         z-index: $zindex-fixed + 30;
         background:white;
@@ -119,6 +124,8 @@ export default {
           margin-left: $spacer;
           margin-top: $spacer;
           pointer-events: auto;
+          float: left;
+          width: calc(320px - #{$spacer});
 
           &:before {
             content:"";
@@ -130,16 +137,24 @@ export default {
             display: inline-block;
             z-index: $zindex-fixed + 20;
             border:1px solid white;
+            position: absolute;
+            top:0;
+            left:0;
           }
 
           & > * {
             font-size: 1.5rem;
             display: inline-block;
             line-height: $line-height-base;
-            position: absolute;
-            left: 150%;
-            top: 0;
+            padding-left: $spacer;
+            margin-left: $app-nav-brand-height;
           }
+        }
+
+        &__search-bar {
+          position: relative;
+          max-width: 550px;
+          float: left;
         }
 
         &__hamburger {

@@ -6,7 +6,6 @@
           <aggregations-panel />
         </div>
         <div class="col search__body__search-results">
-          <search-bar class="search__body__search-results__bar" />
           <search-results v-if="isReady" :response="searchResponse" :query.sync="query" />
           <div v-else>
             <content-placeholder />
@@ -23,7 +22,6 @@
 <script>
 // Components
 import AggregationsPanel from './AggregationsPanel'
-import SearchBar from './SearchBar'
 import SearchResults from './SearchResults'
 
 import { mapState } from 'vuex'
@@ -37,8 +35,7 @@ export default {
   },
   components: {
     AggregationsPanel,
-    SearchResults,
-    SearchBar
+    SearchResults
   },
   beforeRouteUpdate (to, from, next) {
     if (to.name === 'search') {
