@@ -58,7 +58,7 @@ describe('Search.vue', () => {
     await Vue.nextTick()
 
     expect(trim(wrapped.vm.$el.querySelector('.search-results h4').textContent)).to.equal('1 document found for "bar"')
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__items__item__fragments').innerHTML)).to.equal('this is <mark>bar</mark> document')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results-item__fragments').innerHTML)).to.equal('this is <mark>bar</mark> document')
   })
 
   it('should display two documents found', async () => {
@@ -70,7 +70,7 @@ describe('Search.vue', () => {
     await Vue.nextTick()
 
     expect(trim(wrapped.vm.$el.querySelector('.search-results h4').textContent)).to.equal('2 documents found for "bar"')
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__items__item').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(2)
   })
 
   it('should make a link without routing for a document', async () => {
@@ -80,7 +80,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results__items__item__link').href).to.match(/doc.txt$/)
+    expect(wrapped.vm.$el.querySelector('.search-results-item__basename a').href).to.match(/doc.txt$/)
   })
 
   it('should make a link with routing for a child document', async () => {
@@ -91,6 +91,6 @@ describe('Search.vue', () => {
     await wrapped.vm.search()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results__items__item__link').href).to.match(/child.txt\/parent.txt/)
+    expect(wrapped.vm.$el.querySelector('.search-results-item__basename a').href).to.match(/child.txt\/parent.txt/)
   })
 })

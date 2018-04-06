@@ -5,28 +5,7 @@
         {{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total'), query}) }}
       </h4>
       <div class="search-results__items">
-        <div class="search-results__items__item" v-for="doc in response.hits" :key="doc.id" :class="{ 'search-results__items__item--active': isActive(doc) }">
-          <h5 class="h6">
-            <router-link :to="{ name: 'document', params: { id: doc.id, routing: doc.routing } }">
-              {{ doc.basename }}
-            </router-link>
-          </h5>
-
-          <div class="search-results__items__item__fragments" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
-
-          <ul class="named-entities list-inline">
-            <li class="named-entity list-inline-item" v-for="ne in doc.get('innerHits.NamedEntity.hits.hits', [])" :key="ne._source.id" :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
-              <router-link :to="{ name: 'document', params: { id: doc.id } }" class="badge badge-pill badge-primary">
-                {{ ne._source.mention}}
-              </router-link>
-            </li>
-          </ul>
-
-          <router-link :to="{ name: 'document', params: { id: doc.id, routing: doc.routing } }" class="search-results__items__item__link text-muted">
-            <font-awesome-icon icon="file-alt" />
-            {{ doc.source.path }}
-          </router-link>
-        </div>
+        <search-results-item v-for="doc in response.hits" :key="doc.id" :doc="doc" />
       </div>
     </div>
     <div v-else>
@@ -38,16 +17,12 @@
 </template>
 
 <script>
-import get from 'lodash/get'
+import SearchResultsItem from './SearchResultsItem.vue'
 
 export default {
   name: 'SearchResults',
   props: ['response', 'query'],
-  methods: {
-    isActive (doc) {
-      return this.$route.name === 'document' && get(this.$store.state, 'document.doc.id') === doc.id
-    }
-  }
+  components: { SearchResultsItem }
 }
 </script>
 
@@ -57,42 +32,6 @@ export default {
     &__header {
       padding: $spacer;
       border-bottom: 1px solid $gray-200;
-    }
-
-    &__items {
-
-      &__item {
-        padding: $spacer;
-        border-bottom: 1px solid $gray-200;
-
-        &--active {
-          position: relative;
-
-          &:before {
-            content: "";
-            background: theme-color('primary');
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 3px;
-            box-shadow: 0 0 10px 0 theme-color('primary');
-          }
-        }
-
-        &__fragments {
-          font-size: 0.9em;
-          color: $text-muted;
-        }
-
-        &__link {
-          display: block;
-          white-space: nowrap;
-          width: 100%;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-      }
     }
   }
 </style>

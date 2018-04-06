@@ -5,7 +5,7 @@ import fontawesome from '@fortawesome/fontawesome'
 import faBars from '@fortawesome/fontawesome-free-solid/faBars'
 import faExternalLinkAlt from '@fortawesome/fontawesome-free-solid/faExternalLinkAlt'
 import faGlobe from '@fortawesome/fontawesome-free-solid/faGlobe'
-import faFileAlt from '@fortawesome/fontawesome-free-solid/faFileAlt'
+import faFolder from '@fortawesome/fontawesome-free-solid/faFolder'
 import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
 import faEyeSlash from '@fortawesome/fontawesome-free-solid/faEyeSlash'
 import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
@@ -15,7 +15,7 @@ fontawesome.library.add(
   faBars,
   faExternalLinkAlt,
   faGlobe,
-  faFileAlt,
+  faFolder,
   faSearch,
   faEyeSlash,
   faCaretDown,
