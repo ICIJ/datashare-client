@@ -52,8 +52,8 @@
       "results": {
         "match": "dans le doc",
         "entities": "nb entités",
-        "results": "1 document trouvé pour \"%{query}\" | %{total} documents trouvés pour \"%{query}\"",
-        "no-result": "Aucun document trouvé pour \"%{query}\""
+        "results": "1 document trouvé | %{total} documents trouvés",
+        "no-result": "Aucun document trouvé"
       }
     },
     "document": {
