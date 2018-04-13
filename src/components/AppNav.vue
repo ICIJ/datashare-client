@@ -24,6 +24,11 @@
             <language-chooser @changed="toggleMenu" />
           </li>
           <li class="list-unstyled-item app__nav__container__menu__item">
+            <router-link :to="{ name: 'indexing' }">
+              Index documents
+            </router-link>
+          </li>
+          <li class="list-unstyled-item app__nav__container__menu__item">
             <a href="https://www.icij.org/investigations/paradise-papers/" target="_blank">
               Paradise Papers
               <font-awesome-icon icon="external-link-alt" class="ml-1 app__nav__container__menu__item__new" />
@@ -62,6 +67,11 @@ export default {
   data () {
     return {
       collapseMenu: true
+    }
+  },
+  watch: {
+    '$route' (to, from) {
+      this.collapseMenu = true
     }
   },
   methods: {

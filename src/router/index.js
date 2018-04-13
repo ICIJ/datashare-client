@@ -4,6 +4,7 @@ import VueRouter from 'vue-router'
 import App from '@/components/App'
 import DocumentView from '@/components/DocumentView'
 import Landing from '@/components/Landing'
+import Indexing from '@/components/Indexing'
 import Search from '@/components/Search'
 
 import store from '@/store'
@@ -47,6 +48,11 @@ export default new VueRouter({
           name: 'landing',
           path: '',
           component: Landing
+        },
+        {
+          name: 'indexing',
+          path: 'indexing',
+          component: Indexing
         }
       ]
     }
