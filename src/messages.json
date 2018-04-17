@@ -33,6 +33,12 @@
       "details": "Details",
       "extracted_text": "Extracted text",
       "preview": "Preview"
+    },
+    "indexing": {
+      "btnLabel": "Index",
+      "stages": "Stages",
+      "index_stage_label": "index",
+      "extract_stage_label": "extract"
     }
   },
   "fr": {
@@ -69,6 +75,12 @@
       "details": "Details",
       "extracted_text": "Texte",
       "preview": "Prévisualisation"
+    },
+    "indexing": {
+      "btnLabel": "Indexer",
+      "stages": "Étapes",
+      "index_stage_label": "indexation",
+      "extract_stage_label": "extraction"
     }
   }
 }

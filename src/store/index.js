@@ -5,11 +5,12 @@ import createPersistedState from 'vuex-persistedstate'
 import aggregation from './modules/aggregation'
 import document from './modules/document'
 import search from './modules/search'
+import indexing from './modules/indexing'
 
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  modules: { aggregation, document, search },
+  modules: { aggregation, document, search, indexing },
   plugins: [
     createPersistedState({
       paths: ['search'],

@@ -33,7 +33,9 @@
     "vue-progressbar": "^0.7.4",
     "vue-router": "^3.0.1",
     "vuex": "^3.0.1",
-    "vuex-persistedstate": "^2.5.1"
+    "vuex-map-fields": "^1.1.6",
+    "vuex-persistedstate": "^2.5.1",
+    "whatwg-fetch": "^2.0.4"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",
