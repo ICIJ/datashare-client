@@ -24,18 +24,31 @@ export const mutations = {
   updateField,
   updateTasks (state, raw) {
     state.tasks = raw
+  },
+  cleanTasks (state) {
+    state.tasks = []
   }
 }
 
 export const actions = {
   query ({ state, commit }) {
-    console.log(state)
     if (state.form.index) {
-      datashare.index(state.form.path).then(raw => { commit('updateTasks', raw) })
+      datashare.index(state.form.path)
     }
     if (state.form.extract) {
-      datashare.extract(state.form.pipeline).then(raw => { commit('updateTasks', raw) })
+      datashare.extract(state.form.pipeline)
     }
+  },
+  cleanTasks ({ state, commit }) {
+    datashare.cleanTasks().then(commit('cleanTasks'))
+  },
+  startPollTasks ({ state, commit }) {
+    setInterval(() => {
+      datashare.getTasks().then(resp => resp.json().then(raw => commit('updateTasks', raw)))
+    }, 2000)
+  },
+  stopPollTasks () {
+    clearInterval()
   }
 }
 
