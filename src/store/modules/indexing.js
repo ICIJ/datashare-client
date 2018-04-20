@@ -13,6 +13,7 @@ export const state = {
     extract: false,
     pipeline: null
   },
+  pollHandle: null,
   tasks: []
 }
 
@@ -22,11 +23,17 @@ export const getters = {
 
 export const mutations = {
   updateField,
-  updateTasks (state, raw) {
-    state.tasks = raw
-  },
   cleanTasks (state) {
     state.tasks = []
+  },
+  startPolling (state) {
+    state.pollHandle = setInterval(() => {
+      datashare.getTasks().then(resp => resp.json().then(raw => (state.tasks = raw)))
+    }, 2000)
+  },
+  stopPolling (state) {
+    clearInterval(state.pollHandle)
+    state.pollHandle = null
   }
 }
 
@@ -43,12 +50,10 @@ export const actions = {
     datashare.cleanTasks().then(commit('cleanTasks'))
   },
   startPollTasks ({ state, commit }) {
-    setInterval(() => {
-      datashare.getTasks().then(resp => resp.json().then(raw => commit('updateTasks', raw)))
-    }, 2000)
+    commit('startPolling')
   },
-  stopPollTasks () {
-    clearInterval()
+  stopPollTasks ({ state, commit }) {
+    commit('stopPolling')
   }
 }
 

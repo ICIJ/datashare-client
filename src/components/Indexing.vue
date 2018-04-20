@@ -62,8 +62,12 @@ export default {
   },
   beforeRouteEnter (to, _from, next) {
     next(vm => {
-      vm.$store.dispatch('indexing/startPollTasks')
+      vm.$store.commit('indexing/startPolling')
     })
+  },
+  beforeRouteLeave (to, _from, next) {
+    this.$store.commit('indexing/stopPolling')
+    next()
   },
   methods: {
     submit () {
