@@ -52,13 +52,13 @@
           </div>
           <ul class="list-group list-group-flush">
             <li v-for="task in tasks" :key="task.name" class="indexing__tasks list-group-item">
-              {{ task.name }}
+              {{ taskLabel(task.name) }}
               <span class="badge badge-pill small float-right">
                 {{ task.state }}
               </span>
               <div class="indexing__tasks__progress progress">
-                <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar" :style="'width: ' + task.progress * 100 + '%'" :aria-valuenow="task.progress * 100" aria-valuemin="0" aria-valuemax="100">
-                  {{ Math.round(task.progress * 100) }}%
+                <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar" :style="'width: ' + getProgress(task.progress) + '%'" :aria-valuenow="getProgress(task.progress)" aria-valuemin="0" aria-valuemax="100">
+                  {{ getProgress(task.progress) }}%
                 </div>
               </div>
             </li>
@@ -78,6 +78,7 @@
 
 import { createHelpers } from 'vuex-map-fields'
 import {mapState} from 'vuex'
+import last from 'lodash/last'
 
 const { mapFields } = createHelpers({
   getterType: `indexing/getField`,
@@ -106,12 +107,25 @@ export default {
     cleanTasks () {
       this.$store.dispatch('indexing/cleanTasks')
     },
+    taskLabel (name) {
+      let nameAndId = last(name.split('.')).split('@')
+      return nameAndId[0] + '(' + nameAndId[1] + ')'
+    },
     taskStateToClass (state) {
       switch (state) {
         case ('DONE'): return 'bg-success'
         case ('EXECPT'): return 'bg-danger'
         case ('RUNNING'): return 'bg-info'
       }
+    },
+    getProgress (value) {
+      if (value === -2.0) {
+        return 100
+      }
+      if (value === -1.0) {
+        return 0
+      }
+      return Math.round(value * 100)
     }
   }
 }
