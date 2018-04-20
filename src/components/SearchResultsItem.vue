@@ -38,7 +38,7 @@ export default {
   computed: {
     folder () {
       // Extract location parts
-      let parts = this.doc.source.path.split('/')
+      let parts = this.doc.get('_source.path', '').split('/')
       // Remove the base name
       parts.splice(-1, 1)
       // And return the new path
