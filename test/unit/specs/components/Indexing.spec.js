@@ -19,6 +19,10 @@ describe('Indexing.vue', () => {
     const localVue = createLocalVue()
     localVue.use(VueI18n)
     wrapped = mount(Indexing, {i18n, router, store})
+    sinon.stub(window, 'fetch')
+  })
+  afterEach(() => {
+    window.fetch.restore()
   })
 
   it('should begin/stop polling when route enter/leave', async () => {
@@ -28,4 +32,34 @@ describe('Indexing.vue', () => {
     router.push('/')
     expect(wrapped.vm.$store.state.indexing.pollHandle).to.equal(null)
   })
+
+  it('should call index when index is selected', async () => {
+    window.fetch.returns(jsonOk({}))
+    wrapped.vm.$store.dispatch('indexing/query')
+    await Vue.nextTick()
+
+    sinon.assert.calledOnce(window.fetch)
+    sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata', {method: 'POST', body: '{}'})
+  })
+
+  it('should update tasks with polling request', async () => {
+    window.fetch.returns(jsonOk({}))
+    wrapped.vm.$store.commit('indexing/updateTasks', [{name: 'foo.bar@123', progress: 0.5, state: 'DONE'},
+      {name: 'foo.baz@456', progress: 0.2, state: 'RUNNING'}])
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[0].textContent).to.contain('bar(123)')
+    expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[1].textContent).to.contain('baz(456)')
+  })
 })
+
+function jsonOk (body) {
+  const mockResponse = new window.Response(JSON.stringify(body), {
+    status: 200,
+    headers: {
+      'Content-type': 'application/json'
+    }
+  })
+  return Promise.resolve(mockResponse)
+}

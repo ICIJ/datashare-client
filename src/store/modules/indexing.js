@@ -26,9 +26,12 @@ export const mutations = {
   cleanTasks (state) {
     state.tasks = []
   },
+  updateTasks (state, raw) {
+    state.tasks = raw
+  },
   startPolling (state) {
     state.pollHandle = setInterval(() => {
-      datashare.getTasks().then(resp => resp.json().then(raw => (state.tasks = raw)))
+      datashare.getTasks().then(resp => resp.json().then(raw => this.updateTasks(state, raw)))
     }, 2000)
   },
   stopPolling (state) {
