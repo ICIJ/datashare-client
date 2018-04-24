@@ -52,6 +52,19 @@ describe('Indexing.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[0].textContent).to.contain('bar(123)')
     expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[1].textContent).to.contain('baz(456)')
   })
+
+  it('should call extract when extract is selected', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', {path: 'form.index', value: false})
+    store.commit('indexing/updateField', {path: 'form.extract', value: true})
+    store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
+
+    store.dispatch('indexing/query')
+    wrapped.update()
+
+    sinon.assert.calledOnce(window.fetch)
+    sinon.assert.calledWith(window.fetch, '/task/extract/PIPELINE', {method: 'POST', body: '{}'})
+  })
 })
 
 function jsonOk (body) {
