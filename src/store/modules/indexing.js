@@ -32,7 +32,7 @@ export const mutations = {
   },
   startPolling (state) {
     state.pollHandle = setInterval(() => {
-      datashare.getTasks().then(resp => resp.json().then(raw => this.updateTasks(state, raw)))
+      datashare.getTasks().then(resp => resp.json().then(raw => this.commit('indexing/updateTasks', raw)))
     }, 2000)
   },
   stopPolling (state) {
