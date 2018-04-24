@@ -23,6 +23,14 @@
             </div>
           </div>
           <div class="form-group card-body my-0">
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="enableOcr" v-model="enableOcr">
+              <label class="form-check-label" for="index">
+                {{ $t('indexing.enable_ocr') }}
+              </label>
+            </div>
+          </div>
+          <div class="form-group card-body my-0">
             <label for="path">Path</label>
             <input id="path" v-model="path" class="form-control "/>
           </div>
@@ -88,7 +96,7 @@ const { mapFields } = createHelpers({
 export default {
   name: 'indexing',
   computed: {
-    ...mapFields(['form.pipeline', 'form.index', 'form.extract', 'form.path']),
+    ...mapFields(['form.pipeline', 'form.index', 'form.extract', 'form.path', 'form.enableOcr']),
     ...mapState('indexing', {tasks: state => state.tasks})
   },
   beforeRouteEnter (to, _from, next) {

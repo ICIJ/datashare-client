@@ -41,7 +41,8 @@
       "extract_stage_label": "extract",
       "purge": "Delete done tasks",
       "ongoing": "Tasks",
-      "new": "New task"
+      "new": "New task",
+      "enable_ocr": "enable Optical Character Recognition"
     }
   },
   "fr": {

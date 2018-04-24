@@ -11,7 +11,8 @@ export const state = {
     index: true,
     path: '/home/datashare/data',
     extract: false,
-    pipeline: null
+    pipeline: null,
+    enableOcr: false
   },
   pollHandle: null,
   tasks: []
@@ -43,7 +44,7 @@ export const mutations = {
 export const actions = {
   query ({ state, commit }) {
     if (state.form.index) {
-      datashare.index(state.form.path)
+      datashare.index(state.form.path, {enableOcr: state.form.enableOcr})
     }
     if (state.form.extract) {
       datashare.extract(state.form.pipeline)
