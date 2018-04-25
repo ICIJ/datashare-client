@@ -50,7 +50,7 @@ describe('Indexing.vue', () => {
     await Vue.nextTick()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata', {method: 'POST', body: JSON.stringify({options: {enableOcr: false}})})
+    sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata', {method: 'POST', body: JSON.stringify({options: {ocr: false}})})
   })
 
   it('should call extract when extract is selected', async () => {
@@ -70,13 +70,13 @@ describe('Indexing.vue', () => {
     window.fetch.returns(jsonOk({}))
     store.commit('indexing/updateField', {path: 'form.index', value: true})
     store.commit('indexing/updateField', {path: 'form.extract', value: false})
-    store.commit('indexing/updateField', {path: 'form.enableOcr', value: true})
+    store.commit('indexing/updateField', {path: 'form.ocr', value: true})
 
     store.dispatch('indexing/query')
     wrapped.update()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata', {method: 'POST', body: JSON.stringify({options: {enableOcr: true}})})
+    sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata', {method: 'POST', body: JSON.stringify({options: {ocr: true}})})
   })
 })
 
