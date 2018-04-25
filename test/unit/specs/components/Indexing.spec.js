@@ -78,6 +78,26 @@ describe('Indexing.vue', () => {
     sinon.assert.calledOnce(window.fetch)
     sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata', {method: 'POST', body: JSON.stringify({options: {ocr: true}})})
   })
+
+  it('should hide ocr option if not indexing', async () => {
+    store.commit('indexing/updateField', {path: 'form.index', value: true})
+    wrapped.update()
+    expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(1)
+
+    store.commit('indexing/updateField', {path: 'form.index', value: false})
+    wrapped.update()
+    expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(0)
+  })
+
+  it('should hide pipeline choice if not extracting named entities', async () => {
+    store.commit('indexing/updateField', {path: 'form.extract', value: true})
+    wrapped.update()
+    expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(1)
+
+    store.commit('indexing/updateField', {path: 'form.extract', value: false})
+    wrapped.update()
+    expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(0)
+  })
 })
 
 function jsonOk (body) {

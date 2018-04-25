@@ -22,7 +22,7 @@
               </label>
             </div>
           </div>
-          <div class="form-group card-body my-0">
+          <div class="form-group card-body my-0" v-if="index">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="ocr" v-model="ocr">
               <label class="form-check-label" for="index">
@@ -34,7 +34,7 @@
             <label for="path">Path</label>
             <input id="path" v-model="path" class="form-control "/>
           </div>
-          <div class="form-group card-body my-0">
+          <div class="form-group card-body my-0" v-if="extract">
             <label for="pipeline">NLP Pipeline</label>
             <select class="form-control" id="pipeline" v-model="pipeline">
               <option value="CORENLP">Core NLP</option>
