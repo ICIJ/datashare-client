@@ -25,7 +25,7 @@
           </li>
           <li class="list-unstyled-item app__nav__container__menu__item">
             <router-link :to="{ name: 'indexing' }">
-              Index documents
+              Analyse documents
             </router-link>
           </li>
           <li class="list-unstyled-item app__nav__container__menu__item">
