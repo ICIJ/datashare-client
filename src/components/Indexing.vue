@@ -122,7 +122,8 @@ export default {
     taskStateToClass (state) {
       switch (state) {
         case ('DONE'): return 'bg-success'
-        case ('EXECPT'): return 'bg-danger'
+        case ('ERROR'): return 'bg-danger'
+        case ('CANCELLED'): return 'bg-warning'
         case ('RUNNING'): return 'bg-info'
       }
     },
