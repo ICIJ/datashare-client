@@ -16,9 +16,9 @@
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="extract" v-model="extract">
-              <label class="form-check-label" for="extract">
-                {{ $t('indexing.extract_stage_label') }}
+              <input class="form-check-input" type="checkbox" id="findNames" v-model="findNames">
+              <label class="form-check-label" for="findNames">
+                {{ $t('indexing.findNames_stage_label') }}
               </label>
             </div>
           </div>
@@ -34,7 +34,7 @@
             <label for="path">Path</label>
             <input id="path" v-model="path" class="form-control "/>
           </div>
-          <div class="form-group card-body my-0" v-if="extract">
+          <div class="form-group card-body my-0" v-if="findNames">
             <label for="pipeline">NLP Pipeline</label>
             <select class="form-control" id="pipeline" v-model="pipeline">
               <option value="CORENLP">Core NLP</option>
@@ -96,7 +96,7 @@ const { mapFields } = createHelpers({
 export default {
   name: 'indexing',
   computed: {
-    ...mapFields(['form.pipeline', 'form.index', 'form.extract', 'form.path', 'form.ocr']),
+    ...mapFields(['form.pipeline', 'form.index', 'form.findNames', 'form.path', 'form.ocr']),
     ...mapState('indexing', {tasks: state => state.tasks})
   },
   beforeRouteEnter (to, _from, next) {

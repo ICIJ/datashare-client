@@ -37,8 +37,8 @@
     "indexing": {
       "btnLabel": "Index",
       "stages": "Stages",
-      "index_stage_label": "index",
-      "extract_stage_label": "extract",
+      "index_stage_label": "extract text",
+      "extract_stage_label": "find names",
       "purge": "Delete done tasks",
       "ongoing": "Tasks",
       "new": "New task",
@@ -84,7 +84,7 @@
       "btnLabel": "Indexer",
       "stages": "Étapes",
       "index_stage_label": "indexation",
-      "extract_stage_label": "extraction"
+      "extract_stage_label": "trouver les noms"
     }
   }
 }

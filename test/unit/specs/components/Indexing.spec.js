@@ -53,23 +53,23 @@ describe('Indexing.vue', () => {
     sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata', {method: 'POST', body: JSON.stringify({options: {ocr: false}})})
   })
 
-  it('should call extract when extract is selected', async () => {
+  it('should call findNames when findNames is selected', async () => {
     window.fetch.returns(jsonOk({}))
     store.commit('indexing/updateField', {path: 'form.index', value: false})
-    store.commit('indexing/updateField', {path: 'form.extract', value: true})
+    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
     store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
 
     store.dispatch('indexing/query')
     wrapped.update()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/task/extract/PIPELINE', {method: 'POST', body: '{}'})
+    sinon.assert.calledWith(window.fetch, '/task/findNames/PIPELINE', {method: 'POST', body: '{}'})
   })
 
   it('should call index with ocr option', async () => {
     window.fetch.returns(jsonOk({}))
     store.commit('indexing/updateField', {path: 'form.index', value: true})
-    store.commit('indexing/updateField', {path: 'form.extract', value: false})
+    store.commit('indexing/updateField', {path: 'form.findNames', value: false})
     store.commit('indexing/updateField', {path: 'form.ocr', value: true})
 
     store.dispatch('indexing/query')
@@ -89,12 +89,12 @@ describe('Indexing.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(0)
   })
 
-  it('should hide pipeline choice if not extracting named entities', async () => {
-    store.commit('indexing/updateField', {path: 'form.extract', value: true})
+  it('should hide pipeline choice if not findNamesing named entities', async () => {
+    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(1)
 
-    store.commit('indexing/updateField', {path: 'form.extract', value: false})
+    store.commit('indexing/updateField', {path: 'form.findNames', value: false})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(0)
   })

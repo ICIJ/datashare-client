@@ -10,7 +10,7 @@ export const state = {
   form: {
     index: true,
     path: '/home/datashare/data',
-    extract: false,
+    findNames: false,
     pipeline: null,
     ocr: false
   },
@@ -46,8 +46,8 @@ export const actions = {
     if (state.form.index) {
       datashare.index(state.form.path, {ocr: state.form.ocr})
     }
-    if (state.form.extract) {
-      datashare.extract(state.form.pipeline)
+    if (state.form.findNames) {
+      datashare.findNames(state.form.pipeline)
     }
   },
   cleanTasks ({ state, commit }) {
