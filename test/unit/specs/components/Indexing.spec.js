@@ -63,7 +63,19 @@ describe('Indexing.vue', () => {
     wrapped.update()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/task/findNames/PIPELINE', {method: 'POST', body: '{}'})
+    sinon.assert.calledWith(window.fetch, '/task/findNames/PIPELINE', {method: 'POST', body: JSON.stringify({options: {resume: true}})})
+  })
+
+  it('should disable resume if index is selected with name finding', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', {path: 'form.index', value: true})
+    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
+    store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
+
+    store.dispatch('indexing/query')
+    wrapped.update()
+
+    sinon.assert.calledWith(window.fetch, '/task/findNames/PIPELINE', {method: 'POST', body: JSON.stringify({options: {resume: false}})})
   })
 
   it('should call index with ocr option', async () => {

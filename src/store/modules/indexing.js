@@ -47,7 +47,7 @@ export const actions = {
       datashare.index(state.form.path, {ocr: state.form.ocr})
     }
     if (state.form.findNames) {
-      datashare.findNames(state.form.pipeline)
+      datashare.findNames(state.form.pipeline, {resume: !state.form.index})
     }
   },
   cleanTasks ({ state, commit }) {

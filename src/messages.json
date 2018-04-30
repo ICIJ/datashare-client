@@ -38,7 +38,7 @@
       "btnLabel": "Index",
       "stages": "Stages",
       "index_stage_label": "extract text",
-      "extract_stage_label": "find names",
+      "findNames_stage_label": "find names",
       "purge": "Delete done tasks",
       "ongoing": "Tasks",
       "new": "New task",
