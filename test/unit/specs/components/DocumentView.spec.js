@@ -13,7 +13,7 @@ import VueProgressBar from 'vue-progressbar'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
-import DocumentView from '@/components/DocumentView'
+import DocumentView from '@/components/document/DocumentView'
 
 Vue.use(VueI18n)
 Vue.use(VueProgressBar, { color: '#852308' })

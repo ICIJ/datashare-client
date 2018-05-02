@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import App from '@/components/App'
-import DocumentView from '@/components/DocumentView'
+import DocumentView from '@/components/document/DocumentView'
 import Landing from '@/components/Landing'
 import Indexing from '@/components/Indexing'
 import Search from '@/components/Search'

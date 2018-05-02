@@ -70,7 +70,7 @@
 import {mapState} from 'vuex'
 import sortedUniqBy from 'lodash/sortedUniqBy'
 import escape from 'lodash/escape'
-import {highlight} from '../utils/strings'
+import {highlight} from '@/utils/strings'
 
 export default {
   name: 'document-view',
