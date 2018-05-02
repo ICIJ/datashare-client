@@ -60,14 +60,14 @@
       </div>
       <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
-        <template v-if="document.source.contentType === 'application/pdf'">
+        <template v-if="document.contentType === 'application/pdf'">
           <pdf-viewer :url="document.relativePath" workerSrc="" />
         </template>
-        <template v-else-if="document.source.contentType === 'image/tiff'">
+        <template v-else-if="document.contentType === 'image/tiff'">
           <tiff-viewer :url="document.relativePath" />
         </template>
-        <template v-else-if="document.source.contentType.indexOf('xls') > 0 || document.source.contentType.indexOf('csv') > 0">
-          <spreadsheet-viewer :url="document.relativePath" :type="document.source.contentType"/>
+        <template v-else-if="document.contentType.indexOf('xls') > 0 || document.contentType.indexOf('csv') > 0">
+          <spreadsheet-viewer :url="document.relativePath" :type="document.contentType"/>
         </template>
         <template v-else>
           Not available

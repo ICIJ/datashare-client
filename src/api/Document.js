@@ -15,6 +15,9 @@ export default class Document extends EsDoc {
   get relativePath () {
     return this.source.path
   }
+  get contentType () {
+    return this.source.contentType || 'unknown'
+  }
   get creationDate () {
     return moment(this.source.metadata.tika_metadata_creation_date).format('LLL')
   }
