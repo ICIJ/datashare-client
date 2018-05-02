@@ -12,6 +12,9 @@ export default class Document extends EsDoc {
   get highlight () {
     return this.raw.highlight
   }
+  get relativePath () {
+    return this.source.path
+  }
   get creationDate () {
     return moment(this.source.metadata.tika_metadata_creation_date).format('LLL')
   }

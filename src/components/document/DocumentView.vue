@@ -60,7 +60,18 @@
       </div>
       <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
-        Not available
+        <template v-if="document.source.contentType === 'application/pdf'">
+          <pdf-viewer :url="document.relativePath" workerSrc="" />
+        </template>
+        <template v-else-if="document.source.contentType === 'image/tiff'">
+          <tiff-viewer :url="document.relativePath" />
+        </template>
+        <template v-else-if="document.source.contentType.indexOf('xls') > 0 || document.source.contentType.indexOf('csv') > 0">
+          <spreadsheet-viewer :url="document.relativePath" :type="document.source.contentType"/>
+        </template>
+        <template v-else>
+          Not available
+        </template>
       </div>
     </div>
   </div>
@@ -71,8 +82,15 @@ import {mapState} from 'vuex'
 import sortedUniqBy from 'lodash/sortedUniqBy'
 import escape from 'lodash/escape'
 import {highlight} from '@/utils/strings'
+import PdfViewer from './PdfViewer'
+import SpreadsheetViewer from './SpreadsheetViewer'
+import TiffViewer from './TiffViewer'
 
 export default {
+  components: {
+    TiffViewer,
+    SpreadsheetViewer,
+    PdfViewer},
   name: 'document-view',
   props: ['id', 'routing'],
   data () {
