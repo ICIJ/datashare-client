@@ -126,9 +126,3 @@ export default {
   }
 }
 </script>
-Vue.component('spreadsheet-viewer', {
-
-template: `
-
-`
-})
