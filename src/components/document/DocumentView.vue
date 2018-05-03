@@ -57,6 +57,7 @@
             <dd class="col-sm-9">{{ document.source.extractionLevel }}</dd>
           </template>
         </dl>
+        <a class="btn btn-primary" :href="document.relativePath">{{ $t('document.download_button') }}</a>
       </div>
       <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">

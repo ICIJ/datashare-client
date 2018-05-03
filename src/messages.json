@@ -32,7 +32,8 @@
       "tree_level": "Tree level",
       "details": "Details",
       "extracted_text": "Extracted text",
-      "preview": "Preview"
+      "preview": "Preview",
+      "download_button": "Download"
     },
     "indexing": {
       "btnLabel": "Index",
@@ -78,7 +79,8 @@
       "tree_level": "Niveau d'imbrication",
       "details": "Details",
       "extracted_text": "Texte",
-      "preview": "Prévisualisation"
+      "preview": "Prévisualisation",
+      "download_button": "Télécharger"
     },
     "indexing": {
       "btnLabel": "Indexer",
