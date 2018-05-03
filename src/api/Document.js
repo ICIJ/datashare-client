@@ -1,4 +1,5 @@
 import last from 'lodash/last'
+import split from 'lodash/split'
 import EsDoc from './EsDoc'
 import moment from 'moment'
 
@@ -13,7 +14,10 @@ export default class Document extends EsDoc {
     return this.raw.highlight
   }
   get relativePath () {
-    return this.source.path
+    if (this.source.path.indexOf(process.env.CONFIG.data_prefix) === -1) {
+      return this.source.path
+    }
+    return process.env.CONFIG.data_prefix + split(this.source.path, process.env.CONFIG.data_prefix, 2)[1]
   }
   get contentType () {
     return this.source.contentType || 'unknown'

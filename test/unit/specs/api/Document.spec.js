@@ -25,4 +25,19 @@ describe('Document', () => {
     let doc = new Document({_source: {contentLength: 12345678}})
     expect(doc.humanSize).to.equal('11.77 MB (12345678 B)')
   })
+
+  it('should give relative path of document from data prefix', () => {
+    let docFile = new Document({_source: {path: '/a/path/to/data/sub/dir/file.txt'}})
+    expect(docFile.relativePath).to.equal('/data/sub/dir/file.txt')
+  })
+
+  it('should give the original path of document from data prefix if no data string in path', () => {
+    let docFile = new Document({_source: {path: '/a/datapath/to/sub/dir/file.txt'}})
+    expect(docFile.relativePath).to.equal('/a/datapath/to/sub/dir/file.txt')
+  })
+
+  it('should give relative path when data_prefix is not a directory', () => {
+    let docFile = new Document({_source: {path: '/datashare/data/file.txt'}})
+    expect(docFile.relativePath).to.equal('/data/file.txt')
+  })
 })
