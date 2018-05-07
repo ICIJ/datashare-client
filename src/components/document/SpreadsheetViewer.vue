@@ -13,7 +13,7 @@
     </div>
     <div class="alert" v-if="!document.active">
       <i class="fa fa fa-cog fa-spin"></i>
-      Generating preview...
+      {{ info }}
     </div>
   </div>
 </template>
@@ -31,6 +31,7 @@ export default {
   props: ['url', 'type'],
   data () {
     return {
+      info: 'Generating preview...',
       document: {
         promise: null,
         active: null,
@@ -111,16 +112,13 @@ export default {
     data () {
       return new Promise((resolve, reject) => {
         if (!this.document.promise) {
-          // Asynchronous download the XLS(X)
-          if (this.type.indexOf('xls') === 0) {
+          if (this.type.localeCompare('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') === 0) {
             this.document.promise = this.xlsx()
-            // Asynchronous download the CSV
-          } else if (this.type === 'csv') {
+          } else if (this.type.localeCompare('text/csv') === 0) {
             this.document.promise = this.csv()
           }
         }
-        // Resolve the promise when the doc is loaded
-        this.document.promise.then(resolve)
+        this.document.promise.then(resolve).catch((err) => { this.info = err })
       })
     }
   }
