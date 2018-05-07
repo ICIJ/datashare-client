@@ -1,9 +1,9 @@
 <template>
   <div class="spreadsheet-viewer">
-    <div class="spreadsheet-viewer__header" v-if="document.active">
+    <div class="spreadsheet-viewer__header" v-if="doc.active">
       Sheet
-      <select class="form-control input-sm" v-model="document.active">
-        <option v-for="(_, name) in document.sheets" v-bind:key="name">
+      <select class="form-control input-sm" v-model="doc.active">
+        <option v-for="(_, name) in doc.sheets" v-bind:key="name">
           {{ name }}
         </option>
       </select>
@@ -11,7 +11,7 @@
     <div class="spreadsheet-viewer__hot">
       <div class="spreadsheet-viewer__hot__container"></div>
     </div>
-    <div class="alert" v-if="!document.active">
+    <div class="alert" v-if="!doc.active">
       <i class="fa fa fa-cog fa-spin"></i>
       {{ info }}
     </div>
@@ -32,7 +32,7 @@ export default {
   data () {
     return {
       info: 'Generating preview...',
-      document: {
+      doc: {
         promise: null,
         active: null,
         sheets: {}
@@ -42,13 +42,13 @@ export default {
   created () {
     this.type = trim(this.type.toLowerCase(), '.')
     this.data().then(workbook => {
-      this.$set(this.document, 'sheets', workbook)
-      this.$set(this.document, 'active', Object.keys(workbook)[0])
+      this.$set(this.doc, 'sheets', workbook)
+      this.$set(this.doc, 'active', Object.keys(workbook)[0])
     })
   },
   computed: {
     active () {
-      return this.document.active
+      return this.doc.active
     },
     hotEl () {
       return this.$el.querySelector('.spreadsheet-viewer__hot__container')
@@ -61,7 +61,7 @@ export default {
           this.hot.destroy()
         }
         this.hot = new Handsontable(this.hotEl, {
-          data: this.document.sheets[sheetname],
+          data: this.doc.sheets[sheetname],
           minSpareCols: 1,
           minSpareRows: 1,
           contextMenu: false,
@@ -111,14 +111,14 @@ export default {
     },
     data () {
       return new Promise((resolve, reject) => {
-        if (!this.document.promise) {
+        if (!this.doc.promise) {
           if (this.type.localeCompare('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') === 0) {
-            this.document.promise = this.xlsx()
+            this.doc.promise = this.xlsx()
           } else if (this.type.localeCompare('text/csv') === 0) {
-            this.document.promise = this.csv()
+            this.doc.promise = this.csv()
           }
         }
-        this.document.promise.then(resolve).catch((err) => { this.info = err })
+        this.doc.promise.then(resolve).catch((err) => { this.info = err })
       })
     }
   }

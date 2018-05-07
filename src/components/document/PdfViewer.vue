@@ -25,7 +25,7 @@ export default {
   props: ['url', 'workerSrc'],
   data () {
     return {
-      document: {
+      doc: {
         promise: null,
         active: 1,
         pages: []
@@ -34,29 +34,29 @@ export default {
   },
   methods: {
     page (p) {
-      this.$set(this.document, 'active', p)
+      this.$set(this.doc, 'active', p)
       // Did we fetch this page already?
-      if (this.document.pages[p - 1]) {
-        return this.document.pages[p - 1]
+      if (this.doc.pages[p - 1]) {
+        return this.doc.pages[p - 1]
       } else {
         this.pdf().then(pdf => {
           return this.render(pdf, p).then(canvas => {
-            if (this.document.pages.length === 0) {
-              this.$set(this.document, 'pages', new Array(pdf.pdfInfo.numPages))
+            if (this.doc.pages.length === 0) {
+              this.$set(this.doc, 'pages', new Array(pdf.pdfInfo.numPages))
             }
-            this.$set(this.document.pages, p - 1, canvas.toDataURL())
+            this.$set(this.doc.pages, p - 1, canvas.toDataURL())
           })
         })
       }
     },
     pdf () {
       return new Promise((resolve, reject) => {
-        if (this.document.promise) {
-          this.document.promise.then(resolve)
+        if (this.doc.promise) {
+          this.doc.promise.then(resolve)
         } else {
           PDFJS.workerSrc = this.workerSrc
-          this.document.promise = PDFJS.getDocument(this.url).promise
-          this.document.promise.then(resolve)
+          this.doc.promise = PDFJS.getDocument(this.url).promise
+          this.doc.promise.then(resolve)
         }
       })
     },
