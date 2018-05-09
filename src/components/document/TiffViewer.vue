@@ -1,28 +1,30 @@
 <template>
   <div class="tiff-viewer">
-    <div class="tiff-viewer__header text-center" v-if="doc.pages.length > 0">
-      <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, -1)">
-        <i class="fa fa-rotate-left"></i>
-      </button>
-      <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, 1)">
-        <i class="fa fa-rotate-right"></i>
-      </button>
-      <div class="tiff-viewer__header__pages">
-        Page <select class="form-control input-sm" v-model.number="doc.active">
-        <option v-for="page in doc.pages.length" v-bind:key="page.address">
-          {{ page }}
-        </option>
-      </select> of {{ doc.pages.length }}
+    <template v-if="doc.pages.length > 0">
+      <div class="tiff-viewer__header text-center">
+        <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, -1)">
+          <i class="fa fa-rotate-left"></i>
+        </button>
+        <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, 1)">
+          <i class="fa fa-rotate-right"></i>
+        </button>
+        <div class="tiff-viewer__header__pages">
+          Page <select class="form-control input-sm" v-model="doc.active">
+          <option v-for="page in doc.pages.length" v-bind:key="page">
+            {{ page }}
+          </option>
+        </select> of {{ doc.pages.length }}
+        </div>
       </div>
-    </div>
-    <div v-if="doc.active > 0" class="img-thumbnail">
-      <div class="alert tiff-viewer__warning">
-        <i class="fa fa-warning"></i> The browser preview of this TIFF file may not show all the images. We suggest you
-        download it in your computer to view all the contents.
+      <div class="img-thumbnail">
+        <div class="alert tiff-viewer__warning">
+          <i class="fa fa-warning"></i> The browser preview of this TIFF file may not show all the images. We suggest
+          you download it in your computer to view all the contents.
+        </div>
+        <img class="tiff-viewer__canvas img-responsive" :src="page(doc.active).toDataURL()"/>
       </div>
-
-    </div>
-    <div v-else class="alert"><i class="fa fa fa-cog fa-spin"></i>{{ info }}</div>
+    </template>
+    <div v-else class="alert"><i class="fa fa fa-cog fa-spin"></i>{{ message }}</div>
   </div>
 </template>
 
@@ -35,7 +37,7 @@ export default {
   props: ['url'],
   data () {
     return {
-      info: 'Generating preview...',
+      message: 'Generating preview...',
       tiff: null,
       doc: {
         active: 0,
@@ -53,20 +55,19 @@ export default {
         return this.doc.pages[p - 1]
       } else {
         if (this.tiff !== null) {
-          this.render(this.tiff, p)
+          return this.render(this.tiff, p)
         } else {
           return this.getTiff().then(tiff => {
             this.tiff = tiff
             // Then return a new promise to paginate the result
             return this.render(this.tiff, p).then(canvas => {
               if (this.doc.pages.length === 0) {
-                this.$set(this.doc, 'pages', new Array(this.tiff.countDirectory()))
+                this.doc.pages = new Array(this.tiff.countDirectory())
               }
-              // Canvas is ready, create an property for this page
-              this.$set(this.doc.pages, p - 1, canvas)
+              this.doc.pages[p - 1] = canvas
             })
           }).catch((err) => {
-            this.info = `${err.response.status} ${err.response.statusText}`
+            this.message = err.message
           })
         }
       }
@@ -77,19 +78,19 @@ export default {
           if (r.status >= 200 && r.status < 300) {
             return r
           } else {
-            var error = new Error(r.statusText)
+            var error = new Error(`${r.status} ${r.statusText}`)
             error.response = r
             throw error
           }
         })
         .then((r) => r.arrayBuffer())
-        .then((arrayBuffer) => new Tiff(arrayBuffer))
+        .then((arrayBuffer) => new Tiff({buffer: arrayBuffer}))
     },
     render (tiff, p) {
       return new Promise(resolve => {
         // Change tiff directory
         tiff.setDirectory(p)
-        this.$set(this.doc, 'active', p)
+        this.doc.active = p
         resolve(tiff.toCanvas())
       })
     },

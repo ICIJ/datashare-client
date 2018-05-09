@@ -9,4 +9,12 @@ describe('TiffViewer.vue', () => {
 
     expect(wrapped.vm.$el.querySelector('.alert').textContent).to.contain('404 Not Found')
   })
+
+  it('should display canvas when tiff is found', async () => {
+    var wrapped = mount(TiffViewer, {propsData: {'url': 'base/resources/image.tiff'}})
+    await wrapped.vm.page(1)
+    wrapped.update()
+
+    expect(wrapped.vm.$el.querySelector('img.tiff-viewer__canvas')).to.not.equal(null)
+  })
 })

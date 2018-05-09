@@ -31,7 +31,7 @@ export default {
   props: ['url', 'type'],
   data () {
     return {
-      info: 'Generating preview...',
+      message: 'Generating preview...',
       doc: {
         promise: null,
         active: null,

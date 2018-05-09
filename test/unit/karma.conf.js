@@ -29,7 +29,10 @@ module.exports = function karmaConfig (config) {
     },
     frameworks: ['mocha', 'sinon-chai', 'phantomjs-shim'],
     reporters: ['spec', 'coverage'],
-    files: ['./index.js'],
+    files: [
+      './index.js',
+      {pattern: 'resources/**/*.*', watched: false, included: false, served: true}
+    ],
     preprocessors: {
       './index.js': ['webpack', 'sourcemap']
     },
