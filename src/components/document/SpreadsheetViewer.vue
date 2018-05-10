@@ -77,38 +77,23 @@ export default {
         this.message = err.message
       })
     },
-    getArrayBuffer (url) {
-      return new Promise((resolve, reject) => {
-        var xhr = new XMLHttpRequest()
-        // Open the file using the prop's url
-        xhr.open('GET', url, true)
-        xhr.responseType = 'arraybuffer'
-        // Bind onload on the XHR objct
-        xhr.onload = function (e) {
-          if (this.status === 200) {
-            resolve(xhr.response)
-          } else {
-            reject(new Error('bad response status : ' + this.status))
-          }
-        }
-        xhr.send()
-      })
-    },
     xlsx () {
-      return this.getArrayBuffer(this.url).then(arraybuffer => {
-        var data = new Uint8Array(arraybuffer)
-        var arr = []
-        for (var i = 0; i !== data.length; ++i) {
-          arr[i] = String.fromCharCode(data[i])
-        }
-        var workbook = XLSX.read(arr.join(''), {type: 'binary'})
-        var result = {}
-        workbook.SheetNames.forEach(function (sheetname) {
-          var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetname], {header: 1})
-          if (roa.length > 0) result[sheetname] = roa
+      return ds.getSource(this.url)
+        .then(r => r.arrayBuffer())
+        .then(arrayBuffer => {
+          var data = new Uint8Array(arrayBuffer)
+          var arr = []
+          for (var i = 0; i !== data.length; ++i) {
+            arr[i] = String.fromCharCode(data[i])
+          }
+          var workbook = XLSX.read(arr.join(''), {type: 'binary'})
+          var result = {}
+          workbook.SheetNames.forEach(function (sheetname) {
+            var roa = XLSX.utils.sheet_to_json(workbook.Sheets[sheetname], {header: 1})
+            if (roa.length > 0) result[sheetname] = roa
+          })
+          return result
         })
-        return result
-      })
     },
     csv () {
       return ds.getSource(this.url)
