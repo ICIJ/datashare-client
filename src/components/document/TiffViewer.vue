@@ -30,7 +30,9 @@
 
 <script>
 import Tiff from 'tiff.js'
-import 'whatwg-fetch'
+import {DatashareClient} from '@/api/datashare'
+
+const ds = new DatashareClient()
 
 export default {
   name: 'tiff-viewer',
@@ -73,16 +75,7 @@ export default {
       }
     },
     getTiff () {
-      return fetch(this.url)
-        .then((r) => {
-          if (r.status >= 200 && r.status < 300) {
-            return r
-          } else {
-            var error = new Error(`${r.status} ${r.statusText}`)
-            error.response = r
-            throw error
-          }
-        })
+      return ds.getSource(this.url)
         .then((r) => r.arrayBuffer())
         .then((arrayBuffer) => new Tiff({buffer: arrayBuffer}))
     },

@@ -13,4 +13,15 @@ export class DatashareClient {
   getTasks () {
     return fetch('/task/')
   }
+  getSource (url) {
+    return fetch(url).then((r) => {
+      if (r.status >= 200 && r.status < 300) {
+        return r
+      } else {
+        var error = new Error(`${r.status} ${r.statusText}`)
+        error.response = r
+        throw error
+      }
+    })
+  }
 }

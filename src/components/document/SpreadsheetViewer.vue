@@ -13,18 +13,18 @@
     </div>
     <div class="alert" v-if="!doc.active">
       <i class="fa fa fa-cog fa-spin"></i>
-      {{ info }}
+      {{ message }}
     </div>
   </div>
 </template>
 
 <script>
-import trim from 'lodash/trim'
-import Vue from 'vue'
-import 'whatwg-fetch'
 import Handsontable from 'handsontable'
 import XLSX from 'xlsx'
 import Papa from 'papaparse'
+import {DatashareClient} from '@/api/datashare'
+
+const ds = new DatashareClient()
 
 export default {
   name: 'spreadsheet-viewer',
@@ -32,19 +32,15 @@ export default {
   data () {
     return {
       message: 'Generating preview...',
+      spreadsheet: null,
       doc: {
-        promise: null,
         active: null,
         sheets: {}
       }
     }
   },
-  created () {
-    this.type = trim(this.type.toLowerCase(), '.')
-    this.data().then(workbook => {
-      this.$set(this.doc, 'sheets', workbook)
-      this.$set(this.doc, 'active', Object.keys(workbook)[0])
-    })
+  mounted () {
+    this.getWorkbook()
   },
   computed: {
     active () {
@@ -54,23 +50,33 @@ export default {
       return this.$el.querySelector('.spreadsheet-viewer__hot__container')
     }
   },
-  watch: {
-    active (sheetname) {
-      Vue.nextTick(() => {
-        if (this.hot) {
-          this.hot.destroy()
+  methods: {
+    getWorkbook () {
+      let p = null
+      if (this.type.localeCompare('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') === 0) {
+        p = this.xlsx()
+      } else if (this.type.localeCompare('text/csv') === 0) {
+        p = this.csv()
+      } else {
+        return null
+      }
+      return p.then(workbook => {
+        this.doc.sheets = workbook
+        this.doc.active = Object.keys(workbook)[0]
+        if (this.spreadsheet) {
+          this.spreadsheet.destroy()
         }
-        this.hot = new Handsontable(this.hotEl, {
-          data: this.doc.sheets[sheetname],
+        this.spreadsheet = new Handsontable(this.hotEl, {
+          data: this.doc.sheets[this.doc.active],
           minSpareCols: 1,
           minSpareRows: 1,
           contextMenu: false,
           preventOverflow: 'horizontal'
         })
+      }).catch(err => {
+        this.message = err.message
       })
-    }
-  },
-  methods: {
+    },
     getArrayBuffer (url) {
       return new Promise((resolve, reject) => {
         var xhr = new XMLHttpRequest()
@@ -105,21 +111,9 @@ export default {
       })
     },
     csv () {
-      return fetch(this.url).then(csv => {
-        return {1: Papa.parse(csv).data}
-      })
-    },
-    data () {
-      return new Promise((resolve, reject) => {
-        if (!this.doc.promise) {
-          if (this.type.localeCompare('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') === 0) {
-            this.doc.promise = this.xlsx()
-          } else if (this.type.localeCompare('text/csv') === 0) {
-            this.doc.promise = this.csv()
-          }
-        }
-        this.doc.promise.then(resolve).catch((err) => { this.info = err })
-      })
+      return ds.getSource(this.url)
+        .then(r => r.text())
+        .then(csv => { return { 1: Papa.parse(csv).data } })
     }
   }
 }
