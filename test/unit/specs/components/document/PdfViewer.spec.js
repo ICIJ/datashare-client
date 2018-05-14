@@ -1,13 +1,14 @@
 import {mount} from 'vue-test-utils'
 import PdfViewer from '@/components/document/PdfViewer'
 
-describe('PdfViewer.vue', () => {
-//  it('should display error when PDF is not found', async () => {
-//    var wrapped = mount(PdfViewer, {propsData: {'url': 'invalid.url'}})
-//    await wrapped.vm.page(1)
-//
-//    expect(wrapped.vm.$el.querySelector('.alert').textContent).to.contain('404 Not Found')
-//  })
+describe.only('PdfViewer.vue', () => {
+  it('should display error when PDF is not found', async () => {
+    var wrapped = mount(PdfViewer, {propsData: {'url': 'invalid.url'}})
+    await wrapped.vm.page(1)
+    wrapped.update()
+
+    expect(wrapped.vm.$el.querySelector('.alert').textContent).to.contain('Missing PDF')
+  })
 
   it('should display canvas when PDF is found', async () => {
     var wrapped = mount(PdfViewer, {propsData: {'url': 'base/resources/document.pdf'}})
