@@ -1,64 +1,62 @@
 <template>
   <div class="pdf-viewer">
-    <div class="pdf-viewer__header" v-if="document.pages.length > 1">
-      Page <select class="form-control input-sm" v-model.number="document.active">
-      <option v-for="page in document.pages.length" v-bind:key="page.address">
-        {{ page }}
-      </option>
-    </select> of {{ document.pages.length }}
-    </div>
-    <div v-if="page(document.active)">
-      <img class="pdf-viewer__canvas img-responsive img-thumbnail" :src="page(document.active)"/>
-    </div>
+    <template v-if="doc.pages.length > 0">
+      <div class="pdf-viewer__header">
+        Page <select class="form-control input-sm" v-model="doc.active">
+        <option v-for="page in doc.pages.length" v-bind:key="page.address">
+          {{ page }}
+        </option>
+      </select> of {{ doc.pages.length }}
+      </div>
+      <img class="pdf-viewer__canvas img-responsive img-thumbnail" :src="page(doc.active).toDataURL()"/>
+    </template>
     <div v-else class="alert">
       <i class="fa fa fa-cog fa-spin"></i>
-      Generating preview...
+      {{ message }}
     </div>
   </div>
 </template>
 
 <script>
 import PDFJS from 'pdfjs-dist'
+import Worker from 'pdfjs-dist/build/pdf.worker.js'
+(typeof window !== 'undefined' ? window : {}).pdfjsWorker = Worker
 
 export default {
   name: 'pdf-viewer',
-  props: ['url', 'workerSrc'],
+  props: ['url'],
   data () {
     return {
+      message: 'Generating preview...',
       doc: {
-        promise: null,
-        active: 1,
+        active: 0,
         pages: []
       }
     }
   },
   methods: {
     page (p) {
-      this.$set(this.doc, 'active', p)
       // Did we fetch this page already?
       if (this.doc.pages[p - 1]) {
         return this.doc.pages[p - 1]
       } else {
-        this.pdf().then(pdf => {
+        return this.loadPdf().then(pdf => {
           return this.render(pdf, p).then(canvas => {
             if (this.doc.pages.length === 0) {
               this.$set(this.doc, 'pages', new Array(pdf.pdfInfo.numPages))
             }
-            this.$set(this.doc.pages, p - 1, canvas.toDataURL())
+            this.$set(this.doc, 'active', p)
+            this.$set(this.doc.pages, p - 1, canvas)
+            return this.doc.pages[p - 1]
           })
+        }).catch(err => {
+          this.message = err.message
         })
       }
     },
-    pdf () {
-      return new Promise((resolve, reject) => {
-        if (this.doc.promise) {
-          this.doc.promise.then(resolve)
-        } else {
-          PDFJS.workerSrc = this.workerSrc
-          this.doc.promise = PDFJS.getDocument(this.url).promise
-          this.doc.promise.then(resolve)
-        }
-      })
+    loadPdf () {
+      let loadingTask = PDFJS.getDocument(this.url)
+      return loadingTask.promise
     },
     render (pdf, p) {
       return pdf.getPage(p).then(page => {

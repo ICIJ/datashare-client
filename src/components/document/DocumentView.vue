@@ -62,7 +62,7 @@
       <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
         <template v-if="document.contentType === 'application/pdf'">
-          <pdf-viewer :url="document.relativePath" workerSrc="" />
+          <pdf-viewer :url="document.relativePath" />
         </template>
         <template v-else-if="document.contentType === 'image/tiff'">
           <tiff-viewer :url="document.relativePath" />
