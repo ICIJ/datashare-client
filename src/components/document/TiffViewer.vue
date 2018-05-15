@@ -50,6 +50,9 @@ export default {
   created () {
     Tiff.initialize({TOTAL_MEMORY: 16777216 * 10})
   },
+  mounted () {
+    this.page(1)
+  },
   methods: {
     page (p) {
       // Did we fetch this page already?

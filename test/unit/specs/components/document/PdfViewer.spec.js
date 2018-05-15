@@ -1,7 +1,12 @@
 import {mount} from 'vue-test-utils'
 import PdfViewer from '@/components/document/PdfViewer'
+import noop from 'lodash/noop'
 
 describe('PdfViewer.vue', () => {
+  beforeEach(async () => {
+    PdfViewer.mounted = noop
+  })
+
   it('should display error when PDF is not found', async () => {
     var wrapped = mount(PdfViewer, {propsData: {'url': 'invalid.url'}})
     await wrapped.vm.page(1)

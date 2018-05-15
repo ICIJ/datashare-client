@@ -34,6 +34,9 @@ export default {
       }
     }
   },
+  mounted () {
+    this.page(1)
+  },
   methods: {
     page (p) {
       // Did we fetch this page already?

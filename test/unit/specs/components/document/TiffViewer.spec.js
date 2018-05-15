@@ -1,7 +1,12 @@
 import {mount} from 'vue-test-utils'
 import TiffViewer from '@/components/document/TiffViewer'
+import noop from 'lodash/noop'
 
 describe('TiffViewer.vue', () => {
+  beforeEach(async () => {
+    TiffViewer.mounted = noop
+  })
+
   it('should display error when tiff is not found', async () => {
     var wrapped = mount(TiffViewer, {propsData: {'url': 'invalid.url'}})
     await wrapped.vm.page(1)
