@@ -23,8 +23,9 @@ const webpackConfig = merge(baseWebpackConfig, {
       extract: true,
       usePostCSS: true
     }), {
-      test: /\.worker\.js$/,
-      loader: 'worker-loader',
+        test: /\.worker\.js$/,
+        loader: 'worker-loader',
+        options: {name: utils.assetsPath('js/[name].js')}
     }
   ]},
   devtool: config.build.productionSourceMap ? config.build.devtool : false,

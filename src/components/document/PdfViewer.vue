@@ -19,8 +19,10 @@
 
 <script>
 import PDFJS from 'pdfjs-dist'
-import Worker from 'pdfjs-dist/build/pdf.worker.js'
+import Worker from 'pdfjs-dist/build/pdf.worker'
 (typeof window !== 'undefined' ? window : {}).pdfjsWorker = Worker
+
+PDFJS.GlobalWorkerOptions.workerSrc = 'static/js/pdf.worker.js'
 
 export default {
   name: 'pdf-viewer',
