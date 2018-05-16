@@ -30,6 +30,7 @@ export default {
   data () {
     return {
       message: 'Generating preview...',
+      pdf: null,
       doc: {
         active: 0,
         pages: []
@@ -43,15 +44,16 @@ export default {
     page (p) {
       // Did we fetch this page already?
       if (this.doc.pages[p - 1]) {
+        this.doc.active = p
         return this.doc.pages[p - 1]
       } else {
         return this.loadPdf().then(pdf => {
-          return this.render(pdf, p).then(canvas => {
+          return this.renderPage(pdf, p).then(canvas => {
             if (this.doc.pages.length === 0) {
-              this.$set(this.doc, 'pages', new Array(pdf.pdfInfo.numPages))
+              this.doc.pages = new Array(pdf.pdfInfo.numPages)
             }
-            this.$set(this.doc, 'active', p)
-            this.$set(this.doc.pages, p - 1, canvas)
+            this.doc.active = p
+            this.doc.pages[p - 1] = canvas
             return this.doc.pages[p - 1]
           })
         }).catch(err => {
@@ -60,10 +62,17 @@ export default {
       }
     },
     loadPdf () {
-      let loadingTask = PDFJS.getDocument(this.url)
-      return loadingTask.promise
+      if (this.pdf !== null) {
+        return new Promise(() => this.pdf)
+      } else {
+        let loadingTask = PDFJS.getDocument(this.url)
+        return loadingTask.promise.then(pdf => {
+          this.pdf = pdf
+          return pdf
+        })
+      }
     },
-    render (pdf, p) {
+    renderPage (pdf, p) {
       return pdf.getPage(p).then(page => {
         const scale = 1.5
         const viewport = page.getViewport(scale)
