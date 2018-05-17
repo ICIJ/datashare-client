@@ -8,7 +8,9 @@
         </option>
       </select> of {{ doc.pages.length }}
       </div>
-      <img class="pdf-viewer__canvas img-responsive img-thumbnail" :src="page(doc.active)"/>
+      <div v-if="page(doc.active)">
+        <img class="pdf-viewer__canvas img-responsive img-thumbnail" :src="page(doc.active)"/>
+      </div>
     </template>
     <div v-else class="alert">
       <i class="fa fa fa-cog fa-spin"></i>
@@ -38,7 +40,7 @@ export default {
     }
   },
   mounted () {
-    this.page(1)
+    this.loadPage(1)
   },
   methods: {
     page (p) {
@@ -47,19 +49,22 @@ export default {
         this.doc.active = p
         return this.doc.pages[p - 1]
       } else {
-        return this.loadPdf().then(pdf => {
-          return this.renderPage(pdf, p).then(canvas => {
-            if (this.doc.pages.length === 0) {
-              this.doc.pages = new Array(pdf.pdfInfo.numPages)
-            }
-            this.doc.active = p
-            this.doc.pages[p - 1] = canvas.toDataURL()
-            return this.doc.pages[p - 1]
-          })
-        }).catch(err => {
-          this.message = err.message
-        })
+        this.loadPage(p)
       }
+    },
+    loadPage (p) {
+      return this.loadPdf().then(pdf => {
+        return this.renderPage(pdf, p).then(canvas => {
+          if (this.doc.pages.length === 0) {
+            this.doc.pages = new Array(pdf.pdfInfo.numPages)
+          }
+          this.doc.active = p
+          this.doc.pages[p - 1] = canvas.toDataURL()
+          return this.doc.pages[p - 1]
+        })
+      }).catch(err => {
+        this.message = err.message
+      })
     },
     loadPdf () {
       if (this.pdf !== null) {
