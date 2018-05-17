@@ -21,7 +21,7 @@
           <i class="fa fa-warning"></i> The browser preview of this TIFF file may not show all the images. We suggest
           you download it in your computer to view all the contents.
         </div>
-        <img class="tiff-viewer__canvas img-responsive" :src="page(doc.active).toDataURL()"/>
+        <img class="tiff-viewer__canvas img-responsive" :width="maxWidth" :src="page(doc.active).toDataURL()"/>
       </div>
     </template>
     <div v-else class="alert"><i class="fa fa fa-cog fa-spin"></i>{{ message }}</div>
@@ -40,6 +40,7 @@ export default {
   data () {
     return {
       message: 'Generating preview...',
+      maxWidth: 800,
       tiff: null,
       doc: {
         active: 0,
