@@ -3,7 +3,7 @@ import PdfViewer from '@/components/document/PdfViewer'
 import noop from 'lodash/noop'
 import PDFJS from 'pdfjs-dist'
 
-describe('PdfViewer.vue', () => {
+describe.only('PdfViewer.vue', () => {
   beforeEach(async () => {
     PdfViewer.mounted = noop
   })
@@ -28,7 +28,7 @@ describe('PdfViewer.vue', () => {
     var getDocument = sinon.spy(PDFJS, 'getDocument')
     var wrapped = mount(PdfViewer, {propsData: {'url': 'base/resources/document.pdf'}})
     await wrapped.vm.page(1)
-    await wrapped.vm.page(1)
+    await wrapped.vm.page(2)
     wrapped.update()
 
     getDocument.restore()

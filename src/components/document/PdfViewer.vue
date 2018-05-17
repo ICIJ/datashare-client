@@ -8,7 +8,7 @@
         </option>
       </select> of {{ doc.pages.length }}
       </div>
-      <img class="pdf-viewer__canvas img-responsive img-thumbnail" :src="page(doc.active).toDataURL()"/>
+      <img class="pdf-viewer__canvas img-responsive img-thumbnail" :src="page(doc.active)"/>
     </template>
     <div v-else class="alert">
       <i class="fa fa fa-cog fa-spin"></i>
@@ -53,7 +53,7 @@ export default {
               this.doc.pages = new Array(pdf.pdfInfo.numPages)
             }
             this.doc.active = p
-            this.doc.pages[p - 1] = canvas
+            this.doc.pages[p - 1] = canvas.toDataURL()
             return this.doc.pages[p - 1]
           })
         }).catch(err => {
@@ -63,7 +63,7 @@ export default {
     },
     loadPdf () {
       if (this.pdf !== null) {
-        return new Promise(() => this.pdf)
+        return new Promise((resolve) => resolve(this.pdf))
       } else {
         let loadingTask = PDFJS.getDocument(this.url)
         return loadingTask.promise.then(pdf => {
