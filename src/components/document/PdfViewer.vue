@@ -2,7 +2,7 @@
   <div class="pdf-viewer">
     <template v-if="doc.pages.length > 0">
       <div class="pdf-viewer__header">
-        Page <select class="form-control input-sm" v-model="doc.active">
+        Page <select class="form-control input-sm" v-model.number="doc.active">
         <option v-for="page in doc.pages.length" v-bind:key="page.address">
           {{ page }}
         </option>
@@ -59,7 +59,7 @@ export default {
             this.doc.pages = new Array(pdf.pdfInfo.numPages)
           }
           this.doc.active = p
-          this.doc.pages[p - 1] = canvas.toDataURL()
+          this.$set(this.doc.pages, p - 1, canvas.toDataURL())
           return this.doc.pages[p - 1]
         })
       }).catch(err => {
@@ -70,8 +70,7 @@ export default {
       if (this.pdf !== null) {
         return new Promise((resolve) => resolve(this.pdf))
       } else {
-        let loadingTask = PDFJS.getDocument(this.url)
-        return loadingTask.promise.then(pdf => {
+        return PDFJS.getDocument(this.url).then(pdf => {
           this.pdf = pdf
           return pdf
         })
