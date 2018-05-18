@@ -14,7 +14,7 @@
     <div class="search-results-item__fragments" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
 
     <ul class="named-entities list-inline">
-      <li class="named-entity list-inline-item" v-for="ne in doc.get('innerHits.NamedEntity.hits.hits', [])" :key="ne._source.id" :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
+      <li class="named-entity list-inline-item" v-for="ne in namedEntities" :key="ne._source.id" :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
         <router-link :to="{ name: 'document', params: { id: doc.id } }" class="badge badge-pill badge-primary">
           {{ ne._source.mention}}
         </router-link>
@@ -25,6 +25,7 @@
 
 <script>
 import get from 'lodash/get'
+import uniqBy from 'lodash/uniqBy'
 import settings from '@/utils/settings'
 
 export default {
@@ -50,6 +51,9 @@ export default {
     },
     folderParams () {
       return { q: `path:"${this.folder}"` }
+    },
+    namedEntities () {
+      return uniqBy(this.doc.get('innerHits.NamedEntity.hits.hits', []), '_source.mention')
     }
   }
 }
