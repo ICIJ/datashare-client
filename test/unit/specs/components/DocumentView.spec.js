@@ -48,7 +48,7 @@ describe('DocumentView.vue', () => {
     await Vue.nextTick()
 
     expect(wrapped.isEmpty()).to.equal(true)
-  }, 5000)
+  })
 
   it('should display a document', async () => {
     await letData(es).have(new IndexedDocument('foo.txt').withContent('this is foo document')).commit()
@@ -59,7 +59,7 @@ describe('DocumentView.vue', () => {
 
     expect(wrapped.vm.$el.querySelector('h3').textContent).to.equal('foo.txt')
     expect(wrapped.vm.$el.querySelectorAll('dd')[2].textContent).to.equal('foo.txt')
-  }, 5000)
+  })
 
   it('should display a child document', async () => {
     await letData(es).have(new IndexedDocument('parent.txt').withContent('this is a parent document')).commit()
@@ -71,7 +71,7 @@ describe('DocumentView.vue', () => {
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelector('h3').textContent).to.equal('child.txt')
-  }, 5000)
+  })
 
   it('should mark named entities', async () => {
     await letData(es).have(new IndexedDocument('mydoc.txt').withContent('a NER doc with 2 NER2')
@@ -86,7 +86,7 @@ describe('DocumentView.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('mark')[0].classList.contains('category1')).to.equal(true)
     expect(wrapped.vm.$el.querySelectorAll('mark')[1].textContent).to.equal('NER2')
     expect(wrapped.vm.$el.querySelectorAll('mark')[1].classList.contains('category2')).to.equal(true)
-  }, 5000)
+  })
 
   it('should display a document with named entities and escaped HTML', async () => {
     await letData(es).have(new IndexedDocument('html_doc.txt').withContent('a foo document <with>HTML</with>')
@@ -98,5 +98,5 @@ describe('DocumentView.vue', () => {
 
     expect(wrapped.vm.$el.querySelector('.text-pre-wrap').innerHTML).to.equal(
       'a <mark class="ner organization">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;')
-  }, 5000)
+  })
 })
