@@ -117,6 +117,17 @@ describe('Search.vue', () => {
     await wrapped.vm.search('bar')
     await Vue.nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__pagination').textContent)).to.equal('Next Page')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__pagination').textContent)).to.equal('Next page')
+  })
+
+  it('should display Page suivante in french', async () => {
+    const Constructor = Vue.extend(Search)
+    const vm = new Constructor({store, router, i18n: new VueI18n({locale: 'fr', messages})}).$mount()
+
+    await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
+    await vm.search('bar')
+    await Vue.nextTick()
+
+    expect(trim(vm.$el.querySelector('.search-results__header__pagination').textContent)).to.equal('Page suivante')
   })
 })
