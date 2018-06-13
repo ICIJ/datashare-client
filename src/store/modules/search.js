@@ -132,6 +132,10 @@ export const actions = {
 
     return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
+  nextPage ({ state, commit }) {
+    commit('from', state.from + state.size)
+    return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+  },
   addFacetValue ({ commit, dispatch }, facet) {
     commit('addFacetValue', facet)
     return dispatch('query')

@@ -229,4 +229,37 @@ describe('store/module/search', () => {
     await store.dispatch('query', { query: 'document', from: 0, size: 3 })
     expect(store.state.response.hits.length).to.equal(3)
   })
+
+  it('should return 1 document', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await store.dispatch('query', { query: 'document', from: 3, size: 3 })
+    expect(store.state.response.hits.length).to.equal(1)
+  })
+
+  it('should return 1 document', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await store.dispatch('query', { query: 'document', from: 0, size: 3 })
+    await store.dispatch('nextPage')
+    expect(store.state.response.hits.length).to.equal(1)
+  })
+
+  it('should return 0 document', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await store.dispatch('query', { query: 'document', from: 0, size: 3 })
+    await store.dispatch('nextPage')
+    await store.dispatch('nextPage')
+    expect(store.state.response.hits.length).to.equal(0)
+  })
 })

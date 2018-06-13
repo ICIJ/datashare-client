@@ -47,7 +47,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search('foo')
     await Vue.nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header').textContent)).to.equal('No documents found')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__number-of-results').textContent)).to.equal('No documents found')
   })
 
   it('should display one document found', async () => {
@@ -55,7 +55,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search('bar')
     await Vue.nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header').textContent)).to.equal('1 document found')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__number-of-results').textContent)).to.equal('1 document found')
     expect(trim(wrapped.vm.$el.querySelector('.search-results-item__fragments').innerHTML)).to.equal('this is <mark>bar</mark> document')
   })
 
@@ -66,7 +66,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search('bar')
     await Vue.nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header').textContent)).to.equal('2 documents found')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__number-of-results').textContent)).to.equal('2 documents found')
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(2)
   })
 
@@ -110,5 +110,13 @@ describe('Search.vue', () => {
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(3)
+  })
+
+  it('should display Next page', async () => {
+    await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
+    await wrapped.vm.search('bar')
+    await Vue.nextTick()
+
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__pagination').textContent)).to.equal('Next Page')
   })
 })

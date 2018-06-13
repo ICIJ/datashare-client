@@ -2,7 +2,8 @@
   <div class="search-results">
     <div v-if="query && response.hits.length > 0">
       <div class="search-results__header">
-        {{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total')}) }}
+        <div class="search-results__header__number-of-results">{{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total')}) }}</div>
+        <div class="search-results__header__pagination" @click="nextPage">Next Page</div>
       </div>
       <div class="search-results__items">
         <search-results-item v-for="doc in response.hits" :key="doc.id" :doc="doc" />
@@ -10,7 +11,7 @@
     </div>
     <div v-else>
       <div class="search-results__header">
-        {{ $t('search.results.no-result') }}
+        <div class="search-results__header__number-of-results">{{ $t('search.results.no-result') }}</div>
       </div>
     </div>
   </div>
@@ -22,7 +23,12 @@ import SearchResultsItem from './SearchResultsItem.vue'
 export default {
   name: 'SearchResults',
   props: ['response', 'query'],
-  components: { SearchResultsItem }
+  components: { SearchResultsItem },
+  methods: {
+    nextPage () {
+      this.$store.dispatch('search/nextPage')
+    }
+  }
 }
 </script>
 
