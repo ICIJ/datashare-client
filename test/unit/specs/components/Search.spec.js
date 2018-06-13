@@ -44,8 +44,7 @@ describe('Search.vue', () => {
   })
 
   it('should display no document found', async () => {
-    wrapped.vm.q = 'foo'
-    await wrapped.vm.search()
+    await wrapped.vm.search('foo')
     await Vue.nextTick()
 
     expect(trim(wrapped.vm.$el.querySelector('.search-results__header').textContent)).to.equal('No documents found')
@@ -53,8 +52,7 @@ describe('Search.vue', () => {
 
   it('should display one document found', async () => {
     await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
-    wrapped.vm.q = 'bar'
-    await wrapped.vm.search()
+    await wrapped.vm.search('bar')
     await Vue.nextTick()
 
     expect(trim(wrapped.vm.$el.querySelector('.search-results__header').textContent)).to.equal('1 document found')
@@ -64,9 +62,8 @@ describe('Search.vue', () => {
   it('should display two documents found', async () => {
     await letData(es).have(new IndexedDocument('docs/bar1.txt').withContent('this is bar 1 document')).commit()
     await letData(es).have(new IndexedDocument('docs/bar2.txt').withContent('this is bar 2 document')).commit()
-    wrapped.vm.q = 'bar'
 
-    await wrapped.vm.search()
+    await wrapped.vm.search('bar')
     await Vue.nextTick()
 
     expect(trim(wrapped.vm.$el.querySelector('.search-results__header').textContent)).to.equal('2 documents found')
@@ -75,9 +72,7 @@ describe('Search.vue', () => {
 
   it('should make a link without routing for a document', async () => {
     await letData(es).have(new IndexedDocument('doc.txt').withContent('this is a document')).commit()
-    wrapped.vm.q = 'document'
-
-    await wrapped.vm.search()
+    await wrapped.vm.search('document')
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelector('.search-results-item__basename a').href).to.match(/doc.txt$/)
@@ -86,11 +81,34 @@ describe('Search.vue', () => {
   it('should make a link with routing for a child document', async () => {
     await letData(es).have(new IndexedDocument('parent.txt').withContent('this is a parent document')).commit()
     await letData(es).have(new IndexedDocument('child.txt').withContent('this is a children document').withParent('parent.txt')).commit()
-    wrapped.vm.q = 'children'
 
-    await wrapped.vm.search()
+    await wrapped.vm.search('children')
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelector('.search-results-item__basename a').href).to.match(/child.txt\/parent.txt/)
+  })
+
+  it('should return 2 documents', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await wrapped.vm.search({ query: 'document', from: 0, size: 2 })
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(2)
+  })
+
+  it('should return 3 documents', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(3)
   })
 })

@@ -209,4 +209,24 @@ describe('store/module/search', () => {
     await store.dispatch('addFacetValue', { name: 'content-type', value: ['csv', 'pdf'] })
     expect(store.getters.findFacet('content-type').values).to.have.lengthOf(3)
   })
+
+  it('should return 2 documents', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await store.dispatch('query', { query: 'document', from: 0, size: 2 })
+    expect(store.state.response.hits.length).to.equal(2)
+  })
+
+  it('should return 3 documents', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await store.dispatch('query', { query: 'document', from: 0, size: 3 })
+    expect(store.state.response.hits.length).to.equal(3)
+  })
 })

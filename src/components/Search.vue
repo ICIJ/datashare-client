@@ -60,9 +60,9 @@ export default {
     })
   },
   methods: {
-    search (query = this.q) {
+    search (queryOrParams) {
       this.isReady = false
-      return this.$store.dispatch('search/query', query)
+      return this.$store.dispatch('search/query', queryOrParams)
         .then(() => {
           this.isReady = true
         })

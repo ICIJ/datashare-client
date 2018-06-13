@@ -11,6 +11,8 @@ import uniq from 'lodash/uniq'
 
 export const state = {
   query: '',
+  from: 0,
+  size: 25,
   facets: [],
   response: Response.none()
 }
@@ -18,6 +20,12 @@ export const state = {
 export const getters = {
   getQuery (state) {
     return state.query
+  },
+  getFrom (state) {
+    return state.from
+  },
+  getSize (state) {
+    return state.size
   },
   hasFacetValue (state) {
     return item => !!find(state.facets, facet => {
@@ -63,11 +71,21 @@ export const getters = {
 export const mutations = {
   clear (state) {
     state.query = ''
+    state.from = 0
+    state.size = 25
     state.facets = []
     state.response = Response.none()
   },
   query (state, query) {
     state.query = query
+    state.response = Response.none()
+  },
+  from (state, from) {
+    state.from = from
+    state.response = Response.none()
+  },
+  size (state, size) {
+    state.size = size
     state.response = Response.none()
   },
   buildResponse (state, raw) {
@@ -107,9 +125,12 @@ export const mutations = {
 }
 
 export const actions = {
-  query ({ state, commit }, query = state.query) {
-    commit('query', query)
-    return client.searchDocs(query, state.facets).then(raw => { commit('buildResponse', raw) })
+  query ({ state, commit }, queryOrParams = { query: state.query, from: state.from, size: state.size }) {
+    commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String ? queryOrParams : queryOrParams.query)
+    commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.from : queryOrParams.from)
+    commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
+
+    return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   addFacetValue ({ commit, dispatch }, facet) {
     commit('addFacetValue', facet)
