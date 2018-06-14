@@ -8,7 +8,8 @@
       },
       "more": "Explore more",
       "placeholder": "Search for people, companies, etc",
-      "inthedocs": "In the documents"
+      "inthedocs": "In the documents",
+      "relative": "Relative to the search"
     },
     "search": {
       "placeholder": "Search in documents...",
@@ -56,7 +57,8 @@
       },
       "more": "Explorer plus",
       "placeholder": "Rechercher des personnes, entreprises, etc.",
-      "inthedocs": "Dans les documents"
+      "inthedocs": "Dans les documents",
+      "relative": "Relatifs à la recherche"
     },
     "search": {
       "placeholder": "Rechercher dans les documents...",

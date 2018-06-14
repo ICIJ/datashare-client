@@ -13,6 +13,8 @@ export default {
   },
   created () {
     this.aggregate()
+    // Watch change on the facet store the restart aggregation
+    this.$store.watch(this.watchedForUpdate, this.aggregate, { deep: true })
   },
   computed: {
     items () {
@@ -34,6 +36,7 @@ export default {
     aggregate () {
       if (this.facet) {
         this.isReady = false
+        this.response = Response.none()
         return this.$store.dispatch('aggregation/query', this.facet).then(r => {
           this.response = r
           this.isReady = true
@@ -60,13 +63,20 @@ export default {
       return this.$store.getters['search/hasFacetValue'](this.facet.itemParam(item))
     },
     hasValues () {
-      return this.$store.getters['search/hasFacetValues'](this.facet.name)
+      return this.isReady && this.$store.getters['search/hasFacetValues'](this.facet.name)
     },
     isReversed () {
       return this.$store.getters['search/isFacetReversed'](this.facet.name)
     },
     toggleItems () {
       this.collapseItems = !this.collapseItems
+    },
+    watchedForUpdate (state) {
+      if (!state.aggregation.global) {
+        // This will allow to watch change on the search only when
+        // the aggregation is not global (ie. relative to the search).
+        return state.search
+      }
     },
     refreshRoute () {
       this.$router.push({
@@ -120,7 +130,6 @@ export default {
         overflow: hidden;
 
         &--active {
-          font-weight: bolder;
 
           &:before {
             content: "";

@@ -1,5 +1,13 @@
 <template>
   <div class="aggregations-panel">
+    <div class="aggregations-panel__global-toggler px-4 pt-3 pb-0">
+      <label class="custom-control custom-checkbox m-0" :class="{ 'text-muted': !relative }">
+        <input type="checkbox" class="custom-control-input" v-model="relative" />
+        <span class="custom-control-label">
+          {{ $t('aggregations.relative') }}
+        </span>
+      </label>
+    </div>
     <component v-for="facet in facets" :key="facet.name" :is="facet.type" v-bind="{ facet }"></component>
   </div>
 </template>
@@ -12,6 +20,16 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'AggregationsPanel',
+  data () {
+    return {
+      relative: !this.$store.state.aggregation.global
+    }
+  },
+  watch: {
+    relative (areRelative) {
+      this.$store.commit('aggregation/global', !areRelative)
+    }
+  },
   components: {
     FacetNamedEntity,
     FacetText

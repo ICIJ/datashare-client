@@ -19,14 +19,14 @@ export const state = {
       type: FacetText.name,
       itemParam: (item) => ({ name: 'content-type', value: item.key }),
       itemLabel: (item) => get(types, [item.key, 'label'], item.key),
-      body: bodybuilder().agg('terms', 'contentType', 'contentType')
+      body: (body) => body.agg('terms', 'contentType', 'contentType')
     },
     {
       name: 'language',
       key: 'language',
       type: FacetText.name,
       itemParam: (item) => ({ name: 'language', value: item.key }),
-      body: bodybuilder().agg('terms', 'language', 'language')
+      body: (body) => body.agg('terms', 'language', 'language')
     },
     {
       name: 'named-entity',
@@ -34,7 +34,7 @@ export const state = {
       key: 'mentions',
       type: FacetNamedEntity.name,
       itemParam: (item) => item.key,
-      body: bodybuilder()
+      body: (body) => body
         .query('term', 'type', 'NamedEntity')
         .agg('terms', 'mentionNorm', 'mentions', {
           'size': 15,
@@ -49,6 +49,9 @@ const isAValidFacet = facet => {
 }
 
 export const mutations = {
+  global (state, areGlobal = !state.global) {
+    state.global = areGlobal
+  },
   addFacet (state, facet) {
     if (!isAValidFacet(facet)) {
       throw new Error('Facet is malformed')
@@ -63,6 +66,20 @@ export const mutations = {
 export const getters = {
   getFacet (state) {
     return predicate => find(state.facets, predicate)
+  },
+  buildFacetBody (state, getters, $rootState) {
+    return predicate => {
+      // Find the Bodybuilder instance for this faet using a predicate
+      const body = getters.getFacet(predicate).body(bodybuilder())
+      // If the aggregation must not be global (relative to a search)
+      // we add the query conditions to the body.
+      if (!state.global) {
+        client.addQueryToBody($rootState.search.query, body)
+      }
+      // We finally build the body with no docs (size 0) to avoid loading
+      // content twice.
+      return body.size(0).build()
+    }
   }
 }
 
@@ -72,7 +89,7 @@ export const actions = {
       index: process.env.CONFIG.es_index,
       type: 'doc',
       size: 0,
-      body: getters.getFacet(facetPredicate).body.size(2).build()
+      body: getters.buildFacetBody(facetPredicate)
     }).then(raw => new Response(raw))
   }
 }
