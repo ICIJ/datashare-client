@@ -31,12 +31,15 @@ export default class Response {
   get aggregations () {
     return this[_raw].aggregations || {}
   }
+  get total () {
+    return this[_raw].hits.total
+  }
   static instantiate (hit) {
     const Type = find(Response.types, Type => Type.match(hit))
     return new Type(hit)
   }
   static none () {
-    return new Response({hits: {hits: []}})
+    return new Response({hits: {hits: [], total: 0}})
   }
   static get types () {
     return [Document, NamedEntity]

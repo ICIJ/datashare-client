@@ -21,7 +21,7 @@ describe('store/module/search', () => {
     await es.indices.delete({index: process.env.CONFIG.es_index})
   })
   beforeEach(async () => {
-    await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', body: {query: {match_all: {}}}})
+    await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}}})
     store = new Vuex.Store({ state, actions, mutations, getters })
     // Reset default search not to inherit from previous searches
     store.commit('clear')
@@ -248,10 +248,11 @@ describe('store/module/search', () => {
 
     await store.dispatch('query', { query: 'document', from: 0, size: 3 })
     await store.dispatch('nextPage')
+    expect(store.state.from).to.equal(3)
     expect(store.state.response.hits.length).to.equal(1)
   })
 
-  it('should return 0 documents', async () => {
+  it('should return 1 document', async () => {
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
@@ -260,7 +261,8 @@ describe('store/module/search', () => {
     await store.dispatch('query', { query: 'document', from: 0, size: 3 })
     await store.dispatch('nextPage')
     await store.dispatch('nextPage')
-    expect(store.state.response.hits.length).to.equal(0)
+    expect(store.state.from).to.equal(3)
+    expect(store.state.response.hits.length).to.equal(1)
   })
 
   it('should return 4 documents on the first page', async () => {
@@ -270,6 +272,7 @@ describe('store/module/search', () => {
     await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
 
     await store.dispatch('firstPage')
+    expect(store.state.from).to.equal(0)
     expect(store.state.response.hits.length).to.equal(4)
   })
 
@@ -283,6 +286,7 @@ describe('store/module/search', () => {
     await store.dispatch('nextPage')
     await store.dispatch('nextPage')
     await store.dispatch('firstPage')
+    expect(store.state.from).to.equal(0)
     expect(store.state.response.hits.length).to.equal(3)
   })
 
@@ -297,6 +301,36 @@ describe('store/module/search', () => {
     await store.dispatch('nextPage')
     await store.dispatch('nextPage')
     await store.dispatch('previousPage')
+    expect(store.state.from).to.equal(2)
+    expect(store.state.response.hits.length).to.equal(2)
+  })
+
+  it('should return 0 documents in total', async () => {
+    await store.dispatch('query', '*')
+    expect(store.state.response.total).to.equal(0)
+  })
+
+  it('should return 5 documents in total', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocument('doc_05.txt').withContent('this is the fifth document')).commit()
+
+    await store.dispatch('query', { query: 'document', from: 0, size: 2 })
+    expect(store.state.response.total).to.equal(5)
+  })
+
+  it('should return the last page whose contains 2 documents', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocument('doc_05.txt').withContent('this is the fifth document')).commit()
+
+    await store.dispatch('query', { query: 'document', from: 0, size: 3 })
+    await store.dispatch('lastPage')
+    expect(store.state.from).to.equal(3)
     expect(store.state.response.hits.length).to.equal(2)
   })
 })

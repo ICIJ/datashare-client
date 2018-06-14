@@ -5,7 +5,8 @@ import castArray from 'lodash/castArray'
 import each from 'lodash/each'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
-import min from 'lodash/min'
+import floor from 'lodash/floor'
+import max from 'lodash/max'
 import reduce from 'lodash/reduce'
 import remove from 'lodash/remove'
 import uniq from 'lodash/uniq'
@@ -144,7 +145,6 @@ export const actions = {
     commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String ? queryOrParams : queryOrParams.query)
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.from : queryOrParams.from)
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
-
     return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   firstPage ({ state, commit }) {
@@ -152,11 +152,17 @@ export const actions = {
     return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   previousPage ({ state, commit }) {
-    commit('from', min([0, state.from - state.size]))
+    commit('from', max([0, state.from - state.size]))
     return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   nextPage ({ state, commit }) {
-    commit('from', state.from + state.size)
+    const nextFrom = state.from + state.size
+    nextFrom < state.response.total ? commit('from', nextFrom) : commit('from', state.from)
+    return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+  },
+  lastPage ({ state, commit }) {
+    // Calculate the "from" parameter to display the last page
+    commit('from', state.size * floor(state.response.total / state.size))
     return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   addFacetValue ({ commit, dispatch }, facet) {
