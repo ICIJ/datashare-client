@@ -285,4 +285,18 @@ describe('store/module/search', () => {
     await store.dispatch('firstPage')
     expect(store.state.response.hits.length).to.equal(3)
   })
+
+  it('should return 2 documents on the second page', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocument('doc_05.txt').withContent('this is the fifth document')).commit()
+
+    await store.dispatch('query', { query: 'document', from: 0, size: 2 })
+    await store.dispatch('nextPage')
+    await store.dispatch('nextPage')
+    await store.dispatch('previousPage')
+    expect(store.state.response.hits.length).to.equal(2)
+  })
 })

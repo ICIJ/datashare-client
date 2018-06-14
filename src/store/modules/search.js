@@ -5,6 +5,7 @@ import castArray from 'lodash/castArray'
 import each from 'lodash/each'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
+import min from 'lodash/min'
 import reduce from 'lodash/reduce'
 import remove from 'lodash/remove'
 import uniq from 'lodash/uniq'
@@ -148,6 +149,10 @@ export const actions = {
   },
   firstPage ({ state, commit }) {
     commit('from', 0)
+    return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+  },
+  previousPage ({ state, commit }) {
+    commit('from', min([0, state.from - state.size]))
     return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   nextPage ({ state, commit }) {
