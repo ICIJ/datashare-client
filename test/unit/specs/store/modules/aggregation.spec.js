@@ -9,7 +9,7 @@ import {IndexedDocument, letData} from 'test/unit/es_utils'
 
 let store = null
 
-describe.only('store/module/aggregation', () => {
+describe('store/module/aggregation', () => {
   var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
   before(async () => {
     await es.indices.create({index: process.env.CONFIG.es_index})
