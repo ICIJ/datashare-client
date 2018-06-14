@@ -10,7 +10,7 @@ import remove from 'lodash/remove'
 import uniq from 'lodash/uniq'
 
 export const state = {
-  query: '',
+  query: '*',
   from: 0,
   size: 25,
   facets: [],
@@ -70,7 +70,7 @@ export const getters = {
 
 export const mutations = {
   clear (state) {
-    state.query = ''
+    state.query = '*'
     state.from = 0
     state.size = 25
     state.facets = []
@@ -130,6 +130,10 @@ export const actions = {
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.from : queryOrParams.from)
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
 
+    return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+  },
+  firstPage ({ state, commit }) {
+    commit('from', 0)
     return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   nextPage ({ state, commit }) {

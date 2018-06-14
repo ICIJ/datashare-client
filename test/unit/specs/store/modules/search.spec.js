@@ -1,4 +1,4 @@
-import { actions, mutations, getters } from '@/store/modules/search'
+import { state, actions, mutations, getters } from '@/store/modules/search'
 import Response from '@/api/Response'
 import Document from '@/api/Document'
 import NamedEntity from '@/api/NamedEntity'
@@ -6,13 +6,11 @@ import esMapping from '@/datashare_index_mappings.json'
 
 import elasticsearch from 'elasticsearch-browser'
 import Vuex from 'vuex'
-import cloneDeep from 'lodash/cloneDeep'
 
 import {IndexedDocument, letData} from 'test/unit/es_utils'
 
 describe('store/module/search', () => {
   var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
-  var state = { query: '', response: Response.none(), facets: [] }
   var store = null
 
   before(async () => {
@@ -24,7 +22,9 @@ describe('store/module/search', () => {
   })
   beforeEach(async () => {
     await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', body: {query: {match_all: {}}}})
-    store = new Vuex.Store({ state: cloneDeep(state), actions, mutations, getters })
+    store = new Vuex.Store({ state, actions, mutations, getters })
+    // Reset default search not to inherit from previous searches
+    store.commit('clear')
   })
 
   it('should define a store module', () => {
@@ -251,7 +251,7 @@ describe('store/module/search', () => {
     expect(store.state.response.hits.length).to.equal(1)
   })
 
-  it('should return 0 document', async () => {
+  it('should return 0 documents', async () => {
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
@@ -261,5 +261,28 @@ describe('store/module/search', () => {
     await store.dispatch('nextPage')
     await store.dispatch('nextPage')
     expect(store.state.response.hits.length).to.equal(0)
+  })
+
+  it('should return 4 documents on the first page', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await store.dispatch('firstPage')
+    expect(store.state.response.hits.length).to.equal(4)
+  })
+
+  it('should return 3 documents on the first page', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await store.dispatch('query', { query: 'document', from: 0, size: 3 })
+    await store.dispatch('nextPage')
+    await store.dispatch('nextPage')
+    await store.dispatch('firstPage')
+    expect(store.state.response.hits.length).to.equal(3)
   })
 })
