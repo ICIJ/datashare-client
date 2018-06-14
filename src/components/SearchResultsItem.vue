@@ -47,7 +47,7 @@ export default {
     },
     location () {
       // Remove the base folder
-      return this.folder.replace(settings.document.base, '')
+      return this.folder.replace(settings.document.base, '~')
     },
     folderParams () {
       return { q: `path:"${this.folder}"` }

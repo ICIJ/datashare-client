@@ -27,6 +27,20 @@ export function docPlugin (Client, config, components) {
 }
 
 export function searchPlugin (Client, config, components) {
+  Client.prototype.addFacetsToBody = function (facets, body) {
+    // Add facet one by one as a MUST filter
+    each(facets, facetValue => {
+      // Find the facet's definition for the given value
+      const facet = store.getters['aggregation/getFacet']({ name: facetValue.name })
+      // A reversed facetValue means we want to exclude the value
+      if (facetValue.reverse) {
+        return body.notFilter('terms', facet.key, facetValue.values)
+      } else {
+        return body.addFilter('terms', facet.key, facetValue.values)
+      }
+    })
+  }
+
   Client.prototype.addQueryToBody = function (query, body) {
     // Create a top-level "MUST query" which contain a "SHOULD query" including
     // a query_string and NamedEntity. If we don't add a `match_all` query,
@@ -48,17 +62,7 @@ export function searchPlugin (Client, config, components) {
   Client.prototype.searchDocs = function (query, facets = [], from = 0, size = 25) {
     // We're going to build the body step by step
     const body = bodybuilder().from(from).size(size)
-    // Add facet one by one as a MUST filter
-    each(facets, facetValue => {
-      // Find the facet's definition for the given value
-      const facet = store.getters['aggregation/getFacet']({ name: facetValue.name })
-      // A reversed facetValue means we want to exclude the value
-      if (facetValue.reverse) {
-        return body.notFilter('terms', facet.key, facetValue.values)
-      } else {
-        return body.addFilter('terms', facet.key, facetValue.values)
-      }
-    })
+    this.addFacetsToBody(facets, body)
     this.addQueryToBody(query, body)
     // Add an option to exclude the content
     body.rawOption('_source', { includes: ['*'], excludes: ['content'] })

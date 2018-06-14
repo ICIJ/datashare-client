@@ -74,6 +74,7 @@ export const getters = {
       // If the aggregation must not be global (relative to a search)
       // we add the query conditions to the body.
       if (!state.global) {
+        client.addFacetsToBody($rootState.search.facets, body)
         client.addQueryToBody($rootState.search.query, body)
       }
       // We finally build the body with no docs (size 0) to avoid loading

@@ -19,7 +19,7 @@ export default class EsDoc {
     })
   }
   get (path, defaultValue) {
-    return get(this, path, defaultValue)
+    return get(this.raw, path, defaultValue)
   }
   get raw () {
     return this[_raw]
