@@ -27,7 +27,7 @@ const i18n = new VueI18n({locale: 'en', messages})
 Vue.component('content-placeholder', ContentPlaceholder)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
-describe.only('FacetText.vue', () => {
+describe('FacetText.vue', () => {
   var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
   var wrapped = null
   before(async () => {
