@@ -6,6 +6,7 @@ import VueProgressBar from 'vue-progressbar'
 
 import noop from 'lodash/noop'
 import find from 'lodash/find'
+import trim from 'lodash/trim'
 import elasticsearch from 'elasticsearch-browser'
 
 import {mount, createLocalVue} from 'vue-test-utils'
@@ -109,7 +110,7 @@ describe('FacetText.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
   })
 
-  it('should display apply relative facet and get back to global facet', async () => {
+  it('should apply relative facet and get back to global facet', async () => {
     await letData(es).have(new IndexedDocument('index.js').withContent('Lorem').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('index.html').withContent('Ipsum').withContentType('text/html')).commit()
 
@@ -128,5 +129,23 @@ describe('FacetText.vue', () => {
     await wrapped.vm.aggregate()
     await Vue.nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
+  })
+
+  it('should display an item for inverted facet with no docs', async () => {
+    await letData(es).have(new IndexedDocument('index.js').withContent('Lorem').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('index.html').withContent('Lorem').withContentType('text/html')).commit()
+
+    store.commit('search/query', '*')
+    store.commit('aggregation/global', false)
+    store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
+    store.commit('search/excludeFacet', 'content-type')
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    const lastItem = wrapped.vm.$el.querySelector('.facet-text__items__item:last-child')
+
+    expect(lastItem.classList.contains('facet-text__items__item--active')).to.equal(true)
+    expect(trim(lastItem.querySelector('span').textContent)).to.equal('0')
   })
 })

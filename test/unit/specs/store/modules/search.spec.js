@@ -133,7 +133,7 @@ describe('store/module/search', () => {
     expect(store.state.response.hits.length).to.equal(3)
     await store.dispatch('addFacetValue', { name: 'content-type', value: 'txt' })
     expect(store.state.response.hits.length).to.equal(1)
-    await store.dispatch('invertFacet', 'content-type')
+    await store.dispatch('toggleFacet', 'content-type')
     expect(store.state.response.hits.length).to.equal(2)
   })
 
@@ -146,9 +146,9 @@ describe('store/module/search', () => {
 
     await store.dispatch('query', '*')
     await store.dispatch('addFacetValue', { name: 'content-type', value: 'txt' })
-    await store.dispatch('invertFacet', 'content-type')
+    await store.dispatch('toggleFacet', 'content-type')
     expect(store.state.response.hits.length).to.equal(3)
-    await store.dispatch('invertFacet', 'content-type')
+    await store.dispatch('toggleFacet', 'content-type')
     expect(store.state.response.hits.length).to.equal(2)
   })
 
@@ -168,14 +168,14 @@ describe('store/module/search', () => {
     await store.dispatch('addFacetValue', { name: 'content-type', value: 'txt' })
     assert(store.getters.hasFacetValues('content-type'))
     assert(!store.getters.isFacetReversed('content-type'))
-    await store.dispatch('invertFacet', 'content-type')
+    await store.dispatch('toggleFacet', 'content-type')
     assert(store.getters.isFacetReversed('content-type'))
   })
 
   it('should take into reverse a facet and not the others', async () => {
     await store.dispatch('addFacetValue', { name: 'content-type', value: 'txt' })
     await store.dispatch('addFacetValue', { name: 'language', value: 'fr' })
-    await store.dispatch('invertFacet', 'content-type')
+    await store.dispatch('toggleFacet', 'content-type')
     assert(store.getters.isFacetReversed('content-type'))
     assert(!store.getters.isFacetReversed('language'))
   })

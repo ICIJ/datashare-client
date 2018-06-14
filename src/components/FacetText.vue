@@ -1,5 +1,6 @@
 <script>
 import Response from '@/api/Response'
+import each from 'lodash/each'
 
 export default {
   name: 'FacetText',
@@ -23,6 +24,9 @@ export default {
     headerIcon () {
       return this.collapseItems ? 'caret-right' : 'caret-down'
     },
+    facetFilter () {
+      return this.$store.getters['search/findFacet'](this.facet.name)
+    },
     placeholderRows () {
       return [
         {
@@ -30,6 +34,9 @@ export default {
           boxes: [[0, '70%'], ['20%', '10%']]
         }
       ]
+    },
+    isGlobal () {
+      return this.$store.state.aggregation.global
     }
   },
   methods: {
@@ -38,10 +45,18 @@ export default {
         this.isReady = false
         this.response = Response.none()
         return this.$store.dispatch('aggregation/query', this.facet).then(r => {
-          this.response = r
+          this.response = this.addInvertedFacets(r)
           this.isReady = true
         })
       }
+    },
+    addInvertedFacets (response) {
+      if (!this.isGlobal && this.facetFilter && this.facetFilter.reverse) {
+        each(this.facetFilter.values, key => {
+          response.push(`aggregations.${this.facet.key}.buckets`, { key })
+        })
+      }
+      return response
     },
     addValue (item) {
       this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
@@ -56,7 +71,7 @@ export default {
       this.refreshRoute()
     },
     invert () {
-      this.$store.commit('search/invertFacet', this.facet.name)
+      this.$store.commit('search/toggleFacet', this.facet.name)
       this.refreshRoute()
     },
     hasValue (item) {
@@ -106,7 +121,7 @@ export default {
       <div class="list-group-item facet-text__items__item p-0" v-for="item in items" :key="item.key" :class="{ 'facet-text__items__item--active': hasValue(item) }">
         <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
           <span class="badge badge-pill badge-light float-right">
-            {{ item.doc_count }}
+            {{ item.doc_count || 0 }}
           </span>
           {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
         </a>

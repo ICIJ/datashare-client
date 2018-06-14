@@ -115,11 +115,25 @@ export const mutations = {
       }
     }
   },
-  invertFacet (state, name, toggler = null) {
+  excludeFacet (state, name) {
     // Look for facet for this name
     const existingFacet = find(state.facets, { name })
     if (existingFacet) {
-      existingFacet.reverse = toggler !== null ? toggler : !existingFacet.reverse
+      existingFacet.reverse = true
+    }
+  },
+  includeFacet (state, name) {
+    // Look for facet for this name
+    const existingFacet = find(state.facets, { name })
+    if (existingFacet) {
+      existingFacet.reverse = true
+    }
+  },
+  toggleFacet (state, name) {
+    // Look for facet for this name
+    const existingFacet = find(state.facets, { name })
+    if (existingFacet) {
+      existingFacet.reverse = !existingFacet.reverse
     }
   }
 }
@@ -148,8 +162,8 @@ export const actions = {
     commit('removeFacetValue', facet)
     return dispatch('query')
   },
-  invertFacet ({ commit, dispatch }, name) {
-    commit('invertFacet', name)
+  toggleFacet ({ commit, dispatch }, name) {
+    commit('toggleFacet', name)
     return dispatch('query')
   },
   updateFromRouteQuery ({ commit, rootState }, query) {
@@ -169,7 +183,7 @@ export const actions = {
           // use the query values.
           commit('addFacetValue', facet.itemParam({ key: query[key] }))
           // Invert the facet if we are using the second key (for reverse facet)
-          if (index) commit('invertFacet', facet.name, true)
+          if (index) commit('excludeFacet', facet.name)
         }
       })
     })
