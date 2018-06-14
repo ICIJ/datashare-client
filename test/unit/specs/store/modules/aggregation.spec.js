@@ -9,7 +9,7 @@ import {IndexedDocument, letData} from 'test/unit/es_utils'
 
 let store = null
 
-describe('store/module/aggregation', () => {
+describe.only('store/module/aggregation', () => {
   var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
   before(async () => {
     await es.indices.create({index: process.env.CONFIG.es_index})
@@ -41,8 +41,8 @@ describe('store/module/aggregation', () => {
     expect(store.getters.getFacet({ name: 'yo-type' })).to.equal(undefined)
   })
 
-  it('should have a facet with a build method', () => {
-    expect(store.state.facets[0].body).to.respondTo('build')
+  it('should have a facet with a body method', () => {
+    expect(store.state.facets[0]).to.respondTo('body')
   })
 
   it('should add a facet', () => {
