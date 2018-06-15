@@ -2,26 +2,18 @@ import { state, actions, mutations, getters } from '@/store/modules/search'
 import Response from '@/api/Response'
 import Document from '@/api/Document'
 import NamedEntity from '@/api/NamedEntity'
-import esMapping from '@/datashare_index_mappings.json'
 
-import elasticsearch from 'elasticsearch-browser'
 import Vuex from 'vuex'
 
 import {IndexedDocument, letData} from 'test/unit/es_utils'
+import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 
 describe('store/module/search', () => {
-  var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
+  esConnectionHelper()
+  var es = esConnectionHelper.es
   var store = null
 
-  before(async () => {
-    await es.indices.create({index: process.env.CONFIG.es_index})
-    await es.indices.putMapping({index: process.env.CONFIG.es_index, type: 'doc', body: esMapping})
-  })
-  after(async () => {
-    await es.indices.delete({index: process.env.CONFIG.es_index})
-  })
   beforeEach(async () => {
-    await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}}})
     store = new Vuex.Store({ state, actions, mutations, getters })
     // Reset default search not to inherit from previous searches
     store.commit('clear')
@@ -281,6 +273,7 @@ describe('store/module/search', () => {
     await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
     await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    // await letData(es).have(new IndexedDocuments().baseName("doc").count(4)).commit()
 
     await store.dispatch('query', { query: 'document', from: 0, size: 3 })
     await store.dispatch('nextPage')

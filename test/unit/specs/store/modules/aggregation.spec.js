@@ -1,27 +1,19 @@
 import { state, actions, getters, mutations } from '@/store/modules/aggregation'
-import esMapping from '@/datashare_index_mappings.json'
 
-import elasticsearch from 'elasticsearch-browser'
 import Vuex from 'vuex'
 import cloneDeep from 'lodash/cloneDeep'
 
 import {IndexedDocument, letData} from 'test/unit/es_utils'
-
-let store = null
+import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 
 describe('store/module/aggregation', () => {
-  var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
-  before(async () => {
-    await es.indices.create({index: process.env.CONFIG.es_index})
-    await es.indices.putMapping({index: process.env.CONFIG.es_index, type: 'doc', body: esMapping})
-  })
-  after(async () => {
-    await es.indices.delete({index: process.env.CONFIG.es_index})
-  })
+  esConnectionHelper()
+  var es = esConnectionHelper.es
+  let store = null
+
   beforeEach(async () => {
     // Recreate the store before every test to preserve the intial step
     store = new Vuex.Store({ state: cloneDeep(state), actions, getters, mutations })
-    await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}}})
   })
 
   it('should define a `content-type` facet correctly', () => {

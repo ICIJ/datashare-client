@@ -6,9 +6,8 @@ import noop from 'lodash/noop'
 import trim from 'lodash/trim'
 import 'es6-promise/auto'
 import {mount, createLocalVue} from 'vue-test-utils'
-import elasticsearch from 'elasticsearch-browser'
 
-import esMapping from '@/datashare_index_mappings.json'
+import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
@@ -26,17 +25,10 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('coontent-placeholder', ContentPlaceholder)
 
 describe('Search.vue', () => {
-  var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
+  esConnectionHelper()
+  var es = esConnectionHelper.es
   var wrapped = null
-  before(async () => {
-    await es.indices.create({index: process.env.CONFIG.es_index})
-    await es.indices.putMapping({index: process.env.CONFIG.es_index, type: 'doc', body: esMapping})
-  })
-  after(async () => {
-    await es.indices.delete({index: process.env.CONFIG.es_index})
-  })
   beforeEach(async () => {
-    await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', body: {query: {match_all: {}}}})
     const localVue = createLocalVue()
     localVue.use(VueI18n)
     Search.created = noop

@@ -1,7 +1,6 @@
 import {createLocalVue, mount} from 'vue-test-utils'
 import {IndexedDocument, letData} from 'test/unit/es_utils'
-import esMapping from '@/datashare_index_mappings.json'
-import elasticsearch from 'elasticsearch-browser'
+import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 
 import messages from '@/messages'
 import router from '@/router'
@@ -25,17 +24,10 @@ Vue.component('content-placeholder', ContentPlaceholder)
 const i18n = new VueI18n({locale: 'en', messages})
 
 describe('DocumentView.vue', () => {
+  esConnectionHelper()
+  var es = esConnectionHelper.es
   var wrapped = null
-  var es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
-  before(async () => {
-    await es.indices.create({index: process.env.CONFIG.es_index})
-    await es.indices.putMapping({index: process.env.CONFIG.es_index, type: 'doc', body: esMapping})
-  })
-  after(async () => {
-    await es.indices.delete({index: process.env.CONFIG.es_index})
-  })
   beforeEach(async () => {
-    await es.deleteByQuery({index: process.env.CONFIG.es_index, conflicts: 'proceed', body: {query: {match_all: {}}}})
     const localVue = createLocalVue()
     localVue.use(VueI18n)
     wrapped = mount(DocumentView, {i18n, router, store})
