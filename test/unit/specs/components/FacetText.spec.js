@@ -29,6 +29,7 @@ Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 describe('FacetText.vue', () => {
   esConnectionHelper()
+  var es = esConnectionHelper.es
   var wrapped = null
   beforeEach(async () => {
     const localVue = createLocalVue()
@@ -42,6 +43,10 @@ describe('FacetText.vue', () => {
         facet: find(store.state.aggregation.facets, {name: 'content-type'})
       }
     })
+  })
+
+  afterEach(async () => {
+    store.commit('aggregation/setGlobalSearch', true)
   })
 
   it('should display empty list', async () => {
@@ -91,7 +96,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.aggregate()
     await Vue.nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(3)
-    store.commit('aggregation/global', false)
+    store.commit('aggregation/setGlobalSearch', false)
     await wrapped.vm.aggregate()
     await Vue.nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(1)
@@ -106,17 +111,17 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('index.html').withContent('Ipsum').withContentType('text/html')).commit()
 
     store.commit('search/query', 'Lorem')
-    store.commit('aggregation/global', true)
+    store.commit('aggregation/setGlobalSearch', true)
     await wrapped.vm.aggregate()
     await Vue.nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
 
-    store.commit('aggregation/global', false)
+    store.commit('aggregation/setGlobalSearch', false)
     await wrapped.vm.aggregate()
     await Vue.nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(1)
 
-    store.commit('aggregation/global', true)
+    store.commit('aggregation/setGlobalSearch', true)
     await wrapped.vm.aggregate()
     await Vue.nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
@@ -127,7 +132,7 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('index.html').withContent('Lorem').withContentType('text/html')).commit()
 
     store.commit('search/query', '*')
-    store.commit('aggregation/global', false)
+    store.commit('aggregation/setGlobalSearch', false)
     store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
     store.commit('search/excludeFacet', 'content-type')
 

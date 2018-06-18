@@ -10,7 +10,7 @@ import find from 'lodash/find'
 import get from 'lodash/get'
 
 export const state = {
-  global: true,
+  globalSearch: true,
   facets: [
     {
       name: 'content-type',
@@ -49,8 +49,8 @@ const isAValidFacet = facet => {
 }
 
 export const mutations = {
-  global (state, areGlobal = !state.global) {
-    state.global = areGlobal
+  setGlobalSearch (state, globalSearch) {
+    state.globalSearch = globalSearch
   },
   addFacet (state, facet) {
     if (!isAValidFacet(facet)) {
@@ -73,7 +73,7 @@ export const getters = {
       const body = getters.getFacet(predicate).body(bodybuilder())
       // If the aggregation must not be global (relative to a search)
       // we add the query conditions to the body.
-      if (!state.global) {
+      if (!state.globalSearch) {
         client.addFacetsToBody($rootState.search.facets, body)
         client.addQueryToBody($rootState.search.query, body)
       }

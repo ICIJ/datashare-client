@@ -36,7 +36,7 @@ export default {
       ]
     },
     isGlobal () {
-      return this.$store.state.aggregation.global
+      return this.$store.state.aggregation.globalSearch
     }
   },
   methods: {
@@ -87,7 +87,7 @@ export default {
       this.collapseItems = !this.collapseItems
     },
     watchedForUpdate (state) {
-      if (!state.aggregation.global) {
+      if (!state.aggregation.globalSearch) {
         // This will allow to watch change on the search only when
         // the aggregation is not global (ie. relative to the search).
         return state.search

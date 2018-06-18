@@ -12,7 +12,6 @@ describe('store/module/aggregation', () => {
   let store = null
 
   beforeEach(async () => {
-    // Recreate the store before every test to preserve the intial step
     store = new Vuex.Store({ state: cloneDeep(state), actions, getters, mutations })
   })
 
