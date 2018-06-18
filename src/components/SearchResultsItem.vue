@@ -53,7 +53,7 @@ export default {
       return { q: `path:"${this.folder}"` }
     },
     namedEntities () {
-      return uniqBy(this.doc.get('innerHits.NamedEntity.hits.hits', []), '_source.mention')
+      return uniqBy(this.doc.get('inner_hits.NamedEntity.hits.hits', []), '_source.mention')
     }
   }
 }
