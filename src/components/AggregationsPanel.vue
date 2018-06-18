@@ -1,8 +1,8 @@
 <template>
   <div class="aggregations-panel">
     <div class="aggregations-panel__global-toggler px-4 pt-3 pb-0">
-      <label class="custom-control custom-checkbox m-0" :class="{ 'text-muted': globalSearch }">
-        <input type="checkbox" class="custom-control-input" v-model="globalSearch" />
+      <label class="custom-control custom-checkbox m-0" :class="{ 'text-muted': relativeSearch }">
+        <input type="checkbox" class="custom-control-input" v-model="relativeSearch" />
         <span class="custom-control-label">
           {{ $t('aggregations.relative') }}
         </span>
@@ -22,12 +22,12 @@ export default {
   name: 'AggregationsPanel',
   data () {
     return {
-      globalSearch: this.$store.state.aggregation.globalSearch
+      relativeSearch: !this.$store.state.aggregation.globalSearch
     }
   },
   watch: {
-    globalSearch (globalSearch) {
-      this.$store.commit('aggregation/setGlobalSearch', globalSearch)
+    relativeSearch (relativeSearch) {
+      this.$store.commit('aggregation/setGlobalSearch', !relativeSearch)
     }
   },
   components: {
