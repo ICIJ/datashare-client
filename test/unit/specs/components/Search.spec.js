@@ -49,7 +49,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search('bar')
     await Vue.nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__number-of-results').textContent)).to.equal('1 document found')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).to.equal('on 1 document found')
     expect(trim(wrapped.vm.$el.querySelector('.search-results-item__fragments').innerHTML)).to.equal('this is <mark>bar</mark> document')
   })
 
@@ -60,7 +60,7 @@ describe('Search.vue', () => {
     await wrapped.vm.search('bar')
     await Vue.nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__number-of-results').textContent)).to.equal('2 documents found')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).to.equal('on 2 documents found')
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(2)
   })
 

@@ -8,8 +8,13 @@
         <div @click="previousPage" v-bind:class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__previous-page']">
           <font-awesome-icon icon="angle-left" />
         </div>
-        <div class="search-results__header__number-of-results">
-          {{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total')}) }}
+        <div class="search-results__header__progress">
+          <div class="search-results__header__progress__pagination">
+            {{ $store.state.search.from + 1 }} - {{ $store.state.search.from + $store.state.search.size }}
+          </div>
+          <div class="search-results__header__progress_number-of-results">
+            {{ $tc('search.results.on') }} {{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total')}) }}
+          </div>
         </div>
         <div @click="nextPage" v-bind:class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__next-page']">
           <font-awesome-icon icon="angle-right" />
@@ -82,9 +87,13 @@ export default {
       > div {
         padding: 0.3rem;
 
-        &.search-results__header__number-of-results {
+        &.search-results__header__progress {
           flex: 1 auto;
           text-align: center;
+
+          > div {
+            display: inline-block;
+          }
         }
 
         &.search-results__header__first-page,

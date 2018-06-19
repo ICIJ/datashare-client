@@ -18,7 +18,8 @@
         "match": "match in doc",
         "entities": "nb entities",
         "results": "1 document found | %{total} documents found",
-        "no-result": "No documents found"
+        "no-result": "No documents found",
+        "on": "on"
       }
     },
     "document": {
@@ -66,7 +67,8 @@
         "match": "dans le doc",
         "entities": "nb entités",
         "results": "1 document trouvé | %{total} documents trouvés",
-        "no-result": "Aucun document trouvé"
+        "no-result": "Aucun document trouvé",
+        "on": "sur"
       }
     },
     "document": {
