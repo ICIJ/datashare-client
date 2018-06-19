@@ -5,7 +5,7 @@ import NamedEntity from '@/api/NamedEntity'
 
 import Vuex from 'vuex'
 
-import {IndexedDocument, letData} from 'test/unit/es_utils'
+import { IndexedDocuments, IndexedDocument, letData } from 'test/unit/es_utils'
 import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 
 describe('store/module/search', () => {
@@ -203,40 +203,28 @@ describe('store/module/search', () => {
   })
 
   it('should return 2 documents', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('query', { query: 'document', from: 0, size: 2 })
     expect(store.state.response.hits.length).to.equal(2)
   })
 
   it('should return 3 documents', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('query', { query: 'document', from: 0, size: 3 })
     expect(store.state.response.hits.length).to.equal(3)
   })
 
   it('should return 1 document', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('query', { query: 'document', from: 3, size: 3 })
     expect(store.state.response.hits.length).to.equal(1)
   })
 
   it('should return 1 document', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('query', { query: 'document', from: 0, size: 3 })
     await store.dispatch('nextPage')
@@ -245,10 +233,7 @@ describe('store/module/search', () => {
   })
 
   it('should return 1 document', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('query', { query: 'document', from: 0, size: 3 })
     await store.dispatch('nextPage')
@@ -258,10 +243,7 @@ describe('store/module/search', () => {
   })
 
   it('should return 4 documents on the first page', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('firstPage')
     expect(store.state.from).to.equal(0)
@@ -269,11 +251,7 @@ describe('store/module/search', () => {
   })
 
   it('should return 3 documents on the first page', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
-    // await letData(es).have(new IndexedDocuments().baseName("doc").count(4)).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('query', { query: 'document', from: 0, size: 3 })
     await store.dispatch('nextPage')
@@ -284,11 +262,7 @@ describe('store/module/search', () => {
   })
 
   it('should return 2 documents on the second page', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
-    await letData(es).have(new IndexedDocument('doc_05.txt').withContent('this is the fifth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(5)).commit()
 
     await store.dispatch('query', { query: 'document', from: 0, size: 2 })
     await store.dispatch('nextPage')
@@ -304,22 +278,14 @@ describe('store/module/search', () => {
   })
 
   it('should return 5 documents in total', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
-    await letData(es).have(new IndexedDocument('doc_05.txt').withContent('this is the fifth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(5)).commit()
 
     await store.dispatch('query', { query: 'document', from: 0, size: 2 })
     expect(store.state.response.total).to.equal(5)
   })
 
   it('should return the last page whose contains 2 documents', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
-    await letData(es).have(new IndexedDocument('doc_05.txt').withContent('this is the fifth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(5)).commit()
 
     await store.dispatch('query', { query: 'document', from: 0, size: 3 })
     await store.dispatch('lastPage')

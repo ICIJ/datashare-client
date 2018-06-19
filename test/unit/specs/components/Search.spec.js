@@ -15,7 +15,7 @@ import store from '@/store'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
 import Search from '@/components/Search'
-import {IndexedDocument, letData} from 'test/unit/es_utils'
+import { IndexedDocuments, IndexedDocument, letData } from 'test/unit/es_utils'
 
 Vue.use(VueI18n)
 Vue.use(VueProgressBar, { color: '#852308' })
@@ -83,10 +83,7 @@ describe('Search.vue', () => {
   })
 
   it('should return 2 documents', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 2 })
     await Vue.nextTick()
@@ -95,10 +92,7 @@ describe('Search.vue', () => {
   })
 
   it('should return 3 documents', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
     await Vue.nextTick()
@@ -129,10 +123,7 @@ describe('Search.vue', () => {
   })
 
   it('should display the first and the previous page as unavailable', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
     await Vue.nextTick()
@@ -144,10 +135,7 @@ describe('Search.vue', () => {
   })
 
   it('should display the next and the last page as unavailable', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 3, size: 3 })
     await Vue.nextTick()
