@@ -33,9 +33,10 @@ describe('Search.vue', () => {
     localVue.use(VueI18n)
     Search.created = noop
     wrapped = mount(Search, {i18n, router, store})
+    store.commit('search/clear')
   })
 
-  it('should display no document found', async () => {
+  it('should display no documents found', async () => {
     await wrapped.vm.search('foo')
     await Vue.nextTick()
 
@@ -44,6 +45,7 @@ describe('Search.vue', () => {
 
   it('should display one document found', async () => {
     await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
+
     await wrapped.vm.search('bar')
     await Vue.nextTick()
 
