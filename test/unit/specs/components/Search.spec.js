@@ -104,22 +104,55 @@ describe('Search.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(3)
   })
 
-  it('should display Next page', async () => {
-    await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
-    await wrapped.vm.search('bar')
+  it('should not display the pagination', async () => {
+    await wrapped.vm.search('foo')
     await Vue.nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__pagination').textContent)).to.equal('Next page')
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).to.equal(0)
   })
 
-  it('should display Page suivante in french', async () => {
-    const Constructor = Vue.extend(Search)
-    const vm = new Constructor({store, router, i18n: new VueI18n({locale: 'fr', messages})}).$mount()
+  it('should display the pagination', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
 
-    await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
-    await vm.search('bar')
+    await wrapped.vm.search('document')
     await Vue.nextTick()
 
-    expect(trim(vm.$el.querySelector('.search-results__header__pagination').textContent)).to.equal('Page suivante')
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).to.equal(1)
+  })
+
+  it('should display the first and the previous page as unavailable', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page.disabled').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page.disabled').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page.disabled').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page.disabled').length).to.equal(0)
+  })
+
+  it('should display the next and the last page as unavailable', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('this is the second document')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('this is the third document')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withContent('this is the fourth document')).commit()
+
+    await wrapped.vm.search({ query: 'document', from: 3, size: 3 })
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page.disabled').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page.disabled').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page.disabled').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page.disabled').length).to.equal(1)
   })
 })
