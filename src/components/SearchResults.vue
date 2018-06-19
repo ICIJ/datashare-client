@@ -2,10 +2,10 @@
   <div class="search-results">
     <div v-if="query && response.hits.length > 0">
       <div class="search-results__header">
-        <div @click="firstPage" v-bind:class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__first-page']">
+        <div @click="firstPage" v-bind:class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__first-page', 'px-2']">
           <font-awesome-icon icon="angle-double-left" />
         </div>
-        <div @click="previousPage" v-bind:class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__previous-page']">
+        <div @click="previousPage" v-bind:class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__previous-page', 'px-2']">
           <font-awesome-icon icon="angle-left" />
         </div>
         <div class="search-results__header__progress">
@@ -16,10 +16,10 @@
             {{ $tc('search.results.on') }} {{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total')}) }}
           </div>
         </div>
-        <div @click="nextPage" v-bind:class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__next-page']">
+        <div @click="nextPage" v-bind:class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__next-page', 'px-2']">
           <font-awesome-icon icon="angle-right" />
         </div>
-        <div @click="lastPage" v-bind:class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__last-page']">
+        <div @click="lastPage" v-bind:class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__last-page', 'px-2']">
           <font-awesome-icon icon="angle-double-right" />
         </div>
       </div>
@@ -85,7 +85,7 @@ export default {
       width: 100%;
 
       > div {
-        padding: 0.3rem;
+        // padding: 0.3rem;
 
         &.search-results__header__progress {
           flex: 1 auto;
