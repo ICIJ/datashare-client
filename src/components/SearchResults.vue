@@ -2,10 +2,10 @@
   <div class="search-results">
     <div v-if="query && response.hits.length > 0">
       <div class="search-results__header">
-        <div @click="firstPage" v-bind:class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__first-page', 'px-2']">
+        <div @click="firstPage" :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__first-page', 'px-2']" data-toggle="tooltip" :title="$t('search.results.firstPage')">
           <font-awesome-icon icon="angle-double-left" />
         </div>
-        <div @click="previousPage" v-bind:class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__previous-page', 'px-2']">
+        <div @click="previousPage" :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__previous-page', 'px-2']" data-toggle="tooltip" :title="$t('search.results.previousPage')">
           <font-awesome-icon icon="angle-left" />
         </div>
         <div class="search-results__header__progress">
@@ -13,13 +13,13 @@
             {{ $store.state.search.from + 1 }} - {{ $store.state.search.from + $store.state.search.size }}
           </div>
           <div class="search-results__header__progress_number-of-results">
-            {{ $tc('search.results.on') }} {{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total')}) }}
+            {{ $t('search.results.on') }} {{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total')}) }}
           </div>
         </div>
-        <div @click="nextPage" v-bind:class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__next-page', 'px-2']">
+        <div @click="nextPage" :class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__next-page', 'px-2']" data-toggle="tooltip" :title="$t('search.results.nextPage')">
           <font-awesome-icon icon="angle-right" />
         </div>
-        <div @click="lastPage" v-bind:class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__last-page', 'px-2']">
+        <div @click="lastPage" :class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__last-page', 'px-2']" data-toggle="tooltip" :title="$t('search.results.lastPage')">
           <font-awesome-icon icon="angle-double-right" />
         </div>
       </div>

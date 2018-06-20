@@ -19,7 +19,11 @@
         "entities": "nb entities",
         "results": "1 document found | %{total} documents found",
         "no-result": "No documents found",
-        "on": "on"
+        "on": "on",
+        "firstPage": "Go to first page",
+        "previousPage": "Go to previous page",
+        "nextPage": "Go to next page",
+        "lastPage": "Go to last page"
       }
     },
     "document": {
@@ -68,7 +72,11 @@
         "entities": "nb entités",
         "results": "1 document trouvé | %{total} documents trouvés",
         "no-result": "Aucun document trouvé",
-        "on": "sur"
+        "on": "sur",
+        "firstPage": "Aller à la première page",
+        "previousPage": "Aller à la page précédente",
+        "nextPage": "Aller à la page suivante",
+        "lastPage": "Aller à la dernière page"
       }
     },
     "document": {
