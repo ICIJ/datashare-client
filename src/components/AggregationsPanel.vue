@@ -69,9 +69,6 @@ export default {
         font-size: 0.9em;
         color: $body-color;
         padding:0;
-        max-height: 20rem;
-        overflow: auto;
-
       }
     }
   }
