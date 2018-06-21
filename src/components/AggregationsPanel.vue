@@ -53,22 +53,29 @@ export default {
         position: sticky;
         top:0;
         z-index: 100;
+
+        & > h6 {
+          font-weight: bolder;
+          margin-bottom: 0;
+          padding-top: $spacer * .25;
+          text-transform: uppercase;
+          color: $gray-500;
+          background: transparent;
+          cursor: pointer;
+        }
       }
 
-      .card-header h6 {
-        font-weight: bolder;
-        margin-bottom: 0;
-        padding-top: $spacer * .25;
-        text-transform: uppercase;
-        color: $gray-500;
-        background: transparent;
-        cursor: pointer;
-      }
-
-      & > .list-group, & > .card-body {
+      & > .list-group,
+      & > .card-body {
         font-size: 0.9em;
         color: $body-color;
         padding:0;
+      }
+
+      & > .list-group {
+        .facet__items__display {
+          cursor: pointer;
+        }
       }
     }
   }

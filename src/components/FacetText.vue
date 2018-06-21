@@ -133,9 +133,9 @@ export default {
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
       </div>
-      <div class="list-group-item facet-named-entity__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
-        <font-awesome-icon :icon="display.icon" />
+      <div class="list-group-item facet__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
         <span>{{ display.label }}</span>
+        <font-awesome-icon :icon="display.icon" class="float-right"/>
       </div>
     </div>
   </div>

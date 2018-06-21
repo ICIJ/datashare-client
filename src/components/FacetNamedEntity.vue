@@ -59,9 +59,9 @@ export default {
           </div>
         </router-link>
       </div>
-      <div class="list-group-item facet-named-entity__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
-        <font-awesome-icon :icon="display.icon" />
+      <div class="list-group-item facet__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
         <span>{{ display.label }}</span>
+        <font-awesome-icon :icon="display.icon" class="float-right"/>
       </div>
     </div>
   </div>
