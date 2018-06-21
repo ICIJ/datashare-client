@@ -1,10 +1,12 @@
 <script>
 import Response from '@/api/Response'
 import each from 'lodash/each'
+import { mixin } from 'mixins/facets'
 
 export default {
   name: 'FacetText',
   props: ['facet'],
+  mixins: [mixin],
   data () {
     return {
       response: Response.none(),
@@ -118,7 +120,7 @@ export default {
       </h6>
     </div>
     <div class="list-group list-group-flush facet-text__items" v-if="!collapseItems">
-      <div class="list-group-item facet-text__items__item p-0" v-for="item in items" :key="item.key" :class="{ 'facet-text__items__item--active': hasValue(item) }">
+      <div class="list-group-item facet-text__items__item p-0" v-for="item in displayedItems" :key="item.key" :class="{ 'facet-text__items__item--active': hasValue(item) }">
         <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
           <span class="badge badge-pill badge-light float-right">
             {{ item.doc_count || 0 }}
@@ -130,6 +132,10 @@ export default {
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
+      </div>
+      <div class="list-group-item facet-named-entity__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
+        <font-awesome-icon :icon="display.icon" />
+        <span>{{ display.label }}</span>
       </div>
     </div>
   </div>

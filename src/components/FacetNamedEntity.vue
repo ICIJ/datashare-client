@@ -1,33 +1,23 @@
 <script>
 import Response from '@/api/Response'
-import slice from 'lodash/slice'
+import { mixin } from 'mixins/facets'
 
 export default {
   name: 'FacetNamedEntity',
   props: ['facet'],
+  mixins: [mixin],
   data () {
     return {
       response: Response.none(),
-      collapseItems: false,
-      display: {
-        icon: 'angle-down',
-        label: 'More',
-        size: 5
-      }
+      collapseItems: false
     }
   },
   created () {
     this.aggregate()
   },
   computed: {
-    items () {
-      return this.response.get(`aggregations.${this.facet.key}.buckets`, [])
-    },
     headerIcon () {
       return this.collapseItems ? 'caret-right' : 'caret-down'
-    },
-    displayedItems () {
-      return slice(this.items, 0, this.display.size)
     }
   },
   methods: {
@@ -40,11 +30,6 @@ export default {
     },
     toggleItems () {
       this.collapseItems = !this.collapseItems
-    },
-    toogleDisplay () {
-      this.display.icon = this.display.icon === 'angle-down' ? 'angle-up' : 'angle-down'
-      this.display.label = this.display.label === 'More' ? 'Less' : 'More'
-      this.display.size = this.display.size === 5 ? -1 : 5
     }
   }
 }
@@ -74,7 +59,7 @@ export default {
           </div>
         </router-link>
       </div>
-      <div class="list-group-item facet-named-entity__items__display" @click="toogleDisplay" v-if="items.length > 5">
+      <div class="list-group-item facet-named-entity__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
         <font-awesome-icon :icon="display.icon" />
         <span>{{ display.label }}</span>
       </div>

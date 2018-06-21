@@ -144,4 +144,32 @@ describe('FacetText.vue', () => {
     expect(lastItem.classList.contains('facet-text__items__item--active')).to.equal(true)
     expect(trim(lastItem.querySelector('span').textContent)).to.equal('0')
   })
+
+  it('should not display the more button', async () => {
+    await letData(es).have(new IndexedDocument('index.js').withContent('Lorem').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('index.html').withContent('Lorem').withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('index.css').withContent('Lorem').withContentType('text/stylesheet')).commit()
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(3)
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__display span').length).to.equal(0)
+  })
+
+  it('should display the more button and its font awesome icon', async () => {
+    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('index_04.txt').withContent('Lorem').withContentType('text/type_04')).commit()
+    await letData(es).have(new IndexedDocument('index_05.txt').withContent('Lorem').withContentType('text/type_05')).commit()
+    await letData(es).have(new IndexedDocument('index_06.txt').withContent('Lorem').withContentType('text/type_06')).commit()
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__display > span').length).to.equal(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet-named-entity__items__display > span').textContent)).to.equal('More')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
+  })
 })

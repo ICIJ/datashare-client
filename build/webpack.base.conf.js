@@ -39,7 +39,8 @@ module.exports = {
       'test': resolve('test'),
       'images': resolve('src/assets/images'),
       'data': resolve('src/assets/data'),
-      'node_modules': resolve('node_modules')
+      'node_modules': resolve('node_modules'),
+      'mixins': resolve('src/mixins')
     }
   },
   module: {
