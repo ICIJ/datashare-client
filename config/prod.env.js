@@ -1,7 +1,7 @@
 'use strict'
 
 const CONFIG = {
-  es_index: '"datashare-local"',
+  es_index: '"datashare"',
   es_log: '"error"',
   data_prefix: '"/data/"'
 }

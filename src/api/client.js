@@ -87,7 +87,7 @@ export function searchPlugin (Client, config, components) {
 }
 
 const client = new es.Client({
-  host: process.env.CONFIG.es_host || window.location.hostname + ':9200',
+  host: process.env.CONFIG.es_host || window.location.hostname + ':' + window.location.port + '/search',
   plugins: [ docPlugin, searchPlugin ]
 })
 
