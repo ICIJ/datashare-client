@@ -13,6 +13,9 @@ export class DatashareClient {
   getTasks () {
     return fetch('/task/')
   }
+  createIndex () {
+    return fetch('/search/createIndex', {method: 'PUT'})
+  }
   getSource (url) {
     return fetch(url).then((r) => {
       if (r.status >= 200 && r.status < 300) {
