@@ -14,9 +14,13 @@
 
 <script>
 import AppNav from './AppNav'
+import {DatashareClient} from '@/api/datashare'
 
 export default {
   name: 'App',
-  components: { AppNav }
+  components: { AppNav },
+  created () {
+    new DatashareClient().createIndex()
+  }
 }
 </script>
