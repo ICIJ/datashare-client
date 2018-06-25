@@ -11,7 +11,8 @@ export default {
     return {
       response: Response.none(),
       collapseItems: false,
-      isReady: false
+      isReady: false,
+      facetQuery: ''
     }
   },
   created () {
@@ -120,7 +121,11 @@ export default {
       </h6>
     </div>
     <div class="list-group list-group-flush facet-text__items" v-if="!collapseItems">
-      <div class="list-group-item facet-text__items__item p-0" v-for="item in displayedItems" :key="item.key" :class="{ 'facet-text__items__item--active': hasValue(item) }">
+      <div class="list-group facet-text__items__search py-2 px-3">
+        <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + (facet.label || facet.name) + '...'" />
+        <font-awesome-icon icon="search" class="float-right" />
+      </div>
+      <div class="list-group-item facet-text__items__item p-0" v-for="item in displayedFilteredItems()" :key="item.key" :class="{ 'facet-text__items__item--active': hasValue(item) }">
         <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
           <span class="badge badge-pill badge-light float-right">
             {{ item.doc_count || 0 }}
@@ -145,6 +150,22 @@ export default {
   .facet-text {
 
     &__items {
+
+      &__search {
+        color: $gray-500;
+        display: flex;
+        flex-direction: row;
+        position: relative;
+
+        > input {
+          border: none;
+          width: 90%;
+        }
+
+        > svg {
+          margin: auto;
+        }
+      }
 
       &__item {
         position: relative;

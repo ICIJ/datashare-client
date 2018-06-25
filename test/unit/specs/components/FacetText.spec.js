@@ -4,12 +4,10 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 
-import noop from 'lodash/noop'
-import find from 'lodash/find'
-import trim from 'lodash/trim'
+import { find, noop, trim } from 'lodash'
 
-import {mount, createLocalVue} from 'vue-test-utils'
-import {IndexedDocument, letData} from 'test/unit/es_utils'
+import { createLocalVue, mount } from 'vue-test-utils'
+import { IndexedDocument, letData } from 'test/unit/es_utils'
 
 import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 import messages from '@/messages'
@@ -43,10 +41,10 @@ describe('FacetText.vue', () => {
         facet: find(store.state.aggregation.facets, {name: 'content-type'})
       }
     })
-  })
-
-  afterEach(async () => {
+    // Reset aggregation store to global search
     store.commit('aggregation/setGlobalSearch', true)
+    // Reset facetQuery to default
+    wrapped.vm.facetQuery = ''
   })
 
   it('should display empty list', async () => {
@@ -146,15 +144,17 @@ describe('FacetText.vue', () => {
   })
 
   it('should not display the more button', async () => {
-    await letData(es).have(new IndexedDocument('index.js').withContent('Lorem').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('index.html').withContent('Lorem').withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('index.css').withContent('Lorem').withContentType('text/stylesheet')).commit()
+    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('index_04.txt').withContent('Lorem').withContentType('text/type_04')).commit()
+    await letData(es).have(new IndexedDocument('index_05.txt').withContent('Lorem').withContentType('text/type_05')).commit()
 
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(3)
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__display span').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(5)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(0)
   })
 
   it('should display the more button and its font awesome icon', async () => {
@@ -168,8 +168,129 @@ describe('FacetText.vue', () => {
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__display > span').length).to.equal(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet-named-entity__items__display > span').textContent)).to.equal('More')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display> span').textContent)).to.equal('More')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
+  })
+
+  it('should display all the facet values and the more button', async () => {
+    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('index_04.txt').withContent('Lorem').withContentType('text/type_04')).commit()
+    await letData(es).have(new IndexedDocument('index_05.txt').withContent('Lorem').withContentType('text/type_05')).commit()
+    await letData(es).have(new IndexedDocument('index_06.txt').withContent('Lorem').withContentType('text/type_06')).commit()
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.displayedFilteredItems().length).to.equal(5)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display> span').textContent)).to.equal('More')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
+  })
+
+  it('should filter facet values 1/3 and display the more button', async () => {
+    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('index_04.txt').withContent('Lorem').withContentType('text/type_04')).commit()
+    await letData(es).have(new IndexedDocument('index_05.txt').withContent('Lorem').withContentType('text/type_05')).commit()
+    await letData(es).have(new IndexedDocument('index_06.txt').withContent('Lorem').withContentType('text/type_06')).commit()
+
+    wrapped.vm.facetQuery = 'text/type_0'
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.displayedFilteredItems().length).to.equal(5)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display> span').textContent)).to.equal('More')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
+  })
+
+  it('should filter facet values 2/3 but no more button', async () => {
+    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('index_04.txt').withContent('Lorem').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('index_05.txt').withContent('Lorem').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('index_06.txt').withContent('Lorem').withContentType('text/type_03')).commit()
+
+    wrapped.vm.facetQuery = 'text/type_03'
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.displayedFilteredItems().length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(0)
+  })
+
+  it('should filter facet values 3/3', async () => {
+    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('index_04.txt').withContent('Lorem').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('index_05.txt').withContent('Lorem').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('index_06.txt').withContent('Lorem').withContentType('text/type_03')).commit()
+
+    wrapped.vm.facetQuery = 'yolo'
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.displayedFilteredItems().length).to.equal(0)
+  })
+
+  it('should filter facet values - Uppercase situation 1/2', async () => {
+    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/ENGLISH')).commit()
+    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/FRENCH')).commit()
+
+    wrapped.vm.facetQuery = 'en'
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.displayedFilteredItems().length).to.equal(2)
+  })
+
+  it('should filter facet values - Uppercase situation 2/2', async () => {
+    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/english')).commit()
+    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/french')).commit()
+
+    wrapped.vm.facetQuery = 'EN'
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.displayedFilteredItems().length).to.equal(2)
+  })
+
+  it('should filter facet values on facet label', async () => {
+    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('application/pdf')).commit()
+    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')).commit()
+    await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('image/wmf')).commit()
+    await letData(es).have(new IndexedDocument('index_04.txt').withContent('Lorem').withContentType('image/emf')).commit()
+
+    wrapped.vm.facetQuery = 'Windows'
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.displayedFilteredItems().length).to.equal(2)
+  })
+
+  it('should filter facet values - Accentuated situation', async () => {
+    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/marqué')).commit()
+    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/remarques')).commit()
+    await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('text/autre')).commit()
+    await letData(es).have(new IndexedDocument('index_04.txt').withContent('Lorem').withContentType('text/autre')).commit()
+
+    wrapped.vm.facetQuery = 'marque'
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.displayedFilteredItems().length).to.equal(2)
   })
 })

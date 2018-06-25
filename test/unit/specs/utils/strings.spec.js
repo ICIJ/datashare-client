@@ -1,5 +1,5 @@
-import {sliceIndexes, highlight} from '@/utils/strings.js'
-import {escape} from 'lodash'
+import { sliceIndexes, highlight, removeDiacritics } from '@/utils/strings.js'
+import { escape } from 'lodash'
 
 describe('sliceIndexes', () => {
   it('should return empty list when input is empty string', () => {
@@ -77,5 +77,15 @@ describe('highlight', () => {
   it('should return one mark with custom rest function', () => {
     expect(highlight('say hi to </the> world', [{content: 'hi', index: 4}], m => m.content, r => escape(r)))
       .to.equal('say hi to &lt;/the&gt; world')
+  })
+})
+
+describe('removeDiacritics', () => {
+  it('replace nothing on an empty string', () => {
+    expect(removeDiacritics('')).to.equal('')
+  })
+
+  it('replace è, û and é', () => {
+    expect(removeDiacritics('Crème brûlée')).to.equal('Creme brulee')
   })
 })

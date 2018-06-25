@@ -112,8 +112,8 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.aggregate()
     await Vue.nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__display > span').length).to.equal(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet-named-entity__items__display > span').textContent)).to.equal('More')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).to.equal('More')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
   })
 })
