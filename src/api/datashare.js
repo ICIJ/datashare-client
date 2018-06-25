@@ -2,7 +2,7 @@ import 'whatwg-fetch'
 
 export class DatashareClient {
   index (path, options) {
-    return fetch('/task/index/file/' + path.replace(/\//g, '%7C'), {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
+    return fetch(`/task/index/file${path}`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
   }
   findNames (pipeline, options) {
     return fetch(`/task/findNames/${pipeline}`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
