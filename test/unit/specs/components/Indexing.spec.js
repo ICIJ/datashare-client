@@ -50,7 +50,8 @@ describe('Indexing.vue', () => {
     await Vue.nextTick()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata', {method: 'POST', body: JSON.stringify({options: {ocr: false}})})
+    sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata',
+      {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 
   it('should call findNames when findNames is selected', async () => {
@@ -63,7 +64,8 @@ describe('Indexing.vue', () => {
     wrapped.update()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/task/findNames/PIPELINE', {method: 'POST', body: JSON.stringify({options: {resume: true}})})
+    sinon.assert.calledWith(window.fetch, '/task/findNames/PIPELINE',
+      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
   it('should disable resume if index is selected with name finding', async () => {
@@ -75,7 +77,8 @@ describe('Indexing.vue', () => {
     store.dispatch('indexing/query')
     wrapped.update()
 
-    sinon.assert.calledWith(window.fetch, '/task/findNames/PIPELINE', {method: 'POST', body: JSON.stringify({options: {resume: false}})})
+    sinon.assert.calledWith(window.fetch, '/task/findNames/PIPELINE',
+      {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
   })
 
   it('should call index with ocr option', async () => {
@@ -88,7 +91,8 @@ describe('Indexing.vue', () => {
     wrapped.update()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata', {method: 'POST', body: JSON.stringify({options: {ocr: true}})})
+    sinon.assert.calledWith(window.fetch, '/task/index/file/%7Chome%7Cdatashare%7Cdata',
+      {method: 'POST', body: JSON.stringify({options: {ocr: true}}), credentials: 'same-origin'})
   })
 
   it('should hide ocr option if not indexing', async () => {
