@@ -24,6 +24,9 @@ module.exports = {
     // allow async-await
     'generator-star-spacing': 'off',
     // allow debugger during development
-    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off'
+    'no-debugger': process.env.NODE_ENV === 'production' ? 'error' : 'off',
+    // Disable the control of invisible characters in the ASCII range 0-31.
+    // https://stackoverflow.com/questions/49743842/javascript-unexpected-control-characters-in-regular-expression
+    'no-control-regex': 0
   }
 }
