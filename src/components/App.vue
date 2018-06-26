@@ -20,7 +20,9 @@ export default {
   name: 'App',
   components: { AppNav },
   created () {
-    new DatashareClient().createIndex()
+    if (process.env.NODE_ENV === 'production') {
+      new DatashareClient().createIndex()
+    }
   }
 }
 </script>
