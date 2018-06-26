@@ -11,8 +11,7 @@ export default {
     return {
       response: Response.none(),
       collapseItems: false,
-      isReady: false,
-      facetQuery: ''
+      isReady: false
     }
   },
   created () {
@@ -121,7 +120,7 @@ export default {
       </h6>
     </div>
     <div class="list-group list-group-flush facet-text__items" v-if="!collapseItems">
-      <div class="list-group facet-text__items__search py-2 px-3">
+      <div class="list-group facet__items__search py-2 px-3">
         <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + (facet.label || facet.name) + '...'" />
         <font-awesome-icon icon="search" class="float-right" />
       </div>
@@ -140,7 +139,7 @@ export default {
       </div>
       <div class="list-group-item facet__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
         <span>{{ display.label }}</span>
-        <font-awesome-icon :icon="display.icon" class="float-right"/>
+        <font-awesome-icon :icon="display.icon" class="float-right" />
       </div>
     </div>
   </div>
@@ -150,22 +149,6 @@ export default {
   .facet-text {
 
     &__items {
-
-      &__search {
-        color: $gray-500;
-        display: flex;
-        flex-direction: row;
-        position: relative;
-
-        > input {
-          border: none;
-          width: 90%;
-        }
-
-        > svg {
-          margin: auto;
-        }
-      }
 
       &__item {
         position: relative;

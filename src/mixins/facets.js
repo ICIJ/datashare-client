@@ -10,7 +10,8 @@ export const mixin = {
         icon: 'angle-down',
         label: 'More',
         size: initialNumberOfFilesDisplayed
-      }
+      },
+      facetQuery: ''
     }
   },
   computed: {

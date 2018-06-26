@@ -73,8 +73,28 @@ export default {
       }
 
       & > .list-group {
-        .facet__items__display {
-          cursor: pointer;
+
+        .facet__items {
+
+          &__search {
+            color: $gray-500;
+            display: flex;
+            flex-direction: row;
+            position: relative;
+
+            > input {
+              border: none;
+              width: 90%;
+            }
+
+            > svg {
+              margin: auto;
+            }
+          }
+
+          &__display {
+            cursor: pointer;
+          }
         }
       }
     }

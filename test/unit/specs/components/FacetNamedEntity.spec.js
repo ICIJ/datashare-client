@@ -116,4 +116,59 @@ describe('FacetNamedEntity.vue', () => {
     expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).to.equal('More')
     expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
   })
+
+  it('should display the more button and its font awesome icon', async () => {
+    await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER1 document').withNer('NER1', 2)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER2 doc with NER2 NER2 NER1 NER3 NER4 NER5 and NER6')
+      .withNer('NER2', 2).withNer('NER2', 16).withNer('NER2', 21).withNer('NER1', 26).withNer('NER3', 35).withNer('NER4', 42).withNer('NER5', 42).withNer('NER6', 42)).commit()
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).to.equal('More')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
+  })
+
+  it('should filter on named entity facet and return no documents', async () => {
+    await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER1 document').withNer('NER1', 1)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER1 document').withNer('NER2', 2)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc3.txt').withContent('a NER1 document').withNer('NER3', 3)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc4.txt').withContent('a NER1 document').withNer('NER4', 4)).commit()
+
+    wrapped.vm.facetQuery = 'Windows'
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item').length).to.equal(0)
+  })
+
+  it('should filter on named entity facet and return all documents', async () => {
+    await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER1 document').withNer('NER1', 1)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER1 document').withNer('NER2', 2)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc3.txt').withContent('a NER1 document').withNer('NER3', 3)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc4.txt').withContent('a NER1 document').withNer('NER4', 4)).commit()
+
+    wrapped.vm.facetQuery = 'ner'
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item').length).to.equal(4)
+  })
+
+  it('should filter on named entity facet and return only 1 document', async () => {
+    await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER1 document').withNer('NER1', 1)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER1 document').withNer('NER2', 2)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc3.txt').withContent('a NER1 document').withNer('NER3', 3)).commit()
+    await letData(es).have(new IndexedDocument('docs/doc4.txt').withContent('a NER1 document').withNer('NER4', 4)).commit()
+
+    wrapped.vm.facetQuery = 'ner1'
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet-named-entity__items__item').length).to.equal(1)
+  })
 })
