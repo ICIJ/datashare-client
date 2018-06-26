@@ -1,31 +1,11 @@
 <template>
   <div class="search-results">
     <div v-if="query && response.hits.length > 0">
-      <div class="search-results__header">
-        <div @click="firstPage" :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__first-page', 'px-2']" data-toggle="tooltip" :title="$t('search.results.firstPage')" v-if="response.total > $store.state.search.size">
-          <font-awesome-icon icon="angle-double-left" />
-        </div>
-        <div @click="previousPage" :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__previous-page', 'px-2']" data-toggle="tooltip" :title="$t('search.results.previousPage')" v-if="response.total > $store.state.search.size">
-          <font-awesome-icon icon="angle-left" />
-        </div>
-        <div class="search-results__header__progress">
-          <div class="search-results__header__progress__pagination">
-            {{ $store.state.search.from + 1 }} - {{ lastDocument }}
-          </div>
-          <div class="search-results__header__progress_number-of-results">
-            {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, {total: response.get('hits.total')}) }}
-          </div>
-        </div>
-        <div @click="nextPage" :class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__next-page', 'px-2']" data-toggle="tooltip" :title="$t('search.results.nextPage')" v-if="response.total > $store.state.search.size">
-          <font-awesome-icon icon="angle-right" />
-        </div>
-        <div @click="lastPage" :class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__last-page', 'px-2']" data-toggle="tooltip" :title="$t('search.results.lastPage')" v-if="response.total > $store.state.search.size">
-          <font-awesome-icon icon="angle-double-right" />
-        </div>
-      </div>
+      <search-results-header :response="response" />
       <div class="search-results__items">
         <search-results-item v-for="doc in response.hits" :key="doc.id" :doc="doc" />
       </div>
+      <search-results-header :response="response" />
     </div>
     <div v-else>
       <div class="search-results__header">
@@ -36,46 +16,13 @@
 </template>
 
 <script>
-import min from 'lodash/min'
+import SearchResultsHeader from './SearchResultsHeader.vue'
 import SearchResultsItem from './SearchResultsItem.vue'
 
 export default {
   name: 'SearchResults',
   props: ['response', 'query'],
-  components: { SearchResultsItem },
-  computed: {
-    lastDocument () {
-      return min([this.response.total, this.$store.state.search.from + this.$store.state.search.size])
-    }
-  },
-  methods: {
-    firstPage () {
-      if (this.isFirstOrPreviousPageAvailable()) {
-        this.$store.dispatch('search/firstPage')
-      }
-    },
-    previousPage () {
-      if (this.isFirstOrPreviousPageAvailable()) {
-        this.$store.dispatch('search/previousPage')
-      }
-    },
-    nextPage () {
-      if (this.isNextOrLastPageAvailable()) {
-        this.$store.dispatch('search/nextPage')
-      }
-    },
-    lastPage () {
-      if (this.isNextOrLastPageAvailable()) {
-        this.$store.dispatch('search/lastPage')
-      }
-    },
-    isFirstOrPreviousPageAvailable () {
-      return this.$store.state.search.from !== 0
-    },
-    isNextOrLastPageAvailable () {
-      return this.$store.state.search.from + this.$store.state.search.size < this.$store.state.search.response.total
-    }
-  }
+  components: { SearchResultsHeader, SearchResultsItem }
 }
 </script>
 
@@ -91,8 +38,6 @@ export default {
       width: 100%;
 
       > div {
-        // padding: 0.3rem;
-
         &.search-results__header__progress {
           flex: 1 auto;
           text-align: center;
