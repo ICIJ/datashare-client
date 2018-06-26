@@ -10,10 +10,10 @@
         </div>
         <div class="search-results__header__progress">
           <div class="search-results__header__progress__pagination">
-            {{ $store.state.search.from + 1 }} - {{ $store.state.search.from + $store.state.search.size }}
+            {{ $store.state.search.from + 1 }} - {{ lastDocument }}
           </div>
           <div class="search-results__header__progress_number-of-results">
-            {{ $t('search.results.on') }} {{ $tc('search.results.results', response.hits.length, {total: response.get('hits.total')}) }}
+            {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, {total: response.get('hits.total')}) }}
           </div>
         </div>
         <div @click="nextPage" :class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__next-page', 'px-2']" data-toggle="tooltip" :title="$t('search.results.nextPage')" v-if="response.total > $store.state.search.size">
@@ -36,12 +36,18 @@
 </template>
 
 <script>
+import min from 'lodash/min'
 import SearchResultsItem from './SearchResultsItem.vue'
 
 export default {
   name: 'SearchResults',
   props: ['response', 'query'],
   components: { SearchResultsItem },
+  computed: {
+    lastDocument () {
+      return min([this.response.total, this.$store.state.search.from + this.$store.state.search.size])
+    }
+  },
   methods: {
     firstPage () {
       if (this.isFirstOrPreviousPageAvailable()) {
