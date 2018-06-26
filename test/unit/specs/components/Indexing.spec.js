@@ -50,7 +50,7 @@ describe('Indexing.vue', () => {
     await Vue.nextTick()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/task/index/file/home/datashare/data',
+    sinon.assert.calledWith(window.fetch, '/api/task/index/file/home/datashare/data',
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 
@@ -64,7 +64,7 @@ describe('Indexing.vue', () => {
     wrapped.update()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/task/findNames/PIPELINE',
+    sinon.assert.calledWith(window.fetch, '/api/task/findNames/PIPELINE',
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
@@ -77,7 +77,7 @@ describe('Indexing.vue', () => {
     store.dispatch('indexing/query')
     wrapped.update()
 
-    sinon.assert.calledWith(window.fetch, '/task/findNames/PIPELINE',
+    sinon.assert.calledWith(window.fetch, '/api/task/findNames/PIPELINE',
       {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
   })
 
@@ -91,7 +91,7 @@ describe('Indexing.vue', () => {
     wrapped.update()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/task/index/file/home/datashare/data',
+    sinon.assert.calledWith(window.fetch, '/api/task/index/file/home/datashare/data',
       {method: 'POST', body: JSON.stringify({options: {ocr: true}}), credentials: 'same-origin'})
   })
 

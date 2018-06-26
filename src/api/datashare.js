@@ -2,19 +2,19 @@ import 'whatwg-fetch'
 
 export class DatashareClient {
   index (path, options) {
-    return fetch(`/task/index/file${path}`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
+    return fetch(`/api/task/index/file${path}`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
   }
   findNames (pipeline, options) {
-    return fetch(`/task/findNames/${pipeline}`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
+    return fetch(`/api/task/findNames/${pipeline}`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
   }
   cleanTasks () {
-    return fetch('/task/clean/', {method: 'POST', body: '{}', credentials: 'same-origin'})
+    return fetch('/api/task/clean/', {method: 'POST', body: '{}', credentials: 'same-origin'})
   }
   getTasks () {
-    return fetch('/task/', {credentials: 'same-origin'})
+    return fetch('/api/task/', {credentials: 'same-origin'})
   }
   createIndex () {
-    return fetch('/search/createIndex', {method: 'PUT', credentials: 'same-origin'})
+    return fetch('/api/search/createIndex', {method: 'PUT', credentials: 'same-origin'})
   }
   getSource (url) {
     return fetch(url).then((r) => {
