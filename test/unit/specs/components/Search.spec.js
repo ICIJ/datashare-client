@@ -5,7 +5,7 @@ import VueProgressBar from 'vue-progressbar'
 import noop from 'lodash/noop'
 import trim from 'lodash/trim'
 import 'es6-promise/auto'
-import {mount, createLocalVue} from 'vue-test-utils'
+import { mount, createLocalVue } from 'vue-test-utils'
 
 import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 import messages from '@/messages'
@@ -20,7 +20,7 @@ import { IndexedDocuments, IndexedDocument, letData } from 'test/unit/es_utils'
 Vue.use(VueI18n)
 Vue.use(VueProgressBar, { color: '#852308' })
 
-const i18n = new VueI18n({locale: 'en', messages})
+const i18n = new VueI18n({ locale: 'en', messages })
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 Vue.component('coontent-placeholder', ContentPlaceholder)
 
@@ -110,10 +110,22 @@ describe('Search.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).to.equal(0)
   })
 
-  it('should display the pagination', async () => {
+  it('should not display the pagination', async () => {
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
 
     await wrapped.vm.search('document')
+    await Vue.nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).to.equal(0)
+  })
+
+  it('should display the pagination', async () => {
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
+
+    await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).to.equal(1)
