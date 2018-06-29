@@ -7432,6 +7432,10 @@ timers-browserify@^2.0.4:
   dependencies:
     setimmediate "^1.0.4"
 
+tiny-cookie@^2.1.2:
+  version "2.1.2"
+  resolved "https://registry.yarnpkg.com/tiny-cookie/-/tiny-cookie-2.1.2.tgz#3c25689a07c76438f90209648c143976b0b52bef"
+
 tmp@0.0.31:
   version "0.0.31"
   resolved "https://registry.yarnpkg.com/tmp/-/tmp-0.0.31.tgz#8f38ab9438e17315e5dbd8b3657e8bfb277ae4a7"
