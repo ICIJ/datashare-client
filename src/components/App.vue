@@ -45,7 +45,9 @@ export default {
   components: { AppNav },
   computed: {
     isAllowed () {
-      return getCookie(this.getConfig('ds_cookie_name')) !== null
+      const getJSON = (key) => getCookie(key, JSON.parse)
+      let cookie = getJSON(this.getConfig('ds_cookie_name'))
+      return getCookie(this.getConfig('ds_cookie_name')) !== null && cookie.hasOwnProperty('login') && cookie.login !== null
     }
   },
   created () {

@@ -25,7 +25,7 @@ describe('App.vue', () => {
   let Constructor = null
 
   beforeEach(async () => {
-    setCookie(process.env.CONFIG.ds_cookie_name, { login: 'yolo' })
+    setCookie(process.env.CONFIG.ds_cookie_name, { 'login': 'yolo' }, JSON.stringify)
 
     Constructor = Vue.extend(App)
     vm = new Constructor({ i18n, router, store }).$mount()
@@ -48,7 +48,6 @@ describe('App.vue', () => {
 
   it('should not display the app if no cookie', () => {
     removeCookie(process.env.CONFIG.ds_cookie_name)
-
     vm = new Constructor({i18n, router, store}).$mount()
 
     expect(vm.$el.querySelectorAll('.app').length).to.equal(0)
@@ -56,5 +55,13 @@ describe('App.vue', () => {
 
   it('should display the app because of the right cookie', () => {
     expect(vm.$el.querySelectorAll('.app').length).to.equal(1)
+  })
+
+  it('should not display the app if cookie has no login property', () => {
+    removeCookie(process.env.CONFIG.ds_cookie_name)
+    setCookie(process.env.CONFIG.ds_cookie_name, 'yolo', JSON.stringify)
+    vm = new Constructor({i18n, router, store}).$mount()
+
+    expect(vm.$el.querySelectorAll('.app').length).to.equal(0)
   })
 })
