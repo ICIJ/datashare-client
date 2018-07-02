@@ -43,7 +43,7 @@
       "download_button": "Download"
     },
     "indexing": {
-      "btnLabel": "Index",
+      "btnLabel": "Go",
       "stages": "Stages",
       "index_stage_label": "extract text",
       "findNames_stage_label": "find names",
@@ -97,7 +97,7 @@
       "download_button": "Télécharger"
     },
     "indexing": {
-      "btnLabel": "Indexer",
+      "btnLabel": "Go",
       "stages": "Étapes",
       "index_stage_label": "indexation",
       "extract_stage_label": "trouver les noms"
