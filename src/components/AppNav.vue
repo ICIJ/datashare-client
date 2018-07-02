@@ -46,6 +46,12 @@
               <font-awesome-icon icon="external-link-alt" class="ml-1 app__nav__container__menu__item__new" />
             </a>
           </li>
+          <li class="list-unstyled-item app__nav__container__menu__item">
+            <a href="https://jira.icij.org/servicedesk/" target="_blank">
+              Ask for help
+              <font-awesome-icon icon="ambulance" class="ml-1 app__nav__container__menu__item__new" />
+            </a>
+          </li>
         </ul>
       </div>
     </header>
