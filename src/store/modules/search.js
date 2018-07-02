@@ -1,4 +1,4 @@
-import client from '@/api/client'
+import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 
 import { castArray, each, filter, find, floor, max, reduce, remove, uniq } from 'lodash'
@@ -137,25 +137,25 @@ export const actions = {
     commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String ? queryOrParams : queryOrParams.query)
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.from : queryOrParams.from)
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
-    return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   firstPage ({ state, commit }) {
     commit('from', 0)
-    return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   previousPage ({ state, commit }) {
     commit('from', max([0, state.from - state.size]))
-    return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   nextPage ({ state, commit }) {
     const nextFrom = state.from + state.size
     nextFrom < state.response.total ? commit('from', nextFrom) : commit('from', state.from)
-    return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   lastPage ({ state, commit }) {
     // Calculate the "from" parameter to display the last page
     commit('from', state.size * floor(state.response.total / state.size))
-    return client.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
   },
   addFacetValue ({ commit, dispatch }, facet) {
     commit('addFacetValue', facet)

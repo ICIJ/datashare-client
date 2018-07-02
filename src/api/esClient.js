@@ -86,9 +86,9 @@ export function searchPlugin (Client, config, components) {
   }
 }
 
-const client = new es.Client({
+const esClient = new es.Client({
   host: process.env.CONFIG.es_host || window.location.hostname + ':' + window.location.port + '/api/search',
   plugins: [ docPlugin, searchPlugin ]
 })
 
-export default client
+export default esClient

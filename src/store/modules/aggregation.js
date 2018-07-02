@@ -1,4 +1,4 @@
-import client from '@/api/client'
+import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import FacetText from '@/components/FacetText'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
@@ -74,8 +74,8 @@ export const getters = {
       // If the aggregation must not be global (relative to a search)
       // we add the query conditions to the body.
       if (!state.globalSearch) {
-        client.addFacetsToBody($rootState.search.facets, body)
-        client.addQueryToBody($rootState.search.query, body)
+        esClient.addFacetsToBody($rootState.search.facets, body)
+        esClient.addQueryToBody($rootState.search.query, body)
       }
       // We finally build the body with no docs (size 0) to avoid loading
       // content twice.
@@ -86,7 +86,7 @@ export const getters = {
 
 export const actions = {
   query ({ commit, dispatch, getters }, facetPredicate) {
-    return client.search({
+    return esClient.search({
       index: process.env.CONFIG.es_index,
       type: 'doc',
       size: 0,

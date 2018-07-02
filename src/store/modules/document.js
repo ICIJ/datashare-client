@@ -1,4 +1,4 @@
-import client from '@/api/client'
+import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 
 const state = {
@@ -27,13 +27,13 @@ const mutations = {
 const actions = {
   get ({commit}, idAndRouting) {
     commit('idAndRouting', idAndRouting)
-    return client.getEsDoc(idAndRouting.id, idAndRouting.routing).then(
+    return esClient.getEsDoc(idAndRouting.id, idAndRouting.routing).then(
       raw => commit('doc', raw),
       _ => commit('doc', null)
     )
   },
   getNamedEntities ({commit, state}) {
-    return client.getNamedEntities(state.idAndRouting.id, state.idAndRouting.routing).then(
+    return esClient.getNamedEntities(state.idAndRouting.id, state.idAndRouting.routing).then(
       raw => commit('namedEntities', raw),
       _ => commit('namedEntities', {hits: {hits: []}})
     )
