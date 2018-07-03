@@ -6,7 +6,7 @@ let esIndex = process.env.CONFIG.es_index
 
 const esConnectionHelper = () => {
   before(async () => {
-    if (es.indices.exists({index: esIndex})) {
+    if (await es.indices.exists({index: esIndex})) {
       await es.indices.delete({index: esIndex})
     }
     await es.indices.create({index: esIndex})
