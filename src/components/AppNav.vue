@@ -20,9 +20,6 @@
           </button>
         </div>
         <ul class="app__nav__container__menu list-unstyled" :class="{ 'app__nav__container__menu--collapse': collapseMenu }">
-          <li class="list-unstyled-item app__nav__container__menu__item p-3">
-            <language-chooser @changed="toggleMenu" />
-          </li>
           <li class="list-unstyled-item app__nav__container__menu__item">
             <router-link :to="{ name: 'indexing' }">
               Analyse documents
@@ -60,14 +57,12 @@
 
 <script>
 import { headroom } from 'vue-headroom'
-import LanguageChooser from './LanguageChooser'
 import SearchBar from './SearchBar'
 
 export default {
   name: 'AppNav',
   components: {
     headroom,
-    LanguageChooser,
     SearchBar
   },
   data () {
