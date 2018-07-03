@@ -30,10 +30,6 @@
               </label>
             </div>
           </div>
-          <div class="form-group card-body my-0">
-            <label for="path">Path</label>
-            <input id="path" v-model="path" class="form-control "/>
-          </div>
           <div class="form-group card-body my-0" v-if="findNames">
             <label for="pipeline">NLP Pipeline</label>
             <select class="form-control" id="pipeline" v-model="pipeline">
@@ -96,7 +92,7 @@ const { mapFields } = createHelpers({
 export default {
   name: 'indexing',
   computed: {
-    ...mapFields(['form.pipeline', 'form.index', 'form.findNames', 'form.path', 'form.ocr']),
+    ...mapFields(['form.pipeline', 'form.index', 'form.findNames', 'form.ocr']),
     ...mapState('indexing', {tasks: state => state.tasks})
   },
   beforeRouteEnter (to, _from, next) {
