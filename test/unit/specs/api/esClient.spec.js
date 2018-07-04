@@ -2,13 +2,10 @@ import esClient from '@/api/esClient'
 
 describe('esClient', () => {
   var server
-  var redirectionUrl
 
   beforeEach(() => {
     server = sinon.fakeServer.create()
-    sinon.stub(window.location, 'assign').callsFake(function (data) {
-      redirectionUrl = data
-    })
+    sinon.stub(window.location, 'assign')
   })
 
   afterEach(() => {
@@ -28,6 +25,6 @@ describe('esClient', () => {
 
     await esClient.searchDocs('*')
     sinon.assert.calledOnce(window.location.assign)
-    expect(redirectionUrl).to.equal('localhost:9876' + process.env.CONFIG.ds_auth_url)
+    expect(window.location.assign.getCall(0).args).to.deep.equal(['localhost:9876' + process.env.CONFIG.ds_auth_url])
   })
 })
