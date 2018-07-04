@@ -16,6 +16,11 @@ export class DatashareClient {
   createIndex () {
     return this.sendAction('/api/search/createIndex', {method: 'PUT', credentials: 'same-origin'})
   }
+  static async getConfig () {
+    let resp = await fetch('/config')
+    let json = await resp.json()
+    return json
+  }
   getSource (url) {
     return fetch(url).then((r) => {
       if (r.status >= 200 && r.status < 300) {
