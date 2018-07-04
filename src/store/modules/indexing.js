@@ -11,7 +11,7 @@ export const state = {
     index: true,
     path: '/home/datashare/data',
     findNames: false,
-    pipeline: null,
+    pipeline: 'CORENLP',
     ocr: false
   },
   pollHandle: null,
@@ -23,6 +23,15 @@ export const getters = {
 }
 
 export const mutations = {
+  clear (state) {
+    updateField(state, {path: 'form.index', value: true})
+    updateField(state, {path: 'form.path', value: '/home/datashare/data'})
+    updateField(state, {path: 'form.findNames', value: false})
+    updateField(state, {path: 'form.pipeline', value: 'CORENLP'})
+    updateField(state, {path: 'form.ocr', value: false})
+    updateField(state, {path: 'pollHandle', value: null})
+    // updateField(state, {path: 'tasks', value: []})
+  },
   updateField,
   cleanTasks (state) {
     state.tasks = []
