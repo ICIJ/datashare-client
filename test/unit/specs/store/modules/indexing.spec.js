@@ -9,7 +9,6 @@ describe('Indexing store', () => {
   })
 
   beforeEach(() => {
-    // store = new Vuex.Store({ actions, getters, mutations, state })
     store.commit('clear')
   })
 
