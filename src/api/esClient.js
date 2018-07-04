@@ -12,7 +12,20 @@ export function docPlugin (Client, config, components) {
   // Both have a dedicated class, children of EsDoc
 
   Client.prototype.getEsDoc = function (id, routing = null) {
-    return this.get({index: process.env.CONFIG.es_index, type: 'doc', id: id, routing: routing})
+    return this.get({
+      index: process.env.CONFIG.es_index,
+      type: 'doc',
+      id: id,
+      routing: routing
+    }).then(function (data) {
+      return data
+    }, function (err) {
+      if (err && err.status === 401) {
+        window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
+      } else {
+        return err
+      }
+    })
   }
   Client.prototype.getNamedEntities = function (docId, routing = null) {
     var body = bodybuilder().query('parent_id', {type: 'NamedEntity', id: docId}).build()
@@ -22,6 +35,14 @@ export function docPlugin (Client, config, components) {
       size: 200,
       routing: routing,
       body: body
+    }).then(function (data) {
+      return data
+    }, function (err) {
+      if (err && err.status === 401) {
+        window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
+      } else {
+        return err
+      }
     })
   }
 }
@@ -82,6 +103,14 @@ export function searchPlugin (Client, config, components) {
       index: process.env.CONFIG.es_index,
       type: 'doc',
       body: body.build()
+    }).then(function (data) {
+      return data
+    }, function (err) {
+      if (err && err.status === 401) {
+        window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
+      } else {
+        return err
+      }
     })
   }
 }
