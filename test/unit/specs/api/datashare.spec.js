@@ -1,6 +1,6 @@
-import {DatashareClient} from '@/api/datashare'
+import { DatashareClient } from '@/api/datashare'
 
-describe('datashare backend', () => {
+describe('Datashare backend client', () => {
   var ds = new DatashareClient()
 
   beforeEach(() => {
@@ -15,7 +15,16 @@ describe('datashare backend', () => {
 
   it('should return backend response to createIndex', async () => {
     fetchReturns(200, {})
-    ds.createIndex().then(resp => resp.json().then(j => expect(j).to.deep.equal({})))
+    let resp = await ds.createIndex()
+    let json = await resp.json()
+    expect(json).to.deep.equal({})
+  })
+
+  it('should redirect to signin page if backend response to createIndex is 401', async () => {
+    fetchReturns(401, {})
+    await ds.createIndex()
+    sinon.assert.calledOnce(window.location.assign)
+    expect(window.location.assign.getCall(0).args).to.deep.equal(['localhost:9876' + process.env.CONFIG.ds_auth_url])
   })
 })
 
