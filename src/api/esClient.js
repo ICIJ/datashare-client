@@ -100,7 +100,7 @@ export function searchPlugin (Client, config, components) {
 
 let handle401Error = (err) => {
   if (err && err.status === 401) {
-    window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
+    window.location.assign(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
   } else {
     throw err
   }

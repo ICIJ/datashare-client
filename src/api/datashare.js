@@ -32,7 +32,8 @@ export class DatashareClient {
   sendAction (url, params) {
     return fetch(url, params).then((r) => {
       if (r.status === 401) {
-        window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
+        window.location.assign(window.location.protocol + '//' +
+          window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
       } else {
         return r
       }
