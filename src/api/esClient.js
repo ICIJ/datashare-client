@@ -23,7 +23,7 @@ export function docPlugin (Client, config, components) {
       if (err && err.status === 401) {
         window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
       } else {
-        return err
+        throw err
       }
     })
   }
@@ -41,7 +41,7 @@ export function docPlugin (Client, config, components) {
       if (err && err.status === 401) {
         window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
       } else {
-        return err
+        throw err
       }
     })
   }
@@ -109,7 +109,7 @@ export function searchPlugin (Client, config, components) {
       if (err && err.status === 401) {
         window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
       } else {
-        return err
+        throw err
       }
     })
   }
