@@ -19,14 +19,9 @@ export function docPlugin (Client, config, components) {
       routing: routing
     }).then(function (data) {
       return data
-    }, function (err) {
-      if (err && err.status === 401) {
-        window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
-      } else {
-        throw err
-      }
-    })
+    }, handle401Error)
   }
+
   Client.prototype.getNamedEntities = function (docId, routing = null) {
     var body = bodybuilder().query('parent_id', {type: 'NamedEntity', id: docId}).build()
     return this.search({
@@ -37,13 +32,7 @@ export function docPlugin (Client, config, components) {
       body: body
     }).then(function (data) {
       return data
-    }, function (err) {
-      if (err && err.status === 401) {
-        window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
-      } else {
-        throw err
-      }
-    })
+    }, handle401Error)
   }
 }
 
@@ -105,13 +94,15 @@ export function searchPlugin (Client, config, components) {
       body: body.build()
     }).then(function (data) {
       return data
-    }, function (err) {
-      if (err && err.status === 401) {
-        window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
-      } else {
-        throw err
-      }
-    })
+    }, handle401Error)
+  }
+}
+
+let handle401Error = (err) => {
+  if (err && err.status === 401) {
+    window.location.assign(window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)
+  } else {
+    throw err
   }
 }
 
