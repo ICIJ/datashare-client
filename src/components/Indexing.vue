@@ -24,13 +24,13 @@
               </div>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" id="findNames" name="action" value="findName" v-model="action">
+              <input class="form-check-input" type="radio" id="findNames" name="action" value="findNames" v-model="action">
               <label class="form-check-label" for="action">
                 {{ $t('indexing.findNames_stage_label') }}
               </label>
             </div>
           </div>
-          <div class="form-group card-body my-0" v-if="findNames">
+          <div class="form-group card-body my-0" v-if="action === 'findNames'">
             <label for="pipeline">Named Entities Finders</label>
             <select class="form-control" id="pipeline" v-model="pipeline">
               <option value="CORENLP">Core NLP</option>
