@@ -60,7 +60,7 @@ export function searchPlugin (Client, config, components) {
     // @TODO: Test this!!
     body.query('match_all').addQuery('bool', b => b
       // Add the query string to the body
-      .orQuery('query_string', { query, default_field: 'content' })
+      .orQuery('query_string', { query, default_field: '*' })
       // Add match for namedentity containing the query string
       .orQuery('has_child', 'type', 'NamedEntity', {
         'inner_hits': {
