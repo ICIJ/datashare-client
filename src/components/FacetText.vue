@@ -39,6 +39,9 @@ export default {
     },
     isGlobal () {
       return this.$store.state.aggregation.globalSearch
+    },
+    hasResults () {
+      return this.isReady && this.items.length > 0
     }
   },
   methods: {
@@ -111,7 +114,7 @@ export default {
       <span v-if="hasValues()" class="float-right btn-group">
         <button class="btn btn-sm btn-outline-secondary py-0" @click="invert" :class="{ 'active': isReversed() }">
           <font-awesome-icon icon="eye-slash" />
-          Invert
+          {{ $t('facet.invert') }}
         </button>
       </span>
       <h6 @click="toggleItems">
@@ -120,10 +123,10 @@ export default {
       </h6>
     </div>
     <div class="list-group list-group-flush facet-text__items" v-if="!collapseItems">
-      <div class="list-group facet__items__search py-2 px-3">
+      <label class="list-group facet__items__search py-2 px-3" v-if="hasResults">
         <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + (facet.label || facet.name) + '...'" />
         <font-awesome-icon icon="search" class="float-right" />
-      </div>
+      </label>
       <div class="list-group-item facet-text__items__item p-0" v-for="item in displayedFilteredItems()" :key="item.key" :class="{ 'facet-text__items__item--active': hasValue(item) }">
         <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
           <span class="badge badge-pill badge-light float-right">
@@ -140,6 +143,9 @@ export default {
       <div class="list-group-item facet__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
         <span>{{ display.label }}</span>
         <font-awesome-icon :icon="display.icon" class="float-right" />
+      </div>
+      <div class="p-2 text-center small text-muted" v-if="isReady && !hasResults">
+        {{ $t('facet.none') }}
       </div>
     </div>
   </div>

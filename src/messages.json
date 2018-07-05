@@ -27,6 +27,10 @@
         "lastPage": "Go to last page"
       }
     },
+    "facet": {
+      "none": "No distinct values",
+      "invert": "Invert"
+    },
     "document": {
       "name": "File name",
       "path": "File path",

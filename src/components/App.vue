@@ -38,16 +38,17 @@
 <script>
 import AppNav from './AppNav'
 import { DatashareClient } from '@/api/datashare'
-import { getCookie } from 'tiny-cookie'
+// import { getCookie } from 'tiny-cookie'
 
 export default {
   name: 'App',
   components: { AppNav },
   computed: {
     isAllowed () {
-      const getJSON = (key) => getCookie(key, JSON.parse)
-      let cookie = getJSON(this.getConfig('ds_cookie_name'))
-      return getCookie(this.getConfig('ds_cookie_name')) !== null && cookie.hasOwnProperty('login') && cookie.login !== null
+      return true
+      // const getJSON = (key) => getCookie(key, JSON.parse)
+      // let cookie = getJSON(this.getConfig('ds_cookie_name'))
+      // return getCookie(this.getConfig('ds_cookie_name')) !== null && cookie.hasOwnProperty('login') && cookie.login !== null
     }
   },
   created () {
