@@ -37,7 +37,7 @@ export const state = {
       body: (body) => body
         .query('term', 'type', 'NamedEntity')
         .agg('terms', 'mentionNorm', 'mentions', {
-          'size': 15,
+          'size': 50,
           'order': [ {'docs': 'desc'}, {'_count': 'desc'} ]
         }, sub => sub.agg('cardinality', 'join#Document', 'docs'))
     }
