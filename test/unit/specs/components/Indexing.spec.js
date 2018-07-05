@@ -15,14 +15,16 @@ const i18n = new VueI18n({locale: 'en', messages})
 describe('Indexing.vue', () => {
   var wrapped = null
 
-  beforeEach(async () => {
+  beforeEach(() => {
     const localVue = createLocalVue()
     localVue.use(VueI18n)
     wrapped = mount(Indexing, {i18n, router, store})
     sinon.stub(window, 'fetch')
   })
+
   afterEach(() => {
     window.fetch.restore()
+    wrapped.vm.$store.commit('indexing/clear')
   })
 
   it('should begin/stop polling when route enter/leave', async () => {
@@ -138,16 +140,6 @@ describe('Indexing.vue', () => {
     store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(0)
-  })
-
-  it('should setcorenlp as default pipeline', async () => {
-    window.fetch.returns(jsonOk({}))
-    store.dispatch('indexing/query')
-    await Vue.nextTick()
-
-    sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/api/task/index/file/home/datashare/data',
-      {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 })
 
