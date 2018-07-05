@@ -10,7 +10,6 @@ export const state = {
   form: {
     action: 'index',
     path: '/home/datashare/data',
-    findNames: false,
     pipeline: 'CORENLP',
     ocr: false
   },
@@ -26,7 +25,6 @@ export const mutations = {
   clear (state) {
     state.form.action = 'index'
     state.form.path = '/home/datashare/data'
-    state.form.findNames = false
     state.form.pipeline = 'CORENLP'
     state.form.ocr = false
     state.pollHandle = null

@@ -92,7 +92,7 @@ const { mapFields } = createHelpers({
 export default {
   name: 'indexing',
   computed: {
-    ...mapFields(['form.pipeline', 'form.action', 'form.findNames', 'form.ocr']),
+    ...mapFields(['form.pipeline', 'form.action', 'form.ocr']),
     ...mapState('indexing', {tasks: state => state.tasks})
   },
   beforeRouteEnter (to, _from, next) {

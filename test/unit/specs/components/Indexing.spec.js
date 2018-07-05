@@ -66,7 +66,7 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 
-  it('should call findNames when action is findNames', async () => {
+  it('should call findNames when selected action is findNames', async () => {
     window.fetch.returns(jsonOk({}))
     store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
     store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
@@ -79,10 +79,21 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
   })
 
+  it('should set corenlp as default pipeline', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
+
+    store.dispatch('indexing/query')
+    wrapped.update()
+
+    sinon.assert.calledOnce(window.fetch)
+    sinon.assert.calledWith(window.fetch, '/api/task/findNames/CORENLP',
+      {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
+  })
+
   it('should disable resume if selected action is findNames', async () => {
     window.fetch.returns(jsonOk({}))
     store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
     store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
 
     store.dispatch('indexing/query')
@@ -95,7 +106,6 @@ describe('Indexing.vue', () => {
   it('should call index action with ocr option', async () => {
     window.fetch.returns(jsonOk({}))
     store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
-    store.commit('indexing/updateField', {path: 'form.findNames', value: false})
     store.commit('indexing/updateField', {path: 'form.ocr', value: true})
 
     store.dispatch('indexing/query')
@@ -106,28 +116,38 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {ocr: true}}), credentials: 'same-origin'})
   })
 
-  it('should display ocr option if index action is chosen', async () => {
+  it('should display ocr option if selected action is index', async () => {
     store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(1)
   })
 
-  it('should hide ocr option if index action is not chosen', async () => {
+  it('should hide ocr option if selected action is not index', async () => {
     store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(0)
   })
 
-  it('should display pipeline choice if findNames action is chosen', async () => {
+  it('should display pipeline choice if selected action is findNames', async () => {
     store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(1)
   })
 
-  it('should hide pipeline choice if findNames action is not chosen', async () => {
+  it('should hide pipeline choice if selected action is not findNames', async () => {
     store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(0)
+  })
+
+  it('should setcorenlp as default pipeline', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.dispatch('indexing/query')
+    await Vue.nextTick()
+
+    sinon.assert.calledOnce(window.fetch)
+    sinon.assert.calledWith(window.fetch, '/api/task/index/file/home/datashare/data',
+      {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 })
 
