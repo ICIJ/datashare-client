@@ -45,6 +45,9 @@ export default {
   components: { AppNav },
   computed: {
     isAllowed () {
+      // Byepass authorization in development
+      if (process.env.NODE_ENV === 'development') return true
+      // Read cookie to know if the request is authorized
       const getJSON = (key) => getCookie(key, JSON.parse)
       let cookie = getJSON(this.getConfig('ds_cookie_name'))
       return getCookie(this.getConfig('ds_cookie_name')) !== null && cookie.hasOwnProperty('login') && cookie.login !== null
