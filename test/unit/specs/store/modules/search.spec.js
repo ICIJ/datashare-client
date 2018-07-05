@@ -8,16 +8,16 @@ import Vuex from 'vuex'
 import { IndexedDocuments, IndexedDocument, letData } from 'test/unit/es_utils'
 import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 
-describe('store/module/search', () => {
+describe('Search store', () => {
   esConnectionHelper()
   var es = esConnectionHelper.es
   var store = null
 
   beforeEach(async () => {
     store = new Vuex.Store({ state, actions, mutations, getters })
-    // Reset default search not to inherit from previous searches
-    store.commit('clear')
   })
+
+  afterEach(() => store.commit('clear'))
 
   it('should define a store module', () => {
     expect(store.state).to.not.equal(undefined)
