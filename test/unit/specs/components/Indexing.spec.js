@@ -1,4 +1,4 @@
-import {createLocalVue, mount} from 'vue-test-utils'
+import { createLocalVue, mount } from 'vue-test-utils'
 import Indexing from '@/components/Indexing'
 
 import messages from '@/messages'
@@ -44,7 +44,7 @@ describe('Indexing.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[1].textContent).to.contain('baz(456)')
   })
 
-  it('should call index when index is selected', async () => {
+  it('should call index when index action is selected', async () => {
     window.fetch.returns(jsonOk({}))
     store.dispatch('indexing/query')
     await Vue.nextTick()
@@ -54,10 +54,9 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 
-  it('should call findNames when findNames is selected', async () => {
+  it('should call findNames when action is findNames', async () => {
     window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.index', value: false})
-    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
+    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
     store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
 
     store.dispatch('indexing/query')
@@ -65,12 +64,12 @@ describe('Indexing.vue', () => {
 
     sinon.assert.calledOnce(window.fetch)
     sinon.assert.calledWith(window.fetch, '/api/task/findNames/PIPELINE',
-      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
+      {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
   })
 
   it('should disable resume if index is selected with name finding', async () => {
     window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.index', value: true})
+    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
     store.commit('indexing/updateField', {path: 'form.findNames', value: true})
     store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
 
@@ -81,9 +80,9 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
   })
 
-  it('should call index with ocr option', async () => {
+  it('should call index action with ocr option', async () => {
     window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.index', value: true})
+    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
     store.commit('indexing/updateField', {path: 'form.findNames', value: false})
     store.commit('indexing/updateField', {path: 'form.ocr', value: true})
 
@@ -95,22 +94,26 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {ocr: true}}), credentials: 'same-origin'})
   })
 
-  it('should hide ocr option if not indexing', async () => {
-    store.commit('indexing/updateField', {path: 'form.index', value: true})
+  it('should display ocr option if index action is chosen', async () => {
+    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(1)
+  })
 
-    store.commit('indexing/updateField', {path: 'form.index', value: false})
+  it('should hide ocr option if index action is not chosen', async () => {
+    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(0)
   })
 
-  it('should hide pipeline choice if not findNamesing named entities', async () => {
-    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
+  it('should display pipeline choice if findNames action is chosen', async () => {
+    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(1)
+  })
 
-    store.commit('indexing/updateField', {path: 'form.findNames', value: false})
+  it('should hide pipeline choice if findNames action is not chosen', async () => {
+    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
     wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(0)
   })

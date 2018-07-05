@@ -57,7 +57,7 @@ export const actions = {
         datashare.index(state.form.path, {ocr: state.form.ocr})
         break
       case 'findNames' :
-        datashare.findNames(state.form.pipeline, {resume: !state.form.index})
+        datashare.findNames(state.form.pipeline, {resume: false})
         break
       default :
         break
