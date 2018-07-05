@@ -74,6 +74,7 @@ export function searchPlugin (Client, config, components) {
     const body = bodybuilder().from(from).size(size)
     this.addFacetsToBody(facets, body)
     this.addQueryToBody(query, body)
+    body.query('match', 'type', 'Document')
     // Add an option to exclude the content
     body.rawOption('_source', { includes: ['*'], excludes: ['content'] })
     // Add an option to highlight fragments in the results
