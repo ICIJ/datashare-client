@@ -31,7 +31,7 @@
             </div>
           </div>
           <div class="form-group card-body my-0" v-if="findNames">
-            <label for="pipeline">NLP Pipeline</label>
+            <label for="pipeline">Named Entities Finders</label>
             <select class="form-control" id="pipeline" v-model="pipeline">
               <option value="CORENLP">Core NLP</option>
               <option value="OPENNLP">Open NLP</option>
