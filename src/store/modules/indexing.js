@@ -8,7 +8,7 @@ const datashare = new DatashareClient()
 
 export const state = {
   form: {
-    index: true,
+    action: 'index',
     path: '/home/datashare/data',
     findNames: false,
     pipeline: 'CORENLP',
@@ -24,13 +24,13 @@ export const getters = {
 
 export const mutations = {
   clear (state) {
-    updateField(state, {path: 'form.index', value: true})
-    updateField(state, {path: 'form.path', value: '/home/datashare/data'})
-    updateField(state, {path: 'form.findNames', value: false})
-    updateField(state, {path: 'form.pipeline', value: 'CORENLP'})
-    updateField(state, {path: 'form.ocr', value: false})
-    updateField(state, {path: 'pollHandle', value: null})
-    // updateField(state, {path: 'tasks', value: []})
+    state.form.action = 'index'
+    state.form.path = '/home/datashare/data'
+    state.form.findNames = false
+    state.form.pipeline = 'CORENLP'
+    state.form.ocr = false
+    state.pollHandle = null
+    // state.tasks = []
   },
   updateField,
   cleanTasks (state) {
@@ -52,11 +52,15 @@ export const mutations = {
 
 export const actions = {
   query ({ state, commit }) {
-    if (state.form.index) {
-      datashare.index(state.form.path, {ocr: state.form.ocr})
-    }
-    if (state.form.findNames) {
-      datashare.findNames(state.form.pipeline, {resume: !state.form.index})
+    switch (state.form.action) {
+      case 'index' :
+        datashare.index(state.form.path, {ocr: state.form.ocr})
+        break
+      case 'findNames' :
+        datashare.findNames(state.form.pipeline, {resume: !state.form.index})
+        break
+      default :
+        break
     }
   },
   cleanTasks ({ state, commit }) {

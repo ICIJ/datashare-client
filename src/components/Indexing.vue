@@ -10,22 +10,22 @@
           </div>
           <div class="form-group card-body my-0">
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="index" v-model="index">
-              <label class="form-check-label" for="index">
+              <input class="form-check-input" type="radio" id="index" name="action" value="index" v-model="action">
+              <label class="form-check-label" for="action">
                 {{ $t('indexing.index_stage_label') }}
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="checkbox" id="findNames" v-model="findNames">
-              <label class="form-check-label" for="findNames">
+              <input class="form-check-input" type="radio" id="findNames" name="action" value="findName" v-model="action">
+              <label class="form-check-label" for="action">
                 {{ $t('indexing.findNames_stage_label') }}
               </label>
             </div>
           </div>
-          <div class="form-group card-body my-0" v-if="index">
+          <div class="form-group card-body my-0" v-if="action === 'index'">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" id="ocr" v-model="ocr">
-              <label class="form-check-label" for="index">
+              <label class="form-check-label" for="action">
                 {{ $t('indexing.enable_ocr') }}
               </label>
             </div>
@@ -92,7 +92,7 @@ const { mapFields } = createHelpers({
 export default {
   name: 'indexing',
   computed: {
-    ...mapFields(['form.pipeline', 'form.index', 'form.findNames', 'form.ocr']),
+    ...mapFields(['form.pipeline', 'form.action', 'form.findNames', 'form.ocr']),
     ...mapState('indexing', {tasks: state => state.tasks})
   },
   beforeRouteEnter (to, _from, next) {
