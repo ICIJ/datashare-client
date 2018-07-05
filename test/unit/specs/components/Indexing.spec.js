@@ -44,8 +44,20 @@ describe('Indexing.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[1].textContent).to.contain('baz(456)')
   })
 
+  it('should call index as default action', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.dispatch('indexing/query')
+    await Vue.nextTick()
+
+    sinon.assert.calledOnce(window.fetch)
+    sinon.assert.calledWith(window.fetch, '/api/task/index/file/home/datashare/data',
+      {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
+  })
+
   it('should call index when index action is selected', async () => {
     window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
+
     store.dispatch('indexing/query')
     await Vue.nextTick()
 
@@ -67,7 +79,7 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
   })
 
-  it('should disable resume if index is selected with name finding', async () => {
+  it('should disable resume if selected action is findNames', async () => {
     window.fetch.returns(jsonOk({}))
     store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
     store.commit('indexing/updateField', {path: 'form.findNames', value: true})
