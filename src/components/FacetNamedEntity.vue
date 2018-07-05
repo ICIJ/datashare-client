@@ -35,52 +35,12 @@
 </template>
 
 <script>
-import Response from '@/api/Response'
 import { mixin } from 'mixins/facets'
 
 export default {
   name: 'FacetNamedEntity',
   props: ['facet'],
-  mixins: [mixin],
-  data () {
-    return {
-      response: Response.none(),
-      collapseItems: false,
-      isReady: false
-    }
-  },
-  created () {
-    this.aggregate()
-    // Watch change on the facet store the restart aggregation
-    this.$store.watch(this.watchedForUpdate, this.aggregate, { deep: true })
-  },
-  computed: {
-    headerIcon () {
-      return this.collapseItems ? 'caret-right' : 'caret-down'
-    }
-  },
-  methods: {
-    aggregate () {
-      if (this.facet) {
-        this.isReady = false
-        this.response = Response.none()
-        return this.$store.dispatch('aggregation/query', this.facet).then(r => {
-          this.response = r
-          this.isReady = true
-        })
-      }
-    },
-    toggleItems () {
-      this.collapseItems = !this.collapseItems
-    },
-    watchedForUpdate (state) {
-      if (!state.aggregation.globalSearch) {
-        // This will allow to watch change on the search only when
-        // the aggregation is not global (ie. relative to the search).
-        return state.search
-      }
-    }
-  }
+  mixins: [mixin]
 }
 </script>
 

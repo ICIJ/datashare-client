@@ -1,4 +1,12 @@
-import { filter, includes, slice, toLower, toString } from 'lodash'
+import Response from '@/api/Response'
+
+import filter from 'lodash/filter'
+import includes from 'lodash/includes'
+import slice from 'lodash/slice'
+import toLower from 'lodash/toLower'
+import toString from 'lodash/toString'
+import each from 'lodash/each'
+
 import { removeDiacritics } from '@/utils/strings.js'
 
 const initialNumberOfFilesDisplayed = 5
@@ -6,13 +14,21 @@ const initialNumberOfFilesDisplayed = 5
 export const mixin = {
   data () {
     return {
+      facetQuery: '',
       display: {
         icon: 'angle-down',
         label: 'More',
         size: initialNumberOfFilesDisplayed
       },
-      facetQuery: ''
+      response: Response.none(),
+      collapseItems: false,
+      isReady: false
     }
+  },
+  created () {
+    this.aggregate()
+    // Watch change on the facet store the restart aggregation
+    this.$store.watch(this.watchedForUpdate, this.aggregate, { deep: true })
   },
   computed: {
     items () {
@@ -24,9 +40,88 @@ export const mixin = {
           return includes(this.normalize(item[attribute]), this.normalize(this.facetQuery))
         }).length > 0) || (this.facet.itemLabel && includes(this.normalize(this.facet.itemLabel(item)), this.normalize(this.facetQuery)))
       }, this)
+    },
+    headerIcon () {
+      return this.collapseItems ? 'caret-right' : 'caret-down'
+    },
+    facetFilter () {
+      return this.$store.getters['search/findFacet'](this.facet.name)
+    },
+    placeholderRows () {
+      return [
+        {
+          height: '1em',
+          boxes: [[0, '70%'], ['20%', '10%']]
+        }
+      ]
+    },
+    isGlobal () {
+      return this.$store.state.aggregation.globalSearch
+    },
+    hasResults () {
+      return this.isReady && this.items.length > 0
     }
   },
   methods: {
+    aggregate () {
+      if (this.facet) {
+        this.isReady = false
+        this.response = Response.none()
+        return this.$store.dispatch('aggregation/query', this.facet).then(r => {
+          this.response = this.addInvertedFacets(r)
+          this.isReady = true
+        })
+      }
+    },
+    addInvertedFacets (response) {
+      if (!this.isGlobal && this.facetFilter && this.facetFilter.reverse) {
+        each(this.facetFilter.values, key => {
+          response.push(`aggregations.${this.facet.key}.buckets`, { key })
+        })
+      }
+      return response
+    },
+    addValue (item) {
+      this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
+      this.refreshRoute()
+    },
+    removeValue (item) {
+      this.$store.commit('search/removeFacetValue', this.facet.itemParam(item))
+      this.refreshRoute()
+    },
+    toggleValue (item) {
+      this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
+      this.refreshRoute()
+    },
+    invert () {
+      this.$store.commit('search/toggleFacet', this.facet.name)
+      this.refreshRoute()
+    },
+    hasValue (item) {
+      return this.$store.getters['search/hasFacetValue'](this.facet.itemParam(item))
+    },
+    hasValues () {
+      return this.isReady && this.$store.getters['search/hasFacetValues'](this.facet.name)
+    },
+    isReversed () {
+      return this.$store.getters['search/isFacetReversed'](this.facet.name)
+    },
+    toggleItems () {
+      this.collapseItems = !this.collapseItems
+    },
+    watchedForUpdate (state) {
+      if (!state.aggregation.globalSearch) {
+        // This will allow to watch change on the search only when
+        // the aggregation is not global (ie. relative to the search).
+        return state.search
+      }
+    },
+    refreshRoute () {
+      this.$router.push({
+        name: 'search',
+        query: this.$store.getters['search/toRouteQuery']
+      })
+    },
     displayedFilteredItems () {
       return slice(this.filteredItems, 0, this.display.size)
     },
