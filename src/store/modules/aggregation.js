@@ -30,7 +30,7 @@ export const state = {
     },
     {
       name: 'named-entity',
-      label: 'Named Entites',
+      label: 'Named Entities',
       key: 'mentions',
       type: FacetNamedEntity.name,
       itemParam: (item) => item.key,
