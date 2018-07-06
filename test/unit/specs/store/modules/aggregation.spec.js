@@ -16,6 +16,10 @@ describe('Aggregation store', () => {
     store = new Vuex.Store({ state: cloneDeep(state), actions, getters, mutations, modules: { search } })
   })
 
+  afterEach(() => {
+    store.commit('search/clear')
+  })
+
   it('should define a `content-type` facet correctly', () => {
     expect(store.state.facets[0].name).to.equal('content-type')
     expect(store.state.facets[0].type).to.equal('FacetText')
