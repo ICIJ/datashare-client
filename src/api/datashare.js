@@ -1,6 +1,9 @@
 import 'whatwg-fetch'
 
 export class DatashareClient {
+  constructor () {
+    this.ds_host = process.env.CONFIG.ds_host || ''
+  }
   index (path, options) {
     return this.sendAction(`/api/task/index/file${path}`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
   }
@@ -16,10 +19,8 @@ export class DatashareClient {
   createIndex () {
     return this.sendAction('/api/search/createIndex', {method: 'PUT', credentials: 'same-origin'})
   }
-  static async getConfig () {
-    let resp = await fetch('/config')
-    let json = await resp.json()
-    return json
+  getFullUrl (url) {
+    return `${this.ds_host}${url}`
   }
   getSource (url) {
     return fetch(url).then((r) => {
@@ -35,7 +36,7 @@ export class DatashareClient {
     })
   }
   sendAction (url, params) {
-    return fetch(url, params).then((r) => {
+    return fetch(this.getFullUrl(url), params).then((r) => {
       if (r.status === 401) {
         window.location.assign(window.location.protocol + '//' +
           window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_url)

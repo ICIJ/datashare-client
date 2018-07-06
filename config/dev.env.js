@@ -6,6 +6,7 @@ module.exports = merge(prodEnv, {
   NODE_ENV: '"development"',
   CONFIG: {
     es_host: '"elasticsearch:9200"',
-    es_index: '"local-datashare"'
+    es_index: '"local-datashare"',
+    ds_host: '"http://localhost:8080"',
   }
 })
