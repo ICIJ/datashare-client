@@ -1,7 +1,15 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 
-import { castArray, each, filter, find, floor, max, reduce, remove, uniq } from 'lodash'
+import castArray from 'lodash/castArray'
+import each from 'lodash/each'
+import filter from 'lodash/filter'
+import find from 'lodash/find'
+import floor from 'lodash/floor'
+import max from 'lodash/max'
+import reduce from 'lodash/reduce'
+import remove from 'lodash/remove'
+import uniq from 'lodash/uniq'
 
 export const state = {
   query: '*',

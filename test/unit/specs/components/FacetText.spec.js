@@ -4,7 +4,9 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 
-import { find, noop, trim } from 'lodash'
+import find from 'lodash/find'
+import noop from 'lodash/noop'
+import trim from 'lodash/trim'
 
 import { createLocalVue, mount } from 'vue-test-utils'
 import { IndexedDocument, letData } from 'test/unit/es_utils'
@@ -29,6 +31,7 @@ describe('FacetText.vue', () => {
   esConnectionHelper()
   var es = esConnectionHelper.es
   var wrapped = null
+
   beforeEach(async () => {
     const localVue = createLocalVue()
     localVue.use(VueI18n)
@@ -41,11 +44,11 @@ describe('FacetText.vue', () => {
         facet: find(store.state.aggregation.facets, {name: 'content-type'})
       }
     })
-    // Reset aggregation store to global search
-    store.commit('aggregation/setGlobalSearch', true)
     // Reset facetQuery to default
     wrapped.vm.facetQuery = ''
   })
+
+  afterEach(async () => store.commit('search/clear'))
 
   it('should display empty list', async () => {
     await wrapped.vm.aggregate()
@@ -82,7 +85,7 @@ describe('FacetText.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(3)
   })
 
-  it('should display 1 facet item after applying the search', async () => {
+  it('should display X facet items after applying the relative search', async () => {
     await letData(es).have(new IndexedDocument('index.js').withContent('INDEX').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('list.js').withContent('LIST').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('show.js').withContent('SHOW').withContentType('text/javascript')).commit()
@@ -93,33 +96,9 @@ describe('FacetText.vue', () => {
     store.commit('search/query', 'SHOW')
     await wrapped.vm.aggregate()
     await Vue.nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(3)
-    store.commit('aggregation/setGlobalSearch', false)
-    await wrapped.vm.aggregate()
-    await Vue.nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(1)
+
     store.commit('search/query', 'INDEX')
-    await wrapped.vm.aggregate()
-    await Vue.nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
-  })
-
-  it('should apply relative facet and get back to global facet', async () => {
-    await letData(es).have(new IndexedDocument('index.js').withContent('Lorem').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('index.html').withContent('Ipsum').withContentType('text/html')).commit()
-
-    store.commit('search/query', 'Lorem')
-    store.commit('aggregation/setGlobalSearch', true)
-    await wrapped.vm.aggregate()
-    await Vue.nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
-
-    store.commit('aggregation/setGlobalSearch', false)
-    await wrapped.vm.aggregate()
-    await Vue.nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(1)
-
-    store.commit('aggregation/setGlobalSearch', true)
     await wrapped.vm.aggregate()
     await Vue.nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
@@ -130,7 +109,6 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('index.html').withContent('Lorem').withContentType('text/html')).commit()
 
     store.commit('search/query', '*')
-    store.commit('aggregation/setGlobalSearch', false)
     store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
     store.commit('search/excludeFacet', 'content-type')
 

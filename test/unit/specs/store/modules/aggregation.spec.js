@@ -1,18 +1,19 @@
 import { state, actions, getters, mutations } from '@/store/modules/aggregation'
+import search from '@/store/modules/search'
 
 import Vuex from 'vuex'
 import cloneDeep from 'lodash/cloneDeep'
 
-import {IndexedDocument, letData} from 'test/unit/es_utils'
+import { IndexedDocument, letData } from 'test/unit/es_utils'
 import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 
-describe('store/module/aggregation', () => {
+describe('Aggregation store', () => {
   esConnectionHelper()
   var es = esConnectionHelper.es
   let store = null
 
   beforeEach(async () => {
-    store = new Vuex.Store({ state: cloneDeep(state), actions, getters, mutations })
+    store = new Vuex.Store({ state: cloneDeep(state), actions, getters, mutations, modules: { search } })
   })
 
   it('should define a `content-type` facet correctly', () => {

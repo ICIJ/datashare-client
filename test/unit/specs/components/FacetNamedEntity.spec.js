@@ -51,6 +51,7 @@ describe('FacetNamedEntity.vue', () => {
   })
 
   it('should display one named entity', async () => {
+    store.commit('search/clear')
     await letData(es).have(new IndexedDocument('docs/naz.txt').withContent('this is a naz document').withNer('naz')).commit()
     await wrapped.vm.aggregate()
     await Vue.nextTick()
