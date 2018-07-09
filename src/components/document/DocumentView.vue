@@ -167,6 +167,12 @@ export default {
 
   &__content {
     padding: $spacer * 2 $spacer;
+
+    & .tab-pane {
+      & dd {
+        word-wrap: break-word;
+      }
+    }
   }
 
   .text-pre-wrap {
