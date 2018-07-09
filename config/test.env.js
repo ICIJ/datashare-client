@@ -4,7 +4,8 @@ const devEnv = require('./dev.env')
 
 const CONFIG = {
   es_index: '"datashare-testjs"',
-  es_log: '"debug"'
+  es_log: '"debug"',
+  ds_host: null,
 }
 
 module.exports = merge(devEnv, {
