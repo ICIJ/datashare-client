@@ -9,7 +9,6 @@ const datashare = new DatashareClient()
 export const state = {
   form: {
     action: 'index',
-    path: '/home/datashare/data',
     pipeline: 'CORENLP',
     ocr: false
   },
@@ -24,7 +23,6 @@ export const getters = {
 export const mutations = {
   clear (state) {
     state.form.action = 'index'
-    state.form.path = '/home/datashare/data'
     state.form.pipeline = 'CORENLP'
     state.form.ocr = false
     state.pollHandle = null
@@ -52,7 +50,7 @@ export const actions = {
   query ({ state, commit }) {
     switch (state.form.action) {
       case 'index' :
-        datashare.index(state.form.path, {ocr: state.form.ocr})
+        datashare.index({ocr: state.form.ocr})
         break
       case 'findNames' :
         datashare.findNames(state.form.pipeline, {resume: false})

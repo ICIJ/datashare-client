@@ -52,7 +52,7 @@ describe('Indexing.vue', () => {
     await Vue.nextTick()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/api/task/index/file/home/datashare/data',
+    sinon.assert.calledWith(window.fetch, '/api/task/index/file',
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 
@@ -64,7 +64,7 @@ describe('Indexing.vue', () => {
     await Vue.nextTick()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/api/task/index/file/home/datashare/data',
+    sinon.assert.calledWith(window.fetch, '/api/task/index/file',
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 
@@ -114,7 +114,7 @@ describe('Indexing.vue', () => {
     wrapped.update()
 
     sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/api/task/index/file/home/datashare/data',
+    sinon.assert.calledWith(window.fetch, '/api/task/index/file',
       {method: 'POST', body: JSON.stringify({options: {ocr: true}}), credentials: 'same-origin'})
   })
 

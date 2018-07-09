@@ -57,12 +57,12 @@
             <dd class="col-sm-9">{{ document.source.extractionLevel }}</dd>
           </template>
         </dl>
-        <a class="btn btn-primary" :href="document.relativePath">{{ $t('document.download_button') }}</a>
+        <a class="btn btn-primary" :href="documentUrl">{{ $t('document.download_button') }}</a>
       </div>
       <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
         <template v-if="document.contentType === 'application/pdf'">
-          <pdf-viewer :url="document.relativePath" />
+          <pdf-viewer :url="documentUrl" />
         </template>
         <template v-else-if="document.contentType === 'image/tiff'">
           <tiff-viewer :url="document.relativePath" />
@@ -86,6 +86,7 @@ import {highlight} from '@/utils/strings'
 import PdfViewer from './PdfViewer'
 import SpreadsheetViewer from './SpreadsheetViewer'
 import TiffViewer from './TiffViewer'
+import {DatashareClient} from '@/api/datashare'
 
 export default {
   components: {
@@ -114,6 +115,9 @@ export default {
         return highlight(this.document.source.content, this.namedEntities,
           m => `<mark class="ner ${m.category}">${m.source.mention}</mark>`, r => escape(r), m => m.source.mention)
       }
+    },
+    documentUrl () {
+      return DatashareClient.getFullUrl(this.document.relativePath)
     }
   },
   beforeRouteEnter (to, _from, next) {

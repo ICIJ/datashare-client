@@ -18,7 +18,6 @@ describe('Indexing store', () => {
     store.commit('clear')
 
     expect(store.state.form.action).to.equal('index')
-    expect(store.state.form.path).to.equal('/home/datashare/data')
     expect(store.state.form.pipeline).to.equal('CORENLP')
     expect(store.state.form.ocr).to.equal(false)
     expect(store.state.pollHandle).to.equal(null)
