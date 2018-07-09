@@ -55,6 +55,10 @@
       "ongoing": "Tasks",
       "new": "New task",
       "enable_ocr": "enable Optical Character Recognition"
+    },
+    "menu": {
+      "help": "Ask for help",
+      "logout": "Logout"
     }
   },
   "fr": {
@@ -105,6 +109,10 @@
       "stages": "Étapes",
       "index_stage_label": "indexation",
       "extract_stage_label": "trouver les noms"
+    },
+    "menu": {
+      "help": "Demander de l'aide",
+      "logout": "Déconnexion"
     }
   }
 }

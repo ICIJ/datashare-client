@@ -5,7 +5,8 @@ const CONFIG = {
   es_log: '"error"',
   data_prefix: '"/data/"',
   ds_auth_url: '"/auth/xemx/signin"',
-  ds_cookie_name: '"_ds_session_id"'
+  ds_cookie_name: '"_ds_session_id"',
+  ds_auth_signout: '"/auth/signout"'
 }
 
 module.exports = {

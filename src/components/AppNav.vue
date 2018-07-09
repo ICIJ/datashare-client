@@ -45,8 +45,13 @@
           </li>
           <li class="list-unstyled-item app__nav__container__menu__item">
             <a href="https://jira.icij.org/servicedesk/" target="_blank">
-              Ask for help
+              {{ $t('menu.help') }}
               <font-awesome-icon icon="ambulance" class="ml-1 app__nav__container__menu__item__new" />
+            </a>
+          </li>
+          <li class="list-unstyled-item app__nav__container__menu__item">
+            <a :href="logoutLink" target="_blank">
+              {{ $t('menu.logout') }}
             </a>
           </li>
         </ul>
@@ -82,6 +87,11 @@ export default {
     isntLanding () {
       return this.$route.name !== 'landing'
     }
+  },
+  computed: {
+    logoutLink () {
+      return window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_signout
+    }
   }
 }
 </script>
@@ -90,8 +100,8 @@ export default {
   .app__nav {
     z-index: $zindex-fixed;
     position: relative;
-    width:100%;
-    color:$body-color;
+    width: 100%;
+    color: $body-color;
     width: auto;
     min-height: $app-nav-height;
     background: $body-bg;
@@ -101,7 +111,6 @@ export default {
       transition: background 600ms, box-shadow 600ms;
 
       .headroom--top & {
-        // box-shadow: 0 0 5px rgba(black, 0);
 
         &:before {
           @include media-breakpoint-down(md) {
