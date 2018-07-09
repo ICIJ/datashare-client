@@ -50,7 +50,7 @@ export default {
       return this.folder.replace(settings.document.base, '~')
     },
     folderParams () {
-      return { q: `path:"${this.folder}"` }
+      return { q: `path:${this.folder}*` }
     },
     namedEntities () {
       return uniqBy(this.doc.get('inner_hits.NamedEntity.hits.hits', []), '_source.mention')

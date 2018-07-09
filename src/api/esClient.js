@@ -1,6 +1,7 @@
 import es from 'elasticsearch-browser'
 import bodybuilder from 'bodybuilder'
 import each from 'lodash/each'
+import replace from 'lodash/replace'
 
 import store from '@/store'
 
@@ -56,8 +57,8 @@ export function searchPlugin (Client, config, components) {
     // a query_string and NamedEntity. If we don't add a `match_all` query,
     // Bodybuilder ignores the query context, a MUST, and replace it by the none
     // mentioned in the nested query.
-    //
-    // @TODO: Test this!!
+    // Escape slash by adding a backslash before it
+    query = replace(query, /\//g, '\\/')
     body.query('match_all').addQuery('bool', b => b
       // Add the query string to the body
       .orQuery('query_string', { query, default_field: '*' })
