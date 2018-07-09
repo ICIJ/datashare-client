@@ -1,24 +1,30 @@
 import esClient from '@/api/esClient'
 import bodybuilder from 'bodybuilder'
+import { state, actions, getters, mutations } from '@/store/modules/aggregation'
+import cloneDeep from 'lodash/cloneDeep'
+import Vuex from 'vuex'
 
 describe('esClient', () => {
   var server = null
+  var store = null
 
   beforeEach(() => {
     server = sinon.fakeServer.create()
     sinon.stub(window.location, 'assign')
+    store = new Vuex.Store({ state: cloneDeep(state), actions, getters, mutations })
   })
 
   afterEach(() => {
     server.restore()
     window.location.assign.restore()
+    store.commit('clear')
   })
 
   it('should return backend response to a POST request for searchDocs', async () => {
     server.respondWith('POST', 'http://elasticsearch:9200/datashare-testjs/doc/_search', [200, {'Content-Type': 'application/json'}, '{"foo": "bar"}'])
 
     let response = await esClient.searchDocs('*')
-    expect(response).to.deep.equal({'foo': 'bar'})
+    expect(response).to.deep.equal({ 'foo': 'bar' })
   })
 
   it('should redirect to signin page if searchDocs response status is 401', async () => {

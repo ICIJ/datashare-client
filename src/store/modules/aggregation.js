@@ -56,6 +56,39 @@ export const mutations = {
       throw new Error('Facet already exists')
     }
     return state.facets.push(facet)
+  },
+  clear (state) {
+    state.facets = [
+      {
+        name: 'content-type',
+        label: 'File Types',
+        key: 'contentType',
+        type: FacetText.name,
+        itemParam: (item) => ({ name: 'content-type', value: item.key }),
+        itemLabel: (item) => get(types, [item.key, 'label'], item.key),
+        body: (body) => body.agg('terms', 'contentType', 'contentType')
+      },
+      {
+        name: 'language',
+        key: 'language',
+        type: FacetText.name,
+        itemParam: (item) => ({ name: 'language', value: item.key }),
+        body: (body) => body.agg('terms', 'language', 'language')
+      },
+      {
+        name: 'named-entity',
+        label: 'Named Entities',
+        key: 'mentions',
+        type: FacetNamedEntity.name,
+        itemParam: (item) => item.key,
+        body: (body) => body
+          .query('term', 'type', 'NamedEntity')
+          .agg('terms', 'mentionNorm', 'mentions', {
+            'size': 50,
+            'order': [ {'docs': 'desc'}, {'_count': 'desc'} ]
+          }, sub => sub.agg('cardinality', 'join#Document', 'docs'))
+      }
+    ]
   }
 }
 

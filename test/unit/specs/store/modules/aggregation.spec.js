@@ -18,6 +18,11 @@ describe('Aggregation store', () => {
 
   afterEach(() => {
     store.commit('search/clear')
+    store.commit('clear')
+  })
+
+  it('should define a store module', () => {
+    expect(store.state).to.not.equal(undefined)
   })
 
   it('should define a `content-type` facet correctly', () => {
