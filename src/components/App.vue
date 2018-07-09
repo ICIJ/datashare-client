@@ -12,7 +12,7 @@
           The International Consortium of Investigative Journalists' search and discovery platform.
         </p>
         <p>
-          <a class="btn btn-primary btn-lg" :href="getConfig('ds_auth_url')">
+          <a class="btn btn-primary btn-lg" :href="getConfig('ds_auth_signin')">
             <i class="fa fa-sign-in"></i>&nbsp;
             Login with Xemx
           </a></p>

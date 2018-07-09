@@ -32,7 +32,7 @@ describe('esClient', () => {
 
     await esClient.searchDocs('*')
     sinon.assert.calledOnce(window.location.assign)
-    expect(window.location.assign.getCall(0).args).to.deep.equal(['http://localhost:9876' + process.env.CONFIG.ds_auth_url])
+    expect(window.location.assign.getCall(0).args).to.deep.equal(['http://localhost:9876' + process.env.CONFIG.ds_auth_signin])
   })
 
   it('should build a simple ES query', async () => {
