@@ -22,7 +22,7 @@
 import Handsontable from 'handsontable'
 import XLSX from 'xlsx'
 import Papa from 'papaparse'
-import {DatashareClient} from '@/api/datashare'
+import {DatashareClient} from '@/api/DatashareClient'
 
 const ds = new DatashareClient()
 

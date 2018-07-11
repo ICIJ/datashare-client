@@ -37,7 +37,7 @@
 
 <script>
 import AppNav from './AppNav'
-import { DatashareClient } from '@/api/datashare'
+import { DatashareClient } from '@/api/DatashareClient'
 import { getCookie } from 'tiny-cookie'
 
 export default {

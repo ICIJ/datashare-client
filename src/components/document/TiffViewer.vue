@@ -30,7 +30,7 @@
 
 <script>
 import Tiff from 'tiff.js'
-import {DatashareClient} from '@/api/datashare'
+import {DatashareClient} from '@/api/DatashareClient'
 
 const ds = new DatashareClient()
 

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getField, updateField } from 'vuex-map-fields'
-import { DatashareClient } from '@/api/datashare'
+import {DatashareClient} from '@/api/DatashareClient'
 
 Vue.use(Vuex)
 const datashare = new DatashareClient()

@@ -1,4 +1,4 @@
-import { DatashareClient } from '@/api/datashare'
+import { DatashareClient } from '@/api/DatashareClient'
 
 describe('Datashare backend client', () => {
   var ds = new DatashareClient()
