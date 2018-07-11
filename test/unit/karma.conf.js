@@ -10,7 +10,7 @@ module.exports = function karmaConfig (config) {
     captureTimeout: 60000,
     browserDisconnectTimeout: 5000,
     browserDisconnectTolerance: 0,
-    browserNoActivityTimeout: 10000,
+    browserNoActivityTimeout: 20000,
     // to run in additional browsers:
     // 1. install corresponding karma launcher
     //    http://karma-runner.github.io/0.13/config/browsers.html
