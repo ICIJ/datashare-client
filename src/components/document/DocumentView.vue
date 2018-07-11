@@ -62,7 +62,7 @@
       <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
         <template v-if="document.contentType === 'application/pdf'">
-          <pdf-viewer :url="documentUrl" />
+          <pdf-viewer :url="document.relativePath" />
         </template>
         <template v-else-if="document.contentType === 'image/tiff'">
           <tiff-viewer :url="document.relativePath" />
@@ -86,7 +86,6 @@ import {highlight} from '@/utils/strings'
 import PdfViewer from './PdfViewer'
 import SpreadsheetViewer from './SpreadsheetViewer'
 import TiffViewer from './TiffViewer'
-import {DatashareClient} from '@/api/DatashareClient'
 
 export default {
   components: {
@@ -115,9 +114,6 @@ export default {
         return highlight(this.document.source.content, this.namedEntities,
           m => `<mark class="ner ${m.category}">${m.source.mention}</mark>`, r => escape(r), m => m.source.mention)
       }
-    },
-    documentUrl () {
-      return DatashareClient.getFullUrl(this.document.relativePath)
     }
   },
   beforeRouteEnter (to, _from, next) {
