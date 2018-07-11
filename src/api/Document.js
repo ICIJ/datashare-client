@@ -14,7 +14,7 @@ export default class Document extends EsDoc {
     if (this.source.path.indexOf(process.env.CONFIG.data_prefix) === -1) {
       return this.source.path
     }
-    return process.env.CONFIG.data_prefix + split(this.source.path, process.env.CONFIG.data_prefix, 2)[1]
+    return '/api' + process.env.CONFIG.data_prefix + split(this.source.path, process.env.CONFIG.data_prefix, 2)[1]
   }
   get contentType () {
     return this.source.contentType || 'unknown'

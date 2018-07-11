@@ -28,7 +28,7 @@ describe('Document', () => {
 
   it('should give relative path of document from data prefix', () => {
     let docFile = new Document({_source: {path: '/a/path/to/data/sub/dir/file.txt'}})
-    expect(docFile.relativePath).to.equal('/data/sub/dir/file.txt')
+    expect(docFile.relativePath).to.equal('/api/data/sub/dir/file.txt')
   })
 
   it('should give the original path of document from data prefix if no data string in path', () => {
@@ -38,6 +38,6 @@ describe('Document', () => {
 
   it('should give relative path when data_prefix is not a directory', () => {
     let docFile = new Document({_source: {path: '/datashare/data/file.txt'}})
-    expect(docFile.relativePath).to.equal('/data/file.txt')
+    expect(docFile.relativePath).to.equal('/api/data/file.txt')
   })
 })
