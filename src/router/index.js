@@ -23,7 +23,7 @@ export default new VueRouter({
           component: Search,
           beforeEnter: (to, from, next) => {
             // Not a child route and Query is empty
-            if (to.name === 'search' && [null, undefined, ''].indexOf(to.query.q) > -1) {
+            if (to.name === 'search' && [null, undefined].indexOf(to.query.q) > -1) {
               // Redirect to landing page
               return next({ name: 'landing' })
             }
