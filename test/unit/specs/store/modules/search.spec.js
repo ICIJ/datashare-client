@@ -7,20 +7,28 @@ import Vuex from 'vuex'
 
 import { IndexedDocuments, IndexedDocument, letData } from 'test/unit/es_utils'
 import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
+import cloneDeep from 'lodash/cloneDeep'
 
 describe('Search store', () => {
   esConnectionHelper()
-  var es = esConnectionHelper.es
-  var store = null
+  let es = esConnectionHelper.es
+  let store = null
 
-  beforeEach(async () => {
+  before(async () => {
     store = new Vuex.Store({ state, actions, mutations, getters })
   })
 
-  afterEach(() => store.commit('clear'))
+  afterEach(async () => store.commit('reset'))
 
   it('should define a store module', () => {
     expect(store.state).to.not.equal(undefined)
+  })
+
+  it('should reset the store state', async () => {
+    let initialState = cloneDeep(store.state)
+    await store.commit('reset')
+
+    expect(store.state).to.deep.equal(initialState)
   })
 
   it('should change the state after `query` mutation', () => {

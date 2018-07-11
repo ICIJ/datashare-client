@@ -1,32 +1,34 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getField, updateField } from 'vuex-map-fields'
-import {DatashareClient} from '@/api/datashare'
+import { DatashareClient } from '@/api/datashare'
 
 Vue.use(Vuex)
 const datashare = new DatashareClient()
 
-export const state = {
-  form: {
-    action: 'index',
-    pipeline: 'CORENLP',
-    ocr: false
-  },
-  pollHandle: null,
-  tasks: []
+function initialState () {
+  return {
+    form: {
+      action: 'index',
+      pipeline: 'CORENLP',
+      ocr: false
+    },
+    pollHandle: null,
+    tasks: []
+  }
 }
+
+export const state = initialState
 
 export const getters = {
   getField
 }
 
 export const mutations = {
-  clear (state) {
-    state.form.action = 'index'
-    state.form.pipeline = 'CORENLP'
-    state.form.ocr = false
-    state.pollHandle = null
-    // state.tasks = []
+  reset (state) {
+    // acquire initial state
+    const s = initialState()
+    Object.keys(s).forEach(key => { state[key] = s[key] })
   },
   updateField,
   cleanTasks (state) {

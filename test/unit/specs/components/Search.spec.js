@@ -33,7 +33,7 @@ describe('Search.vue', () => {
     localVue.use(VueI18n)
     Search.created = noop
     wrapped = mount(Search, {i18n, router, store})
-    store.commit('search/clear')
+    store.commit('search/reset')
   })
 
   it('should display no documents found', async () => {

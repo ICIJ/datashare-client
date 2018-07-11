@@ -1,26 +1,25 @@
 import Vuex from 'vuex'
 import { actions, getters, mutations, state } from '@/store/modules/indexing'
+import cloneDeep from 'lodash/cloneDeep'
 
 describe('Indexing store', () => {
-  var store = null
+  let store = null
 
-  before(() => {
+  before(async () => {
     store = new Vuex.Store({ actions, getters, mutations, state })
   })
 
-  afterEach(() => store.commit('clear'))
+  afterEach(async () => store.commit('reset'))
 
   it('should define a store module', () => {
     expect(store.state).to.not.equal(undefined)
   })
 
-  it('should reset properties to it default values', () => {
-    store.commit('clear')
+  it('should reset the store state', async () => {
+    let initialState = cloneDeep(store.state)
+    await store.commit('reset')
 
-    expect(store.state.form.action).to.equal('index')
-    expect(store.state.form.pipeline).to.equal('CORENLP')
-    expect(store.state.form.ocr).to.equal(false)
-    expect(store.state.pollHandle).to.equal(null)
+    expect(store.state).to.deep.equal(initialState)
   })
 
   it('should clear running jobs', async () => {

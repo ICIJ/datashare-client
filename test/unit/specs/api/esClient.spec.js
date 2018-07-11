@@ -17,7 +17,7 @@ describe('esClient', () => {
   afterEach(() => {
     server.restore()
     window.location.assign.restore()
-    store.commit('clear')
+    store.commit('reset')
   })
 
   it('should return backend response to a POST request for searchDocs', async () => {

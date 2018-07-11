@@ -3,26 +3,48 @@ import search from '@/store/modules/search'
 
 import Vuex from 'vuex'
 import cloneDeep from 'lodash/cloneDeep'
+import omit from 'lodash/omit'
+import functionsIn from 'lodash/functionsIn'
+import each from 'lodash/each'
 
 import { IndexedDocument, letData } from 'test/unit/es_utils'
 import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 
 describe('Aggregation store', () => {
   esConnectionHelper()
-  var es = esConnectionHelper.es
+  let es = esConnectionHelper.es
   let store = null
 
-  beforeEach(async () => {
-    store = new Vuex.Store({ state: cloneDeep(state), actions, getters, mutations, modules: { search } })
+  before(async () => {
+    store = new Vuex.Store({ state: state, actions, getters, mutations, modules: { search } })
   })
 
-  afterEach(() => {
-    store.commit('search/clear')
-    store.commit('clear')
+  afterEach(async () => {
+    store.commit('search/reset')
+    store.commit('reset')
   })
 
   it('should define a store module', () => {
     expect(store.state).to.not.equal(undefined)
+  })
+
+  it('should reset the store state', async () => {
+    let initialState = cloneDeep(store.state)
+
+    await store.commit('reset')
+
+    // Should filter the functions because these would never be equal
+    // So only compare integers, strings, arrays ...
+    let tmp = each(initialState.facets, (value, key) => {
+      initialState.facets[key] = omit(value, functionsIn(value))
+    })
+    initialState.facets = tmp
+    tmp = each(store.state.facets, (value, key) => {
+      store.state.facets[key] = omit(value, functionsIn(value))
+    })
+    store.state.facets = tmp
+
+    expect(store.state).to.deep.equal(initialState)
   })
 
   it('should define a `content-type` facet correctly', () => {
@@ -47,9 +69,9 @@ describe('Aggregation store', () => {
   })
 
   it('should add a facet', () => {
-    expect(store.state.facets).to.have.lengthOf(state.facets.length)
+    expect(store.state.facets).to.have.lengthOf(state().facets.length)
     store.commit('addFacet', { name: 'test', type: null, body: null })
-    expect(store.state.facets).to.have.lengthOf(state.facets.length + 1)
+    expect(store.state.facets).to.have.lengthOf(state().facets.length + 1)
   })
 
   it('should throw an error while adding a invalid facet', () => {

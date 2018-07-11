@@ -1,13 +1,22 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 
-const state = {
-  idAndRouting: null,
-  doc: null,
-  namedEntities: []
+function initialState () {
+  return {
+    idAndRouting: null,
+    doc: null,
+    namedEntities: []
+  }
 }
 
-const mutations = {
+export const state = initialState
+
+export const mutations = {
+  reset (state) {
+    // acquire initial state
+    const s = initialState()
+    Object.keys(s).forEach(key => { state[key] = s[key] })
+  },
   idAndRouting (state, idAndRouting) {
     state.idAndRouting = idAndRouting
     state.doc = null
@@ -24,7 +33,7 @@ const mutations = {
   }
 }
 
-const actions = {
+export const actions = {
   get ({commit}, idAndRouting) {
     commit('idAndRouting', idAndRouting)
     return esClient.getEsDoc(idAndRouting.id, idAndRouting.routing).then(

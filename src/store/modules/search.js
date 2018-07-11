@@ -11,13 +11,17 @@ import reduce from 'lodash/reduce'
 import remove from 'lodash/remove'
 import uniq from 'lodash/uniq'
 
-export const state = {
-  query: '*',
-  from: 0,
-  size: 25,
-  facets: [],
-  response: Response.none()
+function initialState () {
+  return {
+    query: '*',
+    from: 0,
+    size: 25,
+    facets: [],
+    response: Response.none()
+  }
 }
+
+export const state = initialState
 
 export const getters = {
   getQuery (state) {
@@ -71,12 +75,10 @@ export const getters = {
 }
 
 export const mutations = {
-  clear (state) {
-    state.query = '*'
-    state.from = 0
-    state.size = 25
-    state.facets = []
-    state.response = Response.none()
+  reset (state) {
+    // acquire initial state
+    const s = initialState()
+    Object.keys(s).forEach(key => { state[key] = s[key] })
   },
   query (state, query) {
     state.query = query
@@ -178,8 +180,8 @@ export const actions = {
     return dispatch('query')
   },
   updateFromRouteQuery ({ commit, rootState }, query) {
-    // Clear all existing options
-    commit('clear')
+    // Reset all existing options
+    commit('reset')
     // Add the query to the state with a mutation to not triggering a search
     if (query.q) commit('query', query.q)
     // Iterate over the list of facet

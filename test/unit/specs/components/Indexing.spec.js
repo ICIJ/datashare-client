@@ -24,7 +24,7 @@ describe('Indexing.vue', () => {
 
   afterEach(() => {
     window.fetch.restore()
-    wrapped.vm.$store.commit('indexing/clear')
+    wrapped.vm.$store.commit('indexing/reset')
   })
 
   it('should begin/stop polling when route enter/leave', async () => {

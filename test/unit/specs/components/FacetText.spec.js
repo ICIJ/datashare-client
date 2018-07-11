@@ -48,7 +48,7 @@ describe('FacetText.vue', () => {
     wrapped.vm.facetQuery = ''
   })
 
-  afterEach(async () => store.commit('search/clear'))
+  afterEach(async () => store.commit('search/reset'))
 
   it('should display empty list', async () => {
     await wrapped.vm.aggregate()
