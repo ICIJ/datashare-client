@@ -6,6 +6,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import omit from 'lodash/omit'
 import functionsIn from 'lodash/functionsIn'
 import each from 'lodash/each'
+import find from 'lodash/find'
 
 import { IndexedDocument, letData } from 'test/unit/es_utils'
 import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
@@ -47,9 +48,28 @@ describe('Aggregation store', () => {
     expect(store.state).to.deep.equal(initialState)
   })
 
-  it('should define a `content-type` facet correctly', () => {
-    expect(store.state.facets[0].name).to.equal('content-type')
-    expect(store.state.facets[0].type).to.equal('FacetText')
+  it('should define a `content-type` facet correctly (name, key and type)', () => {
+    let facetPath = find(store.state.facets, {name: 'content-type'})
+
+    facetPath.should.be.an('object')
+    expect(facetPath.key).to.equal('contentType')
+    expect(facetPath.type).to.equal('FacetText')
+  })
+
+  it('should define a `language` facet correctly (name, key and type)', () => {
+    let facetPath = find(store.state.facets, {name: 'language'})
+
+    facetPath.should.be.an('object')
+    expect(facetPath.key).to.equal('language')
+    expect(facetPath.type).to.equal('FacetText')
+  })
+
+  it('should define a `named-entity` facet correctly (name, key and type)', () => {
+    let facetPath = find(store.state.facets, {name: 'named-entity'})
+
+    facetPath.should.be.an('object')
+    expect(facetPath.key).to.equal('mentions')
+    expect(facetPath.type).to.equal('FacetNamedEntity')
   })
 
   it('should find a `content-type` facet using object', () => {
@@ -146,9 +166,11 @@ describe('Aggregation store', () => {
 
   // Path facet
   it('should define a `path` facet correctly (name, key and type)', () => {
-    expect(store.state.facets[3].name).to.equal('path')
-    expect(store.state.facets[3].key).to.equal('path')
-    expect(store.state.facets[3].type).to.equal('FacetPath')
+    let facetPath = find(store.state.facets, {name: 'path'})
+
+    facetPath.should.be.an('object')
+    expect(facetPath.key).to.equal('path')
+    expect(facetPath.type).to.equal('FacetPath')
   })
 
   it('should get no bucket for path aggregation', async () => {
