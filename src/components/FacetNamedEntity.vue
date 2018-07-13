@@ -3,12 +3,12 @@
     <div class="card-header">
       <h6 @click="toggleItems">
         <font-awesome-icon :icon="headerIcon" />
-        {{ facet.label || facet.name }}
+        {{ $t('facet.' + facet.key) }}
       </h6>
     </div>
     <div class="list-group list-group-flush facet-named-entity__items" v-if="!collapseItems">
       <div class="list-group facet__items__search py-2 px-3" v-if="filteredItems.length > 0">
-        <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + (facet.label || facet.name) + '...'" />
+        <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
         <font-awesome-icon icon="search" class="float-right" />
       </div>
       <div class="list-group-item facet-named-entity__items__item" v-for="item in displayedFilteredItems()" :key="item.key">

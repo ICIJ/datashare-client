@@ -15,7 +15,6 @@ function initialState () {
     facets: [
       {
         name: 'content-type',
-        label: 'File Types',
         key: 'contentType',
         type: FacetText.name,
         itemParam: (item) => ({ name: 'content-type', value: item.key }),
@@ -31,7 +30,6 @@ function initialState () {
       },
       {
         name: 'named-entity',
-        label: 'Named Entities',
         key: 'mentions',
         type: FacetNamedEntity.name,
         itemParam: (item) => item.key,
@@ -44,7 +42,6 @@ function initialState () {
       },
       {
         name: 'path',
-        label: 'Path',
         key: 'path',
         type: FacetPath.name,
         itemParam: (item) => item.key,

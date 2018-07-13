@@ -58,12 +58,12 @@ export default {
               node = {label: element, path: path + '*', count: 0, children: []}
             }
             // Add node to tree if not already in it
-            if (filter(treePointer, {'label': element}).length === 0) {
+            if (filter(treePointer, {label: element}).length === 0) {
               treePointer.push(node)
             }
             // Increment count
-            filter(treePointer, {'label': element})[0].count++
-            treePointer = filter(treePointer, {'label': element})[0].children
+            filter(treePointer, {label: element})[0].count++
+            treePointer = filter(treePointer, {label: element})[0].children
           }
         })
       })
@@ -84,12 +84,12 @@ export default {
       </span>
       <h6 @click="toggleItems">
         <font-awesome-icon :icon="headerIcon" />
-        {{ facet.label || facet.name }}
+        {{ $t('facet.' + facet.key) }}
       </h6>
     </div>
     <div class="list-group list-group-flush facet-path__items" v-if="!collapseItems">
       <div class="list-group facet__items__search py-2 px-3" v-if="filteredItems.length > 0">
-        <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + (facet.label || facet.name) + '...'" />
+        <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
         <font-awesome-icon icon="search" class="float-right" />
       </div>
       <div class="list-group-item facet-path-list-group">

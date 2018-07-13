@@ -19,12 +19,12 @@ export default {
       </span>
       <h6 @click="toggleItems">
         <font-awesome-icon :icon="headerIcon" />
-        {{ facet.label || facet.name }}
+        {{ $t('facet.' + facet.key) }}
       </h6>
     </div>
     <div class="list-group list-group-flush facet-text__items" v-if="!collapseItems">
       <label class="list-group facet__items__search py-2 px-3" v-if="hasResults">
-        <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + (facet.label || facet.name) + '...'" />
+        <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
         <font-awesome-icon icon="search" class="float-right" />
       </label>
       <div class="list-group-item facet-text__items__item p-0" v-for="item in displayedFilteredItems()" :key="item.key" :class="{ 'facet-text__items__item--active': hasValue(item) }">

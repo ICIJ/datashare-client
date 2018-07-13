@@ -29,7 +29,11 @@
     },
     "facet": {
       "none": "No distinct values",
-      "invert": "Invert"
+      "invert": "Invert",
+      "contentType": "File Types",
+      "language": "Languages",
+      "mentions": "Named Entities",
+      "path": "Path"
     },
     "document": {
       "name": "File name",
@@ -88,6 +92,14 @@
         "nextPage": "Aller à la page suivante",
         "lastPage": "Aller à la dernière page"
       }
+    },
+    "facet": {
+      "none": "Aucune valeur distincte",
+      "invert": "Inverser",
+      "contentType": "Types de fichier",
+      "language": "Langues",
+      "mentions": "Entitées nommées",
+      "path": "Chemin du fichier"
     },
     "document": {
       "name": "Nom du fichier",
