@@ -2,6 +2,7 @@ import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import FacetText from '@/components/FacetText'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
+import FacetPath from '@/components/FacetPath'
 import types from '@/utils/types.json'
 
 import bodybuilder from 'bodybuilder'
@@ -40,6 +41,14 @@ function initialState () {
             'size': 50,
             'order': [ {'docs': 'desc'}, {'_count': 'desc'} ]
           }, sub => sub.agg('cardinality', 'join#Document', 'docs'))
+      },
+      {
+        name: 'path',
+        label: 'Path',
+        key: 'path',
+        type: FacetPath.name,
+        itemParam: (item) => item.key,
+        body: (body) => body.agg('terms', 'path', 'path')
       }
     ]
   }

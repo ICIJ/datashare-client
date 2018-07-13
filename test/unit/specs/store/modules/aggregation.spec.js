@@ -143,4 +143,41 @@ describe('Aggregation store', () => {
     const response = await store.dispatch('query', {name: 'content-type'})
     expect(response.aggregations.contentType.buckets).to.have.lengthOf(3)
   })
+
+  // Path facet
+  it('should define a `path` facet correctly (name, label, key and type)', () => {
+    expect(store.state.facets[3].name).to.equal('path')
+    expect(store.state.facets[3].label).to.equal('Path')
+    expect(store.state.facets[3].key).to.equal('path')
+    expect(store.state.facets[3].type).to.equal('FacetPath')
+  })
+
+  it('should get no bucket for path aggregation', async () => {
+    const response = await store.dispatch('query', { name: 'path' })
+    expect(response.aggregations.path.buckets).to.have.lengthOf(0)
+  })
+
+  it('should return one bucket, the correct path and the correct number of results', async () => {
+    await letData(es).have(new IndexedDocument('this/is/a/path/test.doc')).commit()
+
+    const response = await store.dispatch('query', { name: 'path' })
+    expect(response.aggregations.path.buckets).to.have.lengthOf(1)
+    expect(response.aggregations.path.buckets[0].key).to.equal('this/is/a/path/test.doc')
+    expect(response.aggregations.path.buckets[0].doc_count).to.equal(1)
+  })
+
+  it('should return lots of buckets, the correct path and the correct number of results', async () => {
+    await letData(es).have(new IndexedDocument('this/is/a/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('this/is/a/second/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('this/is/a/third/path/test.doc')).commit()
+
+    const response = await store.dispatch('query', { name: 'path' })
+    expect(response.aggregations.path.buckets).to.have.lengthOf(3)
+    expect(response.aggregations.path.buckets[0].key).to.equal('this/is/a/path/test.doc')
+    expect(response.aggregations.path.buckets[0].doc_count).to.equal(1)
+    expect(response.aggregations.path.buckets[1].key).to.equal('this/is/a/second/path/test.doc')
+    expect(response.aggregations.path.buckets[1].doc_count).to.equal(1)
+    expect(response.aggregations.path.buckets[2].key).to.equal('this/is/a/third/path/test.doc')
+    expect(response.aggregations.path.buckets[2].doc_count).to.equal(1)
+  })
 })

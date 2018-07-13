@@ -7,6 +7,7 @@
 <script>
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
+import FacetPath from '@/components/FacetPath'
 
 import { mapState } from 'vuex'
 
@@ -14,7 +15,8 @@ export default {
   name: 'AggregationsPanel',
   components: {
     FacetNamedEntity,
-    FacetText
+    FacetText,
+    FacetPath
   },
   computed: {
     ...mapState('aggregation', {
