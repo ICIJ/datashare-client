@@ -14,7 +14,7 @@ import find from 'lodash/find'
 
 const i18n = new VueI18n({locale: 'en', messages})
 
-describe.only('FacetPath.vue', () => {
+describe('FacetPath.vue', () => {
   esConnectionHelper()
   var es = esConnectionHelper.es
   var wrapped = null
