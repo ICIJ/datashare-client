@@ -26,6 +26,11 @@ function initialState () {
         key: 'language',
         type: FacetText.name,
         itemParam: (item) => ({ name: 'language', value: item.key }),
+        itemLabel: (item) => {
+          if (!item.key) return ''
+          item = item.key.toString()
+          return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
+        },
         body: (body) => body.agg('terms', 'language', 'language')
       },
       {

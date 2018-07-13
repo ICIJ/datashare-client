@@ -145,9 +145,8 @@ describe('Aggregation store', () => {
   })
 
   // Path facet
-  it('should define a `path` facet correctly (name, label, key and type)', () => {
+  it('should define a `path` facet correctly (name, key and type)', () => {
     expect(store.state.facets[3].name).to.equal('path')
-    expect(store.state.facets[3].label).to.equal('Path')
     expect(store.state.facets[3].key).to.equal('path')
     expect(store.state.facets[3].type).to.equal('FacetPath')
   })
