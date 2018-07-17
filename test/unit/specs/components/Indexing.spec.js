@@ -78,7 +78,7 @@ describe('Indexing.vue', () => {
 
     sinon.assert.calledOnce(window.fetch)
     sinon.assert.calledWith(window.fetch, '/api/task/findNames/PIPELINE',
-      {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
+      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
   it('should set corenlp as default pipeline', async () => {
@@ -90,7 +90,7 @@ describe('Indexing.vue', () => {
 
     sinon.assert.calledOnce(window.fetch)
     sinon.assert.calledWith(window.fetch, '/api/task/findNames/CORENLP',
-      {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
+      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
   it('should disable resume if selected action is findNames', async () => {
@@ -102,7 +102,7 @@ describe('Indexing.vue', () => {
     wrapped.update()
 
     sinon.assert.calledWith(window.fetch, '/api/task/findNames/PIPELINE',
-      {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
+      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
   it('should call index action with ocr option', async () => {
