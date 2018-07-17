@@ -33,7 +33,8 @@
       "contentType": "File Types",
       "language": "Languages",
       "mentions": "Named Entities",
-      "path": "Path"
+      "path": "Path",
+      "extractionDate": "Indexing date"
     },
     "document": {
       "name": "File name",
@@ -99,7 +100,8 @@
       "contentType": "Types de fichier",
       "language": "Langues",
       "mentions": "Entitées nommées",
-      "path": "Chemin du fichier"
+      "path": "Chemin du fichier",
+      "extractionDate": "Date d'indexation"
     },
     "document": {
       "name": "Nom du fichier",

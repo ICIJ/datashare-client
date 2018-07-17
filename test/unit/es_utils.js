@@ -59,6 +59,10 @@ class IndexedDocument {
     }
     return this
   }
+  withIndexingDate (indexingDate) {
+    this.extractionDate = indexingDate
+    return this
+  }
   withNer (mention, offset = 1, category = 'ORGANIZATION') {
     this.nerList.push(new IndexedNe(mention, offset, category))
     return this

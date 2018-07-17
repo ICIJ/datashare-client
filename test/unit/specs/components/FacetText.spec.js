@@ -44,11 +44,13 @@ describe('FacetText.vue', () => {
         facet: find(store.state.aggregation.facets, {name: 'content-type'})
       }
     })
+  })
+
+  afterEach(async () => {
+    store.commit('search/reset')
     // Reset facetQuery to default
     wrapped.vm.facetQuery = ''
   })
-
-  afterEach(async () => store.commit('search/reset'))
 
   it('should display empty list', async () => {
     await wrapped.vm.aggregate()
@@ -147,7 +149,7 @@ describe('FacetText.vue', () => {
     await Vue.nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display> span').textContent)).to.equal('More')
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).to.equal('More')
     expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
   })
 
@@ -164,7 +166,7 @@ describe('FacetText.vue', () => {
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(5)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display> span').textContent)).to.equal('More')
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).to.equal('More')
     expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
   })
 
@@ -270,5 +272,28 @@ describe('FacetText.vue', () => {
     await Vue.nextTick()
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(2)
+  })
+
+  it('should display an indexing date facet with 4 months', async () => {
+    wrapped = mount(FacetText, { i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, {name: 'indexing-date'}) } })
+    await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-04-04T20:20:20.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-05-05T02:00:42.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-05-05T20:10:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withIndexingDate('2018-05-05T23:41:17.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_05.txt').withIndexingDate('2018-07-07T06:16:44.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_06.txt').withIndexingDate('2018-07-07T16:16:16.001Z')).commit()
+
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+
+    expect(wrapped.vm.displayedFilteredItems().length).to.equal(4)
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item > a')[0].innerText)).to.equal('1\n        \n        2018-04')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item .badge')[0].innerText)).to.equal('1')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item > a')[1].innerText)).to.equal('3\n        \n        2018-05')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item .badge')[1].innerText)).to.equal('3')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item > a')[2].innerText)).to.equal('0\n        \n        2018-06')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item .badge')[2].innerText)).to.equal('0')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item > a')[3].innerText)).to.equal('2\n        \n        2018-07')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item .badge')[3].innerText)).to.equal('2')
   })
 })

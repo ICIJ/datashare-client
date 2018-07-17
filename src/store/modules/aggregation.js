@@ -17,28 +17,28 @@ function initialState () {
         name: 'content-type',
         key: 'contentType',
         type: FacetText.name,
-        itemParam: (item) => ({ name: 'content-type', value: item.key }),
-        itemLabel: (item) => get(types, [item.key, 'label'], item.key),
-        body: (body) => body.agg('terms', 'contentType', 'contentType')
+        itemParam: item => ({ name: 'content-type', value: item.key }),
+        itemLabel: item => get(types, [item.key, 'label'], item.key),
+        body: body => body.agg('terms', 'contentType', 'contentType')
       },
       {
         name: 'language',
         key: 'language',
         type: FacetText.name,
-        itemParam: (item) => ({ name: 'language', value: item.key }),
-        itemLabel: (item) => {
+        itemParam: item => ({ name: 'language', value: item.key }),
+        itemLabel: item => {
           if (!item.key) return ''
           item = item.key.toString()
           return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
         },
-        body: (body) => body.agg('terms', 'language', 'language')
+        body: body => body.agg('terms', 'language', 'language')
       },
       {
         name: 'named-entity',
         key: 'mentions',
         type: FacetNamedEntity.name,
-        itemParam: (item) => item.key,
-        body: (body) => body
+        itemParam: item => item.key,
+        body: body => body
           .query('term', 'type', 'NamedEntity')
           .agg('terms', 'mentionNorm', 'mentions', {
             'size': 50,
@@ -49,8 +49,19 @@ function initialState () {
         name: 'path',
         key: 'path',
         type: FacetPath.name,
-        itemParam: (item) => item.key,
-        body: (body) => body.agg('terms', 'path', 'path')
+        itemParam: item => item.key,
+        body: body => body.agg('terms', 'path', 'path')
+      },
+      {
+        name: 'indexing-date',
+        key: 'extractionDate',
+        type: FacetText.name,
+        itemParam: item => ({ name: 'indexing-date', value: item.key }),
+        itemLabel: item => item.key_as_string,
+        body: body => body.agg('date_histogram', 'extractionDate', {
+          interval: '1M',
+          format: 'yyyy-MM'
+        }, 'extractionDate')
       }
     ]
   }

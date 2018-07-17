@@ -49,7 +49,7 @@ describe('Aggregation store', () => {
   })
 
   it('should define a `content-type` facet correctly (name, key and type)', () => {
-    let facetPath = find(store.state.facets, {name: 'content-type'})
+    let facetPath = find(store.state.facets, { name: 'content-type' })
 
     facetPath.should.be.an('object')
     expect(facetPath.key).to.equal('contentType')
@@ -57,7 +57,7 @@ describe('Aggregation store', () => {
   })
 
   it('should define a `language` facet correctly (name, key and type)', () => {
-    let facetPath = find(store.state.facets, {name: 'language'})
+    let facetPath = find(store.state.facets, { name: 'language' })
 
     facetPath.should.be.an('object')
     expect(facetPath.key).to.equal('language')
@@ -65,7 +65,7 @@ describe('Aggregation store', () => {
   })
 
   it('should define a `named-entity` facet correctly (name, key and type)', () => {
-    let facetPath = find(store.state.facets, {name: 'named-entity'})
+    let facetPath = find(store.state.facets, { name: 'named-entity' })
 
     facetPath.should.be.an('object')
     expect(facetPath.key).to.equal('mentions')
@@ -200,5 +200,14 @@ describe('Aggregation store', () => {
     expect(response.aggregations.path.buckets[1].doc_count).to.equal(1)
     expect(response.aggregations.path.buckets[2].key).to.equal('this/is/a/third/path/test.doc')
     expect(response.aggregations.path.buckets[2].doc_count).to.equal(1)
+  })
+
+  // Indexing date facet
+  it('should define an `indexing date` facet correctly (name, key and type)', () => {
+    let facetPath = find(store.state.facets, { name: 'indexing-date' })
+
+    facetPath.should.be.an('object')
+    expect(facetPath.key).to.equal('extractionDate')
+    expect(facetPath.type).to.equal('FacetText')
   })
 })
