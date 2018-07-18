@@ -57,7 +57,7 @@
             <dd class="col-sm-9">{{ document.source.extractionLevel }}</dd>
           </template>
         </dl>
-        <a class="btn btn-primary" :href="documentUrl">{{ $t('document.download_button') }}</a>
+        <a class="btn btn-primary" :href="getFullUrl" target="_blank">{{ $t('document.download_button') }}</a>
       </div>
       <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
@@ -79,13 +79,14 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import { mapState } from 'vuex'
 import sortedUniqBy from 'lodash/sortedUniqBy'
 import escape from 'lodash/escape'
 import {highlight} from '@/utils/strings'
 import PdfViewer from './PdfViewer'
 import SpreadsheetViewer from './SpreadsheetViewer'
 import TiffViewer from './TiffViewer'
+import { DatashareClient } from '@/api/DatashareClient'
 
 export default {
   components: {
@@ -114,6 +115,9 @@ export default {
         return highlight(this.document.source.content, this.namedEntities,
           m => `<mark class="ner ${m.category}">${m.source.mention}</mark>`, r => escape(r), m => m.source.mention)
       }
+    },
+    getFullUrl () {
+      return DatashareClient.getFullUrl(this.document.relativePath)
     }
   },
   beforeRouteEnter (to, _from, next) {
