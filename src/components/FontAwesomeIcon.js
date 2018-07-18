@@ -19,6 +19,8 @@ import faAngleDoubleRight from '@fortawesome/fontawesome-free-solid/faAngleDoubl
 import faAngleDown from '@fortawesome/fontawesome-free-solid/faAngleDown'
 import faAngleUp from '@fortawesome/fontawesome-free-solid/faAngleUp'
 import faAmbulance from '@fortawesome/fontawesome-free-solid/faAmbulance'
+import faUndo from '@fortawesome/fontawesome-free-solid/faUndo'
+import faRedo from '@fortawesome/fontawesome-free-solid/faRedo'
 
 // And add them to the library
 fontawesome.library.add(
@@ -38,7 +40,9 @@ fontawesome.library.add(
   faAngleDoubleRight,
   faAngleDown,
   faAngleUp,
-  faAmbulance
+  faAmbulance,
+  faUndo,
+  faRedo
 )
 
 export default FontAwesomeIcon

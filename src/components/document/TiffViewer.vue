@@ -3,10 +3,10 @@
     <template v-if="doc.pages.length > 0">
       <div class="tiff-viewer__header text-center">
         <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, -1)">
-          <i class="fa fa-rotate-left"></i>
+          <font-awesome-icon icon="undo" class="float-right" />
         </button>
         <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, 1)">
-          <i class="fa fa-rotate-right"></i>
+          <font-awesome-icon icon="redo" class="float-right" />
         </button>
         <div class="tiff-viewer__header__pages">
           Page <select class="form-control input-sm" v-model="doc.active">
@@ -30,7 +30,7 @@
 
 <script>
 import Tiff from 'tiff.js'
-import {DatashareClient} from '@/api/DatashareClient'
+import { DatashareClient } from '@/api/DatashareClient'
 
 const ds = new DatashareClient()
 
