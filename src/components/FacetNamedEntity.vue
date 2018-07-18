@@ -7,7 +7,7 @@
       </h6>
     </div>
     <div class="list-group list-group-flush facet-named-entity__items" v-if="!collapseItems">
-      <div class="list-group facet__items__search py-2 px-3" v-if="filteredItems.length > 0">
+      <div class="list-group facet__items__search py-2 px-3" v-if="hasResults && facet.isSearchable">
         <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
         <font-awesome-icon icon="search" class="float-right" />
       </div>

@@ -94,15 +94,33 @@ describe('Aggregation store', () => {
     expect(store.state.facets).to.have.lengthOf(state().facets.length + 1)
   })
 
-  it('should throw an error while adding a invalid facet', () => {
+  it('should throw an error while adding an empty facet', () => {
     expect(() => {
-      store.commit('addFacet', { name: 'test', type: null })
+      store.commit('addFacet', {})
     }).to.throw()
   })
 
-  it('should throw an error while adding an existing facet', () => {
+  it('should throw an error while adding a facet without name', () => {
     expect(() => {
-      store.commit('addFacet', { name: 'content-type', type: null, body: null })
+      store.commit('addFacet', { type: 'yolo', isSearchable: false, body: 'yolo' })
+    }).to.throw()
+  })
+
+  it('should throw an error while adding a facet without type', () => {
+    expect(() => {
+      store.commit('addFacet', { name: 'yolo', isSearchable: false, body: 'yolo' })
+    }).to.throw()
+  })
+
+  it('should throw an error while adding a facet without isSearchable', () => {
+    expect(() => {
+      store.commit('addFacet', { name: 'yolo', type: 'yolo', body: 'yolo' })
+    }).to.throw()
+  })
+
+  it('should throw an error while adding a facet without body', () => {
+    expect(() => {
+      store.commit('addFacet', { name: 'yolo', type: 'yolo', isSearchable: false })
     }).to.throw()
   })
 

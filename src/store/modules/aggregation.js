@@ -17,6 +17,7 @@ function initialState () {
         name: 'content-type',
         key: 'contentType',
         type: FacetText.name,
+        isSearchable: true,
         itemParam: item => ({ name: 'content-type', value: item.key }),
         itemLabel: item => get(types, [item.key, 'label'], item.key),
         body: body => body.agg('terms', 'contentType', 'contentType')
@@ -25,6 +26,7 @@ function initialState () {
         name: 'language',
         key: 'language',
         type: FacetText.name,
+        isSearchable: true,
         itemParam: item => ({ name: 'language', value: item.key }),
         itemLabel: item => {
           if (!item.key) return ''
@@ -37,6 +39,7 @@ function initialState () {
         name: 'named-entity',
         key: 'mentions',
         type: FacetNamedEntity.name,
+        isSearchable: true,
         itemParam: item => item.key,
         body: body => body
           .query('term', 'type', 'NamedEntity')
@@ -49,6 +52,7 @@ function initialState () {
         name: 'path',
         key: 'path',
         type: FacetPath.name,
+        isSearchable: false,
         itemParam: item => item.key,
         body: body => body.agg('terms', 'path', 'path')
       },
@@ -56,6 +60,7 @@ function initialState () {
         name: 'indexing-date',
         key: 'extractionDate',
         type: FacetText.name,
+        isSearchable: false,
         itemParam: item => ({ name: 'indexing-date', value: item.key }),
         itemLabel: item => item.key_as_string,
         body: body => body.agg('date_histogram', 'extractionDate', {
@@ -68,7 +73,7 @@ function initialState () {
 }
 
 const isAValidFacet = facet => {
-  return every(['name', 'type', 'body'], p => facet.hasOwnProperty(p))
+  return every(['name', 'type', 'isSearchable', 'body'], p => facet.hasOwnProperty(p))
 }
 
 export const state = initialState
