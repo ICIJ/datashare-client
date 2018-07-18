@@ -18,7 +18,7 @@ Vue.component('content-placeholder', ContentPlaceholder)
 
 const i18n = new VueI18n({locale: 'en', messages})
 
-describe('App.vue', () => {
+describe.only('App.vue', () => {
   let vm = null
   let Constructor = null
 
@@ -46,6 +46,13 @@ describe('App.vue', () => {
 
   it('should not display the app if no cookie', () => {
     removeCookie(process.env.CONFIG.ds_cookie_name)
+    vm = new Constructor({i18n, router, store}).$mount()
+
+    expect(vm.$el.querySelectorAll('.app').length).to.equal(0)
+  })
+
+  it('should not display the app if cookie is null', () => {
+    setCookie(process.env.CONFIG.ds_cookie_name, null)
     vm = new Constructor({i18n, router, store}).$mount()
 
     expect(vm.$el.querySelectorAll('.app').length).to.equal(0)

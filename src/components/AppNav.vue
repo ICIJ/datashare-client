@@ -50,7 +50,7 @@
             </a>
           </li>
           <li class="list-unstyled-item app__nav__container__menu__item">
-            <a :href="logoutLink" target="_blank">
+            <a :href="logoutLink">
               {{ $t('menu.logout') }}
             </a>
           </li>
@@ -63,6 +63,7 @@
 <script>
 import { headroom } from 'vue-headroom'
 import SearchBar from './SearchBar'
+import {DatashareClient} from '../api/DatashareClient'
 
 export default {
   name: 'AppNav',
@@ -90,7 +91,7 @@ export default {
   },
   computed: {
     logoutLink () {
-      return window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_signout
+      return DatashareClient.getFullUrl(process.env.CONFIG.ds_auth_signout)
     }
   }
 }
