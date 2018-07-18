@@ -11,21 +11,21 @@
           <div class="form-group card-body my-0">
             <div class="form-check">
               <input class="form-check-input" type="radio" id="index" name="action" value="index" v-model="action">
-              <label class="form-check-label" for="action">
+              <label class="form-check-label" for="index">
                 {{ $t('indexing.index_stage_label') }}
               </label>
             </div>
             <div class="form-group card-body my-0" v-if="action === 'index'">
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="ocr" v-model="ocr">
-                <label class="form-check-label" for="action">
+                <label class="form-check-label" for="ocr">
                   {{ $t('indexing.enable_ocr') }}
                 </label>
               </div>
             </div>
             <div class="form-check">
               <input class="form-check-input" type="radio" id="findNames" name="action" value="findNames" v-model="action">
-              <label class="form-check-label" for="action">
+              <label class="form-check-label" for="findNames">
                 {{ $t('indexing.findNames_stage_label') }}
               </label>
             </div>
