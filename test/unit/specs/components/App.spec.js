@@ -18,7 +18,7 @@ Vue.component('content-placeholder', ContentPlaceholder)
 
 const i18n = new VueI18n({locale: 'en', messages})
 
-describe.only('App.vue', () => {
+describe('App.vue', () => {
   let vm = null
   let Constructor = null
 
