@@ -28,12 +28,12 @@ describe('About.vue', () => {
   it('should display client git sha1', () => {
     window.fetch.returns(jsonOk({}))
     wrapped = mount(About, {i18n, router, store})
-    let sha1 = wrapped.vm.$el.querySelectorAll('.about dd')[0].textContent
+    let sha1 = wrapped.vm.$el.querySelectorAll('.about dd')[1].textContent
     expect(sha1.match(/[a-z0-9]*/)[0]).to.equal(sha1)
     expect(sha1.length).to.equal(7)
   })
 
-  it('should display server git sha1', async () => {
+  it('should display server git sha1 and version', async () => {
     window.fetch.returns(jsonOk({
       'git.commit.message.short': '[launchBack] Increase Java RAM to 4Go',
       'git.build.user.name': 'Bruno Thomas',
@@ -52,14 +52,15 @@ describe('About.vue', () => {
       'git.commit.user.name': 'annelhote',
       'git.commit.time': '2018-07-18T15:23:59+0200',
       'git.commit.id.describe': '6240439-dirty',
-      'git.build.version': '0.11',
+      'git.build.version': 'version',
       'git.commit.id': 'sha1',
       'git.commit.id.abbrev': 'sha1_abbrev'
     }))
     wrapped = mount(About, {i18n, router, store})
 
     await Vue.nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.about dd')[1].textContent).to.equal('sha1_abbrev')
+    expect(wrapped.vm.$el.querySelectorAll('.about dd')[0].textContent).to.equal('version')
+    expect(wrapped.vm.$el.querySelectorAll('.about dd')[2].textContent).to.equal('sha1_abbrev')
   })
 })
 

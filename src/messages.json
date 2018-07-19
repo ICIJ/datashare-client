@@ -68,6 +68,7 @@
       "about": "About"
     },
     "about": {
+      "datashareVersion": "Datashare version",
       "clientVersion": "Client version",
       "serverVersion": "Server version"
     }
@@ -137,6 +138,7 @@
       "about": "A propos"
     },
     "about": {
+      "datashareVersion": "Version datashare",
       "clientVersion": "Version client",
       "serverVersion": "Version serveur"
     }
