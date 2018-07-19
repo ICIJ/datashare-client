@@ -22,7 +22,7 @@
         <ul class="app__nav__container__menu list-unstyled" :class="{ 'app__nav__container__menu--collapse': collapseMenu }">
           <li class="list-unstyled-item app__nav__container__menu__item">
             <router-link :to="{ name: 'indexing' }">
-              Analyse documents
+              {{ $t('menu.analyse') }}
             </router-link>
           </li>
           <li class="list-unstyled-item app__nav__container__menu__item">
@@ -53,6 +53,11 @@
             <a :href="logoutLink">
               {{ $t('menu.logout') }}
             </a>
+          </li>
+          <li class="list-unstyled-item app__nav__container__menu__item">
+            <router-link :to="{ name: 'about' }">
+              {{ $t('menu.about') }}
+            </router-link>
           </li>
         </ul>
       </div>

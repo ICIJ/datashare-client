@@ -6,6 +6,7 @@ import DocumentView from '@/components/document/DocumentView'
 import Landing from '@/components/Landing'
 import Indexing from '@/components/Indexing'
 import Search from '@/components/Search'
+import About from '@/components/About'
 
 import store from '@/store'
 
@@ -53,6 +54,11 @@ export default new VueRouter({
           name: 'indexing',
           path: 'indexing',
           component: Indexing
+        },
+        {
+          name: 'about',
+          path: 'about',
+          component: About
         }
       ]
     }

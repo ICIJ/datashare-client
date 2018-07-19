@@ -16,6 +16,9 @@ export class DatashareClient {
   createIndex () {
     return this.sendAction('/api/search/createIndex', {method: 'PUT', credentials: 'same-origin'})
   }
+  getVersion () {
+    return this.sendAction('/version')
+  }
   static getFullUrl (url) {
     let dsHost = process.env.CONFIG.ds_host || ''
     return `${dsHost}${url}`

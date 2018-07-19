@@ -63,7 +63,13 @@
     },
     "menu": {
       "help": "Ask for help",
-      "logout": "Logout"
+      "analyse": "Analyse documents",
+      "logout": "Logout",
+      "about": "About"
+    },
+    "about": {
+      "clientVersion": "Client version",
+      "serverVersion": "Server version"
     }
   },
   "fr": {
@@ -126,7 +132,13 @@
     },
     "menu": {
       "help": "Demander de l'aide",
-      "logout": "Déconnexion"
+      "analyse": "Analyser des documents",
+      "logout": "Déconnexion",
+      "about": "A propos"
+    },
+    "about": {
+      "clientVersion": "Version client",
+      "serverVersion": "Version serveur"
     }
   }
 }
