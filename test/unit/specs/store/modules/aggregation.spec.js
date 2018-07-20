@@ -90,7 +90,7 @@ describe('Aggregation store', () => {
 
   it('should add a facet', () => {
     expect(store.state.facets).to.have.lengthOf(state().facets.length)
-    store.commit('addFacet', { name: 'test', type: null, body: null })
+    store.commit('addFacet', { name: 'test', type: null, isSearchable: null, body: null })
     expect(store.state.facets).to.have.lengthOf(state().facets.length + 1)
   })
 
