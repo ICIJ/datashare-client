@@ -56,6 +56,7 @@ export const getters = {
   toRouteQuery (state, getters, rootState) {
     return {
       q: state.query,
+      size: state.size,
       ...reduce(state.facets, (memo, facetValue) => {
         // We need to look for the facet's definition in order to us its `id`
         // as key for tge URL params. This was we track configured facet instead
@@ -85,11 +86,11 @@ export const mutations = {
     state.response = Response.none()
   },
   from (state, from) {
-    state.from = from
+    state.from = Number(from)
     state.response = Response.none()
   },
   size (state, size) {
-    state.size = size
+    state.size = Number(size)
     state.response = Response.none()
   },
   buildResponse (state, raw) {
@@ -184,6 +185,7 @@ export const actions = {
     commit('reset')
     // Add the query to the state with a mutation to not triggering a search
     if (query.q) commit('query', query.q)
+    if (query.size) commit('size', query.size)
     // Iterate over the list of facet
     each(rootState.aggregation.facets, facet => {
       // The facet key are formatted in the URL as follow.
