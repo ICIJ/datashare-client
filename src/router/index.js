@@ -1,19 +1,29 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+import About from '@/components/About'
 import App from '@/components/App'
 import DocumentView from '@/components/document/DocumentView'
-import Landing from '@/components/Landing'
 import Indexing from '@/components/Indexing'
+import Landing from '@/components/Landing'
+import Login from '@/components/Login'
 import Search from '@/components/Search'
-import About from '@/components/About'
 
 import store from '@/store'
+import { isAuthenticated } from '@/utils/auth'
+import get from 'lodash/get'
 
 Vue.use(VueRouter)
 
-export default new VueRouter({
+const router = new VueRouter({
   routes: [
+    {
+      path: '/login',
+      component: Login,
+      meta: {
+        skipsAuth: true
+      }
+    },
     {
       path: '/',
       component: App,
@@ -64,3 +74,16 @@ export default new VueRouter({
     }
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  // True if the authentication must be skipped
+  const skipsAuth = to.matched.some(r => get(r, 'meta.skipsAuth', false))
+
+  if (skipsAuth || isAuthenticated()) {
+    next()
+  } else {
+    next('/login')
+  }
+})
+
+export default router
