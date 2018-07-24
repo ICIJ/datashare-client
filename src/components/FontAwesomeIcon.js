@@ -1,30 +1,28 @@
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
-import fontawesome from '@fortawesome/fontawesome'
+import { library, dom } from '@fortawesome/fontawesome-svg-core'
 
-// Pick icons
-import faUserShield from '@fortawesome/fontawesome-free-solid/faUserShield'
-import faBars from '@fortawesome/fontawesome-free-solid/faBars'
-import faExternalLinkAlt from '@fortawesome/fontawesome-free-solid/faExternalLinkAlt'
-import faGlobe from '@fortawesome/fontawesome-free-solid/faGlobe'
-import faFolder from '@fortawesome/fontawesome-free-solid/faFolder'
-import faFolderOpen from '@fortawesome/fontawesome-free-solid/faFolderOpen'
-import faFile from '@fortawesome/fontawesome-free-solid/faFile'
-import faSearch from '@fortawesome/fontawesome-free-solid/faSearch'
-import faEyeSlash from '@fortawesome/fontawesome-free-solid/faEyeSlash'
-import faCaretDown from '@fortawesome/fontawesome-free-solid/faCaretDown'
-import faCaretRight from '@fortawesome/fontawesome-free-solid/faCaretRight'
-import faAngleDoubleLeft from '@fortawesome/fontawesome-free-solid/faAngleDoubleLeft'
-import faAngleLeft from '@fortawesome/fontawesome-free-solid/faAngleLeft'
-import faAngleRight from '@fortawesome/fontawesome-free-solid/faAngleRight'
-import faAngleDoubleRight from '@fortawesome/fontawesome-free-solid/faAngleDoubleRight'
-import faAngleDown from '@fortawesome/fontawesome-free-solid/faAngleDown'
-import faAngleUp from '@fortawesome/fontawesome-free-solid/faAngleUp'
-import faAmbulance from '@fortawesome/fontawesome-free-solid/faAmbulance'
-import faUndo from '@fortawesome/fontawesome-free-solid/faUndo'
-import faRedo from '@fortawesome/fontawesome-free-solid/faRedo'
+import {faUserShield} from '@fortawesome/free-solid-svg-icons/faUserShield'
+import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
+import {faExternalLinkAlt} from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt'
+import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
+import {faFolder} from '@fortawesome/free-solid-svg-icons/faFolder'
+import {faFolderOpen} from '@fortawesome/free-solid-svg-icons/faFolderOpen'
+import {faFile} from '@fortawesome/free-solid-svg-icons/faFile'
+import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch'
+import {faEyeSlash} from '@fortawesome/free-solid-svg-icons/faEyeSlash'
+import {faCaretDown} from '@fortawesome/free-solid-svg-icons/faCaretDown'
+import {faCaretRight} from '@fortawesome/free-solid-svg-icons/faCaretRight'
+import {faAngleDoubleLeft} from '@fortawesome/free-solid-svg-icons/faAngleDoubleLeft'
+import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft'
+import {faAngleRight} from '@fortawesome/free-solid-svg-icons/faAngleRight'
+import {faAngleDoubleRight} from '@fortawesome/free-solid-svg-icons/faAngleDoubleRight'
+import {faAngleDown} from '@fortawesome/free-solid-svg-icons/faAngleDown'
+import {faAngleUp} from '@fortawesome/free-solid-svg-icons/faAngleUp'
+import {faAmbulance} from '@fortawesome/free-solid-svg-icons/faAmbulance'
+import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo'
+import {faRedo} from '@fortawesome/free-solid-svg-icons/faRedo'
 
-// And add them to the library
-fontawesome.library.add(
+library.add(
   faUserShield,
   faBars,
   faExternalLinkAlt,
@@ -46,5 +44,8 @@ fontawesome.library.add(
   faUndo,
   faRedo
 )
+
+// Kicks off the process of finding <i> tags and replacing with <svg>
+dom.watch()
 
 export default FontAwesomeIcon
