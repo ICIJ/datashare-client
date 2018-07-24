@@ -100,7 +100,7 @@ export default {
         <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
         <font-awesome-icon icon="search" class="float-right" />
       </div>
-      <div class="list-group-item facet-path-list-group">
+      <div class="list-group-item facet-path-list-group" v-if="isReady">
         <tree :tree-data="tree"></tree>
       </div>
       <div v-if="!isReady">
