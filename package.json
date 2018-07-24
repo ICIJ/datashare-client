@@ -15,9 +15,12 @@
     "build": "node build/build.js"
   },
   "dependencies": {
-    "@fortawesome/fontawesome-svg-core": "^1.2.2",
-    "@fortawesome/free-solid-svg-icons": "^5.2.0",
-    "@fortawesome/vue-fontawesome": "^0.1.1",
+    "@fortawesome/fontawesome": "^1.1.4",
+    "@fortawesome/fontawesome-svg-core": "^1.2.1",
+    "@fortawesome/free-brands-svg-icons": "^5.1",
+    "@fortawesome/free-regular-svg-icons": "^5.1.1",
+    "@fortawesome/free-solid-svg-icons": "^5.1",
+    "@fortawesome/vue-fontawesome": "^0.0.22",
     "bodybuilder": "^2.2.10",
     "bootstrap": "^4.0.0",
     "elasticsearch-browser": "^14.1.0",
@@ -25,7 +28,6 @@
     "handsontable": "^2.0.0",
     "lodash": "^4.17.5",
     "moment": "^2.21.0",
-    "node-sass": "^4.7.2",
     "papaparse": "^4.4.0",
     "pdfjs-dist": "^2.0.489",
     "sass-loader": "^6.0.6",
@@ -44,6 +46,7 @@
     "xlsx": "^0.12.11"
   },
   "devDependencies": {
+    "node-sass": "^4.7.2",
     "autoprefixer": "^7.1.2",
     "babel-core": "^6.22.1",
     "babel-eslint": "^8.2.1",
