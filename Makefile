@@ -8,7 +8,7 @@ dist:
 		npm run build
 
 install:
-		yarn || npm install
+		yarn
 
 unit:
 		npm run unit
