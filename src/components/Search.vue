@@ -79,7 +79,7 @@ export default {
 
 <style lang="scss">
   .search {
-    &__body {
+    & &__body {
 
       &__aggregations-panel {
         max-width: 320px;

@@ -11,10 +11,10 @@ export default class Document extends EsDoc {
     return this.raw.highlight
   }
   get relativePath () {
-    if (this.source.path.indexOf(process.env.CONFIG.data_prefix) === -1) {
+    if (this.source.path.indexOf(process.env.VUE_APP_DATA_PREFIX) === -1) {
       return this.source.path
     }
-    return '/api' + process.env.CONFIG.data_prefix + split(this.source.path, process.env.CONFIG.data_prefix, 2)[1]
+    return '/api' + process.env.VUE_APP_DATA_PREFIX + split(this.source.path, process.env.VUE_APP_DATA_PREFIX, 2)[1]
   }
   get contentType () {
     return this.source.contentType || 'unknown'

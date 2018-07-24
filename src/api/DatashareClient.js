@@ -1,5 +1,7 @@
 import 'whatwg-fetch'
 
+console.log(process.env)
+
 export class DatashareClient {
   index (options) {
     return this.sendAction(`/api/task/index/file`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
@@ -20,7 +22,7 @@ export class DatashareClient {
     return this.sendAction('/version')
   }
   static getFullUrl (url) {
-    let dsHost = process.env.CONFIG.ds_host || ''
+    let dsHost = process.env.VUE_APP_DS_HOST || ''
     return `${dsHost}${url}`
   }
   getSource (relativeUrl) {
@@ -49,6 +51,6 @@ export class DatashareClient {
 
   redirectToAuth () {
     window.location.assign(window.location.protocol + '//' +
-      window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_signin)
+      window.location.hostname + ':' + window.location.port + process.env.VUE_APP_DS_AUTH_SIGNIN)
   }
 }

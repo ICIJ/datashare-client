@@ -96,7 +96,7 @@ export default {
   },
   computed: {
     logoutLink () {
-      return DatashareClient.getFullUrl(process.env.CONFIG.ds_auth_signout)
+      return DatashareClient.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     }
   }
 }

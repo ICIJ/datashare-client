@@ -27,7 +27,7 @@ export default {
   },
   computed: {
     clientHash () {
-      return process.env.CONFIG.git_hash.substring(0, 7)
+      return process.env.VUE_APP_GIT_HASH.substring(0, 7)
     }
   },
   methods: {

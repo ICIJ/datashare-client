@@ -14,7 +14,7 @@ export function docPlugin (Client, config, components) {
 
   Client.prototype.getEsDoc = function (id, routing = null) {
     return this.get({
-      index: process.env.CONFIG.es_index,
+      index: process.env.VUE_APP_ES_INDEX,
       type: 'doc',
       id: id,
       routing: routing
@@ -26,7 +26,7 @@ export function docPlugin (Client, config, components) {
   Client.prototype.getNamedEntities = function (docId, routing = null) {
     var body = bodybuilder().query('parent_id', {type: 'NamedEntity', id: docId}).build()
     return this.search({
-      index: process.env.CONFIG.es_index,
+      index: process.env.VUE_APP_ES_INDEX,
       type: 'doc',
       size: 200,
       routing: routing,
@@ -91,7 +91,7 @@ export function searchPlugin (Client, config, components) {
     })
     // Return a promise that build the body composed above
     return this.search({
-      index: process.env.CONFIG.es_index,
+      index: process.env.VUE_APP_ES_INDEX,
       type: 'doc',
       body: body.build()
     }).then(function (data) {
@@ -102,14 +102,14 @@ export function searchPlugin (Client, config, components) {
 
 let handle401Error = (err) => {
   if (err && err.status === 401) {
-    window.location.assign(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + process.env.CONFIG.ds_auth_signin)
+    window.location.assign(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + process.env.VUE_APP_DS_AUTH_SIGNIN)
   } else {
     throw err
   }
 }
 
 const esClient = new es.Client({
-  host: process.env.CONFIG.es_host || window.location.hostname + ':' + window.location.port + '/api/search',
+  host: process.env.VUE_APP_ES_HOST || window.location.hostname + ':' + window.location.port + '/api/search',
   plugins: [ docPlugin, searchPlugin ]
 })
 
