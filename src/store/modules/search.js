@@ -17,6 +17,7 @@ function initialState () {
     from: 0,
     size: 25,
     facets: [],
+    sort: 'relevance',
     response: Response.none()
   }
 }
@@ -32,6 +33,9 @@ export const getters = {
   },
   getSize (state) {
     return state.size
+  },
+  getSort (state) {
+    return state.sort
   },
   hasFacetValue (state) {
     return item => !!find(state.facets, facet => {
@@ -57,6 +61,7 @@ export const getters = {
     return {
       q: state.query,
       size: state.size,
+      sort: state.sort,
       ...reduce(state.facets, (memo, facetValue) => {
         // We need to look for the facet's definition in order to us its `id`
         // as key for tge URL params. This was we track configured facet instead
@@ -91,6 +96,10 @@ export const mutations = {
   },
   size (state, size) {
     state.size = Number(size)
+    state.response = Response.none()
+  },
+  sort (state, sort) {
+    state.sort = sort
     state.response = Response.none()
   },
   buildResponse (state, raw) {
@@ -144,29 +153,30 @@ export const mutations = {
 }
 
 export const actions = {
-  query ({ state, commit }, queryOrParams = { query: state.query, from: state.from, size: state.size }) {
+  query ({ state, commit }, queryOrParams = { query: state.query, from: state.from, size: state.size, sort: state.sort }) {
     commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String ? queryOrParams : queryOrParams.query)
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.from : queryOrParams.from)
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+    commit('sort', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.sort : queryOrParams.sort)
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
   },
   firstPage ({ state, commit }) {
     commit('from', 0)
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
   },
   previousPage ({ state, commit }) {
     commit('from', max([0, state.from - state.size]))
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
   },
   nextPage ({ state, commit }) {
     const nextFrom = state.from + state.size
     nextFrom < state.response.total ? commit('from', nextFrom) : commit('from', state.from)
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
   },
   lastPage ({ state, commit }) {
     // Calculate the "from" parameter to display the last page
     commit('from', state.size * floor(state.response.total / state.size))
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size).then(raw => { commit('buildResponse', raw) })
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
   },
   addFacetValue ({ commit, dispatch }, facet) {
     commit('addFacetValue', facet)
@@ -186,6 +196,7 @@ export const actions = {
     // Add the query to the state with a mutation to not triggering a search
     if (query.q) commit('query', query.q)
     if (query.size) commit('size', query.size)
+    if (query.sort) commit('sort', query.sort)
     // Iterate over the list of facet
     each(rootState.aggregation.facets, facet => {
       // The facet key are formatted in the URL as follow.

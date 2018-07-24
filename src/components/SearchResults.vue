@@ -1,11 +1,11 @@
 <template>
   <div class="search-results">
     <div v-if="query && response.hits.length > 0">
-      <search-results-header :response="response" />
+      <search-results-header :response="response" :position="'top'" />
       <div class="search-results__items">
         <search-results-item v-for="doc in response.hits" :key="doc.id" :doc="doc" />
       </div>
-      <search-results-header :response="response" />
+      <search-results-header :response="response" :position="'bottom'" />
     </div>
     <div v-else>
       <div class="search-results__header">

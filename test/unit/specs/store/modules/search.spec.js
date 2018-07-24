@@ -300,4 +300,17 @@ describe('Search store', () => {
     expect(store.state.from).to.equal(3)
     expect(store.state.response.hits.length).to.equal(2)
   })
+
+  it('should return sorted documents according to increasing extractionDate', async () => {
+    let dates = ['2018-06-04T20:20:20.001Z', '2018-08-04T20:20:20.001Z', '2018-05-04T20:20:20.001Z', '2018-07-04T20:20:20.001Z', '2018-04-04T20:20:20.001Z']
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndexingDate(dates).count(5)).commit()
+
+    await store.dispatch('query', { query: '*', from: 0, size: 5, sort: 'dateOldest' })
+
+    expect(store.state.response.hits[0].source.extractionDate).to.equal('2018-04-04T20:20:20.001Z')
+    expect(store.state.response.hits[1].source.extractionDate).to.equal('2018-05-04T20:20:20.001Z')
+    expect(store.state.response.hits[2].source.extractionDate).to.equal('2018-06-04T20:20:20.001Z')
+    expect(store.state.response.hits[3].source.extractionDate).to.equal('2018-07-04T20:20:20.001Z')
+    expect(store.state.response.hits[4].source.extractionDate).to.equal('2018-08-04T20:20:20.001Z')
+  })
 })

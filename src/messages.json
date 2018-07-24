@@ -25,7 +25,15 @@
         "firstPage": "Go to first page",
         "previousPage": "Go to previous page",
         "nextPage": "Go to next page",
-        "lastPage": "Go to last page"
+        "lastPage": "Go to last page",
+        "sort": {
+          "sort": "Sort by",
+          "relevance": "Relevance",
+          "dateNewest": "Date (newest)",
+          "dateOldest": "Date (oldest)",
+          "sizeLargest": "Size (decreasing)",
+          "sizeSmallest": "Size (increasing)"
+        }
       }
     },
     "facet": {
@@ -100,7 +108,15 @@
         "firstPage": "Aller à la première page",
         "previousPage": "Aller à la page précédente",
         "nextPage": "Aller à la page suivante",
-        "lastPage": "Aller à la dernière page"
+        "lastPage": "Aller à la dernière page",
+        "sort": {
+          "sort": "Tri par",
+          "relevance": "Pertinence",
+          "dateNewest": "Date (décroissante)",
+          "dateOldest": "Date (croissante)",
+          "sizeLargest": "Taille (décroissante)",
+          "sizeSmallest": "Taille (croissante)"
+        }
       }
     },
     "facet": {

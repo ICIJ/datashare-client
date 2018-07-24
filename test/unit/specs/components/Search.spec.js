@@ -166,7 +166,7 @@ describe('Search.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(1)
   })
 
-  it('should display the select to choose the number of results per page', async () => {
+  it('should display the dropdown to choose the number of results per page', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 10 })
@@ -174,7 +174,19 @@ describe('Search.vue', () => {
 
     let e = wrapped.vm.$el.querySelectorAll('.search-results__header .search-results__header__size select')[0]
 
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header .search-results__header__size').length).to.equal(1)
     expect(e.options[e.selectedIndex].value).to.equal('10')
+  })
+
+  it('should display the dropdown to choose the order', async () => {
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
+
+    await wrapped.vm.search({ query: 'document', from: 0, size: 10, sort: 'dateOldest' })
+    await Vue.nextTick()
+
+    let e = wrapped.vm.$el.querySelectorAll('.search-results__header .search-results__header__sort select')[0]
+
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header .search-results__header__sort').length).to.equal(1)
+    expect(e.options[e.selectedIndex].value).to.equal('dateOldest')
   })
 })
