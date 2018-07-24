@@ -6,36 +6,36 @@
 
 ``` bash
 # install dependencies
-npm install
+yarn
 
 # serve with hot reload at localhost:9090
-npm run dev
+yarn run dev
 
 # build for production with minification
-npm run build
+yarn run build
 
 # build for production and view the bundle analyzer report
-npm run build --report
+yarn run build --report
 
 # run unit tests
-npm run unit
+yarn run unit
 
 # run e2e tests
-npm run e2e
+yarn run e2e
 
 # run all tests
-npm test
+yarn test
 ```
 
 For a detailed explanation on how things work, check out the [guide](http://vuejs-templates.github.io/webpack/) and [docs for vue-loader](http://vuejs.github.io/vue-loader).
 
 ## How to run with datashare backend locally
 
-Datashare backend allows to index, find names and provide file preview or download. It can be run alongside the dev frontend for manual testing with the benefits of hot reloading with `npm run dev`.
+Datashare backend allows to index, find names and provide file preview or download. It can be run alongside the dev frontend for manual testing with the benefits of hot reloading with `yarn run dev`.
 
 You have to either run the backend docker container, or the java code if you are willing to modify the backend code.
 
-There are three parameters to use when using the backend in dev mode : 
+There are three parameters to use when using the backend in dev mode :
 
 - run the web server with `-w`
 - allow Cross Origin requests (from the front to the back) with `--cors <pattern>`
@@ -63,4 +63,4 @@ $ ./launchBack -w -d /path/to/data
 ```
 
 - ***NOTE 1*** : `/path/to/data` must end with `data`
-- ***NOTE 2*** : the `--cors` is already set in the shell script 
+- ***NOTE 2*** : the `--cors` is already set in the shell script
