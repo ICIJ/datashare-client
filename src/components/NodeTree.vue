@@ -2,7 +2,7 @@
   <li v-if="node" :class="{ 'tree-node--folder': isFolder, 'tree-node--file': !isFolder }" class="tree-node">
     <div class="row no-gutters">
       <div class="col tree-node__label">
-        <a @click="toggle">
+        <a @click="toggle" :title="node.label">
           <font-awesome-icon :icon="nodeIcon" class="mr-1 text-muted tree-node__label__icon" />
           {{ node.label }}
         </a>
