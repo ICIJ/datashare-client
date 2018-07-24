@@ -27,7 +27,7 @@ describe('FacetPath.vue', () => {
     // Check that the facet is displayed
     expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree').length).to.equal(1)
     // Chack that there is no node in the tree
-    expect(wrapped.vm.$el.querySelectorAll('.node-tree').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).to.equal(0)
   })
 
   it('should display a not empty tree', async () => {
@@ -41,10 +41,10 @@ describe('FacetPath.vue', () => {
     // Check that the facet is displayed
     expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree').length).to.equal(1)
     // Check that there are 2 nodes in the tree
-    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree .node-tree').length).to.equal(7)
+    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree .tree-node').length).to.equal(7)
     // Among the nodes, 1 is a folder
-    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree .node-tree.folder').length).to.equal(4)
+    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree .tree-node--folder').length).to.equal(4)
     // Among the nodes, 1 is a file
-    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree .node-tree.file').length).to.equal(3)
+    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree .tree-node--file').length).to.equal(3)
   })
 })

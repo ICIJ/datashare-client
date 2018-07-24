@@ -1,6 +1,6 @@
 <template>
   <div class="facet-path-tree">
-    <ul class="facet-path-tree-list">
+    <ul class="facet-path-tree__list list-unstyled mb-0">
       <node-tree v-for="node in treeData" :node="node" :key="node.label"></node-tree>
     </ul>
   </div>
@@ -16,12 +16,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-  .facet-path-tree {
-    ul {
-      margin: 0;
-      padding: 0;
-    }
-  }
-</style>

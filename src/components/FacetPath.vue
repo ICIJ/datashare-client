@@ -2,8 +2,12 @@
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import last from 'lodash/last'
+import trim from 'lodash/trim'
+import { join } from 'path'
+
 import { mixin } from 'mixins/facets'
 import Tree from './Tree'
+import settings from '@/utils/settings'
 
 export default {
   name: 'FacetPath',
@@ -35,36 +39,40 @@ export default {
     isGlobal () {
       return this.$store.state.aggregation.globalSearch
     },
+    treeRoot () {
+      return settings.document.base
+    },
     tree () {
-      let tree = []
-      let node = null
+      const folderSeparator = '/'
+      const tree = []
       let treePointer = null
-      let path = null
-      let folderSeparator = '/'
-      let lastItem = null
+
       each(this.items, item => {
+        // Remove the document base from the path
+        const fullPath = item.key.split(this.treeRoot).pop()
+        const lastItem = last(fullPath.split(folderSeparator))
+        // Build the path for the current item starting
+        // with the folter separator
+        let path = this.treeRoot
         treePointer = tree
-        path = folderSeparator
-        lastItem = last(item.key.split(folderSeparator))
-        each(item.key.split(folderSeparator), element => {
-          // Ignore empty node
-          // Potentially the first node if path begins by a /
-          if (element !== '') {
-            if (element === lastItem) {
-              path += element
-              node = {label: element, path: path, count: 0}
-            } else {
-              path += element + folderSeparator
-              node = {label: element, path: path + '*', count: 0, children: []}
-            }
-            // Add node to tree if not already in it
-            if (filter(treePointer, {label: element}).length === 0) {
-              treePointer.push(node)
-            }
-            // Increment count
-            filter(treePointer, {label: element})[0].count++
-            treePointer = filter(treePointer, {label: element})[0].children
+        // Potentially the first node is a path begining with / so we trim
+        // the string to avoid addig emtpy dir
+        each(trim(fullPath, '/').split(folderSeparator), label => {
+          let node = null
+          if (label === lastItem) {
+            path = join(path, label)
+            node = { label, path, count: 0 }
+          } else {
+            path = join(path, label, folderSeparator)
+            node = { label, path: path + '*', count: 0, children: [] }
           }
+          // Add node to tree if not already in it
+          if (filter(treePointer, { label }).length === 0) {
+            treePointer.push(node)
+          }
+          // Increment count
+          filter(treePointer, { label })[0].count++
+          treePointer = filter(treePointer, { label })[0].children
         })
       })
       return tree
