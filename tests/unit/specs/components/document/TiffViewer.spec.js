@@ -1,4 +1,4 @@
-import {mount} from 'vue-test-utils'
+import {mount} from '@vue/test-utils'
 import TiffViewer from '@/components/document/TiffViewer'
 import noop from 'lodash/noop'
 

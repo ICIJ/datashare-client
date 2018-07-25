@@ -1,4 +1,4 @@
-import { createLocalVue } from 'vue-test-utils'
+import { createLocalVue } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import { setCookie, removeCookie } from 'tiny-cookie'

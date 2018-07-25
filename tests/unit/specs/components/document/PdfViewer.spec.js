@@ -1,4 +1,4 @@
-import {mount} from 'vue-test-utils'
+import {mount} from '@vue/test-utils'
 import PdfViewer from '@/components/document/PdfViewer'
 import noop from 'lodash/noop'
 import PDFJS from 'pdfjs-dist'

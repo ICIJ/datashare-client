@@ -1,6 +1,6 @@
-import {createLocalVue, mount} from 'vue-test-utils'
-import {IndexedDocument, letData} from 'test/unit/es_utils'
-import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
+import {createLocalVue, mount} from '@vue/test-utils'
+import {IndexedDocument, letData} from '../../es_utils'
+import esConnectionHelper from '../utils/esConnectionHelper'
 
 import messages from '@/messages'
 import router from '@/router'

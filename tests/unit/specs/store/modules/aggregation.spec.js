@@ -8,8 +8,8 @@ import functionsIn from 'lodash/functionsIn'
 import each from 'lodash/each'
 import find from 'lodash/find'
 
-import { IndexedDocument, letData } from 'test/unit/es_utils'
-import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from '../../../es_utils'
+import esConnectionHelper from '../../utils/esConnectionHelper'
 
 describe('Aggregation store', () => {
   esConnectionHelper()

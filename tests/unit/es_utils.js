@@ -95,7 +95,7 @@ class IndexBuilder {
     } else {
       var docId = this.document.path
       let createRequest = {
-        index: process.env.CONFIG.es_index,
+        index: process.env.VUE_APP_ES_INDEX,
         type: 'doc',
         refresh: true,
         id: docId,
@@ -108,7 +108,7 @@ class IndexBuilder {
       for (var i = 0; i < this.document.nerList.length; i++) {
         let ner = this.document.nerList[i]
         await this.index.create({
-          index: process.env.CONFIG.es_index,
+          index: process.env.VUE_APP_ES_INDEX,
           type: 'doc',
           refresh: true,
           id: ner.mention + ner.offset,

@@ -1,4 +1,4 @@
-import {mount} from 'vue-test-utils'
+import {mount} from '@vue/test-utils'
 import SearchResultsItem from '@/components/SearchResultsItem'
 import Document from '@/api/Document'
 import messages from '@/messages'

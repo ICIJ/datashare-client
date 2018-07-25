@@ -1,4 +1,4 @@
-import { createLocalVue, mount } from 'vue-test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import Indexing from '@/components/Indexing'
 
 import messages from '@/messages'

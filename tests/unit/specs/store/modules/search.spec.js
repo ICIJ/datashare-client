@@ -5,8 +5,8 @@ import NamedEntity from '@/api/NamedEntity'
 
 import Vuex from 'vuex'
 
-import { IndexedDocuments, IndexedDocument, letData } from 'test/unit/es_utils'
-import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
+import { IndexedDocuments, IndexedDocument, letData } from '../../../es_utils'
+import esConnectionHelper from '../../utils/esConnectionHelper'
 import cloneDeep from 'lodash/cloneDeep'
 
 describe('Search store', () => {

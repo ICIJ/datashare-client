@@ -7,9 +7,9 @@ import VueProgressBar from 'vue-progressbar'
 import trim from 'lodash/trim'
 import find from 'lodash/find'
 
-import {mount, createLocalVue} from 'vue-test-utils'
+import {mount, createLocalVue} from '@vue/test-utils'
 
-import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
+import esConnectionHelper from '../utils/esConnectionHelper'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
@@ -17,7 +17,7 @@ import store from '@/store'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
-import {IndexedDocument, letData} from 'test/unit/es_utils'
+import {IndexedDocument, letData} from '../../es_utils'
 
 Vue.use(VueI18n)
 Vue.use(VueProgressBar, { color: '#852308' })

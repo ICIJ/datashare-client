@@ -1,4 +1,4 @@
-import {mount} from 'vue-test-utils'
+import {mount} from '@vue/test-utils'
 import Vue from 'vue'
 import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
 

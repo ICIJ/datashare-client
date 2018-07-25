@@ -5,9 +5,9 @@ import VueProgressBar from 'vue-progressbar'
 import noop from 'lodash/noop'
 import trim from 'lodash/trim'
 import 'es6-promise/auto'
-import { mount, createLocalVue } from 'vue-test-utils'
+import { mount, createLocalVue } from '@vue/test-utils'
 
-import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
+import esConnectionHelper from '../utils/esConnectionHelper'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
@@ -15,7 +15,7 @@ import store from '@/store'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
 import Search from '@/components/Search'
-import { IndexedDocuments, IndexedDocument, letData } from 'test/unit/es_utils'
+import { IndexedDocuments, IndexedDocument, letData } from '../../es_utils'
 
 Vue.use(VueI18n)
 Vue.use(VueProgressBar, { color: '#852308' })
