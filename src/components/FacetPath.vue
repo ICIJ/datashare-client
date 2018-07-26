@@ -5,7 +5,7 @@ import last from 'lodash/last'
 import trim from 'lodash/trim'
 import { join } from 'path'
 
-import { mixin } from 'mixins/facets'
+import { mixin } from '@/mixins/facets'
 import Tree from './Tree'
 import settings from '@/utils/settings'
 

@@ -35,7 +35,7 @@
 </template>
 
 <script>
-import { mixin } from 'mixins/facets'
+import { mixin } from '@/mixins/facets'
 
 export default {
   name: 'FacetNamedEntity',

@@ -1,5 +1,5 @@
 <script>
-import { mixin } from 'mixins/facets'
+import { mixin } from '@/mixins/facets'
 
 export default {
   name: 'FacetText',
@@ -27,12 +27,14 @@ export default {
         <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
         <font-awesome-icon icon="search" class="float-right" />
       </label>
-      <div class="list-group-item facet-text__items__item p-0" v-for="item in displayedFilteredItems()" :key="item.key" :class="{ 'facet-text__items__item--active': hasValue(item) }">
+      <div class="list-group-item facet-text__items__item p-0" v-for="(item, index) in displayedFilteredItems()" :key="index" :class="{ 'facet-text__items__item--active': hasValue(item) }">
         <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
-          <span class="badge badge-pill badge-light float-right">
+          <span class="badge badge-pill badge-light float-right facet-text__items__item__count">
             {{ item.doc_count || 0 }}
           </span>
-          {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
+          <span class="facet-text__items__item__label">
+            {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
+          </span>
         </a>
       </div>
       <div v-if="!isReady">
