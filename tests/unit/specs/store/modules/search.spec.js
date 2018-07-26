@@ -8,6 +8,7 @@ import Vuex from 'vuex'
 import { IndexedDocuments, IndexedDocument, letData } from '../../../es_utils'
 import esConnectionHelper from '../../utils/esConnectionHelper'
 import cloneDeep from 'lodash/cloneDeep'
+import { expect } from 'chai'
 
 describe('Search store', () => {
   esConnectionHelper()

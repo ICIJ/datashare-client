@@ -1,11 +1,11 @@
-import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
+import { mount, createLocalVue } from '@vue/test-utils'
+import { expect } from 'chai'
 
 import noop from 'lodash/noop'
 import trim from 'lodash/trim'
 import 'es6-promise/auto'
-import { mount, createLocalVue } from '@vue/test-utils'
 
 import esConnectionHelper from '../utils/esConnectionHelper'
 import messages from '@/messages'
@@ -13,32 +13,29 @@ import router from '@/router'
 import store from '@/store'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import ContentPlaceholder from '@/components/ContentPlaceholder'
 import Search from '@/components/Search'
 import { IndexedDocuments, IndexedDocument, letData } from '../../es_utils'
 
-Vue.use(VueI18n)
-Vue.use(VueProgressBar, { color: '#852308' })
+const localVue = createLocalVue()
+localVue.use(VueI18n)
+localVue.use(VueProgressBar, { color: '#852308' })
+localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({ locale: 'en', messages })
-Vue.component('font-awesome-icon', FontAwesomeIcon)
-Vue.component('coontent-placeholder', ContentPlaceholder)
 
 describe('Search.vue', () => {
   esConnectionHelper()
   var es = esConnectionHelper.es
   var wrapped = null
-  beforeEach(async () => {
-    const localVue = createLocalVue()
-    localVue.use(VueI18n)
+  beforeEach(() => {
     Search.created = noop
-    wrapped = mount(Search, {i18n, router, store})
+    wrapped = mount(Search, {localVue, i18n, router, store})
     store.commit('search/reset')
   })
 
   it('should display no documents found', async () => {
     await wrapped.vm.search('foo')
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(trim(wrapped.vm.$el.querySelector('.search-results__header__number-of-results').textContent)).to.equal('No documents found')
   })
@@ -47,7 +44,7 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
 
     await wrapped.vm.search('bar')
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress__pagination').textContent)).to.equal('1 - 1')
     expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).to.equal('on 1 document found')
@@ -59,7 +56,7 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocument('docs/bar2.txt').withContent('this is bar 2 document')).commit()
 
     await wrapped.vm.search('bar')
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress__pagination').textContent)).to.equal('1 - 2')
     expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).to.equal('on 2 documents found')
@@ -68,8 +65,9 @@ describe('Search.vue', () => {
 
   it('should make a link without routing for a document', async () => {
     await letData(es).have(new IndexedDocument('doc.txt').withContent('this is a document')).commit()
+    
     await wrapped.vm.search('document')
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelector('.search-results-item__basename a').href).to.match(/doc.txt$/)
   })
@@ -79,7 +77,7 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocument('child.txt').withContent('this is a children document').withParent('parent.txt')).commit()
 
     await wrapped.vm.search('children')
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelector('.search-results-item__basename a').href).to.match(/child.txt\/parent.txt/)
   })
@@ -88,7 +86,7 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 2 })
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(2)
   })
@@ -97,14 +95,14 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(3)
   })
 
   it('should not display the pagination', async () => {
     await wrapped.vm.search('foo')
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).to.equal(0)
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).to.equal(0)
@@ -116,7 +114,7 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
 
     await wrapped.vm.search('document')
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).to.equal(0)
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).to.equal(0)
@@ -128,7 +126,7 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).to.equal(2)
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).to.equal(2)
@@ -143,7 +141,7 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page.disabled').length).to.equal(2)
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page.disabled').length).to.equal(2)
@@ -155,7 +153,7 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 3, size: 3 })
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page.disabled').length).to.equal(0)
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page.disabled').length).to.equal(0)
@@ -170,7 +168,7 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 10 })
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     let e = wrapped.vm.$el.querySelectorAll('.search-results__header .search-results__header__size select')[0]
 

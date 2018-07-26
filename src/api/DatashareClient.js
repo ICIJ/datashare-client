@@ -1,7 +1,7 @@
-import fetchPonyfill from 'fetch-ponyfill'
+import fetchPonyfill from 'fetch-ponyfill';
 
 export class DatashareClient {
-  constructor ({ fetch = window.fetch || fetchPonyfill().fetch } = { }) {
+  constructor({ fetch = window.fetch || fetchPonyfill().fetch } = { }) {
     this.fetch = fetch
   }
   index (options) {

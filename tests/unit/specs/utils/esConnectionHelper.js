@@ -1,8 +1,8 @@
 import elasticsearch from 'elasticsearch-browser'
 import esMapping from '@/datashare_index_mappings.json'
 
-let es = new elasticsearch.Client({host: process.env.CONFIG.es_host})
-let esIndex = process.env.CONFIG.es_index
+let es = new elasticsearch.Client({host: process.env.VUE_APP_ES_HOST})
+let esIndex = process.env.VUE_APP_ES_INDEX
 
 const esConnectionHelper = () => {
   before(async () => {

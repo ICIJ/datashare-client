@@ -1,4 +1,5 @@
 import Document from '@/api/Document'
+import { expect } from 'chai'
 
 describe('Document', () => {
   it('should display human readable size for -1', () => {

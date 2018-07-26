@@ -2,13 +2,14 @@ import 'es6-promise/auto'
 
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import VueProgressBar from 'vue-progressbar'
 
 import find from 'lodash/find'
 import noop from 'lodash/noop'
 import trim from 'lodash/trim'
 
 import { createLocalVue, mount } from '@vue/test-utils'
+import { expect } from 'chai'
+
 import { IndexedDocument, letData } from '../../es_utils'
 
 import esConnectionHelper from '../utils/esConnectionHelper'
@@ -16,27 +17,24 @@ import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 
-import ContentPlaceholder from '@/components/ContentPlaceholder'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import FacetText from '@/components/FacetText'
 
-Vue.use(VueI18n)
-Vue.use(VueProgressBar, { color: '#852308' })
+const localVue = createLocalVue()
+localVue.use(VueI18n)
+localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({locale: 'en', messages})
-Vue.component('content-placeholder', ContentPlaceholder)
-Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 describe('FacetText.vue', () => {
   esConnectionHelper()
   var es = esConnectionHelper.es
   var wrapped = null
 
-  beforeEach(async () => {
-    const localVue = createLocalVue()
-    localVue.use(VueI18n)
+  beforeEach(() => {
     FacetText.watchedForUpdate = noop
     wrapped = mount(FacetText, {
+      localVue,
       i18n,
       router,
       store,
@@ -47,14 +45,14 @@ describe('FacetText.vue', () => {
   })
 
   afterEach(async () => {
-    store.commit('search/reset')
+    await store.commit('search/reset')
     // Reset facetQuery to default
     wrapped.vm.facetQuery = ''
   })
 
   it('should display empty list', async () => {
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(0)
   })
@@ -67,7 +65,7 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('list.html').withContentType('text/html')).commit()
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
   })
@@ -82,7 +80,7 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('list.css').withContentType('text/stylesheet')).commit()
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(3)
   })
@@ -97,12 +95,12 @@ describe('FacetText.vue', () => {
 
     store.commit('search/query', 'SHOW')
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(1)
 
     store.commit('search/query', 'INDEX')
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
   })
 
@@ -115,7 +113,7 @@ describe('FacetText.vue', () => {
     store.commit('search/excludeFacet', 'content-type')
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     const lastItem = wrapped.vm.$el.querySelector('.facet-text__items__item:last-child')
 
@@ -131,7 +129,7 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('index_05.txt').withContent('Lorem').withContentType('text/type_05')).commit()
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(5)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(0)
@@ -146,7 +144,7 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('index_06.txt').withContent('Lorem').withContentType('text/type_06')).commit()
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
     expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).to.equal('More')
@@ -162,7 +160,7 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('index_06.txt').withContent('Lorem').withContentType('text/type_06')).commit()
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(5)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
@@ -181,7 +179,7 @@ describe('FacetText.vue', () => {
     wrapped.vm.facetQuery = 'text/type_0'
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(5)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
@@ -200,7 +198,7 @@ describe('FacetText.vue', () => {
     wrapped.vm.facetQuery = 'text/type_03'
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(1)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(0)
@@ -217,7 +215,7 @@ describe('FacetText.vue', () => {
     wrapped.vm.facetQuery = 'yolo'
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(0)
   })
@@ -229,7 +227,7 @@ describe('FacetText.vue', () => {
     wrapped.vm.facetQuery = 'en'
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(2)
   })
@@ -241,7 +239,7 @@ describe('FacetText.vue', () => {
     wrapped.vm.facetQuery = 'EN'
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(2)
   })
@@ -255,7 +253,7 @@ describe('FacetText.vue', () => {
     wrapped.vm.facetQuery = 'Windows'
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(2)
   })
@@ -269,13 +267,13 @@ describe('FacetText.vue', () => {
     wrapped.vm.facetQuery = 'marque'
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(2)
   })
 
   it('should display an indexing date facet with 4 months', async () => {
-    wrapped = mount(FacetText, { i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, {name: 'indexing-date'}) } })
+    wrapped = mount(FacetText, { localVue, i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, {name: 'indexing-date'}) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-04-04T20:20:20.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-05-05T02:00:42.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-05-05T20:10:00.001Z')).commit()
@@ -284,16 +282,20 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('doc_06.txt').withIndexingDate('2018-07-07T16:16:16.001Z')).commit()
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
+
+    const getItem = (idx) => wrapped.vm.$el.querySelectorAll('.facet-text__items__item')[idx]
+    const getItemChild = (idx, selector) => getItem(idx).querySelector(selector)
+    const getItemChildText = (idx, selector) => trim(getItemChild(idx, selector).textContent)
 
     expect(wrapped.vm.displayedFilteredItems().length).to.equal(4)
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item > a')[0].innerText)).to.equal('1\n        \n        2018-04')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item .badge')[0].innerText)).to.equal('1')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item > a')[1].innerText)).to.equal('3\n        \n        2018-05')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item .badge')[1].innerText)).to.equal('3')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item > a')[2].innerText)).to.equal('0\n        \n        2018-06')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item .badge')[2].innerText)).to.equal('0')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item > a')[3].innerText)).to.equal('2\n        \n        2018-07')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet-text__items__item .badge')[3].innerText)).to.equal('2')
+    expect(getItemChildText(0, '.facet-text__items__item__label')).to.equal('2018-04')
+    expect(getItemChildText(0, '.facet-text__items__item__count')).to.equal('1')
+    expect(getItemChildText(1, '.facet-text__items__item__label')).to.equal('2018-05')
+    expect(getItemChildText(1, '.facet-text__items__item__count')).to.equal('3')
+    expect(getItemChildText(2, '.facet-text__items__item__label')).to.equal('2018-06')
+    expect(getItemChildText(2, '.facet-text__items__item__count')).to.equal('0')
+    expect(getItemChildText(3, '.facet-text__items__item__label')).to.equal('2018-07')
+    expect(getItemChildText(3, '.facet-text__items__item__count')).to.equal('2')
   })
 })

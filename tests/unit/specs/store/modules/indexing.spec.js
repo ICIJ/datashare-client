@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import { actions, getters, mutations, state } from '@/store/modules/indexing'
 import cloneDeep from 'lodash/cloneDeep'
+import { expect } from 'chai'
 
 describe('Indexing store', () => {
   let store = null

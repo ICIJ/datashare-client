@@ -1,5 +1,6 @@
 import { sliceIndexes, highlight, removeDiacritics } from '@/utils/strings.js'
 import { escape } from 'lodash'
+import { expect } from 'chai'
 
 describe('sliceIndexes', () => {
   it('should return empty list when input is empty string', () => {

@@ -1,16 +1,22 @@
 import 'es6-promise/auto'
 
-import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import { mount } from '@vue/test-utils'
-import FacetPath from '@/components/FacetPath'
+import { mount, createLocalVue } from '@vue/test-utils'
+import { expect } from 'chai'
 
 import esConnectionHelper from '../utils/esConnectionHelper'
 import { IndexedDocument, letData } from '../../es_utils'
+
+import FacetPath from '@/components/FacetPath'
+import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 import find from 'lodash/find'
+
+const localVue = createLocalVue()
+localVue.use(VueI18n)
+localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({locale: 'en', messages})
 
@@ -20,7 +26,15 @@ describe('FacetPath.vue', () => {
   var wrapped = null
 
   before(async () => {
-    wrapped = mount(FacetPath, { i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, { name: 'path' }) } })
+    wrapped = mount(FacetPath, {
+      localVue,
+      i18n,
+      router,
+      store,
+      propsData: {
+        facet: find(store.state.aggregation.facets, { name: 'path' })
+      }
+    })
   })
 
   it('should display an empty tree', () => {
@@ -36,7 +50,7 @@ describe('FacetPath.vue', () => {
     await letData(es).have(new IndexedDocument('/root/folder_02/folder_03/doc_03.txt').withContent('document').withContentType('text/javascript')).commit()
 
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     // Check that the facet is displayed
     expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree').length).to.equal(1)

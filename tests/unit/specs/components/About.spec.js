@@ -1,14 +1,19 @@
+import VueI18n from 'vue-i18n'
 import { createLocalVue, mount } from '@vue/test-utils'
-import About from '@/components/About'
+import sinon from 'sinon'
+import { expect } from 'chai'
+import fetchPonyfill from 'fetch-ponyfill';
 
+const { fetch, Response } = fetchPonyfill()
+window.fetch = fetch
+
+import About from '@/components/About'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 
-import Vue from 'vue'
-import VueI18n from 'vue-i18n'
-
-Vue.use(VueI18n)
+const localVue = createLocalVue()
+localVue.use(VueI18n)
 
 const i18n = new VueI18n({locale: 'en', messages})
 
@@ -17,8 +22,6 @@ describe('About.vue', () => {
 
   beforeEach(() => {
     sinon.stub(window, 'fetch')
-    const localVue = createLocalVue()
-    localVue.use(VueI18n)
   })
 
   afterEach(() => {
@@ -27,8 +30,8 @@ describe('About.vue', () => {
 
   it('should display client git sha1', () => {
     window.fetch.returns(jsonOk({}))
-    wrapped = mount(About, {i18n, router, store})
-    let sha1 = wrapped.vm.$el.querySelectorAll('.about dd')[1].textContent
+    wrapped = mount(About, {localVue, i18n, router, store})
+    let sha1 = wrapped.vm.clientHash
     expect(sha1.match(/[a-z0-9]*/)[0]).to.equal(sha1)
     expect(sha1.length).to.equal(7)
   })
@@ -56,16 +59,15 @@ describe('About.vue', () => {
       'git.commit.id': 'sha1',
       'git.commit.id.abbrev': 'sha1_abbrev'
     }))
-    wrapped = mount(About, {i18n, router, store})
-
-    await Vue.nextTick()
+    wrapped = mount(About, {localVue, i18n, router, store})
+    await wrapped.vm.promise
     expect(wrapped.vm.$el.querySelectorAll('.about dd')[0].textContent).to.equal('version')
     expect(wrapped.vm.$el.querySelectorAll('.about dd')[2].textContent).to.equal('sha1_abbrev')
   })
 })
 
 function jsonOk (body) {
-  const mockResponse = new window.Response(JSON.stringify(body), {
+  const mockResponse = new Response(JSON.stringify(body), {
     status: 200,
     headers: {
       'Content-type': 'application/json'

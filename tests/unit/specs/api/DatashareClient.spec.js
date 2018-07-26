@@ -1,16 +1,21 @@
+import { expect } from 'chai'
+import sinon from 'sinon'
 import { DatashareClient } from '@/api/DatashareClient'
+import fetchPonyfill from 'fetch-ponyfill';
+
+const { Response } = fetchPonyfill()
+const ds = new DatashareClient()
 
 describe('Datashare backend client', () => {
-  var ds = new DatashareClient()
 
   beforeEach(() => {
-    sinon.stub(window, 'fetch')
-    sinon.stub(window.location, 'assign')
+    sinon.stub(ds, 'fetch')
+    sinon.stub(ds, 'redirectToAuth')
   })
 
   afterEach(() => {
-    window.fetch.restore()
-    window.location.assign.restore()
+    ds.fetch.restore()
+    ds.redirectToAuth.restore()
   })
 
   it('should return backend response to createIndex', async () => {
@@ -23,13 +28,12 @@ describe('Datashare backend client', () => {
   it('should redirect to signin page if backend response to createIndex is 401', async () => {
     fetchReturns(401, {})
     await ds.createIndex()
-    sinon.assert.calledOnce(window.location.assign)
-    expect(window.location.assign.getCall(0).args).to.deep.equal(['http://localhost:9876' + process.env.CONFIG.ds_auth_signin])
+    sinon.assert.calledOnce(ds.redirectToAuth)
   })
 })
 
 function fetchReturns (status, json) {
-  window.fetch.returns(Promise.resolve(new window.Response(JSON.stringify(json), {
+  ds.fetch.returns(Promise.resolve(new Response(JSON.stringify(json), {
     status: status,
     headers: {
       'Content-type': 'application/json'

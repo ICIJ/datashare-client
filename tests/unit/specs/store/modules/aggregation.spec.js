@@ -7,6 +7,7 @@ import omit from 'lodash/omit'
 import functionsIn from 'lodash/functionsIn'
 import each from 'lodash/each'
 import find from 'lodash/find'
+import { expect } from 'chai'
 
 import { IndexedDocument, letData } from '../../../es_utils'
 import esConnectionHelper from '../../utils/esConnectionHelper'

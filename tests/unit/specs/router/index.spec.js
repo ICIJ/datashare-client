@@ -2,6 +2,7 @@ import { createLocalVue } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import { setCookie, removeCookie } from 'tiny-cookie'
+import { expect } from 'chai'
 
 import store from '@/store'
 import messages from '@/messages'
@@ -34,28 +35,28 @@ describe('router', () => {
   })
 
   it('should redirect to /login if no cookie', async () => {
-    removeCookie(process.env.CONFIG.ds_cookie_name)
+    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
     await vm.$router.push('search')
     await vm.$nextTick()
     expect(vm.$route.path).to.equal('/login')
   })
 
   it('should redirect to /login if cookie is null', async () => {
-    setCookie(process.env.CONFIG.ds_cookie_name, null)
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, null)
     await vm.$router.push('search')
     await vm.$nextTick()
     expect(vm.$route.path).to.equal('/login')
   })
 
   it('should redirect to /login if cookie has no login property', async () => {
-    setCookie(process.env.CONFIG.ds_cookie_name, 'yolo', JSON.stringify)
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, 'yolo', JSON.stringify)
     await vm.$router.push('search')
     await vm.$nextTick()
     expect(vm.$route.path).to.equal('/login')
   })
 
   it('should not redirect to /login when we have the right cookie', async () => {
-    setCookie(process.env.CONFIG.ds_cookie_name, { 'login': 'yolo' }, JSON.stringify)
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'yolo' }, JSON.stringify)
     await vm.$router.push('search')
     await vm.$nextTick()
     expect(vm.$route.path).to.not.equal('/login')

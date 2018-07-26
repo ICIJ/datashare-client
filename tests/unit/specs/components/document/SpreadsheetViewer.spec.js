@@ -1,8 +1,8 @@
-import {mount} from '@vue/test-utils'
+import { mount } from '@vue/test-utils'
 import Vue from 'vue'
 import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
 
-describe('SpreadsheetViewer.vue', () => {
+describe.skip('SpreadsheetViewer.vue', () => {
   it('should display error when CSV file is not found', async () => {
     var wrapped = mount(SpreadsheetViewer, {propsData: {'url': 'invalid.csv', type: 'text/csv'}})
     await wrapped.vm.getWorkbook()
