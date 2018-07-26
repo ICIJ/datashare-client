@@ -1,8 +1,9 @@
-import 'whatwg-fetch'
-
-console.log(process.env)
+import fetchPonyfill from 'fetch-ponyfill'
 
 export class DatashareClient {
+  constructor ({ fetch = window.fetch || fetchPonyfill().fetch } = { }) {
+    this.fetch = fetch
+  }
   index (options) {
     return this.sendAction(`/api/task/index/file`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
   }
@@ -22,11 +23,10 @@ export class DatashareClient {
     return this.sendAction('/version')
   }
   static getFullUrl (url) {
-    let dsHost = process.env.VUE_APP_DS_HOST || ''
-    return `${dsHost}${url}`
+    return `${process.env.VUE_APP_DS_HOST || ''}${url}`
   }
   getSource (relativeUrl) {
-    return fetch(DatashareClient.getFullUrl(relativeUrl), {credentials: 'same-origin'}).then((r) => {
+    return this.fetch(DatashareClient.getFullUrl(relativeUrl), {credentials: 'same-origin'}).then((r) => {
       if (r.status >= 200 && r.status < 300) {
         return r
       } else if (r.status === 401) {
@@ -40,7 +40,7 @@ export class DatashareClient {
   }
 
   sendAction (url, params) {
-    return fetch(DatashareClient.getFullUrl(url), params).then((r) => {
+    return this.fetch(DatashareClient.getFullUrl(url), params).then((r) => {
       if (r.status === 401) {
         this.redirectToAuth()
       } else {
@@ -50,7 +50,8 @@ export class DatashareClient {
   }
 
   redirectToAuth () {
-    window.location.assign(window.location.protocol + '//' +
-      window.location.hostname + ':' + window.location.port + process.env.VUE_APP_DS_AUTH_SIGNIN)
+    window.location.assign(process.env.VUE_APP_DS_AUTH_SIGNIN)
   }
 }
+
+export default DatashareClient

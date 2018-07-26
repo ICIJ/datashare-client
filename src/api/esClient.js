@@ -89,6 +89,7 @@ export function searchPlugin (Client, config, components) {
         }
       }
     })
+
     // Return a promise that build the body composed above
     return this.search({
       index: process.env.VUE_APP_ES_INDEX,
@@ -102,14 +103,14 @@ export function searchPlugin (Client, config, components) {
 
 let handle401Error = (err) => {
   if (err && err.status === 401) {
-    window.location.assign(window.location.protocol + '//' + window.location.hostname + ':' + window.location.port + process.env.VUE_APP_DS_AUTH_SIGNIN)
+    window.location.assign(process.env.VUE_APP_DS_AUTH_SIGNIN)
   } else {
     throw err
   }
 }
 
 const esClient = new es.Client({
-  host: process.env.VUE_APP_ES_HOST || window.location.hostname + ':' + window.location.port + '/api/search',
+  host: process.env.VUE_APP_ES_HOST,
   plugins: [ docPlugin, searchPlugin ]
 })
 
