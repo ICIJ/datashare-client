@@ -1,5 +1,3 @@
-import Response from '@/api/Response'
-
 import filter from 'lodash/filter'
 import includes from 'lodash/includes'
 import slice from 'lodash/slice'
@@ -7,11 +5,16 @@ import toLower from 'lodash/toLower'
 import toString from 'lodash/toString'
 import each from 'lodash/each'
 
+import Response from '@/api/Response'
+import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { removeDiacritics } from '@/utils/strings.js'
 
 const initialNumberOfFilesDisplayed = 5
 
 export const mixin = {
+  components: {
+    ContentPlaceholder
+  },
   data () {
     return {
       facetQuery: '',

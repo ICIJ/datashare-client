@@ -23,6 +23,7 @@
 // Components
 import AggregationsPanel from './AggregationsPanel'
 import SearchResults from './SearchResults'
+import ContentPlaceholder from './ContentPlaceholder'
 
 import { mapState } from 'vuex'
 
@@ -35,7 +36,8 @@ export default {
   },
   components: {
     AggregationsPanel,
-    SearchResults
+    SearchResults,
+    ContentPlaceholder
   },
   beforeRouteUpdate (to, from, next) {
     if (to.name === 'search') {
