@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import { getField, updateField } from 'vuex-map-fields'
-import {DatashareClient} from '@/api/DatashareClient'
+import { DatashareClient } from '@/api/DatashareClient'
 
 Vue.use(Vuex)
 const datashare = new DatashareClient()
@@ -9,9 +9,14 @@ const datashare = new DatashareClient()
 function initialState () {
   return {
     form: {
-      action: 'index',
-      pipeline: 'CORENLP',
-      ocr: false
+      index: false,
+      findNames: false,
+      ocr: 0,
+      pipeline_corenlp: false,
+      pipeline_opennlp: false,
+      pipeline_mitie: false,
+      pipeline_ixapipe: false,
+      pipeline_gatenlp: false
     },
     pollHandle: null,
     tasks: []
@@ -50,15 +55,13 @@ export const mutations = {
 
 export const actions = {
   query ({ state, commit }) {
-    switch (state.form.action) {
-      case 'index' :
-        datashare.index({ocr: state.form.ocr})
-        break
-      case 'findNames' :
-        datashare.findNames(state.form.pipeline, {resume: true})
-        break
-      default :
-        break
+    if (state.form.index) datashare.index({ ocr: state.form.ocr })
+    if (state.form.findNames) {
+      if (state.form.pipeline_corenlp) datashare.findNames('CORENLP', { resume: true })
+      if (state.form.pipeline_opennlp) datashare.findNames('OPENNLP', { resume: true })
+      if (state.form.pipeline_mitie) datashare.findNames('MITIE', { resume: true })
+      if (state.form.pipeline_ixapipe) datashare.findNames('IXAPIPE', { resume: true })
+      if (state.form.pipeline_gatenlp) datashare.findNames('GATENLP', { resume: true })
     }
   },
   cleanTasks ({ state, commit }) {

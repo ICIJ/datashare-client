@@ -61,14 +61,25 @@
       "download_button": "Download"
     },
     "indexing": {
+      "yes": "Yes",
+      "no": "No",
+      "previous": "Previous",
+      "next": "Next",
       "btnLabel": "Go",
       "stages": "Stages",
-      "index_stage_label": "extract text",
-      "findNames_stage_label": "find names",
+      "index_stage_label": "Extract text",
+      "findNames_stage_label": "Find names",
       "purge": "Delete done tasks",
       "ongoing": "Tasks",
-      "new": "New task",
-      "enable_ocr": "enable Optical Character Recognition"
+      "step_01": "What do you want to do ?",
+      "step_02": "While indexing, do you want to do the OCR ?",
+      "step_03": "Which NLP pipeline(s) would you run ?",
+      "step_04": "Ready ?",
+      "choose_one_action": "Please, choose at least one action",
+      "choose_one_pipeline": "Please, choose at least one NLP pipeline",
+      "ocr": "OCR",
+      "pipelines": "Pipelines",
+      "correct_errors": "Please correct the following error(s) :"
     },
     "menu": {
       "help": "Ask for help",
@@ -144,10 +155,23 @@
       "download_button": "Télécharger"
     },
     "indexing": {
+      "yes": "Oui",
+      "no": "Non",
+      "previous": "Précédent",
+      "next": "Suivant",
       "btnLabel": "Go",
       "stages": "Étapes",
-      "index_stage_label": "indexation",
-      "extract_stage_label": "trouver les noms"
+      "index_stage_label": "Extraction des textes",
+      "extract_stage_label": "Trouver les noms",
+      "step_01": "Que voulez-vous faire ?",
+      "step_02": "Pendant l'indexation, voulez-vous faire de l'OCR ?",
+      "step_03": "Quel(s) algo(s) de NLP voulez-vous lancer ?",
+      "step_04": "Prêts ?",
+      "choose_one_action": "Merci de choisir au moins une action",
+      "choose_one_pipeline": "Merci de choisir au moins un algo de NLP",
+      "ocr": "OCR",
+      "pipelines": "Algo(s)",
+      "correct_errors": "Merci de corriger les erreurs suivantes :"
     },
     "menu": {
       "help": "Demander de l'aide",

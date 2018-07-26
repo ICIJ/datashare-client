@@ -16,10 +16,10 @@ describe('Indexing.vue', () => {
   var wrapped = null
 
   beforeEach(() => {
+    sinon.stub(window, 'fetch')
     const localVue = createLocalVue()
     localVue.use(VueI18n)
     wrapped = mount(Indexing, {i18n, router, store})
-    sinon.stub(window, 'fetch')
   })
 
   afterEach(() => {
@@ -46,44 +46,21 @@ describe('Indexing.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[1].textContent).to.contain('baz(456)')
   })
 
-  it('should call index as default action', async () => {
+  it('should call index when index action is selected', () => {
     window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', { path: 'form.index', value: true })
+
     store.dispatch('indexing/query')
-    await Vue.nextTick()
 
     sinon.assert.calledOnce(window.fetch)
     sinon.assert.calledWith(window.fetch, '/api/task/index/file',
-      {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
+      {method: 'POST', body: JSON.stringify({options: {ocr: 0}}), credentials: 'same-origin'})
   })
 
-  it('should call index when index action is selected', async () => {
+  it('should call findNames when selected action is findNames with the correct pipeline', () => {
     window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
-
-    store.dispatch('indexing/query')
-    await Vue.nextTick()
-
-    sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/api/task/index/file',
-      {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
-  })
-
-  it('should call findNames when selected action is findNames', async () => {
-    window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
-
-    store.dispatch('indexing/query')
-    wrapped.update()
-
-    sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/api/task/findNames/PIPELINE',
-      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-  })
-
-  it('should set corenlp as default pipeline', async () => {
-    window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
+    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    store.commit('indexing/updateField', { path: 'form.pipeline_corenlp', value: true })
 
     store.dispatch('indexing/query')
     wrapped.update()
@@ -93,53 +70,76 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
-  it('should disable resume if selected action is findNames', async () => {
-    window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
-
-    store.dispatch('indexing/query')
-    wrapped.update()
-
-    sinon.assert.calledWith(window.fetch, '/api/task/findNames/PIPELINE',
-      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-  })
-
   it('should call index action with ocr option', async () => {
     window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
-    store.commit('indexing/updateField', {path: 'form.ocr', value: true})
+    store.commit('indexing/updateField', {path: 'form.index', value: true})
+    store.commit('indexing/updateField', {path: 'form.ocr', value: 1})
 
     store.dispatch('indexing/query')
     wrapped.update()
 
     sinon.assert.calledOnce(window.fetch)
     sinon.assert.calledWith(window.fetch, '/api/task/index/file',
-      {method: 'POST', body: JSON.stringify({options: {ocr: true}}), credentials: 'same-origin'})
+      {method: 'POST', body: JSON.stringify({options: {ocr: 1}}), credentials: 'same-origin'})
   })
 
-  it('should display ocr option if selected action is index', async () => {
-    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
-    wrapped.update()
-    expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(1)
+  it('should set first step as default step', () => {
+    expect(wrapped.vm.step).to.equal(1)
+    expect(wrapped.vm.errors.length).to.equal(0)
   })
 
-  it('should hide ocr option if selected action is not index', async () => {
-    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    wrapped.update()
-    expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(0)
+  it('should diplay an error message', async () => {
+    window.fetch.returns(jsonOk({}))
+    await wrapped.vm.next()
+    await Vue.nextTick()
+    expect(wrapped.vm.errors.length).to.equal(1)
+    expect(wrapped.vm.step).to.equal(1)
   })
 
-  it('should display pipeline choice if selected action is findNames', async () => {
-    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    wrapped.update()
-    expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(1)
+  it('should diplay the second step of the wizard', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', {path: 'form.index', value: true})
+    await wrapped.vm.next()
+    await Vue.nextTick()
+    expect(wrapped.vm.step).to.equal(2)
+    expect(wrapped.vm.errors.length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_02').length).to.equal(1)
+    expect(wrapped.vm.ocr).to.equal(0)
   })
 
-  it('should hide pipeline choice if selected action is not findNames', async () => {
-    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
-    wrapped.update()
-    expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(0)
+  it('should display the third step of the wizard', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
+    await wrapped.vm.next()
+    await Vue.nextTick()
+    expect(wrapped.vm.step).to.equal(3)
+    expect(wrapped.vm.errors.length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_03').length).to.equal(1)
+  })
+
+  it('should display an error if no NLP pipeline is choosen', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
+    await wrapped.vm.next()
+    await wrapped.vm.next()
+    await Vue.nextTick()
+    expect(wrapped.vm.step).to.equal(3)
+    expect(wrapped.vm.errors.length).to.equal(1)
+  })
+
+  it('should display the last and final step', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', {path: 'form.index', value: true})
+    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
+    store.commit('indexing/updateField', {path: 'form.pipeline_opennlp', value: true})
+    await wrapped.vm.next()
+    await wrapped.vm.next()
+    await wrapped.vm.next()
+    await Vue.nextTick()
+    expect(wrapped.vm.step).to.equal(4)
+    expect(wrapped.vm.errors.length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_04').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_04 button[type=submit]').length).to.equal(1)
   })
 })
 
