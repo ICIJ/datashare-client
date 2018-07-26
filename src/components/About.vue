@@ -28,14 +28,17 @@ export default {
   computed: {
     clientHash () {
       return process.env.VUE_APP_GIT_HASH.substring(0, 7)
+    },
+    promise () {
+      return new DatashareClient().getVersion().then(r => r.json())
     }
   },
   methods: {
     getServerVersion () {
-      return new DatashareClient().getVersion().then(r => r.json().then(json => {
-        this.serverHash = json['git.commit.id.abbrev']
-        this.serverVersion = json['git.build.version']
-      }))
+      return this.promise.then(res => {
+        this.serverHash = res['git.commit.id.abbrev']
+        this.serverVersion = res['git.build.version']
+      })
     }
   }
 }
