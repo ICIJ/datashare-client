@@ -12,6 +12,7 @@ import get from 'lodash/get'
 
 function initialState () {
   return {
+    globalSearch: true,
     facets: [
       {
         name: 'content-type',
@@ -84,6 +85,9 @@ export const mutations = {
     const s = initialState()
     Object.keys(s).forEach(key => { state[key] = s[key] })
   },
+  setGlobalSearch (state, globalSearch) {
+    state.globalSearch = globalSearch
+  },
   addFacet (state, facet) {
     if (!isAValidFacet(facet)) {
       throw new Error('Facet is malformed')
@@ -103,10 +107,12 @@ export const getters = {
     return predicate => {
       // Find the Bodybuilder instance for this faet using a predicate
       const body = getters.getFacet(predicate).body(bodybuilder())
-      // The aggregation must not be global (but relative to a search)
+      // If the aggregation must not be global (relative to a search)
       // we add the query conditions to the body.
-      esClient.addFacetsToBody(rootState.search.facets, body)
-      esClient.addQueryToBody(rootState.search.query, body)
+      if (!state.globalSearch) {
+        esClient.addFacetsToBody(rootState.search.facets, body)
+        esClient.addQueryToBody(rootState.search.query, body)
+      }
       // We finally build the body with no docs (size 0) to avoid loading
       // content twice.
       return body.size(0).build()
