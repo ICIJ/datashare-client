@@ -10,7 +10,7 @@ jobs:
           - "cluster.name=datashare"
           # CORS
           - "http.cors.enabled=true"
-          - "http.cors.allow-origin=\"*\""
+          - "http.cors.allow-origin=*"
           - "http.cors.allow-methods=OPTIONS, HEAD, GET, POST, PUT, DELETE"
         name: elasticsearch
 
