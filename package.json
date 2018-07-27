@@ -18,7 +18,7 @@
     "@fortawesome/vue-fontawesome": "^0.0.22",
     "bodybuilder": "^2.2.10",
     "bootstrap": "4.0.0",
-    "elasticsearch-browser": "^14.1.0",
+    "elasticsearch-browser": "^15.1.1",
     "es6-promise": "^4.2.4",
     "fetch-ponyfill": "^6.0.2",
     "handsontable": "^2.0.0",

@@ -21,7 +21,7 @@ const esConnectionHelper = () => {
   beforeEach(async () => {
     await es.deleteByQuery({ index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}} })
     // Easy Tiger! Elasticsearch can hardly follow
-    await setTimeout(noop, 2000)
+    await setTimeout(noop, 5000)
   })
 }
 

@@ -1,5 +1,6 @@
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const { join } = require('path')
+const { setCookie } = require('tiny-cookie')
 
 const resolve = filepath => join(__dirname, filepath)
 const gitRevisionPlugin = new GitRevisionPlugin()
@@ -32,10 +33,12 @@ module.exports = {
       .set('mixins', resolve('src/mixins'))
       .set('tests', resolve('tests'))
 
-    /* if (process.env.NODE_ENV === 'test' || true) {
-      const app = require('express')()
+    if (process.env.NODE_ENV === 'test' || true) {
+      // Log the user by default
+      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'TOKEN' }, JSON.stringify)
+      /* const app = require('express')()
       app.use(require('serve-static')('tests/unit/resources'))
-      app.listen(9876)
-    } */
+      app.listen(9876) */
+    }
   }
 }
