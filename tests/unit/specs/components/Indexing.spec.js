@@ -2,7 +2,7 @@ import VueI18n from 'vue-i18n'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { expect } from 'chai'
 import sinon from 'sinon'
-import fetchPonyfill from 'fetch-ponyfill';
+import fetchPonyfill from 'fetch-ponyfill'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Indexing from '@/components/Indexing'
@@ -81,10 +81,9 @@ describe('Indexing.vue', () => {
     store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
 
     store.dispatch('indexing/query')
-    wrapped.update()
 
     sinon.assert.calledOnce(datashare.fetch)
-    sinon.assert.calledWith(datashare.fetch,  DatashareClient.getFullUrl('/api/task/findNames/PIPELINE'),
+    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/PIPELINE'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
@@ -93,10 +92,9 @@ describe('Indexing.vue', () => {
     store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
 
     store.dispatch('indexing/query')
-    wrapped.update()
 
     sinon.assert.calledOnce(datashare.fetch)
-    sinon.assert.calledWith(datashare.fetch,  DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
+    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
@@ -106,7 +104,6 @@ describe('Indexing.vue', () => {
     store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
 
     store.dispatch('indexing/query')
-    wrapped.update()
 
     sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/PIPELINE'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
@@ -118,7 +115,6 @@ describe('Indexing.vue', () => {
     store.commit('indexing/updateField', {path: 'form.ocr', value: true})
 
     store.dispatch('indexing/query')
-    wrapped.update()
 
     sinon.assert.calledOnce(datashare.fetch)
     sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/index/file'),
@@ -127,25 +123,21 @@ describe('Indexing.vue', () => {
 
   it('should display ocr option if selected action is index', () => {
     store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
-    wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(1)
   })
 
   it('should hide ocr option if selected action is not index', () => {
     store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(0)
   })
 
   it('should display pipeline choice if selected action is findNames', () => {
     store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(1)
   })
 
   it('should hide pipeline choice if selected action is not findNames', () => {
     store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
-    wrapped.update()
     expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(0)
   })
 })
