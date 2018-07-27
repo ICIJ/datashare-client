@@ -1,5 +1,6 @@
 import { createLocalVue, mount } from 'vue-test-utils'
 import Indexing from '@/components/Indexing'
+import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 
 import messages from '@/messages'
 import router from '@/router'
@@ -12,8 +13,9 @@ Vue.use(VueI18n)
 
 const i18n = new VueI18n({locale: 'en', messages})
 
-describe('Indexing.vue', () => {
+describe.only('Indexing.vue', () => {
   var wrapped = null
+  esConnectionHelper()
 
   beforeEach(() => {
     sinon.stub(window, 'fetch')
@@ -27,7 +29,7 @@ describe('Indexing.vue', () => {
     wrapped.vm.$store.commit('indexing/reset')
   })
 
-  it('should begin/stop polling when route enter/leave', async () => {
+  it('should begin/stop polling when route enter/leave', () => {
     router.push('indexing')
     expect(wrapped.vm.$store.state.indexing.pollHandle).to.not.equal(undefined)
 
@@ -91,16 +93,16 @@ describe('Indexing.vue', () => {
   it('should diplay an error message', async () => {
     window.fetch.returns(jsonOk({}))
     await wrapped.vm.next()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.errors.length).to.equal(1)
     expect(wrapped.vm.step).to.equal(1)
   })
 
   it('should diplay the second step of the wizard', async () => {
     window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.index', value: true})
+    store.commit('indexing/updateField', { path: 'form.index', value: true })
     await wrapped.vm.next()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.step).to.equal(2)
     expect(wrapped.vm.errors.length).to.equal(0)
     expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_02').length).to.equal(1)
@@ -109,9 +111,9 @@ describe('Indexing.vue', () => {
 
   it('should display the third step of the wizard', async () => {
     window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
+    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
     await wrapped.vm.next()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.step).to.equal(3)
     expect(wrapped.vm.errors.length).to.equal(0)
     expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_03').length).to.equal(1)
@@ -119,23 +121,23 @@ describe('Indexing.vue', () => {
 
   it('should display an error if no NLP pipeline is choosen', async () => {
     window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
+    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
     await wrapped.vm.next()
     await wrapped.vm.next()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.step).to.equal(3)
     expect(wrapped.vm.errors.length).to.equal(1)
   })
 
-  it('should display the last and final step', async () => {
+  it.only('should display the last and final step', async () => {
     window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.index', value: true})
-    store.commit('indexing/updateField', {path: 'form.findNames', value: true})
-    store.commit('indexing/updateField', {path: 'form.pipeline_opennlp', value: true})
+    store.commit('indexing/updateField', { path: 'form.index', value: true })
+    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    store.commit('indexing/updateField', { path: 'form.pipeline_opennlp', value: true })
     await wrapped.vm.next()
     await wrapped.vm.next()
     await wrapped.vm.next()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.step).to.equal(4)
     expect(wrapped.vm.errors.length).to.equal(0)
     expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_04').length).to.equal(1)
