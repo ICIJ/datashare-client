@@ -10,9 +10,11 @@ import store from '@/store'
 import { IndexedDocument, letData } from '../../../es_utils'
 import esConnectionHelper from '../../utils/esConnectionHelper'
 
-describe('Aggregation store', () => {
+describe('Aggregation store', function () {
   esConnectionHelper()
   let es = esConnectionHelper.es
+  // High timeout because multiple searches can be heavy for the Elasticsearch
+  this.timeout(1e4)
 
   before(async () => {
     store.commit('aggregation/reset')

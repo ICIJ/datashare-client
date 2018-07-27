@@ -1,6 +1,9 @@
+import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import { mount, createLocalVue } from '@vue/test-utils'
 import { expect } from 'chai'
+
+import esConnectionHelper from '../utils/esConnectionHelper'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import SearchResultsItem from '@/components/SearchResultsItem'
@@ -12,11 +15,14 @@ import store from '@/store'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Vuex)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({ locale: 'en', messages })
 
-describe('Indexing.vue', () => {
+describe('SearchResultsItem.vue', () => {
+  esConnectionHelper()
+
   it('should reduce named entities : zero named entities', async () => {
     var wrapped = mount(SearchResultsItem, {localVue, i18n, router, store, propsData: {'doc': new Document({_source: {path: 'a/b/c/foo.txt'}})}})
     expect(wrapped.vm.namedEntities).to.eql([])

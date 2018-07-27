@@ -4,6 +4,7 @@ import store from '@/store'
 
 import { createLocalVue, mount } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
+import Vuex from 'vuex'
 import VueProgressBar from 'vue-progressbar'
 import { expect } from 'chai'
 
@@ -12,6 +13,7 @@ import App from '@/components/App'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Vuex)
 localVue.use(VueProgressBar, { color: '#852308' })
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 

@@ -1,13 +1,12 @@
 import { expect } from 'chai'
 import sinon from 'sinon'
 import { DatashareClient } from '@/api/DatashareClient'
-import fetchPonyfill from 'fetch-ponyfill';
+import fetchPonyfill from 'fetch-ponyfill'
 
 const { Response } = fetchPonyfill()
 const ds = new DatashareClient()
 
 describe('Datashare backend client', () => {
-
   beforeEach(() => {
     sinon.stub(ds, 'fetch')
     sinon.stub(ds, 'redirectToAuth')

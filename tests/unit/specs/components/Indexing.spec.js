@@ -1,3 +1,4 @@
+import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { expect } from 'chai'
@@ -16,6 +17,7 @@ import { DatashareClient } from '@/api/DatashareClient'
 const { Response } = fetchPonyfill()
 
 const localVue = createLocalVue()
+localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 

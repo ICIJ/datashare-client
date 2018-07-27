@@ -1,24 +1,27 @@
 import elasticsearch from 'elasticsearch-browser'
 import esMapping from '@/datashare_index_mappings.json'
+import noop from 'lodash/noop'
 
 let es = new elasticsearch.Client({host: process.env.VUE_APP_ES_HOST})
-let esIndex = process.env.VUE_APP_ES_INDEX
+let index = process.env.VUE_APP_ES_INDEX
 
 const esConnectionHelper = () => {
   before(async () => {
-    if (await es.indices.exists({index: esIndex})) {
-      await es.indices.delete({index: esIndex})
+    if (!await es.indices.exists({ index })) {
+      await es.indices.create({ index })
+      await es.indices.putMapping({ index, type: 'doc', body: esMapping })
     }
-    await es.indices.create({index: esIndex})
-    await es.indices.putMapping({index: esIndex, type: 'doc', body: esMapping})
   })
 
   after(async () => {
-    await es.indices.delete({index: esIndex})
+    // await es.indices.delete({ index, ignoreUnavailable: true })
+    await es.deleteByQuery({ index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}} })
   })
 
   beforeEach(async () => {
-    await es.deleteByQuery({index: esIndex, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}}})
+    await es.deleteByQuery({ index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}} })
+    // Easy Tiger! Elasticsearch can hardly follow
+    await setTimeout(noop, 2000)
   })
 }
 

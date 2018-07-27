@@ -9,9 +9,11 @@ import esConnectionHelper from '../../utils/esConnectionHelper'
 import cloneDeep from 'lodash/cloneDeep'
 import { expect, assert } from 'chai'
 
-describe('Search store', () => {
+describe('Search store', function () {
   esConnectionHelper()
   let es = esConnectionHelper.es
+  // High timeout because multiple searches can be heavy for the Elasticsearch
+  this.timeout(1e4)
 
   afterEach(async () => store.commit('search/reset'))
 

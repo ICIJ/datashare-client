@@ -1,18 +1,21 @@
+import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+
 import { createLocalVue, mount } from '@vue/test-utils'
 import sinon from 'sinon'
 import { expect } from 'chai'
-import fetchPonyfill from 'fetch-ponyfill';
-
-const { fetch, Response } = fetchPonyfill()
-window.fetch = fetch
+import fetchPonyfill from 'fetch-ponyfill'
 
 import About from '@/components/About'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 
+const { fetch, Response } = fetchPonyfill()
+window.fetch = fetch
+
 const localVue = createLocalVue()
+localVue.use(Vuex)
 localVue.use(VueI18n)
 
 const i18n = new VueI18n({locale: 'en', messages})

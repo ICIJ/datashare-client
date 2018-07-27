@@ -1,5 +1,4 @@
-import 'es6-promise/auto'
-
+import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 
@@ -20,6 +19,7 @@ import FacetNamedEntity from '@/components/FacetNamedEntity'
 import {IndexedDocument, letData} from '../../es_utils'
 
 const localVue = createLocalVue()
+localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -39,6 +39,9 @@ describe('FacetNamedEntity.vue', () => {
         facet: find(store.state.aggregation.facets, {name: 'named-entity'})
       }
     })
+
+    wrapped.vm.$store.commit('aggregation/reset')
+    await wrapped.vm.aggregate()
   })
 
   afterEach(async () => store.commit('search/reset'))
@@ -60,8 +63,7 @@ describe('FacetNamedEntity.vue', () => {
   })
 
   it('should display two named entities in one document', async () => {
-    await letData(es).have(new IndexedDocument('docs/qux.txt').withContent('this is a document')
-      .withNer('qux').withNer('foo')).commit()
+    await letData(es).have(new IndexedDocument('docs/qux.txt').withContent('this is a document').withNer('qux').withNer('foo')).commit()
     await wrapped.vm.aggregate()
     await wrapped.vm.$nextTick()
 

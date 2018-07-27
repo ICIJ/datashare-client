@@ -1,3 +1,4 @@
+import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import { mount, createLocalVue } from '@vue/test-utils'
@@ -18,6 +19,7 @@ import { IndexedDocuments, IndexedDocument, letData } from '../../es_utils'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Vuex)
 localVue.use(VueProgressBar, { color: '#852308' })
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
@@ -27,7 +29,7 @@ describe('Search.vue', function () {
   esConnectionHelper()
   var es = esConnectionHelper.es
   var wrapped = null
-  // Hight timeout because multiple searches can be heavy for the Elasticsearch
+  // High timeout because multiple searches can be heavy for the Elasticsearch
   this.timeout(1e4)
 
   before(() => {

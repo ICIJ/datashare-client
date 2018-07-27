@@ -70,7 +70,7 @@ export const mixin = {
       if (this.facet) {
         this.isReady = false
         this.response = Response.none()
-        return this.$store.dispatch('aggregation/query', this.facet).then(r => {
+        return this.$store.dispatch('aggregation/query', { name: this.facet.name }).then(r => {
           this.response = this.addInvertedFacets(r)
           this.isReady = true
         })

@@ -1,4 +1,6 @@
+import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+
 import { createLocalVue, mount } from '@vue/test-utils'
 import { expect } from 'chai'
 
@@ -12,6 +14,7 @@ import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import DocumentView from '@/components/document/DocumentView'
 
 const localVue = createLocalVue()
+localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 

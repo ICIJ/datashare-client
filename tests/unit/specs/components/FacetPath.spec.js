@@ -1,6 +1,6 @@
-import 'es6-promise/auto'
-
+import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+
 import { mount, createLocalVue } from '@vue/test-utils'
 import { expect } from 'chai'
 
@@ -16,6 +16,7 @@ import find from 'lodash/find'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Vuex)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({locale: 'en', messages})
@@ -35,6 +36,9 @@ describe('FacetPath.vue', () => {
         facet: find(store.state.aggregation.facets, { name: 'path' })
       }
     })
+
+    wrapped.vm.$store.commit('aggregation/reset')
+    await wrapped.vm.aggregate()
   })
 
   it('should display an empty tree', () => {

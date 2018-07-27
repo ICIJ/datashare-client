@@ -1,6 +1,4 @@
-import 'es6-promise/auto'
-
-import Vue from 'vue'
+import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 
 import find from 'lodash/find'
@@ -22,6 +20,7 @@ import FacetText from '@/components/FacetText'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Vuex)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({locale: 'en', messages})
@@ -31,7 +30,7 @@ describe('FacetText.vue', () => {
   var es = esConnectionHelper.es
   var wrapped = null
 
-  beforeEach(() => {
+  beforeEach(async () => {
     FacetText.watchedForUpdate = noop
     wrapped = mount(FacetText, {
       localVue,
@@ -42,6 +41,9 @@ describe('FacetText.vue', () => {
         facet: find(store.state.aggregation.facets, {name: 'content-type'})
       }
     })
+
+    wrapped.vm.$store.commit('aggregation/reset')
+    await wrapped.vm.aggregate()
   })
 
   afterEach(async () => {
