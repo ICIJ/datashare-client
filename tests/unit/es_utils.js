@@ -89,9 +89,9 @@ class IndexBuilder {
       // Copy this array into 'documents' because 'document'
       // will be overwritten by the next call to have
       this.documents = this.document
-      this.documents.forEach(async (item) => {
-        await this.have(item).commit()
-      })
+      for (const doc of this.documents) {
+        await this.have(doc).commit()
+      }
     } else {
       var docId = this.document.path
       let createRequest = {
