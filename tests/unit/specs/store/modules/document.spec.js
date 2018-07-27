@@ -1,25 +1,18 @@
-import Vuex from 'vuex'
-import { state, actions, mutations } from '@/store/modules/document'
 import cloneDeep from 'lodash/cloneDeep'
 import { expect } from 'chai'
 
+import store from '@/store'
+import { initialState } from '@/store/modules/document'
+
 describe('Document store', () => {
-  let store = null
-
-  before(async () => {
-    store = new Vuex.Store({ state, actions, mutations })
-  })
-
-  afterEach(async () => store.commit('reset'))
+  afterEach(async () => store.commit('document/reset'))
 
   it('should define a store module', () => {
-    expect(store.state).to.not.equal(undefined)
+    expect(store.state.document).to.not.equal(undefined)
   })
 
   it('should reset the store state', async () => {
-    let initialState = cloneDeep(store.state)
-    await store.commit('reset')
-
-    expect(store.state).to.deep.equal(initialState)
+    await store.commit('document/reset')
+    expect(store.state.document).to.deep.equal(initialState())
   })
 })
