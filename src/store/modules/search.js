@@ -11,7 +11,7 @@ import reduce from 'lodash/reduce'
 import remove from 'lodash/remove'
 import uniq from 'lodash/uniq'
 
-function initialState () {
+export function initialState () {
   return {
     query: '*',
     from: 0,
@@ -79,7 +79,9 @@ export const mutations = {
   reset (state) {
     // acquire initial state
     const s = initialState()
-    Object.keys(s).forEach(key => { state[key] = s[key] })
+    Object.keys(s).forEach(key => {
+      state[key] = s[key]
+    })
   },
   query (state, query) {
     state.query = query

@@ -10,7 +10,7 @@ import every from 'lodash/every'
 import find from 'lodash/find'
 import get from 'lodash/get'
 
-function initialState () {
+export function initialState () {
   return {
     facets: [
       {
@@ -84,6 +84,12 @@ export const mutations = {
     const s = initialState()
     Object.keys(s).forEach(key => { state[key] = s[key] })
   },
+  clear (state) {
+    return state.facets.splice(0, state.facets.length)
+  },
+  setFacets (state, facets) {
+    state.facets = facets
+  },
   addFacet (state, facet) {
     if (!isAValidFacet(facet)) {
       throw new Error('Facet is malformed')
@@ -101,8 +107,10 @@ export const getters = {
   },
   buildFacetBody (state, getters, rootState) {
     return predicate => {
-      // Find the Bodybuilder instance for this faet using a predicate
-      const body = getters.getFacet(predicate).body(bodybuilder())
+      // Find the Bodybuilder instance for this facet using a predicate
+      const facet = getters.getFacet(predicate)
+      // Use an empty body if no facet is found
+      const body = facet ? facet.body(bodybuilder()) : bodybuilder()
       // The aggregation must not be global (but relative to a search)
       // we add the query conditions to the body.
       esClient.addFacetsToBody(rootState.search.facets, body)

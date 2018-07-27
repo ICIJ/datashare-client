@@ -1,12 +1,9 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
 import { getField, updateField } from 'vuex-map-fields'
 import { DatashareClient } from '@/api/DatashareClient'
 
-Vue.use(Vuex)
 export const datashare = new DatashareClient()
 
-function initialState () {
+export function initialState () {
   return {
     form: {
       action: 'index',
