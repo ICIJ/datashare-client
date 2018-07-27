@@ -11,4 +11,4 @@ install:
 		yarn
 
 unit:
-		yarn run unit
+		yarn run test:unit
