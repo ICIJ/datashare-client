@@ -54,7 +54,7 @@ describe('Indexing store', () => {
 
     sinon.assert.callCount(window.fetch, 5)
     sinon.assert.calledWith(window.fetch, '/api/task/index/file',
-      {method: 'POST', body: JSON.stringify({options: {ocr: 0}}), credentials: 'same-origin'})
+      {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
     sinon.assert.calledWith(window.fetch, '/api/task/findNames/CORENLP',
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
     sinon.assert.calledWith(window.fetch, '/api/task/findNames/OPENNLP',

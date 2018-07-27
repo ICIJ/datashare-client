@@ -36,13 +36,13 @@
           </div>
           <div class="form-group card-body my-0">
             <div class="form-check">
-              <input class="form-check-input" type="radio" id="yes" value="1" v-model="ocr">
+              <input class="form-check-input" type="radio" id="yes" value="true" v-model="ocr">
               <label class="form-check-label" for="yes">
                 {{ $t('indexing.yes') }}
               </label>
             </div>
             <div class="form-check">
-              <input class="form-check-input" type="radio" id="no" value="0" v-model="ocr">
+              <input class="form-check-input" type="radio" id="no" value="false" v-model="ocr">
               <label class="form-check-label" for="no">
                 {{ $t('indexing.no') }}
               </label>

@@ -13,7 +13,7 @@ Vue.use(VueI18n)
 
 const i18n = new VueI18n({locale: 'en', messages})
 
-describe.only('Indexing.vue', () => {
+describe('Indexing.vue', () => {
   var wrapped = null
   esConnectionHelper()
 
@@ -56,7 +56,7 @@ describe.only('Indexing.vue', () => {
 
     sinon.assert.calledOnce(window.fetch)
     sinon.assert.calledWith(window.fetch, '/api/task/index/file',
-      {method: 'POST', body: JSON.stringify({options: {ocr: 0}}), credentials: 'same-origin'})
+      {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 
   it('should call findNames when selected action is findNames with the correct pipeline', () => {
@@ -75,14 +75,14 @@ describe.only('Indexing.vue', () => {
   it('should call index action with ocr option', async () => {
     window.fetch.returns(jsonOk({}))
     store.commit('indexing/updateField', {path: 'form.index', value: true})
-    store.commit('indexing/updateField', {path: 'form.ocr', value: 1})
+    store.commit('indexing/updateField', {path: 'form.ocr', value: true})
 
     store.dispatch('indexing/query')
     wrapped.update()
 
     sinon.assert.calledOnce(window.fetch)
     sinon.assert.calledWith(window.fetch, '/api/task/index/file',
-      {method: 'POST', body: JSON.stringify({options: {ocr: 1}}), credentials: 'same-origin'})
+      {method: 'POST', body: JSON.stringify({options: {ocr: true}}), credentials: 'same-origin'})
   })
 
   it('should set first step as default step', () => {
@@ -106,7 +106,7 @@ describe.only('Indexing.vue', () => {
     expect(wrapped.vm.step).to.equal(2)
     expect(wrapped.vm.errors.length).to.equal(0)
     expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_02').length).to.equal(1)
-    expect(wrapped.vm.ocr).to.equal(0)
+    expect(wrapped.vm.ocr).to.equal(false)
   })
 
   it('should display the third step of the wizard', async () => {
@@ -129,7 +129,7 @@ describe.only('Indexing.vue', () => {
     expect(wrapped.vm.errors.length).to.equal(1)
   })
 
-  it.only('should display the last and final step', async () => {
+  it('should display the last and final step', async () => {
     window.fetch.returns(jsonOk({}))
     store.commit('indexing/updateField', { path: 'form.index', value: true })
     store.commit('indexing/updateField', { path: 'form.findNames', value: true })

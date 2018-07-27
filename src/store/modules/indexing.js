@@ -11,7 +11,7 @@ function initialState () {
     form: {
       index: false,
       findNames: false,
-      ocr: 0,
+      ocr: false,
       pipeline_corenlp: false,
       pipeline_opennlp: false,
       pipeline_mitie: false,
