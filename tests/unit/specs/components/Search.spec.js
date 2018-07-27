@@ -5,7 +5,7 @@ import { expect } from 'chai'
 
 import noop from 'lodash/noop'
 import trim from 'lodash/trim'
-import 'es6-promise/auto'
+import partial from 'lodash/partial'
 
 import esConnectionHelper from '../utils/esConnectionHelper'
 import messages from '@/messages'
@@ -23,14 +23,28 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({ locale: 'en', messages })
 
-describe('Search.vue', () => {
+describe('Search.vue', function () {
   esConnectionHelper()
   var es = esConnectionHelper.es
   var wrapped = null
-  beforeEach(() => {
+  // Hight timeout because multiple searches can be heavy for the Elasticsearch
+  this.timeout(1e4)
+
+  before(() => {
+    // Remove all facets to avoid unecessary request
+    store.commit('aggregation/clear')
+  })
+
+  after(() => {
+    // And restore all facets!
+    store.commit('aggregation/reset')
+  })
+
+  beforeEach(async () => {
     Search.created = noop
     wrapped = mount(Search, {localVue, i18n, router, store})
-    store.commit('search/reset')
+    wrapped.vm.$store.commit('search/reset')
+    await wrapped.vm.$nextTick()
   })
 
   it('should display no documents found', async () => {
@@ -65,7 +79,7 @@ describe('Search.vue', () => {
 
   it('should make a link without routing for a document', async () => {
     await letData(es).have(new IndexedDocument('doc.txt').withContent('this is a document')).commit()
-    
+
     await wrapped.vm.search('document')
     await wrapped.vm.$nextTick()
 
