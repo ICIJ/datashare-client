@@ -31,6 +31,7 @@ describe('SearchResultsItem.vue', () => {
       store,
       propsData: {
         'doc': new Document({
+          _id: 1,
           _source: {
             path: 'a/b/c/foo.txt'
           }})
@@ -47,6 +48,7 @@ describe('SearchResultsItem.vue', () => {
       store,
       propsData: {
         'doc': new Document({
+          _id: 1,
           _source: {
             path: 'a/b/c/foo.txt'
           },
@@ -79,6 +81,7 @@ describe('SearchResultsItem.vue', () => {
       store,
       propsData: {
         'doc': new Document({
+          _id: 1,
           _source: {
             path: 'a/b/c/foo.txt'
           },
@@ -116,6 +119,7 @@ describe('SearchResultsItem.vue', () => {
       store,
       propsData: {
         'doc': new Document({
+          _id: 1,
           _source: {
             path: 'a/b/c/foo.txt'
           },
