@@ -88,7 +88,7 @@ function initialState () {
         key: 'extractionLevel',
         type: FacetText.name,
         isSearchable: false,
-        itemParam: item => item.key,
+        itemParam: item => ({ name: 'extraction-level', value: item.key }),
         itemLabel: item => get(levels, item.key),
         body: body => body.agg('terms', 'extractionLevel', 'extractionLevel')
       }
