@@ -112,6 +112,7 @@
     ],
     "coverageDirectory": "tests/unit/coverage",
     "collectCoverage": true,
+    "collectCoverageFrom": ["src/**/*.(js|vue)"],
     "testURL": "http://localhost/"
   },
   "gitHooks": {
