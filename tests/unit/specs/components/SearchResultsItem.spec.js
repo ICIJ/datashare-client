@@ -24,22 +24,129 @@ describe('SearchResultsItem.vue', () => {
   esConnectionHelper()
 
   it('should reduce named entities : zero named entities', async () => {
-    var wrapped = mount(SearchResultsItem, {localVue, i18n, router, store, propsData: {'doc': new Document({_source: {path: 'a/b/c/foo.txt'}})}})
+    var wrapped = mount(SearchResultsItem, {
+      localVue,
+      i18n,
+      router,
+      store,
+      propsData: {
+        'doc': new Document({
+          _source: {
+            path: 'a/b/c/foo.txt'
+          }})
+      }
+    })
     expect(wrapped.vm.namedEntities).to.eql([])
   })
 
   it('should reduce named entities : one named entities', async () => {
-    var wrapped = mount(SearchResultsItem, {localVue, i18n, router, store, propsData: {'doc': new Document({_source: {path: 'a/b/c/foo.txt'}, inner_hits: {NamedEntity: {hits: {hits: [{_source: {id: 'id', mention: 'foo'}}]}}}})}})
+    var wrapped = mount(SearchResultsItem, {
+      localVue,
+      i18n,
+      router,
+      store,
+      propsData: {
+        'doc': new Document({
+          _source: {
+            path: 'a/b/c/foo.txt'
+          },
+          inner_hits: {
+            NamedEntity: {
+              hits: {
+                hits: [
+                  {
+                    _source: {
+                      id: 'id',
+                      mention: 'foo'
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        }
+        )
+      }})
+
     expect(wrapped.vm.namedEntities).to.eql([{_source: {id: 'id', mention: 'foo'}}])
   })
 
   it('should reduce named entities : two named entities', async () => {
-    var wrapped = mount(SearchResultsItem, {localVue, i18n, router, store, propsData: {'doc': new Document({_source: {path: 'a/b/c/foo.txt'}, inner_hits: {NamedEntity: {hits: {hits: [{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}]}}}})}})
+    var wrapped = mount(SearchResultsItem, {
+      localVue,
+      i18n,
+      router,
+      store,
+      propsData: {
+        'doc': new Document({
+          _source: {
+            path: 'a/b/c/foo.txt'
+          },
+          inner_hits: {
+            NamedEntity: {
+              hits: {
+                hits: [
+                  {
+                    _source: {
+                      id: 'id',
+                      mention: 'foo'
+                    }
+                  }, {
+                    _source: {
+                      id: 'id_bar',
+                      mention: 'bar'
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        })
+      }
+    })
+
     expect(wrapped.vm.namedEntities).to.eql([{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}])
   })
 
   it('should reduce named entities : two named entities with duplicates', async () => {
-    var wrapped = mount(SearchResultsItem, {localVue, i18n, router, store, propsData: {'doc': new Document({_source: {path: 'a/b/c/foo.txt'}, inner_hits: {NamedEntity: {hits: {hits: [{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id2', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}]}}}})}})
+    var wrapped = mount(SearchResultsItem, {
+      localVue,
+      i18n,
+      router,
+      store,
+      propsData: {
+        'doc': new Document({
+          _source: {
+            path: 'a/b/c/foo.txt'
+          },
+          inner_hits: {
+            NamedEntity: {
+              hits: {
+                hits: [
+                  {
+                    _source: {
+                      id: 'id',
+                      mention: 'foo'
+                    }
+                  }, {
+                    _source: {
+                      id: 'id2',
+                      mention: 'foo'
+                    }
+                  }, {
+                    _source: {
+                      id: 'id_bar',
+                      mention: 'bar'
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        })
+      }
+    })
+
     expect(wrapped.vm.namedEntities).to.eql([{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}])
   })
 })
