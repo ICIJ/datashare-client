@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-// import createPersistedState from 'vuex-persistedstate'
+import createPersistedState from 'vuex-persistedstate'
 
 import aggregation from './modules/aggregation'
 import document from './modules/document'
@@ -11,7 +11,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: { aggregation, document, search, indexing },
-  /* plugins: [
+  plugins: [
     createPersistedState({
       paths: ['search'],
       filter: (mutation) => {
@@ -19,6 +19,6 @@ export default new Vuex.Store({
         return mutation.type.indexOf('search/') === 0
       }
     })
-  ], */
+  ],
   strict: process.env.NODE_ENV !== 'production'
 })
