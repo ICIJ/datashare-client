@@ -85,8 +85,14 @@ export const mutations = {
     const s = initialState()
     Object.keys(s).forEach(key => { state[key] = s[key] })
   },
+  clear (state) {
+    return state.facets.splice(0, state.facets.length)
+  },
   setGlobalSearch (state, globalSearch) {
     state.globalSearch = globalSearch
+  },
+  setFacets (state, facets) {
+    state.facets = facets
   },
   addFacet (state, facet) {
     if (!isAValidFacet(facet)) {
