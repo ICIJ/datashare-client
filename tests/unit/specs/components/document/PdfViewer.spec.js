@@ -1,5 +1,4 @@
 import { mount } from '@vue/test-utils'
-import sinon from 'sinon'
 import PdfViewer from '@/components/document/PdfViewer'
 import noop from 'lodash/noop'
 import PDFJS from 'pdfjs-dist'
@@ -12,23 +11,22 @@ describe.skip('PdfViewer.vue', () => {
   it('should display canvas when PDF is found', async () => {
     var wrapped = mount(PdfViewer, {propsData: {'url': '/document.pdf'}})
     await wrapped.vm.loadPage(1)
-    expect(wrapped.vm.$el.querySelector('img.pdf-viewer__canvas')).to.not.equal(null)
+    expect(wrapped.vm.$el.querySelector('img.pdf-viewer__canvas')).toEqual(null)
   }, 10000)
 
   it('should cache pdf data', async () => {
-    var getDocument = sinon.spy(PDFJS, 'getDocument')
+    jest.spyOn(PDFJS, 'getDocument')
     var wrapped = mount(PdfViewer, {propsData: {'url': '/document.pdf'}})
     await wrapped.vm.loadPage(1)
     await wrapped.vm.loadPage(2)
-    getDocument.restore()
     wrapped.update()
-    sinon.assert.calledOnce(getDocument)
+    expect(PDFJS.getDocument).toHaveBeenCalled()
   }, 10000)
 
   it('should display pdf page', async () => {
     var wrapped = mount(PdfViewer, {propsData: {'url': '/document.pdf'}})
-    expect(wrapped.vm.page(1)).to.equal(undefined)
+    expect(wrapped.vm.page(1)).toBeUndefined(undefined)
     await wrapped.vm.loadPage(1)
-    expect(wrapped.vm.page(1)).to.not.equal(undefined)
+    expect(wrapped.vm.page(1)).not.toBeUndefined(undefined)
   })
 })
