@@ -38,7 +38,6 @@ export class DatashareClient {
       }
     })
   }
-
   sendAction (url, params) {
     return this.fetch(DatashareClient.getFullUrl(url), params).then((r) => {
       if (r.status === 401) {
@@ -48,7 +47,6 @@ export class DatashareClient {
       }
     })
   }
-
   redirectToAuth () {
     window.location.assign(process.env.VUE_APP_DS_AUTH_SIGNIN)
   }
