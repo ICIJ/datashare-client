@@ -59,22 +59,54 @@ export function searchPlugin (Client, config, components) {
     // mentioned in the nested query.
     // Escape slash by adding a backslash before it
     query = replace(query, /\//g, '\\/')
-    body.query('match_all').addQuery('bool', b => b
-      // Add the query string to the body
-      .orQuery('query_string', { query, default_field: '*' })
-      // Add match for namedentity containing the query string
-      .orQuery('has_child', 'type', 'NamedEntity', {
-        'inner_hits': {
-          'size': 30
-        }
-      }, sub => sub.query('match', 'mention', query)))
+    body.query('match_all')
+      .addQuery('bool', b => b
+        // Add the query string to the body
+        .orQuery('query_string', { query, default_field: '*' })
+        // Add match for namedentity containing the query string
+        .orQuery('has_child', 'type', 'NamedEntity', {
+          'inner_hits': {
+            'size': 30
+          }
+        }, sub => sub.query('match', 'mention', query))
+      )
   }
 
-  Client.prototype.searchDocs = function (query, facets = [], from = 0, size = 25) {
+  Client.prototype.addSortToBody = function (sort, body) {
+    let sortField
+    let sortOrder
+    switch (sort) {
+      case 'relevance' :
+        sortField = '_score'
+        sortOrder = 'desc'
+        break
+      case 'dateNewest' :
+        sortField = 'extractionDate'
+        sortOrder = 'desc'
+        break
+      case 'dateOldest' :
+        sortField = 'extractionDate'
+        sortOrder = 'asc'
+        break
+      case 'sizeLargest' :
+        sortField = 'contentLength'
+        sortOrder = 'desc'
+        break
+      case 'sizeSmallest' :
+        sortField = 'contentLength'
+        sortOrder = 'asc'
+        break
+    }
+    body.sort(sortField, sortOrder)
+  }
+
+  Client.prototype.searchDocs = function (query, facets = [], from = 0, size = 25, sort = 'relevance') {
     // We're going to build the body step by step
     const body = bodybuilder().from(from).size(size)
     this.addFacetsToBody(facets, body)
     this.addQueryToBody(query, body)
+    this.addSortToBody(sort, body)
+    // Select only the Documents and not the NamedEntities
     body.query('match', 'type', 'Document')
     // Add an option to exclude the content
     body.rawOption('_source', { includes: ['*'], excludes: ['content'] })

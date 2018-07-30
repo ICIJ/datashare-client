@@ -48,11 +48,34 @@ describe('esClient', () => {
     expect(window.location.assign.getCall(0).args[0]).to.equal(process.env.VUE_APP_DS_AUTH_SIGNIN)
   })
 
+  it('should build an ES query with facets', async () => {
+    let from = 0
+    let size = 25
+    let facets = [{ name: 'content-type', values: ['value_01', 'value_02', 'value_03'] }]
+    let body = bodybuilder().from(from).size(size)
+    await esClient.addFacetsToBody(facets, body)
+
+    expect(body.build()).to.deep.equal({
+      from: from,
+      size: size,
+      query: {
+        bool: {
+          filter: {
+            terms: {
+              contentType: ['value_01', 'value_02', 'value_03']
+            }
+          }
+        }
+      }
+    })
+  })
+
   it('should build a simple ES query', async () => {
     let from = 0
     let size = 25
+    let query = '*'
     let body = bodybuilder().from(from).size(size)
-    await esClient.addQueryToBody('*', body)
+    await esClient.addQueryToBody(query, body)
 
     expect(body.build()).to.deep.equal({
       from: from,
@@ -65,8 +88,8 @@ describe('esClient', () => {
             bool: {
               should: [{
                 query_string: {
-                  query: '*',
-                  default_field: '*'
+                  query: query,
+                  default_field: query
                 }}, {
                 has_child: {
                   type: 'NamedEntity',
@@ -75,7 +98,7 @@ describe('esClient', () => {
                   },
                   query: {
                     match: {
-                      mention: '*'
+                      mention: query
                     }
                   }
                 }
@@ -123,6 +146,24 @@ describe('esClient', () => {
           }]
         }
       }
+    })
+  })
+
+  it('should build a simple sorted ES query', async () => {
+    let sort = 'dateOldest'
+    let from = 0
+    let size = 25
+    let body = bodybuilder().from(from).size(size)
+    await esClient.addSortToBody(sort, body)
+
+    expect(body.build()).to.deep.equal({
+      from: from,
+      size: size,
+      sort: [{
+        extractionDate: {
+          order: 'asc'
+        }
+      }]
     })
   })
 })

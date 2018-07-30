@@ -7,6 +7,7 @@ import fetchPonyfill from 'fetch-ponyfill'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Indexing from '@/components/Indexing'
+import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
 
 import messages from '@/messages'
 import router from '@/router'
@@ -25,6 +26,7 @@ const i18n = new VueI18n({locale: 'en', messages})
 
 describe('Indexing.vue', () => {
   var wrapped = null
+  esConnectionHelper()
 
   beforeEach(() => {
     wrapped = mount(Indexing, {localVue, i18n, router, store})
@@ -36,7 +38,7 @@ describe('Indexing.vue', () => {
     wrapped.vm.$store.commit('indexing/reset')
   })
 
-  it('should begin/stop polling when route enter/leave', async () => {
+  it('should begin/stop polling when route enter/leave', () => {
     router.push('indexing')
     expect(wrapped.vm.$store.state.indexing.pollHandle).to.not.equal(undefined)
 
@@ -77,21 +79,10 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 
-  it('should call findNames when selected action is findNames', async () => {
-    datashare.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
-
-    store.dispatch('indexing/query')
-
-    sinon.assert.calledOnce(datashare.fetch)
-    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/PIPELINE'),
-      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-  })
-
-  it('should set corenlp as default pipeline', async () => {
-    datashare.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
+  it('should call findNames when selected action is findNames with the correct pipeline', () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    store.commit('indexing/updateField', { path: 'form.pipeline_corenlp', value: true })
 
     store.dispatch('indexing/query')
 
@@ -100,20 +91,9 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
-  it('should disable resume if selected action is findNames', () => {
-    datashare.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    store.commit('indexing/updateField', {path: 'form.pipeline', value: 'PIPELINE'})
-
-    store.dispatch('indexing/query')
-
-    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/PIPELINE'),
-      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-  })
-
-  it('should call index action with ocr option', () => {
-    datashare.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
+  it('should call index action with ocr option', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', {path: 'form.index', value: true})
     store.commit('indexing/updateField', {path: 'form.ocr', value: true})
 
     store.dispatch('indexing/query')
@@ -123,24 +103,63 @@ describe('Indexing.vue', () => {
       {method: 'POST', body: JSON.stringify({options: {ocr: true}}), credentials: 'same-origin'})
   })
 
-  it('should display ocr option if selected action is index', () => {
-    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
-    expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(1)
+  it('should set first step as default step', () => {
+    expect(wrapped.vm.step).to.equal(1)
+    expect(wrapped.vm.errors.length).to.equal(0)
   })
 
-  it('should hide ocr option if selected action is not index', () => {
-    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    expect(wrapped.vm.$el.querySelectorAll('input#ocr').length).to.equal(0)
+  it('should diplay an error message', async () => {
+    window.fetch.returns(jsonOk({}))
+    await wrapped.vm.next()
+    await wrapped.vm.$nextTick()
+    expect(wrapped.vm.errors.length).to.equal(1)
+    expect(wrapped.vm.step).to.equal(1)
   })
 
-  it('should display pipeline choice if selected action is findNames', () => {
-    store.commit('indexing/updateField', {path: 'form.action', value: 'findNames'})
-    expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(1)
+  it('should diplay the second step of the wizard', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', { path: 'form.index', value: true })
+    await wrapped.vm.next()
+    await wrapped.vm.$nextTick()
+    expect(wrapped.vm.step).to.equal(2)
+    expect(wrapped.vm.errors.length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_02').length).to.equal(1)
+    expect(wrapped.vm.ocr).to.equal(false)
   })
 
-  it('should hide pipeline choice if selected action is not findNames', () => {
-    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
-    expect(wrapped.vm.$el.querySelectorAll('select#pipeline').length).to.equal(0)
+  it('should display the third step of the wizard', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    await wrapped.vm.next()
+    await wrapped.vm.$nextTick()
+    expect(wrapped.vm.step).to.equal(3)
+    expect(wrapped.vm.errors.length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_03').length).to.equal(1)
+  })
+
+  it('should display an error if no NLP pipeline is choosen', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    await wrapped.vm.next()
+    await wrapped.vm.next()
+    await wrapped.vm.$nextTick()
+    expect(wrapped.vm.step).to.equal(3)
+    expect(wrapped.vm.errors.length).to.equal(1)
+  })
+
+  it('should display the last and final step', async () => {
+    window.fetch.returns(jsonOk({}))
+    store.commit('indexing/updateField', { path: 'form.index', value: true })
+    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    store.commit('indexing/updateField', { path: 'form.pipeline_opennlp', value: true })
+    await wrapped.vm.next()
+    await wrapped.vm.next()
+    await wrapped.vm.next()
+    await wrapped.vm.$nextTick()
+    expect(wrapped.vm.step).to.equal(4)
+    expect(wrapped.vm.errors.length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_04').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing__form__step_04 button[type=submit]').length).to.equal(1)
   })
 })
 

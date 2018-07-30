@@ -41,9 +41,8 @@ describe('FacetText.vue', () => {
         facet: find(store.state.aggregation.facets, {name: 'content-type'})
       }
     })
-
-    wrapped.vm.$store.commit('aggregation/reset')
-    await wrapped.vm.aggregate()
+    // Reset aggregation store to global search
+    store.commit('aggregation/setGlobalSearch', true)
   })
 
   afterEach(async () => {
@@ -52,7 +51,7 @@ describe('FacetText.vue', () => {
     wrapped.vm.facetQuery = ''
   })
 
-  it('should display empty list', async () => {
+  it('should display empty list and the relative search checkbox', async () => {
     await wrapped.vm.aggregate()
     await wrapped.vm.$nextTick()
 
@@ -97,12 +96,38 @@ describe('FacetText.vue', () => {
 
     store.commit('search/query', 'SHOW')
     await wrapped.vm.aggregate()
-    await wrapped.vm.$nextTick()
+    await Vue.nextTick()
+    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(3)
+
+    store.commit('aggregation/setGlobalSearch', false)
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(1)
 
     store.commit('search/query', 'INDEX')
     await wrapped.vm.aggregate()
     await wrapped.vm.$nextTick()
+    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
+  })
+
+  it('should apply relative facet and get back to global facet', async () => {
+    await letData(es).have(new IndexedDocument('index.js').withContent('Lorem').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('index.html').withContent('Ipsum').withContentType('text/html')).commit()
+
+    store.commit('search/query', 'Lorem')
+    store.commit('aggregation/setGlobalSearch', true)
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
+
+    store.commit('aggregation/setGlobalSearch', false)
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
+    expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(1)
+
+    store.commit('aggregation/setGlobalSearch', true)
+    await wrapped.vm.aggregate()
+    await Vue.nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
   })
 
@@ -120,7 +145,7 @@ describe('FacetText.vue', () => {
     const lastItem = wrapped.vm.$el.querySelector('.facet-text__items__item:last-child')
 
     expect(lastItem.classList.contains('facet-text__items__item--active')).to.equal(true)
-    expect(trim(lastItem.querySelector('span').textContent)).to.equal('0')
+    expect(trim(lastItem.querySelector('span').textContent)).to.equal('1')
   })
 
   it('should not display the more button', async () => {

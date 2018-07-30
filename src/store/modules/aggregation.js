@@ -12,6 +12,7 @@ import get from 'lodash/get'
 
 export function initialState () {
   return {
+    globalSearch: true,
     facets: [
       {
         name: 'content-type',
@@ -84,11 +85,8 @@ export const mutations = {
     const s = initialState()
     Object.keys(s).forEach(key => { state[key] = s[key] })
   },
-  clear (state) {
-    return state.facets.splice(0, state.facets.length)
-  },
-  setFacets (state, facets) {
-    state.facets = facets
+  setGlobalSearch (state, globalSearch) {
+    state.globalSearch = globalSearch
   },
   addFacet (state, facet) {
     if (!isAValidFacet(facet)) {
@@ -107,14 +105,14 @@ export const getters = {
   },
   buildFacetBody (state, getters, rootState) {
     return predicate => {
-      // Find the Bodybuilder instance for this facet using a predicate
-      const facet = getters.getFacet(predicate)
-      // Use an empty body if no facet is found
-      const body = facet ? facet.body(bodybuilder()) : bodybuilder()
-      // The aggregation must not be global (but relative to a search)
+      // Find the Bodybuilder instance for this faet using a predicate
+      const body = getters.getFacet(predicate).body(bodybuilder())
+      // If the aggregation must not be global (relative to a search)
       // we add the query conditions to the body.
-      esClient.addFacetsToBody(rootState.search.facets, body)
-      esClient.addQueryToBody(rootState.search.query, body)
+      if (!state.globalSearch) {
+        esClient.addFacetsToBody(rootState.search.facets, body)
+        esClient.addQueryToBody(rootState.search.query, body)
+      }
       // We finally build the body with no docs (size 0) to avoid loading
       // content twice.
       return body.size(0).build()
