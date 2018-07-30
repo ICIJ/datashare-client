@@ -33,7 +33,7 @@ module.exports = {
       .set('mixins', resolve('src/mixins'))
       .set('tests', resolve('tests'))
 
-    if (process.env.NODE_ENV === 'test' || true) {
+    if (process.env.NODE_ENV === 'test') {
       // Log the user by default
       setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'TOKEN' }, JSON.stringify)
       /* const app = require('express')()
