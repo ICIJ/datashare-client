@@ -7,7 +7,7 @@ import fetchPonyfill from 'fetch-ponyfill'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Indexing from '@/components/Indexing'
-import esConnectionHelper from 'test/unit/specs/utils/esConnectionHelper'
+import esConnectionHelper from '..//utils/esConnectionHelper'
 
 import messages from '@/messages'
 import router from '@/router'
@@ -57,22 +57,11 @@ describe('Indexing.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[1].textContent).to.contain('baz(456)')
   })
 
-  it('should call index as default action', async () => {
+  it('should call index when index action is selected', () => {
     datashare.fetch.returns(jsonOk({}))
-    store.dispatch('indexing/query')
-    await wrapped.vm.$nextTick()
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.index', value: true })
 
-    sinon.assert.calledOnce(datashare.fetch)
-    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/index/file'),
-      {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
-  })
-
-  it('should call index when index action is selected', async () => {
-    datashare.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.action', value: 'index'})
-
-    store.dispatch('indexing/query')
-    await wrapped.vm.$nextTick()
+    wrapped.vm.$store.dispatch('indexing/query')
 
     sinon.assert.calledOnce(datashare.fetch)
     sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/index/file'),
@@ -80,11 +69,11 @@ describe('Indexing.vue', () => {
   })
 
   it('should call findNames when selected action is findNames with the correct pipeline', () => {
-    window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
-    store.commit('indexing/updateField', { path: 'form.pipeline_corenlp', value: true })
+    datashare.fetch.returns(jsonOk({}))
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline_corenlp', value: true })
 
-    store.dispatch('indexing/query')
+    wrapped.vm.$store.dispatch('indexing/query')
 
     sinon.assert.calledOnce(datashare.fetch)
     sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
@@ -92,11 +81,11 @@ describe('Indexing.vue', () => {
   })
 
   it('should call index action with ocr option', async () => {
-    window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', {path: 'form.index', value: true})
-    store.commit('indexing/updateField', {path: 'form.ocr', value: true})
+    datashare.fetch.returns(jsonOk({}))
+    wrapped.vm.$store.commit('indexing/updateField', {path: 'form.index', value: true})
+    wrapped.vm.$store.commit('indexing/updateField', {path: 'form.ocr', value: true})
 
-    store.dispatch('indexing/query')
+    wrapped.vm.$store.dispatch('indexing/query')
 
     sinon.assert.calledOnce(datashare.fetch)
     sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/index/file'),
@@ -109,7 +98,7 @@ describe('Indexing.vue', () => {
   })
 
   it('should diplay an error message', async () => {
-    window.fetch.returns(jsonOk({}))
+    datashare.fetch.returns(jsonOk({}))
     await wrapped.vm.next()
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.errors.length).to.equal(1)
@@ -117,8 +106,8 @@ describe('Indexing.vue', () => {
   })
 
   it('should diplay the second step of the wizard', async () => {
-    window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', { path: 'form.index', value: true })
+    datashare.fetch.returns(jsonOk({}))
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.index', value: true })
     await wrapped.vm.next()
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.step).to.equal(2)
@@ -128,8 +117,8 @@ describe('Indexing.vue', () => {
   })
 
   it('should display the third step of the wizard', async () => {
-    window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    datashare.fetch.returns(jsonOk({}))
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.findNames', value: true })
     await wrapped.vm.next()
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.step).to.equal(3)
@@ -138,8 +127,8 @@ describe('Indexing.vue', () => {
   })
 
   it('should display an error if no NLP pipeline is choosen', async () => {
-    window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    datashare.fetch.returns(jsonOk({}))
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.findNames', value: true })
     await wrapped.vm.next()
     await wrapped.vm.next()
     await wrapped.vm.$nextTick()
@@ -148,10 +137,10 @@ describe('Indexing.vue', () => {
   })
 
   it('should display the last and final step', async () => {
-    window.fetch.returns(jsonOk({}))
-    store.commit('indexing/updateField', { path: 'form.index', value: true })
-    store.commit('indexing/updateField', { path: 'form.findNames', value: true })
-    store.commit('indexing/updateField', { path: 'form.pipeline_opennlp', value: true })
+    datashare.fetch.returns(jsonOk({}))
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.index', value: true })
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline_opennlp', value: true })
     await wrapped.vm.next()
     await wrapped.vm.next()
     await wrapped.vm.next()

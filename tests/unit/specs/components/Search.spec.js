@@ -196,7 +196,7 @@ describe('Search.vue', function () {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 10, sort: 'dateOldest' })
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
 
     let e = wrapped.vm.$el.querySelectorAll('.search-results__header .search-results__header__sort select')[0]
 

@@ -96,12 +96,12 @@ describe('FacetText.vue', () => {
 
     store.commit('search/query', 'SHOW')
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(3)
 
     store.commit('aggregation/setGlobalSearch', false)
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(1)
 
     store.commit('search/query', 'INDEX')
@@ -117,17 +117,17 @@ describe('FacetText.vue', () => {
     store.commit('search/query', 'Lorem')
     store.commit('aggregation/setGlobalSearch', true)
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
 
     store.commit('aggregation/setGlobalSearch', false)
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(1)
 
     store.commit('aggregation/setGlobalSearch', true)
     await wrapped.vm.aggregate()
-    await Vue.nextTick()
+    await wrapped.vm.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet-text__items__item').length).to.equal(2)
   })
 

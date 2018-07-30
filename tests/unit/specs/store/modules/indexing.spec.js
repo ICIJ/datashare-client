@@ -1,7 +1,13 @@
 import Vuex from 'vuex'
-import { actions, getters, mutations, state } from '@/store/modules/indexing'
 import cloneDeep from 'lodash/cloneDeep'
 import { expect } from 'chai'
+import sinon from 'sinon'
+import fetchPonyfill from 'fetch-ponyfill'
+
+import { DatashareClient } from '@/api/DatashareClient'
+import { actions, getters, mutations, state, datashare } from '@/store/modules/indexing'
+
+const { Response } = fetchPonyfill()
 
 describe('Indexing store', () => {
   let store = null
@@ -11,12 +17,12 @@ describe('Indexing store', () => {
   })
 
   beforeEach(() => {
-    sinon.stub(window, 'fetch')
+    sinon.stub(datashare, 'fetch')
   })
 
   afterEach(async () => {
     store.commit('reset')
-    window.fetch.restore()
+    datashare.fetch.restore()
   })
 
   it('should define a store module', () => {
@@ -33,12 +39,12 @@ describe('Indexing store', () => {
   it('should execute an empty query', async () => {
     fetchReturns(200, {})
     await store.dispatch('query')
-    sinon.assert.callCount(window.fetch, 0)
+    sinon.assert.callCount(datashare.fetch, 0)
   })
 
   it('should execute an empty query', async () => {
     await store.dispatch('query')
-    sinon.assert.callCount(window.fetch, 0)
+    sinon.assert.callCount(datashare.fetch, 0)
   })
 
   it('should execute a complex query', async () => {
@@ -53,16 +59,16 @@ describe('Indexing store', () => {
 
     await store.dispatch('query')
 
-    sinon.assert.callCount(window.fetch, 5)
-    sinon.assert.calledWith(window.fetch, '/api/task/index/file',
+    sinon.assert.callCount(datashare.fetch, 5)
+    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/index/file'),
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
-    sinon.assert.calledWith(window.fetch, '/api/task/findNames/CORENLP',
+    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-    sinon.assert.calledWith(window.fetch, '/api/task/findNames/OPENNLP',
+    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/OPENNLP'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-    sinon.assert.calledWith(window.fetch, '/api/task/findNames/IXAPIPE',
+    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/IXAPIPE'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-    sinon.assert.calledWith(window.fetch, '/api/task/findNames/GATENLP',
+    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/GATENLP'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
@@ -70,8 +76,8 @@ describe('Indexing store', () => {
     fetchReturns(200, {})
     await store.dispatch('cleanTasks')
     expect(store.state.tasks).to.deep.equal([])
-    sinon.assert.calledOnce(window.fetch)
-    sinon.assert.calledWith(window.fetch, '/api/task/clean/',
+    sinon.assert.calledOnce(datashare.fetch)
+    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/clean/'),
       {method: 'POST', body: '{}', credentials: 'same-origin'})
   })
 
@@ -82,7 +88,7 @@ describe('Indexing store', () => {
 })
 
 function fetchReturns (status, json) {
-  window.fetch.returns(Promise.resolve(new window.Response(JSON.stringify(json), {
+  datashare.fetch.returns(Promise.resolve(new Response(JSON.stringify(json), {
     status: status,
     headers: {
       'Content-type': 'application/json'
