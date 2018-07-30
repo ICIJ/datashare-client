@@ -6,14 +6,14 @@ let es = new elasticsearch.Client({host: process.env.VUE_APP_ES_HOST})
 let index = process.env.VUE_APP_ES_INDEX
 
 const esConnectionHelper = () => {
-  before(async () => {
+  beforeAll(async () => {
     if (!await es.indices.exists({ index })) {
       await es.indices.create({ index })
       await es.indices.putMapping({ index, type: 'doc', body: esMapping })
     }
   })
 
-  after(async () => {
+  afterAll(async () => {
     // await es.indices.delete({ index, ignoreUnavailable: true })
     await es.deleteByQuery({ index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}} })
   })

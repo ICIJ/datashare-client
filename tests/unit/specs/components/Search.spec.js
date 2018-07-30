@@ -6,7 +6,6 @@ import { expect } from 'chai'
 
 import noop from 'lodash/noop'
 import trim from 'lodash/trim'
-import partial from 'lodash/partial'
 
 import esConnectionHelper from '../utils/esConnectionHelper'
 import messages from '@/messages'
@@ -30,14 +29,14 @@ describe('Search.vue', function () {
   var es = esConnectionHelper.es
   var wrapped = null
   // High timeout because multiple searches can be heavy for the Elasticsearch
-  this.timeout(1e4)
+  jest.setTimeout(1e4)
 
-  before(() => {
+  beforeAll(() => {
     // Remove all facets to avoid unecessary request
     store.commit('aggregation/clear')
   })
 
-  after(() => {
+  afterAll(() => {
     // And restore all facets!
     store.commit('aggregation/reset')
   })

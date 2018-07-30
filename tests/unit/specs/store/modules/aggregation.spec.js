@@ -4,7 +4,6 @@ import functionsIn from 'lodash/functionsIn'
 import each from 'lodash/each'
 import find from 'lodash/find'
 import { expect } from 'chai'
-import Vuex from 'vuex'
 
 import store from '@/store'
 import { IndexedDocument, letData } from '../../../es_utils'
@@ -14,9 +13,9 @@ describe('Aggregation store', function () {
   esConnectionHelper()
   let es = esConnectionHelper.es
   // High timeout because multiple searches can be heavy for the Elasticsearch
-  this.timeout(1e4)
+  jest.setTimeout(1e4)
 
-  before(async () => {
+  beforeAll(async () => {
     store.commit('aggregation/reset')
     store.commit('search/reset')
   })

@@ -26,7 +26,7 @@ describe('FacetPath.vue', () => {
   var es = esConnectionHelper.es
   var wrapped = null
 
-  before(async () => {
+  beforeAll(async () => {
     wrapped = mount(FacetPath, {
       localVue,
       i18n,

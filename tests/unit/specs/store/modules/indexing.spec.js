@@ -1,4 +1,5 @@
 import Vuex from 'vuex'
+import Vue from 'vue'
 import cloneDeep from 'lodash/cloneDeep'
 import { expect } from 'chai'
 import sinon from 'sinon'
@@ -8,11 +9,12 @@ import { DatashareClient } from '@/api/DatashareClient'
 import { actions, getters, mutations, state, datashare } from '@/store/modules/indexing'
 
 const { Response } = fetchPonyfill()
+Vue.use(Vuex)
 
 describe('Indexing store', () => {
   let store = null
 
-  before(async () => {
+  beforeAll(async () => {
     store = new Vuex.Store({ actions, getters, mutations, state })
   })
 
