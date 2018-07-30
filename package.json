@@ -6,7 +6,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit --timeout 10000 --runInBand",
+    "test:unit": "vue-cli-service test:unit --runInBand",
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
@@ -110,6 +110,8 @@
     "testMatch": [
       "**/tests/unit/**/*.spec.js"
     ],
+    "coverageDirectory": "tests/unit/coverage",
+    "collectCoverage": true,
     "testURL": "http://localhost/"
   },
   "gitHooks": {
