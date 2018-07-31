@@ -15,8 +15,8 @@
 
     <ul class="named-entities list-inline">
       <li class="named-entity list-inline-item" v-for="ne in namedEntities" :key="ne._source.id" :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
-        <router-link :to="{ name: 'document', params: { id: doc.id } }" class="badge badge-pill badge-primary">
-          {{ ne._source.mention}}
+        <router-link :to="{ name: 'document', params: { id: doc.id } }" class="badge badge-pill badge-primary" v-b-tooltip.hover :title=" ne._source.mention">
+          {{ ne._source.mention | truncate }}
         </router-link>
       </li>
     </ul>
@@ -55,6 +55,22 @@ export default {
     namedEntities () {
       return uniqBy(this.doc.get('inner_hits.NamedEntity.hits.hits', []), '_source.mention')
     }
+  },
+  filters: {
+    truncate (text = '', length = 30, clamp = '...') {
+      if (text.length <= length) return text
+
+      let truncated = text.slice(0, length - clamp.length)
+      let last = truncated.length - 1
+
+      while (last > 0 && truncated[last] !== ' ' && truncated[last] !== clamp[0]) {
+        last -= 1
+      }
+      // Fix for case when text dont have any `space`
+      last = last || length - clamp.length
+      truncated = truncated.slice(0, last)
+      return truncated + clamp
+    }
   }
 }
 </script>
@@ -63,6 +79,14 @@ export default {
   .search-results-item {
     padding: $spacer;
     border-bottom: 1px solid $gray-200;
+
+    & .badge {
+      display: inline-block;
+      max-width: 100%;
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+    }
 
     &--active {
       position: relative;
