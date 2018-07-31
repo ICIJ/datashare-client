@@ -43,7 +43,8 @@
       "language": "Languages",
       "mentions": "Named Entities",
       "path": "Path",
-      "extractionDate": "Indexing date"
+      "extractionDate": "Indexing date",
+      "extractionLevel": "Extraction level"
     },
     "document": {
       "name": "File name",
@@ -137,7 +138,8 @@
       "language": "Langues",
       "mentions": "Entitées nommées",
       "path": "Chemin du fichier",
-      "extractionDate": "Date d'indexation"
+      "extractionDate": "Date d'indexation",
+      "extractionLevel": "Niveau d'extraction"
     },
     "document": {
       "name": "Nom du fichier",

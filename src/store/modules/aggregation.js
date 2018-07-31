@@ -10,7 +10,21 @@ import every from 'lodash/every'
 import find from 'lodash/find'
 import get from 'lodash/get'
 
-export function initialState () {
+const levels = {
+  '0': 'File on disk',
+  '1': '1st level',
+  '2': '2nd level',
+  '3': '3rd level',
+  '4': '4th level',
+  '5': '5th level',
+  '6': '6th level',
+  '7': '7th level',
+  '8': '8th level',
+  '9': '9th level',
+  '10': '10th level'
+}
+
+function initialState () {
   return {
     globalSearch: true,
     facets: [
@@ -68,6 +82,15 @@ export function initialState () {
           interval: '1M',
           format: 'yyyy-MM'
         }, 'extractionDate')
+      },
+      {
+        name: 'extraction-level',
+        key: 'extractionLevel',
+        type: FacetText.name,
+        isSearchable: false,
+        itemParam: item => ({ name: 'extraction-level', value: item.key }),
+        itemLabel: item => get(levels, item.key),
+        body: body => body.agg('terms', 'extractionLevel', 'extractionLevel')
       }
     ]
   }
