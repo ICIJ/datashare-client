@@ -86,15 +86,16 @@ export const mixin = {
     },
     addValue (item) {
       this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
+      console.log('add')
       this.refreshRoute()
     },
     removeValue (item) {
       this.$store.commit('search/removeFacetValue', this.facet.itemParam(item))
+      console.log('remove')
       this.refreshRoute()
     },
     toggleValue (item) {
       this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
-      this.refreshRoute()
     },
     invert () {
       this.$store.commit('search/toggleFacet', this.facet.name)
