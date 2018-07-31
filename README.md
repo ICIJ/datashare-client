@@ -6,16 +6,20 @@
 ## Install
 
 * Install [canvas for Node](https://github.com/Automattic/node-canvas)
-`sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++`
+
+`> sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++`
 
 * Install [Vue CLI](https://cli.vuejs.org/)
-`sudo npm install -g @vue/cli`
+
+`> sudo npm install -g @vue/cli`
 
 * Install dependencies
-`yarn`
+
+`> yarn`
 
 * Serve with hot reload at localhost:8080
-`yarn serve`
+
+`> yarn serve`
 
 
 ## Build Setup
