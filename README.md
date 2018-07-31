@@ -2,26 +2,42 @@
 
 [![Circle CI](https://circleci.com/gh/ICIJ/datashare-client.png?style=shield&circle-token=bb83a70d5a43a31c6fd38d797f015b9419c15ffe)](https://circleci.com/gh/ICIJ/datashare-client)
 
+
+## Install
+
+* Install [canvas for Node](https://github.com/Automattic/node-canvas)
+`sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-essential g++`
+
+* Install [Vue CLI](https://cli.vuejs.org/)
+`sudo npm install -g @vue/cli`
+
+* Install dependencies
+`yarn`
+
+* Serve with hot reload at localhost:8080
+`yarn serve`
+
+
 ## Build Setup
 
 ``` bash
-# install dependencies
+# install / update dependencies
 yarn
 
-# serve with hot reload at localhost:9090
-yarn run dev
+# serve with hot reload at localhost:8080
+yarn serve
 
 # build for production with minification
-yarn run build
+yarn build
 
-# build for production and view the bundle analyzer report
-yarn run build --report
+# lint and fixe files
+yarn lint
 
-# run unit tests
-yarn run unit
+# run unit tests serially with jest
+yarn test:unit
 
 # run e2e tests
-yarn run e2e
+yarn test:e2e
 
 # run all tests
 yarn test
@@ -31,7 +47,7 @@ For a detailed explanation on how things work, check out the [guide](http://vuej
 
 ## How to run with datashare backend locally
 
-Datashare backend allows to index, find names and provide file preview or download. It can be run alongside the dev frontend for manual testing with the benefits of hot reloading with `yarn run dev`.
+Datashare backend allows to index, find names and provide file preview or download. It can be run alongside the dev frontend for manual testing with the benefits of hot reloading with `yarn serve`.
 
 You have to either run the backend docker container, or the java code if you are willing to modify the backend code.
 
