@@ -13,7 +13,7 @@
       </div>
       <div class="list-group-item facet-named-entity__items__item" v-for="item in displayedFilteredItems()" :key="item.key">
         <router-link :to="{ name: 'search', query: { q: item.key }}" >
-          <div class="badge badge-pill badge-primary mr-1 text-uppercase facet-named-entity__items__item__key">
+          <div class="badge badge-pill badge-primary mr-1 text-uppercase facet-named-entity__items__item__key" :title="item.key">
             {{ item.key }}
           </div>
           <div class="text-secondary small facet-named-entity__items__item__description">
@@ -48,8 +48,12 @@ export default {
 
   .facet-named-entity__items {
 
-    &__item__key {
-      white-space: normal;
+    & &__item__key {
+      white-space: nowrap;
+      display: inline-block;
+      overflow: hidden;
+      max-width: 100%;
+      text-overflow: ellipsis;
     }
 
     &__item__description {
