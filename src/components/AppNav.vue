@@ -1,5 +1,5 @@
 <template>
-  <headroom :z-index="1000" :offset="50">
+  <headroom :z-index="1000" :offset="250" :on-unpin="onPin">
     <header class="app__nav" :class="{ 'app__nav--collapse': collapseMenu }">
       <transition name="fade">
         <div class="app__nav__mask" v-if="!collapseMenu" @click="toggleMenu"></div>
@@ -92,6 +92,9 @@ export default {
     },
     isntLanding () {
       return this.$route.name !== 'landing'
+    },
+    onPin () {
+      this.$root.$emit('bv::hide::popover')
     }
   },
   computed: {
