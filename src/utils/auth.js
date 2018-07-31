@@ -7,7 +7,7 @@ export const isAuthenticated = function () {
     return true
   }
   // Find the cookie created by the backend
-  const cookieName = process.env.CONFIG['ds_cookie_name']
+  const cookieName = process.env.VUE_APP_DS_COOKIE_NAME
   const cookie = getCookie(cookieName, JSON.parse)
 
   return get(cookie, 'login', null) !== null

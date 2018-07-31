@@ -1,5 +1,3 @@
-import Response from '@/api/Response'
-
 import filter from 'lodash/filter'
 import includes from 'lodash/includes'
 import slice from 'lodash/slice'
@@ -7,11 +5,16 @@ import toLower from 'lodash/toLower'
 import toString from 'lodash/toString'
 import each from 'lodash/each'
 
+import Response from '@/api/Response'
+import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { removeDiacritics } from '@/utils/strings.js'
 
 const initialNumberOfFilesDisplayed = 5
 
 export const mixin = {
+  components: {
+    ContentPlaceholder
+  },
   data () {
     return {
       facetQuery: '',
@@ -67,7 +70,7 @@ export const mixin = {
       if (this.facet) {
         this.isReady = false
         this.response = Response.none()
-        return this.$store.dispatch('aggregation/query', this.facet).then(r => {
+        return this.$store.dispatch('aggregation/query', { name: this.facet.name }).then(r => {
           this.response = this.addInvertedFacets(r)
           this.isReady = true
         })

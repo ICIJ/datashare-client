@@ -11,7 +11,7 @@
         <ul class="list-group">
           <li class="list-group-item bg-light">
             <p>To log in, use ICIJ secure authentication plateform:</p>
-            <a class="btn btn-dark btn-lg" :href="getConfig('ds_auth_signin')">
+            <a class="btn btn-dark btn-lg" :href="getConfig('DS_AUTH_SIGNIN')">
               <font-awesome-icon icon="user-shield" class="mr-2" />
               Login with Xemx
             </a>
@@ -36,7 +36,7 @@ export default {
   name: 'Login',
   methods: {
     getConfig (name, defaultValue) {
-      return get(process.env.CONFIG, name, defaultValue)
+      return get(process.env, `VUE_APP_${name.toUpperCase()}`, defaultValue)
     }
   }
 }

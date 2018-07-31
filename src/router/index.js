@@ -18,13 +18,6 @@ Vue.use(VueRouter)
 const router = new VueRouter({
   routes: [
     {
-      path: '/login',
-      component: Login,
-      meta: {
-        skipsAuth: true
-      }
-    },
-    {
       path: '/',
       component: App,
       children: [
@@ -71,6 +64,13 @@ const router = new VueRouter({
           component: About
         }
       ]
+    },
+    {
+      path: '/login',
+      component: Login,
+      meta: {
+        skipsAuth: true
+      }
     }
   ]
 })

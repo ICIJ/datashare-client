@@ -1,14 +1,14 @@
 run:
-		npm run dev
+		yarn run serve
 
 clean:
 		rm -Rf ./dist
 
 dist:
-		npm run build
+		yarn run build
 
 install:
 		yarn
 
 unit:
-		npm run unit
+		yarn run test:unit

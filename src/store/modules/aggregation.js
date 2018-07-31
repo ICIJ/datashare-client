@@ -108,8 +108,14 @@ export const mutations = {
     const s = initialState()
     Object.keys(s).forEach(key => { state[key] = s[key] })
   },
+  clear (state) {
+    return state.facets.splice(0, state.facets.length)
+  },
   setGlobalSearch (state, globalSearch) {
     state.globalSearch = globalSearch
+  },
+  setFacets (state, facets) {
+    state.facets = facets
   },
   addFacet (state, facet) {
     if (!isAValidFacet(facet)) {
@@ -146,7 +152,7 @@ export const getters = {
 export const actions = {
   query ({ commit, dispatch, getters }, facetPredicate) {
     return esClient.search({
-      index: process.env.CONFIG.es_index,
+      index: process.env.VUE_APP_ES_INDEX,
       type: 'doc',
       size: 0,
       body: getters.buildFacetBody(facetPredicate)

@@ -1,7 +1,7 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 
-function initialState () {
+export function initialState () {
   return {
     idAndRouting: null,
     doc: null,

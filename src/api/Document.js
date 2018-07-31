@@ -1,20 +1,24 @@
 import last from 'lodash/last'
 import split from 'lodash/split'
+import get from 'lodash/get'
 import EsDoc from './EsDoc'
 import moment from 'moment'
 
 export default class Document extends EsDoc {
+  get path () {
+    return get(this, 'source.path', '')
+  }
   get basename () {
-    return last(this.source.path.split('/'))
+    return last(this.path.split('/'))
   }
   get highlight () {
     return this.raw.highlight
   }
   get relativePath () {
-    if (this.source.path.indexOf(process.env.CONFIG.data_prefix) === -1) {
-      return this.source.path
+    if (this.path.indexOf(process.env.VUE_APP_DATA_PREFIX) === -1) {
+      return this.path
     }
-    return '/api' + process.env.CONFIG.data_prefix + split(this.source.path, process.env.CONFIG.data_prefix, 2)[1]
+    return '/api' + process.env.VUE_APP_DATA_PREFIX + split(this.path, process.env.VUE_APP_DATA_PREFIX, 2)[1]
   }
   get contentType () {
     return this.source.contentType || 'unknown'
