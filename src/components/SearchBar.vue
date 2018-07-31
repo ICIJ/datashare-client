@@ -1,15 +1,27 @@
 <template>
-  <form class="search-bar container-fluid py-3 input-group" @submit.prevent="submit">
-    <input v-model="query" type="search" :placeholder="$t('search.placeholder')" class="form-control">
-    <div class="input-group-append">
-      <button type="submit" class="btn btn-icij">{{ $t('search.buttonlabel') }}</button>
+  <form class="search-bar form-row align-items-center container-fluid py-3" @submit.prevent="submit">
+    <div class="input-group col">
+      <input v-model="query" type="search" :placeholder="$t('search.placeholder')" class="form-control">
+      <div class="input-group-append">
+        <button type="submit" class="btn btn-icij">
+          {{ $t('search.buttonlabel') }}
+        </button>
+      </div>
+    </div>
+    <div class="col-auto px-0 pl-2">
+      <search-settings placement="bottomleft" />
     </div>
   </form>
 </template>
 
 <script>
+import SearchSettings from './SearchSettings'
+
 export default {
   name: 'SearchBar',
+  components: {
+    SearchSettings
+  },
   data () {
     return {
       query: this.$store.state.search.query

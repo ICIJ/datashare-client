@@ -88,6 +88,9 @@ export const mutations = {
       state[key] = s[key]
     })
   },
+  resetFacets (state) {
+    state.facets.slice(0, state.facets.length)
+  },
   query (state, query) {
     state.query = query
     state.response = Response.none()
@@ -155,6 +158,14 @@ export const mutations = {
 }
 
 export const actions = {
+  reset ({ commit, dispatch }, name) {
+    commit('reset')
+    return dispatch('query')
+  },
+  resetFacets ({ commit, dispatch }, name) {
+    commit('resetFacets')
+    return dispatch('query')
+  },
   query ({ state, commit }, queryOrParams = { query: state.query, from: state.from, size: state.size, sort: state.sort }) {
     commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String ? queryOrParams : queryOrParams.query)
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.from : queryOrParams.from)

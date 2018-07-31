@@ -1,13 +1,5 @@
 <template>
   <div class="aggregations-panel">
-    <div class="aggregations-panel__global-toggler px-4 pt-3 pb-0">
-      <label class="custom-control custom-checkbox m-0" :class="{ 'text-muted': relativeSearch }">
-        <input type="checkbox" class="custom-control-input" v-model="relativeSearch" />
-        <span class="custom-control-label">
-          {{ $t('aggregations.relative') }}
-        </span>
-      </label>
-    </div>
     <component v-for="facet in facets" :key="facet.name" :is="facet.type" v-bind="{ facet }"></component>
   </div>
 </template>
@@ -29,11 +21,6 @@ export default {
   data () {
     return {
       relativeSearch: !this.$store.state.aggregation.globalSearch
-    }
-  },
-  watch: {
-    relativeSearch (relativeSearch) {
-      this.$store.commit('aggregation/setGlobalSearch', !relativeSearch)
     }
   },
   computed: {

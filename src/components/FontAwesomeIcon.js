@@ -3,6 +3,7 @@ import { library, dom } from '@fortawesome/fontawesome-svg-core'
 
 import {faUserShield} from '@fortawesome/free-solid-svg-icons/faUserShield'
 import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
+import {faCog} from '@fortawesome/free-solid-svg-icons/faCog'
 import {faExternalLinkAlt} from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt'
 import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
 import {faFolder} from '@fortawesome/free-solid-svg-icons/faFolder'
@@ -25,6 +26,7 @@ import {faRedo} from '@fortawesome/free-solid-svg-icons/faRedo'
 library.add(
   faUserShield,
   faBars,
+  faCog,
   faExternalLinkAlt,
   faGlobe,
   faFolder,

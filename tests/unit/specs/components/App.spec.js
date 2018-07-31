@@ -7,7 +7,7 @@ import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
 import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
-import { expect } from 'chai'
+import trim from 'lodash/trim'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import App from '@/components/App'
@@ -23,12 +23,12 @@ describe('App.vue', () => {
   it('should display search bar', () => {
     const i18n = new VueI18n({ locale: 'en', messages })
     const wrapped = mount(App, { localVue, i18n, router, store })
-    expect(wrapped.vm.$el.querySelector('form.search-bar button').textContent).to.equal('Search')
+    expect(trim(wrapped.vm.$el.querySelector('form.search-bar button[type=submit]').textContent)).toEqual('Search')
   })
 
   it('should display search bar in french', () => {
     const i18n = new VueI18n({ locale: 'fr', messages })
     const wrapped = mount(App, { localVue, i18n, router, store })
-    expect(wrapped.vm.$el.querySelector('form.search-bar button').textContent).to.equal('Rechercher')
+    expect(trim(wrapped.vm.$el.querySelector('form.search-bar button[type=submit]').textContent)).toEqual('Rechercher')
   })
 })
