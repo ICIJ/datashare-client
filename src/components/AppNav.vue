@@ -111,7 +111,8 @@ export default {
     width: auto;
     min-height: $app-nav-height;
     background: $body-bg;
-    box-shadow: 0 0 5px 3px rgba(black, 0.05);
+    border-bottom: $gray-200 1px solid;
+    box-shadow: 0 2px 10px 0 rgba(black,.05);
 
     &--collapse, &--collapse &__container__main {
       transition: background 600ms, box-shadow 600ms;
@@ -232,6 +233,7 @@ export default {
 
             &:hover {
               background: rgba($body-color, 0.1);
+              color: mix(theme-color(primary), $body-color);
             }
           }
 
