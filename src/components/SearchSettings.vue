@@ -2,6 +2,7 @@
   <span class="search-settings">
     <button type="button" class="btn btn-icij" id="toggleSettings" title="Search settings" v-b-tooltip.hover>
       <font-awesome-icon icon="cog" />
+      <span class="sr-only">Search settings</span>
     </button>
     <b-popover target="toggleSettings" triggers="click" :placement="placement">
       <template slot="title">
