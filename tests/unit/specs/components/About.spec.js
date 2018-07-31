@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+import BootstrapVue from 'bootstrap-vue'
 
 import { createLocalVue, mount } from '@vue/test-utils'
 import sinon from 'sinon'
@@ -17,6 +18,7 @@ window.fetch = fetch
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
+localVue.use(BootstrapVue)
 
 const i18n = new VueI18n({locale: 'en', messages})
 

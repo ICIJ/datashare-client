@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+import BootstrapVue from 'bootstrap-vue'
 import { mount, createLocalVue } from '@vue/test-utils'
 import { expect } from 'chai'
 
@@ -16,6 +17,7 @@ import store from '@/store'
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Vuex)
+localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({ locale: 'en', messages })

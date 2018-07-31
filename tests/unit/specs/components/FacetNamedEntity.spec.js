@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
+import BootstrapVue from 'bootstrap-vue'
 
 import trim from 'lodash/trim'
 import find from 'lodash/find'
@@ -20,6 +21,7 @@ import {IndexedDocument, letData} from '../../es_utils'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
+localVue.use(BootstrapVue)
 localVue.use(VueI18n)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
