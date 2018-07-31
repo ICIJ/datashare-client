@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
+import BootstrapVue from 'bootstrap-vue'
 
 import router from './router'
 import messages from './messages'
@@ -11,6 +12,7 @@ import '@/main.scss'
 
 Vue.use(VueI18n)
 Vue.use(VueProgressBar, { color: '#852308' })
+Vue.use(BootstrapVue)
 // Font Awesome component must be available everywhere
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

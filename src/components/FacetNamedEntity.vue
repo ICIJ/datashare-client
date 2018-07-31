@@ -13,7 +13,7 @@
       </div>
       <div class="list-group-item facet-named-entity__items__item" v-for="item in displayedFilteredItems()" :key="item.key">
         <router-link :to="{ name: 'search', query: { q: item.key }}" >
-          <div class="badge badge-pill badge-primary mr-1 text-uppercase facet-named-entity__items__item__key" :title="item.key">
+          <div class="badge badge-pill badge-primary mr-1 text-uppercase facet-named-entity__items__item__key" :title="item.key" v-b-tooltip.hover>
             {{ item.key }}
           </div>
           <div class="text-secondary small facet-named-entity__items__item__description">
