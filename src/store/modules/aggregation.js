@@ -35,7 +35,7 @@ function initialState () {
         isSearchable: true,
         itemParam: item => ({ name: 'content-type', value: item.key }),
         itemLabel: item => get(types, [item.key, 'label'], item.key),
-        body: body => body.agg('terms', 'contentType', 'contentType')
+        body: (body, options) => body.agg('terms', 'contentType', 'contentType', options)
       },
       {
         name: 'language',
@@ -48,7 +48,7 @@ function initialState () {
           item = item.key.toString()
           return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
         },
-        body: body => body.agg('terms', 'language', 'language')
+        body: (body, options) => body.agg('terms', 'language', 'language', options)
       },
       {
         name: 'named-entity',
@@ -56,11 +56,12 @@ function initialState () {
         type: FacetNamedEntity.name,
         isSearchable: true,
         itemParam: item => item.key,
-        body: body => body
+        body: (body, options = {}) => body
           .query('term', 'type', 'NamedEntity')
           .agg('terms', 'mentionNorm', 'mentions', {
-            'size': 50,
-            'order': [ {'docs': 'desc'}, {'_count': 'desc'} ]
+            size: 50,
+            order: [ {'docs': 'desc'}, {'_count': 'desc'} ],
+            ...options
           }, sub => sub.agg('cardinality', 'join#Document', 'docs'))
       },
       {
@@ -69,7 +70,7 @@ function initialState () {
         type: FacetPath.name,
         isSearchable: false,
         itemParam: item => item.key,
-        body: body => body.agg('terms', 'path', 'path')
+        body: (body, options) => body.agg('terms', 'path', 'path', options)
       },
       {
         name: 'indexing-date',

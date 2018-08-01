@@ -5,15 +5,21 @@ import toLower from 'lodash/toLower'
 import toString from 'lodash/toString'
 import each from 'lodash/each'
 
+import bModal from 'bootstrap-vue/es/components/modal/modal'
+
 import Response from '@/api/Response'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { removeDiacritics } from '@/utils/strings.js'
+import FacetSearch from '@/components/FacetSearch'
 
 const initialNumberOfFilesDisplayed = 5
 
 export const mixin = {
+  props: ['facet'],
   components: {
-    ContentPlaceholder
+    ContentPlaceholder,
+    FacetSearch,
+    bModal
   },
   data () {
     return {
@@ -66,6 +72,11 @@ export const mixin = {
     }
   },
   methods: {
+    asyncFacetSearch () {
+      if (this.$refs.asyncFacetSearch) {
+        this.$refs.asyncFacetSearch.show()
+      }
+    },
     aggregate () {
       if (this.facet) {
         this.isReady = false
@@ -140,3 +151,5 @@ export const mixin = {
     }
   }
 }
+
+export default mixin

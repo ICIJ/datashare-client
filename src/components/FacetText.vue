@@ -3,7 +3,6 @@ import { mixin } from '@/mixins/facets'
 
 export default {
   name: 'FacetText',
-  props: ['facet'],
   mixins: [mixin]
 }
 </script>
@@ -23,10 +22,15 @@ export default {
       </h6>
     </div>
     <div class="list-group list-group-flush facet-text__items" v-if="!collapseItems">
-      <label class="list-group facet__items__search py-2 px-3" v-if="hasResults && facet.isSearchable">
-        <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
-        <font-awesome-icon icon="search" class="float-right" />
-      </label>
+      <form @submit="asyncFacetSearch" v-if="hasResults && facet.isSearchable">
+        <label class="list-group facet__items__search py-2 px-3">
+          <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
+          <font-awesome-icon icon="search" class="float-right" />
+        </label>
+      </form>
+      <b-modal hide-header hide-footer lazy ref="asyncFacetSearch">
+        <facet-search :facet="facet" :query="facetQuery" />
+      </b-modal>
       <div class="list-group-item facet-text__items__item p-0" v-for="(item, index) in displayedFilteredItems()" :key="index" :class="{ 'facet-text__items__item--active': hasValue(item) }">
         <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
           <span class="badge badge-pill badge-light float-right facet-text__items__item__count">

@@ -1,5 +1,6 @@
 import es from 'elasticsearch-browser'
 import bodybuilder from 'bodybuilder'
+import castArray from 'lodash/castArray'
 import each from 'lodash/each'
 import replace from 'lodash/replace'
 
@@ -38,9 +39,9 @@ export function docPlugin (Client, config, components) {
 }
 
 export function searchPlugin (Client, config, components) {
-  Client.prototype.addFacetsToBody = function (facets, body) {
+  Client.prototype.addFacetsToBody = function (facetOrFacets, body) {
     // Add facet one by one as a MUST filter
-    each(facets, facetValue => {
+    each(castArray(facetOrFacets), facetValue => {
       // Find the facet's definition for the given value
       const facet = store.getters['aggregation/getFacet']({ name: facetValue.name })
       // A reversed facetValue means we want to exclude the value
