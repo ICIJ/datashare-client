@@ -1,6 +1,6 @@
 <template>
   <div class="aggregations-panel">
-    <component v-for="facet in facets" :key="facet.name" :is="facet.type" v-bind="{ facet }"></component>
+    <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.type" v-bind="{ facet }"></component>
   </div>
 </template>
 
@@ -8,6 +8,10 @@
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
 import FacetPath from '@/components/FacetPath'
+
+import sortBy from 'lodash/sortBy'
+import map from 'lodash/map'
+import get from 'lodash/get'
 
 import { mapState } from 'vuex'
 
@@ -18,9 +22,17 @@ export default {
     FacetText,
     FacetPath
   },
+  mounted () {
+    this.$watch(() => map(this.$refs, (ref, key) => get(ref, '0.isReady', false)), (e) => {
+      this.sortedFacets = sortBy(this.facets, (facet, index) => {
+        return get(this, `$refs.${facet.name}.0.hasResults`, true) ? index : this.facets.length + index
+      })
+    })
+  },
   data () {
     return {
-      relativeSearch: !this.$store.state.aggregation.globalSearch
+      relativeSearch: !this.$store.state.aggregation.globalSearch,
+      sortedFacets: this.$store.state.aggregation.facets
     }
   },
   computed: {
