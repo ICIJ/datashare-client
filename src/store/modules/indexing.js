@@ -39,10 +39,8 @@ export const mutations = {
   updateTasks (state, raw) {
     state.tasks = raw
   },
-  startPolling (state) {
-    state.pollHandle = setInterval(() => {
-      datashare.getTasks().then(resp => resp.json().then(raw => this.commit('indexing/updateTasks', raw)))
-    }, 2000)
+  setPoolHandle (state, poolHandle) {
+    state.pollHandle = poolHandle
   },
   stopPolling (state) {
     clearInterval(state.pollHandle)
@@ -64,10 +62,19 @@ export const actions = {
   cleanTasks ({ state, commit }) {
     datashare.cleanTasks().then(commit('cleanTasks'))
   },
-  startPollTasks ({ state, commit }) {
-    commit('startPolling')
+  loadTasks ({ commit }) {
+    return datashare.getTasks()
+      .then(resp => resp.json())
+      .then(raw => {
+        commit('indexing/updateTasks', raw)
+        return raw
+      })
   },
-  stopPollTasks ({ state, commit }) {
+  startPollTasks ({ commit, dispatch }) {
+    const poolHandle = setInterval(() => dispatch('loadTasks'), 2000)
+    commit('setPoolHandle', poolHandle)
+  },
+  stopPollTasks ({ commit }) {
     commit('stopPolling')
   }
 }
