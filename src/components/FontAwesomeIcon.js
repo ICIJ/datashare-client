@@ -22,6 +22,7 @@ import {faAngleUp} from '@fortawesome/free-solid-svg-icons/faAngleUp'
 import {faAmbulance} from '@fortawesome/free-solid-svg-icons/faAmbulance'
 import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo'
 import {faRedo} from '@fortawesome/free-solid-svg-icons/faRedo'
+import {faRocket} from '@fortawesome/free-solid-svg-icons/faRocket'
 
 library.add(
   faUserShield,
@@ -44,7 +45,8 @@ library.add(
   faAngleUp,
   faAmbulance,
   faUndo,
-  faRedo
+  faRedo,
+  faRocket
 )
 
 // Kicks off the process of finding <i> tags and replacing with <svg>

@@ -95,7 +95,7 @@ describe('Indexing.vue', () => {
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.step).toEqual(2)
     expect(wrapped.vm.errors.length).toEqual(0)
-    expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step_02').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step--02').length).toEqual(1)
     expect(wrapped.vm.ocr).toEqual(false)
   })
 
@@ -106,7 +106,7 @@ describe('Indexing.vue', () => {
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.step).toEqual(3)
     expect(wrapped.vm.errors.length).toEqual(0)
-    expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step_03').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step--03').length).toEqual(1)
   })
 
   it('should display an error if no NLP pipeline is choosen', async () => {
@@ -130,8 +130,8 @@ describe('Indexing.vue', () => {
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.step).toEqual(4)
     expect(wrapped.vm.errors.length).toEqual(0)
-    expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step_04').length).toEqual(1)
-    expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step_04 button[type=submit]').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step--04').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step--04 button[type=submit]').length).toEqual(1)
   })
 })
 

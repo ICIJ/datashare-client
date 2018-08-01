@@ -1,32 +1,45 @@
 <template>
-  <div class="indexing container-fluid">
-    <div class="row">
-      <indexing-form class="mt-4 col-lg-3 col-md-4 order-last" id="indexing-form" />
-      <div class="col-lg-9 col-md-8 mt-4" v-if="tasks.length">
-        <div class="card">
-          <div class="card-header">
-            <h3 class="h5 m-0">
-              {{ $t('indexing.ongoing') }}
-            </h3>
-          </div>
-          <ul class="list-group list-group-flush">
-            <li v-for="task in tasks" :key="task.name" class="indexing__tasks list-group-item">
-              {{ taskLabel(task.name) }}
-              <span class="badge badge-pill small float-right">
-                {{ task.state }}
-              </span>
-              <div class="indexing__tasks__progress progress">
-                <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar" :style="'width: ' + getProgress(task.progress) + '%'" :aria-valuenow="getProgress(task.progress)" aria-valuemin="0" aria-valuemax="100">
-                  {{ getProgress(task.progress) }}%
-                </div>
+  <div class="indexing container pt-4">
+    <div class="text-right">
+      <button class="btn btn-icij" type="button" @click="newTask">
+        <font-awesome-icon icon="rocket" class="mr-2" />
+        {{ $t('indexing.new') }}
+      </button>
+    </div>
+    <b-modal ref="indexingForm" hide-footer modal-class="indexing__form-modal" size="md">
+      <div slot="modal-title">
+        <font-awesome-icon icon="rocket" class="mr-2" />
+        {{ $t('indexing.new') }}
+      </div>
+      <indexing-form id="indexing-form" />
+    </b-modal>
+    <div class="mt-4">
+      <div class="card">
+        <div class="card-header">
+          <h3 class="h5 m-0">
+            {{ $t('indexing.ongoing') }}
+          </h3>
+        </div>
+        <ul class="list-group list-group-flush"  v-if="tasks.length">
+          <li v-for="task in tasks" :key="task.name" class="indexing__tasks list-group-item">
+            {{ taskLabel(task.name) }}
+            <span class="badge badge-pill small float-right">
+              {{ task.state }}
+            </span>
+            <div class="indexing__tasks__progress progress">
+              <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar" :style="'width: ' + getProgress(task.progress) + '%'" :aria-valuenow="getProgress(task.progress)" aria-valuemin="0" aria-valuemax="100">
+                {{ getProgress(task.progress) }}%
               </div>
-            </li>
-          </ul>
-          <div class="card-footer text-right border-0">
-            <button class="btn btn-icij" type="button" @click="cleanTasks">
-              {{ $t('indexing.purge') }}
-            </button>
-          </div>
+            </div>
+          </li>
+        </ul>
+        <div v-else class="px-4 py-2 text-center text-muted">
+          {{ $t('indexing.empty') }}
+        </div>
+        <div class="card-footer text-right border-0" v-if="tasks.length">
+          <button class="btn btn-icij" type="button" @click="cleanTasks">
+            {{ $t('indexing.purge') }}
+          </button>
         </div>
       </div>
     </div>
@@ -35,18 +48,24 @@
 
 <script>
 import { mapState } from 'vuex'
+import bModal from 'bootstrap-vue/es/components/modal/modal'
 import last from 'lodash/last'
 
 import IndexingForm from './IndexingForm'
 
 export default {
   name: 'indexing',
-  components: { IndexingForm },
+  components: { IndexingForm, bModal },
   computed: {
     ...mapState('indexing', { tasks: state => state.tasks })
   },
   created () {
     this.$store.dispatch('search/query')
+  },
+  mounted () {
+    if (this.tasks.length === 0) {
+      this.newTask()
+    }
   },
   beforeRouteEnter (to, _from, next) {
     next(vm => {
@@ -58,6 +77,9 @@ export default {
     next()
   },
   methods: {
+    newTask () {
+      this.$refs.indexingForm.show()
+    },
     cleanTasks () {
       this.$store.dispatch('indexing/cleanTasks')
     },
@@ -85,3 +107,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .indexing {
+
+    &__form-modal .modal-body {
+      background: theme-color('icij');
+      color: white;
+    }
+  }
+</style>

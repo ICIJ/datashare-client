@@ -24,7 +24,7 @@ export default class Response {
     return this.set(path, arr)
   }
   get hits () {
-    return map(this[_raw].hits.hits, hit => {
+    return map(this.get('hits.hits', []), hit => {
       return Response.instantiate(hit)
     })
   }

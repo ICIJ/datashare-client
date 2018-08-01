@@ -80,7 +80,8 @@
       "choose_one_pipeline": "Please, choose at least one NLP pipeline",
       "ocr": "OCR",
       "pipelines": "Pipelines",
-      "correct_errors": "Please correct the following error(s) :"
+      "empty": "You started no tasks yet.",
+      "new": "Start a new task"
     },
     "menu": {
       "help": "Ask for help",

@@ -29,10 +29,21 @@ $text-muted: #717171;
 $input-focus-border-color: map-get($theme-colors, 'secondary');
 $link-hover-color: darken(map-get($theme-colors, 'warning'), 10%);
 
+$btn-box-shadow: none;
+
 $popover-max-width: 550px;
 $popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
 $popover-border-color: white;
 $popover-header-bg: white;
+
+$modal-content-border-width: 0;
+$modal-content-box-shadow-xs: 0 10px 30px 0 rgba(black, .4);
+$modal-content-box-shadow-sm-up: 0 20px 60px 0 rgba(black, .4);
+$modal-backdrop-bg: white;
+$modal-backdrop-opacity: .7;
+$modal-inner-padding: 1.5rem;
+$modal-header-padding: 1.5rem;
+
 
 // Bootstrap variables and mixins must be available everywhere
 @import '~node_modules/bootstrap/scss/_functions.scss';

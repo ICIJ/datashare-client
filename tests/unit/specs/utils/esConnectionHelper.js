@@ -5,7 +5,9 @@ import noop from 'lodash/noop'
 let es = new elasticsearch.Client({host: process.env.VUE_APP_ES_HOST})
 let index = process.env.VUE_APP_ES_INDEX
 
-const esConnectionHelper = () => {
+const esConnectionHelper = function () {
+  jest.setTimeout(1e4)
+
   beforeAll(async () => {
     if (!await es.indices.exists({ index })) {
       await es.indices.create({ index })
