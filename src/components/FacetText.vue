@@ -28,7 +28,7 @@ export default {
           <font-awesome-icon icon="search" class="float-right" />
         </label>
       </form>
-      <b-modal hide-header hide-footer lazy ref="asyncFacetSearch">
+      <b-modal hide-footer lazy ref="asyncFacetSearch" :title="$t('facet.' + facet.key)">
         <facet-search :facet="facet" :query="facetQuery" />
       </b-modal>
       <div class="list-group-item facet-text__items__item p-0" v-for="(item, index) in displayedFilteredItems()" :key="index" :class="{ 'facet-text__items__item--active': hasValue(item) }">
