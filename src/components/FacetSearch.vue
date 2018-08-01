@@ -8,7 +8,7 @@
         </span>
       </label>
     </form>
-    <div class="card m-0 mt-4 facet-search__items" v-infinite-scroll="next" infinite-scroll-disabled="readTheEnd">
+    <div class="card m-0 mt-4 facet-search__items" v-infinite-scroll="next" infinite-scroll-disabled="reachTheEnd">
       <ul class="list-group">
         <li v-for="(item, index) in items" :key="index" class="list-group-item facet-search__items__item">
           <span class="badge badge-pill badge-light float-right facet-search__items__item__count">
@@ -52,7 +52,7 @@ export default {
       items: [],
       pageSize: 25,
       offset: 0,
-      readTheEnd: false
+      reachTheEnd: false
     }
   },
   mounted () {
@@ -76,7 +76,7 @@ export default {
         this.items = startOver ? slice : this.items.concat(slice)
         this.isReady = true
         // Did we reach the end?
-        this.readTheEnd = all.length < this.size
+        this.reachTheEnd = all.length < this.size
       })
     },
     escapeRegExp (str) {
@@ -85,7 +85,7 @@ export default {
     },
     startOver () {
       this.isReady = false
-      this.readTheEnd = false
+      this.reachTheEnd = false
       this.offset = 0
     },
     next () {

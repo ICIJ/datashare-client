@@ -1,8 +1,5 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
-import FacetText from '@/components/FacetText'
-import FacetNamedEntity from '@/components/FacetNamedEntity'
-import FacetPath from '@/components/FacetPath'
 import types from '@/utils/types.json'
 
 import bodybuilder from 'bodybuilder'
@@ -31,7 +28,7 @@ function initialState () {
       {
         name: 'content-type',
         key: 'contentType',
-        type: FacetText.name,
+        type: 'FacetText',
         isSearchable: true,
         itemParam: item => ({ name: 'content-type', value: item.key }),
         itemLabel: item => get(types, [item.key, 'label'], item.key),
@@ -40,7 +37,7 @@ function initialState () {
       {
         name: 'language',
         key: 'language',
-        type: FacetText.name,
+        type: 'FacetText',
         isSearchable: true,
         itemParam: item => ({ name: 'language', value: item.key }),
         itemLabel: item => {
@@ -53,7 +50,7 @@ function initialState () {
       {
         name: 'named-entity',
         key: 'mentions',
-        type: FacetNamedEntity.name,
+        type: 'FacetNamedEntity',
         isSearchable: true,
         itemParam: item => item.key,
         body: (body, options = {}) => body
@@ -67,7 +64,7 @@ function initialState () {
       {
         name: 'path',
         key: 'path',
-        type: FacetPath.name,
+        type: 'FacetPath',
         isSearchable: false,
         itemParam: item => item.key,
         body: (body, options) => body.agg('terms', 'path', 'path', options)
@@ -75,7 +72,7 @@ function initialState () {
       {
         name: 'indexing-date',
         key: 'extractionDate',
-        type: FacetText.name,
+        type: 'FacetText',
         isSearchable: false,
         itemParam: item => ({ name: 'indexing-date', value: item.key }),
         itemLabel: item => item.key_as_string,
@@ -87,7 +84,7 @@ function initialState () {
       {
         name: 'extraction-level',
         key: 'extractionLevel',
-        type: FacetText.name,
+        type: 'FacetText',
         isSearchable: false,
         itemParam: item => ({ name: 'extraction-level', value: item.key }),
         itemLabel: item => get(levels, item.key),
