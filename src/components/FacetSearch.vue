@@ -30,6 +30,7 @@ import get from 'lodash/get'
 import throttle from 'lodash/throttle'
 import uniq from 'lodash/uniq'
 import infiniteScroll from 'vue-infinite-scroll'
+import PQueue from 'p-queue'
 import esClient from '@/api/esClient'
 
 export default {
@@ -52,7 +53,8 @@ export default {
       items: [],
       pageSize: 25,
       offset: 0,
-      reachTheEnd: false
+      reachTheEnd: false,
+      queue: new PQueue({concurrency: 1})
     }
   },
   mounted () {
@@ -67,16 +69,19 @@ export default {
     search (startOver = true) {
       // Start the search over
       if (startOver) this.startOver()
-      // Load the facet using a body build using the facet configuration
-      return esClient.search({ index: process.env.VUE_APP_ES_INDEX, body: this.body }).then(data => {
-        // Extract the slice we need for this page (if any)
-        const all = get(data, this.resultPath, [])
-        const slice = all.slice(this.offset, this.size)
-        // Add the new items to the end of the items if needed
-        this.items = startOver ? slice : this.items.concat(slice)
-        this.isReady = true
-        // Did we reach the end?
-        this.reachTheEnd = all.length < this.size
+      // We queue the promises to ensure they are executed in the right order
+      return this.queue.add(() => {
+        // Load the facet using a body build using the facet configuration
+        return esClient.search({ index: process.env.VUE_APP_ES_INDEX, body: this.body }).then(data => {
+          // Extract the slice we need for this page (if any)
+          const all = get(data, this.resultPath, [])
+          const slice = all.slice(this.items.length, this.items.length + this.pageSize)
+          // Add the new items to the end of the items if needed
+          this.items = startOver ? all : this.items.concat(slice)
+          this.isReady = true
+          // Did we reach the end?
+          this.reachTheEnd = all.length < this.size
+        })
       })
     },
     escapeRegExp (str) {
@@ -89,7 +94,7 @@ export default {
       this.offset = 0
     },
     next () {
-      this.offset += this.items.length
+      this.offset += this.pageSize
       return this.search(false)
     }
   },
@@ -115,10 +120,7 @@ export default {
     body () {
       return this.facet.body(bodybuilder().size(0), {
         size: this.size,
-        include: `.*(${this.queryTokens.join('|')}).*`,
-        order: {
-          _key: 'asc'
-        }
+        include: `.*(${this.queryTokens.join('|')}).*`
       }).build()
     },
     searchWithThrottle () {
