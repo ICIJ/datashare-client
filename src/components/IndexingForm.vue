@@ -183,6 +183,7 @@
 <script>
 import { createHelpers } from 'vuex-map-fields'
 import { mapState } from 'vuex'
+import noop from 'lodash/noop'
 
 const { mapFields } = createHelpers({
   getterType: `indexing/getField`,
@@ -191,6 +192,12 @@ const { mapFields } = createHelpers({
 
 export default {
   name: 'indexing',
+  props: {
+    finally: {
+      type: Function,
+      default: noop
+    }
+  },
   data () {
     return {
       step: 1,
@@ -272,7 +279,7 @@ export default {
       return true
     },
     submit () {
-      this.$store.dispatch('indexing/query')
+      this.finally(this.$store.dispatch('indexing/query'))
     }
   }
 }
