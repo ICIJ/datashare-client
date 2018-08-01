@@ -1,8 +1,13 @@
 import fetchPonyfill from 'fetch-ponyfill'
 
 export class DatashareClient {
-  constructor ({ fetch = window.fetch || fetchPonyfill().fetch } = { }) {
-    this.fetch = fetch
+  constructor () {
+    if (window.fetch) {
+      // Build-in fetch method must never we call from an object other than Window
+      this.fetch = (...args) => window.fetch(...args)
+    } else {
+      this.fetch = fetchPonyfill().fetch
+    }
   }
   index (options) {
     return this.sendAction(`/api/task/index/file`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})

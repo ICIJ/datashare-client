@@ -69,11 +69,11 @@ export default {
       this.newTask()
     }
   },
-  beforeRouteEnter (to, _from, next) {
+  beforeRouteEnter (to, from, next) {
     store.dispatch('indexing/startPollTasks')
-    store.dispatch('indexing/loadTasks').finally(ary(next))
+    store.dispatch('indexing/loadTasks').then(ary(next), ary(next))
   },
-  beforeRouteLeave (to, _from, next) {
+  beforeRouteLeave (to, from, next) {
     this.$store.dispatch('indexing/stopPollTasks')
     next()
   },

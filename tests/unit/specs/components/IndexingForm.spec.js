@@ -12,7 +12,7 @@ import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
-import { DatashareClient } from '@/api/DatashareClient'
+import DatashareClient from '@/api/DatashareClient'
 
 const { Response } = fetchPonyfill()
 

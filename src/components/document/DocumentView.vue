@@ -86,7 +86,7 @@ import { highlight } from '@/utils/strings'
 import PdfViewer from './PdfViewer'
 import SpreadsheetViewer from './SpreadsheetViewer'
 import TiffViewer from './TiffViewer'
-import { DatashareClient } from '@/api/DatashareClient'
+import DatashareClient from '@/api/DatashareClient'
 
 export default {
   components: {

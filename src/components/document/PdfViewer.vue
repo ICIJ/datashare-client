@@ -22,7 +22,7 @@
 <script>
 import PDFJS from 'pdfjs-dist'
 import Worker from 'pdfjs-dist/build/pdf.worker'
-import {DatashareClient} from '@/api/DatashareClient'
+import DatashareClient from '@/api/DatashareClient'
 (typeof window !== 'undefined' ? window : {}).pdfjsWorker = Worker
 
 PDFJS.GlobalWorkerOptions.workerSrc = 'static/js/pdf.worker.js'

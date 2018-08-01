@@ -1,5 +1,5 @@
 import { getField, updateField } from 'vuex-map-fields'
-import { DatashareClient } from '@/api/DatashareClient'
+import DatashareClient from '@/api/DatashareClient'
 
 export const datashare = new DatashareClient()
 
@@ -64,9 +64,11 @@ export const actions = {
   },
   loadTasks ({ commit }) {
     return datashare.getTasks()
-      .then(resp => resp.json())
+      .then(resp => {
+        return resp.json().catch(() => [])
+      })
       .then(raw => {
-        commit('indexing/updateTasks', raw)
+        commit('updateTasks', raw)
         return raw
       })
   },

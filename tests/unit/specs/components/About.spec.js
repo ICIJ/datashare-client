@@ -3,8 +3,6 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 
 import { createLocalVue, mount } from '@vue/test-utils'
-import sinon from 'sinon'
-import { expect } from 'chai'
 import fetchPonyfill from 'fetch-ponyfill'
 
 import About from '@/components/About'
@@ -26,23 +24,19 @@ describe('About.vue', () => {
   var wrapped = null
 
   beforeEach(() => {
-    sinon.stub(window, 'fetch')
-  })
-
-  afterEach(() => {
-    window.fetch.restore()
+    jest.spyOn(window, 'fetch')
   })
 
   it('should display client git sha1', () => {
-    window.fetch.returns(jsonOk({}))
+    window.fetch.mockReturnValue(jsonOk({}))
     wrapped = mount(About, {localVue, i18n, router, store})
-    let sha1 = wrapped.vm.clientHash
-    expect(sha1.match(/[a-z0-9]*/)[0]).to.equal(sha1)
-    expect(sha1.length).to.equal(7)
+    const sha1 = wrapped.vm.clientHash
+    expect(sha1.match(/[a-z0-9]*/)[0]).toEqual(sha1)
+    expect(sha1.length).toEqual(7)
   })
 
   it('should display server git sha1 and version', async () => {
-    window.fetch.returns(jsonOk({
+    window.fetch.mockReturnValue(jsonOk({
       'git.commit.message.short': '[launchBack] Increase Java RAM to 4Go',
       'git.build.user.name': 'Bruno Thomas',
       'git.remote.origin.url': 'git@github.com:ICIJ/datashare.git',
@@ -66,8 +60,8 @@ describe('About.vue', () => {
     }))
     wrapped = mount(About, {localVue, i18n, router, store})
     await wrapped.vm.promise
-    expect(wrapped.vm.$el.querySelectorAll('.about dd')[0].textContent).to.equal('version')
-    expect(wrapped.vm.$el.querySelectorAll('.about dd')[2].textContent).to.equal('sha1_abbrev')
+    expect(wrapped.vm.$el.querySelectorAll('.about dd')[0].textContent).toEqual('version')
+    expect(wrapped.vm.$el.querySelectorAll('.about dd')[2].textContent).toEqual('sha1_abbrev')
   })
 })
 

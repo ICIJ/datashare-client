@@ -13,7 +13,7 @@
 </style>
 
 <script>
-import { DatashareClient } from '@/api/DatashareClient'
+import DatashareClient from '@/api/DatashareClient'
 import AppNav from './AppNav'
 
 export default {

@@ -1,4 +1,4 @@
-import { DatashareClient } from '@/api/DatashareClient'
+import DatashareClient from '@/api/DatashareClient'
 import fetchPonyfill from 'fetch-ponyfill'
 import noop from 'lodash/noop'
 

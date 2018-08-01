@@ -12,25 +12,26 @@
 </template>
 
 <script>
-import {DatashareClient} from '@/api/DatashareClient'
+import DatashareClient from '@/api/DatashareClient'
 
 export default {
   name: 'about',
   created () {
+    const ds = new DatashareClient()
+    // Load the versions once
+    this.promise = ds.getVersion().then(r => r.json())
     this.getServerVersion()
   },
   data () {
     return {
       serverHash: '',
-      serverVersion: ''
+      serverVersion: '',
+      promise: null
     }
   },
   computed: {
     clientHash () {
       return process.env.VUE_APP_GIT_HASH.substring(0, 7)
-    },
-    promise () {
-      return new DatashareClient().getVersion().then(r => r.json())
     }
   },
   methods: {

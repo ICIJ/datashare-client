@@ -68,7 +68,7 @@
 <script>
 import { headroom } from 'vue-headroom'
 import SearchBar from './SearchBar'
-import { DatashareClient } from '../api/DatashareClient'
+import DatashareClient from '../api/DatashareClient'
 
 export default {
   name: 'AppNav',

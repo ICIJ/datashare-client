@@ -5,7 +5,7 @@ import { expect } from 'chai'
 import sinon from 'sinon'
 import fetchPonyfill from 'fetch-ponyfill'
 
-import { DatashareClient } from '@/api/DatashareClient'
+import DatashareClient from '@/api/DatashareClient'
 import { actions, getters, mutations, state, datashare } from '@/store/modules/indexing'
 
 const { Response } = fetchPonyfill()
