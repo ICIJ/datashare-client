@@ -30,6 +30,9 @@
         <span>{{ display.label }}</span>
         <font-awesome-icon :icon="display.icon" class="float-right"/>
       </div>
+      <div class="p-2 text-center small text-muted" v-if="isReady && !hasResults">
+        {{ $t('facet.none') }}
+      </div>
     </div>
   </div>
 </template>
