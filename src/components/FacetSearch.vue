@@ -48,7 +48,8 @@ export default {
       type: Object
     },
     query: {
-      type: String
+      type: String,
+      default: ''
     },
     selectable: {
       type: Boolean,
