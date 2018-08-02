@@ -40,6 +40,11 @@ export const mixin = {
     // Watch change on the facet store the restart aggregation
     this.$store.watch(this.watchedForUpdate, this.aggregate, { deep: true })
   },
+  watch: {
+    items () {
+      this.facetQuery = ''
+    }
+  },
   computed: {
     items () {
       return this.response.get(`aggregations.${this.facet.key}.buckets`, [])
