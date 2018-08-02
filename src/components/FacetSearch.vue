@@ -8,7 +8,7 @@
         </span>
       </label>
     </form>
-    <div class="card m-0 mt-4 facet-search__items" v-infinite-scroll="next" infinite-scroll-disabled="reachTheEnd">
+    <div v-show="items.length" class="card m-0 mt-4 facet-search__items" v-infinite-scroll="next" infinite-scroll-disabled="reachTheEnd">
       <ul class="list-group">
         <li v-for="(item, index) in items" :key="index" class="list-group-item facet-search__items__item p-0" :class="{ 'facet-search__items__item--active': hasValue(item) }">
           <a v-if="selectable" href @click.prevent="toggleValue(item)" class="p-3 d-block">
@@ -25,9 +25,9 @@
           </span>
         </li>
       </ul>
-      <div v-if="items.length === 0" class="bg-light text-muted text-center p-2">
-        No results
-      </div>
+    </div>
+    <div v-show="!items.length" class="text-muted text-center p-2 mt-4">
+      No results
     </div>
   </div>
 </template>

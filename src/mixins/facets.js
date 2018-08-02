@@ -40,11 +40,6 @@ export const mixin = {
     // Watch change on the facet store the restart aggregation
     this.$store.watch(this.watchedForUpdate, this.aggregate, { deep: true })
   },
-  watch: {
-    items () {
-      this.facetQuery = ''
-    }
-  },
   computed: {
     items () {
       return this.response.get(`aggregations.${this.facet.key}.buckets`, [])
@@ -87,6 +82,8 @@ export const mixin = {
     asyncFacetSearch () {
       if (this.$refs.asyncFacetSearch) {
         this.$refs.asyncFacetSearch.show()
+        // Only once the modal has been rendered
+        this.$nextTick(() => { this.facetQuery = '' })
       }
     },
     aggregate () {
