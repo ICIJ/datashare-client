@@ -52,4 +52,40 @@ describe('SearchSettings.vue', function () {
     let e = wrapped.vm.$el.querySelector('#input-sort')
     expect(e.options[e.selectedIndex].value).toEqual('dateOldest')
   })
+
+  it('shouldn\'t have facets', async () => {
+    wrapped = mount(SearchSettings, {localVue, i18n, router, store})
+    await wrapped.vm.$store.dispatch('search/reset')
+    expect(wrapped.vm.hasFacets).toEqual(false)
+  })
+
+  it('should have facets', async () => {
+    wrapped = mount(SearchSettings, {localVue, i18n, router, store})
+    await wrapped.vm.$store.dispatch('search/reset')
+    expect(wrapped.vm.hasFacets).toEqual(false)
+    await wrapped.vm.$store.commit('search/addFacetValue', { name: 'content-type', value: 'csv' })
+    expect(wrapped.vm.hasFacets).toEqual(true)
+  })
+
+  it('should reset facets', async () => {
+    wrapped = mount(SearchSettings, {localVue, i18n, router, store})
+    await wrapped.vm.$store.commit('search/addFacetValue', { name: 'content-type', value: 'csv' })
+    expect(wrapped.vm.hasFacets).toEqual(true)
+    wrapped.vm.resetFacets()
+    expect(wrapped.vm.hasFacets).toEqual(false)
+  })
+
+  it('should have an input checked for globalSearch', async () => {
+    wrapped = mount(SearchSettings, {localVue, i18n, router, store})
+    wrapped.vm.$store.commit('aggregation/reset')
+    await wrapped.vm.$nextTick()
+    expect(wrapped.vm.$el.querySelector('#input-global').checked).toEqual(false)
+  })
+
+  it('should have an input unchecked for globalSearch', async () => {
+    wrapped = mount(SearchSettings, {localVue, i18n, router, store})
+    wrapped.vm.$store.commit('aggregation/setGlobalSearch', false)
+    await wrapped.vm.$nextTick()
+    expect(wrapped.vm.$el.querySelector('#input-global').checked).toEqual(false)
+  })
 })
