@@ -4,6 +4,7 @@ import slice from 'lodash/slice'
 import toLower from 'lodash/toLower'
 import toString from 'lodash/toString'
 import each from 'lodash/each'
+import pick from 'lodash/pick'
 
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 
@@ -132,7 +133,7 @@ export const mixin = {
       if (!state.aggregation.globalSearch) {
         // This will allow to watch change on the search only when
         // the aggregation is not global (ie. relative to the search).
-        return state.search
+        return pick(state.search, ['query', 'facets'])
       }
     },
     refreshRoute () {
