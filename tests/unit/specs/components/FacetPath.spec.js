@@ -45,7 +45,7 @@ describe('FacetPath.vue', () => {
 
   it('should display an empty tree', () => {
     // Check that the facet is displayed
-    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet-path__items').length).to.equal(1)
     // Chack that there is no node in the tree
     expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).to.equal(0)
   })
