@@ -78,9 +78,10 @@ export default {
           const slice = all.slice(this.items.length, this.items.length + this.pageSize)
           // Add the new items to the end of the items if needed
           this.items = startOver ? all : this.items.concat(slice)
-          this.isReady = true
           // Did we reach the end?
           this.reachTheEnd = all.length < this.size
+          // Ready when this is the last promise in the queue
+          this.isReady = this.queue.pending === 1
         })
       })
     },
