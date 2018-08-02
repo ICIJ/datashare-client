@@ -50,8 +50,11 @@ export default {
         <span>{{ display.label }}</span>
         <font-awesome-icon :icon="display.icon" class="float-right" />
       </div>
-      <div class="p-2 text-center small text-muted" v-if="isReady && !hasResults">
+      <div v-if="!hasResults" class="p-2 text-center small text-muted">
         {{ $t('facet.none') }}
+      </div>
+      <div v-else-if="noMatches" class="p-2 text-center small text-muted border-top bg-mark">
+        <span  v-html="$t('facet.noMatches')"></span>
       </div>
     </div>
   </div>

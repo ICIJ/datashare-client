@@ -69,6 +69,10 @@ export const mixin = {
     },
     hasResults () {
       return this.isReady && this.items.length > 0
+    },
+    noMatches () {
+      console.log(this.filteredItems.length)
+      return this.isReady && this.filteredItems.length === 0
     }
   },
   methods: {

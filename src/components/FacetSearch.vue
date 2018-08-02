@@ -10,11 +10,19 @@
     </form>
     <div class="card m-0 mt-4 facet-search__items" v-infinite-scroll="next" infinite-scroll-disabled="reachTheEnd">
       <ul class="list-group">
-        <li v-for="(item, index) in items" :key="index" class="list-group-item facet-search__items__item">
-          <span class="badge badge-pill badge-light float-right facet-search__items__item__count">
-            {{ item.doc_count || 0 }}
+        <li v-for="(item, index) in items" :key="index" class="list-group-item facet-search__items__item p-0" :class="{ 'facet-search__items__item--active': hasValue(item) }">
+          <a v-if="selectable" href @click.prevent="toggleValue(item)" class="p-3 d-block">
+            <span class="badge badge-pill badge-light float-right facet-search__items__item__count">
+              {{ item.doc_count || 0 }}
+            </span>
+            {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
+          </a>
+          <span v-else class="p-3 d-block">
+            <span class="badge badge-pill badge-light float-right facet-search__items__item__count">
+              {{ item.doc_count || 0 }}
+            </span>
+            {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
           </span>
-          {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
         </li>
       </ul>
       <div v-if="items.length === 0" class="bg-light text-muted text-center p-2">
@@ -41,6 +49,10 @@ export default {
     },
     query: {
       type: String
+    },
+    selectable: {
+      type: Boolean,
+      default: true
     }
   },
   directives: {
@@ -66,6 +78,26 @@ export default {
     }
   },
   methods: {
+    addValue (item) {
+      this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
+      this.refreshRoute()
+    },
+    removeValue (item) {
+      this.$store.commit('search/removeFacetValue', this.facet.itemParam(item))
+      this.refreshRoute()
+    },
+    toggleValue (item) {
+      this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
+    },
+    hasValue (item) {
+      return this.$store.getters['search/hasFacetValue'](this.facet.itemParam(item))
+    },
+    refreshRoute () {
+      this.$router.push({
+        name: 'search',
+        query: this.$store.getters['search/toRouteQuery']
+      })
+    },
     search (startOver = true) {
       // Start the search over
       if (startOver) this.startOver()
@@ -137,6 +169,33 @@ export default {
     &__items {
       max-height: 50vh;
       overflow: auto;
+
+      &__item {
+        position: relative;
+
+        &--active {
+
+          &:before {
+            content: "";
+            background: theme-color('primary');
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            width: 3px;
+            box-shadow: 0 0 10px 0 theme-color('primary');
+          }
+
+          .facet-text--reversed & {
+            text-decoration: line-through;
+
+            &:before {
+              background: $body-color;
+              box-shadow: 0 0 10px 0 $body-color;
+            }
+          }
+        }
+      }
     }
   }
 </style>

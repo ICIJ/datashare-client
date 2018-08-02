@@ -14,7 +14,7 @@
         </label>
       </form>
       <b-modal hide-header hide-footer lazy ref="asyncFacetSearch">
-        <facet-search :facet="facet" :query="facetQuery" />
+        <facet-search :facet="facet" :query="facetQuery" :selectable="false" />
       </b-modal>
       <div class="list-group-item facet-named-entity__items__item" v-for="item in displayedFilteredItems()" :key="item.key">
         <router-link :to="{ name: 'search', query: { q: item.key }}" >
@@ -35,8 +35,11 @@
         <span>{{ display.label }}</span>
         <font-awesome-icon :icon="display.icon" class="float-right"/>
       </div>
-      <div class="p-2 text-center small text-muted" v-if="isReady && !hasResults">
+      <div v-if="!hasResults" class="p-2 text-center small text-muted">
         {{ $t('facet.none') }}
+      </div>
+      <div v-else-if="noMatches" class="p-2 text-center small text-muted border-top bg-mark">
+        <span  v-html="$t('facet.noMatches')"></span>
       </div>
     </div>
   </div>
