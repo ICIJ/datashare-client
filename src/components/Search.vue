@@ -29,11 +29,6 @@ import { mapState } from 'vuex'
 
 export default {
   name: 'Search',
-  data () {
-    return {
-      isReady: false
-    }
-  },
   components: {
     AggregationsPanel,
     SearchResults,
@@ -58,16 +53,13 @@ export default {
   computed: {
     ...mapState('search', {
       query: state => state.query,
-      searchResponse: state => state.response
+      searchResponse: state => state.response,
+      isReady: state => state.isReady
     })
   },
   methods: {
     search (queryOrParams) {
-      this.isReady = false
       return this.$store.dispatch('search/query', queryOrParams)
-        .then(() => {
-          this.isReady = true
-        })
     }
   },
   watch: {

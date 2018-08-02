@@ -18,7 +18,8 @@ export function initialState () {
     size: 25,
     facets: [],
     sort: 'relevance',
-    response: Response.none()
+    response: Response.none(),
+    isReady: true
   }
 }
 
@@ -107,7 +108,11 @@ export const mutations = {
     state.sort = sort
     state.response = Response.none()
   },
+  isReady (state, isReady = !state.isReady) {
+    state.isReady = isReady
+  },
   buildResponse (state, raw) {
+    state.isReady = true
     state.response = new Response(raw)
   },
   addFacetValue (state, facet) {
@@ -171,25 +176,26 @@ export const actions = {
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.from : queryOrParams.from)
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
     commit('sort', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.sort : queryOrParams.sort)
+    commit('isReady', false)
     return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
   },
-  firstPage ({ state, commit }) {
+  firstPage ({ commit, dispatch }) {
     commit('from', 0)
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
+    return dispatch('query')
   },
-  previousPage ({ state, commit }) {
+  previousPage ({ state, commit, dispatch }) {
     commit('from', max([0, state.from - state.size]))
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
+    return dispatch('query')
   },
-  nextPage ({ state, commit }) {
+  nextPage ({ state, commit, dispatch }) {
     const nextFrom = state.from + state.size
     nextFrom < state.response.total ? commit('from', nextFrom) : commit('from', state.from)
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
+    return dispatch('query')
   },
-  lastPage ({ state, commit }) {
+  lastPage ({ state, commit, dispatch }) {
     // Calculate the "from" parameter to display the last page
     commit('from', state.size * floor(state.response.total / state.size))
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
+    return dispatch('query')
   },
   addFacetValue ({ commit, dispatch }, facet) {
     commit('addFacetValue', facet)
