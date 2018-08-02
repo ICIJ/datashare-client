@@ -5,13 +5,12 @@ import last from 'lodash/last'
 import trim from 'lodash/trim'
 import { join } from 'path'
 
-import { mixin } from '@/mixins/facets'
-import Tree from './Tree'
 import settings from '@/utils/settings'
+import Tree from '@/components/Tree'
+import { mixin } from '@/mixins/facets'
 
 export default {
   name: 'FacetPath',
-  props: ['facet'],
   mixins: [mixin],
   components: {
     Tree
@@ -96,21 +95,17 @@ export default {
       </h6>
     </div>
     <div class="list-group list-group-flush facet-path__items" v-if="!collapseItems">
-      <div class="list-group facet__items__search py-2 px-3" v-if="hasResults && facet.isSearchable">
-        <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
-        <font-awesome-icon icon="search" class="float-right" />
-      </div>
-      <div class="list-group-item facet-path-list-group" v-if="isReady">
-        <tree :tree-data="tree"></tree>
-      </div>
       <div v-if="!isReady">
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
       </div>
+      <div class="list-group-item facet-path-list-group" v-if="hasResults">
+        <tree :tree-data="tree"></tree>
+      </div>
+      <div v-if="noResults" class="p-2 text-center small text-muted">
+        {{ $t('facet.none') }}
+      </div>
     </div>
   </div>
 </template>
-
-<style lang="scss" scoped>
-</style>

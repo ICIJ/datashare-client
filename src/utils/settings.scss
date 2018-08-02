@@ -14,12 +14,13 @@ $theme-colors: (
   light: #F0F0F0,
   dark: darken(#852308, 10),
   darker: darken(#852308, 20),
-  darkest: darken(#852308, 25)
+  darkest: darken(#852308, 25),
+  mark: #fcf8e3
 );
 
 $enable-shadows: true;
 
-$font-family-sans-serif: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif !default;
+$font-family-sans-serif: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-family-serif: "Merriweather", Georgia, "Times New Roman", Times, serif !default;
 
 $headings-font-family: "Lato", $font-family-serif;
@@ -37,12 +38,16 @@ $popover-border-color: white;
 $popover-header-bg: white;
 
 $modal-content-border-width: 0;
-$modal-content-box-shadow-xs: 0 10px 30px 0 rgba(black, .4);
-$modal-content-box-shadow-sm-up: 0 20px 60px 0 rgba(black, .4);
+$modal-content-box-shadow-xs: 0 10px 30px 0 rgba(black, .1);
+$modal-content-box-shadow-sm-up: 0 20px 60px 0 rgba(black, .2);
 $modal-backdrop-bg: white;
-$modal-backdrop-opacity: .7;
+$modal-backdrop-opacity: .85;
 $modal-inner-padding: 1.5rem;
 $modal-header-padding: 1.5rem;
+
+$kbd-padding-y: .2em;
+$kbd-padding-x: .4em;
+$kbd-bg: rgba(#222, .7);
 
 
 // Bootstrap variables and mixins must be available everywhere

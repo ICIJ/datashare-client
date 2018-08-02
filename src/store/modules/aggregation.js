@@ -1,8 +1,5 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
-import FacetText from '@/components/FacetText'
-import FacetNamedEntity from '@/components/FacetNamedEntity'
-import FacetPath from '@/components/FacetPath'
 import types from '@/utils/types.json'
 
 import bodybuilder from 'bodybuilder'
@@ -31,16 +28,16 @@ function initialState () {
       {
         name: 'content-type',
         key: 'contentType',
-        type: FacetText.name,
+        type: 'FacetText',
         isSearchable: true,
         itemParam: item => ({ name: 'content-type', value: item.key }),
         itemLabel: item => get(types, [item.key, 'label'], item.key),
-        body: body => body.agg('terms', 'contentType', 'contentType')
+        body: (body, options) => body.agg('terms', 'contentType', 'contentType', options)
       },
       {
         name: 'language',
         key: 'language',
-        type: FacetText.name,
+        type: 'FacetText',
         isSearchable: true,
         itemParam: item => ({ name: 'language', value: item.key }),
         itemLabel: item => {
@@ -48,33 +45,34 @@ function initialState () {
           item = item.key.toString()
           return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
         },
-        body: body => body.agg('terms', 'language', 'language')
+        body: (body, options) => body.agg('terms', 'language', 'language', options)
       },
       {
         name: 'named-entity',
         key: 'mentions',
-        type: FacetNamedEntity.name,
+        type: 'FacetNamedEntity',
         isSearchable: true,
         itemParam: item => item.key,
-        body: body => body
+        body: (body, options = {}) => body
           .query('term', 'type', 'NamedEntity')
           .agg('terms', 'mentionNorm', 'mentions', {
-            'size': 50,
-            'order': [ {'docs': 'desc'}, {'_count': 'desc'} ]
+            size: 50,
+            order: [ {'docs': 'desc'}, {'_count': 'desc'} ],
+            ...options
           }, sub => sub.agg('cardinality', 'join#Document', 'docs'))
       },
       {
         name: 'path',
         key: 'path',
-        type: FacetPath.name,
+        type: 'FacetPath',
         isSearchable: false,
         itemParam: item => item.key,
-        body: body => body.agg('terms', 'path', 'path')
+        body: (body, options) => body.agg('terms', 'path', 'path', options)
       },
       {
         name: 'indexing-date',
         key: 'extractionDate',
-        type: FacetText.name,
+        type: 'FacetText',
         isSearchable: false,
         itemParam: item => ({ name: 'indexing-date', value: item.key }),
         itemLabel: item => item.key_as_string,
@@ -86,7 +84,7 @@ function initialState () {
       {
         name: 'extraction-level',
         key: 'extractionLevel',
-        type: FacetText.name,
+        type: 'FacetText',
         isSearchable: false,
         itemParam: item => ({ name: 'extraction-level', value: item.key }),
         itemLabel: item => get(levels, item.key),

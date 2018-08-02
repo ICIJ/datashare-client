@@ -7,10 +7,15 @@
       </h6>
     </div>
     <div class="list-group list-group-flush facet-named-entity__items" v-if="!collapseItems">
-      <div class="list-group facet__items__search py-2 px-3" v-if="hasResults && facet.isSearchable">
-        <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
-        <font-awesome-icon icon="search" class="float-right" />
-      </div>
+      <form @submit="asyncFacetSearch" v-if="hasResults && facet.isSearchable">
+        <label class="list-group facet__items__search border-bottom py-2 px-3">
+          <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
+          <font-awesome-icon icon="search" class="float-right" />
+        </label>
+      </form>
+      <b-modal hide-header hide-footer lazy ref="asyncFacetSearch">
+        <facet-search :facet="facet" :query="facetQuery" :selectable="false" />
+      </b-modal>
       <div class="list-group-item facet-named-entity__items__item" v-for="item in displayedFilteredItems()" :key="item.key">
         <router-link :to="{ name: 'search', query: { q: item.key }}" >
           <div class="badge badge-pill badge-primary mr-1 text-uppercase facet-named-entity__items__item__key" :title="item.key" v-b-tooltip.hover>
@@ -30,8 +35,11 @@
         <span>{{ display.label }}</span>
         <font-awesome-icon :icon="display.icon" class="float-right"/>
       </div>
-      <div class="p-2 text-center small text-muted" v-if="isReady && !hasResults">
+      <div v-if="noResults" class="p-2 text-center small text-muted">
         {{ $t('facet.none') }}
+      </div>
+      <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
+        <span  v-html="$t('facet.noMatches')"></span>
       </div>
     </div>
   </div>
@@ -42,7 +50,6 @@ import { mixin } from '@/mixins/facets'
 
 export default {
   name: 'FacetNamedEntity',
-  props: ['facet'],
   mixins: [mixin]
 }
 </script>
@@ -51,16 +58,21 @@ export default {
 
   .facet-named-entity__items {
 
-    & &__item__key {
-      white-space: nowrap;
-      display: inline-block;
-      overflow: hidden;
-      max-width: 100%;
-      text-overflow: ellipsis;
+    & &__item {
+      border: 0;
+
+      &__key {
+        white-space: nowrap;
+        display: inline-block;
+        overflow: hidden;
+        max-width: 100%;
+        text-overflow: ellipsis;
+      }
+
+      &__description {
+        font-style: italic;
+      }
     }
 
-    &__item__description {
-      font-style: italic;
-    }
   }
 </style>

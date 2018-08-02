@@ -37,7 +37,8 @@
       }
     },
     "facet": {
-      "none": "No distinct values",
+      "none": "No values",
+      "noMatches": "No matches.<br />Hit <kbd>enter</kbd> to search in every documents",
       "invert": "Invert",
       "contentType": "File Types",
       "language": "Languages",

@@ -21,6 +21,7 @@ import {faAngleDown} from '@fortawesome/free-solid-svg-icons/faAngleDown'
 import {faAngleUp} from '@fortawesome/free-solid-svg-icons/faAngleUp'
 import {faAmbulance} from '@fortawesome/free-solid-svg-icons/faAmbulance'
 import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo'
+import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus'
 import {faRedo} from '@fortawesome/free-solid-svg-icons/faRedo'
 import {faRocket} from '@fortawesome/free-solid-svg-icons/faRocket'
 
@@ -45,6 +46,7 @@ library.add(
   faAngleUp,
   faAmbulance,
   faUndo,
+  faPlus,
   faRedo,
   faRocket
 )
