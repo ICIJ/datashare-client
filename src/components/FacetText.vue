@@ -23,7 +23,7 @@ export default {
     </div>
     <div class="list-group list-group-flush facet-text__items" v-if="!collapseItems">
       <form @submit="asyncFacetSearch" v-if="hasResults && facet.isSearchable">
-        <label class="list-group facet__items__search py-2 px-3">
+        <label class="list-group facet__items__search border-bottom py-2 px-3">
           <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
           <font-awesome-icon icon="search" class="float-right" />
         </label>
@@ -50,10 +50,10 @@ export default {
         <span>{{ display.label }}</span>
         <font-awesome-icon :icon="display.icon" class="float-right" />
       </div>
-      <div v-if="!hasResults" class="p-2 text-center small text-muted">
+      <div v-if="noResults" class="p-2 text-center small text-muted">
         {{ $t('facet.none') }}
       </div>
-      <div v-else-if="noMatches" class="p-2 text-center small text-muted border-top bg-mark">
+      <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
         <span  v-html="$t('facet.noMatches')"></span>
       </div>
     </div>
@@ -66,6 +66,7 @@ export default {
     &__items {
 
       &__item {
+        border: 0;
         position: relative;
         overflow: hidden;
 

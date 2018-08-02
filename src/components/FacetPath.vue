@@ -95,13 +95,16 @@ export default {
       </h6>
     </div>
     <div class="list-group list-group-flush facet-path__items" v-if="!collapseItems">
-      <div class="list-group-item facet-path-list-group" v-if="isReady">
-        <tree :tree-data="tree"></tree>
-      </div>
       <div v-if="!isReady">
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
+      </div>
+      <div class="list-group-item facet-path-list-group" v-if="hasResults">
+        <tree :tree-data="tree"></tree>
+      </div>
+      <div v-if="noResults" class="p-2 text-center small text-muted">
+        {{ $t('facet.none') }}
       </div>
     </div>
   </div>

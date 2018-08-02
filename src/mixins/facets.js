@@ -70,6 +70,9 @@ export const mixin = {
     hasResults () {
       return this.isReady && this.items.length > 0
     },
+    noResults () {
+      return this.isReady && this.items.length === 0
+    },
     noMatches () {
       return this.isReady && this.filteredItems.length === 0
     }
