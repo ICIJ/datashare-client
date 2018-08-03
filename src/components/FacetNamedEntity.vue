@@ -1,78 +1,48 @@
-<template>
-  <div class="facet-named-entity card card-default">
-    <div class="card-header">
-      <h6 @click="toggleItems">
-        <font-awesome-icon :icon="headerIcon" />
-        {{ $t('facet.' + facet.key) }}
-      </h6>
-    </div>
-    <div class="list-group list-group-flush facet-named-entity__items" v-if="!collapseItems">
-      <form @submit="asyncFacetSearch" v-if="hasResults && facet.isSearchable">
-        <label class="list-group facet__items__search border-bottom py-2 px-3">
-          <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
-          <font-awesome-icon icon="search" class="float-right" />
-        </label>
-      </form>
-      <b-modal hide-header hide-footer lazy ref="asyncFacetSearch">
-        <facet-search :facet="facet" :query="facetQuery" :selectable="false" />
-      </b-modal>
-      <div class="list-group-item facet-named-entity__items__item" v-for="item in displayedFilteredItems()" :key="item.key">
-        <router-link :to="{ name: 'search', query: { q: item.key }}" >
-          <div class="badge badge-pill badge-primary mr-1 text-uppercase facet-named-entity__items__item__key" :title="item.key" v-b-tooltip.hover>
-            {{ item.key }}
-          </div>
-          <div class="text-secondary small facet-named-entity__items__item__description">
-            {{
-              $t('aggregations.mentions.item', {
-                occurrences: $tc('aggregations.mentions.occurrence', item.doc_count, { count: item.doc_count }),
-                documents: $tc('aggregations.mentions.document', item.docs.value, { count: item.docs.value })
-              })
-            }}
-          </div>
-        </router-link>
-      </div>
-      <div class="list-group-item facet__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
-        <span>{{ display.label }}</span>
-        <font-awesome-icon :icon="display.icon" class="float-right"/>
-      </div>
-      <div v-if="noResults" class="p-2 text-center small text-muted">
-        {{ $t('facet.none') }}
-      </div>
-      <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
-        <span  v-html="$t('facet.noMatches')"></span>
-      </div>
-    </div>
-  </div>
-</template>
-
 <script>
-import { mixin } from '@/mixins/facets'
+import mixin from '@/mixins/facets'
+import Facet from '@/components/Facet'
 
 export default {
   name: 'FacetNamedEntity',
+  components: { Facet },
   mixins: [mixin]
 }
 </script>
 
+<template>
+  <facet :facet="facet" class="facet--named-entity" ref="facet">
+    <template slot="item" slot-scope="{ item }">
+      <router-link :to="{ name: 'search', query: { q: item.key }}" class="py-2 px-3">
+        <div class="badge badge-pill badge-primary mr-1 text-uppercase facet__items__item__key" :title="item.key" v-b-tooltip.hover>
+          {{ item.key }}
+        </div>
+        <div class="text-secondary small facet__items__item__description">
+          {{
+            $t('aggregations.mentions.item', {
+              occurrences: $tc('aggregations.mentions.occurrence', item.doc_count, { count: item.doc_count }),
+              documents: $tc('aggregations.mentions.document', item.docs.value, { count: item.docs.value })
+            })
+          }}
+        </div>
+      </router-link>
+    </template>
+  </facet>
+</template>
+
 <style lang="scss">
+  .facet--named-entity .facet__items__item {
+    border: 0;
 
-  .facet-named-entity__items {
-
-    & &__item {
-      border: 0;
-
-      &__key {
-        white-space: nowrap;
-        display: inline-block;
-        overflow: hidden;
-        max-width: 100%;
-        text-overflow: ellipsis;
-      }
-
-      &__description {
-        font-style: italic;
-      }
+    .facet__items__item__key {
+      white-space: nowrap;
+      display: inline-block;
+      overflow: hidden;
+      max-width: 100%;
+      text-overflow: ellipsis;
     }
 
+    .facet__items__item__description {
+      font-style: italic;
+    }
   }
 </style>

@@ -6,6 +6,7 @@ import trim from 'lodash/trim'
 import { join } from 'path'
 
 import settings from '@/utils/settings'
+import Facet from '@/components/Facet'
 import Tree from '@/components/Tree'
 import { mixin } from '@/mixins/facets'
 
@@ -13,40 +14,16 @@ export default {
   name: 'FacetPath',
   mixins: [mixin],
   components: {
+    Facet,
     Tree
   },
-  created () {
-    this.aggregate()
-    // Watch change on the facet store the restart aggregation
-    this.$store.watch(this.watchedForUpdate, this.aggregate, { deep: true })
-  },
-  computed: {
-    items () {
-      return this.response.get(`aggregations.${this.facet.key}.buckets`, [])
-    },
-    facetFilter () {
-      return this.$store.getters['search/findFacet'](this.facet.name)
-    },
-    placeholderRows () {
-      return [
-        {
-          height: '1em',
-          boxes: [[0, '70%'], ['20%', '10%']]
-        }
-      ]
-    },
-    isGlobal () {
-      return this.$store.state.aggregation.globalSearch
-    },
-    treeRoot () {
-      return settings.document.base
-    },
-    tree () {
+  methods: {
+    tree (items) {
       const folderSeparator = '/'
       const tree = []
       let treePointer = null
 
-      each(this.items, item => {
+      each(items, item => {
         // Remove the document base from the path
         const fullPath = item.key.split(this.treeRoot).pop()
         const lastItem = last(fullPath.split(folderSeparator))
@@ -76,36 +53,19 @@ export default {
       })
       return tree
     }
+  },
+  computed: {
+    treeRoot () {
+      return settings.document.base
+    }
   }
 }
 </script>
 
 <template>
-  <div class="facet-path card" :class="{ 'facet-path--reversed': isReversed() }">
-    <div class="card-header">
-      <span v-if="hasValues()" class="float-right btn-group">
-        <button class="btn btn-sm btn-outline-secondary py-0" @click="invert" :class="{ 'active': isReversed() }">
-          <font-awesome-icon icon="eye-slash" />
-          Invert
-        </button>
-      </span>
-      <h6 @click="toggleItems">
-        <font-awesome-icon :icon="headerIcon" />
-        {{ $t('facet.' + facet.key) }}
-      </h6>
-    </div>
-    <div class="list-group list-group-flush facet-path__items" v-if="!collapseItems">
-      <div v-if="!isReady">
-        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
-        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
-        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
-      </div>
-      <div class="list-group-item facet-path-list-group" v-if="hasResults">
-        <tree :tree-data="tree"></tree>
-      </div>
-      <div v-if="noResults" class="p-2 text-center small text-muted">
-        {{ $t('facet.none') }}
-      </div>
-    </div>
-  </div>
+  <facet :facet="facet" :show-more="false" ref="facet">
+    <template slot="items" slot-scope="{ items }">
+      <tree :tree-data="tree(items)"></tree>
+    </template>
+  </facet>
 </template>
