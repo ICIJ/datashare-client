@@ -57,6 +57,7 @@
       "content_type": "Content type",
       "content_encoding": "Content encoding",
       "tree_level": "Tree level",
+      "parent_document": "Parent Document",
       "details": "Details",
       "extracted_text": "Extracted text",
       "preview": "Preview",

@@ -6,17 +6,17 @@
         <ul class="list-inline">
           <li class="document__header__nav__item list-inline-item">
             <a @click="tab = 'details'" :class="{active: tab === 'details'}">
-              {{$t('document.details')}}
+              {{ $t('document.details') }}
             </a>
           </li>
           <li class="document__header__nav__item list-inline-item">
             <a @click="tab = 'text'" :class="{active: tab === 'text'}">
-              {{$t('document.extracted_text')}}
+              {{ $t('document.extracted_text') }}
             </a>
           </li>
           <li class="document__header__nav__item list-inline-item">
             <a @click="tab = 'preview'" :class="{active: tab === 'preview'}">
-              {{$t('document.preview')}}
+              {{ $t('document.preview') }}
             </a>
           </li>
         </ul>
@@ -56,6 +56,14 @@
             <dt class="col-sm-3">{{ $t('document.tree_level') }}</dt>
             <dd class="col-sm-9">{{ document.source.extractionLevel }}</dd>
           </template>
+          <template v-if="document.source.extractionLevel > 0 && parentDocument">
+            <dt class="col-sm-3">{{ $t('document.parent_document') }}</dt>
+            <dd class="col-sm-9">
+              <router-link :to="{ name: 'document', params: { id: document.source.parentDocument, routing: document.routing } }">
+                {{ parentDocument.basename }}
+              </router-link>
+            </dd>
+          </template>
         </dl>
         <a class="btn btn-primary" :href="getFullUrl" target="_blank">{{ $t('document.download_button') }}</a>
       </div>
@@ -92,7 +100,8 @@ export default {
   components: {
     TiffViewer,
     SpreadsheetViewer,
-    PdfViewer},
+    PdfViewer
+  },
   name: 'document-view',
   props: ['id', 'routing'],
   data () {
@@ -102,13 +111,14 @@ export default {
   },
   methods: {
     getDoc (params = { id: this.id, routing: this.routing }) {
-      return this.$store.dispatch('document/get', params).then(() => this.$store.dispatch('document/getNamedEntities'))
+      return this.$store.dispatch('document/get', params).then(() => this.$store.dispatch('document/getParent')).then(() => this.$store.dispatch('document/getNamedEntities'))
     }
   },
   computed: {
     ...mapState('document', {
       document: state => state.doc,
-      namedEntities: state => sortedUniqBy(state.namedEntities, ne => ne.source.offset)
+      namedEntities: state => sortedUniqBy(state.namedEntities, ne => ne.source.offset),
+      parentDocument: state => state.parentDoc
     }),
     markedSourceContent () {
       if (this.document) {

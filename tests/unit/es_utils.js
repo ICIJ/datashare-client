@@ -76,6 +76,7 @@ class IndexedDocument {
   }
   withParent (parentId) {
     this.parentDocument = parentId
+    this.extractionLevel = 1
     return this
   }
   hasParent () {

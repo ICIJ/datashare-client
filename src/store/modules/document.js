@@ -5,7 +5,8 @@ export function initialState () {
   return {
     idAndRouting: null,
     doc: null,
-    namedEntities: []
+    namedEntities: [],
+    parentDoc: null
   }
 }
 
@@ -20,6 +21,7 @@ export const mutations = {
   idAndRouting (state, idAndRouting) {
     state.idAndRouting = idAndRouting
     state.doc = null
+    state.parentDoc = null
   },
   doc (state, raw) {
     if (raw !== null) {
@@ -30,6 +32,13 @@ export const mutations = {
   },
   namedEntities (state, raw) {
     state.namedEntities = new Response(raw).hits
+  },
+  parentDoc (state, raw) {
+    if (raw !== null) {
+      state.parentDoc = Response.instantiate(raw)
+    } else {
+      state.parentDoc = null
+    }
   }
 }
 
@@ -41,11 +50,22 @@ export const actions = {
       _ => commit('doc', null)
     )
   },
-  getNamedEntities ({commit, state}) {
+  getNamedEntities ({ commit, state }) {
     return esClient.getNamedEntities(state.idAndRouting.id, state.idAndRouting.routing).then(
       raw => commit('namedEntities', raw),
       _ => commit('namedEntities', {hits: {hits: []}})
     )
+  },
+  getParent ({ commit, state }) {
+    if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
+      let currentDoc = state.doc.raw._source
+      return esClient.getEsDoc(currentDoc.parentDocument, currentDoc.rootDocument).then(
+        raw => commit('parentDoc', raw),
+        _ => commit('parentDoc', null)
+      )
+    } else {
+      return null
+    }
   }
 }
 

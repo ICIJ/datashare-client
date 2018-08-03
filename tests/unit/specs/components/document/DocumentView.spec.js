@@ -5,8 +5,8 @@ import BootstrapVue from 'bootstrap-vue'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { expect } from 'chai'
 
-import { IndexedDocument, letData } from '../../es_utils'
-import esConnectionHelper from '../utils/esConnectionHelper'
+import { IndexedDocument, letData } from '../../../es_utils'
+import esConnectionHelper from '../../utils/esConnectionHelper'
 
 import messages from '@/messages'
 import router from '@/router'
@@ -20,7 +20,7 @@ localVue.use(VueI18n)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
-const i18n = new VueI18n({ locale: 'en', messages})
+const i18n = new VueI18n({ locale: 'en', messages })
 
 describe.skip('DocumentView.vue', () => {
   esConnectionHelper()
@@ -28,7 +28,7 @@ describe.skip('DocumentView.vue', () => {
 
   it('should display an empty page when document is not found', async () => {
     const id = 'notfound'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
 
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
@@ -38,7 +38,7 @@ describe.skip('DocumentView.vue', () => {
 
   it('should display a document', async () => {
     const id = 'foo.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
 
     await letData(es).have(new IndexedDocument('foo.txt')
       .withContent('this is foo document'))
@@ -53,7 +53,7 @@ describe.skip('DocumentView.vue', () => {
   it('should display a child document', async () => {
     const id = 'child.txt'
     const routing = 'parent.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id, routing }})
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id, routing }})
 
     await letData(es).have(new IndexedDocument('parent.txt')
       .withContent('this is a parent document'))
@@ -71,7 +71,7 @@ describe.skip('DocumentView.vue', () => {
 
   it('should mark named entities', async () => {
     const id = 'mydoc.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
 
     await letData(es).have(new IndexedDocument('mydoc.txt')
       .withContent('a NER doc with 2 NER2')
@@ -90,7 +90,7 @@ describe.skip('DocumentView.vue', () => {
 
   it('should display a document with named entities and escaped HTML', async () => {
     const id = 'html_doc.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
 
     await letData(es).have(new IndexedDocument('html_doc.txt')
       .withContent('a foo document <with>HTML</with>')

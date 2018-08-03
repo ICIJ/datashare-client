@@ -41,5 +41,8 @@ module.exports = {
       app.use(require('serve-static')('tests/unit/resources'))
       app.listen(9876) */
     }
+  },
+  devServer: {
+    port: 9090
   }
 }
