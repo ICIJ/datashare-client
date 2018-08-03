@@ -40,12 +40,10 @@ describe('FacetPath.vue', () => {
     })
 
     wrapped.vm.$store.commit('aggregation/reset')
-    await wrapped.vm.aggregate()
+    await wrapped.vm.root.aggregate()
   })
 
   it('should display an empty tree', () => {
-    // Check that the facet is displayed
-    expect(wrapped.vm.$el.querySelectorAll('.facet-path__items').length).to.equal(1)
     // Chack that there is no node in the tree
     expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).to.equal(0)
   })
@@ -55,16 +53,14 @@ describe('FacetPath.vue', () => {
     await letData(es).have(new IndexedDocument('/root/folder_01/doc_02.txt').withContent('document').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('/root/folder_02/folder_03/doc_03.txt').withContent('document').withContentType('text/javascript')).commit()
 
-    await wrapped.vm.aggregate()
-    await wrapped.vm.$nextTick()
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
 
-    // Check that the facet is displayed
-    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree').length).to.equal(1)
     // Check that there are 2 nodes in the tree
-    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree .tree-node').length).to.equal(7)
+    expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).to.equal(7)
     // Among the nodes, 1 is a folder
-    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree .tree-node--folder').length).to.equal(4)
+    expect(wrapped.vm.$el.querySelectorAll('.tree-node--folder').length).to.equal(4)
     // Among the nodes, 1 is a file
-    expect(wrapped.vm.$el.querySelectorAll('.facet-path-tree .tree-node--file').length).to.equal(3)
+    expect(wrapped.vm.$el.querySelectorAll('.tree-node--file').length).to.equal(3)
   })
 })
