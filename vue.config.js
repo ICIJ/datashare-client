@@ -25,6 +25,7 @@ module.exports = {
           ]
         })
     })
+
     // Aliases configuration
     config.resolve.alias
       .set('images', resolve('src/assets/images'))
