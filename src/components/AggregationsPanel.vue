@@ -23,9 +23,9 @@ export default {
     FacetPath
   },
   mounted () {
-    this.$watch(() => map(this.$refs, (ref, key) => get(ref, '0.isReady', false)), (e) => {
+    this.$watch(() => map(this.$refs, (ref, key) => get(ref, '0.root.isReady', false)), (e) => {
       this.sortedFacets = sortBy(this.facets, (facet, index) => {
-        return get(this, `$refs.${facet.name}.0.hasResults`, true) ? index : this.facets.length + index
+        return get(this, `$refs.${facet.name}.0.root.hasResults`, true) ? index : this.facets.length + index
       })
     })
   },
