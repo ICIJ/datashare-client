@@ -8,7 +8,7 @@
         </button>
       </div>
     </div>
-    <div class="col-auto px-0 pl-2">
+    <div class="col-auto px-0 pl-2" v-if="!hideSettings">
       <search-settings placement="bottomleft" />
     </div>
   </form>
@@ -19,6 +19,12 @@ import SearchSettings from './SearchSettings'
 
 export default {
   name: 'SearchBar',
+  props: {
+    hideSettings: {
+      type: Boolean,
+      default: false
+    }
+  },
   components: {
     SearchSettings
   },

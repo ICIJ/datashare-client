@@ -4,7 +4,7 @@
       <h1 class="landing__form__heading">
         Datashare
       </h1>
-      <search-bar class="landing__form__search-bar" />
+      <search-bar class="landing__form__search-bar" hide-settings />
     </div>
   </div>
 </template>
