@@ -23,7 +23,7 @@ sudo npm install -g @vue/cli
 yarn
 ```
 
-* Serve with hot reload at localhost:8080
+* Serve with hot reload at localhost:9090
 
 ```
 yarn serve
@@ -36,7 +36,7 @@ yarn serve
 # install / update dependencies
 yarn
 
-# serve with hot reload at localhost:8080
+# serve with hot reload at localhost:9090
 yarn serve
 
 # build for production with minification
