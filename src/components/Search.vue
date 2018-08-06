@@ -13,7 +13,9 @@
             <content-placeholder />
           </div>
         </div>
-        <router-view class="col search__body__document"></router-view>
+        <div class="col search__body__document">
+          <router-view></router-view>
+        </div>
       </div>
     </div>
   </div>
@@ -87,6 +89,23 @@ export default {
         overflow: auto;
         border-left: 1px solid $gray-200;
         border-right: 1px solid $gray-200;
+      }
+
+      &__document {
+        background: $aggregations-panel-bg;
+
+        .document {
+          box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
+          border: $gray-200 1px solid;
+          margin: $spacer * 2 auto;
+          background: white;
+          min-height: 90vh;
+          max-width: 880px;
+
+          @media (max-width:1700px) {
+            margin:0;
+          }
+        }
       }
     }
   }

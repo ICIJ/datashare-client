@@ -1,7 +1,13 @@
 <template>
   <div class="document" v-if="document">
     <div class="document__header">
-      <h3>{{ document.basename }}</h3>
+      <h3>
+        {{ document.basename }}
+        <a class="btn btn-link float-right" :href="getFullUrl" target="_blank" title="Download source file">
+          <font-awesome-icon icon="download" />
+          <span class="sr-only">{{ $t('document.download_button') }}</span>
+        </a>
+      </h3>
       <nav class="document__header__nav">
         <ul class="list-inline">
           <li class="document__header__nav__item list-inline-item">
@@ -65,7 +71,6 @@
             </dd>
           </template>
         </dl>
-        <a class="btn btn-primary" :href="getFullUrl" target="_blank">{{ $t('document.download_button') }}</a>
       </div>
       <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
