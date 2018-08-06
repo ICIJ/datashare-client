@@ -1,8 +1,6 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import cloneDeep from 'lodash/cloneDeep'
-import { expect } from 'chai'
-import sinon from 'sinon'
 import fetchPonyfill from 'fetch-ponyfill'
 
 import DatashareClient from '@/api/DatashareClient'
@@ -19,38 +17,34 @@ describe('Indexing store', () => {
   })
 
   beforeEach(() => {
-    sinon.stub(datashare, 'fetch')
+    jest.spyOn(datashare, 'fetch')
   })
 
   afterEach(async () => {
+    datashare.fetch.mockClear()
     store.commit('reset')
-    datashare.fetch.restore()
   })
 
   it('should define a store module', () => {
-    expect(store.state).to.not.equal(undefined)
+    expect(store.state).not.toEqual(undefined)
   })
 
   it('should reset the store state', async () => {
     let initialState = cloneDeep(store.state)
     await store.commit('reset')
 
-    expect(store.state).to.deep.equal(initialState)
+    expect(store.state).toEqual(initialState)
   })
 
   it('should execute an empty query', async () => {
-    fetchReturns(200, {})
+    datashare.fetch.mockReturnValue(jsonOk({}))
     await store.dispatch('query')
-    sinon.assert.callCount(datashare.fetch, 0)
-  })
 
-  it('should execute an empty query', async () => {
-    await store.dispatch('query')
-    sinon.assert.callCount(datashare.fetch, 0)
+    expect(datashare.fetch).toHaveBeenCalledTimes(0)
   })
 
   it('should execute a complex query', async () => {
-    fetchReturns(200, {})
+    datashare.fetch.mockReturnValue(jsonOk({}))
     store.state.form.index = true
     store.state.form.findNames = true
     store.state.form.pipeline_corenlp = true
@@ -61,39 +55,40 @@ describe('Indexing store', () => {
 
     await store.dispatch('query')
 
-    sinon.assert.callCount(datashare.fetch, 5)
-    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/index/file'),
+    expect(datashare.fetch).toHaveBeenCalledTimes(5)
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
-    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/OPENNLP'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/OPENNLP'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/IXAPIPE'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/IXAPIPE'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/findNames/GATENLP'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/GATENLP'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
   it('should clear running jobs', async () => {
-    fetchReturns(200, {})
+    datashare.fetch.mockReturnValue(jsonOk({}))
     await store.dispatch('cleanTasks')
-    expect(store.state.tasks).to.deep.equal([])
-    sinon.assert.calledOnce(datashare.fetch)
-    sinon.assert.calledWith(datashare.fetch, DatashareClient.getFullUrl('/api/task/clean/'),
+    expect(store.state.tasks).toEqual([])
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
       {method: 'POST', body: '{}', credentials: 'same-origin'})
   })
 
   it('should stop polling jobs', async () => {
     await store.dispatch('stopPollTasks')
-    expect(store.state.pollHandle).to.equal(null)
+    expect(store.state.pollHandle).toBeNull()
   })
 })
 
-function fetchReturns (status, json) {
-  datashare.fetch.returns(Promise.resolve(new Response(JSON.stringify(json), {
-    status: status,
+function jsonOk (body) {
+  const mockResponse = new Response(JSON.stringify(body), {
+    status: 200,
     headers: {
       'Content-type': 'application/json'
     }
-  })))
+  })
+  return Promise.resolve(mockResponse)
 }
