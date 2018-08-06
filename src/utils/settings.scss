@@ -15,7 +15,10 @@ $theme-colors: (
   dark: darken(#852308, 10),
   darker: darken(#852308, 20),
   darkest: darken(#852308, 25),
-  mark: #fcf8e3
+  mark: #fcf8e3,
+  category-person: #ff6699,
+  category-organization: #7f66ff,
+  category-location: #4cd9aa
 );
 
 $enable-shadows: true;

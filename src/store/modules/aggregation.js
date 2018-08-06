@@ -49,17 +49,23 @@ function initialState () {
       },
       {
         name: 'named-entity',
-        key: 'mentions',
+        key: 'byMentions',
         type: 'FacetNamedEntity',
         isSearchable: true,
         itemParam: item => item.key,
         body: (body, options = {}) => body
           .query('term', 'type', 'NamedEntity')
-          .agg('terms', 'mentionNorm', 'mentions', {
+          .agg('terms', 'mentionNorm', 'byMentions', {
             size: 50,
-            order: [ {'docs': 'desc'}, {'_count': 'desc'} ],
+            order: [ {'byDocs': 'desc'}, {'_count': 'desc'} ],
             ...options
-          }, sub => sub.agg('cardinality', 'join#Document', 'docs'))
+          }, sub => {
+            return sub
+              .agg('cardinality', 'join#Document', 'byDocs')
+              .agg('terms', 'category', 'byCategories', sub => {
+                return sub.agg('cardinality', 'join#Document', 'byDocs')
+              })
+          })
       },
       {
         name: 'path',

@@ -42,7 +42,7 @@
       "invert": "Invert",
       "contentType": "File Types",
       "language": "Languages",
-      "mentions": "Named Entities",
+      "byMentions": "Named Entities",
       "path": "Path",
       "extractionDate": "Indexing date",
       "extractionLevel": "Extraction level"

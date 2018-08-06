@@ -95,14 +95,16 @@ import PdfViewer from './PdfViewer'
 import SpreadsheetViewer from './SpreadsheetViewer'
 import TiffViewer from './TiffViewer'
 import DatashareClient from '@/api/DatashareClient'
+import ner from '@/mixins/ner'
 
 export default {
+  name: 'document-view',
+  mixins: [ner],
   components: {
     TiffViewer,
     SpreadsheetViewer,
     PdfViewer
   },
-  name: 'document-view',
   props: ['id', 'routing'],
   data () {
     return {
@@ -122,8 +124,9 @@ export default {
     }),
     markedSourceContent () {
       if (this.document) {
-        return highlight(this.document.source.content, this.namedEntities,
-          m => `<mark class="ner ${m.category}">${m.source.mention}</mark>`, r => escape(r), m => m.source.mention)
+        return highlight(this.document.source.content, this.namedEntities, m => {
+          return `<mark class="ner ${this.getCategoryClass(m.category, 'bg-')}">${m.source.mention}</mark>`
+        }, r => escape(r), m => m.source.mention)
       }
     },
     getFullUrl () {
@@ -192,17 +195,9 @@ export default {
   .text-pre-wrap {
     white-space: pre-wrap;
   }
+
   .ner {
     border-bottom: 1px dotted;
-    &.organization {
-      background-color: rgba(108, 204, 255, 0.63);
-    }
-    &.person {
-      background-color: rgba(149, 255, 129, 0.63);
-    }
-    &.location {
-      background-color: rgb(255, 225, 165);
-    }
   }
 }
 </style>

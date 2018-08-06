@@ -13,9 +13,10 @@
 
     <div class="search-results-item__fragments" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
 
-    <ul class="named-entities list-inline">
+    <ul class="named-entities list-inline mt-3">
       <li class="named-entity list-inline-item" v-for="ne in namedEntities" :key="ne._source.id" :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
-        <router-link :to="{ name: 'document', params: { id: doc.id } }" class="badge badge-pill badge-primary" v-b-tooltip.hover :title=" ne._source.mention">
+        <router-link :to="{ name: 'document', params: { id: doc.id } }" class="badge badge-pill text-white" :class="getCategoryClass(ne._source.category, 'bg-')" v-b-tooltip.hover :title=" ne._source.mention">
+          <font-awesome-icon :icon="getCategoryIcon(ne._source.category)" class="mr-1" />
           {{ ne._source.mention | truncate }}
         </router-link>
       </li>
@@ -27,9 +28,11 @@
 import get from 'lodash/get'
 import uniqBy from 'lodash/uniqBy'
 import settings from '@/utils/settings'
+import ner from '@/mixins/ner'
 
 export default {
   name: 'SearchResultsItem',
+  mixins: [ner],
   props: ['doc'],
   methods: {
     isActive () {

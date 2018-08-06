@@ -66,7 +66,7 @@ describe('Aggregation store', function () {
     let facetPath = find(store.state.aggregation.facets, { name: 'named-entity' })
 
     expect(facetPath).to.be.an('object')
-    expect(facetPath.key).to.equal('mentions')
+    expect(facetPath.key).to.equal('byMentions')
     expect(facetPath.type).to.equal('FacetNamedEntity')
   })
 

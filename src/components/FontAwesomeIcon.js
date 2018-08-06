@@ -1,54 +1,62 @@
 import FontAwesomeIcon from '@fortawesome/vue-fontawesome'
 import { library, dom } from '@fortawesome/fontawesome-svg-core'
 
-import {faUserShield} from '@fortawesome/free-solid-svg-icons/faUserShield'
-import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
-import {faCog} from '@fortawesome/free-solid-svg-icons/faCog'
-import {faExternalLinkAlt} from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt'
-import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
-import {faFolder} from '@fortawesome/free-solid-svg-icons/faFolder'
-import {faFolderOpen} from '@fortawesome/free-solid-svg-icons/faFolderOpen'
-import {faFile} from '@fortawesome/free-solid-svg-icons/faFile'
-import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch'
-import {faEyeSlash} from '@fortawesome/free-solid-svg-icons/faEyeSlash'
-import {faCaretDown} from '@fortawesome/free-solid-svg-icons/faCaretDown'
-import {faCaretRight} from '@fortawesome/free-solid-svg-icons/faCaretRight'
+import {faAmbulance} from '@fortawesome/free-solid-svg-icons/faAmbulance'
 import {faAngleDoubleLeft} from '@fortawesome/free-solid-svg-icons/faAngleDoubleLeft'
-import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft'
-import {faAngleRight} from '@fortawesome/free-solid-svg-icons/faAngleRight'
 import {faAngleDoubleRight} from '@fortawesome/free-solid-svg-icons/faAngleDoubleRight'
 import {faAngleDown} from '@fortawesome/free-solid-svg-icons/faAngleDown'
+import {faAngleLeft} from '@fortawesome/free-solid-svg-icons/faAngleLeft'
+import {faAngleRight} from '@fortawesome/free-solid-svg-icons/faAngleRight'
 import {faAngleUp} from '@fortawesome/free-solid-svg-icons/faAngleUp'
-import {faAmbulance} from '@fortawesome/free-solid-svg-icons/faAmbulance'
-import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo'
+import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
+import {faBuilding} from '@fortawesome/free-solid-svg-icons/faBuilding'
+import {faCaretDown} from '@fortawesome/free-solid-svg-icons/faCaretDown'
+import {faCaretRight} from '@fortawesome/free-solid-svg-icons/faCaretRight'
+import {faCog} from '@fortawesome/free-solid-svg-icons/faCog'
+import {faExternalLinkAlt} from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt'
+import {faEyeSlash} from '@fortawesome/free-solid-svg-icons/faEyeSlash'
+import {faFile} from '@fortawesome/free-solid-svg-icons/faFile'
+import {faFolder} from '@fortawesome/free-solid-svg-icons/faFolder'
+import {faFolderOpen} from '@fortawesome/free-solid-svg-icons/faFolderOpen'
+import {faGlobe} from '@fortawesome/free-solid-svg-icons/faGlobe'
+import {faIdBadge} from '@fortawesome/free-solid-svg-icons/faIdBadge'
+import {faMapMarkerAlt} from '@fortawesome/free-solid-svg-icons/faMapMarkerAlt'
 import {faPlus} from '@fortawesome/free-solid-svg-icons/faPlus'
+import {faQuestionCircle} from '@fortawesome/free-solid-svg-icons/faQuestionCircle'
 import {faRedo} from '@fortawesome/free-solid-svg-icons/faRedo'
 import {faRocket} from '@fortawesome/free-solid-svg-icons/faRocket'
+import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch'
+import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo'
+import {faUserShield} from '@fortawesome/free-solid-svg-icons/faUserShield'
 
 library.add(
-  faUserShield,
-  faBars,
-  faCog,
-  faExternalLinkAlt,
-  faGlobe,
-  faFolder,
-  faFolderOpen,
-  faFile,
-  faSearch,
-  faEyeSlash,
-  faCaretDown,
-  faCaretRight,
+  faAmbulance,
   faAngleDoubleLeft,
-  faAngleLeft,
-  faAngleRight,
   faAngleDoubleRight,
   faAngleDown,
+  faAngleLeft,
+  faAngleRight,
   faAngleUp,
-  faAmbulance,
-  faUndo,
+  faBars,
+  faBuilding,
+  faCaretDown,
+  faCaretRight,
+  faCog,
+  faExternalLinkAlt,
+  faEyeSlash,
+  faFile,
+  faFolder,
+  faFolderOpen,
+  faGlobe,
+  faIdBadge,
+  faMapMarkerAlt,
   faPlus,
+  faQuestionCircle,
   faRedo,
-  faRocket
+  faRocket,
+  faSearch,
+  faUndo,
+  faUserShield
 )
 
 // Kicks off the process of finding <i> tags and replacing with <svg>
