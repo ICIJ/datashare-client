@@ -4,9 +4,9 @@
       <transition name="fade">
         <div class="app__nav__mask" v-if="!collapseMenu" @click="toggleMenu"></div>
       </transition>
-      <div class="app__nav__container">
-        <div class="clearfix app__nav__container__main">
-          <router-link class="app__nav__container__main__brand" :to="{ name: 'search' }">
+      <div class="app__nav__container row no-gutters">
+        <div class="app__nav__container__main col row no-gutters">
+          <router-link class="app__nav__container__main__brand col" :to="{ name: 'search' }">
             <div class="sr-only">
               ICIJ
             </div>
@@ -14,50 +14,31 @@
               Datashare
             </div>
           </router-link>
-          <search-bar class="app__nav__container__main__search-bar" v-if="isntLanding()" />
-          <button class="btn btn-link btn-lg float-right mt-2 app__nav__container__main__hamburger" @click="toggleMenu">
-            <font-awesome-icon icon="bars" size="2x" />
-          </button>
+          <div class="app__nav__container__main__search-bar col" v-if="isntLanding()">
+            <search-bar />
+          </div>
         </div>
-        <ul class="app__nav__container__menu list-unstyled" :class="{ 'app__nav__container__menu--collapse': collapseMenu }">
+        <ul class="app__nav__container__menu list-unstyled col" :class="{ 'app__nav__container__menu--collapse': collapseMenu }"  v-if="isntLanding()">
           <li class="list-unstyled-item app__nav__container__menu__item">
             <router-link :to="{ name: 'indexing' }">
               {{ $t('menu.analyse') }}
             </router-link>
           </li>
           <li class="list-unstyled-item app__nav__container__menu__item">
-            <a href="https://www.icij.org/investigations/paradise-papers/" target="_blank">
-              Paradise Papers
-              <font-awesome-icon icon="external-link-alt" class="ml-1 app__nav__container__menu__item__new" />
-            </a>
+            <router-link :to="{ name: 'about' }">
+              {{ $t('menu.about') }}
+            </router-link>
           </li>
-          <li class="list-unstyled-item app__nav__container__menu__item">
-            <a href="https://offshoreleaks.icij.org" target="_blank">
-              Offshore Leaks
-              <font-awesome-icon icon="external-link-alt" class="ml-1 app__nav__container__menu__item__new" />
-            </a>
-          </li>
-          <li class="list-unstyled-item app__nav__container__menu__item">
-            <a href="https://www.icij.org/" target="_blank">
-              ICIJ
-              <font-awesome-icon icon="external-link-alt" class="ml-1 app__nav__container__menu__item__new" />
-            </a>
-          </li>
-          <li class="list-unstyled-item app__nav__container__menu__item">
+          <li class="list-unstyled-item app__nav__container__menu__item mr-auto">
             <a href="https://jira.icij.org/servicedesk/" target="_blank">
               {{ $t('menu.help') }}
-              <font-awesome-icon icon="ambulance" class="ml-1 app__nav__container__menu__item__new" />
             </a>
           </li>
           <li class="list-unstyled-item app__nav__container__menu__item">
             <a :href="logoutLink">
+              <font-awesome-icon icon="sign-out-alt" class="mr-1" />
               {{ $t('menu.logout') }}
             </a>
-          </li>
-          <li class="list-unstyled-item app__nav__container__menu__item">
-            <router-link :to="{ name: 'about' }">
-              {{ $t('menu.about') }}
-            </router-link>
           </li>
         </ul>
       </div>
@@ -106,7 +87,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .app__nav {
+  html body .app__nav {
     z-index: $zindex-fixed;
     position: relative;
     width: 100%;
@@ -116,19 +97,6 @@ export default {
     background: $body-bg;
     border-bottom: $gray-200 1px solid;
     box-shadow: 0 2px 10px 0 rgba(black,.05);
-
-    &--collapse, &--collapse &__container__main {
-      transition: background 600ms, box-shadow 600ms;
-
-      .headroom--top & {
-
-        &:before {
-          @include media-breakpoint-down(md) {
-            transform: translateX(-200%)
-          }
-        }
-      }
-    }
 
     &__mask {
       background: rgba(black, 0.5);
@@ -146,6 +114,7 @@ export default {
         z-index: $zindex-fixed + 30;
         background:white;
         min-height: $app-nav-height;
+        max-width: 320px + 550px;
 
         &__brand, &__brand:hover, &__brand:focus {
           color: inherit;
@@ -154,8 +123,7 @@ export default {
           margin-left: $spacer;
           margin-top: $spacer;
           pointer-events: auto;
-          float: left;
-          width: calc(320px - #{$spacer});
+          max-width: calc(320px - #{$spacer});
 
           &:before {
             content:"";
@@ -181,10 +149,10 @@ export default {
           }
         }
 
-        &__search-bar {
+        & &__search-bar {
           position: relative;
           max-width: 550px;
-          float: left;
+          padding: 0 $spacer;
         }
 
         &__hamburger {
@@ -195,53 +163,26 @@ export default {
       }
 
       &__menu {
-        z-index: $zindex-fixed + 20;
-        position: absolute;
-        top:100%;
-        left:0;
-        right:0;
-        clear:both;
-        margin:0;
-        background: darken($body-bg, 10);
-        transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
-
-        &:after {
-          z-index:10;
-          transition: opacity 400ms;
-          position: absolute;
-          top:100%;
-          height: 3rem;
-          left:0;
-          right:0;
-          content:"";
-          pointer-events: none;
-          @include gradient-y(rgba(black, 0.2), rgba(black, 0));
-        }
-
-        &--collapse,
-        .headroom--unpinned & {
-          transform: translateY(-100%);
-          &:after {
-            opacity: 0;
-          }
-        }
+        display: flex;
+        flex-grow: 1;
+        margin: 0;
 
         &__item {
-          border-bottom: 1px solid rgba($body-color, 0.1);
-
           & > a {
-            display: block;
-            padding: $spacer;
-            color: inherit;
+            padding: $spacer * 1.5 $spacer;
+            display: inline-block;
+            color: $body-color;
+            font-weight: bolder;
+            position: relative;
+            transition: .4s;
+            font-family: $headings-font-family;
+            border-bottom: 3px solid transparent;
 
             &:hover {
-              background: rgba($body-color, 0.1);
-              color: mix(theme-color(primary), $body-color);
+              color: theme-color('icij');
+              text-decoration: none;
+              border-color: theme-color('icij');
             }
-          }
-
-          &__new {
-            color: rgba($body-color, 0.2);
           }
         }
       }

@@ -27,6 +27,7 @@ import {faQuestionCircle} from '@fortawesome/free-solid-svg-icons/faQuestionCirc
 import {faRedo} from '@fortawesome/free-solid-svg-icons/faRedo'
 import {faRocket} from '@fortawesome/free-solid-svg-icons/faRocket'
 import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch'
+import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons/faSignOutAlt'
 import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo'
 import {faUserShield} from '@fortawesome/free-solid-svg-icons/faUserShield'
 
@@ -57,6 +58,7 @@ library.add(
   faRedo,
   faRocket,
   faSearch,
+  faSignOutAlt,
   faUndo,
   faUserShield
 )
