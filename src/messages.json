@@ -37,7 +37,8 @@
       }
     },
     "facet": {
-      "none": "No values",
+      "none": "No values.",
+      "seeAll": "Search the entire database",
       "noMatches": "No matches.<br />Hit <kbd>enter</kbd> to search in every documents",
       "invert": "Invert",
       "contentType": "File Types",

@@ -47,7 +47,10 @@
         <font-awesome-icon :icon="display.icon" class="float-right" />
       </div>
       <div v-if="noResults" class="p-2 text-center small text-muted">
-        {{ $t('facet.none') }}
+        {{ $t('facet.none') }}<br />
+        <a @click="asyncFacetSearch" href="#">
+          {{ $t('facet.seeAll') }}
+        </a>
       </div>
       <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
         <span  v-html="$t('facet.noMatches')"></span>
