@@ -116,12 +116,12 @@ export default {
         min-height: $app-nav-height;
         max-width: 320px + 550px;
 
-        &__brand, &__brand:hover, &__brand:focus {
+        &__brand.col, &__brand:hover, &__brand:focus {
           color: inherit;
           position: relative;
           display: inline-block;
-          margin-left: $spacer;
-          margin-top: $spacer;
+          padding: $spacer;
+          margin-right: $spacer;
           pointer-events: auto;
           max-width: calc(320px - #{$spacer});
 
@@ -136,8 +136,8 @@ export default {
             z-index: $zindex-fixed + 20;
             border:1px solid white;
             position: absolute;
-            top:0;
-            left:0;
+            top: $spacer;
+            left: $spacer;
           }
 
           & > * {
