@@ -1,5 +1,8 @@
 <template>
   <div class="aggregations-panel">
+    <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.key) : null">
+      <facet-search :facet="selectedFacet" :query="facetQuery" />
+    </b-modal>
     <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.type" v-bind="{ facet }"></component>
   </div>
 </template>
@@ -8,10 +11,12 @@
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
 import FacetPath from '@/components/FacetPath'
+import FacetSearch from '@/components/FacetSearch'
 
 import sortBy from 'lodash/sortBy'
 import map from 'lodash/map'
 import get from 'lodash/get'
+import bModal from 'bootstrap-vue/es/components/modal/modal'
 
 import { mapState } from 'vuex'
 
@@ -20,7 +25,9 @@ export default {
   components: {
     FacetNamedEntity,
     FacetText,
-    FacetPath
+    FacetPath,
+    FacetSearch,
+    bModal
   },
   mounted () {
     this.$watch(() => map(this.$refs, (ref, key) => get(ref, '0.root.isReady', false)), (e) => {
@@ -28,17 +35,32 @@ export default {
         return get(this, `$refs.${facet.name}.0.root.hasResults`, true) ? index : this.facets.length + index
       })
     })
+    // Watch for $root event
+    this.$root.$on('facet::async-search', this.asyncFacetSearch)
   },
   data () {
     return {
       relativeSearch: !this.$store.state.aggregation.globalSearch,
-      sortedFacets: this.$store.state.aggregation.facets
+      sortedFacets: this.$store.state.aggregation.facets,
+      selectedFacet: null,
+      facetQuery: null
     }
   },
   computed: {
     ...mapState('aggregation', {
       facets: state => state.facets
     })
+  },
+  methods: {
+    asyncFacetSearch (selectedFacet, facetQuery) {
+      if (this.$refs.asyncFacetSearch) {
+        // Set properties
+        this.$set(this, 'selectedFacet', selectedFacet)
+        this.$set(this, 'facetQuery', facetQuery)
+        // Display the modal
+        this.$refs.asyncFacetSearch.show()
+      }
+    }
   }
 }
 </script>
@@ -46,7 +68,7 @@ export default {
 <style lang="scss">
   .aggregations-panel {
 
-    .card {
+    & > .card {
       margin: $spacer;
 
       .card-header {

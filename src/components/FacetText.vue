@@ -10,5 +10,5 @@ export default {
 </script>
 
 <template>
-  <facet :facet="facet" ref="facet"></facet>
+  <facet v-bind="$props" ref="facet"></facet>
 </template>

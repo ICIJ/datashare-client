@@ -8,23 +8,8 @@
         </span>
       </label>
     </form>
-    <div v-show="items.length" class="card m-0 mt-4 facet-search__items" v-infinite-scroll="next" infinite-scroll-disabled="reachTheEnd">
-      <ul class="list-group">
-        <li v-for="(item, index) in items" :key="index" class="list-group-item facet-search__items__item p-0" :class="{ 'facet-search__items__item--active': hasValue(item) }">
-          <a v-if="selectable" href @click.prevent="toggleValue(item)" class="p-3 d-block">
-            <span class="badge badge-pill badge-light float-right facet-search__items__item__count">
-              {{ item.doc_count || 0 }}
-            </span>
-            {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
-          </a>
-          <span v-else class="p-3 d-block">
-            <span class="badge badge-pill badge-light float-right facet-search__items__item__count">
-              {{ item.doc_count || 0 }}
-            </span>
-            {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
-          </span>
-        </li>
-      </ul>
+    <div v-show="items.length" class="mt-4 facet-search__items card" v-infinite-scroll="next" infinite-scroll-disabled="reachTheEnd">
+      <component class="border-0" :is="facet.type" :async-items="items" hide-search hide-header hide-show-more v-bind="{ facet }"></component>
     </div>
     <div v-show="!items.length" class="text-muted text-center p-2 mt-4">
       No results
@@ -39,10 +24,16 @@ import throttle from 'lodash/throttle'
 import uniq from 'lodash/uniq'
 import infiniteScroll from 'vue-infinite-scroll'
 import PQueue from 'p-queue'
+
 import esClient from '@/api/esClient'
+
+import FacetNamedEntity from '@/components/FacetNamedEntity'
+import FacetText from '@/components/FacetText'
+import FacetPath from '@/components/FacetPath'
 
 export default {
   name: 'FacetSearch',
+  mixins: [],
   props: {
     facet: {
       type: Object
@@ -58,6 +49,11 @@ export default {
   },
   directives: {
     infiniteScroll
+  },
+  components: {
+    FacetNamedEntity,
+    FacetText,
+    FacetPath
   },
   data () {
     return {
@@ -79,26 +75,6 @@ export default {
     }
   },
   methods: {
-    addValue (item) {
-      this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
-      this.refreshRoute()
-    },
-    removeValue (item) {
-      this.$store.commit('search/removeFacetValue', this.facet.itemParam(item))
-      this.refreshRoute()
-    },
-    toggleValue (item) {
-      this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
-    },
-    hasValue (item) {
-      return this.$store.getters['search/hasFacetValue'](this.facet.itemParam(item))
-    },
-    refreshRoute () {
-      this.$router.push({
-        name: 'search',
-        query: this.$store.getters['search/toRouteQuery']
-      })
-    },
     search (startOver = true) {
       // Start the search over
       if (startOver) this.startOver()
@@ -166,37 +142,9 @@ export default {
 
 <style lang="scss">
   .facet-search {
-
     &__items {
       max-height: 50vh;
       overflow: auto;
-
-      &__item {
-        position: relative;
-
-        &--active {
-
-          &:before {
-            content: "";
-            background: theme-color('primary');
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 3px;
-            box-shadow: 0 0 10px 0 theme-color('primary');
-          }
-
-          .facet-text--reversed & {
-            text-decoration: line-through;
-
-            &:before {
-              background: $body-color;
-              box-shadow: 0 0 10px 0 $body-color;
-            }
-          }
-        }
-      }
     }
   }
 </style>

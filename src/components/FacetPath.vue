@@ -63,7 +63,7 @@ export default {
 </script>
 
 <template>
-  <facet :facet="facet" :show-more="false" ref="facet">
+  <facet v-bind="propsWithout('hide-show-more')" hide-show-more ref="facet">
     <template slot="items" slot-scope="{ items }">
       <tree :tree-data="tree(items)"></tree>
     </template>

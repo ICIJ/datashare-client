@@ -1,6 +1,6 @@
 <template>
-  <div class="facet card" :class="{ 'facet--reversed': isReversed() }">
-    <slot name="header">
+  <div class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet-hide-header': hideHeader  }">
+    <slot name="header" v-if="!hideHeader">
       <div class="card-header">
         <span v-if="hasValues()" class="float-right btn-group">
           <button class="btn btn-sm btn-outline-secondary py-0" @click="invert" :class="{ 'active': isReversed() }">
@@ -15,15 +15,12 @@
       </div>
     </slot>
     <div class="list-group list-group-flush facet__items" v-if="!collapseItems">
-      <slot name="search">
+      <slot name="search" v-if="!hideSearch">
         <form @submit="asyncFacetSearch" v-if="hasResults && facet.isSearchable" >
           <label class="list-group facet__items__search border-bottom py-2 px-3">
             <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
             <font-awesome-icon icon="search" class="float-right" />
           </label>
-          <b-modal hide-footer lazy ref="asyncFacetSearch" :title="$t('facet.' + facet.key)">
-            <facet-search :facet="facet" :query="facetQuery" />
-          </b-modal>
         </form>
       </slot>
       <slot name="items" :items="displayedFilteredItems()" :facetQuery="facetQuery">
@@ -68,12 +65,9 @@ import toString from 'lodash/toString'
 import each from 'lodash/each'
 import pick from 'lodash/pick'
 
-import bModal from 'bootstrap-vue/es/components/modal/modal'
-
 import Response from '@/api/Response'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { removeDiacritics } from '@/utils/strings.js'
-import FacetSearch from '@/components/FacetSearch'
 import { mixin } from '@/mixins/facets'
 
 const initialNumberOfFilesDisplayed = 5
@@ -81,23 +75,8 @@ const initialNumberOfFilesDisplayed = 5
 export default {
   name: 'Facet',
   mixins: [mixin],
-  props: {
-    facet: {
-      type: Object
-    },
-    showMore: {
-      type: Boolean,
-      default: true
-    },
-    hideSearch: {
-      type: Boolean,
-      default: false
-    }
-  },
   components: {
-    bModal,
-    ContentPlaceholder,
-    FacetSearch
+    ContentPlaceholder
   },
   data () {
     return {
@@ -109,17 +88,20 @@ export default {
       },
       response: Response.none(),
       collapseItems: false,
-      isReady: false
+      isReady: !!this.asyncItems
     }
   },
   created () {
-    this.aggregate()
-    // Watch change on the facet store the restart aggregation
-    this.$store.watch(this.watchedForUpdate, this.aggregate, { deep: true })
+    // Are we using an "offline" components?
+    if (!this.asyncItems) {
+      this.aggregate()
+      // Watch change on the facet store the restart aggregation
+      this.$store.watch(this.watchedForUpdate, this.aggregate, { deep: true })
+    }
   },
   computed: {
     items () {
-      return this.response.get(`aggregations.${this.facet.key}.buckets`, [])
+      return this.asyncItems || this.response.get(`aggregations.${this.facet.key}.buckets`, [])
     },
     filteredItems () {
       return filter(this.items, item => {
@@ -143,11 +125,8 @@ export default {
   },
   methods: {
     asyncFacetSearch () {
-      if (this.$refs.asyncFacetSearch) {
-        this.$refs.asyncFacetSearch.show()
-        // Only once the modal has been rendered
-        this.$nextTick(() => { this.facetQuery = '' })
-      }
+      this.$root.$emit('facet::async-search', this.facet, this.facetQuery)
+      this.$emit('async-search', this.facet, this.facetQuery)
     },
     aggregate () {
       if (this.facet) {
@@ -178,13 +157,13 @@ export default {
       }
     },
     displayedFilteredItems () {
-      return slice(this.filteredItems, 0, this.display.size)
+      return this.hideShowMore ? this.filteredItems : slice(this.filteredItems, 0, this.display.size)
     },
     normalize (str) {
       return removeDiacritics(toLower(toString(str)))
     },
     shouldDisplayShowMoreAction () {
-      return this.showMore && this.filteredItems.length > initialNumberOfFilesDisplayed
+      return !this.hideShowMore && this.filteredItems.length > initialNumberOfFilesDisplayed
     },
     toogleDisplay () {
       this.display.icon = this.display.icon === 'angle-down' ? 'angle-up' : 'angle-down'

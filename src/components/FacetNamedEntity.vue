@@ -11,7 +11,7 @@ export default {
 </script>
 
 <template>
-  <facet :facet="facet" class="facet--named-entity" ref="facet">
+  <facet v-bind="$props" class="facet--named-entity" ref="facet">
     <template slot="item" slot-scope="{ item }">
       <span v-for="category in item.byCategories.buckets" :key="category.key">
         <router-link :to="{ name: 'search', query: { q: item.key }}" class="px-3 row">
@@ -41,6 +41,7 @@ export default {
   .facet--named-entity .facet__items__item {
 
     .facet__items__item__icon {
+      max-width: 4rem;
       font-size: 2em;
       position: relative;
       border-right: 1px dashed $card-border-color !important;

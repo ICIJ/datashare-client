@@ -1,7 +1,30 @@
+import flatten from 'lodash/flatten'
+import camelCase from 'lodash/camelCase'
 import get from 'lodash/get'
+import reduce from 'lodash/reduce'
 
 export const mixin = {
-  props: ['facet'],
+  props: {
+    facet: {
+      type: Object
+    },
+    hideHeader: {
+      type: Boolean,
+      default: false
+    },
+    hideSearch: {
+      type: Boolean,
+      default: false
+    },
+    hideShowMore: {
+      type: Boolean,
+      default: false
+    },
+    asyncItems: {
+      type: Array,
+      default: null
+    }
+  },
   data () {
     return {
       isReady: false
@@ -27,6 +50,16 @@ export const mixin = {
     }
   },
   methods: {
+    // Returns all props without the givens keys
+    propsWithout (...keys) {
+      keys = flatten(keys).map(camelCase)
+      return reduce(this.$props, (props, value, key) => {
+        if (keys.indexOf(key) === -1) {
+          props[key] = value
+        }
+        return props
+      }, {})
+    },
     addValue (item) {
       this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
       this.refreshRoute()

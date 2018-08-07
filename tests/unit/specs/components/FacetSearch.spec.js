@@ -44,7 +44,7 @@ describe('FacetSearch.vue', () => {
     await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('list.html').withContentType('text/html')).commit()
     await wrapped.vm.search()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
   })
 
   it('should paginate 4 items on 2 pages', async () => {
@@ -54,9 +54,9 @@ describe('FacetSearch.vue', () => {
     await letData(es).have(new IndexedDocument('index.css').withContentType('text/css')).commit()
     await letData(es).have(new IndexedDocument('index.php').withContentType('text/php')).commit()
     await wrapped.vm.search()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(4)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(4)
   })
 
   it('should paginate 10 items on 10 pages', async () => {
@@ -65,25 +65,25 @@ describe('FacetSearch.vue', () => {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
     await wrapped.vm.search()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(3)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(3)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(4)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(4)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(5)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(5)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(6)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(6)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(7)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(7)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(8)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(8)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(9)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(9)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(10)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(10)
   })
 
   it('should paginate 10 items on 2 pages, and start over', async () => {
@@ -92,13 +92,13 @@ describe('FacetSearch.vue', () => {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
     await wrapped.vm.search()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(5)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(5)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(10)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(10)
     await wrapped.vm.search(true)
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(5)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(5)
     await wrapped.vm.next()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(10)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(10)
   })
 
   it('should create query tokens', async () => {
@@ -115,15 +115,15 @@ describe('FacetSearch.vue', () => {
     }
     wrapped.vm.asyncQuery = ''
     await wrapped.vm.search()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(10)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(10)
 
     wrapped.vm.asyncQuery = 'doc'
     await wrapped.vm.search()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
 
     wrapped.vm.asyncQuery = 'pdf'
     await wrapped.vm.search()
-    expect(wrapped.vm.$el.querySelectorAll('.facet-search__items__item').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
   })
 
   it('trigger a search when value of asyncQuery changes', async () => {
