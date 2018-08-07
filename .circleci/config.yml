@@ -17,8 +17,8 @@ jobs:
     steps:
       - checkout
       - run:
-          name: update npm
-          command: 'sudo npm install -g npm@latest yarn@latest'
+          name: update npm & yarn
+          command: 'sudo npm install -g npm@latest yarnpkg@latest'
       - run:
           name: make install
           command: make install
