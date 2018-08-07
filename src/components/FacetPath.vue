@@ -29,11 +29,11 @@ export default {
         const lastItem = last(fullPath.split(folderSeparator))
         // Build the path for the current item starting
         // with the folter separator
-        let path = this.treeRoot
+        let path = folderSeparator
         treePointer = tree
         // Potentially the first node is a path begining with / so we trim
         // the string to avoid addig emtpy dir
-        each(trim(fullPath, '/').split(folderSeparator), label => {
+        each(trim(fullPath, folderSeparator).split(folderSeparator), label => {
           let node = null
           if (label === lastItem) {
             path = join(path, label)

@@ -37,7 +37,7 @@ export default {
   },
   computed: {
     folderParams () {
-      return { q: `path:"${this.node.path}"` }
+      return { q: `path:${this.node.path}` }
     },
     isFolder () {
       return this.node.children && this.node.children.length
