@@ -2,11 +2,15 @@ import Vuex from 'vuex'
 import bodybuilder from 'bodybuilder'
 import cloneDeep from 'lodash/cloneDeep'
 import partial from 'lodash/partial'
-import { expect } from 'chai'
 import sinon from 'sinon'
+import noop from 'lodash/noop'
 
 import esClient from '@/api/esClient'
 import { state, actions, getters, mutations } from '@/store/modules/aggregation'
+
+// JSDom has no location
+// @see https://github.com/jsdom/jsdom/issues/2112
+window.location.assign = noop
 
 describe('esClient', () => {
   var server = null
@@ -15,7 +19,7 @@ describe('esClient', () => {
 
   beforeEach(() => {
     store = new Vuex.Store({ state: cloneDeep(state), actions, getters, mutations })
-    sinon.stub(window.location, 'assign')
+    jest.spyOn(window.location, 'assign')
     server = sinon.fakeServer.create()
     // There is two bugs here that screw the test:
     // 1) `sinon.fakeServer` doesn't map the global XMLHttpRequest so we need to
@@ -30,22 +34,21 @@ describe('esClient', () => {
 
   afterEach(() => {
     server.restore()
-    XMLHttpRequest = window.XMLHttpRequest
-    window.location.assign.restore()
+    window.location.assign.mockClear()
     store.commit('reset')
   })
 
   it('should return backend response to a POST request for searchDocs', async () => {
     server.respondWith('POST', esSearchUrl, [200, {'Content-Type': 'application/json'}, '{"foo": "bar"}'])
     let response = await esClient.searchDocs('*')
-    expect(response).to.deep.equal({ 'foo': 'bar' })
+    expect(response).toEqual({ 'foo': 'bar' })
   })
 
   it('should redirect to signin page if searchDocs response status is 401', async () => {
     server.respondWith('POST', esSearchUrl, [401, {'Content-Type': 'application/json'}, '{"error": "unauthorized"}'])
     await esClient.searchDocs('*')
-    sinon.assert.calledOnce(window.location.assign)
-    expect(window.location.assign.getCall(0).args[0]).to.equal(process.env.VUE_APP_DS_AUTH_SIGNIN)
+    expect(window.location.assign).toHaveBeenCalledTimes(1)
+    expect(window.location.assign.mock.calls[0][0]).toEqual(process.env.VUE_APP_DS_AUTH_SIGNIN)
   })
 
   it('should build an ES query with facets', async () => {
@@ -55,7 +58,7 @@ describe('esClient', () => {
     let body = bodybuilder().from(from).size(size)
     await esClient.addFacetsToBody(facets, body)
 
-    expect(body.build()).to.deep.equal({
+    expect(body.build()).toEqual({
       from: from,
       size: size,
       query: {
@@ -77,7 +80,7 @@ describe('esClient', () => {
     let body = bodybuilder().from(from).size(size)
     await esClient.addQueryToBody(query, body)
 
-    expect(body.build()).to.deep.equal({
+    expect(body.build()).toEqual({
       from: from,
       size: size,
       query: {
@@ -116,7 +119,7 @@ describe('esClient', () => {
     let body = bodybuilder().from(from).size(size)
     await esClient.addQueryToBody('path:/home/datashare/path/*', body)
 
-    expect(body.build()).to.deep.equal({
+    expect(body.build()).toEqual({
       from: from,
       size: size,
       query: {
@@ -156,7 +159,7 @@ describe('esClient', () => {
     let body = bodybuilder().from(from).size(size)
     await esClient.addSortToBody(sort, body)
 
-    expect(body.build()).to.deep.equal({
+    expect(body.build()).toEqual({
       from: from,
       size: size,
       sort: [{
