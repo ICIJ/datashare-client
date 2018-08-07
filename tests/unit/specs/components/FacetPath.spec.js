@@ -3,7 +3,6 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 
 import { mount, createLocalVue } from '@vue/test-utils'
-import { expect } from 'chai'
 
 import esConnectionHelper from '../utils/esConnectionHelper'
 import { IndexedDocument, letData } from '../../es_utils'
@@ -45,7 +44,7 @@ describe('FacetPath.vue', () => {
 
   it('should display an empty tree', () => {
     // Chack that there is no node in the tree
-    expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).toEqual(0)
   })
 
   it('should display a not empty tree', async () => {
@@ -57,10 +56,10 @@ describe('FacetPath.vue', () => {
     await wrapped.vm.root.$nextTick()
 
     // Check that there are 2 nodes in the tree
-    expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).to.equal(7)
+    expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).toEqual(7)
     // Among the nodes, 1 is a folder
-    expect(wrapped.vm.$el.querySelectorAll('.tree-node--folder').length).to.equal(4)
+    expect(wrapped.vm.$el.querySelectorAll('.tree-node--folder').length).toEqual(4)
     // Among the nodes, 1 is a file
-    expect(wrapped.vm.$el.querySelectorAll('.tree-node--file').length).to.equal(3)
+    expect(wrapped.vm.$el.querySelectorAll('.tree-node--file').length).toEqual(3)
   })
 })

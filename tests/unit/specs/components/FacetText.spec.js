@@ -7,7 +7,6 @@ import noop from 'lodash/noop'
 import trim from 'lodash/trim'
 
 import { createLocalVue, mount } from '@vue/test-utils'
-import { expect } from 'chai'
 
 import { IndexedDocument, letData } from '../../es_utils'
 
@@ -57,7 +56,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(0)
   })
 
   it('should display two facets items', async () => {
@@ -70,7 +69,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
   })
 
   it('should display three facets items', async () => {
@@ -85,7 +84,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).to.equal(3)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(3)
   })
 
   it('should display X facet items after applying the relative search', async () => {
@@ -99,17 +98,17 @@ describe('FacetText.vue', () => {
     store.commit('search/query', 'SHOW')
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).to.equal(3)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(3)
 
     store.commit('aggregation/setGlobalSearch', false)
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
 
     store.commit('search/query', 'INDEX')
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
   })
 
   it('should apply relative facet and get back to global facet', async () => {
@@ -120,17 +119,17 @@ describe('FacetText.vue', () => {
     store.commit('aggregation/setGlobalSearch', true)
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
 
     store.commit('aggregation/setGlobalSearch', false)
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
 
     store.commit('aggregation/setGlobalSearch', true)
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
   })
 
   it('should display an item for inverted facet with no docs', async () => {
@@ -146,8 +145,8 @@ describe('FacetText.vue', () => {
 
     const lastItem = wrapped.vm.$el.querySelector('.facet__items__item:last-child')
 
-    expect(lastItem.classList.contains('facet__items__item--active')).to.equal(true)
-    expect(trim(lastItem.querySelector('span').textContent)).to.equal('1')
+    expect(lastItem.classList.contains('facet__items__item--active')).toEqual(true)
+    expect(trim(lastItem.querySelector('span').textContent)).toEqual('1')
   })
 
   it('should not display the more button', async () => {
@@ -160,8 +159,8 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).to.equal(5)
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(5)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(0)
   })
 
   it('should display the more button and its font awesome icon', async () => {
@@ -175,9 +174,9 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).to.equal('More')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('More')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).toEqual('1')
   })
 
   it('should display all the facet values and the more button', async () => {
@@ -191,10 +190,10 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.displayedFilteredItems().length).to.equal(5)
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).to.equal('More')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
+    expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(5)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('More')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).toEqual('1')
   })
 
   it('should filter facet values 1/3 and display the more button', async () => {
@@ -210,10 +209,10 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.displayedFilteredItems().length).to.equal(5)
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display> span').textContent)).to.equal('More')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).to.equal('1')
+    expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(5)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(1)
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display> span').textContent)).toEqual('More')
+    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).toEqual('1')
   })
 
   it('should filter facet values 2/3 but no more button', async () => {
@@ -229,8 +228,8 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.displayedFilteredItems().length).to.equal(1)
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).to.equal(0)
+    expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(0)
   })
 
   it('should filter facet values 3/3', async () => {
@@ -246,7 +245,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.displayedFilteredItems().length).to.equal(0)
+    expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(0)
   })
 
   it('should filter facet values - Uppercase situation 1/2', async () => {
@@ -258,7 +257,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.displayedFilteredItems().length).to.equal(2)
+    expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(2)
   })
 
   it('should filter facet values - Uppercase situation 2/2', async () => {
@@ -270,7 +269,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.displayedFilteredItems().length).to.equal(2)
+    expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(2)
   })
 
   it('should filter facet values on facet label', async () => {
@@ -284,7 +283,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.displayedFilteredItems().length).to.equal(2)
+    expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(2)
   })
 
   it('should filter facet values - Accentuated situation', async () => {
@@ -298,7 +297,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.displayedFilteredItems().length).to.equal(2)
+    expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(2)
   })
 
   it('should display an indexing date facet with 4 months', async () => {
@@ -317,14 +316,14 @@ describe('FacetText.vue', () => {
     const getItemChild = (idx, selector) => getItem(idx).querySelector(selector)
     const getItemChildText = (idx, selector) => trim(getItemChild(idx, selector).textContent)
 
-    expect(wrapped.vm.root.displayedFilteredItems().length).to.equal(4)
-    expect(getItemChildText(0, '.facet__items__item__label')).to.equal('2018-04')
-    expect(getItemChildText(0, '.facet__items__item__count')).to.equal('1')
-    expect(getItemChildText(1, '.facet__items__item__label')).to.equal('2018-05')
-    expect(getItemChildText(1, '.facet__items__item__count')).to.equal('3')
-    expect(getItemChildText(2, '.facet__items__item__label')).to.equal('2018-06')
-    expect(getItemChildText(2, '.facet__items__item__count')).to.equal('0')
-    expect(getItemChildText(3, '.facet__items__item__label')).to.equal('2018-07')
-    expect(getItemChildText(3, '.facet__items__item__count')).to.equal('2')
+    expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(4)
+    expect(getItemChildText(0, '.facet__items__item__label')).toEqual('2018-04')
+    expect(getItemChildText(0, '.facet__items__item__count')).toEqual('1')
+    expect(getItemChildText(1, '.facet__items__item__label')).toEqual('2018-05')
+    expect(getItemChildText(1, '.facet__items__item__count')).toEqual('3')
+    expect(getItemChildText(2, '.facet__items__item__label')).toEqual('2018-06')
+    expect(getItemChildText(2, '.facet__items__item__count')).toEqual('0')
+    expect(getItemChildText(3, '.facet__items__item__label')).toEqual('2018-07')
+    expect(getItemChildText(3, '.facet__items__item__count')).toEqual('2')
   })
 })

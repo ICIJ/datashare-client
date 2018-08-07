@@ -3,7 +3,6 @@ import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
 import { mount, createLocalVue } from '@vue/test-utils'
-import { expect } from 'chai'
 
 import noop from 'lodash/noop'
 import trim from 'lodash/trim'
@@ -54,7 +53,7 @@ describe('Search.vue', function () {
     await wrapped.vm.search('foo')
     await wrapped.vm.$nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__number-of-results').textContent)).to.equal('No documents found')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__number-of-results').textContent)).toEqual('No documents found')
   })
 
   it('should display one document found', async () => {
@@ -63,9 +62,9 @@ describe('Search.vue', function () {
     await wrapped.vm.search('bar')
     await wrapped.vm.$nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress__pagination').textContent)).to.equal('1 - 1')
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).to.equal('on 1 document found')
-    expect(trim(wrapped.vm.$el.querySelector('.search-results-item__fragments').innerHTML)).to.equal('this is <mark>bar</mark> document')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress__pagination').textContent)).toEqual('1 - 1')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).toEqual('on 1 document found')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results-item__fragments').innerHTML)).toEqual('this is <mark>bar</mark> document')
   })
 
   it('should display 2 documents found', async () => {
@@ -75,9 +74,9 @@ describe('Search.vue', function () {
     await wrapped.vm.search('bar')
     await wrapped.vm.$nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress__pagination').textContent)).to.equal('1 - 2')
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).to.equal('on 2 documents found')
-    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(2)
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress__pagination').textContent)).toEqual('1 - 2')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).toEqual('on 2 documents found')
+    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).toEqual(2)
   })
 
   it('should make a link without routing for a document', async () => {
@@ -86,7 +85,7 @@ describe('Search.vue', function () {
     await wrapped.vm.search('document')
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results-item__basename a').href).to.match(/doc.txt$/)
+    expect(wrapped.vm.$el.querySelector('.search-results-item__basename a').href).toMatch(/doc.txt$/)
   })
 
   it('should make a link with routing for a child document', async () => {
@@ -96,7 +95,7 @@ describe('Search.vue', function () {
     await wrapped.vm.search('children')
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.search-results-item__basename a').href).to.match(/child.txt\/parent.txt/)
+    expect(wrapped.vm.$el.querySelector('.search-results-item__basename a').href).toMatch(/child.txt\/parent.txt/)
   })
 
   it('should return 2 documents', async () => {
@@ -105,7 +104,7 @@ describe('Search.vue', function () {
     await wrapped.vm.search({ query: 'document', from: 0, size: 2 })
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(2)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).toEqual(2)
   })
 
   it('should return 3 documents', async () => {
@@ -114,17 +113,17 @@ describe('Search.vue', function () {
     await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(3)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).toEqual(3)
   })
 
   it('should not display the pagination', async () => {
     await wrapped.vm.search('foo')
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).to.equal(0)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).to.equal(0)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page').length).to.equal(0)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).toEqual(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).toEqual(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page').length).toEqual(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).toEqual(0)
   })
 
   it('should not display the pagination', async () => {
@@ -133,10 +132,10 @@ describe('Search.vue', function () {
     await wrapped.vm.search('document')
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).to.equal(0)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).to.equal(0)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page').length).to.equal(0)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).toEqual(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).toEqual(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page').length).toEqual(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).toEqual(0)
   })
 
   it('should display the pagination', async () => {
@@ -145,13 +144,13 @@ describe('Search.vue', function () {
     await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).to.equal(2)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).to.equal(2)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page').length).to.equal(2)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).to.equal(2)
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress__pagination').textContent)).to.equal('1 - 3')
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).to.equal('on 4 documents found')
-    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(3)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).toEqual(2)
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress__pagination').textContent)).toEqual('1 - 3')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).toEqual('on 4 documents found')
+    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).toEqual(3)
   })
 
   it('should display the first and the previous page as unavailable', async () => {
@@ -160,10 +159,10 @@ describe('Search.vue', function () {
     await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page.disabled').length).to.equal(2)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page.disabled').length).to.equal(2)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page.disabled').length).to.equal(0)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page.disabled').length).to.equal(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page.disabled').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page.disabled').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page.disabled').length).toEqual(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page.disabled').length).toEqual(0)
   })
 
   it('should display the next and the last page as unavailable', async () => {
@@ -172,12 +171,12 @@ describe('Search.vue', function () {
     await wrapped.vm.search({ query: 'document', from: 3, size: 3 })
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page.disabled').length).to.equal(0)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page.disabled').length).to.equal(0)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page.disabled').length).to.equal(2)
-    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page.disabled').length).to.equal(2)
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress__pagination').textContent)).to.equal('4 - 4')
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).to.equal('on 4 documents found')
-    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).to.equal(1)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__first-page.disabled').length).toEqual(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__previous-page.disabled').length).toEqual(0)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__next-page.disabled').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page.disabled').length).toEqual(2)
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress__pagination').textContent)).toEqual('4 - 4')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__progress_number-of-results').textContent)).toEqual('on 4 documents found')
+    expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).toEqual(1)
   })
 })

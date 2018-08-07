@@ -3,7 +3,6 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 
 import { createLocalVue, mount } from '@vue/test-utils'
-import { expect } from 'chai'
 
 import { IndexedDocument, letData } from '../../../es_utils'
 import esConnectionHelper from '../../utils/esConnectionHelper'
@@ -33,7 +32,7 @@ describe.skip('DocumentView.vue', () => {
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.isEmpty()).to.equal(true)
+    expect(wrapped.isEmpty()).toEqual(true)
   })
 
   it('should display a document', async () => {
@@ -46,8 +45,8 @@ describe.skip('DocumentView.vue', () => {
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelector('h3').textContent).to.equal('foo.txt')
-    expect(wrapped.vm.$el.querySelectorAll('dd')[2].textContent).to.equal('foo.txt')
+    expect(wrapped.vm.$el.querySelector('h3').textContent).toEqual('foo.txt')
+    expect(wrapped.vm.$el.querySelectorAll('dd')[2].textContent).toEqual('foo.txt')
   })
 
   it('should display a child document', async () => {
@@ -66,7 +65,7 @@ describe.skip('DocumentView.vue', () => {
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelector('h3').textContent).to.equal('child.txt')
+    expect(wrapped.vm.$el.querySelector('h3').textContent).toEqual('child.txt')
   })
 
   it('should mark named entities', async () => {
@@ -81,11 +80,11 @@ describe.skip('DocumentView.vue', () => {
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('mark').length).to.equal(2)
-    expect(wrapped.vm.$el.querySelectorAll('mark')[0].textContent).to.equal('NER')
-    expect(wrapped.vm.$el.querySelectorAll('mark')[0].classList.contains('category1')).to.equal(true)
-    expect(wrapped.vm.$el.querySelectorAll('mark')[1].textContent).to.equal('NER2')
-    expect(wrapped.vm.$el.querySelectorAll('mark')[1].classList.contains('category2')).to.equal(true)
+    expect(wrapped.vm.$el.querySelectorAll('mark').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('mark')[0].textContent).toEqual('NER')
+    expect(wrapped.vm.$el.querySelectorAll('mark')[0].classList.contains('category1')).toEqual(true)
+    expect(wrapped.vm.$el.querySelectorAll('mark')[1].textContent).toEqual('NER2')
+    expect(wrapped.vm.$el.querySelectorAll('mark')[1].classList.contains('category2')).toEqual(true)
   })
 
   it('should display a document with named entities and escaped HTML', async () => {
@@ -99,7 +98,7 @@ describe.skip('DocumentView.vue', () => {
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelector('.text-pre-wrap').innerHTML).to.equal(
+    expect(wrapped.vm.$el.querySelector('.text-pre-wrap').innerHTML).toEqual(
       'a <mark class="ner organization">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;')
   })
 })

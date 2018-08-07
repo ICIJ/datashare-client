@@ -2,7 +2,6 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import { mount, createLocalVue } from '@vue/test-utils'
-import { expect } from 'chai'
 
 import esConnectionHelper from '../utils/esConnectionHelper'
 
@@ -39,7 +38,7 @@ describe('SearchResultsItem.vue', () => {
           }})
       }
     })
-    expect(wrapped.vm.namedEntities).to.eql([])
+    expect(wrapped.vm.namedEntities).toEqual([])
   })
 
   it('should reduce named entities : one named entities', async () => {
@@ -72,7 +71,7 @@ describe('SearchResultsItem.vue', () => {
         )
       }})
 
-    expect(wrapped.vm.namedEntities).to.eql([{_source: {id: 'id', mention: 'foo'}}])
+    expect(wrapped.vm.namedEntities).toEqual([{_source: {id: 'id', mention: 'foo'}}])
   })
 
   it('should reduce named entities : two named entities', async () => {
@@ -110,7 +109,7 @@ describe('SearchResultsItem.vue', () => {
       }
     })
 
-    expect(wrapped.vm.namedEntities).to.eql([{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}])
+    expect(wrapped.vm.namedEntities).toEqual([{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}])
   })
 
   it('should reduce named entities : two named entities with duplicates', async () => {
@@ -153,6 +152,6 @@ describe('SearchResultsItem.vue', () => {
       }
     })
 
-    expect(wrapped.vm.namedEntities).to.eql([{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}])
+    expect(wrapped.vm.namedEntities).toEqual([{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}])
   })
 })

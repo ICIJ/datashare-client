@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import { setCookie, removeCookie } from 'tiny-cookie'
-import { expect } from 'chai'
 
 import esConnectionHelper from '../utils/esConnectionHelper'
 
@@ -42,27 +41,27 @@ describe('router', () => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
     await wrapped.vm.$router.push('landing')
     await wrapped.vm.$nextTick()
-    expect(wrapped.vm.$route.path).to.equal('/login')
+    expect(wrapped.vm.$route.path).toEqual('/login')
   })
 
   it('should redirect to /login if cookie is null', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, null)
     await wrapped.vm.$router.push('landing')
     await wrapped.vm.$nextTick()
-    expect(wrapped.vm.$route.path).to.equal('/login')
+    expect(wrapped.vm.$route.path).toEqual('/login')
   })
 
   it('should redirect to /login if cookie has no login property', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, 'yolo', JSON.stringify)
     await wrapped.vm.$router.push('landing')
     await wrapped.vm.$nextTick()
-    expect(wrapped.vm.$route.path).to.equal('/login')
+    expect(wrapped.vm.$route.path).toEqual('/login')
   })
 
   it('should not redirect to /login when we have the right cookie', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'yolo' }, JSON.stringify)
     await wrapped.vm.$router.push('landing')
     await wrapped.vm.$nextTick()
-    expect(wrapped.vm.$route.path).to.not.equal('/login')
+    expect(wrapped.vm.$route.path).not.toEqual('/login')
   })
 })
