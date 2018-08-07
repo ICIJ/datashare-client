@@ -50,7 +50,6 @@
 import { mapState } from 'vuex'
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import last from 'lodash/last'
-import ary from 'lodash/ary'
 
 import store from '@/store'
 import IndexingForm from './IndexingForm'
@@ -70,8 +69,11 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    store.dispatch('indexing/startPollTasks')
-    store.dispatch('indexing/loadTasks').then(ary(next), ary(next))
+    store.dispatch('indexing/loadTasks').then(() => {
+      store.dispatch('indexing/startPollTasks')
+      next()
+    // Proceed anyway
+    }, () => next())
   },
   beforeRouteLeave (to, from, next) {
     this.$store.dispatch('indexing/stopPollTasks')
