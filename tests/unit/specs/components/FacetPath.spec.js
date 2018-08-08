@@ -43,7 +43,7 @@ describe('FacetPath.vue', () => {
   })
 
   it('should display an empty tree', () => {
-    // Chack that there is no node in the tree
+    // Check that there is no node in the tree
     expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).toEqual(0)
   })
 
