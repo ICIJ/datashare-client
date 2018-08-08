@@ -21,7 +21,7 @@ jobs:
           command: sudo npm install -g npm@latest yarn@latest
       - run:
           name: make install
-          command: yarn install
+          command: sudo yarn install
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
