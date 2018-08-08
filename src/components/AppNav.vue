@@ -17,30 +17,33 @@
           <div class="app__nav__container__main__search-bar col" v-if="isntLanding()">
             <search-bar />
           </div>
+          <a class="app__nav__container__main__hamburger col" @click.prevent="toggleMenu()" href="#">
+            <font-awesome-icon icon="bars" />
+          </a>
+          <ul class="app__nav__container__main__menu list-unstyled col" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
+            <li class="list-unstyled-item app__nav__container__main__menu__item">
+              <router-link :to="{ name: 'indexing' }">
+                {{ $t('menu.analyse') }}
+              </router-link>
+            </li>
+            <li class="list-unstyled-item app__nav__container__main__menu__item">
+              <router-link :to="{ name: 'about' }">
+                {{ $t('menu.about') }}
+              </router-link>
+            </li>
+            <li class="list-unstyled-item app__nav__container__main__menu__item mr-auto">
+              <a href="https://jira.icij.org/servicedesk/" target="_blank">
+                {{ $t('menu.help') }}
+              </a>
+            </li>
+            <li class="list-unstyled-item app__nav__container__main__menu__item">
+              <a :href="logoutLink">
+                <font-awesome-icon icon="sign-out-alt" class="mr-1" />
+                {{ $t('menu.logout') }}
+              </a>
+            </li>
+          </ul>
         </div>
-        <ul class="app__nav__container__menu list-unstyled col" :class="{ 'app__nav__container__menu--collapse': collapseMenu }"  v-if="isntLanding()">
-          <li class="list-unstyled-item app__nav__container__menu__item">
-            <router-link :to="{ name: 'indexing' }">
-              {{ $t('menu.analyse') }}
-            </router-link>
-          </li>
-          <li class="list-unstyled-item app__nav__container__menu__item">
-            <router-link :to="{ name: 'about' }">
-              {{ $t('menu.about') }}
-            </router-link>
-          </li>
-          <li class="list-unstyled-item app__nav__container__menu__item mr-auto">
-            <a href="https://jira.icij.org/servicedesk/" target="_blank">
-              {{ $t('menu.help') }}
-            </a>
-          </li>
-          <li class="list-unstyled-item app__nav__container__menu__item">
-            <a :href="logoutLink">
-              <font-awesome-icon icon="sign-out-alt" class="mr-1" />
-              {{ $t('menu.logout') }}
-            </a>
-          </li>
-        </ul>
       </div>
     </header>
   </headroom>
@@ -87,7 +90,7 @@ export default {
 </script>
 
 <style lang="scss">
-  html body .app__nav {
+  .app__nav {
     z-index: $zindex-fixed;
     position: relative;
     width: 100%;
@@ -114,16 +117,19 @@ export default {
         z-index: $zindex-fixed + 30;
         background:white;
         min-height: $app-nav-height;
-        max-width: 320px + 550px;
+        white-space: nowrap;
 
         &__brand.col, &__brand:hover, &__brand:focus {
           color: inherit;
           position: relative;
           display: inline-block;
           padding: $spacer;
-          margin-right: $spacer;
           pointer-events: auto;
-          max-width: calc(320px - #{$spacer});
+          max-width: 320px;
+
+          @include media-breakpoint-down(md) {
+            max-width: 220px;
+          }
 
           &:before {
             content:"";
@@ -145,43 +151,96 @@ export default {
             display: inline-block;
             line-height: $line-height-base;
             padding-left: $spacer;
-            margin-left: $app-nav-brand-height;
+            margin-left: $app-nav-brand-height + $spacer;
           }
         }
 
-        & &__search-bar {
+        &__search-bar.col {
           position: relative;
           max-width: 550px;
           padding: 0 $spacer;
         }
 
-        &__hamburger {
+        & &__hamburger {
           cursor: pointer;
           color: inherit;
           pointer-events: auto;
+          max-width: 3.5rem;
+          font-size: 1.5rem;
+          line-height: $app-nav-height;
+          height: $app-nav-height;
+          display: none;
+          text-align: center;
+          margin-left: auto;
+
+          @include media-breakpoint-down(lg) {
+            display: block;
+          }
         }
-      }
 
-      &__menu {
-        display: flex;
-        flex-grow: 1;
-        margin: 0;
+        &__menu {
+          display: flex;
+          flex-grow: 1;
+          margin: 0;
 
-        &__item {
-          & > a {
-            padding: $spacer * 1.5 $spacer;
-            display: inline-block;
-            color: $body-color;
-            font-weight: bolder;
-            position: relative;
-            transition: .4s;
-            font-family: $headings-font-family;
-            border-bottom: 3px solid transparent;
+          @include media-breakpoint-down(lg) {
+            display: block;
+            transition: opacity 300ms;
 
-            &:hover {
-              color: theme-color('icij');
-              text-decoration: none;
-              border-color: theme-color('icij');
+            .app__nav--collapse & {
+              opacity: 0;
+              pointer-events: none;
+            }
+
+            &.col {
+              position: absolute;
+              right: 0;
+              top: 100%;
+              margin: $spacer;
+              max-width: 280px;
+              background: $body-bg;
+              border: $gray-200 1px solid;
+              box-shadow: 0 2px 10px 0 rgba(black,.05);
+
+              &:before {
+                content:"";
+                border: ($spacer / 2) solid transparent;
+                border-bottom-color: $body-bg;
+                position: absolute;
+                bottom: 100%;
+                right: $spacer;
+              }
+            }
+
+            &.col &__item {
+              a {
+                display: block;
+                border-bottom: $gray-200 1px solid;
+                padding: $spacer;
+              }
+
+              &:last-child a {
+                border-bottom: 0;
+              }
+            }
+          }
+
+          &__item {
+            & > a {
+              padding: $spacer * 1.5 $spacer;
+              display: inline-block;
+              color: $body-color;
+              font-weight: bolder;
+              position: relative;
+              transition: .4s;
+              font-family: $headings-font-family;
+              border-bottom: 3px solid transparent;
+
+              &:hover {
+                color: theme-color('icij');
+                text-decoration: none;
+                border-color: theme-color('icij');
+              }
             }
           }
         }
