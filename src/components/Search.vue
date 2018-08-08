@@ -1,5 +1,5 @@
 <template>
-  <div class="search">
+  <div class="search" :class="{ 'search--show-document': showDocument }">
     <div class="container-fluid px-0 search__body">
       <div class="row no-gutters">
         <div class="col search__body__aggregations-panel">
@@ -13,7 +13,10 @@
             <content-placeholder />
           </div>
         </div>
-        <div class="col search__body__document">
+        <div class="col search__body__document" v-show="showDocument">
+          <router-link :to="{ name: 'search', query: searchQuery }" class="p-2 mx-2 mt-1 d-none d-md-inline-block d-xl-none">
+            Back to the search results
+          </router-link>
           <router-view></router-view>
         </div>
       </div>
@@ -57,7 +60,13 @@ export default {
       query: state => state.query,
       searchResponse: state => state.response,
       isReady: state => state.isReady
-    })
+    }),
+    searchQuery () {
+      return this.$store.getters['search/toRouteQuery']
+    },
+    showDocument () {
+      return this.$route.name === 'document'
+    }
   },
   methods: {
     search (queryOrParams) {
@@ -75,20 +84,35 @@ export default {
 
 <style lang="scss">
   .search {
-    & &__body {
+    background: $aggregations-panel-bg;
 
-      &__aggregations-panel {
+    &__body {
+
+      &__aggregations-panel.col {
         max-width: 320px;
         min-height: calc(100vh - #{$app-nav-height});
-        background: $aggregations-panel-bg;
+
+        @include media-breakpoint-down(lg) {
+          .search--show-document & {
+            display: none;
+          }
+        }
       }
 
-      &__search-results {
+      &__search-results.col {
+        background: white;
         position: relative;
         max-width: 550px;
         overflow: auto;
         border-left: 1px solid $gray-200;
         border-right: 1px solid $gray-200;
+
+        @include media-breakpoint-down(lg) {
+          .search--show-document & {
+            display: none;
+            max-width: 100%;
+          }
+        }
       }
 
       &__document {
@@ -102,8 +126,12 @@ export default {
           min-height: 90vh;
           max-width: 880px;
 
-          @media (max-width:1700px) {
-            margin:0;
+          @media (max-width: 1780px) {
+            margin-top: 0;
+          }
+
+          @include media-breakpoint-down(lg) {
+            margin-top: $spacer;
           }
         }
       }

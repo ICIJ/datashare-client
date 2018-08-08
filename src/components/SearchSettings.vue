@@ -4,7 +4,7 @@
       <font-awesome-icon icon="cog" />
       <span class="sr-only">Search settings</span>
     </button>
-    <b-popover target="toggleSettings" triggers="click" :placement="placement">
+    <b-popover target="toggleSettings" triggers="click" :placement="placement" :container="container">
       <template slot="title">
         <font-awesome-icon icon="cog" />
         Search settings
@@ -129,7 +129,7 @@ export default {
 <style lang="scss">
   .search-settings {
     &__popover {
-      width: calc(550px - 4rem);
+      width: 100%;
     }
   }
 </style>

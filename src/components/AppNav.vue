@@ -159,6 +159,10 @@ export default {
           position: relative;
           max-width: 550px;
           padding: 0 $spacer;
+
+          .search-settings__popover {
+            transform: translateY($spacer);
+          }
         }
 
         & &__hamburger {
@@ -193,6 +197,7 @@ export default {
             }
 
             &.col {
+              border-radius: $dropdown-border-radius;
               position: absolute;
               right: 0;
               top: 100%;

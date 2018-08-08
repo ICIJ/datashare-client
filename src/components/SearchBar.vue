@@ -1,5 +1,5 @@
 <template>
-  <form class="search-bar form-row align-items-center container-fluid py-3" @submit.prevent="submit">
+  <form class="search-bar form-row align-items-center container-fluid py-3" :id="uniqueId" @submit.prevent="submit">
     <div class="input-group col">
       <input v-model="query" type="search" :placeholder="$t('search.placeholder')" class="form-control">
       <div class="input-group-append">
@@ -9,13 +9,14 @@
       </div>
     </div>
     <div class="col-auto px-0 pl-2" v-if="!hideSettings">
-      <search-settings placement="bottomleft" />
+      <search-settings placement="bottomleft" :container="uniqueId" />
     </div>
   </form>
 </template>
 
 <script>
 import SearchSettings from './SearchSettings'
+import uniqueId from 'lodash/uniqueId'
 
 export default {
   name: 'SearchBar',
@@ -50,6 +51,11 @@ export default {
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
       // And emit an event for those listening...
       this.$emit('submit', this.query)
+    }
+  },
+  computed: {
+    uniqueId () {
+      return uniqueId('search-bar-')
     }
   }
 }
