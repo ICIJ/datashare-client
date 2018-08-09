@@ -46,7 +46,8 @@
       "byMentions": "Named Entities",
       "path": "Path",
       "extractionDate": "Indexing date",
-      "extractionLevel": "Extraction level"
+      "extractionLevel": "Extraction level",
+      "deleteNamedEntity": "Delete this Named Entity"
     },
     "document": {
       "name": "File name",
@@ -143,7 +144,8 @@
       "mentions": "Entitées nommées",
       "path": "Chemin du fichier",
       "extractionDate": "Date d'indexation",
-      "extractionLevel": "Niveau d'extraction"
+      "extractionLevel": "Niveau d'extraction",
+      "deleteNamedEntity": "Supprimer cette Entité Nommée"
     },
     "document": {
       "name": "Nom du fichier",

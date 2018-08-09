@@ -27,6 +27,13 @@ describe('Datashare backend client', () => {
     await ds.createIndex()
     expect(ds.redirectToAuth).toHaveBeenCalledTimes(1)
   })
+
+  it('should return backend reponse to deleteNamedEntitiesByMentionNorm', async () => {
+    fetchReturns(200, {})
+    let resp = await ds.deleteNamedEntitiesByMentionNorm('mentionNorm')
+    let json = await resp.json()
+    expect(json).toEqual({})
+  })
 })
 
 function fetchReturns (status, json) {

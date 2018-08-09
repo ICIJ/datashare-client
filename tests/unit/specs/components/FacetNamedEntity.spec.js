@@ -39,11 +39,13 @@ describe('FacetNamedEntity.vue', () => {
       }
     })
 
-    wrapped.vm.$store.commit('aggregation/reset')
     await wrapped.vm.root.aggregate()
   })
 
-  afterEach(async () => store.commit('search/reset'))
+  afterEach(async () => {
+    store.commit('search/reset')
+    store.commit('aggregation/reset')
+  })
 
   it('should display empty list', async () => {
     await wrapped.vm.root.aggregate()
@@ -171,5 +173,14 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.root.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
+  })
+
+  it('should display the dropdown menu', async () => {
+    await letData(es).have(new IndexedDocument('docs/naz.txt').withContent('this is a naz document').withNer('naz')).commit()
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item .facet__items__item__menu').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item .facet__items__item__menu .dropdown-item').length).toEqual(1)
   })
 })

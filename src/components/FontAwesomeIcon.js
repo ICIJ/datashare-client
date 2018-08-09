@@ -14,6 +14,7 @@ import {faCaretDown} from '@fortawesome/free-solid-svg-icons/faCaretDown'
 import {faCaretRight} from '@fortawesome/free-solid-svg-icons/faCaretRight'
 import {faCog} from '@fortawesome/free-solid-svg-icons/faCog'
 import {faDownload} from '@fortawesome/free-solid-svg-icons/faDownload'
+import {faEllipsisH} from '@fortawesome/free-solid-svg-icons/faEllipsisH'
 import {faExternalLinkAlt} from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt'
 import {faEyeSlash} from '@fortawesome/free-solid-svg-icons/faEyeSlash'
 import {faFile} from '@fortawesome/free-solid-svg-icons/faFile'
@@ -28,6 +29,7 @@ import {faRedo} from '@fortawesome/free-solid-svg-icons/faRedo'
 import {faRocket} from '@fortawesome/free-solid-svg-icons/faRocket'
 import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch'
 import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons/faSignOutAlt'
+import {faTrashAlt} from '@fortawesome/free-solid-svg-icons/faTrashAlt'
 import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo'
 import {faUserShield} from '@fortawesome/free-solid-svg-icons/faUserShield'
 
@@ -45,6 +47,7 @@ library.add(
   faCaretRight,
   faCog,
   faDownload,
+  faEllipsisH,
   faExternalLinkAlt,
   faEyeSlash,
   faFile,
@@ -59,6 +62,7 @@ library.add(
   faRocket,
   faSearch,
   faSignOutAlt,
+  faTrashAlt,
   faUndo,
   faUserShield
 )

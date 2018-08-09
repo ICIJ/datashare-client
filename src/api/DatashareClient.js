@@ -27,6 +27,9 @@ export class DatashareClient {
   getVersion () {
     return this.sendAction('/version')
   }
+  deleteNamedEntitiesByMentionNorm (mentionNorm) {
+    return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`)
+  }
   static getFullUrl (url) {
     return `${process.env.VUE_APP_DS_HOST || ''}${url}`
   }

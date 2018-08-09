@@ -185,7 +185,6 @@ export default {
       &__item {
         border: 0;
         position: relative;
-        overflow: hidden;
 
         &--active {
 
