@@ -18,7 +18,7 @@ export default {
           <div class="col-3 facet__items__item__icon py-2" :class="getCategoryClass(category.key, 'text-')">
             <font-awesome-icon :icon="getCategoryIcon(category.key)" />
           </div>
-          <div class="col-7 py-2">
+          <div class="col-8 py-2">
             <div class="badge badge-pill badge-primary mr-1 text-uppercase facet__items__item__key text-white" :class="getCategoryClass(category.key, 'bg-')" :title="item.key" v-b-tooltip.hover>
               {{ item.key }}
             </div>
@@ -31,10 +31,10 @@ export default {
               }}
             </div>
           </div>
-          <div class="col-2 facet__items__item__menu">
-            <b-dropdown id="ddown1" class="h-100" no-caret>
-              <template slot="button-content">
-                <font-awesome-icon icon="ellipsis-h" />
+          <div class="col-1 px-1 facet__items__item__menu">
+            <b-dropdown id="ddown1" class="h-100" no-caret btn-group dropright offset="25">
+              <template slot="button-content" class="px-1">
+                <font-awesome-icon icon="ellipsis-v" />
               </template>
               <b-dropdown-item @click="deleteNamedEntitiesByMentionNorm(item.key)">
                 <font-awesome-icon icon="trash-alt" />
@@ -82,11 +82,24 @@ export default {
         background-color: transparent;
         border: none;
         color: grey;
-        padding: 0;
+        padding: 10px;
 
         &:focus {
           box-shadow: none;
         }
+        &:active {
+          background-color: transparent;
+          border: none;
+          box-shadow: none;
+          color: grey;
+        }
+        &:focus:active {
+          box-shadow: none;
+        }
+      }
+
+      .dropdown-menu {
+        margin-top: -200%;
       }
     }
   }
