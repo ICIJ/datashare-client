@@ -1,14 +1,14 @@
 run:
-		yarn run serve
+		yarn serve
 
 clean:
 		rm -Rf ./dist
 
 dist:
-		yarn run build
+		yarn build
 
 install:
 		yarn
 
 unit:
-		yarn run test:unit
+		yarn test:unit
