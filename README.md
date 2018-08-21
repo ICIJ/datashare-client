@@ -2,6 +2,10 @@
 
 [![Circle CI](https://circleci.com/gh/ICIJ/datashare-client.png?style=shield&circle-token=bb83a70d5a43a31c6fd38d797f015b9419c15ffe)](https://circleci.com/gh/ICIJ/datashare-client)
 
+## Requirements
+
+Vue CLI requires Node.js version 8.9 or above (8.11.0+ recommended) [[source](https://cli.vuejs.org/guide/installation.html)].
+
 
 ## Install
 
@@ -14,7 +18,7 @@ sudo apt-get install libcairo2-dev libjpeg-dev libpango1.0-dev libgif-dev build-
 * Install [Vue CLI](https://cli.vuejs.org/):
 
 ```
-sudo npm install -g @vue/cli
+sudo yarn global add @vue/cli
 ```
 
 * Install dependencies:
@@ -68,6 +72,11 @@ There are three parameters to use when using the backend in dev mode :
 - run the web server with `-w`
 - allow Cross Origin requests (from the front to the back) with `--cors <pattern>`
 - points to the data directory (where the source files are located, the directory must be called `data`) with `-d`
+
+:warning: Caution : In both case, you need to add "elasticsearch" and "redis" as known hosts in your `/etc/hosts` file, on line 127.0.0.1.
+
+`127.0.0.1 localhost elasticsearch redis`
+
 
 ### with docker
 
