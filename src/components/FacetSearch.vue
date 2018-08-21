@@ -144,7 +144,7 @@ export default {
   .facet-search {
     &__items {
       max-height: 50vh;
-      overflow: auto;
+      overflow: hidden auto;
     }
   }
 </style>
