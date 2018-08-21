@@ -83,7 +83,9 @@ export default {
       sizes: [10, 25, 50, 100],
       selectedSize: this.$store.state.search.size,
       sorts: ['relevance', 'dateNewest', 'dateOldest', 'sizeLargest', 'sizeSmallest'],
-      selectedSort: this.$store.state.search.sort
+      selectedSort: this.$store.state.search.sort,
+      // https://vuejs.org/v2/guide/reactivity.html#Declaring-Reactive-Properties
+      container: ''
     }
   },
   props: {
