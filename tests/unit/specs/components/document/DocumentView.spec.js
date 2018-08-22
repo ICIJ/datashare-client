@@ -21,13 +21,13 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({ locale: 'en', messages })
 
-describe.skip('DocumentView.vue', () => {
+describe('DocumentView.vue', () => {
   esConnectionHelper()
   var es = esConnectionHelper.es
 
   it('should display an empty page when document is not found', async () => {
     const id = 'notfound'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
@@ -37,7 +37,7 @@ describe.skip('DocumentView.vue', () => {
 
   it('should display a document', async () => {
     const id = 'foo.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
+    const wrapped = mount(DocumentView, {localVue, i18n, router, store, propsData: { id }})
 
     await letData(es).have(new IndexedDocument('foo.txt')
       .withContent('this is foo document'))
@@ -45,14 +45,14 @@ describe.skip('DocumentView.vue', () => {
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelector('h3').textContent).toEqual('foo.txt')
+    expect(wrapped.vm.$el.querySelector('h3 > span').textContent).toEqual('foo.txt')
     expect(wrapped.vm.$el.querySelectorAll('dd')[2].textContent).toEqual('foo.txt')
   })
 
   it('should display a child document', async () => {
     const id = 'child.txt'
     const routing = 'parent.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id, routing }})
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id, routing }})
 
     await letData(es).have(new IndexedDocument('parent.txt')
       .withContent('this is a parent document'))
@@ -65,12 +65,12 @@ describe.skip('DocumentView.vue', () => {
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelector('h3').textContent).toEqual('child.txt')
+    expect(wrapped.vm.$el.querySelector('h3 > span').textContent).toEqual('child.txt')
   })
 
   it('should mark named entities', async () => {
     const id = 'mydoc.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
     await letData(es).have(new IndexedDocument('mydoc.txt')
       .withContent('a NER doc with 2 NER2')
@@ -82,14 +82,14 @@ describe.skip('DocumentView.vue', () => {
 
     expect(wrapped.vm.$el.querySelectorAll('mark').length).toEqual(2)
     expect(wrapped.vm.$el.querySelectorAll('mark')[0].textContent).toEqual('NER')
-    expect(wrapped.vm.$el.querySelectorAll('mark')[0].classList.contains('category1')).toEqual(true)
+    expect(wrapped.vm.$el.querySelectorAll('mark')[0].classList.contains('bg-category-category1')).toEqual(true)
     expect(wrapped.vm.$el.querySelectorAll('mark')[1].textContent).toEqual('NER2')
-    expect(wrapped.vm.$el.querySelectorAll('mark')[1].classList.contains('category2')).toEqual(true)
+    expect(wrapped.vm.$el.querySelectorAll('mark')[1].classList.contains('bg-category-category2')).toEqual(true)
   })
 
   it('should display a document with named entities and escaped HTML', async () => {
     const id = 'html_doc.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propData: { id }})
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
     await letData(es).have(new IndexedDocument('html_doc.txt')
       .withContent('a foo document <with>HTML</with>')
@@ -99,6 +99,6 @@ describe.skip('DocumentView.vue', () => {
     await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelector('.text-pre-wrap').innerHTML).toEqual(
-      'a <mark class="ner organization">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;')
+      'a <mark class="ner bg-category-organization">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;')
   })
 })

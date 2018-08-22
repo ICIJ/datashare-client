@@ -2,7 +2,7 @@
   <div class="document" v-if="document">
     <div class="document__header">
       <h3>
-        {{ document.basename }}
+        <span>{{ document.basename }}</span>
         <a class="btn btn-link float-right" :href="getFullUrl" target="_blank" title="Download source file">
           <font-awesome-icon icon="download" />
           <span class="sr-only">{{ $t('document.download_button') }}</span>
