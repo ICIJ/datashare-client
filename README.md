@@ -4,6 +4,8 @@
 
 ## Requirements
 
+You need (Yarn)[https://yarnpkg.com/lang/en/docs/install/] installed on your machine (tested with version 1.9.4).
+
 Vue CLI requires Node.js version 8.9 or above (8.11.0+ recommended) [[source](https://cli.vuejs.org/guide/installation.html)].
 
 
