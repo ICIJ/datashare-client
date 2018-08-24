@@ -62,9 +62,7 @@ function initialState () {
           }, sub => {
             return sub
               .agg('cardinality', 'join#Document', 'byDocs')
-              .agg('terms', 'category', 'byCategories', sub => {
-                return sub.agg('cardinality', 'join#Document', 'byDocs')
-              })
+              .agg('terms', 'category', 'byCategories', sub => sub.agg('cardinality', 'join#Document', 'byDocs'))
           })
       },
       {
