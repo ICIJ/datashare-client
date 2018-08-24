@@ -16,6 +16,11 @@
             </a>
           </li>
           <li class="document__header__nav__item list-inline-item">
+            <a @click="tab = 'named_entities'" :class="{active: tab === 'named_entities'}">
+              {{ $t('document.named_entities') }}
+            </a>
+          </li>
+          <li class="document__header__nav__item list-inline-item">
             <a @click="tab = 'text'" :class="{active: tab === 'text'}">
               {{ $t('document.extracted_text') }}
             </a>
@@ -72,6 +77,7 @@
           </template>
         </dl>
       </div>
+      <div class="tab-pane" v-bind:class="{active: tab === 'named_entities'}"></div>
       <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
         <template v-if="document.contentType === 'application/pdf'">

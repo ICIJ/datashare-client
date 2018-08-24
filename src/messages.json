@@ -61,6 +61,7 @@
       "tree_level": "Tree level",
       "parent_document": "Parent Document",
       "details": "Details",
+      "named_entities": "Named Entities",
       "extracted_text": "Extracted text",
       "preview": "Preview",
       "download_button": "Download"
@@ -158,6 +159,7 @@
       "content_encoding": "Encodage",
       "tree_level": "Niveau d'imbrication",
       "details": "Details",
+      "named_entities": "Entitiés nommées",
       "extracted_text": "Texte",
       "preview": "Prévisualisation",
       "download_button": "Télécharger"
