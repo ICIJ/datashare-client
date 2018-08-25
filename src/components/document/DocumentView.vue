@@ -42,7 +42,6 @@
           <dd class="col-sm-9">{{ document.source.path }}</dd>
           <dt class="col-sm-3">{{ $t('document.id') }}</dt>
           <dd class="col-sm-9">{{ document.id }}</dd>
-
           <template v-if="document.source.metadata.tika_metadata_creation_date">
             <dt class="col-sm-3">{{ $t('document.creation_date') }}</dt>
             <dd class="col-sm-9">{{ document.creationDate }}</dd>
@@ -77,7 +76,14 @@
           </template>
         </dl>
       </div>
-      <div class="tab-pane" v-bind:class="{active: tab === 'named_entities'}"></div>
+      <div class="tab-pane" v-bind:class="{active: tab === 'named_entities'}">
+        <div v-for="(results, index) in groupByCategories(namedEntities)" :key="index">
+        {{ results[0].source.category }} ({{ results.length }})
+          <div v-for="(result, index) in groupByMentionNorm(results)" :key="index">
+            {{ result[0].source.mentionNorm }} ({{ result.length }})
+          </div>
+        </div>
+      </div>
       <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
         <template v-if="document.contentType === 'application/pdf'">
@@ -98,23 +104,25 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import sortedUniqBy from 'lodash/sortedUniqBy'
-import escape from 'lodash/escape'
 import { highlight } from '@/utils/strings'
+import { mapState } from 'vuex'
+import DatashareClient from '@/api/DatashareClient'
+import escape from 'lodash/escape'
+import groupBy from 'lodash/groupBy'
+import ner from '@/mixins/ner'
+import orderBy from 'lodash/orderBy'
 import PdfViewer from './PdfViewer'
+import sortedUniqBy from 'lodash/sortedUniqBy'
 import SpreadsheetViewer from './SpreadsheetViewer'
 import TiffViewer from './TiffViewer'
-import DatashareClient from '@/api/DatashareClient'
-import ner from '@/mixins/ner'
 
 export default {
   name: 'document-view',
   mixins: [ner],
   components: {
-    TiffViewer,
+    PdfViewer,
     SpreadsheetViewer,
-    PdfViewer
+    TiffViewer
   },
   props: ['id', 'routing'],
   data () {
@@ -125,17 +133,23 @@ export default {
   methods: {
     getDoc (params = { id: this.id, routing: this.routing }) {
       return this.$store.dispatch('document/get', params).then(() => this.$store.dispatch('document/getParent')).then(() => this.$store.dispatch('document/getNamedEntities'))
+    },
+    groupByCategories (array) {
+      return orderBy(groupBy(array, m => m.source.category), ['length', m => m[0].source.category], ['desc', 'asc'])
+    },
+    groupByMentionNorm (array) {
+      return orderBy(groupBy(array, m => m.source.mentionNorm), ['length', m => m[0].source.mentionNorm], ['desc', 'asc'])
     }
   },
   computed: {
     ...mapState('document', {
       document: state => state.doc,
-      namedEntities: state => sortedUniqBy(state.namedEntities, ne => ne.source.offset),
+      namedEntities: state => state.namedEntities,
       parentDocument: state => state.parentDoc
     }),
     markedSourceContent () {
       if (this.document) {
-        return highlight(this.document.source.content, this.namedEntities, m => {
+        return highlight(this.document.source.content, sortedUniqBy(this.namedEntities, ne => ne.source.offset), m => {
           return `<mark class="ner ${this.getCategoryClass(m.category, 'bg-')}">${m.source.mention}</mark>`
         }, r => escape(r), m => m.source.mention)
       }
