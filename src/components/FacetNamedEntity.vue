@@ -1,12 +1,16 @@
 <script>
+import { capitalize } from '@/utils/strings'
+import Facet from '@/components/Facet'
 import facets from '@/mixins/facets'
 import ner from '@/mixins/ner'
-import Facet from '@/components/Facet'
 
 export default {
   name: 'FacetNamedEntity',
   components: { Facet },
-  mixins: [facets, ner]
+  mixins: [facets, ner],
+  methods: {
+    capitalize: capitalize
+  }
 }
 </script>
 
@@ -19,7 +23,7 @@ export default {
             <font-awesome-icon :icon="getCategoryIcon(category.key)" />
           </div>
           <div class="col-8 py-2">
-            <div class="badge badge-pill badge-primary mr-1 text-uppercase facet__items__item__key text-white" :class="getCategoryClass(category.key, 'bg-')" :title="item.key" v-b-tooltip.hover>
+            <div class="badge badge-pill badge-primary mr-1 text-uppercase facet__items__item__key text-white" :class="getCategoryClass(category.key, 'bg-')" :title="capitalize(item.key)" v-b-tooltip.hover>
               {{ item.key }}
             </div>
             <div class="text-secondary small facet__items__item__description">
