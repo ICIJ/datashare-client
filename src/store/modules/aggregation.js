@@ -107,7 +107,19 @@ function initialState () {
         key: 'path',
         type: 'FacetPath',
         isSearchable: false,
-        itemParam: item => item.key,
+        itemParam: item => ({ name: 'path', value: item.key }),
+        addFilter: (body, param) => {
+          body.query('bool', sub => {
+            param.values.forEach(path => sub.orQuery('prefix', { path }))
+            return sub
+          })
+        },
+        notFilter: (body, param) => {
+          body.query('bool', sub => {
+            param.values.forEach(path => sub.notQuery('prefix', { path }))
+            return sub
+          })
+        },
         body: (body, options) => body.agg('terms', 'path', 'path', options)
       },
       {
