@@ -1,4 +1,7 @@
-import { map, zipObject, takeRight, identity } from 'lodash'
+import identity from 'lodash/identity'
+import map from 'lodash/map'
+import takeRight from 'lodash/takeRight'
+import zipObject from 'lodash/zipObject'
 
 export function sliceIndexes (str, indexes) {
   if (str.length === 0) return []
@@ -123,7 +126,16 @@ for (let i = 0; i < defaultDiacriticsRemovalMap.length; i++) {
 
 // "what?" version ... http://jsperf.com/diacritics/12
 export function removeDiacritics (str) {
-  return str.replace(/[^\u0000-\u007E]/g, function (a) {
+  return str.replace(/./g, function (a) {
     return diacriticsMap[a] || a
   })
+}
+
+export function capitalize (str) {
+  if (typeof str !== 'string') return -1
+  var a = str.toLowerCase().split(' ')
+  a.forEach((m, index, array) => {
+    array[index] = m.charAt(0).toUpperCase() + m.slice(1)
+  })
+  return a.join(' ')
 }

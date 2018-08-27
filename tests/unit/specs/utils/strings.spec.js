@@ -1,5 +1,5 @@
-import { sliceIndexes, highlight, removeDiacritics } from '@/utils/strings.js'
-import { escape } from 'lodash'
+import { sliceIndexes, highlight, removeDiacritics, capitalize } from '@/utils/strings.js'
+import escape from 'lodash/escape'
 
 describe('sliceIndexes', () => {
   it('should return empty list when input is empty string', () => {
@@ -87,5 +87,19 @@ describe('removeDiacritics', () => {
 
   it('replace è, û and é', () => {
     expect(removeDiacritics('Crème brûlée')).toEqual('Creme brulee')
+  })
+})
+
+describe('capitalize', () => {
+  it('should return -1', () => {
+    expect(capitalize({})).toEqual(-1)
+  })
+
+  it('should return empty string', () => {
+    expect(capitalize('')).toEqual('')
+  })
+
+  it('should return Palace Street', () => {
+    expect(capitalize('paLAce strEEt')).toEqual('Palace Street')
   })
 })
