@@ -23,6 +23,10 @@ export default class Response {
     arr.push(value)
     return this.set(path, arr)
   }
+  prepend (path, value) {
+    const arr = this.get(path, [])
+    return this.set(path, [value].concat(arr))
+  }
   get hits () {
     return map(this.get('hits.hits', []), hit => {
       return Response.instantiate(hit)

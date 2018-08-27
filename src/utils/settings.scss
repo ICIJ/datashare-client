@@ -3,9 +3,6 @@ $body-bg: #fff;
 $theme-colors: (
   primary: #F8B700,
   icij: #852308,
-  tradewind: #68BEB0,
-  cuttysark: #50676b,
-  punch: #CA4024,
   secondary: #505050,
   success: #28a745,
   info: #17a2b8,
@@ -16,6 +13,7 @@ $theme-colors: (
   darker: darken(#852308, 20),
   darkest: darken(#852308, 25),
   mark: #fcf8e3,
+  category-ban: #505050,
   category-person: #ff6699,
   category-organization: #7f66ff,
   category-location: #4cd9aa

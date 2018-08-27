@@ -5,7 +5,7 @@ export const mixin = {
         person: 'id-badge',
         organization: 'building',
         location: 'map-marker-alt'
-      }[category.toLowerCase()] || 'question-circle'
+      }[category.toLowerCase()] || 'ban'
     },
     getCategoryClass (category = 'muted', prefix = '') {
       return `${prefix}category-${category.toLowerCase()}`
