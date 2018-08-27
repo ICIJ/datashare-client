@@ -46,9 +46,9 @@ export function searchPlugin (Client, config, components) {
       const facet = store.getters['aggregation/getFacet']({ name: facetValue.name })
       // A reversed facetValue means we want to exclude the value
       if (facetValue.reverse) {
-        return body.notFilter('terms', facet.key, facetValue.values)
+        return facet.notFilter ? facet.notFilter(body, facetValue) : body.notFilter('terms', facet.key, facetValue.values)
       } else {
-        return body.addFilter('terms', facet.key, facetValue.values)
+        return facet.addFilter ? facet.addFilter(body, facetValue) : body.addFilter('terms', facet.key, facetValue.values)
       }
     })
   }

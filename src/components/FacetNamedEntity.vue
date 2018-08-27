@@ -6,20 +6,34 @@ import Facet from '@/components/Facet'
 export default {
   name: 'FacetNamedEntity',
   components: { Facet },
-  mixins: [facets, ner]
+  mixins: [facets, ner],
+  methods: {
+    getCategories (item) {
+      if (item.byCategories) {
+        return item.byCategories.buckets
+      }
+      return [
+        {
+          key: 'ban',
+          doc_count: 0,
+          byDocs: { value: 0 }
+        }
+      ]
+    }
+  }
 }
 </script>
 
 <template>
   <facet v-bind="$props" class="facet--named-entity" ref="facet">
     <template slot="item" slot-scope="{ item }">
-      <span v-for="category in item.byCategories.buckets" :key="category.key">
-        <router-link :to="{ name: 'search', query: { q: item.key }}" class="px-3 row">
+      <span v-for="category in getCategories(item)" :key="category.key">
+        <div class="px-3 row">
           <div class="col-3 facet__items__item__icon py-2" :class="getCategoryClass(category.key, 'text-')">
             <font-awesome-icon :icon="getCategoryIcon(category.key)" />
           </div>
-          <div class="col-8 py-2">
-            <div class="badge badge-pill badge-primary mr-1 text-uppercase facet__items__item__key text-white" :class="getCategoryClass(category.key, 'bg-')" :title="item.key" v-b-tooltip.hover>
+          <a class="col-8 py-2" href @click.prevent="toggleValue(item)">
+            <div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__key text-white" :class="getCategoryClass(category.key, 'bg-')" :title="item.key" v-b-tooltip.hover>
               {{ item.key }}
             </div>
             <div class="text-secondary small facet__items__item__description">
@@ -30,7 +44,7 @@ export default {
                 })
               }}
             </div>
-          </div>
+          </a>
           <div class="col-1 px-1 facet__items__item__menu">
             <b-dropdown id="ddown1" class="h-100" no-caret btn-group dropright offset="25">
               <template slot="button-content" class="px-1">
@@ -42,7 +56,7 @@ export default {
                </b-dropdown-item>
             </b-dropdown>
           </div>
-        </router-link>
+        </div>
       </span>
     </template>
   </facet>
@@ -75,6 +89,10 @@ export default {
 
     .facet__items__item__description {
       font-style: italic;
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .facet__items__item__menu {

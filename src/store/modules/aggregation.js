@@ -52,20 +52,56 @@ function initialState () {
         key: 'byMentions',
         type: 'FacetNamedEntity',
         isSearchable: true,
-        itemParam: item => item.key,
-        body: (body, options = {}) => body
-          .query('term', 'type', 'NamedEntity')
-          .agg('terms', 'mentionNorm', 'byMentions', {
-            size: 50,
-            order: [ {'byDocs': 'desc'}, {'_count': 'desc'} ],
-            ...options
-          }, sub => {
-            return sub
-              .agg('cardinality', 'join#Document', 'byDocs')
-              .agg('terms', 'category', 'byCategories', sub => {
-                return sub.agg('cardinality', 'join#Document', 'byDocs')
+        itemParam: item => ({ name: 'named-entity', value: item.key }),
+        addFilter: (body, param) => {
+          return body.addQuery('bool', b => {
+            b.orQuery('has_child', 'type', 'NamedEntity', { }, sub => {
+              return sub.query('query_string', {
+                default_field: 'mentionNorm',
+                query: param.values.map(v => `(${v})`).join(' OR ')
               })
+            })
+
+            b.orQuery('query_string', {
+              default_field: 'mentionNorm',
+              query: param.values.map(v => `(${v})`).join(' OR ')
+            })
+
+            return b
           })
+        },
+        notFilter: (body, param) => {
+          return body.notQuery('bool', b => {
+            b.orQuery('has_child', 'type', 'NamedEntity', { }, sub => {
+              return sub.query('query_string', {
+                default_field: 'mentionNorm',
+                query: param.values.map(v => `(${v})`).join(' OR ')
+              })
+            })
+
+            b.orQuery('query_string', {
+              default_field: 'mentionNorm',
+              query: param.values.map(v => `(${v})`).join(' OR ')
+            })
+
+            return b
+          })
+        },
+        body: (body, options = {}) => {
+          return body
+            .query('term', 'type', 'NamedEntity')
+            .agg('terms', 'mentionNorm', 'byMentions', {
+              size: 50,
+              order: [ {'byDocs': 'desc'}, {'_count': 'desc'} ],
+              ...options
+            }, sub => {
+              return sub
+                .agg('cardinality', 'join#Document', 'byDocs')
+                .agg('terms', 'category', 'byCategories', sub => {
+                  return sub.agg('cardinality', 'join#Document', 'byDocs')
+                })
+            })
+        }
       },
       {
         name: 'path',

@@ -60,7 +60,7 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.root.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__item__description').textContent)).toEqual('one occurrence in one document')
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__item__description').textContent)).toEqual('one occurrence in one doc')
   })
 
   it('should display two named entities in one document', async () => {
@@ -79,7 +79,7 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.root.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__item__description').textContent)).toEqual('3 occurrences in 2 documents')
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__item__description').textContent)).toEqual('3 occurrences in 2 docs')
   })
 
   it('should display three named entities in two documents with right order', async () => {

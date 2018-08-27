@@ -144,7 +144,7 @@ export default {
     addInvertedFacets (response) {
       if (!this.isGlobal && this.facetFilter && this.facetFilter.reverse) {
         each(this.facetFilter.values, key => {
-          response.push(`aggregations.${this.facet.key}.buckets`, { key })
+          response.prepend(`aggregations.${this.facet.key}.buckets`, { key })
         })
       }
       return response

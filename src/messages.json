@@ -4,7 +4,7 @@
       "mentions": {
         "item": "%{occurrences} in %{documents}",
         "occurrence": "no occurrences | one occurrence | {count} occurrences",
-        "document": "no documents | one document | {count} documents"
+        "document": "no docs | one doc | {count} docs"
       },
       "more": "Explore more",
       "placeholder": "Search for people, companies, etc",
