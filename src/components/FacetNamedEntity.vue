@@ -66,6 +66,11 @@ export default {
 
 <style lang="scss">
   .facet--named-entity .facet__items__item {
+    &:hover {
+      .facet__items__item__menu {
+        display: block;
+      }
+    }
 
     .facet__items__item__icon {
       max-width: 4rem;
@@ -98,6 +103,8 @@ export default {
     }
 
     .facet__items__item__menu {
+      display: none;
+
       button {
         background-color: transparent;
         border: none;
