@@ -65,69 +65,78 @@ export default {
 </template>
 
 <style lang="scss">
-  .facet--named-entity .facet__items__item {
-    &:hover {
-      .facet__items__item__menu {
-        display: block;
-      }
-    }
-
-    .facet__items__item__icon {
-      max-width: 4rem;
+  .facet--named-entity {
+    .facet__items__category {
+      font-weight: 800;
       font-size: 2em;
-      position: relative;
-      border-right: 1px dashed $card-border-color !important;
-
-      svg {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
+      margin-bottom: 0.3em;
     }
 
-    .facet__items__item__key {
-      white-space: nowrap;
-      display: inline-block;
-      overflow: hidden;
-      max-width: 100%;
-      text-overflow: ellipsis;
-    }
-
-    .facet__items__item__description {
-      font-style: italic;
-      white-space: nowrap;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .facet__items__item__menu {
-      display: none;
-
-      button {
-        background-color: transparent;
-        border: none;
-        color: grey;
-        padding: 10px;
-
-        &:focus {
-          box-shadow: none;
+    .facet__items__item {
+      &:hover {
+        .facet__items__item__menu {
+          display: block;
         }
-        &:active {
+      }
+
+      .facet__items__item__icon {
+        max-width: 4rem;
+        font-size: 2em;
+        position: relative;
+        border-right: 1px dashed $card-border-color !important;
+
+        svg {
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+        }
+      }
+
+      .facet__items__item__key {
+        white-space: nowrap;
+        display: inline-block;
+        overflow: hidden;
+        max-width: 100%;
+        text-overflow: ellipsis;
+      }
+
+      .facet__items__item__description {
+        font-style: italic;
+        white-space: nowrap;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      .facet__items__item__menu {
+        display: none;
+
+        button {
           background-color: transparent;
           border: none;
-          box-shadow: none;
           color: grey;
-        }
-        &:focus:active {
-          box-shadow: none;
-        }
-      }
+          padding: 0.3em;
 
-      .dropdown-menu {
-        margin-top: -200%;
+          &:focus {
+            box-shadow: none;
+          }
+          &:active {
+            background-color: transparent;
+            border: none;
+            box-shadow: none;
+            color: grey;
+          }
+          &:focus:active {
+            box-shadow: none;
+          }
+        }
+
+        .dropdown-menu {
+          margin-top: -200%;
+        }
       }
     }
   }
+
 </style>

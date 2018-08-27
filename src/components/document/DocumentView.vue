@@ -77,32 +77,33 @@
         </dl>
       </div>
       <div class="tab-pane" v-bind:class="{active: tab === 'named_entities'}">
-        <div v-for="(results, index) in groupByCategories(namedEntities)" :key="index">
-          <div v-for="(result, index) in groupByMentionNorm(results)" :key="index" class="named-entity">
-            <router-link :to="{ name: 'search', query: { q: result[0].source.mentionNorm }}" class="px-3 row">
-              <div class="col-3 facet__items__item__icon py-2" :class="getCategoryClass(result[0].source.category, 'text-')">
-                <font-awesome-icon :icon="getCategoryIcon(result[0].source.category)" />
-              </div>
-              <div class="col-8 py-2">
-                <div class="badge badge-pill badge-primary mr-1 text-uppercase facet__items__item__key text-white" :class="getCategoryClass(result[0].source.category, 'bg-')" :title="capitalize(result[0].source.mentionNorm)" v-b-tooltip.hover>
-                  {{ result[0].source.mentionNorm }}
+        <div class="facet--named-entity">
+          <div v-for="(results, index) in groupByCategories(namedEntities)" :key="index" class="list-group list-group-flush facet__items">
+            <div class="facet__items__category" :class="getCategoryClass(results[0].source.category, 'text-')">{{ capitalize(results[0].source.category) }} <i>({{ results.length }})</i></div>
+            <div v-for="(result, index) in groupByMentionNorm(results)" :key="index" class="facet__items__item p-0 border-0 px-3 row">
+                <div class="col-3 facet__items__item__icon py-2" :class="getCategoryClass(result[0].source.category, 'text-')">
+                  <font-awesome-icon :icon="getCategoryIcon(result[0].source.category)" />
                 </div>
-                <div class="text-secondary small facet__items__item__description">
-                  {{ $tc('aggregations.mentions.occurrence', result.length, { count: result.length }) }}
+                <div class="col-8 py-2">
+                  <div class="badge badge-pill badge-primary mr-1 text-uppercase facet__items__item__key text-white" :class="getCategoryClass(result[0].source.category, 'bg-')" :title="capitalize(result[0].source.mentionNorm)" v-b-tooltip.hover>
+                    {{ result[0].source.mentionNorm }}
+                  </div>
+                  <div class="text-secondary small facet__items__item__description">
+                    {{ $tc('aggregations.mentions.occurrence', result.length, { count: result.length }) }}
+                  </div>
                 </div>
-              </div>
-              <div class="col-1 px-1 facet__items__item__menu">
-                <b-dropdown id="ddown1" class="h-100" no-caret btn-group dropright offset="25">
-                  <template slot="button-content" class="px-1">
-                    <font-awesome-icon icon="ellipsis-v" />
-                  </template>
-                  <b-dropdown-item @click="deleteNamedEntitiesByMentionNorm(result[0].source.mentionNorm)">
-                    <font-awesome-icon icon="trash-alt" />
-                     {{ $t('facet.deleteNamedEntity') }}
-                   </b-dropdown-item>
-                </b-dropdown>
-              </div>
-            </router-link>
+                <div class="col-1 px-1 facet__items__item__menu">
+                  <b-dropdown id="ddown1" class="h-100" no-caret btn-group dropright offset="25">
+                    <template slot="button-content" class="px-1">
+                      <font-awesome-icon icon="ellipsis-v" />
+                    </template>
+                    <b-dropdown-item @click="deleteNamedEntitiesByMentionNorm(result[0].source.mentionNorm)">
+                      <font-awesome-icon icon="trash-alt" />
+                       {{ $t('facet.deleteNamedEntity') }}
+                     </b-dropdown-item>
+                  </b-dropdown>
+                </div>
+            </div>
           </div>
         </div>
       </div>
