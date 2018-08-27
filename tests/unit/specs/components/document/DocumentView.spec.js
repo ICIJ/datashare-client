@@ -12,6 +12,7 @@ import router from '@/router'
 import store from '@/store'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import DocumentView from '@/components/document/DocumentView'
+import trim from 'lodash/trim'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -24,6 +25,10 @@ const i18n = new VueI18n({ locale: 'en', messages })
 describe('DocumentView.vue', () => {
   esConnectionHelper()
   var es = esConnectionHelper.es
+
+  afterEach(async () => {
+    store.commit('document/reset')
+  })
 
   it('should display an empty page when document is not found', async () => {
     const id = 'notfound'
@@ -39,14 +44,14 @@ describe('DocumentView.vue', () => {
     const id = 'foo.txt'
     const wrapped = mount(DocumentView, {localVue, i18n, router, store, propsData: { id }})
 
-    await letData(es).have(new IndexedDocument('foo.txt')
+    await letData(es).have(new IndexedDocument(id)
       .withContent('this is foo document'))
       .commit()
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelector('h3 > span').textContent).toEqual('foo.txt')
-    expect(wrapped.vm.$el.querySelectorAll('dd')[2].textContent).toEqual('foo.txt')
+    expect(wrapped.vm.$el.querySelector('h3 > span').textContent).toEqual(id)
+    expect(wrapped.vm.$el.querySelectorAll('dd')[2].textContent).toEqual(id)
   })
 
   it('should display a child document', async () => {
@@ -54,29 +59,30 @@ describe('DocumentView.vue', () => {
     const routing = 'parent.txt'
     const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id, routing }})
 
-    await letData(es).have(new IndexedDocument('parent.txt')
+    await letData(es).have(new IndexedDocument(routing)
       .withContent('this is a parent document'))
       .commit()
-    await letData(es).have(new IndexedDocument('child.txt')
+    await letData(es).have(new IndexedDocument(id)
       .withContent('this is a children document')
-      .withParent('parent.txt'))
+      .withParent(routing))
       .commit()
 
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelector('h3 > span').textContent).toEqual('child.txt')
+    expect(wrapped.vm.$el.querySelector('h3 > span').textContent).toEqual(id)
   })
 
   it('should mark named entities', async () => {
     const id = 'mydoc.txt'
     const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
-    await letData(es).have(new IndexedDocument('mydoc.txt')
+    await letData(es).have(new IndexedDocument(id)
       .withContent('a NER doc with 2 NER2')
       .withNer('NER', 2, 'CATEGORY1')
       .withNer('NER2', 17, 'CATEGORY2'))
       .commit()
+
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
@@ -91,7 +97,7 @@ describe('DocumentView.vue', () => {
     const id = 'html_doc.txt'
     const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
-    await letData(es).have(new IndexedDocument('html_doc.txt')
+    await letData(es).have(new IndexedDocument(id)
       .withContent('a foo document <with>HTML</with>')
       .withNer('foo', 2))
       .commit()
@@ -100,5 +106,27 @@ describe('DocumentView.vue', () => {
 
     expect(wrapped.vm.$el.querySelector('.text-pre-wrap').innerHTML).toEqual(
       'a <mark class="ner bg-category-organization">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;')
+  })
+
+  it('should display named entities in the dedicated tab', async () => {
+    const id = 'html_doc.txt'
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('a foo document <with>HTML</with>')
+      .withNer('mention_01', 2, 'CATEGORY_01')
+      .withNer('mention_02', 5, 'CATEGORY_02')
+      .withNer('mention_03', 12, 'CATEGORY_03'))
+      .commit()
+    await wrapped.vm.getDoc()
+    await wrapped.vm.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.named-entity .facet__items__item__key').length).toEqual(3)
+    expect(trim(wrapped.vm.$el.querySelectorAll('.named-entity .facet__items__item__key')[0].textContent)).toEqual('mention_01')
+    expect(wrapped.vm.$el.querySelectorAll('.named-entity .facet__items__item__key')[0].classList.contains('bg-category-category_01')).toEqual(true)
+    expect(trim(wrapped.vm.$el.querySelectorAll('.named-entity .facet__items__item__key')[1].textContent)).toEqual('mention_02')
+    expect(wrapped.vm.$el.querySelectorAll('.named-entity .facet__items__item__key')[1].classList.contains('bg-category-category_02')).toEqual(true)
+    expect(trim(wrapped.vm.$el.querySelectorAll('.named-entity .facet__items__item__key')[2].textContent)).toEqual('mention_03')
+    expect(wrapped.vm.$el.querySelectorAll('.named-entity .facet__items__item__key')[2].classList.contains('bg-category-category_03')).toEqual(true)
   })
 })

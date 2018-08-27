@@ -78,13 +78,35 @@
       </div>
       <div class="tab-pane" v-bind:class="{active: tab === 'named_entities'}">
         <div v-for="(results, index) in groupByCategories(namedEntities)" :key="index">
-        {{ results[0].source.category }} ({{ results.length }})
-          <div v-for="(result, index) in groupByMentionNorm(results)" :key="index">
-            {{ result[0].source.mentionNorm }} ({{ result.length }})
+          <div v-for="(result, index) in groupByMentionNorm(results)" :key="index" class="named-entity">
+            <router-link :to="{ name: 'search', query: { q: result[0].source.mentionNorm }}" class="px-3 row">
+              <div class="col-3 facet__items__item__icon py-2" :class="getCategoryClass(result[0].source.category, 'text-')">
+                <font-awesome-icon :icon="getCategoryIcon(result[0].source.category)" />
+              </div>
+              <div class="col-8 py-2">
+                <div class="badge badge-pill badge-primary mr-1 text-uppercase facet__items__item__key text-white" :class="getCategoryClass(result[0].source.category, 'bg-')" :title="capitalize(result[0].source.mentionNorm)" v-b-tooltip.hover>
+                  {{ result[0].source.mentionNorm }}
+                </div>
+                <div class="text-secondary small facet__items__item__description">
+                  {{ $tc('aggregations.mentions.occurrence', result.length, { count: result.length }) }}
+                </div>
+              </div>
+              <div class="col-1 px-1 facet__items__item__menu">
+                <b-dropdown id="ddown1" class="h-100" no-caret btn-group dropright offset="25">
+                  <template slot="button-content" class="px-1">
+                    <font-awesome-icon icon="ellipsis-v" />
+                  </template>
+                  <b-dropdown-item @click="deleteNamedEntitiesByMentionNorm(result[0].source.mentionNorm)">
+                    <font-awesome-icon icon="trash-alt" />
+                     {{ $t('facet.deleteNamedEntity') }}
+                   </b-dropdown-item>
+                </b-dropdown>
+              </div>
+            </router-link>
           </div>
         </div>
       </div>
-      <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent"></div>
+      <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent()"></div>
       <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
         <template v-if="document.contentType === 'application/pdf'">
           <pdf-viewer :url="document.relativePath" />
@@ -104,7 +126,7 @@
 </template>
 
 <script>
-import { highlight } from '@/utils/strings'
+import { capitalize, highlight } from '@/utils/strings'
 import { mapState } from 'vuex'
 import DatashareClient from '@/api/DatashareClient'
 import escape from 'lodash/escape'
@@ -139,14 +161,7 @@ export default {
     },
     groupByMentionNorm (array) {
       return orderBy(groupBy(array, m => m.source.mentionNorm), ['length', m => m[0].source.mentionNorm], ['desc', 'asc'])
-    }
-  },
-  computed: {
-    ...mapState('document', {
-      document: state => state.doc,
-      namedEntities: state => state.namedEntities,
-      parentDocument: state => state.parentDoc
-    }),
+    },
     markedSourceContent () {
       if (this.document) {
         return highlight(this.document.source.content, sortedUniqBy(this.namedEntities, ne => ne.source.offset), m => {
@@ -154,6 +169,14 @@ export default {
         }, r => escape(r), m => m.source.mention)
       }
     },
+    capitalize: capitalize
+  },
+  computed: {
+    ...mapState('document', {
+      document: state => state.doc,
+      namedEntities: state => state.namedEntities,
+      parentDocument: state => state.parentDoc
+    }),
     getFullUrl () {
       return DatashareClient.getFullUrl(this.document.relativePath)
     }
