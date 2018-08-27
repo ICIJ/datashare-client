@@ -40,7 +40,7 @@ export default {
             node = { label, path, count: 0 }
           } else {
             path = join(path, label, folderSeparator)
-            node = { label, path: path + '*', count: 0, children: [] }
+            node = { label, path: path, count: 0, children: [] }
           }
           // Add node to tree if not already in it
           if (filter(treePointer, { label }).length === 0) {
@@ -65,7 +65,7 @@ export default {
 <template>
   <facet v-bind="propsWithout('hide-show-more')" hide-show-more ref="facet">
     <template slot="items" slot-scope="{ items }">
-      <tree :tree-data="tree(items)"></tree>
+      <tree :tree-data="tree(items)" :facet="facet"></tree>
     </template>
   </facet>
 </template>
