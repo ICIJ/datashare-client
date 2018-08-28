@@ -29,7 +29,6 @@ module.exports = {
     // Aliases configuration
     config.resolve.alias
       .set('images', resolve('src/assets/images'))
-      .set('data', resolve('src/assets/data'))
       .set('node_modules', resolve('node_modules'))
       .set('mixins', resolve('src/mixins'))
       .set('tests', resolve('tests'))
