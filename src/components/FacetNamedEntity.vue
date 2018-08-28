@@ -30,11 +30,11 @@ export default {
   <facet v-bind="$props" class="facet--named-entity" ref="facet">
     <template slot="item" slot-scope="{ item }">
       <span v-for="category in getCategories(item)" :key="category.key">
-        <div class="px-3 row">
-          <div class="col-3 facet__items__item__icon py-2" :class="getCategoryClass(category.key, 'text-')">
+        <div class="row no-gutters">
+          <div class="col-2 facet__items__item__icon py-2" :class="getCategoryClass(category.key, 'text-')">
             <font-awesome-icon :icon="getCategoryIcon(category.key)" />
           </div>
-          <a class="col-8 py-2" href @click.prevent="toggleValue(item)">
+          <a class="col py-2 pl-2" href @click.prevent="toggleValue(item)">
             <div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__key text-white" :class="getCategoryClass(category.key, 'bg-')" :title="capitalize(item.key)" v-b-tooltip.hover>
               {{ item.key }}
             </div>
@@ -47,8 +47,8 @@ export default {
               }}
             </div>
           </a>
-          <div class="col-1 px-1 facet__items__item__menu">
-            <b-dropdown id="ddown1" class="h-100" no-caret btn-group dropright offset="25">
+          <div class="col facet__items__item__menu">
+            <b-dropdown class="h-100 my-2" no-caret dropright offset="25">
               <template slot="button-content" class="px-1">
                 <font-awesome-icon icon="ellipsis-v" />
               </template>
@@ -65,76 +65,62 @@ export default {
 </template>
 
 <style lang="scss">
-  .facet--named-entity {
-    .facet__items__category {
-      font-weight: 800;
+  .facet--named-entity .facet__items__category {
+    font-weight: 800;
+  }
+
+  .facet--named-entity .facet__items__item {
+
+    .row {
+      flex-wrap: nowrap;
+    }
+
+    &__icon {
+      max-width: 4rem;
       font-size: 2em;
       margin-bottom: 0.3em;
     }
 
-    .facet__items__item {
-      &:hover {
-        .facet__items__item__menu {
-          display: block;
-        }
-      }
+    &__key {
+      display: inline-block;
+      overflow: hidden;
+      max-width: 100%;
+      text-overflow: ellipsis;
+    }
 
-      .facet__items__item__icon {
-        max-width: 4rem;
-        font-size: 2em;
-        position: relative;
-        border-right: 1px dashed $card-border-color !important;
+    &__description {
+      font-style: italic;
+      white-space: nowrap;
+      max-width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
 
-        svg {
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-        }
-      }
+    &__menu {
+      max-width: 2.5em;
 
-      .facet__items__item__key {
-        white-space: nowrap;
-        display: inline-block;
-        overflow: hidden;
-        max-width: 100%;
-        text-overflow: ellipsis;
-      }
-
-      .facet__items__item__description {
-        font-style: italic;
-        white-space: nowrap;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .facet__items__item__menu {
+      .btn-group > .btn {
         display: none;
+        background-color: transparent;
+        border: none;
+        color: grey;
+        padding: 0;
+        height: 2em;
+        line-height: 2em;
+        width: 2em;
+        border-radius: 50% !important;
+        text-align: center;
 
-        button {
-          background-color: transparent;
+        &:focus, &:focus:active, &:active {
+          background-color: theme-color('light');
           border: none;
           color: grey;
           padding: 0.3em;
-
-          &:focus {
-            box-shadow: none;
-          }
-          &:active {
-            background-color: transparent;
-            border: none;
-            box-shadow: none;
-            color: grey;
-          }
-          &:focus:active {
-            box-shadow: none;
-          }
         }
+      }
 
-        .dropdown-menu {
-          margin-top: -200%;
-        }
+      .dropdown-menu {
+        margin-top: -2em;
       }
     }
   }
