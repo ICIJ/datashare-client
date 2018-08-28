@@ -75,10 +75,22 @@ export default {
       flex-wrap: nowrap;
     }
 
+    & > span:hover .facet__items__item__menu {
+      visibility: visible;
+    }
+
     &__icon {
       max-width: 4rem;
       font-size: 2em;
       margin-bottom: 0.3em;
+      border-right: 1px dashed $card-border-color !important;
+
+      svg {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+      }
     }
 
     &__key {
@@ -98,9 +110,9 @@ export default {
 
     &__menu {
       max-width: 2.5em;
+      visibility: hidden;
 
       .btn-group > .btn {
-        display: none;
         background-color: transparent;
         border: none;
         color: grey;
