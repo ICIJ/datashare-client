@@ -75,17 +75,17 @@ describe('SearchSettings.vue', function () {
     expect(wrapped.vm.hasFacets).toEqual(false)
   })
 
-  it('should have an input checked for globalSearch', async () => {
+  it('should have an input unchecked for globalSearch', async () => {
     wrapped = mount(SearchSettings, {localVue, i18n, router, store})
     wrapped.vm.$store.commit('aggregation/reset')
     await wrapped.vm.$nextTick()
-    expect(wrapped.vm.$el.querySelector('#input-global').checked).toEqual(false)
+    expect(wrapped.vm.$el.querySelector('#input-global').checked).toEqual(true)
   })
 
-  it('should have an input unchecked for globalSearch', async () => {
+  it('should have an input checked for globalSearch', async () => {
     wrapped = mount(SearchSettings, {localVue, i18n, router, store})
-    wrapped.vm.$store.commit('aggregation/setGlobalSearch', false)
+    wrapped.vm.$store.commit('aggregation/setGlobalSearch', true)
     await wrapped.vm.$nextTick()
-    expect(wrapped.vm.$el.querySelector('#input-global').checked).toEqual(false)
+    expect(wrapped.vm.$el.querySelector('#input-global').checked).toEqual(true)
   })
 })
