@@ -23,7 +23,7 @@ const levels = {
 
 function initialState () {
   return {
-    globalSearch: true,
+    globalSearch: false,
     facets: [
       {
         name: 'content-type',
