@@ -4,8 +4,8 @@ import BootstrapVue from 'bootstrap-vue'
 
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import { IndexedDocument, letData } from '../../../es_utils'
-import esConnectionHelper from '../../utils/esConnectionHelper'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import messages from '@/messages'
 import router from '@/router'

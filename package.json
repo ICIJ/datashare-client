@@ -108,7 +108,8 @@
       "node_modules/(?!(bootstrap-vue)/)"
     ],
     "moduleNameMapper": {
-      "^@/(.*)$": "<rootDir>/src/$1"
+      "^@/(.*)$": "<rootDir>/src/$1",
+      "tests/(.*)$": "<rootDir>/tests/$1"
     },
     "snapshotSerializers": [
       "jest-serializer-vue"

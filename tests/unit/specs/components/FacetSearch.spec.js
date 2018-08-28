@@ -3,9 +3,9 @@ import VueI18n from 'vue-i18n'
 import find from 'lodash/find'
 
 import { createLocalVue, mount } from '@vue/test-utils'
-import { IndexedDocument, letData } from '../../es_utils'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-import esConnectionHelper from '../utils/esConnectionHelper'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/messages'
 import store from '@/store'
 import router from '@/router'

@@ -4,8 +4,8 @@ import Response from '@/api/Response'
 import Document from '@/api/Document'
 import NamedEntity from '@/api/NamedEntity'
 
-import { IndexedDocuments, IndexedDocument, letData } from '../../../es_utils'
-import esConnectionHelper from '../../utils/esConnectionHelper'
+import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('Search store', function () {
   esConnectionHelper()

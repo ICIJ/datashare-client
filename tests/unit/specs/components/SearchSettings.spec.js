@@ -4,7 +4,7 @@ import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
 import { mount, createLocalVue } from '@vue/test-utils'
 
-import esConnectionHelper from '../utils/esConnectionHelper'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'

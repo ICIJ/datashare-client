@@ -4,8 +4,8 @@ import BootstrapVue from 'bootstrap-vue'
 
 import { mount, createLocalVue } from '@vue/test-utils'
 
-import esConnectionHelper from '../utils/esConnectionHelper'
-import { IndexedDocument, letData } from '../../es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 import FacetPath from '@/components/FacetPath'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'

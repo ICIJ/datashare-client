@@ -8,9 +8,9 @@ import trim from 'lodash/trim'
 
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import { IndexedDocument, letData } from '../../es_utils'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-import esConnectionHelper from '../utils/esConnectionHelper'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'

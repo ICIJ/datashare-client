@@ -4,7 +4,7 @@ import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import { setCookie, removeCookie } from 'tiny-cookie'
 
-import esConnectionHelper from '../utils/esConnectionHelper'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import store from '@/store'
 import messages from '@/messages'

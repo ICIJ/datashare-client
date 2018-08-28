@@ -7,14 +7,14 @@ import find from 'lodash/find'
 
 import { mount, createLocalVue } from '@vue/test-utils'
 
-import esConnectionHelper from '../utils/esConnectionHelper'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
-import {IndexedDocument, letData} from '../../es_utils'
+import {IndexedDocument, letData} from 'tests/unit/es_utils'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)

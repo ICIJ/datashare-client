@@ -7,14 +7,14 @@ import { mount, createLocalVue } from '@vue/test-utils'
 import noop from 'lodash/noop'
 import trim from 'lodash/trim'
 
-import esConnectionHelper from '../utils/esConnectionHelper'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Search from '@/components/Search'
-import { IndexedDocuments, IndexedDocument, letData } from '../../es_utils'
+import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)

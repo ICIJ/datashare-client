@@ -6,7 +6,7 @@ import fetchPonyfill from 'fetch-ponyfill'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Indexing from '@/components/Indexing'
-import esConnectionHelper from '..//utils/esConnectionHelper'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import messages from '@/messages'
 import router from '@/router'

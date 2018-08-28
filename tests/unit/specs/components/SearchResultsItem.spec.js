@@ -3,7 +3,7 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import { mount, createLocalVue } from '@vue/test-utils'
 
-import esConnectionHelper from '../utils/esConnectionHelper'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import SearchResultsItem from '@/components/SearchResultsItem'
