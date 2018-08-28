@@ -25,7 +25,7 @@ export function docPlugin (Client, config, components) {
   }
 
   Client.prototype.getNamedEntities = function (docId, routing = null) {
-    var body = bodybuilder().query('parent_id', {type: 'NamedEntity', id: docId}).build()
+    var body = bodybuilder().query('parent_id', {type: 'NamedEntity', id: docId}).filter('term', 'isHidden', 'false').build()
     return this.search({
       index: process.env.VUE_APP_ES_INDEX,
       type: 'doc',

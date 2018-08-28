@@ -36,6 +36,22 @@ describe('Document store', () => {
     expect(store.state.document.namedEntities[0].raw._routing).toEqual(id)
   })
 
+  it('should get only the not hidden document\'s named entities', async () => {
+    let id = 'doc.txt'
+    await letData(es).have(new IndexedDocument(id).withContent('This is the document.')
+      .withNer('entity_01', 42, 'ORGANIZATION', false)
+      .withNer('entity_02', 43, 'ORGANIZATION', true)
+      .withNer('entity_03', 44, 'ORGANIZATION', false)).commit()
+
+    await store.dispatch('document/get', { id: id })
+    await store.dispatch('document/getNamedEntities')
+    expect(store.state.document.namedEntities.length).toEqual(2)
+    expect(store.state.document.namedEntities[0].raw._source.mention).toEqual('entity_01')
+    expect(store.state.document.namedEntities[0].raw._routing).toEqual(id)
+    expect(store.state.document.namedEntities[1].raw._source.mention).toEqual('entity_03')
+    expect(store.state.document.namedEntities[1].raw._routing).toEqual(id)
+  })
+
   it('should get the parent document', async () => {
     await letData(es).have(new IndexedDocument('parent.txt').withContent('This is parent.')).commit()
     await store.dispatch('search/query', 'parent')
