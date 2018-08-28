@@ -89,6 +89,7 @@ function initialState () {
         body: (body, options = {}) => {
           return body
             .query('term', 'type', 'NamedEntity')
+            .filter('term', 'isHidden', 'false')
             .agg('terms', 'mentionNorm', 'byMentions', {
               size: 50,
               order: [ {'byDocs': 'desc'}, {'_count': 'desc'} ],

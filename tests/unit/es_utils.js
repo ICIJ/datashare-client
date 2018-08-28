@@ -5,10 +5,11 @@ function letData (index) {
 }
 
 class IndexedNe {
-  constructor (mention, offset, category = 'ORGANIZATION') {
+  constructor (mention, offset = 1, category = 'ORGANIZATION', isHidden = false) {
     this.mention = mention
     this.offset = offset
     this.category = category
+    this.isHidden = isHidden
   }
 }
 
@@ -70,8 +71,8 @@ class IndexedDocument {
     this.extractionDate = indexingDate
     return this
   }
-  withNer (mention, offset = 1, category = 'ORGANIZATION') {
-    this.nerList.push(new IndexedNe(mention, offset, category))
+  withNer (mention, offset = 1, category = 'ORGANIZATION', isHidden = false) {
+    this.nerList.push(new IndexedNe(mention, offset, category, isHidden))
     return this
   }
   withParent (parentId) {
@@ -126,6 +127,7 @@ class IndexBuilder {
             mentionNorm: ner.mention,
             offset: ner.offset,
             category: ner.category,
+            isHidden: ner.isHidden,
             type: 'NamedEntity',
             join: {name: 'NamedEntity', parent: docId}
           }

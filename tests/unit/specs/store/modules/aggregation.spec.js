@@ -225,4 +225,18 @@ describe('Aggregation store', function () {
     expect(facetPath.key).toEqual('extractionDate')
     expect(facetPath.type).toEqual('FacetText')
   })
+
+  it('should aggregate only the not hidden named entities', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.csv').withNer('entity_01', 42, 'ORGANIZATION', false)).commit()
+    await letData(es).have(new IndexedDocument('doc_02.csv').withNer('entity_01', 43, 'ORGANIZATION', false)).commit()
+    await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_02', 44, 'ORGANIZATION', true)).commit()
+    await letData(es).have(new IndexedDocument('doc_04.csv').withNer('entity_03', 45, 'ORGANIZATION', false)).commit()
+
+    const response = await store.dispatch('aggregation/query', { name: 'named-entity' })
+    expect(response.aggregations.byMentions.buckets).toHaveLength(2)
+    expect(response.aggregations.byMentions.buckets[0].key).toEqual('entity_01')
+    expect(response.aggregations.byMentions.buckets[0].doc_count).toEqual(2)
+    expect(response.aggregations.byMentions.buckets[1].key).toEqual('entity_03')
+    expect(response.aggregations.byMentions.buckets[1].doc_count).toEqual(1)
+  })
 })
