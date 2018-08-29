@@ -143,7 +143,7 @@ let handle401Error = (err) => {
 }
 
 const esClient = new es.Client({
-  host: process.env.VUE_APP_ES_HOST,
+  host: process.env.VUE_APP_ES_HOST || window.location.hostname + ':' + window.location.port + '/api/search',
   plugins: [ docPlugin, searchPlugin ]
 })
 
