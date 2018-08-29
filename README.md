@@ -8,6 +8,8 @@ You need (Yarn)[https://yarnpkg.com/lang/en/docs/install/] installed on your mac
 
 Vue CLI requires Node.js version 8.9 or above (8.11.0+ recommended) [[source](https://cli.vuejs.org/guide/installation.html)].
 
+Caution, node 8.11.3 causes a JS heap out of memory on `yarn build`. Use node 8.9.4 instead.
+
 
 ## Install
 
