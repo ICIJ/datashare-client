@@ -3,10 +3,6 @@ import camelCase from 'lodash/camelCase'
 import get from 'lodash/get'
 import reduce from 'lodash/reduce'
 
-import DatashareClient from '@/api/DatashareClient'
-
-const datashare = new DatashareClient()
-
 export const mixin = {
   props: {
     facet: {
@@ -93,9 +89,6 @@ export const mixin = {
         name: 'search',
         query: this.$store.getters['search/toRouteQuery']
       })
-    },
-    deleteNamedEntitiesByMentionNorm (mentionNorm) {
-      datashare.deleteNamedEntitiesByMentionNorm(mentionNorm)
     }
   }
 }

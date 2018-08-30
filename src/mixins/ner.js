@@ -1,3 +1,7 @@
+import DatashareClient from '@/api/DatashareClient'
+
+const datashare = new DatashareClient()
+
 export const mixin = {
   methods: {
     getCategoryIcon (category = '') {
@@ -9,6 +13,9 @@ export const mixin = {
     },
     getCategoryClass (category = 'muted', prefix = '') {
       return `${prefix}category-${category.toLowerCase()}`
+    },
+    deleteNamedEntitiesByMentionNorm (mentionNorm) {
+      datashare.deleteNamedEntitiesByMentionNorm(mentionNorm)
     }
   }
 }
