@@ -30,6 +30,7 @@ import esClient from '@/api/esClient'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
 import FacetPath from '@/components/FacetPath'
+import { EventBus } from '@/utils/event-bus.js'
 
 export default {
   name: 'FacetSearch',
@@ -68,6 +69,7 @@ export default {
   },
   mounted () {
     this.search()
+    EventBus.$on('facet::hide::named-entities', () => this.search())
   },
   watch: {
     asyncQuery () {

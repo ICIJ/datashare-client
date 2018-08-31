@@ -2,6 +2,11 @@ import flatten from 'lodash/flatten'
 import camelCase from 'lodash/camelCase'
 import get from 'lodash/get'
 import reduce from 'lodash/reduce'
+import { EventBus } from '@/utils/event-bus.js'
+
+import DatashareClient from '@/api/DatashareClient'
+
+const datashare = new DatashareClient()
 
 export const mixin = {
   props: {
@@ -88,6 +93,11 @@ export const mixin = {
       this.$router.push({
         name: 'search',
         query: this.$store.getters['search/toRouteQuery']
+      })
+    },
+    deleteNamedEntitiesByMentionNorm (mentionNorm) {
+      return datashare.deleteNamedEntitiesByMentionNorm(mentionNorm).then(resp => {
+        EventBus.$emit('facet::hide::named-entities')
       })
     }
   }

@@ -3,6 +3,7 @@ import { capitalize } from '@/utils/strings'
 import Facet from '@/components/Facet'
 import facets from '@/mixins/facets'
 import ner from '@/mixins/ner'
+import { EventBus } from '@/utils/event-bus.js'
 
 export default {
   name: 'FacetNamedEntity',
@@ -22,6 +23,9 @@ export default {
       ]
     },
     capitalize: capitalize
+  },
+  mounted () {
+    EventBus.$on('facet::hide::named-entities', () => this.$refs.facet.aggregate())
   }
 }
 </script>
