@@ -1,21 +1,31 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+import BootstrapVue from 'bootstrap-vue'
+import { createLocalVue, mount } from '@vue/test-utils'
+
 import find from 'lodash/find'
 
-import { createLocalVue, mount } from '@vue/test-utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import messages from '@/messages'
-import store from '@/store'
-import router from '@/router'
-
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
+import { EventBus } from '@/utils/event-bus.js'
 import FacetSearch from '@/components/FacetSearch'
+import FontAwesomeIcon from '@/components/FontAwesomeIcon'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import messages from '@/messages'
+import router from '@/router'
+import store from '@/store'
+
+jest.mock('@/api/DatashareClient', () => {
+  return jest.fn().mockImplementation(() => {
+    return {deleteNamedEntitiesByMentionNorm: jest.fn().mockImplementation(() => {
+      return Promise.resolve()
+    })}
+  })
+})
 
 const localVue = createLocalVue()
-localVue.use(VueI18n)
 localVue.use(Vuex)
+localVue.use(BootstrapVue)
+localVue.use(VueI18n)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({locale: 'en', messages})
@@ -26,15 +36,7 @@ describe('FacetSearch.vue', () => {
   var wrapped = null
 
   beforeEach(async () => {
-    wrapped = mount(FacetSearch, {
-      localVue,
-      i18n,
-      store,
-      router,
-      propsData: {
-        facet: find(store.state.aggregation.facets, { name: 'content-type' })
-      }
-    })
+    wrapped = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.aggregation.facets, { name: 'content-type' }) } })
   })
 
   it('should display 2 items', async () => {
@@ -131,5 +133,32 @@ describe('FacetSearch.vue', () => {
     wrapped.vm.asyncQuery = 'pdf'
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.search).toHaveBeenCalled()
+  })
+
+  it('should emit a facet::hide::named-entities event on click to delete named entity', async () => {
+    wrapped = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.aggregation.facets, { name: 'named-entity' }) } })
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is a naz document').withNer('naz')).commit()
+    await wrapped.vm.search()
+
+    const mockCallback = jest.fn()
+    EventBus.$on('facet::hide::named-entities', mockCallback)
+
+    await wrapped.find('.facet__items__item__menu .dropdown-item:first-child').trigger('click')
+
+    expect(mockCallback.mock.calls.length).toEqual(1)
+  })
+
+  it('should call the search function after a named entity deletion', async () => {
+    wrapped = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.aggregation.facets, { name: 'named-entity' }) } })
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is a naz document').withNer('naz')).commit()
+    await wrapped.vm.search()
+
+    const spySearch = jest.spyOn(wrapped.vm, 'search')
+    expect(spySearch).not.toBeCalled()
+
+    await wrapped.find('.facet__items__item__menu .dropdown-item:first-child').trigger('click')
+
+    expect(spySearch).toBeCalled()
+    expect(spySearch).toBeCalledTimes(1)
   })
 })

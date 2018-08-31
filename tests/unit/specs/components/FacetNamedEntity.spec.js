@@ -1,20 +1,27 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
+import { createLocalVue, mount } from '@vue/test-utils'
 
 import trim from 'lodash/trim'
 import find from 'lodash/find'
 
-import { mount, createLocalVue } from '@vue/test-utils'
-
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { EventBus } from '@/utils/event-bus.js'
+import FacetNamedEntity from '@/components/FacetNamedEntity'
+import FontAwesomeIcon from '@/components/FontAwesomeIcon'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import FacetNamedEntity from '@/components/FacetNamedEntity'
-import {IndexedDocument, letData} from 'tests/unit/es_utils'
+jest.mock('@/api/DatashareClient', () => {
+  return jest.fn().mockImplementation(() => {
+    return {deleteNamedEntitiesByMentionNorm: jest.fn().mockImplementation(() => {
+      return Promise.resolve()
+    })}
+  })
+})
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -29,16 +36,7 @@ describe('FacetNamedEntity.vue', () => {
   var es = esConnectionHelper.es
   var wrapped = null
   beforeEach(async () => {
-    wrapped = mount(FacetNamedEntity, {
-      localVue,
-      i18n,
-      router,
-      store,
-      propsData: {
-        facet: find(store.state.aggregation.facets, {name: 'named-entity'})
-      }
-    })
-
+    wrapped = mount(FacetNamedEntity, { localVue, i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, {name: 'named-entity'}) } })
     await wrapped.vm.root.aggregate()
   })
 
@@ -182,5 +180,32 @@ describe('FacetNamedEntity.vue', () => {
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item .facet__items__item__menu').length).toEqual(1)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item .facet__items__item__menu .dropdown-item').length).toEqual(1)
+  })
+
+  it('should emit a facet::hide::named-entities event on click to delete named entity', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is a naz document').withNer('naz')).commit()
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    const mockCallback = jest.fn()
+    EventBus.$on('facet::hide::named-entities', mockCallback)
+
+    await wrapped.find('.facet__items__item .facet__items__item__menu .dropdown-item:first-child').trigger('click')
+
+    expect(mockCallback.mock.calls.length).toEqual(1)
+  })
+
+  it('should call the aggregate function after a named entity deletion', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is a naz document').withNer('naz')).commit()
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    const spyAggregate = jest.spyOn(wrapped.vm.root, 'aggregate')
+    expect(spyAggregate).not.toBeCalled()
+
+    await wrapped.find('.facet__items__item .facet__items__item__menu .dropdown-item:first-child').trigger('click')
+
+    expect(spyAggregate).toBeCalled()
+    expect(spyAggregate).toBeCalledTimes(1)
   })
 })
