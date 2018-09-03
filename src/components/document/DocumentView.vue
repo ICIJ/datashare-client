@@ -111,6 +111,10 @@
       </div>
     </div>
   </div>
+  <div v-else class="nodocument">
+    <font-awesome-icon icon="exclamation-triangle" />
+    <span>{{ $t('document.not_found') }}</span>
+  </div>
 </template>
 
 <script>
@@ -238,6 +242,17 @@ export default {
 
   .ner {
     border-bottom: 1px dotted;
+  }
+}
+
+.nodocument {
+  background-color: white;
+  font-weight: 800;
+  margin: 1em;
+  padding: 1em;
+
+  & span {
+    margin-left: 1em;
   }
 }
 </style>

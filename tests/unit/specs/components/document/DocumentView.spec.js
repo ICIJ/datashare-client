@@ -30,14 +30,14 @@ describe('DocumentView.vue', () => {
     store.commit('document/reset')
   })
 
-  it('should display an empty page when document is not found', async () => {
+  it('should display an error message when document is not found', async () => {
     const id = 'notfound'
     const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.isEmpty()).toEqual(true)
+    expect(wrapped.vm.$el.querySelector('span').textContent).toEqual('Document not found')
   })
 
   it('should display a document', async () => {

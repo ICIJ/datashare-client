@@ -64,7 +64,8 @@
       "named_entities": "Named Entities",
       "extracted_text": "Extracted text",
       "preview": "Preview",
-      "download_button": "Download"
+      "download_button": "Download",
+      "not_found": "Document not found"
     },
     "indexing": {
       "yes": "Yes",
@@ -162,7 +163,8 @@
       "named_entities": "Entitiés nommées",
       "extracted_text": "Texte",
       "preview": "Prévisualisation",
-      "download_button": "Télécharger"
+      "download_button": "Télécharger",
+      "not_found": "Document non trouvé"
     },
     "indexing": {
       "yes": "Oui",
