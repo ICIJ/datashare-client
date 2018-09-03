@@ -16,6 +16,7 @@ import {faCaretRight} from '@fortawesome/free-solid-svg-icons/faCaretRight'
 import {faCog} from '@fortawesome/free-solid-svg-icons/faCog'
 import {faDownload} from '@fortawesome/free-solid-svg-icons/faDownload'
 import {faEllipsisV} from '@fortawesome/free-solid-svg-icons/faEllipsisV'
+import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle'
 import {faExternalLinkAlt} from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt'
 import {faEyeSlash} from '@fortawesome/free-solid-svg-icons/faEyeSlash'
 import {faFile} from '@fortawesome/free-solid-svg-icons/faFile'
@@ -50,6 +51,7 @@ library.add(
   faCog,
   faDownload,
   faEllipsisV,
+  faExclamationTriangle,
   faExternalLinkAlt,
   faEyeSlash,
   faFile,

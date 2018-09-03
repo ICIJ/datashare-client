@@ -18,13 +18,16 @@
       </div>
       <div class="img-thumbnail">
         <div class="alert tiff-viewer__warning">
-          <i class="fa fa-warning"></i> The browser preview of this TIFF file may not show all the images. We suggest
-          you download it in your computer to view all the contents.
+          <font-awesome-icon icon="exclamation-triangle" />
+          <span>The browser preview of this TIFF file may not show all the images. We suggest you download it in your computer to view all the contents.</span>
         </div>
         <img class="tiff-viewer__canvas img-responsive" :width="maxWidth" :src="page(doc.active).toDataURL()"/>
       </div>
     </template>
-    <div v-else class="alert"><i class="fa fa fa-cog fa-spin"></i>{{ message }}</div>
+    <div v-else class="alert">
+      <font-awesome-icon icon="cog" spin />
+      {{ message }}
+    </div>
   </div>
 </template>
 

@@ -12,7 +12,7 @@
       <div class="spreadsheet-viewer__hot__container"></div>
     </div>
     <div class="alert" v-if="!doc.active">
-      <font-awesome-icon icon="cog" spin/>
+      <font-awesome-icon icon="cog" spin />
       {{ message }}
     </div>
   </div>

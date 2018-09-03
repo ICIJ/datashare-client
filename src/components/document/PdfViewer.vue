@@ -13,7 +13,7 @@
       </div>
     </template>
     <div v-else class="alert">
-      <i class="fa fa fa-cog fa-spin"></i>
+      <font-awesome-icon icon="cog" spin />
       {{ message }}
     </div>
   </div>
