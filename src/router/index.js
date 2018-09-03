@@ -13,6 +13,8 @@ import store from '@/store'
 import { isAuthenticated } from '@/utils/auth'
 import get from 'lodash/get'
 
+import { EventBus } from '@/utils/event-bus'
+
 Vue.use(VueRouter)
 
 const router = new VueRouter({
@@ -78,11 +80,26 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   // True if the authentication must be skipped
   const skipsAuth = to.matched.some(r => get(r, 'meta.skipsAuth', false))
-
   if (skipsAuth || isAuthenticated()) {
     next()
   } else {
     next('/login')
+  }
+})
+
+EventBus.$on('http::error', err => {
+  if (err && err.status === 401) {
+    window.location.assign(process.env.VUE_APP_DS_AUTH_SIGNIN)
+  } else {
+    var errorName = ''
+    if (err && err.status && err.statusText) {
+      errorName = err.status + ' ' + err.statusText
+    } else {
+      errorName = err
+    }
+    var error = new Error(errorName)
+    error.response = err
+    throw error
   }
 })
 

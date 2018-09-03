@@ -3,14 +3,10 @@ import bodybuilder from 'bodybuilder'
 import cloneDeep from 'lodash/cloneDeep'
 import partial from 'lodash/partial'
 import sinon from 'sinon'
-import noop from 'lodash/noop'
+import { EventBus } from '@/utils/event-bus'
 
 import esClient from '@/api/esClient'
 import { state, actions, getters, mutations } from '@/store/modules/aggregation'
-
-// JSDom has no location
-// @see https://github.com/jsdom/jsdom/issues/2112
-window.location.assign = noop
 
 describe('esClient', () => {
   var server = null
@@ -19,12 +15,11 @@ describe('esClient', () => {
 
   beforeEach(() => {
     store = new Vuex.Store({ state: cloneDeep(state), actions, getters, mutations })
-    jest.spyOn(window.location, 'assign')
     server = sinon.fakeServer.create()
     // There is two bugs here that screw the test:
     // 1) `sinon.fakeServer` doesn't map the global XMLHttpRequest so we need to
     // do it manually because JSDOM uses it's own window's instance
-    XMLHttpRequest = window.XMLHttpRequest
+    global.XMLHttpRequest = global.window.XMLHttpRequest
     // 2) Elasticsearch.js client disables 'async' argument of the `open` method
     // when using PahntomJS. We need the same behavior with JSDom too so we wrap
     // the method with a partial function to always receive `false` as last argument.
@@ -34,7 +29,6 @@ describe('esClient', () => {
 
   afterEach(() => {
     server.restore()
-    window.location.assign.mockClear()
     store.commit('reset')
   })
 
@@ -44,11 +38,15 @@ describe('esClient', () => {
     expect(response).toEqual({ 'foo': 'bar' })
   })
 
-  it('should redirect to signin page if searchDocs response status is 401', async () => {
-    server.respondWith('POST', esSearchUrl, [401, {'Content-Type': 'application/json'}, '{"error": "unauthorized"}'])
+  it('should emit an error if the backend response has a bad status', async () => {
+    const mockCallback = jest.fn()
+    EventBus.$on('http::error', mockCallback)
+    server.respondWith('POST', esSearchUrl, [42, {'Content-Type': 'application/json'}, '{"error": "unauthorized"}'])
+
     await esClient.searchDocs('*')
-    expect(window.location.assign).toHaveBeenCalledTimes(1)
-    expect(window.location.assign.mock.calls[0][0]).toEqual(process.env.VUE_APP_DS_AUTH_SIGNIN)
+
+    expect(mockCallback.mock.calls.length).toBe(1)
+    expect(mockCallback.mock.calls[0][0].response).toEqual('{"error": "unauthorized"}')
   })
 
   it('should build an ES query with facets', async () => {

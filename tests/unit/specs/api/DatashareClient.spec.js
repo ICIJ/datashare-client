@@ -1,18 +1,13 @@
 import DatashareClient from '@/api/DatashareClient'
+import { EventBus } from '@/utils/event-bus'
 import fetchPonyfill from 'fetch-ponyfill'
-import noop from 'lodash/noop'
-
-// JSDom has no location
-// @see https://github.com/jsdom/jsdom/issues/2112
-window.location.assign = noop
 
 const { Response } = fetchPonyfill()
 const ds = new DatashareClient()
 
 describe('Datashare backend client', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     jest.spyOn(ds, 'fetch')
-    jest.spyOn(ds, 'redirectToAuth')
   })
 
   it('should return backend response to createIndex', async () => {
@@ -22,10 +17,15 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should redirect to signin page if backend response to createIndex is 401', async () => {
-    fetchReturns(401, {})
+  it('should emit an error if the backend response has a bad status', async () => {
+    fetchReturns(42, {})
+    const mockCallback = jest.fn()
+    EventBus.$on('http::error', mockCallback)
+
     await ds.createIndex()
-    expect(ds.redirectToAuth).toHaveBeenCalledTimes(1)
+
+    expect(mockCallback.mock.calls.length).toBe(1)
+    expect(mockCallback.mock.calls[0][0]).toEqual(new Response(JSON.stringify({}), {status: 42, headers: {'Content-type': 'application/json'}}))
   })
 
   it('should return backend reponse to deleteNamedEntitiesByMentionNorm', async () => {

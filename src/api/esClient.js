@@ -1,9 +1,9 @@
-import es from 'elasticsearch-browser'
 import bodybuilder from 'bodybuilder'
 import castArray from 'lodash/castArray'
 import each from 'lodash/each'
+import es from 'elasticsearch-browser'
+import { EventBus } from '@/utils/event-bus'
 import replace from 'lodash/replace'
-
 import store from '@/store'
 
 // Custom API for datashare
@@ -21,7 +21,10 @@ export function docPlugin (Client, config, components) {
       routing: routing
     }).then(function (data) {
       return data
-    }, handle401Error)
+    }, error => {
+      EventBus.$emit('http::error', error)
+      return null
+    })
   }
 
   Client.prototype.getNamedEntities = function (docId, routing = null) {
@@ -34,7 +37,10 @@ export function docPlugin (Client, config, components) {
       body: body
     }).then(function (data) {
       return data
-    }, handle401Error)
+    }, error => {
+      EventBus.$emit('http::error', error)
+      return null
+    })
   }
 }
 
@@ -130,15 +136,10 @@ export function searchPlugin (Client, config, components) {
       body: body.build()
     }).then(function (data) {
       return data
-    }, handle401Error)
-  }
-}
-
-let handle401Error = (err) => {
-  if (err && err.status === 401) {
-    window.location.assign(process.env.VUE_APP_DS_AUTH_SIGNIN)
-  } else {
-    throw err
+    }, error => {
+      EventBus.$emit('http::error', error)
+      return null
+    })
   }
 }
 

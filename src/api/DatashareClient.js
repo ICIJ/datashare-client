@@ -1,9 +1,10 @@
+import { EventBus } from '@/utils/event-bus'
 import fetchPonyfill from 'fetch-ponyfill'
 
 export class DatashareClient {
   constructor () {
     if (window.fetch) {
-      // Build-in fetch method must never we call from an object other than Window
+      // Build-in fetch method must never be called by an object other than Window
       this.fetch = (...args) => window.fetch(...args)
     } else {
       this.fetch = fetchPonyfill().fetch
@@ -34,29 +35,22 @@ export class DatashareClient {
     return `${process.env.VUE_APP_DS_HOST || ''}${url}`
   }
   getSource (relativeUrl) {
-    return this.fetch(DatashareClient.getFullUrl(relativeUrl), {credentials: 'same-origin'}).then((r) => {
+    return this.fetch(DatashareClient.getFullUrl(relativeUrl), {credentials: 'same-origin'}).then(r => {
       if (r.status >= 200 && r.status < 300) {
         return r
-      } else if (r.status === 401) {
-        this.redirectToAuth()
       } else {
-        var error = new Error(`${r.status} ${r.statusText}`)
-        error.response = r
-        throw error
+        EventBus.$emit('http::error', r)
       }
-    })
+    }, err => EventBus.$emit('http::error', err))
   }
   sendAction (url, params) {
-    return this.fetch(DatashareClient.getFullUrl(url), params).then((r) => {
-      if (r.status === 401) {
-        this.redirectToAuth()
-      } else {
+    return this.fetch(DatashareClient.getFullUrl(url), params).then(r => {
+      if (r.status >= 200 && r.status < 300) {
         return r
+      } else {
+        EventBus.$emit('http::error', r)
       }
-    })
-  }
-  redirectToAuth () {
-    window.location.assign(process.env.VUE_APP_DS_AUTH_SIGNIN)
+    }, err => EventBus.$emit('http::error', err))
   }
 }
 
