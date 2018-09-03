@@ -74,7 +74,14 @@ const router = new VueRouter({
         skipsAuth: true
       }
     }
-  ]
+  ],
+  scrollBehavior (to, from, savedPosition) {
+    if (to.name === 'document') {
+      return { x: 0, y: 0 }
+    } else {
+      return savedPosition
+    }
+  }
 })
 
 router.beforeEach((to, from, next) => {
