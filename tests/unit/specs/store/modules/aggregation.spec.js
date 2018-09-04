@@ -197,6 +197,7 @@ describe('Aggregation store', function () {
     await letData(es).have(new IndexedDocument('this/is/a/path/test.doc')).commit()
 
     const response = await store.dispatch('aggregation/query', { name: 'path' })
+
     expect(response.aggregations.path.buckets).toHaveLength(1)
     expect(response.aggregations.path.buckets[0].key).toEqual('this/is/a/path/test.doc')
     expect(response.aggregations.path.buckets[0].doc_count).toEqual(1)
@@ -208,6 +209,7 @@ describe('Aggregation store', function () {
     await letData(es).have(new IndexedDocument('this/is/a/third/path/test.doc')).commit()
 
     const response = await store.dispatch('aggregation/query', { name: 'path' })
+
     expect(response.aggregations.path.buckets).toHaveLength(3)
     expect(response.aggregations.path.buckets[0].key).toEqual('this/is/a/path/test.doc')
     expect(response.aggregations.path.buckets[0].doc_count).toEqual(1)
@@ -224,6 +226,20 @@ describe('Aggregation store', function () {
     expect(typeof facetPath).toBe('object')
     expect(facetPath.key).toEqual('extractionDate')
     expect(facetPath.type).toEqual('FacetText')
+  })
+
+  it('should return the indexing date buckets', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-04-04T20:20:20.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-04-06T20:20:20.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-05-04T20:20:20.001Z')).commit()
+
+    const response = await store.dispatch('aggregation/query', { name: 'indexing-date' })
+
+    expect(response.aggregations.extractionDate.buckets).toHaveLength(2)
+    expect(response.aggregations.extractionDate.buckets[0].key).toEqual(1522540800000)
+    expect(response.aggregations.extractionDate.buckets[0].doc_count).toEqual(2)
+    expect(response.aggregations.extractionDate.buckets[1].key).toEqual(1525132800000)
+    expect(response.aggregations.extractionDate.buckets[1].doc_count).toEqual(1)
   })
 
   it('should aggregate only the not hidden named entities', async () => {
