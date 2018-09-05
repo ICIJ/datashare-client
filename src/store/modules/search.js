@@ -146,13 +146,6 @@ export const mutations = {
       existingFacet.reverse = true
     }
   },
-  includeFacet (state, name) {
-    // Look for facet for this name
-    const existingFacet = find(state.facets, { name })
-    if (existingFacet) {
-      existingFacet.reverse = true
-    }
-  },
   toggleFacet (state, name) {
     // Look for facet for this name
     const existingFacet = find(state.facets, { name })
