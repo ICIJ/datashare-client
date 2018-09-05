@@ -12,7 +12,7 @@ localVue.use(VueI18n)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
-describe.skip('TiffViewer.vue', () => {
+describe('TiffViewer.vue', () => {
   let httpServer = null
   beforeAll(() => {
     httpServer = createServer({root: 'tests/unit'})
