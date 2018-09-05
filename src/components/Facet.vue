@@ -71,13 +71,13 @@ import pick from 'lodash/pick'
 import Response from '@/api/Response'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { removeDiacritics } from '@/utils/strings.js'
-import { mixin } from '@/mixins/facets'
+import facets from '@/mixins/facets'
 
 const initialNumberOfFilesDisplayed = 5
 
 export default {
   name: 'Facet',
-  mixins: [mixin],
+  mixins: [facets],
   components: {
     ContentPlaceholder
   },

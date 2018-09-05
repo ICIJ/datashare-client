@@ -8,11 +8,11 @@ import { join } from 'path'
 import settings from '@/utils/settings'
 import Facet from '@/components/Facet'
 import Tree from '@/components/Tree'
-import { mixin } from '@/mixins/facets'
+import facets from '@/mixins/facets'
 
 export default {
   name: 'FacetPath',
-  mixins: [mixin],
+  mixins: [facets],
   components: {
     Facet,
     Tree

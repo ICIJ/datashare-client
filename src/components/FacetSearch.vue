@@ -34,7 +34,6 @@ import { EventBus } from '@/utils/event-bus.js'
 
 export default {
   name: 'FacetSearch',
-  mixins: [],
   props: {
     facet: {
       type: Object

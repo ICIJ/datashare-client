@@ -1,11 +1,11 @@
 <script>
-import mixin from '@/mixins/facets'
+import facets from '@/mixins/facets'
 import Facet from '@/components/Facet'
 
 export default {
   name: 'FacetText',
   components: { Facet },
-  mixins: [mixin]
+  mixins: [facets]
 }
 </script>
 
