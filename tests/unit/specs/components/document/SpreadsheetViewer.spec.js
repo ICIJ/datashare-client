@@ -13,7 +13,7 @@ localVue.use(VueI18n)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
-describe.skip('SpreadsheetViewer.vue', () => {
+describe('SpreadsheetViewer.vue', () => {
   let httpServer = null
   beforeAll(() => {
     httpServer = createServer({root: 'tests/unit'})

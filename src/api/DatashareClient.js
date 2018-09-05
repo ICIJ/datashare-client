@@ -35,13 +35,7 @@ export class DatashareClient {
     return `${process.env.VUE_APP_DS_HOST || ''}${url}`
   }
   getSource (relativeUrl) {
-    return this.fetch(DatashareClient.getFullUrl(relativeUrl), {credentials: 'same-origin'}).then(r => {
-      if (r.status >= 200 && r.status < 300) {
-        return r
-      } else {
-        EventBus.$emit('http::error', r)
-      }
-    }, err => EventBus.$emit('http::error', err))
+    return this.sendAction(relativeUrl, {credentials: 'same-origin'})
   }
   sendAction (url, params) {
     return this.fetch(DatashareClient.getFullUrl(url), params).then(r => {
@@ -49,8 +43,11 @@ export class DatashareClient {
         return r
       } else {
         EventBus.$emit('http::error', r)
+        const error = new Error(`${r.status} ${r.statusText}`)
+        error.response = r
+        throw error
       }
-    }, err => EventBus.$emit('http::error', err))
+    })
   }
 }
 

@@ -22,7 +22,11 @@ describe('Datashare backend client', () => {
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
 
-    await ds.createIndex()
+    try {
+      await ds.createIndex()
+    } catch (err) {
+      expect(err).toEqual(new Error('42 undefined'))
+    }
 
     expect(mockCallback.mock.calls.length).toBe(1)
     expect(mockCallback.mock.calls[0][0]).toEqual(new Response(JSON.stringify({}), {status: 42, headers: {'Content-type': 'application/json'}}))

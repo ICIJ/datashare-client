@@ -97,16 +97,6 @@ router.beforeEach((to, from, next) => {
 EventBus.$on('http::error', err => {
   if (err && err.status === 401) {
     window.location.assign(process.env.VUE_APP_DS_AUTH_SIGNIN)
-  } else {
-    var errorName = ''
-    if (err && err.status && err.statusText) {
-      errorName = err.status + ' ' + err.statusText
-    } else {
-      errorName = err
-    }
-    var error = new Error(errorName)
-    error.response = err
-    throw error
   }
 })
 
