@@ -36,9 +36,6 @@ module.exports = {
     if (process.env.NODE_ENV === 'test') {
       // Log the user by default
       setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'TOKEN' }, JSON.stringify)
-      /* const app = require('express')()
-      app.use(require('serve-static')('tests/unit/resources'))
-      app.listen(9876) */
     }
   },
   devServer: {
