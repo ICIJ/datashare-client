@@ -130,6 +130,26 @@ function initialState () {
         isSearchable: false,
         itemParam: item => ({ name: 'indexing-date', value: item.key }),
         itemLabel: item => item.key_as_string,
+        addFilter: (body, param) => {
+          body.query('bool', sub => {
+            param.values.forEach(date => {
+              let gte = new Date(parseInt(date))
+              let lte = new Date(gte.setMonth(gte.getMonth() + 1) - 1)
+              sub.orQuery('range', 'extractionDate', { gte: new Date(parseInt(date)), lte: lte })
+            })
+            return sub
+          })
+        },
+        notFilter: (body, param) => {
+          body.query('bool', sub => {
+            param.values.forEach(date => {
+              let gte = new Date(parseInt(date))
+              let lte = new Date(gte.setMonth(gte.getMonth() + 1) - 1)
+              sub.notQuery('range', 'extractionDate', { gte: new Date(parseInt(date)), lte: lte })
+            })
+            return sub
+          })
+        },
         body: body => body.agg('date_histogram', 'extractionDate', {
           interval: '1M',
           format: 'yyyy-MM'

@@ -22,6 +22,7 @@ const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Vuex)
 localVue.use(BootstrapVue)
+
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({locale: 'en', messages})
@@ -48,6 +49,7 @@ describe('FacetText.vue', () => {
 
   afterEach(async () => {
     await store.commit('search/reset')
+    await store.commit('aggregation/reset')
     // Reset facetQuery to default
     wrapped.vm.root.facetQuery = ''
   })
@@ -132,6 +134,7 @@ describe('FacetText.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
   })
 
+  // #TBD : False positive
   it('should display an item for inverted facet with no docs', async () => {
     await letData(es).have(new IndexedDocument('index.js').withContent('Lorem').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('index.html').withContent('Lorem').withContentType('text/html')).commit()
@@ -325,5 +328,27 @@ describe('FacetText.vue', () => {
     expect(getItemChildText(2, '.facet__items__item__count')).toEqual('0')
     expect(getItemChildText(3, '.facet__items__item__label')).toEqual('2018-07')
     expect(getItemChildText(3, '.facet__items__item__count')).toEqual('2')
+  })
+
+  it('should querying on date on click on facet link, by a route redirect', async () => {
+    wrapped = mount(FacetText, { localVue, i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, {name: 'indexing-date'}) } })
+    await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-04-04T20:20:20.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-05-05T02:00:42.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-05-05T20:10:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withIndexingDate('2018-05-05T23:41:17.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_05.txt').withIndexingDate('2018-07-07T06:16:44.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_06.txt').withIndexingDate('2018-07-07T16:16:16.001Z')).commit()
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    const spyRefreshRoute = jest.spyOn(wrapped.vm.root, 'refreshRoute')
+    expect(spyRefreshRoute).not.toBeCalled()
+
+    wrapped.find('.list-group-item:nth-child(4) > a').trigger('click')
+
+    expect(spyRefreshRoute).toBeCalled()
+    expect(spyRefreshRoute).toBeCalledTimes(1)
+    expect(wrapped.vm.$store.getters['search/toRouteQuery']).toEqual({ q: '*', size: 25, sort: 'relevance', 'f[indexing-date]': [ new Date('2018-07-01T00:00:00.000Z').getTime() ] })
   })
 })
