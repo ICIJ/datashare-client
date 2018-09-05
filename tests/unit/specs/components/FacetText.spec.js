@@ -134,22 +134,21 @@ describe('FacetText.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
   })
 
-  // #TBD : False positive
-  it('should display an item for inverted facet with no docs', async () => {
-    await letData(es).have(new IndexedDocument('index.js').withContent('Lorem').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('index.html').withContent('Lorem').withContentType('text/html')).commit()
+  it.only('should display an item for inverted facet', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('Lorem').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('Lorem').withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('Lorem').withContentType('text/javascript')).commit()
 
-    store.commit('search/query', '*')
     store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
     store.commit('search/excludeFacet', 'content-type')
 
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    const lastItem = wrapped.vm.$el.querySelector('.facet__items__item:last-child')
+    const firstItem = wrapped.vm.$el.querySelectorAll('.facet--reversed .facet__items__item')[0]
 
-    expect(lastItem.classList.contains('facet__items__item--active')).toEqual(true)
-    expect(trim(lastItem.querySelector('span').textContent)).toEqual('1')
+    expect(firstItem.classList.contains('facet__items__item--active')).toEqual(true)
+    expect(trim(firstItem.querySelector('span').textContent)).toEqual('2')
   })
 
   it('should not display the more button', async () => {
