@@ -1,7 +1,7 @@
 <template>
   <div class="indexing container pt-4">
     <div class="text-right">
-      <button class="btn btn-icij" type="button" @click="openTaskForm">
+      <button class="btn btn-icij" type="button" @click="openIndexingForm">
         <font-awesome-icon icon="rocket" class="mr-2" />
         {{ $t('indexing.new') }}
       </button>
@@ -11,7 +11,7 @@
         <font-awesome-icon icon="rocket" class="mr-2" />
         {{ $t('indexing.new') }}
       </div>
-      <indexing-form id="indexing-form" :finally="closeTaskForm" />
+      <indexing-form id="indexing-form" :finally="closeIndexingForm" />
     </b-modal>
     <div class="mt-4">
       <div class="card">
@@ -65,7 +65,7 @@ export default {
   },
   mounted () {
     if (this.tasks.length === 0) {
-      this.openTaskForm()
+      this.openIndexingForm()
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -80,10 +80,10 @@ export default {
     next()
   },
   methods: {
-    openTaskForm () {
+    openIndexingForm () {
       this.$refs.indexingForm.show()
     },
-    closeTaskForm () {
+    closeIndexingForm () {
       this.$refs.indexingForm.hide()
     },
     cleanTasks () {
