@@ -134,7 +134,7 @@ describe('FacetText.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
   })
 
-  it.only('should display an item for inverted facet', async () => {
+  it('should display an item for inverted facet', async () => {
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('Lorem').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withContent('Lorem').withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withContent('Lorem').withContentType('text/javascript')).commit()
