@@ -13,7 +13,8 @@ export function initialState () {
       pipeline_opennlp: false,
       pipeline_mitie: false,
       pipeline_ixapipe: false,
-      pipeline_gatenlp: false
+      pipeline_gatenlp: false,
+      step: 1
     },
     pollHandle: null,
     tasks: []

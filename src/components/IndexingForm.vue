@@ -200,7 +200,6 @@ export default {
   },
   data () {
     return {
-      step: 1,
       errors: []
     }
   },
@@ -213,7 +212,8 @@ export default {
       'form.pipeline_opennlp',
       'form.pipeline_mitie',
       'form.pipeline_ixapipe',
-      'form.pipeline_gatenlp'
+      'form.pipeline_gatenlp',
+      'form.step'
     ]),
     ...mapState('search', {
       isIndexEmpty: state => {
@@ -279,7 +279,9 @@ export default {
       return true
     },
     submit () {
-      this.finally(this.$store.dispatch('indexing/query'))
+      this.finally(this.$store.dispatch('indexing/query').then(() => {
+        this.$store.commit('indexing/reset')
+      }))
     }
   }
 }

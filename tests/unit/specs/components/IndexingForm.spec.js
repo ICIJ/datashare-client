@@ -7,6 +7,7 @@ import fetchPonyfill from 'fetch-ponyfill'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import IndexingForm from '@/components/IndexingForm'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import cloneDeep from 'lodash/cloneDeep'
 
 import messages from '@/messages'
 import router from '@/router'
@@ -132,6 +133,23 @@ describe('Indexing.vue', () => {
     expect(wrapped.vm.errors.length).toEqual(0)
     expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step--04').length).toEqual(1)
     expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step--04 button[type=submit]').length).toEqual(1)
+  })
+
+  it('should reset the modal params on submitting the form', async () => {
+    datashare.fetch.mockReturnValue(jsonOk({}))
+    let initialState = cloneDeep(store.state.indexing)
+
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.index', value: true })
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.findNames', value: true })
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.ocr', value: true })
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline_corenlp', value: true })
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline_opennlp', value: true })
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline_ixapipe', value: true })
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.step', value: 3 })
+
+    await wrapped.vm.submit()
+
+    expect(store.state.indexing).toEqual(initialState)
   })
 })
 
