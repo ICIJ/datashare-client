@@ -31,9 +31,7 @@ export default {
   },
   mounted () {
     this.$watch(() => map(this.$refs, (ref, key) => get(ref, '0.root.isReady', false)), (e) => {
-      this.sortedFacets = sortBy(this.facets, (facet, index) => {
-        return get(this, `$refs.${facet.name}.0.root.hasResults`, true) ? index : this.facets.length + index
-      })
+      this.sortedFacets = sortBy(this.facets, facet => get(this, `$refs.${facet.name}.0.root.isReady`, true) ? !get(this, `$refs.${facet.name}.0.root.hasResults`, true) : false)
     })
     // Watch for $root event
     this.$root.$on('facet::async-search', this.asyncFacetSearch)

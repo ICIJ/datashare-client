@@ -23,7 +23,12 @@
           </label>
         </form>
       </slot>
-      <slot name="items" :items="displayedFilteredItems()" :facetQuery="facetQuery">
+      <div v-if="!isReady">
+        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
+        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
+        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
+      </div>
+      <slot v-else name="items" :items="displayedFilteredItems()" :facetQuery="facetQuery">
         <div class="list-group-item facet__items__item p-0 border-0" v-for="(item, index) in displayedFilteredItems()" :key="index" :class="{ 'facet__items__item--active': hasValue(item) }">
           <slot name="item" :item="item">
             <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
@@ -37,11 +42,6 @@
           </slot>
         </div>
       </slot>
-      <div v-if="!isReady">
-        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
-        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
-        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
-      </div>
       <div class="list-group-item facet__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
         <span>{{ display.label }}</span>
         <font-awesome-icon :icon="display.icon" class="float-right" />
@@ -131,11 +131,12 @@ export default {
       this.$root.$emit('facet::async-search', this.facet, this.facetQuery)
       this.$emit('async-search', this.facet, this.facetQuery)
     },
-    aggregate () {
+    aggregate (delay = null) {
       if (this.facet) {
         this.isReady = false
         this.response = Response.none()
-        return this.$store.dispatch('aggregation/query', { name: this.facet.name }).then(r => {
+        return this.$store.dispatch('aggregation/query', { name: this.facet.name }).then(async r => {
+          if (delay) await new Promise(resolve => setTimeout(resolve, delay))
           this.response = this.addInvertedFacets(r)
           this.isReady = true
         })

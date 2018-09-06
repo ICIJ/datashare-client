@@ -25,7 +25,7 @@ export default {
     capitalize: capitalize
   },
   mounted () {
-    EventBus.$on('facet::hide::named-entities', () => this.$refs.facet.aggregate())
+    EventBus.$on('facet::hide::named-entities', () => this.$refs.facet.aggregate(250))
   }
 }
 </script>
