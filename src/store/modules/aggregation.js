@@ -86,19 +86,6 @@ function initialState () {
             return b
           })
         },
-        // WIP
-        _filteredBody: (body) => {
-          let filteredBody = body
-          body.query('bool', b => {
-            b.orQuery('has_parent', 'parent_type', 'Document', { }, sub => {
-              sub.query('match_all')
-              filteredBody = sub
-              return sub
-            })
-            return b
-          })
-          return filteredBody
-        },
         body: (body, options = {}) => {
           return body
             .query('term', 'type', 'NamedEntity')
@@ -135,9 +122,9 @@ function initialState () {
           })
         },
         body: (body, options) => body
-          .query('regexp', {
-            'path': '/home/datashare/data/([^/]+/[^/]+){1,4}'
-          })
+          /* .query('regexp', {
+            'path': `/?([^/]+/[^/]+){0,7}`
+          }) */
           .agg('terms', 'path', 'path', {
             ...options,
             size: 500

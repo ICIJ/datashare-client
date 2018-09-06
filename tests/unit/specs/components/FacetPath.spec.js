@@ -55,11 +55,8 @@ describe('FacetPath.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    // Check that there are 2 nodes in the tree
     expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).toEqual(7)
-    // Among the nodes, 1 is a folder
     expect(wrapped.vm.$el.querySelectorAll('.tree-node--folder').length).toEqual(4)
-    // Among the nodes, 1 is a file
     expect(wrapped.vm.$el.querySelectorAll('.tree-node--file').length).toEqual(3)
   })
 })
