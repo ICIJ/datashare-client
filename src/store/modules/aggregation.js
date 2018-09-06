@@ -86,6 +86,19 @@ function initialState () {
             return b
           })
         },
+        // WIP
+        _filteredBody: (body) => {
+          let filteredBody = body
+          body.query('bool', b => {
+            b.orQuery('has_parent', 'parent_type', 'Document', { }, sub => {
+              sub.query('match_all')
+              filteredBody = sub
+              return sub
+            })
+            return b
+          })
+          return filteredBody
+        },
         body: (body, options = {}) => {
           return body
             .query('term', 'type', 'NamedEntity')
@@ -121,7 +134,14 @@ function initialState () {
             return sub
           })
         },
-        body: (body, options) => body.agg('terms', 'path', 'path', options)
+        body: (body, options) => body
+          .query('regexp', {
+            'path': '/home/datashare/data/([^/]+/[^/]+){1,4}'
+          })
+          .agg('terms', 'path', 'path', {
+            ...options,
+            size: 500
+          })
       },
       {
         name: 'indexing-date',
@@ -206,12 +226,14 @@ export const getters = {
   },
   buildFacetBody (state, getters, rootState) {
     return predicate => {
-      // Find the Bodybuilder instance for this faet using a predicate
-      const body = getters.getFacet(predicate).body(bodybuilder())
+      // Find the Bodybuilder instance for this facet using a predicate
+      const facet = getters.getFacet(predicate)
+      const body = facet.body(bodybuilder())
       // If the aggregation must not be global (relative to a search)
       // we add the query conditions to the body.
       if (!state.globalSearch) {
-        esClient.addFacetsToBody(rootState.search.facets, body)
+        let filteredBody = facet.filteredBody ? facet.filteredBody(body) : body
+        esClient.addFacetsToBody(rootState.search.facets, filteredBody)
         esClient.addQueryToBody(rootState.search.query, body)
       }
       // We finally build the body with no docs (size 0) to avoid loading

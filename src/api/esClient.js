@@ -73,7 +73,7 @@ export function searchPlugin (Client, config, components) {
         // Add match for namedentity containing the query string
         .orQuery('has_child', 'type', 'NamedEntity', {
           'inner_hits': {
-            'size': 30
+            'size': 100
           }
         }, sub => sub.query('match', 'mention', query))
       )
