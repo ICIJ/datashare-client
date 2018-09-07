@@ -35,6 +35,6 @@ describe('TiffViewer.vue', () => {
     await wrapped.vm.page(1)
     await localVue.nextTick()
 
-    expect(wrapped.vm.$el.querySelector('img.tiff-viewer__canvas')).not.toEqual(null)
+    expect(wrapped.vm.$el.querySelectorAll('img.tiff-viewer__canvas')).not.toHaveLength(0)
   })
 })

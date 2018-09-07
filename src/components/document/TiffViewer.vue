@@ -130,7 +130,7 @@ export default {
         }
       })
       // Change the image src to start loading the image
-      img.src = canvas.toDataURL()
+      img.src = canvas.toDataURL ? canvas.toDataURL() : null
       return promise
     }
   }
