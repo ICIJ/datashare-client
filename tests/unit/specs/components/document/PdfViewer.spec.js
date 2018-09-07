@@ -17,7 +17,7 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 describe('PdfViewer.vue', () => {
   let httpServer = null
   beforeAll(() => {
-    httpServer = createServer({root: 'tests/unit'})
+    httpServer = createServer({root: 'tests/unit/resources'})
     httpServer.listen(9876)
   })
   afterAll(() => {
@@ -28,7 +28,7 @@ describe('PdfViewer.vue', () => {
   })
 
   it('should display canvas when PDF is not found', async () => {
-    var wrapped = mount(PdfViewer, {localVue, propsData: {'url': 'http://localhost:9876/missingDocument.pdf'}})
+    var wrapped = mount(PdfViewer, {localVue, propsData: { url: 'missingDocument.pdf' }})
     await wrapped.vm.loadPage(1)
     expect(wrapped.vm.$el.querySelector('img.pdf-viewer__canvas')).toEqual(null)
     expect(wrapped.vm.$el.querySelector('.alert').textContent).toContain('stream must have data')
@@ -36,7 +36,7 @@ describe('PdfViewer.vue', () => {
 
   it('should cache pdf data', async () => {
     jest.spyOn(PDFJS, 'getDocument')
-    var wrapped = mount(PdfViewer, {localVue, propsData: {'url': 'http://localhost:9876/resources/document.pdf'}})
+    var wrapped = mount(PdfViewer, {localVue, propsData: { url: 'document.pdf' }})
     await wrapped.vm.loadPage(1)
     await wrapped.vm.loadPage(2)
     await localVue.nextTick()
@@ -44,7 +44,7 @@ describe('PdfViewer.vue', () => {
   }, 10000)
 
   it('should display pdf page', async () => {
-    var wrapped = mount(PdfViewer, {localVue, propsData: {'url': 'http://localhost:9876/resources/document.pdf'}})
+    var wrapped = mount(PdfViewer, {localVue, propsData: { url: 'document.pdf' }})
     expect(wrapped.vm.page(1)).toBeUndefined(undefined)
     await wrapped.vm.loadPage(1)
     expect(wrapped.vm.page(1)).not.toBeUndefined(undefined)

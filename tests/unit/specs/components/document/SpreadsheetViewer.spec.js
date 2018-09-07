@@ -16,7 +16,7 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 describe('SpreadsheetViewer.vue', () => {
   let httpServer = null
   beforeAll(() => {
-    httpServer = createServer({root: 'tests/unit'})
+    httpServer = createServer({root: 'tests/unit/resources'})
     httpServer.listen(9876)
   })
   afterAll(() => {
@@ -24,7 +24,7 @@ describe('SpreadsheetViewer.vue', () => {
   })
 
   it('should display error when CSV file is not found', async () => {
-    var wrapped = mount(SpreadsheetViewer, {localVue, propsData: {'url': 'http://localhost:9876/invalid.csv', type: 'text/csv'}})
+    var wrapped = mount(SpreadsheetViewer, {localVue, propsData: { url: 'invalid.csv', type: 'text/csv' }})
     await wrapped.vm.getWorkbook()
     await Vue.nextTick()
 
@@ -34,8 +34,8 @@ describe('SpreadsheetViewer.vue', () => {
 
   it('should display error when XLSX file is not found', async () => {
     var wrapped = mount(SpreadsheetViewer, {localVue,
-      propsData: {'url': 'http://localhost:9876/invalid.xlsx',
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}})
+      propsData: { url: 'invalid.xlsx',
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }})
     await wrapped.vm.getWorkbook()
     await Vue.nextTick()
 
@@ -44,7 +44,7 @@ describe('SpreadsheetViewer.vue', () => {
   })
 
   it('should display handsontable with a CSV file', async () => {
-    var wrapped = mount(SpreadsheetViewer, {localVue, propsData: {'url': 'http://localhost:9876/resources/spreadsheet.csv', type: 'text/csv'}})
+    var wrapped = mount(SpreadsheetViewer, {localVue, propsData: { url: 'spreadsheet.csv', type: 'text/csv' }})
     await wrapped.vm.getWorkbook()
     await Vue.nextTick()
     expect(wrapped.vm.$el.querySelector('.ht_master.handsontable')).not.toEqual(null)
@@ -52,8 +52,8 @@ describe('SpreadsheetViewer.vue', () => {
 
   it('should display handsontable with a XLSX file', async () => {
     var wrapped = mount(SpreadsheetViewer, {localVue,
-      propsData: {'url': 'http://localhost:9876/resources/spreadsheet.xlsx',
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}})
+      propsData: { url: 'spreadsheet.xlsx',
+        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' }})
     await wrapped.vm.getWorkbook()
     await Vue.nextTick()
 

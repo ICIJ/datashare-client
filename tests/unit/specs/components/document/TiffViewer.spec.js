@@ -15,7 +15,7 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 describe('TiffViewer.vue', () => {
   let httpServer = null
   beforeAll(() => {
-    httpServer = createServer({root: 'tests/unit'})
+    httpServer = createServer({root: 'tests/unit/resources'})
     httpServer.listen(9876)
   })
   afterAll(() => {
@@ -23,7 +23,7 @@ describe('TiffViewer.vue', () => {
   })
 
   it('should display error when tiff is not found', async () => {
-    var wrapped = mount(TiffViewer, {localVue, propsData: {'url': 'http://localhost:9876/invalid.url'}})
+    var wrapped = mount(TiffViewer, { localVue, propsData: { url: 'invalid.url' } })
     await wrapped.vm.page(1)
     await localVue.nextTick()
 
@@ -31,7 +31,7 @@ describe('TiffViewer.vue', () => {
   })
 
   it('should display canvas when tiff is found', async () => {
-    var wrapped = mount(TiffViewer, {localVue, propsData: {'url': 'http://localhost:9876/resources/image.tiff'}})
+    var wrapped = mount(TiffViewer, { localVue, propsData: { url: 'image.tiff' } })
     await wrapped.vm.page(1)
     await localVue.nextTick()
 
