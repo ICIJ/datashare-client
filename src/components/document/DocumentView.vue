@@ -102,7 +102,7 @@
         <template v-else-if="document.contentType === 'image/tiff'">
           <tiff-viewer :url="document.relativePath" />
         </template>
-        <template v-else-if="document.contentType.indexOf('xls') > 0 || document.contentType.indexOf('csv') > 0">
+        <template v-else-if="document.contentType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || document.contentType === 'text/csv'">
           <spreadsheet-viewer :url="document.relativePath" :type="document.contentType"/>
         </template>
         <template v-else>

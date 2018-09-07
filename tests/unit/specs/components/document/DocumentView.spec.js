@@ -2,7 +2,7 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 
-import { createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -13,6 +13,7 @@ import store from '@/store'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import DocumentView from '@/components/document/DocumentView'
 import trim from 'lodash/trim'
+import { createServer } from 'http-server'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -24,15 +25,25 @@ const i18n = new VueI18n({ locale: 'en', messages })
 
 describe('DocumentView.vue', () => {
   esConnectionHelper()
-  var es = esConnectionHelper.es
+  const es = esConnectionHelper.es
+  let httpServer = null
+
+  beforeAll(() => {
+    httpServer = createServer({root: 'tests/unit/resources'})
+    httpServer.listen(9876)
+  })
 
   afterEach(async () => {
     store.commit('document/reset')
   })
 
+  afterAll(() => {
+    httpServer.close()
+  })
+
   it('should display an error message when document is not found', async () => {
     const id = 'notfound'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
@@ -42,7 +53,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a document', async () => {
     const id = 'foo.txt'
-    const wrapped = mount(DocumentView, {localVue, i18n, router, store, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, {localVue, i18n, router, store, propsData: { id }})
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('this is foo document'))
@@ -57,7 +68,7 @@ describe('DocumentView.vue', () => {
   it('should display a child document', async () => {
     const id = 'child.txt'
     const routing = 'parent.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id, routing }})
+    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id, routing }})
 
     await letData(es).have(new IndexedDocument(routing)
       .withContent('this is a parent document'))
@@ -75,7 +86,7 @@ describe('DocumentView.vue', () => {
 
   it('should mark named entities', async () => {
     const id = 'mydoc.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('a NER doc with 2 NER2')
@@ -95,7 +106,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a document with named entities and escaped HTML', async () => {
     const id = 'html_doc.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('a foo document <with>HTML</with>')
@@ -110,7 +121,7 @@ describe('DocumentView.vue', () => {
 
   it('should display named entities in the dedicated tab', async () => {
     const id = 'html_doc.txt'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('a foo document <with>HTML</with>')
@@ -130,5 +141,20 @@ describe('DocumentView.vue', () => {
     expect(pills[1].classList.contains('border-category-category_02')).toEqual(true)
     expect(trim(pills[2].querySelector('span:first-child').textContent)).toEqual('mention_03')
     expect(pills[2].classList.contains('border-category-category_03')).toEqual(true)
+  })
+
+  it('should call the SpreadsheetViewer', async () => {
+    const id = 'spreadsheet.xlsx'
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('this,is,a,XLSX,doc')
+      .withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
+      .commit()
+
+    await wrapped.vm.getDoc()
+    await wrapped.vm.$nextTick()
+
+    expect(wrapped.vm.$el.querySelector('.spreadsheet-viewer')).not.toEqual(null)
   })
 })
