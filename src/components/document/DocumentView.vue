@@ -1,6 +1,6 @@
 <template>
   <div v-if="!isReady">
-    <content-placeholder class="list-group-item py-2 px-3" />
+    <content-placeholder class="document py-2 px-3" />
   </div>
   <div v-else>
     <div class="document" v-if="document">
