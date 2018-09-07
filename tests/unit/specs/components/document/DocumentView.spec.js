@@ -143,13 +143,28 @@ describe('DocumentView.vue', () => {
     expect(pills[2].classList.contains('border-category-category_03')).toEqual(true)
   })
 
-  it('should call the SpreadsheetViewer', async () => {
+  it('should call the SpreadsheetViewer for XLSX document', async () => {
     const id = 'spreadsheet.xlsx'
     const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
     await letData(es).have(new IndexedDocument(id)
-      .withContent('this,is,a,XLSX,doc')
+      .withContent('')
       .withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
+      .commit()
+
+    await wrapped.vm.getDoc()
+    await wrapped.vm.$nextTick()
+
+    expect(wrapped.vm.$el.querySelector('.spreadsheet-viewer')).not.toEqual(null)
+  })
+
+  it('should call the SpreadsheetViewer for CSV document', async () => {
+    const id = 'spreadsheet.csv'
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('')
+      .withContentType('text/csv'))
       .commit()
 
     await wrapped.vm.getDoc()
