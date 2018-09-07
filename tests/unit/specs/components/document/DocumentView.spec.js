@@ -172,4 +172,34 @@ describe('DocumentView.vue', () => {
 
     expect(wrapped.vm.$el.querySelector('.spreadsheet-viewer')).not.toEqual(null)
   })
+
+  it('should call the PdfViewer for PDF document', async () => {
+    const id = 'document.pdf'
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('')
+      .withContentType('application/pdf'))
+      .commit()
+
+    await wrapped.vm.getDoc()
+    await wrapped.vm.$nextTick()
+
+    expect(wrapped.vm.$el.querySelector('.pdf-viewer')).not.toEqual(null)
+  })
+
+  it('should call the TiffViewer for TIFF document', async () => {
+    const id = 'image.tiff'
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('')
+      .withContentType('image/tiff'))
+      .commit()
+
+    await wrapped.vm.getDoc()
+    await wrapped.vm.$nextTick()
+
+    expect(wrapped.vm.$el.querySelector('.tiff-viewer')).not.toEqual(null)
+  })
 })
