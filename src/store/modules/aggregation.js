@@ -105,29 +105,27 @@ function initialState () {
       },
       {
         name: 'path',
-        key: 'path',
+        key: 'byDirname',
         type: 'FacetPath',
         isSearchable: false,
         itemParam: item => ({ name: 'path', value: item.key }),
         addFilter: (body, param) => {
           body.query('bool', sub => {
-            param.values.forEach(path => sub.orQuery('prefix', { path }))
+            param.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
             return sub
           })
         },
         notFilter: (body, param) => {
           body.query('bool', sub => {
-            param.values.forEach(path => sub.notQuery('prefix', { path }))
+            param.values.forEach(dirname => sub.notQuery('prefix', { dirname }))
             return sub
           })
         },
         body: (body, options) => body
-          /* .query('regexp', {
-            'path': `/?([^/]+/[^/]+){0,7}`
-          }) */
-          .agg('terms', 'path', 'path', {
-            ...options,
-            size: 500
+          .agg('terms', 'dirname', 'byDirname', {
+            size: 500,
+            order: { '_key': 'asc' },
+            ...options
           })
       },
       {

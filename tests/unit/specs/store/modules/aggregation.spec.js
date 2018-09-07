@@ -184,13 +184,13 @@ describe('Aggregation store', function () {
     let facetPath = find(store.state.aggregation.facets, {name: 'path'})
 
     expect(typeof facetPath).toBe('object')
-    expect(facetPath.key).toEqual('path')
+    expect(facetPath.key).toEqual('byDirname')
     expect(facetPath.type).toEqual('FacetPath')
   })
 
   it('should get no bucket for path aggregation', async () => {
     const response = await store.dispatch('aggregation/query', { name: 'path' })
-    expect(response.aggregations.path.buckets).toHaveLength(0)
+    expect(response.aggregations.byDirname.buckets).toHaveLength(0)
   })
 
   it('should return one bucket, the correct path and the correct number of results', async () => {
@@ -198,9 +198,9 @@ describe('Aggregation store', function () {
 
     const response = await store.dispatch('aggregation/query', { name: 'path' })
 
-    expect(response.aggregations.path.buckets).toHaveLength(1)
-    expect(response.aggregations.path.buckets[0].key).toEqual('/this/is/a/path/test.doc')
-    expect(response.aggregations.path.buckets[0].doc_count).toEqual(1)
+    expect(response.aggregations.byDirname.buckets).toHaveLength(1)
+    expect(response.aggregations.byDirname.buckets[0].key).toEqual('/this/is/a/path')
+    expect(response.aggregations.byDirname.buckets[0].doc_count).toEqual(1)
   })
 
   it('should return lots of buckets, the correct path and the correct number of results', async () => {
@@ -210,13 +210,13 @@ describe('Aggregation store', function () {
 
     const response = await store.dispatch('aggregation/query', { name: 'path' })
 
-    expect(response.aggregations.path.buckets).toHaveLength(3)
-    expect(response.aggregations.path.buckets[0].key).toEqual('/this/is/a/path/test.doc')
-    expect(response.aggregations.path.buckets[0].doc_count).toEqual(1)
-    expect(response.aggregations.path.buckets[1].key).toEqual('/this/is/a/second/path/test.doc')
-    expect(response.aggregations.path.buckets[1].doc_count).toEqual(1)
-    expect(response.aggregations.path.buckets[2].key).toEqual('/this/is/a/third/path/test.doc')
-    expect(response.aggregations.path.buckets[2].doc_count).toEqual(1)
+    expect(response.aggregations.byDirname.buckets).toHaveLength(3)
+    expect(response.aggregations.byDirname.buckets[0].key).toEqual('/this/is/a/path')
+    expect(response.aggregations.byDirname.buckets[0].doc_count).toEqual(1)
+    expect(response.aggregations.byDirname.buckets[1].key).toEqual('/this/is/a/second/path')
+    expect(response.aggregations.byDirname.buckets[1].doc_count).toEqual(1)
+    expect(response.aggregations.byDirname.buckets[2].key).toEqual('/this/is/a/third/path')
+    expect(response.aggregations.byDirname.buckets[2].doc_count).toEqual(1)
   })
 
   // Indexing date facet

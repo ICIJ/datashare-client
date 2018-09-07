@@ -1,18 +1,19 @@
 <template>
   <div class="facet-path-tree">
     <ul class="facet-path-tree__list list-unstyled mb-0 py-2 px-3" v-if="treeData.length">
-      <node-tree v-for="node in treeData" :facet="facet" :node="node" :key="node.label"></node-tree>
+      <tree-node v-for="node in treeData" :facet="facet" :node="node" :key="node.label"></tree-node>
     </ul>
   </div>
 </template>
 
 <script>
-import NodeTree from './NodeTree'
+import TreeNode from './FacetPathTreeNode'
 
 export default {
+  name: 'FacetPathTree',
   props: ['treeData', 'facet'],
   components: {
-    NodeTree
+    TreeNode
   }
 }
 </script>

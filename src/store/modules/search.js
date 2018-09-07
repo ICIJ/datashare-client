@@ -170,7 +170,10 @@ export const actions = {
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
     commit('sort', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.sort : queryOrParams.sort)
     commit('isReady', false)
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => { commit('buildResponse', raw) })
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => {
+      commit('buildResponse', raw)
+      return raw
+    })
   },
   firstPage ({ commit, dispatch }) {
     commit('from', 0)

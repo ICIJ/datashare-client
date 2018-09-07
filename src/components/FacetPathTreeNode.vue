@@ -1,9 +1,9 @@
 <template>
-  <li v-if="node" :class="{ 'tree-node--folder': isFolder, 'tree-node--file': !isFolder, 'tree-node--active': hasValue(nodeParams) }" class="tree-node">
+  <li v-if="node" :class="{ 'tree-node--has-children': hasChildren, 'tree-node--active': hasValue(nodeParams) }" class="tree-node">
     <div class="row no-gutters">
       <div class="col tree-node__label pb-1">
         <a @click="toggle" :title="node.label" v-b-tooltip.hover>
-          <font-awesome-icon :icon="nodeIcon" class="mr-1 tree-node__label__icon" />
+          <font-awesome-icon icon="folder" class="mr-1 tree-node__label__icon" />
           {{ node.label }}
         </a>
       </div>
@@ -15,14 +15,14 @@
           title="Search within this directory"
           class="badge badge-pill badge-light">
           <font-awesome-icon icon="search" class="tree-node__count__icon" />
-          <span class="" v-if="isFolder">
+          <span>
             {{ node.count || 0 }}
           </span>
         </a>
       </div>
     </div>
     <ul v-if="node.children && node.children.length" v-show="open" class="list-unstyled pl-3">
-      <node v-for="child in node.children" :facet="facet" :node="child" :key="child.label"></node>
+      <facet-path-tree-node v-for="child in node.children" :facet="facet" :node="child" :key="child.label"></facet-path-tree-node>
     </ul>
   </li>
 </template>
@@ -33,7 +33,7 @@ import facets from '@/mixins/facets'
 import { join } from 'path'
 
 export default {
-  name: 'node',
+  name: 'FacetPathTreeNode',
   props: ['node', 'facet'],
   mixins: [facets],
   data: function () {
@@ -45,16 +45,13 @@ export default {
     nodeParams () {
       return { key: join(settings.document.base, this.node.path) }
     },
-    isFolder () {
+    hasChildren () {
       return this.node.children && this.node.children.length
-    },
-    nodeIcon () {
-      return this.isFolder ? this.open ? 'folder-open' : 'folder' : 'file'
     }
   },
   methods: {
     toggle: function () {
-      if (this.isFolder) {
+      if (this.hasChildren) {
         this.open = !this.open
       }
     }
@@ -66,7 +63,7 @@ export default {
   .tree-node {
     overflow: hidden;
 
-    &--folder > * > &__label {
+    &--has-children > * > &__label {
       cursor: pointer;
     }
 

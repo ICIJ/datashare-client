@@ -1,13 +1,13 @@
 <script>
 import each from 'lodash/each'
-import filter from 'lodash/filter'
+import find from 'lodash/find'
 import last from 'lodash/last'
 import trim from 'lodash/trim'
 import { join } from 'path'
 
 import settings from '@/utils/settings'
 import Facet from '@/components/Facet'
-import Tree from '@/components/Tree'
+import FacetPathTree from '@/components/FacetPathTree'
 import facets from '@/mixins/facets'
 
 export default {
@@ -15,7 +15,7 @@ export default {
   mixins: [facets],
   components: {
     Facet,
-    Tree
+    FacetPathTree
   },
   methods: {
     tree (items) {
@@ -26,7 +26,6 @@ export default {
       each(items, item => {
         // Remove the document base from the path
         const fullPath = item.key.split(this.treeRoot).pop()
-        const lastItem = last(fullPath.split(folderSeparator))
         // Build the path for the current item starting
         // with the folter separator
         let path = folderSeparator
@@ -34,21 +33,21 @@ export default {
         // Potentially the first node is a path begining with / so we trim
         // the string to avoid addig emtpy dir
         each(trim(fullPath, folderSeparator).split(folderSeparator), label => {
-          let node = null
-          if (label === lastItem) {
-            path = join(path, label)
-            node = { label, path, count: 0 }
-          } else {
-            path = join(path, label, folderSeparator)
-            node = { label, path: path, count: 0, children: [] }
-          }
+          let folder = find(treePointer, { label })
           // Add node to tree if not already in it
-          if (filter(treePointer, { label }).length === 0) {
-            treePointer.push(node)
+          if (!folder) {
+            treePointer.push({
+              label,
+              path: join(path, label, folderSeparator),
+              count: item.doc_count,
+              children: []
+            })
+            treePointer = last(treePointer).children
+          } else {
+            // Increment count
+            folder.count += item.doc_count
+            treePointer = folder.children
           }
-          // Increment count
-          filter(treePointer, { label })[0].count++
-          treePointer = filter(treePointer, { label })[0].children
         })
       })
       return tree
@@ -65,7 +64,7 @@ export default {
 <template>
   <facet v-bind="propsWithout('hide-show-more')" hide-show-more ref="facet">
     <template slot="items" slot-scope="{ items }">
-      <tree :tree-data="tree(items)" :facet="facet"></tree>
+      <facet-path-tree :tree-data="tree(items)" :facet="facet"></facet-path-tree>
     </template>
   </facet>
 </template>

@@ -1,4 +1,5 @@
 import isArray from 'lodash/isArray'
+import { dirname } from 'path'
 
 function letData (index) {
   return new IndexBuilder(index)
@@ -48,6 +49,7 @@ class IndexedDocuments {
 class IndexedDocument {
   constructor (path) {
     this.path = path
+    this.dirname = dirname(path)
     this.join = {name: 'Document'}
     this.type = 'Document'
     this.metadata = {

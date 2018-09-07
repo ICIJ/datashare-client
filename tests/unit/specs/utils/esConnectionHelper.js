@@ -16,7 +16,7 @@ const esConnectionHelper = function () {
   })
 
   afterAll(async () => {
-    // await es.indices.delete({ index, ignoreUnavailable: true })
+    await es.indices.delete({ index, ignoreUnavailable: true })
     await es.deleteByQuery({ index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}} })
   })
 
