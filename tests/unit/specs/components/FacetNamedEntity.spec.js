@@ -89,9 +89,9 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.root.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(3)
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item__key')[0].textContent.trim()).toEqual('NER1')
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item__key')[1].textContent.trim()).toEqual('NER2')
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item__key')[2].textContent.trim()).toEqual('NER3')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item__body__key')[0].textContent.trim()).toEqual('NER1')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item__body__key')[1].textContent.trim()).toEqual('NER2')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item__body__key')[2].textContent.trim()).toEqual('NER3')
   })
 
   it('should not display the more button', async () => {

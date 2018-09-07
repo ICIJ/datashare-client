@@ -38,8 +38,8 @@ export default {
           <div class="col-2 facet__items__item__icon py-2" :class="getCategoryClass(category.key, 'text-')">
             <font-awesome-icon :icon="getCategoryIcon(category.key)" />
           </div>
-          <a class="col py-2 pl-2" href @click.prevent="toggleValue(item)">
-            <div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__key text-white" :class="getCategoryClass(category.key, 'bg-')" :title="capitalize(item.key)" v-b-tooltip.hover>
+          <a class="col-auto py-2 pl-2 facet__items__item__body" href @click.prevent="toggleValue(item)">
+            <div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__body__key text-white" :class="getCategoryClass(category.key, 'bg-')" :title="capitalize(item.key)" v-b-tooltip.hover>
               {{ item.key }}
             </div>
             <div class="text-secondary small facet__items__item__description">
@@ -77,6 +77,9 @@ export default {
 
     .row {
       flex-wrap: nowrap;
+      align-items: stretch;
+      align-content: stretch;
+      width: 100%;
     }
 
     & > span:hover .facet__items__item__menu {
@@ -84,7 +87,8 @@ export default {
     }
 
     &__icon {
-      max-width: 4rem;
+      flex-basis: 4rem;
+      flex-grow: 0;
       font-size: 2em;
       margin-bottom: 0.3em;
       border-right: 1px dashed $card-border-color !important;
@@ -97,11 +101,17 @@ export default {
       }
     }
 
-    &__key {
-      display: inline-block;
-      overflow: hidden;
-      max-width: 100%;
-      text-overflow: ellipsis;
+    &__body {
+      flex-grow: 1;
+      flex-basis: 50%;
+      min-width: 0;
+
+      &__key {
+        display: inline-block;
+        overflow: hidden;
+        max-width: 100%;
+        text-overflow: ellipsis;
+      }
     }
 
     &__description {
@@ -113,7 +123,8 @@ export default {
     }
 
     &__menu {
-      max-width: 2.5em;
+      flex-basis: 2.5em;
+      flex-grow: 0;
       visibility: hidden;
 
       .btn-group > .btn {
