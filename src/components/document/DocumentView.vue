@@ -143,6 +143,7 @@ import sortedUniqBy from 'lodash/sortedUniqBy'
 import SpreadsheetViewer from './SpreadsheetViewer'
 import TiffViewer from './TiffViewer'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
+import { EventBus } from '@/utils/event-bus.js'
 
 export default {
   name: 'document-view',
@@ -159,6 +160,11 @@ export default {
       tab: 'details',
       isReady: false
     }
+  },
+  mounted () {
+    EventBus.$on('facet::hide::named-entities', () => {
+      return this.$store.dispatch('document/getNamedEntities')
+    })
   },
   methods: {
     getDoc (params = { id: this.id, routing: this.routing }) {
