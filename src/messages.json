@@ -65,7 +65,8 @@
       "extracted_text": "Extracted text",
       "preview": "Preview",
       "download_button": "Download",
-      "not_found": "Document not found"
+      "not_found": "Document not found",
+      "named_entities_not_found": "No named entites found"
     },
     "indexing": {
       "yes": "Yes",
@@ -164,7 +165,8 @@
       "extracted_text": "Texte",
       "preview": "Prévisualisation",
       "download_button": "Télécharger",
-      "not_found": "Document non trouvé"
+      "not_found": "Document non trouvé",
+      "named_entities_not_found": "Pas d'entités nommées trouvées"
     },
     "indexing": {
       "yes": "Oui",

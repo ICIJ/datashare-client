@@ -202,4 +202,18 @@ describe('DocumentView.vue', () => {
 
     expect(wrapped.vm.$el.querySelector('.tiff-viewer')).not.toEqual(null)
   })
+
+  it('should display an error message if no named entities found', async () => {
+    const id = 'test.doc'
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent(''))
+      .commit()
+
+    await wrapped.vm.getDoc()
+    await wrapped.vm.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.document .tab-pane.document__named-entities .document__named-entities--no--found').length).toEqual(1)
+  })
 })
