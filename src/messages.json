@@ -66,7 +66,8 @@
       "preview": "Preview",
       "download_button": "Download",
       "not_found": "Document not found",
-      "named_entities_not_found": "No named entites found"
+      "named_entities_not_found": "No named entites found",
+      "named_entites_not_searched": "Document not parsed. To search named entities, go to \"Analyse document\" and start a new task \"Find names\"."
     },
     "indexing": {
       "yes": "Yes",
@@ -166,7 +167,8 @@
       "preview": "Prévisualisation",
       "download_button": "Télécharger",
       "not_found": "Document non trouvé",
-      "named_entities_not_found": "Pas d'entités nommées trouvées"
+      "named_entities_not_found": "Pas d'entités nommées trouvées",
+      "named_entites_not_searched": "Document non parsé. Afin de lancer la recherche d'entités nommées, allez dans \"Analyser des documents\" et lancez une nouvelle tâche \"Trouver les entitées nommées\"."
     },
     "indexing": {
       "yes": "Oui",
@@ -176,7 +178,7 @@
       "btnLabel": "Go",
       "stages": "Étapes",
       "index_stage_label": "Extraction des textes",
-      "extract_stage_label": "Trouver les noms",
+      "findNames_stage_label": "Trouver les entitées nommées",
       "step_01": "Que voulez-vous faire ?",
       "step_02": "Pendant l'indexation, voulez-vous faire de l'OCR ?",
       "step_03": "Quel(s) algo(s) de NLP voulez-vous lancer ?",

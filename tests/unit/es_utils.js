@@ -56,6 +56,7 @@ class IndexedDocument {
       tika_metadata_content_type: null
     }
     this.nerList = []
+    this.nerTags = []
   }
   withContent (content) {
     this.content = content
@@ -71,6 +72,10 @@ class IndexedDocument {
   }
   withIndexingDate (indexingDate) {
     this.extractionDate = indexingDate
+    return this
+  }
+  withPipeline (pipeline) {
+    this.nerTags.push(pipeline)
     return this
   }
   withNer (mention, offset = 1, category = 'ORGANIZATION', isHidden = false) {

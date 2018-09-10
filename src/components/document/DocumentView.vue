@@ -81,7 +81,13 @@
           </dl>
         </div>
         <div class="tab-pane document__named-entities" v-bind:class="{active: tab === 'named_entities'}">
-          <div v-if="groupByCategories(namedEntities).length > 0">
+          <div v-if="document.source.nerTags.length === 0" class="document__named-entities--not--searched">
+            {{ $t('document.named_entites_not_searched') }}
+          </div>
+          <div v-else-if="groupByCategories(namedEntities).length === 0" class="document__named-entities--not--found">
+            {{ $t('document.named_entities_not_found') }}
+          </div>
+          <div v-else>
             <div v-for="(results, index) in groupByCategories(namedEntities)" :key="index" class="mb-4">
               <div class="mb-2" :class="getCategoryClass(results[0].source.category, 'text-')">
                 <font-awesome-icon :icon="getCategoryIcon(results[0].source.category)" />
@@ -98,9 +104,6 @@
                 </span>
               </span>
             </div>
-          </div>
-          <div v-else class="document__named-entities--no--found">
-            {{ $t('document.named_entities_not_found') }}
           </div>
         </div>
         <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent()"></div>

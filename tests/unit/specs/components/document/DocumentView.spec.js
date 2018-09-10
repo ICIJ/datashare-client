@@ -125,6 +125,7 @@ describe('DocumentView.vue', () => {
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('a foo document <with>HTML</with>')
+      .withPipeline('CORENLP')
       .withNer('mention_01', 2, 'CATEGORY_01')
       .withNer('mention_02', 5, 'CATEGORY_02')
       .withNer('mention_03', 12, 'CATEGORY_03'))
@@ -203,7 +204,7 @@ describe('DocumentView.vue', () => {
     expect(wrapped.vm.$el.querySelector('.tiff-viewer')).not.toEqual(null)
   })
 
-  it('should display an error message if no named entities found', async () => {
+  it('should display a specific error message if no names finding task has been run on that document', async () => {
     const id = 'test.doc'
     const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
 
@@ -214,6 +215,21 @@ describe('DocumentView.vue', () => {
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
 
-    expect(wrapped.vm.$el.querySelectorAll('.document .tab-pane.document__named-entities .document__named-entities--no--found').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.document .tab-pane.document__named-entities .document__named-entities--not--searched').length).toEqual(1)
+  })
+
+  it('should display a specific error message if no named entities found after names finding task', async () => {
+    const id = 'test.doc'
+    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('')
+      .withPipeline('CORENLP'))
+      .commit()
+
+    await wrapped.vm.getDoc()
+    await wrapped.vm.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.document .tab-pane.document__named-entities .document__named-entities--not--found').length).toEqual(1)
   })
 })
