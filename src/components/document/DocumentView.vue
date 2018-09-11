@@ -162,9 +162,7 @@ export default {
     }
   },
   mounted () {
-    EventBus.$on('facet::hide::named-entities', () => {
-      return this.$store.dispatch('document/getNamedEntities')
-    })
+    EventBus.$on('facet::hide::named-entities', () => this.$store.dispatch('document/getNamedEntities'))
   },
   methods: {
     getDoc (params = { id: this.id, routing: this.routing }) {
