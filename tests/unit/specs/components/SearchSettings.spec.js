@@ -88,4 +88,12 @@ describe('SearchSettings.vue', function () {
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.$el.querySelector('#input-global').checked).toEqual(true)
   })
+
+  it('should call router push on facets reset', async () => {
+    jest.spyOn(router, 'push')
+    wrapped = mount(SearchSettings, { localVue, i18n, router, store })
+    expect(router.push).not.toHaveBeenCalled()
+    wrapped.vm.resetFacets()
+    expect(router.push).toHaveBeenCalled()
+  })
 })
