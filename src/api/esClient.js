@@ -138,7 +138,7 @@ export function searchPlugin (Client, config, components) {
       return data
     }, error => {
       EventBus.$emit('http::error', error)
-      return null
+      throw error
     })
   }
 }
