@@ -42,9 +42,8 @@
           </slot>
         </div>
       </slot>
-      <div class="list-group-item facet__items__display" @click="toogleDisplay" v-if="shouldDisplayShowMoreAction()">
+      <div class="list-group-item facet__items__display" @click="asyncFacetSearch" v-if="shouldDisplayShowMoreAction()">
         <span>{{ display.label }}</span>
-        <font-awesome-icon :icon="display.icon" class="float-right" />
       </div>
       <div v-if="noResults" class="p-2 text-center small text-muted">
         {{ $t('facet.none') }}<br />
@@ -85,8 +84,7 @@ export default {
     return {
       facetQuery: '',
       display: {
-        icon: 'angle-down',
-        label: 'More',
+        label: 'Show more',
         size: initialNumberOfFilesDisplayed
       },
       response: Response.none(),
@@ -168,11 +166,6 @@ export default {
     },
     shouldDisplayShowMoreAction () {
       return !this.hideShowMore && this.filteredItems.length > initialNumberOfFilesDisplayed
-    },
-    toogleDisplay () {
-      this.display.icon = this.display.icon === 'angle-down' ? 'angle-up' : 'angle-down'
-      this.display.label = this.display.label === 'More' ? 'Less' : 'More'
-      this.display.size = this.display.size === initialNumberOfFilesDisplayed ? this.filteredItems.length : initialNumberOfFilesDisplayed
     }
   }
 }
