@@ -91,7 +91,7 @@ export default {
     },
     taskLabel (name) {
       let nameAndId = last(name.split('.')).split('@')
-      return nameAndId[0] + '(' + nameAndId[1] + ')'
+      return nameAndId[0] + ' (' + nameAndId[1] + ')'
     },
     taskStateToClass (state) {
       switch (state) {
