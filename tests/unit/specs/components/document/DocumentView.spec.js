@@ -14,6 +14,7 @@ import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import DocumentView from '@/components/document/DocumentView'
 import trim from 'lodash/trim'
 import { createServer } from 'http-server'
+import { EventBus } from '@/utils/event-bus.js'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -232,4 +233,31 @@ describe('DocumentView.vue', () => {
 
     expect(wrapped.vm.$el.querySelectorAll('.document .tab-pane.document__named-entities .document__named-entities--not--found').length).toEqual(1)
   })
+
+  it('should reload the named entities search on custom event emitted', async () => {
+    const id = 'mydoc.txt'
+    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+
+    let indexBuilder = await letData(es).have(new IndexedDocument(id)
+      .withContent('')
+      .withPipeline('CORENLP')
+      .withNer('mention_01', 2, 'CATEGORY_01')
+      .withNer('mention_02', 5, 'CATEGORY_02'))
+      .commit()
+
+    await wrapped.vm.getDoc()
+    await wrapped.vm.$nextTick()
+    expect(wrapped.vm.$el.querySelectorAll('.document__named-entities .badge-pill').length).toEqual(2)
+
+    await indexBuilder.hideNer('mention_02')
+    EventBus.$emit('facet::hide::named-entities')
+    await delay(100)
+    expect(wrapped.vm.$el.querySelectorAll('.document__named-entities .badge-pill').length).toEqual(1)
+  })
 })
+
+function delay (t, v) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve.bind(null, v), t)
+  })
+}

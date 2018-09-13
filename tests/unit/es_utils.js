@@ -1,4 +1,5 @@
 import isArray from 'lodash/isArray'
+import find from 'lodash/find'
 import { dirname } from 'path'
 
 function letData (index) {
@@ -11,6 +12,9 @@ class IndexedNe {
     this.offset = offset
     this.category = category
     this.isHidden = isHidden
+  }
+  get id () {
+    return this.mention + this.offset
   }
 }
 
@@ -90,6 +94,11 @@ class IndexedDocument {
   hasParent () {
     return this.parentDocument !== undefined
   }
+  hideNer (mention) {
+    let ner = find(this.nerList, { mention: mention })
+    ner.isHidden = true
+    return ner
+  }
 }
 
 class IndexBuilder {
@@ -99,6 +108,25 @@ class IndexBuilder {
   have (document) {
     this.document = document
     return this
+  }
+  async hideNer (mention) {
+    await this.update(await this.document.hideNer(mention))
+    return this
+  }
+  async update (ner) {
+    console.log('update')
+    await this.index.update({
+      index: process.env.VUE_APP_ES_INDEX,
+      type: 'doc',
+      refresh: true,
+      id: ner.id,
+      body: {
+        doc: {
+          isHidden: ner.isHidden
+        }
+      }
+    })
+    console.log('end of update')
   }
   async commit () {
     if (isArray(this.document)) {
@@ -127,7 +155,7 @@ class IndexBuilder {
           index: process.env.VUE_APP_ES_INDEX,
           type: 'doc',
           refresh: true,
-          id: ner.mention + ner.offset,
+          id: ner.id,
           routing: docId,
           body: {
             mention: ner.mention,
@@ -141,6 +169,7 @@ class IndexBuilder {
         })
       }
     }
+    return this
   }
 }
 
