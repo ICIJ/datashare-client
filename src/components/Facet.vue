@@ -43,7 +43,7 @@
         </div>
       </slot>
       <div class="list-group-item facet__items__display" @click="asyncFacetSearch" v-if="shouldDisplayShowMoreAction()">
-        <span>{{ display.label }}</span>
+        <span>{{ $t('facet.showMore') }}</span>
       </div>
       <div v-if="noResults" class="p-2 text-center small text-muted">
         {{ $t('facet.none') }}<br />
@@ -84,7 +84,6 @@ export default {
     return {
       facetQuery: '',
       display: {
-        label: 'Show more',
         size: initialNumberOfFilesDisplayed
       },
       response: Response.none(),

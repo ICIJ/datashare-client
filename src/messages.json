@@ -47,7 +47,8 @@
       "byDirname": "Path",
       "extractionDate": "Indexing date",
       "extractionLevel": "Extraction level",
-      "deleteNamedEntity": "Delete this Named Entity"
+      "deleteNamedEntity": "Delete this Named Entity",
+      "showMore": "Show more"
     },
     "document": {
       "name": "File name",
@@ -149,7 +150,8 @@
       "path": "Chemin du fichier",
       "extractionDate": "Date d'indexation",
       "extractionLevel": "Niveau d'extraction",
-      "deleteNamedEntity": "Supprimer cette Entité Nommée"
+      "deleteNamedEntity": "Supprimer cette Entité Nommée",
+      "showMore": "Voir plus"
     },
     "document": {
       "name": "Nom du fichier",
