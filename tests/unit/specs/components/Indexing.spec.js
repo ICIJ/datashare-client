@@ -51,8 +51,8 @@ describe('Indexing.vue', () => {
     await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks').length).toEqual(2)
-    expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[0].textContent).toContain('bar(123)')
-    expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[1].textContent).toContain('baz(456)')
+    expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[0].textContent).toContain('bar (123)')
+    expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[1].textContent).toContain('baz (456)')
   })
 })
 

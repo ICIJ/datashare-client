@@ -177,8 +177,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('More')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).toEqual('1')
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('Show more')
   })
 
   it('should display all the facet values and the more button', async () => {
@@ -194,8 +193,7 @@ describe('FacetText.vue', () => {
 
     expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(5)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('More')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).toEqual('1')
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('Show more')
   })
 
   it('should filter facet values 1/3 and display the more button', async () => {
@@ -213,8 +211,7 @@ describe('FacetText.vue', () => {
 
     expect(wrapped.vm.root.displayedFilteredItems().length).toEqual(5)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display> span').textContent)).toEqual('More')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).toEqual('1')
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display> span').textContent)).toEqual('Show more')
   })
 
   it('should filter facet values 2/3 but no more button', async () => {

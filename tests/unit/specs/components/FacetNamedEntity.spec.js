@@ -114,8 +114,7 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.root.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('More')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).toEqual('1')
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('Show more')
   })
 
   it('should display the more button and its font awesome icon', async () => {
@@ -127,8 +126,7 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.root.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(1)
-    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('More')
-    expect(trim(wrapped.vm.$el.querySelectorAll('.facet__items__display svg[data-icon="angle-down"]').length)).toEqual('1')
+    expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('Show more')
   })
 
   it('should filter on named entity facet and return no documents', async () => {
