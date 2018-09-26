@@ -742,7 +742,7 @@
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@vue/cli-overlay/-/cli-overlay-3.0.4.tgz#6d5640021906d35e5572c186c3f35b4e7a93c247"
 
-"@vue/cli-plugin-babel@^3.0.4":
+"@vue/cli-plugin-babel@^3.0.0-rc.10":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@vue/cli-plugin-babel/-/cli-plugin-babel-3.0.4.tgz#f2e4a12f498e285fdc605ad29df4b9b0d4a0eb10"
   dependencies:
@@ -750,7 +750,7 @@
     "@vue/babel-preset-app" "^3.0.4"
     babel-loader "^8.0.0-0"
 
-"@vue/cli-plugin-e2e-nightwatch@^3.0.4":
+"@vue/cli-plugin-e2e-nightwatch@^3.0.0-rc.10":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@vue/cli-plugin-e2e-nightwatch/-/cli-plugin-e2e-nightwatch-3.0.4.tgz#4a1de0c4d98d70cb3e9a2008e00b4402b51b41d0"
   dependencies:
@@ -761,7 +761,7 @@
     nightwatch "^0.9.21"
     selenium-server "^3.13.0"
 
-"@vue/cli-plugin-eslint@^3.0.4":
+"@vue/cli-plugin-eslint@^3.0.0-rc.10":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@vue/cli-plugin-eslint/-/cli-plugin-eslint-3.0.4.tgz#0c62607c44a3b63fc730fdc0dd0ad5165bc559f6"
   dependencies:
@@ -771,7 +771,7 @@
     eslint-loader "^2.0.0"
     eslint-plugin-vue "^4.5.0"
 
-"@vue/cli-plugin-unit-jest@^3.0.4":
+"@vue/cli-plugin-unit-jest@^3.0.0-rc.10":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@vue/cli-plugin-unit-jest/-/cli-plugin-unit-jest-3.0.4.tgz#28196d85f6aab1b4045fce40cf194b9b6001009c"
   dependencies:
@@ -783,7 +783,7 @@
     jest-transform-stub "^1.0.0"
     vue-jest "^2.6.0"
 
-"@vue/cli-service@^3.0.4":
+"@vue/cli-service@^3.0.0-rc.10":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@vue/cli-service/-/cli-service-3.0.4.tgz#0084569470a742a3c9adf32e8815c4760eaafd96"
   dependencies:
@@ -868,7 +868,7 @@
     source-map "^0.5.6"
     vue-template-es2015-compiler "^1.6.0"
 
-"@vue/eslint-config-standard@^3.0.4":
+"@vue/eslint-config-standard@^3.0.0-rc.10":
   version "3.0.4"
   resolved "https://registry.yarnpkg.com/@vue/eslint-config-standard/-/eslint-config-standard-3.0.4.tgz#e7bb75f880d9996bbc5185f6733df95fb44282d2"
   dependencies:
