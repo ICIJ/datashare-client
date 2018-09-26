@@ -98,7 +98,6 @@ export default {
     width: auto;
     min-height: $app-nav-height;
     background: $body-bg;
-    border-bottom: $gray-200 1px solid;
     box-shadow: 0 2px 10px 0 rgba(black,.05);
 
     &__mask {
