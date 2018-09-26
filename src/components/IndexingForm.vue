@@ -14,7 +14,7 @@
           </label>
         </div>
         <div class="custom-control custom-checkbox">
-          <input class="custom-control-input" type="checkbox" id="findNames" v-model="findNames" value="findNames" :disabled="isIndexEmpty">
+          <input class="custom-control-input" type="checkbox" id="findNames" v-model="findNames" value="findNames" :disabled="isFindNamesDisabled">
           <label class="custom-control-label" for="findNames">
             {{ $t('indexing.findNames_stage_label') }}
           </label>
@@ -219,7 +219,10 @@ export default {
       isIndexEmpty: state => {
         return state.response.hits.length === 0
       }
-    })
+    }),
+    isFindNamesDisabled () {
+      return this.isIndexEmpty && !this.index
+    }
   },
   methods: {
     previous () {
