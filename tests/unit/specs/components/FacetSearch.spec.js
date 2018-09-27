@@ -105,6 +105,7 @@ describe('FacetSearch.vue', () => {
 
   it('should create query tokens', async () => {
     wrapped.vm.asyncQuery = 'iCij'
+    await wrapped.vm.search()
     expect(wrapped.vm.queryTokens).toContain('iCij')
     expect(wrapped.vm.queryTokens).toContain('icij')
     expect(wrapped.vm.queryTokens).toContain('ICIJ')
@@ -115,6 +116,7 @@ describe('FacetSearch.vue', () => {
     for (const type of ['pdf', 'doc', 'docx', 'html', 'css', 'js', 'tx', 'vue', 'txt', 'xls']) {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
+
     wrapped.vm.asyncQuery = ''
     await wrapped.vm.search()
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(10)

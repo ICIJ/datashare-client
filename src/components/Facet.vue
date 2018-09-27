@@ -52,7 +52,7 @@
         </a>
       </div>
       <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
-        <span  v-html="$t('facet.noMatches')"></span>
+        <span v-html="$t('facet.noMatches')"></span>
       </div>
     </div>
   </div>
@@ -65,12 +65,18 @@ import slice from 'lodash/slice'
 import toLower from 'lodash/toLower'
 import toString from 'lodash/toString'
 import each from 'lodash/each'
+import get from 'lodash/get'
 import pick from 'lodash/pick'
+import throttle from 'lodash/throttle'
+import uniq from 'lodash/uniq'
 
+import bodybuilder from 'bodybuilder'
 import Response from '@/api/Response'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { removeDiacritics } from '@/utils/strings.js'
 import facets from '@/mixins/facets'
+import esClient from '@/api/esClient'
+import PQueue from 'p-queue'
 
 const initialNumberOfFilesDisplayed = 5
 
@@ -88,7 +94,15 @@ export default {
       },
       response: Response.none(),
       collapseItems: false,
-      isReady: !!this.asyncItems
+      isReady: !!this.asyncItems,
+      pageSize: 25,
+      offset: 0,
+      queue: new PQueue({concurrency: 1})
+    }
+  },
+  watch: {
+    facetQuery () {
+      this.searchWithThrottle()
     }
   },
   created () {
@@ -101,7 +115,7 @@ export default {
   },
   computed: {
     items () {
-      return this.asyncItems || this.response.get(`aggregations.${this.facet.key}.buckets`, [])
+      return this.asyncItems || get(this.response, `aggregations.${this.facet.key}.buckets`, [])
     },
     filteredItems () {
       return filter(this.items, item => {
@@ -121,6 +135,36 @@ export default {
     },
     noMatches () {
       return this.isReady && this.filteredItems.length === 0
+    },
+    body () {
+      let body = this.facet.body(bodybuilder(), {
+        size: this.size,
+        include: `.*(${this.queryTokens.join('|')}).*`
+      })
+      if (!this.isGlobal) {
+        let filteredBody = this.facet.filteredBody ? this.facet.filteredBody(body) : body
+        esClient.addFacetsToBody(this.$store.state.search.facets, filteredBody)
+        esClient.addQueryToBody(this.$store.state.search.query, body)
+      }
+      return body.size(0).build()
+    },
+    queryTokens () {
+      return uniq([
+        // Regular query
+        this.facetQuery,
+        // Uppercase and lowercase versions
+        this.facetQuery.toLowerCase(),
+        this.facetQuery.toUpperCase(),
+        // Capitalize (first letter in Uppercase)
+        this.facetQuery.charAt(0).toUpperCase() + this.facetQuery.slice(1)
+      // And escape the string for use in REGEX
+      ].map(this.escapeRegExp))
+    },
+    size () {
+      return this.offset + this.pageSize
+    },
+    searchWithThrottle () {
+      return throttle(this.aggregate, 400)
     }
   },
   methods: {
@@ -132,10 +176,12 @@ export default {
       if (this.facet) {
         this.isReady = false
         this.response = Response.none()
-        return this.$store.dispatch('aggregation/query', { name: this.facet.name }).then(async r => {
-          if (delay) await new Promise(resolve => setTimeout(resolve, delay))
-          this.response = this.addInvertedFacets(r)
-          this.isReady = true
+        return this.queue.add(() => {
+          return esClient.search({ index: process.env.VUE_APP_ES_INDEX, body: this.body }).then(async r => {
+            if (delay) await new Promise(resolve => setTimeout(resolve, delay))
+            this.response = this.addInvertedFacets(r)
+            this.isReady = this.queue.pending === 1
+          })
         })
       }
     },
@@ -165,6 +211,10 @@ export default {
     },
     shouldDisplayShowMoreAction () {
       return !this.hideShowMore && this.filteredItems.length > initialNumberOfFilesDisplayed
+    },
+    escapeRegExp (str) {
+      // eslint-disable-next-line no-useless-escape
+      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
     }
   }
 }
