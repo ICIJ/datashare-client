@@ -28,8 +28,8 @@
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
       </div>
-      <slot v-else name="items" :items="displayedFilteredItems()" :facetQuery="facetQuery">
-        <div class="list-group-item facet__items__item p-0 border-0" v-for="(item, index) in displayedFilteredItems()" :key="index" :class="{ 'facet__items__item--active': hasValue(item) }">
+      <slot v-else name="items" :items="filteredItems" :facetQuery="facetQuery">
+        <div class="list-group-item facet__items__item p-0 border-0" v-for="(item, index) in filteredItems" :key="index" :class="{ 'facet__items__item--active': hasValue(item) }">
           <slot name="item" :item="item">
             <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
               <span class="badge badge-pill badge-light float-right facet__items__item__count">
@@ -61,7 +61,6 @@
 <script>
 import filter from 'lodash/filter'
 import includes from 'lodash/includes'
-import slice from 'lodash/slice'
 import toLower from 'lodash/toLower'
 import toString from 'lodash/toString'
 import each from 'lodash/each'
@@ -202,9 +201,6 @@ export default {
         // the aggregation is not global (ie. relative to the search).
         return pick(state.search, ['query', 'facets'])
       }
-    },
-    displayedFilteredItems () {
-      return this.hideShowMore ? this.filteredItems : slice(this.filteredItems, 0, this.display.size)
     },
     normalize (str) {
       return removeDiacritics(toLower(toString(str)))
