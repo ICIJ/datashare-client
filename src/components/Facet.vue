@@ -28,8 +28,8 @@
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
       </div>
-      <slot v-else name="items" :items="filteredItems" :facetQuery="facetQuery">
-        <div class="list-group-item facet__items__item p-0 border-0" v-for="(item, index) in filteredItems" :key="index" :class="{ 'facet__items__item--active': hasValue(item) }">
+      <slot v-else name="items" :items="items" :facetQuery="facetQuery">
+        <div class="list-group-item facet__items__item p-0 border-0" v-for="(item, index) in items" :key="index" :class="{ 'facet__items__item--active': hasValue(item) }">
           <slot name="item" :item="item">
             <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
               <span class="badge badge-pill badge-light float-right facet__items__item__count">
@@ -59,8 +59,6 @@
 </template>
 
 <script>
-import filter from 'lodash/filter'
-import includes from 'lodash/includes'
 import toLower from 'lodash/toLower'
 import toString from 'lodash/toString'
 import each from 'lodash/each'
@@ -116,13 +114,6 @@ export default {
     items () {
       return this.asyncItems || get(this.response, `aggregations.${this.facet.key}.buckets`, [])
     },
-    filteredItems () {
-      return filter(this.items, item => {
-        return (filter(Object.keys(item), attribute => {
-          return includes(this.normalize(item[attribute]), this.normalize(this.facetQuery))
-        }).length > 0) || (this.facet.itemLabel && includes(this.normalize(this.facet.itemLabel(item)), this.normalize(this.facetQuery)))
-      }, this)
-    },
     headerIcon () {
       return this.collapseItems ? 'caret-right' : 'caret-down'
     },
@@ -133,7 +124,7 @@ export default {
       return this.isReady && this.items.length === 0
     },
     noMatches () {
-      return this.isReady && this.filteredItems.length === 0
+      return this.isReady && this.items.length === 0
     },
     body () {
       let body = this.facet.body(bodybuilder(), {
@@ -206,7 +197,7 @@ export default {
       return removeDiacritics(toLower(toString(str)))
     },
     shouldDisplayShowMoreAction () {
-      return !this.hideShowMore && this.filteredItems.length > initialNumberOfFilesDisplayed
+      return !this.hideShowMore && this.items.length > initialNumberOfFilesDisplayed
     },
     escapeRegExp (str) {
       // eslint-disable-next-line no-useless-escape

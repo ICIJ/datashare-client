@@ -191,7 +191,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.filteredItems.length).toEqual(6)
+    expect(wrapped.vm.root.items.length).toEqual(6)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(1)
     expect(trim(wrapped.vm.$el.querySelector('.facet__items__display > span').textContent)).toEqual('Show more')
   })
@@ -209,7 +209,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.filteredItems.length).toEqual(6)
+    expect(wrapped.vm.root.items.length).toEqual(6)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(1)
     expect(trim(wrapped.vm.$el.querySelector('.facet__items__display> span').textContent)).toEqual('Show more')
   })
@@ -227,7 +227,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.filteredItems.length).toEqual(1)
+    expect(wrapped.vm.root.items.length).toEqual(1)
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__display > span').length).toEqual(0)
   })
 
@@ -244,7 +244,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.filteredItems.length).toEqual(0)
+    expect(wrapped.vm.root.items.length).toEqual(0)
   })
 
   it('should filter facet values - Uppercase situation 1/2', async () => {
@@ -256,7 +256,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.filteredItems.length).toEqual(2)
+    expect(wrapped.vm.root.items.length).toEqual(2)
   })
 
   it('should filter facet values - Uppercase situation 2/2', async () => {
@@ -268,7 +268,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.filteredItems.length).toEqual(2)
+    expect(wrapped.vm.root.items.length).toEqual(2)
   })
 
   it.skip('should filter facet values on facet label', async () => {
@@ -282,7 +282,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.filteredItems.length).toEqual(2)
+    expect(wrapped.vm.root.items.length).toEqual(2)
   })
 
   it.skip('should filter facet values - Accentuated situation', async () => {
@@ -296,7 +296,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    expect(wrapped.vm.root.filteredItems.length).toEqual(2)
+    expect(wrapped.vm.root.items.length).toEqual(2)
   })
 
   it('should display an indexing date facet with 4 months', async () => {
@@ -315,7 +315,7 @@ describe('FacetText.vue', () => {
     const getItemChild = (idx, selector) => getItem(idx).querySelector(selector)
     const getItemChildText = (idx, selector) => trim(getItemChild(idx, selector).textContent)
 
-    expect(wrapped.vm.root.filteredItems.length).toEqual(4)
+    expect(wrapped.vm.root.items.length).toEqual(4)
     expect(getItemChildText(0, '.facet__items__item__label')).toEqual('2018-04')
     expect(getItemChildText(0, '.facet__items__item__count')).toEqual('1')
     expect(getItemChildText(1, '.facet__items__item__label')).toEqual('2018-05')
