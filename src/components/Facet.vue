@@ -68,7 +68,6 @@ import throttle from 'lodash/throttle'
 import uniq from 'lodash/uniq'
 
 import bodybuilder from 'bodybuilder'
-import Response from '@/api/Response'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { removeDiacritics } from '@/utils/strings.js'
 import facets from '@/mixins/facets'
@@ -89,12 +88,12 @@ export default {
       display: {
         size: initialNumberOfFilesDisplayed
       },
-      response: Response.none(),
       collapseItems: false,
       isReady: !!this.asyncItems,
       pageSize: 25,
       offset: 0,
-      queue: new PQueue({concurrency: 1})
+      queue: new PQueue({concurrency: 1}),
+      results: []
     }
   },
   watch: {
@@ -112,7 +111,7 @@ export default {
   },
   computed: {
     items () {
-      return this.asyncItems || get(this.response, `aggregations.${this.facet.key}.buckets`, [])
+      return this.asyncItems || get(this.results, `aggregations.${this.facet.key}.buckets`, [])
     },
     headerIcon () {
       return this.collapseItems ? 'caret-right' : 'caret-down'
@@ -165,11 +164,11 @@ export default {
     aggregate (delay = null) {
       if (this.facet) {
         this.isReady = false
-        this.response = Response.none()
+        this.results = []
         return this.queue.add(() => {
           return esClient.search({ index: process.env.VUE_APP_ES_INDEX, body: this.body }).then(async r => {
             if (delay) await new Promise(resolve => setTimeout(resolve, delay))
-            this.response = this.addInvertedFacets(r)
+            this.results = this.addInvertedFacets(r)
             this.isReady = this.queue.pending === 1
           })
         })
