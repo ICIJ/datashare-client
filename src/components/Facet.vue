@@ -16,7 +16,7 @@
     </slot>
     <div class="list-group list-group-flush facet__items" v-if="!collapseItems">
       <slot name="search" v-if="!hideSearch">
-        <form @submit="asyncFacetSearch" v-if="hasResults && facet.isSearchable" >
+        <form @submit="asyncFacetSearch" v-if="facet.isSearchable">
           <label class="list-group facet__items__search border-bottom py-2 px-3">
             <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
             <font-awesome-icon icon="search" class="float-right" />
@@ -104,9 +104,9 @@ export default {
   created () {
     // Are we using an "offline" components?
     if (!this.asyncItems) {
-      this.aggregate()
+      this.aggregateWithLoading()
       // Watch change on the facet store the restart aggregation
-      this.$store.watch(this.watchedForUpdate, this.aggregate, { deep: true })
+      this.$store.watch(this.watchedForUpdate, this.aggregateWithLoading, { deep: true })
     }
   },
   computed: {
@@ -161,13 +161,14 @@ export default {
       this.$root.$emit('facet::async-search', this.facet, this.facetQuery)
       this.$emit('async-search', this.facet, this.facetQuery)
     },
-    aggregate (delay = null) {
+    aggregateWithLoading () {
+      this.isReady = false
+      return this.aggregate()
+    },
+    aggregate () {
       if (this.facet) {
-        this.isReady = false
-        this.results = []
         return this.queue.add(() => {
           return esClient.search({ index: process.env.VUE_APP_ES_INDEX, body: this.body }).then(async r => {
-            if (delay) await new Promise(resolve => setTimeout(resolve, delay))
             this.results = this.addInvertedFacets(r)
             this.isReady = this.queue.pending === 1
           })
