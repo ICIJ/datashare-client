@@ -104,7 +104,7 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should create query tokens', async () => {
-    wrapped.vm.asyncQuery = 'iCij'
+    wrapped.vm.facetQuery = 'iCij'
     await wrapped.vm.search()
     expect(wrapped.vm.queryTokens).toContain('iCij')
     expect(wrapped.vm.queryTokens).toContain('icij')
@@ -112,27 +112,27 @@ describe('FacetSearch.vue', () => {
     expect(wrapped.vm.queryTokens).toContain('ICij')
   })
 
-  it('should filter the list according to asyncQuery', async () => {
+  it('should filter the list according to facetQuery', async () => {
     for (const type of ['pdf', 'doc', 'docx', 'html', 'css', 'js', 'tx', 'vue', 'txt', 'xls']) {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
 
-    wrapped.vm.asyncQuery = ''
+    wrapped.vm.facetQuery = ''
     await wrapped.vm.search()
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(10)
 
-    wrapped.vm.asyncQuery = 'doc'
+    wrapped.vm.facetQuery = 'doc'
     await wrapped.vm.search()
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
 
-    wrapped.vm.asyncQuery = 'pdf'
+    wrapped.vm.facetQuery = 'pdf'
     await wrapped.vm.search()
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
   })
 
-  it('trigger a search when value of asyncQuery changes', async () => {
+  it('trigger a search when value of facetQuery changes', async () => {
     jest.spyOn(wrapped.vm, 'search')
-    wrapped.vm.asyncQuery = 'pdf'
+    wrapped.vm.facetQuery = 'pdf'
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.search).toHaveBeenCalled()
   })

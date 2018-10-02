@@ -1,7 +1,7 @@
 <template>
   <div class="facet-search">
     <form @submit.prevent class="facet-search__form input-group">
-      <input type="search" class="form-control" id="input-facet-search" v-model="asyncQuery" />
+      <input type="search" class="form-control" id="input-facet-search" v-model="facetQuery" />
       <label class="input-group-append m-0" for="input-facet-search">
         <span class="input-group-text">
           <font-awesome-icon icon="search" />
@@ -21,7 +21,6 @@
 import bodybuilder from 'bodybuilder'
 import get from 'lodash/get'
 import throttle from 'lodash/throttle'
-import uniq from 'lodash/uniq'
 import infiniteScroll from 'vue-infinite-scroll'
 import PQueue from 'p-queue'
 
@@ -31,9 +30,11 @@ import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
 import FacetPath from '@/components/FacetPath'
 import { EventBus } from '@/utils/event-bus.js'
+import facets from '@/mixins/facets'
 
 export default {
   name: 'FacetSearch',
+  mixins: [facets],
   props: {
     facet: {
       type: Object
@@ -57,11 +58,9 @@ export default {
   },
   data () {
     return {
-      asyncQuery: this.query,
+      facetQuery: this.query,
       isReady: false,
       items: [],
-      pageSize: 25,
-      offset: 0,
       reachTheEnd: false,
       queue: new PQueue({concurrency: 1})
     }
@@ -71,7 +70,7 @@ export default {
     EventBus.$on('facet::hide::named-entities', () => this.search())
   },
   watch: {
-    asyncQuery () {
+    facetQuery () {
       this.searchWithThrottle()
     }
   },
@@ -95,10 +94,6 @@ export default {
         })
       })
     },
-    escapeRegExp (str) {
-      // eslint-disable-next-line no-useless-escape
-      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
-    },
     startOver () {
       this.isReady = false
       this.reachTheEnd = false
@@ -110,24 +105,6 @@ export default {
     }
   },
   computed: {
-    resultPath () {
-      return `aggregations.${this.facet.key}.buckets`
-    },
-    size () {
-      return this.offset + this.pageSize
-    },
-    queryTokens () {
-      return uniq([
-        // Regular query
-        this.asyncQuery,
-        // Uppercase and lowercase versions
-        this.asyncQuery.toLowerCase(),
-        this.asyncQuery.toUpperCase(),
-        // Capitalize (first letter in Uppercase)
-        this.asyncQuery.charAt(0).toUpperCase() + this.asyncQuery.slice(1)
-      // And escape the string for use in REGEX
-      ].map(this.escapeRegExp))
-    },
     body () {
       return this.facet.body(bodybuilder().size(0), {
         size: this.size,

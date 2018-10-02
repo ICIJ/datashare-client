@@ -1,9 +1,10 @@
-import flatten from 'lodash/flatten'
 import camelCase from 'lodash/camelCase'
+import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import reduce from 'lodash/reduce'
-import { EventBus } from '@/utils/event-bus.js'
+import uniq from 'lodash/uniq'
 
+import { EventBus } from '@/utils/event-bus.js'
 import DatashareClient from '@/api/DatashareClient'
 
 const datashare = new DatashareClient()
@@ -32,7 +33,9 @@ export const mixin = {
   },
   data () {
     return {
-      isReady: false
+      isReady: false,
+      offset: 0,
+      pageSize: 25
     }
   },
   computed: {
@@ -52,6 +55,24 @@ export const mixin = {
           boxes: [[0, '70%'], ['20%', '10%']]
         }
       ]
+    },
+    size () {
+      return this.offset + this.pageSize
+    },
+    resultPath () {
+      return `aggregations.${this.facet.key}.buckets`
+    },
+    queryTokens () {
+      return uniq([
+        // Regular query
+        this.facetQuery,
+        // Uppercase and lowercase versions
+        this.facetQuery.toLowerCase(),
+        this.facetQuery.toUpperCase(),
+        // Capitalize (first letter in Uppercase)
+        this.facetQuery.charAt(0).toUpperCase() + this.facetQuery.slice(1)
+      // And escape the string for use in REGEX
+      ].map(this.escapeRegExp))
     }
   },
   methods: {
@@ -99,6 +120,10 @@ export const mixin = {
       return datashare.deleteNamedEntitiesByMentionNorm(mentionNorm).then(resp => {
         EventBus.$emit('facet::hide::named-entities')
       })
+    },
+    escapeRegExp (str) {
+      // eslint-disable-next-line no-useless-escape
+      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
     }
   }
 }

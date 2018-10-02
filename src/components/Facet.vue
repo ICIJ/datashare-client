@@ -65,7 +65,6 @@ import each from 'lodash/each'
 import get from 'lodash/get'
 import pick from 'lodash/pick'
 import throttle from 'lodash/throttle'
-import uniq from 'lodash/uniq'
 
 import bodybuilder from 'bodybuilder'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
@@ -90,8 +89,6 @@ export default {
       },
       collapseItems: false,
       isReady: !!this.asyncItems,
-      pageSize: 25,
-      offset: 0,
       queue: new PQueue({concurrency: 1}),
       results: []
     }
@@ -111,7 +108,7 @@ export default {
   },
   computed: {
     items () {
-      return this.asyncItems || get(this.results, `aggregations.${this.facet.key}.buckets`, [])
+      return this.asyncItems || get(this.results, this.resultPath, [])
     },
     headerIcon () {
       return this.collapseItems ? 'caret-right' : 'caret-down'
@@ -126,7 +123,7 @@ export default {
       return this.isReady && this.items.length === 0
     },
     body () {
-      let body = this.facet.body(bodybuilder(), {
+      let body = this.facet.body(bodybuilder().size(0), {
         size: this.size,
         include: `.*(${this.queryTokens.join('|')}).*`
       })
@@ -135,22 +132,7 @@ export default {
         esClient.addFacetsToBody(this.$store.state.search.facets, filteredBody)
         esClient.addQueryToBody(this.$store.state.search.query, body)
       }
-      return body.size(0).build()
-    },
-    queryTokens () {
-      return uniq([
-        // Regular query
-        this.facetQuery,
-        // Uppercase and lowercase versions
-        this.facetQuery.toLowerCase(),
-        this.facetQuery.toUpperCase(),
-        // Capitalize (first letter in Uppercase)
-        this.facetQuery.charAt(0).toUpperCase() + this.facetQuery.slice(1)
-      // And escape the string for use in REGEX
-      ].map(this.escapeRegExp))
-    },
-    size () {
-      return this.offset + this.pageSize
+      return body.build()
     },
     searchWithThrottle () {
       return throttle(this.aggregate, 400)
@@ -198,10 +180,6 @@ export default {
     },
     shouldDisplayShowMoreAction () {
       return !this.hideShowMore && this.items.length > initialNumberOfFilesDisplayed
-    },
-    escapeRegExp (str) {
-      // eslint-disable-next-line no-useless-escape
-      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
     }
   }
 }
