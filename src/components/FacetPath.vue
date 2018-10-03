@@ -28,7 +28,7 @@ export default {
         const fullPath = item.key.split(this.treeRoot).pop()
         // Build the path for the current item starting
         // with the folter separator
-        let path = folderSeparator
+        let path = ''
         treePointer = tree
         // Potentially the first node is a path begining with / so we trim
         // the string to avoid addig emtpy dir
@@ -38,7 +38,7 @@ export default {
           if (!folder) {
             treePointer.push({
               label,
-              path: join(path, label, folderSeparator),
+              path: join(path, folderSeparator, label),
               count: item.doc_count,
               children: []
             })
@@ -47,6 +47,7 @@ export default {
             // Increment count
             folder.count += item.doc_count
             treePointer = folder.children
+            path = join(path, folderSeparator, label)
           }
         })
       })
