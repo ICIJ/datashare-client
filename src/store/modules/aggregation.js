@@ -122,9 +122,10 @@ function initialState () {
           })
         },
         body: (body, options) => body
-          .agg('terms', 'dirname', 'byDirname', {
+          .agg('terms', 'dirname.tree', 'byDirname', {
             size: 500,
             order: { '_key': 'asc' },
+            exclude: '/.*/.*',
             ...options
           })
       },

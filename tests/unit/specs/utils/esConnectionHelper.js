@@ -1,5 +1,6 @@
 import elasticsearch from 'elasticsearch-browser'
 import esMapping from '@/datashare_index_mappings.json'
+import esSettings from '@/datashare_index_settings.json'
 import noop from 'lodash/noop'
 
 let es = new elasticsearch.Client({host: process.env.VUE_APP_ES_HOST})
@@ -10,7 +11,7 @@ const esConnectionHelper = function () {
 
   beforeAll(async () => {
     if (!await es.indices.exists({ index })) {
-      await es.indices.create({ index })
+      await es.indices.create({ index, body: { settings: esSettings } })
       await es.indices.putMapping({ index, type: 'doc', body: esMapping })
     }
   })
