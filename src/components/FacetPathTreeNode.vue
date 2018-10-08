@@ -2,7 +2,7 @@
   <li v-if="node" :class="{ 'tree-node--has-children': hasChildren, 'tree-node--active': hasValue(nodeParams) }" class="tree-node">
     <div class="row no-gutters">
       <div class="col tree-node__label pb-1">
-        <a @click="toggle" :title="node.label" v-b-tooltip.hover>
+        <a @click="getChildren" :title="node.label" v-b-tooltip.hover>
           <font-awesome-icon icon="folder" class="mr-1 tree-node__label__icon" />
           {{ node.label }}
         </a>
@@ -21,7 +21,7 @@
         </a>
       </div>
     </div>
-    <ul v-if="node.children && node.children.length" v-show="open" class="list-unstyled pl-3">
+    <ul v-show="node.children && open" class="list-unstyled pl-3">
       <facet-path-tree-node v-for="child in node.children" :facet="facet" :node="child" :key="child.label"></facet-path-tree-node>
     </ul>
   </li>
@@ -31,6 +31,12 @@
 import settings from '@/utils/settings'
 import facets from '@/mixins/facets'
 import { join } from 'path'
+import bodybuilder from 'bodybuilder'
+import esClient from '@/api/esClient'
+import PQueue from 'p-queue'
+import each from 'lodash/each'
+import get from 'lodash/get'
+import replace from 'lodash/replace'
 
 export default {
   name: 'FacetPathTreeNode',
@@ -38,7 +44,8 @@ export default {
   mixins: [facets],
   data: function () {
     return {
-      open: false
+      open: false,
+      queue: new PQueue({concurrency: 1})
     }
   },
   computed: {
@@ -47,11 +54,33 @@ export default {
     },
     hasChildren () {
       return this.node.children && this.node.children.length
+    },
+    body () {
+      let body = this.facet.body(bodybuilder().size(0), {
+        size: 5,
+        exclude: `/.*/.*/.*`,
+        include: `${this.node.path}/.*`
+      })
+      return body.build()
     }
   },
   methods: {
-    toggle: function () {
-      if (this.hasChildren) {
+    getChildren () {
+      if (this.facet && this.node.children.length === 0) {
+        return this.queue.add(() => {
+          return esClient.search({ index: process.env.VUE_APP_ES_INDEX, body: this.body }).then(async r => {
+            each(get(r, `aggregations.${this.facet.key}.buckets`, []), bucket => {
+              this.node.children.push({
+                label: replace(bucket.key, this.node.path + '/', ''),
+                path: this.node.path + bucket.key,
+                count: bucket.doc_count,
+                children: []
+              })
+            })
+            this.open = !this.open
+          })
+        })
+      } else {
         this.open = !this.open
       }
     }
