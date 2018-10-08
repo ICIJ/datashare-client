@@ -1,5 +1,5 @@
 <template>
-  <li v-if="node" :class="{ 'tree-node--has-children': hasChildren, 'tree-node--active': hasValue(nodeParams) }" class="tree-node">
+  <li v-if="node" :class="{ 'tree-node--has-children': hasChildren(), 'tree-node--active': hasValue(nodeParams) }" class="tree-node">
     <div class="row no-gutters">
       <div class="col tree-node__label pb-1">
         <a @click="getChildren" :title="node.label" v-b-tooltip.hover>
@@ -53,9 +53,6 @@ export default {
     nodeParams () {
       return { key: join(settings.document.base, this.node.path) }
     },
-    hasChildren () {
-      return this.node.children && this.node.children.length
-    },
     body () {
       let body = this.facet.body(bodybuilder().size(0), {
         size: 5,
@@ -66,6 +63,9 @@ export default {
     }
   },
   methods: {
+    hasChildren () {
+      return this.node.children && this.node.children.length
+    },
     getChildren () {
       if (this.facet && !this.node.isLoaded) {
         return this.queue.add(() => {
