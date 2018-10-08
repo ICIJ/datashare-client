@@ -18,11 +18,9 @@ export default {
     displayFirstLevel (items) {
       const folderSeparator = '/'
       const tree = []
-
       each(items, item => {
-        let label = replace(item.key, folderSeparator, '')
         tree.push({
-          label,
+          label: replace(item.key, folderSeparator, ''),
           path: item.key,
           count: item.doc_count,
           children: []
