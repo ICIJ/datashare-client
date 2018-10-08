@@ -37,6 +37,7 @@ import PQueue from 'p-queue'
 import each from 'lodash/each'
 import get from 'lodash/get'
 import replace from 'lodash/replace'
+import repeat from 'lodash/repeat'
 
 export default {
   name: 'FacetPathTreeNode',
@@ -58,7 +59,7 @@ export default {
     body () {
       let body = this.facet.body(bodybuilder().size(0), {
         size: 5,
-        exclude: `/.*/.*/.*`,
+        exclude: repeat('/.*', this.node.path.split('/').length + 1),
         include: `${this.node.path}/.*`
       })
       return body.build()
@@ -72,7 +73,7 @@ export default {
             each(get(r, `aggregations.${this.facet.key}.buckets`, []), bucket => {
               this.node.children.push({
                 label: replace(bucket.key, this.node.path + '/', ''),
-                path: this.node.path + bucket.key,
+                path: bucket.key,
                 count: bucket.doc_count,
                 children: []
               })
