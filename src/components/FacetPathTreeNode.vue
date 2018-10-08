@@ -67,15 +67,17 @@ export default {
   },
   methods: {
     getChildren () {
-      if (this.facet && this.node.children.length === 0) {
+      if (this.facet && !this.node.isLoaded) {
         return this.queue.add(() => {
           return esClient.search({ index: process.env.VUE_APP_ES_INDEX, body: this.body }).then(async r => {
+            this.node.isLoaded = true
             each(get(r, `aggregations.${this.facet.key}.buckets`, []), bucket => {
               this.node.children.push({
                 label: replace(bucket.key, this.node.path + '/', ''),
                 path: bucket.key,
                 count: bucket.doc_count,
-                children: []
+                children: [],
+                isLoaded: false
               })
             })
             this.open = !this.open

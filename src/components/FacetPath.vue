@@ -23,7 +23,8 @@ export default {
           label: replace(item.key, folderSeparator, ''),
           path: item.key,
           count: item.doc_count,
-          children: []
+          children: [],
+          isLoaded: false
         })
       })
       return tree
