@@ -194,7 +194,7 @@ describe('Aggregation store', function () {
   })
 
   it('should return one bucket, the correct first level path (after skipping the first level) and the correct number of results', async () => {
-    await letData(es).have(new IndexedDocument('/this/is/a/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('/root/user/is/a/path/test.doc')).commit()
 
     const response = await store.dispatch('aggregation/query', { name: 'path' })
 
@@ -204,9 +204,9 @@ describe('Aggregation store', function () {
   })
 
   it('should return lots of buckets, the correct path and the correct number of results', async () => {
-    await letData(es).have(new IndexedDocument('/this/is/a/path/test.doc')).commit()
-    await letData(es).have(new IndexedDocument('/this/is/a/second/path/test.doc')).commit()
-    await letData(es).have(new IndexedDocument('/this/was/a/third/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('/root/user/is/a/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('/root/user/is/a/second/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('/root/user/was/a/third/path/test.doc')).commit()
 
     const response = await store.dispatch('aggregation/query', { name: 'path' })
 

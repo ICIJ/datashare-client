@@ -8,7 +8,7 @@
     "tokenizer": {
       "path_tokenizer": {
         "type": "path_hierarchy",
-        "skip": 1
+        "skip": 2
       }
     }
   }
