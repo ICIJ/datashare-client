@@ -28,9 +28,7 @@
 </template>
 
 <script>
-import settings from '@/utils/settings'
 import facets from '@/mixins/facets'
-import { join } from 'path'
 import bodybuilder from 'bodybuilder'
 import esClient from '@/api/esClient'
 import PQueue from 'p-queue'
@@ -51,7 +49,7 @@ export default {
   },
   computed: {
     nodeParams () {
-      return { key: join(settings.document.base, this.node.path) }
+      return { key: this.node.path }
     },
     body () {
       let body = this.facet.body(bodybuilder().size(0), {

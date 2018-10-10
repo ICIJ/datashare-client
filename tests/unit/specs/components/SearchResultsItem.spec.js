@@ -154,4 +154,21 @@ describe('SearchResultsItem.vue', () => {
 
     expect(wrapped.vm.namedEntities).toEqual([{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}])
   })
+
+  it('should display the correct location', async () => {
+    var wrapped = mount(SearchResultsItem, {
+      localVue,
+      i18n,
+      router,
+      store,
+      propsData: {
+        'doc': new Document({
+          _id: 1,
+          _source: {
+            path: '/home/data/folder_01/folder_02/foo.txt'
+          }})
+      }
+    })
+    expect(wrapped.vm.location).toEqual('~/data/folder_01/folder_02/')
+  })
 })

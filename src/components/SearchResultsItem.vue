@@ -26,8 +26,8 @@
 
 <script>
 import get from 'lodash/get'
+import replace from 'lodash/replace'
 import uniqBy from 'lodash/uniqBy'
-import settings from '@/utils/settings'
 import ner from '@/mixins/ner'
 
 export default {
@@ -43,14 +43,15 @@ export default {
     folder () {
       // Extract location parts
       let parts = this.doc.get('_source.path', '').split('/')
-      // Remove the base name
+      // Remove the file name
       parts.splice(-1, 1)
       // And return the new path
       return parts.join('/') + '/'
     },
     location () {
-      // Remove the base folder
-      return this.folder.replace(settings.document.base, '~')
+      // Replace the substring before VUE_APP_DATA_PREFIX by '~'
+      const regexp = new RegExp('^(\\S*)' + process.env.VUE_APP_DATA_PREFIX + '(\\S*)$')
+      return replace(this.folder, regexp, '~/data/$2')
     },
     folderParams () {
       return { q: `path:${this.folder}*` }
