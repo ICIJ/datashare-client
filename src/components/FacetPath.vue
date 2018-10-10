@@ -2,7 +2,6 @@
 import each from 'lodash/each'
 import replace from 'lodash/replace'
 
-import settings from '@/utils/settings'
 import Facet from '@/components/Facet'
 import FacetPathTree from '@/components/FacetPathTree'
 import facets from '@/mixins/facets'
@@ -28,11 +27,6 @@ export default {
         })
       })
       return tree
-    }
-  },
-  computed: {
-    treeRoot () {
-      return settings.document.base
     }
   }
 }
