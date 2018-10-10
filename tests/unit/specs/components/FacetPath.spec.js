@@ -48,9 +48,9 @@ describe('FacetPath.vue', () => {
   })
 
   it('should display a not empty tree', async () => {
-    await letData(es).have(new IndexedDocument('/root/user/folder_01/doc_01.txt').withContent('document').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('/root/user/folder_02/doc_02.txt').withContent('document').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('/root/user/folder_03/doc_03.txt').withContent('document').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('/folder_01/doc_01.txt').withContent('document').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('/folder_02/doc_02.txt').withContent('document').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('/folder_03/doc_03.txt').withContent('document').withContentType('text/javascript')).commit()
 
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()

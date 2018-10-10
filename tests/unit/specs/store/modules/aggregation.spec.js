@@ -193,20 +193,20 @@ describe('Aggregation store', function () {
     expect(response.aggregations.byDirname.buckets).toHaveLength(0)
   })
 
-  it('should return one bucket, the correct first level path (after skipping the first level) and the correct number of results', async () => {
+  it('should return one bucket, the correct first level path and the correct number of results', async () => {
     await letData(es).have(new IndexedDocument('/root/user/is/a/path/test.doc')).commit()
 
     const response = await store.dispatch('aggregation/query', { name: 'path' })
 
     expect(response.aggregations.byDirname.buckets).toHaveLength(1)
-    expect(response.aggregations.byDirname.buckets[0].key).toEqual('/is')
+    expect(response.aggregations.byDirname.buckets[0].key).toEqual('/root')
     expect(response.aggregations.byDirname.buckets[0].doc_count).toEqual(1)
   })
 
   it('should return lots of buckets, the correct path and the correct number of results', async () => {
-    await letData(es).have(new IndexedDocument('/root/user/is/a/path/test.doc')).commit()
-    await letData(es).have(new IndexedDocument('/root/user/is/a/second/path/test.doc')).commit()
-    await letData(es).have(new IndexedDocument('/root/user/was/a/third/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('/is/a/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('/is/a/second/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('/was/a/third/path/test.doc')).commit()
 
     const response = await store.dispatch('aggregation/query', { name: 'path' })
 
