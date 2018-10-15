@@ -28,6 +28,9 @@ export class DatashareClient {
   getVersion () {
     return this.sendAction('/version')
   }
+  getConfig () {
+    return this.sendAction('/config')
+  }
   deleteNamedEntitiesByMentionNorm (mentionNorm) {
     return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, {method: 'PUT', credentials: 'same-origin'})
   }

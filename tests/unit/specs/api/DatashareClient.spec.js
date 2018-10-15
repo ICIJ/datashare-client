@@ -38,6 +38,13 @@ describe('Datashare backend client', () => {
     let json = await resp.json()
     expect(json).toEqual({})
   })
+
+  it('should return backend reponse to getConfig', async () => {
+    fetchReturns(200, {})
+    let resp = await ds.getConfig()
+    let json = await resp.json()
+    expect(json).toEqual({})
+  })
 })
 
 function fetchReturns (status, json) {
