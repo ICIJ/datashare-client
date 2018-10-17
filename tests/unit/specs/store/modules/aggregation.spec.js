@@ -7,6 +7,7 @@ import find from 'lodash/find'
 import store from '@/store'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import Vue from 'vue'
 
 describe('Aggregation store', function () {
   esConnectionHelper()
@@ -189,31 +190,37 @@ describe('Aggregation store', function () {
   })
 
   it('should get no bucket for path aggregation', async () => {
+    Vue.prototype.config = { dataDir: '/home/user/data' }
+
     const response = await store.dispatch('aggregation/query', { name: 'path' })
     expect(response.aggregations.byDirname.buckets).toHaveLength(0)
   })
 
-  it('should return one bucket, the correct first level path and the correct number of results', async () => {
-    await letData(es).have(new IndexedDocument('/root/user/is/a/path/test.doc')).commit()
+  it('should return 1 bucket, the correct first level path and the correct number of results', async () => {
+    Vue.prototype.config = { dataDir: '/home/user/data' }
+
+    await letData(es).have(new IndexedDocument('/home/user/data/is/a/path/test.doc')).commit()
 
     const response = await store.dispatch('aggregation/query', { name: 'path' })
 
     expect(response.aggregations.byDirname.buckets).toHaveLength(1)
-    expect(response.aggregations.byDirname.buckets[0].key).toEqual('/root')
+    expect(response.aggregations.byDirname.buckets[0].key).toEqual('/home/user/data/is')
     expect(response.aggregations.byDirname.buckets[0].doc_count).toEqual(1)
   })
 
-  it('should return lots of buckets, the correct path and the correct number of results', async () => {
-    await letData(es).have(new IndexedDocument('/is/a/path/test.doc')).commit()
-    await letData(es).have(new IndexedDocument('/is/a/second/path/test.doc')).commit()
-    await letData(es).have(new IndexedDocument('/was/a/third/path/test.doc')).commit()
+  it('should return 2 buckets, the correct path and the correct number of results', async () => {
+    Vue.prototype.config = { dataDir: '/home/user/data' }
+
+    await letData(es).have(new IndexedDocument('/home/user/data/is/a/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('/home/user/data/is/a/second/path/test.doc')).commit()
+    await letData(es).have(new IndexedDocument('/home/user/data/was/a/third/path/test.doc')).commit()
 
     const response = await store.dispatch('aggregation/query', { name: 'path' })
 
     expect(response.aggregations.byDirname.buckets).toHaveLength(2)
-    expect(response.aggregations.byDirname.buckets[0].key).toEqual('/is')
+    expect(response.aggregations.byDirname.buckets[0].key).toEqual('/home/user/data/is')
     expect(response.aggregations.byDirname.buckets[0].doc_count).toEqual(2)
-    expect(response.aggregations.byDirname.buckets[1].key).toEqual('/was')
+    expect(response.aggregations.byDirname.buckets[1].key).toEqual('/home/user/data/was')
     expect(response.aggregations.byDirname.buckets[1].doc_count).toEqual(1)
   })
 

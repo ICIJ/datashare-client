@@ -1,6 +1,7 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import types from '@/utils/types.json'
+import Vue from 'vue'
 
 import bodybuilder from 'bodybuilder'
 import every from 'lodash/every'
@@ -107,6 +108,7 @@ function initialState () {
         name: 'path',
         key: 'byDirname',
         type: 'FacetPath',
+        prefix: true,
         isSearchable: false,
         itemParam: item => ({ name: 'path', value: item.key }),
         addFilter: (body, param) => {
@@ -121,13 +123,16 @@ function initialState () {
             return sub
           })
         },
-        body: (body, options) => body
-          .agg('terms', 'dirname.tree', 'byDirname', {
-            size: 500,
-            order: { '_key': 'asc' },
-            exclude: '/.*/.*',
-            ...options
-          })
+        body: (body, options) => {
+          return body
+            .agg('terms', 'dirname.tree', 'byDirname', {
+              size: 500,
+              order: { '_key': 'asc' },
+              exclude: Vue.prototype.config.dataDir + '/.*/.*',
+              include: Vue.prototype.config.dataDir + '/.*',
+              ...options
+            })
+        }
       },
       {
         name: 'indexing-date',

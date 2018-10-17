@@ -72,6 +72,7 @@ import { removeDiacritics } from '@/utils/strings.js'
 import facets from '@/mixins/facets'
 import esClient from '@/api/esClient'
 import PQueue from 'p-queue'
+import Vue from 'vue'
 
 const initialNumberOfFilesDisplayed = 5
 
@@ -123,9 +124,10 @@ export default {
       return this.isReady && this.items.length === 0
     },
     body () {
+      let prefix = this.facet.prefix ? Vue.prototype.config.dataDir + '/' : ''
       let body = this.facet.body(bodybuilder().size(0), {
         size: this.size,
-        include: `.*(${this.queryTokens.join('|')}).*`
+        include: prefix + `.*(${this.queryTokens.join('|')}).*`
       })
       if (!this.isGlobal) {
         let filteredBody = this.facet.filteredBody ? this.facet.filteredBody(body) : body

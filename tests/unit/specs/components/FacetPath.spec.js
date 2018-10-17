@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
@@ -28,6 +29,7 @@ describe('FacetPath.vue', () => {
   var wrapped = null
 
   beforeAll(async () => {
+    Vue.prototype.config = { dataDir: '/home/user/data' }
     wrapped = mount(FacetPath, {
       localVue,
       i18n,
@@ -48,11 +50,21 @@ describe('FacetPath.vue', () => {
   })
 
   it('should display a not empty tree', async () => {
-    await letData(es).have(new IndexedDocument('/folder_01/doc_01.txt').withContent('document').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('/folder_02/doc_02.txt').withContent('document').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('/folder_03/doc_03.txt').withContent('document').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('/home/user/data/folder_01/doc_01.txt').withContent('document').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('/home/user/data/folder_02/doc_02.txt').withContent('document').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('/home/user/data/folder_03/doc_03.txt').withContent('document').withContentType('text/javascript')).commit()
 
     await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).toEqual(3)
+  })
+
+  it('should display the first level of the tree', async () => {
+    await letData(es).have(new IndexedDocument('/home/user/data/folder_01/file_01.txt').withContent('document').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('/home/user/data/folder_02/file_02.txt').withContent('document').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('/home/user/data/folder_02/folder_03/file_03.txt').withContent('document').withContentType('text/javascript')).commit()
+
     await wrapped.vm.root.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.tree-node').length).toEqual(3)
