@@ -7,6 +7,7 @@ import router from './router'
 import messages from './messages'
 import store from './store'
 import FontAwesomeIcon from './components/FontAwesomeIcon'
+import DatashareClient from '@/api/DatashareClient'
 
 import '@/main.scss'
 
@@ -18,12 +19,26 @@ Vue.use(BootstrapVue)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 const i18n = new VueI18n({locale: 'en', fallbackLocale: 'en', messages})
-/* eslint-disable no-new */
-const vm = new Vue({
-  i18n,
-  router,
-  store,
-  render: h => h('router-view')
-}).$mount('#app')
+let vm = null
 
-export default vm
+/* eslint-disable no-new */
+async function createApp () {
+  const ds = new DatashareClient()
+  return ds.getConfig().then(res => {
+    return res.json().then(config => {
+      Vue.prototype.config = config
+      vm = new Vue({
+        i18n,
+        router,
+        store,
+        render: h => h('router-view')
+      }).$mount('#app')
+    })
+  })
+}
+
+if (process.env.NODE_ENV === 'production') {
+  createApp()
+}
+
+export { vm, createApp }
