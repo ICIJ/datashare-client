@@ -2,6 +2,7 @@
 import each from 'lodash/each'
 import replace from 'lodash/replace'
 
+import Vue from 'vue'
 import Facet from '@/components/Facet'
 import FacetPathTree from '@/components/FacetPathTree'
 import facets from '@/mixins/facets'
@@ -15,11 +16,10 @@ export default {
   },
   methods: {
     displayFirstLevel (items) {
-      const folderSeparator = '/'
       const tree = []
       each(items, item => {
         tree.push({
-          label: replace(item.key, folderSeparator, ''),
+          label: replace(item.key, Vue.prototype.config.dataDir + '/', ''),
           path: item.key,
           count: item.doc_count,
           children: [],
