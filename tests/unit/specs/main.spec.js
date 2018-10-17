@@ -36,7 +36,6 @@ describe('main', () => {
   it('should set the config', async () => {
     window.fetch.mockReturnValue(jsonOk({ key: 'value' }))
     await createApp()
-    console.log(Vue.prototype.config)
     expect(Vue.prototype.config).toBeDefined()
     expect(Vue.prototype.config).toEqual({ key: 'value' })
   })
