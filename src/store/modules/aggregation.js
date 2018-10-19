@@ -142,21 +142,25 @@ function initialState () {
         itemParam: item => ({ name: 'indexing-date', value: item.key }),
         itemLabel: item => item.key_as_string,
         addFilter: (body, param) => {
+          let gte, lte, tmp
           body.query('bool', sub => {
             param.values.forEach(date => {
-              let gte = new Date(parseInt(date))
-              let lte = new Date(gte.setMonth(gte.getMonth() + 1) - 1)
-              sub.orQuery('range', 'extractionDate', { gte: new Date(parseInt(date)), lte: lte })
+              gte = new Date(parseInt(date))
+              tmp = new Date(parseInt(date))
+              lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
+              sub.orQuery('range', 'extractionDate', { gte, lte })
             })
             return sub
           })
         },
         notFilter: (body, param) => {
+          let gte, lte, tmp
           body.query('bool', sub => {
             param.values.forEach(date => {
-              let gte = new Date(parseInt(date))
-              let lte = new Date(gte.setMonth(gte.getMonth() + 1) - 1)
-              sub.notQuery('range', 'extractionDate', { gte: new Date(parseInt(date)), lte: lte })
+              gte = new Date(parseInt(date))
+              tmp = new Date(parseInt(date))
+              lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
+              sub.notQuery('range', 'extractionDate', { gte, lte })
             })
             return sub
           })
