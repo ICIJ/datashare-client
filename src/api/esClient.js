@@ -57,7 +57,14 @@ export function searchPlugin (Client, config, components) {
       } else {
         // Detect if we are building an aggregation for the Named NamedEntities
         if (includes(JSON.stringify(body.build()), 'byMentions')) {
-          return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', facet.key, facetValue.values))
+          if (facet.addFilter) {
+            return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
+              facetValue.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
+              return sub
+            }))
+          } else {
+            return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', facet.key, facetValue.values))
+          }
         } else {
           return facet.addFilter ? facet.addFilter(body, facetValue) : body.addFilter('terms', facet.key, facetValue.values)
         }
