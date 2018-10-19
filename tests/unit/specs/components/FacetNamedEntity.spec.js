@@ -206,4 +206,18 @@ describe('FacetNamedEntity.vue', () => {
     expect(spyAggregate).toBeCalled()
     expect(spyAggregate).toBeCalledTimes(1)
   })
+
+  it('should filter results according to the content type facet search', async () => {
+    await letData(es).have(new IndexedDocument('index_01.pdf').withContent('PDF content').withContentType('application/pdf').withNer('pdf')).commit()
+    await letData(es).have(new IndexedDocument('index_02.csv').withContent('CSV content').withContentType('text/csv').withNer('csv')).commit()
+
+    let contentTypeFacet = find(store.state.aggregation.facets, {name: 'content-type'})
+    contentTypeFacet.value = ['application/pdf']
+    wrapped.vm.$store.commit('search/addFacetValue', contentTypeFacet)
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
+  })
 })

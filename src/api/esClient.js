@@ -1,6 +1,7 @@
 import bodybuilder from 'bodybuilder'
 import castArray from 'lodash/castArray'
 import each from 'lodash/each'
+import includes from 'lodash/includes'
 import es from 'elasticsearch-browser'
 import { EventBus } from '@/utils/event-bus'
 import replace from 'lodash/replace'
@@ -54,7 +55,12 @@ export function searchPlugin (Client, config, components) {
       if (facetValue.reverse) {
         return facet.notFilter ? facet.notFilter(body, facetValue) : body.notFilter('terms', facet.key, facetValue.values)
       } else {
-        return facet.addFilter ? facet.addFilter(body, facetValue) : body.addFilter('terms', facet.key, facetValue.values)
+        // Detect if we are building an aggregation for the Named NamedEntities
+        if (includes(JSON.stringify(body.build()), 'byMentions')) {
+          return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', facet.key, facetValue.values))
+        } else {
+          return facet.addFilter ? facet.addFilter(body, facetValue) : body.addFilter('terms', facet.key, facetValue.values)
+        }
       }
     })
   }
