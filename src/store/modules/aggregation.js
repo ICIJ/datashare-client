@@ -146,7 +146,7 @@ function initialState () {
             param.values.forEach(date => {
               let gte = new Date(parseInt(date))
               let lte = new Date(gte.setMonth(gte.getMonth() + 1) - 1)
-              sub.orQuery('range', 'extractionDate', { gte, lte })
+              sub.orQuery('range', 'extractionDate', { gte: new Date(parseInt(date)), lte: lte })
             })
             return sub
           })
@@ -156,7 +156,7 @@ function initialState () {
             param.values.forEach(date => {
               let gte = new Date(parseInt(date))
               let lte = new Date(gte.setMonth(gte.getMonth() + 1) - 1)
-              sub.notQuery('range', 'extractionDate', { gte, lte })
+              sub.notQuery('range', 'extractionDate', { gte: new Date(parseInt(date)), lte: lte })
             })
             return sub
           })
