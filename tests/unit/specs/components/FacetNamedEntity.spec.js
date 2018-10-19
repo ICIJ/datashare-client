@@ -246,8 +246,6 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
 
-    console.log('\n\n\n\n\n\n\n\n')
-
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
   })
 })
