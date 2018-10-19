@@ -58,10 +58,21 @@ export function searchPlugin (Client, config, components) {
         // Detect if we are building an aggregation for the Named NamedEntities
         if (includes(JSON.stringify(body.build()), 'byMentions')) {
           if (facet.addFilter) {
-            return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
-              facetValue.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
-              return sub
-            }))
+            if (facet.name === 'path') {
+              return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
+                facetValue.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
+                return sub
+              }))
+            } else if (facet.name === 'indexing-date') {
+              return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
+                facetValue.values.forEach(date => {
+                  let gte = new Date(parseInt(date))
+                  let lte = new Date(gte.setMonth(gte.getMonth() + 1) - 1)
+                  sub.orQuery('range', 'extractionDate', { gte: new Date(parseInt(date)), lte: lte })
+                })
+                return sub
+              }))
+            }
           } else {
             return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', facet.key, facetValue.values))
           }

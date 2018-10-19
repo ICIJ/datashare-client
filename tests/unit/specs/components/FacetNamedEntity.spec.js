@@ -234,4 +234,20 @@ describe('FacetNamedEntity.vue', () => {
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
   })
+
+  it('should filter results according to the date facet search', async () => {
+    await letData(es).have(new IndexedDocument('index_01.pdf').withContent('PDF content').withNer('pdf').withIndexingDate('2018-10-19T10:11:12.001Z')).commit()
+    await letData(es).have(new IndexedDocument('index_02.csv').withContent('CSV content').withNer('csv').withIndexingDate('2018-09-19T10:11:12.001Z')).commit()
+
+    let dateFacet = find(store.state.aggregation.facets, {name: 'indexing-date'})
+    dateFacet.value = [new Date('2018-09-01T00:00:00.000Z').getTime().toString()]
+    wrapped.vm.$store.commit('search/addFacetValue', dateFacet)
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    console.log('\n\n\n\n\n\n\n\n')
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
+  })
 })
