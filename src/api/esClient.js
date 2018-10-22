@@ -57,26 +57,7 @@ export function searchPlugin (Client, config, components) {
       } else {
         // Detect if we are building an aggregation for the Named NamedEntities
         if (this.isNamedEntityAggregation(body)) {
-          switch (facet.type) {
-            case 'FacetText':
-              return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', facet.key, facetValue.values))
-            case 'FacetPath':
-              return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
-                facetValue.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
-                return sub
-              }))
-            case 'FacetDate':
-              return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
-                facetValue.values.forEach(date => {
-                  let gte = new Date(parseInt(date))
-                  let lte = new Date(gte.setMonth(gte.getMonth() + 1) - 1)
-                  sub.orQuery('range', 'extractionDate', { gte: new Date(parseInt(date)), lte: lte })
-                })
-                return sub
-              }))
-            default:
-              return body
-          }
+          return facet.addParentFilter ? facet.addParentFilter(body, facetValue) : body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', facet.key, facetValue.values))
         } else {
           return facet.addFilter ? facet.addFilter(body, facetValue) : body.addFilter('terms', facet.key, facetValue.values)
         }

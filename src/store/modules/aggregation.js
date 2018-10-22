@@ -117,6 +117,12 @@ function initialState () {
             return sub
           })
         },
+        addParentFilter: (body, param) => {
+          body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
+            param.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
+            return sub
+          }))
+        },
         notFilter: (body, param) => {
           body.query('bool', sub => {
             param.values.forEach(dirname => sub.notQuery('prefix', { dirname }))
@@ -152,6 +158,16 @@ function initialState () {
             })
             return sub
           })
+        },
+        addParentFilter: (body, param) => {
+          return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
+            param.values.forEach(date => {
+              let gte = new Date(parseInt(date))
+              let lte = new Date(gte.setMonth(gte.getMonth() + 1) - 1)
+              sub.orQuery('range', 'extractionDate', { gte: new Date(parseInt(date)), lte: lte })
+            })
+            return sub
+          }))
         },
         notFilter: (body, param) => {
           let gte, lte, tmp
