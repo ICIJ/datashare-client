@@ -125,7 +125,7 @@ export default {
     },
     body () {
       let prefix = this.facet.prefix ? Vue.prototype.config.dataDir + '/' : ''
-      let body = this.facet.body(bodybuilder().size(0), {
+      let body = this.facet.body(bodybuilder(), {
         size: this.size,
         include: prefix + `.*(${this.queryTokens.join('|')}).*`
       })
