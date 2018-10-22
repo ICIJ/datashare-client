@@ -227,8 +227,7 @@ export const getters = {
       // If the aggregation must not be global (relative to a search)
       // we add the query conditions to the body.
       if (!state.globalSearch) {
-        let filteredBody = facet.filteredBody ? facet.filteredBody(body) : body
-        esClient.addFacetsToBody(rootState.search.facets, filteredBody)
+        esClient.addFacetsToBody(rootState.search.facets, body)
         esClient.addQueryToBody(rootState.search.query, body)
       }
       // We finally build the body with no docs (size 0) to avoid loading

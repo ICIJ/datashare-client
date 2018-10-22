@@ -130,8 +130,7 @@ export default {
         include: prefix + `.*(${this.queryTokens.join('|')}).*`
       })
       if (!this.isGlobal) {
-        let filteredBody = this.facet.filteredBody ? this.facet.filteredBody(body) : body
-        esClient.addFacetsToBody(this.$store.state.search.facets, filteredBody)
+        esClient.addFacetsToBody(this.$store.state.search.facets, body)
         esClient.addQueryToBody(this.$store.state.search.query, body)
       }
       return body.build()
