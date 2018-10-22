@@ -39,18 +39,7 @@ class FacetText {
   }
 }
 
-class FacetDate {
-  constructor (name, key, isSearchable, labelFun) {
-    this.name = name
-    this.key = key
-    this.isSearchable = isSearchable
-    this.itemLabel = labelFun
-  }
-
-  itemParam (item) {
-    return { name: this.name, value: item.key }
-  }
-
+class FacetDate extends FacetText {
   addFilter (body, param) {
     let gte, lte, tmp
     body.query('bool', sub => {
@@ -98,17 +87,10 @@ class FacetDate {
   }
 }
 
-class FacetPath {
+class FacetPath extends FacetText {
   constructor (name, key, isSearchable) {
-    this.name = name
-    this.key = key
-    this.isSearchable = isSearchable
+    super(name, key, isSearchable, null)
     this.prefix = true
-    this.itemLabel = null
-  }
-
-  itemParam (item) {
-    return ({ name: 'path', value: item.key })
   }
 
   addFilter (body, param) {
@@ -143,16 +125,9 @@ class FacetPath {
   }
 }
 
-class FacetNamedEntity {
+class FacetNamedEntity extends FacetText {
   constructor (name, key, isSearchable) {
-    this.name = name
-    this.key = key
-    this.isSearchable = isSearchable
-    this.itemLabel = null
-  }
-
-  itemParam (item) {
-    return { name: 'named-entity', value: item.key }
+    super(name, key, isSearchable, null)
   }
 
   addFilter (body, param) {
