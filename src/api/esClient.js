@@ -56,14 +56,16 @@ export function searchPlugin (Client, config, components) {
         return facet.notFilter ? facet.notFilter(body, facetValue) : body.notFilter('terms', facet.key, facetValue.values)
       } else {
         // Detect if we are building an aggregation for the Named NamedEntities
-        if (includes(JSON.stringify(body.build()), 'byMentions')) {
-          if (facet.addFilter) {
-            if (facet.name === 'path') {
+        if (this.isNamedEntityAggregation(body)) {
+          switch (facet.type) {
+            case 'FacetText':
+              return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', facet.key, facetValue.values))
+            case 'FacetPath':
               return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
                 facetValue.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
                 return sub
               }))
-            } else if (facet.name === 'indexing-date') {
+            case 'FacetDate':
               return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
                 facetValue.values.forEach(date => {
                   let gte = new Date(parseInt(date))
@@ -72,15 +74,18 @@ export function searchPlugin (Client, config, components) {
                 })
                 return sub
               }))
-            }
-          } else {
-            return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', facet.key, facetValue.values))
+            default:
+              return body
           }
         } else {
           return facet.addFilter ? facet.addFilter(body, facetValue) : body.addFilter('terms', facet.key, facetValue.values)
         }
       }
     })
+  }
+
+  Client.prototype.isNamedEntityAggregation = function (body) {
+    return includes(JSON.stringify(body.build()), '"must":{"term":{"type":"NamedEntity"}}')
   }
 
   Client.prototype.addQueryToBody = function (query, body) {
