@@ -11,6 +11,7 @@
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
 import FacetPath from '@/components/FacetPath'
+import FacetDate from '@/components/FacetDate'
 import FacetSearch from '@/components/FacetSearch'
 
 import sortBy from 'lodash/sortBy'
@@ -27,6 +28,7 @@ export default {
     FacetText,
     FacetPath,
     FacetSearch,
+    FacetDate,
     bModal
   },
   mounted () {

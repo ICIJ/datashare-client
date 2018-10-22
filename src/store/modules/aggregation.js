@@ -137,7 +137,7 @@ function initialState () {
       {
         name: 'indexing-date',
         key: 'extractionDate',
-        type: 'FacetText',
+        type: 'FacetDate',
         isSearchable: false,
         itemParam: item => ({ name: 'indexing-date', value: item.key }),
         itemLabel: item => item.key_as_string,

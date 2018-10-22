@@ -230,7 +230,7 @@ describe('Aggregation store', function () {
 
     expect(typeof facetPath).toBe('object')
     expect(facetPath.key).toEqual('extractionDate')
-    expect(facetPath.type).toEqual('FacetText')
+    expect(facetPath.type).toEqual('FacetDate')
   })
 
   it('should return the indexing date buckets', async () => {
