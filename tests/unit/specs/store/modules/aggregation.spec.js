@@ -51,7 +51,7 @@ describe('Aggregation store', function () {
 
     expect(typeof facetPath).toBe('object')
     expect(facetPath.key).toEqual('contentType')
-    expect(facetPath.type).toEqual('FacetText')
+    expect(facetPath.constructor.name).toEqual('FacetText')
   })
 
   it('should define a `language` facet correctly (name, key and type)', () => {
@@ -59,7 +59,7 @@ describe('Aggregation store', function () {
 
     expect(typeof facetPath).toBe('object')
     expect(facetPath.key).toEqual('language')
-    expect(facetPath.type).toEqual('FacetText')
+    expect(facetPath.constructor.name).toEqual('FacetText')
   })
 
   it('should define a `named-entity` facet correctly (name, key and type)', () => {
@@ -67,7 +67,7 @@ describe('Aggregation store', function () {
 
     expect(typeof facetPath).toBe('object')
     expect(facetPath.key).toEqual('byMentions')
-    expect(facetPath.type).toEqual('FacetNamedEntity')
+    expect(facetPath.constructor.name).toEqual('FacetNamedEntity')
   })
 
   it('should find a `content-type` facet using object', () => {
@@ -186,7 +186,7 @@ describe('Aggregation store', function () {
 
     expect(typeof facetPath).toBe('object')
     expect(facetPath.key).toEqual('byDirname')
-    expect(facetPath.type).toEqual('FacetPath')
+    expect(facetPath.constructor.name).toEqual('FacetPath')
   })
 
   it('should get no bucket for path aggregation', async () => {
@@ -230,7 +230,7 @@ describe('Aggregation store', function () {
 
     expect(typeof facetPath).toBe('object')
     expect(facetPath.key).toEqual('extractionDate')
-    expect(facetPath.type).toEqual('FacetDate')
+    expect(facetPath.constructor.name).toEqual('FacetDate')
   })
 
   it('should return the indexing date buckets', async () => {

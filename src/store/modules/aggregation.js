@@ -22,179 +22,206 @@ const levels = {
   '10': '10th level'
 }
 
+class FacetText {
+  constructor (name, key, isSearchable, labelFun) {
+    this.name = name
+    this.key = key
+    this.isSearchable = isSearchable
+    this.itemLabel = labelFun
+  }
+
+  itemParam (item) {
+    return { name: this.name, value: item.key }
+  }
+
+  body (body, options) {
+    return body.agg('terms', this.key, this.key, options)
+  }
+}
+
+class FacetDate {
+  constructor (name, key, isSearchable, labelFun) {
+    this.name = name
+    this.key = key
+    this.isSearchable = isSearchable
+    this.itemLabel = labelFun
+  }
+
+  itemParam (item) {
+    return { name: this.name, value: item.key }
+  }
+
+  addFilter (body, param) {
+    let gte, lte, tmp
+    body.query('bool', sub => {
+      param.values.forEach(date => {
+        gte = new Date(parseInt(date))
+        tmp = new Date(parseInt(date))
+        lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
+        sub.orQuery('range', 'extractionDate', { gte, lte })
+      })
+      return sub
+    })
+  }
+
+  addParentFilter (body, param) {
+    return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
+      let gte, lte, tmp
+      param.values.forEach(date => {
+        gte = new Date(parseInt(date))
+        tmp = new Date(parseInt(date))
+        lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
+        sub.orQuery('range', 'extractionDate', { gte, lte })
+      })
+      return sub
+    }))
+  }
+
+  notFilter (body, param) {
+    let gte, lte, tmp
+    body.query('bool', sub => {
+      param.values.forEach(date => {
+        gte = new Date(parseInt(date))
+        tmp = new Date(parseInt(date))
+        lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
+        sub.notQuery('range', 'extractionDate', { gte, lte })
+      })
+      return sub
+    })
+  }
+
+  body (body) {
+    return body.agg('date_histogram', 'extractionDate', {
+      interval: '1M',
+      format: 'yyyy-MM'
+    }, 'extractionDate')
+  }
+}
+
+class FacetPath {
+  constructor (name, key, isSearchable) {
+    this.name = name
+    this.key = key
+    this.isSearchable = isSearchable
+    this.prefix = true
+    this.itemLabel = null
+  }
+
+  itemParam (item) {
+    return ({ name: 'path', value: item.key })
+  }
+
+  addFilter (body, param) {
+    return body.query('bool', sub => {
+      param.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
+      return sub
+    })
+  }
+
+  addParentFilter (body, param) {
+    return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
+      param.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
+      return sub
+    }))
+  }
+
+  notFilter (body, param) {
+    return body.query('bool', sub => {
+      param.values.forEach(dirname => sub.notQuery('prefix', { dirname }))
+      return sub
+    })
+  }
+
+  body (body, options) {
+    return body.agg('terms', 'dirname.tree', 'byDirname', {
+      size: 500,
+      order: { '_key': 'asc' },
+      exclude: Vue.prototype.config.dataDir + '/.*/.*',
+      include: Vue.prototype.config.dataDir + '/.*',
+      ...options
+    })
+  }
+}
+
+class FacetNamedEntity {
+  constructor (name, key, isSearchable) {
+    this.name = name
+    this.key = key
+    this.isSearchable = isSearchable
+    this.itemLabel = null
+  }
+
+  itemParam (item) {
+    return { name: 'named-entity', value: item.key }
+  }
+
+  addFilter (body, param) {
+    return body.addQuery('bool', b => {
+      b.orQuery('has_child', 'type', 'NamedEntity', { }, sub => {
+        return sub.query('query_string', {
+          default_field: 'mentionNorm',
+          query: param.values.map(v => `(${v})`).join(' OR ')
+        })
+      })
+
+      b.orQuery('query_string', {
+        default_field: 'mentionNorm',
+        query: param.values.map(v => `(${v})`).join(' OR ')
+      })
+      return b
+    })
+  }
+
+  notFilter (body, param) {
+    return body.notQuery('bool', b => {
+      b.orQuery('has_child', 'type', 'NamedEntity', { }, sub => {
+        return sub.query('query_string', {
+          default_field: 'mentionNorm',
+          query: param.values.map(v => `(${v})`).join(' OR ')
+        })
+      })
+
+      b.orQuery('query_string', {
+        default_field: 'mentionNorm',
+        query: param.values.map(v => `(${v})`).join(' OR ')
+      })
+
+      return b
+    })
+  }
+
+  body (body, options) {
+    return body
+      .query('term', 'type', 'NamedEntity')
+      .filter('term', 'isHidden', 'false')
+      .agg('terms', 'mentionNorm', 'byMentions', {
+        size: 50,
+        order: [ {'byDocs': 'desc'}, {'_count': 'desc'} ],
+        ...options
+      }, sub => {
+        return sub
+          .agg('cardinality', 'join#Document', 'byDocs')
+          .agg('terms', 'category', 'byCategories', sub => {
+            return sub.agg('cardinality', 'join#Document', 'byDocs')
+          })
+      })
+  }
+}
+
 function initialState () {
   return {
     globalSearch: false,
     facets: [
-      {
-        name: 'content-type',
-        key: 'contentType',
-        type: 'FacetText',
-        isSearchable: true,
-        itemParam: item => ({ name: 'content-type', value: item.key }),
-        itemLabel: item => get(types, [item.key, 'label'], item.key),
-        body: (body, options) => body.agg('terms', 'contentType', 'contentType', options)
-      },
-      {
-        name: 'language',
-        key: 'language',
-        type: 'FacetText',
-        isSearchable: true,
-        itemParam: item => ({ name: 'language', value: item.key }),
-        itemLabel: item => {
-          if (!item.key) return ''
-          item = item.key.toString()
-          return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
-        },
-        body: (body, options) => body.agg('terms', 'language', 'language', options)
-      },
-      {
-        name: 'named-entity',
-        key: 'byMentions',
-        type: 'FacetNamedEntity',
-        isSearchable: true,
-        itemParam: item => ({ name: 'named-entity', value: item.key }),
-        addFilter: (body, param) => {
-          return body.addQuery('bool', b => {
-            b.orQuery('has_child', 'type', 'NamedEntity', { }, sub => {
-              return sub.query('query_string', {
-                default_field: 'mentionNorm',
-                query: param.values.map(v => `(${v})`).join(' OR ')
-              })
-            })
-
-            b.orQuery('query_string', {
-              default_field: 'mentionNorm',
-              query: param.values.map(v => `(${v})`).join(' OR ')
-            })
-            return b
-          })
-        },
-        notFilter: (body, param) => {
-          return body.notQuery('bool', b => {
-            b.orQuery('has_child', 'type', 'NamedEntity', { }, sub => {
-              return sub.query('query_string', {
-                default_field: 'mentionNorm',
-                query: param.values.map(v => `(${v})`).join(' OR ')
-              })
-            })
-
-            b.orQuery('query_string', {
-              default_field: 'mentionNorm',
-              query: param.values.map(v => `(${v})`).join(' OR ')
-            })
-
-            return b
-          })
-        },
-        body: (body, options = {}) => {
-          return body
-            .query('term', 'type', 'NamedEntity')
-            .filter('term', 'isHidden', 'false')
-            .agg('terms', 'mentionNorm', 'byMentions', {
-              size: 50,
-              order: [ {'byDocs': 'desc'}, {'_count': 'desc'} ],
-              ...options
-            }, sub => {
-              return sub
-                .agg('cardinality', 'join#Document', 'byDocs')
-                .agg('terms', 'category', 'byCategories', sub => {
-                  return sub.agg('cardinality', 'join#Document', 'byDocs')
-                })
-            })
-        }
-      },
-      {
-        name: 'path',
-        key: 'byDirname',
-        type: 'FacetPath',
-        prefix: true,
-        isSearchable: false,
-        itemParam: item => ({ name: 'path', value: item.key }),
-        addFilter: (body, param) => {
-          body.query('bool', sub => {
-            param.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
-            return sub
-          })
-        },
-        addParentFilter: (body, param) => {
-          body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
-            param.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
-            return sub
-          }))
-        },
-        notFilter: (body, param) => {
-          body.query('bool', sub => {
-            param.values.forEach(dirname => sub.notQuery('prefix', { dirname }))
-            return sub
-          })
-        },
-        body: (body, options) => {
-          return body
-            .agg('terms', 'dirname.tree', 'byDirname', {
-              size: 500,
-              order: { '_key': 'asc' },
-              exclude: Vue.prototype.config.dataDir + '/.*/.*',
-              include: Vue.prototype.config.dataDir + '/.*',
-              ...options
-            })
-        }
-      },
-      {
-        name: 'indexing-date',
-        key: 'extractionDate',
-        type: 'FacetDate',
-        isSearchable: false,
-        itemParam: item => ({ name: 'indexing-date', value: item.key }),
-        itemLabel: item => item.key_as_string,
-        addFilter: (body, param) => {
-          let gte, lte, tmp
-          body.query('bool', sub => {
-            param.values.forEach(date => {
-              gte = new Date(parseInt(date))
-              tmp = new Date(parseInt(date))
-              lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
-              sub.orQuery('range', 'extractionDate', { gte, lte })
-            })
-            return sub
-          })
-        },
-        addParentFilter: (body, param) => {
-          return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
-            param.values.forEach(date => {
-              let gte = new Date(parseInt(date))
-              let lte = new Date(gte.setMonth(gte.getMonth() + 1) - 1)
-              sub.orQuery('range', 'extractionDate', { gte: new Date(parseInt(date)), lte: lte })
-            })
-            return sub
-          }))
-        },
-        notFilter: (body, param) => {
-          let gte, lte, tmp
-          body.query('bool', sub => {
-            param.values.forEach(date => {
-              gte = new Date(parseInt(date))
-              tmp = new Date(parseInt(date))
-              lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
-              sub.notQuery('range', 'extractionDate', { gte, lte })
-            })
-            return sub
-          })
-        },
-        body: body => body.agg('date_histogram', 'extractionDate', {
-          interval: '1M',
-          format: 'yyyy-MM'
-        }, 'extractionDate')
-      },
-      {
-        name: 'extraction-level',
-        key: 'extractionLevel',
-        type: 'FacetText',
-        isSearchable: false,
-        itemParam: item => ({ name: 'extraction-level', value: item.key }),
-        itemLabel: item => get(levels, item.key),
-        body: body => body.agg('terms', 'extractionLevel', 'extractionLevel')
-      }
+      new FacetText('content-type', 'contentType', true, item => get(types, [item.key, 'label'], item.key)),
+      new FacetText('language', 'language', true, item => {
+        if (!item.key) return ''
+        item = item.key.toString()
+        return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
+      }),
+      new FacetNamedEntity('named-entity', 'byMentions', true),
+      new FacetPath('path', 'byDirname', false),
+      new FacetDate('indexing-date', 'extractionDate', false, item => item.key_as_string),
+      new FacetText('extraction-level', 'extractionLevel', false, item => get(levels, item.key, item.key))
     ]
   }
 }

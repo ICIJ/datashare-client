@@ -125,10 +125,8 @@ export default {
     },
     body () {
       let prefix = this.facet.prefix ? Vue.prototype.config.dataDir + '/' : ''
-      let body = this.facet.body(bodybuilder(), {
-        size: this.size,
-        include: prefix + `.*(${this.queryTokens.join('|')}).*`
-      })
+      let options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : {}
+      let body = this.facet.body(bodybuilder(), options)
       if (!this.isGlobal) {
         esClient.addFacetsToBody(this.$store.state.search.facets, body)
         esClient.addQueryToBody(this.$store.state.search.query, body)
