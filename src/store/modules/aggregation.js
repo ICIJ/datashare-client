@@ -42,7 +42,7 @@ class FacetText {
 class FacetDate extends FacetText {
   addFilter (body, param) {
     let gte, lte, tmp
-    body.query('bool', sub => {
+    return body.query('bool', sub => {
       param.values.forEach(date => {
         gte = new Date(parseInt(date))
         tmp = new Date(parseInt(date))
@@ -54,16 +54,7 @@ class FacetDate extends FacetText {
   }
 
   addParentFilter (body, param) {
-    return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
-      let gte, lte, tmp
-      param.values.forEach(date => {
-        gte = new Date(parseInt(date))
-        tmp = new Date(parseInt(date))
-        lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
-        sub.orQuery('range', 'extractionDate', { gte, lte })
-      })
-      return sub
-    }))
+    return body.query('has_parent', { 'parent_type': 'Document' }, q => this.addFilter(q, param))
   }
 
   notFilter (body, param) {
@@ -101,10 +92,7 @@ class FacetPath extends FacetText {
   }
 
   addParentFilter (body, param) {
-    return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('bool', sub => {
-      param.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
-      return sub
-    }))
+    return body.query('has_parent', { 'parent_type': 'Document' }, q => this.addFilter(q, param))
   }
 
   notFilter (body, param) {
