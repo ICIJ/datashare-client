@@ -53,13 +53,13 @@ export function searchPlugin (Client, config, components) {
       const facet = store.getters['aggregation/getFacet']({ name: facetValue.name })
       // A reversed facetValue means we want to exclude the value
       if (facetValue.reverse) {
-        return facet.notFilter ? facet.notFilter(body, facetValue) : body.notFilter('terms', facet.key, facetValue.values)
+        return facet.notFilter(body, facetValue)
       } else {
         // Detect if we are building an aggregation for the Named NamedEntities
         if (this.isNamedEntityAggregation(body)) {
-          return facet.addParentFilter ? facet.addParentFilter(body, facetValue) : body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', facet.key, facetValue.values))
+          return facet.addParentFilter(body, facetValue)
         } else {
-          return facet.addFilter ? facet.addFilter(body, facetValue) : body.addFilter('terms', facet.key, facetValue.values)
+          return facet.addFilter(body, facetValue)
         }
       }
     })

@@ -34,6 +34,18 @@ class FacetText {
     return { name: this.name, value: item.key }
   }
 
+  addFilter (body, param) {
+    return body.addFilter('terms', this.key, param.values)
+  }
+
+  addParentFilter (body, param) {
+    return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', this.key, param.values))
+  }
+
+  notFilter (body, param) {
+    return body.notFilter('terms', this.key, param.values)
+  }
+
   body (body, options) {
     return body.agg('terms', this.key, this.key, options)
   }
@@ -41,12 +53,11 @@ class FacetText {
 
 class FacetDate extends FacetText {
   addFilter (body, param) {
-    let gte, lte, tmp
     return body.query('bool', sub => {
       param.values.forEach(date => {
-        gte = new Date(parseInt(date))
-        tmp = new Date(parseInt(date))
-        lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
+        let gte = new Date(parseInt(date))
+        let tmp = new Date(parseInt(date))
+        let lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
         sub.orQuery('range', 'extractionDate', { gte, lte })
       })
       return sub
@@ -58,12 +69,11 @@ class FacetDate extends FacetText {
   }
 
   notFilter (body, param) {
-    let gte, lte, tmp
     body.query('bool', sub => {
       param.values.forEach(date => {
-        gte = new Date(parseInt(date))
-        tmp = new Date(parseInt(date))
-        lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
+        let gte = new Date(parseInt(date))
+        let tmp = new Date(parseInt(date))
+        let lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
         sub.notQuery('range', 'extractionDate', { gte, lte })
       })
       return sub
