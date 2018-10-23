@@ -51,17 +51,19 @@ class FacetText {
   }
 }
 
-class FacetDocument extends FacetText {
+class FacetType extends FacetText {
   addFilter (body, param, func) {
     return this.queryBuilder(body, param, 'orQuery')
   }
 
-  addParentFilter (body, param) {
-    return body.query('has_parent', { 'parent_type': 'Document' }, q => this.addFilter(q, param))
-  }
-
   notFilter (body, param, func) {
     return this.queryBuilder(body, param, 'notQuery')
+  }
+}
+
+class FacetDocument extends FacetType {
+  addParentFilter (body, param) {
+    return body.query('has_parent', { 'parent_type': 'Document' }, q => this.addFilter(q, param))
   }
 }
 
@@ -110,7 +112,7 @@ class FacetPath extends FacetDocument {
   }
 }
 
-class FacetNamedEntity extends FacetText {
+class FacetNamedEntity extends FacetType {
   constructor (name, key, isSearchable) {
     super(name, key, isSearchable, null)
   }
@@ -130,14 +132,6 @@ class FacetNamedEntity extends FacetText {
       })
       return b
     })
-  }
-
-  addFilter (body, param) {
-    return this.queryBuilder(body, param, 'addQuery')
-  }
-
-  notFilter (body, param) {
-    return this.queryBuilder(body, param, 'notQuery')
   }
 
   body (body, options) {
