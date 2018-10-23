@@ -51,19 +51,7 @@ class FacetText {
   }
 }
 
-class FacetDate extends FacetText {
-  queryBuilder (body, param, func) {
-    return body.query('bool', sub => {
-      param.values.forEach(date => {
-        let gte = new Date(parseInt(date))
-        let tmp = new Date(parseInt(date))
-        let lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
-        sub[func]('range', 'extractionDate', { gte, lte })
-      })
-      return sub
-    })
-  }
-
+class FacetDocument extends FacetText {
   addFilter (body, param, func) {
     return this.queryBuilder(body, param, 'orQuery')
   }
@@ -75,16 +63,30 @@ class FacetDate extends FacetText {
   notFilter (body, param, func) {
     return this.queryBuilder(body, param, 'notQuery')
   }
+}
+
+class FacetDate extends FacetDocument {
+  queryBuilder (body, param, func) {
+    return body.query('bool', sub => {
+      param.values.forEach(date => {
+        let gte = new Date(parseInt(date))
+        let tmp = new Date(parseInt(date))
+        let lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
+        sub[func]('range', this.key, { gte, lte })
+      })
+      return sub
+    })
+  }
 
   body (body) {
-    return body.agg('date_histogram', 'extractionDate', {
+    return body.agg('date_histogram', this.key, {
       interval: '1M',
       format: 'yyyy-MM'
-    }, 'extractionDate')
+    }, this.key)
   }
 }
 
-class FacetPath extends FacetText {
+class FacetPath extends FacetDocument {
   constructor (name, key, isSearchable) {
     super(name, key, isSearchable, null)
     this.prefix = true
@@ -97,20 +99,8 @@ class FacetPath extends FacetText {
     })
   }
 
-  addFilter (body, param) {
-    return this.queryBuilder(body, param, 'orQuery')
-  }
-
-  addParentFilter (body, param) {
-    return body.query('has_parent', { 'parent_type': 'Document' }, q => this.addFilter(q, param))
-  }
-
-  notFilter (body, param) {
-    return this.queryBuilder(body, param, 'notQuery')
-  }
-
   body (body, options) {
-    return body.agg('terms', 'dirname.tree', 'byDirname', {
+    return body.agg('terms', 'dirname.tree', this.key, {
       size: 500,
       order: { '_key': 'asc' },
       exclude: Vue.prototype.config.dataDir + '/.*/.*',
@@ -154,7 +144,7 @@ class FacetNamedEntity extends FacetText {
     return body
       .query('term', 'type', 'NamedEntity')
       .filter('term', 'isHidden', 'false')
-      .agg('terms', 'mentionNorm', 'byMentions', {
+      .agg('terms', 'mentionNorm', this.key, {
         size: 50,
         order: [ {'byDocs': 'desc'}, {'_count': 'desc'} ],
         ...options
