@@ -7,6 +7,7 @@ import bodybuilder from 'bodybuilder'
 import every from 'lodash/every'
 import find from 'lodash/find'
 import get from 'lodash/get'
+import includes from 'lodash/includes'
 
 const levels = {
   '0': 'File on disk',
@@ -34,36 +35,52 @@ class FacetText {
     return { name: this.name, value: item.key }
   }
 
-  addFilter (body, param) {
+  addChildIncludeFilter (body, param) {
     return body.addFilter('terms', this.key, param.values)
   }
 
-  addParentFilter (body, param) {
+  addParentIncludeFilter (body, param) {
     return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', this.key, param.values))
   }
 
-  notFilter (body, param) {
+  addChildExcludeFilter (body, param) {
     return body.notFilter('terms', this.key, param.values)
   }
 
   body (body, options) {
     return body.agg('terms', this.key, this.key, options)
   }
+
+  addFilter (body, param) {
+    if (param.reverse) {
+      return this.addChildExcludeFilter(body, param)
+    } else {
+      if (this.isNamedEntityAggregation(body)) {
+        return this.addParentIncludeFilter(body, param)
+      } else {
+        return this.addChildIncludeFilter(body, param)
+      }
+    }
+  }
+
+  isNamedEntityAggregation (body) {
+    return includes(JSON.stringify(body.build()), '"must":{"term":{"type":"NamedEntity"}}')
+  }
 }
 
 class FacetType extends FacetText {
-  addFilter (body, param, func) {
+  addChildIncludeFilter (body, param, func) {
     return this.queryBuilder(body, param, 'orQuery')
   }
 
-  notFilter (body, param, func) {
+  addChildExcludeFilter (body, param, func) {
     return this.queryBuilder(body, param, 'notQuery')
   }
 }
 
 class FacetDocument extends FacetType {
-  addParentFilter (body, param) {
-    return body.query('has_parent', { 'parent_type': 'Document' }, q => this.addFilter(q, param))
+  addParentIncludeFilter (body, param) {
+    return body.query('has_parent', { 'parent_type': 'Document' }, q => this.addChildIncludeFilter(q, param))
   }
 }
 

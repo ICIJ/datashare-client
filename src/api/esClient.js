@@ -1,7 +1,6 @@
 import bodybuilder from 'bodybuilder'
 import castArray from 'lodash/castArray'
 import each from 'lodash/each'
-import includes from 'lodash/includes'
 import es from 'elasticsearch-browser'
 import { EventBus } from '@/utils/event-bus'
 import replace from 'lodash/replace'
@@ -51,22 +50,8 @@ export function searchPlugin (Client, config, components) {
     each(castArray(facetOrFacets), facetValue => {
       // Find the facet's definition for the given value
       const facet = store.getters['aggregation/getFacet']({ name: facetValue.name })
-      // A reversed facetValue means we want to exclude the value
-      if (facetValue.reverse) {
-        return facet.notFilter(body, facetValue)
-      } else {
-        // Detect if we are building an aggregation for the Named NamedEntities
-        if (this.isNamedEntityAggregation(body)) {
-          return facet.addParentFilter(body, facetValue)
-        } else {
-          return facet.addFilter(body, facetValue)
-        }
-      }
+      return facet.addFilter(body, facetValue)
     })
-  }
-
-  Client.prototype.isNamedEntityAggregation = function (body) {
-    return includes(JSON.stringify(body.build()), '"must":{"term":{"type":"NamedEntity"}}')
   }
 
   Client.prototype.addQueryToBody = function (query, body) {
