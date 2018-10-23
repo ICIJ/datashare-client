@@ -52,32 +52,28 @@ class FacetText {
 }
 
 class FacetDate extends FacetText {
-  addFilter (body, param) {
+  queryBuilder (body, param, func) {
     return body.query('bool', sub => {
       param.values.forEach(date => {
         let gte = new Date(parseInt(date))
         let tmp = new Date(parseInt(date))
         let lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
-        sub.orQuery('range', 'extractionDate', { gte, lte })
+        sub[func]('range', 'extractionDate', { gte, lte })
       })
       return sub
     })
+  }
+
+  addFilter (body, param, func) {
+    return this.queryBuilder(body, param, 'orQuery')
   }
 
   addParentFilter (body, param) {
     return body.query('has_parent', { 'parent_type': 'Document' }, q => this.addFilter(q, param))
   }
 
-  notFilter (body, param) {
-    body.query('bool', sub => {
-      param.values.forEach(date => {
-        let gte = new Date(parseInt(date))
-        let tmp = new Date(parseInt(date))
-        let lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
-        sub.notQuery('range', 'extractionDate', { gte, lte })
-      })
-      return sub
-    })
+  notFilter (body, param, func) {
+    return this.queryBuilder(body, param, 'notQuery')
   }
 
   body (body) {
@@ -94,11 +90,15 @@ class FacetPath extends FacetText {
     this.prefix = true
   }
 
-  addFilter (body, param) {
+  queryBuilder (body, param, func) {
     return body.query('bool', sub => {
-      param.values.forEach(dirname => sub.orQuery('prefix', { dirname }))
+      param.values.forEach(dirname => sub[func]('prefix', { dirname }))
       return sub
     })
+  }
+
+  addFilter (body, param) {
+    return this.queryBuilder(body, param, 'orQuery')
   }
 
   addParentFilter (body, param) {
@@ -106,10 +106,7 @@ class FacetPath extends FacetText {
   }
 
   notFilter (body, param) {
-    return body.query('bool', sub => {
-      param.values.forEach(dirname => sub.notQuery('prefix', { dirname }))
-      return sub
-    })
+    return this.queryBuilder(body, param, 'notQuery')
   }
 
   body (body, options) {
@@ -128,8 +125,8 @@ class FacetNamedEntity extends FacetText {
     super(name, key, isSearchable, null)
   }
 
-  addFilter (body, param) {
-    return body.addQuery('bool', b => {
+  queryBuilder (body, param, func) {
+    return body[func]('bool', b => {
       b.orQuery('has_child', 'type', 'NamedEntity', { }, sub => {
         return sub.query('query_string', {
           default_field: 'mentionNorm',
@@ -145,22 +142,12 @@ class FacetNamedEntity extends FacetText {
     })
   }
 
+  addFilter (body, param) {
+    return this.queryBuilder(body, param, 'addQuery')
+  }
+
   notFilter (body, param) {
-    return body.notQuery('bool', b => {
-      b.orQuery('has_child', 'type', 'NamedEntity', { }, sub => {
-        return sub.query('query_string', {
-          default_field: 'mentionNorm',
-          query: param.values.map(v => `(${v})`).join(' OR ')
-        })
-      })
-
-      b.orQuery('query_string', {
-        default_field: 'mentionNorm',
-        query: param.values.map(v => `(${v})`).join(' OR ')
-      })
-
-      return b
-    })
+    return this.queryBuilder(body, param, 'notQuery')
   }
 
   body (body, options) {
