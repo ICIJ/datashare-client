@@ -248,4 +248,20 @@ describe('FacetNamedEntity.vue', () => {
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
   })
+
+  it('should filter results according to the content type reverse facet search', async () => {
+    await letData(es).have(new IndexedDocument('index_01.pdf').withContent('PDF content').withContentType('application/pdf').withNer('pdf')).commit()
+    await letData(es).have(new IndexedDocument('index_02.csv').withContent('CSV content').withContentType('text/csv').withNer('csv')).commit()
+
+    let contentTypeFacet = find(store.state.aggregation.facets, {name: 'content-type'})
+    contentTypeFacet.value = ['application/pdf']
+    wrapped.vm.$store.commit('search/addFacetValue', contentTypeFacet)
+    wrapped.vm.$store.commit('search/toggleFacet', 'content-type')
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelector('.facet__items__item__body__key').textContent).toContain('csv')
+  })
 })

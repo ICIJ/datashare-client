@@ -43,6 +43,10 @@ class FacetText {
     return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', this.key, param.values))
   }
 
+  addParentExcludeFilter (body, param) {
+    return body.query('has_parent', { 'parent_type': 'Document' }, q => q.notQuery('terms', this.key, param.values))
+  }
+
   addChildExcludeFilter (body, param) {
     return body.notFilter('terms', this.key, param.values)
   }
@@ -53,7 +57,11 @@ class FacetText {
 
   addFilter (body, param) {
     if (param.reverse) {
-      return this.addChildExcludeFilter(body, param)
+      if (this.isNamedEntityAggregation(body)) {
+        return this.addParentExcludeFilter(body, param)
+      } else {
+        return this.addChildExcludeFilter(body, param)
+      }
     } else {
       if (this.isNamedEntityAggregation(body)) {
         return this.addParentIncludeFilter(body, param)
