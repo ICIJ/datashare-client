@@ -36,7 +36,7 @@ describe('FacetNamedEntity.vue', () => {
   var es = esConnectionHelper.es
   var wrapped = null
   beforeEach(async () => {
-    wrapped = mount(FacetNamedEntity, { localVue, i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, {name: 'named-entity'}) } })
+    wrapped = mount(FacetNamedEntity, { localVue, i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, {name: 'named-entity-person'}) } })
     await wrapped.vm.root.aggregate()
   })
 

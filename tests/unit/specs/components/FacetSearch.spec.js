@@ -138,7 +138,7 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should emit a facet::hide::named-entities event on click to delete named entity', async () => {
-    wrapped = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.aggregation.facets, { name: 'named-entity' }) } })
+    wrapped = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.aggregation.facets, { name: 'named-entity-person' }) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is a naz document').withNer('naz')).commit()
     await wrapped.vm.search()
 
@@ -151,7 +151,7 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should call the search function after a named entity deletion', async () => {
-    wrapped = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.aggregation.facets, { name: 'named-entity' }) } })
+    wrapped = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.aggregation.facets, { name: 'named-entity-person' }) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is a naz document').withNer('naz')).commit()
     await wrapped.vm.search()
 
