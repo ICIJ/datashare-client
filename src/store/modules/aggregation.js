@@ -8,6 +8,8 @@ import find from 'lodash/find'
 import get from 'lodash/get'
 
 import {FacetText, FacetDate, FacetPath, FacetNamedEntity, levels} from './facets'
+import each from 'lodash/each'
+import castArray from 'lodash/castArray'
 
 function initialState () {
   return {
@@ -73,7 +75,7 @@ export const getters = {
       // If the aggregation must not be global (relative to a search)
       // we add the query conditions to the body.
       if (!state.globalSearch) {
-        esClient.addFacetsToBody(rootState.search.facets, body)
+        addFacetsToBody(rootState.search.facets, getters, body)
         esClient.addQueryToBody(rootState.search.query, body)
       }
       // We finally build the body with no docs (size 0) to avoid loading
@@ -96,11 +98,18 @@ export const actions = {
     let facet = getters.getFacet({name: params.name})
     let body = facet.body(bodybuilder(), params.options)
     if (!rootState.aggregation.globalSearch) {
-      esClient.addFacetsToBody(rootState.search.facets, body)
+      addFacetsToBody(rootState.search.facets, getters, body)
       esClient.addQueryToBody(rootState.search.query, body)
     }
     return esClient.search({index: process.env.VUE_APP_ES_INDEX, body: body.build()})
   }
+}
+
+function addFacetsToBody (facetOrFacets, getters, body) {
+  each(castArray(facetOrFacets), facetValue => {
+    const facet = getters.getFacet({ name: facetValue.name })
+    return facet.addFilter(body, facetValue)
+  })
 }
 
 export default {

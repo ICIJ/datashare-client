@@ -164,13 +164,13 @@ export const actions = {
     commit('resetFacets')
     return dispatch('query')
   },
-  query ({ state, commit }, queryOrParams = { query: state.query, from: state.from, size: state.size, sort: state.sort }) {
+  query ({ state, commit, rootState }, queryOrParams = { query: state.query, from: state.from, size: state.size, sort: state.sort }) {
     commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String ? queryOrParams : queryOrParams.query)
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.from : queryOrParams.from)
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
     commit('sort', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.sort : queryOrParams.sort)
     commit('isReady', false)
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => {
+    return esClient.searchDocs(state.query, state.facets, rootState.aggregation.facets, state.from, state.size, state.sort).then(raw => {
       commit('buildResponse', raw)
       return raw
     })

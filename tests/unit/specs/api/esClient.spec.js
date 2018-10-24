@@ -1,6 +1,7 @@
 import bodybuilder from 'bodybuilder'
 import { EventBus } from '@/utils/event-bus'
 import esClient from '@/api/esClient'
+import {FacetText} from '@/store/modules/facets'
 
 describe('esClient', () => {
   it('should return backend response to a POST request for searchDocs', async () => {
@@ -25,7 +26,7 @@ describe('esClient', () => {
     let size = 25
     let facets = [{ name: 'content-type', values: ['value_01', 'value_02', 'value_03'] }]
     let body = bodybuilder().from(from).size(size)
-    await esClient.addFacetsToBody(facets, body)
+    await esClient._addFacetsToBody(facets, [new FacetText('content-type', 'contentType', true, null)], body)
 
     expect(body.build()).toEqual({
       from: from,
