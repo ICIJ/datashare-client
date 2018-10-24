@@ -68,10 +68,10 @@ export const getters = {
     return predicate => find(state.facets, predicate)
   },
   buildFacetBody (state, getters, rootState) {
-    return predicate => {
+    return params => {
       // Find the Bodybuilder instance for this facet using a predicate
-      const facet = getters.getFacet(predicate)
-      const body = facet.body(bodybuilder())
+      const facet = getters.getFacet({name: params.name})
+      const body = facet.body(bodybuilder(), params.options)
       // If the aggregation must not be global (relative to a search)
       // we add the query conditions to the body.
       if (!state.globalSearch) {
@@ -86,22 +86,13 @@ export const getters = {
 }
 
 export const actions = {
-  query ({ commit, dispatch, getters }, facetPredicate) {
+  query ({ commit, dispatch, getters }, params) {
     return esClient.search({
       index: process.env.VUE_APP_ES_INDEX,
       type: 'doc',
       size: 0,
-      body: getters.buildFacetBody(facetPredicate)
+      body: getters.buildFacetBody(params)
     }).then(raw => new Response(raw))
-  },
-  searchFacet ({ commit, dispatch, getters, rootState }, params) {
-    let facet = getters.getFacet({name: params.name})
-    let body = facet.body(bodybuilder(), params.options)
-    if (!rootState.aggregation.globalSearch) {
-      addFacetsToBody(rootState.search.facets, getters, body)
-      esClient.addQueryToBody(rootState.search.query, body)
-    }
-    return esClient.search({index: process.env.VUE_APP_ES_INDEX, body: body.build()})
   }
 }
 
