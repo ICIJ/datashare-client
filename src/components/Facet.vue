@@ -10,7 +10,7 @@
         </span>
         <h6 @click="toggleItems">
           <font-awesome-icon :icon="headerIcon" />
-          {{ $t('facet.' + facet.key) }}
+          {{ $t('facet.' + facet.name) }}
         </h6>
       </div>
     </slot>
@@ -18,7 +18,7 @@
       <slot name="search" v-if="!hideSearch">
         <form @submit="asyncFacetSearch" v-if="facet.isSearchable">
           <label class="list-group facet__items__search border-bottom py-2 px-3">
-            <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.key) + '...'" />
+            <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.name) + '...'" />
             <font-awesome-icon icon="search" class="float-right" />
           </label>
         </form>
