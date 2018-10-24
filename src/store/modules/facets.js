@@ -76,9 +76,7 @@ class FacetText {
   }
 
   applyTo (body) {
-    if (this.hasValues()) {
-      this.addFilter(body, {name: this.name, values: this.values, reverse: this.reverse})
-    }
+    this.addFilter(body)
   }
 }
 

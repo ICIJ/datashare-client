@@ -259,7 +259,7 @@ export const actions = {
     return dispatch('query')
   },
 
-  updateFromRouteQuery ({ commit, rootState }, query) {
+  updateFromRouteQuery ({ state, commit }, query) {
     // Reset all existing options
     commit('reset')
     // Add the query to the state with a mutation to not triggering a search
@@ -267,7 +267,7 @@ export const actions = {
     if (query.size) commit('size', query.size)
     if (query.sort) commit('sort', query.sort)
     // Iterate over the list of facet
-    each(rootState.aggregation.facets, facet => {
+    each(state.facets, facet => {
       // The facet key are formatted in the URL as follow.
       // See `query-string` for more info about query string format.
       each([`f[${facet.name}]`, `f[-${facet.name}]`], (key, index) => {
