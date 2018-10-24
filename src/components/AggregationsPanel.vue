@@ -1,6 +1,6 @@
 <template>
   <div class="aggregations-panel">
-    <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.key) : null">
+    <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
       <facet-search :facet="selectedFacet" :query="facetQuery" />
     </b-modal>
     <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.constructor.name" v-bind="{ facet }"></component>
