@@ -62,11 +62,12 @@ describe('Aggregation store', function () {
     expect(facetPath.constructor.name).toEqual('FacetText')
   })
 
-  it('should define a `named-entity` facet correctly (name, key and type)', () => {
+  it('should define a `named-entity` facet correctly (name, key, type and default category)', () => {
     let facetPath = find(store.state.aggregation.facets, { name: 'named-entity' })
 
     expect(typeof facetPath).toBe('object')
     expect(facetPath.key).toEqual('byMentions')
+    expect(facetPath.category).toEqual('PERSON')
     expect(facetPath.constructor.name).toEqual('FacetNamedEntity')
   })
 
@@ -247,17 +248,49 @@ describe('Aggregation store', function () {
     expect(response.aggregations.extractionDate.buckets[1].doc_count).toEqual(1)
   })
 
-  it('should aggregate only the not hidden named entities', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.csv').withNer('entity_01', 42, 'ORGANIZATION', false)).commit()
-    await letData(es).have(new IndexedDocument('doc_02.csv').withNer('entity_01', 43, 'ORGANIZATION', false)).commit()
-    await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_02', 44, 'ORGANIZATION', true)).commit()
-    await letData(es).have(new IndexedDocument('doc_04.csv').withNer('entity_03', 45, 'ORGANIZATION', false)).commit()
+  // Named entities facet
+  it('should aggregate only the not hidden named entities for default category', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.csv').withNer('entity_01', 42, 'PERSON', false)).commit()
+    await letData(es).have(new IndexedDocument('doc_02.csv').withNer('entity_01', 43, 'PERSON', false)).commit()
+    await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_02', 44, 'PERSON', true)).commit()
+    await letData(es).have(new IndexedDocument('doc_04.csv').withNer('entity_03', 45, 'PERSON', false)).commit()
 
     const response = await store.dispatch('aggregation/query', { name: 'named-entity' })
+
     expect(response.aggregations.byMentions.buckets).toHaveLength(2)
     expect(response.aggregations.byMentions.buckets[0].key).toEqual('entity_01')
     expect(response.aggregations.byMentions.buckets[0].doc_count).toEqual(2)
     expect(response.aggregations.byMentions.buckets[1].key).toEqual('entity_03')
     expect(response.aggregations.byMentions.buckets[1].doc_count).toEqual(1)
+  })
+
+  it('should aggregate named entities for PERSON category', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.csv').withNer('entity_01', 42, 'PERSON', false)).commit()
+    await letData(es).have(new IndexedDocument('doc_02.csv').withNer('entity_02', 43, 'PERSON', false)).commit()
+    await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_03', 44, 'LOCATION', true)).commit()
+
+    const response = await store.dispatch('aggregation/query', { name: 'named-entity', category: 'PERSON' })
+
+    expect(response.aggregations.byMentions.buckets).toHaveLength(2)
+  })
+
+  it('should aggregate named entities for LOCATION category', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.csv').withNer('entity_01', 42, 'LOCATION', false)).commit()
+    await letData(es).have(new IndexedDocument('doc_02.csv').withNer('entity_02', 43, 'LOCATION', false)).commit()
+    await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_03', 44, 'ORGANIZATION', true)).commit()
+
+    const response = await store.dispatch('aggregation/query', { name: 'named-entity', category: 'LOCATION' })
+
+    expect(response.aggregations.byMentions.buckets).toHaveLength(2)
+  })
+
+  it('should aggregate named entities for ORGANIZATION category', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.csv').withNer('entity_01', 42, 'ORGANIZATION', false)).commit()
+    await letData(es).have(new IndexedDocument('doc_02.csv').withNer('entity_02', 43, 'ORGANIZATION', false)).commit()
+    await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_03', 44, 'PERSON', true)).commit()
+
+    const response = await store.dispatch('aggregation/query', { name: 'named-entity', category: 'ORGANIZATION' })
+
+    expect(response.aggregations.byMentions.buckets).toHaveLength(2)
   })
 })

@@ -82,7 +82,7 @@ class IndexedDocument {
     this.nerTags.push(pipeline)
     return this
   }
-  withNer (mention, offset = 1, category = 'ORGANIZATION', isHidden = false) {
+  withNer (mention, offset = 1, category = 'PERSON', isHidden = false) {
     this.nerList.push(new IndexedNe(mention, offset, category, isHidden))
     return this
   }

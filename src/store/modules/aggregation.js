@@ -138,8 +138,9 @@ class FacetPath extends FacetDocument {
 }
 
 class FacetNamedEntity extends FacetType {
-  constructor (name, key, isSearchable) {
+  constructor (name, key, isSearchable, category = 'PERSON') {
     super(name, key, isSearchable, null)
+    this.category = category
   }
 
   queryBuilder (body, param, func) {
@@ -163,6 +164,7 @@ class FacetNamedEntity extends FacetType {
     return body
       .query('term', 'type', 'NamedEntity')
       .filter('term', 'isHidden', 'false')
+      .filter('term', 'category', this.category)
       .agg('terms', 'mentionNorm', this.key, {
         size: 50,
         order: [ {'byDocs': 'desc'}, {'_count': 'desc'} ],
@@ -187,7 +189,9 @@ function initialState () {
         item = item.key.toString()
         return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
       }),
-      new FacetNamedEntity('named-entity', 'byMentions', true),
+      new FacetNamedEntity('named-entity', 'byMentions', true, 'PERSON'),
+      new FacetNamedEntity('named-entity', 'byMentions', true, 'LOCATION'),
+      new FacetNamedEntity('named-entity', 'byMentions', true, 'ORGANIZATION'),
       new FacetPath('path', 'byDirname', false),
       new FacetDate('indexing-date', 'extractionDate', false, item => item.key_as_string),
       new FacetText('extraction-level', 'extractionLevel', false, item => get(levels, item.key, item.key))

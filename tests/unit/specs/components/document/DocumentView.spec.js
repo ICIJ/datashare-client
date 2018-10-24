@@ -117,7 +117,7 @@ describe('DocumentView.vue', () => {
     await wrapped.vm.$nextTick()
 
     expect(wrapped.vm.$el.querySelector('.text-pre-wrap').innerHTML).toEqual(
-      'a <mark class="ner bg-category-organization">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;')
+      'a <mark class="ner bg-category-person">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;')
   })
 
   it('should display named entities in the dedicated tab', async () => {
