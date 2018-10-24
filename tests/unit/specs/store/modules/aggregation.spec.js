@@ -235,7 +235,7 @@ describe('Search facets', function () {
     await letData(es).have(new IndexedDocument('doc_02.csv').withNer('entity_02', 43, 'LOCATION', false)).commit()
     await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_03', 44, 'ORGANIZATION', true)).commit()
 
-    const response = await store.dispatch('aggregation/query', { name: 'named-entity-location', category: 'LOCATION' })
+    const response = await store.dispatch('search/queryFacet', { name: 'named-entity-location', category: 'LOCATION' })
 
     expect(response.aggregations.byMentions.buckets).toHaveLength(2)
   })
@@ -245,7 +245,7 @@ describe('Search facets', function () {
     await letData(es).have(new IndexedDocument('doc_02.csv').withNer('entity_02', 43, 'ORGANIZATION', false)).commit()
     await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_03', 44, 'PERSON', true)).commit()
 
-    const response = await store.dispatch('aggregation/query', { name: 'named-entity-organization', category: 'ORGANIZATION' })
+    const response = await store.dispatch('search/queryFacet', { name: 'named-entity-organization', category: 'ORGANIZATION' })
 
     expect(response.aggregations.byMentions.buckets).toHaveLength(2)
   })
