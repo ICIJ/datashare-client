@@ -40,16 +40,14 @@ describe('FacetText.vue', () => {
       router,
       store,
       propsData: {
-        facet: find(store.state.aggregation.facets, {name: 'content-type'})
+        facet: find(store.state.search.facets, {name: 'content-type'})
       }
     })
-    // Reset aggregation store to global search
-    store.commit('aggregation/setGlobalSearch', true)
+    store.commit('search/setGlobalSearch', true)
   })
 
   afterEach(async () => {
     await store.commit('search/reset')
-    await store.commit('aggregation/reset')
     // Reset facetQuery to default
     wrapped.vm.root.facetQuery = ''
   })
@@ -102,7 +100,7 @@ describe('FacetText.vue', () => {
     await wrapped.vm.root.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(3)
 
-    store.commit('aggregation/setGlobalSearch', false)
+    store.commit('search/setGlobalSearch', false)
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
@@ -118,17 +116,17 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('index.html').withContent('Ipsum').withContentType('text/html')).commit()
 
     store.commit('search/query', 'Lorem')
-    store.commit('aggregation/setGlobalSearch', true)
+    store.commit('search/setGlobalSearch', true)
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
 
-    store.commit('aggregation/setGlobalSearch', false)
+    store.commit('search/setGlobalSearch', false)
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
 
-    store.commit('aggregation/setGlobalSearch', true)
+    store.commit('search/setGlobalSearch', true)
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
@@ -300,7 +298,7 @@ describe('FacetText.vue', () => {
   })
 
   it('should display an indexing date facet with 4 months', async () => {
-    wrapped = mount(FacetText, { localVue, i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, {name: 'indexing-date'}) } })
+    wrapped = mount(FacetText, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, {name: 'indexing-date'}) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-04-04T20:20:20.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-05-05T02:00:42.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-05-05T20:10:00.001Z')).commit()
@@ -327,7 +325,7 @@ describe('FacetText.vue', () => {
   })
 
   it('should querying on date on click on facet link, by a route redirect', async () => {
-    wrapped = mount(FacetText, { localVue, i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, {name: 'indexing-date'}) } })
+    wrapped = mount(FacetText, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, {name: 'indexing-date'}) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-04-04T20:20:20.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-05-05T02:00:42.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-05-05T20:10:00.001Z')).commit()

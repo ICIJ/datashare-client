@@ -31,13 +31,13 @@ describe('SearchBar.vue', function () {
 
   beforeAll(() => {
     // Remove all facets to avoid unecessary request
-    store.commit('aggregation/clear')
+    store.commit('search/clear')
     wrapped = mount(SearchBar, {localVue, i18n, router, store})
   })
 
   afterAll(() => {
     // And restore all facets!
-    store.commit('aggregation/reset')
+    store.commit('search/reset')
   })
 
   it('should display a search button', async () => {

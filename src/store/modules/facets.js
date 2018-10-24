@@ -21,6 +21,8 @@ class FacetText {
     this.key = key
     this.isSearchable = isSearchable
     this.itemLabel = labelFun
+    this.reverse = false
+    this.values = []
   }
 
   itemParam (item) {
@@ -47,24 +49,36 @@ class FacetText {
     return body.agg('terms', this.key, this.key, options)
   }
 
-  addFilter (body, param) {
-    if (param.reverse) {
-      if (this.isNamedEntityAggregation(body)) {
-        return this.addParentExcludeFilter(body, param)
+  addFilter (body) {
+    if (this.hasValues()) {
+      if (this.reverse) {
+        if (this.isNamedEntityAggregation(body)) {
+          return this.addParentExcludeFilter(body, {name: this.name, values: this.values, reverse: this.reverse})
+        } else {
+          return this.addChildExcludeFilter(body, {name: this.name, values: this.values, reverse: this.reverse})
+        }
       } else {
-        return this.addChildExcludeFilter(body, param)
-      }
-    } else {
-      if (this.isNamedEntityAggregation(body)) {
-        return this.addParentIncludeFilter(body, param)
-      } else {
-        return this.addChildIncludeFilter(body, param)
+        if (this.isNamedEntityAggregation(body)) {
+          return this.addParentIncludeFilter(body, {name: this.name, values: this.values, reverse: this.reverse})
+        } else {
+          return this.addChildIncludeFilter(body, {name: this.name, values: this.values, reverse: this.reverse})
+        }
       }
     }
   }
 
+  hasValues () {
+    return this.values.length > 0
+  }
+
   isNamedEntityAggregation (body) {
     return includes(JSON.stringify(body.build()), '"must":{"term":{"type":"NamedEntity"}}')
+  }
+
+  applyTo (body) {
+    if (this.hasValues()) {
+      this.addFilter(body, {name: this.name, values: this.values, reverse: this.reverse})
+    }
   }
 }
 

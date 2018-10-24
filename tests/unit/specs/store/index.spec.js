@@ -9,10 +9,6 @@ describe('store', () => {
     expect(store.strict).toEqual(true)
   })
 
-  it('should define an aggregation module', () => {
-    expect(store.state.aggregation).toBeDefined()
-  })
-
   it('should define a search module', () => {
     expect(store.state.search).toBeDefined()
   })

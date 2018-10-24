@@ -1,10 +1,8 @@
 import bodybuilder from 'bodybuilder'
-import castArray from 'lodash/castArray'
 import each from 'lodash/each'
 import es from 'elasticsearch-browser'
 import { EventBus } from '@/utils/event-bus'
 import replace from 'lodash/replace'
-import find from 'lodash/find'
 
 // Custom API for datashare
 // @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/extending_core_components.html
@@ -93,11 +91,11 @@ export function searchPlugin (Client, config, components) {
     body.sort(sortField, sortOrder)
   }
 
-  // TODO remove duplicate facets and duplicate function addFacetsToBody (esClient and aggregation)
-  Client.prototype.searchDocs = function (query, facets = [], aggregationFacets = [], from = 0, size = 25, sort = 'relevance') {
+  // TODO remove duplicate function addFacetsToBody (esClient and search)
+  Client.prototype.searchDocs = function (query, facets = [], from = 0, size = 25, sort = 'relevance') {
     // We're going to build the body step by step
     const body = bodybuilder().from(from).size(size)
-    this._addFacetsToBody(facets, aggregationFacets, body)
+    this._addFacetsToBody(facets, body)
     this.addQueryToBody(query, body)
     this.addSortToBody(sort, body)
     // Select only the Documents and not the NamedEntities
@@ -129,10 +127,9 @@ export function searchPlugin (Client, config, components) {
     })
   }
 
-  Client.prototype._addFacetsToBody = function (facetOrFacets, aggregationFacets, body) {
-    each(castArray(facetOrFacets), facetValue => {
-      const facet = find(aggregationFacets, {name: facetValue.name})
-      facet.addFilter(body, facetValue)
+  Client.prototype._addFacetsToBody = function (facets, body) {
+    each(facets, facet => {
+      facet.applyTo(body)
     })
   }
 }

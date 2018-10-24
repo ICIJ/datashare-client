@@ -29,12 +29,12 @@ describe('SearchSettings.vue', function () {
 
   beforeAll(() => {
     // Remove all facets to avoid unecessary request
-    store.commit('aggregation/clear')
+    store.commit('search/clear')
   })
 
   afterAll(() => {
     // And restore all facets!
-    store.commit('aggregation/reset')
+    store.commit('search/reset')
   })
 
   it('should display the dropdown to choose the number of results per page', async () => {
@@ -77,14 +77,14 @@ describe('SearchSettings.vue', function () {
 
   it('should have an input unchecked for globalSearch', async () => {
     wrapped = mount(SearchSettings, {localVue, i18n, router, store})
-    wrapped.vm.$store.commit('aggregation/reset')
+    wrapped.vm.$store.commit('search/reset')
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.$el.querySelector('#input-global').checked).toEqual(true)
   })
 
   it('should have an input checked for globalSearch', async () => {
     wrapped = mount(SearchSettings, {localVue, i18n, router, store})
-    wrapped.vm.$store.commit('aggregation/setGlobalSearch', true)
+    wrapped.vm.$store.commit('search/setGlobalSearch', true)
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.$el.querySelector('#input-global').checked).toEqual(true)
   })

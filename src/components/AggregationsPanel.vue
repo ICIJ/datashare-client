@@ -47,14 +47,14 @@ export default {
   },
   data () {
     return {
-      relativeSearch: !this.$store.state.aggregation.globalSearch,
-      sortedFacets: this.$store.state.aggregation.facets,
+      relativeSearch: !this.$store.state.search.globalSearch,
+      sortedFacets: this.$store.state.search.facets,
       selectedFacet: null,
       facetQuery: null
     }
   },
   computed: {
-    ...mapState('aggregation', {
+    ...mapState('search', {
       facets: state => state.facets
     })
   },

@@ -138,7 +138,7 @@ export default {
         let prefix = this.facet.prefix ? this.config.dataDir + '/' : ''
         let options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : {}
         return this.queue.add(() => {
-          return this.$store.dispatch('aggregation/query', {name: this.facet.name, options: options}).then(async r => {
+          return this.$store.dispatch('search/queryFacet', {name: this.facet.name, options: options}).then(async r => {
             this.results = this.addInvertedFacets(r)
             this.isReady = this.queue.pending === 1
           })
@@ -157,7 +157,7 @@ export default {
       this.collapseItems = !this.collapseItems
     },
     watchedForUpdate (state) {
-      if (!state.aggregation.globalSearch) {
+      if (!state.search.globalSearch) {
         // This will allow to watch change on the search only when
         // the aggregation is not global (ie. relative to the search).
         return pick(state.search, ['query', 'facets'])

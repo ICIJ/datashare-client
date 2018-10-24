@@ -8,15 +8,30 @@ import find from 'lodash/find'
 import floor from 'lodash/floor'
 import max from 'lodash/max'
 import reduce from 'lodash/reduce'
-import remove from 'lodash/remove'
+import bodybuilder from 'bodybuilder'
 import uniq from 'lodash/uniq'
+import {FacetDate, FacetNamedEntity, FacetPath, FacetText, levels} from './facets'
+import types from '@/utils/types.json'
+import get from 'lodash/get'
 
 export function initialState () {
   return {
     query: '*',
     from: 0,
     size: 25,
-    facets: [],
+    globalSearch: false,
+    facets: [
+      new FacetText('content-type', 'contentType', true, item => get(types, [item.key, 'label'], item.key)),
+      new FacetText('language', 'language', true, item => {
+        if (!item.key) return ''
+        item = item.key.toString()
+        return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
+      }),
+      new FacetNamedEntity('named-entity', 'byMentions', true),
+      new FacetPath('path', 'byDirname', false),
+      new FacetDate('indexing-date', 'extractionDate', false, item => item.key_as_string),
+      new FacetText('extraction-level', 'extractionLevel', false, item => get(levels, item.key, item.key))
+    ],
     sort: 'relevance',
     response: Response.none(),
     isReady: true
@@ -38,6 +53,21 @@ export const getters = {
   getSort (state) {
     return state.sort
   },
+  getFacet (state) {
+    return predicate => find(state.facets, predicate)
+  },
+  buildFacetBody (state, getters) {
+    return params => {
+      const facet = getters.getFacet({name: params.name})
+      const body = facet.body(bodybuilder(), params.options)
+
+      if (!state.globalSearch) {
+        addFacetsToBody(state.facets, getters, body)
+        esClient.addQueryToBody(state.query, body)
+      }
+      return body.size(0).build()
+    }
+  },
   hasFacetValue (state) {
     return item => !!find(state.facets, facet => {
       return facet.name === item.name && facet.values.indexOf(item.value) > -1
@@ -55,10 +85,13 @@ export const getters = {
       })
     }
   },
+  activeFacets (state) {
+    return filter(state.facets, f => f.hasValues())
+  },
   findFacet (state) {
     return name => find(state.facets, { name })
   },
-  toRouteQuery (state, getters, rootState) {
+  toRouteQuery (state) {
     return {
       q: state.query,
       size: state.size,
@@ -68,10 +101,10 @@ export const getters = {
         // as key for tge URL params. This was we track configured facet instead
         // of arbitrary values provided by the user. This allow to retreive special
         // behaviors depending on the facet definition.
-        const facet = find(rootState.aggregation.facets, { name: facetValue.name })
+        const facet = find(state.facets, { name: facetValue.name })
         // We don't add facetValue that match with any existing facets
         // defined in the `aggregation` store.
-        if (facet) {
+        if (facet && facet.hasValues()) {
           const key = facetValue.reverse ? `f[-${facet.name}]` : `f[${facet.name}]`
           memo[key] = facetValue.values
         }
@@ -88,6 +121,9 @@ export const mutations = {
     Object.keys(s).forEach(key => {
       state[key] = s[key]
     })
+  },
+  setGlobalSearch (state, globalSearch) {
+    state.globalSearch = globalSearch
   },
   resetFacets (state) {
     state.facets.slice(0, state.facets.length)
@@ -115,6 +151,15 @@ export const mutations = {
     state.isReady = true
     state.response = new Response(raw)
   },
+  setFacets (state, facets) {
+    state.facets = facets
+  },
+  addFacet (state, facet) {
+    if (find(state.facets, {name: facet.name})) {
+      throw new Error('Facet already exists')
+    }
+    return state.facets.push(facet)
+  },
   addFacetValue (state, facet) {
     // We cast the new facet values to allow several new values at the same time
     const values = castArray(facet.value)
@@ -123,8 +168,11 @@ export const mutations = {
     if (existingFacet) {
       existingFacet.values = uniq(existingFacet.values.concat(values))
     } else {
-      state.facets.push({ name: facet.name, values, reverse: false })
+      throw new Error(`cannot find facet named ${facet.name}`)
     }
+  },
+  clear (state) {
+    return state.facets.splice(0, state.facets.length)
   },
   removeFacetValue (state, facet) {
     // Look for facet for this name
@@ -132,11 +180,6 @@ export const mutations = {
     if (existingFacet) {
       // Filter the values for this name to remove the given value
       existingFacet.values = filter(existingFacet.values, value => value !== facet.value)
-      // If the facet is now empty (no values)...
-      if (existingFacet.values.length === 0) {
-        // ... we can remove it
-        remove(state.facets, { name: existingFacet.name })
-      }
     }
   },
   excludeFacet (state, name) {
@@ -164,16 +207,24 @@ export const actions = {
     commit('resetFacets')
     return dispatch('query')
   },
-  query ({ state, commit, rootState }, queryOrParams = { query: state.query, from: state.from, size: state.size, sort: state.sort }) {
+  query ({ state, commit }, queryOrParams = { query: state.query, from: state.from, size: state.size, sort: state.sort }) {
     commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String ? queryOrParams : queryOrParams.query)
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.from : queryOrParams.from)
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
     commit('sort', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.sort : queryOrParams.sort)
     commit('isReady', false)
-    return esClient.searchDocs(state.query, state.facets, rootState.aggregation.facets, state.from, state.size, state.sort).then(raw => {
+    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => {
       commit('buildResponse', raw)
       return raw
     })
+  },
+  queryFacet ({ getters }, params) {
+    return esClient.search({
+      index: process.env.VUE_APP_ES_INDEX,
+      type: 'doc',
+      size: 0,
+      body: getters.buildFacetBody(params)
+    }).then(raw => new Response(raw))
   },
   firstPage ({ commit, dispatch }) {
     commit('from', 0)
@@ -205,6 +256,7 @@ export const actions = {
     commit('toggleFacet', name)
     return dispatch('query')
   },
+
   updateFromRouteQuery ({ commit, rootState }, query) {
     // Reset all existing options
     commit('reset')
@@ -229,6 +281,12 @@ export const actions = {
       })
     })
   }
+}
+
+function addFacetsToBody (facets, getters, body) {
+  each(facets, facet => {
+    return facet.addFilter(body)
+  })
 }
 
 export default {

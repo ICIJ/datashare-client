@@ -43,7 +43,7 @@ export const mixin = {
       return get(this, '$refs.facet', {})
     },
     isGlobal () {
-      return this.$store.state.aggregation.globalSearch
+      return this.$store.state.search.globalSearch
     },
     facetFilter () {
       return this.$store.getters['search/findFacet'](this.facet.name)

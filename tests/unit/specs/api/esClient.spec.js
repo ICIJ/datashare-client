@@ -24,9 +24,10 @@ describe('esClient', () => {
   it('should build an ES query with facets', async () => {
     let from = 0
     let size = 25
-    let facets = [{ name: 'content-type', values: ['value_01', 'value_02', 'value_03'] }]
+    let facets = [new FacetText('content-type', 'contentType', true, null)]
+    facets[0].values = ['value_01', 'value_02', 'value_03']
     let body = bodybuilder().from(from).size(size)
-    await esClient._addFacetsToBody(facets, [new FacetText('content-type', 'contentType', true, null)], body)
+    await esClient._addFacetsToBody(facets, body)
 
     expect(body.build()).toEqual({
       from: from,

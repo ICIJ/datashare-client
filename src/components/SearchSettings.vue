@@ -79,7 +79,7 @@ export default {
   components: { bPopover },
   data () {
     return {
-      relativeSearch: !this.$store.state.aggregation.globalSearch,
+      relativeSearch: !this.$store.state.search.globalSearch,
       sizes: [10, 25, 50, 100],
       selectedSize: this.$store.state.search.size,
       sorts: ['relevance', 'dateNewest', 'dateOldest', 'sizeLargest', 'sizeSmallest'],
@@ -96,7 +96,7 @@ export default {
   },
   watch: {
     relativeSearch (relativeSearch) {
-      this.$store.commit('aggregation/setGlobalSearch', !relativeSearch)
+      this.$store.commit('search/setGlobalSearch', !relativeSearch)
       this.$root.$emit('bv::hide::popover')
     }
   },
@@ -124,7 +124,7 @@ export default {
   },
   computed: {
     hasFacets () {
-      return this.$store.state.search.facets.length > 0
+      return this.$store.getters['search/activeFacets'].length > 0
     }
   }
 }

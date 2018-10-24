@@ -36,11 +36,11 @@ describe('FacetPath.vue', () => {
       router,
       store,
       propsData: {
-        facet: find(store.state.aggregation.facets, { name: 'path' })
+        facet: find(store.state.search.facets, { name: 'path' })
       }
     })
 
-    wrapped.vm.$store.commit('aggregation/reset')
+    wrapped.vm.$store.commit('search/reset')
     await wrapped.vm.root.aggregate()
   })
 

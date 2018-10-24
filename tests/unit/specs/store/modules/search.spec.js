@@ -1,5 +1,4 @@
 import store from '@/store'
-import { initialState } from '@/store/modules/search'
 import Response from '@/api/Response'
 import Document from '@/api/Document'
 import NamedEntity from '@/api/NamedEntity'
@@ -17,11 +16,6 @@ describe('Search store', function () {
 
   it('should define a store module', () => {
     expect(store.state.search).not.toEqual(undefined)
-  })
-
-  it('should reset the store state', async () => {
-    await store.commit('search/reset')
-    expect(store.state.search).toEqual(initialState())
   })
 
   it('should change the state after `query` mutation', () => {
@@ -61,14 +55,14 @@ describe('Search store', function () {
     expect(store.state.search.response.hits[2]).toEqual(undefined)
   })
 
-  it('should get document from ElsaticSearch', async () => {
+  it('should get document from ElasticSearch', async () => {
     await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
     await store.dispatch('search/query', 'bar')
     expect(store.state.search.response.hits.length).toEqual(1)
     expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
   })
 
-  it('should found 2 documents filtered by one content-type', async () => {
+  it('should find 2 documents filtered by one content-type', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('foo.txt').withContentType('txt').withContent('foo')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
@@ -80,7 +74,7 @@ describe('Search store', function () {
     expect(store.state.search.response.hits.length).toEqual(2)
   })
 
-  it('should found 3 documents filtered by two content-type', async () => {
+  it('should find 3 documents filtered by two content-type', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()

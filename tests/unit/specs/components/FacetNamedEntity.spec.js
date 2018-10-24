@@ -36,13 +36,12 @@ describe('FacetNamedEntity.vue', () => {
   var es = esConnectionHelper.es
   var wrapped = null
   beforeEach(async () => {
-    wrapped = mount(FacetNamedEntity, { localVue, i18n, router, store, propsData: { facet: find(store.state.aggregation.facets, {name: 'named-entity-person'}) } })
+    wrapped = mount(FacetNamedEntity, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, {name: 'named-entity-person'}) } })
     await wrapped.vm.root.aggregate()
   })
 
   afterEach(async () => {
     store.commit('search/reset')
-    store.commit('aggregation/reset')
   })
 
   it('should display empty list', async () => {
@@ -211,7 +210,7 @@ describe('FacetNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('index_01.pdf').withContent('PDF content').withContentType('application/pdf').withNer('pdf')).commit()
     await letData(es).have(new IndexedDocument('index_02.csv').withContent('CSV content').withContentType('text/csv').withNer('csv')).commit()
 
-    let contentTypeFacet = find(store.state.aggregation.facets, {name: 'content-type'})
+    let contentTypeFacet = find(store.state.search.facets, {name: 'content-type'})
     contentTypeFacet.value = ['application/pdf']
     wrapped.vm.$store.commit('search/addFacetValue', contentTypeFacet)
 
@@ -225,7 +224,7 @@ describe('FacetNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('/a/index_01.pdf').withContent('PDF content').withNer('pdf')).commit()
     await letData(es).have(new IndexedDocument('/b/index_02.csv').withContent('CSV content').withNer('csv')).commit()
 
-    let pathFacet = find(store.state.aggregation.facets, {name: 'path'})
+    let pathFacet = find(store.state.search.facets, {name: 'path'})
     pathFacet.value = ['/a']
     wrapped.vm.$store.commit('search/addFacetValue', pathFacet)
 
@@ -239,7 +238,7 @@ describe('FacetNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('index_01.pdf').withContent('PDF content').withNer('pdf').withIndexingDate('2018-10-19T10:11:12.001Z')).commit()
     await letData(es).have(new IndexedDocument('index_02.csv').withContent('CSV content').withNer('csv').withIndexingDate('2018-09-19T10:11:12.001Z')).commit()
 
-    let dateFacet = find(store.state.aggregation.facets, {name: 'indexing-date'})
+    let dateFacet = find(store.state.search.facets, {name: 'indexing-date'})
     dateFacet.value = [new Date('2018-09-01T00:00:00.000Z').getTime().toString()]
     wrapped.vm.$store.commit('search/addFacetValue', dateFacet)
 
@@ -253,7 +252,7 @@ describe('FacetNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('index_01.pdf').withContent('PDF content').withContentType('application/pdf').withNer('pdf')).commit()
     await letData(es).have(new IndexedDocument('index_02.csv').withContent('CSV content').withContentType('text/csv').withNer('csv')).commit()
 
-    let contentTypeFacet = find(store.state.aggregation.facets, {name: 'content-type'})
+    let contentTypeFacet = find(store.state.search.facets, {name: 'content-type'})
     contentTypeFacet.value = ['application/pdf']
     wrapped.vm.$store.commit('search/addFacetValue', contentTypeFacet)
     wrapped.vm.$store.commit('search/toggleFacet', 'content-type')

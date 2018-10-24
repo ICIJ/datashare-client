@@ -34,12 +34,12 @@ describe('Search.vue', function () {
 
   beforeAll(() => {
     // Remove all facets to avoid unecessary request
-    store.commit('aggregation/clear')
+    store.commit('search/clear')
   })
 
   afterAll(() => {
     // And restore all facets!
-    store.commit('aggregation/reset')
+    store.commit('search/reset')
   })
 
   beforeEach(async () => {
@@ -107,7 +107,7 @@ describe('Search.vue', function () {
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).toEqual(2)
   })
 
-  it('should return 3 documents', async () => {
+  it.only('should return 3 documents', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
