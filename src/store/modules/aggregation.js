@@ -257,6 +257,15 @@ export const actions = {
       size: 0,
       body: getters.buildFacetBody(facetPredicate)
     }).then(raw => new Response(raw))
+  },
+  searchFacet ({ commit, dispatch, getters, rootState }, params) {
+    let facet = getters.getFacet({name: params.name})
+    let body = facet.body(bodybuilder(), params.options)
+    if (!rootState.aggregation.globalSearch) {
+      esClient.addFacetsToBody(rootState.search.facets, body)
+      esClient.addQueryToBody(rootState.search.query, body)
+    }
+    return esClient.search({index: process.env.VUE_APP_ES_INDEX, body: body.build()})
   }
 }
 

@@ -66,13 +66,10 @@ import get from 'lodash/get'
 import pick from 'lodash/pick'
 import throttle from 'lodash/throttle'
 
-import bodybuilder from 'bodybuilder'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { removeDiacritics } from '@/utils/strings.js'
 import facets from '@/mixins/facets'
-import esClient from '@/api/esClient'
 import PQueue from 'p-queue'
-import Vue from 'vue'
 
 const initialNumberOfFilesDisplayed = 5
 
@@ -123,16 +120,6 @@ export default {
     noMatches () {
       return this.isReady && this.items.length === 0
     },
-    body () {
-      let prefix = this.facet.prefix ? Vue.prototype.config.dataDir + '/' : ''
-      let options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : {}
-      let body = this.facet.body(bodybuilder(), options)
-      if (!this.isGlobal) {
-        esClient.addFacetsToBody(this.$store.state.search.facets, body)
-        esClient.addQueryToBody(this.$store.state.search.query, body)
-      }
-      return body.build()
-    },
     searchWithThrottle () {
       return throttle(this.aggregate, 400)
     }
@@ -148,8 +135,10 @@ export default {
     },
     aggregate () {
       if (this.facet) {
+        let prefix = this.facet.prefix ? this.config.dataDir + '/' : ''
+        let options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : {}
         return this.queue.add(() => {
-          return esClient.search({ index: process.env.VUE_APP_ES_INDEX, body: this.body }).then(async r => {
+          return this.$store.dispatch('aggregation/searchFacet', {name: this.facet.name, options: options}).then(async r => {
             this.results = this.addInvertedFacets(r)
             this.isReady = this.queue.pending === 1
           })
