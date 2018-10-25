@@ -6,11 +6,7 @@ import replace from 'lodash/replace'
 
 // Custom API for datashare
 // @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/extending_core_components.html
-export function docPlugin (Client, config, components) {
-  // This plugin defines method to handle common EsDoc request.
-  // Currently we supporte only to type of data: Document & NamedEntity.
-  // Both have a dedicated class, children of EsDoc
-
+export function datasharePlugin (Client, config, components) {
   Client.prototype.getEsDoc = function (id, routing = null) {
     return this.get({
       index: process.env.VUE_APP_ES_INDEX,
@@ -40,9 +36,7 @@ export function docPlugin (Client, config, components) {
       return null
     })
   }
-}
 
-export function searchPlugin (Client, config, components) {
   Client.prototype.addQueryToBody = function (query, body) {
     // Create a top-level "MUST query" which contain a "SHOULD query" including
     // a query_string and NamedEntity. If we don't add a `match_all` query,
@@ -91,28 +85,8 @@ export function searchPlugin (Client, config, components) {
     body.sort(sortField, sortOrder)
   }
 
-  // TODO remove duplicate function addFacetsToBody (esClient and search)
   Client.prototype.searchDocs = function (query, facets = [], from = 0, size = 25, sort = 'relevance') {
-    // We're going to build the body step by step
-    const body = bodybuilder().from(from).size(size)
-    this._addFacetsToBody(facets, body)
-    this.addQueryToBody(query, body)
-    this.addSortToBody(sort, body)
-    // Select only the Documents and not the NamedEntities
-    body.query('match', 'type', 'Document')
-    // Add an option to exclude the content
-    body.rawOption('_source', { includes: ['*'], excludes: ['content'] })
-    // Add an option to highlight fragments in the results
-    body.rawOption('highlight', {
-      fields: {
-        content: {
-          fragment_size: 150,
-          number_of_fragments: 3,
-          pre_tags: ['<mark>'],
-          post_tags: ['</mark>']
-        }
-      }
-    })
+    const body = this._buildBody(from, size, facets, query, sort)
 
     // Return a promise that build the body composed above
     return this.search({
@@ -127,6 +101,29 @@ export function searchPlugin (Client, config, components) {
     })
   }
 
+  Client.prototype._buildBody = function (from, size, facets, query, sort) {
+    const body = bodybuilder().from(from).size(size)
+    this._addFacetsToBody(facets, body)
+    this.addQueryToBody(query, body)
+    this.addSortToBody(sort, body)
+    // Select only the Documents and not the NamedEntities
+    body.query('match', 'type', 'Document')
+    // Add an option to exclude the content
+    body.rawOption('_source', {includes: ['*'], excludes: ['content']})
+    // Add an option to highlight fragments in the results
+    body.rawOption('highlight', {
+      fields: {
+        content: {
+          fragment_size: 150,
+          number_of_fragments: 3,
+          pre_tags: ['<mark>'],
+          post_tags: ['</mark>']
+        }
+      }
+    })
+    return body
+  }
+
   Client.prototype._addFacetsToBody = function (facets, body) {
     each(facets, facet => {
       facet.applyTo(body)
@@ -136,7 +133,7 @@ export function searchPlugin (Client, config, components) {
 
 const esClient = new es.Client({
   host: process.env.VUE_APP_ES_HOST || window.location.hostname + ':' + window.location.port + '/api/search',
-  plugins: [ docPlugin, searchPlugin ]
+  plugins: [ datasharePlugin ]
 })
 
 export default esClient
