@@ -64,7 +64,7 @@ export const getters = {
       const body = facet.body(bodybuilder(), params.options)
 
       if (!state.globalSearch) {
-        addFacetsToBody(state.facets, getters, body)
+        each(state.facets, facet => facet.addFilter(body))
         esClient.addQueryToBody(state.query, body)
       }
       return body.size(0).build()
@@ -283,12 +283,6 @@ export const actions = {
       })
     })
   }
-}
-
-function addFacetsToBody (facets, getters, body) {
-  each(facets, facet => {
-    return facet.addFilter(body)
-  })
 }
 
 export default {
