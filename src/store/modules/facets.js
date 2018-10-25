@@ -23,6 +23,7 @@ class FacetText {
     this.itemLabel = labelFun
     this.reverse = false
     this.values = []
+    this.component = 'FacetText'
   }
 
   itemParam (item) {
@@ -81,6 +82,11 @@ class FacetText {
 }
 
 class FacetType extends FacetText {
+  constructor (name, key, isSearchable, labelFun) {
+    super(name, key, isSearchable, labelFun)
+    this.component = 'FacetType'
+  }
+
   addChildIncludeFilter (body, param, func) {
     return this.queryBuilder(body, param, 'orQuery')
   }
@@ -91,12 +97,22 @@ class FacetType extends FacetText {
 }
 
 class FacetDocument extends FacetType {
+  constructor (name, key, isSearchable, labelFun) {
+    super(name, key, isSearchable, labelFun)
+    this.component = 'FacetDocument'
+  }
+
   addParentIncludeFilter (body, param) {
     return body.query('has_parent', { 'parent_type': 'Document' }, q => this.addChildIncludeFilter(q, param))
   }
 }
 
 class FacetDate extends FacetDocument {
+  constructor (name, key, isSearchable, labelFun) {
+    super(name, key, isSearchable, labelFun)
+    this.component = 'FacetDate'
+  }
+
   queryBuilder (body, param, func) {
     return body.query('bool', sub => {
       param.values.forEach(date => {
@@ -121,6 +137,7 @@ class FacetPath extends FacetDocument {
   constructor (name, key, isSearchable) {
     super(name, key, isSearchable, null)
     this.prefix = true
+    this.component = 'FacetPath'
   }
 
   queryBuilder (body, param, func) {
@@ -145,6 +162,7 @@ class FacetNamedEntity extends FacetType {
   constructor (name, key, isSearchable, category = 'PERSON') {
     super(name, key, isSearchable, null)
     this.category = category
+    this.component = 'FacetNamedEntity'
   }
 
   queryBuilder (body, param, func) {
