@@ -42,18 +42,6 @@ export function initialState () {
 export const state = initialState
 
 export const getters = {
-  getQuery (state) {
-    return state.query
-  },
-  getFrom (state) {
-    return state.from
-  },
-  getSize (state) {
-    return state.size
-  },
-  getSort (state) {
-    return state.sort
-  },
   getFacet (state) {
     return predicate => find(state.facets, predicate)
   },
