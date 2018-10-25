@@ -8,7 +8,6 @@ import find from 'lodash/find'
 import floor from 'lodash/floor'
 import max from 'lodash/max'
 import reduce from 'lodash/reduce'
-import bodybuilder from 'bodybuilder'
 import uniq from 'lodash/uniq'
 import {FacetDate, FacetNamedEntity, FacetPath, FacetText, levels} from './facets'
 import types from '@/utils/types.json'
@@ -57,18 +56,6 @@ export const getters = {
   },
   getFacet (state) {
     return predicate => find(state.facets, predicate)
-  },
-  buildFacetBody (state, getters) {
-    return params => {
-      const facet = getters.getFacet({name: params.name})
-      const body = facet.body(bodybuilder(), params.options)
-
-      if (!state.globalSearch) {
-        each(state.facets, facet => facet.addFilter(body))
-        esClient.addQueryToBody(state.query, body)
-      }
-      return body.size(0).build()
-    }
   },
   hasFacetValue (state) {
     return item => !!find(state.facets, facet => {
@@ -220,13 +207,14 @@ export const actions = {
       return raw
     })
   },
-  queryFacet ({ getters }, params) {
-    return esClient.search({
-      index: process.env.VUE_APP_ES_INDEX,
-      type: 'doc',
-      size: 0,
-      body: getters.buildFacetBody(params)
-    }).then(raw => new Response(raw))
+  queryFacet ({ state, getters }, params) {
+    return esClient.searchFacet(
+      getters.getFacet({name: params.name}),
+      state.query,
+      state.facets,
+      state.globalSearch,
+      params.options
+    ).then(raw => new Response(raw))
   },
   firstPage ({ commit, dispatch }) {
     commit('from', 0)

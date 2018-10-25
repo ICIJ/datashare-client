@@ -1,4 +1,5 @@
 import bodybuilder from 'bodybuilder'
+
 import each from 'lodash/each'
 import es from 'elasticsearch-browser'
 import { EventBus } from '@/utils/event-bus'
@@ -93,6 +94,25 @@ export function datasharePlugin (Client, config, components) {
       index: process.env.VUE_APP_ES_INDEX,
       type: 'doc',
       body: body.build()
+    }).then(function (data) {
+      return data
+    }, error => {
+      EventBus.$emit('http::error', error)
+      throw error
+    })
+  }
+
+  Client.prototype.searchFacet = function (facet, query, facets = [], isGlobalSearch = false, options = {}) {
+    const body = facet.body(bodybuilder(), options)
+
+    if (!isGlobalSearch) {
+      each(facets, facet => facet.addFilter(body))
+      this.addQueryToBody(query, body)
+    }
+    return esClient.search({
+      index: process.env.VUE_APP_ES_INDEX,
+      type: 'doc',
+      body: body.size(0).build()
     }).then(function (data) {
       return data
     }, error => {
