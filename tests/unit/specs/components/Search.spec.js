@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
@@ -44,6 +45,7 @@ describe('Search.vue', function () {
 
   beforeEach(async () => {
     Search.created = noop
+    Vue.prototype.config = { dataDir: '/home/user/data' }
     wrapped = mount(Search, {localVue, i18n, router, store})
     wrapped.vm.$store.commit('search/reset')
     await wrapped.vm.$nextTick()
@@ -107,7 +109,7 @@ describe('Search.vue', function () {
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).toEqual(2)
   })
 
-  it.only('should return 3 documents', async () => {
+  it('should return 3 documents', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapped.vm.search({ query: 'document', from: 0, size: 3 })
