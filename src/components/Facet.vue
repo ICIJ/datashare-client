@@ -136,7 +136,7 @@ export default {
     aggregate () {
       if (this.facet) {
         let prefix = this.facet.prefix ? this.config.dataDir + '/' : ''
-        let options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : {}
+        let options = this.facet.isSearchable ? {size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*`} : {}
         return this.queue.add(() => {
           return this.$store.dispatch('search/queryFacet', {name: this.facet.name, options: options}).then(async r => {
             this.results = this.addInvertedFacets(r)
