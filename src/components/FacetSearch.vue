@@ -9,7 +9,7 @@
       </label>
     </form>
     <div v-show="items.length" class="mt-4 facet-search__items card" v-infinite-scroll="next" infinite-scroll-disabled="reachTheEnd">
-      <component class="border-0" :is="facet.constructor.name" :async-items="items" hide-search hide-header hide-show-more v-bind="{ facet }"></component>
+      <component class="border-0" :is="facet.component" :async-items="items" hide-search hide-header hide-show-more v-bind="{ facet }"></component>
     </div>
     <div v-show="!items.length" class="text-muted text-center p-2 mt-4">
       No results
