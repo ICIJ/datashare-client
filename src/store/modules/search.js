@@ -81,7 +81,7 @@ export const getters = {
         const facet = find(state.facets, { name: facetValue.name })
         // We don't add facetValue that match with any existing facets
         // defined in the `aggregation` store.
-        if (facet && facet.hasValues()) {
+        if (facet && facetValue.values.length > 0) {
           const key = facetValue.reverse ? `f[-${facet.name}]` : `f[${facet.name}]`
           memo[key] = facetValue.values
         }

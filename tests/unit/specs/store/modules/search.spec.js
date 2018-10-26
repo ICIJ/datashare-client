@@ -287,4 +287,16 @@ describe('Search store', function () {
     expect(store.state.search.from).toEqual(3)
     expect(store.state.search.response.hits.length).toEqual(2)
   })
+
+  it('should return the default query parameters', () => {
+    expect(store.getters['search/toRouteQuery']).toEqual({ q: '*', size: 25, sort: 'relevance' })
+  })
+
+  it('should return an advanced and faceted query parameters', () => {
+    store.commit('search/query', 'datashare')
+    store.commit('search/size', 12)
+    store.commit('search/sort', 'randomOrder')
+    store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
+    expect(store.getters['search/toRouteQuery']).toEqual({ q: 'datashare', size: 12, sort: 'randomOrder', 'f[content-type]': ['TXT'] })
+  })
 })
