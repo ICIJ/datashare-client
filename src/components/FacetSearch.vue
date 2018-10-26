@@ -18,13 +18,10 @@
 </template>
 
 <script>
-import bodybuilder from 'bodybuilder'
 import get from 'lodash/get'
 import throttle from 'lodash/throttle'
 import infiniteScroll from 'vue-infinite-scroll'
 import PQueue from 'p-queue'
-
-import esClient from '@/api/esClient'
 
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
@@ -81,7 +78,8 @@ export default {
       // We queue the promises to ensure they are executed in the right order
       return this.queue.add(() => {
         // Load the facet using a body build using the facet configuration
-        return esClient.search({ index: process.env.VUE_APP_ES_INDEX, body: this.body }).then(data => {
+        let options = {size: this.size, include: `.*(${this.queryTokens.join('|')}).*`}
+        return this.$store.dispatch('search/queryFacet', {name: this.facet.name, options: options}).then(data => {
           // Extract the slice we need for this page (if any)
           const all = get(data, this.resultPath, [])
           const slice = all.slice(this.items.length, this.items.length + this.pageSize)
@@ -105,12 +103,6 @@ export default {
     }
   },
   computed: {
-    body () {
-      return this.facet.body(bodybuilder().size(0), {
-        size: this.size,
-        include: `.*(${this.queryTokens.join('|')}).*`
-      }).build()
-    },
     searchWithThrottle () {
       return throttle(this.search, 400)
     }
