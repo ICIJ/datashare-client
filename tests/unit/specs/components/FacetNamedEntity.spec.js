@@ -263,4 +263,19 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
     expect(wrapped.vm.$el.querySelector('.facet__items__item__body__key').textContent).toContain('csv')
   })
+
+  it('should display the named entities containing the query string, and those linked to documents containing the query string', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.text').withContent('Document 01 with tax').withNer('NER')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.text').withContent('Document 02').withNer('tax')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.text').withContent('Document 03 without anything').withNer('useless')).commit()
+
+    store.commit('search/query', 'tax')
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item__body__key')[0].textContent).toContain('NER')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item__body__key')[1].textContent).toContain('tax')
+  })
 })

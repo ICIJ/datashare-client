@@ -50,11 +50,11 @@ export function datasharePlugin (Client, config, components) {
         // Add the query string to the body
         .orQuery('query_string', { query, default_field: '*' })
         // Add match for namedentity containing the query string
-        .orQuery('has_child', 'type', 'NamedEntity', {
+        .orQuery('has_parent', 'parent_type', 'Document', {
           'inner_hits': {
             'size': 30
           }
-        }, sub => sub.query('match', 'mention', query))
+        }, sub => sub.query('match', 'content', query))
       )
   }
 

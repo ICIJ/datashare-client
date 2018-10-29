@@ -65,14 +65,14 @@ describe('esClient', () => {
                   query: query,
                   default_field: query
                 }}, {
-                has_child: {
-                  type: 'NamedEntity',
+                has_parent: {
+                  parent_type: 'Document',
                   inner_hits: {
                     size: 30
                   },
                   query: {
                     match: {
-                      mention: query
+                      content: query
                     }
                   }
                 }
@@ -104,14 +104,14 @@ describe('esClient', () => {
                   query: 'path:\\/home\\/datashare\\/path\\/*',
                   default_field: '*'
                 }}, {
-                has_child: {
-                  type: 'NamedEntity',
+                has_parent: {
+                  parent_type: 'Document',
                   inner_hits: {
                     size: 30
                   },
                   query: {
                     match: {
-                      mention: 'path:\\/home\\/datashare\\/path\\/*'
+                      content: 'path:\\/home\\/datashare\\/path\\/*'
                     }
                   }
                 }
