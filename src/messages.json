@@ -43,7 +43,7 @@
       "invert": "Invert",
       "content-type": "File Type",
       "language": "Language",
-      "named-entity-person": "Persons",
+      "named-entity-person": "People",
       "named-entity-location": "Locations",
       "named-entity-organization": "Organizations",
       "path": "Path",
