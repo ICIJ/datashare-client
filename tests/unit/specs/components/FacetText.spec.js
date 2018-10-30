@@ -269,27 +269,13 @@ describe('FacetText.vue', () => {
     expect(wrapped.vm.root.items.length).toEqual(2)
   })
 
-  it.skip('should filter facet values on facet label', async () => {
+  it('should filter facet values on facet label', async () => {
     await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('application/pdf')).commit()
     await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')).commit()
     await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('image/wmf')).commit()
     await letData(es).have(new IndexedDocument('index_04.txt').withContent('Lorem').withContentType('image/emf')).commit()
 
-    wrapped.vm.root.facetQuery = 'Windows'
-
-    await wrapped.vm.root.aggregate()
-    await wrapped.vm.root.$nextTick()
-
-    expect(wrapped.vm.root.items.length).toEqual(2)
-  })
-
-  it.skip('should filter facet values - Accentuated situation', async () => {
-    await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/marqué')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/remarques')).commit()
-    await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('text/autre')).commit()
-    await letData(es).have(new IndexedDocument('index_04.txt').withContent('Lorem').withContentType('text/autre')).commit()
-
-    wrapped.vm.root.facetQuery = 'marque'
+    wrapped.vm.root.facetQuery = 'image'
 
     await wrapped.vm.root.aggregate()
     await wrapped.vm.root.$nextTick()
