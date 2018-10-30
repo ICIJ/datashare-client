@@ -35,7 +35,7 @@ export const mixin = {
     return {
       isReady: false,
       offset: 0,
-      pageSize: 10
+      pageSize: 8
     }
   },
   computed: {
