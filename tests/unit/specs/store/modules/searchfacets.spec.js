@@ -8,7 +8,7 @@ import store from '@/store'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import Vue from 'vue'
-import {FacetText} from '@/store/facets'
+import {FacetText} from '@/store/facetsStore'
 
 describe('Search facets', function () {
   esConnectionHelper()

@@ -1,7 +1,7 @@
 import bodybuilder from 'bodybuilder'
 import { EventBus } from '@/utils/event-bus'
 import esClient from '@/api/esClient'
-import {FacetText} from '@/store/facets'
+import {FacetText} from '@/store/facetsStore'
 
 describe('esClient', () => {
   it('should return backend response to a POST request for searchDocs', async () => {

@@ -1,7 +1,7 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import types from '@/utils/types.json'
-import {FacetDate, FacetNamedEntity, FacetPath, FacetText, levels} from '@/store/facets'
+import {FacetDate, FacetNamedEntity, FacetPath, FacetText, levels} from '@/store/facetsStore'
 
 import castArray from 'lodash/castArray'
 import each from 'lodash/each'
