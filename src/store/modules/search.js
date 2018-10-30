@@ -1,17 +1,17 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
+import types from '@/utils/types.json'
+import {FacetDate, FacetNamedEntity, FacetPath, FacetText, levels} from '@/store/facets'
 
 import castArray from 'lodash/castArray'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
 import floor from 'lodash/floor'
+import get from 'lodash/get'
 import max from 'lodash/max'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
-import {FacetDate, FacetNamedEntity, FacetPath, FacetText, levels} from './facets'
-import types from '@/utils/types.json'
-import get from 'lodash/get'
 
 export function initialState () {
   return {
