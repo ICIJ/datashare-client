@@ -119,7 +119,7 @@ describe('FacetSearch.vue', () => {
 
     wrapped.vm.facetQuery = ''
     await wrapped.vm.search()
-    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(10)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(8)
 
     wrapped.vm.facetQuery = 'doc'
     await wrapped.vm.search()
