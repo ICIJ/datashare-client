@@ -27,8 +27,8 @@ export function initialState () {
         return item.charAt(0).toUpperCase() + item.slice(1).toLowerCase()
       }),
       new FacetNamedEntity('named-entity-person', 'byMentions', true, 'PERSON'),
-      new FacetNamedEntity('named-entity-location', 'byMentions', true, 'LOCATION'),
       new FacetNamedEntity('named-entity-organization', 'byMentions', true, 'ORGANIZATION'),
+      new FacetNamedEntity('named-entity-location', 'byMentions', true, 'LOCATION'),
       new FacetPath('path', 'byDirname', false),
       new FacetDate('indexing-date', 'extractionDate', false, item => item.key_as_string),
       new FacetText('extraction-level', 'extractionLevel', false, item => get(levels, item.key, item.key))
