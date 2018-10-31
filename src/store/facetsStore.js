@@ -182,6 +182,10 @@ class FacetNamedEntity extends FacetType {
     })
   }
 
+  addParentIncludeFilter (body, param) {
+    return body.query('terms', 'mentionNorm', param.values)
+  }
+
   body (body, options) {
     return body
       .query('term', 'type', 'NamedEntity')

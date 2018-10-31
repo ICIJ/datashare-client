@@ -278,4 +278,18 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item__body__key')[0].textContent).toContain('NER')
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item__body__key')[1].textContent).toContain('tax')
   })
+
+  it('should filter results according to the named entity facet search', async () => {
+    await letData(es).have(new IndexedDocument('/a/index_01.pdf').withContent('PDF content').withNer('pdf')).commit()
+    await letData(es).have(new IndexedDocument('/b/index_02.csv').withContent('CSV content').withNer('csv')).commit()
+
+    let namedEntityFacet = find(store.state.search.facets, {name: 'named-entity-person'})
+    namedEntityFacet.value = ['pdf']
+    wrapped.vm.$store.commit('search/addFacetValue', namedEntityFacet)
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
+  })
 })
