@@ -87,7 +87,7 @@ describe('Search store', function () {
     expect(store.state.search.response.hits.length).toEqual(2)
   })
 
-  it('should not found documents after filter by content-type', async () => {
+  it('should not find documents after filtering by content-type', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
@@ -98,7 +98,7 @@ describe('Search store', function () {
     expect(store.state.search.response.hits.length).toEqual(0)
   })
 
-  it('should found documents after removing filter by content-type', async () => {
+  it('should find documents after removing filter by content-type', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
@@ -135,7 +135,7 @@ describe('Search store', function () {
     expect(store.state.search.response.hits.length).toEqual(2)
   })
 
-  it('should filter documents with a selected named entity', async () => {
+  it('should filter documents if a named entity is selected', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('foo.txt').withContentType('txt').withContent('foo')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
