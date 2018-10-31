@@ -125,6 +125,17 @@ describe('Search store', function () {
   })
 
   it('should exclude documents with a specific content-type and include them again', async () => {
+    await letData(es).have(new IndexedDocument('bar.txt').withContent('bar').withNer('name_01')).commit()
+    await letData(es).have(new IndexedDocument('foo.txt').withContent('foo').withNer('name_01')).commit()
+    await letData(es).have(new IndexedDocument('bar.pdf').withContent('bar').withNer('name_01')).commit()
+    await letData(es).have(new IndexedDocument('bar.csv').withContent('bar').withNer('name_02')).commit()
+    await letData(es).have(new IndexedDocument('bar.ico').withContent('bar').withNer('name_02')).commit()
+
+    await store.dispatch('search/addFacetValue', { name: 'named-entity-person', value: 'name_02' })
+    expect(store.state.search.response.hits.length).toEqual(2)
+  })
+
+  it('should filter documents with a selected named entity', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('foo.txt').withContentType('txt').withContent('foo')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
@@ -179,14 +190,14 @@ describe('Search store', function () {
     expect(store.getters['search/findFacet']('content-type').values).toHaveLength(3)
   })
 
-  it('should add a facet value only once', async () => {
+  it('should add a facet value only once (1/2)', async () => {
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
     expect(store.getters['search/findFacet']('content-type').values).toHaveLength(1)
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
     expect(store.getters['search/findFacet']('content-type').values).toHaveLength(1)
   })
 
-  it('should add facet values only once', async () => {
+  it('should add facet values only once (2/2)', async () => {
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: ['txt', 'csv'] })
     expect(store.getters['search/findFacet']('content-type').values).toHaveLength(2)
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
@@ -211,14 +222,14 @@ describe('Search store', function () {
     expect(store.state.search.response.hits.length).toEqual(3)
   })
 
-  it('should return 1 document', async () => {
+  it('should return 1 document (1/3)', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 3, size: 3 })
     expect(store.state.search.response.hits.length).toEqual(1)
   })
 
-  it('should return 1 document', async () => {
+  it('should return 1 document (2/3)', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
@@ -227,7 +238,7 @@ describe('Search store', function () {
     expect(store.state.search.response.hits.length).toEqual(1)
   })
 
-  it('should return 1 document', async () => {
+  it('should return 1 document (3/3)', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
