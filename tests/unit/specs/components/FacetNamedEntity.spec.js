@@ -361,4 +361,22 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[1].textContent).toContain('person_03')
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[2].textContent).toContain('person_04')
   })
+
+  it('should prepend a selected and inverted Named Entity in the results, and remove it from the rest of the results', async () => {
+    await letData(es).have(new IndexedDocument('doc.txt').withContent('1st document').withNer('person_01').withNer('person_02')).commit()
+
+    let namedEntityFacet = find(store.state.search.facets, {name: 'named-entity-person'})
+    namedEntityFacet.value = ['person_01']
+    wrapped.vm.$store.commit('search/addFacetValue', namedEntityFacet)
+    wrapped.vm.$store.commit('search/toggleFacet', 'named-entity-person')
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(2)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[0].textContent).toContain('person_01')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[0].className).toContain('facet__items__item--active')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[1].textContent).toContain('person_02')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[1].className).not.toContain('facet__items__item--active')
+  })
 })

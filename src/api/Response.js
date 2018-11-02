@@ -1,6 +1,7 @@
 import find from 'lodash/find'
 import get from 'lodash/get'
 import map from 'lodash/map'
+import remove from 'lodash/remove'
 import set from 'lodash/set'
 
 import Document from './Document'
@@ -25,6 +26,7 @@ export default class Response {
   }
   prepend (path, value) {
     const arr = this.get(path, [])
+    remove(arr, value)
     return this.set(path, [value].concat(arr))
   }
   get hits () {
