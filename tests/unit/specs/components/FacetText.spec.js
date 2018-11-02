@@ -48,8 +48,6 @@ describe('FacetText.vue', () => {
 
   afterEach(async () => {
     await store.commit('search/reset')
-    // Reset facetQuery to default
-    wrapped.vm.root.facetQuery = ''
   })
 
   it('should display empty list and the relative search checkbox', async () => {
