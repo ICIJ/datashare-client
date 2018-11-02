@@ -1,5 +1,7 @@
 import Vue from 'vue'
 import includes from 'lodash/includes'
+import split from 'lodash/split'
+import upperCase from 'lodash/upperCase'
 
 const levels = {
   '0': 'File on disk',
@@ -165,6 +167,10 @@ class FacetNamedEntity extends FacetType {
     this.component = 'FacetNamedEntity'
   }
 
+  isSelfAffected (body) {
+    return includes(JSON.stringify(body.build()), '"term":{"category":"' + upperCase(split(this.name, '-')[2]) + '"}')
+  }
+
   queryBuilder (body, param, func) {
     return body[func]('bool', b => {
       b.orQuery('has_child', 'type', 'NamedEntity', { }, sub => {
@@ -187,7 +193,11 @@ class FacetNamedEntity extends FacetType {
   }
 
   addParentIncludeFilter (body, param) {
-    return body.query('terms', 'mentionNorm', param.values)
+    if (this.isSelfAffected(body)) {
+      return body.query('terms', 'mentionNorm', param.values)
+    } else {
+      return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('has_child', 'type', 'NamedEntity', {}, r => r.query('terms', 'mentionNorm', param.values)))
+    }
   }
 
   body (body, options) {

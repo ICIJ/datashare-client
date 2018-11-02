@@ -265,9 +265,9 @@ describe('FacetNamedEntity.vue', () => {
   })
 
   it('should display the named entities containing the query string, and those linked to documents containing the query string', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.text').withContent('Document 01 with tax').withNer('NER')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.text').withContent('Document 02').withNer('tax')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.text').withContent('Document 03 without anything').withNer('useless')).commit()
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('Document 01 with tax').withNer('NER')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('Document 02').withNer('tax')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('Document 03 without anything').withNer('useless')).commit()
 
     store.commit('search/query', 'tax')
 
@@ -280,8 +280,9 @@ describe('FacetNamedEntity.vue', () => {
   })
 
   it('should filter results according to the named entity facet search', async () => {
-    await letData(es).have(new IndexedDocument('/a/index_01.pdf').withContent('PDF content').withNer('pdf')).commit()
-    await letData(es).have(new IndexedDocument('/b/index_02.csv').withContent('CSV content').withNer('csv')).commit()
+    await letData(es).have(new IndexedDocument('doc_01.pdf').withContent('PDF content').withNer('pdf')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.csv').withContent('CSV content').withNer('csv')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.csv').withContent('TXT content').withNer('txt')).commit()
 
     let namedEntityFacet = find(store.state.search.facets, {name: 'named-entity-person'})
     namedEntityFacet.value = ['pdf']
@@ -291,5 +292,70 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.root.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[0].textContent).toContain('pdf')
+  })
+
+  it('should display the only named-entity-person selected', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('1st document')
+      .withNer('person_01', 1, 'PERSON')
+      .withNer('person_02', 1, 'PERSON')
+      .withNer('person_03', 1, 'PERSON')
+      .withNer('organization_01', 1, 'ORGANIZATION')
+      .withNer('organization_02', 1, 'ORGANIZATION')
+    ).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('2d document')
+      .withNer('person_03', 1, 'PERSON')
+      .withNer('organization_03', 1, 'ORGANIZATION')
+    ).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('3rd document')
+      .withNer('person_02', 1, 'PERSON')
+      .withNer('person_04', 1, 'PERSON')
+      .withNer('organization_02', 1, 'ORGANIZATION')
+      .withNer('organization_03', 1, 'ORGANIZATION')
+      .withNer('organization_04', 1, 'ORGANIZATION')
+    ).commit()
+
+    let namedEntityFacet = find(store.state.search.facets, {name: 'named-entity-person'})
+    namedEntityFacet.value = ['person_02']
+    wrapped.vm.$store.commit('search/addFacetValue', namedEntityFacet)
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[0].textContent).toContain('person_02')
+  })
+
+  it('should filter results of named-entity-person according to the named-entity-organization selected', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('1st document')
+      .withNer('person_01', 1, 'PERSON')
+      .withNer('person_02', 1, 'PERSON')
+      .withNer('person_03', 1, 'PERSON')
+      .withNer('organization_01', 1, 'ORGANIZATION')
+      .withNer('organization_02', 1, 'ORGANIZATION')
+    ).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('2d document')
+      .withNer('person_03', 1, 'PERSON')
+      .withNer('organization_03', 1, 'ORGANIZATION')
+    ).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('3rd document')
+      .withNer('person_02', 1, 'PERSON')
+      .withNer('person_04', 1, 'PERSON')
+      .withNer('organization_02', 1, 'ORGANIZATION')
+      .withNer('organization_03', 1, 'ORGANIZATION')
+      .withNer('organization_04', 1, 'ORGANIZATION')
+    ).commit()
+
+    let namedEntityFacet = find(store.state.search.facets, {name: 'named-entity-organization'})
+    namedEntityFacet.value = ['organization_03']
+    wrapped.vm.$store.commit('search/addFacetValue', namedEntityFacet)
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(3)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[0].textContent).toContain('person_02')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[1].textContent).toContain('person_03')
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[2].textContent).toContain('person_04')
   })
 })
