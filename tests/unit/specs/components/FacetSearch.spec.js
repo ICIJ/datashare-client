@@ -130,7 +130,7 @@ describe('FacetSearch.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
   })
 
-  it('trigger a search when value of facetQuery changes', async () => {
+  it('should trigger a search when value of facetQuery changes', async () => {
     jest.spyOn(wrapped.vm, 'search')
     wrapped.vm.facetQuery = 'pdf'
     await wrapped.vm.$nextTick()

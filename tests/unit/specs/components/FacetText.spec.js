@@ -17,6 +17,7 @@ import store from '@/store'
 
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import FacetText from '@/components/FacetText'
+import mixin from '@/mixins/facets'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -33,7 +34,7 @@ describe('FacetText.vue', () => {
   var wrapped = null
 
   beforeEach(async () => {
-    FacetText.watchedForUpdate = noop
+    mixin.methods.watchedForUpdate = noop
     wrapped = mount(FacetText, {
       localVue,
       i18n,

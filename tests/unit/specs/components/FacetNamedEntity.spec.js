@@ -14,6 +14,8 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
+import noop from 'lodash/noop'
+import mixin from '@/mixins/facets'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn().mockImplementation(() => {
@@ -36,6 +38,7 @@ describe('FacetNamedEntity.vue', () => {
   var es = esConnectionHelper.es
   var wrapped = null
   beforeEach(async () => {
+    mixin.methods.watchedForUpdate = noop
     wrapped = mount(FacetNamedEntity, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, {name: 'named-entity-person'}) } })
     await wrapped.vm.root.aggregate()
   })

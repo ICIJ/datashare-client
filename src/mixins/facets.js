@@ -3,6 +3,7 @@ import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
+import pick from 'lodash/pick'
 
 import { EventBus } from '@/utils/event-bus.js'
 import DatashareClient from '@/api/DatashareClient'
@@ -124,6 +125,13 @@ export const mixin = {
     escapeRegExp (str) {
       // eslint-disable-next-line no-useless-escape
       return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
+    },
+    watchedForUpdate (state) {
+      if (!state.search.globalSearch) {
+        // This will allow to watch change on the search only when
+        // the aggregation is not global (ie. relative to the search).
+        return pick(state.search, ['query', 'facets'])
+      }
     }
   }
 }

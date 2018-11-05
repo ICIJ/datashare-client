@@ -63,7 +63,6 @@ import toLower from 'lodash/toLower'
 import toString from 'lodash/toString'
 import each from 'lodash/each'
 import get from 'lodash/get'
-import pick from 'lodash/pick'
 import throttle from 'lodash/throttle'
 
 import ContentPlaceholder from '@/components/ContentPlaceholder'
@@ -155,13 +154,6 @@ export default {
     },
     toggleItems () {
       this.collapseItems = !this.collapseItems
-    },
-    watchedForUpdate (state) {
-      if (!state.search.globalSearch) {
-        // This will allow to watch change on the search only when
-        // the aggregation is not global (ie. relative to the search).
-        return pick(state.search, ['query', 'facets'])
-      }
     },
     normalize (str) {
       return removeDiacritics(toLower(toString(str)))

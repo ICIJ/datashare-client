@@ -38,17 +38,10 @@ describe('Search.vue', function () {
     store.commit('search/clear')
   })
 
-  afterAll(() => {
-    // And restore all facets!
-    store.commit('search/reset')
-  })
-
   beforeEach(async () => {
     Search.created = noop
     Vue.prototype.config = { dataDir: '/home/user/data' }
     wrapped = mount(Search, {localVue, i18n, router, store})
-    wrapped.vm.$store.commit('search/reset')
-    await wrapped.vm.$nextTick()
   })
 
   it('should display no documents found', async () => {
