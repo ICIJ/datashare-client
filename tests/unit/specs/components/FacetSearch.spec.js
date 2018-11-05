@@ -131,7 +131,7 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should trigger a search when value of facetQuery changes', async () => {
-    jest.spyOn(wrapped.vm, 'search')
+    jest.spyOn(wrapped.vm, 'search').mockImplementation(jest.fn)
     wrapped.vm.facetQuery = 'pdf'
     await wrapped.vm.$nextTick()
     expect(wrapped.vm.search).toHaveBeenCalled()
