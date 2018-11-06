@@ -18,7 +18,7 @@ jobs:
       - checkout
       - run:
           name: make install
-          command: sudo yarn install
+          command: make install
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
