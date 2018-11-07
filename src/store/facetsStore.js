@@ -1,5 +1,6 @@
 import Vue from 'vue'
 import includes from 'lodash/includes'
+import some from 'lodash/some'
 import split from 'lodash/split'
 import upperCase from 'lodash/upperCase'
 
@@ -75,7 +76,7 @@ class FacetText {
   }
 
   isNamedEntityAggregation (body) {
-    return includes(JSON.stringify(body.build()), '"must":{"term":{"type":"NamedEntity"}}')
+    return some(['"must":{"term":{"type":"NamedEntity"}}', '"must":[{"term":{"type":"NamedEntity"}}'], str => includes(JSON.stringify(body.build()), str))
   }
 
   applyTo (body) {

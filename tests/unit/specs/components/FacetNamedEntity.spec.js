@@ -379,4 +379,28 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[1].textContent).toContain('person_02')
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item')[1].className).not.toContain('facet__items__item--active')
   })
+
+  it('should filter facets results on 2 named entities from different categories', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('content')
+      .withNer('person_01', 1, 'PERSON')
+      .withNer('person_02', 1, 'PERSON')
+      .withNer('organization_01', 1, 'ORGANIZATION')
+      .withNer('organization_02', 1, 'ORGANIZATION')
+      .withNer('location_01', 1, 'LOCATION')
+      .withNer('location_02', 1, 'LOCATION')
+    ).commit()
+
+    let namedEntityFacet = find(store.state.search.facets, {name: 'named-entity-person'})
+    namedEntityFacet.value = ['person_01']
+    wrapped.vm.$store.commit('search/addFacetValue', namedEntityFacet)
+
+    namedEntityFacet = find(store.state.search.facets, {name: 'named-entity-organization'})
+    namedEntityFacet.value = ['organization_01']
+    wrapped.vm.$store.commit('search/addFacetValue', namedEntityFacet)
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
+  })
 })
