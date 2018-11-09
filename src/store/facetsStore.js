@@ -201,6 +201,10 @@ class FacetNamedEntity extends FacetType {
     }
   }
 
+  addParentExcludeFilter (body, param) {
+    return body.query('has_parent', { 'parent_type': 'Document' }, q => q.notQuery('has_child', 'type', 'NamedEntity', {}, r => r.query('terms', 'mentionNorm', param.values)))
+  }
+
   body (body, options) {
     return body
       .query('term', 'type', 'NamedEntity')

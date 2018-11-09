@@ -363,7 +363,8 @@ describe('FacetNamedEntity.vue', () => {
   })
 
   it('should prepend a selected and inverted Named Entity in the results, and remove it from the rest of the results', async () => {
-    await letData(es).have(new IndexedDocument('doc.txt').withContent('1st document').withNer('person_01').withNer('person_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('document').withNer('person_01')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('document').withNer('person_02')).commit()
 
     let namedEntityFacet = find(store.state.search.facets, {name: 'named-entity-person'})
     namedEntityFacet.value = ['person_01']
@@ -402,5 +403,27 @@ describe('FacetNamedEntity.vue', () => {
     await wrapped.vm.root.$nextTick()
 
     expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
+  })
+
+  it('should display the correct number of occurences if named entity facet is inverted', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('content')
+      .withNer('person_01', 1, 'PERSON')
+      .withNer('organization_01', 1, 'ORGANIZATION')
+    ).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('content')
+      .withNer('person_01', 1, 'PERSON')
+      .withNer('organization_02', 1, 'ORGANIZATION')
+    ).commit()
+
+    let namedEntityFacet = find(store.state.search.facets, {name: 'named-entity-organization'})
+    namedEntityFacet.value = ['organization_01']
+    wrapped.vm.$store.commit('search/addFacetValue', namedEntityFacet)
+    wrapped.vm.$store.commit('search/toggleFacet', 'named-entity-organization')
+
+    await wrapped.vm.root.aggregate()
+    await wrapped.vm.root.$nextTick()
+
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item').length).toEqual(1)
+    expect(wrapped.vm.$el.querySelectorAll('.facet__items__item .facet__items__item__description')[0].textContent).toContain('one occurrence in one doc')
   })
 })
