@@ -114,7 +114,6 @@ class IndexBuilder {
     return this
   }
   async update (ner) {
-    console.log('update')
     await this.index.update({
       index: process.env.VUE_APP_ES_INDEX,
       type: 'doc',
@@ -126,7 +125,6 @@ class IndexBuilder {
         }
       }
     })
-    console.log('end of update')
   }
   async commit () {
     if (isArray(this.document)) {
