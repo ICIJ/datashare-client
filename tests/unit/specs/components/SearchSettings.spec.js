@@ -30,6 +30,9 @@ describe('SearchSettings.vue', function () {
   beforeAll(() => {
     // Remove all facets to avoid unecessary request
     store.commit('search/clear')
+    let settingsButton = document.createElement('button')
+    settingsButton.setAttribute('id', 'toggleSettings')
+    document.body.appendChild(settingsButton)
   })
 
   afterAll(() => {

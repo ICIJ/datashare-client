@@ -20,6 +20,12 @@ localVue.use(VueProgressBar, { color: '#852308' })
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
 describe('App.vue', () => {
+  beforeAll(() => {
+    let settingsButton = document.createElement('button')
+    settingsButton.setAttribute('id', 'toggleSettings')
+    document.body.appendChild(settingsButton)
+  })
+
   it('should display search bar', () => {
     const i18n = new VueI18n({ locale: 'en', messages })
     const wrapped = mount(App, { localVue, i18n, router, store })
