@@ -131,7 +131,8 @@ class FacetDate extends FacetDocument {
   body (body) {
     return body.agg('date_histogram', this.key, {
       interval: '1M',
-      format: 'yyyy-MM'
+      format: 'yyyy-MM',
+      order: { '_key': 'desc' }
     }, this.key)
   }
 }

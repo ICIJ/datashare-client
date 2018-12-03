@@ -299,14 +299,14 @@ describe('FacetText.vue', () => {
     const getItemChildText = (idx, selector) => trim(getItemChild(idx, selector).textContent)
 
     expect(wrapped.vm.root.items.length).toEqual(4)
-    expect(getItemChildText(0, '.facet__items__item__label')).toEqual('2018-04')
-    expect(getItemChildText(0, '.facet__items__item__count')).toEqual('1')
-    expect(getItemChildText(1, '.facet__items__item__label')).toEqual('2018-05')
-    expect(getItemChildText(1, '.facet__items__item__count')).toEqual('3')
-    expect(getItemChildText(2, '.facet__items__item__label')).toEqual('2018-06')
-    expect(getItemChildText(2, '.facet__items__item__count')).toEqual('0')
-    expect(getItemChildText(3, '.facet__items__item__label')).toEqual('2018-07')
-    expect(getItemChildText(3, '.facet__items__item__count')).toEqual('2')
+    expect(getItemChildText(0, '.facet__items__item__label')).toEqual('2018-07')
+    expect(getItemChildText(0, '.facet__items__item__count')).toEqual('2')
+    expect(getItemChildText(1, '.facet__items__item__label')).toEqual('2018-06')
+    expect(getItemChildText(1, '.facet__items__item__count')).toEqual('0')
+    expect(getItemChildText(2, '.facet__items__item__label')).toEqual('2018-05')
+    expect(getItemChildText(2, '.facet__items__item__count')).toEqual('3')
+    expect(getItemChildText(3, '.facet__items__item__label')).toEqual('2018-04')
+    expect(getItemChildText(3, '.facet__items__item__count')).toEqual('1')
   })
 
   it('should querying on date on click on facet link, by a route redirect', async () => {
@@ -324,10 +324,10 @@ describe('FacetText.vue', () => {
     const spyRefreshRoute = jest.spyOn(wrapped.vm.root, 'refreshRoute')
     expect(spyRefreshRoute).not.toBeCalled()
 
-    wrapped.find('.list-group-item:nth-child(4) > a').trigger('click')
+    wrapped.find('.list-group-item:nth-child(3) > a').trigger('click')
 
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(1)
-    expect(wrapped.vm.$store.getters['search/toRouteQuery']).toEqual({ q: '*', size: 25, sort: 'relevance', 'f[indexing-date]': [ new Date('2018-07-01T00:00:00.000Z').getTime() ] })
+    expect(wrapped.vm.$store.getters['search/toRouteQuery']).toEqual({ q: '*', size: 25, sort: 'relevance', 'f[indexing-date]': [ new Date('2018-05-01T00:00:00.000Z').getTime() ] })
   })
 })

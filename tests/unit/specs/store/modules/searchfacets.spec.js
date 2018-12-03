@@ -208,10 +208,10 @@ describe('Search facets', function () {
     const response = await store.dispatch('search/queryFacet', { name: 'indexing-date' })
 
     expect(response.aggregations.extractionDate.buckets).toHaveLength(2)
-    expect(response.aggregations.extractionDate.buckets[0].key).toEqual(1522540800000)
-    expect(response.aggregations.extractionDate.buckets[0].doc_count).toEqual(2)
-    expect(response.aggregations.extractionDate.buckets[1].key).toEqual(1525132800000)
-    expect(response.aggregations.extractionDate.buckets[1].doc_count).toEqual(1)
+    expect(response.aggregations.extractionDate.buckets[0].key).toEqual(1525132800000)
+    expect(response.aggregations.extractionDate.buckets[0].doc_count).toEqual(1)
+    expect(response.aggregations.extractionDate.buckets[1].key).toEqual(1522540800000)
+    expect(response.aggregations.extractionDate.buckets[1].doc_count).toEqual(2)
   })
 
   // Named entities facet
