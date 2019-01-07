@@ -91,7 +91,7 @@
             <div v-for="(results, index) in groupByCategories(namedEntities)" :key="index" class="mb-4">
               <div class="mb-2" :class="getCategoryClass(results[0].source.category, 'text-')">
                 <font-awesome-icon :icon="getCategoryIcon(results[0].source.category)" />
-                {{ capitalize(results[0].source.category) }} <i>({{ results.length }})</i>
+                {{ $t('facet.named-entity-' + results[0].source.category.toLowerCase()) }} <i>({{ results.length }})</i>
               </div>
               <span v-for="(result, index) in groupByMentionNorm(results)" :key="index" class="d-inline mr-2">
                 <span class="badge badge-pill p-0 badge-light text-uppercase text-black border" :class="getCategoryClass(result[0].source.category, 'border-')">
