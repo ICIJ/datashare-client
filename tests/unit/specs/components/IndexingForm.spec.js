@@ -32,6 +32,7 @@ describe('Indexing.vue', () => {
   beforeEach(() => {
     wrapped = mount(IndexingForm, {localVue, i18n, router, store})
     jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk({}))
   })
 
   afterEach(() => {
@@ -39,39 +40,33 @@ describe('Indexing.vue', () => {
   })
 
   it('should call index when index action is selected', () => {
-    const len = datashare.fetch.mock.calls.length
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockClear()
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.index', value: true })
-
     wrapped.vm.$store.dispatch('indexing/query')
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(len + 1)
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
   })
 
   it('should call findNames when selected action is findNames with the correct pipeline', () => {
-    const len = datashare.fetch.mock.calls.length
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockClear()
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.findNames', value: true })
-    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline_corenlp', value: true })
-
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline', value: 'opennlp' })
     wrapped.vm.$store.dispatch('indexing/query')
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(len + 1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/OPENNLP'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
   it('should call index action with ocr option', async () => {
-    const len = datashare.fetch.mock.calls.length
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockClear()
     wrapped.vm.$store.commit('indexing/updateField', {path: 'form.index', value: true})
     wrapped.vm.$store.commit('indexing/updateField', {path: 'form.ocr', value: true})
-
     wrapped.vm.$store.dispatch('indexing/query')
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(len + 1)
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
       {method: 'POST', body: JSON.stringify({options: {ocr: true}}), credentials: 'same-origin'})
   })
@@ -82,18 +77,18 @@ describe('Indexing.vue', () => {
   })
 
   it('should diplay an error message', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
     await wrapped.vm.next()
     await wrapped.vm.$nextTick()
+
     expect(wrapped.vm.errors.length).toEqual(1)
     expect(wrapped.vm.step).toEqual(1)
   })
 
   it('should diplay the second step of the wizard', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.index', value: true })
     await wrapped.vm.next()
     await wrapped.vm.$nextTick()
+
     expect(wrapped.vm.step).toEqual(2)
     expect(wrapped.vm.errors.length).toEqual(0)
     expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step--02').length).toEqual(1)
@@ -101,34 +96,32 @@ describe('Indexing.vue', () => {
   })
 
   it('should display the third step of the wizard', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.findNames', value: true })
     await wrapped.vm.next()
     await wrapped.vm.$nextTick()
+
     expect(wrapped.vm.step).toEqual(3)
     expect(wrapped.vm.errors.length).toEqual(0)
     expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step--03').length).toEqual(1)
   })
 
-  it('should display an error if no NLP pipeline is choosen', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
+  it('should set Core NLP as default pipeline', async () => {
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.findNames', value: true })
     await wrapped.vm.next()
-    await wrapped.vm.next()
     await wrapped.vm.$nextTick()
+
     expect(wrapped.vm.step).toEqual(3)
-    expect(wrapped.vm.errors.length).toEqual(1)
+    expect(wrapped.vm.pipeline).toEqual('corenlp')
   })
 
   it('should display the last and final step', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.index', value: true })
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.findNames', value: true })
-    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline_opennlp', value: true })
     await wrapped.vm.next()
     await wrapped.vm.next()
     await wrapped.vm.next()
     await wrapped.vm.$nextTick()
+
     expect(wrapped.vm.step).toEqual(4)
     expect(wrapped.vm.errors.length).toEqual(0)
     expect(wrapped.vm.$el.querySelectorAll('.indexing-form__step--04').length).toEqual(1)
@@ -136,17 +129,12 @@ describe('Indexing.vue', () => {
   })
 
   it('should reset the modal params on submitting the form', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
     let initialState = cloneDeep(store.state.indexing)
-
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.index', value: true })
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.findNames', value: true })
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.ocr', value: true })
-    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline_corenlp', value: true })
-    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline_opennlp', value: true })
-    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline_ixapipe', value: true })
+    wrapped.vm.$store.commit('indexing/updateField', { path: 'form.pipeline', value: 'opennlp' })
     wrapped.vm.$store.commit('indexing/updateField', { path: 'form.step', value: 3 })
-
     await wrapped.vm.submit()
 
     expect(store.state.indexing).toEqual(initialState)

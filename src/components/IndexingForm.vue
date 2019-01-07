@@ -66,35 +66,25 @@
         </h4>
       </div>
       <div class="indexing-form__step__body form-group my-0 pl-4">
-        <div class="custom-control custom-checkbox">
-          <input class="custom-control-input" type="checkbox" id="pipeline_corenlp" v-model="pipeline_corenlp" name="pipeline_corenlp">
-          <label class="custom-control-label" for="pipeline_corenlp">
-            Core NLP
-          </label>
+        <div class="custom-control custom-radio">
+          <input class="custom-control-input" type="radio" id="pipeline_corenlp" value="corenlp" v-model="pipeline">
+          <label class="custom-control-label" for="pipeline_corenlp">Core NLP</label>
         </div>
-        <div class="custom-control custom-checkbox">
-          <input class="custom-control-input" type="checkbox" id="pipeline_opennlp" v-model="pipeline_opennlp" name="pipeline_opennlp">
-          <label class="custom-control-label" for="pipeline_opennlp">
-            Open NLP
-          </label>
+        <div class="custom-control custom-radio">
+          <input class="custom-control-input" type="radio" id="pipeline_opennlp" value="opennlp" v-model="pipeline">
+          <label class="custom-control-label" for="pipeline_opennlp">Open NLP</label>
         </div>
-        <div class="custom-control custom-checkbox">
-          <input class="custom-control-input" type="checkbox" id="pipeline_mitie" v-model="pipeline_mitie" name="pipeline_mitie">
-          <label class="custom-control-label" for="pipeline_mitie">
-            Mitie
-          </label>
+        <div class="custom-control custom-radio">
+          <input class="custom-control-input" type="radio" id="pipeline_mitie" value="mitie" v-model="pipeline">
+          <label class="custom-control-label" for="pipeline_mitie">Mitie</label>
         </div>
-        <div class="custom-control custom-checkbox">
-          <input class="custom-control-input" type="checkbox" id="pipeline_ixapipe" v-model="pipeline_ixapipe" name="pipeline_ixapipe">
-          <label class="custom-control-label" for="pipeline_ixapipe">
-            Ixa Pipe
-          </label>
+        <div class="custom-control custom-radio">
+          <input class="custom-control-input" type="radio" id="pipeline_ixapipe" value="ixapipe" v-model="pipeline">
+          <label class="custom-control-label" for="pipeline_ixapipe">Ixa Pipe</label>
         </div>
-        <div class="custom-control custom-checkbox">
-          <input class="custom-control-input" type="checkbox" id="pipeline_gatenlp" v-model="pipeline_gatenlp" name="pipeline_gatenlp">
-          <label class="custom-control-label" for="pipeline_gatenlp">
-            Gate NLP
-          </label>
+        <div class="custom-control custom-radio">
+          <input class="custom-control-input" type="radio" id="pipeline_gatenlp" value="gatenlp" v-model="pipeline">
+          <label class="custom-control-label" for="pipeline_gatenlp">Gate NLP</label>
         </div>
       </div>
       <div class="indexing-form__step__footer mt-4 row no-gutters">
@@ -142,11 +132,11 @@
           <dt class="col-sm-4 text-sm-right">{{ $t('indexing.pipelines') }}</dt>
           <dd class="col-sm-8">
             <ul class="list-unstyled mb-0">
-              <li v-if="$store.state.indexing.form.pipeline_corenlp">Core NLP</li>
-              <li v-if="$store.state.indexing.form.pipeline_opennlp">Open NLP</li>
-              <li v-if="$store.state.indexing.form.pipeline_mitie">Mitie</li>
-              <li v-if="$store.state.indexing.form.pipeline_ixapipe">Ixa Pipe</li>
-              <li v-if="$store.state.indexing.form.pipeline_gatenlp">Gate NLP</li>
+              <li v-if="$store.state.indexing.form.pipeline === 'corenlp'">Core NLP</li>
+              <li v-if="$store.state.indexing.form.pipeline === 'opennlp'">Open NLP</li>
+              <li v-if="$store.state.indexing.form.pipeline === 'mitie'">Mitie</li>
+              <li v-if="$store.state.indexing.form.pipeline === 'ixapipe'">Ixa Pipe</li>
+              <li v-if="$store.state.indexing.form.pipeline === 'gatenlp'">Gate NLP</li>
             </ul>
           </dd>
         </div>
@@ -208,11 +198,7 @@ export default {
       'form.index',
       'form.findNames',
       'form.ocr',
-      'form.pipeline_corenlp',
-      'form.pipeline_opennlp',
-      'form.pipeline_mitie',
-      'form.pipeline_ixapipe',
-      'form.pipeline_gatenlp',
+      'form.pipeline',
       'form.step'
     ]),
     ...mapState('search', {
@@ -271,7 +257,7 @@ export default {
         case 2:
           break
         case 3:
-          if (!this.$store.state.indexing.form.pipeline_corenlp && !this.$store.state.indexing.form.pipeline_opennlp && !this.$store.state.indexing.form.pipeline_mitie && !this.$store.state.indexing.form.pipeline_ixapipe && !this.$store.state.indexing.form.pipeline_gatenlp) {
+          if (!this.$store.state.indexing.form.pipeline) {
             this.errors.push('indexing.choose_one_pipeline')
             return false
           }

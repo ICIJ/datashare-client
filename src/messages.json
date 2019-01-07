@@ -88,7 +88,7 @@
       "step_03": "Which NLP pipeline(s) would you run ?",
       "step_04": "Ready ?",
       "choose_one_action": "Please, choose at least one action",
-      "choose_one_pipeline": "Please, choose at least one NLP pipeline",
+      "choose_one_pipeline": "Please, choose an NLP pipeline",
       "ocr": "OCR",
       "pipelines": "Pipelines",
       "empty": "You started no tasks yet.",
@@ -190,7 +190,7 @@
       "step_03": "Quel(s) algo(s) de NLP voulez-vous lancer ?",
       "step_04": "Prêts ?",
       "choose_one_action": "Merci de choisir au moins une action",
-      "choose_one_pipeline": "Merci de choisir au moins un algo de NLP",
+      "choose_one_pipeline": "Merci de choisir un algorithme de NLP",
       "ocr": "OCR",
       "pipelines": "Algo(s)",
       "correct_errors": "Merci de corriger les erreurs suivantes :"

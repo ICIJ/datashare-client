@@ -18,6 +18,7 @@ describe('Indexing store', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk({}))
   })
 
   afterEach(async () => {
@@ -37,40 +38,26 @@ describe('Indexing store', () => {
   })
 
   it('should execute an empty query', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
     await store.dispatch('query')
 
     expect(datashare.fetch).toHaveBeenCalledTimes(0)
   })
 
   it('should execute a complex query', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
     store.state.form.index = true
     store.state.form.findNames = true
-    store.state.form.pipeline_corenlp = true
-    store.state.form.pipeline_opennlp = true
-    store.state.form.pipeline_mitie = false
-    store.state.form.pipeline_ixapipe = true
-    store.state.form.pipeline_gatenlp = true
-
     await store.dispatch('query')
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(5)
+    expect(datashare.fetch).toHaveBeenCalledTimes(2)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/OPENNLP'),
-      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/IXAPIPE'),
-      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/GATENLP'),
-      {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })
 
   it('should clear running jobs', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
     await store.dispatch('cleanTasks')
+
     expect(store.state.tasks).toEqual([])
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
@@ -79,6 +66,7 @@ describe('Indexing store', () => {
 
   it('should stop polling jobs', async () => {
     await store.dispatch('stopPollTasks')
+
     expect(store.state.pollHandle).toBeNull()
   })
 })

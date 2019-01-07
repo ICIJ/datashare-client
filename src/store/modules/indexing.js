@@ -9,11 +9,7 @@ export function initialState () {
       index: false,
       findNames: false,
       ocr: false,
-      pipeline_corenlp: false,
-      pipeline_opennlp: false,
-      pipeline_mitie: false,
-      pipeline_ixapipe: false,
-      pipeline_gatenlp: false,
+      pipeline: 'corenlp',
       step: 1
     },
     pollHandle: null,
@@ -50,14 +46,26 @@ export const mutations = {
 }
 
 export const actions = {
-  query ({ state, commit }) {
+  query ({ state }) {
     if (state.form.index) datashare.index({ ocr: state.form.ocr })
     if (state.form.findNames) {
-      if (state.form.pipeline_corenlp) datashare.findNames('CORENLP', { resume: true })
-      if (state.form.pipeline_opennlp) datashare.findNames('OPENNLP', { resume: true })
-      if (state.form.pipeline_mitie) datashare.findNames('MITIE', { resume: true })
-      if (state.form.pipeline_ixapipe) datashare.findNames('IXAPIPE', { resume: true })
-      if (state.form.pipeline_gatenlp) datashare.findNames('GATENLP', { resume: true })
+      switch (state.form.pipeline) {
+        case 'corenlp':
+          datashare.findNames('CORENLP', { resume: true })
+          break
+        case 'opennlp':
+          datashare.findNames('OPENNLP', { resume: true })
+          break
+        case 'mitie':
+          datashare.findNames('MITIE', { resume: true })
+          break
+        case 'ixapipe':
+          datashare.findNames('IXAPIPE', { resume: true })
+          break
+        case 'gatenlp':
+          datashare.findNames('GATENLP', { resume: true })
+          break
+      }
     }
   },
   cleanTasks ({ state, commit }) {
