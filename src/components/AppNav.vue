@@ -32,7 +32,7 @@
               </router-link>
             </li>
             <li class="list-unstyled-item app__nav__container__main__menu__item mr-auto">
-              <a href="https://jira.icij.org/servicedesk/" target="_blank">
+              <a href="https://jira.icij.org/servicedesk/customer/portal/4/create/108" target="_blank">
                 {{ $t('menu.help') }}
               </a>
             </li>

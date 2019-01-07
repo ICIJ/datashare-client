@@ -18,7 +18,7 @@
           </li>
           <li class="list-group-item">
             <p>If you need any help, please visit our support desk:</p>
-            <a class="btn btn-outline-secondary btn-lg" href="https://jira.icij.org/servicedesk/">
+            <a class="btn btn-outline-secondary btn-lg" href="https://jira.icij.org/servicedesk/customer/portal/4/create/108">
               <font-awesome-icon icon="ambulance" class="mr-2" />
               Ask for help
             </a>
