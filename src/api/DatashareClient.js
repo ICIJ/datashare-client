@@ -40,6 +40,9 @@ export class DatashareClient {
   getSource (relativeUrl) {
     return this.sendAction(relativeUrl, {credentials: 'same-origin'})
   }
+  getIndices () {
+    return this.sendAction('/api/indices')
+  }
   sendAction (url, params) {
     return this.fetch(DatashareClient.getFullUrl(url), params).then(r => {
       if (r.status >= 200 && r.status < 300) {

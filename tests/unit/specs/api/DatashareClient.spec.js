@@ -8,13 +8,15 @@ const ds = new DatashareClient()
 describe('Datashare backend client', () => {
   beforeEach(async () => {
     jest.spyOn(ds, 'fetch')
+    fetchReturns(200, {})
   })
 
   it('should return backend response to createIndex', async () => {
-    fetchReturns(200, {})
-    let resp = await ds.createIndex()
-    let json = await resp.json()
-    expect(json).toEqual({})
+    ds.createIndex().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
   })
 
   it('should emit an error if the backend response has a bad status', async () => {
@@ -33,17 +35,27 @@ describe('Datashare backend client', () => {
   })
 
   it('should return backend reponse to deleteNamedEntitiesByMentionNorm', async () => {
-    fetchReturns(200, {})
-    let resp = await ds.deleteNamedEntitiesByMentionNorm('mentionNorm')
-    let json = await resp.json()
-    expect(json).toEqual({})
+    ds.deleteNamedEntitiesByMentionNorm('mentionNorm').then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
   })
 
   it('should return backend reponse to getConfig', async () => {
-    fetchReturns(200, {})
-    let resp = await ds.getConfig()
-    let json = await resp.json()
-    expect(json).toEqual({})
+    ds.getConfig().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
+  it('should return backend reponse to getIndices', async () => {
+    ds.getIndices().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
   })
 })
 
