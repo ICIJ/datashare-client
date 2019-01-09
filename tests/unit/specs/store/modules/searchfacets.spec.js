@@ -42,28 +42,28 @@ describe('Search facets', function () {
   })
 
   it('should define a `content-type` facet correctly (name, key and type)', () => {
-    let facetPath = find(store.state.search.facets, { name: 'content-type' })
+    let facet = find(store.state.search.facets, { name: 'content-type' })
 
-    expect(typeof facetPath).toBe('object')
-    expect(facetPath.key).toEqual('contentType')
-    expect(facetPath.constructor.name).toEqual('FacetText')
+    expect(typeof facet).toBe('object')
+    expect(facet.key).toEqual('contentType')
+    expect(facet.constructor.name).toEqual('FacetText')
   })
 
   it('should define a `language` facet correctly (name, key and type)', () => {
-    let facetPath = find(store.state.search.facets, { name: 'language' })
+    let facet = find(store.state.search.facets, { name: 'language' })
 
-    expect(typeof facetPath).toBe('object')
-    expect(facetPath.key).toEqual('language')
-    expect(facetPath.constructor.name).toEqual('FacetText')
+    expect(typeof facet).toBe('object')
+    expect(facet.key).toEqual('language')
+    expect(facet.constructor.name).toEqual('FacetText')
   })
 
   it('should define a `named-entity` facet correctly (name, key, type and PERSON category)', () => {
-    let facetPath = find(store.state.search.facets, { name: 'named-entity-person' })
+    let facet = find(store.state.search.facets, { name: 'named-entity-person' })
 
-    expect(typeof facetPath).toBe('object')
-    expect(facetPath.key).toEqual('byMentions')
-    expect(facetPath.category).toEqual('PERSON')
-    expect(facetPath.constructor.name).toEqual('FacetNamedEntity')
+    expect(typeof facet).toBe('object')
+    expect(facet.key).toEqual('byMentions')
+    expect(facet.category).toEqual('PERSON')
+    expect(facet.constructor.name).toEqual('FacetNamedEntity')
   })
 
   it('should find a `content-type` facet using object', () => {

@@ -226,4 +226,11 @@ class FacetNamedEntity extends FacetType {
   }
 }
 
-export {FacetDate, FacetPath, FacetText, FacetNamedEntity, levels}
+class FacetIndex extends FacetText {
+  constructor (name, key, isSearchable) {
+    super(name, key, isSearchable, null)
+    // this.indices = await ds.getIndices()
+  }
+}
+
+export { FacetDate, FacetPath, FacetText, FacetNamedEntity, FacetIndex, levels }

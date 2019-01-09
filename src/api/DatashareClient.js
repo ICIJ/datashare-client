@@ -41,7 +41,7 @@ export class DatashareClient {
     return this.sendAction(relativeUrl, {credentials: 'same-origin'})
   }
   getIndices () {
-    return this.sendAction('/api/indices')
+    return this.sendAction('/api/user/indices')
   }
   sendAction (url, params) {
     return this.fetch(DatashareClient.getFullUrl(url), params).then(r => {

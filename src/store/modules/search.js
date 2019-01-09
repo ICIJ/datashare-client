@@ -1,7 +1,7 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import types from '@/utils/types.json'
-import {FacetDate, FacetNamedEntity, FacetPath, FacetText, levels} from '@/store/facetsStore'
+import { FacetDate, FacetNamedEntity, FacetPath, FacetText, FacetIndex, levels } from '@/store/facetsStore'
 
 import castArray from 'lodash/castArray'
 import each from 'lodash/each'
@@ -32,7 +32,7 @@ export function initialState () {
       new FacetPath('path', 'byDirname', false),
       new FacetDate('indexing-date', 'extractionDate', false, item => item.key_as_string),
       new FacetText('extraction-level', 'extractionLevel', false, item => get(levels, item.key, item.key)),
-      new FacetText('leaks', '_index', false)
+      new FacetIndex('leaks', '_index', false)
     ],
     sort: 'relevance',
     response: Response.none(),
