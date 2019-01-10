@@ -8,7 +8,7 @@ import store from '@/store'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import Vue from 'vue'
-import {FacetText} from '@/store/facetsStore'
+import { FacetText } from '@/store/facetsStore'
 
 describe('Search facets', function () {
   esConnectionHelper()
@@ -248,5 +248,14 @@ describe('Search facets', function () {
     const response = await store.dispatch('search/queryFacet', { name: 'named-entity-organization', category: 'ORGANIZATION' })
 
     expect(response.aggregations.byMentions.buckets).toHaveLength(2)
+  })
+
+  // Index facet
+  it('should define a `leaks` facet correctly (name, key and type)', () => {
+    let facet = find(store.state.search.facets, { name: 'leaks' })
+
+    expect(typeof facet).toBe('object')
+    expect(facet.key).toEqual('_index')
+    expect(facet.constructor.name).toEqual('FacetIndex')
   })
 })

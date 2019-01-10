@@ -227,9 +227,9 @@ class FacetNamedEntity extends FacetType {
 }
 
 class FacetIndex extends FacetText {
-  constructor (name, key, isSearchable) {
+  constructor (name, key, isSearchable, category = 'PERSON') {
     super(name, key, isSearchable, null)
-    // this.indices = await ds.getIndices()
+    this.component = 'FacetIndex'
   }
 }
 

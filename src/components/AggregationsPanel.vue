@@ -8,27 +8,29 @@
 </template>
 
 <script>
-import FacetNamedEntity from '@/components/FacetNamedEntity'
-import FacetText from '@/components/FacetText'
-import FacetPath from '@/components/FacetPath'
 import FacetDate from '@/components/FacetDate'
+import FacetIndex from '@/components/FacetIndex'
+import FacetNamedEntity from '@/components/FacetNamedEntity'
+import FacetPath from '@/components/FacetPath'
 import FacetSearch from '@/components/FacetSearch'
+import FacetText from '@/components/FacetText'
 
 import sortBy from 'lodash/sortBy'
 import map from 'lodash/map'
 import get from 'lodash/get'
-import bModal from 'bootstrap-vue/es/components/modal/modal'
 
+import bModal from 'bootstrap-vue/es/components/modal/modal'
 import { mapState } from 'vuex'
 
 export default {
   name: 'AggregationsPanel',
   components: {
+    FacetDate,
+    FacetIndex,
     FacetNamedEntity,
-    FacetText,
     FacetPath,
     FacetSearch,
-    FacetDate,
+    FacetText,
     bModal
   },
   mounted () {
