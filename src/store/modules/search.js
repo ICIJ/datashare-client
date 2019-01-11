@@ -36,7 +36,8 @@ export function initialState () {
     ],
     sort: 'relevance',
     response: Response.none(),
-    isReady: true
+    isReady: true,
+    index: process.env.VUE_APP_ES_INDEX
   }
 }
 
@@ -125,6 +126,10 @@ export const mutations = {
   isReady (state, isReady = !state.isReady) {
     state.isReady = isReady
   },
+  index (state, index) {
+    state.index = index
+    state.response = Response.none()
+  },
   buildResponse (state, raw) {
     state.isReady = true
     state.response = new Response(raw)
@@ -144,7 +149,11 @@ export const mutations = {
     // Look for existing facet for this name
     const existingFacet = find(state.facets, { name: facet.name })
     if (existingFacet) {
-      existingFacet.values = uniq(existingFacet.values.concat(values))
+      if (facet.name === 'leaks') {
+        existingFacet.values = values
+      } else {
+        existingFacet.values = uniq(existingFacet.values.concat(values))
+      }
     } else {
       throw new Error(`cannot find facet named ${facet.name}`)
     }
@@ -191,13 +200,14 @@ export const actions = {
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
     commit('sort', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.sort : queryOrParams.sort)
     commit('isReady', false)
-    return esClient.searchDocs(state.query, state.facets, state.from, state.size, state.sort).then(raw => {
+    return esClient.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort).then(raw => {
       commit('buildResponse', raw)
       return raw
     })
   },
   queryFacet ({ state, getters }, params) {
     return esClient.searchFacet(
+      state.index,
       getters.getFacet({name: params.name}),
       state.query,
       state.facets,
@@ -235,7 +245,6 @@ export const actions = {
     commit('toggleFacet', name)
     return dispatch('query')
   },
-
   updateFromRouteQuery ({ state, commit }, query) {
     // Reset all existing options
     commit('reset')

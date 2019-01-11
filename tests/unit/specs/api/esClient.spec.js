@@ -1,21 +1,23 @@
 import bodybuilder from 'bodybuilder'
 import { EventBus } from '@/utils/event-bus'
 import esClient from '@/api/esClient'
-import {FacetText} from '@/store/facetsStore'
+import { FacetText } from '@/store/facetsStore'
 
 describe('esClient', () => {
   it('should return backend response to a POST request for searchDocs', async () => {
+    const index = process.env.VUE_APP_ES_INDEX
     esClient.search = jest.fn(query => Promise.resolve({ 'foo': 'bar' }))
-    let response = await esClient.searchDocs('*')
+    let response = await esClient.searchDocs(index, '*')
     expect(response).toEqual({ 'foo': 'bar' })
   })
 
   it('should emit an error if the backend response is an error', async () => {
+    const index = process.env.VUE_APP_ES_INDEX
     esClient.search = jest.fn(() => Promise.reject(new Error('this is an error')))
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
 
-    await expect(esClient.searchDocs('*')).rejects.toThrow('this is an error')
+    await expect(esClient.searchDocs(index, '*')).rejects.toThrow('this is an error')
 
     expect(mockCallback.mock.calls.length).toBe(1)
     expect(mockCallback.mock.calls[0][0].message).toEqual('this is an error')

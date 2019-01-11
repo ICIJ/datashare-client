@@ -8,9 +8,9 @@ import replace from 'lodash/replace'
 // Custom API for datashare
 // @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/extending_core_components.html
 export function datasharePlugin (Client, config, components) {
-  Client.prototype.getEsDoc = function (id, routing = null) {
+  Client.prototype.getEsDoc = function (index, id, routing = null) {
     return this.get({
-      index: process.env.VUE_APP_ES_INDEX,
+      index: index,
       type: 'doc',
       id: id,
       routing: routing
@@ -22,14 +22,13 @@ export function datasharePlugin (Client, config, components) {
     })
   }
 
-  Client.prototype.getNamedEntities = function (docId, routing = null) {
-    var body = bodybuilder().query('parent_id', {type: 'NamedEntity', id: docId}).filter('term', 'isHidden', 'false').build()
+  Client.prototype.getNamedEntities = function (index, docId, routing = null) {
     return this.search({
-      index: process.env.VUE_APP_ES_INDEX,
+      index: index,
       type: 'doc',
       size: 200,
       routing: routing,
-      body: body
+      body: bodybuilder().query('parent_id', {type: 'NamedEntity', id: docId}).filter('term', 'isHidden', 'false').build()
     }).then(function (data) {
       return data
     }, error => {
@@ -86,14 +85,12 @@ export function datasharePlugin (Client, config, components) {
     body.sort(sortField, sortOrder)
   }
 
-  Client.prototype.searchDocs = function (query, facets = [], from = 0, size = 25, sort = 'relevance') {
-    const body = this._buildBody(from, size, facets, query, sort)
-
+  Client.prototype.searchDocs = function (index, query, facets = [], from = 0, size = 25, sort = 'relevance') {
     // Return a promise that build the body composed above
     return this.search({
-      index: process.env.VUE_APP_ES_INDEX,
+      index: index,
       type: 'doc',
-      body: body.build()
+      body: this._buildBody(from, size, facets, query, sort).build()
     }).then(function (data) {
       return data
     }, error => {
@@ -102,15 +99,14 @@ export function datasharePlugin (Client, config, components) {
     })
   }
 
-  Client.prototype.searchFacet = function (facet, query, facets = [], isGlobalSearch = false, options = {}) {
+  Client.prototype.searchFacet = function (index, facet, query, facets = [], isGlobalSearch = false, options = {}) {
     const body = facet.body(bodybuilder(), options)
-
     if (!isGlobalSearch) {
       each(facets, facet => facet.addFilter(body))
       this.addQueryToBody(query, body)
     }
     return esClient.search({
-      index: process.env.VUE_APP_ES_INDEX,
+      index: index,
       type: 'doc',
       body: body.size(0).build()
     }).then(function (data) {

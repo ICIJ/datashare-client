@@ -43,23 +43,23 @@ export const mutations = {
 }
 
 export const actions = {
-  get ({commit}, idAndRouting) {
+  get ({commit, rootState}, idAndRouting) {
     commit('idAndRouting', idAndRouting)
-    return esClient.getEsDoc(idAndRouting.id, idAndRouting.routing).then(
+    return esClient.getEsDoc(rootState.search.index, idAndRouting.id, idAndRouting.routing).then(
       raw => commit('doc', raw),
       _ => commit('doc', null)
     )
   },
-  getNamedEntities ({ commit, state }) {
-    return esClient.getNamedEntities(state.idAndRouting.id, state.idAndRouting.routing).then(
+  getNamedEntities ({ commit, state, rootState }) {
+    return esClient.getNamedEntities(rootState.search.index, state.idAndRouting.id, state.idAndRouting.routing).then(
       raw => commit('namedEntities', raw),
       _ => commit('namedEntities', {hits: {hits: []}})
     )
   },
-  getParent ({ commit, state }) {
+  getParent ({ commit, state, rootState }) {
     if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
       let currentDoc = state.doc.raw._source
-      return esClient.getEsDoc(currentDoc.parentDocument, currentDoc.rootDocument).then(
+      return esClient.getEsDoc(rootState.search.index, currentDoc.parentDocument, currentDoc.rootDocument).then(
         raw => commit('parentDoc', raw),
         _ => commit('parentDoc', null)
       )
