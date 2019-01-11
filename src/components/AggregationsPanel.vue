@@ -4,16 +4,17 @@
       <facet-search :facet="selectedFacet" :query="facetQuery" />
     </b-modal>
     <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
+    <index-selector />
   </div>
 </template>
 
 <script>
 import FacetDate from '@/components/FacetDate'
-import FacetIndex from '@/components/FacetIndex'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetPath from '@/components/FacetPath'
 import FacetSearch from '@/components/FacetSearch'
 import FacetText from '@/components/FacetText'
+import IndexSelector from '@/components/IndexSelector'
 
 import sortBy from 'lodash/sortBy'
 import map from 'lodash/map'
@@ -26,11 +27,11 @@ export default {
   name: 'AggregationsPanel',
   components: {
     FacetDate,
-    FacetIndex,
     FacetNamedEntity,
     FacetPath,
     FacetSearch,
     FacetText,
+    IndexSelector,
     bModal
   },
   mounted () {
