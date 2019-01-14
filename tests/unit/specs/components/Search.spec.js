@@ -16,6 +16,8 @@ import store from '@/store'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Search from '@/components/Search'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
+import fetchPonyfill from 'fetch-ponyfill'
+import DatashareClient from '@/api/DatashareClient'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -23,8 +25,18 @@ localVue.use(Vuex)
 localVue.use(VueProgressBar, { color: '#852308' })
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
-
 const i18n = new VueI18n({ locale: 'en', messages })
+const { Response } = fetchPonyfill()
+
+jest.mock('@/api/DatashareClient', () => jest.fn())
+DatashareClient.mockImplementation(() => {
+  return {
+    getIndices: () => {
+      return Promise.resolve(new Response(JSON.stringify([]),
+        { status: 200, headers: { 'Content-type': 'application/json' } }))
+    }
+  }
+})
 
 describe('Search.vue', function () {
   esConnectionHelper()
@@ -41,7 +53,8 @@ describe('Search.vue', function () {
   beforeEach(async () => {
     Search.created = noop
     Vue.prototype.config = { dataDir: '/home/user/data' }
-    wrapped = mount(Search, {localVue, i18n, router, store})
+    wrapped = mount(Search, { localVue, i18n, router, store })
+    store.commit('search/clear')
   })
 
   it('should display no documents found', async () => {
