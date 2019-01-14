@@ -3,8 +3,8 @@
     <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
       <facet-search :facet="selectedFacet" :query="facetQuery" />
     </b-modal>
-    <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
     <index-selector />
+    <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
   </div>
 </template>
 

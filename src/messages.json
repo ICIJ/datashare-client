@@ -49,7 +49,7 @@
       "path": "Path",
       "indexing-date": "Indexing date",
       "extraction-level": "Extraction level",
-      "leaks": "Leaks",
+      "projects": "Projects",
       "deleteNamedEntity": "Delete this Named Entity",
       "showMore": "Show more"
     },
@@ -155,6 +155,7 @@
       "path": "Chemin du fichier",
       "indexing-date": "Date d'indexation",
       "extraction-level": "Niveau d'extraction",
+      "projects": "Projets",
       "deleteNamedEntity": "Supprimer cette Entité Nommée",
       "showMore": "Voir plus"
     },

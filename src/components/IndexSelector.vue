@@ -3,7 +3,7 @@
     <div class="card-header">
       <h6 @click="toggleItems">
         <font-awesome-icon :icon="headerIcon" />
-        {{ $t('facet.leaks') }}
+        {{ $t('facet.projects') }}
       </h6>
     </div>
     <div class="list-group list-group-flush facet__items" v-if="!collapseItems">
