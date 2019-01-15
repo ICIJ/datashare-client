@@ -11,21 +11,13 @@ describe('Datashare backend client', () => {
     fetchReturns(200, {})
   })
 
-  it('should return backend response to createIndex', async () => {
-    ds.createIndex().then(
-      resp => resp.json().then(
-        json => expect(json).toEqual({})
-      )
-    )
-  })
-
   it('should emit an error if the backend response has a bad status', async () => {
     fetchReturns(42, {})
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
 
     try {
-      await ds.createIndex()
+      await ds.getConfig()
     } catch (err) {
       expect(err).toEqual(new Error('42 undefined'))
     }
