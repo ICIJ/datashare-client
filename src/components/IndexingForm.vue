@@ -82,10 +82,6 @@
           <input class="custom-control-input" type="radio" id="pipeline_ixapipe" value="ixapipe" v-model="pipeline">
           <label class="custom-control-label" for="pipeline_ixapipe">Ixa Pipe</label>
         </div>
-        <div class="custom-control custom-radio">
-          <input class="custom-control-input" type="radio" id="pipeline_gatenlp" value="gatenlp" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_gatenlp">Gate NLP</label>
-        </div>
       </div>
       <div class="indexing-form__step__footer mt-4 row no-gutters">
         <div class="col">
@@ -136,7 +132,6 @@
               <li v-if="$store.state.indexing.form.pipeline === 'opennlp'">Open NLP</li>
               <li v-if="$store.state.indexing.form.pipeline === 'mitie'">Mitie</li>
               <li v-if="$store.state.indexing.form.pipeline === 'ixapipe'">Ixa Pipe</li>
-              <li v-if="$store.state.indexing.form.pipeline === 'gatenlp'">Gate NLP</li>
             </ul>
           </dd>
         </div>
