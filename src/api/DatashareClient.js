@@ -22,6 +22,9 @@ export class DatashareClient {
   getTasks () {
     return this.sendAction('/api/task/', {credentials: 'same-origin'})
   }
+  createIndex () {
+    return this.sendAction('/api/search/createIndex', {method: 'PUT', credentials: 'same-origin'})
+  }
   getVersion () {
     return this.sendAction('/version')
   }

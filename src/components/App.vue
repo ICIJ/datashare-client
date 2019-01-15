@@ -13,10 +13,16 @@
 </style>
 
 <script>
+import DatashareClient from '@/api/DatashareClient'
 import AppNav from './AppNav'
 
 export default {
   name: 'App',
-  components: { AppNav }
+  components: { AppNav },
+  created () {
+    if (process.env.NODE_ENV === 'production') {
+      new DatashareClient().createIndex()
+    }
+  }
 }
 </script>
