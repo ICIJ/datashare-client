@@ -61,6 +61,11 @@ class IndexedDocument {
     }
     this.nerList = []
     this.nerTags = []
+    this.index = process.env.VUE_APP_ES_INDEX
+  }
+  toIndex (index) {
+    this.index = index
+    return this
   }
   withContent (content) {
     this.content = content
@@ -135,9 +140,10 @@ class IndexBuilder {
         await this.have(doc).commit()
       }
     } else {
-      var docId = this.document.path
+      const docId = this.document.path
+      const index = this.document.index
       let createRequest = {
-        index: process.env.VUE_APP_ES_INDEX,
+        index: index,
         type: 'doc',
         refresh: true,
         id: docId,
@@ -147,10 +153,10 @@ class IndexBuilder {
         createRequest.routing = this.document.parentDocument
       }
       await this.index.create(createRequest)
-      for (var i = 0; i < this.document.nerList.length; i++) {
+      for (let i = 0; i < this.document.nerList.length; i++) {
         let ner = this.document.nerList[i]
         await this.index.create({
-          index: process.env.VUE_APP_ES_INDEX,
+          index: index,
           type: 'doc',
           refresh: true,
           id: ner.id,

@@ -16,9 +16,11 @@
 import DatashareClient from '@/api/DatashareClient'
 import map from 'lodash/map'
 import union from 'lodash/union'
+import facets from '@/mixins/facets'
 
 export default {
   name: 'IndexSelector',
+  mixins: [facets],
   data () {
     return {
       options: [],
@@ -48,9 +50,9 @@ export default {
     })
   },
   methods: {
-    async select (value) {
-      await this.$store.commit('search/index', value)
-      await this.$store.dispatch('search/query')
+    select (value) {
+      this.$store.commit('search/index', value)
+      this.refreshRoute()
     },
     toggleItems () {
       this.collapseItems = !this.collapseItems

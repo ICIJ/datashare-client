@@ -326,6 +326,6 @@ describe('FacetText.vue', () => {
 
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(1)
-    expect(wrapped.vm.$store.getters['search/toRouteQuery']).toEqual({ q: '*', size: 25, sort: 'relevance', 'f[indexing-date]': [ new Date('2018-05-01T00:00:00.000Z').getTime() ] })
+    expect(wrapped.vm.$store.getters['search/toRouteQuery']).toEqual({ index: process.env.VUE_APP_ES_INDEX, q: '*', size: 25, sort: 'relevance', 'f[indexing-date]': [ new Date('2018-05-01T00:00:00.000Z').getTime() ] })
   })
 })

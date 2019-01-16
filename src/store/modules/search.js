@@ -74,6 +74,7 @@ export const getters = {
       q: state.query,
       size: state.size,
       sort: state.sort,
+      index: state.index,
       ...reduce(state.facets, (memo, facetValue) => {
         // We need to look for the facet's definition in order to us its `id`
         // as key for tge URL params. This was we track configured facet instead
@@ -148,11 +149,7 @@ export const mutations = {
     // Look for existing facet for this name
     const existingFacet = find(state.facets, { name: facet.name })
     if (existingFacet) {
-      if (facet.name === 'leaks') {
-        existingFacet.values = values
-      } else {
-        existingFacet.values = uniq(existingFacet.values.concat(values))
-      }
+      existingFacet.values = uniq(existingFacet.values.concat(values))
     } else {
       throw new Error(`cannot find facet named ${facet.name}`)
     }
@@ -193,7 +190,8 @@ export const actions = {
     commit('resetFacets')
     return dispatch('query')
   },
-  query ({ state, commit }, queryOrParams = { query: state.query, from: state.from, size: state.size, sort: state.sort }) {
+  query ({ state, commit }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort }) {
+    commit('index', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.index : queryOrParams.index)
     commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String ? queryOrParams : queryOrParams.query)
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.from : queryOrParams.from)
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String ? state.size : queryOrParams.size)
@@ -248,6 +246,7 @@ export const actions = {
     // Reset all existing options
     commit('reset')
     // Add the query to the state with a mutation to not triggering a search
+    if (query.index) commit('index', query.index)
     if (query.q) commit('query', query.q)
     if (query.size) commit('size', query.size)
     if (query.sort) commit('sort', query.sort)

@@ -55,6 +55,20 @@ describe('Search store', function () {
     expect(store.state.search.response.hits[2]).toEqual(undefined)
   })
 
+  it('should return document from local index', async () => {
+    await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
+    await store.dispatch('search/query', 'bar')
+    expect(store.state.search.response.hits.length).toEqual(1)
+    expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
+  })
+
+  it('should return document from another index', async () => {
+    await letData(es).have(new IndexedDocument('docs/bar.txt').toIndex('another-index').withContent('this is bar document')).commit()
+    await store.dispatch('search/query', { index: 'another-index', query: 'bar', from: 0, size: 25 })
+    expect(store.state.search.response.hits.length).toEqual(1)
+    expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
+  })
+
   it('should get document from ElasticSearch', async () => {
     await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
     await store.dispatch('search/query', 'bar')
@@ -300,14 +314,15 @@ describe('Search store', function () {
   })
 
   it('should return the default query parameters', () => {
-    expect(store.getters['search/toRouteQuery']).toEqual({ q: '*', size: 25, sort: 'relevance' })
+    expect(store.getters['search/toRouteQuery']).toEqual({ index: process.env.VUE_APP_ES_INDEX, q: '*', size: 25, sort: 'relevance' })
   })
 
   it('should return an advanced and faceted query parameters', () => {
+    store.commit('search/index', 'new-index')
     store.commit('search/query', 'datashare')
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
-    expect(store.getters['search/toRouteQuery']).toEqual({ q: 'datashare', size: 12, sort: 'randomOrder', 'f[content-type]': ['TXT'] })
+    expect(store.getters['search/toRouteQuery']).toEqual({ index: 'new-index', q: 'datashare', size: 12, sort: 'randomOrder', 'f[content-type]': ['TXT'] })
   })
 })
