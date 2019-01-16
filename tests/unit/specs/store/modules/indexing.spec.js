@@ -43,7 +43,7 @@ describe('Indexing store', () => {
     expect(datashare.fetch).toHaveBeenCalledTimes(0)
   })
 
-  it('should execute a complex query', async () => {
+  it('should execute an index and findNames query', async () => {
     store.state.form.index = true
     store.state.form.findNames = true
     await store.dispatch('query')
@@ -51,6 +51,16 @@ describe('Indexing store', () => {
     expect(datashare.fetch).toHaveBeenCalledTimes(2)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
       {method: 'POST', body: JSON.stringify({options: {ocr: false}}), credentials: 'same-origin'})
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
+      {method: 'POST', body: JSON.stringify({options: {resume: false}}), credentials: 'same-origin'})
+  })
+
+  it('should execute a findNames query', async () => {
+    store.state.form.index = false
+    store.state.form.findNames = true
+    await store.dispatch('query')
+
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
       {method: 'POST', body: JSON.stringify({options: {resume: true}}), credentials: 'same-origin'})
   })

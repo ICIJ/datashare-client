@@ -47,26 +47,26 @@ export const mutations = {
 
 export const actions = {
   query ({ state }) {
-    if (state.form.index) datashare.index({ ocr: state.form.ocr })
     if (state.form.findNames) {
       switch (state.form.pipeline) {
         case 'corenlp':
-          datashare.findNames('CORENLP', { resume: true })
+          datashare.findNames('CORENLP', { resume: !state.form.index })
           break
         case 'opennlp':
-          datashare.findNames('OPENNLP', { resume: true })
+          datashare.findNames('OPENNLP', { resume: !state.form.index })
           break
         case 'mitie':
-          datashare.findNames('MITIE', { resume: true })
+          datashare.findNames('MITIE', { resume: !state.form.index })
           break
         case 'ixapipe':
-          datashare.findNames('IXAPIPE', { resume: true })
+          datashare.findNames('IXAPIPE', { resume: !state.form.index })
           break
         case 'gatenlp':
-          datashare.findNames('GATENLP', { resume: true })
+          datashare.findNames('GATENLP', { resume: !state.form.index })
           break
       }
     }
+    if (state.form.index) datashare.index({ ocr: state.form.ocr })
   },
   cleanTasks ({ state, commit }) {
     datashare.cleanTasks().then(commit('cleanTasks'))
