@@ -63,8 +63,8 @@ describe('Search store', function () {
   })
 
   it('should return document from another index', async () => {
-    await letData(es).have(new IndexedDocument('docs/bar.txt').toIndex('another-index').withContent('this is bar document')).commit()
-    await store.dispatch('search/query', { index: 'another-index', query: 'bar', from: 0, size: 25 })
+    await letData(es).have(new IndexedDocument('docs/bar.txt').toIndex(process.env.VUE_APP_ES_ANOTHER_INDEX).withContent('this is bar document')).commit()
+    await store.dispatch('search/query', { index: process.env.VUE_APP_ES_ANOTHER_INDEX, query: 'bar', from: 0, size: 25 })
     expect(store.state.search.response.hits.length).toEqual(1)
     expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
   })
