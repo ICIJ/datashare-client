@@ -39,7 +39,7 @@
     "facet": {
       "none": "No values.",
       "seeAll": "Search the entire database",
-      "noMatches": "No matches.<br />Hit <kbd>enter</kbd> to search in every documents",
+      "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
       "invert": "Invert",
       "content-type": "File Type",
       "language": "Language",
@@ -93,7 +93,8 @@
       "ocr": "OCR",
       "pipelines": "Pipelines",
       "empty": "You started no tasks yet.",
-      "new": "Start a new task"
+      "new": "Start a new task",
+      "correct_errors": "Please correct the following errors :"
     },
     "menu": {
       "help": "Ask for help",
@@ -146,6 +147,8 @@
     },
     "facet": {
       "none": "Aucune valeur distincte",
+      "seeAll": "Chercher dans toute la base de données",
+      "noMatches": "Pas de résultat.<br />Presser <kbd>Entrée</kbd> pour chercher dans tous les documents",
       "invert": "Inverser",
       "content-type": "Types de fichier",
       "language": "Langues",
@@ -169,6 +172,7 @@
       "content_type": "Type",
       "content_encoding": "Encodage",
       "tree_level": "Niveau d'imbrication",
+      "parent_document": "Document Parent",
       "details": "Details",
       "named_entities": "Entitiés nommées",
       "extracted_text": "Texte",
@@ -187,6 +191,8 @@
       "stages": "Étapes",
       "index_stage_label": "Extraction des textes",
       "findNames_stage_label": "Trouver les entitées nommées",
+      "purge": "Supprimer les tâches terminées",
+      "ongoing": "Tâches",
       "step_01": "Que voulez-vous faire ?",
       "step_02": "Pendant l'indexation, voulez-vous faire de l'OCR ?",
       "step_03": "Quel(s) algo(s) de NLP voulez-vous lancer ?",
@@ -195,6 +201,8 @@
       "choose_one_pipeline": "Merci de choisir un algorithme de NLP",
       "ocr": "OCR",
       "pipelines": "Algo(s)",
+      "empty": "Vous n'avez pas encore démarré de tâche",
+      "new": "Démarrer une nouvelle tâche",
       "correct_errors": "Merci de corriger les erreurs suivantes :"
     },
     "menu": {
