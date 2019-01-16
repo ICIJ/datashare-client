@@ -2,7 +2,6 @@ import store from '@/store'
 import Response from '@/api/Response'
 import Document from '@/api/Document'
 import NamedEntity from '@/api/NamedEntity'
-
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 

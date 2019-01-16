@@ -14,8 +14,7 @@ const esConnectionHelper = function () {
     await Promise.all(
       map(indices, async index => {
         if (!await es.indices.exists({ index: index })) {
-          await es.indices.create({ index: index, body: { settings: esSettings } })
-          await es.indices.putMapping({ index: index, type: 'doc', body: esMapping })
+          await es.indices.create({ index: index, body: { settings: esSettings, mappings: esMapping } })
         }
       })
     )
