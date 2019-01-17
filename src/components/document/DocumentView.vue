@@ -118,7 +118,7 @@
             <spreadsheet-viewer :url="document.relativePath" :type="document.contentType"/>
           </template>
           <template v-else>
-            Not available
+            {{ $t('document.not_available') }}
           </template>
         </div>
       </div>
