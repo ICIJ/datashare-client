@@ -21,7 +21,7 @@ localVue.use(VueProgressBar, { color: '#852308' })
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
-const i18n = new VueI18n({ locale: 'en', messages })
+let i18n = new VueI18n({ locale: 'en', messages })
 
 describe('SearchBar.vue', function () {
   esConnectionHelper()
@@ -43,9 +43,16 @@ describe('SearchBar.vue', function () {
     store.commit('search/reset')
   })
 
-  it('should display a search button', async () => {
-    let e = wrapped.vm.$el.querySelector('button[type=submit]')
-    expect(trim(e.textContent)).toEqual('Search')
+  it('should display search bar', () => {
+    expect(wrapped.find('form.search-bar button[type=submit]').exists()).toBeTruthy()
+    expect(wrapped.find('form.search-bar button[type=submit]').text()).toEqual('Search')
+  })
+
+  it('should display search bar in french', () => {
+    i18n = new VueI18n({ locale: 'fr', messages })
+    wrapped = mount(SearchBar, { localVue, i18n, router, store })
+    expect(wrapped.find('form.search-bar button[type=submit]').exists()).toBeTruthy()
+    expect(wrapped.find('form.search-bar button[type=submit]').text()).toEqual('Rechercher')
   })
 
   it('should display a search settings button', async () => {
