@@ -124,7 +124,7 @@ describe('Search.vue', function () {
     expect(wrapped.vm.$el.querySelectorAll('.search-results-item').length).toEqual(3)
   })
 
-  it('should not display the pagination', async () => {
+  it('should not display the pagination (1/2)', async () => {
     await wrapped.vm.search('foo')
     await wrapped.vm.$nextTick()
 
@@ -134,7 +134,7 @@ describe('Search.vue', function () {
     expect(wrapped.vm.$el.querySelectorAll('.search-results__header__last-page').length).toEqual(0)
   })
 
-  it('should not display the pagination', async () => {
+  it('should not display the pagination (2/2)', async () => {
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
 
     await wrapped.vm.search('document')
