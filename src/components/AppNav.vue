@@ -22,19 +22,29 @@
           </a>
           <ul class="app__nav__container__main__menu list-unstyled col" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
             <li class="list-unstyled-item app__nav__container__main__menu__item">
+              <a href="https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare" target="_blank">
+                {{ $t('menu.addDocuments') }}
+              </a>
+            </li>
+            <li class="list-unstyled-item app__nav__container__main__menu__item">
               <router-link :to="{ name: 'indexing' }">
                 {{ $t('menu.analyse') }}
               </router-link>
             </li>
             <li class="list-unstyled-item app__nav__container__main__menu__item">
-              <router-link :to="{ name: 'about' }">
-                {{ $t('menu.about') }}
-              </router-link>
+              <a href="https://icij.gitbook.io/datashare" target="_blank">
+                {{ $t('menu.faq') }}
+              </a>
             </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item mr-auto">
+            <li class="list-unstyled-item app__nav__container__main__menu__item">
               <a href="https://jira.icij.org/servicedesk/customer/portal/4/create/108" target="_blank">
                 {{ $t('menu.help') }}
               </a>
+            </li>
+            <li class="list-unstyled-item app__nav__container__main__menu__item mr-auto">
+              <router-link :to="{ name: 'about' }">
+                {{ $t('menu.about') }}
+              </router-link>
             </li>
             <li class="list-unstyled-item app__nav__container__main__menu__item">
               <a :href="logoutLink">

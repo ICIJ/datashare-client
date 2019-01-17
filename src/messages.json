@@ -98,9 +98,11 @@
     },
     "menu": {
       "help": "Ask for help",
-      "analyse": "Analyse documents",
+      "analyse": "Analyze documents",
       "logout": "Logout",
-      "about": "About"
+      "about": "About",
+      "addDocuments": "How to add documents",
+      "faq": "FAQ"
     },
     "about": {
       "datashareVersion": "Datashare version",
@@ -209,7 +211,9 @@
       "help": "Demander de l'aide",
       "analyse": "Analyser des documents",
       "logout": "Déconnexion",
-      "about": "A propos"
+      "about": "A propos",
+      "addDocuments": "Comment ajouter des documents",
+      "faq": "FAQ"
     },
     "about": {
       "datashareVersion": "Version datashare",
