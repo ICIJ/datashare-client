@@ -15,6 +15,7 @@
       "placeholder": "Search in documents...",
       "buttonlabel": "Search",
       "search-in": "Search in",
+      "settings": "Search settings",
       "results": {
         "match": "match in doc",
         "entities": "nb entities",
@@ -127,6 +128,7 @@
       "placeholder": "Rechercher dans les documents...",
       "buttonlabel": "Rechercher",
       "search-in": "Rechercher dans",
+      "settings": "Paramètres de recherche",
       "results": {
         "match": "dans le doc",
         "entities": "nb entités",
