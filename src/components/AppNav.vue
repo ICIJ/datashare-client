@@ -22,7 +22,7 @@
           </a>
           <ul class="app__nav__container__main__menu list-unstyled col" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
             <li class="list-unstyled-item app__nav__container__main__menu__item">
-              <a href="https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare" target="_blank">
+              <a :href="getAddDocumentsLink()" target="_blank">
                 {{ $t('menu.addDocuments') }}
               </a>
             </li>
@@ -63,6 +63,7 @@
 import { headroom } from 'vue-headroom'
 import SearchBar from './SearchBar'
 import DatashareClient from '../api/DatashareClient'
+import getOS from '@/utils/user'
 
 export default {
   name: 'AppNav',
@@ -89,6 +90,23 @@ export default {
     },
     onPin () {
       this.$root.$emit('bv::hide::popover')
+    },
+    getAddDocumentsLink () {
+      let link
+      switch (getOS()) {
+        case 'mac' :
+          link = 'https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare'
+          break
+        case 'windows' :
+          link = 'https://icij.gitbook.io/datashare/windows/how-to-add-documents-to-datashare'
+          break
+        case 'linux' :
+          link = 'https://icij.gitbook.io/datashare/linux/how-to-add-documents-to-datashare'
+          break
+        default :
+          link = 'https://icij.gitbook.io/datashare/'
+      }
+      return link
     }
   },
   computed: {
