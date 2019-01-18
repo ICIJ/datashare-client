@@ -1,4 +1,4 @@
-import { sliceIndexes, highlight, removeDiacritics, capitalize } from '@/utils/strings.js'
+import { sliceIndexes, highlight, removeDiacritics, capitalize } from '@/utils/strings'
 import escape from 'lodash/escape'
 
 describe('sliceIndexes', () => {
