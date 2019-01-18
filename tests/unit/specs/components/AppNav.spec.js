@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import messages from '@/messages'
@@ -24,9 +25,9 @@ describe('AppNav.vue', () => {
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
   })
 
-  it('should display a menu', () => {
+  it('should display a menu, without logout link', () => {
     expect(wrapper.find('.app__nav__container__main__menu').exists()).toBeTruthy()
-    expect(wrapper.findAll('.app__nav__container__main__menu__item').length).toEqual(6)
+    expect(wrapper.findAll('.app__nav__container__main__menu__item').length).toEqual(5)
   })
 
   it('should display the Mac link to the doc', () => {
@@ -49,5 +50,21 @@ describe('AppNav.vue', () => {
 
   it('should display the default link to the doc', () => {
     expect(wrapper.find('.app__nav__container__main__menu__item a').attributes().href).toEqual('https://icij.gitbook.io/datashare/')
+  })
+
+  it('should not display a logout link (1/2)', () => {
+    expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(0)
+  })
+
+  it('should not display a logout link (2/2)', () => {
+    Vue.prototype.config = { mode: 'LOCAL' }
+    wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
+    expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(0)
+  })
+
+  it('should display a logout link', () => {
+    Vue.prototype.config = { mode: 'SERVER' }
+    wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
+    expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(1)
   })
 })

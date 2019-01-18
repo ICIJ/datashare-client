@@ -1,4 +1,4 @@
-import { getOS } from '@/utils/user'
+import getOS from '@/utils/user'
 
 describe('user', () => {
   let languageGetter

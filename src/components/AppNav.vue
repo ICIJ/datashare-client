@@ -46,7 +46,7 @@
                 {{ $t('menu.about') }}
               </router-link>
             </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item">
+            <li class="list-unstyled-item app__nav__container__main__menu__item logout" v-if="isRemote">
               <a :href="logoutLink">
                 <font-awesome-icon icon="sign-out-alt" class="mr-1" />
                 {{ $t('menu.logout') }}
@@ -60,6 +60,7 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { headroom } from 'vue-headroom'
 import SearchBar from './SearchBar'
 import DatashareClient from '../api/DatashareClient'
@@ -74,6 +75,14 @@ export default {
   data () {
     return {
       collapseMenu: true
+    }
+  },
+  computed: {
+    logoutLink () {
+      return DatashareClient.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
+    },
+    isRemote () {
+      return Vue.prototype.config && Vue.prototype.config.mode === 'SERVER'
     }
   },
   watch: {
@@ -107,11 +116,6 @@ export default {
           link = 'https://icij.gitbook.io/datashare/'
       }
       return link
-    }
-  },
-  computed: {
-    logoutLink () {
-      return DatashareClient.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     }
   }
 }
