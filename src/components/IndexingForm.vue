@@ -252,10 +252,6 @@ export default {
         case 2:
           break
         case 3:
-          if (!this.$store.state.indexing.form.pipeline) {
-            this.errors.push('indexing.choose_one_pipeline')
-            return false
-          }
           break
         case 4:
           break
