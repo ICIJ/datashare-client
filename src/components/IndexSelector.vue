@@ -44,7 +44,7 @@ export default {
     const ds = new DatashareClient()
     ds.getIndices().then(res => {
       res.json().then(indices => {
-        this.options = union([{ value: process.env.VUE_APP_ES_INDEX, text: process.env.VUE_APP_ES_INDEX }],
+        this.options = union([{ value: process.env.VUE_APP_ES_INDEX, text: this.$t('facet.local-index') }],
           map(indices, index => { return { value: index, text: index } }))
       })
     })

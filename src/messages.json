@@ -52,7 +52,8 @@
       "extraction-level": "Extraction level",
       "projects": "Projects",
       "deleteNamedEntity": "Delete this Named Entity",
-      "showMore": "Show more"
+      "showMore": "Show more",
+      "local-index": "My documents"
     },
     "document": {
       "name": "File name",
@@ -173,7 +174,8 @@
       "extraction-level": "Niveau d'extraction",
       "projects": "Projets",
       "deleteNamedEntity": "Supprimer cette Entité Nommée",
-      "showMore": "Voir plus"
+      "showMore": "Voir plus",
+      "local-index": "Mes documents"
     },
     "document": {
       "name": "Nom du fichier",

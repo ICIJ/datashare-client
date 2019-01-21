@@ -30,19 +30,19 @@ DatashareClient.mockImplementation(() => {
 })
 
 describe('IndexSelector.vue', () => {
-  let wrapped = null
+  let wrapper
 
   beforeEach(() => {
-    wrapped = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
+    wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
   })
 
   it('should display a dropdown containing only the local index', () => {
-    expect(wrapped.findAll('option')).toHaveLength(1)
-    expect(wrapped.findAll('option').at(0).text()).toBe(process.env.VUE_APP_ES_INDEX)
+    expect(wrapper.findAll('option')).toHaveLength(1)
+    expect(wrapper.findAll('option').at(0).text()).toBe('My documents')
   })
 
   it('should select the local index as default selected index', () => {
-    expect(wrapped.vm.selected).toBe(process.env.VUE_APP_ES_INDEX)
+    expect(wrapper.vm.selected).toBe(process.env.VUE_APP_ES_INDEX)
   })
 
   it('should display a dropdown containing 3 indices', async () => {
@@ -54,13 +54,14 @@ describe('IndexSelector.vue', () => {
         }
       }
     })
-    wrapped = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
-    await wrapped.vm.$nextTick()
-    await wrapped.vm.$nextTick()
-    expect(wrapped.findAll('option')).toHaveLength(3)
-    expect(wrapped.findAll('option').at(0).text()).toBe(process.env.VUE_APP_ES_INDEX)
-    expect(wrapped.findAll('option').at(1).text()).toBe('first-index')
-    expect(wrapped.findAll('option').at(2).text()).toBe('second-index')
+    wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.findAll('option')).toHaveLength(3)
+    expect(wrapper.findAll('option').at(0).text()).toBe('My documents'
+    )
+    expect(wrapper.findAll('option').at(1).text()).toBe('first-index')
+    expect(wrapper.findAll('option').at(2).text()).toBe('second-index')
   })
 
   it('should change the selected index and refresh the route', async () => {
@@ -72,18 +73,18 @@ describe('IndexSelector.vue', () => {
         }
       }
     })
-    wrapped = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
-    await wrapped.vm.$nextTick()
-    await wrapped.vm.$nextTick()
+    wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
 
-    const spyRefreshRoute = jest.spyOn(wrapped.vm, 'refreshRoute')
+    const spyRefreshRoute = jest.spyOn(wrapper.vm, 'refreshRoute')
     expect(spyRefreshRoute).not.toBeCalled()
 
-    wrapped.findAll('option').at(2).element.selected = true
-    wrapped.find('select').trigger('change')
+    wrapper.findAll('option').at(2).element.selected = true
+    wrapper.find('select').trigger('change')
 
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(1)
-    expect(wrapped.vm.$store.getters['search/toRouteQuery'].index).toEqual('second-index')
+    expect(wrapper.vm.$store.getters['search/toRouteQuery'].index).toEqual('second-index')
   })
 })
