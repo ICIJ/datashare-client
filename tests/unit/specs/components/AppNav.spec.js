@@ -25,6 +25,10 @@ describe('AppNav.vue', () => {
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
   })
 
+  afterEach(() => {
+    Vue.prototype.config = { mode: 'LOCAL' }
+  })
+
   it('should display a menu, without logout link', () => {
     expect(wrapper.find('.app__nav__container__main__menu').exists()).toBeTruthy()
     expect(wrapper.findAll('.app__nav__container__main__menu__item').length).toEqual(4)
@@ -66,5 +70,15 @@ describe('AppNav.vue', () => {
     Vue.prototype.config = { mode: 'SERVER' }
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
     expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(1)
+  })
+
+  it('should display the github help link', () => {
+    expect(wrapper.find('.app__nav__container__main__menu__item.help a').attributes().href).toEqual(expect.stringContaining('github.com'))
+  })
+
+  it('should display the jira help link', () => {
+    Vue.prototype.config = { mode: 'SERVER' }
+    wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
+    expect(wrapper.find('.app__nav__container__main__menu__item.help a').attributes().href).toEqual(expect.stringContaining('jira.icij.org'))
   })
 })

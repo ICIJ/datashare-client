@@ -36,8 +36,8 @@
                 {{ $t('menu.faq') }}
               </a>
             </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item">
-              <a href="https://jira.icij.org/servicedesk/customer/portal/4/create/108" target="_blank">
+            <li class="list-unstyled-item app__nav__container__main__menu__item help">
+              <a :href="getHelpLink()" target="_blank">
                 {{ $t('menu.help') }}
               </a>
             </li>
@@ -111,6 +111,9 @@ export default {
           link = 'https://icij.gitbook.io/datashare/'
       }
       return link
+    },
+    getHelpLink () {
+      return this.isRemote ? 'https://jira.icij.org/servicedesk/customer/portal/4/create/108' : 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
     }
   }
 }
