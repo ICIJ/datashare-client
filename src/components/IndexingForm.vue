@@ -83,19 +83,19 @@
       <div class="indexing-form__step__body form-group my-0 pl-4">
         <div class="custom-control custom-radio">
           <input class="custom-control-input" type="radio" id="pipeline_corenlp" value="corenlp" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_corenlp">{{ $t('corenlp') }}</label>
+          <label class="custom-control-label" for="pipeline_corenlp">{{ $t('indexing.corenlp') }} ({{ $t('indexing.default') }})</label>
         </div>
         <div class="custom-control custom-radio">
           <input class="custom-control-input" type="radio" id="pipeline_opennlp" value="opennlp" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_opennlp">{{ $t('opennlp') }}</label>
+          <label class="custom-control-label" for="pipeline_opennlp">{{ $t('indexing.opennlp') }}</label>
         </div>
         <div class="custom-control custom-radio">
           <input class="custom-control-input" type="radio" id="pipeline_mitie" value="mitie" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_mitie">{{ $t('mitie') }}</label>
+          <label class="custom-control-label" for="pipeline_mitie">{{ $t('indexing.mitie') }}</label>
         </div>
         <div class="custom-control custom-radio">
           <input class="custom-control-input" type="radio" id="pipeline_ixapipe" value="ixapipe" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_ixapipe">{{ $t('ixapipe') }}</label>
+          <label class="custom-control-label" for="pipeline_ixapipe">{{ $t('indexing.ixapipe') }}</label>
         </div>
       </div>
       <div class="indexing-form__step__footer mt-4 row no-gutters">
@@ -148,10 +148,10 @@
           <dt class="col-sm-8 text-sm-right">{{ $t('indexing.pipelines') }}</dt>
           <dd class="col-sm-4">
             <ul class="list-unstyled mb-0">
-              <li v-if="$store.state.indexing.form.pipeline === 'corenlp'">{{ $t('corenlp') }}</li>
-              <li v-if="$store.state.indexing.form.pipeline === 'opennlp'">{{ $t('opennlp') }}</li>
-              <li v-if="$store.state.indexing.form.pipeline === 'mitie'">{{ $t('mitie') }}</li>
-              <li v-if="$store.state.indexing.form.pipeline === 'ixapipe'">{{ $t('ixapipe') }}</li>
+              <li v-if="$store.state.indexing.form.pipeline === 'corenlp'">{{ $t('indexing.corenlp') }}</li>
+              <li v-if="$store.state.indexing.form.pipeline === 'opennlp'">{{ $t('indexing.opennlp') }}</li>
+              <li v-if="$store.state.indexing.form.pipeline === 'mitie'">{{ $t('indexing.mitie') }}</li>
+              <li v-if="$store.state.indexing.form.pipeline === 'ixapipe'">{{ $t('indexing.ixapipe') }}</li>
             </ul>
           </dd>
         </div>
