@@ -12,7 +12,7 @@
 <style lang="scss" scoped>
   .landing {
     position: relative;
-    min-height: calc(100vh - #{$app-nav-height});
+    min-height: calc(100vh - #{$app-nav-height}  - #{$app-footer-height});
     background: $aggregations-panel-bg;
 
     &:after {

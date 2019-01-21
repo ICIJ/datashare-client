@@ -50,7 +50,6 @@ $kbd-padding-y: .2em;
 $kbd-padding-x: .4em;
 $kbd-bg: rgba(#222, .7);
 
-
 // Bootstrap variables and mixins must be available everywhere
 @import '~node_modules/bootstrap/scss/_functions.scss';
 @import '~node_modules/bootstrap/scss/_variables.scss';
@@ -60,4 +59,5 @@ $kbd-bg: rgba(#222, .7);
 
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
+$app-footer-height: $line-height-base * 1.2rem;
 $aggregations-panel-bg: #F2F0F0;

@@ -5,7 +5,8 @@ import BootstrapVue from 'bootstrap-vue'
 import { createLocalVue, mount } from '@vue/test-utils'
 import fetchPonyfill from 'fetch-ponyfill'
 
-import About from '@/components/About'
+import AppFooter from '@/components/AppFooter'
+import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
@@ -17,10 +18,14 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(BootstrapVue)
+localVue.component('font-awesome-icon', FontAwesomeIcon)
+localVue.prototype.config = {
+  userDir: '/home/foo/Datashare'
+}
 
 const i18n = new VueI18n({locale: 'en', messages})
 
-describe('About.vue', () => {
+describe('AppFooter.vue', () => {
   var wrapped = null
 
   beforeEach(() => {
@@ -29,7 +34,7 @@ describe('About.vue', () => {
 
   it('should display client git sha1', () => {
     window.fetch.mockReturnValue(jsonOk({}))
-    wrapped = mount(About, {localVue, i18n, router, store})
+    wrapped = mount(AppFooter, {localVue, i18n, router, store})
     const sha1 = wrapped.vm.clientHash
     expect(sha1.match(/[a-z0-9]*/)[0]).toEqual(sha1)
     expect(sha1.length).toEqual(7)
@@ -58,10 +63,10 @@ describe('About.vue', () => {
       'git.commit.id': 'sha1',
       'git.commit.id.abbrev': 'sha1_abbrev'
     }))
-    wrapped = mount(About, {localVue, i18n, router, store})
+    wrapped = mount(AppFooter, {localVue, i18n, router, store})
     await wrapped.vm.promise
-    expect(wrapped.vm.$el.querySelectorAll('.about dd')[0].textContent).toEqual('version')
-    expect(wrapped.vm.$el.querySelectorAll('.about dd')[2].textContent).toEqual('sha1_abbrev')
+    expect(wrapped.find('.app__footer__tooltip__server__value').text()).toEqual('sha1_abbrev')
+    expect(wrapped.find('.app__footer__addon--version').text()).toEqual('version')
   })
 })
 

@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import About from '@/components/About'
 import App from '@/components/App'
 import DocumentView from '@/components/document/DocumentView'
 import Indexing from '@/components/Indexing'
@@ -59,11 +58,6 @@ const router = new VueRouter({
           name: 'indexing',
           path: 'indexing',
           component: Indexing
-        },
-        {
-          name: 'about',
-          path: 'about',
-          component: About
         }
       ]
     },

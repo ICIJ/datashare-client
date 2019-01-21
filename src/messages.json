@@ -118,6 +118,12 @@
       "datashareVersion": "Datashare version",
       "clientVersion": "Client version",
       "serverVersion": "Server version"
+    },
+    "footer": {
+      "analyse": "Analyze documents",
+      "homedir": "Move files to this directory to be able to analyse them",
+      "clientVersion": "Client",
+      "serverVersion": "Server"
     }
   },
   "fr": {
@@ -234,6 +240,10 @@
       "datashareVersion": "Version datashare",
       "clientVersion": "Version client",
       "serverVersion": "Version serveur"
+    },
+    "footer": {
+      "clientVersion": "Client",
+      "serverVersion": "Serveur"
     }
   }
 }

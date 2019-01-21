@@ -10,10 +10,12 @@ import {faAngleRight} from '@fortawesome/free-solid-svg-icons/faAngleRight'
 import {faAngleUp} from '@fortawesome/free-solid-svg-icons/faAngleUp'
 import {faBan} from '@fortawesome/free-solid-svg-icons/faBan'
 import {faBars} from '@fortawesome/free-solid-svg-icons/faBars'
+import {faBolt} from '@fortawesome/free-solid-svg-icons/faBolt'
 import {faBuilding} from '@fortawesome/free-solid-svg-icons/faBuilding'
 import {faCaretDown} from '@fortawesome/free-solid-svg-icons/faCaretDown'
 import {faCaretRight} from '@fortawesome/free-solid-svg-icons/faCaretRight'
 import {faCog} from '@fortawesome/free-solid-svg-icons/faCog'
+import {faDesktop} from '@fortawesome/free-solid-svg-icons/faDesktop'
 import {faDownload} from '@fortawesome/free-solid-svg-icons/faDownload'
 import {faEllipsisV} from '@fortawesome/free-solid-svg-icons/faEllipsisV'
 import {faExclamationTriangle} from '@fortawesome/free-solid-svg-icons/faExclamationTriangle'
@@ -30,6 +32,7 @@ import {faQuestionCircle} from '@fortawesome/free-solid-svg-icons/faQuestionCirc
 import {faRedo} from '@fortawesome/free-solid-svg-icons/faRedo'
 import {faRocket} from '@fortawesome/free-solid-svg-icons/faRocket'
 import {faSearch} from '@fortawesome/free-solid-svg-icons/faSearch'
+import {faServer} from '@fortawesome/free-solid-svg-icons/faServer'
 import {faSignOutAlt} from '@fortawesome/free-solid-svg-icons/faSignOutAlt'
 import {faTrashAlt} from '@fortawesome/free-solid-svg-icons/faTrashAlt'
 import {faUndo} from '@fortawesome/free-solid-svg-icons/faUndo'
@@ -45,10 +48,12 @@ library.add(
   faAngleUp,
   faBars,
   faBan,
+  faBolt,
   faBuilding,
   faCaretDown,
   faCaretRight,
   faCog,
+  faDesktop,
   faDownload,
   faEllipsisV,
   faExclamationTriangle,
@@ -64,6 +69,7 @@ library.add(
   faQuestionCircle,
   faRedo,
   faRocket,
+  faServer,
   faSearch,
   faSignOutAlt,
   faTrashAlt,
