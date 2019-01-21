@@ -6,6 +6,11 @@
           {{ $t('indexing.step_01') }}
         </h4>
       </div>
+      <div class="indexing-form__step__subheader mb-4" v-if="shouldRender('indexing.step_01_sub')">
+        <span>
+          {{ $t('indexing.step_01_sub') }}
+        </span>
+      </div>
       <div class="indexing-form__step__body form-group my-0 pl-4">
         <div class="custom-control custom-checkbox">
           <input class="custom-control-input" type="checkbox" id="index" v-model="index" value="index">
@@ -31,6 +36,11 @@
         <h4>
           {{ $t('indexing.step_02') }}
         </h4>
+      </div>
+      <div class="indexing-form__step__subheader mb-4" v-if="shouldRender('indexing.step_02_sub')">
+        <span>
+          {{ $t('indexing.step_02_sub') }}
+        </span>
       </div>
       <div class="indexing-form__step__body form-group my-0 pl-4">
         <div class="custom-control custom-radio">
@@ -64,6 +74,11 @@
         <h4>
           {{ $t('indexing.step_03') }}
         </h4>
+      </div>
+      <div class="indexing-form__step__subheader mb-4" v-if="shouldRender('indexing.step_03_sub')">
+        <span>
+          {{ $t('indexing.step_03_sub') }}
+        </span>
       </div>
       <div class="indexing-form__step__body form-group my-0 pl-4">
         <div class="custom-control custom-radio">
@@ -102,31 +117,36 @@
           {{ $t('indexing.step_04') }}
         </h4>
       </div>
+      <div class="indexing-form__step__subheader mb-4" v-if="shouldRender('indexing.step_04_sub')">
+        <span>
+          {{ $t('indexing.step_04_sub') }}
+        </span>
+      </div>
       <dl class="form-group mb-0 border border-white py-2 mx-3">
         <div class="row">
-          <dt class="col-sm-4 text-sm-right">{{ $t('indexing.index_stage_label') }}</dt>
-          <dd class="col-sm-8">
+          <dt class="col-sm-8 text-sm-right">{{ $t('indexing.index_stage_label') }}</dt>
+          <dd class="col-sm-4">
             <span v-if="$store.state.indexing.form.index">{{ $t('indexing.yes') }}</span>
             <span v-if="!$store.state.indexing.form.index">{{ $t('indexing.no') }}</span>
           </dd>
         </div>
         <div v-if="$store.state.indexing.form.index" class="row">
-          <dt class="col-sm-4 text-sm-right">{{ $t('indexing.ocr') }}</dt>
-          <dd class="col-sm-8">
+          <dt class="col-sm-8 text-sm-right">{{ $t('indexing.ocr') }}</dt>
+          <dd class="col-sm-4">
             <span v-if="$store.state.indexing.form.ocr">{{ $t('indexing.yes') }}</span>
             <span v-if="!$store.state.indexing.form.ocr">{{ $t('indexing.no') }}</span>
           </dd>
         </div>
         <div class="row">
-          <dt class="col-sm-4 text-sm-right">{{ $t('indexing.findNames_stage_label') }}</dt>
-          <dd class="col-sm-8">
+          <dt class="col-sm-8 text-sm-right">{{ $t('indexing.findNames_stage_label') }}</dt>
+          <dd class="col-sm-4">
             <span v-if="$store.state.indexing.form.findNames">{{ $t('indexing.yes') }}</span>
             <span v-if="!$store.state.indexing.form.findNames">{{ $t('indexing.no') }}</span>
           </dd>
         </div>
         <div v-if="$store.state.indexing.form.findNames" class="row">
-          <dt class="col-sm-4 text-sm-right">{{ $t('indexing.pipelines') }}</dt>
-          <dd class="col-sm-8">
+          <dt class="col-sm-8 text-sm-right">{{ $t('indexing.pipelines') }}</dt>
+          <dd class="col-sm-4">
             <ul class="list-unstyled mb-0">
               <li v-if="$store.state.indexing.form.pipeline === 'corenlp'">Core NLP</li>
               <li v-if="$store.state.indexing.form.pipeline === 'opennlp'">Open NLP</li>
@@ -262,6 +282,9 @@ export default {
       this.finally(this.$store.dispatch('indexing/query').then(() => {
         this.$store.commit('indexing/reset')
       }))
+    },
+    shouldRender (string) {
+      return this.$te(string) && this.$t(string) !== ''
     }
   }
 }
@@ -277,6 +300,10 @@ export default {
       &__header h4 {
         font-size: 1.2em;
         font-weight: bolder;
+      }
+
+      &__subheader {
+        font-style: italic;
       }
 
       &__footer {
