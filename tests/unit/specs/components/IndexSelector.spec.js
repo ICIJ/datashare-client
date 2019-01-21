@@ -36,9 +36,8 @@ describe('IndexSelector.vue', () => {
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
   })
 
-  it('should display a dropdown containing only the local index', () => {
-    expect(wrapper.findAll('option')).toHaveLength(1)
-    expect(wrapper.findAll('option').at(0).text()).toBe('My documents')
+  it('should not display a dropdown containing only the local index', () => {
+    expect(wrapper.findAll('option')).toHaveLength(0)
   })
 
   it('should select the local index as default selected index', () => {
@@ -58,8 +57,7 @@ describe('IndexSelector.vue', () => {
     await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
     expect(wrapper.findAll('option')).toHaveLength(3)
-    expect(wrapper.findAll('option').at(0).text()).toBe('My documents'
-    )
+    expect(wrapper.findAll('option').at(0).text()).toBe('My documents')
     expect(wrapper.findAll('option').at(1).text()).toBe('first-index')
     expect(wrapper.findAll('option').at(2).text()).toBe('second-index')
   })

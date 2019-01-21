@@ -1,5 +1,5 @@
 <template>
-  <div class="facet card facet--hide-show-more facet--hide-search">
+  <div class="facet card facet--hide-show-more facet--hide-search" v-if="options.length > 1">
     <div class="card-header">
       <h6 @click="toggleItems">
         <font-awesome-icon :icon="headerIcon" />
