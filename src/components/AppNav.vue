@@ -55,10 +55,9 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { headroom } from 'vue-headroom'
-import SearchBar from './SearchBar'
-import DatashareClient from '../api/DatashareClient'
+import SearchBar from '@/components/SearchBar'
+import DatashareClient from '@/api/DatashareClient'
 import getOS from '@/utils/user'
 
 export default {
@@ -77,7 +76,7 @@ export default {
       return DatashareClient.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     },
     isRemote () {
-      return Vue.prototype.config && Vue.prototype.config.mode === 'SERVER'
+      return this.config && this.config.mode === 'SERVER'
     }
   },
   watch: {

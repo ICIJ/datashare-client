@@ -1,11 +1,9 @@
 <script>
-import each from 'lodash/each'
-import replace from 'lodash/replace'
-
-import Vue from 'vue'
 import Facet from '@/components/Facet'
 import FacetPathTree from '@/components/FacetPathTree'
 import facets from '@/mixins/facets'
+import each from 'lodash/each'
+import replace from 'lodash/replace'
 
 export default {
   name: 'FacetPath',
@@ -19,7 +17,7 @@ export default {
       const tree = []
       each(items, item => {
         tree.push({
-          label: replace(item.key, Vue.prototype.config.dataDir + '/', ''),
+          label: replace(item.key, this.config.dataDir + '/', ''),
           path: item.key,
           count: item.doc_count,
           children: [],
