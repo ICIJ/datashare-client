@@ -110,14 +110,8 @@
       "help": "Ask for help",
       "analyse": "Analyze documents",
       "logout": "Logout",
-      "about": "About",
       "addDocuments": "How to add documents",
       "faq": "FAQ"
-    },
-    "about": {
-      "datashareVersion": "Datashare version",
-      "clientVersion": "Client version",
-      "serverVersion": "Server version"
     },
     "footer": {
       "analyse": "Analyze documents",
@@ -232,14 +226,8 @@
       "help": "Aide",
       "analyse": "Analyser les documents",
       "logout": "Déconnexion",
-      "about": "A propos",
       "addDocuments": "Comment ajouter des documents",
       "faq": "FAQ"
-    },
-    "about": {
-      "datashareVersion": "Version datashare",
-      "clientVersion": "Version client",
-      "serverVersion": "Version serveur"
     },
     "footer": {
       "clientVersion": "Client",
