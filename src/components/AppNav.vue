@@ -41,11 +41,6 @@
                 {{ $t('menu.help') }}
               </a>
             </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item mr-auto">
-              <router-link :to="{ name: 'about' }">
-                {{ $t('menu.about') }}
-              </router-link>
-            </li>
             <li class="list-unstyled-item app__nav__container__main__menu__item logout" v-if="isRemote">
               <a :href="logoutLink">
                 <font-awesome-icon icon="sign-out-alt" class="mr-1" />
