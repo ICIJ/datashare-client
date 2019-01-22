@@ -10,19 +10,24 @@
     <div v-else>
       <div class="search-results__header">
         <div class="search-results__header__number-of-results">{{ $t('search.results.no-result') }}</div>
+        <div class="ml-1">
+          You may try to
+          <reset-filters-button />
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import SearchResultsHeader from './SearchResultsHeader.vue'
-import SearchResultsItem from './SearchResultsItem.vue'
+import SearchResultsHeader from '@/components/SearchResultsHeader'
+import SearchResultsItem from '@/components/SearchResultsItem'
+import ResetFiltersButton from '@/components/ResetFiltersButton'
 
 export default {
   name: 'SearchResults',
   props: ['response', 'query'],
-  components: { SearchResultsHeader, SearchResultsItem }
+  components: { SearchResultsHeader, SearchResultsItem, ResetFiltersButton }
 }
 </script>
 

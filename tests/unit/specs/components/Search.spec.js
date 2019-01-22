@@ -61,7 +61,7 @@ describe('Search.vue', function () {
     await wrapped.vm.search('foo')
     await wrapped.vm.$nextTick()
 
-    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__number-of-results').textContent)).toEqual('No documents found')
+    expect(trim(wrapped.vm.$el.querySelector('.search-results__header__number-of-results').textContent)).toEqual('No documents found.')
   })
 
   it('should display one document found', async () => {

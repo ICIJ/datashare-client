@@ -37,9 +37,7 @@
             </p>
           </div>
           <div class="col-4 text-right">
-            <button class="btn btn-secondary btn-sm" id="input-reset" @click="resetFacets" :disabled="!hasFacets">
-              Reset
-            </button>
+            <reset-filters-button />
           </div>
         </div>
         <div class="row py-2">
@@ -73,10 +71,11 @@
 
 <script>
 import bPopover from 'bootstrap-vue/es/components/popover/popover'
+import ResetFiltersButton from '@/components/ResetFiltersButton'
 
 export default {
   name: 'SearchSettings',
-  components: { bPopover },
+  components: { bPopover, ResetFiltersButton },
   data () {
     return {
       relativeSearch: !this.$store.state.search.globalSearch,
@@ -120,11 +119,6 @@ export default {
       this.$root.$emit('bv::hide::popover')
       // Change the route
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
-    }
-  },
-  computed: {
-    hasFacets () {
-      return this.$store.getters['search/activeFacets'].length > 0
     }
   }
 }
