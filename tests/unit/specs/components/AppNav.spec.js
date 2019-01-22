@@ -27,7 +27,7 @@ describe('AppNav.vue', () => {
 
   it('should display a menu, without logout link', () => {
     expect(wrapper.find('.app__nav__container__main__menu').exists()).toBeTruthy()
-    expect(wrapper.findAll('.app__nav__container__main__menu__item').length).toEqual(5)
+    expect(wrapper.findAll('.app__nav__container__main__menu__item').length).toEqual(4)
   })
 
   it('should display the Mac link to the doc', () => {
