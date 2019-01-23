@@ -36,7 +36,7 @@
                 {{ $t('menu.faq') }}
               </a>
             </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item help">
+            <li class="list-unstyled-item app__nav__container__main__menu__item help mr-auto">
               <a :href="getHelpLink()" target="_blank">
                 {{ $t('menu.help') }}
               </a>
