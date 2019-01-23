@@ -6,7 +6,7 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import find from 'lodash/find'
 
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { EventBus } from '@/utils/event-bus.js'
+import { EventBus } from '@/utils/event-bus'
 import FacetSearch from '@/components/FacetSearch'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'

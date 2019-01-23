@@ -61,7 +61,7 @@ export default {
     ...mapState('indexing', { tasks: state => state.tasks })
   },
   created () {
-    this.$store.dispatch('search/query')
+    store.dispatch('search/query')
   },
   mounted () {
     if (this.tasks.length === 0) {
@@ -76,7 +76,7 @@ export default {
     }, () => next())
   },
   beforeRouteLeave (to, from, next) {
-    this.$store.dispatch('indexing/stopPollTasks')
+    store.dispatch('indexing/stopPollTasks')
     next()
   },
   methods: {
@@ -87,7 +87,7 @@ export default {
       this.$refs.indexingForm.hide()
     },
     cleanTasks () {
-      this.$store.dispatch('indexing/cleanTasks')
+      store.dispatch('indexing/cleanTasks')
     },
     taskLabel (name) {
       let nameAndId = last(name.split('.')).split('@')
