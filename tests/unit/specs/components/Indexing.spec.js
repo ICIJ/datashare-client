@@ -1,58 +1,51 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
-import BootstrapVue from 'bootstrap-vue'
 import { createLocalVue, mount } from '@vue/test-utils'
-import fetchPonyfill from 'fetch-ponyfill'
-
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Indexing from '@/components/Indexing'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
-
+import fetchPonyfill from 'fetch-ponyfill'
 const { Response } = fetchPonyfill()
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
-localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
-
-const i18n = new VueI18n({locale: 'en', messages})
+const i18n = new VueI18n({ locale: 'en', messages })
 
 describe('Indexing.vue', () => {
-  var wrapped = null
+  let wrapper
   esConnectionHelper()
 
   beforeEach(() => {
-    wrapped = mount(Indexing, {localVue, i18n, router, store})
+    wrapper = mount(Indexing, { localVue, i18n, router, store })
     jest.spyOn(datashare, 'fetch')
   })
 
   afterEach(() => {
-    wrapped.vm.$store.commit('indexing/reset')
+    store.commit('indexing/reset')
   })
 
   it('should begin/stop polling when route enter/leave', () => {
     router.push('indexing')
-    expect(wrapped.vm.$store.state.indexing.pollHandle).not.toEqual(undefined)
+    expect(store.state.indexing.pollHandle).not.toEqual(undefined)
 
     router.push('/')
-    expect(wrapped.vm.$store.state.indexing.pollHandle).toEqual(null)
+    expect(store.state.indexing.pollHandle).toEqual(null)
   })
 
-  it('should update tasks with polling request', async () => {
+  it('should update tasks with polling request', () => {
     datashare.fetch.mockReturnValue(jsonOk({}))
-    wrapped.vm.$store.commit('indexing/updateTasks', [{name: 'foo.bar@123', progress: 0.5, state: 'DONE'},
-      {name: 'foo.baz@456', progress: 0.2, state: 'RUNNING'}])
-    await wrapped.vm.$nextTick()
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' },
+      { name: 'foo.baz@456', progress: 0.2, state: 'RUNNING' }])
 
-    expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks').length).toEqual(2)
-    expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[0].textContent).toContain('bar (123)')
-    expect(wrapped.vm.$el.querySelectorAll('li.indexing__tasks')[1].textContent).toContain('baz (456)')
+    expect(wrapper.findAll('li.indexing__tasks').length).toEqual(2)
+    expect(wrapper.findAll('li.indexing__tasks').at(0).text()).toContain('bar (123)')
+    expect(wrapper.findAll('li.indexing__tasks').at(1).text()).toContain('baz (456)')
   })
 })
 
