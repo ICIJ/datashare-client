@@ -105,7 +105,7 @@
       "opennlp": "Open NLP",
       "mitie": "Mitie",
       "ixapipe": "Ixa Pipe",
-      "default": "by default - CoreNLP offers the highest probability of working in most documents"
+      "default": "By default - CoreNLP offers the highest probability of working in most documents"
     },
     "menu": {
       "help": "Ask for help",
@@ -222,7 +222,7 @@
       "opennlp": "Open NLP",
       "mitie": "Mitie",
       "ixapipe": "Ixa Pipe",
-      "default": "par défaut - CoreNLP présente une meilleure probablilité de fonctionner avec tous les documents"
+      "default": "Par défaut - CoreNLP présente une meilleure probablilité de fonctionner avec tous les documents"
     },
     "menu": {
       "help": "Aide",

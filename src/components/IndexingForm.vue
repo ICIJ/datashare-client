@@ -83,19 +83,30 @@
       <div class="indexing-form__step__body form-group my-0 pl-4">
         <div class="custom-control custom-radio">
           <input class="custom-control-input" type="radio" id="pipeline_corenlp" value="corenlp" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_corenlp">{{ $t('indexing.corenlp') }} ({{ $t('indexing.default') }})</label>
+          <label class="custom-control-label" for="pipeline_corenlp">
+            {{ $t('indexing.corenlp') }}
+            <div class="font-italic small">
+              {{ $t('indexing.default') }}
+            </div>
+          </label>
         </div>
         <div class="custom-control custom-radio">
           <input class="custom-control-input" type="radio" id="pipeline_opennlp" value="opennlp" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_opennlp">{{ $t('indexing.opennlp') }}</label>
+          <label class="custom-control-label" for="pipeline_opennlp">
+            {{ $t('indexing.opennlp') }}
+          </label>
         </div>
         <div class="custom-control custom-radio">
           <input class="custom-control-input" type="radio" id="pipeline_mitie" value="mitie" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_mitie">{{ $t('indexing.mitie') }}</label>
+          <label class="custom-control-label" for="pipeline_mitie">
+            {{ $t('indexing.mitie') }}
+          </label>
         </div>
         <div class="custom-control custom-radio">
           <input class="custom-control-input" type="radio" id="pipeline_ixapipe" value="ixapipe" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_ixapipe">{{ $t('indexing.ixapipe') }}</label>
+          <label class="custom-control-label" for="pipeline_ixapipe">
+            {{ $t('indexing.ixapipe') }}
+          </label>
         </div>
       </div>
       <div class="indexing-form__step__footer mt-4 row no-gutters">
