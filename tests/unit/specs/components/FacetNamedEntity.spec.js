@@ -37,9 +37,11 @@ describe('FacetNamedEntity.vue', () => {
   esConnectionHelper()
   var es = esConnectionHelper.es
   var wrapped = null
+
   beforeEach(async () => {
     mixin.methods.watchedForUpdate = noop
     wrapped = mount(FacetNamedEntity, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, {name: 'named-entity-person'}) } })
+    store.commit('search/setGlobalSearch', false)
     await wrapped.vm.root.aggregate()
   })
 

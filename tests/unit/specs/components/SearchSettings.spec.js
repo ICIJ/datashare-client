@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount, createWrapper } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/messages'
 import router from '@/router'
@@ -45,15 +45,17 @@ describe('SearchSettings.vue', () => {
     expect(e.options[e.selectedIndex].value).toEqual('dateOldest')
   })
 
-  it('should have an input unchecked for globalSearch', async () => {
-    await wrapper.vm.$nextTick()
-    expect(wrapper.vm.$el.querySelector('#input-global').checked).toEqual(true)
+  it('should not be relative to the search, by default', () => {
+    expect(wrapper.vm.$el.querySelector('#input-global').checked).toEqual(false)
   })
 
-  it('should have an input checked for globalSearch', async () => {
-    wrapper.vm.$store.commit('search/setGlobalSearch', true)
-    await wrapper.vm.$nextTick()
+  it('should emit a bv::hide::popover on relativeSearch change', () => {
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+    wrapper.vm.relativeSearch = true
+
     expect(wrapper.vm.$el.querySelector('#input-global').checked).toEqual(true)
+    expect(rootWrapper.emitted('bv::hide::popover')).toBeTruthy()
+    expect(rootWrapper.emitted('bv::hide::popover').length).toEqual(1)
   })
 
   it('should call router push on facets reset', async () => {

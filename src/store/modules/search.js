@@ -18,7 +18,7 @@ export function initialState () {
     query: '*',
     from: 0,
     size: 25,
-    globalSearch: false,
+    globalSearch: true,
     facets: [
       new FacetText('content-type', 'contentType', true, item => get(types, [item.key, 'label'], item.key)),
       new FacetText('language', 'language', true, item => {
