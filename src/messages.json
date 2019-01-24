@@ -81,7 +81,7 @@
       "no": "No",
       "previous": "Previous",
       "next": "Next",
-      "btnLabel": "Go",
+      "go": "Go",
       "stages": "Stages",
       "index_stage_label": "Extract text from my documents",
       "findNames_stage_label": "Find named entities (names of people, organizations and locations) in my documents",
@@ -99,13 +99,15 @@
       "ocr": "OCR",
       "pipelines": "Pipelines",
       "empty": "You started no tasks yet.",
-      "new": "Start a new task",
+      "extract_text": "Extract text",
       "correct_errors": "Please correct the following errors:",
       "corenlp": "Core NLP",
       "opennlp": "Open NLP",
       "mitie": "Mitie",
       "ixapipe": "Ixa Pipe",
-      "default": "By default - CoreNLP offers the highest probability of working in most documents"
+      "default": "By default - CoreNLP offers the highest probability of working in most documents",
+      "extract": "Extract",
+      "find_named_entities": "Find named entities"
     },
     "menu": {
       "help": "Ask for help",
@@ -202,7 +204,7 @@
       "no": "Non",
       "previous": "Précédent",
       "next": "Suivant",
-      "btnLabel": "Go",
+      "go": "Go",
       "stages": "Étapes",
       "index_stage_label": "Extraction des textes de mes documents",
       "findNames_stage_label": "Trouver les entitées nommées dans les documents",
@@ -216,13 +218,15 @@
       "ocr": "OCR",
       "pipelines": "Algo(s)",
       "empty": "Vous n'avez pas encore démarré de tâche",
-      "new": "Démarrer une nouvelle tâche",
+      "extract_text": "Extraire le texte",
       "correct_errors": "Merci de corriger les erreurs suivantes :",
       "corenlp": "Core NLP",
       "opennlp": "Open NLP",
       "mitie": "Mitie",
       "ixapipe": "Ixa Pipe",
-      "default": "Par défaut - CoreNLP présente une meilleure probablilité de fonctionner avec tous les documents"
+      "default": "Par défaut - CoreNLP présente une meilleure probablilité de fonctionner avec tous les documents",
+      "extract": "Extraire",
+      "find_named_entities": "Trouver les entitées nommées"
     },
     "menu": {
       "help": "Aide",

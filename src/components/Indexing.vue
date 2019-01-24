@@ -1,17 +1,26 @@
 <template>
   <div class="indexing container pt-4">
     <div class="text-right">
-      <button class="btn btn-icij" type="button" @click="openIndexingForm">
+      <button class="btn btn-icij mr-2" type="button" @click="openExtractingForm">
         <font-awesome-icon icon="rocket" class="mr-2" />
-        {{ $t('indexing.new') }}
+        {{ $t('indexing.extract_text') }}
+      </button>
+      <button class="btn btn-icij" type="button" @click="openFindNamedEntitiesForm">
+        {{ $t('indexing.find_named_entities') }}
       </button>
     </div>
-    <b-modal ref="indexingForm" hide-footer modal-class="indexing__form-modal" size="md">
+    <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal" size="md">
       <div slot="modal-title">
         <font-awesome-icon icon="rocket" class="mr-2" />
-        {{ $t('indexing.new') }}
+        {{ $t('indexing.extract_text') }}
       </div>
-      <indexing-form id="indexing-form" :finally="closeIndexingForm" />
+      <extracting-form id="extracting-form" :finally="closeExtractingForm" />
+    </b-modal>
+    <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal" size="md">
+      <div slot="modal-title">
+        {{ $t('indexing.find_named_entities') }}
+      </div>
+      <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm" />
     </b-modal>
     <div class="mt-4">
       <div class="card">
@@ -49,14 +58,14 @@
 <script>
 import { mapState } from 'vuex'
 import bModal from 'bootstrap-vue/es/components/modal/modal'
-import last from 'lodash/last'
-
+import ExtractingForm from '@/components/ExtractingForm'
+import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import store from '@/store'
-import IndexingForm from './IndexingForm'
+import last from 'lodash/last'
 
 export default {
   name: 'indexing',
-  components: { IndexingForm, bModal },
+  components: { ExtractingForm, FindNamedEntitiesForm, bModal },
   computed: {
     ...mapState('indexing', { tasks: state => state.tasks })
   },
@@ -65,7 +74,7 @@ export default {
   },
   mounted () {
     if (this.tasks.length === 0) {
-      this.openIndexingForm()
+      this.openExtractingForm()
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -80,11 +89,17 @@ export default {
     next()
   },
   methods: {
-    openIndexingForm () {
-      this.$refs.indexingForm.show()
+    openExtractingForm () {
+      this.$refs.extractingForm.show()
     },
-    closeIndexingForm () {
-      this.$refs.indexingForm.hide()
+    closeExtractingForm () {
+      this.$refs.extractingForm.hide()
+    },
+    openFindNamedEntitiesForm () {
+      this.$refs.findNamedEntitiesForm.show()
+    },
+    closeFindNamedEntitiesForm () {
+      this.$refs.findNamedEntitiesForm.hide()
     },
     cleanTasks () {
       store.dispatch('indexing/cleanTasks')
@@ -95,10 +110,10 @@ export default {
     },
     taskStateToClass (state) {
       switch (state) {
-        case ('DONE'): return 'bg-success'
-        case ('ERROR'): return 'bg-danger'
-        case ('CANCELLED'): return 'bg-warning'
-        case ('RUNNING'): return 'bg-info'
+        case 'DONE': return 'bg-success'
+        case 'ERROR': return 'bg-danger'
+        case 'CANCELLED': return 'bg-warning'
+        case 'RUNNING': return 'bg-info'
       }
     },
     getProgress (value) {

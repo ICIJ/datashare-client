@@ -6,11 +6,8 @@ export const datashare = new DatashareClient()
 export function initialState () {
   return {
     form: {
-      index: false,
-      findNames: false,
       ocr: false,
-      pipeline: 'corenlp',
-      step: 1
+      pipeline: 'corenlp'
     },
     pollHandle: null,
     tasks: []
@@ -46,27 +43,24 @@ export const mutations = {
 }
 
 export const actions = {
-  query ({ state }) {
-    if (state.form.findNames) {
-      switch (state.form.pipeline) {
-        case 'corenlp':
-          datashare.findNames('CORENLP', { resume: !state.form.index })
-          break
-        case 'opennlp':
-          datashare.findNames('OPENNLP', { resume: !state.form.index })
-          break
-        case 'mitie':
-          datashare.findNames('MITIE', { resume: !state.form.index })
-          break
-        case 'ixapipe':
-          datashare.findNames('IXAPIPE', { resume: !state.form.index })
-          break
-        case 'gatenlp':
-          datashare.findNames('GATENLP', { resume: !state.form.index })
-          break
-      }
+  submitExtract ({ state }) {
+    datashare.index({ ocr: state.form.ocr })
+  },
+  submitFindNamedEntities ({ state }) {
+    switch (state.form.pipeline) {
+      case 'corenlp':
+        datashare.findNames('CORENLP', { resume: !state.form.index })
+        break
+      case 'opennlp':
+        datashare.findNames('OPENNLP', { resume: !state.form.index })
+        break
+      case 'mitie':
+        datashare.findNames('MITIE', { resume: !state.form.index })
+        break
+      case 'ixapipe':
+        datashare.findNames('IXAPIPE', { resume: !state.form.index })
+        break
     }
-    if (state.form.index) datashare.index({ ocr: state.form.ocr })
   },
   cleanTasks ({ state, commit }) {
     datashare.cleanTasks().then(commit('cleanTasks'))
