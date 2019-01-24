@@ -8,6 +8,7 @@ import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -17,6 +18,7 @@ const i18n = new VueI18n({ locale: 'en', messages })
 
 describe('Indexing.vue', () => {
   let wrapper
+  const es = esConnectionHelper.es
   esConnectionHelper()
 
   beforeEach(() => {
@@ -58,21 +60,39 @@ describe('Indexing.vue', () => {
     expect(wrapper.find('.find-named-entities__form').isVisible()).toBeFalsy()
   })
 
+  it('should return an empty index by default', () => {
+    expect(wrapper.vm.isIndexEmpty).toBeTruthy()
+  })
+
+  it('should not be an empty index', async () => {
+    await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
+    await store.dispatch('search/query')
+
+    expect(wrapper.vm.isIndexEmpty).toBeFalsy()
+    await store.commit('search/reset')
+  })
+
   it('should display the extract and the find named entities buttons', () => {
     expect(wrapper.findAll('.btn-extract').length).toEqual(1)
     expect(wrapper.findAll('.btn-find-named-entites').length).toEqual(1)
   })
 
-  it('should enable the find named entities buttton if no tasks are running', () => {
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
-    store.commit('indexing/cleanTasks')
-
-    expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toBeUndefined()
+  it('should disable the find named entities buttton by default', () => {
+    expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toEqual('disabled')
   })
 
   it('should disable the find named entities buttton if a task is running', () => {
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
 
     expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toEqual('disabled')
+  })
+
+  it('should enable the find named entities buttton if no tasks are running and the index is not empty', async () => {
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
+    await store.dispatch('search/query')
+
+    expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toBeUndefined()
+    await store.commit('search/reset')
   })
 })

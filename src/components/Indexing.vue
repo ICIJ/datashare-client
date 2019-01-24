@@ -5,7 +5,7 @@
         <font-awesome-icon icon="rocket" class="mr-2" />
         {{ $t('indexing.extract_text') }}
       </button>
-      <button class="btn btn-icij btn-find-named-entites" type="button" :disabled="hasTaskRunning" @click="openFindNamedEntitiesForm">
+      <button class="btn btn-icij btn-find-named-entites" type="button" :disabled="isFindNamedEntitiesDisabled" @click="openFindNamedEntitiesForm">
         {{ $t('indexing.find_named_entities') }}
       </button>
     </div>
@@ -61,6 +61,7 @@ import bModal from 'bootstrap-vue/es/components/modal/modal'
 import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import store from '@/store'
+import filter from 'lodash/filter'
 import last from 'lodash/last'
 
 export default {
@@ -68,8 +69,14 @@ export default {
   components: { ExtractingForm, FindNamedEntitiesForm, bModal },
   computed: {
     ...mapState('indexing', { tasks: state => state.tasks }),
-    hasTaskRunning () {
-      return !(this.tasks.length === 0)
+    ...mapState('search', {
+      isIndexEmpty: state => {
+        return state.response.total === undefined || state.response.total === 0
+      }
+    }),
+    isFindNamedEntitiesDisabled () {
+      const runningTasks = filter(this.tasks, function (item) { return item.state !== 'DONE' })
+      return runningTasks.length !== 0 || this.isIndexEmpty
     }
   },
   mounted () {
