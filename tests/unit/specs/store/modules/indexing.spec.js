@@ -50,7 +50,7 @@ describe('Indexing store', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
-      { method: 'POST', body: JSON.stringify({ options: { resume: true } }), credentials: 'same-origin' })
+      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }), credentials: 'same-origin' })
   })
 
   it('should clear running jobs', async () => {
