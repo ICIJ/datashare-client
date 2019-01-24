@@ -1,51 +1,49 @@
 <template>
   <form class="find-named-entities-form" id="find-named-entities-form" @submit.prevent="submitFindNamedEntities">
-    <div class="find-named-entities-form__step--03 find-named-entities-form__step">
-      <div class="find-named-entities-form__step__header mb-4">
-        <h4>
-          {{ $t('indexing.step_03') }}
-        </h4>
+    <div class="find-named-entities-form__header mb-4">
+      <h4>
+        {{ $t('indexing.find_named_entities_header') }}
+      </h4>
+    </div>
+    <div class="find-named-entities-form__subheader mb-4" v-if="shouldRender('indexing.find_named_entities_subheader')">
+      <span>
+          {{ $t('indexing.find_named_entities_subheader') }}
+      </span>
+    </div>
+    <div class="find-named-entities-form__body form-group my-0 pl-4">
+      <div class="custom-control custom-radio">
+        <input class="custom-control-input" type="radio" id="pipeline_corenlp" value="corenlp" v-model="pipeline">
+        <label class="custom-control-label" for="pipeline_corenlp">
+          {{ $t('indexing.corenlp') }}
+          <div class="font-italic small">
+            {{ $t('indexing.default') }}
+          </div>
+        </label>
       </div>
-      <div class="find-named-entities-form__step__subheader mb-4" v-if="shouldRender('indexing.step_03_sub')">
-        <span>
-          {{ $t('indexing.step_03_sub') }}
-        </span>
+      <div class="custom-control custom-radio">
+        <input class="custom-control-input" type="radio" id="pipeline_opennlp" value="opennlp" v-model="pipeline">
+        <label class="custom-control-label" for="pipeline_opennlp">
+          {{ $t('indexing.opennlp') }}
+        </label>
       </div>
-      <div class="find-named-entities-form__step__body form-group my-0 pl-4">
-        <div class="custom-control custom-radio">
-          <input class="custom-control-input" type="radio" id="pipeline_corenlp" value="corenlp" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_corenlp">
-            {{ $t('indexing.corenlp') }}
-            <div class="font-italic small">
-              {{ $t('indexing.default') }}
-            </div>
-          </label>
-        </div>
-        <div class="custom-control custom-radio">
-          <input class="custom-control-input" type="radio" id="pipeline_opennlp" value="opennlp" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_opennlp">
-            {{ $t('indexing.opennlp') }}
-          </label>
-        </div>
-        <div class="custom-control custom-radio">
-          <input class="custom-control-input" type="radio" id="pipeline_mitie" value="mitie" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_mitie">
-            {{ $t('indexing.mitie') }}
-          </label>
-        </div>
-        <div class="custom-control custom-radio">
-          <input class="custom-control-input" type="radio" id="pipeline_ixapipe" value="ixapipe" v-model="pipeline">
-          <label class="custom-control-label" for="pipeline_ixapipe">
-            {{ $t('indexing.ixapipe') }}
-          </label>
-        </div>
+      <div class="custom-control custom-radio">
+        <input class="custom-control-input" type="radio" id="pipeline_mitie" value="mitie" v-model="pipeline">
+        <label class="custom-control-label" for="pipeline_mitie">
+          {{ $t('indexing.mitie') }}
+        </label>
       </div>
-      <div class="find-named-entities-form__step__footer mt-4 row no-gutters">
-        <div class="col text-right">
-          <button class="btn btn-primary font-weight-bold" type="submit">
-            {{ $t('indexing.go') }}
-          </button>
-        </div>
+      <div class="custom-control custom-radio">
+        <input class="custom-control-input" type="radio" id="pipeline_ixapipe" value="ixapipe" v-model="pipeline">
+        <label class="custom-control-label" for="pipeline_ixapipe">
+          {{ $t('indexing.ixapipe') }}
+        </label>
+      </div>
+    </div>
+    <div class="find-named-entities-form__footer mt-4 row no-gutters">
+      <div class="col text-right">
+        <button class="btn btn-primary font-weight-bold" type="submit">
+          {{ $t('indexing.go') }}
+        </button>
       </div>
     </div>
   </form>
@@ -98,19 +96,13 @@ export default {
     background: theme-color('icij');
     color: white;
 
-    &__step {
+    &__header h4 {
+      font-size: 1.2em;
+      font-weight: bolder;
+    }
 
-      &__header h4 {
-        font-size: 1.2em;
-        font-weight: bolder;
-      }
-
-      &__subheader {
-        font-style: italic;
-      }
-
-      &__footer {
-      }
+    &__subheader {
+      font-style: italic;
     }
   }
 </style>

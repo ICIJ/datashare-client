@@ -63,9 +63,10 @@ describe('FindNamedEntitiesForm.vue', () => {
   })
 
   it('should display a subheader', () => {
-    messages.en.indexing.step_03_sub = 'This is a subheader'
-    expect(wrapper.findAll('.find-named-entities-form__step__subheader').length).toEqual(1)
-    expect(wrapper.findAll('.find-named-entities-form__step__subheader').at(0).text()).toEqual('This is a subheader')
+    messages.en.indexing.find_named_entities_subheader = 'This is a subheader'
+
+    expect(wrapper.findAll('.find-named-entities-form__subheader').length).toEqual(1)
+    expect(wrapper.findAll('.find-named-entities-form__subheader').at(0).text()).toEqual('This is a subheader')
   })
 })
 

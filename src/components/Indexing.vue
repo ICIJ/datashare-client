@@ -26,7 +26,7 @@
       <div class="card">
         <div class="card-header">
           <h3 class="h5 m-0">
-            {{ $t('indexing.ongoing') }}
+            {{ $t('indexing.tasks') }}
           </h3>
         </div>
         <ul class="list-group list-group-flush"  v-if="tasks.length">

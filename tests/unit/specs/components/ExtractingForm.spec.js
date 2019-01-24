@@ -63,9 +63,10 @@ describe('ExtractingForm.vue', () => {
   })
 
   it('should display a subheader', () => {
-    messages.en.indexing.step_02_sub = 'This is a subheader'
-    expect(wrapper.findAll('.extracting-form__step__subheader').length).toEqual(1)
-    expect(wrapper.findAll('.extracting-form__step__subheader').at(0).text()).toEqual('This is a subheader')
+    messages.en.indexing.extracting_subheader = 'This is a subheader'
+
+    expect(wrapper.findAll('.extracting-form__subheader').length).toEqual(1)
+    expect(wrapper.findAll('.extracting-form__subheader').at(0).text()).toEqual('This is a subheader')
   })
 })
 
