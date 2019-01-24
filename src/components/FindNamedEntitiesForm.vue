@@ -10,7 +10,7 @@
           {{ $t('indexing.find_named_entities_subheader') }}
       </span>
     </div>
-    <div class="find-named-entities-form__body form-group my-0 pl-4">
+    <div class="find-named-entities-form__body form-group mb-4 pl-4">
       <div class="custom-control custom-radio">
         <input class="custom-control-input" type="radio" id="pipeline_corenlp" value="corenlp" v-model="pipeline">
         <label class="custom-control-label" for="pipeline_corenlp">
@@ -39,6 +39,11 @@
         </label>
       </div>
     </div>
+    <div class="find-named-entities-form__body form-group pl-4">
+      <b-form-checkbox id="syncModels" v-model="offline">
+        {{ $t('indexing.sync_models') }}
+      </b-form-checkbox>
+    </div>
     <div class="find-named-entities-form__footer mt-4 row no-gutters">
       <div class="col text-right">
         <button class="btn btn-primary font-weight-bold" type="submit">
@@ -51,7 +56,6 @@
 
 <script>
 import { createHelpers } from 'vuex-map-fields'
-import { mapState } from 'vuex'
 import noop from 'lodash/noop'
 
 const { mapFields } = createHelpers({
@@ -69,13 +73,9 @@ export default {
   },
   computed: {
     ...mapFields([
-      'form.pipeline'
-    ]),
-    ...mapState('search', {
-      isIndexEmpty: state => {
-        return state.response.hits.length === 0
-      }
-    })
+      'form.pipeline',
+      'form.offline'
+    ])
   },
   methods: {
     submitFindNamedEntities () {

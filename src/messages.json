@@ -94,7 +94,8 @@
       "opennlp": "Open NLP",
       "mitie": "Mitie",
       "ixapipe": "Ixa Pipe",
-      "default": "By default - CoreNLP offers the highest probability of working in most documents"
+      "default": "By default - CoreNLP offers the highest probability of working in most documents",
+      "sync_models": "Offline"
     },
     "menu": {
       "help": "Ask for help",
@@ -204,7 +205,8 @@
       "opennlp": "Open NLP",
       "mitie": "Mitie",
       "ixapipe": "Ixa Pipe",
-      "default": "Par défaut - CoreNLP présente une meilleure probablilité de fonctionner avec tous les documents"
+      "default": "Par défaut - CoreNLP présente une meilleure probablilité de fonctionner avec tous les documents",
+      "sync_models": "Hors ligne"
     },
     "menu": {
       "help": "Aide",

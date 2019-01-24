@@ -7,7 +7,8 @@ export function initialState () {
   return {
     form: {
       ocr: false,
-      pipeline: 'corenlp'
+      pipeline: 'corenlp',
+      offline: false
     },
     pollHandle: null,
     tasks: []
@@ -49,16 +50,16 @@ export const actions = {
   submitFindNamedEntities ({ state }) {
     switch (state.form.pipeline) {
       case 'corenlp':
-        datashare.findNames('CORENLP', { resume: !state.form.index })
+        datashare.findNames('CORENLP', { syncModels: !state.form.offline })
         break
       case 'opennlp':
-        datashare.findNames('OPENNLP', { resume: !state.form.index })
+        datashare.findNames('OPENNLP', { syncModels: !state.form.offline })
         break
       case 'mitie':
-        datashare.findNames('MITIE', { resume: !state.form.index })
+        datashare.findNames('MITIE', { syncModels: !state.form.offline })
         break
       case 'ixapipe':
-        datashare.findNames('IXAPIPE', { resume: !state.form.index })
+        datashare.findNames('IXAPIPE', { syncModels: !state.form.offline })
         break
     }
   },
