@@ -25,11 +25,9 @@
 </template>
 
 <script>
-// Components
-import AggregationsPanel from './AggregationsPanel'
-import SearchResults from './SearchResults'
-import ContentPlaceholder from './ContentPlaceholder'
-
+import AggregationsPanel from '@/components/AggregationsPanel'
+import SearchResults from '@/components/SearchResults'
+import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { mapState } from 'vuex'
 
 export default {
