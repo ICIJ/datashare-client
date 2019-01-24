@@ -5,7 +5,6 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import cloneDeep from 'lodash/cloneDeep'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
@@ -29,6 +28,7 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockClear()
   })
 
   afterEach(() => {
@@ -36,7 +36,6 @@ describe('FindNamedEntitiesForm.vue', () => {
   })
 
   it('should call findNames action with CoreNLP pipeline, by default', () => {
-    datashare.fetch.mockClear()
     wrapper.vm.submitFindNamedEntities()
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
@@ -45,7 +44,6 @@ describe('FindNamedEntitiesForm.vue', () => {
   })
 
   it('should call findNames action with OpenNLP pipeline', () => {
-    datashare.fetch.mockClear()
     wrapper.vm.pipeline = 'opennlp'
     wrapper.vm.submitFindNamedEntities()
 
@@ -55,18 +53,24 @@ describe('FindNamedEntitiesForm.vue', () => {
   })
 
   it('should reset the modal params on submitting the form', async () => {
-    const initialState = cloneDeep(store.state.indexing)
     wrapper.vm.pipeline = 'opennlp'
     await wrapper.vm.submitFindNamedEntities()
 
-    expect(store.state.indexing).toEqual(initialState)
+    expect(wrapper.vm.pipeline).toEqual('corenlp')
   })
 
-  it('should display a subheader', () => {
+  it('should not render a subheader if empty', () => {
+    messages.en.indexing.find_named_entities_subheader = ''
+
+    expect(wrapper.vm.shouldRender('indexing.find_named_entities_subheader')).toBeFalsy()
+  })
+
+  it('should render a subheader and display it', () => {
     messages.en.indexing.find_named_entities_subheader = 'This is a subheader'
 
+    expect(wrapper.vm.shouldRender('indexing.find_named_entities_subheader')).toBeTruthy()
     expect(wrapper.findAll('.find-named-entities-form__subheader').length).toEqual(1)
-    expect(wrapper.findAll('.find-named-entities-form__subheader').at(0).text()).toEqual('This is a subheader')
+    expect(wrapper.find('.find-named-entities-form__subheader').text()).toEqual('This is a subheader')
   })
 })
 

@@ -9,14 +9,14 @@
         {{ $t('indexing.find_named_entities') }}
       </button>
     </div>
-    <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal" size="md">
+    <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
       <div slot="modal-title">
         <font-awesome-icon icon="rocket" class="mr-2" />
         {{ $t('indexing.extract_text') }}
       </div>
       <extracting-form id="extracting-form" :finally="closeExtractingForm" />
     </b-modal>
-    <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal" size="md">
+    <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md">
       <div slot="modal-title">
         {{ $t('indexing.find_named_entities') }}
       </div>
@@ -68,9 +68,6 @@ export default {
   components: { ExtractingForm, FindNamedEntitiesForm, bModal },
   computed: {
     ...mapState('indexing', { tasks: state => state.tasks })
-  },
-  created () {
-    store.dispatch('search/query')
   },
   mounted () {
     if (this.tasks.length === 0) {

@@ -5,7 +5,6 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import ExtractingForm from '@/components/ExtractingForm'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import cloneDeep from 'lodash/cloneDeep'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
@@ -29,6 +28,7 @@ describe('ExtractingForm.vue', () => {
     wrapper = shallowMount(ExtractingForm, { localVue, i18n, router, store })
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockClear()
   })
 
   afterEach(() => {
@@ -36,7 +36,6 @@ describe('ExtractingForm.vue', () => {
   })
 
   it('should call extract action without OCR option, by default', () => {
-    datashare.fetch.mockClear()
     wrapper.vm.submitExtract()
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
@@ -45,7 +44,6 @@ describe('ExtractingForm.vue', () => {
   })
 
   it('should call extract action with OCR option', () => {
-    datashare.fetch.mockClear()
     wrapper.vm.ocr = true
     wrapper.vm.submitExtract()
 
@@ -55,18 +53,24 @@ describe('ExtractingForm.vue', () => {
   })
 
   it('should reset the modal params on submitting the form', async () => {
-    const initialState = cloneDeep(store.state.indexing)
     wrapper.vm.ocr = true
     await wrapper.vm.submitExtract()
 
-    expect(store.state.indexing).toEqual(initialState)
+    expect(wrapper.vm.ocr).toBeFalsy()
   })
 
-  it('should display a subheader', () => {
+  it('should not render a subheader if empty', () => {
+    messages.en.indexing.extracting_subheader = ''
+
+    expect(wrapper.vm.shouldRender('indexing.extracting_subheader')).toBeFalsy()
+  })
+
+  it('should render a subheader and display it', () => {
     messages.en.indexing.extracting_subheader = 'This is a subheader'
 
+    expect(wrapper.vm.shouldRender('indexing.extracting_subheader')).toBeTruthy()
     expect(wrapper.findAll('.extracting-form__subheader').length).toEqual(1)
-    expect(wrapper.findAll('.extracting-form__subheader').at(0).text()).toEqual('This is a subheader')
+    expect(wrapper.find('.extracting-form__subheader').text()).toEqual('This is a subheader')
   })
 })
 

@@ -8,8 +8,6 @@ import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
-import fetchPonyfill from 'fetch-ponyfill'
-const { Response } = fetchPonyfill()
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -39,7 +37,6 @@ describe('Indexing.vue', () => {
   })
 
   it('should update tasks with polling request', () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' },
       { name: 'foo.baz@456', progress: 0.2, state: 'RUNNING' }])
 
@@ -47,14 +44,17 @@ describe('Indexing.vue', () => {
     expect(wrapper.findAll('li.indexing__tasks').at(0).text()).toContain('bar (123)')
     expect(wrapper.findAll('li.indexing__tasks').at(1).text()).toContain('baz (456)')
   })
-})
 
-function jsonOk (body) {
-  const mockResponse = new Response(JSON.stringify(body), {
-    status: 200,
-    headers: {
-      'Content-type': 'application/json'
-    }
+  it('should open extract form if no tasks is running', () => {
+    expect(wrapper.find('.extracting__form').isVisible()).toBeTruthy()
+    expect(wrapper.find('.find-named-entities__form').isVisible()).toBeFalsy()
   })
-  return Promise.resolve(mockResponse)
-}
+
+  it('should not open extract form if some tasks are running', async () => {
+    await store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    wrapper = mount(Indexing, { localVue, i18n, router, store })
+
+    expect(wrapper.find('.extracting__form').isVisible()).toBeFalsy()
+    expect(wrapper.find('.find-named-entities__form').isVisible()).toBeFalsy()
+  })
+})
