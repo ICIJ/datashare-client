@@ -30,10 +30,10 @@ describe('Indexing.vue', () => {
 
   it('should begin/stop polling when route enter/leave', () => {
     router.push('indexing')
-    expect(store.state.indexing.pollHandle).not.toEqual(undefined)
+    expect(store.state.indexing.pollHandle).toBeDefined()
 
     router.push('/')
-    expect(store.state.indexing.pollHandle).toEqual(null)
+    expect(store.state.indexing.pollHandle).toBeNull()
   })
 
   it('should update tasks with polling request', () => {
@@ -50,11 +50,29 @@ describe('Indexing.vue', () => {
     expect(wrapper.find('.find-named-entities__form').isVisible()).toBeFalsy()
   })
 
-  it('should not open extract form if some tasks are running', async () => {
-    await store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+  it('should not open extract form if some tasks are running', () => {
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     wrapper = mount(Indexing, { localVue, i18n, router, store })
 
     expect(wrapper.find('.extracting__form').isVisible()).toBeFalsy()
     expect(wrapper.find('.find-named-entities__form').isVisible()).toBeFalsy()
+  })
+
+  it('should display the extract and the find named entities buttons', () => {
+    expect(wrapper.findAll('.btn-extract').length).toEqual(1)
+    expect(wrapper.findAll('.btn-find-named-entites').length).toEqual(1)
+  })
+
+  it('should enable the find named entities buttton if no tasks are running', () => {
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    store.commit('indexing/cleanTasks')
+
+    expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toBeUndefined()
+  })
+
+  it('should disable the find named entities buttton if a task is running', () => {
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+
+    expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toEqual('disabled')
   })
 })

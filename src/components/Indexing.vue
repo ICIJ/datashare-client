@@ -1,11 +1,11 @@
 <template>
   <div class="indexing container pt-4">
     <div class="text-right">
-      <button class="btn btn-icij mr-2" type="button" @click="openExtractingForm">
+      <button class="btn btn-icij mr-2 btn-extract" type="button" @click="openExtractingForm">
         <font-awesome-icon icon="rocket" class="mr-2" />
         {{ $t('indexing.extract_text') }}
       </button>
-      <button class="btn btn-icij" type="button" @click="openFindNamedEntitiesForm">
+      <button class="btn btn-icij btn-find-named-entites" type="button" :disabled="hasTaskRunning" @click="openFindNamedEntitiesForm">
         {{ $t('indexing.find_named_entities') }}
       </button>
     </div>
@@ -67,7 +67,10 @@ export default {
   name: 'indexing',
   components: { ExtractingForm, FindNamedEntitiesForm, bModal },
   computed: {
-    ...mapState('indexing', { tasks: state => state.tasks })
+    ...mapState('indexing', { tasks: state => state.tasks }),
+    hasTaskRunning () {
+      return !(this.tasks.length === 0)
+    }
   },
   mounted () {
     if (this.tasks.length === 0) {
