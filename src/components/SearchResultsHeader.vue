@@ -12,7 +12,7 @@
           {{ $store.state.search.from + 1 }} - {{ lastDocument }}
         </div>&nbsp;
         <div class="search-results__header__progress_number-of-results">
-          {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, {total: response.get('hits.total')}) }}
+          {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: response.get('hits.total') }) }}
         </div>
       </div>
       <div @click="nextPage" :class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__next-page', 'px-2']" v-b-tooltip.hover :title="$t('search.results.nextPage')" v-if="response.total > $store.state.search.size">

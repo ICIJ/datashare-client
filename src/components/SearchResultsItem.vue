@@ -5,14 +5,11 @@
         {{ doc.basename }}
       </router-link>
     </h5>
-
     <router-link :to="{ name: 'search', query: folderParams }" class="search-results-item__location">
       <font-awesome-icon icon="folder" class="mr-1" />
       {{ location }}
     </router-link>
-
     <div class="search-results-item__fragments" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
-
     <ul class="named-entities list-inline mt-3">
       <li class="named-entity list-inline-item" v-for="ne in namedEntities" :key="ne._source.id" :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
         <router-link :to="{ name: 'document', params: { id: doc.id } }" class="badge badge-pill text-white" :class="getCategoryClass(ne._source.category, 'bg-')" v-b-tooltip.hover :title=" ne._source.mention">
