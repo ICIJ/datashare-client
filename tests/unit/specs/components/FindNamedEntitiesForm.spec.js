@@ -10,6 +10,7 @@ import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
 import fetchPonyfill from 'fetch-ponyfill'
+import Vue from 'vue'
 const { Response } = fetchPonyfill()
 
 const localVue = createLocalVue()
@@ -65,6 +66,12 @@ describe('FindNamedEntitiesForm.vue', () => {
     await wrapper.vm.submitFindNamedEntities()
 
     expect(wrapper.vm.pipeline).toEqual('corenlp')
+  })
+
+  it('should not show offline checkbox in SERVER mode', async () => {
+    Vue.prototype.config = {mode: 'SERVER'}
+    let w = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
+    expect(w.contains('.find-named-entities-form__offline')).toBeFalsy()
   })
 })
 

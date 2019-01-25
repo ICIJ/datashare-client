@@ -39,7 +39,7 @@
         </label>
       </div>
     </div>
-    <div class="find-named-entities-form__body form-group pl-4">
+    <div class="find-named-entities-form__offline form-group pl-4" v-if="!isRemote">
       <b-form-checkbox id="syncModels" v-model="offline">
         {{ $t('indexing.sync_models') }}
       </b-form-checkbox>
@@ -79,7 +79,10 @@ export default {
     ...mapFields([
       'form.pipeline',
       'form.offline'
-    ])
+    ]),
+    isRemote () {
+      return this.config && this.config.mode === 'SERVER'
+    }
   },
   methods: {
     submitFindNamedEntities () {
