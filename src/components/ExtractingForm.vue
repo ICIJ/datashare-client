@@ -5,7 +5,7 @@
         {{ $t('indexing.extracting_header') }}
       </h4>
     </div>
-    <div class="extracting-form__subheader mb-4" v-if="shouldRender('indexing.extracting_subheader')">
+    <div class="extracting-form__subheader mb-4">
       <span>
         {{ $t('indexing.extracting_subheader') }}
       </span>
@@ -61,9 +61,6 @@ export default {
       this.finally(this.$store.dispatch('indexing/submitExtract').then(() => {
         this.$store.commit('indexing/reset')
       }))
-    },
-    shouldRender (string) {
-      return this.$te(string) && this.$t(string) !== ''
     }
   }
 }

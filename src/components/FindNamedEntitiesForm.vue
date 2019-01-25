@@ -5,7 +5,7 @@
         {{ $t('indexing.find_named_entities_header') }}
       </h4>
     </div>
-    <div class="find-named-entities-form__subheader mb-4" v-if="shouldRender('indexing.find_named_entities_subheader')">
+    <div class="find-named-entities-form__subheader mb-4">
       <span>
           {{ $t('indexing.find_named_entities_subheader') }}
       </span>
@@ -86,9 +86,6 @@ export default {
       this.finally(this.$store.dispatch('indexing/submitFindNamedEntities').then(() => {
         this.$store.commit('indexing/reset')
       }))
-    },
-    shouldRender (string) {
-      return this.$te(string) && this.$t(string) !== ''
     }
   }
 }

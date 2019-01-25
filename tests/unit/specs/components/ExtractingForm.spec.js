@@ -4,7 +4,6 @@ import BootstrapVue from 'bootstrap-vue'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import ExtractingForm from '@/components/ExtractingForm'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
@@ -22,7 +21,6 @@ const i18n = new VueI18n({ locale: 'en', messages })
 
 describe('ExtractingForm.vue', () => {
   let wrapper
-  esConnectionHelper()
 
   beforeEach(() => {
     wrapper = shallowMount(ExtractingForm, { localVue, i18n, router, store })
@@ -57,20 +55,6 @@ describe('ExtractingForm.vue', () => {
     await wrapper.vm.submitExtract()
 
     expect(wrapper.vm.ocr).toBeFalsy()
-  })
-
-  it('should not render a subheader if empty', () => {
-    messages.en.indexing.extracting_subheader = ''
-
-    expect(wrapper.vm.shouldRender('indexing.extracting_subheader')).toBeFalsy()
-  })
-
-  it('should render a subheader and display it', () => {
-    messages.en.indexing.extracting_subheader = 'This is a subheader'
-
-    expect(wrapper.vm.shouldRender('indexing.extracting_subheader')).toBeTruthy()
-    expect(wrapper.findAll('.extracting-form__subheader').length).toEqual(1)
-    expect(wrapper.find('.extracting-form__subheader').text()).toEqual('This is a subheader')
   })
 })
 
