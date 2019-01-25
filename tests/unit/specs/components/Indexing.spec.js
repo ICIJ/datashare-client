@@ -7,10 +7,12 @@ import messages from '@/messages'
 import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
+import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
+localVue.directive('b-tooltip', vBTooltip)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 const i18n = new VueI18n({ locale: 'en', messages })
 
@@ -61,13 +63,15 @@ describe('Indexing.vue', () => {
     expect(wrapper.findAll('.btn-find-named-entites').length).toEqual(1)
   })
 
-  it('should disable the find named entities buttton by default', () => {
+  it('should enable the find named entities buttton by default, and display no tooltip', () => {
     expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toBeUndefined()
+    expect(wrapper.find('.span-find-named-entities').attributes().title).toEqual('')
   })
 
-  it('should disable the find named entities buttton if a task is running', () => {
+  it('should disable the find named entities buttton if a task is running and display a tooltip', async () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
 
     expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toEqual('disabled')
+    expect(wrapper.find('.span-find-named-entities').attributes().title).not.toEqual('')
   })
 })

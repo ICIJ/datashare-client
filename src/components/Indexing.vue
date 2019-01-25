@@ -5,9 +5,12 @@
         <font-awesome-icon icon="rocket" class="mr-2" />
         {{ $t('indexing.extract_text') }}
       </button>
-      <button class="btn btn-icij btn-find-named-entites" type="button" :disabled="isFindNamedEntitiesDisabled" @click="openFindNamedEntitiesForm">
-        {{ $t('indexing.find_named_entities') }}
-      </button>
+      <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
+        <button class="btn btn-icij btn-find-named-entites" type="button"
+                :disabled="isFindNamedEntitiesDisabled" @click="openFindNamedEntitiesForm">
+          {{ $t('indexing.find_named_entities') }}
+        </button>
+      </span>
     </div>
     <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
       <div slot="modal-title">
@@ -36,7 +39,9 @@
               {{ task.state }}
             </span>
             <div class="indexing__tasks__progress progress">
-              <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar" :style="'width: ' + getProgress(task.progress) + '%'" :aria-valuenow="getProgress(task.progress)" aria-valuemin="0" aria-valuemax="100">
+              <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar"
+                   :style="'width: ' + getProgress(task.progress) + '%'" :aria-valuenow="getProgress(task.progress)"
+                   aria-valuemin="0" aria-valuemax="100">
                 {{ getProgress(task.progress) }}%
               </div>
             </div>
@@ -72,6 +77,9 @@ export default {
     isFindNamedEntitiesDisabled () {
       const runningTasks = filter(this.tasks, function (item) { return item.state !== 'DONE' })
       return runningTasks.length !== 0
+    },
+    findNamedEntitiesTooltip () {
+      return this.isFindNamedEntitiesDisabled ? this.$t('indexing.find_named_entities_tooltip') : ''
     }
   },
   mounted () {
