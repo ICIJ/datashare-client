@@ -36,7 +36,6 @@
 
 <script>
 import { createHelpers } from 'vuex-map-fields'
-import { mapState } from 'vuex'
 import noop from 'lodash/noop'
 
 const { mapFields } = createHelpers({
@@ -55,12 +54,7 @@ export default {
   computed: {
     ...mapFields([
       'form.ocr'
-    ]),
-    ...mapState('search', {
-      isIndexEmpty: state => {
-        return state.response.hits.length === 0
-      }
-    })
+    ])
   },
   methods: {
     submitExtract () {

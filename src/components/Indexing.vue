@@ -69,14 +69,9 @@ export default {
   components: { ExtractingForm, FindNamedEntitiesForm, bModal },
   computed: {
     ...mapState('indexing', { tasks: state => state.tasks }),
-    ...mapState('search', {
-      isIndexEmpty: state => {
-        return state.response.total === undefined || state.response.total === 0
-      }
-    }),
     isFindNamedEntitiesDisabled () {
       const runningTasks = filter(this.tasks, function (item) { return item.state !== 'DONE' })
-      return runningTasks.length !== 0 || this.isIndexEmpty
+      return runningTasks.length !== 0
     }
   },
   mounted () {
