@@ -88,9 +88,9 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    store.dispatch('indexing/loadTasks').then(() => {
+    return store.dispatch('indexing/loadTasks').then(() => {
       store.dispatch('indexing/startPollTasks')
-      next()
+      return next()
     // Proceed anyway
     }, () => next())
   },

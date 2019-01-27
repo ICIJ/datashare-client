@@ -10,7 +10,7 @@ const { Response } = fetchPonyfill()
 Vue.use(Vuex)
 
 describe('Indexing store', () => {
-  let store = null
+  let store
 
   beforeAll(async () => {
     store = new Vuex.Store({ actions, getters, mutations, state })
@@ -66,6 +66,25 @@ describe('Indexing store', () => {
     await store.dispatch('stopPollTasks')
 
     expect(store.state.pollHandle).toBeNull()
+  })
+
+  it('should reset the extracting form', async () => {
+    store.state.form.ocr = true
+    expect(store.state.form.ocr).toBeTruthy()
+
+    await store.dispatch('resetExtractForm')
+    expect(store.state.form.ocr).toBeFalsy()
+  })
+
+  it('should reset the Find Named Entities form', async () => {
+    store.state.form.pipeline = 'opennlp'
+    store.state.form.offline = true
+    expect(store.state.form.pipeline).toEqual('opennlp')
+    expect(store.state.form.offline).toBeTruthy()
+
+    await store.dispatch('resetFindNamedEntitiesForm')
+    expect(store.state.form.pipeline).toEqual('corenlp')
+    expect(store.state.form.offline).toBeFalsy()
   })
 })
 

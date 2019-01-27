@@ -87,7 +87,7 @@ export default {
   methods: {
     submitFindNamedEntities () {
       this.finally(this.$store.dispatch('indexing/submitFindNamedEntities').then(() => {
-        this.$store.commit('indexing/reset')
+        this.$store.dispatch('indexing/resetFindNamedEntitiesForm')
       }))
     }
   }

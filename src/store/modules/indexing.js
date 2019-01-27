@@ -34,12 +34,19 @@ export const mutations = {
   updateTasks (state, raw) {
     state.tasks = raw
   },
-  setPoolHandle (state, poolHandle) {
-    state.pollHandle = poolHandle
+  setPollHandle (state, pollHandle) {
+    state.pollHandle = pollHandle
   },
   stopPolling (state) {
     clearInterval(state.pollHandle)
     state.pollHandle = null
+  },
+  resetExtractForm (state) {
+    state.form.ocr = initialState().form.ocr
+  },
+  resetFindNamedEntitiesForm (state) {
+    state.form.pipeline = initialState().form.pipeline
+    state.form.offline = initialState().form.offline
   }
 }
 
@@ -77,11 +84,17 @@ export const actions = {
       })
   },
   startPollTasks ({ commit, dispatch }) {
-    const poolHandle = setInterval(() => dispatch('loadTasks'), 2000)
-    commit('setPoolHandle', poolHandle)
+    const pollHandle = setInterval(() => dispatch('loadTasks'), 2000)
+    commit('setPollHandle', pollHandle)
   },
   stopPollTasks ({ commit }) {
     commit('stopPolling')
+  },
+  resetFindNamedEntitiesForm ({ commit }) {
+    commit('resetFindNamedEntitiesForm')
+  },
+  resetExtractForm ({ commit }) {
+    commit('resetExtractForm')
   }
 }
 

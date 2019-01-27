@@ -8,6 +8,9 @@ import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
 import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
+import DatashareClient from '@/api/DatashareClient'
+import fetchPonyfill from 'fetch-ponyfill'
+const { Response } = fetchPonyfill()
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -28,11 +31,16 @@ describe('Indexing.vue', () => {
     store.commit('indexing/reset')
   })
 
-  it('should begin/stop polling when route enter/leave', () => {
-    router.push('indexing')
-    expect(store.state.indexing.pollHandle).toBeDefined()
+  it('should start polling tasks on beforeRouteEnter and stop polling tasks on beforeRouteLeave', async () => {
+    datashare.fetch.mockReturnValue(jsonOk({}))
+    await Indexing.beforeRouteEnter(undefined, undefined, jest.fn())
 
-    router.push('/')
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/'),
+      { credentials: 'same-origin' })
+    expect(store.state.indexing.pollHandle).not.toBeNull()
+
+    Indexing.beforeRouteLeave(undefined, undefined, jest.fn())
     expect(store.state.indexing.pollHandle).toBeNull()
   })
 
@@ -75,3 +83,13 @@ describe('Indexing.vue', () => {
     expect(wrapper.find('.span-find-named-entities').attributes().title).not.toEqual('')
   })
 })
+
+function jsonOk (body) {
+  const mockResponse = new Response(JSON.stringify(body), {
+    status: 200,
+    headers: {
+      'Content-type': 'application/json'
+    }
+  })
+  return Promise.resolve(mockResponse)
+}

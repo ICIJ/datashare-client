@@ -59,7 +59,7 @@ export default {
   methods: {
     submitExtract () {
       this.finally(this.$store.dispatch('indexing/submitExtract').then(() => {
-        this.$store.commit('indexing/reset')
+        this.$store.dispatch('indexing/resetExtractForm')
       }))
     }
   }
