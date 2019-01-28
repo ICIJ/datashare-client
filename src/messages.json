@@ -86,7 +86,7 @@
       "extract_text": "Extract text",
       "extracting_header": "Do you want to extract text also from images and PDFs?",
       "extracting_subheader": "By enabling the OCR",
-      "find_named_entities": "Find named entities",
+      "find_named_entities": "Find people, organizations and locations",
       "find_named_entities_header": "Which technology do you want to apply in order to find named entities?",
       "find_named_entities_subheader": "Choose one of the pipeline listed below",
       "find_named_entities_tooltip": "Texts must be extracted before finding named entities",
@@ -107,7 +107,7 @@
     },
     "footer": {
       "analyse": "Analyze documents",
-      "homedir": "Move files to this directory to be able to analyse them",
+      "homedir": "Move files to this directory to be able to analyze them",
       "clientVersion": "Client",
       "serverVersion": "Server"
     }
@@ -198,7 +198,7 @@
       "extract_text": "Extraire le texte",
       "extracting_header": "Pendant l'indexation, voulez-vous aussi extraire le texte des images et PDFs ?",
       "extracting_subheader": "En activant l'OCR",
-      "find_named_entities": "Trouver les entitées nommées",
+      "find_named_entities": "Trouver les personnes, organisations et lieux",
       "find_named_entities_header": "Quelle technologie voulez-vous utiliser pour trouver les entités nommées ?",
       "find_named_entities_subheader": "CHoisir l'une des technologies litées ci-dessous",
       "find_named_entities_tooltip": "Les textes doivent être extraits avant de trouver les entitées nommées",
@@ -218,6 +218,8 @@
       "faq": "FAQ"
     },
     "footer": {
+      "analyse": "Analyse les documents",
+      "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
       "clientVersion": "Client",
       "serverVersion": "Serveur"
     }
