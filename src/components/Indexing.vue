@@ -7,7 +7,7 @@
       </button>
       <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
         <button class="btn btn-icij btn-find-named-entites" type="button"
-                :disabled="isFindNamedEntitiesDisabled" @click="openFindNamedEntitiesForm">
+                :disabled="isPendingTasks" @click="openFindNamedEntitiesForm">
           {{ $t('indexing.find_named_entities') }}
         </button>
       </span>
@@ -50,9 +50,14 @@
         <div v-else class="px-4 py-2 text-center text-muted">
           {{ $t('indexing.empty') }}
         </div>
-        <div class="card-footer text-right border-0" v-if="tasks.length">
-          <button class="btn btn-icij" type="button" @click="cleanTasks">
-            {{ $t('indexing.purge') }}
+        <div class="card-footer text-right border-0" v-if="isPendingTasks||isDoneTasks">
+          <button class="btn btn-icij btn-stop-pending-tasks mr-2"
+                  type="button" :disabled="!isPendingTasks" @click="stopPendingTasks">
+            {{ $t('indexing.stop_pending_tasks') }}
+          </button>
+          <button class="btn btn-icij btn-delete-done-tasks"
+                  type="button" :disabled="!isDoneTasks" @click="deleteDoneTasks">
+            {{ $t('indexing.delete_done_tasks') }}
           </button>
         </div>
       </div>
@@ -74,12 +79,14 @@ export default {
   components: { ExtractingForm, FindNamedEntitiesForm, bModal },
   computed: {
     ...mapState('indexing', { tasks: state => state.tasks }),
-    isFindNamedEntitiesDisabled () {
-      const runningTasks = filter(this.tasks, function (item) { return item.state !== 'DONE' })
-      return runningTasks.length !== 0
+    isPendingTasks () {
+      return filter(this.tasks, { state: 'RUNNING' }).length !== 0
+    },
+    isDoneTasks () {
+      return filter(this.tasks, { state: 'DONE' }).length !== 0
     },
     findNamedEntitiesTooltip () {
-      return this.isFindNamedEntitiesDisabled ? this.$t('indexing.find_named_entities_tooltip') : ''
+      return this.isPendingTasks ? this.$t('indexing.find_named_entities_tooltip') : ''
     }
   },
   mounted () {
@@ -111,8 +118,11 @@ export default {
     closeFindNamedEntitiesForm () {
       this.$refs.findNamedEntitiesForm.hide()
     },
-    cleanTasks () {
-      store.dispatch('indexing/cleanTasks')
+    stopPendingTasks () {
+      store.dispatch('indexing/stopPendingTasks')
+    },
+    deleteDoneTasks () {
+      store.dispatch('indexing/deleteDoneTasks')
     },
     taskLabel (name) {
       let nameAndId = last(name.split('.')).split('@')

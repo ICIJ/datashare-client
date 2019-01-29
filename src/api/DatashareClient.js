@@ -11,19 +11,22 @@ export class DatashareClient {
     }
   }
   index (options) {
-    return this.sendAction(`/api/task/index/file`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
+    return this.sendAction(`/api/task/index/file`, { method: 'POST', body: JSON.stringify({ options }), credentials: 'same-origin' })
   }
   findNames (pipeline, options) {
-    return this.sendAction(`/api/task/findNames/${pipeline}`, {method: 'POST', body: JSON.stringify({options}), credentials: 'same-origin'})
+    return this.sendAction(`/api/task/findNames/${pipeline}`, { method: 'POST', body: JSON.stringify({ options }), credentials: 'same-origin' })
   }
-  cleanTasks () {
-    return this.sendAction('/api/task/clean/', {method: 'POST', body: '{}', credentials: 'same-origin'})
+  stopPendingTasks () {
+    return this.sendAction('/api/task/clean/', { method: 'POST', body: '{}', credentials: 'same-origin' })
+  }
+  deleteDoneTasks () {
+    return this.sendAction('/api/task/clean/', { method: 'POST', body: '{}', credentials: 'same-origin' })
   }
   getTasks () {
-    return this.sendAction('/api/task/', {credentials: 'same-origin'})
+    return this.sendAction('/api/task/', { credentials: 'same-origin' })
   }
   createIndex () {
-    return this.sendAction('/api/search/createIndex', {method: 'PUT', credentials: 'same-origin'})
+    return this.sendAction('/api/search/createIndex', { method: 'PUT', credentials: 'same-origin' })
   }
   getVersion () {
     return this.sendAction('/version')
@@ -32,13 +35,13 @@ export class DatashareClient {
     return this.sendAction('/config')
   }
   deleteNamedEntitiesByMentionNorm (mentionNorm) {
-    return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, {method: 'PUT', credentials: 'same-origin'})
+    return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT', credentials: 'same-origin' })
   }
   static getFullUrl (url) {
     return `${process.env.VUE_APP_DS_HOST || ''}${url}`
   }
   getSource (relativeUrl) {
-    return this.sendAction(relativeUrl, {credentials: 'same-origin'})
+    return this.sendAction(relativeUrl, { credentials: 'same-origin' })
   }
   getIndices () {
     return this.sendAction('/api/user/indices')

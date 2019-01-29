@@ -1,10 +1,9 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import cloneDeep from 'lodash/cloneDeep'
-import fetchPonyfill from 'fetch-ponyfill'
-
 import DatashareClient from '@/api/DatashareClient'
 import { actions, getters, mutations, state, datashare } from '@/store/modules/indexing'
+import fetchPonyfill from 'fetch-ponyfill'
 
 const { Response } = fetchPonyfill()
 Vue.use(Vuex)
@@ -12,7 +11,7 @@ Vue.use(Vuex)
 describe('Indexing store', () => {
   let store
 
-  beforeAll(async () => {
+  beforeAll(() => {
     store = new Vuex.Store({ actions, getters, mutations, state })
   })
 
@@ -21,7 +20,7 @@ describe('Indexing store', () => {
     datashare.fetch.mockReturnValue(jsonOk({}))
   })
 
-  afterEach(async () => {
+  afterEach(() => {
     datashare.fetch.mockClear()
     store.commit('reset')
   })
@@ -31,7 +30,7 @@ describe('Indexing store', () => {
   })
 
   it('should reset the store state', async () => {
-    let initialState = cloneDeep(store.state)
+    const initialState = cloneDeep(store.state)
     await store.commit('reset')
 
     expect(store.state).toEqual(initialState)
@@ -53,13 +52,26 @@ describe('Indexing store', () => {
       { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }), credentials: 'same-origin' })
   })
 
-  it('should clear running jobs', async () => {
-    await store.dispatch('cleanTasks')
+  it('should stop pending tasks', async () => {
+    store.commit('updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+    expect(store.state.tasks.length).toEqual(1)
 
-    expect(store.state.tasks).toEqual([])
+    await store.dispatch('stopPendingTasks')
+    expect(store.state.tasks.length).toEqual(0)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
-      {method: 'POST', body: '{}', credentials: 'same-origin'})
+      { method: 'POST', body: '{}', credentials: 'same-origin' })
+  })
+
+  it('should delete done tasks', async () => {
+    store.commit('updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    expect(store.state.tasks.length).toEqual(1)
+
+    await store.dispatch('deleteDoneTasks')
+    expect(store.state.tasks.length).toEqual(0)
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
+      { method: 'POST', body: '{}', credentials: 'same-origin' })
   })
 
   it('should stop polling jobs', async () => {

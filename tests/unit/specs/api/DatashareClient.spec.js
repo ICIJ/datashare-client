@@ -6,13 +6,93 @@ const { Response } = fetchPonyfill()
 const ds = new DatashareClient()
 
 describe('Datashare backend client', () => {
-  beforeEach(async () => {
+  beforeEach(() => {
     jest.spyOn(ds, 'fetch')
     fetchReturns(200, {})
   })
 
+  it('should return backend response to index', async () => {
+    ds.index({}).then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
+  it('should return backend response to findNames', async () => {
+    ds.findNames('pipeline', {}).then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
+  it('should return backend response to stopPendingTasks', async () => {
+    ds.stopPendingTasks().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
+  it('should return backend response to deleteDoneTasks', async () => {
+    ds.deleteDoneTasks().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
+  it('should return backend response to getTasks', async () => {
+    ds.getTasks().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
   it('should return backend response to createIndex', async () => {
     ds.createIndex().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
+  it('should return backend response to getVersion', async () => {
+    ds.getVersion().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
+  it('should return backend response to getConfig', async () => {
+    ds.getConfig().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
+  it('should return backend response to deleteNamedEntitiesByMentionNorm', async () => {
+    ds.deleteNamedEntitiesByMentionNorm('mentionNorm').then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
+  it('should return backend response to getSource', async () => {
+    ds.getSource('relativeUrl').then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
+  it('should return backend response to getIndices', async () => {
+    ds.getIndices().then(
       resp => resp.json().then(
         json => expect(json).toEqual({})
       )
@@ -31,39 +111,13 @@ describe('Datashare backend client', () => {
     }
 
     expect(mockCallback.mock.calls.length).toBe(1)
-    expect(mockCallback.mock.calls[0][0]).toEqual(new Response(JSON.stringify({}), {status: 42, headers: {'Content-type': 'application/json'}}))
-  })
-
-  it('should return backend reponse to deleteNamedEntitiesByMentionNorm', async () => {
-    ds.deleteNamedEntitiesByMentionNorm('mentionNorm').then(
-      resp => resp.json().then(
-        json => expect(json).toEqual({})
-      )
-    )
-  })
-
-  it('should return backend reponse to getConfig', async () => {
-    ds.getConfig().then(
-      resp => resp.json().then(
-        json => expect(json).toEqual({})
-      )
-    )
-  })
-
-  it('should return backend reponse to getIndices', async () => {
-    ds.getIndices().then(
-      resp => resp.json().then(
-        json => expect(json).toEqual({})
-      )
-    )
+    expect(mockCallback.mock.calls[0][0]).toEqual(new Response(JSON.stringify({}), { status: 42, headers: { 'Content-type': 'application/json' } }))
   })
 })
 
 function fetchReturns (status, json) {
   ds.fetch.mockReturnValue(Promise.resolve(new Response(JSON.stringify(json), {
     status: status,
-    headers: {
-      'Content-type': 'application/json'
-    }
+    headers: { 'Content-type': 'application/json' }
   })))
 }

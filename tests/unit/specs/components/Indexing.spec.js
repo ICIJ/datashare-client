@@ -29,6 +29,7 @@ describe('Indexing.vue', () => {
 
   afterEach(() => {
     store.commit('indexing/reset')
+    datashare.fetch.mockClear()
   })
 
   it('should start polling tasks on beforeRouteEnter and stop polling tasks on beforeRouteLeave', async () => {
@@ -67,8 +68,8 @@ describe('Indexing.vue', () => {
   })
 
   it('should display the extract and the find named entities buttons', () => {
-    expect(wrapper.findAll('.btn-extract').length).toEqual(1)
-    expect(wrapper.findAll('.btn-find-named-entites').length).toEqual(1)
+    expect(wrapper.contains('.btn-extract')).toBeTruthy()
+    expect(wrapper.contains('.btn-find-named-entites')).toBeTruthy()
   })
 
   it('should enable the find named entities buttton by default, and display no tooltip', () => {
@@ -81,6 +82,58 @@ describe('Indexing.vue', () => {
 
     expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toEqual('disabled')
     expect(wrapper.find('.span-find-named-entities').attributes().title).not.toEqual('')
+  })
+
+  it('should not display the "Stop pending tasks" and "Delete done tasks" buttons', () => {
+    expect(wrapper.contains('.btn-stop-pending-tasks')).toBeFalsy()
+    expect(wrapper.contains('.btn-delete-done-tasks')).toBeFalsy()
+  })
+
+  it('should display the "Stop pending tasks" and "Delete done tasks" buttons, if a task is running', () => {
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+
+    expect(wrapper.contains('.btn-stop-pending-tasks')).toBeTruthy()
+    expect(wrapper.contains('.btn-delete-done-tasks')).toBeTruthy()
+  })
+
+  it('should enable the "Stop pending tasks" if a task is running', () => {
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+
+    expect(wrapper.find('.btn-stop-pending-tasks').attributes().disabled).toBeUndefined()
+    expect(wrapper.find('.btn-delete-done-tasks').attributes().disabled).toEqual('disabled')
+  })
+
+  it('should enable the "Delete done tasks" if a task is done', () => {
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+
+    expect(wrapper.find('.btn-stop-pending-tasks').attributes().disabled).toEqual('disabled')
+    expect(wrapper.find('.btn-delete-done-tasks').attributes().disabled).toBeUndefined()
+  })
+
+  it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', async () => {
+    datashare.fetch.mockReturnValue(jsonOk({}))
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+    expect(wrapper.vm.tasks.length).toEqual(1)
+
+    wrapper.find('.btn-stop-pending-tasks').trigger('click')
+
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
+      { method: 'POST', body: '{}', credentials: 'same-origin' })
+    expect(wrapper.vm.tasks.length).toEqual(0)
+  })
+
+  it('should call a backend endpoint on click on the "Delete done tasks" button', async () => {
+    datashare.fetch.mockReturnValue(jsonOk({}))
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    expect(wrapper.vm.tasks.length).toEqual(1)
+
+    wrapper.find('.btn-delete-done-tasks').trigger('click')
+
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
+      { method: 'POST', body: '{}', credentials: 'same-origin' })
+    expect(wrapper.vm.tasks.length).toEqual(0)
   })
 })
 

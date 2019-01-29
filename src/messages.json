@@ -80,7 +80,6 @@
       "yes": "Yes",
       "no": "No",
       "go": "Go",
-      "purge": "Delete done tasks",
       "tasks": "Tasks",
       "empty": "You started no tasks yet.",
       "extract_text": "Extract text",
@@ -96,7 +95,9 @@
       "mitie": "Mitie",
       "ixapipe": "Ixa Pipe",
       "default": "By default - CoreNLP offers the highest probability of working in most documents",
-      "sync_models": "Offline"
+      "sync_models": "Offline",
+      "stop_pending_tasks": "Stop all pending tasks",
+      "delete_done_tasks": "Delete done tasks"
     },
     "menu": {
       "help": "Ask for help",
@@ -192,7 +193,6 @@
       "yes": "Oui",
       "no": "Non",
       "go": "Go",
-      "purge": "Supprimer les tâches terminées",
       "tasks": "Tâches",
       "empty": "Vous n'avez pas encore démarré de tâche",
       "extract_text": "Extraire le texte",
@@ -200,7 +200,7 @@
       "extracting_subheader": "En activant l'OCR",
       "find_named_entities": "Trouver les personnes, organisations et lieux",
       "find_named_entities_header": "Quelle technologie voulez-vous utiliser pour trouver les entités nommées ?",
-      "find_named_entities_subheader": "CHoisir l'une des technologies litées ci-dessous",
+      "find_named_entities_subheader": "Choisir l'une des technologies litées ci-dessous",
       "find_named_entities_tooltip": "Les textes doivent être extraits avant de trouver les entitées nommées",
       "pipelines": "Algo(s)",
       "corenlp": "Core NLP",
@@ -208,7 +208,9 @@
       "mitie": "Mitie",
       "ixapipe": "Ixa Pipe",
       "default": "Par défaut - CoreNLP présente une meilleure probablilité de fonctionner avec tous les documents",
-      "sync_models": "Hors ligne"
+      "sync_models": "Hors ligne",
+      "stop_pending_tasks": "Arrêter toutes les tâches en cours",
+      "delete_done_tasks": "Supprimer les tâches terminées"
     },
     "menu": {
       "help": "Aide",

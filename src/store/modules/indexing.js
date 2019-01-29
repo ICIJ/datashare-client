@@ -1,5 +1,6 @@
 import { getField, updateField } from 'vuex-map-fields'
 import DatashareClient from '@/api/DatashareClient'
+import remove from 'lodash/remove'
 
 export const datashare = new DatashareClient()
 
@@ -22,14 +23,17 @@ export const getters = {
 }
 
 export const mutations = {
+  updateField,
   reset (state) {
     // acquire initial state
     const s = initialState()
     Object.keys(s).forEach(key => { state[key] = s[key] })
   },
-  updateField,
-  cleanTasks (state) {
-    state.tasks = []
+  stopPendingTasks (state) {
+    remove(state.tasks, item => item.state === 'RUNNING')
+  },
+  deleteDoneTasks (state) {
+    remove(state.tasks, item => item.state === 'DONE')
   },
   updateTasks (state, raw) {
     state.tasks = raw
@@ -70,8 +74,11 @@ export const actions = {
         break
     }
   },
-  cleanTasks ({ state, commit }) {
-    datashare.cleanTasks().then(commit('cleanTasks'))
+  stopPendingTasks ({ state, commit }) {
+    datashare.stopPendingTasks().then(commit('stopPendingTasks'))
+  },
+  deleteDoneTasks ({ state, commit }) {
+    datashare.deleteDoneTasks().then(commit('deleteDoneTasks'))
   },
   loadTasks ({ commit }) {
     return datashare.getTasks()
