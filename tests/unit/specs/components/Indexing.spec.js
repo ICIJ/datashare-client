@@ -37,7 +37,7 @@ describe('Indexing.vue', () => {
     await Indexing.beforeRouteEnter(undefined, undefined, jest.fn())
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task'),
       { credentials: 'same-origin' })
     expect(store.state.indexing.pollHandle).not.toBeNull()
 
@@ -118,7 +118,7 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-stop-pending-tasks').trigger('click')
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stopAll/'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stopAll'),
       { method: 'PUT', credentials: 'same-origin' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
@@ -131,7 +131,7 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-delete-done-tasks').trigger('click')
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean'),
       { method: 'POST', body: '{}', credentials: 'same-origin' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })

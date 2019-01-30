@@ -60,7 +60,7 @@ describe('Indexing store', () => {
 
     expect(store.state.tasks.length).toEqual(0)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stopAll/'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stopAll'),
       { method: 'PUT', credentials: 'same-origin' })
   })
 
@@ -85,7 +85,7 @@ describe('Indexing store', () => {
 
     expect(store.state.tasks.length).toEqual(0)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean'),
       { method: 'POST', body: '{}', credentials: 'same-origin' })
   })
 
