@@ -32,18 +32,23 @@
             {{ $t('indexing.tasks') }}
           </h3>
         </div>
-        <ul class="list-group list-group-flush"  v-if="tasks.length">
-          <li v-for="task in tasks" :key="task.name" class="indexing__tasks list-group-item">
-            {{ taskLabel(task.name) }}
-            <span class="badge badge-pill small float-right">
-              {{ task.state }}
-            </span>
-            <div class="indexing__tasks__progress progress">
-              <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar"
-                   :style="'width: ' + getProgress(task.progress) + '%'" :aria-valuenow="getProgress(task.progress)"
-                   aria-valuemin="0" aria-valuemax="100">
-                {{ getProgress(task.progress) }}%
+        <ul class="list-group list-group-flush" v-if="tasks.length">
+          <li v-for="task in tasks" :key="task.name" class="indexing__tasks list-group-item d-flex">
+            <div class="col">
+              {{ taskLabel(task.name) }}
+              <span class="badge badge-pill small float-right">
+                {{ task.state }}
+              </span>
+              <div class="indexing__tasks__progress progress">
+                <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar"
+                     :style="'width: ' + getProgress(task.progress) + '%'" :aria-valuenow="getProgress(task.progress)"
+                     aria-valuemin="0" aria-valuemax="100">
+                  {{ getProgress(task.progress) }}%
+                </div>
               </div>
+            </div>
+            <div class="col-md-auto p-0 btn-stop-task">
+              <font-awesome-icon icon="times-circle" @click="stopTask(taskLabel(task.name))" />
             </div>
           </li>
         </ul>
@@ -120,6 +125,9 @@ export default {
     },
     stopPendingTasks () {
       store.dispatch('indexing/stopPendingTasks')
+    },
+    stopTask (name) {
+      store.dispatch('indexing/stopTask', name)
     },
     deleteDoneTasks () {
       store.dispatch('indexing/deleteDoneTasks')

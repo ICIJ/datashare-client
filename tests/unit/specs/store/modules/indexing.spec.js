@@ -57,7 +57,21 @@ describe('Indexing store', () => {
     expect(store.state.tasks.length).toEqual(1)
 
     await store.dispatch('stopPendingTasks')
+
     expect(store.state.tasks.length).toEqual(0)
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
+      { method: 'POST', body: '{}', credentials: 'same-origin' })
+  })
+
+  it('should stop the task named 456', async () => {
+    store.commit('updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' },
+      { name: 'foo.bar@456', progress: 0.7, state: 'RUNNING' }])
+    expect(store.state.tasks.length).toEqual(2)
+
+    await store.dispatch('stopTask', 'bar (456)')
+
+    expect(store.state.tasks.length).toEqual(1)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
       { method: 'POST', body: '{}', credentials: 'same-origin' })
@@ -68,6 +82,7 @@ describe('Indexing store', () => {
     expect(store.state.tasks.length).toEqual(1)
 
     await store.dispatch('deleteDoneTasks')
+
     expect(store.state.tasks.length).toEqual(0)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),

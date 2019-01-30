@@ -135,6 +135,27 @@ describe('Indexing.vue', () => {
       { method: 'POST', body: '{}', credentials: 'same-origin' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
+
+  it('should display 2 "Stop task" icons if 2 tasks are running', () => {
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' },
+      { name: 'foo.bar@456', progress: 0.7, state: 'RUNNING' }])
+
+    expect(wrapper.findAll('.btn-stop-task').length).toEqual(2)
+  })
+
+  it('should call a backend endpoint on click on a "Stop task" icon', () => {
+    datashare.fetch.mockReturnValue(jsonOk({}))
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+
+    expect(wrapper.findAll('.btn-stop-task').length).toEqual(1)
+
+    wrapper.find('.btn-stop-task svg').trigger('click')
+
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
+      { method: 'POST', body: '{}', credentials: 'same-origin' })
+    expect(wrapper.vm.tasks.length).toEqual(0)
+  })
 })
 
 function jsonOk (body) {

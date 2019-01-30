@@ -18,6 +18,11 @@ export class DatashareClient {
   }
   stopPendingTasks () {
     return this.sendAction('/api/task/clean/', { method: 'POST', body: '{}', credentials: 'same-origin' })
+    // return this.sendAction('/api/task/stopAll/', { method: 'PUT', body: '{}', credentials: 'same-origin' })
+  }
+  stopTask (name) {
+    return this.sendAction('/api/task/clean/', { method: 'POST', body: '{}', credentials: 'same-origin' })
+    // return this.sendAction(('/api/task/stop/' + name), { method: 'PUT', body: '{}', credentials: 'same-origin' })
   }
   deleteDoneTasks () {
     return this.sendAction('/api/task/clean/', { method: 'POST', body: '{}', credentials: 'same-origin' })

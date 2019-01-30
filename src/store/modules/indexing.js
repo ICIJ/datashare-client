@@ -1,6 +1,7 @@
 import { getField, updateField } from 'vuex-map-fields'
 import DatashareClient from '@/api/DatashareClient'
 import remove from 'lodash/remove'
+import endsWith from 'lodash/endsWith'
 
 export const datashare = new DatashareClient()
 
@@ -31,6 +32,10 @@ export const mutations = {
   },
   stopPendingTasks (state) {
     remove(state.tasks, item => item.state === 'RUNNING')
+  },
+  stopTask (state, name) {
+    remove(state.tasks, item => endsWith(item.name,
+      '@' + name.split(' ')[1].replace('(', '').replace(')', '')))
   },
   deleteDoneTasks (state) {
     remove(state.tasks, item => item.state === 'DONE')
@@ -74,10 +79,13 @@ export const actions = {
         break
     }
   },
-  stopPendingTasks ({ state, commit }) {
+  stopPendingTasks ({ commit }) {
     datashare.stopPendingTasks().then(commit('stopPendingTasks'))
   },
-  deleteDoneTasks ({ state, commit }) {
+  stopTask ({ commit }, name) {
+    datashare.stopTask(name).then(commit('stopTask', name))
+  },
+  deleteDoneTasks ({ commit }) {
     datashare.deleteDoneTasks().then(commit('deleteDoneTasks'))
   },
   loadTasks ({ commit }) {

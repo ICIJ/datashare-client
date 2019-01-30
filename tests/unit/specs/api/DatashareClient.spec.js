@@ -35,6 +35,14 @@ describe('Datashare backend client', () => {
     )
   })
 
+  it('should return backend response to stopTask', async () => {
+    ds.stopTask().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
   it('should return backend response to deleteDoneTasks', async () => {
     ds.deleteDoneTasks().then(
       resp => resp.json().then(
