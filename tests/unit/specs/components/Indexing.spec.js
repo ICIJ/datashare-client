@@ -118,8 +118,8 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-stop-pending-tasks').trigger('click')
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
-      { method: 'POST', body: '{}', credentials: 'same-origin' })
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stopAll/'),
+      { method: 'PUT', credentials: 'same-origin' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
@@ -152,8 +152,8 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-stop-task svg').trigger('click')
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
-      { method: 'POST', body: '{}', credentials: 'same-origin' })
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stop/bar (123)'),
+      { method: 'PUT', credentials: 'same-origin' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 })

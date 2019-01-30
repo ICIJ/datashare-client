@@ -60,8 +60,8 @@ describe('Indexing store', () => {
 
     expect(store.state.tasks.length).toEqual(0)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
-      { method: 'POST', body: '{}', credentials: 'same-origin' })
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stopAll/'),
+      { method: 'PUT', credentials: 'same-origin' })
   })
 
   it('should stop the task named 456', async () => {
@@ -73,8 +73,8 @@ describe('Indexing store', () => {
 
     expect(store.state.tasks.length).toEqual(1)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean/'),
-      { method: 'POST', body: '{}', credentials: 'same-origin' })
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stop/bar (456)'),
+      { method: 'PUT', credentials: 'same-origin' })
   })
 
   it('should delete done tasks', async () => {

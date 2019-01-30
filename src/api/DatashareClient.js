@@ -17,12 +17,10 @@ export class DatashareClient {
     return this.sendAction(`/api/task/findNames/${pipeline}`, { method: 'POST', body: JSON.stringify({ options }), credentials: 'same-origin' })
   }
   stopPendingTasks () {
-    return this.sendAction('/api/task/clean/', { method: 'POST', body: '{}', credentials: 'same-origin' })
-    // return this.sendAction('/api/task/stopAll/', { method: 'PUT', body: '{}', credentials: 'same-origin' })
+    return this.sendAction('/api/task/stopAll/', { method: 'PUT', credentials: 'same-origin' })
   }
   stopTask (name) {
-    return this.sendAction('/api/task/clean/', { method: 'POST', body: '{}', credentials: 'same-origin' })
-    // return this.sendAction(('/api/task/stop/' + name), { method: 'PUT', body: '{}', credentials: 'same-origin' })
+    return this.sendAction((`/api/task/stop/${name}`), { method: 'PUT', credentials: 'same-origin' })
   }
   deleteDoneTasks () {
     return this.sendAction('/api/task/clean/', { method: 'POST', body: '{}', credentials: 'same-origin' })
