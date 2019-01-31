@@ -7,7 +7,7 @@
         "document": "no docs | one doc | {count} docs"
       },
       "more": "Explore more",
-      "placeholder": "Search for people, companies, etc",
+      "placeholder": "Search for people, organizations, locations...",
       "inthedocs": "In the documents",
       "relative": "Relative to the search"
     },
@@ -20,7 +20,7 @@
         "match": "match in doc",
         "entities": "nb entities",
         "results": "1 document found | %{total} documents found",
-        "no-result": "No documents found.",
+        "no-result": "No documents found",
         "on": "on",
         "perPage": "per page",
         "firstPage": "Go to first page",
@@ -38,7 +38,7 @@
       }
     },
     "facet": {
-      "none": "No values.",
+      "none": "No values",
       "seeAll": "Search the entire database",
       "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
       "invert": "Exclude",
@@ -84,20 +84,20 @@
       "empty": "You started no tasks yet.",
       "extract_text": "Extract text",
       "extracting_header": "Do you want to extract text also from images and PDFs?",
-      "extracting_subheader": "By enabling the OCR",
+      "extracting_subheader": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
       "find_named_entities": "Find people, organizations and locations",
-      "find_named_entities_header": "Which technology do you want to apply in order to find named entities?",
-      "find_named_entities_subheader": "Choose one of the pipeline listed below",
+      "find_named_entities_header": "Which technology do you want to apply in order to find people, organizations and locations?",
+      "find_named_entities_subheader": "Datashare uses Natural Language Processing models. Please choose one of them:",
       "find_named_entities_tooltip": "Texts must be extracted before finding named entities",
       "pipelines": "Pipelines",
       "corenlp": "Core NLP",
       "opennlp": "Open NLP",
       "mitie": "Mitie",
       "ixapipe": "Ixa Pipe",
-      "default": "By default - CoreNLP offers the highest probability of working in most documents",
+      "default": "By default - Offers the highest probability of working in most documents",
       "sync_models": "Offline",
       "stop_pending_tasks": "Stop all pending tasks",
-      "delete_done_tasks": "Delete done tasks"
+      "delete_done_tasks": "Clear done tasks"
     },
     "menu": {
       "help": "Ask for help",
@@ -108,7 +108,7 @@
     },
     "footer": {
       "analyse": "Analyze documents",
-      "homedir": "Move files to this directory to be able to analyze them",
+      "homedir": "Move files to this directory in order to analyze them",
       "clientVersion": "Client",
       "serverVersion": "Server"
     }
@@ -121,7 +121,7 @@
         "document": "aucun document | un document | {count} documents"
       },
       "more": "Explorer plus",
-      "placeholder": "Rechercher des personnes, entreprises, etc.",
+      "placeholder": "Rechercher des personnes, organisations, lieux",
       "inthedocs": "Dans les documents",
       "relative": "Relatifs à la recherche"
     },
@@ -187,27 +187,27 @@
       "download_button": "Télécharger",
       "not_found": "Document non trouvé",
       "named_entities_not_found": "Pas d'entités nommées trouvées",
-      "named_entites_not_searched": "Document non parsé. Afin de lancer la recherche d'entités nommées, allez dans \"Analyser des documents\" et lancez une nouvelle tâche \"Trouver les entitées nommées\"."
+      "named_entites_not_searched": "Document non analysé. Afin de lancer la recherche d'entités nommées, allez dans \"Analyser des documents\" et lancez une nouvelle tâche \"Trouver les entitées nommées\"."
     },
     "indexing": {
       "yes": "Oui",
       "no": "Non",
       "go": "Go",
       "tasks": "Tâches",
-      "empty": "Vous n'avez pas encore démarré de tâche",
+      "empty": "Vous n'avez pas encore démarré de tâches",
       "extract_text": "Extraire le texte",
-      "extracting_header": "Pendant l'indexation, voulez-vous aussi extraire le texte des images et PDFs ?",
-      "extracting_subheader": "En activant l'OCR",
+      "extracting_header": "Pendant l'indexation, voulez-vous aussi extraire le texte des images et des PDFs ?",
+      "extracting_subheader": "Si oui, Datashare appliquera de l'OCR (Optical Character Recognition). Cela peut prendre jusqu'à 10 fois plus de temps.",
       "find_named_entities": "Trouver les personnes, organisations et lieux",
       "find_named_entities_header": "Quelle technologie voulez-vous utiliser pour trouver les entités nommées ?",
-      "find_named_entities_subheader": "Choisir l'une des technologies litées ci-dessous",
-      "find_named_entities_tooltip": "Les textes doivent être extraits avant de trouver les entitées nommées",
+      "find_named_entities_subheader": "Datashare applique des modèles de Traitement de Language Naturel. Veuillez choisir l'un d'eux:",
+      "find_named_entities_tooltip": "Les textes doivent être extraits avant de chercher les entitées nommées",
       "pipelines": "Algo(s)",
       "corenlp": "Core NLP",
       "opennlp": "Open NLP",
       "mitie": "Mitie",
       "ixapipe": "Ixa Pipe",
-      "default": "Par défaut - CoreNLP présente une meilleure probablilité de fonctionner avec tous les documents",
+      "default": "Par défaut - Meilleure probablilité de fonctionner pour tous les documents",
       "sync_models": "Hors ligne",
       "stop_pending_tasks": "Arrêter toutes les tâches en cours",
       "delete_done_tasks": "Supprimer les tâches terminées"
@@ -220,7 +220,7 @@
       "faq": "FAQ"
     },
     "footer": {
-      "analyse": "Analyse les documents",
+      "analyse": "Analyser les documents",
       "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
       "clientVersion": "Client",
       "serverVersion": "Serveur"
