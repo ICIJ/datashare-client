@@ -106,7 +106,7 @@ export default {
     }
 
     &--active > * > &__label &__label__icon {
-      color:  theme-color('primary');
+      color:  theme-color('secondary');
     }
 
     .facet--reversed &--active > * > &__label {
