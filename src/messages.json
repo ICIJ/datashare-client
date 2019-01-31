@@ -35,7 +35,8 @@
           "sizeLargest": "Size (decreasing)",
           "sizeSmallest": "Size (increasing)"
         }
-      }
+      },
+      "reset_filters": "Reset filters"
     },
     "facet": {
       "none": "No values",
@@ -149,7 +150,8 @@
           "sizeLargest": "Taille (décroissante)",
           "sizeSmallest": "Taille (croissante)"
         }
-      }
+      },
+      "reset_filters": "Réinitialiser les filtres"
     },
     "facet": {
       "none": "Aucune valeur distincte",
