@@ -97,7 +97,7 @@ export default {
 
 <style lang="scss">
   .find-named-entities-form {
-    background: theme-color('icij');
+    background: darken($primary, 20);
     color: white;
 
     &__header h4 {

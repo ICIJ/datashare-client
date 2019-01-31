@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
+import Murmur from '@icij/murmur'
 
 import router from './router'
 import messages from './messages'
@@ -15,6 +16,7 @@ Vue.config.productionTip = false
 Vue.use(VueI18n)
 Vue.use(VueProgressBar, { color: '#852308' })
 Vue.use(BootstrapVue)
+Vue.use(Murmur)
 // Font Awesome component must be available everywhere
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 

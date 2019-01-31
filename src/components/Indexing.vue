@@ -1,12 +1,12 @@
 <template>
   <div class="indexing container pt-4">
     <div class="text-right">
-      <button class="btn btn-icij mr-2 btn-extract" type="button" @click="openExtractingForm">
+      <button class="btn btn-primary mr-2 btn-extract" type="button" @click="openExtractingForm">
         <font-awesome-icon icon="rocket" class="mr-2" />
         {{ $t('indexing.extract_text') }}
       </button>
       <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
-        <button class="btn btn-icij btn-find-named-entites" type="button"
+        <button class="btn btn-primary btn-find-named-entites" type="button"
                 :disabled="isPendingTasks" @click="openFindNamedEntitiesForm">
           {{ $t('indexing.find_named_entities') }}
         </button>
@@ -56,11 +56,11 @@
           {{ $t('indexing.empty') }}
         </div>
         <div class="card-footer text-right border-0" v-if="isPendingTasks||isDoneTasks">
-          <button class="btn btn-icij btn-stop-pending-tasks mr-2"
+          <button class="btn btn-primary btn-stop-pending-tasks mr-2"
                   type="button" :disabled="!isPendingTasks" @click="stopPendingTasks">
             {{ $t('indexing.stop_pending_tasks') }}
           </button>
-          <button class="btn btn-icij btn-delete-done-tasks"
+          <button class="btn btn-primary btn-delete-done-tasks"
                   type="button" :disabled="!isDoneTasks" @click="deleteDoneTasks">
             {{ $t('indexing.delete_done_tasks') }}
           </button>
@@ -161,7 +161,7 @@ export default {
   .indexing {
 
     &__form-modal .modal-body {
-      background: theme-color('icij');
+      background: darken($primary, 20);
       color: white;
     }
   }

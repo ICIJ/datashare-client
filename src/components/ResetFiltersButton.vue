@@ -1,5 +1,5 @@
 <template>
-  <button class="btn btn-secondary btn-sm" id="input-reset" @click="resetFacets" :disabled="!hasFacets">
+  <button class="btn btn-outline-secondary btn-sm" id="input-reset" @click="resetFacets" :disabled="!hasFacets">
     Reset filters
   </button>
 </template>

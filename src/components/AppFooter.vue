@@ -1,7 +1,7 @@
 <template>
   <div class="app__footer text-nowrap">
-    <router-link :to="{ name: 'indexing' }"  class="app__footer__addon btn btn-sm" :title="$t('footer.analyse')" v-b-tooltip>
-      <font-awesome-icon icon="plus" />
+    <router-link :to="{ name: 'indexing' }"  class="app__footer__addon btn btn-sm text-secondary" :title="$t('footer.analyse')" v-b-tooltip>
+      <font-awesome-icon icon="rocket" />
       <span class="sr-only">{{ $t('menu.analyse') }}</span>
     </router-link>
     <div class="app__footer__addon app__footer__addon--homedir" :title="$t('footer.homedir')" v-b-tooltip v-if="!isRemote">
@@ -47,11 +47,11 @@
     left: 0;
     width: 100%;
     height: $app-footer-height;
-    background: #222;
     color: white;
     font-size: 0.8rem;
     display: flex;
     align-items: center;
+    background: #222;
 
     &__addon {
       padding: 0 .5em;

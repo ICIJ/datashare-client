@@ -1,4 +1,9 @@
 @import './utils/settings.scss';
 @import './utils/animations.scss';
+@import './assets/fonts/Medel/stylesheet.css';
 @import '~node_modules/bootstrap/scss/bootstrap';
-@import '~node_modules/bootstrap-vue/dist/bootstrap-vue.css'
+@import '~node_modules/bootstrap-vue/dist/bootstrap-vue.css';
+
+.text-special {
+  font-family: $special-font-family;
+}

@@ -17,6 +17,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.1.1",
     "@fortawesome/free-solid-svg-icons": "^5.1",
     "@fortawesome/vue-fontawesome": "^0.0.22",
+    "@icij/murmur": "^1.6.2",
     "bodybuilder": "^2.2.10",
     "bootstrap": "4.1.2",
     "bootstrap-vue": "^2.0.0-rc.11",

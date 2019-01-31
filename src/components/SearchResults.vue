@@ -8,9 +8,11 @@
       <search-results-header :response="response" :position="'bottom'" />
     </div>
     <div v-else>
-      <div class="search-results__header">
-        <div class="search-results__header__number-of-results">{{ $t('search.results.no-result') }}</div>
-        <div class="ml-1">
+      <div class="search-results__header border-0 d-flex justify-content-center align-items-center py-5">
+        <div class="search-results__header__number-of-results">
+          {{ $t('search.results.no-result') }}
+        </div>
+        <div class="ml-2">
           You may try to
           <reset-filters-button />
         </div>

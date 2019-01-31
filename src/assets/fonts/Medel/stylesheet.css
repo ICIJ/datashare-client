@@ -1,0 +1,13 @@
+@font-face {
+    font-family: 'Medel';
+    src: url('Medel-Regular.eot');
+    src: local('Medel Regular'), local('Medel-Regular'),
+        url('Medel-Regular.eot?#iefix') format('embedded-opentype'),
+        url('Medel-Regular.woff2') format('woff2'),
+        url('Medel-Regular.woff') format('woff'),
+        url('Medel-Regular.ttf') format('truetype'),
+        url('Medel-Regular.svg#Medel-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+

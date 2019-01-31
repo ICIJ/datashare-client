@@ -1,7 +1,7 @@
 <template>
   <div class="landing">
     <div class="landing__form">
-      <h1 class="landing__form__heading">
+      <h1 class="landing__form__heading text-special">
         Datashare
       </h1>
       <search-bar class="landing__form__search-bar" hide-settings />
@@ -13,18 +13,7 @@
   .landing {
     position: relative;
     min-height: calc(100vh - #{$app-nav-height}  - #{$app-footer-height});
-    background: $aggregations-panel-bg;
-
-    &:after {
-      content:"";
-      z-index: 0;
-      position: absolute;
-      top:0;
-      left:0;
-      right:0;
-      bottom:55%;
-      background: theme-color('dark');
-    }
+    @include gradient-directional($primary, $secondary);
 
     &__form {
       z-index: 100;
@@ -42,7 +31,8 @@
         right:0;
         text-align: center;
         color: white;
-        font-weight: bolder;
+        font-weight: 400;
+        font-size: 3rem;
       }
 
       &__search-bar {

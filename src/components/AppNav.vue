@@ -6,11 +6,9 @@
       </transition>
       <div class="app__nav__container row no-gutters">
         <div class="app__nav__container__main col row no-gutters">
-          <router-link class="app__nav__container__main__brand col" :to="{ name: 'search' }">
-            <div class="sr-only">
-              ICIJ
-            </div>
-            <div>
+          <router-link class="app__nav__container__main__brand col d-flex justify-content-start align-items-center" :to="{ name: 'search' }">
+            <brand size="40" class="mx-3" />
+            <div class="text-special">
               Datashare
             </div>
           </router-link>
@@ -21,27 +19,28 @@
             <font-awesome-icon icon="bars" />
           </a>
           <ul class="app__nav__container__main__menu list-unstyled col" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
+            <li class="list-unstyled-item app__nav__container__main__menu__item border-right ml-auto">
+              <router-link :to="{ name: 'indexing' }">
+                <font-awesome-icon icon="rocket" class="mr-1" />
+                {{ $t('menu.analyse') }}
+              </router-link>
+            </li>
             <li class="list-unstyled-item app__nav__container__main__menu__item">
               <a :href="getAddDocumentsLink()" target="_blank">
                 {{ $t('menu.addDocuments') }}
               </a>
             </li>
             <li class="list-unstyled-item app__nav__container__main__menu__item">
-              <router-link :to="{ name: 'indexing' }">
-                {{ $t('menu.analyse') }}
-              </router-link>
-            </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item">
               <a href="https://icij.gitbook.io/datashare" target="_blank">
                 {{ $t('menu.faq') }}
               </a>
             </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item help mr-auto">
+            <li class="list-unstyled-item app__nav__container__main__menu__item">
               <a :href="getHelpLink()" target="_blank">
                 {{ $t('menu.help') }}
               </a>
             </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item logout" v-if="isRemote">
+            <li class="list-unstyled-item app__nav__container__main__menu__item logout border-left" v-if="isRemote">
               <a :href="logoutLink">
                 <font-awesome-icon icon="sign-out-alt" class="mr-1" />
                 {{ $t('menu.logout') }}
@@ -59,12 +58,14 @@ import { headroom } from 'vue-headroom'
 import SearchBar from '@/components/SearchBar'
 import DatashareClient from '@/api/DatashareClient'
 import getOS from '@/utils/user'
+import Murmur from '@icij/murmur'
 
 export default {
   name: 'AppNav',
   components: {
     headroom,
-    SearchBar
+    SearchBar,
+    Brand: Murmur.components.Brand
   },
   data () {
     return {
@@ -149,37 +150,18 @@ export default {
 
         &__brand.col, &__brand:hover, &__brand:focus {
           color: inherit;
-          position: relative;
-          display: inline-block;
           padding: $spacer;
           pointer-events: auto;
           max-width: 320px;
+          font-size: 1.5rem;
 
           @include media-breakpoint-down(md) {
             max-width: 220px;
           }
 
-          &:before {
-            content:"";
-            background: url('~images/icij-white@2x.png') no-repeat 0 0;
-            background-size: cover;
-            filter: invert(100%);
-            width: $app-nav-brand-height;
-            height: $app-nav-brand-height;
-            display: inline-block;
-            z-index: $zindex-fixed + 20;
-            border:1px solid white;
-            position: absolute;
-            top: $spacer;
-            left: $spacer;
-          }
-
-          & > * {
-            font-size: 1.5rem;
-            display: inline-block;
-            line-height: $line-height-base;
-            padding-left: $spacer;
-            margin-left: $app-nav-brand-height + $spacer;
+          .brand svg {
+            color: black;
+            border: black 1px solid;
           }
         }
 
@@ -270,9 +252,9 @@ export default {
               border-bottom: 3px solid transparent;
 
               &:hover {
-                color: theme-color('icij');
+                color: $secondary;
                 text-decoration: none;
-                border-color: theme-color('icij');
+                border-color: $secondary;
               }
             }
           }

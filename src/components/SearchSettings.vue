@@ -1,6 +1,6 @@
 <template>
   <span class="search-settings">
-    <button type="button" class="btn btn-icij" id="toggleSettings" title="Search settings" v-b-tooltip.hover>
+    <button type="button" class="btn btn-primary" id="toggleSettings" title="Search settings" v-b-tooltip.hover>
       <font-awesome-icon icon="cog" />
       <span class="sr-only">Search settings</span>
     </button>

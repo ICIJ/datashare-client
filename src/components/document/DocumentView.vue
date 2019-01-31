@@ -216,7 +216,7 @@ export default {
   }
 
   &__header {
-    background: theme-color('dark');
+    background: $primary;
     color: white;
     padding: $spacer * 2 $spacer;
     padding-bottom: 0;
@@ -242,7 +242,7 @@ export default {
 
           &.active {
             font-weight: bold;
-            border-color: theme-color('primary');
+            border-color: theme-color('secondary');
           }
         }
       }

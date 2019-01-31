@@ -1,31 +1,47 @@
 $body-bg: #fff;
 
+$saddle-red: #FA4070;
+$primary: #193D87;
+$secondary: #FA4070;
+$tertiary: #FFBF57;
+
+$warning: #FFBF57;
+$success: #3d8a11;
+$info: #45C4FF;
+
+$link-color: $primary;
+
 $theme-colors: (
-  primary: #F8B700,
   icij: #852308,
-  secondary: #505050,
-  success: #28a745,
-  info: #17a2b8,
-  warning: #F4EDEA,
+  primary: $primary,
+  secondary: $secondary,
+  tertiary: $tertiary,
+  success: $success,
+  info: $info,
+  warning: $warning,
   danger: #dc3545,
   light: #F0F0F0,
-  dark: darken(#852308, 10),
-  darker: darken(#852308, 20),
-  darkest: darken(#852308, 25),
+  dark: darken($primary, 20),
+  darker: darken($primary, 30),
+  darkest: darken($primary, 35),
   mark: #fcf8e3,
-  category-ban: #505050,
+  category-ban: $secondary,
   category-person: #ff6699,
-  category-organization: #7f66ff,
+  category-organization: darken($warning, 5),
   category-location: #4cd9aa
 );
 
 $enable-shadows: true;
+$enable-rounded: true;
 
 $font-family-sans-serif: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
 $font-family-serif: "Merriweather", Georgia, "Times New Roman", Times, serif !default;
 
 $headings-font-family: "Lato", $font-family-sans-serif;
 $headings-font-weight: 700;
+
+$special-font-family: "Medel", $headings-font-family;
+
 $text-muted: #717171;
 
 $input-focus-border-color: map-get($theme-colors, 'secondary');

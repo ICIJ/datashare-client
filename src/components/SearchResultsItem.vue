@@ -5,7 +5,7 @@
         {{ doc.basename }}
       </router-link>
     </h5>
-    <router-link :to="{ name: 'search', query: folderParams }" class="search-results-item__location">
+    <router-link :to="{ name: 'search', query: folderParams }" class="search-results-item__location small">
       <font-awesome-icon icon="folder" class="mr-1" />
       {{ location }}
     </router-link>
@@ -94,13 +94,13 @@ export default {
 
       &:before {
         content: "";
-        background: theme-color('primary');
+        background: $secondary;
         position: absolute;
         top: 0;
         left: 0;
         bottom: 0;
         width: 3px;
-        box-shadow: 0 0 10px 0 theme-color('primary');
+        box-shadow: 0 0 10px 0 $secondary;
       }
     }
 
@@ -115,7 +115,7 @@ export default {
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
-      color: mix(theme-color('info'), white)
+      color: $gray-500;
     }
 
     &__fragments {

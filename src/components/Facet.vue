@@ -3,7 +3,7 @@
     <slot name="header" v-if="!hideHeader">
       <div class="card-header">
         <span v-if="hasValues()" class="float-right btn-group">
-          <button class="btn btn-sm btn-outline-secondary py-0" @click="invert" :class="{ 'active': isReversed() }">
+          <button class="btn btn-sm btn-outline-dark py-0" @click="invert" :class="{ 'active': isReversed() }">
             <font-awesome-icon icon="eye-slash" />
             {{ $t('facet.invert') }}
           </button>
@@ -16,7 +16,7 @@
     </slot>
     <div class="list-group list-group-flush facet__items" v-if="!collapseItems">
       <slot name="search" v-if="!hideSearch">
-        <form @submit="asyncFacetSearch" v-if="facet.isSearchable">
+        <form @submit.prevent="asyncFacetSearch" v-if="facet.isSearchable">
           <label class="list-group facet__items__search border-bottom py-2 px-3">
             <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.name) + '...'" />
             <font-awesome-icon icon="search" class="float-right" />
@@ -178,13 +178,13 @@ export default {
 
           &:before {
             content: "";
-            background: theme-color('primary');
+            background: $secondary;
             position: absolute;
             top: 0;
             left: 0;
             bottom: 0;
             width: 3px;
-            box-shadow: 0 0 10px 0 theme-color('primary');
+            box-shadow: 0 0 10px 0 $secondary;
           }
 
           .facet--reversed & {

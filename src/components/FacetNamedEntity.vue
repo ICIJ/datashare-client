@@ -42,7 +42,7 @@ export default {
             <div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__body__key text-white" :class="getCategoryClass(category.key, 'bg-')" :title="capitalize(item.key)" v-b-tooltip.hover>
               {{ item.key }}
             </div>
-            <div class="text-secondary small facet__items__item__description">
+            <div class="text-muted small facet__items__item__description">
               {{
                 $t('aggregations.mentions.item', {
                   occurrences: $tc('aggregations.mentions.occurrence', category.doc_count, { count: category.doc_count }),
