@@ -7,7 +7,7 @@
       <div class="app__nav__container row no-gutters">
         <div class="app__nav__container__main col row no-gutters">
           <router-link class="app__nav__container__main__brand col d-flex justify-content-start align-items-center" :to="{ name: 'search' }">
-            <brand size="40" class="mx-3" />
+            <img src="~images/icij-black.svg" alt="ICIJ" class="mx-2 border border-dark" />
             <div class="text-special">
               Datashare
             </div>
@@ -58,14 +58,12 @@ import { headroom } from 'vue-headroom'
 import SearchBar from '@/components/SearchBar'
 import DatashareClient from '@/api/DatashareClient'
 import getOS from '@/utils/user'
-import Murmur from '@icij/murmur'
 
 export default {
   name: 'AppNav',
   components: {
     headroom,
-    SearchBar,
-    Brand: Murmur.components.Brand
+    SearchBar
   },
   data () {
     return {
@@ -159,9 +157,10 @@ export default {
             max-width: 220px;
           }
 
-          .brand svg {
+          svg, img {
             color: black;
             border: black 1px solid;
+            height: $app-nav-brand-height;
           }
         }
 
