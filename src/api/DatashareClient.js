@@ -20,13 +20,13 @@ export class DatashareClient {
     return this.sendAction('/api/task/stopAll', { method: 'PUT', credentials: 'same-origin' })
   }
   stopTask (name) {
-    return this.sendAction((`/api/task/stop/${name}`), { method: 'PUT', credentials: 'same-origin' })
+    return this.sendAction((`/api/task/stop/${encodeURIComponent(name)}`), { method: 'PUT', credentials: 'same-origin' })
   }
   deleteDoneTasks () {
     return this.sendAction('/api/task/clean', { method: 'POST', body: '{}', credentials: 'same-origin' })
   }
   getTasks () {
-    return this.sendAction('/api/task', { credentials: 'same-origin' })
+    return this.sendAction('/api/task/all', { credentials: 'same-origin' })
   }
   createIndex () {
     return this.sendAction('/api/search/createIndex', { method: 'PUT', credentials: 'same-origin' })

@@ -37,7 +37,7 @@ describe('Indexing.vue', () => {
     await Indexing.beforeRouteEnter(undefined, undefined, jest.fn())
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/all'),
       { credentials: 'same-origin' })
     expect(store.state.indexing.pollHandle).not.toBeNull()
 
@@ -152,7 +152,7 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-stop-task svg').trigger('click')
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stop/bar (123)'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
       { method: 'PUT', credentials: 'same-origin' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })

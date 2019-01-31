@@ -69,11 +69,11 @@ describe('Indexing store', () => {
       { name: 'foo.bar@456', progress: 0.7, state: 'RUNNING' }])
     expect(store.state.tasks.length).toEqual(2)
 
-    await store.dispatch('stopTask', 'bar (456)')
+    await store.dispatch('stopTask', 'foo.bar@123')
 
     expect(store.state.tasks.length).toEqual(1)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stop/bar (456)'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
       { method: 'PUT', credentials: 'same-origin' })
   })
 

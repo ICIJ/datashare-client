@@ -47,8 +47,9 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-auto p-0 btn-stop-task">
-              <font-awesome-icon icon="times-circle" @click="stopTask(taskLabel(task.name))" />
+            <div class="col-md-auto p-0 btn-stop-task my-auto">
+              <font-awesome-icon icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '', 'btn-outline-icij', 'disabled']"
+                                 @click="task.state === 'RUNNING' ? stopTask(task.name) : ''" />
             </div>
           </li>
         </ul>
@@ -163,6 +164,11 @@ export default {
     &__form-modal .modal-body {
       background: theme-color('icij');
       color: white;
+    }
+
+    .btn-stop-task > .muted {
+      opacity: 0.5;
+      filter: grayscale(0.9) brightness(2.3);
     }
   }
 </style>
