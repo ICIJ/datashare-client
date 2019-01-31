@@ -74,7 +74,7 @@
       "not_found": "Document not found",
       "not_available": "Preview is available only for some formats: pdf, cvs, xlsx, tiff and rtf.",
       "named_entities_not_found": "No named entities found",
-      "named_entites_not_searched": "Document not analyzed. To search named entities, go to \"Analyze document\" and start a new task \"Find named entities\"."
+      "named_entites_not_searched": "Document not analyzed. To search named entities, go to \"Analyze my document\" and start a new task \"Find named entities\"."
     },
     "indexing": {
       "yes": "Yes",
@@ -101,13 +101,13 @@
     },
     "menu": {
       "help": "Ask for help",
-      "analyse": "Analyze documents",
+      "analyse": "Analyze my documents",
       "logout": "Logout",
       "addDocuments": "How to add documents",
       "faq": "FAQ"
     },
     "footer": {
-      "analyse": "Analyze documents",
+      "analyse": "Analyze my documents",
       "homedir": "Move files to this directory in order to analyze them",
       "clientVersion": "Client",
       "serverVersion": "Server"
@@ -187,7 +187,7 @@
       "download_button": "Télécharger",
       "not_found": "Document non trouvé",
       "named_entities_not_found": "Pas d'entités nommées trouvées",
-      "named_entites_not_searched": "Document non analysé. Afin de lancer la recherche d'entités nommées, allez dans \"Analyser des documents\" et lancez une nouvelle tâche \"Trouver les entitées nommées\"."
+      "named_entites_not_searched": "Document non analysé. Afin de lancer la recherche d'entités nommées, allez dans \"Analyser mes documents\" et lancez une nouvelle tâche \"Trouver les entitées nommées\"."
     },
     "indexing": {
       "yes": "Oui",
@@ -214,13 +214,13 @@
     },
     "menu": {
       "help": "Aide",
-      "analyse": "Analyser les documents",
+      "analyse": "Analyser mes documents",
       "logout": "Déconnexion",
       "addDocuments": "Comment ajouter des documents",
       "faq": "FAQ"
     },
     "footer": {
-      "analyse": "Analyser les documents",
+      "analyse": "Analyser mes documents",
       "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
       "clientVersion": "Client",
       "serverVersion": "Serveur"
