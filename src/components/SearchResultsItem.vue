@@ -45,8 +45,7 @@ export default {
       return parts.join('/') + '/'
     },
     location () {
-      // Replace the substring before VUE_APP_DATA_PREFIX by '~'
-      return '.' + this.folder.split(this.config.dataDir).pop()
+      return '.' + this.folder.split(get(this, 'config.dataDir', process.env.VUE_APP_DATA_PREFIX)).pop()
     },
     folderParams () {
       return { q: `path:${this.folder}*` }
