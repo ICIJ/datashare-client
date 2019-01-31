@@ -7,10 +7,7 @@
       <div class="app__nav__container row no-gutters">
         <div class="app__nav__container__main col row no-gutters">
           <router-link class="app__nav__container__main__brand col d-flex justify-content-start align-items-center" :to="{ name: 'search' }">
-            <img src="~images/icij-black.svg" alt="ICIJ" class="mx-2 border border-dark" />
-            <div class="text-special">
-              Datashare
-            </div>
+            <img src="~images/logo-color.svg" alt="Datashare" class="mx-3" />
           </router-link>
           <div class="app__nav__container__main__search-bar col" v-if="isntLanding()">
             <search-bar />
@@ -159,7 +156,6 @@ export default {
 
           svg, img {
             color: black;
-            border: black 1px solid;
             height: $app-nav-brand-height;
           }
         }

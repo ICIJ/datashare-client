@@ -2,7 +2,7 @@
   <div class="landing">
     <div class="landing__form">
       <h1 class="landing__form__heading text-special">
-        Datashare
+        <img src="~images/logo-white.svg" alt="Datashare" />
       </h1>
       <search-bar class="landing__form__search-bar" hide-settings />
     </div>
@@ -33,6 +33,12 @@
         color: white;
         font-weight: 400;
         font-size: 3rem;
+
+        img {
+          height: 6rem;
+          margin-bottom: $spacer;
+          filter: drop-shadow(0 0 10px rgba(black, .5));
+        }
       }
 
       &__search-bar {
