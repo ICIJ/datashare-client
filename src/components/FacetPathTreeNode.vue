@@ -12,7 +12,7 @@
           href
           @click.prevent="toggleValue(nodeParams)"
           v-b-tooltip.hover
-          title="Search within this directory"
+          :title="$t('document.search_directory')"
           class="badge badge-pill badge-light">
           <font-awesome-icon icon="search" class="tree-node__count__icon" />
           <span>

@@ -2,11 +2,13 @@
   <div class="pdf-viewer">
     <template v-if="doc.pages.length > 0">
       <div class="pdf-viewer__header">
-        Page <select class="form-control input-sm" v-model.number="doc.active">
-        <option v-for="page in doc.pages.length" v-bind:key="page.address">
-          {{ page }}
-        </option>
-      </select> of {{ doc.pages.length }}
+        {{ $t('document.page') }}
+        <select class="form-control input-sm" v-model.number="doc.active">
+          <option v-for="page in doc.pages.length" v-bind:key="page.address">
+            {{ page }}
+          </option>
+        </select>
+        {{ $t('document.of') }} {{ doc.pages.length }}
       </div>
       <div v-if="page(doc.active)">
         <img class="pdf-viewer__canvas img-responsive img-thumbnail" :src="page(doc.active)"/>
@@ -32,7 +34,7 @@ export default {
   props: ['url'],
   data () {
     return {
-      message: 'Generating preview...',
+      message: this.$t('document.generating_preview'),
       pdf: null,
       doc: {
         active: 0,

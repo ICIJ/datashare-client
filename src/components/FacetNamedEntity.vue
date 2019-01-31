@@ -1,35 +1,3 @@
-<script>
-import { capitalize } from '@/utils/strings'
-import Facet from '@/components/Facet'
-import facets from '@/mixins/facets'
-import ner from '@/mixins/ner'
-import { EventBus } from '@/utils/event-bus.js'
-
-export default {
-  name: 'FacetNamedEntity',
-  components: { Facet },
-  mixins: [facets, ner],
-  methods: {
-    getCategories (item) {
-      if (item.byCategories) {
-        return item.byCategories.buckets
-      }
-      return [
-        {
-          key: 'ban',
-          doc_count: 0,
-          byDocs: { value: 0 }
-        }
-      ]
-    },
-    capitalize: capitalize
-  },
-  mounted () {
-    EventBus.$on('facet::hide::named-entities', () => this.$refs.facet.aggregate(250))
-  }
-}
-</script>
-
 <template>
   <facet v-bind="$props" class="facet--named-entity" ref="facet">
     <template slot="item" slot-scope="{ item }">
@@ -67,6 +35,38 @@ export default {
     </template>
   </facet>
 </template>
+
+<script>
+import { capitalize } from '@/utils/strings'
+import Facet from '@/components/Facet'
+import facets from '@/mixins/facets'
+import ner from '@/mixins/ner'
+import { EventBus } from '@/utils/event-bus.js'
+
+export default {
+  name: 'FacetNamedEntity',
+  components: { Facet },
+  mixins: [facets, ner],
+  methods: {
+    getCategories (item) {
+      if (item.byCategories) {
+        return item.byCategories.buckets
+      }
+      return [
+        {
+          key: 'ban',
+          doc_count: 0,
+          byDocs: { value: 0 }
+        }
+      ]
+    },
+    capitalize: capitalize
+  },
+  mounted () {
+    EventBus.$on('facet::hide::named-entities', () => this.$refs.facet.aggregate(250))
+  }
+}
+</script>
 
 <style lang="scss">
   .facet--named-entity .facet__items__category {

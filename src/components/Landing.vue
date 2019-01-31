@@ -9,6 +9,15 @@
   </div>
 </template>
 
+<script>
+import SearchBar from '@/components/SearchBar'
+
+export default {
+  name: 'Landing',
+  components: { SearchBar }
+}
+</script>
+
 <style lang="scss" scoped>
   .landing {
     position: relative;
@@ -49,12 +58,3 @@
     }
   }
 </style>
-
-<script>
-import SearchBar from './SearchBar'
-
-export default {
-  name: 'Landing',
-  components: { SearchBar }
-}
-</script>

@@ -1,3 +1,7 @@
+<template>
+  <facet v-bind="$props" ref="facet"></facet>
+</template>
+
 <script>
 import facets from '@/mixins/facets'
 import Facet from '@/components/Facet'
@@ -8,7 +12,3 @@ export default {
   mixins: [facets]
 }
 </script>
-
-<template>
-  <facet v-bind="$props" ref="facet"></facet>
-</template>

@@ -75,7 +75,12 @@
       "not_found": "Document not found",
       "not_available": "Preview is available only for some formats: pdf, cvs, xlsx, tiff and rtf.",
       "named_entities_not_found": "No named entities found",
-      "named_entites_not_searched": "Document not analyzed. To search named entities, go to \"Analyze my document\" and start a new task \"Find named entities\"."
+      "named_entites_not_searched": "Document not analyzed. To search named entities, go to \"Analyze my document\" and start a new task \"Find named entities\".",
+      "generating_preview": "Generating preview...",
+      "page": "Page",
+      "of": "of",
+      "sheet": "Sheet",
+      "search_directory": "Search within this directory"
     },
     "indexing": {
       "yes": "Yes",
@@ -112,6 +117,14 @@
       "homedir": "Move files to this directory in order to analyze them",
       "clientVersion": "Client",
       "serverVersion": "Server"
+    },
+    "login": {
+      "welcome": "Welcome to Datashare",
+      "sum_up": "<a href=\"https://icij.org\">ICIJ</a> search and discovery platform.",
+      "authentication_platform": "To log in, use ICIJ secure authentication plateform:",
+      "xemx": "Login with Xemx",
+      "support_desk": "If you need any help, please visit our support desk:",
+      "ask_help": "Ask for help"
     }
   },
   "fr": {
@@ -189,7 +202,12 @@
       "download_button": "Télécharger",
       "not_found": "Document non trouvé",
       "named_entities_not_found": "Pas d'entités nommées trouvées",
-      "named_entites_not_searched": "Document non analysé. Afin de lancer la recherche d'entités nommées, allez dans \"Analyser mes documents\" et lancez une nouvelle tâche \"Trouver les entitées nommées\"."
+      "named_entites_not_searched": "Document non analysé. Afin de lancer la recherche d'entités nommées, allez dans \"Analyser mes documents\" et lancez une nouvelle tâche \"Trouver les entitées nommées\".",
+      "generating_preview": "Génère une prévisualisation...",
+      "page": "Page",
+      "of": "sur",
+      "sheet": "Feuille",
+      "search_directory": "Chercher dans ce dossier"
     },
     "indexing": {
       "yes": "Oui",
@@ -226,6 +244,14 @@
       "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
       "clientVersion": "Client",
       "serverVersion": "Serveur"
+    },
+    "login": {
+      "welcome": "Bienvenue sur Datashare",
+      "sum_up": "La plateforme de recherche et de découverte de l'<a href=\"https://icij.org\">ICIJ</a>.",
+      "authentication_platform": "Pour vous connecter, utilisez la plateforme d'authentification sécurisée de l'ICIJ :",
+      "xemx": "Se connecter avec Xemx",
+      "support_desk": "Si vous avez besoin d'aide, veuillez visiter notre bureau support :",
+      "ask_help": "Aide"
     }
   }
 }

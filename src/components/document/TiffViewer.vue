@@ -9,11 +9,13 @@
           <font-awesome-icon icon="redo" class="float-right" />
         </button>
         <div class="tiff-viewer__header__pages">
-          Page <select class="form-control input-sm" v-model="doc.active">
-          <option v-for="page in doc.pages.length" v-bind:key="page">
-            {{ page }}
-          </option>
-        </select> of {{ doc.pages.length }}
+          {{ $t('document.page') }}
+          <select class="form-control input-sm" v-model="doc.active">
+            <option v-for="page in doc.pages.length" v-bind:key="page">
+              {{ page }}
+            </option>
+          </select>
+          {{ $t('document.of') }} {{ doc.pages.length }}
         </div>
       </div>
       <div class="img-thumbnail">

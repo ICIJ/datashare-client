@@ -2,25 +2,25 @@
   <div class="login">
     <div class="login__card card text-center">
       <div class="login__card__heading card-title mt-4">
-        <h2 class="display-4">Welcome to Datashare</h2>
+        <h2 class="display-4">{{ $t('login.welcome') }}</h2>
         <p class="lead mb-0">
-          <a hre="https://icij.org">ICIJ</a>' search and discovery platform.
+          {{ $t('login.sum_up') }}
         </p>
       </div>
       <div class="login__card__body">
         <ul class="list-group">
           <li class="list-group-item bg-light">
-            <p>To log in, use ICIJ secure authentication plateform:</p>
+            <p>{{ $t('login.authentication_platform') }}</p>
             <a class="btn btn-dark btn-lg" :href="getConfig('DS_AUTH_SIGNIN')">
               <font-awesome-icon icon="user-shield" class="mr-2" />
-              Login with Xemx
+              {{ $t('login.xemx') }}
             </a>
           </li>
           <li class="list-group-item">
-            <p>If you need any help, please visit our support desk:</p>
+            <p>{{ $t('login.support_desk') }}</p>
             <a class="btn btn-outline-secondary btn-lg" href="https://jira.icij.org/servicedesk/customer/portal/4/create/108">
               <font-awesome-icon icon="ambulance" class="mr-2" />
-              Ask for help
+              {{ $t('login.ask_help') }}
             </a>
           </li>
         </ul>

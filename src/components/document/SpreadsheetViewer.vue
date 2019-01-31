@@ -1,7 +1,7 @@
 <template>
   <div class="spreadsheet-viewer">
     <div class="spreadsheet-viewer__header" v-if="doc.active">
-      Sheet
+      {{ $t('document.sheet') }}
       <select class="form-control input-sm" v-model="doc.active">
         <option v-for="(_, name) in doc.sheets" v-bind:key="name">
           {{ name }}
@@ -31,7 +31,7 @@ export default {
   props: ['url', 'type'],
   data () {
     return {
-      message: 'Generating preview...',
+      message: this.$t('document.generating_preview'),
       spreadsheet: null,
       doc: {
         active: null,
