@@ -169,6 +169,6 @@ describe('SearchResultsItem.vue', () => {
           }})
       }
     })
-    expect(wrapped.vm.location).toEqual('~/data/folder_01/folder_02/')
+    expect(wrapped.vm.location).toEqual('.folder_01/folder_02/')
   })
 })
