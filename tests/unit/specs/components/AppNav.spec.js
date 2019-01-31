@@ -73,12 +73,12 @@ describe('AppNav.vue', () => {
   })
 
   it('should display the github help link', () => {
-    expect(wrapper.find('.app__nav__container__main__menu__item.help a').attributes().href).toEqual(expect.stringContaining('github.com'))
+    expect(wrapper.find('.app__nav__container__main__menu__item--help a').attributes().href).toEqual(expect.stringContaining('github.com'))
   })
 
   it('should display the jira help link', () => {
     Vue.prototype.config = { mode: 'SERVER' }
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
-    expect(wrapper.find('.app__nav__container__main__menu__item.help a').attributes().href).toEqual(expect.stringContaining('jira.icij.org'))
+    expect(wrapper.find('.app__nav__container__main__menu__item--help a').attributes().href).toEqual(expect.stringContaining('jira.icij.org'))
   })
 })

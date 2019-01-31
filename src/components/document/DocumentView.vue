@@ -8,7 +8,7 @@
         <h3>
           <span>{{ document.basename }}</span>
           <a class="btn btn-link float-right" :href="getFullUrl" target="_blank" title="Download source file">
-            <font-awesome-icon icon="download" />
+            <font-awesome-icon icon="download" class="text-white" />
             <span class="sr-only">{{ $t('document.download_button') }}</span>
           </a>
         </h3>

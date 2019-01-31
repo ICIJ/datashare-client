@@ -23,7 +23,6 @@
 
 <script>
 import get from 'lodash/get'
-import replace from 'lodash/replace'
 import uniqBy from 'lodash/uniqBy'
 import ner from '@/mixins/ner'
 
@@ -47,8 +46,7 @@ export default {
     },
     location () {
       // Replace the substring before VUE_APP_DATA_PREFIX by '~'
-      const regexp = new RegExp('^(\\S*)' + process.env.VUE_APP_DATA_PREFIX + '(\\S*)$')
-      return replace(this.folder, regexp, '~/data/$2')
+      return '.' + this.folder.split(this.config.dataDir).pop()
     },
     folderParams () {
       return { q: `path:${this.folder}*` }
