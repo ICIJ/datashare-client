@@ -148,7 +148,7 @@ export function datasharePlugin (Client, config, components) {
 }
 
 const esClient = new es.Client({
-  host: process.env.VUE_APP_ES_HOST || window.location.hostname + ':' + window.location.port + '/api/search',
+  host: process.env.VUE_APP_ES_HOST || window.location.hostname + ':' + window.location.port + '/api/index/search',
   plugins: [ datasharePlugin ]
 })
 
