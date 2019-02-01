@@ -1,13 +1,19 @@
 import ResetFiltersButton from '@/components/ResetFiltersButton'
-import { shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import store from '@/store'
 import router from '@/router'
+import VueI18n from 'vue-i18n'
+import messages from '@/messages'
+
+const localVue = createLocalVue()
+localVue.use(VueI18n)
+const i18n = new VueI18n({ locale: 'en', messages })
 
 describe('ResetFiltersButton.vue', function () {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(ResetFiltersButton, { store, router })
+    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store })
     store.commit('search/reset')
   })
 
