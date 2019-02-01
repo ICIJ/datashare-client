@@ -7,7 +7,8 @@
       <div class="app__nav__container row no-gutters">
         <div class="app__nav__container__main col row no-gutters">
           <router-link class="app__nav__container__main__brand col d-flex justify-content-start align-items-center" :to="{ name: 'search' }">
-            <img src="~images/logo-color.svg" alt="Datashare" class="mx-3" />
+            <img src="~images/logo-color.svg" alt="Datashare" class="ml-3" />
+            <span class="app__nav__container__main__brand__beta mr-3">beta</span>
           </router-link>
           <div class="app__nav__container__main__search-bar col" v-if="isntLanding()">
             <search-bar />
@@ -143,7 +144,7 @@ export default {
         min-height: $app-nav-height;
         white-space: nowrap;
 
-        &__brand.col, &__brand:hover, &__brand:focus {
+        &__brand.col, &__brand:hover, &__brand:focus, &__brand {
           color: inherit;
           padding: $spacer;
           pointer-events: auto;
@@ -158,6 +159,18 @@ export default {
             color: black;
             height: $app-nav-brand-height;
           }
+        }
+
+        &__brand__beta {
+          font-size: .6em;
+          background: $saddle-red;
+          padding: .05em .2em;
+          display: inline-block;
+          height: auto;
+          color: white;
+          position: relative;
+          top: -0.5em;
+          margin-left: 0.5em;
         }
 
         &__search-bar.col {

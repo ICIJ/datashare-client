@@ -46,14 +46,13 @@ export default {
         img {
           height: 6rem;
           margin-bottom: $spacer;
-          filter: drop-shadow(0 0 10px rgba(black, .5));
+          transform: translateX(-9.5%); // half of logo width
         }
       }
 
       &__search-bar {
         background: white;
         border-radius: $border-radius;
-        box-shadow: $dropdown-box-shadow;
       }
     }
   }
