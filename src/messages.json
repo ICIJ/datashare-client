@@ -36,7 +36,8 @@
           "sizeSmallest": "Size (increasing)"
         }
       },
-      "reset_filters": "Reset filters"
+      "reset_filters": "Reset filters",
+      "back": "Back to the search results"
     },
     "facet": {
       "none": "No values",
@@ -164,7 +165,8 @@
           "sizeSmallest": "Taille (croissante)"
         }
       },
-      "reset_filters": "Réinitialiser les filtres"
+      "reset_filters": "Réinitialiser les filtres",
+      "back": "Retour aux résultats de recherche"
     },
     "facet": {
       "none": "Aucune valeur distincte",

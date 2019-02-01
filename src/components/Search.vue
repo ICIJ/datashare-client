@@ -15,7 +15,7 @@
         </div>
         <div class="col search__body__document" v-show="showDocument">
           <router-link :to="{ name: 'search', query: searchQuery }" class="p-2 mx-2 mt-1 d-none d-md-inline-block d-xl-none">
-            Back to the search results
+            {{ $t('search.back') }}
           </router-link>
           <router-view></router-view>
         </div>
