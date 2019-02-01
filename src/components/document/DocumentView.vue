@@ -193,7 +193,7 @@ export default {
       parentDocument: state => state.parentDoc
     }),
     getFullUrl () {
-      return DatashareClient.getFullUrl(this.document.relativePath)
+      return DatashareClient.getFullUrl(this.document.url)
     }
   },
   beforeRouteEnter (to, _from, next) {
