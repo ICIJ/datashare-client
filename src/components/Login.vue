@@ -3,9 +3,7 @@
     <div class="login__card card text-center">
       <div class="login__card__heading card-title mt-4">
         <h2 class="display-4">{{ $t('login.welcome') }}</h2>
-        <p class="lead mb-0">
-          {{ $t('login.sum_up') }}
-        </p>
+        <p class="lead mb-0" v-html="$t('login.sum_up')"></p>
       </div>
       <div class="login__card__body">
         <ul class="list-group">
