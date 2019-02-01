@@ -13,7 +13,7 @@
           {{ $t('search.results.no-result') }}
         </div>
         <div class="ml-2">
-          You may try to
+          {{ $t('search.try') }}
           <reset-filters-button />
         </div>
       </div>

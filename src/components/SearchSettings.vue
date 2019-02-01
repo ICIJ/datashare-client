@@ -1,8 +1,10 @@
 <template>
   <span class="search-settings">
-    <button type="button" class="btn btn-primary" id="toggleSettings" title="Search settings" v-b-tooltip.hover>
+    <button type="button" class="btn btn-primary" id="toggleSettings" :title="$t('search.settings.title')" v-b-tooltip.hover>
       <font-awesome-icon icon="cog" />
-      <span class="sr-only">Search settings</span>
+      <span class="sr-only">
+        {{ $t('search.settings.title') }}
+      </span>
     </button>
     <b-popover target="toggleSettings" triggers="click" :placement="placement" :container="container">
       <template slot="title">
@@ -14,11 +16,11 @@
           <div class="col-8">
             <p class="m-0">
               <label for="input-global" class="m-0">
-                Contextualize the search results with the facets:
+                {{ $t('search.settings.contextualize') }}
               </label>
             </p>
             <p class="text-muted m-0">
-              Facets on the right panel will be updated according to the search results.
+              {{ $t('search.settings.contextualize_explanation') }}
             </p>
           </div>
           <div class="col-4 text-right">
@@ -28,12 +30,12 @@
         <div class="row py-2">
           <div class="col-8">
             <p class="m-0">
-              <label for="input-reset" class="m-0">
-                Reset the filter facets:
+              <label class="m-0">
+                {{ $t('search.settings.reset_filters') }}
               </label>
             </p>
             <p class="text-muted m-0">
-              Remove selected facet from the search.
+              {{ $t('search.settings.reset_filters_explanation') }}
             </p>
           </div>
           <div class="col-4 text-right">
@@ -42,7 +44,7 @@
         </div>
         <div class="row py-2">
           <label class="col-8" for="input-page-size">
-            Number of results by page:
+            {{ $t('search.settings.results_per_page') }}
           </label>
           <div class="col-4 text-right">
             <select v-model="selectedSize" @change="changeSize" class="custom-select custom-select-sm" id="input-page-size">
@@ -54,7 +56,7 @@
         </div>
         <div class="row py-2">
           <label class="col-8" for="input-sort">
-            Sort results by:
+            {{ $t('search.settings.sort_by') }}
           </label>
           <div class="col-4 text-right">
             <select v-model="selectedSort" @change="changeSort" class="custom-select custom-select-sm" id="input-sort">

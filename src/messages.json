@@ -15,7 +15,15 @@
       "placeholder": "Search in documents...",
       "buttonlabel": "Search",
       "search-in": "Search in",
-      "settings": "Search settings",
+      "settings": {
+        "title": "Search settings",
+        "contextualize": "Contextualize the search results with the facets:",
+        "contextualize_explanation": "Facets on the left panel will be updated according to the search results.",
+        "reset_filters": "Reset the filter facets:",
+        "reset_filters_explanation": "Remove selected facet from the search.",
+        "results_per_page": "Number of results by page:",
+        "sort_by": "Sort results by:"
+      },
       "results": {
         "match": "match in doc",
         "entities": "nb entities",
@@ -37,7 +45,8 @@
         }
       },
       "reset_filters": "Reset filters",
-      "back": "Back to the search results"
+      "back": "Back to the search results",
+      "try": "You may try to"
     },
     "facet": {
       "none": "No values",
@@ -144,7 +153,15 @@
       "placeholder": "Rechercher dans les documents...",
       "buttonlabel": "Rechercher",
       "search-in": "Rechercher dans",
-      "settings": "Paramètres de recherche",
+      "settings": {
+        "title": "Paramètres de recherche",
+        "contextualize": "Contextualiser les résulats de la recherche avec les facets:",
+        "contextualize_explanation": "Les facets dans la colonne de gauche seront mises à jour en fonction des résultats de recherche.",
+        "reset_filters": "Réinitialiser les filtres des facets",
+        "reset_filters_explanation": "Supprime les facets sléectionnés de la recherche",
+        "results_per_page": "Nombre de résultats par page:",
+        "sort_by": "Trier les résultats par:"
+      },
       "results": {
         "match": "dans le doc",
         "entities": "nb entités",
@@ -166,7 +183,8 @@
         }
       },
       "reset_filters": "Réinitialiser les filtres",
-      "back": "Retour aux résultats de recherche"
+      "back": "Retour aux résultats de recherche",
+      "try": "Vous devriez essayer de"
     },
     "facet": {
       "none": "Aucune valeur distincte",
