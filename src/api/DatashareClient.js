@@ -31,6 +31,9 @@ export class DatashareClient {
   createIndex () {
     return this.sendAction('/api/index/create', { method: 'PUT', credentials: 'same-origin' })
   }
+  getIndices () {
+    return this.sendAction('/api/index/all')
+  }
   getVersion () {
     return this.sendAction('/version')
   }
@@ -45,9 +48,6 @@ export class DatashareClient {
   }
   getSource (document) {
     return this.sendAction(document.url, { credentials: 'same-origin' })
-  }
-  getIndices () {
-    return this.sendAction('/api/index/all')
   }
   sendAction (url, params) {
     return this.fetch(DatashareClient.getFullUrl(url), params).then(r => {
