@@ -31,7 +31,7 @@ PDFJS.GlobalWorkerOptions.workerSrc = 'static/js/pdf.worker.js'
 
 export default {
   name: 'pdf-viewer',
-  props: ['url'],
+  props: ['document'],
   data () {
     return {
       message: this.$t('document.generating_preview'),
@@ -73,7 +73,7 @@ export default {
       if (this.pdf !== null) {
         return new Promise((resolve) => resolve(this.pdf))
       } else {
-        return PDFJS.getDocument(DatashareClient.getFullUrl(this.url)).then(pdf => {
+        return PDFJS.getDocument(DatashareClient.getFullUrl(this.document.url)).then(pdf => {
           this.pdf = pdf
           return pdf
         })

@@ -28,7 +28,7 @@ const ds = new DatashareClient()
 
 export default {
   name: 'spreadsheet-viewer',
-  props: ['url', 'type'],
+  props: ['document'],
   data () {
     return {
       message: this.$t('document.generating_preview'),
@@ -53,9 +53,9 @@ export default {
   methods: {
     getWorkbook () {
       let p = null
-      if (this.type.localeCompare('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') === 0) {
+      if (this.document.contentType.localeCompare('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet') === 0) {
         p = this.xlsx()
-      } else if (this.type.localeCompare('text/csv') === 0) {
+      } else if (this.document.contentType.localeCompare('text/csv') === 0) {
         p = this.csv()
       } else {
         return null
@@ -78,7 +78,7 @@ export default {
       })
     },
     xlsx () {
-      return ds.getSource(this.url)
+      return ds.getSource(this.document)
         .then(r => r.arrayBuffer())
         .then(arrayBuffer => {
           var data = new Uint8Array(arrayBuffer)
@@ -96,7 +96,7 @@ export default {
         })
     },
     csv () {
-      return ds.getSource(this.url)
+      return ds.getSource(this.document)
         .then(r => r.text())
         .then(csv => { return { 1: Papa.parse(csv).data } })
     }

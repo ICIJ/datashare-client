@@ -41,7 +41,7 @@ const ds = new DatashareClient()
 
 export default {
   name: 'tiff-viewer',
-  props: ['url'],
+  props: ['document'],
   data () {
     return {
       message: 'Generating preview...',
@@ -84,7 +84,7 @@ export default {
       }
     },
     getTiff () {
-      return ds.getSource(this.url)
+      return ds.getSource(this.document)
         .then((r) => r.arrayBuffer())
         .then((arrayBuffer) => new Tiff({buffer: arrayBuffer}))
     },

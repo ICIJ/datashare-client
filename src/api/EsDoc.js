@@ -12,7 +12,7 @@ export default class EsDoc {
     // Map the given object to document attribute
     return extend(this, {
       id: raw._id,
-      routing: raw._routing,
+      routing: raw._routing || raw._id,
       version: raw._version,
       type: raw._type,
       source: raw._source || {}

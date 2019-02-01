@@ -109,13 +109,13 @@
         <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent()"></div>
         <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
           <template v-if="document.contentType === 'application/pdf'">
-            <pdf-viewer :url="document.relativePath" />
+            <pdf-viewer :document="document" />
           </template>
           <template v-else-if="document.contentType === 'image/tiff'">
-            <tiff-viewer :url="document.relativePath" />
+            <tiff-viewer :document="document" />
           </template>
           <template v-else-if="document.contentType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || document.contentType === 'text/csv'">
-            <spreadsheet-viewer :url="document.relativePath" :type="document.contentType"/>
+            <spreadsheet-viewer :document="document" />
           </template>
           <template v-else>
             {{ $t('document.not_available') }}

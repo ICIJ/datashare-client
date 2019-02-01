@@ -20,6 +20,9 @@ export default class Document extends EsDoc {
     }
     return '/api' + process.env.VUE_APP_DATA_PREFIX + split(this.path, process.env.VUE_APP_DATA_PREFIX, 2)[1]
   }
+  get url () {
+    return '/api/index/src/' + this.index + '/' + this.id + '?routing=' + this.routing
+  }
   get contentType () {
     return this.source.contentType || 'unknown'
   }
@@ -33,6 +36,9 @@ export default class Document extends EsDoc {
     let value = (size / Math.pow(1024, unitIndex)).toFixed(2)
     let unit = ['B', 'kB', 'MB', 'GB', 'TB'][unitIndex]
     return unitIndex === 0 ? `${size} B` : `${value} ${unit} (${size} B)`
+  }
+  get index () {
+    return this.raw._index
   }
   static get esName () {
     return 'Document'

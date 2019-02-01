@@ -43,11 +43,11 @@ export class DatashareClient {
   static getFullUrl (url) {
     return `${process.env.VUE_APP_DS_HOST || ''}${url}`
   }
-  getSource (relativeUrl) {
-    return this.sendAction(relativeUrl, { credentials: 'same-origin' })
+  getSource (document) {
+    return this.sendAction(document.url, { credentials: 'same-origin' })
   }
   getIndices () {
-    return this.sendAction('/api/user/indices')
+    return this.sendAction('/api/index/all')
   }
   sendAction (url, params) {
     return this.fetch(DatashareClient.getFullUrl(url), params).then(r => {
