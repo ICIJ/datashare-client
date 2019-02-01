@@ -44,7 +44,7 @@ describe('IndexSelector.vue', () => {
     expect(wrapper.vm.selected).toBe(process.env.VUE_APP_ES_INDEX)
   })
 
-  it('should display a dropdown containing 3 indices', async () => {
+  it('should display a dropdown containing 2 indices', async () => {
     DatashareClient.mockImplementation(() => {
       return {
         getIndices: () => {
@@ -56,10 +56,9 @@ describe('IndexSelector.vue', () => {
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
     await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
-    expect(wrapper.findAll('option')).toHaveLength(3)
-    expect(wrapper.findAll('option').at(0).text()).toBe('My documents')
-    expect(wrapper.findAll('option').at(1).text()).toBe('first-index')
-    expect(wrapper.findAll('option').at(2).text()).toBe('second-index')
+    expect(wrapper.findAll('option')).toHaveLength(2)
+    expect(wrapper.findAll('option').at(0).text()).toBe('first-index')
+    expect(wrapper.findAll('option').at(1).text()).toBe('second-index')
   })
 
   it('should change the selected index and refresh the route', async () => {
@@ -78,7 +77,7 @@ describe('IndexSelector.vue', () => {
     const spyRefreshRoute = jest.spyOn(wrapper.vm, 'refreshRoute')
     expect(spyRefreshRoute).not.toBeCalled()
 
-    wrapper.findAll('option').at(2).element.selected = true
+    wrapper.findAll('option').at(1).element.selected = true
     wrapper.find('select').trigger('change')
 
     expect(spyRefreshRoute).toBeCalled()

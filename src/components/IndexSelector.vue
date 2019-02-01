@@ -15,7 +15,6 @@
 <script>
 import DatashareClient from '@/api/DatashareClient'
 import map from 'lodash/map'
-import union from 'lodash/union'
 import facets from '@/mixins/facets'
 
 export default {
@@ -44,8 +43,7 @@ export default {
     const ds = new DatashareClient()
     ds.getIndices().then(res => {
       res.json().then(indices => {
-        this.options = union([{ value: process.env.VUE_APP_ES_INDEX, text: this.$t('facet.local-index') }],
-          map(indices, index => { return { value: index, text: index } }))
+        this.options = map(indices, index => { return { value: index, text: index } })
       })
     })
   },
