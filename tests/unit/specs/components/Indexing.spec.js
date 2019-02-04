@@ -136,11 +136,13 @@ describe('Indexing.vue', () => {
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
-  it('should display 2 "Stop task" icons if 2 tasks are running', () => {
+  it('should display 2 available "Stop task" buttons if 2 tasks are running', () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' },
       { name: 'foo.bar@456', progress: 0.7, state: 'RUNNING' }])
 
     expect(wrapper.findAll('.btn-stop-task').length).toEqual(2)
+    expect(wrapper.findAll('.btn-stop-task').at(0).attributes.disabled).toBeUndefined()
+    expect(wrapper.findAll('.btn-stop-task').at(1).attributes.disabled).toBeUndefined()
   })
 
   it('should call a backend endpoint on click on a "Stop task" icon', () => {
@@ -149,12 +151,19 @@ describe('Indexing.vue', () => {
 
     expect(wrapper.findAll('.btn-stop-task').length).toEqual(1)
 
-    wrapper.find('.btn-stop-task svg').trigger('click')
+    wrapper.find('.btn-stop-task').trigger('click')
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
       { method: 'PUT', credentials: 'same-origin' })
     expect(wrapper.vm.tasks.length).toEqual(0)
+  })
+
+  it('should display 1 disabled "Stop task" button if 1 task is done', () => {
+    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+
+    expect(wrapper.findAll('.btn-stop-task').length).toEqual(1)
+    expect(wrapper.find('.btn-stop-task').attributes().disabled).toEqual('disabled')
   })
 })
 

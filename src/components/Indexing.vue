@@ -47,9 +47,11 @@
                 </div>
               </div>
             </div>
-            <div class="col-md-auto p-0 btn-stop-task my-auto">
-              <font-awesome-icon icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '', 'btn-outline-icij', 'disabled']"
-                                 @click="task.state === 'RUNNING' ? stopTask(task.name) : ''" />
+            <div class="col-md-auto p-0 my-auto">
+              <button class="btn btn-link btn-stop-task" :title="$t('indexing.stop_task')"
+                      @click="task.state === 'RUNNING' ? stopTask(task.name) : ''" :disabled="task.state !== 'RUNNING'">
+                <font-awesome-icon icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '']" />
+              </button>
             </div>
           </li>
         </ul>

@@ -112,6 +112,7 @@
       "ixapipe": "Ixa Pipe",
       "default": "By default - Offers the highest probability of working in most documents",
       "sync_models": "Please check this box if you are currently working offline with no internet connection.",
+      "stop_task": "Stop this task",
       "stop_pending_tasks": "Stop all pending tasks",
       "delete_done_tasks": "Clear done tasks"
     },
@@ -249,6 +250,7 @@
       "ixapipe": "Ixa Pipe",
       "default": "Par défaut - Meilleure probablilité de fonctionner pour tous les documents",
       "sync_models": "Hors ligne",
+      "stop_task": "Arrêter cette tâche",
       "stop_pending_tasks": "Arrêter toutes les tâches en cours",
       "delete_done_tasks": "Supprimer les tâches terminées"
     },
