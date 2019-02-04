@@ -1,40 +1,20 @@
-import { createLocalVue, mount } from '@vue/test-utils'
 import Vuex from 'vuex'
-import VueI18n from 'vue-i18n'
-import VueProgressBar from 'vue-progressbar'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import router from '@/router'
 import { setCookie, removeCookie } from 'tiny-cookie'
 
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-
-import store from '@/store'
-import messages from '@/messages'
-import router from '@/router'
-
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import ContentPlaceholder from '@/components/ContentPlaceholder'
+const localVue = createLocalVue()
+localVue.use(Vuex)
 
 describe('router', () => {
-  esConnectionHelper()
-  let wrapped = null
+  let wrapped
 
   beforeAll(() => {
-    // Create a view with a root router-view
-    const localVue = createLocalVue()
-
-    localVue.use(Vuex)
-    localVue.use(VueI18n)
-    localVue.use(VueProgressBar, { color: '#852308' })
-    localVue.component('font-awesome-icon', FontAwesomeIcon)
-    localVue.component('content-placeholder', ContentPlaceholder)
-
-    const i18n = new VueI18n({ locale: 'en', messages })
-
-    wrapped = mount({ template: '<router-view />' }, { localVue, i18n, router, store })
+    wrapped = shallowMount({ template: '<router-view />' }, { localVue, router })
   })
 
   beforeEach(async () => {
     await wrapped.vm.$router.push('login')
-    await wrapped.vm.$nextTick()
   })
 
   it('should redirect to /login if no cookie', async () => {
