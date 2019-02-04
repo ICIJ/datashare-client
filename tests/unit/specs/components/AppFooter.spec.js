@@ -4,6 +4,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import AppFooter from '@/components/AppFooter'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import messages from '@/messages'
+import router from '@/router'
 import bTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
 import fetchPonyfill from 'fetch-ponyfill'
 const { fetch, Response } = fetchPonyfill()
@@ -27,7 +28,7 @@ describe('AppFooter.vue', () => {
 
   it('should display client git sha1', () => {
     window.fetch.mockReturnValue(jsonOk({}))
-    wrapper = shallowMount(AppFooter, { localVue, i18n })
+    wrapper = shallowMount(AppFooter, { localVue, i18n, router })
     const sha1 = wrapper.vm.clientHash
 
     expect(sha1.match(/[a-z0-9]*/)[0]).toEqual(sha1)
@@ -57,7 +58,7 @@ describe('AppFooter.vue', () => {
       'git.commit.id': 'sha1',
       'git.commit.id.abbrev': 'sha1_abbrev'
     }))
-    wrapper = shallowMount(AppFooter, { localVue, i18n })
+    wrapper = shallowMount(AppFooter, { localVue, i18n, router })
     await wrapper.vm.promise
 
     expect(wrapper.find('.app__footer__tooltip__server__value').text()).toEqual('sha1_abbrev')

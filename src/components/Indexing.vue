@@ -144,7 +144,7 @@ export default {
         case 'DONE': return 'bg-success'
         case 'ERROR': return 'bg-danger'
         case 'CANCELLED': return 'bg-warning'
-        case 'RUNNING': return 'bg-info'
+        case 'RUNNING': return 'bg-info progress-bar-striped progress-bar-animated'
       }
     },
     getProgress (value) {
