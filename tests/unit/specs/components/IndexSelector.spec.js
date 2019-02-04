@@ -7,7 +7,7 @@ import find from 'lodash/find'
 import router from '@/router'
 import store from '@/store'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import messages from '@/messages'
+import messages from '@/lang/en'
 import DatashareClient from '@/api/DatashareClient'
 import fetchPonyfill from 'fetch-ponyfill'
 const { Response } = fetchPonyfill()

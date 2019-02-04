@@ -8,7 +8,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import SearchResultsItem from '@/components/SearchResultsItem'
 import Document from '@/api/Document'
-import messages from '@/messages'
+import messages from '@/lang/en'
 
 import router from '@/router'
 import store from '@/store'

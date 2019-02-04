@@ -10,7 +10,7 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 import FacetPath from '@/components/FacetPath'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import messages from '@/messages'
+import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import find from 'lodash/find'

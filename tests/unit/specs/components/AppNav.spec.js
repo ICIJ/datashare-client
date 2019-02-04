@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
-import messages from '@/messages'
+import messages from '@/lang/en'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import AppNav from '@/components/AppNav'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'

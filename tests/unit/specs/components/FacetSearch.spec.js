@@ -10,7 +10,7 @@ import { EventBus } from '@/utils/event-bus'
 import FacetSearch from '@/components/FacetSearch'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import messages from '@/messages'
+import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 

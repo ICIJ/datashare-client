@@ -1,0 +1,141 @@
+{
+  "en": {
+    "aggregations": {
+      "mentions": {
+        "item": "%{occurrences} in %{documents}",
+        "occurrence": "no occurrences | one occurrence | {count} occurrences",
+        "document": "no docs | one doc | {count} docs"
+      },
+      "more": "Explore more",
+      "placeholder": "Search for people, organizations, locations...",
+      "inthedocs": "In the documents",
+      "relative": "Relative to the search"
+    },
+    "search": {
+      "placeholder": "Search in documents...",
+      "buttonlabel": "Search",
+      "search-in": "Search in",
+      "settings": {
+        "title": "Search settings",
+        "contextualize": "Contextualize the search results with the facets:",
+        "contextualize_explanation": "Facets on the left panel will be updated according to the search results.",
+        "reset_filters": "Reset the filter facets:",
+        "reset_filters_explanation": "Remove selected facet from the search.",
+        "results_per_page": "Number of results by page:",
+        "sort_by": "Sort results by:"
+      },
+      "results": {
+        "match": "match in doc",
+        "entities": "nb entities",
+        "results": "1 document found | %{total} documents found",
+        "no-result": "No documents found",
+        "on": "on",
+        "perPage": "per page",
+        "firstPage": "Go to first page",
+        "previousPage": "Go to previous page",
+        "nextPage": "Go to next page",
+        "lastPage": "Go to last page",
+        "sort": {
+          "sort": "Sort by",
+          "relevance": "Relevance",
+          "dateNewest": "Date (newest)",
+          "dateOldest": "Date (oldest)",
+          "sizeLargest": "Size (decreasing)",
+          "sizeSmallest": "Size (increasing)"
+        }
+      },
+      "reset_filters": "Reset filters",
+      "back": "Back to the search results",
+      "try": "You may try to"
+    },
+    "facet": {
+      "none": "No values",
+      "seeAll": "Search the entire database",
+      "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
+      "invert": "Exclude",
+      "content-type": "File Type",
+      "language": "Language",
+      "named-entity-person": "People",
+      "named-entity-location": "Locations",
+      "named-entity-organization": "Organizations",
+      "path": "Path",
+      "indexing-date": "Indexing date",
+      "extraction-level": "Extraction level",
+      "projects": "Projects",
+      "deleteNamedEntity": "Delete this Named Entity",
+      "showMore": "Show more",
+      "local-index": "My documents"
+    },
+    "document": {
+      "name": "File name",
+      "path": "File path",
+      "id": "File ID",
+      "creation_date": "Creation date",
+      "size": "File size",
+      "content_language": "Content language",
+      "content_type": "Content type",
+      "content_encoding": "Content encoding",
+      "tree_level": "Tree level",
+      "parent_document": "Parent Document",
+      "details": "Details",
+      "named_entities": "Named Entities",
+      "extracted_text": "Extracted text",
+      "preview": "Preview",
+      "download_button": "Download",
+      "not_found": "Document not found",
+      "not_available": "Preview is available only for some formats: pdf, cvs, xlsx, tiff and rtf.",
+      "named_entities_not_found": "No named entities found",
+      "named_entites_not_searched": "Document not analyzed. To search named entities, go to \"Analyze my document\" and start a new task \"Find named entities\".",
+      "generating_preview": "Generating preview...",
+      "page": "Page",
+      "of": "of",
+      "sheet": "Sheet",
+      "search_directory": "Search within this directory"
+    },
+    "indexing": {
+      "yes": "Yes",
+      "no": "No",
+      "go": "Go",
+      "tasks": "Tasks",
+      "empty": "You started no tasks yet.",
+      "extract_text": "Extract text",
+      "extracting_header": "Do you want to extract text also from images and PDFs?",
+      "extracting_subheader": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
+      "find_named_entities": "Find people, organizations and locations",
+      "find_named_entities_header": "Which technology do you want to apply in order to find people, organizations and locations?",
+      "find_named_entities_subheader": "Datashare uses Natural Language Processing models. Please choose one of them:",
+      "find_named_entities_tooltip": "Texts must be extracted before finding named entities",
+      "pipelines": "Pipelines",
+      "corenlp": "Core NLP",
+      "opennlp": "Open NLP",
+      "mitie": "Mitie",
+      "ixapipe": "Ixa Pipe",
+      "default": "By default - Offers the highest probability of working in most documents",
+      "sync_models": "Please check this box if you are currently working offline with no internet connection.",
+      "stop_task": "Stop this task",
+      "stop_pending_tasks": "Stop all pending tasks",
+      "delete_done_tasks": "Clear done tasks"
+    },
+    "menu": {
+      "help": "Ask for help",
+      "analyse": "Analyze my documents",
+      "logout": "Logout",
+      "addDocuments": "How to add documents",
+      "faq": "FAQ"
+    },
+    "footer": {
+      "analyse": "Analyze my documents",
+      "homedir": "Move files to this directory in order to analyze them",
+      "clientVersion": "Client",
+      "serverVersion": "Server"
+    },
+    "login": {
+      "welcome": "Welcome to Datashare",
+      "sum_up": "<a href=\"https://icij.org\">ICIJ</a> search and discovery platform.",
+      "authentication_platform": "To log in, use ICIJ secure authentication plateform:",
+      "xemx": "Login with Xemx",
+      "support_desk": "If you need any help, please visit our support desk:",
+      "ask_help": "Ask for help"
+    }
+  }
+}

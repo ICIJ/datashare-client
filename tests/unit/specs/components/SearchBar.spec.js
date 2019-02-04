@@ -1,7 +1,8 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import messages from '@/messages'
+import messages from '@/lang/en'
+import messagesFr from '@/lang/fr'
 import router from '@/router'
 import store from '@/store'
 import SearchBar from '@/components/SearchBar'
@@ -33,7 +34,7 @@ describe('SearchBar.vue', function () {
   })
 
   it('should display a search bar button in french', () => {
-    const i18n = new VueI18n({ locale: 'fr', messages })
+    const i18n = new VueI18n({ locale: 'fr', messages: messagesFr })
     wrapper = shallowMount(SearchBar, { localVue, i18n, router, store })
     expect(wrapper.contains('.search-bar .btn')).toBeTruthy()
     expect(wrapper.find('.search-bar .btn').text()).toEqual('Rechercher')

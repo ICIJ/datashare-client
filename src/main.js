@@ -2,11 +2,10 @@ import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
-
-import router from './router'
-import messages from './messages'
-import store from './store'
-import FontAwesomeIcon from './components/FontAwesomeIcon'
+import router from '@/router'
+import messages from '@/lang/en'
+import store from '@/store'
+import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import DatashareClient from '@/api/DatashareClient'
 
 import '@/main.scss'
@@ -18,7 +17,7 @@ Vue.use(BootstrapVue)
 // Font Awesome component must be available everywhere
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
-const i18n = new VueI18n({locale: 'en', fallbackLocale: 'en', messages})
+const i18n = new VueI18n({ locale: 'en', fallbackLocale: 'en', messages })
 let vm = null
 
 /* eslint-disable no-new */

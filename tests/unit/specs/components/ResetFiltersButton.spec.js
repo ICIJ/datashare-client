@@ -3,7 +3,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import store from '@/store'
 import router from '@/router'
 import VueI18n from 'vue-i18n'
-import messages from '@/messages'
+import messages from '@/lang/en'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
