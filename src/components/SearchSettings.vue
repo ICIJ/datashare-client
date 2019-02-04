@@ -9,7 +9,7 @@
     <b-popover target="toggleSettings" triggers="click" :placement="placement" :container="container">
       <template slot="title">
         <font-awesome-icon icon="cog" />
-        {{ $t('search.settings') }}
+        {{ $t('search.settings.title') }}
       </template>
       <div class="search-settings__popover">
         <div class="row py-2">
