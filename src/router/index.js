@@ -9,7 +9,7 @@ import Login from '@/components/Login'
 import Search from '@/components/Search'
 
 import store from '@/store'
-import { isAuthenticated } from '@/utils/auth'
+import { isAuthenticated } from '@/utils/user'
 import get from 'lodash/get'
 
 import { EventBus } from '@/utils/event-bus'

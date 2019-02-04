@@ -55,7 +55,7 @@
 import { headroom } from 'vue-headroom'
 import SearchBar from '@/components/SearchBar'
 import DatashareClient from '@/api/DatashareClient'
-import getOS from '@/utils/user'
+import { getOS } from '@/utils/user'
 
 export default {
   name: 'AppNav',

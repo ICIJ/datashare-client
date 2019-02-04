@@ -66,7 +66,7 @@ import get from 'lodash/get'
 import throttle from 'lodash/throttle'
 
 import ContentPlaceholder from '@/components/ContentPlaceholder'
-import { removeDiacritics } from '@/utils/strings.js'
+import { removeDiacritics } from '@/utils/strings'
 import facets from '@/mixins/facets'
 import PQueue from 'p-queue'
 

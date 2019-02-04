@@ -7,9 +7,14 @@ import AppNav from '@/components/AppNav'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import router from '@/router'
 import store from '@/store'
-import getOS from '@/utils/user'
+import { getOS } from '@/utils/user'
 
-jest.mock('@/utils/user', () => jest.fn())
+jest.mock('@/utils/user', () => {
+  return {
+    getOS: jest.fn(),
+    isAuthenticated: jest.fn()
+  }
+})
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
