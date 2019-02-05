@@ -155,6 +155,10 @@ export default {
           color: white;
           text-decoration: none;
         }
+
+        .dropdown-menu {
+          top: -0.5 * $spacer  !important;
+        }
       }
     }
   }

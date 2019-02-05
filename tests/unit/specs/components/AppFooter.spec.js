@@ -5,8 +5,11 @@ import AppFooter from '@/components/AppFooter'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import messages from '@/lang/en'
 import router from '@/router'
+import bDropdown from 'bootstrap-vue/es/components/dropdown/dropdown'
+import bDropdownItem from 'bootstrap-vue/es/components/dropdown/dropdown-item'
 import bTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
 import fetchPonyfill from 'fetch-ponyfill'
+
 const { fetch, Response } = fetchPonyfill()
 window.fetch = fetch
 
@@ -14,6 +17,8 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
+localVue.component('b-dropdown', bDropdown)
+localVue.component('b-dropdown-item', bDropdownItem)
 localVue.component('b-tooltip', bTooltip)
 localVue.directive('b-tooltip', bTooltip)
 localVue.prototype.config = { userDir: '/home/foo/Datashare' }
@@ -66,14 +71,14 @@ describe('AppFooter.vue', () => {
   })
 
   it('should display a lang bar with 2 languages', () => {
-    expect(wrapper.find('.app__footer__lang').exists()).toBeTruthy()
-    expect(wrapper.findAll('.app__footer__lang .btn').length).toEqual(2)
+    expect(wrapper.find('.app__footer__addon--lang').exists()).toBeTruthy()
+    expect(wrapper.findAll('.app__footer__addon--lang .dropdown-item').length).toEqual(2)
   })
 
   it('should switch from english to french interface language', async () => {
     expect(wrapper.find('.app__footer__addon').text()).toBe('Analyze my documents')
 
-    wrapper.findAll('.app__footer__lang .btn').at(1).trigger('click')
+    wrapper.findAll('.app__footer__addon--lang .dropdown-item').at(1).trigger('click')
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.app__footer__addon').text()).toBe('Analyser mes documents')
   })
