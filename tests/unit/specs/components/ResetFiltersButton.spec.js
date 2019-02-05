@@ -7,7 +7,7 @@ import messages from '@/lang/en'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
-const i18n = new VueI18n({ locale: 'en', messages })
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('ResetFiltersButton.vue', function () {
   let wrapper

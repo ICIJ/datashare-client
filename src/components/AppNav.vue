@@ -150,6 +150,7 @@ export default {
           pointer-events: auto;
           max-width: 320px;
           font-size: 1.5rem;
+          text-decoration: none;
 
           @include media-breakpoint-down(md) {
             max-width: 220px;

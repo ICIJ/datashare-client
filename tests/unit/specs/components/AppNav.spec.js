@@ -20,7 +20,7 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.use(VueI18n)
-const i18n = new VueI18n({ locale: 'en', messages })
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('AppNav.vue', () => {
   let wrapper

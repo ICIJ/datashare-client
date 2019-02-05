@@ -31,7 +31,7 @@ localVue.use(BootstrapVue)
 localVue.use(VueI18n)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
-const i18n = new VueI18n({locale: 'en', messages})
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('FacetNamedEntity.vue', () => {
   esConnectionHelper()

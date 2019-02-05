@@ -32,12 +32,76 @@
         </div>
       </b-tooltip>
     </div>
+    <div class="app__footer__lang">
+      <button class="btn btn-link m-0 p-0" v-for="(lang, index) in langs" :key="lang" @click.prevent="changeLanguage(lang)">
+        <span class="mx-2">{{ lang }}</span>
+        <span v-if="index !== langs.length - 1">|</span>
+      </button>
+    </div>
     <div class="app__footer__addon app__footer__addon--version" ref="appFooterVersion">
       <font-awesome-icon icon="bolt" class="mr-1" />
       {{ serverVersion }}
     </div>
   </div>
 </template>
+
+<script>
+import DatashareClient from '@/api/DatashareClient'
+
+export default {
+  name: 'AppFooter',
+  created () {
+    const ds = new DatashareClient()
+    this.promise = ds.getVersion().then(r => r.json())
+    this.getServerVersion()
+  },
+  data () {
+    return {
+      serverHash: '',
+      serverVersion: '',
+      promise: null,
+      langs: ['en', 'fr'],
+      loadedLanguages: ['en']
+    }
+  },
+  computed: {
+    clientHash () {
+      return process.env.VUE_APP_GIT_HASH.substring(0, 7)
+    },
+    isRemote () {
+      return this.config && this.config.mode === 'SERVER'
+    }
+  },
+  methods: {
+    getServerVersion () {
+      return this.promise.then(res => {
+        this.serverHash = res['git.commit.id.abbrev']
+        this.serverVersion = res['git.build.version']
+      })
+    },
+    changeLanguage (lang) {
+      this.loadLanguageAsync(lang)
+    },
+    setI18nLanguage (lang) {
+      this.$i18n.locale = lang
+      return lang
+    },
+    loadLanguageAsync (lang) {
+      if (this.$i18n.locale !== lang) {
+        if (!this.loadedLanguages.includes(lang)) {
+          return import(`@/lang/${lang}`).then(msgs => {
+            this.$i18n.setLocaleMessage(lang, msgs.default)
+            this.loadedLanguages.push(lang)
+            return this.setI18nLanguage(lang)
+          })
+        }
+        return Promise.resolve(this.setI18nLanguage(lang))
+      }
+      return Promise.resolve(lang)
+    }
+  }
+}
+</script>
 
 <style lang="scss">
   .app__footer {
@@ -68,41 +132,13 @@
         font-weight: bold;
       }
     }
+
+    &__lang {
+      .btn, .btn:hover, .btn:focus {
+        border: none;
+        color: white;
+        text-decoration: none;
+      }
+    }
   }
 </style>
-
-<script>
-import DatashareClient from '@/api/DatashareClient'
-
-export default {
-  name: 'AppFooter',
-  created () {
-    const ds = new DatashareClient()
-    this.promise = ds.getVersion().then(r => r.json())
-    this.getServerVersion()
-  },
-  data () {
-    return {
-      serverHash: '',
-      serverVersion: '',
-      promise: null
-    }
-  },
-  computed: {
-    clientHash () {
-      return process.env.VUE_APP_GIT_HASH.substring(0, 7)
-    },
-    isRemote () {
-      return this.config && this.config.mode === 'SERVER'
-    }
-  },
-  methods: {
-    getServerVersion () {
-      return this.promise.then(res => {
-        this.serverHash = res['git.commit.id.abbrev']
-        this.serverVersion = res['git.build.version']
-      })
-    }
-  }
-}
-</script>

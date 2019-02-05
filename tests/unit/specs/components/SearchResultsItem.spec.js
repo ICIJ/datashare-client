@@ -19,7 +19,7 @@ localVue.use(Vuex)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
-const i18n = new VueI18n({ locale: 'en', messages })
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchResultsItem.vue', () => {
   esConnectionHelper()

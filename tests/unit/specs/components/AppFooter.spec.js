@@ -17,18 +17,18 @@ localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.component('b-tooltip', bTooltip)
 localVue.directive('b-tooltip', bTooltip)
 localVue.prototype.config = { userDir: '/home/foo/Datashare' }
-const i18n = new VueI18n({ locale: 'en', messages })
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('AppFooter.vue', () => {
   let wrapper
 
   beforeEach(() => {
     jest.spyOn(window, 'fetch')
+    window.fetch.mockReturnValue(jsonOk({}))
+    wrapper = shallowMount(AppFooter, { localVue, i18n, router })
   })
 
   it('should display client git sha1', () => {
-    window.fetch.mockReturnValue(jsonOk({}))
-    wrapper = shallowMount(AppFooter, { localVue, i18n, router })
     const sha1 = wrapper.vm.clientHash
 
     expect(sha1.match(/[a-z0-9]*/)[0]).toEqual(sha1)
@@ -63,6 +63,19 @@ describe('AppFooter.vue', () => {
 
     expect(wrapper.find('.app__footer__tooltip__server__value').text()).toEqual('sha1_abbrev')
     expect(wrapper.find('.app__footer__addon--version').text()).toEqual('version')
+  })
+
+  it('should display a lang bar with 2 languages', () => {
+    expect(wrapper.find('.app__footer__lang').exists()).toBeTruthy()
+    expect(wrapper.findAll('.app__footer__lang .btn').length).toEqual(2)
+  })
+
+  it('should switch from english to french interface language', async () => {
+    expect(wrapper.find('.app__footer__addon').text()).toBe('Analyze my documents')
+
+    wrapper.findAll('.app__footer__lang .btn').at(1).trigger('click')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.find('.app__footer__addon').text()).toBe('Analyser mes documents')
   })
 })
 

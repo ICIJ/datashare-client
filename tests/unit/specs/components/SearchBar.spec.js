@@ -11,7 +11,7 @@ const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Vuex)
 
-const i18n = new VueI18n({ locale: 'en', messages })
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchBar.vue', function () {
   let wrapper
@@ -34,7 +34,7 @@ describe('SearchBar.vue', function () {
   })
 
   it('should display a search bar button in french', () => {
-    const i18n = new VueI18n({ locale: 'fr', messages: messagesFr })
+    const i18n = new VueI18n({ locale: 'fr', messages: { 'fr': messagesFr } })
     wrapper = shallowMount(SearchBar, { localVue, i18n, router, store })
     expect(wrapper.contains('.search-bar .btn')).toBeTruthy()
     expect(wrapper.find('.search-bar .btn').text()).toEqual('Rechercher')

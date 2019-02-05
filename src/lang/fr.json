@@ -1,140 +1,138 @@
 {
-  "fr": {
-    "aggregations": {
-      "mentions": {
-        "item": "%{occurrences} dans %{documents}",
-        "occurrence": "aucune occurrence | une occurrence | {count} occurrences",
-        "document": "aucun document | un document | {count} documents"
-      },
-      "more": "Explorer plus",
-      "placeholder": "Rechercher des personnes, organisations, lieux",
-      "inthedocs": "Dans les documents",
-      "relative": "Relatifs à la recherche"
+  "aggregations": {
+    "mentions": {
+      "item": "%{occurrences} dans %{documents}",
+      "occurrence": "aucune occurrence | une occurrence | {count} occurrences",
+      "document": "aucun document | un document | {count} documents"
     },
-    "search": {
-      "placeholder": "Rechercher dans les documents...",
-      "buttonlabel": "Rechercher",
-      "search-in": "Rechercher dans",
-      "settings": {
-        "title": "Paramètres de recherche",
-        "contextualize": "Contextualiser les résulats de la recherche avec les facets:",
-        "contextualize_explanation": "Les facets dans la colonne de gauche seront mises à jour en fonction des résultats de recherche.",
-        "reset_filters": "Réinitialiser les filtres des facets",
-        "reset_filters_explanation": "Supprime les facets sléectionnés de la recherche",
-        "results_per_page": "Nombre de résultats par page:",
-        "sort_by": "Trier les résultats par:"
-      },
-      "results": {
-        "match": "dans le doc",
-        "entities": "nb entités",
-        "results": "1 document trouvé | %{total} documents trouvés",
-        "no-result": "Aucun document trouvé.",
-        "on": "sur",
-        "perPage": "par page",
-        "firstPage": "Aller à la première page",
-        "previousPage": "Aller à la page précédente",
-        "nextPage": "Aller à la page suivante",
-        "lastPage": "Aller à la dernière page",
-        "sort": {
-          "sort": "Tri par",
-          "relevance": "Pertinence",
-          "dateNewest": "Date (décroissante)",
-          "dateOldest": "Date (croissante)",
-          "sizeLargest": "Taille (décroissante)",
-          "sizeSmallest": "Taille (croissante)"
-        }
-      },
-      "reset_filters": "Réinitialiser les filtres",
-      "back": "Retour aux résultats de recherche",
-      "try": "Vous devriez essayer de"
+    "more": "Explorer plus",
+    "placeholder": "Rechercher des personnes, organisations, lieux",
+    "inthedocs": "Dans les documents",
+    "relative": "Relatifs à la recherche"
+  },
+  "search": {
+    "placeholder": "Rechercher dans les documents...",
+    "buttonlabel": "Rechercher",
+    "search-in": "Rechercher dans",
+    "settings": {
+      "title": "Paramètres de recherche",
+      "contextualize": "Contextualiser les résulats de la recherche avec les facets:",
+      "contextualize_explanation": "Les facets dans la colonne de gauche seront mises à jour en fonction des résultats de recherche.",
+      "reset_filters": "Réinitialiser les filtres des facets",
+      "reset_filters_explanation": "Supprime les facets sélectionnés de la recherche",
+      "results_per_page": "Nombre de résultats par page",
+      "sort_by": "Trier les résultats par"
     },
-    "facet": {
-      "none": "Aucune valeur distincte",
-      "seeAll": "Chercher dans toute la base de données",
-      "noMatches": "Pas de résultat.<br />Presser <kbd>Entrée</kbd> pour chercher dans tous les documents",
-      "invert": "Exclure",
-      "content-type": "Types de fichier",
-      "language": "Langues",
-      "named-entity-person": "Personnes",
-      "named-entity-location": "Lieux",
-      "named-entity-organization": "Organisations",
-      "path": "Chemin du fichier",
-      "indexing-date": "Date d'indexation",
-      "extraction-level": "Niveau d'extraction",
-      "projects": "Projets",
-      "deleteNamedEntity": "Supprimer cette Entité Nommée",
-      "showMore": "Voir plus",
-      "local-index": "Mes documents"
+    "results": {
+      "match": "dans le doc",
+      "entities": "nb entités",
+      "results": "1 document trouvé | %{total} documents trouvés",
+      "no-result": "Aucun document trouvé.",
+      "on": "sur",
+      "perPage": "par page",
+      "firstPage": "Aller à la première page",
+      "previousPage": "Aller à la page précédente",
+      "nextPage": "Aller à la page suivante",
+      "lastPage": "Aller à la dernière page",
+      "sort": {
+        "sort": "Tri par",
+        "relevance": "Pertinence",
+        "dateNewest": "Date (décroissante)",
+        "dateOldest": "Date (croissante)",
+        "sizeLargest": "Taille (décroissante)",
+        "sizeSmallest": "Taille (croissante)"
+      }
     },
-    "document": {
-      "name": "Nom du fichier",
-      "path": "Chemin du fichier",
-      "id": "Identifiant",
-      "creation_date": "Date de création",
-      "size": "Taille",
-      "content_language": "Language",
-      "content_type": "Type",
-      "content_encoding": "Encodage",
-      "tree_level": "Niveau d'imbrication",
-      "parent_document": "Document Parent",
-      "details": "Details",
-      "named_entities": "Entitiés nommées",
-      "extracted_text": "Texte",
-      "preview": "Prévisualisation",
-      "download_button": "Télécharger",
-      "not_found": "Document non trouvé",
-      "named_entities_not_found": "Pas d'entités nommées trouvées",
-      "named_entites_not_searched": "Document non analysé. Afin de lancer la recherche d'entités nommées, allez dans \"Analyser mes documents\" et lancez une nouvelle tâche \"Trouver les entitées nommées\".",
-      "generating_preview": "Génère une prévisualisation...",
-      "page": "Page",
-      "of": "sur",
-      "sheet": "Feuille",
-      "search_directory": "Chercher dans ce dossier"
-    },
-    "indexing": {
-      "yes": "Oui",
-      "no": "Non",
-      "go": "Go",
-      "tasks": "Tâches",
-      "empty": "Vous n'avez pas encore démarré de tâches",
-      "extract_text": "Extraire le texte",
-      "extracting_header": "Pendant l'indexation, voulez-vous aussi extraire le texte des images et des PDFs ?",
-      "extracting_subheader": "Si oui, Datashare appliquera de l'OCR (Optical Character Recognition). Cela peut prendre jusqu'à 10 fois plus de temps.",
-      "find_named_entities": "Trouver les personnes, organisations et lieux",
-      "find_named_entities_header": "Quelle technologie voulez-vous utiliser pour trouver les entités nommées ?",
-      "find_named_entities_subheader": "Datashare applique des modèles de Traitement de Language Naturel. Veuillez choisir l'un d'eux:",
-      "find_named_entities_tooltip": "Les textes doivent être extraits avant de chercher les entitées nommées",
-      "pipelines": "Algo(s)",
-      "corenlp": "Core NLP",
-      "opennlp": "Open NLP",
-      "mitie": "Mitie",
-      "ixapipe": "Ixa Pipe",
-      "default": "Par défaut - Meilleure probablilité de fonctionner pour tous les documents",
-      "sync_models": "Hors ligne",
-      "stop_task": "Arrêter cette tâche",
-      "stop_pending_tasks": "Arrêter toutes les tâches en cours",
-      "delete_done_tasks": "Supprimer les tâches terminées"
-    },
-    "menu": {
-      "help": "Aide",
-      "analyse": "Analyser mes documents",
-      "logout": "Déconnexion",
-      "addDocuments": "Comment ajouter des documents",
-      "faq": "FAQ"
-    },
-    "footer": {
-      "analyse": "Analyser mes documents",
-      "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
-      "clientVersion": "Client",
-      "serverVersion": "Serveur"
-    },
-    "login": {
-      "welcome": "Bienvenue sur Datashare",
-      "sum_up": "La plateforme de recherche et de découverte de l'<a href=\"https://icij.org\">ICIJ</a>.",
-      "authentication_platform": "Pour vous connecter, utilisez la plateforme d'authentification sécurisée de l'ICIJ :",
-      "xemx": "Se connecter avec Xemx",
-      "support_desk": "Si vous avez besoin d'aide, veuillez visiter notre bureau support :",
-      "ask_help": "Aide"
-    }
+    "reset_filters": "Réinitialiser les filtres",
+    "back": "Retour aux résultats de recherche",
+    "try": "Vous devriez essayer de"
+  },
+  "facet": {
+    "none": "Aucune valeur distincte",
+    "seeAll": "Chercher dans toute la base de données",
+    "noMatches": "Pas de résultat.<br />Presser <kbd>Entrée</kbd> pour chercher dans tous les documents",
+    "invert": "Exclure",
+    "content-type": "Types de fichier",
+    "language": "Langues",
+    "named-entity-person": "Personnes",
+    "named-entity-location": "Lieux",
+    "named-entity-organization": "Organisations",
+    "path": "Chemin du fichier",
+    "indexing-date": "Date d'indexation",
+    "extraction-level": "Niveau d'extraction",
+    "projects": "Projets",
+    "deleteNamedEntity": "Supprimer cette Entité Nommée",
+    "showMore": "Voir plus",
+    "local-index": "Mes documents"
+  },
+  "document": {
+    "name": "Nom du fichier",
+    "path": "Chemin du fichier",
+    "id": "Identifiant",
+    "creation_date": "Date de création",
+    "size": "Taille",
+    "content_language": "Language",
+    "content_type": "Type",
+    "content_encoding": "Encodage",
+    "tree_level": "Niveau d'imbrication",
+    "parent_document": "Document Parent",
+    "details": "Details",
+    "named_entities": "Entitiés nommées",
+    "extracted_text": "Texte",
+    "preview": "Prévisualisation",
+    "download_button": "Télécharger",
+    "not_found": "Document non trouvé",
+    "named_entities_not_found": "Pas d'entités nommées trouvées",
+    "named_entites_not_searched": "Document non analysé. Afin de lancer la recherche d'entités nommées, allez dans \"Analyser mes documents\" et lancez une nouvelle tâche \"Trouver les entitées nommées\".",
+    "generating_preview": "Génère une prévisualisation...",
+    "page": "Page",
+    "of": "sur",
+    "sheet": "Feuille",
+    "search_directory": "Chercher dans ce dossier"
+  },
+  "indexing": {
+    "yes": "Oui",
+    "no": "Non",
+    "go": "Go",
+    "tasks": "Tâches",
+    "empty": "Vous n'avez pas encore démarré de tâches",
+    "extract_text": "Extraire le texte",
+    "extracting_header": "Pendant l'indexation, voulez-vous aussi extraire le texte des images et des PDFs ?",
+    "extracting_subheader": "Si oui, Datashare appliquera de l'OCR (Optical Character Recognition). Cela peut prendre jusqu'à 10 fois plus de temps.",
+    "find_named_entities": "Trouver les personnes, organisations et lieux",
+    "find_named_entities_header": "Quelle technologie voulez-vous utiliser pour trouver les entités nommées ?",
+    "find_named_entities_subheader": "Datashare applique des modèles de Traitement de Language Naturel. Veuillez choisir l'un d'eux:",
+    "find_named_entities_tooltip": "Les textes doivent être extraits avant de chercher les entitées nommées",
+    "pipelines": "Algo(s)",
+    "corenlp": "Core NLP",
+    "opennlp": "Open NLP",
+    "mitie": "Mitie",
+    "ixapipe": "Ixa Pipe",
+    "default": "Par défaut - Meilleure probablilité de fonctionner pour tous les documents",
+    "sync_models": "Hors ligne",
+    "stop_task": "Arrêter cette tâche",
+    "stop_pending_tasks": "Arrêter toutes les tâches en cours",
+    "delete_done_tasks": "Supprimer les tâches terminées"
+  },
+  "menu": {
+    "help": "Aide",
+    "analyse": "Analyser mes documents",
+    "logout": "Déconnexion",
+    "addDocuments": "Comment ajouter des documents",
+    "faq": "FAQ"
+  },
+  "footer": {
+    "analyse": "Analyser mes documents",
+    "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
+    "clientVersion": "Client",
+    "serverVersion": "Serveur"
+  },
+  "login": {
+    "welcome": "Bienvenue sur Datashare",
+    "sum_up": "La plateforme de recherche et de découverte de l'<a href=\"https://icij.org\">ICIJ</a>.",
+    "authentication_platform": "Pour vous connecter, utilisez la plateforme d'authentification sécurisée de l'ICIJ :",
+    "xemx": "Se connecter avec Xemx",
+    "support_desk": "Si vous avez besoin d'aide, veuillez visiter notre bureau support :",
+    "ask_help": "Aide"
   }
 }

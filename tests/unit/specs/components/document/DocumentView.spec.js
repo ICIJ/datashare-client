@@ -22,7 +22,7 @@ localVue.use(VueI18n)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
-const i18n = new VueI18n({ locale: 'en', messages, silentTranslationWarn: true })
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages }, silentTranslationWarn: true })
 
 describe('DocumentView.vue', () => {
   esConnectionHelper()

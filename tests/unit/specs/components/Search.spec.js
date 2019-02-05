@@ -22,7 +22,7 @@ localVue.use(Vuex)
 localVue.use(VueProgressBar, { color: '#852308' })
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
-const i18n = new VueI18n({ locale: 'en', messages })
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 jest.mock('@/api/DatashareClient', () => jest.fn())
 DatashareClient.mockImplementation(() => {

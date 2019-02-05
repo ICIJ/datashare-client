@@ -167,10 +167,5 @@ export default {
       background: darken($primary, 20);
       color: white;
     }
-
-    .btn-stop-task > .muted {
-      opacity: 0.5;
-      filter: grayscale(0.9) brightness(2.3);
-    }
   }
 </style>

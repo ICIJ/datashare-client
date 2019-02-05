@@ -12,7 +12,7 @@ const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.directive('b-tooltip', vBTooltip)
 Vue.config.ignoredElements = ['font-awesome-icon']
-const i18n = new VueI18n({ locale: 'en', messages })
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchSettings.vue', () => {
   esConnectionHelper()

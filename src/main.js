@@ -17,7 +17,7 @@ Vue.use(BootstrapVue)
 // Font Awesome component must be available everywhere
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
-const i18n = new VueI18n({ locale: 'en', fallbackLocale: 'en', messages })
+const i18n = new VueI18n({ locale: 'en', fallbackLocale: 'en', messages: { 'en': messages } })
 let vm = null
 
 /* eslint-disable no-new */
