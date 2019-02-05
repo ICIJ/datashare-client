@@ -33,8 +33,8 @@
       </b-tooltip>
     </div>
     <div class="app__footer__lang">
-      <button class="btn btn-link m-0 p-0" v-for="(label, lang, index) in languages" :key="lang" @click.prevent="changeLanguage(lang)">
-        <span class="mx-2">{{ label }}</span>
+      <button class="btn btn-link m-0 p-0" v-for="(lang, index) in languages" :key="lang.key" @click.prevent="changeLanguage(lang.key)">
+        <span class="mx-2">{{ lang.label }}</span>
         <span v-if="index !== languages.length - 1">|</span>
       </button>
     </div>
@@ -60,7 +60,13 @@ export default {
       serverHash: '',
       serverVersion: '',
       promise: null,
-      languages: { en: 'English', fr: 'Français' },
+      languages: [{
+        key: 'en',
+        label: 'English'
+      }, {
+        key: 'fr',
+        label: 'Français'
+      }],
       loadedLanguages: ['en']
     }
   },
