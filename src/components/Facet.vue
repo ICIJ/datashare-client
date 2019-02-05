@@ -8,7 +8,7 @@
             {{ $t('facet.invert') }}
           </button>
         </span>
-        <h6 @click="toggleItems">
+        <h6 @click="toggleItems" class="text-nowrap">
           <font-awesome-icon :icon="headerIcon" />
           {{ $t('facet.' + facet.name) }}
         </h6>

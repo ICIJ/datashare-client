@@ -39,7 +39,7 @@
     </div>
 
     <div class="app__footer__addon app__footer__addon--lang">
-      <b-dropdown variant="link" right="true" size="sm" no-caret>
+      <b-dropdown variant="link" size="sm" no-caret>
         <template slot="button-content">
           <font-awesome-icon icon="globe" class="mr-1" />
           {{ currentLanguage.label }}
@@ -106,7 +106,7 @@ export default {
     loadLanguageAsync (lang) {
       if (this.$i18n.locale !== lang) {
         if (!this.loadedLanguages.includes(lang)) {
-          return import(`@/lang/${lang}`).then(msgs => {
+          return import(/* webpackChunkName: "[request]" */ '@/lang/' + lang + '.json').then(msgs => {
             this.$i18n.setLocaleMessage(lang, msgs.default)
             this.loadedLanguages.push(lang)
             return this.setI18nLanguage(lang)

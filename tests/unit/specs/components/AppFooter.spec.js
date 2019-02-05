@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import AppFooter from '@/components/AppFooter'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import messages from '@/lang/en'
@@ -30,7 +30,7 @@ describe('AppFooter.vue', () => {
   beforeEach(() => {
     jest.spyOn(window, 'fetch')
     window.fetch.mockReturnValue(jsonOk({}))
-    wrapper = shallowMount(AppFooter, { localVue, i18n, router })
+    wrapper = mount(AppFooter, { localVue, i18n, router })
   })
 
   it('should display client git sha1', () => {
@@ -63,7 +63,7 @@ describe('AppFooter.vue', () => {
       'git.commit.id': 'sha1',
       'git.commit.id.abbrev': 'sha1_abbrev'
     }))
-    wrapper = shallowMount(AppFooter, { localVue, i18n, router })
+    wrapper = mount(AppFooter, { localVue, i18n, router })
     await wrapper.vm.promise
 
     expect(wrapper.find('.app__footer__tooltip__server__value').text()).toEqual('sha1_abbrev')
@@ -77,7 +77,6 @@ describe('AppFooter.vue', () => {
 
   it('should switch from english to french interface language', async () => {
     expect(wrapper.find('.app__footer__addon').text()).toBe('Analyze my documents')
-
     wrapper.findAll('.app__footer__addon--lang .dropdown-item').at(1).trigger('click')
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.app__footer__addon').text()).toBe('Analyser mes documents')
