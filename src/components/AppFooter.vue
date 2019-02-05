@@ -32,21 +32,29 @@
         </div>
       </b-tooltip>
     </div>
-    <div class="app__footer__lang mr-3">
-      <button class="btn btn-link m-0 p-0" v-for="(lang, index) in languages" :key="lang.key" @click.prevent="changeLanguage(lang.key)">
-        <span class="mx-2">{{ lang.label }}</span>
-        <span v-if="index !== languages.length - 1">|</span>
-      </button>
-    </div>
+
     <div class="app__footer__addon app__footer__addon--version" ref="appFooterVersion">
       <font-awesome-icon icon="bolt" class="mr-1" />
       {{ serverVersion }}
+    </div>
+
+    <div class="app__footer__addon app__footer__addon--lang">
+      <b-dropdown variant="link" right="true" size="sm" no-caret>
+        <template slot="button-content">
+          <font-awesome-icon icon="globe" class="mr-1" />
+          {{ currentLanguage.label }}
+        </template>
+        <b-dropdown-item v-for="lang in languages" :key="lang.key" @click.prevent="changeLanguage(lang.key)" :active="lang == currentLanguage">
+          {{ lang.label }}
+        </b-dropdown-item>
+      </b-dropdown>
     </div>
   </div>
 </template>
 
 <script>
 import DatashareClient from '@/api/DatashareClient'
+import find from 'lodash/find'
 
 export default {
   name: 'AppFooter',
@@ -76,6 +84,9 @@ export default {
     },
     isRemote () {
       return this.config && this.config.mode === 'SERVER'
+    },
+    currentLanguage () {
+      return find(this.languages, { key: this.$i18n.locale })
     }
   },
   methods: {
@@ -137,13 +148,13 @@ export default {
       &--version {
         font-weight: bold;
       }
-    }
 
-    &__lang {
-      .btn, .btn:hover, .btn:focus {
-        border: none;
-        color: white;
-        text-decoration: none;
+      &--lang {
+        .btn, .btn:hover, .btn:focus {
+          border: none;
+          color: white;
+          text-decoration: none;
+        }
       }
     }
   }
