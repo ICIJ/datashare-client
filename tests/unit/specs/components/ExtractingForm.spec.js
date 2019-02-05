@@ -53,6 +53,7 @@ describe('ExtractingForm.vue', () => {
   it('should reset the modal params on submitting the form', async () => {
     wrapper.vm.ocr = true
     await wrapper.vm.submitExtract()
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.ocr).toBeFalsy()
   })

@@ -48,7 +48,7 @@ describe('FindNamedEntitiesForm.vue', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/OPENNLP'),
-      { method: 'POST', body: JSON.stringify({ options: {syncModels: true} }), credentials: 'same-origin' })
+      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }), credentials: 'same-origin' })
   })
 
   it('should call findNames action with no models synchronization', () => {
@@ -64,12 +64,13 @@ describe('FindNamedEntitiesForm.vue', () => {
   it('should reset the modal params on submitting the form', async () => {
     wrapper.vm.pipeline = 'opennlp'
     await wrapper.vm.submitFindNamedEntities()
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.pipeline).toEqual('corenlp')
   })
 
   it('should not show offline checkbox in SERVER mode', async () => {
-    Vue.prototype.config = {mode: 'SERVER'}
+    Vue.prototype.config = { mode: 'SERVER' }
     let w = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
     expect(w.contains('.find-named-entities-form__offline')).toBeFalsy()
   })
