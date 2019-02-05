@@ -131,6 +131,8 @@ export const mixin = {
         // This will allow to watch change on the search only when
         // the aggregation is not global (ie. relative to the search).
         return pick(state.search, ['index', 'query', 'facets'])
+      } else {
+        return pick(state.search, ['index'])
       }
     }
   }

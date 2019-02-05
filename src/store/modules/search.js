@@ -138,7 +138,7 @@ export const mutations = {
     state.facets = facets
   },
   addFacet (state, facet) {
-    if (find(state.facets, {name: facet.name})) {
+    if (find(state.facets, { name: facet.name })) {
       throw new Error('Facet already exists')
     }
     return state.facets.push(facet)
@@ -205,7 +205,7 @@ export const actions = {
   queryFacet ({ state, getters }, params) {
     return esClient.searchFacet(
       state.index,
-      getters.getFacet({name: params.name}),
+      getters.getFacet({ name: params.name }),
       state.query,
       state.facets,
       state.globalSearch,
