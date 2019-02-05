@@ -32,7 +32,7 @@
         </div>
       </b-tooltip>
     </div>
-    <div class="app__footer__lang">
+    <div class="app__footer__lang mr-3">
       <button class="btn btn-link m-0 p-0" v-for="(lang, index) in languages" :key="lang.key" @click.prevent="changeLanguage(lang.key)">
         <span class="mx-2">{{ lang.label }}</span>
         <span v-if="index !== languages.length - 1">|</span>
