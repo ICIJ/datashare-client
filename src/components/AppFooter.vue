@@ -33,9 +33,9 @@
       </b-tooltip>
     </div>
     <div class="app__footer__lang">
-      <button class="btn btn-link m-0 p-0" v-for="(lang, index) in langs" :key="lang" @click.prevent="changeLanguage(lang)">
-        <span class="mx-2">{{ lang }}</span>
-        <span v-if="index !== langs.length - 1">|</span>
+      <button class="btn btn-link m-0 p-0" v-for="(label, lang, index) in languages" :key="lang" @click.prevent="changeLanguage(lang)">
+        <span class="mx-2">{{ label }}</span>
+        <span v-if="index !== languages.length - 1">|</span>
       </button>
     </div>
     <div class="app__footer__addon app__footer__addon--version" ref="appFooterVersion">
@@ -60,7 +60,7 @@ export default {
       serverHash: '',
       serverVersion: '',
       promise: null,
-      langs: ['en', 'fr'],
+      languages: { en: 'English', fr: 'Français' },
       loadedLanguages: ['en']
     }
   },
