@@ -1,10 +1,8 @@
-import Vue from 'vue'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
 import { mount, createLocalVue } from '@vue/test-utils'
-import noop from 'lodash/noop'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
 import router from '@/router'
@@ -47,15 +45,12 @@ describe('Search.vue', () => {
   })
 
   beforeEach(async () => {
-    Search.created = noop
-    Vue.prototype.config = { dataDir: '/home/user/data' }
     wrapper = mount(Search, { localVue, i18n, router, store })
     store.commit('search/clear')
   })
 
   it('should display no documents found', async () => {
-    await wrapper.vm.search('foo')
-    await wrapper.vm.$nextTick()
+    await wrapper.vm.search('*')
 
     expect(wrapper.find('.search-results__header__number-of-results').text()).toEqual('No documents found')
   })
@@ -64,7 +59,6 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
 
     await wrapper.vm.search('bar')
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('1 - 1')
     expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 1 document found')
@@ -76,7 +70,6 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocument('docs/bar2.txt').withContent('this is bar 2 document')).commit()
 
     await wrapper.vm.search('bar')
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('1 - 2')
     expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 2 documents found')
@@ -87,7 +80,6 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocument('doc.txt').withContent('this is a document')).commit()
 
     await wrapper.vm.search('document')
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.find('.search-results-item__basename a').attributes().href).toMatch(/doc.txt$/)
   })
@@ -97,7 +89,6 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocument('child.txt').withContent('this is a children document').withParent('parent.txt')).commit()
 
     await wrapper.vm.search('children')
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.find('.search-results-item__basename a').attributes().href).toMatch(/child.txt\/parent.txt/)
   })
@@ -106,7 +97,6 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapper.vm.search({ query: 'document', from: 0, size: 2 })
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.search-results-item').length).toEqual(2)
   })
@@ -115,14 +105,12 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapper.vm.search({ query: 'document', from: 0, size: 3 })
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.search-results-item').length).toEqual(3)
   })
 
   it('should not display the pagination (1/2)', async () => {
-    await wrapper.vm.search('foo')
-    await wrapper.vm.$nextTick()
+    await wrapper.vm.search('*')
 
     expect(wrapper.findAll('.search-results__header__first-page').length).toEqual(0)
     expect(wrapper.findAll('.search-results__header__previous-page').length).toEqual(0)
@@ -134,7 +122,6 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
 
     await wrapper.vm.search('document')
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.search-results__header__first-page').length).toEqual(0)
     expect(wrapper.findAll('.search-results__header__previous-page').length).toEqual(0)
@@ -146,7 +133,6 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapper.vm.search({ query: 'document', from: 0, size: 3 })
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.search-results__header__first-page').length).toEqual(2)
     expect(wrapper.findAll('.search-results__header__previous-page').length).toEqual(2)
@@ -161,7 +147,6 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapper.vm.search({ query: 'document', from: 0, size: 3 })
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.search-results__header__first-page.disabled').length).toEqual(2)
     expect(wrapper.findAll('.search-results__header__previous-page.disabled').length).toEqual(2)
@@ -173,7 +158,6 @@ describe('Search.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await wrapper.vm.search({ query: 'document', from: 3, size: 3 })
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.search-results__header__first-page.disabled').length).toEqual(0)
     expect(wrapper.findAll('.search-results__header__previous-page.disabled').length).toEqual(0)

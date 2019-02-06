@@ -35,7 +35,7 @@ describe('SearchResultsItem.vue', () => {
           _id: 1,
           _source: {
             path: 'a/b/c/foo.txt'
-          }})
+          } })
       }
     })
     expect(wrapped.vm.namedEntities).toEqual([])
@@ -69,9 +69,9 @@ describe('SearchResultsItem.vue', () => {
           }
         }
         )
-      }})
+      } })
 
-    expect(wrapped.vm.namedEntities).toEqual([{_source: {id: 'id', mention: 'foo'}}])
+    expect(wrapped.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }])
   })
 
   it('should reduce named entities : two named entities', async () => {
@@ -109,7 +109,7 @@ describe('SearchResultsItem.vue', () => {
       }
     })
 
-    expect(wrapped.vm.namedEntities).toEqual([{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}])
+    expect(wrapped.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }, { _source: { id: 'id_bar', mention: 'bar' } }])
   })
 
   it('should reduce named entities : two named entities with duplicates', async () => {
@@ -152,7 +152,7 @@ describe('SearchResultsItem.vue', () => {
       }
     })
 
-    expect(wrapped.vm.namedEntities).toEqual([{_source: {id: 'id', mention: 'foo'}}, {_source: {id: 'id_bar', mention: 'bar'}}])
+    expect(wrapped.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }, { _source: { id: 'id_bar', mention: 'bar' } }])
   })
 
   it('should display the correct location', async () => {
@@ -166,7 +166,7 @@ describe('SearchResultsItem.vue', () => {
           _id: 1,
           _source: {
             path: '/home/data/folder_01/folder_02/foo.txt'
-          }})
+          } })
       }
     })
     expect(wrapped.vm.location).toEqual('.folder_01/folder_02/')
