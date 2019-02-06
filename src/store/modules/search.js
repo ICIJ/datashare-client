@@ -226,8 +226,8 @@ export const actions = {
     return dispatch('query')
   },
   lastPage ({ state, commit, dispatch }) {
-    // Calculate the "from" parameter to display the last page
-    commit('from', state.size * floor(state.response.total / state.size))
+    const gap = (state.response.total % state.size === 0) ? 1 : 0
+    commit('from', state.size * (floor(state.response.total / state.size) - gap))
     return dispatch('query')
   },
   addFacetValue ({ commit, dispatch }, facet) {
