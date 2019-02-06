@@ -26,3 +26,6 @@ jobs:
       - run:
           name: run tests
           command: make unit
+      - run:
+          name: make distribution
+          command: make dist
