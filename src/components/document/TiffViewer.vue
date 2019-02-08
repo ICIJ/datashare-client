@@ -54,7 +54,7 @@ export default {
     }
   },
   created () {
-    Tiff.initialize({TOTAL_MEMORY: 16777216 * 10})
+    Tiff.initialize({ TOTAL_MEMORY: 16777216 * 10 })
   },
   mounted () {
     this.page(1)
@@ -85,8 +85,8 @@ export default {
     },
     getTiff () {
       return ds.getSource(this.document)
-        .then((r) => r.arrayBuffer())
-        .then((arrayBuffer) => new Tiff({buffer: arrayBuffer}))
+        .then(r => r.arrayBuffer())
+        .then(arrayBuffer => new Tiff({ buffer: arrayBuffer }))
     },
     render (tiff, p) {
       return new Promise(resolve => {

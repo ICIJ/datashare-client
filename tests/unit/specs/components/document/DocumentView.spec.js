@@ -30,7 +30,7 @@ describe('DocumentView.vue', () => {
   let httpServer = null
 
   beforeAll(() => {
-    httpServer = createServer({root: 'tests/unit/resources'})
+    httpServer = createServer({ root: 'tests/unit/resources' })
     httpServer.listen(9876)
   })
 
@@ -44,7 +44,7 @@ describe('DocumentView.vue', () => {
 
   it('should display an error message when document is not found', async () => {
     const id = 'notfound'
-    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, { i18n, router, store, localVue, propsData: { id } })
 
     await wrapped.vm.getDoc()
     await wrapped.vm.$nextTick()
@@ -54,7 +54,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a document', async () => {
     const id = 'foo.txt'
-    const wrapped = shallowMount(DocumentView, {localVue, i18n, router, store, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('this is foo document'))
@@ -69,7 +69,7 @@ describe('DocumentView.vue', () => {
   it('should display a child document', async () => {
     const id = 'child.txt'
     const routing = 'parent.txt'
-    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id, routing }})
+    const wrapped = shallowMount(DocumentView, { i18n, router, store, localVue, propsData: { id, routing } })
 
     await letData(es).have(new IndexedDocument(routing)
       .withContent('this is a parent document'))
@@ -87,7 +87,7 @@ describe('DocumentView.vue', () => {
 
   it('should mark named entities', async () => {
     const id = 'mydoc.txt'
-    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, { i18n, router, store, localVue, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('a NER doc with 2 NER2')
@@ -107,7 +107,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a document with named entities and escaped HTML', async () => {
     const id = 'html_doc.txt'
-    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, { i18n, router, store, localVue, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('a foo document <with>HTML</with>')
@@ -122,7 +122,7 @@ describe('DocumentView.vue', () => {
 
   it('should display named entities in the dedicated tab', async () => {
     const id = 'html_doc.txt'
-    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, { i18n, router, store, localVue, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('a foo document <with>HTML</with>')
@@ -147,7 +147,7 @@ describe('DocumentView.vue', () => {
 
   it('should call the SpreadsheetViewer for XLSX document', async () => {
     const id = 'spreadsheet.xlsx'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = mount(DocumentView, { i18n, router, store, localVue, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -162,7 +162,7 @@ describe('DocumentView.vue', () => {
 
   it('should call the SpreadsheetViewer for CSV document', async () => {
     const id = 'spreadsheet.csv'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = mount(DocumentView, { i18n, router, store, localVue, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -207,7 +207,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a specific error message if no names finding task has been run on that document', async () => {
     const id = 'test.doc'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = mount(DocumentView, { i18n, router, store, localVue, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent(''))
@@ -221,7 +221,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a specific error message if no named entities found after names finding task', async () => {
     const id = 'test.doc'
-    const wrapped = mount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = mount(DocumentView, { i18n, router, store, localVue, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -236,7 +236,7 @@ describe('DocumentView.vue', () => {
 
   it('should reload the named entities search on custom event emitted', async () => {
     const id = 'mydoc.txt'
-    const wrapped = shallowMount(DocumentView, {i18n, router, store, localVue, propsData: { id }})
+    const wrapped = shallowMount(DocumentView, { i18n, router, store, localVue, propsData: { id } })
 
     let indexBuilder = await letData(es).have(new IndexedDocument(id)
       .withContent('')

@@ -143,7 +143,7 @@ import sortedUniqBy from 'lodash/sortedUniqBy'
 import SpreadsheetViewer from './SpreadsheetViewer'
 import TiffViewer from './TiffViewer'
 import ContentPlaceholder from '@/components/ContentPlaceholder'
-import { EventBus } from '@/utils/event-bus.js'
+import { EventBus } from '@/utils/event-bus'
 
 export default {
   name: 'document-view',
