@@ -74,6 +74,9 @@ export default {
       }, {
         key: 'fr',
         label: 'Français'
+      }, {
+        key: 'es',
+        label: 'Español'
       }],
       loadedLanguages: ['en']
     }

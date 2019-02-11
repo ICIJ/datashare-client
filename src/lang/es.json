@@ -1,0 +1,139 @@
+{
+  "aggregations": {
+    "mentions": {
+      "item": "%{ocurrencias} in %{documentos}",
+      "occurrence": "sin ocurrencias | una ocurrencia | {contar} occurencias",
+      "document": "sin docs | un doc | {contar} docs\n\nnote you can use documento"
+    },
+    "more": "Explora más",
+    "placeholder": "Búsqueda de personas, organizaciones, localizaciones...",
+    "inthedocs": "En los documentos",
+    "relative": "Relacionado a la búsqueda"
+  },
+  "search": {
+    "placeholder": "Buscar en documentos...",
+    "buttonlabel": "Buscar",
+    "search-in": "Buscar en",
+    "settings": {
+      "title": "Configuración de búsqueda",
+      "contextualize": "Contextualizar los resultados de búsqueda con las facetas:",
+      "contextualize_explanation": "Las facetas en el panel izquierdo se actualizarán de acuerdo con los resultados de la búsqueda.",
+      "reset_filters": "Restablecer las facetas del filtro",
+      "reset_filters_explanation": "Eliminar faceta seleccionada de la búsqueda.",
+      "results_per_page": "Número de resultados por página",
+      "sort_by": "Ordenar resultados por"
+    },
+    "results": {
+      "match": "coincidir en doc",
+      "entities": "nb entidades",
+      "results": "1 documento encontrado | %{total} documentos encontrados",
+      "no-result": "No se han encontrado documentos",
+      "on": "en",
+      "perPage": "por página",
+      "firstPage": "Ir a primera página",
+      "previousPage": "Ir a página anterior",
+      "nextPage": "Ir a página siguiente",
+      "lastPage": "Ir a última página",
+      "sort": {
+        "sort": "Ordenar por",
+        "relevance": "Relevancia",
+        "dateNewest": "Fecha (más reciente)",
+        "dateOldest": "Fecha (más antiguo)",
+        "sizeLargest": "Tamaño (disminuyendo)",
+        "sizeSmallest": "Tamaño (aumentado)"
+      }
+    },
+    "reset_filters": "Resetear filtros",
+    "back": "Regresar a resultados de búsqueda",
+    "try": "Usted puede intentar a"
+  },
+  "facet": {
+    "none": "No hay valores",
+    "seeAll": "Buscar el base de datos entero",
+    "noMatches": "No hay coincidencias. <br /> Presione <kbd> Ingrese </kbd> para buscar en cada de los documentos\n ",
+    "invert": "Excluir",
+    "content-type": "Tipo de archivo",
+    "language": "Idioma",
+    "named-entity-person": "Personas",
+    "named-entity-location": "Ubicaciones",
+    "named-entity-organization": "Organizaciones",
+    "path": "Ruta",
+    "indexing-date": "Fecha de indexación\n ",
+    "extraction-level": "Nivel de extracción",
+    "projects": "Proyectos",
+    "deleteNamedEntity": "Eliminar esta Entidad Identificada",
+    "showMore": "Ver más",
+    "local-index": "Mis documentos"
+  },
+  "document": {
+    "name": "Nombre del archivo",
+    "path": "Ruta del archivo",
+    "id": "ID de archivo",
+    "creation_date": "Fecha de creación",
+    "size": "Tamaño del archivo",
+    "content_language": "Idioma del contenido",
+    "content_type": "Tipo de contenido",
+    "content_encoding": "Codificación de contenido",
+    "tree_level": "Nivel",
+    "parent_document": "Documento Principal",
+    "details": "Detalles",
+    "named_entities": "Entidades identificadas",
+    "extracted_text": "Texto extraído",
+    "preview": "Vista previa",
+    "download_button": "Descargar",
+    "not_found": "Documento no encontrado",
+    "not_available": "La vista previa está disponible solo para algunos formatos: pdf, cvs, xlsx, tiff y rtf.",
+    "named_entities_not_found": "No se han encontrado entidades con nombre",
+    "named_entites_not_searched": "Documento no analizado. Para buscar entidades con nombre, vaya a \"Analizar mi documento\" y comience una nueva tarea \"Buscar entidades con nombre\".",
+    "generating_preview": "Generando visualización previa...",
+    "page": "Página",
+    "of": "de",
+    "sheet": "Hoja",
+    "search_directory": "Buscar dentro de este directorio"
+  },
+  "indexing": {
+    "yes": "Sí",
+    "no": "No",
+    "go": "Ir",
+    "tasks": "Tareas",
+    "empty": "Aún no has iniciado tareas.",
+    "extract_text": "Extraer texto",
+    "extracting_header": "¿Deseas extraer también el texto de imágenes y archivos PDF?",
+    "extracting_subheader": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
+    "find_named_entities": "Encuentra personas, organizaciones y lugares",
+    "find_named_entities_header": "¿Qué tecnología deseas aplicar para encontrar personas, organizaciones y lugares?",
+    "find_named_entities_subheader": "Datashare utiliza modelos de procesamiento de lenguaje natural. Por favor elige uno de ellos:",
+    "find_named_entities_tooltip": "Los textos deben ser extraídos antes de iniciar el proceso para encontrar entidades con nombre",
+    "pipelines": "Canales",
+    "corenlp": "Core NLP",
+    "opennlp": "Open NLP",
+    "mitie": "Mitie",
+    "ixapipe": "Ixa Pipe",
+    "default": "Por defecto - Ofrece la mayor probabilidad de trabajar en la mayoría de los documentos",
+    "sync_models": "Por favor marque esta casilla si actualmente está trabajando sin conexión a Internet.",
+    "stop_task": "Detener esta tarea",
+    "stop_pending_tasks": "Detener todas las tareas pendientes",
+    "delete_done_tasks": "Borrar tareas completadas"
+  },
+  "menu": {
+    "help": "Pedir ayuda",
+    "analyse": "Analizar mis documentos",
+    "logout": "Cerrar sesión",
+    "addDocuments": "Cómo agregar documentos",
+    "faq": "Preguntas frecuentes (FAQ)"
+  },
+  "footer": {
+    "analyse": "Analizar mis documentos",
+    "homedir": "Mueve archivos a este directorio para analizarlos",
+    "clientVersion": "Cliente",
+    "serverVersion": "Servidor"
+  },
+  "login": {
+    "welcome": "Beinvenido a Datashare",
+    "sum_up": "<a href=\"https://icij.org\">ICIJ</a> plataforma de búsqueda y descubrimiento.",
+    "authentication_platform": "Para iniciar sesión, utilice la plataforma de autenticación segura de ICIJ:",
+    "xemx": "Iniciar sesión con Xemx",
+    "support_desk": "Si necesita ayuda, por favor visite nuestro servicio de asistencia:",
+    "ask_help": "Pedir ayuda"
+  }
+}
