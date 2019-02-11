@@ -53,7 +53,7 @@
     "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
     "invert": "Exclude",
     "content-type": "File Type",
-    "language": "Language",
+    "language": "Languages",
     "named-entity-person": "People",
     "named-entity-location": "Locations",
     "named-entity-organization": "Organizations",
