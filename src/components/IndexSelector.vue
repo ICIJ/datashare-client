@@ -50,6 +50,7 @@ export default {
   methods: {
     select (value) {
       this.$store.commit('search/index', value)
+      this.$store.dispatch('search/reset')
       this.refreshRoute()
     },
     toggleItems () {

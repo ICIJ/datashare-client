@@ -4,14 +4,19 @@ import Document from '@/api/Document'
 import NamedEntity from '@/api/NamedEntity'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import cloneDeep from 'lodash/cloneDeep'
+import find from 'lodash/find'
 
-describe('Search store', function () {
+describe('Search store', () => {
   esConnectionHelper()
   let es = esConnectionHelper.es
   // High timeout because multiple searches can be heavy for the Elasticsearch
   jest.setTimeout(1e4)
 
-  afterEach(async () => store.commit('search/reset'))
+  afterEach(() => {
+    store.dispatch('search/reset')
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+  })
 
   it('should define a store module', () => {
     expect(store.state.search).not.toEqual(undefined)
@@ -317,11 +322,27 @@ describe('Search store', function () {
   })
 
   it('should return an advanced and faceted query parameters', () => {
-    store.commit('search/index', 'new-index')
+    store.commit('search/index', 'another-index')
     store.commit('search/query', 'datashare')
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
-    expect(store.getters['search/toRouteQuery']).toEqual({ index: 'new-index', q: 'datashare', size: 12, sort: 'randomOrder', 'f[content-type]': ['TXT'] })
+    expect(store.getters['search/toRouteQuery']).toEqual({ index: 'another-index', q: 'datashare', size: 12, sort: 'randomOrder', 'f[content-type]': ['TXT'] })
+  })
+
+  it('should reset to initial state', () => {
+    const initialState = cloneDeep(store.state.search)
+    store.commit('search/index', 'another-index')
+    store.commit('search/query', 'datashare')
+    store.commit('search/size', 12)
+    store.commit('search/sort', 'randomOrder')
+    store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
+    store.dispatch('search/reset')
+
+    expect(store.state.search.query).toEqual(initialState.query)
+    expect(store.state.search.size).toEqual(initialState.size)
+    expect(store.state.search.sort).toEqual(initialState.sort)
+    expect(find(store.state.search.facets, { name: 'content-type' }).values).toEqual([])
+    expect(store.state.search.index).toEqual('another-index')
   })
 })

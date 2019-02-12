@@ -17,7 +17,7 @@ localVue.use(VueI18n)
 localVue.use(Vuex)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
-const i18n = new VueI18n({locale: 'en', messages: { 'en': messages }})
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 jest.mock('@/api/DatashareClient', () => jest.fn())
 DatashareClient.mockImplementation(() => {
@@ -55,7 +55,6 @@ describe('IndexSelector.vue', () => {
     })
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
     await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
     expect(wrapper.findAll('option')).toHaveLength(2)
     expect(wrapper.findAll('option').at(0).text()).toBe('first-index')
     expect(wrapper.findAll('option').at(1).text()).toBe('second-index')
@@ -82,6 +81,26 @@ describe('IndexSelector.vue', () => {
 
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(1)
-    expect(wrapper.vm.$store.getters['search/toRouteQuery'].index).toEqual('second-index')
+    expect(store.getters['search/toRouteQuery'].index).toEqual('second-index')
+  })
+
+  it('should change the selected index and reset filters', async () => {
+    DatashareClient.mockImplementation(() => {
+      return {
+        getIndices: () => {
+          return Promise.resolve(new Response(JSON.stringify(['first-index', 'second-index']),
+            { status: 200, headers: { 'Content-type': 'application/json' } }))
+        }
+      }
+    })
+    wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
+    store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
+    await wrapper.vm.$nextTick()
+    expect(store.getters['search/toRouteQuery']['f[content-type]']).not.toBeUndefined()
+
+    wrapper.findAll('option').at(1).element.selected = true
+    wrapper.find('select').trigger('change')
+    expect(store.getters['search/toRouteQuery']['f[content-type]']).toBeUndefined()
+    expect(store.getters['search/toRouteQuery'].index).toEqual('second-index')
   })
 })

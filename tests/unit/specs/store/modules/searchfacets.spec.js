@@ -1,31 +1,24 @@
+import Vue from 'vue'
+import { FacetText } from '@/store/facetsStore'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import store from '@/store'
 import cloneDeep from 'lodash/cloneDeep'
 import omit from 'lodash/omit'
 import functionsIn from 'lodash/functionsIn'
 import each from 'lodash/each'
 import find from 'lodash/find'
 
-import store from '@/store'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import Vue from 'vue'
-import { FacetText } from '@/store/facetsStore'
-
-describe('Search facets', function () {
+describe('Search facets', () => {
   esConnectionHelper()
-  let es = esConnectionHelper.es
+  const es = esConnectionHelper.es
   // High timeout because multiple searches can be heavy for the Elasticsearch
   jest.setTimeout(1e4)
 
-  beforeAll(async () => {
-    store.commit('search/reset')
-  })
-
-  afterEach(async () => {
-    store.commit('search/reset')
-  })
+  afterEach(() => store.commit('search/reset'))
 
   it('should reset the store state', async () => {
-    let initialState = cloneDeep(store.state.search)
+    const initialState = cloneDeep(store.state.search)
     await store.commit('search/reset')
 
     // Should filter the functions because these would never be equal
@@ -42,7 +35,7 @@ describe('Search facets', function () {
   })
 
   it('should define a `content-type` facet correctly (name, key and type)', () => {
-    let facet = find(store.state.search.facets, { name: 'content-type' })
+    const facet = find(store.state.search.facets, { name: 'content-type' })
 
     expect(typeof facet).toBe('object')
     expect(facet.key).toEqual('contentType')
@@ -50,7 +43,7 @@ describe('Search facets', function () {
   })
 
   it('should define a `language` facet correctly (name, key and type)', () => {
-    let facet = find(store.state.search.facets, { name: 'language' })
+    const facet = find(store.state.search.facets, { name: 'language' })
 
     expect(typeof facet).toBe('object')
     expect(facet.key).toEqual('language')
@@ -58,7 +51,7 @@ describe('Search facets', function () {
   })
 
   it('should define a `named-entity` facet correctly (name, key, type and PERSON category)', () => {
-    let facet = find(store.state.search.facets, { name: 'named-entity-person' })
+    const facet = find(store.state.search.facets, { name: 'named-entity-person' })
 
     expect(typeof facet).toBe('object')
     expect(facet.key).toEqual('byMentions')
@@ -67,15 +60,15 @@ describe('Search facets', function () {
   })
 
   it('should find a `content-type` facet using object', () => {
-    expect(store.getters['search/getFacet']({ name: 'content-type' })).not.toEqual(undefined)
+    expect(store.getters['search/getFacet']({ name: 'content-type' })).not.toBeUndefined()
   })
 
   it('should find a `content-type` facet using function', () => {
-    expect(store.getters['search/getFacet'](f => f.name === 'content-type')).not.toEqual(undefined)
+    expect(store.getters['search/getFacet'](f => f.name === 'content-type')).not.toBeUndefined()
   })
 
   it('should not find a `yolo-type` facet', () => {
-    expect(store.getters['search/getFacet']({ name: 'yo-type' })).toEqual(undefined)
+    expect(store.getters['search/getFacet']({ name: 'yo-type' })).toBeUndefined()
   })
 
   it('should have a facet with a body method', () => {
@@ -85,6 +78,7 @@ describe('Search facets', function () {
   it('should add a facet', () => {
     const length = store.state.search.facets.length
     store.commit('search/addFacet', new FacetText('test', 'key', true, null))
+
     expect(store.state.search.facets).toHaveLength(length + 1)
   })
 
@@ -92,7 +86,7 @@ describe('Search facets', function () {
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('application/pdf')).commit()
     await letData(es).have(new IndexedDocument('foo.pdf').withContentType('application/pdf')).commit()
 
-    const response = await store.dispatch('search/queryFacet', {name: 'content-type'})
+    const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
 
     expect(response.aggregations.contentType.buckets).toHaveLength(1)
     expect(response.aggregations.contentType.buckets[0].doc_count).toEqual(2)
@@ -101,7 +95,8 @@ describe('Search facets', function () {
   it('should use contentType (without charset)', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('text/plain; charset=UTF-8')).commit()
 
-    const response = await store.dispatch('search/queryFacet', {name: 'content-type'})
+    const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+
     expect(response.aggregations.contentType.buckets[0].key).toEqual('text/plain')
   })
 
@@ -110,7 +105,8 @@ describe('Search facets', function () {
     await letData(es).have(new IndexedDocument('foo.pdf').withContentType('application/pdf')).commit()
     await letData(es).have(new IndexedDocument('foo.js').withContentType('text/javascript')).commit()
 
-    const response = await store.dispatch('search/queryFacet', {name: 'content-type'})
+    const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+
     expect(response.aggregations.contentType.buckets).toHaveLength(2)
     expect(response.aggregations.contentType.buckets[0].doc_count).toEqual(2)
     expect(response.aggregations.contentType.buckets[1].doc_count).toEqual(1)
@@ -120,7 +116,8 @@ describe('Search facets', function () {
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('application/pdf')).commit()
     await letData(es).have(new IndexedDocument('foo.pdf').withContentType('application/pdf')).commit()
 
-    const response = await store.dispatch('search/queryFacet', {name: 'content-type'})
+    const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+
     expect(response.aggregations.contentType.buckets[0].doc_count).toEqual(2)
     expect(response.hits).toHaveLength(0)
   })
@@ -130,7 +127,8 @@ describe('Search facets', function () {
     await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('index.css').withContentType('text/css')).commit()
 
-    const response = await store.dispatch('search/queryFacet', {name: 'content-type'})
+    const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+
     expect(response.aggregations.contentType.buckets).toHaveLength(3)
   })
 
@@ -143,29 +141,30 @@ describe('Search facets', function () {
     await letData(es).have(new IndexedDocument('index.css').withContentType('text/css')).commit()
     await letData(es).have(new IndexedDocument('list.css').withContentType('text/css')).commit()
 
-    const response = await store.dispatch('search/queryFacet', {name: 'content-type'})
+    const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+
     expect(response.aggregations.contentType.buckets).toHaveLength(3)
   })
 
   // Path facet
   it('should define a `path` facet correctly (name, key and type)', () => {
-    let facetPath = find(store.state.search.facets, {name: 'path'})
+    const facet = find(store.state.search.facets, { name: 'path' })
 
-    expect(typeof facetPath).toBe('object')
-    expect(facetPath.key).toEqual('byDirname')
-    expect(facetPath.constructor.name).toEqual('FacetPath')
+    expect(typeof facet).toBe('object')
+    expect(facet.key).toEqual('byDirname')
+    expect(facet.constructor.name).toEqual('FacetPath')
   })
 
   it('should get no bucket for path aggregation', async () => {
     Vue.prototype.config = { dataDir: '/home/user/data' }
 
     const response = await store.dispatch('search/queryFacet', { name: 'path' })
+
     expect(response.aggregations.byDirname.buckets).toHaveLength(0)
   })
 
   it('should return 1 bucket, the correct first level path and the correct number of results', async () => {
     Vue.prototype.config = { dataDir: '/home/user/data' }
-
     await letData(es).have(new IndexedDocument('/home/user/data/is/a/path/test.doc')).commit()
 
     const response = await store.dispatch('search/queryFacet', { name: 'path' })
@@ -177,7 +176,6 @@ describe('Search facets', function () {
 
   it('should return 2 buckets, the correct path and the correct number of results', async () => {
     Vue.prototype.config = { dataDir: '/home/user/data' }
-
     await letData(es).have(new IndexedDocument('/home/user/data/is/a/path/test.doc')).commit()
     await letData(es).have(new IndexedDocument('/home/user/data/is/a/second/path/test.doc')).commit()
     await letData(es).have(new IndexedDocument('/home/user/data/was/a/third/path/test.doc')).commit()
@@ -193,11 +191,11 @@ describe('Search facets', function () {
 
   // Indexing date facet
   it('should define an `indexing date` facet correctly (name, key and type)', () => {
-    let facetPath = find(store.state.search.facets, { name: 'indexing-date' })
+    const facet = find(store.state.search.facets, { name: 'indexing-date' })
 
-    expect(typeof facetPath).toBe('object')
-    expect(facetPath.key).toEqual('extractionDate')
-    expect(facetPath.constructor.name).toEqual('FacetDate')
+    expect(typeof facet).toBe('object')
+    expect(facet.key).toEqual('extractionDate')
+    expect(facet.constructor.name).toEqual('FacetDate')
   })
 
   it('should return the indexing date buckets', async () => {

@@ -98,7 +98,9 @@ export const mutations = {
     // acquire initial state
     const s = initialState()
     Object.keys(s).forEach(key => {
-      state[key] = s[key]
+      if (key !== 'index') {
+        state[key] = s[key]
+      }
     })
   },
   setGlobalSearch (state, globalSearch) {

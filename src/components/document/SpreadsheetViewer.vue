@@ -2,7 +2,7 @@
   <div class="spreadsheet-viewer">
     <div class="spreadsheet-viewer__header" v-if="doc.active">
       {{ $t('document.sheet') }}
-      <b-form-select class="form-control input-sm" v-model="doc.active"
+      <b-form-select class="input-sm" v-model="doc.active"
                      :options="Object.keys(doc.sheets)" @change="displaySheet" />
     </div>
     <div class="spreadsheet-viewer__hot">
