@@ -1,35 +1,21 @@
-import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
-import { mount, createLocalVue } from '@vue/test-utils'
-
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import SearchResultsItem from '@/components/SearchResultsItem'
 import Document from '@/api/Document'
-import messages from '@/lang/en'
-
 import router from '@/router'
-import store from '@/store'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
-localVue.use(Vuex)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
-
 describe('SearchResultsItem.vue', () => {
-  esConnectionHelper()
-
-  it('should reduce named entities : zero named entities', async () => {
-    var wrapped = mount(SearchResultsItem, {
+  it('should reduce named entities : zero named entities', () => {
+    const wrapper = shallowMount(SearchResultsItem, {
       localVue,
-      i18n,
       router,
-      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -38,15 +24,14 @@ describe('SearchResultsItem.vue', () => {
           } })
       }
     })
-    expect(wrapped.vm.namedEntities).toEqual([])
+
+    expect(wrapper.vm.namedEntities).toEqual([])
   })
 
-  it('should reduce named entities : one named entities', async () => {
-    var wrapped = mount(SearchResultsItem, {
+  it('should reduce named entities : one named entities', () => {
+    const wrapper = shallowMount(SearchResultsItem, {
       localVue,
-      i18n,
       router,
-      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -71,15 +56,13 @@ describe('SearchResultsItem.vue', () => {
         )
       } })
 
-    expect(wrapped.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }])
+    expect(wrapper.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }])
   })
 
-  it('should reduce named entities : two named entities', async () => {
-    var wrapped = mount(SearchResultsItem, {
+  it('should reduce named entities : two named entities', () => {
+    const wrapper = shallowMount(SearchResultsItem, {
       localVue,
-      i18n,
       router,
-      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -109,15 +92,13 @@ describe('SearchResultsItem.vue', () => {
       }
     })
 
-    expect(wrapped.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }, { _source: { id: 'id_bar', mention: 'bar' } }])
+    expect(wrapper.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }, { _source: { id: 'id_bar', mention: 'bar' } }])
   })
 
-  it('should reduce named entities : two named entities with duplicates', async () => {
-    var wrapped = mount(SearchResultsItem, {
+  it('should reduce named entities : two named entities with duplicates', () => {
+    const wrapper = shallowMount(SearchResultsItem, {
       localVue,
-      i18n,
       router,
-      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -152,15 +133,13 @@ describe('SearchResultsItem.vue', () => {
       }
     })
 
-    expect(wrapped.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }, { _source: { id: 'id_bar', mention: 'bar' } }])
+    expect(wrapper.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }, { _source: { id: 'id_bar', mention: 'bar' } }])
   })
 
-  it('should display the correct location', async () => {
-    var wrapped = mount(SearchResultsItem, {
+  it('should display the correct location', () => {
+    const wrapper = shallowMount(SearchResultsItem, {
       localVue,
-      i18n,
       router,
-      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -169,6 +148,7 @@ describe('SearchResultsItem.vue', () => {
           } })
       }
     })
-    expect(wrapped.vm.location).toEqual('.folder_01/folder_02/')
+
+    expect(wrapper.vm.location).toEqual('.folder_01/folder_02/')
   })
 })
