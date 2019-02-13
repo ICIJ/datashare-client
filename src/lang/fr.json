@@ -122,7 +122,6 @@
     "faq": "FAQ"
   },
   "footer": {
-    "analyse": "Analyser mes documents",
     "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
     "clientVersion": "Client",
     "serverVersion": "Serveur"

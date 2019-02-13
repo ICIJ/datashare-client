@@ -1,6 +1,6 @@
 <template>
   <div class="app__footer text-nowrap">
-    <router-link :to="{ name: 'indexing' }"  class="app__footer__addon btn btn-sm text-secondary" :title="$t('footer.analyse')" v-b-tooltip>
+    <router-link :to="{ name: 'indexing' }"  class="app__footer__addon btn btn-sm text-secondary" :title="$t('menu.analyse')" v-b-tooltip>
       <font-awesome-icon icon="rocket" />
       <span class="sr-only">{{ $t('menu.analyse') }}</span>
     </router-link>

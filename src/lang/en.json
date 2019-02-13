@@ -123,7 +123,6 @@
     "faq": "FAQ"
   },
   "footer": {
-    "analyse": "Analyze my documents",
     "homedir": "Move files to this directory in order to analyze them",
     "clientVersion": "Client",
     "serverVersion": "Server"
