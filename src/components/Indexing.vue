@@ -41,9 +41,9 @@
               </span>
               <div class="indexing__tasks__progress progress">
                 <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar"
-                     :style="'width: ' + getProgress(task.progress) + '%'" :aria-valuenow="getProgress(task.progress)"
+                     :style="'width: ' + getProgress(task.progress, task.state) + '%'" :aria-valuenow="getProgress(task.progress, task.state)"
                      aria-valuemin="0" aria-valuemax="100">
-                  {{ getProgress(task.progress) }}%
+                  {{ getProgress(task.progress, task.state) }}%
                 </div>
               </div>
             </div>
@@ -149,14 +149,20 @@ export default {
         case 'RUNNING': return 'bg-info progress-bar-striped progress-bar-animated'
       }
     },
-    getProgress (value) {
-      if (value === -2.0) {
-        return 100
+    getProgress (value, state) {
+      let res
+      switch (value) {
+        case -2.0 :
+        case 1.0 :
+          res = (state === 'RUNNING') ? 99 : 100
+          break
+        case -1.0 :
+          res = 0
+          break
+        default :
+          res = Math.min(Math.round(value * 100), 99)
       }
-      if (value === -1.0) {
-        return 0
-      }
-      return Math.round(value * 100)
+      return res
     }
   }
 }

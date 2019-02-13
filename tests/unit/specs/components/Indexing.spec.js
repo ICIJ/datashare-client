@@ -59,12 +59,12 @@ describe('Indexing.vue', () => {
     expect(wrapper.contains('.btn-find-named-entites')).toBeTruthy()
   })
 
-  it('should enable the find named entities buttton by default, and display no tooltip', () => {
+  it('should enable the find named entities button by default, and display no tooltip', () => {
     expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toBeUndefined()
     expect(wrapper.find('.span-find-named-entities').attributes().title).toEqual('')
   })
 
-  it('should disable the find named entities buttton if a task is running and display a tooltip', async () => {
+  it('should disable the find named entities button if a task is running and display a tooltip', () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
 
     expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toEqual('disabled')
@@ -97,7 +97,7 @@ describe('Indexing.vue', () => {
     expect(wrapper.find('.btn-delete-done-tasks').attributes().disabled).toBeUndefined()
   })
 
-  it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', async () => {
+  it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', () => {
     datashare.fetch.mockReturnValue(jsonOk({}))
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     expect(wrapper.vm.tasks.length).toEqual(1)
@@ -110,7 +110,7 @@ describe('Indexing.vue', () => {
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
-  it('should call a backend endpoint on click on the "Delete done tasks" button', async () => {
+  it('should call a backend endpoint on click on the "Delete done tasks" button', () => {
     datashare.fetch.mockReturnValue(jsonOk({}))
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     expect(wrapper.vm.tasks.length).toEqual(1)
@@ -151,6 +151,38 @@ describe('Indexing.vue', () => {
 
     expect(wrapper.findAll('.btn-stop-task').length).toEqual(1)
     expect(wrapper.find('.btn-stop-task').attributes().disabled).toEqual('disabled')
+  })
+
+  it('should return 0 as progress number', () => {
+    expect(wrapper.vm.getProgress(-1, 'RUNNING')).toEqual(0)
+  })
+
+  it('should return 100 as progress number (1/2)', () => {
+    expect(wrapper.vm.getProgress(-2, 'ERROR')).toEqual(100)
+  })
+
+  it('should return 100 as progress number (2/2)', () => {
+    expect(wrapper.vm.getProgress(1, 'DONE')).toEqual(100)
+  })
+
+  it('should return 99 as progress number', () => {
+    expect(wrapper.vm.getProgress(1, 'RUNNING')).toEqual(99)
+  })
+
+  it('should return 40 as progress number', () => {
+    expect(wrapper.vm.getProgress(0.4, 'RUNNING')).toEqual(40)
+  })
+
+  it('should return 41 as progress number', () => {
+    expect(wrapper.vm.getProgress(0.41, 'RUNNING')).toEqual(41)
+  })
+
+  it('should return 42 as progress number', () => {
+    expect(wrapper.vm.getProgress(0.418, 'RUNNING')).toEqual(42)
+  })
+
+  it('should return 99 as progress number', () => {
+    expect(wrapper.vm.getProgress(0.995, 'RUNNING')).toEqual(99)
   })
 })
 
