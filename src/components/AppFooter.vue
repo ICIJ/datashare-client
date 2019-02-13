@@ -37,14 +37,13 @@
       <font-awesome-icon icon="bolt" class="mr-1" />
       {{ serverVersion }}
     </div>
-
     <div class="app__footer__addon app__footer__addon--lang">
       <b-dropdown variant="link" size="sm" no-caret>
         <template slot="button-content">
           <font-awesome-icon icon="globe" class="mr-1" />
           {{ currentLanguage.label }}
         </template>
-        <b-dropdown-item v-for="lang in languages" :key="lang.key" @click.prevent="changeLanguage(lang.key)" :active="lang == currentLanguage">
+        <b-dropdown-item v-for="lang in languages" :key="lang.key" @click.prevent="changeLanguage(lang.key)" :active="lang === currentLanguage">
           {{ lang.label }}
         </b-dropdown-item>
       </b-dropdown>
@@ -89,7 +88,9 @@ export default {
       return this.config && this.config.mode === 'SERVER'
     },
     currentLanguage () {
-      return find(this.languages, { key: this.$i18n.locale })
+      const lang = localStorage.getItem('lang') ? localStorage.getItem('lang') : this.$i18n.locale
+      this.loadLanguageAsync(lang)
+      return find(this.languages, { key: lang })
     }
   },
   methods: {
@@ -103,14 +104,15 @@ export default {
       this.loadLanguageAsync(lang)
     },
     setI18nLanguage (lang) {
+      localStorage.setItem('lang', lang)
       this.$i18n.locale = lang
       return lang
     },
     loadLanguageAsync (lang) {
       if (this.$i18n.locale !== lang) {
         if (!this.loadedLanguages.includes(lang)) {
-          return import(/* webpackChunkName: "[request]" */ '@/lang/' + lang + '.json').then(msgs => {
-            this.$i18n.setLocaleMessage(lang, msgs.default)
+          return import(/* webpackChunkName: "[request]" */ '@/lang/' + lang + '.json').then(messages => {
+            this.$i18n.setLocaleMessage(lang, messages.default)
             this.loadedLanguages.push(lang)
             return this.setI18nLanguage(lang)
           })

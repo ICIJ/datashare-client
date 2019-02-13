@@ -7,13 +7,6 @@
   </div>
 </template>
 
-<style lang="scss">
-  .app {
-    margin-top: $app-nav-height;
-    margin-bottom: $app-footer-height;
-  }
-</style>
-
 <script>
 import DatashareClient from '@/api/DatashareClient'
 import AppFooter from './AppFooter'
@@ -32,3 +25,10 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .app {
+    margin-top: $app-nav-height;
+    margin-bottom: $app-footer-height;
+  }
+</style>
