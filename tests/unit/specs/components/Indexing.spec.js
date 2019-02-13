@@ -54,19 +54,6 @@ describe('Indexing.vue', () => {
     expect(wrapper.findAll('li.indexing__tasks').at(1).text()).toContain('baz (456)')
   })
 
-  it('should open extract form if no tasks is running', () => {
-    expect(wrapper.find('.extracting__form').isVisible()).toBeTruthy()
-    expect(wrapper.find('.find-named-entities__form').isVisible()).toBeFalsy()
-  })
-
-  it('should not open extract form if some tasks are running', () => {
-    store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
-    wrapper = mount(Indexing, { localVue, i18n, router, store })
-
-    expect(wrapper.find('.extracting__form').isVisible()).toBeFalsy()
-    expect(wrapper.find('.find-named-entities__form').isVisible()).toBeFalsy()
-  })
-
   it('should display the extract and the find named entities buttons', () => {
     expect(wrapper.contains('.btn-extract')).toBeTruthy()
     expect(wrapper.contains('.btn-find-named-entites')).toBeTruthy()

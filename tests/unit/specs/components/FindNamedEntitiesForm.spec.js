@@ -72,6 +72,7 @@ describe('FindNamedEntitiesForm.vue', () => {
   it('should not show offline checkbox in SERVER mode', async () => {
     Vue.prototype.config = { mode: 'SERVER' }
     let w = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
+
     expect(w.contains('.find-named-entities-form__offline')).toBeFalsy()
   })
 })

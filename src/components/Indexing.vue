@@ -98,9 +98,11 @@ export default {
     }
   },
   mounted () {
-    if (this.tasks.length === 0) {
-      this.openExtractingForm()
-    }
+    store.dispatch('search/query', '*').then(hits => {
+      if (hits.hits.total === 0) {
+        this.openExtractingForm()
+      }
+    })
   },
   beforeRouteEnter (to, from, next) {
     return store.dispatch('indexing/loadTasks').then(() => {
