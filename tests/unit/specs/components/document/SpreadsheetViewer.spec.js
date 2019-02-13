@@ -76,8 +76,7 @@ describe('SpreadsheetViewer.vue', () => {
       .withContent('')
       .withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
       .commit()
-    wrapper.findAll('.spreadsheet-viewer__header option').at(1).element.selected = true
-    wrapper.find('.spreadsheet-viewer__header select').trigger('change')
+    wrapper.findAll('.spreadsheet-viewer__header option').at(1).setSelected()
 
     expect(wrapper.findAll('.spreadsheet-viewer__hot table td').at(0).text()).toBe('second')
     expect(wrapper.findAll('.spreadsheet-viewer__hot table td').at(1).text()).toBe('sheet')

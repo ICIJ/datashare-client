@@ -76,8 +76,7 @@ describe('IndexSelector.vue', () => {
     const spyRefreshRoute = jest.spyOn(wrapper.vm, 'refreshRoute')
     expect(spyRefreshRoute).not.toBeCalled()
 
-    wrapper.findAll('option').at(1).element.selected = true
-    wrapper.find('select').trigger('change')
+    wrapper.findAll('option').at(1).setSelected()
 
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(1)
@@ -98,8 +97,7 @@ describe('IndexSelector.vue', () => {
     await wrapper.vm.$nextTick()
     expect(store.getters['search/toRouteQuery']['f[content-type]']).not.toBeUndefined()
 
-    wrapper.findAll('option').at(1).element.selected = true
-    wrapper.find('select').trigger('change')
+    wrapper.findAll('option').at(1).setSelected()
     expect(store.getters['search/toRouteQuery']['f[content-type]']).toBeUndefined()
     expect(store.getters['search/toRouteQuery'].index).toEqual('second-index')
   })
