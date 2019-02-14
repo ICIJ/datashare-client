@@ -1,5 +1,4 @@
 import last from 'lodash/last'
-import split from 'lodash/split'
 import get from 'lodash/get'
 import EsDoc from './EsDoc'
 import moment from 'moment'
@@ -13,12 +12,6 @@ export default class Document extends EsDoc {
   }
   get highlight () {
     return this.raw.highlight
-  }
-  get relativePath () {
-    if (this.path.indexOf(process.env.VUE_APP_DATA_PREFIX) === -1) {
-      return this.path
-    }
-    return '/api' + process.env.VUE_APP_DATA_PREFIX + split(this.path, process.env.VUE_APP_DATA_PREFIX, 2)[1]
   }
   get url () {
     return '/api/index/src/' + this.index + '/' + this.id + '?routing=' + this.routing

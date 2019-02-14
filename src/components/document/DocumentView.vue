@@ -43,7 +43,7 @@
             <dt class="col-sm-3">{{ $t('document.name') }}</dt>
             <dd class="col-sm-9">{{ document.basename }}</dd>
             <dt class="col-sm-3">{{ $t('document.path') }}</dt>
-            <dd class="col-sm-9">{{ document.source.path }}</dd>
+            <dd class="col-sm-9">{{ documentPath }}</dd>
             <dt class="col-sm-3">{{ $t('document.id') }}</dt>
             <dd class="col-sm-9">{{ document.id }}</dd>
             <template v-if="document.source.metadata.tika_metadata_creation_date">
@@ -194,6 +194,12 @@ export default {
     }),
     getFullUrl () {
       return DatashareClient.getFullUrl(this.document.url)
+    },
+    documentPath () {
+      if (this.config['mountedDataDir']) {
+        return this.document.source.path.replace(this.config['dataDir'], this.config['mountedDataDir'])
+      }
+      return this.document.source.path
     }
   },
   beforeRouteEnter (to, _from, next) {

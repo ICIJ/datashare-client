@@ -29,7 +29,10 @@ describe('DocumentView.vue', () => {
     httpServer.listen(9876)
   })
 
-  afterEach(() => store.commit('document/reset'))
+  afterEach(() => {
+    store.commit('document/reset')
+    localVue.prototype.config = {}
+  })
 
   afterAll(() => httpServer.close())
 
@@ -44,6 +47,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a document', async () => {
     const id = 'foo.txt'
+    localVue.prototype.config = {}
     const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
@@ -53,6 +57,18 @@ describe('DocumentView.vue', () => {
 
     expect(wrapper.find('h3 > span').text()).toEqual(id)
     expect(wrapper.findAll('dd').at(2).text()).toEqual(id)
+    expect(wrapper.findAll('dd').at(1).text()).toEqual(id)
+  })
+
+  it('should display document path with config.mountedDataDir', async () => {
+    const id = '/home/datashare/data/foo.txt'
+    localVue.prototype.config = { 'dataDir': '/home/datashare/data', 'mountedDataDir': 'C:/Users/ds/docs' }
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+
+    await letData(es).have(new IndexedDocument(id).withContent('this is foo document')).commit()
+    await wrapper.vm.getDoc()
+
+    expect(wrapper.findAll('dd').at(1).text()).toEqual('C:/Users/ds/docs/foo.txt')
   })
 
   it('should display a child document', async () => {
