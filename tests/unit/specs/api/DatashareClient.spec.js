@@ -99,14 +99,6 @@ describe('Datashare backend client', () => {
     )
   })
 
-  it('should return backend response to getIndices', async () => {
-    ds.getIndices().then(
-      resp => resp.json().then(
-        json => expect(json).toEqual({})
-      )
-    )
-  })
-
   it('should emit an error if the backend response has a bad status', async () => {
     fetchReturns(42, {})
     const mockCallback = jest.fn()

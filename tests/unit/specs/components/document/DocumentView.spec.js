@@ -27,6 +27,7 @@ describe('DocumentView.vue', () => {
   beforeAll(() => {
     httpServer = createServer({ root: 'tests/unit/resources' })
     httpServer.listen(9876)
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })
 
   afterEach(() => {
@@ -62,7 +63,7 @@ describe('DocumentView.vue', () => {
 
   it('should display document path with config.mountedDataDir', async () => {
     const id = '/home/datashare/data/foo.txt'
-    localVue.prototype.config = { 'dataDir': '/home/datashare/data', 'mountedDataDir': 'C:/Users/ds/docs' }
+    localVue.prototype.config = { dataDir: '/home/datashare/data', mountedDataDir: 'C:/Users/ds/docs' }
     const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id).withContent('this is foo document')).commit()

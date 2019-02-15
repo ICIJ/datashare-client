@@ -8,9 +8,6 @@ import router from '@/router'
 import store from '@/store'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import messages from '@/lang/en'
-import DatashareClient from '@/api/DatashareClient'
-import fetchPonyfill from 'fetch-ponyfill'
-const { Response } = fetchPonyfill()
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -19,40 +16,24 @@ localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
-jest.mock('@/api/DatashareClient', () => jest.fn())
-DatashareClient.mockImplementation(() => {
-  return {
-    getIndices: () => {
-      return Promise.resolve(new Response(JSON.stringify([]),
-        { status: 200, headers: { 'Content-type': 'application/json' } }))
-    }
-  }
-})
-
 describe('IndexSelector.vue', () => {
   let wrapper
 
   beforeEach(() => {
+    localVue.prototype.config = { userIndices: ['first-index'] }
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
   })
 
-  it('should not display a dropdown containing only the local index', () => {
+  it('should not display a dropdown if there is only one index', () => {
     expect(wrapper.findAll('option')).toHaveLength(0)
   })
 
   it('should select the local index as default selected index', () => {
-    expect(wrapper.vm.selected).toBe(process.env.VUE_APP_ES_INDEX)
+    expect(wrapper.vm.selected).toBe('first-index')
   })
 
   it('should display a dropdown containing 2 indices', async () => {
-    DatashareClient.mockImplementation(() => {
-      return {
-        getIndices: () => {
-          return Promise.resolve(new Response(JSON.stringify(['first-index', 'second-index']),
-            { status: 200, headers: { 'Content-type': 'application/json' } }))
-        }
-      }
-    })
+    localVue.prototype.config = { userIndices: ['first-index', 'second-index'] }
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
     await wrapper.vm.$nextTick()
     expect(wrapper.findAll('option')).toHaveLength(2)
@@ -61,14 +42,7 @@ describe('IndexSelector.vue', () => {
   })
 
   it('should change the selected index and refresh the route', async () => {
-    DatashareClient.mockImplementation(() => {
-      return {
-        getIndices: () => {
-          return Promise.resolve(new Response(JSON.stringify(['first-index', 'second-index']),
-            { status: 200, headers: { 'Content-type': 'application/json' } }))
-        }
-      }
-    })
+    localVue.prototype.config = { userIndices: ['first-index', 'second-index'] }
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
     await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
@@ -84,14 +58,7 @@ describe('IndexSelector.vue', () => {
   })
 
   it('should change the selected index and reset filters', async () => {
-    DatashareClient.mockImplementation(() => {
-      return {
-        getIndices: () => {
-          return Promise.resolve(new Response(JSON.stringify(['first-index', 'second-index']),
-            { status: 200, headers: { 'Content-type': 'application/json' } }))
-        }
-      }
-    })
+    localVue.prototype.config = { userIndices: ['first-index', 'second-index'] }
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
     store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
     await wrapper.vm.$nextTick()

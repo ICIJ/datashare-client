@@ -196,8 +196,8 @@ export default {
       return DatashareClient.getFullUrl(this.document.url)
     },
     documentPath () {
-      if (this.config['mountedDataDir']) {
-        return this.document.source.path.replace(this.config['dataDir'], this.config['mountedDataDir'])
+      if (this.config.mountedDataDir) {
+        return this.document.source.path.replace(this.config.dataDir, this.config.mountedDataDir)
       }
       return this.document.source.path
     }

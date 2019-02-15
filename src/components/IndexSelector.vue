@@ -13,9 +13,8 @@
 </template>
 
 <script>
-import DatashareClient from '@/api/DatashareClient'
-import map from 'lodash/map'
 import facets from '@/mixins/facets'
+import map from 'lodash/map'
 
 export default {
   name: 'IndexSelector',
@@ -40,12 +39,8 @@ export default {
     }
   },
   created () {
-    const ds = new DatashareClient()
-    ds.getIndices().then(res => {
-      res.json().then(indices => {
-        this.options = map(indices, index => { return { value: index, text: index } })
-      })
-    })
+    this.options = map(this.config.userIndices, index => { return { value: index, text: index } })
+    this.selected = this.options[0].value
   },
   methods: {
     select (value) {

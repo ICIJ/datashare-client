@@ -36,7 +36,7 @@ export function initialState () {
     sort: 'relevance',
     response: Response.none(),
     isReady: true,
-    index: process.env.VUE_APP_ES_INDEX
+    index: ''
   }
 }
 

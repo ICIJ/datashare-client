@@ -272,6 +272,7 @@ describe('FacetText.vue', () => {
   })
 
   it('should querying on date on click on facet link, by a route redirect', async () => {
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
     wrapper = mount(FacetText, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'indexing-date' }) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-04-04T20:20:20.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-05-05T02:00:42.001Z')).commit()

@@ -4,7 +4,7 @@ import esSettings from '@/datashare_index_settings.json'
 import noop from 'lodash/noop'
 import map from 'lodash/map'
 
-let es = new elasticsearch.Client({host: process.env.VUE_APP_ES_HOST})
+let es = new elasticsearch.Client({ host: process.env.VUE_APP_ES_HOST })
 let indices = [process.env.VUE_APP_ES_INDEX, process.env.VUE_APP_ES_ANOTHER_INDEX]
 
 const esConnectionHelper = function () {
@@ -23,7 +23,7 @@ const esConnectionHelper = function () {
   beforeEach(async () => {
     await Promise.all(
       map(indices, async index => {
-        await es.deleteByQuery({ index: index, conflicts: 'proceed', refresh: true, body: {query: {match_all: {}}} })
+        await es.deleteByQuery({ index: index, conflicts: 'proceed', refresh: true, body: { query: { match_all: {} } } })
       })
     )
     // Easy Tiger! Elasticsearch can hardly follow

@@ -1,3 +1,4 @@
+import Vue from 'vue'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
@@ -10,9 +11,6 @@ import store from '@/store'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Search from '@/components/Search'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
-import DatashareClient from '@/api/DatashareClient'
-import fetchPonyfill from 'fetch-ponyfill'
-const { Response } = fetchPonyfill()
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -22,16 +20,6 @@ localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
-jest.mock('@/api/DatashareClient', () => jest.fn())
-DatashareClient.mockImplementation(() => {
-  return {
-    getIndices: () => {
-      return Promise.resolve(new Response(JSON.stringify([]),
-        { status: 200, headers: { 'Content-type': 'application/json' } }))
-    }
-  }
-})
-
 describe('Search.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
@@ -40,11 +28,10 @@ describe('Search.vue', () => {
   jest.setTimeout(1e4)
 
   beforeAll(() => {
-    // Remove all facets to avoid unecessary request
-    store.commit('search/clear')
+    Vue.prototype.config = { userIndices: [process.env.VUE_APP_ES_INDEX] }
   })
 
-  beforeEach(async () => {
+  beforeEach(() => {
     wrapper = mount(Search, { localVue, i18n, router, store })
     store.commit('search/clear')
   })

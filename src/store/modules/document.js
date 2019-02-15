@@ -43,7 +43,7 @@ export const mutations = {
 }
 
 export const actions = {
-  get ({commit, rootState}, idAndRouting) {
+  get ({ commit, rootState }, idAndRouting) {
     commit('idAndRouting', idAndRouting)
     return esClient.getEsDoc(rootState.search.index, idAndRouting.id, idAndRouting.routing).then(
       raw => commit('doc', raw),
@@ -53,7 +53,7 @@ export const actions = {
   getNamedEntities ({ commit, state, rootState }) {
     return esClient.getNamedEntities(rootState.search.index, state.idAndRouting.id, state.idAndRouting.routing).then(
       raw => commit('namedEntities', raw),
-      _ => commit('namedEntities', {hits: {hits: []}})
+      _ => commit('namedEntities', { hits: { hits: [] } })
     )
   },
   getParent ({ commit, state, rootState }) {

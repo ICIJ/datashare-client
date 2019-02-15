@@ -31,14 +31,11 @@ export class DatashareClient {
   createIndex () {
     return this.sendAction('/api/index/create', { method: 'PUT', credentials: 'same-origin' })
   }
-  getIndices () {
-    return this.sendAction('/api/index/all')
-  }
   getVersion () {
     return this.sendAction('/version')
   }
   getConfig () {
-    return this.sendAction('/config')
+    return this.sendAction('/api/config')
   }
   deleteNamedEntitiesByMentionNorm (mentionNorm) {
     return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT', credentials: 'same-origin' })
