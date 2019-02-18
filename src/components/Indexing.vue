@@ -99,7 +99,7 @@ export default {
   },
   mounted () {
     store.dispatch('search/query', '*').then(hits => {
-      if (hits.hits.total === 0) {
+      if (hits.hits.total === 0 && this.tasks.length === 0) {
         this.openExtractingForm()
       }
     })
