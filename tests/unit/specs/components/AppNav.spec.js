@@ -1,4 +1,3 @@
-import Vue from 'vue'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import messages from '@/lang/en'
@@ -31,59 +30,75 @@ describe('AppNav.vue', () => {
   })
 
   afterEach(() => {
-    Vue.prototype.config = { mode: 'LOCAL' }
+    localVue.prototype.config = { mode: 'LOCAL' }
   })
 
-  it('should display a menu, without logout link', () => {
+  it('should display a menu', () => {
     expect(wrapper.find('.app__nav__container__main__menu').exists()).toBeTruthy()
-    expect(wrapper.findAll('.app__nav__container__main__menu__item').length).toEqual(4)
+  })
+
+  it('should display the link to analyze my documents', () => {
+    expect(wrapper.findAll('.app__nav__container__main__menu__item router-link-stub').length).toEqual(1)
+  })
+
+  it('should not display the link to analyze my documents in SERVER mode', () => {
+    localVue.prototype.config = { mode: 'SERVER' }
+    wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
+    expect(wrapper.findAll('.app__nav__container__main__menu__item router-link-stub').length).toEqual(0)
+  })
+
+  it('should display the default link to the doc', () => {
+    expect(wrapper.findAll('.app__nav__container__main__menu__item--documents').length).toEqual(1)
+    expect(wrapper.find('.app__nav__container__main__menu__item--documents a').attributes().href).toEqual('https://icij.gitbook.io/datashare/')
   })
 
   it('should display the Mac link to the doc', () => {
     getOS.mockImplementation(() => 'mac')
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
-    expect(wrapper.find('.app__nav__container__main__menu__item a').attributes().href).toEqual('https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare')
+    expect(wrapper.findAll('.app__nav__container__main__menu__item--documents a').at(0).attributes().href).toEqual('https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare')
   })
 
   it('should display the Windows link to the doc', () => {
     getOS.mockImplementation(() => 'windows')
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
-    expect(wrapper.find('.app__nav__container__main__menu__item a').attributes().href).toEqual('https://icij.gitbook.io/datashare/windows/how-to-add-documents-to-datashare')
+    expect(wrapper.findAll('.app__nav__container__main__menu__item--documents a').at(0).attributes().href).toEqual('https://icij.gitbook.io/datashare/windows/how-to-add-documents-to-datashare')
   })
 
   it('should display the Linux link to the doc', () => {
     getOS.mockImplementation(() => 'linux')
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
-    expect(wrapper.find('.app__nav__container__main__menu__item a').attributes().href).toEqual('https://icij.gitbook.io/datashare/linux/how-to-add-documents-to-datashare')
+    expect(wrapper.findAll('.app__nav__container__main__menu__item--documents a').at(0).attributes().href).toEqual('https://icij.gitbook.io/datashare/linux/how-to-add-documents-to-datashare')
   })
 
-  it('should display the default link to the doc', () => {
-    expect(wrapper.find('.app__nav__container__main__menu__item a').attributes().href).toEqual('https://icij.gitbook.io/datashare/')
-  })
-
-  it('should not display a logout link (1/2)', () => {
-    expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(0)
-  })
-
-  it('should not display a logout link (2/2)', () => {
-    Vue.prototype.config = { mode: 'LOCAL' }
+  it('should not display the link to the doc in SERVER mode', () => {
+    localVue.prototype.config = { mode: 'SERVER' }
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
-    expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(0)
-  })
-
-  it('should display a logout link', () => {
-    Vue.prototype.config = { mode: 'SERVER' }
-    wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
-    expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(1)
+    expect(wrapper.findAll('.app__nav__container__main__menu__item--documents').length).toEqual(0)
   })
 
   it('should display the github help link', () => {
     expect(wrapper.find('.app__nav__container__main__menu__item--help a').attributes().href).toEqual(expect.stringContaining('github.com'))
   })
 
-  it('should display the jira help link', () => {
-    Vue.prototype.config = { mode: 'SERVER' }
+  it('should display the jira help link in SERVER mode', () => {
+    localVue.prototype.config = { mode: 'SERVER' }
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
     expect(wrapper.find('.app__nav__container__main__menu__item--help a').attributes().href).toEqual(expect.stringContaining('jira.icij.org'))
+  })
+
+  it('should not display a logout link', () => {
+    expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(0)
+  })
+
+  it('should not display a logout link in LOCAL mode', () => {
+    localVue.prototype.config = { mode: 'LOCAL' }
+    wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
+    expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(0)
+  })
+
+  it('should display a logout link in SERVER mode', () => {
+    localVue.prototype.config = { mode: 'SERVER' }
+    wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
+    expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(1)
   })
 })
