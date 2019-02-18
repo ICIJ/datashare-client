@@ -27,7 +27,7 @@ const router = new VueRouter({
           path: '',
           component: Search,
           beforeEnter: (to, from, next) => {
-            // Not a child route and Query is empty
+            // Not a child route and query is empty
             if (to.name === 'search' && [null, undefined, ''].indexOf(to.query.q) > -1) {
               // Redirect to landing page
               return next({ name: 'landing' })

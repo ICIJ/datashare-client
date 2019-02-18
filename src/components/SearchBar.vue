@@ -44,6 +44,7 @@ export default {
   methods: {
     submit () {
       this.query = (this.query === '' ? '*' : this.query)
+      this.index = (this.index === '' ? this.config.userIndices[0] : this.index)
       // Did the route change? If not, do nothing
       if (this.$route.name === 'search' && this.$route.query.q === this.query) return false
       // Change the route after update the store with the new query
