@@ -59,16 +59,15 @@
 </template>
 
 <script>
-import toLower from 'lodash/toLower'
-import toString from 'lodash/toString'
-import each from 'lodash/each'
-import get from 'lodash/get'
-import throttle from 'lodash/throttle'
-
 import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { removeDiacritics } from '@/utils/strings'
 import facets from '@/mixins/facets'
 import PQueue from 'p-queue'
+import each from 'lodash/each'
+import get from 'lodash/get'
+import throttle from 'lodash/throttle'
+import toLower from 'lodash/toLower'
+import toString from 'lodash/toString'
 
 const initialNumberOfFilesDisplayed = 5
 

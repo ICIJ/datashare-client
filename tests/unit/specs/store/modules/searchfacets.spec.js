@@ -4,16 +4,18 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import store from '@/store'
 import cloneDeep from 'lodash/cloneDeep'
-import omit from 'lodash/omit'
-import functionsIn from 'lodash/functionsIn'
 import each from 'lodash/each'
 import find from 'lodash/find'
+import functionsIn from 'lodash/functionsIn'
+import omit from 'lodash/omit'
 
 describe('Search facets', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   // High timeout because multiple searches can be heavy for the Elasticsearch
   jest.setTimeout(1e4)
+
+  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
   afterEach(() => store.commit('search/reset'))
 

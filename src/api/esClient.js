@@ -28,7 +28,7 @@ export function datasharePlugin (Client, config, components) {
       type: 'doc',
       size: 200,
       routing: routing,
-      body: bodybuilder().query('parent_id', {type: 'NamedEntity', id: docId}).filter('term', 'isHidden', 'false').build()
+      body: bodybuilder().query('parent_id', { type: 'NamedEntity', id: docId }).filter('term', 'isHidden', 'false').build()
     }).then(function (data) {
       return data
     }, error => {
@@ -109,12 +109,11 @@ export function datasharePlugin (Client, config, components) {
       index: index,
       type: 'doc',
       body: body.size(0).build()
-    }).then(function (data) {
-      return data
-    }, error => {
-      EventBus.$emit('http::error', error)
-      throw error
-    })
+    }).then(data => data,
+      error => {
+        EventBus.$emit('http::error', error)
+        throw error
+      })
   }
 
   Client.prototype._buildBody = function (from, size, facets, query, sort) {
@@ -125,7 +124,7 @@ export function datasharePlugin (Client, config, components) {
     // Select only the Documents and not the NamedEntities
     body.query('match', 'type', 'Document')
     // Add an option to exclude the content
-    body.rawOption('_source', {includes: ['*'], excludes: ['content']})
+    body.rawOption('_source', { includes: ['*'], excludes: ['content'] })
     // Add an option to highlight fragments in the results
     body.rawOption('highlight', {
       fields: {

@@ -1,12 +1,11 @@
+import { EventBus } from '@/utils/event-bus'
+import DatashareClient from '@/api/DatashareClient'
 import camelCase from 'lodash/camelCase'
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
+import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
-import pick from 'lodash/pick'
-
-import { EventBus } from '@/utils/event-bus.js'
-import DatashareClient from '@/api/DatashareClient'
 
 const datashare = new DatashareClient()
 

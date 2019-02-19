@@ -33,6 +33,7 @@ describe('FacetSearch.vue', () => {
   let wrapper
 
   beforeEach(() => {
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
     wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.search.facets, { name: 'content-type' }) } })
   })
 
@@ -42,7 +43,9 @@ describe('FacetSearch.vue', () => {
     await letData(es).have(new IndexedDocument('show.js').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('list.html').withContentType('text/html')).commit()
+
     await wrapper.vm.search()
+
     expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
   })
 
@@ -52,9 +55,13 @@ describe('FacetSearch.vue', () => {
     await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('index.css').withContentType('text/css')).commit()
     await letData(es).have(new IndexedDocument('index.php').withContentType('text/php')).commit()
+
     await wrapper.vm.search()
+
     expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
+
     await wrapper.vm.next()
+
     expect(wrapper.findAll('.facet__items__item').length).toEqual(4)
   })
 

@@ -33,7 +33,6 @@ describe('FacetPath.vue', () => {
         facet: find(store.state.search.facets, { name: 'path' })
       }
     })
-
     store.commit('search/reset')
     await wrapper.vm.root.aggregate()
   })

@@ -21,6 +21,8 @@ describe('FacetText.vue', () => {
   const es = esConnectionHelper.es
   let wrapper
 
+  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
+
   beforeEach(() => {
     wrapper = mount(FacetText, {
       localVue,
@@ -32,16 +34,15 @@ describe('FacetText.vue', () => {
     store.commit('search/setGlobalSearch', true)
   })
 
-  afterEach(() => {
-    store.commit('search/reset')
-  })
+  afterEach(() => store.commit('search/reset'))
 
   it('should display no items for the content-type facet', async () => {
     await wrapper.vm.root.aggregate()
+
     expect(wrapper.findAll('.facet__items__item').length).toEqual(0)
   })
 
-  it('should display 2 items for the content-type facet', async () => {
+  it('should display 3 items for the content-type facet', async () => {
     await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('list.js').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('show.js').withContentType('text/javascript')).commit()
@@ -53,7 +54,7 @@ describe('FacetText.vue', () => {
     expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
   })
 
-  it('should display three facets items', async () => {
+  it('should display 4 items for the content-type facet', async () => {
     await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('list.js').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('show.js').withContentType('text/javascript')).commit()

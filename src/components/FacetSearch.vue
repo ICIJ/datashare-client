@@ -28,7 +28,7 @@ import PQueue from 'p-queue'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
 import FacetPath from '@/components/FacetPath'
-import { EventBus } from '@/utils/event-bus.js'
+import { EventBus } from '@/utils/event-bus'
 import facets from '@/mixins/facets'
 
 export default {
@@ -61,7 +61,7 @@ export default {
       isReady: false,
       items: [],
       reachTheEnd: false,
-      queue: new PQueue({concurrency: 1})
+      queue: new PQueue({ concurrency: 1 })
     }
   },
   mounted () {
@@ -80,8 +80,8 @@ export default {
       // We queue the promises to ensure they are executed in the right order
       return this.queue.add(() => {
         // Load the facet using a body build using the facet configuration
-        let options = {size: this.size, include: `.*(${this.queryTokens.join('|')}).*`}
-        return this.$store.dispatch('search/queryFacet', {name: this.facet.name, options: options}).then(data => {
+        let options = { size: this.size, include: `.*(${this.queryTokens.join('|')}).*` }
+        return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options }).then(data => {
           // Extract the slice we need for this page (if any)
           const all = get(data, this.resultPath, [])
           const slice = all.slice(this.items.length, this.items.length + this.pageSize)

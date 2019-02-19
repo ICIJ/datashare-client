@@ -33,46 +33,49 @@ describe('FacetNamedEntity.vue', () => {
   const es = esConnectionHelper.es
   let wrapper
 
-  beforeEach(() => {
+  beforeAll(() => {
     mixin.methods.watchedForUpdate = noop
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+  })
+
+  beforeEach(() => {
     wrapper = mount(FacetNamedEntity, { localVue, i18n, store, propsData: { facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
     store.commit('search/setGlobalSearch', false)
   })
 
   afterEach(() => store.commit('search/reset'))
-
   it('should display empty list', async () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item').length).toEqual(0)
   })
 
-  it('should display one named entity', async () => {
+  it('should display 1 named entity', async () => {
     await letData(es).have(new IndexedDocument('docs/naz.txt').withContent('this is a naz document').withNer('naz')).commit()
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item').length).toEqual(1)
-    expect(wrapper.find('.facet__items__item__description').text()).toEqual('one occurrence in one doc')
+    expect(wrapper.findAll('.facet__items__item__description').at(0).text()).toEqual('one occurrence in one doc')
   })
 
-  it('should display two named entities in one document', async () => {
+  it('should display 2 named entities in one document', async () => {
     await letData(es).have(new IndexedDocument('docs/qux.txt').withContent('this is a document').withNer('qux').withNer('foo')).commit()
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
   })
 
-  it('should display one named entity in two documents', async () => {
+  it('should display 1 named entity in 2 documents', async () => {
     await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER document contain 2 NER').withNer('NER', 2).withNer('NER', 25)).commit()
     await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('another document with NER').withNer('NER', 22)).commit()
 
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item').length).toEqual(1)
-    expect(wrapper.find('.facet__items__item__description').text()).toEqual('3 occurrences in 2 docs')
+    expect(wrapper.findAll('.facet__items__item__description').at(0).text()).toEqual('3 occurrences in 2 docs')
   })
 
-  it('should display three named entities in two documents with right order', async () => {
+  it('should display 3 named entities in 2 documents in correct order', async () => {
     await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER1 document').withNer('NER1', 2)).commit()
     await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER2 doc with NER2 NER2 NER1 and NER3')
       .withNer('NER2', 2).withNer('NER2', 16).withNer('NER2', 21).withNer('NER1', 26).withNer('NER3', 35)).commit()
@@ -238,7 +241,7 @@ describe('FacetNamedEntity.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item').length).toEqual(1)
-    expect(wrapper.find('.facet__items__item__body__key').text()).toContain('csv')
+    expect(wrapper.findAll('.facet__items__item__body__key').at(0).text()).toContain('csv')
   })
 
   it('should display the named entities containing the query string, and those linked to documents containing the query string', async () => {

@@ -3,7 +3,7 @@
     "mentions": {
       "item": "%{ocurrencias} in %{documentos}",
       "occurrence": "sin ocurrencias | una ocurrencia | {contar} occurencias",
-      "document": "sin docs | un doc | {contar} docs\n\nnote you can use documento"
+      "document": "sin docs | un doc | {contar} docs"
     },
     "more": "Explora más",
     "placeholder": "Búsqueda de personas, organizaciones, localizaciones...",

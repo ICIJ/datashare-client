@@ -54,7 +54,7 @@ class IndexedDocument {
   constructor (path) {
     this.path = path
     this.dirname = dirname(path)
-    this.join = {name: 'Document'}
+    this.join = { name: 'Document' }
     this.type = 'Document'
     this.metadata = {
       tika_metadata_content_type: null
@@ -168,7 +168,7 @@ class IndexBuilder {
             category: ner.category,
             isHidden: ner.isHidden,
             type: 'NamedEntity',
-            join: {name: 'NamedEntity', parent: docId}
+            join: { name: 'NamedEntity', parent: docId }
           }
         })
       }
@@ -177,4 +177,4 @@ class IndexBuilder {
   }
 }
 
-export {letData, IndexBuilder, IndexedDocuments, IndexedDocument, IndexedNe}
+export { letData, IndexBuilder, IndexedDocuments, IndexedDocument, IndexedNe }
