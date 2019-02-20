@@ -29,6 +29,12 @@ describe('main', () => {
     expect(vm.config).toBeDefined()
     expect(vm.config).toEqual({ userIndices: ['first-index'], key: 'value' })
   })
+
+  it('should set the ES index for the futures searches', async () => {
+    window.fetch.mockReturnValue(jsonOk({ userIndices: ['first-index'] }))
+    await createApp()
+    expect(vm.$store.state.search.index).toEqual('first-index')
+  })
 })
 
 function jsonOk (body) {
