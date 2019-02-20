@@ -38,7 +38,7 @@ describe('FacetText.vue', () => {
   it('should display no items for the content-type facet', async () => {
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(0)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(0)
     expect(wrapper.vm.root.totalCount).toEqual(0)
   })
 
@@ -51,7 +51,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
     expect(wrapper.vm.root.totalCount).toEqual(5)
   })
 
@@ -66,7 +66,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(4)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
     expect(wrapper.vm.root.totalCount).toEqual(7)
   })
 
@@ -80,16 +80,16 @@ describe('FacetText.vue', () => {
 
     store.commit('search/query', 'SHOW')
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(4)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
     expect(wrapper.vm.root.totalCount).toEqual(6)
 
     store.commit('search/setGlobalSearch', false)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
 
     store.commit('search/query', 'INDEX')
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
   })
 
   it('should apply relative facet and get back to global facet', async () => {
@@ -99,16 +99,16 @@ describe('FacetText.vue', () => {
     store.commit('search/query', 'Lorem')
     store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
     expect(wrapper.vm.root.totalCount).toEqual(2)
 
     store.commit('search/setGlobalSearch', false)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
 
     store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
   })
 
   it('should display an item for inverted facet', async () => {
@@ -137,8 +137,8 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(6)
-    expect(wrapper.findAll('.facet__items__display > span').length).toEqual(0)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(6)
+    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(0)
     expect(wrapper.vm.root.totalCount).toEqual(5)
   })
 
@@ -152,7 +152,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__display > span').length).toEqual(1)
+    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
     expect(wrapper.find('.facet__items__display > span').text()).toEqual('Show more')
     expect(wrapper.vm.root.totalCount).toEqual(6)
   })
@@ -167,8 +167,8 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.vm.root.items.length).toEqual(6)
-    expect(wrapper.findAll('.facet__items__display > span').length).toEqual(1)
+    expect(wrapper.vm.root.items).toHaveLength(6)
+    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
     expect(wrapper.find('.facet__items__display > span').text()).toEqual('Show more')
     expect(wrapper.vm.root.totalCount).toEqual(6)
   })
@@ -185,8 +185,8 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.vm.root.items.length).toEqual(6)
-    expect(wrapper.findAll('.facet__items__display > span').length).toEqual(1)
+    expect(wrapper.vm.root.items).toHaveLength(6)
+    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
     expect(wrapper.find('.facet__items__display> span').text()).toEqual('Show more')
     expect(wrapper.vm.root.totalCount).toEqual(6)
   })
@@ -203,8 +203,8 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.vm.root.items.length).toEqual(1)
-    expect(wrapper.findAll('.facet__items__display > span').length).toEqual(0)
+    expect(wrapper.vm.root.items).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(0)
     expect(wrapper.vm.root.totalCount).toEqual(3)
   })
 
@@ -220,7 +220,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.vm.root.items.length).toEqual(0)
+    expect(wrapper.vm.root.items).toHaveLength(0)
     expect(wrapper.vm.root.totalCount).toEqual(0)
   })
 
@@ -232,7 +232,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.vm.root.items.length).toEqual(2)
+    expect(wrapper.vm.root.items).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(2)
   })
 
@@ -244,7 +244,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.vm.root.items.length).toEqual(2)
+    expect(wrapper.vm.root.items).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(2)
   })
 
@@ -258,7 +258,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.vm.root.items.length).toEqual(2)
+    expect(wrapper.vm.root.items).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(2)
   })
 
@@ -277,7 +277,7 @@ describe('FacetText.vue', () => {
     const getItemChild = (idx, selector) => getItem(idx).find(selector)
     const getItemChildText = (idx, selector) => getItemChild(idx, selector).text()
 
-    expect(wrapper.vm.root.items.length).toEqual(3)
+    expect(wrapper.vm.root.items).toHaveLength(3)
     expect(getItemChildText(1, '.facet__items__item__label')).toEqual('2018-07')
     expect(getItemChildText(1, '.facet__items__item__count')).toEqual('2')
     expect(getItemChildText(2, '.facet__items__item__label')).toEqual('2018-05')
@@ -315,13 +315,13 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('docs/bar.js').toIndex(process.env.VUE_APP_ES_ANOTHER_INDEX).withContentType('text/javascript')).commit()
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
     expect(wrapper.vm.root.totalCount).toEqual(2)
 
     store.commit('search/index', process.env.VUE_APP_ES_ANOTHER_INDEX)
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(1)
   })
 
@@ -331,8 +331,9 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
     expect(wrapper.findAll('.facet__items__item__label').at(0).text()).toEqual('All')
+    expect(wrapper.findAll('.facet__items__item__count').at(0).text()).toEqual('2')
     expect(wrapper.findAll('.facet__items__item').at(0).classes()).toContain('facet__items__item--active')
     expect(wrapper.vm.root.totalCount).toEqual(2)
   })

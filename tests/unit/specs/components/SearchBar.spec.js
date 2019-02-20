@@ -21,9 +21,7 @@ describe('SearchBar.vue', function () {
     wrapper = shallowMount(SearchBar, { localVue, i18n, router, store })
   })
 
-  afterAll(() => {
-    store.commit('search/reset')
-  })
+  afterAll(() => store.commit('search/reset'))
 
   it('should display search bar', () => {
     expect(wrapper.contains('.search-bar')).toBeTruthy()

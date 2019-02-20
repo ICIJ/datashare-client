@@ -1,5 +1,27 @@
 <template>
   <facet v-bind="$props" class="facet--named-entity" ref="facet">
+    <template slot="all" slot-scope="{ totalCount, firstItem }">
+      <span>
+        <div class="row no-gutters">
+          <div class="col-2 facet__items__item__icon py-2" :class="getCategoryClass(getCategories(firstItem)[0].key, 'text-')">
+            <font-awesome-icon :icon="getCategoryIcon(getCategories(firstItem)[0].key)" />
+          </div>
+          <a class="col-auto py-2 pl-2 facet__items__item__body" href @click.prevent="resetValues()">
+            <div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__body__key text-white" :class="getCategoryClass(getCategories(firstItem)[0].key, 'bg-')" :title="capitalize($t('facet.all'))" v-b-tooltip.hover>
+              {{ $t('facet.all') }}
+            </div>
+            <div class="text-muted small facet__items__item__description">
+              {{
+                $t('aggregations.mentions.item', {
+                  occurrences: $tc('aggregations.mentions.occurrence', totalCount, { count: totalCount }),
+                  documents: $tc('aggregations.mentions.document', total, { count: total })
+                })
+              }}
+            </div>
+          </a>
+        </div>
+      </span>
+    </template>
     <template slot="item" slot-scope="{ item }">
       <span v-for="category in getCategories(item)" :key="category.key">
         <div class="row no-gutters">
@@ -47,6 +69,11 @@ export default {
   name: 'FacetNamedEntity',
   components: { Facet },
   mixins: [facets, ner],
+  computed: {
+    total () {
+      return this.$store.state.search.response.total
+    }
+  },
   methods: {
     getCategories (item) {
       if (item.byCategories) {

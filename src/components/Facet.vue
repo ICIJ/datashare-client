@@ -30,14 +30,16 @@
       </div>
       <slot v-else name="items" :items="items" :facetQuery="facetQuery">
         <div class="list-group-item facet__items__item p-0 border-0" :class="{ 'facet__items__item--active': !hasValues() }" v-if="items.length">
-          <a href @click.prevent="resetValues()" class="py-2 px-3">
-            <span class="badge badge-pill badge-light float-right facet__items__item__count">
-              {{ totalCount }}
-            </span>
-            <span class="facet__items__item__label">
-              {{ $t('facet.all') }}
-            </span>
-          </a>
+          <slot name="all" :total-count="totalCount" :first-item="items[0]">
+            <a href @click.prevent="resetValues()" class="py-2 px-3">
+              <span class="badge badge-pill badge-light float-right facet__items__item__count">
+                {{ totalCount }}
+              </span>
+              <span class="facet__items__item__label">
+                {{ $t('facet.all') }}
+              </span>
+            </a>
+          </slot>
         </div>
         <div class="list-group-item facet__items__item p-0 border-0" v-for="(item, index) in items" :key="index" :class="{ 'facet__items__item--active': hasValue(item) }">
           <slot name="item" :item="item">
