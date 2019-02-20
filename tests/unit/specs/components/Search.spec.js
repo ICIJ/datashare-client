@@ -29,6 +29,7 @@ describe('Search.vue', () => {
 
   beforeAll(() => {
     Vue.prototype.config = { userIndices: [process.env.VUE_APP_ES_INDEX] }
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })
 
   beforeEach(() => {

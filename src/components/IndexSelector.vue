@@ -40,7 +40,6 @@ export default {
   },
   created () {
     this.options = map(this.config.userIndices, index => { return { value: index, text: index } })
-    this.selected = this.options[0].value
   },
   methods: {
     select (value) {

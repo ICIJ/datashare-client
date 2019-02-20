@@ -26,6 +26,7 @@ async function createApp () {
   return ds.getConfig().then(res => {
     return res.json().then(config => {
       Vue.prototype.config = config
+      store.commit('search/index', config.userIndices[0])
       vm = new Vue({
         i18n,
         router,

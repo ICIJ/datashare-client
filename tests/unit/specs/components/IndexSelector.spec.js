@@ -21,6 +21,7 @@ describe('IndexSelector.vue', () => {
 
   beforeEach(() => {
     localVue.prototype.config = { userIndices: ['first-index'] }
+    store.commit('search/index', 'first-index')
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
   })
 
