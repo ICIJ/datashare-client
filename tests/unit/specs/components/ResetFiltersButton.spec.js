@@ -44,4 +44,13 @@ describe('ResetFiltersButton.vue', function () {
     wrapper.vm.resetFacets()
     expect(wrapper.vm.hasFacets).toEqual(false)
   })
+
+  it('should call router push on facets reset', () => {
+    jest.spyOn(router, 'push')
+    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store })
+
+    expect(router.push).not.toHaveBeenCalled()
+    wrapper.vm.resetFacets()
+    expect(router.push).toHaveBeenCalled()
+  })
 })

@@ -115,12 +115,6 @@ export default {
       this.$root.$emit('bv::hide::popover')
       // Change the route
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
-    },
-    resetFacets () {
-      this.$store.dispatch('search/reset')
-      this.$root.$emit('bv::hide::popover')
-      // Change the route
-      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
     }
   }
 }

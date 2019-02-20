@@ -105,9 +105,6 @@ export const mutations = {
   setGlobalSearch (state, globalSearch) {
     state.globalSearch = globalSearch
   },
-  resetFacets (state) {
-    state.facets.slice(0, state.facets.length)
-  },
   query (state, query) {
     state.query = query
     state.response = Response.none()
@@ -191,10 +188,6 @@ export const mutations = {
 export const actions = {
   reset ({ commit, dispatch }, name) {
     commit('reset')
-    return dispatch('query')
-  },
-  resetFacets ({ commit, dispatch }, name) {
-    commit('resetFacets')
     return dispatch('query')
   },
   query ({ state, commit }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort }) {

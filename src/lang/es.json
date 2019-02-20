@@ -50,7 +50,8 @@
   "facet": {
     "none": "No hay valores",
     "seeAll": "Buscar el base de datos entero",
-    "noMatches": "No hay coincidencias. <br /> Presione <kbd> Ingrese </kbd> para buscar en cada de los documentos\n ",
+    "noMatches": "No hay coincidencias. <br /> Presione <kbd> Ingrese </kbd> para buscar en cada de los documentos",
+    "noResults": "No hay coincidencias",
     "invert": "Excluir",
     "content-type": "Tipo de archivo",
     "language": "Idiomas",

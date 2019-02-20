@@ -14,7 +14,7 @@
                  hide-search hide-header hide-show-more v-bind="{ facet }"></component>
     </div>
     <div v-show="!items.length" class="text-muted text-center p-2 mt-4">
-      No results
+      {{ $t('facet.noResults') }}
     </div>
   </div>
 </template>

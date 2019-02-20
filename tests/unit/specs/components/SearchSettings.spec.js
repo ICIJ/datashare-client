@@ -3,8 +3,8 @@ import VueI18n from 'vue-i18n'
 import { createLocalVue, shallowMount, createWrapper } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
-import router from '@/router'
 import store from '@/store'
+import router from '@/router'
 import SearchSettings from '@/components/SearchSettings'
 import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
 
@@ -25,45 +25,51 @@ describe('SearchSettings.vue', () => {
     store.commit('search/reset')
   })
 
-  afterAll(() => {
-    store.commit('search/reset')
-  })
-
-  it('should display the dropdown to choose the number of results per page', async () => {
-    await store.commit('search/size', 10)
-    wrapper = shallowMount(SearchSettings, { localVue, i18n, store })
-
-    let e = wrapper.vm.$el.querySelector('#input-page-size')
-    expect(e.options[e.selectedIndex].value).toEqual('10')
-  })
-
-  it('should display the dropdown to choose the order', async () => {
-    await store.commit('search/sort', 'dateOldest')
-    wrapper = shallowMount(SearchSettings, { localVue, i18n, store })
-
-    let e = wrapper.vm.$el.querySelector('#input-sort')
-    expect(e.options[e.selectedIndex].value).toEqual('dateOldest')
-  })
+  afterAll(() => store.commit('search/reset'))
 
   it('should not be relative to the search, by default', () => {
-    expect(wrapper.vm.$el.querySelector('#input-global').checked).toEqual(false)
+    expect(wrapper.vm.relativeSearch).toEqual(false)
   })
 
   it('should emit a bv::hide::popover on relativeSearch change', () => {
     const rootWrapper = createWrapper(wrapper.vm.$root)
-    wrapper.vm.relativeSearch = true
+    wrapper.find('#input-global').setChecked()
 
-    expect(wrapper.vm.$el.querySelector('#input-global').checked).toEqual(true)
-    expect(rootWrapper.emitted('bv::hide::popover')).toBeTruthy()
-    expect(rootWrapper.emitted('bv::hide::popover').length).toEqual(1)
+    expect(wrapper.vm.relativeSearch).toEqual(true)
+    expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
   })
 
-  it('should call router push on facets reset', async () => {
-    jest.spyOn(router, 'push')
-    wrapper = shallowMount(SearchSettings, { localVue, i18n, router, store })
+  it('should display the dropdown to choose the number of results per page', async () => {
+    expect(wrapper.findAll('#input-page-size')).toHaveLength(1)
+    expect(wrapper.vm.selectedSize).toEqual(25)
+  })
 
-    expect(router.push).not.toHaveBeenCalled()
-    wrapper.vm.resetFacets()
+  it('should change the selectedSize via the dropdown', async () => {
+    jest.spyOn(router, 'push')
+    wrapper = shallowMount(SearchSettings, { localVue, i18n, store, router })
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+    wrapper.findAll('#input-page-size option').at(3).setSelected()
+
+    expect(wrapper.vm.selectedSize).toEqual('100')
     expect(router.push).toHaveBeenCalled()
+    expect(router.push).toHaveBeenCalledWith({ 'name': 'search', 'params': {}, 'path': '/', 'query': { 'index': '', 'q': '*', 'size': 100, 'sort': 'relevance' } })
+    expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
+  })
+
+  it('should display the dropdown to choose the order', async () => {
+    expect(wrapper.findAll('#input-sort')).toHaveLength(1)
+    expect(wrapper.vm.selectedSort).toEqual('relevance')
+  })
+
+  it('should change the selectedSort via the dropdown', async () => {
+    jest.spyOn(router, 'push')
+    wrapper = shallowMount(SearchSettings, { localVue, i18n, store, router })
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+    wrapper.findAll('#input-sort option').at(3).setSelected()
+
+    expect(wrapper.vm.selectedSort).toEqual('sizeLargest')
+    expect(router.push).toHaveBeenCalled()
+    expect(router.push).toHaveBeenCalledWith({ 'name': 'search', 'params': {}, 'path': '/', 'query': { 'index': '', 'q': '*', 'size': 25, 'sort': 'sizeLargest' } })
+    expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
   })
 })

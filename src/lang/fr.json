@@ -51,6 +51,7 @@
     "none": "Aucune valeur distincte",
     "seeAll": "Chercher dans toute la base de données",
     "noMatches": "Pas de résultat.<br />Presser <kbd>Entrée</kbd> pour chercher dans tous les documents",
+    "noResults": "Pas de résultats",
     "invert": "Exclure",
     "content-type": "Types de fichier",
     "language": "Langues",
