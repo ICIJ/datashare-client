@@ -110,6 +110,10 @@ export const mixin = {
     isReversed () {
       return this.$store.getters['search/isFacetReversed'](this.facet.name)
     },
+    resetValues () {
+      this.$store.commit('search/resetFacetValues', this.facet.name)
+      this.refreshRoute()
+    },
     refreshRoute () {
       this.$router.push({
         name: 'search',

@@ -179,6 +179,12 @@ export const mutations = {
     if (existingFacet) {
       existingFacet.reverse = !existingFacet.reverse
     }
+  },
+  resetFacetValues (state, name) {
+    const existingFacet = find(state.facets, { name })
+    if (existingFacet) {
+      existingFacet.values = []
+    }
   }
 }
 
@@ -237,6 +243,10 @@ export const actions = {
   },
   removeFacetValue ({ commit, dispatch }, facet) {
     commit('removeFacetValue', facet)
+    return dispatch('query')
+  },
+  resetFacetValues ({ commit, dispatch }, name) {
+    commit('resetFacetValues', name)
     return dispatch('query')
   },
   toggleFacet ({ commit, dispatch }, name) {

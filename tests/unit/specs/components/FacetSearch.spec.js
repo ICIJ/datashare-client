@@ -46,7 +46,7 @@ describe('FacetSearch.vue', () => {
 
     await wrapper.vm.search()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
   })
 
   it('should paginate 4 items on 2 pages', async () => {
@@ -58,11 +58,11 @@ describe('FacetSearch.vue', () => {
 
     await wrapper.vm.search()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
 
     await wrapper.vm.next()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(4)
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(5)
   })
 
   it('should paginate 10 items on 10 pages', async () => {
@@ -71,8 +71,6 @@ describe('FacetSearch.vue', () => {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
     await wrapper.vm.search()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(1)
-    await wrapper.vm.next()
     expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
     await wrapper.vm.next()
     expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
@@ -90,6 +88,8 @@ describe('FacetSearch.vue', () => {
     expect(wrapper.findAll('.facet__items__item').length).toEqual(9)
     await wrapper.vm.next()
     expect(wrapper.findAll('.facet__items__item').length).toEqual(10)
+    await wrapper.vm.next()
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(11)
   })
 
   it('should paginate 10 items on 2 pages, and start over', async () => {
@@ -98,13 +98,13 @@ describe('FacetSearch.vue', () => {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
     await wrapper.vm.search()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(5)
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(6)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(10)
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(11)
     await wrapper.vm.search(true)
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(5)
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(6)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(10)
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(11)
   })
 
   it('should create query tokens', async () => {
@@ -123,15 +123,15 @@ describe('FacetSearch.vue', () => {
 
     wrapper.vm.facetQuery = ''
     await wrapper.vm.search()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(8)
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(9)
 
     wrapper.vm.facetQuery = 'doc'
     await wrapper.vm.search()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
 
     wrapper.vm.facetQuery = 'pdf'
     await wrapper.vm.search()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(1)
+    expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
   })
 
   it('should trigger a search when value of facetQuery changes', async () => {

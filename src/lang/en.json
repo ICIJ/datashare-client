@@ -63,7 +63,8 @@
     "projects": "Projects",
     "deleteNamedEntity": "Delete this Named Entity",
     "showMore": "Show more",
-    "local-index": "My documents"
+    "local-index": "My documents",
+    "all": "All"
   },
   "document": {
     "name": "File name",

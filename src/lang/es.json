@@ -63,7 +63,8 @@
     "projects": "Proyectos",
     "deleteNamedEntity": "Eliminar esta Entidad Identificada",
     "showMore": "Ver más",
-    "local-index": "Mis documentos"
+    "local-index": "Mis documentos",
+    "all": "Todos"
   },
   "document": {
     "name": "Nombre del archivo",

@@ -22,6 +22,22 @@ describe('Search store', () => {
     expect(store.state.search).not.toEqual(undefined)
   })
 
+  it('should reset to initial state', () => {
+    const initialState = cloneDeep(store.state.search)
+    store.commit('search/index', 'another-index')
+    store.commit('search/query', 'datashare')
+    store.commit('search/size', 12)
+    store.commit('search/sort', 'randomOrder')
+    store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
+    store.dispatch('search/reset')
+
+    expect(store.state.search.query).toEqual(initialState.query)
+    expect(store.state.search.size).toEqual(initialState.size)
+    expect(store.state.search.sort).toEqual(initialState.sort)
+    expect(find(store.state.search.facets, { name: 'content-type' }).values).toEqual([])
+    expect(store.state.search.index).toEqual('another-index')
+  })
+
   it('should change the state after `query` mutation', () => {
     store.commit('search/query', 'bar')
     expect(store.state.search.query).toEqual('bar')
@@ -330,19 +346,11 @@ describe('Search store', () => {
     expect(store.getters['search/toRouteQuery']).toEqual({ index: 'another-index', q: 'datashare', size: 12, sort: 'randomOrder', 'f[content-type]': ['TXT'] })
   })
 
-  it('should reset to initial state', () => {
-    const initialState = cloneDeep(store.state.search)
-    store.commit('search/index', 'another-index')
-    store.commit('search/query', 'datashare')
-    store.commit('search/size', 12)
-    store.commit('search/sort', 'randomOrder')
-    store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
-    store.dispatch('search/reset')
+  it('should reset the values of a facet', async () => {
+    await store.dispatch('search/addFacetValue', { name: 'content-type', value: ['txt', 'csv'] })
+    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(2)
 
-    expect(store.state.search.query).toEqual(initialState.query)
-    expect(store.state.search.size).toEqual(initialState.size)
-    expect(store.state.search.sort).toEqual(initialState.sort)
-    expect(find(store.state.search.facets, { name: 'content-type' }).values).toEqual([])
-    expect(store.state.search.index).toEqual('another-index')
+    await store.dispatch('search/resetFacetValues', 'content-type')
+    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(0)
   })
 })

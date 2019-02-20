@@ -29,6 +29,16 @@
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
       </div>
       <slot v-else name="items" :items="items" :facetQuery="facetQuery">
+        <div class="list-group-item facet__items__item p-0 border-0" :class="{ 'facet__items__item--active': !hasValues() }" v-if="items.length">
+          <a href @click.prevent="resetValues()" class="py-2 px-3">
+            <span class="badge badge-pill badge-light float-right facet__items__item__count">
+              {{ totalCount }}
+            </span>
+            <span class="facet__items__item__label">
+              {{ $t('facet.all') }}
+            </span>
+          </a>
+        </div>
         <div class="list-group-item facet__items__item p-0 border-0" v-for="(item, index) in items" :key="index" :class="{ 'facet__items__item--active': hasValue(item) }">
           <slot name="item" :item="item">
             <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
@@ -66,6 +76,7 @@ import PQueue from 'p-queue'
 import each from 'lodash/each'
 import get from 'lodash/get'
 import throttle from 'lodash/throttle'
+import sumBy from 'lodash/sumBy'
 import toLower from 'lodash/toLower'
 import toString from 'lodash/toString'
 
@@ -86,7 +97,8 @@ export default {
       collapseItems: false,
       isReady: !!this.asyncItems,
       queue: new PQueue({ concurrency: 1 }),
-      results: []
+      results: [],
+      totalCount: 0
     }
   },
   watch: {
@@ -137,6 +149,7 @@ export default {
         let options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : {}
         return this.queue.add(() => {
           return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options }).then(r => {
+            this.totalCount = get(r, `aggregations.${this.facet.key}.sum_other_doc_count`, 0) + sumBy(get(r, this.resultPath, []), 'doc_count')
             this.results = this.addInvertedFacets(r)
             this.isReady = this.queue.pending === 1
           })
@@ -146,7 +159,7 @@ export default {
     addInvertedFacets (response) {
       if (!this.isGlobal && this.facetFilter && this.facetFilter.reverse) {
         each(this.facetFilter.values, key => {
-          response.prepend(`aggregations.${this.facet.key}.buckets`, { key })
+          response.prepend(this.resultPath, { key })
         })
       }
       return response
