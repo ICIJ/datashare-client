@@ -1,96 +1,85 @@
 <template>
   <facet v-bind="$props" class="facet--named-entity" ref="facet">
-    <template slot="all" slot-scope="{ totalCount, firstItem }">
-      <span>
-        <div class="row no-gutters">
-          <div class="col-2 facet__items__item__icon py-2" :class="getCategoryClass(getCategories(firstItem)[0].key, 'text-')">
-            <font-awesome-icon :icon="getCategoryIcon(getCategories(firstItem)[0].key)" />
-          </div>
-          <a class="col-auto py-2 pl-2 facet__items__item__body" href @click.prevent="resetValues()">
-            <div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__body__key text-white" :class="getCategoryClass(getCategories(firstItem)[0].key, 'bg-')" :title="capitalize($t('facet.all'))" v-b-tooltip.hover>
-              {{ $t('facet.all') }}
-            </div>
-            <div class="text-muted small facet__items__item__description">
-              {{
-                $t('aggregations.mentions.item', {
-                  occurrences: $tc('aggregations.mentions.occurrence', totalCount, { count: totalCount }),
-                  documents: $tc('aggregations.mentions.document', total, { count: total })
-                })
-              }}
-            </div>
-          </a>
-        </div>
+    <template slot="title">
+      {{ $t('facet.' + facet.name) }}
+      <span class="col-2 facet__items__item__icon py-2" :class="getCategoryClass(facet.category, 'text-')">
+        <font-awesome-icon :icon="getCategoryIcon(facet.category)" />
       </span>
     </template>
-    <template slot="item" slot-scope="{ item }">
-      <span v-for="category in getCategories(item)" :key="category.key">
-        <div class="row no-gutters">
-          <div class="col-2 facet__items__item__icon py-2" :class="getCategoryClass(category.key, 'text-')">
-            <font-awesome-icon :icon="getCategoryIcon(category.key)" />
-          </div>
-          <a class="col-auto py-2 pl-2 facet__items__item__body" href @click.prevent="toggleValue(item)">
-            <div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__body__key text-white" :class="getCategoryClass(category.key, 'bg-')" :title="capitalize(item.key)" v-b-tooltip.hover>
-              {{ item.key }}
-            </div>
-            <div class="text-muted small facet__items__item__description">
-              {{
-                $t('aggregations.mentions.item', {
-                  occurrences: $tc('aggregations.mentions.occurrence', category.doc_count, { count: category.doc_count }),
-                  documents: $tc('aggregations.mentions.document', category.byDocs.value, { count: category.byDocs.value })
-                })
-              }}
-            </div>
-          </a>
-          <div class="col facet__items__item__menu">
-            <b-dropdown class="h-100 my-2" no-caret dropright offset="25">
-              <template slot="button-content" class="px-1">
-                <font-awesome-icon icon="ellipsis-v" />
-              </template>
-              <b-dropdown-item @click="deleteNamedEntitiesByMentionNorm(item.key)">
-                <font-awesome-icon icon="trash-alt" />
-                 {{ $t('facet.deleteNamedEntity') }}
-               </b-dropdown-item>
-            </b-dropdown>
-          </div>
+    <template slot="items" slot-scope="{ items, totalCount }">
+      <b-form-checkbox v-model="isAllSelected" @click.native="resetNamedEntityValues" class="facet__items__all">
+        <span v-html="getNamedEntityLabel({ key: $t('facet.all'), doc_count: totalCount, byDocs: { value: total } })"></span>
+      </b-form-checkbox>
+      <div v-for="item in items" :key="item.key" class="facet__items__item d-flex">
+        <b-form-checkbox v-model="selected[item.key]" @change="toggleValue(item)" class="w-100">
+          <span v-html="getNamedEntityLabel(item)"></span>
+        </b-form-checkbox>
+        <div class="col facet__items__item__menu">
+          <b-dropdown class="h-100 my-2" no-caret dropright offset="25">
+            <template slot="button-content" class="px-1">
+              <font-awesome-icon icon="ellipsis-v" />
+            </template>
+            <b-dropdown-item @click="deleteNamedEntitiesByMentionNorm(item.key)">
+              <font-awesome-icon icon="trash-alt" />
+              {{ $t('facet.deleteNamedEntity') }}
+            </b-dropdown-item>
+          </b-dropdown>
         </div>
-      </span>
+      </div>
     </template>
   </facet>
 </template>
 
 <script>
-import { capitalize } from '@/utils/strings'
 import Facet from '@/components/Facet'
 import facets from '@/mixins/facets'
 import ner from '@/mixins/ner'
 import { EventBus } from '@/utils/event-bus'
+import get from 'lodash/get'
 
 export default {
   name: 'FacetNamedEntity',
   components: { Facet },
   mixins: [facets, ner],
+  data () {
+    return {
+      isAllNamedEntitySelected: true,
+      selected: {}
+    }
+  },
   computed: {
     total () {
       return this.$store.state.search.response.total
     }
   },
   methods: {
-    getCategories (item) {
-      if (item.byCategories) {
-        return item.byCategories.buckets
-      }
-      return [
-        {
-          key: 'ban',
-          doc_count: 0,
-          byDocs: { value: 0 }
-        }
-      ]
+    getNamedEntityLabel (item) {
+      const label = this.facet.itemLabel ? this.facet.itemLabel(item) : item.key
+      const count = get(item, 'doc_count', 0)
+      const value = get(item, 'byDocs.value', 0)
+      return '<div class="col-auto py-2 pl-2 facet__items__item__body">' +
+        '<div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__body__key">' +
+        label +
+        '</div>' +
+        '<div class="text-muted small facet__items__item__description">' +
+        this.$t('aggregations.mentions.item', {
+          occurrences: this.$tc('aggregations.mentions.occurrence', count, { count: count }),
+          documents: this.$tc('aggregations.mentions.document', value, { count: value })
+        }) +
+        '</div>' +
+        '</div>'
     },
-    capitalize
+    resetNamedEntityValues (evt) {
+      if (this.isAllSelected) {
+        evt.preventDefault()
+      } else {
+        this.resetValues()
+        this.resetFacetValues()
+      }
+    }
   },
   mounted () {
-    EventBus.$on('facet::hide::named-entities', () => this.$refs.facet.aggregate(250))
+    EventBus.$on('facet::hide::named-entities', () => this.$refs.facet.aggregate())
   }
 }
 </script>
@@ -109,16 +98,12 @@ export default {
       width: 100%;
     }
 
-    & > span:hover .facet__items__item__menu {
+    &:hover .facet__items__item__menu {
       visibility: visible;
     }
 
     &__icon {
-      flex-basis: 4rem;
-      flex-grow: 0;
-      font-size: 2em;
-      margin-bottom: 0.3em;
-      border-right: 1px dashed $card-border-color !important;
+      font-size: 1.5em;
 
       svg {
         position: absolute;

@@ -5,6 +5,8 @@
 </template>
 
 <script>
+import { EventBus } from '@/utils/event-bus'
+
 export default {
   name: 'ResetFiltersButton',
   computed: {
@@ -16,6 +18,7 @@ export default {
     resetFacets () {
       this.$store.dispatch('search/reset')
       this.$root.$emit('bv::hide::popover')
+      EventBus.$emit('facet::search::reset-filters')
       // Change the route
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
     }

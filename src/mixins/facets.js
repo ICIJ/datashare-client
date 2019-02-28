@@ -1,8 +1,10 @@
 import { EventBus } from '@/utils/event-bus'
 import DatashareClient from '@/api/DatashareClient'
 import camelCase from 'lodash/camelCase'
+import find from 'lodash/find'
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
+import map from 'lodash/map'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
@@ -35,7 +37,15 @@ export const mixin = {
     return {
       isReady: false,
       offset: 0,
-      pageSize: 8
+      pageSize: 8,
+      totalCount: 0,
+      selected: [],
+      isAllSelected: true
+    }
+  },
+  mounted () {
+    if (this.root.$on) {
+      this.root.$on('add-facet-values', value => this.$emit('add-facet-values', value))
     }
   },
   computed: {
@@ -73,6 +83,9 @@ export const mixin = {
         this.facetQuery.charAt(0).toUpperCase() + this.facetQuery.slice(1)
       // And escape the string for use in REGEX
       ].map(this.escapeRegExp))
+    },
+    options () {
+      return map(this.items, item => { return { value: item.key, text: this.getItemLabel(item) } })
     }
   },
   methods: {
@@ -86,7 +99,11 @@ export const mixin = {
         return props
       }, {})
     },
+    hasValue (item) {
+      return this.$store.getters['search/hasFacetValue'](this.facet.itemParam(item))
+    },
     addValue (item) {
+      this.isAllSelected = false
       this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
       this.refreshRoute()
     },
@@ -100,9 +117,6 @@ export const mixin = {
     invert () {
       this.$store.commit('search/toggleFacet', this.facet.name)
       this.refreshRoute()
-    },
-    hasValue (item) {
-      return this.$store.getters['search/hasFacetValue'](this.facet.itemParam(item))
     },
     hasValues () {
       return this.isReady && this.$store.getters['search/hasFacetValues'](this.facet.name)
@@ -137,6 +151,23 @@ export const mixin = {
       } else {
         return pick(state.search, ['index'])
       }
+    },
+    getItemLabel (item) {
+      const label = this.facet.itemLabel ? this.facet.itemLabel(item) : item.key
+      return '<span class="facet__items__item__count badge badge-pill badge-light float-right my-1">' + item.doc_count + '</span><span class="facet__items__item__label py-2 px-1">' + label + '</span>'
+    },
+    selectedValuesFromStore () {
+      this.selected = find(this.$store.state.search.facets, { name: this.facet.name }).values
+      this.isAllSelected = this.selected.length === 0
+    },
+    resetFacetValues () {
+      this.selected = []
+    },
+    changeSelectedValues () {
+      this.isAllSelected = this.selected.length === 0
+      this.$root.$emit('facet::add-facet-values', this.facet, this.selected)
+      this.$emit('add-facet-values', this.facet, this.selected)
+      this.refreshRoute()
     }
   }
 }

@@ -9,19 +9,19 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import { EventBus } from '@/utils/event-bus'
 import FacetDate from '@/components/FacetDate'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetPath from '@/components/FacetPath'
 import FacetSearch from '@/components/FacetSearch'
 import FacetText from '@/components/FacetText'
 import IndexSelector from '@/components/IndexSelector'
-
-import sortBy from 'lodash/sortBy'
-import map from 'lodash/map'
-import get from 'lodash/get'
-
 import bModal from 'bootstrap-vue/es/components/modal/modal'
-import { mapState } from 'vuex'
+import forEach from 'lodash/forEach'
+import get from 'lodash/get'
+import map from 'lodash/map'
+import sortBy from 'lodash/sortBy'
 
 export default {
   name: 'AggregationsPanel',
@@ -35,7 +35,7 @@ export default {
     bModal
   },
   mounted () {
-    this.$watch(() => map(this.$refs, (ref, key) => get(ref, '0.root.isReady', false)), (e) => {
+    this.$watch(() => map(this.$refs, (ref, key) => get(ref, '0.root.isReady', false)), () => {
       this.sortedFacets = sortBy(this.facets, facet => {
         const root = get(this, `$refs.${facet.name}.0.root`, {})
         if (root.isReady) {
@@ -47,6 +47,9 @@ export default {
     })
     // Watch for $root event
     this.$root.$on('facet::async-search', this.asyncFacetSearch)
+    this.$root.$on('facet::add-facet-values', this.addFacetValues)
+    EventBus.$on('facet::search::add-facet-values', this.updateFacetSelectedValues)
+    EventBus.$on('facet::search::reset-filters', this.resetFacetValues)
   },
   data () {
     return {
@@ -70,6 +73,23 @@ export default {
         // Display the modal
         this.$refs.asyncFacetSearch.show()
       }
+    },
+    addFacetValues (selectedFacet, values) {
+      this.$store.commit('search/addFacetValues', { facet: selectedFacet, values })
+    },
+    updateFacetSelectedValues (component) {
+      const facet = this.$refs[component.name][0]
+      if (facet) {
+        facet.root.selectedValuesFromStore()
+      }
+    },
+    resetFacetValues () {
+      forEach(this.$refs, component => {
+        const facet = component[0]
+        if (facet) {
+          facet.root.resetFacetValues()
+        }
+      })
     }
   }
 }

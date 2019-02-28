@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
-import { createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
@@ -9,11 +9,15 @@ import FacetText from '@/components/FacetText'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import find from 'lodash/find'
+import vBFormCheckbox from 'bootstrap-vue/es/components/form-checkbox/form-checkbox'
+import vBFormCheckboxGroup from 'bootstrap-vue/es/components/form-checkbox/form-checkbox-group'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Vuex)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
+localVue.component('b-form-checkbox', vBFormCheckbox)
+localVue.component('b-form-checkbox-group', vBFormCheckboxGroup)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('FacetText.vue', () => {
@@ -38,7 +42,7 @@ describe('FacetText.vue', () => {
   it('should display no items for the content-type facet', async () => {
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(0)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(0)
     expect(wrapper.vm.root.totalCount).toEqual(0)
   })
 
@@ -51,7 +55,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(5)
   })
 
@@ -66,7 +70,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(3)
     expect(wrapper.vm.root.totalCount).toEqual(7)
   })
 
@@ -80,16 +84,16 @@ describe('FacetText.vue', () => {
 
     store.commit('search/query', 'SHOW')
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(3)
     expect(wrapper.vm.root.totalCount).toEqual(6)
 
     store.commit('search/setGlobalSearch', false)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
 
     store.commit('search/query', 'INDEX')
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
   })
 
   it('should apply relative facet and get back to global facet', async () => {
@@ -99,16 +103,16 @@ describe('FacetText.vue', () => {
     store.commit('search/query', 'Lorem')
     store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(2)
 
     store.commit('search/setGlobalSearch', false)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
 
     store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
   })
 
   it('should display an item for inverted facet', async () => {
@@ -121,10 +125,8 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    const firstItem = wrapper.findAll('.facet--reversed .facet__items__item').at(1)
-
-    expect(firstItem.classes()).toContain('facet__items__item--active')
-    expect(firstItem.find('span').text()).toEqual('2')
+    expect(wrapper.findAll('.facet--reversed .facet__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.facet--reversed .facet__items__item .facet__items__item__count').at(0).text()).toEqual('2')
     expect(wrapper.vm.root.totalCount).toEqual(3)
   })
 
@@ -137,7 +139,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(6)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
     expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(0)
     expect(wrapper.vm.root.totalCount).toEqual(5)
   })
@@ -273,22 +275,25 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    const getItem = (idx) => wrapper.findAll('.facet__items__item').at(idx)
+    const getItem = (idx) => wrapper.findAll('.facet__items__item .custom-checkbox').at(idx)
     const getItemChild = (idx, selector) => getItem(idx).find(selector)
     const getItemChildText = (idx, selector) => getItemChild(idx, selector).text()
 
     expect(wrapper.vm.root.items).toHaveLength(3)
-    expect(getItemChildText(1, '.facet__items__item__label')).toEqual('2018-07')
-    expect(getItemChildText(1, '.facet__items__item__count')).toEqual('2')
-    expect(getItemChildText(2, '.facet__items__item__label')).toEqual('2018-05')
-    expect(getItemChildText(2, '.facet__items__item__count')).toEqual('3')
-    expect(getItemChildText(3, '.facet__items__item__label')).toEqual('2018-04')
-    expect(getItemChildText(3, '.facet__items__item__count')).toEqual('1')
+    expect(getItemChildText(0, '.facet__items__item__label')).toEqual('2018-07')
+    expect(getItemChildText(0, '.facet__items__item__count')).toEqual('2')
+    expect(getItemChildText(1, '.facet__items__item__label')).toEqual('2018-05')
+    expect(getItemChildText(1, '.facet__items__item__count')).toEqual('3')
+    expect(getItemChildText(2, '.facet__items__item__label')).toEqual('2018-04')
+    expect(getItemChildText(2, '.facet__items__item__count')).toEqual('1')
     expect(wrapper.vm.root.totalCount).toEqual(6)
   })
 
-  it('should querying on date on click on facet link, by a route redirect', async () => {
+  it('should fire 2 events on click on facet link', async () => {
     wrapper = mount(FacetText, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'indexing-date' }) } })
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+    const spyRefreshRoute = jest.spyOn(wrapper.vm.root, 'refreshRoute')
+
     await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-04-04T20:20:20.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-05-05T02:00:42.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-05-05T20:10:00.001Z')).commit()
@@ -297,16 +302,12 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('doc_06.txt').withIndexingDate('2018-07-07T16:16:16.001Z')).commit()
 
     await wrapper.vm.root.aggregate()
+    wrapper.find('.facet__items__item .custom-checkbox:nth-child(2) input').trigger('click')
 
-    const spyRefreshRoute = jest.spyOn(wrapper.vm.root, 'refreshRoute')
-    expect(spyRefreshRoute).not.toBeCalled()
-
-    wrapper.find('.list-group-item:nth-child(3) > a').trigger('click')
-
+    expect(wrapper.emitted('add-facet-values')).toHaveLength(1)
+    expect(rootWrapper.emitted('facet::add-facet-values')).toHaveLength(1)
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(1)
-    expect(wrapper.vm.$store.getters['search/toRouteQuery']).toEqual({ index: process.env.VUE_APP_ES_INDEX, q: '*', size: 25, sort: 'relevance', 'f[indexing-date]': [ new Date('2018-05-01T00:00:00.000Z').getTime() ] })
-    expect(wrapper.vm.root.totalCount).toEqual(6)
   })
 
   it('should return facets from another index', async () => {
@@ -315,13 +316,13 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('docs/bar.js').toIndex(process.env.VUE_APP_ES_ANOTHER_INDEX).withContentType('text/javascript')).commit()
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(2)
 
     store.commit('search/index', process.env.VUE_APP_ES_ANOTHER_INDEX)
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
     expect(wrapper.vm.root.totalCount).toEqual(1)
   })
 
@@ -331,14 +332,17 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
-    expect(wrapper.findAll('.facet__items__item__label').at(0).text()).toEqual('All')
-    expect(wrapper.findAll('.facet__items__item__count').at(0).text()).toEqual('2')
-    expect(wrapper.findAll('.facet__items__item').at(0).classes()).toContain('facet__items__item--active')
+    expect(wrapper.findAll('.facet__items__all')).toHaveLength(1)
+    expect(wrapper.find('.facet__items__all .facet__items__item__label').text()).toEqual('All')
+    expect(wrapper.findAll('.facet__items__all .facet__items__item__count').at(0).text()).toEqual('2')
+    expect(wrapper.find('.facet__items__all .custom-control-input').element.checked).toBeTruthy()
     expect(wrapper.vm.root.totalCount).toEqual(2)
   })
 
-  it('should trigger a click on "All" item and refresh the route', async () => {
+  it('should trigger a click on "All" item, fire 2 events, unselect others items and refresh the route', async () => {
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+    const spyRefreshRoute = jest.spyOn(wrapper.vm.root, 'refreshRoute')
+
     await letData(es).have(new IndexedDocument('index_01.txt').withContent('Lorem').withContentType('text/type_01')).commit()
     await letData(es).have(new IndexedDocument('index_02.txt').withContent('Lorem').withContentType('text/type_02')).commit()
     await letData(es).have(new IndexedDocument('index_03.txt').withContent('Lorem').withContentType('text/type_02')).commit()
@@ -347,20 +351,13 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('index_06.txt').withContent('Lorem').withContentType('text/type_03')).commit()
 
     await wrapper.vm.root.aggregate()
+    wrapper.find('.facet__items__item .custom-checkbox:nth-child(2) input').trigger('click')
+    wrapper.find('.facet__items__all input').trigger('click')
 
-    const spyRefreshRoute = jest.spyOn(wrapper.vm.root, 'refreshRoute')
-    expect(spyRefreshRoute).not.toBeCalled()
-
-    wrapper.find('.list-group-item:nth-child(3) > a').trigger('click')
-
-    expect(spyRefreshRoute).toBeCalled()
-    expect(spyRefreshRoute).toBeCalledTimes(1)
-    expect(wrapper.vm.$store.getters['search/toRouteQuery']).toEqual({ index: process.env.VUE_APP_ES_INDEX, q: '*', size: 25, sort: 'relevance', 'f[content-type]': [ 'text/type_03' ] })
-
-    wrapper.findAll('.list-group-item > a').at(0).trigger('click')
-
+    expect(wrapper.emitted('add-facet-values')).toHaveLength(2)
+    expect(rootWrapper.emitted('facet::add-facet-values')).toHaveLength(2)
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(2)
-    expect(wrapper.vm.$store.getters['search/toRouteQuery']).toEqual({ index: process.env.VUE_APP_ES_INDEX, q: '*', size: 25, sort: 'relevance' })
+    expect(wrapper.vm.root.selected).toHaveLength(0)
   })
 })

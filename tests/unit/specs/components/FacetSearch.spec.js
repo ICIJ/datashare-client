@@ -46,7 +46,7 @@ describe('FacetSearch.vue', () => {
 
     await wrapper.vm.search()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
   })
 
   it('should paginate 4 items on 2 pages', async () => {
@@ -58,11 +58,11 @@ describe('FacetSearch.vue', () => {
 
     await wrapper.vm.search()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
 
     await wrapper.vm.next()
 
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(5)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(4)
   })
 
   it('should paginate 10 items on 10 pages', async () => {
@@ -71,25 +71,25 @@ describe('FacetSearch.vue', () => {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
     await wrapper.vm.search()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(4)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(3)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(5)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(4)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(6)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(7)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(6)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(8)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(7)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(9)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(8)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(10)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(9)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(11)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
   })
 
   it('should paginate 10 items on 2 pages, and start over', async () => {
@@ -98,13 +98,13 @@ describe('FacetSearch.vue', () => {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
     await wrapper.vm.search()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(6)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(11)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
     await wrapper.vm.search(true)
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(6)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
     await wrapper.vm.next()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(11)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
   })
 
   it('should create query tokens', async () => {
@@ -123,15 +123,15 @@ describe('FacetSearch.vue', () => {
 
     wrapper.vm.facetQuery = ''
     await wrapper.vm.search()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(9)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(8)
 
     wrapper.vm.facetQuery = 'doc'
     await wrapper.vm.search()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(3)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
 
     wrapper.vm.facetQuery = 'pdf'
     await wrapper.vm.search()
-    expect(wrapper.findAll('.facet__items__item').length).toEqual(2)
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
   })
 
   it('should trigger a search when value of facetQuery changes', async () => {
@@ -151,7 +151,7 @@ describe('FacetSearch.vue', () => {
 
     await wrapper.find('.facet__items__item__menu .dropdown-item:first-child').trigger('click')
 
-    expect(mockCallback.mock.calls.length).toEqual(1)
+    expect(mockCallback.mock.calls).toHaveLength(1)
   })
 
   it('should call the search function after a named entity deletion', async () => {

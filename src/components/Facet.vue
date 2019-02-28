@@ -10,7 +10,11 @@
         </span>
         <h6 @click="toggleItems" class="text-nowrap">
           <font-awesome-icon :icon="headerIcon" />
-          {{ $t('facet.' + facet.name) }}
+          <template>
+            <slot name="title">
+              {{ $t('facet.' + facet.name) }}
+            </slot>
+          </template>
         </h6>
       </div>
     </slot>
@@ -28,31 +32,11 @@
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
       </div>
-      <slot v-else name="items" :items="items" :facetQuery="facetQuery">
-        <div class="list-group-item facet__items__item p-0 border-0" :class="{ 'facet__items__item--active': !hasValues() }" v-if="items.length">
-          <slot name="all" :total-count="totalCount" :first-item="items[0]">
-            <a href @click.prevent="resetValues()" class="py-2 px-3">
-              <span class="badge badge-pill badge-light float-right facet__items__item__count">
-                {{ totalCount }}
-              </span>
-              <span class="facet__items__item__label">
-                {{ $t('facet.all') }}
-              </span>
-            </a>
-          </slot>
-        </div>
-        <div class="list-group-item facet__items__item p-0 border-0" v-for="(item, index) in items" :key="index" :class="{ 'facet__items__item--active': hasValue(item) }">
-          <slot name="item" :item="item">
-            <a href @click.prevent="toggleValue(item)" class="py-2 px-3">
-              <span class="badge badge-pill badge-light float-right facet__items__item__count">
-                {{ item.doc_count || 0 }}
-              </span>
-              <span class="facet__items__item__label">
-                {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
-              </span>
-            </a>
-          </slot>
-        </div>
+      <slot v-else-if="items.length > 0" name="items" :items="items" :total-count="totalCount" :facetQuery="facetQuery">
+        <b-form-checkbox v-model="isAllSelected" @change="resetFacetValues" class="facet__items__all">
+          <span v-html="getItemLabel({ key: $t('facet.all'), key_as_string: $t('facet.all'), doc_count: totalCount })"></span>
+        </b-form-checkbox>
+        <b-form-checkbox-group stacked v-model="selected" :options="options" class="list-group-item facet__items__item p-0 border-0" @input="changeSelectedValues" />
       </slot>
       <div class="list-group-item facet__items__display" @click="asyncFacetSearch" v-if="shouldDisplayShowMoreAction()">
         <span>{{ $t('facet.showMore') }}</span>
@@ -99,8 +83,7 @@ export default {
       collapseItems: false,
       isReady: !!this.asyncItems,
       queue: new PQueue({ concurrency: 1 }),
-      results: [],
-      totalCount: 0
+      results: []
     }
   },
   watch: {
@@ -115,6 +98,9 @@ export default {
       // Watch change on the facet store the restart aggregation
       this.$store.watch(this.watchedForUpdate, this.aggregateWithLoading, { deep: true })
     }
+  },
+  mounted () {
+    this.selectedValuesFromStore()
   },
   computed: {
     items () {
@@ -147,8 +133,8 @@ export default {
     },
     aggregate () {
       if (this.facet) {
-        let prefix = this.facet.prefix ? this.config.dataDir + '/' : ''
-        let options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : {}
+        const prefix = this.facet.prefix ? this.config.dataDir + '/' : ''
+        const options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : {}
         return this.queue.add(() => {
           return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options }).then(r => {
             this.totalCount = get(r, `aggregations.${this.facet.key}.sum_other_doc_count`, 0) + sumBy(get(r, this.resultPath, []), 'doc_count')
@@ -182,38 +168,22 @@ export default {
 <style lang="scss">
   .facet {
 
-    &__items {
+    .custom-checkbox {
+      display: block;
+      margin: 0.5rem;
 
-      &__item {
-        border: 0;
-        position: relative;
+      label {
+        display: block;
+      }
 
-        &--active {
+      input:checked + label {
+        font-weight: bold;
+      }
+    }
 
-          &:before {
-            content: "";
-            background: $secondary;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            width: 3px;
-            box-shadow: 0 0 10px 0 $secondary;
-          }
-
-          .facet--reversed & {
-            text-decoration: line-through;
-
-            &:before {
-              background: $body-color;
-              box-shadow: 0 0 10px 0 $body-color;
-            }
-          }
-        }
-
-        & > a {
-          display: block;
-        }
+    &.facet--reversed {
+      input:checked + label {
+        text-decoration: line-through;
       }
     }
   }

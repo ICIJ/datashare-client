@@ -55,15 +55,15 @@ describe('FacetNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('docs/naz.txt').withContent('this is a naz document').withNer('naz')).commit()
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item__description').at(1).text()).toEqual('one occurrence in one doc')
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__description').at(0).text()).toEqual('one occurrence in one doc')
   })
 
   it('should display 2 named entities in one document', async () => {
     await letData(es).have(new IndexedDocument('docs/qux.txt').withContent('this is a document').withNer('qux').withNer('foo')).commit()
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
   })
 
   it('should display 1 named entity in 2 documents', async () => {
@@ -72,8 +72,8 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item__description').at(1).text()).toEqual('3 occurrences in 2 docs')
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__description').at(0).text()).toEqual('3 occurrences in 2 docs')
   })
 
   it('should display 3 named entities in 2 documents in correct order', async () => {
@@ -83,10 +83,10 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
-    expect(wrapper.findAll('.facet__items__item__body__key').at(1).text()).toEqual('NER1')
-    expect(wrapper.findAll('.facet__items__item__body__key').at(2).text()).toEqual('NER2')
-    expect(wrapper.findAll('.facet__items__item__body__key').at(3).text()).toEqual('NER3')
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(0).text()).toEqual('NER1')
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(1).text()).toEqual('NER2')
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(2).text()).toEqual('NER3')
   })
 
   it('should not display the "Show more" button', async () => {
@@ -142,7 +142,7 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(5)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
   })
 
   it('should filter on named entity facet and return only 1 document', async () => {
@@ -154,7 +154,7 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
   })
 
   it('should display the dropdown menu', async () => {
@@ -201,7 +201,7 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
   })
 
   it('should filter results according to the path facet search', async () => {
@@ -214,7 +214,7 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
   })
 
   it('should filter results according to the date facet search', async () => {
@@ -227,12 +227,13 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
   })
 
   it('should filter results according to the content type reverse facet search', async () => {
     await letData(es).have(new IndexedDocument('index_01.pdf').withContent('PDF content').withContentType('application/pdf').withNer('pdf')).commit()
     await letData(es).have(new IndexedDocument('index_02.csv').withContent('CSV content').withContentType('text/csv').withNer('csv')).commit()
+    await letData(es).have(new IndexedDocument('index_03.txt').withContent('Text content').withContentType('text/plain').withNer('text')).commit()
 
     let contentTypeFacet = find(store.state.search.facets, { name: 'content-type' })
     contentTypeFacet.value = ['application/pdf']
@@ -242,7 +243,8 @@ describe('FacetNamedEntity.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item__body__key').at(1).text()).toContain('csv')
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(0).text()).toContain('csv')
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(1).text()).toContain('text')
   })
 
   it('should display the named entities containing the query string, and those linked to documents containing the query string', async () => {
@@ -254,9 +256,9 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
-    expect(wrapper.findAll('.facet__items__item__body__key').at(1).text()).toContain('NER')
-    expect(wrapper.findAll('.facet__items__item__body__key').at(2).text()).toContain('tax')
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(0).text()).toContain('NER')
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(1).text()).toContain('tax')
   })
 
   it('should filter results according to the named entity facet search', async () => {
@@ -270,8 +272,8 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item').at(1).text()).toContain('pdf')
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__item').at(0).text()).toContain('pdf')
   })
 
   it('should display the only named-entity-person selected', async () => {
@@ -300,8 +302,8 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item').at(1).text()).toContain('person_02')
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__item').at(0).text()).toContain('person_02')
   })
 
   it('should filter results of named-entity-person according to the named-entity-organization selected', async () => {
@@ -330,10 +332,10 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
-    expect(wrapper.findAll('.facet__items__item').at(1).text()).toContain('person_02')
-    expect(wrapper.findAll('.facet__items__item').at(2).text()).toContain('person_03')
-    expect(wrapper.findAll('.facet__items__item').at(3).text()).toContain('person_04')
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
+    expect(wrapper.findAll('.facet__items__item').at(0).text()).toContain('person_02')
+    expect(wrapper.findAll('.facet__items__item').at(1).text()).toContain('person_03')
+    expect(wrapper.findAll('.facet__items__item').at(2).text()).toContain('person_04')
   })
 
   it('should prepend a selected and inverted Named Entity in the results, and remove it from the rest of the results', async () => {
@@ -347,11 +349,9 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
-    expect(wrapper.findAll('.facet__items__item').at(1).text()).toContain('person_01')
-    expect(wrapper.findAll('.facet__items__item').at(1).classes()).toContain('facet__items__item--active')
-    expect(wrapper.findAll('.facet__items__item').at(2).text()).toContain('person_02')
-    expect(wrapper.findAll('.facet__items__item').at(2).classes()).not.toContain('facet__items__item--active')
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(0).text()).toBe('person_01')
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(1).text()).toBe('person_02')
   })
 
   it('should filter facets results on 2 named entities from different categories', async () => {
@@ -374,7 +374,7 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
   })
 
   it('should display the correct number of occurrences if named entity facet is inverted', async () => {
@@ -394,8 +394,8 @@ describe('FacetNamedEntity.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__description').at(1).text()).toContain('one occurrence in one doc')
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__description').at(0).text()).toContain('one occurrence in one doc')
   })
 
   it('should display an "All" item on top of others items, and this item should be active by default', async () => {
@@ -404,9 +404,9 @@ describe('FacetNamedEntity.vue', () => {
     await wrapper.vm.root.aggregate()
     await store.dispatch('search/query', '*')
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item').at(0).classes()).toContain('facet__items__item--active')
-    expect(wrapper.findAll('.facet__items__item__body__key').at(0).text()).toEqual('All')
-    expect(wrapper.findAll('.facet__items__item__description').at(0).text()).toEqual('one occurrence in one doc')
+    expect(wrapper.findAll('.facet__items__all')).toHaveLength(1)
+    expect(wrapper.find('.facet__items__all .custom-control-input').element.checked).toBeTruthy()
+    expect(wrapper.findAll('.facet__items__all .facet__items__item__body__key').at(0).text()).toEqual('All')
+    expect(wrapper.findAll('.facet__items__all .facet__items__item__description').at(0).text()).toEqual('one occurrence in one doc')
   })
 })

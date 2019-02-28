@@ -152,6 +152,15 @@ export const mutations = {
       throw new Error(`cannot find facet named ${facet.name}`)
     }
   },
+  addFacetValues (state, { facet, values }) {
+    // Look for existing facet for this name
+    const existingFacet = find(state.facets, { name: facet.name })
+    if (existingFacet) {
+      existingFacet.values = values
+    } else {
+      throw new Error(`cannot find facet named ${facet.name}`)
+    }
+  },
   clear (state) {
     return state.facets.splice(0, state.facets.length)
   },
@@ -186,7 +195,7 @@ export const mutations = {
 }
 
 export const actions = {
-  reset ({ commit, dispatch }, name) {
+  reset ({ commit, dispatch }) {
     commit('reset')
     return dispatch('query')
   },

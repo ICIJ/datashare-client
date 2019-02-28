@@ -10,7 +10,7 @@
     </form>
     <div v-show="items.length" class="mt-4 facet-search__items card"
          v-infinite-scroll="next" infinite-scroll-disabled="reachTheEnd">
-      <component class="border-0" :is="facet.component" :async-items="items"
+      <component class="border-0" :is="facet.component" :async-items="items" @add-facet-values="onAddedFacetValues"
                  hide-search hide-header hide-show-more v-bind="{ facet }"></component>
     </div>
     <div v-show="!items.length" class="text-muted text-center p-2 mt-4">
@@ -80,7 +80,7 @@ export default {
       // We queue the promises to ensure they are executed in the right order
       return this.queue.add(() => {
         // Load the facet using a body build using the facet configuration
-        let options = { size: this.size, include: `.*(${this.queryTokens.join('|')}).*` }
+        const options = { size: this.size, include: `.*(${this.queryTokens.join('|')}).*` }
         return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options }).then(data => {
           // Extract the slice we need for this page (if any)
           const all = get(data, this.resultPath, [])
@@ -102,6 +102,9 @@ export default {
     next () {
       this.offset += this.pageSize
       return this.search(false)
+    },
+    onAddedFacetValues (component) {
+      EventBus.$emit('facet::search::add-facet-values', component)
     }
   },
   computed: {
