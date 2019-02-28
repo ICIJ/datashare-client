@@ -30,7 +30,7 @@ describe('IndexSelector.vue', () => {
   })
 
   it('should select the local index as default selected index', () => {
-    expect(wrapper.vm.selected).toBe('first-index')
+    expect(wrapper.vm.selectedIndex).toBe('first-index')
   })
 
   it('should display a dropdown containing 2 indices', async () => {

@@ -57,15 +57,15 @@ class FacetText {
     if (this.hasValues()) {
       if (this.reverse) {
         if (this.isNamedEntityAggregation(body)) {
-          return this.addParentExcludeFilter(body, {name: this.name, values: this.values, reverse: this.reverse})
+          return this.addParentExcludeFilter(body, { name: this.name, values: this.values, reverse: this.reverse })
         } else {
-          return this.addChildExcludeFilter(body, {name: this.name, values: this.values, reverse: this.reverse})
+          return this.addChildExcludeFilter(body, { name: this.name, values: this.values, reverse: this.reverse })
         }
       } else {
         if (this.isNamedEntityAggregation(body)) {
-          return this.addParentIncludeFilter(body, {name: this.name, values: this.values, reverse: this.reverse})
+          return this.addParentIncludeFilter(body, { name: this.name, values: this.values, reverse: this.reverse })
         } else {
-          return this.addChildIncludeFilter(body, {name: this.name, values: this.values, reverse: this.reverse})
+          return this.addChildIncludeFilter(body, { name: this.name, values: this.values, reverse: this.reverse })
         }
       }
     }
@@ -214,7 +214,7 @@ class FacetNamedEntity extends FacetType {
       .filter('term', 'category', this.category)
       .agg('terms', 'mentionNorm', this.key, {
         size: 50,
-        order: [ {'byDocs': 'desc'}, {'_count': 'desc'} ],
+        order: [ { 'byDocs': 'desc' }, { '_count': 'desc' } ],
         ...options
       }, sub => {
         return sub

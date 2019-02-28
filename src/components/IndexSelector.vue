@@ -1,5 +1,5 @@
 <template>
-  <div class="facet card facet--hide-show-more facet--hide-search" v-if="options.length > 1">
+  <div class="facet card facet--hide-show-more facet--hide-search" v-if="indices.length > 1">
     <div class="card-header">
       <h6 @click="toggleItems">
         <font-awesome-icon :icon="headerIcon" />
@@ -7,7 +7,7 @@
       </h6>
     </div>
     <div class="list-group list-group-flush facet__items" v-if="!collapseItems">
-      <b-form-select :options="options" v-model="selected" class="border-0" @change="select" />
+      <b-form-select :options="indices" v-model="selectedIndex" class="border-0" @change="select" />
     </div>
   </div>
 </template>
@@ -21,12 +21,12 @@ export default {
   mixins: [facets],
   data () {
     return {
-      options: [],
+      indices: [],
       collapseItems: false
     }
   },
   computed: {
-    selected: {
+    selectedIndex: {
       get: function () {
         return this.$store.state.search.index
       },
@@ -39,7 +39,7 @@ export default {
     }
   },
   created () {
-    this.options = map(this.config.userIndices, index => { return { value: index, text: index } })
+    this.indices = map(this.config.userIndices, index => { return { value: index, text: index } })
   },
   methods: {
     select (value) {

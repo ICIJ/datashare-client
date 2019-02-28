@@ -91,12 +91,13 @@ export function datasharePlugin (Client, config, components) {
       index: index,
       type: 'doc',
       body: this._buildBody(from, size, facets, query, sort).build()
-    }).then(function (data) {
-      return data
-    }, error => {
-      EventBus.$emit('http::error', error)
-      throw error
-    })
+    }).then(
+      data => data,
+      error => {
+        EventBus.$emit('http::error', error)
+        throw error
+      }
+    )
   }
 
   Client.prototype.searchFacet = function (index, facet, query, facets = [], isGlobalSearch = false, options = {}) {
@@ -109,11 +110,13 @@ export function datasharePlugin (Client, config, components) {
       index: index,
       type: 'doc',
       body: body.size(0).build()
-    }).then(data => data,
+    }).then(
+      data => data,
       error => {
         EventBus.$emit('http::error', error)
         throw error
-      })
+      }
+    )
   }
 
   Client.prototype._buildBody = function (from, size, facets, query, sort) {
