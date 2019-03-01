@@ -69,10 +69,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', {
-      facets: state => state.facets,
-      showFilters: state => state.showFilters
-    })
+    ...mapState('search', ['facets', 'showFilters'])
   },
   methods: {
     asyncFacetSearch (selectedFacet, facetQuery) {

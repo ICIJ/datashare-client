@@ -188,9 +188,9 @@ export default {
   },
   computed: {
     ...mapState('document', {
-      document: state => state.doc,
-      namedEntities: state => state.namedEntities,
-      parentDocument: state => state.parentDoc
+      document: 'doc',
+      namedEntities: 'namedEntities',
+      parentDocument: 'parentDoc'
     }),
     getFullUrl () {
       return DatashareClient.getFullUrl(this.document.url)

@@ -86,7 +86,7 @@ export default {
   name: 'indexing',
   components: { ExtractingForm, FindNamedEntitiesForm, bModal },
   computed: {
-    ...mapState('indexing', { tasks: state => state.tasks }),
+    ...mapState('indexing', ['tasks']),
     isPendingTasks () {
       return filter(this.tasks, { state: 'RUNNING' }).length !== 0
     },
