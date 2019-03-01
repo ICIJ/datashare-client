@@ -1,5 +1,3 @@
-import { EventBus } from '@/utils/event-bus'
-import DatashareClient from '@/api/DatashareClient'
 import camelCase from 'lodash/camelCase'
 import find from 'lodash/find'
 import flatten from 'lodash/flatten'
@@ -8,8 +6,6 @@ import map from 'lodash/map'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
-
-const datashare = new DatashareClient()
 
 export const mixin = {
   props: {
@@ -102,13 +98,13 @@ export const mixin = {
     hasValue (item) {
       return this.$store.getters['search/hasFacetValue'](this.facet.itemParam(item))
     },
+    removeValue (item) {
+      this.$store.commit('search/removeFacetValue', this.facet.itemParam(item))
+      this.refreshRoute()
+    },
     addValue (item) {
       this.isAllSelected = false
       this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
-      this.refreshRoute()
-    },
-    removeValue (item) {
-      this.$store.commit('search/removeFacetValue', this.facet.itemParam(item))
       this.refreshRoute()
     },
     toggleValue (item) {
@@ -124,19 +120,10 @@ export const mixin = {
     isReversed () {
       return this.$store.getters['search/isFacetReversed'](this.facet.name)
     },
-    resetValues () {
-      this.$store.commit('search/resetFacetValues', this.facet.name)
-      this.refreshRoute()
-    },
     refreshRoute () {
       this.$router.push({
         name: 'search',
         query: this.$store.getters['search/toRouteQuery']
-      })
-    },
-    deleteNamedEntitiesByMentionNorm (mentionNorm) {
-      return datashare.deleteNamedEntitiesByMentionNorm(mentionNorm).then(resp => {
-        EventBus.$emit('facet::hide::named-entities')
       })
     },
     escapeRegExp (str) {

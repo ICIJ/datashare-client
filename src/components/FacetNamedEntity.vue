@@ -35,7 +35,10 @@ import Facet from '@/components/Facet'
 import facets from '@/mixins/facets'
 import ner from '@/mixins/ner'
 import { EventBus } from '@/utils/event-bus'
+import DatashareClient from '@/api/DatashareClient'
 import get from 'lodash/get'
+
+const datashare = new DatashareClient()
 
 export default {
   name: 'FacetNamedEntity',
@@ -43,7 +46,6 @@ export default {
   mixins: [facets, ner],
   data () {
     return {
-      isAllNamedEntitySelected: true,
       selected: {}
     }
   },
@@ -73,9 +75,15 @@ export default {
       if (this.isAllSelected) {
         evt.preventDefault()
       } else {
-        this.resetValues()
-        this.resetFacetValues()
+        this.selected = {}
+        this.$store.commit('search/resetFacetValues', this.facet.name)
+        this.refreshRoute()
       }
+    },
+    deleteNamedEntitiesByMentionNorm (mentionNorm) {
+      return datashare.deleteNamedEntitiesByMentionNorm(mentionNorm).then(() => {
+        EventBus.$emit('facet::hide::named-entities')
+      })
     }
   },
   mounted () {
@@ -85,32 +93,10 @@ export default {
 </script>
 
 <style lang="scss">
-  .facet--named-entity .facet__items__category {
-    font-weight: 800;
-  }
-
   .facet--named-entity .facet__items__item {
-
-    .row {
-      flex-wrap: nowrap;
-      align-items: stretch;
-      align-content: stretch;
-      width: 100%;
-    }
 
     &:hover .facet__items__item__menu {
       visibility: visible;
-    }
-
-    &__icon {
-      font-size: 1.5em;
-
-      svg {
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-      }
     }
 
     &__body {
