@@ -8,7 +8,7 @@ You need [Yarn](https://yarnpkg.com/lang/en/docs/install/) installed on your mac
 
 Vue CLI requires Node.js version 8.9 or above (8.11.0+ recommended) [[source](https://cli.vuejs.org/guide/installation.html)].
 
-Caution, node 8.11.3 causes a JS heap out of memory on `yarn build`. Use node 8.9.4 instead.
+Tested with Node.js LTS 10.15.2.
 
 
 ## Install
@@ -100,7 +100,7 @@ There is a shell script [launchBack.sh](https://github.com/ICIJ/datashare/blob/m
 After having compiled java code, you can launch the script with :
 
 ```
-$ ./launchBack -w -d /path/to/data
+$ ./launchBack -d /path/to/data
 ```
 
 - ***NOTE 1*** : `/path/to/data` must end with `data`
