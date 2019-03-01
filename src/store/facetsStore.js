@@ -1,8 +1,6 @@
 import Vue from 'vue'
 import includes from 'lodash/includes'
 import some from 'lodash/some'
-import split from 'lodash/split'
-import upperCase from 'lodash/upperCase'
 
 const levels = {
   '0': 'File on disk',
@@ -16,6 +14,12 @@ const levels = {
   '8': '8th level',
   '9': '9th level',
   '10': '10th level'
+}
+
+const namedEntityCategoryTranslation = {
+  'named-entity-person': 'PERSON',
+  'named-entity-organization': 'ORGANIZATION',
+  'named-entity-location': 'LOCATION'
 }
 
 class FacetText {
@@ -171,15 +175,18 @@ class FacetNamedEntity extends FacetType {
   }
 
   isSelfAffected (body) {
-    return includes(JSON.stringify(body.build()), '"term":{"category":"' + upperCase(split(this.name, '-')[2]) + '"}')
+    return includes(JSON.stringify(body.build()), '"term":{"category":"' + namedEntityCategoryTranslation[this.name] + '"}')
   }
 
   queryBuilder (body, param, func) {
     return body[func]('bool', b => {
-      b.orQuery('has_child', 'type', 'NamedEntity', { }, sub => {
+      b.orQuery('has_child', 'type', 'NamedEntity', {}, sub => {
         return sub.query('query_string', {
           default_field: 'mentionNorm',
           query: param.values.map(v => `(${v})`).join(' OR ')
+        }).query('query_string', {
+          default_field: 'category',
+          query: namedEntityCategoryTranslation[param.name]
         })
       })
 
@@ -233,4 +240,4 @@ class FacetIndex extends FacetText {
   }
 }
 
-export { FacetDate, FacetPath, FacetText, FacetNamedEntity, FacetIndex, levels }
+export { FacetDate, FacetPath, FacetText, FacetNamedEntity, FacetIndex, levels, namedEntityCategoryTranslation }

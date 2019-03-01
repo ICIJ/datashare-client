@@ -121,7 +121,7 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.find('.facet__items__display > span').text()).toEqual('Show more')
   })
 
-  it('should filter on named entity facet and return no documents', async () => {
+  it('should filter on named entity facet and return no items', async () => {
     await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER1 document').withNer('NER1', 1)).commit()
     await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER1 document').withNer('NER2', 2)).commit()
     await letData(es).have(new IndexedDocument('docs/doc3.txt').withContent('a NER1 document').withNer('NER3', 3)).commit()
@@ -133,7 +133,7 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(0)
   })
 
-  it('should filter on named entity facet and return all documents', async () => {
+  it('should filter on named entity facet and return all items', async () => {
     await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER1 document').withNer('NER1', 1)).commit()
     await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER1 document').withNer('NER2', 2)).commit()
     await letData(es).have(new IndexedDocument('docs/doc3.txt').withContent('a NER1 document').withNer('NER3', 3)).commit()
@@ -145,7 +145,7 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
   })
 
-  it('should filter on named entity facet and return only 1 document', async () => {
+  it('should filter on named entity facet and return only 1 item', async () => {
     await letData(es).have(new IndexedDocument('docs/doc1.txt').withContent('a NER1 document').withNer('NER1', 1)).commit()
     await letData(es).have(new IndexedDocument('docs/doc2.txt').withContent('a NER1 document').withNer('NER2', 2)).commit()
     await letData(es).have(new IndexedDocument('docs/doc3.txt').withContent('a NER1 document').withNer('NER3', 3)).commit()
@@ -191,11 +191,11 @@ describe('FacetNamedEntity.vue', () => {
     expect(spyAggregate).toBeCalledTimes(1)
   })
 
-  it('should filter results according to the content type facet search', async () => {
+  it('should filter items according to the content type facet search', async () => {
     await letData(es).have(new IndexedDocument('index_01.pdf').withContent('PDF content').withContentType('application/pdf').withNer('pdf')).commit()
     await letData(es).have(new IndexedDocument('index_02.csv').withContent('CSV content').withContentType('text/csv').withNer('csv')).commit()
 
-    let contentTypeFacet = find(store.state.search.facets, { name: 'content-type' })
+    const contentTypeFacet = find(store.state.search.facets, { name: 'content-type' })
     contentTypeFacet.value = ['application/pdf']
     store.commit('search/addFacetValue', contentTypeFacet)
 
@@ -204,11 +204,11 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
   })
 
-  it('should filter results according to the path facet search', async () => {
+  it('should filter items according to the path facet search', async () => {
     await letData(es).have(new IndexedDocument('/a/index_01.pdf').withContent('PDF content').withNer('pdf')).commit()
     await letData(es).have(new IndexedDocument('/b/index_02.csv').withContent('CSV content').withNer('csv')).commit()
 
-    let pathFacet = find(store.state.search.facets, { name: 'path' })
+    const pathFacet = find(store.state.search.facets, { name: 'path' })
     pathFacet.value = ['/a']
     store.commit('search/addFacetValue', pathFacet)
 
@@ -217,11 +217,11 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
   })
 
-  it('should filter results according to the date facet search', async () => {
+  it('should filter items according to the date facet search', async () => {
     await letData(es).have(new IndexedDocument('index_01.pdf').withContent('PDF content').withNer('pdf').withIndexingDate('2018-10-19T10:11:12.001Z')).commit()
     await letData(es).have(new IndexedDocument('index_02.csv').withContent('CSV content').withNer('csv').withIndexingDate('2018-09-19T10:11:12.001Z')).commit()
 
-    let dateFacet = find(store.state.search.facets, { name: 'indexing-date' })
+    const dateFacet = find(store.state.search.facets, { name: 'indexing-date' })
     dateFacet.value = [new Date('2018-09-01T00:00:00.000Z').getTime().toString()]
     store.commit('search/addFacetValue', dateFacet)
 
@@ -230,12 +230,12 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
   })
 
-  it('should filter results according to the content type reverse facet search', async () => {
+  it('should filter items according to the content type reverse facet search', async () => {
     await letData(es).have(new IndexedDocument('index_01.pdf').withContent('PDF content').withContentType('application/pdf').withNer('pdf')).commit()
     await letData(es).have(new IndexedDocument('index_02.csv').withContent('CSV content').withContentType('text/csv').withNer('csv')).commit()
     await letData(es).have(new IndexedDocument('index_03.txt').withContent('Text content').withContentType('text/plain').withNer('text')).commit()
 
-    let contentTypeFacet = find(store.state.search.facets, { name: 'content-type' })
+    const contentTypeFacet = find(store.state.search.facets, { name: 'content-type' })
     contentTypeFacet.value = ['application/pdf']
     store.commit('search/addFacetValue', contentTypeFacet)
     store.commit('search/toggleFacet', 'content-type')
@@ -261,12 +261,12 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(1).text()).toContain('tax')
   })
 
-  it('should filter results according to the named entity facet search', async () => {
+  it('should filter items according to the named entity facet search', async () => {
     await letData(es).have(new IndexedDocument('doc_01.pdf').withContent('PDF content').withNer('pdf')).commit()
     await letData(es).have(new IndexedDocument('doc_02.csv').withContent('CSV content').withNer('csv')).commit()
     await letData(es).have(new IndexedDocument('doc_03.csv').withContent('TXT content').withNer('txt')).commit()
 
-    let namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
     namedEntityFacet.value = ['pdf']
     store.commit('search/addFacetValue', namedEntityFacet)
 
@@ -296,7 +296,7 @@ describe('FacetNamedEntity.vue', () => {
       .withNer('organization_04', 1, 'ORGANIZATION')
     ).commit()
 
-    let namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
     namedEntityFacet.value = ['person_02']
     store.commit('search/addFacetValue', namedEntityFacet)
 
@@ -306,7 +306,7 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__item').at(0).text()).toContain('person_02')
   })
 
-  it('should filter results of named-entity-person according to the named-entity-organization selected', async () => {
+  it('should filter items of named-entity-person according to the named-entity-organization selected', async () => {
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('1st document')
       .withNer('person_01', 1, 'PERSON')
       .withNer('person_02', 1, 'PERSON')
@@ -326,7 +326,7 @@ describe('FacetNamedEntity.vue', () => {
       .withNer('organization_04', 1, 'ORGANIZATION')
     ).commit()
 
-    let namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-organization' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-organization' })
     namedEntityFacet.value = ['organization_03']
     store.commit('search/addFacetValue', namedEntityFacet)
 
@@ -338,11 +338,11 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__item').at(2).text()).toContain('person_04')
   })
 
-  it('should prepend a selected and inverted Named Entity in the results, and remove it from the rest of the results', async () => {
+  it('should prepend a selected and inverted Named Entity in the items, and remove it from the rest of the items', async () => {
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('document').withNer('person_01')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withContent('document').withNer('person_02')).commit()
 
-    let namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
     namedEntityFacet.value = ['person_01']
     store.commit('search/addFacetValue', namedEntityFacet)
     store.commit('search/toggleFacet', 'named-entity-person')
@@ -354,7 +354,7 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(1).text()).toBe('person_02')
   })
 
-  it('should filter facets results on 2 named entities from different categories', async () => {
+  it('should filter facets items on 2 named entities from different categories', async () => {
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('content')
       .withNer('person_01', 1, 'PERSON')
       .withNer('person_02', 1, 'PERSON')
@@ -387,7 +387,7 @@ describe('FacetNamedEntity.vue', () => {
       .withNer('organization_02', 1, 'ORGANIZATION')
     ).commit()
 
-    let namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-organization' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-organization' })
     namedEntityFacet.value = ['organization_01']
     store.commit('search/addFacetValue', namedEntityFacet)
     store.commit('search/toggleFacet', 'named-entity-organization')

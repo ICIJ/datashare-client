@@ -2,7 +2,7 @@ import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import types from '@/utils/types.json'
 import { capitalize } from '@/utils/strings'
-import { FacetDate, FacetNamedEntity, FacetPath, FacetText, levels } from '@/store/facetsStore'
+import { FacetDate, FacetNamedEntity, FacetPath, FacetText, levels, namedEntityCategoryTranslation } from '@/store/facetsStore'
 import castArray from 'lodash/castArray'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
@@ -25,9 +25,9 @@ export function initialState () {
         if (!item.key) return ''
         return capitalize(item.key.toString())
       }),
-      new FacetNamedEntity('named-entity-person', 'byMentions', true, 'PERSON'),
-      new FacetNamedEntity('named-entity-organization', 'byMentions', true, 'ORGANIZATION'),
-      new FacetNamedEntity('named-entity-location', 'byMentions', true, 'LOCATION'),
+      new FacetNamedEntity('named-entity-person', 'byMentions', true, namedEntityCategoryTranslation['named-entity-person']),
+      new FacetNamedEntity('named-entity-organization', 'byMentions', true, namedEntityCategoryTranslation['named-entity-organization']),
+      new FacetNamedEntity('named-entity-location', 'byMentions', true, namedEntityCategoryTranslation['named-entity-location']),
       new FacetPath('path', 'byDirname', false),
       new FacetDate('indexing-date', 'extractionDate', false, item => item.key_as_string),
       new FacetText('extraction-level', 'extractionLevel', false, item => get(levels, item.key, item.key))

@@ -11,6 +11,7 @@ import store from '@/store'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Search from '@/components/Search'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
+import find from 'lodash/find'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -154,5 +155,19 @@ describe('Search.vue', () => {
     expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('4 - 4')
     expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 4 documents found')
     expect(wrapper.findAll('.search-results-item').length).toEqual(1)
+  })
+
+  it('should display only the document who has a NE person Paris', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('first document').withNer('paris', 1, 'LOCATION')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('second document').withNer('paris', 1, 'PERSON')).commit()
+
+    store.commit('search/reset')
+    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    namedEntityFacet.value = ['paris']
+    store.commit('search/addFacetValue', namedEntityFacet)
+    await wrapper.vm.search('*')
+
+    expect(wrapper.findAll('.search-results-item').length).toEqual(1)
+    expect(wrapper.findAll('.search-results-item .search-results-item__basename').at(0).text()).toEqual('doc_02.txt')
   })
 })
