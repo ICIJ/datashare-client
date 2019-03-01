@@ -19,7 +19,7 @@ const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 describe('SpreadsheetViewer.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
-  let httpServer = null
+  let httpServer
 
   beforeAll(() => {
     httpServer = createServer({ root: 'tests/unit/resources' })

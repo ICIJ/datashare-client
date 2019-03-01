@@ -59,7 +59,7 @@ export default {
       return this.loadPdf().then(pdf => {
         return this.renderPage(pdf, p).then(canvas => {
           if (this.doc.pages.length === 0) {
-            this.doc.pages = new Array(pdf.pdfInfo.numPages)
+            this.doc.pages = new Array(pdf.numPages)
           }
           this.doc.active = p
           this.$set(this.doc.pages, p - 1, canvas.toDataURL())
@@ -89,7 +89,7 @@ export default {
         canvas.height = viewport.height
         canvas.width = viewport.width
 
-        const renderContext = {canvasContext, viewport}
+        const renderContext = { canvasContext, viewport }
         return page.render(renderContext).then(() => canvas)
       })
     }
