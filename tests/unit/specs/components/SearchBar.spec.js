@@ -17,7 +17,7 @@ describe('SearchBar.vue', function () {
   let wrapper
 
   beforeEach(() => {
-    store.commit('search/clear')
+    store.commit('search/reset')
     wrapper = shallowMount(SearchBar, { localVue, i18n, router, store })
   })
 

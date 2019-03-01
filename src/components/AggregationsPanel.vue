@@ -1,8 +1,17 @@
 <template>
-  <div class="aggregations-panel">
+  <div class="aggregations-panel" v-show="showFilters">
     <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
       <facet-search :facet="selectedFacet" :query="facetQuery" />
     </b-modal>
+    <div class="mx-3 mt-2 mb-n2 small">
+      <ul class="nav">
+        <li class="nav-item">
+          <a class="nav-link p-0" href @click.prevent="clickOnHideFilters()">
+            {{ $t('search.hideFilters') }}
+          </a>
+        </li>
+      </ul>
+    </div>
     <index-selector />
     <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
   </div>
@@ -61,7 +70,8 @@ export default {
   },
   computed: {
     ...mapState('search', {
-      facets: state => state.facets
+      facets: state => state.facets,
+      showFilters: state => state.showFilters
     })
   },
   methods: {
@@ -90,6 +100,9 @@ export default {
           facet.root.resetFacetValues()
         }
       })
+    },
+    clickOnHideFilters () {
+      this.$store.commit('search/toggleFilters')
     }
   }
 }

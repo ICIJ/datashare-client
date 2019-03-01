@@ -6,6 +6,7 @@ import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
+import omit from 'lodash/omit'
 
 describe('Search store', () => {
   esConnectionHelper()
@@ -29,13 +30,13 @@ describe('Search store', () => {
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
+    store.commit('search/toggleFilters')
     store.dispatch('search/reset')
 
-    expect(store.state.search.query).toEqual(initialState.query)
-    expect(store.state.search.size).toEqual(initialState.size)
-    expect(store.state.search.sort).toEqual(initialState.sort)
-    expect(find(store.state.search.facets, { name: 'content-type' }).values).toEqual([])
+    expect(omit(store.state.search, ['index', 'isReady', 'facets'])).toEqual(omit(initialState, ['index', 'isReady', 'facets']))
     expect(store.state.search.index).toEqual('another-index')
+    expect(store.state.search.isReady).toEqual(false)
+    expect(find(store.state.search.facets, { name: 'content-type' }).values).toEqual([])
   })
 
   it('should change the state after `query` mutation', () => {
@@ -352,5 +353,11 @@ describe('Search store', () => {
 
     await store.dispatch('search/resetFacetValues', 'content-type')
     expect(store.getters['search/findFacet']('content-type').values).toHaveLength(0)
+  })
+
+  it('should change the state after `toggleFilters` mutation', () => {
+    const showFilters = store.state.search.showFilters
+    store.commit('search/toggleFilters')
+    expect(store.state.search.showFilters).toEqual(!showFilters)
   })
 })

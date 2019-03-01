@@ -2,9 +2,7 @@
   <div class="search" :class="{ 'search--show-document': showDocument }">
     <div class="container-fluid px-0 search__body">
       <div class="row no-gutters">
-        <div class="col search__body__aggregations-panel">
-          <aggregations-panel />
-        </div>
+        <aggregations-panel class="col search__body__aggregations-panel" />
         <div class="col search__body__search-results">
           <search-results v-if="isReady" :response="searchResponse" :query.sync="query" />
           <div v-else>
@@ -55,9 +53,9 @@ export default {
   },
   computed: {
     ...mapState('search', {
-      query: state => state.query,
-      searchResponse: state => state.response,
-      isReady: state => state.isReady
+      query: 'query',
+      searchResponse: 'response',
+      isReady: 'isReady'
     }),
     searchQuery () {
       return this.$store.getters['search/toRouteQuery']

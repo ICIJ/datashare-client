@@ -1,5 +1,10 @@
 <template>
   <div class="search-results">
+    <div class="search-results__menu" v-show="!showFilters">
+      <a class="nav-link small" href @click.prevent="clickOnShowFilters()">
+        {{ $t('search.showFilters') }}
+      </a>
+    </div>
     <div v-if="query && response.hits.length > 0">
       <search-results-header :response="response" :position="'top'" />
       <div class="search-results__items">
@@ -29,7 +34,22 @@ import ResetFiltersButton from '@/components/ResetFiltersButton'
 export default {
   name: 'SearchResults',
   props: ['response', 'query'],
-  components: { SearchResultsHeader, SearchResultsItem, ResetFiltersButton }
+  components: { SearchResultsHeader, SearchResultsItem, ResetFiltersButton },
+  computed: {
+    showFilters: {
+      get () {
+        return this.$store.state.search.showFilters
+      },
+      set () {
+        this.$store.commit('search/toggleFilters')
+      }
+    }
+  },
+  methods: {
+    clickOnShowFilters () {
+      this.showFilters = !this.showFilters
+    }
+  }
 }
 </script>
 

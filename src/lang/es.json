@@ -14,6 +14,8 @@
     "placeholder": "Buscar en documentos...",
     "buttonlabel": "Buscar",
     "search-in": "Buscar en",
+    "hideFilters": "Ocultar los filtros",
+    "showFilters": "Mostrar los filtros",
     "settings": {
       "title": "Configuración de búsqueda",
       "contextualize": "Contextualizar los resultados de búsqueda con las facetas:",

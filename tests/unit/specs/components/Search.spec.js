@@ -35,7 +35,7 @@ describe('Search.vue', () => {
 
   beforeEach(() => {
     wrapper = mount(Search, { localVue, i18n, router, store })
-    store.commit('search/clear')
+    store.commit('search/reset')
   })
 
   it('should display no documents found', async () => {
@@ -169,5 +169,26 @@ describe('Search.vue', () => {
 
     expect(wrapper.findAll('.search-results-item').length).toEqual(1)
     expect(wrapper.findAll('.search-results-item .search-results-item__basename').at(0).text()).toEqual('doc_02.txt')
+  })
+
+  it('should hide the `Show filters` menu by default', async () => {
+    await wrapper.vm.search('*')
+
+    expect(wrapper.find('.search-results .search-results__menu').isVisible()).toBeFalsy()
+  })
+
+  it('should show the `Show filters` menu', async () => {
+    await wrapper.vm.search('*')
+    store.commit('search/toggleFilters')
+
+    expect(wrapper.find('.search-results .search-results__menu').isVisible()).toBeTruthy()
+  })
+
+  it('should display the filters on click on `Show filters` menu', async () => {
+    await wrapper.vm.search('*')
+    store.commit('search/toggleFilters')
+    wrapper.find('.search-results .search-results__menu .nav-link').trigger('click')
+
+    expect(store.state.search.showFilters).toBeTruthy()
   })
 })

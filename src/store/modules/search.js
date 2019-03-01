@@ -35,7 +35,8 @@ export function initialState () {
     sort: 'relevance',
     response: Response.none(),
     isReady: true,
-    index: ''
+    index: '',
+    showFilters: true
   }
 }
 
@@ -161,9 +162,6 @@ export const mutations = {
       throw new Error(`cannot find facet named ${facet.name}`)
     }
   },
-  clear (state) {
-    return state.facets.splice(0, state.facets.length)
-  },
   removeFacetValue (state, facet) {
     // Look for facet for this name
     const existingFacet = find(state.facets, { name: facet.name })
@@ -191,6 +189,9 @@ export const mutations = {
     if (existingFacet) {
       existingFacet.values = []
     }
+  },
+  toggleFilters (state) {
+    state.showFilters = !state.showFilters
   }
 }
 
