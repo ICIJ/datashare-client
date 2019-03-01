@@ -28,7 +28,7 @@
                 {{ $t('menu.addDocuments') }}
               </a>
             </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item">
+            <li class="list-unstyled-item app__nav__container__main__menu__item" :class="{ 'ml-auto': isRemote }">
               <a href="https://icij.gitbook.io/datashare" target="_blank">
                 {{ $t('menu.faq') }}
               </a>
