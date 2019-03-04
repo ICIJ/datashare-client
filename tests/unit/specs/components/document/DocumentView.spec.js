@@ -102,7 +102,7 @@ describe('DocumentView.vue', () => {
 
     await wrapper.vm.getDoc()
 
-    expect(wrapper.findAll('mark').length).toEqual(2)
+    expect(wrapper.findAll('mark')).toHaveLength(2)
     expect(wrapper.findAll('mark').at(0).text()).toEqual('NER')
     expect(wrapper.findAll('mark').at(0).classes()).toContain('bg-category-category1')
     expect(wrapper.findAll('mark').at(1).text()).toEqual('NER2')
@@ -138,7 +138,7 @@ describe('DocumentView.vue', () => {
 
     const pills = wrapper.findAll('.document__named-entities .badge-pill')
 
-    expect(pills.length).toEqual(3)
+    expect(pills).toHaveLength(3)
     expect(pills.at(0).find('.badge-pill > span').text()).toEqual('mention_01')
     expect(pills.at(0).classes()).toContain('border-category-category_01')
     expect(pills.at(1).find('.badge-pill > span').text()).toEqual('mention_02')
@@ -213,7 +213,7 @@ describe('DocumentView.vue', () => {
 
     await wrapper.vm.getDoc()
 
-    expect(wrapper.findAll('.document .tab-pane.document__named-entities .document__named-entities--not--searched').length).toEqual(1)
+    expect(wrapper.findAll('.document .tab-pane.document__named-entities .document__named-entities--not--searched')).toHaveLength(1)
   })
 
   it('should display a specific error message if no named entities found after names finding task', async () => {
@@ -227,7 +227,7 @@ describe('DocumentView.vue', () => {
 
     await wrapper.vm.getDoc()
 
-    expect(wrapper.findAll('.document .tab-pane.document__named-entities .document__named-entities--not--found').length).toEqual(1)
+    expect(wrapper.findAll('.document .tab-pane.document__named-entities .document__named-entities--not--found')).toHaveLength(1)
   })
 
   it('should reload the named entities search on custom event emitted', async () => {
@@ -242,12 +242,40 @@ describe('DocumentView.vue', () => {
       .commit()
 
     await wrapper.vm.getDoc()
-    expect(wrapper.findAll('.document__named-entities .badge-pill').length).toEqual(2)
+    expect(wrapper.findAll('.document__named-entities .badge-pill')).toHaveLength(2)
 
     await indexBuilder.hideNer('mention_02')
     EventBus.$emit('facet::hide::named-entities')
     await delay(100)
-    expect(wrapper.findAll('.document__named-entities .badge-pill').length).toEqual(1)
+    expect(wrapper.findAll('.document__named-entities .badge-pill')).toHaveLength(1)
+  })
+
+  it('should display the named entities tab in LOCAL mode', async () => {
+    const id = 'foo.txt'
+    localVue.prototype.config = {}
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('this is foo document'))
+      .commit()
+    await wrapper.vm.getDoc()
+
+    expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(4)
+    expect(wrapper.findAll('.document .document__header__nav__item').at(1).text()).toContain('Named Entities')
+  })
+
+  it('should NOT display the named entities tab in SERVER mode', async () => {
+    const id = 'foo.txt'
+    localVue.prototype.config = { mode: 'SERVER' }
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('this is foo document'))
+      .commit()
+    await wrapper.vm.getDoc()
+
+    expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(3)
+    expect(wrapper.findAll('.document .document__header__nav__item').at(1).text()).not.toContain('Named Entities')
   })
 })
 

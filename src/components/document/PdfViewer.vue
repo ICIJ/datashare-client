@@ -4,7 +4,7 @@
       <div class="pdf-viewer__header">
         {{ $t('document.page') }}
         <select class="form-control input-sm" v-model.number="doc.active">
-          <option v-for="page in doc.pages.length" v-bind:key="page.address">
+          <option v-for="page in doc.pages.length" :key="page.address">
             {{ page }}
           </option>
         </select>

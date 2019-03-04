@@ -7,7 +7,7 @@
       <div class="document__header">
         <h3>
           <span>{{ document.basename }}</span>
-          <a class="btn btn-link float-right" :href="getFullUrl" target="_blank" title="Download source file">
+          <a class="btn btn-link float-right" :href="getFullUrl" target="_blank" :title="$t('document.download_file')">
             <font-awesome-icon icon="download" class="text-white" />
             <span class="sr-only">{{ $t('document.download_button') }}</span>
           </a>
@@ -15,22 +15,22 @@
         <nav class="document__header__nav">
           <ul class="list-inline">
             <li class="document__header__nav__item list-inline-item">
-              <a @click="tab = 'details'" :class="{active: tab === 'details'}">
+              <a @click="tab = 'details'" :class="{ active: tab === 'details' }">
                 {{ $t('document.details') }}
               </a>
             </li>
-            <li class="document__header__nav__item list-inline-item">
-              <a @click="tab = 'named_entities'" :class="{active: tab === 'named_entities'}">
+            <li class="document__header__nav__item list-inline-item" v-if="!isRemote">
+              <a @click="tab = 'named_entities'" :class="{ active: tab === 'named_entities' }">
                 {{ $t('document.named_entities') }}
               </a>
             </li>
             <li class="document__header__nav__item list-inline-item">
-              <a @click="tab = 'text'" :class="{active: tab === 'text'}">
+              <a @click="tab = 'text'" :class="{ active: tab === 'text' }">
                 {{ $t('document.extracted_text') }}
               </a>
             </li>
             <li class="document__header__nav__item list-inline-item">
-              <a @click="tab = 'preview'" :class="{active: tab === 'preview'}">
+              <a @click="tab = 'preview'" :class="{ active: tab === 'preview' }">
                 {{ $t('document.preview') }}
               </a>
             </li>
@@ -38,7 +38,7 @@
         </nav>
       </div>
       <div class="tab-content document__content">
-        <div class="tab-pane" v-bind:class="{active: tab === 'details'}">
+        <div class="tab-pane" :class="{active: tab === 'details'}">
           <dl class="row">
             <dt class="col-sm-3">{{ $t('document.name') }}</dt>
             <dd class="col-sm-9">{{ document.basename }}</dd>
@@ -80,7 +80,7 @@
             </template>
           </dl>
         </div>
-        <div class="tab-pane document__named-entities" v-bind:class="{active: tab === 'named_entities'}">
+        <div class="tab-pane document__named-entities" :class="{active: tab === 'named_entities'}">
           <div v-if="document.source.nerTags.length === 0" class="document__named-entities--not--searched">
             {{ $t('document.named_entites_not_searched') }}
           </div>
@@ -106,8 +106,8 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane text-pre-wrap" v-bind:class="{active: tab === 'text'}" v-html="markedSourceContent()"></div>
-        <div class="tab-pane" v-bind:class="{active: tab === 'preview'}">
+        <div class="tab-pane text-pre-wrap" :class="{ active: tab === 'text' }" v-html="markedSourceContent()"></div>
+        <div class="tab-pane" :class="{ active: tab === 'preview' }">
           <template v-if="document.contentType === 'application/pdf'">
             <pdf-viewer :document="document" />
           </template>
@@ -137,6 +137,7 @@ import DatashareClient from '@/api/DatashareClient'
 import escape from 'lodash/escape'
 import groupBy from 'lodash/groupBy'
 import ner from '@/mixins/ner'
+import utils from '@/mixins/utils'
 import orderBy from 'lodash/orderBy'
 import PdfViewer from './PdfViewer'
 import sortedUniqBy from 'lodash/sortedUniqBy'
@@ -147,7 +148,7 @@ import { EventBus } from '@/utils/event-bus'
 
 export default {
   name: 'document-view',
-  mixins: [ner],
+  mixins: [ner, utils],
   components: {
     ContentPlaceholder,
     PdfViewer,
