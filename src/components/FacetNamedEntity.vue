@@ -7,7 +7,7 @@
       </span>
     </template>
     <template slot="items" slot-scope="{ items, totalCount }">
-      <b-form-checkbox v-model="isAllSelected" @click.native="resetNamedEntityValues" class="facet__items__all">
+      <b-form-checkbox v-model="isAllSelected" @click.native="resetNamedEntityValues" class="facet__items__all mb-0">
         <span v-html="getNamedEntityLabel({ key: $t('facet.all'), doc_count: totalCount, byDocs: { value: total } })"></span>
       </b-form-checkbox>
       <div v-for="item in items" :key="item.key" class="facet__items__item d-flex">
