@@ -174,20 +174,20 @@ describe('Search.vue', () => {
   it('should hide the `Show filters` menu by default', async () => {
     await wrapper.vm.search('*')
 
-    expect(wrapper.find('.search-results .search-results__menu').isVisible()).toBeFalsy()
+    expect(wrapper.find('.search-results .search-results__toolbar').isVisible()).toBeFalsy()
   })
 
   it('should show the `Show filters` menu', async () => {
     await wrapper.vm.search('*')
     store.commit('search/toggleFilters')
 
-    expect(wrapper.find('.search-results .search-results__menu').isVisible()).toBeTruthy()
+    expect(wrapper.find('.search-results .search-results__toolbar').isVisible()).toBeTruthy()
   })
 
   it('should display the filters on click on `Show filters` menu', async () => {
     await wrapper.vm.search('*')
     store.commit('search/toggleFilters')
-    wrapper.find('.search-results .search-results__menu .nav-link').trigger('click')
+    wrapper.find('.search-results .search-results__toolbar .nav-link').trigger('click')
 
     expect(store.state.search.showFilters).toBeTruthy()
   })
