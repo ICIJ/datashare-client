@@ -41,7 +41,7 @@ describe('AppNav.vue', () => {
     expect(wrapper.findAll('.app__nav__container__main__menu__item router-link-stub').length).toEqual(1)
   })
 
-  it('should not display the link to analyze my documents in SERVER mode', () => {
+  it('should NOT display the link to analyze my documents in SERVER mode', () => {
     localVue.prototype.config = { mode: 'SERVER' }
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
     expect(wrapper.findAll('.app__nav__container__main__menu__item router-link-stub').length).toEqual(0)
@@ -86,11 +86,11 @@ describe('AppNav.vue', () => {
     expect(wrapper.find('.app__nav__container__main__menu__item--help a').attributes().href).toEqual(expect.stringContaining('jira.icij.org'))
   })
 
-  it('should not display a logout link', () => {
+  it('should NOT display a logout link', () => {
     expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(0)
   })
 
-  it('should not display a logout link in LOCAL mode', () => {
+  it('should NOT display a logout link in LOCAL mode', () => {
     localVue.prototype.config = { mode: 'LOCAL' }
     wrapper = shallowMount(AppNav, { localVue, i18n, router, store })
     expect(wrapper.findAll('.app__nav__container__main__menu__item.logout').length).toEqual(0)

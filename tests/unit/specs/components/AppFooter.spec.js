@@ -115,6 +115,16 @@ describe('AppFooter.vue', () => {
     expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('Español')
     expect(localStorage.getItem('lang')).toEqual('es')
   })
+
+  it('should display the app__footer__addon in LOCAL mode', () => {
+    expect(wrapper.findAll('.app__footer .app__footer__addon--homedir')).toHaveLength(1)
+  })
+
+  it('should NOT display the app__footer__addon in LOCAL mode', () => {
+    localVue.prototype.config = { mode: 'SERVER' }
+    wrapper = mount(AppFooter, { localVue, i18n, router })
+    expect(wrapper.findAll('.app__footer .app__footer__addon--homedir')).toHaveLength(0)
+  })
 })
 
 function jsonOk (body) {

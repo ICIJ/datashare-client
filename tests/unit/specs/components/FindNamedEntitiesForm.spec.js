@@ -69,9 +69,9 @@ describe('FindNamedEntitiesForm.vue', () => {
     expect(wrapper.vm.pipeline).toEqual('corenlp')
   })
 
-  it('should not show offline checkbox in SERVER mode', async () => {
+  it('should NOT show offline checkbox in SERVER mode', () => {
     Vue.prototype.config = { mode: 'SERVER' }
-    let w = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
+    const w = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
 
     expect(w.contains('.find-named-entities-form__offline')).toBeFalsy()
   })

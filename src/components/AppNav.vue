@@ -54,11 +54,13 @@
 <script>
 import { headroom } from 'vue-headroom'
 import SearchBar from '@/components/SearchBar'
-import DatashareClient from '@/api/DatashareClient'
+import utils from '@/mixins/utils'
 import { getOS } from '@/utils/user'
+import DatashareClient from '@/api/DatashareClient'
 
 export default {
   name: 'AppNav',
+  mixins: [utils],
   components: {
     headroom,
     SearchBar
@@ -71,9 +73,6 @@ export default {
   computed: {
     logoutLink () {
       return DatashareClient.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
-    },
-    isRemote () {
-      return this.config && this.config.mode === 'SERVER'
     }
   },
   watch: {

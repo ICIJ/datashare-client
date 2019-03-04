@@ -131,20 +131,20 @@
 </template>
 
 <script>
-import { capitalize, highlight } from '@/utils/strings'
 import { mapState } from 'vuex'
+import ContentPlaceholder from '@/components/ContentPlaceholder'
+import PdfViewer from '@/components/document/PdfViewer'
+import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
+import TiffViewer from '@/components/document/TiffViewer'
+import ner from '@/mixins/ner'
+import utils from '@/mixins/utils'
+import { capitalize, highlight } from '@/utils/strings'
+import { EventBus } from '@/utils/event-bus'
 import DatashareClient from '@/api/DatashareClient'
 import escape from 'lodash/escape'
 import groupBy from 'lodash/groupBy'
-import ner from '@/mixins/ner'
-import utils from '@/mixins/utils'
 import orderBy from 'lodash/orderBy'
-import PdfViewer from './PdfViewer'
 import sortedUniqBy from 'lodash/sortedUniqBy'
-import SpreadsheetViewer from './SpreadsheetViewer'
-import TiffViewer from './TiffViewer'
-import ContentPlaceholder from '@/components/ContentPlaceholder'
-import { EventBus } from '@/utils/event-bus'
 
 export default {
   name: 'document-view',

@@ -56,8 +56,9 @@
 
 <script>
 import { createHelpers } from 'vuex-map-fields'
-import noop from 'lodash/noop'
+import utils from '@/mixins/utils'
 import vFormCheckbox from 'bootstrap-vue/es/components/form-checkbox/form-checkbox'
+import noop from 'lodash/noop'
 
 const { mapFields } = createHelpers({
   getterType: `indexing/getField`,
@@ -66,6 +67,7 @@ const { mapFields } = createHelpers({
 
 export default {
   name: 'FindNamedEntitiesForm',
+  mixins: [utils],
   components: {
     'b-form-checkbox': vFormCheckbox
   },
@@ -79,10 +81,7 @@ export default {
     ...mapFields([
       'form.pipeline',
       'form.offline'
-    ]),
-    isRemote () {
-      return this.config && this.config.mode === 'SERVER'
-    }
+    ])
   },
   methods: {
     submitFindNamedEntities () {

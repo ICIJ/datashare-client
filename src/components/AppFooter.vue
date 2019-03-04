@@ -52,11 +52,13 @@
 </template>
 
 <script>
+import utils from '@/mixins/utils'
 import DatashareClient from '@/api/DatashareClient'
 import find from 'lodash/find'
 
 export default {
   name: 'AppFooter',
+  mixins: [utils],
   created () {
     const ds = new DatashareClient()
     this.promise = ds.getVersion().then(r => r.json())
@@ -83,9 +85,6 @@ export default {
   computed: {
     clientHash () {
       return process.env.VUE_APP_GIT_HASH.substring(0, 7)
-    },
-    isRemote () {
-      return this.config && this.config.mode === 'SERVER'
     },
     currentLanguage () {
       const lang = localStorage.getItem('lang') ? localStorage.getItem('lang') : this.$i18n.locale
