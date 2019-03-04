@@ -81,7 +81,7 @@ export default {
     },
     renderPage (pdf, p) {
       return pdf.getPage(p).then(page => {
-        const scale = 1.5
+        const scale = 3
         const viewport = page.getViewport(scale)
         const canvas = document.createElement('canvas')
         const canvasContext = canvas.getContext('2d')
