@@ -1,10 +1,15 @@
 <template>
   <div class="search-results">
-    <div class="search-results__menu" v-show="!showFilters">
-      <a class="nav-link small" href @click.prevent="clickOnShowFilters()">
-        {{ $t('search.showFilters') }}
-      </a>
-    </div>
+    <transition name="slide-up">
+      <div class="nav search-results__toolbar p-0" v-show="!showFilters">
+        <li class="nav-item">
+          <a class="nav-link text-uppercase font-weight-bold" href @click.prevent="clickOnShowFilters()">
+            <font-awesome-icon icon="filter" />
+            {{ $t('search.showFilters') }}
+          </a>
+        </li>
+      </div>
+    </transition>
     <div v-if="query && response.hits.length > 0">
       <search-results-header :response="response" :position="'top'" />
       <div class="search-results__items">
@@ -55,6 +60,28 @@ export default {
 
 <style lang="scss">
   .search-results {
+
+    &__toolbar {
+      font-size: 0.85rem;
+      line-height: $line-height-base * (1 - (85 - 95) / 95);
+      padding: 0.5rem 0;
+      color: white;
+      background: $tertiary;
+
+      &.slide-up-enter-active, &.slide-up-leave-active {
+        transition: .3s;
+      }
+
+      &.slide-up-enter, &.slide-up-leave-to {
+        opacity: 0;
+        // Works with only one row
+        margin-top: calc(#{-1em * $line-height-base} - #{$spacer * 1});
+      }
+
+      .nav-link {
+        color: mix($tertiary, text-contrast($tertiary), .7)
+      }
+    }
 
     &__header {
       padding: $spacer * 0.5 $spacer;

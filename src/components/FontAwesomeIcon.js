@@ -22,6 +22,7 @@ import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons/faExcla
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
 import { faFile } from '@fortawesome/free-solid-svg-icons/faFile'
+import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter'
 import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder'
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
@@ -61,6 +62,7 @@ library.add(
   faExternalLinkAlt,
   faEyeSlash,
   faFile,
+  faFilter,
   faFolder,
   faFolderOpen,
   faGlobe,

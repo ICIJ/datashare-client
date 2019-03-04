@@ -1,30 +1,35 @@
 <template>
-  <div class="aggregations-panel" v-show="showFilters">
-    <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
-      <facet-search :facet="selectedFacet" :query="facetQuery" />
-    </b-modal>
-    <div class="mx-3 mt-2 mb-n2 small">
-      <ul class="nav">
-        <li class="nav-item">
-          <a class="nav-link p-0" href @click.prevent="clickOnHideFilters()">
-            {{ $t('search.hideFilters') }}
-          </a>
-        </li>
-      </ul>
+  <transition name="slide-left">
+    <div class="aggregations-panel" v-show="showFilters">
+      <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
+        <facet-search :facet="selectedFacet" :query="facetQuery" />
+      </b-modal>
+      <div class="aggregations-panel__toolbar mx-3">
+        <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link p-0 text-uppercase font-weight-bold" href @click.prevent="clickOnHideFilters()">
+              <font-awesome-icon icon="filter" />
+              {{ $t('search.hideFilters') }}
+            </a>
+          </li>
+        </ul>
+      </div>
+      <index-selector />
+      <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
     </div>
-    <index-selector />
-    <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
-  </div>
+  </transition>
 </template>
 
 <script>
 import { mapState } from 'vuex'
 import { EventBus } from '@/utils/event-bus'
+
 import FacetDate from '@/components/FacetDate'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetPath from '@/components/FacetPath'
 import FacetSearch from '@/components/FacetSearch'
 import FacetText from '@/components/FacetText'
+import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import IndexSelector from '@/components/IndexSelector'
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import forEach from 'lodash/forEach'
@@ -40,6 +45,7 @@ export default {
     FacetPath,
     FacetSearch,
     FacetText,
+    FontAwesomeIcon,
     IndexSelector,
     bModal
   },
@@ -108,8 +114,17 @@ export default {
 <style lang="scss">
   .aggregations-panel {
 
+    &.slide-left-enter-active, &.slide-left-leave-active {
+      transition: .3s;
+    }
+
+    &.slide-left-enter, &.slide-left-leave-to {
+      margin-left: -1 * $aggregations-panel-width !important;
+      opacity: 0;
+    }
+
     & > .card {
-      margin: $spacer;
+      margin: 0 $spacer $spacer;
 
       .card-header {
         background: $aggregations-panel-bg;
@@ -160,6 +175,12 @@ export default {
           }
         }
       }
+    }
+
+    &__toolbar {
+      font-size: 0.85rem;
+      line-height: $line-height-base * (1 - (85 - 95) / 95);
+      padding: 0.5rem 0;
     }
   }
 </style>

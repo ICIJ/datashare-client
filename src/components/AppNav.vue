@@ -148,7 +148,7 @@ export default {
           color: inherit;
           padding: $spacer;
           pointer-events: auto;
-          max-width: 320px;
+          max-width: $aggregations-panel-width;
           font-size: 1.5rem;
           text-decoration: none;
 

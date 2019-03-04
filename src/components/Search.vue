@@ -85,7 +85,7 @@ export default {
     &__body {
 
       &__aggregations-panel.col {
-        max-width: 320px;
+        max-width: $aggregations-panel-width;
         min-height: calc(100vh - #{$app-nav-height});
 
         @include media-breakpoint-down(lg) {

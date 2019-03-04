@@ -1,0 +1,19 @@
+/*------------------------
+mixin that calculates if text needs to be light or dark
+depending on the background color passed.
+From this W3C document: http://www.webmasterworld.com/r.cgi?f=88&d=9769&url=http://www.w3.org/TR/AERT#color-contrast
+Color brightness is determined by the following formula:
+((Red value X 299) + (Green value X 587) + (Blue value X 114)) / 1000
+------------------------*/
+
+@function text-contrast($n) {
+  $color-brightness: round((red($n) * 299) + (green($n) * 587) + (blue($n) * 114) / 1000);
+  $light-color: round((red(#ffffff) * 299) + (green(#ffffff) * 587) + (blue(#ffffff) * 114) / 1000);
+
+  @if abs($color-brightness) < ($light-color/2){
+    @return white;
+  }
+  @else {
+    @return black;
+  }
+}
