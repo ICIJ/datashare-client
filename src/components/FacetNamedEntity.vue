@@ -93,59 +93,75 @@ export default {
 </script>
 
 <style lang="scss">
-  .facet--named-entity .facet__items__item {
+  .facet--named-entity {
+    .facet__items__item {
 
-    &:hover .facet__items__item__menu {
-      visibility: visible;
-    }
-
-    &__body {
-      flex-grow: 1;
-      flex-basis: 50%;
-      min-width: 0;
-
-      &__key {
-        display: inline-block;
-        overflow: hidden;
-        max-width: 100%;
-        text-overflow: ellipsis;
+      &:hover .facet__items__item__menu {
+        visibility: visible;
       }
-    }
 
-    &__description {
-      font-style: italic;
-      white-space: nowrap;
-      max-width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+      &__body {
+        flex-grow: 1;
+        flex-basis: 50%;
+        min-width: 0;
 
-    &__menu {
-      flex-basis: 2.5em;
-      flex-grow: 0;
-      visibility: hidden;
-
-      .btn-group > .btn {
-        background-color: transparent;
-        border: none;
-        color: grey;
-        padding: 0;
-        height: 2em;
-        line-height: 2em;
-        width: 2em;
-        border-radius: 50% !important;
-        text-align: center;
-
-        &:focus, &:focus:active, &:active {
-          background-color: theme-color('light');
-          border: none;
-          color: grey;
-          padding: 0.3em;
+        &__key {
+          display: inline-block;
+          overflow: hidden;
+          max-width: 100%;
+          text-overflow: ellipsis;
         }
       }
 
-      .dropdown-menu {
-        margin-top: -2em;
+      &__description {
+        font-style: italic;
+        white-space: nowrap;
+        max-width: 100%;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+
+      &__menu {
+        flex-basis: 2.5em;
+        flex-grow: 0;
+        visibility: hidden;
+
+        .btn-group > .btn {
+          background-color: transparent;
+          border: none;
+          color: grey;
+          padding: 0;
+          height: 2em;
+          line-height: 2em;
+          width: 2em;
+          border-radius: 50% !important;
+          text-align: center;
+
+          &:focus, &:focus:active, &:active {
+            background-color: theme-color('light');
+            border: none;
+            color: grey;
+            padding: 0.3em;
+          }
+        }
+
+        .dropdown-menu {
+          margin-top: -2em;
+        }
+      }
+
+      input:checked + label {
+        .facet__items__item__body__key, .facet__items__item__description {
+          font-weight: bold;
+        }
+      }
+    }
+
+    &.facet--reversed {
+      input:checked + label {
+        .facet__items__item__body__key, .facet__items__item__description {
+          text-decoration: line-through;
+        }
       }
     }
   }

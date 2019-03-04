@@ -125,8 +125,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet--reversed .facet__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.facet--reversed .facet__items__item .facet__items__item__count').at(0).text()).toEqual('2')
+    expect(wrapper.findAll('.facet--reversed .facet__items__item .custom-checkbox .facet__items__item__count').at(0).text()).toEqual('2')
     expect(wrapper.vm.root.totalCount).toEqual(3)
   })
 
