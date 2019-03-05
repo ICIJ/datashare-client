@@ -101,6 +101,9 @@ export default {
         const facet = component[0]
         if (facet) {
           facet.root.resetFacetValues()
+          if (facet.resetNamedEntityValues) {
+            facet.resetNamedEntityValues()
+          }
         }
       })
     },

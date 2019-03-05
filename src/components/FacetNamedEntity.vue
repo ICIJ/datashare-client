@@ -72,11 +72,12 @@ export default {
         '</div>'
     },
     resetNamedEntityValues (evt) {
-      if (this.isAllSelected) {
+      if (evt && this.isAllSelected) {
         evt.preventDefault()
       } else {
-        this.selected = {}
         this.$store.commit('search/resetFacetValues', this.facet.name)
+        this.selected = {}
+        this.isAllSelected = true
         this.refreshRoute()
       }
     },

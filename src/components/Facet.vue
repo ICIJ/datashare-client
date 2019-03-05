@@ -2,7 +2,7 @@
   <div class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet-hide-header': hideHeader  }">
     <slot name="header" v-if="!hideHeader">
       <div class="card-header d-flex">
-        <h6 @click="toggleItems" class="flex-shrink-1 text-truncate">
+        <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate">
           <font-awesome-icon :icon="headerIcon" />
           <template>
             <slot name="title">
