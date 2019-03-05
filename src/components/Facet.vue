@@ -1,14 +1,8 @@
 <template>
   <div class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet-hide-header': hideHeader  }">
     <slot name="header" v-if="!hideHeader">
-      <div class="card-header">
-        <span v-if="hasValues()" class="float-right btn-group">
-          <button class="btn btn-sm btn-outline-dark py-0" @click="invert" :class="{ 'active': isReversed() }">
-            <font-awesome-icon icon="eye-slash" />
-            {{ $t('facet.invert') }}
-          </button>
-        </span>
-        <h6 @click="toggleItems" class="text-nowrap">
+      <div class="card-header d-flex">
+        <h6 @click="toggleItems" class="flex-shrink-1 text-truncate">
           <font-awesome-icon :icon="headerIcon" />
           <template>
             <slot name="title">
@@ -16,6 +10,12 @@
             </slot>
           </template>
         </h6>
+        <span v-if="hasValues()" class="btn-group">
+          <button class="d-inline-flex btn btn-sm btn-outline-dark py-0" @click="invert" :class="{ 'active': isReversed() }">
+            <font-awesome-icon icon="eye-slash" class="mr-1 mt-1" />
+            {{ $t('facet.invert') }}
+          </button>
+        </span>
       </div>
     </slot>
     <div class="list-group list-group-flush facet__items" v-if="!collapseItems">
@@ -174,6 +174,11 @@ export default {
 
       label {
         display: block;
+
+        .facet__items__item__label {
+          max-width: 90%;
+          vertical-align: text-top;
+        }
       }
 
       input:checked + label {

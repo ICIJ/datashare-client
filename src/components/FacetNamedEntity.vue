@@ -1,10 +1,10 @@
 <template>
   <facet v-bind="$props" class="facet--named-entity" ref="facet">
     <template slot="title">
-      {{ $t('facet.' + facet.name) }}
-      <span class="col-2 facet__items__item__icon py-2" :class="getCategoryClass(facet.category, 'text-')">
+      <span class="col-2 facet__items__item__icon pl-2 pr-0" :class="getCategoryClass(facet.category, 'text-')">
         <font-awesome-icon :icon="getCategoryIcon(facet.category)" />
       </span>
+      {{ $t('facet.' + facet.name) }}
     </template>
     <template slot="items" slot-scope="{ items, totalCount }">
       <b-form-checkbox v-model="isAllSelected" @click.native="resetNamedEntityValues" class="facet__items__all mb-0">
@@ -59,7 +59,7 @@ export default {
       const label = this.facet.itemLabel ? this.facet.itemLabel(item) : item.key
       const count = get(item, 'doc_count', 0)
       const value = get(item, 'byDocs.value', 0)
-      return '<div class="col-auto py-2 pl-2 facet__items__item__body">' +
+      return '<div class="col-auto py-1 pl-2 facet__items__item__body">' +
         '<div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__body__key">' +
         label +
         '</div>' +
@@ -94,6 +94,9 @@ export default {
 
 <style lang="scss">
   .facet--named-entity {
+    label.custom-control-label::before, label.custom-control-label::after {
+      top: 1rem;
+    }
     .facet__items__item {
 
       &:hover .facet__items__item__menu {
@@ -101,6 +104,7 @@ export default {
       }
 
       &__body {
+        border-left: 1px dashed $card-border-color !important;
         flex-grow: 1;
         flex-basis: 50%;
         min-width: 0;

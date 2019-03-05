@@ -114,12 +114,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  .facet-search {
-    &__items {
-      max-height: 50vh;
-      overflow: hidden auto;
-    }
-  }
-</style>
