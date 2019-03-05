@@ -91,8 +91,6 @@
     "named_entities_not_found": "No se han encontrado entidades con nombre",
     "named_entites_not_searched": "Documento no analizado. Para buscar entidades con nombre, vaya a \"Analizar mi documento\" y comience una nueva tarea \"Buscar entidades con nombre\".",
     "generating_preview": "Generando visualización previa...",
-    "page": "Página",
-    "of": "de",
     "sheet": "Hoja",
     "search_directory": "Buscar dentro de este directorio"
   },

@@ -1,17 +1,26 @@
 <template>
-  <div class="pdf-viewer">
+  <div class="pdf-viewer d-flex">
     <template v-if="doc.pages.length > 0">
       <div class="pdf-viewer__header">
-        {{ $t('document.page') }}
-        <select class="form-control input-sm" v-model.number="doc.active">
-          <option v-for="page in doc.pages.length" :key="page.address">
-            {{ page }}
-          </option>
-        </select>
-        {{ $t('document.of') }} {{ doc.pages.length }}
+        <div class="pdf-viewer__thumbnails">
+          <div class="text-center mb-4">{{ doc.active }} / {{ doc.pages.length }}</div>
+          <div v-for="page in doc.pages.length" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex flex-row-reverse">
+            <img :src="loadThumbnail(page)" class="ml-1 border border-primary" />
+            <span class="d-flex align-items-center">{{ page }}</span>
+          </div>
+        </div>
       </div>
-      <div v-if="page(doc.active)">
-        <img class="pdf-viewer__canvas img-responsive img-thumbnail" :src="page(doc.active)"/>
+      <div class="pdf-viewer__preview">
+        <div class="pdf-viewer__preview__header">
+          <select class="form-control input-sm w-auto float-right mb-3" v-model.number="doc.active">
+            <option v-for="page in doc.pages.length" :key="page">
+              {{ page }}
+            </option>
+          </select>
+        </div>
+        <div v-if="loadPage(doc.active)">
+          <img class="pdf-viewer__preview__canvas img-responsive img-thumbnail" :src="loadPage(doc.active)"/>
+        </div>
       </div>
     </template>
     <div v-else class="alert">
@@ -25,6 +34,7 @@
 import PDFJS from 'pdfjs-dist'
 import Worker from 'pdfjs-dist/build/pdf.worker'
 import DatashareClient from '@/api/DatashareClient'
+
 (typeof window !== 'undefined' ? window : {}).pdfjsWorker = Worker
 
 PDFJS.GlobalWorkerOptions.workerSrc = 'static/js/pdf.worker.js'
@@ -38,59 +48,74 @@ export default {
       pdf: null,
       doc: {
         active: 0,
-        pages: []
+        pages: [],
+        thumbs: []
       }
     }
   },
   mounted () {
+    this.doc.active = 1
     this.loadPage(1)
   },
   methods: {
-    page (p) {
-      // Did we fetch this page already?
-      if (this.doc.pages[p - 1]) {
-        this.doc.active = p
-        return this.doc.pages[p - 1]
+    loadPdf () {
+      if (this.pdf !== null) {
+        return new Promise(resolve => resolve(this.pdf))
       } else {
-        this.loadPage(p)
-      }
-    },
-    loadPage (p) {
-      return this.loadPdf().then(pdf => {
-        return this.renderPage(pdf, p).then(canvas => {
+        return PDFJS.getDocument(DatashareClient.getFullUrl(this.document.url)).then(pdf => {
           if (this.doc.pages.length === 0) {
             this.doc.pages = new Array(pdf.numPages)
           }
-          this.doc.active = p
-          this.$set(this.doc.pages, p - 1, canvas.toDataURL())
-          return this.doc.pages[p - 1]
-        })
-      }).catch(err => {
-        this.message = err.message
-      })
-    },
-    loadPdf () {
-      if (this.pdf !== null) {
-        return new Promise((resolve) => resolve(this.pdf))
-      } else {
-        return PDFJS.getDocument(DatashareClient.getFullUrl(this.document.url)).then(pdf => {
           this.pdf = pdf
           return pdf
         })
       }
     },
+    loadPage (p) {
+      if (this.doc.pages[p - 1]) {
+        return this.doc.pages[p - 1]
+      } else {
+        return this.loadPdf()
+          .then(pdf => this.renderPage(pdf, p))
+          .catch(err => {
+            this.message = err.message
+          })
+      }
+    },
     renderPage (pdf, p) {
       return pdf.getPage(p).then(page => {
-        const scale = 3
-        const viewport = page.getViewport(scale)
+        const viewport = page.getViewport(3)
         const canvas = document.createElement('canvas')
-        const canvasContext = canvas.getContext('2d')
-
         canvas.height = viewport.height
         canvas.width = viewport.width
-
-        const renderContext = { canvasContext, viewport }
-        return page.render(renderContext).then(() => canvas)
+        return page.render({ canvasContext: canvas.getContext('2d'), viewport }).then(() => {
+          this.$set(this.doc.pages, p - 1, canvas.toDataURL())
+          return this.doc.pages[p - 1]
+        })
+      })
+    },
+    loadThumbnail (p) {
+      if (this.doc.thumbs[p - 1]) {
+        return this.doc.thumbs[p - 1]
+      } else {
+        return this.loadPdf()
+          .then(pdf => this.renderThumbnail(pdf, p))
+          .catch(err => {
+            this.message = err.message
+          })
+      }
+    },
+    renderThumbnail (pdf, p) {
+      return pdf.getPage(p).then(page => {
+        const viewport = page.getViewport(1)
+        const canvas = document.createElement('canvas')
+        canvas.width = 96
+        canvas.height = 137
+        const scale = Math.min(canvas.width / viewport.width, canvas.height / viewport.height)
+        return page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport(scale) }).then(() => {
+          this.$set(this.doc.thumbs, p - 1, canvas.toDataURL())
+          return this.doc.thumbs[p - 1]
+        })
       })
     }
   }

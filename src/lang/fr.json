@@ -90,8 +90,6 @@
     "named_entities_not_found": "Pas d'entités nommées trouvées",
     "named_entites_not_searched": "Document non analysé. Afin de lancer la recherche d'entités nommées, allez dans \"Analyser mes documents\" et lancez une nouvelle tâche \"Trouver les entitées nommées\".",
     "generating_preview": "Génère une prévisualisation...",
-    "page": "Page",
-    "of": "sur",
     "sheet": "Feuille",
     "search_directory": "Chercher dans ce dossier"
   },
