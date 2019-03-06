@@ -175,9 +175,9 @@ export default {
       label {
         display: block;
 
-        .facet__items__item__label {
-          max-width: 90%;
-          vertical-align: text-top;
+        & > span {
+          display: flex;
+          flex-direction: row;
         }
       }
 
