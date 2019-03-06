@@ -1,5 +1,6 @@
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
+import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import SearchResultsItem from '@/components/SearchResultsItem'
@@ -8,6 +9,7 @@ import router from '@/router'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 

@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
+import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
@@ -10,12 +11,13 @@ import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
 import fetchPonyfill from 'fetch-ponyfill'
-import Vue from 'vue'
+
 const { Response } = fetchPonyfill()
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
@@ -70,7 +72,7 @@ describe('FindNamedEntitiesForm.vue', () => {
   })
 
   it('should NOT show offline checkbox in SERVER mode', () => {
-    Vue.prototype.config = { mode: 'SERVER' }
+    Murmur.config.merge({ mode: 'SERVER' })
     const w = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
 
     expect(w.contains('.find-named-entities-form__offline')).toBeFalsy()

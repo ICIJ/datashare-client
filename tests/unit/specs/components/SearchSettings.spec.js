@@ -1,5 +1,5 @@
-import Vue from 'vue'
 import VueI18n from 'vue-i18n'
+import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount, createWrapper } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
@@ -8,10 +8,12 @@ import router from '@/router'
 import SearchSettings from '@/components/SearchSettings'
 import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
 
+Murmur.config.set('ignoredElements', ['font-awesome-icon'])
+
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.directive('b-tooltip', vBTooltip)
-Vue.config.ignoredElements = ['font-awesome-icon']
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchSettings.vue', () => {

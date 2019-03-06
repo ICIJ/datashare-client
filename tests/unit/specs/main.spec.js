@@ -1,5 +1,6 @@
 import Vue from 'vue'
-import { vm, createApp } from '@/main'
+import { createLocalVue } from '@vue/test-utils'
+import { createApp } from '@/main'
 import fetchPonyfill from 'fetch-ponyfill'
 
 const { fetch, Response } = fetchPonyfill()
@@ -17,7 +18,7 @@ describe('main', () => {
   afterEach(() => window.fetch.mockRestore())
 
   it('should instantiate Vue', async () => {
-    await createApp()
+    const vm = await createApp(createLocalVue())
     expect(vm).toBeInstanceOf(Vue)
     expect(vm.$router).toBeDefined()
     expect(vm.$store).toBeDefined()
@@ -25,14 +26,15 @@ describe('main', () => {
 
   it('should set the config', async () => {
     window.fetch.mockReturnValue(jsonOk({ userIndices: ['first-index'], key: 'value' }))
-    await createApp()
-    expect(vm.config).toBeDefined()
-    expect(vm.config).toEqual({ userIndices: ['first-index'], key: 'value' })
+    const vm = await createApp(createLocalVue())
+    expect(vm.$config).toBeDefined()
+    expect(vm.$config.get('userIndices')).toEqual(['first-index'])
+    expect(vm.$config.get('key')).toEqual('value')
   })
 
   it('should set the ES index for the futures searches', async () => {
     window.fetch.mockReturnValue(jsonOk({ userIndices: ['first-index'] }))
-    await createApp()
+    const vm = await createApp(createLocalVue())
     expect(vm.$store.state.search.index).toEqual('first-index')
   })
 })

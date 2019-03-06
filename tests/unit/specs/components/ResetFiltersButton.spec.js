@@ -1,3 +1,4 @@
+import Murmur from '@icij/murmur'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import store from '@/store'
@@ -7,6 +8,7 @@ import messages from '@/lang/en'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Murmur)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('ResetFiltersButton.vue', function () {

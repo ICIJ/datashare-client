@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import AppFooter from '@/components/AppFooter'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
@@ -16,6 +17,7 @@ window.fetch = fetch
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.component('b-dropdown', bDropdown)
 localVue.component('b-dropdown-item', bDropdownItem)
@@ -121,7 +123,7 @@ describe('AppFooter.vue', () => {
   })
 
   it('should NOT display the app__footer__addon in LOCAL mode', () => {
-    localVue.prototype.config = { mode: 'SERVER' }
+    Murmur.config.merge({ mode: 'SERVER' })
     wrapper = mount(AppFooter, { localVue, i18n, router })
     expect(wrapper.findAll('.app__footer .app__footer__addon--homedir')).toHaveLength(0)
   })

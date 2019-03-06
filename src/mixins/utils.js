@@ -1,7 +1,7 @@
 const utils = {
   computed: {
     isRemote () {
-      return this.config && this.config.mode === 'SERVER'
+      return this.$config && this.$config.get('mode') === 'SERVER'
     }
   }
 }

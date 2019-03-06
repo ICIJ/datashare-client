@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Murmur from '@icij/murmur'
 import includes from 'lodash/includes'
 import some from 'lodash/some'
 
@@ -160,8 +160,8 @@ class FacetPath extends FacetDocument {
     return body.agg('terms', 'dirname.tree', this.key, {
       size: 500,
       order: { '_key': 'asc' },
-      exclude: Vue.prototype.config.dataDir + '/.*/.*',
-      include: Vue.prototype.config.dataDir + '/.*',
+      exclude: Murmur.config.get('dataDir') + '/.*/.*',
+      include: Murmur.config.get('dataDir') + '/.*',
       ...options
     })
   }

@@ -39,7 +39,7 @@ export default {
     }
   },
   created () {
-    this.indices = map(this.config.userIndices, index => { return { value: index, text: index } })
+    this.indices = map(this.$config.get('userIndices', []), index => { return { value: index, text: index } })
   },
   methods: {
     select (value) {

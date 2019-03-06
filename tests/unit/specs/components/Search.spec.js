@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
+import Murmur from '@icij/murmur'
 import { mount, createLocalVue } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
@@ -15,6 +16,7 @@ import find from 'lodash/find'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.use(Vuex)
 localVue.use(VueProgressBar, { color: '#852308' })
 localVue.use(BootstrapVue)

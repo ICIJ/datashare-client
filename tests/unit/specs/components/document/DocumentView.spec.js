@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
+import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -15,6 +16,7 @@ import { EventBus } from '@/utils/event-bus'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages }, silentTranslationWarn: true })
@@ -32,7 +34,7 @@ describe('DocumentView.vue', () => {
 
   afterEach(() => {
     store.commit('document/reset')
-    localVue.prototype.config = {}
+    Murmur.config.merge({ dataDir: null, mountedDataDir: null })
   })
 
   afterAll(() => httpServer.close())
@@ -48,7 +50,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a document', async () => {
     const id = 'foo.txt'
-    localVue.prototype.config = {}
+    Murmur.config.merge({ dataDir: null, mountedDataDir: null })
     const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
@@ -63,7 +65,7 @@ describe('DocumentView.vue', () => {
 
   it('should display document path with config.mountedDataDir', async () => {
     const id = '/home/datashare/data/foo.txt'
-    localVue.prototype.config = { dataDir: '/home/datashare/data', mountedDataDir: 'C:/Users/ds/docs' }
+    Murmur.config.merge({ dataDir: '/home/datashare/data', mountedDataDir: 'C:/Users/ds/docs' })
     const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id).withContent('this is foo document')).commit()
@@ -252,7 +254,7 @@ describe('DocumentView.vue', () => {
 
   it('should display the named entities tab in LOCAL mode', async () => {
     const id = 'foo.txt'
-    localVue.prototype.config = {}
+    Murmur.config.merge({ dataDir: null, mountedDataDir: null })
     const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
@@ -266,7 +268,7 @@ describe('DocumentView.vue', () => {
 
   it('should NOT display the named entities tab in SERVER mode', async () => {
     const id = 'foo.txt'
-    localVue.prototype.config = { mode: 'SERVER' }
+    Murmur.config.merge({ mode: 'SERVER' })
     const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)

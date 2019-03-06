@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Indexing from '@/components/Indexing'
@@ -15,6 +16,7 @@ const { Response } = fetchPonyfill()
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.directive('b-tooltip', vBTooltip)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })

@@ -25,7 +25,7 @@ export default {
       const tree = []
       each(items, item => {
         tree.push({
-          label: replace(item.key, this.config.dataDir + '/', ''),
+          label: replace(item.key, this.$config.get('dataDir') + '/', ''),
           path: item.key,
           count: item.doc_count,
           children: [],

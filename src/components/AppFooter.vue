@@ -6,7 +6,7 @@
     </router-link>
     <div class="app__footer__addon app__footer__addon--homedir" :title="$t('footer.homedir')" v-b-tooltip v-if="!isRemote">
       <font-awesome-icon icon="folder" class="mr-1" />
-      {{ config.mountedDataDir || config.dataDir }}
+      {{ $config.get('mountedDataDir') || $config.get('dataDir') }}
     </div>
     <div class="w-100">
       <b-tooltip :target="() => this.$refs.appFooterVersion">

@@ -1,4 +1,5 @@
 import VueI18n from 'vue-i18n'
+import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import AggregationsPanel from '@/components/AggregationsPanel'
 import store from '@/store'
@@ -6,6 +7,7 @@ import messages from '@/lang/en'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Murmur)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('AggregationsPanel.vue', () => {

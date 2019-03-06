@@ -1,7 +1,7 @@
-import Vue from 'vue'
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
+import Murmur from '@icij/murmur'
 import { mount, createLocalVue } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -13,6 +13,7 @@ import find from 'lodash/find'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.use(Vuex)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
@@ -24,7 +25,7 @@ describe('FacetPath.vue', () => {
   let wrapper
 
   beforeAll(async () => {
-    Vue.prototype.config = { dataDir: '/home/user/data' }
+    Murmur.config.set('dataDir', '/home/user/data')
     wrapper = mount(FacetPath, {
       localVue,
       i18n,

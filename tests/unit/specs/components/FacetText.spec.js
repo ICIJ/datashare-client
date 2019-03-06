@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+import Murmur from '@icij/murmur'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
 import messages from '@/lang/en'
 import router from '@/router'
@@ -14,6 +15,7 @@ import vBFormCheckboxGroup from 'bootstrap-vue/es/components/form-checkbox/form-
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.use(Vuex)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.component('b-form-checkbox', vBFormCheckbox)

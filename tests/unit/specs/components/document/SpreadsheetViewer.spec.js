@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+import Murmur from '@icij/murmur'
 import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
 import messages from '@/lang/en'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
@@ -12,6 +13,7 @@ import bFormSelect from 'bootstrap-vue/es/components/form-select/form-select'
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 localVue.component('b-form-select', bFormSelect)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })

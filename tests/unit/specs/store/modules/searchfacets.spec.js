@@ -1,4 +1,4 @@
-import Vue from 'vue'
+import Murmur from '@icij/murmur'
 import { FacetText } from '@/store/facetsStore'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -158,7 +158,7 @@ describe('Search facets', () => {
   })
 
   it('should get no bucket for path aggregation', async () => {
-    Vue.prototype.config = { dataDir: '/home/user/data' }
+    Murmur.config.set('dataDir', '/home/user/data')
 
     const response = await store.dispatch('search/queryFacet', { name: 'path' })
 
@@ -166,7 +166,7 @@ describe('Search facets', () => {
   })
 
   it('should return 1 bucket, the correct first level path and the correct number of results', async () => {
-    Vue.prototype.config = { dataDir: '/home/user/data' }
+    Murmur.config.set('dataDir', '/home/user/data')
     await letData(es).have(new IndexedDocument('/home/user/data/is/a/path/test.doc')).commit()
 
     const response = await store.dispatch('search/queryFacet', { name: 'path' })
@@ -177,7 +177,7 @@ describe('Search facets', () => {
   })
 
   it('should return 2 buckets, the correct path and the correct number of results', async () => {
-    Vue.prototype.config = { dataDir: '/home/user/data' }
+    Murmur.config.set('dataDir', '/home/user/data')
     await letData(es).have(new IndexedDocument('/home/user/data/is/a/path/test.doc')).commit()
     await letData(es).have(new IndexedDocument('/home/user/data/is/a/second/path/test.doc')).commit()
     await letData(es).have(new IndexedDocument('/home/user/data/was/a/third/path/test.doc')).commit()

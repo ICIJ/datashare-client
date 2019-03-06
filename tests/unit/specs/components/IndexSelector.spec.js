@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import { createLocalVue, mount } from '@vue/test-utils'
 import BootstrapVue from 'bootstrap-vue'
+import Murmur from '@icij/murmur'
 import IndexSelector from '@/components/IndexSelector'
 import find from 'lodash/find'
 import router from '@/router'
@@ -11,6 +12,7 @@ import messages from '@/lang/en'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.use(Vuex)
 localVue.use(BootstrapVue)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
@@ -20,7 +22,7 @@ describe('IndexSelector.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    localVue.prototype.config = { userIndices: ['first-index'] }
+    Murmur.config.merge({ userIndices: ['first-index'] })
     store.commit('search/index', 'first-index')
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
   })
@@ -34,7 +36,7 @@ describe('IndexSelector.vue', () => {
   })
 
   it('should display a dropdown containing 2 indices', async () => {
-    localVue.prototype.config = { userIndices: ['first-index', 'second-index'] }
+    Murmur.config.merge({ userIndices: ['first-index', 'second-index'] })
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
     await wrapper.vm.$nextTick()
     expect(wrapper.findAll('option')).toHaveLength(2)
@@ -43,7 +45,7 @@ describe('IndexSelector.vue', () => {
   })
 
   it('should change the selected index and refresh the route', async () => {
-    localVue.prototype.config = { userIndices: ['first-index', 'second-index'] }
+    Murmur.config.merge({ userIndices: ['first-index', 'second-index'] })
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
     await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
@@ -59,7 +61,7 @@ describe('IndexSelector.vue', () => {
   })
 
   it('should change the selected index and reset filters', async () => {
-    localVue.prototype.config = { userIndices: ['first-index', 'second-index'] }
+    Murmur.config.merge({ userIndices: ['first-index', 'second-index'] })
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
     store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
     await wrapper.vm.$nextTick()

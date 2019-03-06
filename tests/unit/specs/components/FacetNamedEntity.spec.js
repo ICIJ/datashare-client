@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
+import Murmur from '@icij/murmur'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import messages from '@/lang/en'
@@ -25,6 +26,7 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(BootstrapVue)
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.component('font-awesome-icon', FontAwesomeIcon)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
