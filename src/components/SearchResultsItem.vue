@@ -33,9 +33,6 @@ export default {
   methods: {
     isActive () {
       return this.$route.name === 'document' && get(this.$store.state, 'document.doc.id') === this.doc.id
-    },
-    yo () {
-      console.log('yo')
     }
   },
   computed: {

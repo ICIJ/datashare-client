@@ -75,12 +75,23 @@ export default {
       return DatashareClient.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     }
   },
+  mounted () {
+    this.saveComponentHeight()
+  },
+  updated () {
+    this.saveComponentHeight()
+  },
   watch: {
     '$route' (to, from) {
       this.collapseMenu = true
     }
   },
   methods: {
+    saveComponentHeight () {
+      const height = `${this.$el.offsetHeight}px`
+      // Save component height in a CSS variable after it's been update
+      this.$root.$el.style.setProperty('--app-nav-height', height)
+    },
     toggleMenu () {
       this.collapseMenu = !this.collapseMenu
     },
@@ -121,8 +132,6 @@ export default {
     width: 100%;
     color: $body-color;
     width: auto;
-    min-height: $app-nav-height;
-    background: $body-bg;
     box-shadow: 0 2px 10px 0 rgba(black,.05);
 
     &__mask {
@@ -140,7 +149,7 @@ export default {
         position:relative;
         z-index: $zindex-fixed + 30;
         background:white;
-        min-height: $app-nav-height;
+        min-height: var(--app-nav-height);
         white-space: nowrap;
 
         &__brand.col, &__brand:hover, &__brand:focus, &__brand {
@@ -189,8 +198,8 @@ export default {
           pointer-events: auto;
           max-width: 3.5rem;
           font-size: 1.5rem;
-          line-height: $app-nav-height;
-          height: $app-nav-height;
+          line-height: var(--app-nav-height);
+          height: var(--app-nav-height);
           display: none;
           text-align: center;
           margin-left: auto;
