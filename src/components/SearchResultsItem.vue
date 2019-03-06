@@ -1,9 +1,7 @@
 <template>
-  <div class="search-results-item" :class="{ 'search-results-item--active': isActive() }">
+  <router-link :to="{ name: 'document', params: { id: doc.id, routing: doc.routing } }" class="search-results-item" :class="{ 'search-results-item--active': isActive() }">
     <h5 class="search-results-item__basename">
-      <router-link :to="{ name: 'document', params: { id: doc.id, routing: doc.routing } }">
-        {{ doc.basename }}
-      </router-link>
+      {{ doc.basename }}
     </h5>
     <span class="search-results-item__location small">
       <font-awesome-icon icon="folder" class="mr-1" />
@@ -20,7 +18,7 @@
         </router-link>
       </li>
     </ul>
-  </div>
+  </router-link>
 </template>
 
 <script>
@@ -79,6 +77,16 @@ export default {
   .search-results-item {
     padding: $spacer;
     border-bottom: 1px solid $gray-200;
+    display: block;
+
+    &:hover {
+      text-decoration: none;
+      background: mix($secondary, white, 5%);
+    }
+
+    &:visited &__basename {
+      color: mix($link-color, white, 50%);
+    }
 
     & .badge {
       display: inline-block;
@@ -93,12 +101,11 @@ export default {
 
       &:before {
         content: "";
-        background: $secondary;
+        border-left: 3px solid $secondary;
         position: absolute;
         top: 0;
         left: 0;
         bottom: 0;
-        width: 3px;
         box-shadow: 0 0 10px 0 $secondary;
       }
     }
