@@ -21,7 +21,7 @@ export function initialState () {
     globalSearch: true,
     facets: [
       new FacetText('content-type', 'contentType', true, item => get(types, [item.key, 'label'], item.key)),
-      new FacetText('language', 'language', true, item => {
+      new FacetText('language', 'language', false, item => {
         if (!item.key) return ''
         return capitalize(item.key.toString())
       }),

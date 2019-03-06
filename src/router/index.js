@@ -43,7 +43,7 @@ const router = new VueRouter({
           children: [
             {
               name: 'document',
-              path: 'd/:id/:routing?',
+              path: 'd/:index/:id/:routing?',
               component: DocumentView,
               props: true
             }
@@ -79,6 +79,10 @@ const router = new VueRouter({
 })
 
 router.beforeEach((to, from, next) => {
+  // Read the current index from the params
+  if (to.params.index && store.state.search.index !== to.params.index) {
+    store.commit('search/index', to.params.index)
+  }
   // True if the authentication must be skipped
   const skipsAuth = to.matched.some(r => get(r, 'meta.skipsAuth', false))
   if (skipsAuth || isAuthenticated()) {

@@ -1,7 +1,7 @@
 <template>
   <div class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet-hide-header': hideHeader  }">
     <slot name="header" v-if="!hideHeader">
-      <div class="card-header d-flex">
+      <div class="card-header px-2 d-flex">
         <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate">
           <font-awesome-icon :icon="headerIcon" />
           <template>
@@ -21,7 +21,7 @@
     <div class="list-group list-group-flush facet__items" v-if="!collapseItems">
       <slot name="search" v-if="!hideSearch">
         <form @submit.prevent="asyncFacetSearch" v-if="facet.isSearchable">
-          <label class="list-group facet__items__search border-bottom py-2 px-3">
+          <label class="list-group facet__items__search border-bottom py-2 px-2">
             <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.name) + '...'" />
             <font-awesome-icon icon="search" class="float-right" />
           </label>

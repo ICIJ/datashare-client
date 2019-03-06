@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: 'document', params: { id: doc.id, routing: doc.routing } }" class="search-results-item" :class="{ 'search-results-item--active': isActive() }">
+  <router-link :to="{ name: 'document', params }" class="search-results-item" :class="{ 'search-results-item--active': isActive() }">
     <h5 class="search-results-item__basename">
       {{ doc.basename }}
     </h5>
@@ -23,6 +23,7 @@
 
 <script>
 import get from 'lodash/get'
+import pick from 'lodash/pick'
 import uniqBy from 'lodash/uniqBy'
 import ner from '@/mixins/ner'
 
@@ -52,6 +53,9 @@ export default {
     },
     namedEntities () {
       return uniqBy(this.doc.get('inner_hits.NamedEntity.hits.hits', []), '_source.mention')
+    },
+    params () {
+      return pick(this.doc, ['index', 'id', 'routing'])
     }
   },
   filters: {
