@@ -70,7 +70,7 @@ describe('Search.vue', () => {
 
     await wrapper.vm.search('document')
 
-    expect(wrapper.find('.search-results-item__basename a').attributes().href).toMatch(/doc.txt$/)
+    expect(wrapper.find('a.search-results-item').attributes().href).toMatch(/doc.txt$/)
   })
 
   it('should make a link with routing for a child document', async () => {
@@ -79,7 +79,7 @@ describe('Search.vue', () => {
 
     await wrapper.vm.search('children')
 
-    expect(wrapper.find('.search-results-item__basename a').attributes().href).toMatch(/child.txt\/parent.txt/)
+    expect(wrapper.find('a.search-results-item').attributes().href).toMatch(/child.txt\/parent.txt/)
   })
 
   it('should return 2 documents', async () => {
