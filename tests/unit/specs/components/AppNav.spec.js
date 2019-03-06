@@ -1,10 +1,10 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
-import messages from '@/lang/en'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
+import messages from '@/lang/en'
 import AppNav from '@/components/AppNav'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import router from '@/router'
 import store from '@/store'
 import { getOS } from '@/utils/user'
@@ -18,7 +18,7 @@ jest.mock('@/utils/user', () => {
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
-localVue.component('font-awesome-icon', FontAwesomeIcon)
+
 localVue.use(VueI18n)
 localVue.use(Murmur)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })

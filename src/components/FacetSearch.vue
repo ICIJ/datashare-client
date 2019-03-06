@@ -4,7 +4,7 @@
       <input type="search" class="form-control" id="input-facet-search" v-model="facetQuery" />
       <label class="input-group-append m-0" for="input-facet-search">
         <span class="input-group-text">
-          <font-awesome-icon icon="search" />
+          <fa icon="search" />
         </span>
       </label>
     </form>

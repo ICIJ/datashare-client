@@ -4,7 +4,7 @@
       {{ doc.basename }}
     </h5>
     <span class="search-results-item__location small">
-      <font-awesome-icon icon="folder" class="mr-1" />
+      <fa icon="folder" class="mr-1" />
       {{ location }}
     </span>
     <div class="search-results-item__fragments" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
@@ -13,7 +13,7 @@
           :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
         <router-link :to="{ name: 'document', params: { id: doc.id } }" class="badge badge-pill text-white"
                      :class="[getCategoryClass(ne._source.category, 'bg-')]" v-b-tooltip.hover :title="ne._source.mention">
-          <font-awesome-icon :icon="getCategoryIcon(ne._source.category)" class="mr-1" />
+          <fa :icon="getCategoryIcon(ne._source.category)" class="mr-1" />
           {{ ne._source.mention | truncate }}
         </router-link>
       </li>

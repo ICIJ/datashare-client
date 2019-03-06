@@ -3,14 +3,14 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { createServer } from 'http-server'
+
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import DocumentView from '@/components/document/DocumentView'
-import { createServer } from 'http-server'
 import { EventBus } from '@/utils/event-bus'
 
 const localVue = createLocalVue()
@@ -18,7 +18,7 @@ localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
-localVue.component('font-awesome-icon', FontAwesomeIcon)
+
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages }, silentTranslationWarn: true })
 
 describe('DocumentView.vue', () => {

@@ -3,7 +3,7 @@
     <div class="row no-gutters">
       <div class="col tree-node__label pb-1">
         <a @click="getChildren" :title="node.label" v-b-tooltip.hover>
-          <font-awesome-icon icon="folder" class="mr-1 tree-node__label__icon" />
+          <fa icon="folder" class="mr-1 tree-node__label__icon" />
           {{ node.label }}
         </a>
       </div>
@@ -14,7 +14,7 @@
           v-b-tooltip.hover
           :title="$t('document.search_directory')"
           class="badge badge-pill badge-light">
-          <font-awesome-icon icon="search" class="tree-node__count__icon" />
+          <fa icon="search" class="tree-node__count__icon" />
           <span>
             {{ node.count || 0 }}
           </span>
@@ -44,7 +44,7 @@ export default {
   data: function () {
     return {
       open: false,
-      queue: new PQueue({concurrency: 1})
+      queue: new PQueue({ concurrency: 1 })
     }
   },
   computed: {

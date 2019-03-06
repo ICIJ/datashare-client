@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import messages from '@/lang/en'
 import messagesFr from '@/lang/fr'
 import router from '@/router'

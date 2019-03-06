@@ -4,7 +4,7 @@
       <div class="nav search-results__toolbar p-0" v-show="!showFilters">
         <li class="nav-item">
           <a class="nav-link text-uppercase font-weight-bold" href @click.prevent="clickOnShowFilters()">
-            <font-awesome-icon icon="filter" />
+            <fa icon="filter" />
             {{ $t('search.showFilters') }}
           </a>
         </li>

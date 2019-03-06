@@ -2,7 +2,7 @@
   <div class="indexing container pt-4">
     <div class="text-right">
       <button class="btn btn-primary mr-2 btn-extract" type="button" @click="openExtractingForm">
-        <font-awesome-icon icon="rocket" class="mr-2" />
+        <fa icon="rocket" class="mr-2" />
         {{ $t('indexing.extract_text') }}
       </button>
       <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
@@ -14,7 +14,7 @@
     </div>
     <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
       <div slot="modal-title">
-        <font-awesome-icon icon="rocket" class="mr-2" />
+        <fa icon="rocket" class="mr-2" />
         {{ $t('indexing.extract_text') }}
       </div>
       <extracting-form id="extracting-form" :finally="closeExtractingForm" />
@@ -50,7 +50,7 @@
             <div class="col-md-auto p-0 my-auto">
               <button class="btn btn-link btn-stop-task" :title="$t('indexing.stop_task')"
                       @click="task.state === 'RUNNING' ? stopTask(task.name) : ''" :disabled="task.state !== 'RUNNING'">
-                <font-awesome-icon icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '']" />
+                <fa icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '']" />
               </button>
             </div>
           </li>

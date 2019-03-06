@@ -1,20 +1,20 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
-import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
-import messages from '@/lang/en'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { createServer } from 'http-server'
+
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { createServer } from 'http-server'
 import bFormSelect from 'bootstrap-vue/es/components/form-select/form-select'
+import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
+import messages from '@/lang/en'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
-localVue.component('font-awesome-icon', FontAwesomeIcon)
+
 localVue.component('b-form-select', bFormSelect)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 

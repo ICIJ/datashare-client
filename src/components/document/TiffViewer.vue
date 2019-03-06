@@ -3,10 +3,10 @@
     <template v-if="doc.pages.length > 0">
       <div class="tiff-viewer__header text-center">
         <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, -1)">
-          <font-awesome-icon icon="undo" class="float-right" />
+          <fa icon="undo" class="float-right" />
         </button>
         <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, 1)">
-          <font-awesome-icon icon="redo" class="float-right" />
+          <fa icon="redo" class="float-right" />
         </button>
         <div class="tiff-viewer__header__pages">
           {{ $t('document.page') }}
@@ -20,14 +20,14 @@
       </div>
       <div class="img-thumbnail">
         <div class="alert tiff-viewer__warning">
-          <font-awesome-icon icon="exclamation-triangle" />
+          <fa icon="exclamation-triangle" />
           <span>The browser preview of this TIFF file may not show all the images. We suggest you download it in your computer to view all the contents.</span>
         </div>
         <img class="tiff-viewer__canvas img-responsive" :width="maxWidth" :src="page(doc.active).toDataURL()"/>
       </div>
     </template>
     <div v-else class="alert">
-      <font-awesome-icon icon="cog" spin />
+      <fa icon="cog" spin />
       {{ message }}
     </div>
   </div>

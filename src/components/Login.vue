@@ -10,14 +10,14 @@
           <li class="list-group-item bg-light">
             <p>{{ $t('login.authentication_platform') }}</p>
             <a class="btn btn-dark btn-lg" :href="getConfig('DS_AUTH_SIGNIN')">
-              <font-awesome-icon icon="user-shield" class="mr-2" />
+              <fa icon="user-shield" class="mr-2" />
               {{ $t('login.xemx') }}
             </a>
           </li>
           <li class="list-group-item">
             <p>{{ $t('login.support_desk') }}</p>
             <a class="btn btn-outline-secondary btn-lg" href="https://jira.icij.org/servicedesk/customer/portal/4/create/108">
-              <font-awesome-icon icon="ambulance" class="mr-2" />
+              <fa icon="ambulance" class="mr-2" />
               {{ $t('login.ask_help') }}
             </a>
           </li>

@@ -2,7 +2,7 @@
   <div class="facet card facet--hide-show-more facet--hide-search" v-if="indices.length > 1">
     <div class="card-header">
       <h6 @click="toggleItems">
-        <font-awesome-icon :icon="headerIcon" />
+        <fa :icon="headerIcon" />
         {{ $t('facet.projects') }}
       </h6>
     </div>

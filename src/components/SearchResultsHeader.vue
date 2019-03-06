@@ -4,12 +4,12 @@
       <div @click.prevent="firstPage"
            :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__first-page', 'px-2']"
            v-b-tooltip.hover :title="$t('search.results.firstPage')" v-if="response.total > $store.state.search.size">
-        <font-awesome-icon icon="angle-double-left" />
+        <fa icon="angle-double-left" />
       </div>
       <div @click.prevent="previousPage"
            :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__previous-page', 'px-2']"
            v-b-tooltip.hover :title="$t('search.results.previousPage')" v-if="response.total > $store.state.search.size">
-        <font-awesome-icon icon="angle-left" />
+        <fa icon="angle-left" />
       </div>
       <div class="search-results__header__progress">
         <div class="search-results__header__progress__pagination">
@@ -22,12 +22,12 @@
       <div @click.prevent="nextPage"
            :class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__next-page', 'px-2']"
            v-b-tooltip.hover :title="$t('search.results.nextPage')" v-if="response.total > $store.state.search.size">
-        <font-awesome-icon icon="angle-right" />
+        <fa icon="angle-right" />
       </div>
       <div @click.prevent="lastPage"
            :class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__last-page', 'px-2']"
            v-b-tooltip.hover :title="$t('search.results.lastPage')" v-if="response.total > $store.state.search.size">
-        <font-awesome-icon icon="angle-double-right" />
+        <fa icon="angle-double-right" />
       </div>
     </div>
   </div>

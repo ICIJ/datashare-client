@@ -2,7 +2,7 @@
   <facet v-bind="$props" class="facet--named-entity" ref="facet">
     <template slot="title">
       <span class="col-2 facet__items__item__icon pl-2 pr-0" :class="getCategoryClass(facet.category, 'text-')">
-        <font-awesome-icon :icon="getCategoryIcon(facet.category)" />
+        <fa :icon="getCategoryIcon(facet.category)" />
       </span>
       {{ $t('facet.' + facet.name) }}
     </template>
@@ -17,10 +17,10 @@
         <div class="col facet__items__item__menu">
           <b-dropdown class="h-100 my-2" no-caret dropright offset="25">
             <template slot="button-content" class="px-1">
-              <font-awesome-icon icon="ellipsis-v" />
+              <fa icon="ellipsis-v" />
             </template>
             <b-dropdown-item @click="deleteNamedEntitiesByMentionNorm(item.key)">
-              <font-awesome-icon icon="trash-alt" />
+              <fa icon="trash-alt" />
               {{ $t('facet.deleteNamedEntity') }}
             </b-dropdown-item>
           </b-dropdown>

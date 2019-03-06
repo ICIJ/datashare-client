@@ -2,29 +2,32 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
-import AppFooter from '@/components/AppFooter'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import messages from '@/lang/en'
-import router from '@/router'
 import bDropdown from 'bootstrap-vue/es/components/dropdown/dropdown'
 import bDropdownItem from 'bootstrap-vue/es/components/dropdown/dropdown-item'
 import bTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
 import fetchPonyfill from 'fetch-ponyfill'
 
+import AppFooter from '@/components/AppFooter'
+import messages from '@/lang/en'
+import router from '@/router'
+
 const { fetch, Response } = fetchPonyfill()
 window.fetch = fetch
 
 const localVue = createLocalVue()
+
 localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
-localVue.component('font-awesome-icon', FontAwesomeIcon)
+
 localVue.component('b-dropdown', bDropdown)
 localVue.component('b-dropdown-item', bDropdownItem)
 localVue.component('b-tooltip', bTooltip)
 localVue.directive('b-tooltip', bTooltip)
-localVue.prototype.config = { userDir: '/home/foo/Datashare' }
+
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+
+Murmur.config.set('userDir', '/home/foo/Datashare')
 
 describe('AppFooter.vue', () => {
   let wrapper

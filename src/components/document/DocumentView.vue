@@ -8,7 +8,7 @@
         <h3>
           <span>{{ document.basename }}</span>
           <a class="btn btn-link float-right" :href="getFullUrl" target="_blank" :title="$t('document.download_file')">
-            <font-awesome-icon icon="download" class="text-white" />
+            <fa icon="download" class="text-white" />
             <span class="sr-only">{{ $t('document.download_button') }}</span>
           </a>
         </h3>
@@ -90,7 +90,7 @@
           <div v-else>
             <div v-for="(results, index) in groupByCategories(namedEntities)" :key="index" class="mb-4">
               <div class="mb-2" :class="getCategoryClass(results[0].source.category, 'text-')">
-                <font-awesome-icon :icon="getCategoryIcon(results[0].source.category)" />
+                <fa :icon="getCategoryIcon(results[0].source.category)" />
                 {{ $t('facet.named-entity-' + results[0].source.category.toLowerCase()) }} <i>({{ results.length }})</i>
               </div>
               <span v-for="(result, index) in groupByMentionNorm(results)" :key="index" class="d-inline mr-2">
@@ -124,7 +124,7 @@
       </div>
     </div>
     <div v-else class="nodocument">
-      <font-awesome-icon icon="exclamation-triangle" />
+      <fa icon="exclamation-triangle" />
       <span>{{ $t('document.not_found') }}</span>
     </div>
   </div>
@@ -132,7 +132,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import ContentPlaceholder from '@/components/ContentPlaceholder'
 import PdfViewer from '@/components/document/PdfViewer'
 import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
 import TiffViewer from '@/components/document/TiffViewer'
@@ -150,7 +149,6 @@ export default {
   name: 'document-view',
   mixins: [ner, utils],
   components: {
-    ContentPlaceholder,
     PdfViewer,
     SpreadsheetViewer,
     TiffViewer

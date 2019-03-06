@@ -7,24 +7,20 @@ import Murmur from '@icij/murmur'
 import router from '@/router'
 import messages from '@/lang/en'
 import store from '@/store'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import DatashareClient from '@/api/DatashareClient'
 
+import '@/utils/font-awesome'
 import '@/main.scss'
-
-Vue.config.productionTip = false
-Vue.use(VueI18n)
-Vue.use(VueProgressBar, { color: '#852308' })
-Vue.use(BootstrapVue)
-Vue.use(Murmur)
-// Font Awesome component must be available everywhere
-Vue.component('font-awesome-icon', FontAwesomeIcon)
-
-const i18n = new VueI18n({ locale: 'en', fallbackLocale: 'en', messages: { 'en': messages } })
-let vm = null
 
 /* eslint-disable no-new */
 async function createApp (LocalVue = Vue) {
+  LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
+  LocalVue.use(VueI18n)
+  LocalVue.use(VueProgressBar, { color: '#852308' })
+  LocalVue.use(BootstrapVue)
+  LocalVue.use(Murmur)
+
+  const i18n = new VueI18n({ locale: 'en', fallbackLocale: 'en', messages: { 'en': messages } })
   const ds = new DatashareClient()
   // Get the config object
   const config = await ds.getConfig().then(res => res.json())
@@ -45,4 +41,4 @@ if (process.env.NODE_ENV !== 'test') {
   createApp()
 }
 
-export { vm, createApp }
+export { createApp }

@@ -5,14 +5,14 @@ import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { mount, createLocalVue } from '@vue/test-utils'
+import find from 'lodash/find'
+
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import Search from '@/components/Search'
-import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
-import find from 'lodash/find'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -20,7 +20,7 @@ localVue.use(Murmur)
 localVue.use(Vuex)
 localVue.use(VueProgressBar, { color: '#852308' })
 localVue.use(BootstrapVue)
-localVue.component('font-awesome-icon', FontAwesomeIcon)
+
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('Search.vue', () => {

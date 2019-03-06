@@ -9,7 +9,7 @@
       <div v-html="content"></div>
     </div>
     <div class="alert" v-if="!doc.active">
-      <font-awesome-icon icon="cog" spin />
+      <fa icon="cog" spin />
       {{ message }}
     </div>
   </div>

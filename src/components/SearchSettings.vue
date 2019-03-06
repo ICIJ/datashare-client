@@ -1,14 +1,14 @@
 <template>
   <span class="search-settings">
     <button type="button" class="btn btn-primary" id="toggleSettings" :title="$t('search.settings.title')" v-b-tooltip.hover>
-      <font-awesome-icon icon="cog" />
+      <fa icon="cog" />
       <span class="sr-only">
         {{ $t('search.settings.title') }}
       </span>
     </button>
     <b-popover target="toggleSettings" triggers="click" :placement="placement" :container="container">
       <template slot="title">
-        <font-awesome-icon icon="cog" />
+        <fa icon="cog" />
         {{ $t('search.settings.title') }}
       </template>
       <div class="search-settings__popover">

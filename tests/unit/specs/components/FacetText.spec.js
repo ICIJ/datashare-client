@@ -2,22 +2,22 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import vBFormCheckbox from 'bootstrap-vue/es/components/form-checkbox/form-checkbox'
+import vBFormCheckboxGroup from 'bootstrap-vue/es/components/form-checkbox/form-checkbox-group'
+import find from 'lodash/find'
+
+import FacetText from '@/components/FacetText'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import FacetText from '@/components/FacetText'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import find from 'lodash/find'
-import vBFormCheckbox from 'bootstrap-vue/es/components/form-checkbox/form-checkbox'
-import vBFormCheckboxGroup from 'bootstrap-vue/es/components/form-checkbox/form-checkbox-group'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(Vuex)
-localVue.component('font-awesome-icon', FontAwesomeIcon)
+
 localVue.component('b-form-checkbox', vBFormCheckbox)
 localVue.component('b-form-checkbox-group', vBFormCheckboxGroup)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })

@@ -3,7 +3,7 @@
     <slot name="header" v-if="!hideHeader">
       <div class="card-header px-2 d-flex">
         <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate">
-          <font-awesome-icon :icon="headerIcon" />
+          <fa :icon="headerIcon" />
           <template>
             <slot name="title">
               {{ $t('facet.' + facet.name) }}
@@ -12,7 +12,7 @@
         </h6>
         <span v-if="hasValues()" class="btn-group">
           <button class="d-inline-flex btn btn-sm btn-outline-dark py-0" @click="invert" :class="{ 'active': isReversed() }">
-            <font-awesome-icon icon="eye-slash" class="mr-1 mt-1" />
+            <fa icon="eye-slash" class="mr-1 mt-1" />
             {{ $t('facet.invert') }}
           </button>
         </span>
@@ -23,7 +23,7 @@
         <form @submit.prevent="asyncFacetSearch" v-if="facet.isSearchable">
           <label class="list-group facet__items__search border-bottom py-2 px-2">
             <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.name) + '...'" />
-            <font-awesome-icon icon="search" class="float-right" />
+            <fa icon="search" class="float-right" />
           </label>
         </form>
       </slot>
@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import ContentPlaceholder from '@/components/ContentPlaceholder'
 import { removeDiacritics } from '@/utils/strings'
 import facets from '@/mixins/facets'
 import PQueue from 'p-queue'
@@ -71,9 +70,6 @@ const initialNumberOfFilesDisplayed = 5
 export default {
   name: 'Facet',
   mixins: [facets],
-  components: {
-    ContentPlaceholder
-  },
   data () {
     return {
       facetQuery: '',

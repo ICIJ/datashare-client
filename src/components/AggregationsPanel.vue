@@ -8,7 +8,7 @@
         <ul class="nav">
           <li class="nav-item">
             <a class="nav-link p-0 text-uppercase font-weight-bold" href @click.prevent="clickOnHideFilters()">
-              <font-awesome-icon icon="filter" />
+              <fa icon="filter" />
               {{ $t('search.hideFilters') }}
             </a>
           </li>
@@ -29,8 +29,8 @@ import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetPath from '@/components/FacetPath'
 import FacetSearch from '@/components/FacetSearch'
 import FacetText from '@/components/FacetText'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import IndexSelector from '@/components/IndexSelector'
+
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import forEach from 'lodash/forEach'
 import get from 'lodash/get'
@@ -45,7 +45,6 @@ export default {
     FacetPath,
     FacetSearch,
     FacetText,
-    FontAwesomeIcon,
     IndexSelector,
     bModal
   },

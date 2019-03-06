@@ -1,6 +1,7 @@
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount, createWrapper } from '@vue/test-utils'
+
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
 import store from '@/store'
@@ -8,8 +9,6 @@ import router from '@/router'
 import SearchSettings from '@/components/SearchSettings'
 import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
 import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-
-Murmur.config.set('ignoredElements', ['font-awesome-icon'])
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)

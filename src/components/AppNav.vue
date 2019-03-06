@@ -14,12 +14,12 @@
             <search-bar />
           </div>
           <a class="app__nav__container__main__hamburger col" @click.prevent="toggleMenu()" href="#">
-            <font-awesome-icon icon="bars" />
+            <fa icon="bars" />
           </a>
           <ul class="app__nav__container__main__menu list-unstyled col" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
             <li class="list-unstyled-item app__nav__container__main__menu__item border-right ml-auto" v-if="!isRemote">
               <router-link :to="{ name: 'indexing' }">
-                <font-awesome-icon icon="rocket" class="mr-1" />
+                <fa icon="rocket" class="mr-1" />
                 {{ $t('menu.analyse') }}
               </router-link>
             </li>
@@ -40,7 +40,7 @@
             </li>
             <li class="list-unstyled-item app__nav__container__main__menu__item logout border-left" v-if="isRemote">
               <a :href="logoutLink">
-                <font-awesome-icon icon="sign-out-alt" class="mr-1" />
+                <fa icon="sign-out-alt" class="mr-1" />
                 {{ $t('menu.logout') }}
               </a>
             </li>

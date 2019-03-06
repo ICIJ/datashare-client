@@ -1,13 +1,13 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
-import { createLocalVue, mount } from '@vue/test-utils'
 import BootstrapVue from 'bootstrap-vue'
+import { createLocalVue, mount } from '@vue/test-utils'
+import find from 'lodash/find'
+
 import Murmur from '@icij/murmur'
 import IndexSelector from '@/components/IndexSelector'
-import find from 'lodash/find'
 import router from '@/router'
 import store from '@/store'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 import messages from '@/lang/en'
 
 const localVue = createLocalVue()
@@ -15,7 +15,7 @@ localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(Vuex)
 localVue.use(BootstrapVue)
-localVue.component('font-awesome-icon', FontAwesomeIcon)
+
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('IndexSelector.vue', () => {

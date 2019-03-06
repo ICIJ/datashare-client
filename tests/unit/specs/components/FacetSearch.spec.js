@@ -3,15 +3,15 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
+import find from 'lodash/find'
+
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { EventBus } from '@/utils/event-bus'
 import FacetSearch from '@/components/FacetSearch'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
-import find from 'lodash/find'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn().mockImplementation(() => {
@@ -26,7 +26,7 @@ localVue.use(Vuex)
 localVue.use(BootstrapVue)
 localVue.use(VueI18n)
 localVue.use(Murmur)
-localVue.component('font-awesome-icon', FontAwesomeIcon)
+
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('FacetSearch.vue', () => {
