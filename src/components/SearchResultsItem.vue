@@ -33,6 +33,9 @@ export default {
   methods: {
     isActive () {
       return this.$route.name === 'document' && get(this.$store.state, 'document.doc.id') === this.doc.id
+    },
+    yo () {
+      console.log('yo')
     }
   },
   computed: {
@@ -84,7 +87,7 @@ export default {
       background: mix($secondary, white, 5%);
     }
 
-    &:visited &__basename {
+    &:visited:not(&--active) &__basename {
       color: mix($link-color, white, 50%);
     }
 
