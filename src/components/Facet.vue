@@ -18,7 +18,7 @@
         </span>
       </div>
     </slot>
-    <slide-up-down class="list-group list-group-flush facet__items" :active="!collapseItems">
+    <div class="list-group list-group-flush facet__items" v-if="!collapseItems">
       <slot name="search" v-if="!hideSearch">
         <form @submit.prevent="asyncFacetSearch" v-if="facet.isSearchable">
           <label class="list-group facet__items__search border-bottom py-2 px-2">
@@ -50,7 +50,7 @@
       <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
         <span v-html="$t('facet.noMatches')"></span>
       </div>
-    </slide-up-down>
+    </div>
   </div>
 </template>
 
