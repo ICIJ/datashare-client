@@ -158,6 +158,7 @@ describe('DocumentView.vue', () => {
       .withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
       .commit()
 
+    wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
 
     expect(wrapper.contains('.spreadsheet-viewer')).toBeTruthy()
@@ -172,6 +173,7 @@ describe('DocumentView.vue', () => {
       .withContentType('text/csv'))
       .commit()
 
+    wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
 
     expect(wrapper.contains('.spreadsheet-viewer')).toBeTruthy()
@@ -186,6 +188,7 @@ describe('DocumentView.vue', () => {
       .withContentType('application/pdf'))
       .commit()
 
+    wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
 
     expect(wrapper.contains('.pdf-viewer')).toBeTruthy()
@@ -200,6 +203,7 @@ describe('DocumentView.vue', () => {
       .withContentType('image/tiff'))
       .commit()
 
+    wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
 
     expect(wrapper.contains('.tiff-viewer')).toBeTruthy()

@@ -107,7 +107,7 @@
           </div>
         </div>
         <div class="tab-pane text-pre-wrap" :class="{ active: tab === 'text' }" v-html="markedSourceContent()"></div>
-        <div class="tab-pane" :class="{ active: tab === 'preview' }">
+        <div class="tab-pane" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
           <template v-if="document.contentType === 'application/pdf'">
             <pdf-viewer :document="document" />
           </template>
