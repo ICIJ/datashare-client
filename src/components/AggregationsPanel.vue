@@ -93,6 +93,7 @@ export default {
       const facet = this.$refs[component.name][0]
       if (facet) {
         facet.root.selectedValuesFromStore()
+        facet.selectedValuesFromStore()
       }
     },
     resetFacetValues () {
