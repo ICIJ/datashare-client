@@ -1,7 +1,7 @@
 <template>
   <router-link :to="{ name: 'document', params }" class="search-results-item" :class="{ 'search-results-item--active': isActive() }">
     <h5 class="search-results-item__basename">
-      {{ doc.basename }}
+      <document-sliced-name :document="doc" />
     </h5>
     <span class="search-results-item__location small">
       <fa icon="folder" class="mr-1" />
@@ -25,12 +25,17 @@
 import get from 'lodash/get'
 import pick from 'lodash/pick'
 import uniqBy from 'lodash/uniqBy'
+
 import ner from '@/mixins/ner'
+import DocumentSlicedName from '@/components/DocumentSlicedName'
 
 export default {
   name: 'SearchResultsItem',
   mixins: [ner],
   props: ['doc'],
+  components: {
+    DocumentSlicedName
+  },
   methods: {
     isActive () {
       return this.$route.name === 'document' && get(this.$store.state, 'document.doc.id') === this.doc.id

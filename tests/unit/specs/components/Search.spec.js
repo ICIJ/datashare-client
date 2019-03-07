@@ -170,7 +170,7 @@ describe('Search.vue', () => {
     await wrapper.vm.search('*')
 
     expect(wrapper.findAll('.search-results-item').length).toEqual(1)
-    expect(wrapper.findAll('.search-results-item .search-results-item__basename').at(0).text()).toEqual('doc_02.txt')
+    expect(wrapper.findAll('.search-results-item .search-results-item__basename .document-sliced-name__item__root').at(0).text()).toEqual('doc_02.txt')
   })
 
   it('should hide the `Show filters` menu by default', async () => {

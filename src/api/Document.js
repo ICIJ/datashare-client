@@ -4,11 +4,25 @@ import EsDoc from './EsDoc'
 import moment from 'moment'
 
 export default class Document extends EsDoc {
+  get shortId () {
+    return this.raw._id.slice(0, 10)
+  }
   get path () {
     return get(this, 'source.path', '')
   }
   get basename () {
     return last(this.path.split('/'))
+  }
+  get slicedName () {
+    if (this.source.extractionLevel === 0) {
+      return [ this.basename ]
+    }
+    const distance = this.source.extractionLevel - 1
+    // Sliced name for extracted doc is composed of:
+    // - root basename
+    // - distance with the top parent
+    // - shorter version of the document id
+    return [ this.basename ].concat([ distance ].slice(0, distance)).concat([ this.shortId ])
   }
   get highlight () {
     return this.raw.highlight

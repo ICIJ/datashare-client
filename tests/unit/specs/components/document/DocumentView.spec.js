@@ -49,18 +49,16 @@ describe('DocumentView.vue', () => {
   })
 
   it('should display a document', async () => {
-    const id = 'foo.txt'
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const id = 'foo.txt'
+    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('this is foo document'))
       .commit()
     await wrapper.vm.getDoc()
 
-    expect(wrapper.find('h3 > span').text()).toEqual(id)
-    expect(wrapper.findAll('dd').at(2).text()).toEqual(id)
-    expect(wrapper.findAll('dd').at(1).text()).toEqual(id)
+    expect(wrapper.find('.document__content__basename').text()).toEqual(id)
   })
 
   it('should display document path with config.mountedDataDir', async () => {
@@ -77,7 +75,7 @@ describe('DocumentView.vue', () => {
   it('should display a child document', async () => {
     const id = 'child.txt'
     const routing = 'parent.txt'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id, routing } })
+    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id, routing } })
 
     await letData(es).have(new IndexedDocument(routing)
       .withContent('this is a parent document'))
@@ -89,7 +87,8 @@ describe('DocumentView.vue', () => {
 
     await wrapper.vm.getDoc()
 
-    expect(wrapper.find('h3 > span').text()).toEqual(id)
+    expect(wrapper.find('.document__content__basename').text()).toEqual(id)
+    expect(wrapper.find('.document__content__tree-level').text()).toEqual('1')
   })
 
   it('should mark named entities', async () => {

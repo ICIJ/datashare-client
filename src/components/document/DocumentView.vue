@@ -6,7 +6,7 @@
     <div class="document m-3" v-if="document">
       <div class="document__header">
         <h3>
-          <span>{{ document.basename }}</span>
+          <document-sliced-name :document="document" />
           <a class="btn btn-link float-right" :href="getFullUrl" target="_blank" :title="$t('document.download_file')">
             <fa icon="download" class="text-white" />
             <span class="sr-only">{{ $t('document.download_button') }}</span>
@@ -41,18 +41,18 @@
         <div class="tab-pane" :class="{active: tab === 'details'}">
           <dl class="row">
             <dt class="col-sm-3">{{ $t('document.name') }}</dt>
-            <dd class="col-sm-9">{{ document.basename }}</dd>
+            <dd class="col-sm-9 document__content__basename">{{ document.basename }}</dd>
             <dt class="col-sm-3">{{ $t('document.path') }}</dt>
-            <dd class="col-sm-9">{{ documentPath }}</dd>
+            <dd class="col-sm-9 document__content__path">{{ documentPath }}</dd>
             <dt class="col-sm-3">{{ $t('document.id') }}</dt>
-            <dd class="col-sm-9">{{ document.id }}</dd>
+            <dd class="col-sm-9 document__content__id">{{ document.id }}</dd>
             <template v-if="document.source.metadata.tika_metadata_creation_date">
               <dt class="col-sm-3">{{ $t('document.creation_date') }}</dt>
-              <dd class="col-sm-9">{{ document.creationDate }}</dd>
+              <dd class="col-sm-9 document__content__creation-date">{{ document.creationDate }}</dd>
             </template>
             <template v-if="document.source.contentLength !== -1">
               <dt class="col-sm-3">{{ $t('document.size') }}</dt>
-              <dd class="col-sm-9">{{ document.humanSize }}</dd>
+              <dd class="col-sm-9 document__content__size">{{ document.humanSize }}</dd>
             </template>
             <template v-if="document.source.language !== 'UNKNOWN'">
               <dt class="col-sm-3">{{ $t('document.content_language') }}</dt>
@@ -68,12 +68,12 @@
             </template>
             <template v-if="document.source.extractionLevel > 0">
               <dt class="col-sm-3">{{ $t('document.tree_level') }}</dt>
-              <dd class="col-sm-9">{{ document.source.extractionLevel }}</dd>
+              <dd class="col-sm-9 document__content__tree-level">{{ document.source.extractionLevel }}</dd>
             </template>
             <template v-if="document.source.extractionLevel > 0 && parentDocument">
               <dt class="col-sm-3">{{ $t('document.parent_document') }}</dt>
               <dd class="col-sm-9">
-                <router-link :to="{ name: 'document', params: { id: document.source.parentDocument, routing: document.routing } }">
+                <router-link :to="{ name: 'document', params: { id: document.source.parentDocument, routing: document.routing } }" class="document__content__parent">
                   {{ parentDocument.basename }}
                 </router-link>
               </dd>
@@ -132,9 +132,11 @@
 
 <script>
 import { mapState } from 'vuex'
+import DocumentSlicedName from '@/components/DocumentSlicedName'
 import PdfViewer from '@/components/document/PdfViewer'
 import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
 import TiffViewer from '@/components/document/TiffViewer'
+
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import { capitalize, highlight } from '@/utils/strings'
@@ -149,6 +151,7 @@ export default {
   name: 'document-view',
   mixins: [ner, utils],
   components: {
+    DocumentSlicedName,
     PdfViewer,
     SpreadsheetViewer,
     TiffViewer
