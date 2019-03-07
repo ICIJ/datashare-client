@@ -27,6 +27,28 @@ async function createApp (LocalVue = Vue) {
   // Murmur expores a config attribute which share a Config object
   // with the current vue instance.
   Murmur.config.merge(config)
+  Murmur.config.set('content-placeholder.rows', [
+    {
+      height: '1em',
+      boxes: [[0, '5em']]
+    },
+    {
+      height: '1em',
+      boxes: [[0, '5em'], ['1em', '60%']]
+    },
+    {
+      height: '1em',
+      boxes: [[0, '5em']]
+    },
+    {
+      height: '1em',
+      boxes: [[0, '5em'], ['1em', '40%']]
+    },
+    {
+      height: '1em',
+      boxes: [[0, '5em']]
+    }
+  ])
   // Select the first user's index as default index
   store.commit('search/index', config.userIndices[0])
   // Render function returns a router-view component by default

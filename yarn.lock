@@ -633,9 +633,9 @@
   version "0.0.22"
   resolved "https://registry.yarnpkg.com/@fortawesome/vue-fontawesome/-/vue-fontawesome-0.0.22.tgz#720457bda0e5866265e5e0f8fe4fbd857fa5653f"
 
-"@icij/murmur@^1.8.2":
-  version "1.8.2"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-1.8.2.tgz#a9cd70fb5b719746193f52c8c5b9c139914ac4ec"
+"@icij/murmur@1.8.3":
+  version "1.8.3"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-1.8.3.tgz#50125cb28f4d039759e81f1ecb0e4d3702102172"
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
     "@fortawesome/fontawesome-svg-core" "^1.2.1"
