@@ -634,9 +634,9 @@
   version "0.0.22"
   resolved "https://registry.yarnpkg.com/@fortawesome/vue-fontawesome/-/vue-fontawesome-0.0.22.tgz#720457bda0e5866265e5e0f8fe4fbd857fa5653f"
 
-"@icij/murmur@1.8.3":
-  version "1.8.3"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-1.8.3.tgz#50125cb28f4d039759e81f1ecb0e4d3702102172"
+"@icij/murmur@1.8.4":
+  version "1.8.4"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-1.8.4.tgz#e6d581e50dd6e8b60242a84747b9bec74e8ba8a5"
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
     "@fortawesome/fontawesome-svg-core" "^1.2.1"
@@ -644,7 +644,7 @@
     "@fortawesome/free-regular-svg-icons" "^5.1.1"
     "@fortawesome/free-solid-svg-icons" "^5.1"
     "@fortawesome/vue-fontawesome" "^0.0.22"
-    bootstrap "^4.1.3"
+    bootstrap "^4.3.1"
     bootstrap-vue "^2.0.0-rc.11"
     clipboard "^2.0.4"
     jquery "^3.3.1"
@@ -1742,7 +1742,7 @@ bootstrap-vue@^2.0.0-rc.11:
     popper.js "^1.12.9"
     vue-functional-data-merge "^2.0.5"
 
-bootstrap@>=4.3.1, bootstrap@^4.1.1, bootstrap@^4.1.3:
+bootstrap@>=4.3.1, bootstrap@^4.1.1, bootstrap@^4.3.1:
   version "4.3.1"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.3.1.tgz#280ca8f610504d99d7b6b4bfc4b68cec601704ac"
 
@@ -9214,11 +9214,7 @@ vue-hot-reload-api@^2.3.0:
   version "2.3.3"
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.3.tgz#2756f46cb3258054c5f4723de8ae7e87302a1ccf"
 
-vue-i18n@^7.4.2:
-  version "7.8.1"
-  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-7.8.1.tgz#2ce4b6efde679a1e05ddb5d907bfc1bc218803b2"
-
-vue-i18n@^8.4.0:
+vue-i18n@^8.4.0, vue-i18n@^8.8.2:
   version "8.8.2"
   resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.8.2.tgz#57baa73dc8f215d68e4b8f2743724657cbb77591"
 
