@@ -1,10 +1,10 @@
 <template>
   <div class="app__footer text-nowrap">
-    <router-link :to="{ name: 'indexing' }"  class="app__footer__addon btn btn-sm text-secondary" :title="$t('menu.analyse')" v-b-tooltip>
+    <router-link :to="{ name: 'indexing' }"  class="app__footer__addon btn btn-sm text-secondary" :title="$t('menu.analyse')" v-b-tooltip  v-if="!isRemote">
       <fa icon="rocket" />
       <span class="sr-only">{{ $t('menu.analyse') }}</span>
     </router-link>
-    <div class="app__footer__addon app__footer__addon--homedir" :title="$t('footer.homedir')" v-b-tooltip v-if="!isRemote">
+    <div class="app__footer__addon app__footer__addon--homedir" :title="$t('footer.homedir')" v-b-tooltip  v-if="!isRemote">
       <fa icon="folder" class="mr-1" />
       {{ $config.get('mountedDataDir') || $config.get('dataDir') }}
     </div>
