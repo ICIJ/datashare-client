@@ -595,15 +595,15 @@
   version "0.1.7"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.1.7.tgz#4336c4b06d0b5608ff1215464b66fcf9f4795284"
 
-"@fortawesome/fontawesome-common-types@^0.2.14":
-  version "0.2.14"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.14.tgz#0eb86a77ac88e8c12c48591735283f0bf0ea5606"
+"@fortawesome/fontawesome-common-types@^0.2.15":
+  version "0.2.15"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.15.tgz#16af950653083d1e3064061de9f8e5e3b579f688"
 
 "@fortawesome/fontawesome-svg-core@^1.2.1":
-  version "1.2.14"
-  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.14.tgz#48fde5fbfa223cffd5fac9c0402cfbe87605a7d0"
+  version "1.2.15"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.15.tgz#368f9fc7e8e8d8636495dc7483f97510f920ba97"
   dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.14"
+    "@fortawesome/fontawesome-common-types" "^0.2.15"
 
 "@fortawesome/fontawesome@^1.1.4":
   version "1.1.8"
@@ -612,22 +612,22 @@
     "@fortawesome/fontawesome-common-types" "^0.1.7"
 
 "@fortawesome/free-brands-svg-icons@^5.1":
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-brands-svg-icons/-/free-brands-svg-icons-5.7.1.tgz#20711fe4d6a459161d052171169baa175b90fca1"
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-brands-svg-icons/-/free-brands-svg-icons-5.7.2.tgz#80ea37f12d22a281a5eadcd0cd3c870683e5dec1"
   dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.14"
+    "@fortawesome/fontawesome-common-types" "^0.2.15"
 
 "@fortawesome/free-regular-svg-icons@^5.1.1":
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-regular-svg-icons/-/free-regular-svg-icons-5.7.1.tgz#eab182769eef910f961ed4c3a581ebd9934b4b38"
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-regular-svg-icons/-/free-regular-svg-icons-5.7.2.tgz#7113bf9df5a970918b8cac8eb45e5ad120818741"
   dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.14"
+    "@fortawesome/fontawesome-common-types" "^0.2.15"
 
 "@fortawesome/free-solid-svg-icons@^5.1":
-  version "5.7.1"
-  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-5.7.1.tgz#df41b8643383862a2af93456e7129e5ffc0fb7ae"
+  version "5.7.2"
+  resolved "https://registry.yarnpkg.com/@fortawesome/free-solid-svg-icons/-/free-solid-svg-icons-5.7.2.tgz#9ec2ed353d630092a8e19cc8aae2f716572963e5"
   dependencies:
-    "@fortawesome/fontawesome-common-types" "^0.2.14"
+    "@fortawesome/fontawesome-common-types" "^0.2.15"
 
 "@fortawesome/vue-fontawesome@^0.0.22":
   version "0.0.22"
@@ -3243,8 +3243,8 @@ es-to-primitive@^1.2.0:
     is-symbol "^1.0.2"
 
 es6-promise@^4.2.4:
-  version "4.2.5"
-  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.5.tgz#da6d0d5692efb461e082c14817fe2427d8f5d054"
+  version "4.2.6"
+  resolved "https://registry.yarnpkg.com/es6-promise/-/es6-promise-4.2.6.tgz#b685edd8258886365ea62b57d30de28fadcd974f"
 
 escape-html@~1.0.3:
   version "1.0.3"
@@ -9316,8 +9316,8 @@ vue@^2.5.x:
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.8.tgz#f21cbc536bfc14f7d1d792a137bb12f69e60ea91"
 
 vuex-map-fields@^1.1.6:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/vuex-map-fields/-/vuex-map-fields-1.3.1.tgz#2a045db8baf2e34823d3f896d91266691c21b3d3"
+  version "1.3.2"
+  resolved "https://registry.yarnpkg.com/vuex-map-fields/-/vuex-map-fields-1.3.2.tgz#db650f2cef61563bd6a02f8c15c4dd0bcd6b1914"
 
 vuex@^3.0.1:
   version "3.1.0"
