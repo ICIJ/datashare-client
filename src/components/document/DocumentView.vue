@@ -13,7 +13,7 @@
           </a>
         </h3>
         <nav class="document__header__nav">
-          <ul class="list-inline">
+          <ul class="list-inline m-0">
             <li class="document__header__nav__item list-inline-item">
               <a @click="tab = 'details'" :class="{ active: tab === 'details' }">
                 {{ $t('document.details') }}
@@ -81,8 +81,8 @@
           </dl>
         </div>
         <div class="tab-pane document__named-entities" :class="{active: tab === 'named_entities'}">
-          <div v-if="document.source.nerTags.length === 0" class="document__named-entities--not--searched">
-            {{ $t('document.named_entites_not_searched') }}
+          <div v-if="!isRemote && document.source.nerTags.length === 0" class="document__named-entities--not--searched">
+            <div v-html="$t('document.named_entites_not_searched', { indexing_link: '#/indexing' })"></div>
           </div>
           <div v-else-if="groupByCategories(namedEntities).length === 0" class="document__named-entities--not--found">
             {{ $t('document.named_entities_not_found') }}
@@ -233,10 +233,12 @@ export default {
   }
 
   &__header {
-    background: $primary;
+    @include gradient-directional(darken($primary, 10), $primary);
     color: white;
     padding: $spacer * 2 $spacer;
     padding-bottom: 0;
+    display: inline-block;
+    width: 100%;
 
     &__nav {
       padding-top: $spacer;
@@ -246,20 +248,30 @@ export default {
 
         a {
           display: inline-block;
-          color: white;
-          border-bottom: 3px solid transparent;
           text-transform: uppercase;
           padding: $spacer * .75 $spacer;
           margin: 0;
+          position: relative;
           cursor: pointer;
 
           &:hover {
             background:rgba(white, .05);
           }
 
-          &.active {
+          &.active, &.active:hover {
             font-weight: bold;
-            border-color: theme-color('secondary');
+            background: white;
+            color: $link-color;
+
+            &:before {
+              content: "";
+              border-top: 2px solid $secondary;
+              position: absolute;
+              top: 0;
+              left: 0;
+              right: 0;
+              box-shadow: 0 0 10px 0 $secondary;
+            }
           }
         }
       }
