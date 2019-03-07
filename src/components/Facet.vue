@@ -34,7 +34,7 @@
       </div>
       <slot v-else-if="items.length > 0" name="items" :items="items" :total-count="totalCount" :facetQuery="facetQuery">
         <b-form-checkbox v-model="isAllSelected" @change="resetFacetValues" class="facet__items__all mb-0">
-          <span v-html="getItemLabel({ key: $t('facet.all'), key_as_string: $t('facet.all'), doc_count: totalCount })"></span>
+          <span v-html="getItemLabel({ key: 'all', key_as_string: 'all', doc_count: totalCount })"></span>
         </b-form-checkbox>
         <b-form-checkbox-group stacked v-model="selected" :options="options" class="list-group-item facet__items__item p-0 border-0" @input="changeSelectedValues" />
       </slot>

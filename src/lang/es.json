@@ -67,7 +67,12 @@
     "deleteNamedEntity": "Eliminar esta Entidad Identificada",
     "showMore": "Ver más",
     "local-index": "Mis documentos",
-    "all": "Todos"
+    "all": "Todos",
+    "lang": {
+      "all": "Todos",
+      "ENGLISH": "Inglés",
+      "FRENCH": "Francés"
+    }
   },
   "document": {
     "name": "Nombre del archivo",

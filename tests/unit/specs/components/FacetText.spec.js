@@ -6,12 +6,12 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import vBFormCheckbox from 'bootstrap-vue/es/components/form-checkbox/form-checkbox'
 import vBFormCheckboxGroup from 'bootstrap-vue/es/components/form-checkbox/form-checkbox-group'
-import find from 'lodash/find'
-
 import FacetText from '@/components/FacetText'
 import messages from '@/lang/en'
+import messagesFr from '@/lang/fr'
 import router from '@/router'
 import store from '@/store'
+import find from 'lodash/find'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -360,5 +360,21 @@ describe('FacetText.vue', () => {
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(2)
     expect(wrapper.vm.root.selected).toHaveLength(0)
+  })
+
+  it('should display the language facet in French', async () => {
+    const i18n = new VueI18n({ locale: 'fr', messages: { 'fr': messagesFr } })
+    wrapper = mount(FacetText, {
+      localVue,
+      i18n,
+      router,
+      store,
+      propsData: { facet: find(store.state.search.facets, { name: 'language' }) }
+    })
+    await letData(es).have(new IndexedDocument('doc_01.txt').withLanguage('ENGLISH')).commit()
+    await wrapper.vm.root.aggregate()
+
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__label').at(0).text()).toEqual('Anglais')
   })
 })

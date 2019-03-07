@@ -145,7 +145,7 @@ export const mixin = {
       const label = this.facet.itemLabel ? this.facet.itemLabel(item) : item.key
       return `
         <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
-          ${label}
+          ${this.$te(label) ? this.$t(label) : this.$te(`facet.${label}`) ? this.$t(`facet.${label}`) : label}
         </span>
         <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
           ${item.doc_count}

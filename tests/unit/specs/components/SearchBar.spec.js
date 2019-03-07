@@ -2,7 +2,6 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-
 import messages from '@/lang/en'
 import messagesFr from '@/lang/fr'
 import router from '@/router'
@@ -13,7 +12,6 @@ const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(Vuex)
-
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchBar.vue', function () {
@@ -30,18 +28,18 @@ describe('SearchBar.vue', function () {
     expect(wrapper.contains('.search-bar')).toBeTruthy()
   })
 
-  it('should display a search settings button', async () => {
+  it('should display a search settings button', () => {
     expect(wrapper.find('.search-bar .btn').text()).toEqual('Search')
   })
 
-  it('should display a search bar button in french', () => {
+  it('should display a search bar button in French', () => {
     const i18n = new VueI18n({ locale: 'fr', messages: { 'fr': messagesFr } })
     wrapper = shallowMount(SearchBar, { localVue, i18n, router, store })
     expect(wrapper.contains('.search-bar .btn')).toBeTruthy()
     expect(wrapper.find('.search-bar .btn').text()).toEqual('Rechercher')
   })
 
-  it('should submmit search', async () => {
+  it('should submit search', () => {
     wrapper.vm.query = 'foo'
     wrapper.vm.submit()
     expect(wrapper.vm.$store.state.search.query).toEqual('foo')

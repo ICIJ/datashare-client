@@ -83,8 +83,8 @@ class IndexedDocument {
     this.extractionDate = indexingDate
     return this
   }
-  withPipeline (pipeline) {
-    this.nerTags.push(pipeline)
+  withLanguage (language) {
+    this.language = language
     return this
   }
   withNer (mention, offset = 1, category = 'PERSON', isHidden = false) {
@@ -94,6 +94,10 @@ class IndexedDocument {
   withParent (parentId) {
     this.parentDocument = parentId
     this.extractionLevel = 1
+    return this
+  }
+  withPipeline (pipeline) {
+    this.nerTags.push(pipeline)
     return this
   }
   hasParent () {

@@ -67,7 +67,12 @@
     "deleteNamedEntity": "Delete this Named Entity",
     "showMore": "Show more",
     "local-index": "My documents",
-    "all": "All"
+    "all": "All",
+    "lang": {
+      "all": "All",
+      "ENGLISH": "English",
+      "FRENCH": "French"
+    }
   },
   "document": {
     "name": "File name",
