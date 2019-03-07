@@ -95,9 +95,6 @@ export default {
       this.$store.watch(this.watchedForUpdate, this.aggregateWithLoading, { deep: true })
     }
   },
-  mounted () {
-    this.selectedValuesFromStore()
-  },
   computed: {
     items () {
       return this.asyncItems || get(this.results, this.resultPath, [])

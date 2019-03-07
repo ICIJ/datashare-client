@@ -11,7 +11,7 @@
         <span v-html="getNamedEntityLabel({ key: $t('facet.all'), doc_count: totalCount, byDocs: { value: total } })"></span>
       </b-form-checkbox>
       <div v-for="item in items" :key="item.key" class="facet__items__item d-flex">
-        <b-form-checkbox v-model="selected[item.key]" @change="toggleValue(item)" class="w-100">
+        <b-form-checkbox v-model="selected" @change="toggleValue(item)" class="w-100" :value="item.key">
           <span v-html="getNamedEntityLabel(item)"></span>
         </b-form-checkbox>
         <div class="col facet__items__item__menu">
@@ -44,11 +44,6 @@ export default {
   name: 'FacetNamedEntity',
   components: { Facet },
   mixins: [facets, ner],
-  data () {
-    return {
-      selected: {}
-    }
-  },
   computed: {
     total () {
       return this.$store.state.search.response.total

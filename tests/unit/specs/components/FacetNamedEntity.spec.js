@@ -411,4 +411,18 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__all .facet__items__item__body__key').at(0).text()).toEqual('All')
     expect(wrapper.findAll('.facet__items__all .facet__items__item__description').at(0).text()).toEqual('one occurrence in one doc')
   })
+
+  it('should load and checked the facet values stored in store', async () => {
+    await letData(es).have(new IndexedDocument('file_01.txt').withContent('person_01').withNer('person_01')).commit()
+    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    namedEntityFacet.value = ['person_01']
+    store.commit('search/addFacetValue', namedEntityFacet)
+
+    wrapper = mount(FacetNamedEntity, { localVue, i18n, store, propsData: { facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
+    await wrapper.vm.root.aggregate()
+
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(0).text()).toEqual('person_01')
+    expect(wrapper.findAll('.facet__items__item input').at(0).element.checked).toBeTruthy()
+  })
 })

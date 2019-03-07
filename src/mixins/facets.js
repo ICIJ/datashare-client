@@ -40,6 +40,7 @@ export const mixin = {
     }
   },
   mounted () {
+    this.selectedValuesFromStore()
     if (this.root.$on) {
       this.root.$on('add-facet-values', value => this.$emit('add-facet-values', value))
     }
@@ -109,6 +110,7 @@ export const mixin = {
     },
     toggleValue (item) {
       this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
+      this.$emit('add-facet-values', this.facet, this.selected.selected)
     },
     invert () {
       this.$store.commit('search/toggleFacet', this.facet.name)
@@ -151,8 +153,10 @@ export const mixin = {
       `
     },
     selectedValuesFromStore () {
-      this.selected = find(this.$store.state.search.facets, { name: this.facet.name }).values
-      this.isAllSelected = this.selected.length === 0
+      if (this.facet) {
+        this.selected = find(this.$store.state.search.facets, { name: this.facet.name }).values
+        this.isAllSelected = this.selected.length === 0
+      }
     },
     resetFacetValues () {
       this.selected = []
