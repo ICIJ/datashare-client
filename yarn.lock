@@ -3147,8 +3147,8 @@ ejs@^2.6.1:
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.6.1.tgz#498ec0d495655abc6f23cd61868d926464071aa0"
 
 elasticsearch-browser@^15.1.1:
-  version "15.3.1"
-  resolved "https://registry.yarnpkg.com/elasticsearch-browser/-/elasticsearch-browser-15.3.1.tgz#47a7b5e36f52da648928f0cd81efc8a38c5bd889"
+  version "15.4.1"
+  resolved "https://registry.yarnpkg.com/elasticsearch-browser/-/elasticsearch-browser-15.4.1.tgz#c5843a9b2953cc9a653c8f6076f60ee4e5a44595"
 
 electron-to-chromium@^1.3.113:
   version "1.3.113"
