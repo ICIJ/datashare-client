@@ -64,6 +64,12 @@ export default {
     this.promise = ds.getVersion().then(r => r.json())
     this.getServerVersion()
   },
+  mounted () {
+    this.saveComponentHeight()
+  },
+  updated () {
+    this.saveComponentHeight()
+  },
   data () {
     return {
       serverHash: '',
@@ -93,6 +99,11 @@ export default {
     }
   },
   methods: {
+    saveComponentHeight () {
+      const height = `${this.$el.offsetHeight}px`
+      // Save component height in a CSS variable after it's been update
+      this.$root.$el.style.setProperty('--app-footer-height', height)
+    },
     getServerVersion () {
       return this.promise.then(res => {
         this.serverHash = res['git.commit.id.abbrev']
