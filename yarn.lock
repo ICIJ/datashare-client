@@ -5049,8 +5049,8 @@ javascript-stringify@^1.6.0:
   resolved "https://registry.yarnpkg.com/javascript-stringify/-/javascript-stringify-1.6.0.tgz#142d111f3a6e3dae8f4a9afd77d45855b5a9cce3"
 
 jest-canvas-mock@^2.0.0-alpha.3:
-  version "2.0.0-alpha.3"
-  resolved "https://registry.yarnpkg.com/jest-canvas-mock/-/jest-canvas-mock-2.0.0-alpha.3.tgz#c9c0764e069ab032eb90e35a77b454e182186a48"
+  version "2.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/jest-canvas-mock/-/jest-canvas-mock-2.0.0-beta.1.tgz#a99f3dd5bcdc10b57c00da43cbe17847697a9425"
   dependencies:
     cssfontparser "^1.2.1"
     parse-color "^1.0.0"
