@@ -6,6 +6,8 @@ import map from 'lodash/map'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
+import last from 'lodash/last'
+import capitalize from 'lodash/capitalize'
 
 export const mixin = {
   props: {
@@ -145,12 +147,24 @@ export const mixin = {
       const label = this.facet.itemLabel ? this.facet.itemLabel(item) : item.key
       return `
         <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
-          ${this.$te(label) ? this.$t(label) : this.$te(`facet.${label}`) ? this.$t(`facet.${label}`) : label}
+          ${this.labelToHuman(label)}
         </span>
         <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
           ${item.doc_count}
         </span>
       `
+    },
+    labelToHuman (label) {
+      if (this.$te(label)) {
+        return this.$t(label)
+      } else if (this.$te(`facet.${label}`)) {
+        return this.$t(`facet.${label}`)
+      } else {
+        return capitalize(this.translationKeyToHuman(label))
+      }
+    },
+    translationKeyToHuman (label) {
+      return last(label.split('.'))
     },
     selectedValuesFromStore () {
       if (this.facet) {
