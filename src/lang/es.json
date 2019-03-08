@@ -72,6 +72,20 @@
       "all": "Todos",
       "ENGLISH": "Inglés",
       "FRENCH": "Francés"
+    },
+    "level": {
+      "all": "Todos",
+      "level_00": "Archivo en disco",
+      "level_01": "1°",
+      "level_02": "2°",
+      "level_03": "3°",
+      "level_04": "4°",
+      "level_05": "5°",
+      "level_06": "6°",
+      "level_07": "7°",
+      "level_08": "8°",
+      "level_09": "9°",
+      "level_10": "10°"
     }
   },
   "document": {
@@ -83,7 +97,6 @@
     "content_language": "Idioma del contenido",
     "content_type": "Tipo de contenido",
     "content_encoding": "Codificación de contenido",
-    "tree_level": "Nivel",
     "parent_document": "Documento Principal",
     "details": "Detalles",
     "named_entities": "Entidades identificadas",

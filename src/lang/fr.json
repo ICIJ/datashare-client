@@ -73,6 +73,20 @@
       "all": "Tous",
       "ENGLISH": "Anglais",
       "FRENCH": "Français"
+    },
+    "level": {
+      "all": "Tous",
+      "level_00": "Fichier sur le disque",
+      "level_01": "1er",
+      "level_02": "2ème",
+      "level_03": "3ème",
+      "level_04": "4ème",
+      "level_05": "5ème",
+      "level_06": "6ème",
+      "level_07": "7ème",
+      "level_08": "8ème",
+      "level_09": "9ème",
+      "level_10": "10ème"
     }
   },
   "document": {
@@ -84,7 +98,6 @@
     "content_language": "Langue",
     "content_type": "Type",
     "content_encoding": "Encodage",
-    "tree_level": "Niveau d'imbrication",
     "parent_document": "Document Parent",
     "details": "Details",
     "named_entities": "Entitiés nommées",

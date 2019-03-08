@@ -2,20 +2,6 @@ import Murmur from '@icij/murmur'
 import includes from 'lodash/includes'
 import some from 'lodash/some'
 
-const levels = {
-  '0': 'File on disk',
-  '1': '1st level',
-  '2': '2nd level',
-  '3': '3rd level',
-  '4': '4th level',
-  '5': '5th level',
-  '6': '6th level',
-  '7': '7th level',
-  '8': '8th level',
-  '9': '9th level',
-  '10': '10th level'
-}
-
 const namedEntityCategoryTranslation = {
   'named-entity-person': 'PERSON',
   'named-entity-organization': 'ORGANIZATION',
@@ -240,4 +226,4 @@ class FacetIndex extends FacetText {
   }
 }
 
-export { FacetDate, FacetPath, FacetText, FacetNamedEntity, FacetIndex, levels, namedEntityCategoryTranslation }
+export { FacetDate, FacetPath, FacetText, FacetNamedEntity, FacetIndex, namedEntityCategoryTranslation }

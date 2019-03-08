@@ -73,6 +73,20 @@
       "all": "All",
       "ENGLISH": "English",
       "FRENCH": "French"
+    },
+    "level": {
+      "all": "All",
+      "level_00": "File on disk",
+      "level_01": "1st",
+      "level_02": "2nd",
+      "level_03": "3rd",
+      "level_04": "4th",
+      "level_05": "5th",
+      "level_06": "6th",
+      "level_07": "7th",
+      "level_08": "8th",
+      "level_09": "9th",
+      "level_10": "10th"
     }
   },
   "document": {
@@ -84,7 +98,6 @@
     "content_language": "Content language",
     "content_type": "Content type",
     "content_encoding": "Content encoding",
-    "tree_level": "Tree level",
     "parent_document": "Parent Document",
     "details": "Details",
     "named_entities": "Named Entities",

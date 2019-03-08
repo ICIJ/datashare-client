@@ -60,15 +60,15 @@
             </template>
             <template v-if="document.source.contentType !== 'unknown'">
               <dt class="col-sm-3">{{ $t('document.content_type') }}</dt>
-              <dd class="col-sm-9">{{ getDocumentType(document.source.contentType) }}</dd>
+              <dd class="col-sm-9">{{ getDocumentTypeLabel(document.source.contentType) }}</dd>
             </template>
             <template v-if="document.source.contentEncoding !== 'unknown'">
               <dt class="col-sm-3">{{ $t('document.content_encoding') }}</dt>
               <dd class="col-sm-9">{{ document.source.contentEncoding }}</dd>
             </template>
             <template v-if="document.source.extractionLevel > 0">
-              <dt class="col-sm-3">{{ $t('document.tree_level') }}</dt>
-              <dd class="col-sm-9 document__content__tree-level">{{ document.source.extractionLevel }}</dd>
+              <dt class="col-sm-3">{{ $t('facet.extraction-level') }}</dt>
+              <dd class="col-sm-9 document__content__tree-level">{{ $t(getExtractionLevelTranslationKey(document.source.extractionLevel)) }}</dd>
             </template>
             <template v-if="document.source.extractionLevel > 0 && parentDocument">
               <dt class="col-sm-3">{{ $t('document.parent_document') }}</dt>
@@ -139,7 +139,7 @@ import TiffViewer from '@/components/document/TiffViewer'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import { highlight } from '@/utils/strings'
-import { getDocumentType } from '@/utils/utils'
+import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import { EventBus } from '@/utils/event-bus'
 import DatashareClient from '@/api/DatashareClient'
 import escape from 'lodash/escape'
@@ -188,7 +188,8 @@ export default {
       }
     },
     capitalize,
-    getDocumentType
+    getDocumentTypeLabel,
+    getExtractionLevelTranslationKey
   },
   computed: {
     ...mapState('document', {

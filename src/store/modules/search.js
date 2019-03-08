@@ -1,13 +1,12 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
-import { getDocumentType } from '@/utils/utils'
-import { FacetDate, FacetNamedEntity, FacetPath, FacetText, levels, namedEntityCategoryTranslation } from '@/store/facetsStore'
+import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
+import { FacetDate, FacetNamedEntity, FacetPath, FacetText, namedEntityCategoryTranslation } from '@/store/facetsStore'
 import castArray from 'lodash/castArray'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
 import floor from 'lodash/floor'
-import get from 'lodash/get'
 import max from 'lodash/max'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
@@ -19,14 +18,14 @@ export function initialState () {
     size: 25,
     globalSearch: true,
     facets: [
-      new FacetText('content-type', 'contentType', true, item => getDocumentType(item.key)),
+      new FacetText('content-type', 'contentType', true, item => getDocumentTypeLabel(item.key)),
       new FacetText('language', 'language', false, item => `facet.lang.${item.key}`),
       new FacetNamedEntity('named-entity-person', 'byMentions', true, namedEntityCategoryTranslation['named-entity-person']),
       new FacetNamedEntity('named-entity-organization', 'byMentions', true, namedEntityCategoryTranslation['named-entity-organization']),
       new FacetNamedEntity('named-entity-location', 'byMentions', true, namedEntityCategoryTranslation['named-entity-location']),
       new FacetPath('path', 'byDirname', false),
       new FacetDate('indexing-date', 'extractionDate', false, item => item.key_as_string),
-      new FacetText('extraction-level', 'extractionLevel', false, item => get(levels, item.key, item.key))
+      new FacetText('extraction-level', 'extractionLevel', false, item => getExtractionLevelTranslationKey(item.key))
     ],
     sort: 'relevance',
     response: Response.none(),

@@ -98,7 +98,7 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     expect(wrapper.find('.document__content__basename').text()).toEqual(id)
-    expect(wrapper.find('.document__content__tree-level').text()).toEqual('1')
+    expect(wrapper.find('.document__content__tree-level').text()).toEqual('1st')
   })
 
   it('should mark named entities', async () => {
