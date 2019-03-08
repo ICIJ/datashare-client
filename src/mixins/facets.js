@@ -5,7 +5,10 @@ import get from 'lodash/get'
 import map from 'lodash/map'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
+import toLower from 'lodash/toLower'
+import toUpper from 'lodash/toUpper'
 import uniq from 'lodash/uniq'
+import upperFirst from 'lodash/upperFirst'
 import last from 'lodash/last'
 import capitalize from 'lodash/capitalize'
 
@@ -73,13 +76,10 @@ export const mixin = {
     },
     queryTokens () {
       return uniq([
-        // Regular query
         this.facetQuery,
-        // Uppercase and lowercase versions
-        this.facetQuery.toLowerCase(),
-        this.facetQuery.toUpperCase(),
-        // Capitalize (first letter in Uppercase)
-        this.facetQuery.charAt(0).toUpperCase() + this.facetQuery.slice(1)
+        toLower(this.facetQuery),
+        toUpper(this.facetQuery),
+        upperFirst(this.facetQuery)
       // And escape the string for use in REGEX
       ].map(this.escapeRegExp))
     },
