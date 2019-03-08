@@ -2,9 +2,8 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { createServer } from 'http-server'
-
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
@@ -51,7 +50,7 @@ describe('DocumentView.vue', () => {
   it('should display a document', async () => {
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
     const id = 'foo.txt'
-    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('this is foo document'))
@@ -85,7 +84,7 @@ describe('DocumentView.vue', () => {
   it('should display a child document', async () => {
     const id = 'child.txt'
     const routing = 'parent.txt'
-    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id, routing } })
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id, routing } })
 
     await letData(es).have(new IndexedDocument(routing)
       .withContent('this is a parent document'))
@@ -158,9 +157,9 @@ describe('DocumentView.vue', () => {
     expect(pills.at(2).classes()).toContain('border-category-category_03')
   })
 
-  it('should call the SpreadsheetViewer for XLSX document', async () => {
+  it('should call the SpreadsheetViewer stub for XLSX document', async () => {
     const id = 'spreadsheet.xlsx'
-    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -170,12 +169,12 @@ describe('DocumentView.vue', () => {
     wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
 
-    expect(wrapper.contains('.spreadsheet-viewer')).toBeTruthy()
+    expect(wrapper.contains('spreadsheet-viewer-stub')).toBeTruthy()
   })
 
-  it('should call the SpreadsheetViewer for CSV document', async () => {
+  it('should call the SpreadsheetViewer stub for CSV document', async () => {
     const id = 'spreadsheet.csv'
-    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -185,12 +184,12 @@ describe('DocumentView.vue', () => {
     wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
 
-    expect(wrapper.contains('.spreadsheet-viewer')).toBeTruthy()
+    expect(wrapper.contains('spreadsheet-viewer-stub')).toBeTruthy()
   })
 
-  it('should call the PdfViewer for PDF document', async () => {
+  it('should call the PdfViewer stub for PDF document', async () => {
     const id = 'document.pdf'
-    const wrapper = mount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -200,12 +199,12 @@ describe('DocumentView.vue', () => {
     wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
 
-    expect(wrapper.contains('.pdf-viewer')).toBeTruthy()
+    expect(wrapper.contains('pdf-viewer-stub')).toBeTruthy()
   })
 
-  it('should call the TiffViewer for TIFF document', async () => {
+  it('should call the TiffViewer stub for TIFF document', async () => {
     const id = 'image.tiff'
-    const wrapper = mount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -215,12 +214,12 @@ describe('DocumentView.vue', () => {
     wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
 
-    expect(wrapper.contains('.tiff-viewer')).toBeTruthy()
+    expect(wrapper.contains('tiff-viewer-stub')).toBeTruthy()
   })
 
   it('should display a specific error message if no names finding task has been run on that document', async () => {
     const id = 'test.doc'
-    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent(''))
@@ -233,7 +232,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a specific error message if no named entities found after names finding task', async () => {
     const id = 'test.doc'
-    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
