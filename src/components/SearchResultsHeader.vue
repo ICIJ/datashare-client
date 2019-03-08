@@ -16,7 +16,7 @@
           {{ $store.state.search.from + 1 }} - {{ lastDocument }}
         </div>&nbsp;
         <div class="search-results__header__progress_number-of-results">
-          {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: response.get('hits.total') }) }}
+          {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
         </div>
       </div>
       <div @click.prevent="nextPage"

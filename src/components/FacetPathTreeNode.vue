@@ -16,7 +16,7 @@
           class="badge badge-pill badge-light">
           <fa icon="search" class="tree-node__count__icon" />
           <span>
-            {{ node.count || 0 }}
+            {{ $n(node.count || 0 ) }}
           </span>
         </a>
       </div>
