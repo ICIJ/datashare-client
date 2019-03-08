@@ -3,8 +3,6 @@ import map from 'lodash/map'
 import takeRight from 'lodash/takeRight'
 import zipObject from 'lodash/zipObject'
 
-export { capitalize } from 'lodash'
-
 export function sliceIndexes (str, indexes) {
   if (str.length === 0) return []
   let orderedIndexes = Array.from(new Set(indexes)).sort((a, b) => a - b)

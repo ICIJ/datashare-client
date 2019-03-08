@@ -1,4 +1,4 @@
-import { sliceIndexes, highlight, removeDiacritics, capitalize } from '@/utils/strings'
+import { sliceIndexes, highlight, removeDiacritics } from '@/utils/strings'
 import escape from 'lodash/escape'
 
 describe('sliceIndexes', () => {
@@ -57,25 +57,25 @@ describe('highlight', () => {
   })
 
   it('should return one mark at the beginning of the string', () => {
-    expect(highlight('say hi to the world', [{content: 'say', index: 0}])).toEqual('<mark>say</mark> hi to the world')
+    expect(highlight('say hi to the world', [{ content: 'say', index: 0 }])).toEqual('<mark>say</mark> hi to the world')
   })
 
   it('should return one mark', () => {
-    expect(highlight('say hi to the world', [{content: 'hi', index: 4}])).toEqual('say <mark>hi</mark> to the world')
+    expect(highlight('say hi to the world', [{ content: 'hi', index: 4 }])).toEqual('say <mark>hi</mark> to the world')
   })
 
   it('should return 3 marks', () => {
-    expect(highlight('say hi to the world', [{content: 'say', index: 0}, {content: 'hi', index: 4}, {content: 'world', index: 14}]))
+    expect(highlight('say hi to the world', [{ content: 'say', index: 0 }, { content: 'hi', index: 4 }, { content: 'world', index: 14 }]))
       .toEqual('<mark>say</mark> <mark>hi</mark> to the <mark>world</mark>')
   })
 
   it('should return one mark with custom mark function', () => {
-    expect(highlight('say hi to the world', [{content: 'hi', category: 'cat', index: 4}], m => `<b class="${m.category}">${m.content}</b>`))
+    expect(highlight('say hi to the world', [{ content: 'hi', category: 'cat', index: 4 }], m => `<b class="${m.category}">${m.content}</b>`))
       .toEqual('say <b class="cat">hi</b> to the world')
   })
 
   it('should return one mark with custom rest function', () => {
-    expect(highlight('say hi to </the> world', [{content: 'hi', index: 4}], m => m.content, r => escape(r)))
+    expect(highlight('say hi to </the> world', [{ content: 'hi', index: 4 }], m => m.content, r => escape(r)))
       .toEqual('say hi to &lt;/the&gt; world')
   })
 })
@@ -87,19 +87,5 @@ describe('removeDiacritics', () => {
 
   it('replace è, û and é', () => {
     expect(removeDiacritics('Crème brûlée')).toEqual('Creme brulee')
-  })
-})
-
-describe('capitalize', () => {
-  it('should return -1', () => {
-    expect(capitalize({})).toEqual(-1)
-  })
-
-  it('should return empty string', () => {
-    expect(capitalize('')).toEqual('')
-  })
-
-  it('should return Palace Street', () => {
-    expect(capitalize('paLAce strEEt')).toEqual('Palace Street')
   })
 })

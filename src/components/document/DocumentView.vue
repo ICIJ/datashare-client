@@ -139,13 +139,14 @@ import TiffViewer from '@/components/document/TiffViewer'
 
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
-import { capitalize, highlight } from '@/utils/strings'
+import { highlight } from '@/utils/strings'
 import { EventBus } from '@/utils/event-bus'
 import DatashareClient from '@/api/DatashareClient'
 import escape from 'lodash/escape'
 import groupBy from 'lodash/groupBy'
 import orderBy from 'lodash/orderBy'
 import sortedUniqBy from 'lodash/sortedUniqBy'
+import capitalize from 'lodash/capitalize'
 
 export default {
   name: 'document-view',
@@ -186,7 +187,7 @@ export default {
         }, r => escape(r), m => m.source.mention)
       }
     },
-    capitalize: capitalize
+    capitalize
   },
   computed: {
     ...mapState('document', {
