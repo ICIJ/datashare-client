@@ -1,5 +1,5 @@
 <template>
-  <span class="document-sliced-name" :class="{ 'document-sliced-name--sliced': document.slicedName.length }">
+  <span class="document-sliced-name" :class="{ 'document-sliced-name--sliced': document.slicedName.length > 1 }">
     <span v-for="(slice, index) in document.slicedName" :key="index" class="document-sliced-name__item" :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }">
       <span v-if="isMiddleSlice(slice)">
         ...
