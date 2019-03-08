@@ -25,7 +25,7 @@
       <facet-path-tree-node v-for="child in node.children" :facet="facet" :node="child" :key="child.label"></facet-path-tree-node>
     </ul>
     <div v-show="hasNoChildren() && open" class="text-muted pl-3">
-      └ <span class="small">No subdirectories</span>
+      └ <span class="small">{{ $t('facet.noSubdirectories') }}</span>
     </div>
   </li>
 </template>

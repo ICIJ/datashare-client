@@ -54,6 +54,7 @@
     "seeAll": "Search the entire database",
     "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
     "noResults": "No results",
+    "noSubdirectories": "No subdirectories",
     "invert": "Exclude",
     "content-type": "File Type",
     "language": "Languages",
