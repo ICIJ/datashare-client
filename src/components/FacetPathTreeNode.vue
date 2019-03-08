@@ -1,13 +1,13 @@
 <template>
   <li v-if="node" :class="{ 'tree-node--has-children': hasChildren(), 'tree-node--active': hasValue(nodeParams) }" class="tree-node">
-    <div class="row no-gutters">
-      <div class="col tree-node__label pb-1">
+    <div class="d-flex flex-row">
+      <div class="tree-node__label" :class="{ 'pb-1': !hasNoChildren() }">
         <a @click="getChildren" :title="node.label" v-b-tooltip.hover>
-          <fa icon="folder" class="mr-1 tree-node__label__icon" />
+          <fa :icon="icon" fixed-width class="mr-1 tree-node__label__icon" :spin="loading" />
           {{ node.label }}
         </a>
       </div>
-      <div class="col tree-node__count">
+      <div class="tree-node__count">
         <a
           href
           @click.prevent="toggleValue(nodeParams)"
@@ -21,9 +21,12 @@
         </a>
       </div>
     </div>
-    <ul v-show="node.children && open" class="list-unstyled pl-3">
+    <ul v-show="hasChildren() && open" class="list-unstyled pl-3">
       <facet-path-tree-node v-for="child in node.children" :facet="facet" :node="child" :key="child.label"></facet-path-tree-node>
     </ul>
+    <div v-show="hasNoChildren() && open" class="text-muted pl-3">
+      └ <span class="small">No subdirectories</span>
+    </div>
   </li>
 </template>
 
@@ -44,6 +47,8 @@ export default {
   data: function () {
     return {
       open: false,
+      loading: false,
+      isLoaded: false,
       queue: new PQueue({ concurrency: 1 })
     }
   },
@@ -58,18 +63,29 @@ export default {
         include: `${this.node.path}/.*`
       })
       return body.build()
+    },
+    icon () {
+      if (this.loading) {
+        return 'sync'
+      }
+      return this.open ? 'folder-open' : 'folder'
     }
   },
   methods: {
     hasChildren () {
       return this.node.children && this.node.children.length
     },
+    hasNoChildren () {
+      return this.isLoaded && this.node.children && !this.node.children.length
+    },
     getChildren () {
-      if (this.facet && !this.node.isLoaded) {
+      if (this.facet && !this.isLoaded) {
         return this.queue.add(() => {
           const index = this.$store.state.search.index
+          this.loading = true
           return esClient.search({ index, body: this.body }).then(async r => {
-            this.node.isLoaded = true
+            this.loading = false
+            this.isLoaded = true
             each(get(r, `aggregations.${this.facet.key}.buckets`, []), bucket => {
               this.node.children.push({
                 label: replace(bucket.key, this.node.path + '/', ''),
@@ -94,7 +110,7 @@ export default {
   .tree-node {
     overflow: hidden;
 
-    &--has-children > * > &__label {
+    &__label {
       cursor: pointer;
     }
 
@@ -120,7 +136,6 @@ export default {
     }
 
     &__count {
-      max-width: 3rem;
       text-align: right;
 
       &__icon {
