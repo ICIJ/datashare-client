@@ -6,9 +6,9 @@
         {{ $t('facet.projects') }}
       </h6>
     </div>
-    <div class="list-group list-group-flush facet__items" v-if="!collapseItems">
+    <slide-up-down class="list-group list-group-flush facet__items" :active="!collapseItems">
       <b-form-select :options="indices" v-model="selectedIndex" class="border-0" @change="select" />
-    </div>
+    </slide-up-down>
   </div>
 </template>
 
