@@ -72,6 +72,16 @@ describe('DocumentView.vue', () => {
     expect(wrapper.findAll('dd').at(1).text()).toEqual('C:/Users/ds/docs/foo.txt')
   })
 
+  it('should display the document type', async () => {
+    const id = 'doc_01.txt'
+    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+
+    await letData(es).have(new IndexedDocument(id).withContent('content').withContentType('application/pdf')).commit()
+    await wrapper.vm.getDoc()
+
+    expect(wrapper.findAll('dd').at(5).text()).toEqual('Portable Document Format (PDF)')
+  })
+
   it('should display a child document', async () => {
     const id = 'child.txt'
     const routing = 'parent.txt'

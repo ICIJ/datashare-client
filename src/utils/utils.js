@@ -1,4 +1,5 @@
 import { getCookie } from 'tiny-cookie'
+import types from '@/utils/types.json'
 import get from 'lodash/get'
 
 function getOS () {
@@ -18,4 +19,9 @@ function isAuthenticated () {
   return get(cookie, 'login', null) !== null
 }
 
-export { getOS, isAuthenticated }
+function getDocumentType (type) {
+  if (type === undefined) return ''
+  return get(types, [type, 'label'], type)
+}
+
+export { getOS, isAuthenticated, getDocumentType }

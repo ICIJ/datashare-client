@@ -56,11 +56,11 @@
             </template>
             <template v-if="document.source.language !== 'UNKNOWN'">
               <dt class="col-sm-3">{{ $t('document.content_language') }}</dt>
-              <dd class="col-sm-9">{{ document.source.language }}</dd>
+              <dd class="col-sm-9">{{ $te(`facet.lang.${document.source.language}`) ? $t(`facet.lang.${document.source.language}`): document.source.language }}</dd>
             </template>
             <template v-if="document.source.contentType !== 'unknown'">
               <dt class="col-sm-3">{{ $t('document.content_type') }}</dt>
-              <dd class="col-sm-9">{{ document.source.contentType }}</dd>
+              <dd class="col-sm-9">{{ getDocumentType(document.source.contentType) }}</dd>
             </template>
             <template v-if="document.source.contentEncoding !== 'unknown'">
               <dt class="col-sm-3">{{ $t('document.content_encoding') }}</dt>
@@ -136,10 +136,10 @@ import DocumentSlicedName from '@/components/DocumentSlicedName'
 import PdfViewer from '@/components/document/PdfViewer'
 import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
 import TiffViewer from '@/components/document/TiffViewer'
-
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import { highlight } from '@/utils/strings'
+import { getDocumentType } from '@/utils/utils'
 import { EventBus } from '@/utils/event-bus'
 import DatashareClient from '@/api/DatashareClient'
 import escape from 'lodash/escape'
@@ -187,7 +187,8 @@ export default {
         }, r => escape(r), m => m.source.mention)
       }
     },
-    capitalize
+    capitalize,
+    getDocumentType
   },
   computed: {
     ...mapState('document', {

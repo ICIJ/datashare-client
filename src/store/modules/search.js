@@ -1,6 +1,6 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
-import types from '@/utils/types.json'
+import { getDocumentType } from '@/utils/utils'
 import { FacetDate, FacetNamedEntity, FacetPath, FacetText, levels, namedEntityCategoryTranslation } from '@/store/facetsStore'
 import castArray from 'lodash/castArray'
 import each from 'lodash/each'
@@ -19,7 +19,7 @@ export function initialState () {
     size: 25,
     globalSearch: true,
     facets: [
-      new FacetText('content-type', 'contentType', true, item => get(types, [item.key, 'label'], item.key)),
+      new FacetText('content-type', 'contentType', true, item => getDocumentType(item.key)),
       new FacetText('language', 'language', false, item => `facet.lang.${item.key}`),
       new FacetNamedEntity('named-entity-person', 'byMentions', true, namedEntityCategoryTranslation['named-entity-person']),
       new FacetNamedEntity('named-entity-organization', 'byMentions', true, namedEntityCategoryTranslation['named-entity-organization']),

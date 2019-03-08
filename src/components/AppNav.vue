@@ -55,7 +55,7 @@
 import { headroom } from 'vue-headroom'
 import SearchBar from '@/components/SearchBar'
 import utils from '@/mixins/utils'
-import { getOS } from '@/utils/user'
+import { getOS } from '@/utils/utils'
 import DatashareClient from '@/api/DatashareClient'
 
 export default {

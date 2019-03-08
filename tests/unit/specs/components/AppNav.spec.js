@@ -2,14 +2,13 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-
 import messages from '@/lang/en'
 import AppNav from '@/components/AppNav'
 import router from '@/router'
 import store from '@/store'
-import { getOS } from '@/utils/user'
+import { getOS } from '@/utils/utils'
 
-jest.mock('@/utils/user', () => {
+jest.mock('@/utils/utils', () => {
   return {
     getOS: jest.fn(),
     isAuthenticated: jest.fn()
