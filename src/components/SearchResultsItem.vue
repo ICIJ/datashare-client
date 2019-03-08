@@ -94,7 +94,7 @@ export default {
     }
 
     &:visited:not(&--active) &__basename {
-      color: mix($link-color, white, 50%);
+      color: mix(#609, white, 50%);
     }
 
     & .badge {
