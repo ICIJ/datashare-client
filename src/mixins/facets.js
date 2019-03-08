@@ -10,7 +10,6 @@ import toUpper from 'lodash/toUpper'
 import uniq from 'lodash/uniq'
 import upperFirst from 'lodash/upperFirst'
 import last from 'lodash/last'
-import capitalize from 'lodash/capitalize'
 
 export const mixin = {
   props: {
@@ -160,7 +159,7 @@ export const mixin = {
       } else if (this.$te(`facet.${label}`)) {
         return this.$t(`facet.${label}`)
       } else {
-        return capitalize(this.translationKeyToHuman(label))
+        return this.translationKeyToHuman(label)
       }
     },
     translationKeyToHuman (label) {

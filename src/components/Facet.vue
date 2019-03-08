@@ -1,5 +1,5 @@
 <template>
-  <div class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet-hide-header': hideHeader  }">
+  <div v-if="!isGloballyEmpty" class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet--hide-header': hideHeader  }">
     <slot name="header" v-if="!hideHeader">
       <div class="card-header px-2 d-flex">
         <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate">
@@ -78,6 +78,7 @@ export default {
       },
       collapseItems: false,
       isReady: !!this.asyncItems,
+      isGloballyEmpty: this.$store.state.search.globalSearch && !this.asyncItems,
       queue: new PQueue({ concurrency: 1 }),
       results: []
     }
@@ -129,11 +130,15 @@ export default {
         const prefix = this.facet.prefix ? this.$config.get('dataDir') + '/' : ''
         const options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : {}
         return this.queue.add(() => {
-          return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options }).then(r => {
-            this.totalCount = get(r, `aggregations.${this.facet.key}.sum_other_doc_count`, 0) + sumBy(get(r, this.resultPath, []), 'doc_count')
-            this.results = this.addInvertedFacets(r)
-            this.isReady = this.queue.pending === 1
-          })
+          return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options })
+            .then(r => {
+              this.totalCount = get(r, `aggregations.${this.facet.key}.sum_other_doc_count`, 0) + sumBy(get(r, this.resultPath, []), 'doc_count')
+              this.results = this.addInvertedFacets(r)
+              this.isReady = this.queue.pending === 1
+              // If this search is global, it means the no values for this query
+              // means no values at all for this facet
+              this.isGloballyEmpty = this.$store.state.search.globalSearch && this.totalCount === 0
+            })
         })
       }
     },

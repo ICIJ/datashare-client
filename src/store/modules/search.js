@@ -89,11 +89,11 @@ export const getters = {
 }
 
 export const mutations = {
-  reset (state) {
+  reset (state, excluded_keys = ['index']) {
     // acquire initial state
     const s = initialState()
     Object.keys(s).forEach(key => {
-      if (key !== 'index') {
+      if (excluded_keys.indexOf(key) === -1) {
         state[key] = s[key]
       }
     })
@@ -217,6 +217,16 @@ export const actions = {
       params.options
     ).then(raw => new Response(raw))
   },
+  queryFacetGlobally ({ state, getters }, params) {
+    return esClient.searchFacet(
+      state.index,
+      getters.getFacet({ name: params.name }),
+      '*',
+      state.facets,
+      true,
+      params.options
+    ).then(raw => new Response(raw))
+  },
   firstPage ({ commit, dispatch }) {
     commit('from', 0)
     return dispatch('query')
@@ -253,7 +263,7 @@ export const actions = {
   },
   updateFromRouteQuery ({ state, commit }, query) {
     // Reset all existing options
-    commit('reset')
+    commit('reset', ['index', 'globalSearch'])
     // Add the query to the state with a mutation to not triggering a search
     if (query.index) commit('index', query.index)
     if (query.q) commit('query', query.q)
