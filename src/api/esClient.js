@@ -107,7 +107,7 @@ export function datasharePlugin (Client, config, components) {
       this.addQueryToBody(query, body)
     }
     return esClient.search({
-      index: index,
+      index,
       type: 'doc',
       body: body.size(0).build()
     }).then(

@@ -67,7 +67,8 @@ export default {
     getChildren () {
       if (this.facet && !this.node.isLoaded) {
         return this.queue.add(() => {
-          return esClient.search({ index: process.env.VUE_APP_ES_INDEX, body: this.body }).then(async r => {
+          const index = this.$store.state.search.index
+          return esClient.search({ index, body: this.body }).then(async r => {
             this.node.isLoaded = true
             each(get(r, `aggregations.${this.facet.key}.buckets`, []), bucket => {
               this.node.children.push({
