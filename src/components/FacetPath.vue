@@ -10,7 +10,7 @@
 import Facet from '@/components/Facet'
 import FacetPathTree from '@/components/FacetPathTree'
 import facets from '@/mixins/facets'
-import each from 'lodash/each'
+import reduce from 'lodash/reduce'
 import replace from 'lodash/replace'
 
 export default {
@@ -22,8 +22,7 @@ export default {
   },
   methods: {
     displayFirstLevel (items) {
-      const tree = []
-      each(items, item => {
+      return reduce(items, (tree, item) => {
         tree.push({
           label: replace(item.key, this.$config.get('dataDir') + '/', ''),
           path: item.key,
@@ -31,8 +30,8 @@ export default {
           children: [],
           isLoaded: false
         })
-      })
-      return tree
+        return tree
+      }, [])
     }
   }
 }
