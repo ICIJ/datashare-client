@@ -17,7 +17,6 @@ localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
-
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages }, silentTranslationWarn: true })
 
 describe('DocumentView.vue', () => {
@@ -38,7 +37,7 @@ describe('DocumentView.vue', () => {
 
   afterAll(() => httpServer.close())
 
-  it('should display an error message when document is not found', async () => {
+  it('should display an error message if document is not found', async () => {
     const id = 'notfound'
     const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
@@ -57,47 +56,7 @@ describe('DocumentView.vue', () => {
       .commit()
     await wrapper.vm.getDoc()
 
-    expect(wrapper.find('.document__content__basename').text()).toEqual(id)
-  })
-
-  it('should display document path with config.mountedDataDir', async () => {
-    const id = '/home/datashare/data/foo.txt'
-    Murmur.config.merge({ dataDir: '/home/datashare/data', mountedDataDir: 'C:/Users/ds/docs' })
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
-
-    await letData(es).have(new IndexedDocument(id).withContent('this is foo document')).commit()
-    await wrapper.vm.getDoc()
-
-    expect(wrapper.findAll('dd').at(1).text()).toEqual('C:/Users/ds/docs/foo.txt')
-  })
-
-  it('should display the document type', async () => {
-    const id = 'doc_01.txt'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
-
-    await letData(es).have(new IndexedDocument(id).withContent('content').withContentType('application/pdf')).commit()
-    await wrapper.vm.getDoc()
-
-    expect(wrapper.findAll('dd').at(5).text()).toEqual('Portable Document Format (PDF)')
-  })
-
-  it('should display a child document', async () => {
-    const id = 'child.txt'
-    const routing = 'parent.txt'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id, routing } })
-
-    await letData(es).have(new IndexedDocument(routing)
-      .withContent('this is a parent document'))
-      .commit()
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('this is a children document')
-      .withParent(routing))
-      .commit()
-
-    await wrapper.vm.getDoc()
-
-    expect(wrapper.find('.document__content__basename').text()).toEqual(id)
-    expect(wrapper.find('.document__content__tree-level').text()).toEqual('1st')
+    expect(wrapper.contains('.document__header')).toBeTruthy()
   })
 
   it('should mark named entities', async () => {

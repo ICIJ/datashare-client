@@ -39,46 +39,7 @@
       </div>
       <div class="tab-content document__content">
         <div class="tab-pane" :class="{active: tab === 'details'}" v-if="tab === 'details'">
-          <dl class="row">
-            <dt class="col-sm-3">{{ $t('document.name') }}</dt>
-            <dd class="col-sm-9 document__content__basename">{{ document.basename }}</dd>
-            <dt class="col-sm-3">{{ $t('document.path') }}</dt>
-            <dd class="col-sm-9 document__content__path">{{ documentPath }}</dd>
-            <dt class="col-sm-3">{{ $t('document.id') }}</dt>
-            <dd class="col-sm-9 document__content__id">{{ document.id }}</dd>
-            <template v-if="document.source.metadata.tika_metadata_creation_date">
-              <dt class="col-sm-3">{{ $t('document.creation_date') }}</dt>
-              <dd class="col-sm-9 document__content__creation-date">{{ document.creationDate }}</dd>
-            </template>
-            <template v-if="document.source.contentLength !== -1">
-              <dt class="col-sm-3">{{ $t('document.size') }}</dt>
-              <dd class="col-sm-9 document__content__size">{{ document.humanSize }}</dd>
-            </template>
-            <template v-if="document.source.language !== 'UNKNOWN'">
-              <dt class="col-sm-3">{{ $t('document.content_language') }}</dt>
-              <dd class="col-sm-9">{{ $te(`facet.lang.${document.source.language}`) ? $t(`facet.lang.${document.source.language}`): document.source.language }}</dd>
-            </template>
-            <template v-if="document.source.contentType !== 'unknown'">
-              <dt class="col-sm-3">{{ $t('document.content_type') }}</dt>
-              <dd class="col-sm-9">{{ getDocumentTypeLabel(document.source.contentType) }}</dd>
-            </template>
-            <template v-if="document.source.contentEncoding !== 'unknown'">
-              <dt class="col-sm-3">{{ $t('document.content_encoding') }}</dt>
-              <dd class="col-sm-9">{{ document.source.contentEncoding }}</dd>
-            </template>
-            <template v-if="document.source.extractionLevel > 0">
-              <dt class="col-sm-3">{{ $t('facet.extraction-level') }}</dt>
-              <dd class="col-sm-9 document__content__tree-level">{{ $t(getExtractionLevelTranslationKey(document.source.extractionLevel)) }}</dd>
-            </template>
-            <template v-if="document.source.extractionLevel > 0 && parentDocument">
-              <dt class="col-sm-3">{{ $t('document.parent_document') }}</dt>
-              <dd class="col-sm-9">
-                <router-link :to="{ name: 'document', params: { id: document.source.parentDocument, routing: document.routing } }" class="document__content__parent">
-                  {{ parentDocument.basename }}
-                </router-link>
-              </dd>
-            </template>
-          </dl>
+          <document-tab-details :document="document" :parentDocument="parentDocument" />
         </div>
         <div class="tab-pane document__named-entities" :class="{active: tab === 'named_entities'}" v-if="tab === 'named_entities'">
           <div v-if="!isRemote && document.source.nerTags.length === 0" class="document__named-entities--not--searched">
@@ -133,13 +94,13 @@
 <script>
 import { mapState } from 'vuex'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
+import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import PdfViewer from '@/components/document/PdfViewer'
 import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
 import TiffViewer from '@/components/document/TiffViewer'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import { highlight } from '@/utils/strings'
-import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import { EventBus } from '@/utils/event-bus'
 import DatashareClient from '@/api/DatashareClient'
 import escape from 'lodash/escape'
@@ -153,6 +114,7 @@ export default {
   mixins: [ner, utils],
   components: {
     DocumentSlicedName,
+    DocumentTabDetails,
     PdfViewer,
     SpreadsheetViewer,
     TiffViewer
@@ -187,9 +149,7 @@ export default {
         }, r => escape(r), m => m.source.mention)
       }
     },
-    capitalize,
-    getDocumentTypeLabel,
-    getExtractionLevelTranslationKey
+    capitalize
   },
   computed: {
     ...mapState('document', {
@@ -199,12 +159,6 @@ export default {
     }),
     getFullUrl () {
       return DatashareClient.getFullUrl(this.document.url)
-    },
-    documentPath () {
-      if (this.$config.get('mountedDataDir')) {
-        return this.document.source.path.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
-      }
-      return this.document.source.path
     }
   },
   beforeRouteEnter (to, _from, next) {
@@ -286,12 +240,6 @@ export default {
 
   &__content {
     padding: $spacer * 2 $spacer;
-
-    & .tab-pane {
-      & dd {
-        word-wrap: break-word;
-      }
-    }
   }
 
   .text-pre-wrap {
