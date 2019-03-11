@@ -111,6 +111,7 @@ describe('DocumentView.vue', () => {
       .commit()
 
     await wrapper.vm.getDoc()
+    wrapper.vm.tab = 'text'
 
     expect(wrapper.findAll('mark')).toHaveLength(2)
     expect(wrapper.findAll('mark').at(0).text()).toEqual('NER')
@@ -127,10 +128,12 @@ describe('DocumentView.vue', () => {
       .withContent('a foo document <with>HTML</with>')
       .withNer('foo', 2))
       .commit()
+
     await wrapper.vm.getDoc()
+    wrapper.vm.tab = 'text'
 
     expect(wrapper.find('.text-pre-wrap').html()).toEqual(
-      '<div class="tab-pane text-pre-wrap">a <mark class="ner bg-category-person">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;</div>')
+      '<div class="tab-pane text-pre-wrap active">a <mark class="ner bg-category-person">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;</div>')
   })
 
   it('should display named entities in the dedicated tab', async () => {
@@ -144,8 +147,9 @@ describe('DocumentView.vue', () => {
       .withNer('mention_02', 5, 'CATEGORY_02')
       .withNer('mention_03', 12, 'CATEGORY_03'))
       .commit()
-    await wrapper.vm.getDoc()
 
+    await wrapper.vm.getDoc()
+    wrapper.vm.tab = 'named_entities'
     const pills = wrapper.findAll('.document__named-entities .badge-pill')
 
     expect(pills).toHaveLength(3)
@@ -166,8 +170,8 @@ describe('DocumentView.vue', () => {
       .withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
       .commit()
 
-    wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
+    wrapper.vm.tab = 'preview'
 
     expect(wrapper.contains('spreadsheet-viewer-stub')).toBeTruthy()
   })
@@ -181,8 +185,8 @@ describe('DocumentView.vue', () => {
       .withContentType('text/csv'))
       .commit()
 
-    wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
+    wrapper.vm.tab = 'preview'
 
     expect(wrapper.contains('spreadsheet-viewer-stub')).toBeTruthy()
   })
@@ -211,8 +215,8 @@ describe('DocumentView.vue', () => {
       .withContentType('image/tiff'))
       .commit()
 
-    wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
+    wrapper.vm.tab = 'preview'
 
     expect(wrapper.contains('tiff-viewer-stub')).toBeTruthy()
   })
@@ -226,6 +230,7 @@ describe('DocumentView.vue', () => {
       .commit()
 
     await wrapper.vm.getDoc()
+    wrapper.vm.tab = 'named_entities'
 
     expect(wrapper.findAll('.document .tab-pane.document__named-entities .document__named-entities--not--searched')).toHaveLength(1)
   })
@@ -240,6 +245,7 @@ describe('DocumentView.vue', () => {
       .commit()
 
     await wrapper.vm.getDoc()
+    wrapper.vm.tab = 'named_entities'
 
     expect(wrapper.findAll('.document .tab-pane.document__named-entities .document__named-entities--not--found')).toHaveLength(1)
   })
@@ -256,6 +262,8 @@ describe('DocumentView.vue', () => {
       .commit()
 
     await wrapper.vm.getDoc()
+    wrapper.vm.tab = 'named_entities'
+
     expect(wrapper.findAll('.document__named-entities .badge-pill')).toHaveLength(2)
 
     await indexBuilder.hideNer('mention_02')

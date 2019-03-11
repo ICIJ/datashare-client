@@ -38,7 +38,7 @@
         </nav>
       </div>
       <div class="tab-content document__content">
-        <div class="tab-pane" :class="{active: tab === 'details'}">
+        <div class="tab-pane" :class="{active: tab === 'details'}" v-if="tab === 'details'">
           <dl class="row">
             <dt class="col-sm-3">{{ $t('document.name') }}</dt>
             <dd class="col-sm-9 document__content__basename">{{ document.basename }}</dd>
@@ -80,7 +80,7 @@
             </template>
           </dl>
         </div>
-        <div class="tab-pane document__named-entities" :class="{active: tab === 'named_entities'}">
+        <div class="tab-pane document__named-entities" :class="{active: tab === 'named_entities'}" v-if="tab === 'named_entities'">
           <div v-if="!isRemote && document.source.nerTags.length === 0" class="document__named-entities--not--searched">
             <div v-html="$t('document.named_entites_not_searched', { indexing_link: '#/indexing' })"></div>
           </div>
@@ -106,7 +106,7 @@
             </div>
           </div>
         </div>
-        <div class="tab-pane text-pre-wrap" :class="{ active: tab === 'text' }" v-html="markedSourceContent()"></div>
+        <div class="tab-pane text-pre-wrap" :class="{ active: tab === 'text' }" v-html="markedSourceContent()" v-if="tab === 'text'" />
         <div class="tab-pane" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
           <template v-if="document.contentType === 'application/pdf'">
             <pdf-viewer :document="document" />
