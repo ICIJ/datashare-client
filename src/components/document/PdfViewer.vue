@@ -121,3 +121,23 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.pdf-viewer {
+  position: relative;
+
+  .pdf-viewer__header {
+    flex: 0 0 15%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+  }
+
+  .pdf-viewer__preview {
+    flex: 0 0 85%;
+    margin-left: 15%;
+  }
+}
+</style>
