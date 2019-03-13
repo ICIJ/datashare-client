@@ -289,6 +289,7 @@
     "download_button": "Télécharger",
     "download_file": "Télécharger le fichier source",
     "not_found": "Document non trouvé",
+    "not_available": "La prévisualisation n'est disponible que pour certains formats : pdf, csv, xlsx, tiff et rtf.",
     "named_entities_not_found": "Pas d'entités nommées trouvées",
     "named_entites_not_searched": "<p>Document non analysé.</p><p class=\"text-muted small\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\"font-weight-bold\" href=\"%{indexing_link}\">Analyser mes documents</a> et lancez une nouvelle tâche \"Trouver les entitées nommées\".</p>",
     "generating_preview": "Génère une prévisualisation...",
