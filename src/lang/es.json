@@ -1,9 +1,9 @@
 {
   "aggregations": {
     "mentions": {
-      "item": "%{ocurrencias} in %{documentos}",
-      "occurrence": "sin ocurrencias | una ocurrencia | {contar} occurencias",
-      "document": "sin docs | un doc | {contar} docs"
+      "item": "%{occurrences} in %{documents}",
+      "occurrence": "sin ocurrencias | una ocurrencia | {count} occurencias",
+      "document": "sin docs | un doc | {count} docs"
     },
     "more": "Explora más",
     "placeholder": "Búsqueda de personas, organizaciones, localizaciones...",
