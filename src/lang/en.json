@@ -294,7 +294,8 @@
     "named_entites_not_searched": "<p>Document not analyzed.</p><p class=\"text-muted small\">To search named entities, go to <a class=\"font-weight-bold\" href=\"%{indexing_link}\">Analyze my document</a> and start a new task \"Find named entities\".</p>",
     "generating_preview": "Generating preview...",
     "sheet": "Sheet",
-    "search_directory": "Search within this directory"
+    "search_directory": "Search within this directory",
+    "tiff_limitations": "The browser preview of this TIFF file may not show all the images. We suggest you download it in your computer to view all the contents."
   },
   "indexing": {
     "yes": "Yes",

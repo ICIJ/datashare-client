@@ -293,7 +293,8 @@
     "named_entites_not_searched": "<p>Document non analysé.</p><p class=\"text-muted small\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\"font-weight-bold\" href=\"%{indexing_link}\">Analyser mes documents</a> et lancez une nouvelle tâche \"Trouver les entitées nommées\".</p>",
     "generating_preview": "Génère une prévisualisation...",
     "sheet": "Feuille",
-    "search_directory": "Chercher dans ce dossier"
+    "search_directory": "Chercher dans ce dossier",
+    "tiff_limitations": "La prévisualisation des fichiers TIFF dans le navigateur peut ne pas montrer toutes les images. Nous vous conseillons de le télécharger afin de voir tout le contenu."
   },
   "indexing": {
     "yes": "Oui",

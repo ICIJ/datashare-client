@@ -1,29 +1,36 @@
 <template>
   <div class="tiff-viewer">
     <template v-if="doc.pages.length > 0">
-      <div class="tiff-viewer__header text-center">
+      <div class="tiff-viewer__header">
+        <div class="tiff-viewer__thumbnails">
+          <div class="text-center mb-4">{{ doc.active }} / {{ doc.pages.length }}</div>
+          <div v-for="page in doc.pages.length" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex flex-row-reverse">
+            <img class="ml-1 tiff-viewer__canvas img-responsive" :width="thumbWidth" :height="thumbWidth" :src="loadPage(page)" />
+            <span class="d-flex align-items-center">{{ page }}</span>
+          </div>
+        </div>
+      </div>
+      <div class="tiff-viewer__preview text-center">
+        <div class="tiff-viewer__preview__pages d-flex flex-row-reverse">
+          <select class="form-control input-sm w-auto mb-3" v-model="doc.active">
+            <option v-for="page in doc.pages.length" v-bind:key="page">
+              {{ page }}
+            </option>
+          </select>
+        </div>
         <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, -1)">
           <fa icon="undo" class="float-right" />
         </button>
         <button class="btn btn-default btn-sm" @click="rotatePage(doc.active, 1)">
           <fa icon="redo" class="float-right" />
         </button>
-        <div class="tiff-viewer__header__pages">
-          {{ $t('document.page') }}
-          <select class="form-control input-sm" v-model="doc.active">
-            <option v-for="page in doc.pages.length" v-bind:key="page">
-              {{ page }}
-            </option>
-          </select>
-          {{ $t('document.of') }} {{ doc.pages.length }}
+        <div class="img-thumbnail">
+          <div class="alert tiff-viewer__warning">
+            <fa icon="exclamation-triangle" />
+            {{ $t('document.tiff_limitations') }}
+          </div>
+          <img class="tiff-viewer__canvas img-responsive" :width="maxWidth" :src="loadPage(doc.active)" />
         </div>
-      </div>
-      <div class="img-thumbnail">
-        <div class="alert tiff-viewer__warning">
-          <fa icon="exclamation-triangle" />
-          <span>The browser preview of this TIFF file may not show all the images. We suggest you download it in your computer to view all the contents.</span>
-        </div>
-        <img class="tiff-viewer__canvas img-responsive" :width="maxWidth" :src="page(doc.active).toDataURL()"/>
       </div>
     </template>
     <div v-else class="alert">
@@ -44,8 +51,9 @@ export default {
   props: ['document'],
   data () {
     return {
-      message: 'Generating preview...',
-      maxWidth: 800,
+      message: this.$t('document.generating_preview'),
+      maxWidth: 750,
+      thumbWidth: 80,
       tiff: null,
       doc: {
         active: 0,
@@ -57,16 +65,22 @@ export default {
     Tiff.initialize({ TOTAL_MEMORY: 16777216 * 10 })
   },
   mounted () {
-    this.page(1)
+    this.doc.active = 1
+    this.loadPage(1)
   },
   methods: {
-    page (p) {
+    loadPage (p) {
       // Did we fetch this page already?
       if (this.doc.pages[p - 1]) {
         return this.doc.pages[p - 1]
       } else {
         if (this.tiff !== null) {
-          return this.render(this.tiff, p)
+          return this.render(this.tiff, p).then(canvas => {
+            if (this.doc.pages.length === 0) {
+              this.doc.pages = new Array(this.tiff.countDirectory())
+            }
+            this.$set(this.doc.pages, p - 1, canvas.toDataURL())
+          })
         } else {
           return this.getTiff().then(tiff => {
             this.tiff = tiff
@@ -75,7 +89,7 @@ export default {
               if (this.doc.pages.length === 0) {
                 this.doc.pages = new Array(this.tiff.countDirectory())
               }
-              this.doc.pages[p - 1] = canvas
+              this.$set(this.doc.pages, p - 1, canvas.toDataURL())
             })
           }).catch((err) => {
             this.message = err.message
@@ -92,7 +106,7 @@ export default {
       return new Promise(resolve => {
         // Change tiff directory
         tiff.setDirectory(p)
-        this.doc.active = p
+        // this.doc.active = p
         resolve(tiff.toCanvas())
       })
     },
@@ -138,3 +152,23 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.tiff-viewer {
+  position: relative;
+
+  .tiff-viewer__header {
+    flex: 0 0 15%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+  }
+
+  .tiff-viewer__preview {
+    flex: 0 0 85%;
+    margin-left: 15%;
+  }
+}
+</style>

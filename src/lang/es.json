@@ -293,7 +293,8 @@
     "named_entites_not_searched": "<p>Documento no analizado.</p><p class=\"text-muted small\">Para buscar entidades con nombre, vaya a <a class=\"font-weight-bold\" href=\"%{indexing_link}\">Analizar mi documento</a> y comience una nueva tarea \"Buscar entidades con nombre\".</p>",
     "generating_preview": "Generando visualización previa...",
     "sheet": "Hoja",
-    "search_directory": "Buscar dentro de este directorio"
+    "search_directory": "Buscar dentro de este directorio",
+    "tiff_limitations": "La vista previa del navegador de este archivo TIFF puede no mostrar todas las imágenes. Le sugerimos que lo descargue en su computadora para ver todos los contenidos."
   },
   "indexing": {
     "yes": "Sí",
