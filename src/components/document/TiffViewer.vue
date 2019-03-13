@@ -70,31 +70,31 @@ export default {
   },
   methods: {
     loadPage (p) {
-      // Did we fetch this page already?
       if (this.doc.pages[p - 1]) {
-        return this.doc.pages[p - 1]
+        return this.doc.pages[p - 1].toDataURL()
       } else {
-        if (this.tiff !== null) {
-          return this.render(this.tiff, p).then(canvas => {
-            if (this.doc.pages.length === 0) {
-              this.doc.pages = new Array(this.tiff.countDirectory())
-            }
-            this.$set(this.doc.pages, p - 1, canvas.toDataURL())
+        return this.render(this.tiff, p).then(canvas => {
+          this.$set(this.doc.pages, p - 1, canvas)
+        }).catch(error => {
+          this.message = error.message
+        })
+      }
+    },
+    render (tiff, p) {
+      if (tiff !== null) {
+        return new Promise(resolve => {
+          tiff.setDirectory(p - 1)
+          resolve(tiff.toCanvas())
+        })
+      } else {
+        return this.getTiff().then(tiff => {
+          this.tiff = tiff
+          this.doc.pages = new Array(this.tiff.countDirectory())
+          return new Promise(resolve => {
+            tiff.setDirectory(p - 1)
+            resolve(tiff.toCanvas())
           })
-        } else {
-          return this.getTiff().then(tiff => {
-            this.tiff = tiff
-            // Then return a new promise to paginate the result
-            return this.render(this.tiff, p).then(canvas => {
-              if (this.doc.pages.length === 0) {
-                this.doc.pages = new Array(this.tiff.countDirectory())
-              }
-              this.$set(this.doc.pages, p - 1, canvas.toDataURL())
-            })
-          }).catch((err) => {
-            this.message = err.message
-          })
-        }
+        })
       }
     },
     getTiff () {
@@ -102,17 +102,8 @@ export default {
         .then(r => r.arrayBuffer())
         .then(arrayBuffer => new Tiff({ buffer: arrayBuffer }))
     },
-    render (tiff, p) {
-      return new Promise(resolve => {
-        // Change tiff directory
-        tiff.setDirectory(p)
-        // this.doc.active = p
-        resolve(tiff.toCanvas())
-      })
-    },
     rotatePage (p, direction = 1) {
       return this.rotate(this.doc.pages[p - 1], direction).then(canvas => {
-        // Canvas is ready, create an property for this page
         this.$set(this.doc.pages, p - 1, canvas)
       })
     },
