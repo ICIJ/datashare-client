@@ -5,7 +5,7 @@
         <div class="pdf-viewer__thumbnails">
           <div class="text-center mb-4">{{ doc.active }} / {{ doc.pages.length }}</div>
           <div v-for="page in doc.pages.length" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex flex-row-reverse">
-            <img :src="loadThumbnail(page)" class="ml-1 border border-primary" />
+            <img class="ml-1 border border-primary" :src="loadThumbnail(page)" />
             <span class="d-flex align-items-center">{{ page }}</span>
           </div>
         </div>

@@ -1,14 +1,23 @@
 <template>
-  <div class="spreadsheet-viewer">
-    <div class="spreadsheet-viewer__header" v-if="doc.active">
-      {{ $t('document.sheet') }}
-      <b-form-select class="input-sm" v-model="doc.active"
-                     :options="Object.keys(doc.sheets)" @change="displaySheet" />
-    </div>
-    <div class="spreadsheet-viewer__hot">
-      <div v-html="content"></div>
-    </div>
-    <div class="alert" v-if="!doc.active">
+  <div class="spreadsheet-viewer d-flex">
+    <template v-if="doc.active">
+      <div class="spreadsheet-viewer__header">
+        <div class="text-center mb-4">{{ doc.active }} / {{ Object.keys(doc.sheets).length }}</div>
+        <div v-for="page in Object.keys(doc.sheets).length" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex flex-row-reverse spreadsheet-viewer__header__thumbnails">
+          <div class="ml-1 img-thumbnail" v-html="displaySheet(Object.keys(doc.sheets)[page - 1])" />
+          <span class="d-flex align-items-center">{{ page }}</span>
+        </div>
+      </div>
+      <div class="spreadsheet-viewer__preview">
+        <div class="spreadsheet-viewer__preview__header" v-if="doc.active">
+          <b-form-select class="input-sm" v-model="doc.active" :options="Object.keys(doc.sheets)" @change="displaySheet" />
+        </div>
+        <div class="spreadsheet-viewer__preview__content">
+          <div v-html="displaySheet(doc.active)" />
+        </div>
+      </div>
+    </template>
+    <div v-else class="alert">
       <fa icon="cog" spin />
       {{ message }}
     </div>
@@ -28,10 +37,9 @@ export default {
     return {
       message: this.$t('document.generating_preview'),
       doc: {
-        active: null,
+        active: 0,
         sheets: {}
-      },
-      content: ''
+      }
     }
   },
   mounted () {
@@ -42,7 +50,6 @@ export default {
       return this.xlsx().then(workbook => {
         this.doc.sheets = workbook
         this.doc.active = Object.keys(workbook)[0]
-        this.content = this.doc.sheets[this.doc.active]
       }).catch(err => {
         this.message = err.message
       })
@@ -66,8 +73,28 @@ export default {
         })
     },
     displaySheet (value) {
-      this.content = this.doc.sheets[value]
+      return this.doc.sheets[value]
     }
   }
 }
 </script>
+
+<style lang="scss">
+.spreadsheet-viewer {
+  position: relative;
+
+  .spreadsheet-viewer__header {
+    flex: 0 0 15%;
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    overflow: auto;
+  }
+
+  .spreadsheet-viewer__preview {
+    flex: 0 0 85%;
+    margin-left: 15%;
+  }
+}
+</style>
