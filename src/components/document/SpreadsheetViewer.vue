@@ -1,11 +1,11 @@
 <template>
-  <div class="spreadsheet-viewer d-flex">
+  <div class="spreadsheet-viewer d-flex flex-grow-1">
     <template v-if="doc.active">
       <div class="spreadsheet-viewer__header">
-        <div class="text-center mb-4">{{ doc.active }} / {{ Object.keys(doc.sheets).length }}</div>
-        <div v-for="page in Object.keys(doc.sheets).length" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex flex-row-reverse spreadsheet-viewer__header__thumbnails">
-          <div class="ml-1 img-thumbnail" v-html="displaySheet(Object.keys(doc.sheets)[page - 1])" />
+        <div class="text-center mb-4">{{ Object.keys(doc.sheets).indexOf(doc.active) + 1 }} / {{ Object.keys(doc.sheets).length }}</div>
+        <div v-for="page in Object.keys(doc.sheets).length" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex spreadsheet-viewer__header__thumbnails">
           <span class="d-flex align-items-center">{{ page }}</span>
+          <div class="small ml-1 img-thumbnail text-truncate" v-html="displaySheet(Object.keys(doc.sheets)[page - 1])" />
         </div>
       </div>
       <div class="spreadsheet-viewer__preview">
@@ -89,12 +89,15 @@ export default {
     left: 0;
     top: 0;
     bottom: 0;
-    overflow: auto;
+    overflow-x: hidden;
+    overflow-y: auto;
+    max-width: 15%;
   }
 
   .spreadsheet-viewer__preview {
     flex: 0 0 85%;
     margin-left: 15%;
+    padding-left: 1em;
   }
 }
 </style>

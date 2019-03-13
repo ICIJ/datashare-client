@@ -138,6 +138,7 @@ export default {
   .pdf-viewer__preview {
     flex: 0 0 85%;
     margin-left: 15%;
+    padding-left: 1em;
   }
 }
 </style>

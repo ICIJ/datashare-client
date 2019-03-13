@@ -3,7 +3,7 @@
     <content-placeholder class="document m-3 py-2 px-3" />
   </div>
   <div v-else>
-    <div class="document m-3" v-if="document">
+    <div class="d-flex flex-column document m-3" v-if="document">
       <div class="document__header">
         <h3>
           <document-sliced-name :document="document" />
@@ -37,7 +37,7 @@
           </ul>
         </nav>
       </div>
-      <div class="tab-content document__content">
+      <div class="d-flex flex-grow-1 tab-content document__content">
         <div class="tab-pane" :class="{active: tab === 'details'}" v-if="tab === 'details'">
           <document-tab-details :document="document" :parentDocument="parentDocument" />
         </div>
@@ -45,7 +45,7 @@
           <document-tab-named-entities :document="document" />
         </div>
         <div class="tab-pane text-pre-wrap" :class="{ active: tab === 'text' }" v-html="markedSourceContent()" v-if="tab === 'text'" />
-        <div class="tab-pane" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
+        <div class="tab-pane d-flex flex-grow-1" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
           <template v-if="document.contentType === 'application/pdf'">
             <pdf-viewer :document="document" />
           </template>
