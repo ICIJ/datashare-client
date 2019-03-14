@@ -1,10 +1,10 @@
 <template>
   <div class="pdf-viewer d-flex">
     <template v-if="doc.pages.length > 0">
-      <div class="pdf-viewer__header">
-        <div class="pdf-viewer__thumbnails">
+      <div id="pdf-viewer__header" class="pdf-viewer__header" @scroll="fetchMoreThumbnails">
+        <div id="pdf-viewer__thumbnails" class="pdf-viewer__thumbnails">
           <div class="text-center mb-4">{{ doc.active }} / {{ doc.pages.length }}</div>
-          <div v-for="page in doc.pages.length" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex flex-row-reverse">
+          <div v-for="page in numberOfThumbnails" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex flex-row-reverse">
             <img class="ml-1 border border-primary" :src="loadThumbnail(page)" />
             <span class="d-flex align-items-center">{{ page }}</span>
           </div>
@@ -34,6 +34,7 @@
 import PDFJS from 'pdfjs-dist'
 import Worker from 'pdfjs-dist/build/pdf.worker'
 import DatashareClient from '@/api/DatashareClient'
+import min from 'lodash/min'
 
 (typeof window !== 'undefined' ? window : {}).pdfjsWorker = Worker
 
@@ -50,7 +51,8 @@ export default {
         active: 0,
         pages: [],
         thumbs: []
-      }
+      },
+      numberOfThumbnails: 0
     }
   },
   mounted () {
@@ -58,6 +60,12 @@ export default {
     this.loadPage(1)
   },
   methods: {
+    fetchMoreThumbnails () {
+      const isBottomOfScrollReached = document.getElementById('pdf-viewer__header').scrollTop + document.getElementById('pdf-viewer__header').offsetHeight >= document.getElementById('pdf-viewer__thumbnails').offsetHeight
+      if (isBottomOfScrollReached && this.numberOfThumbnails !== this.doc.pages.length) {
+        this.numberOfThumbnails = min([this.doc.pages.length, this.numberOfThumbnails + 10])
+      }
+    },
     loadPdf () {
       if (this.pdf !== null) {
         return new Promise(resolve => resolve(this.pdf))
@@ -65,6 +73,7 @@ export default {
         return PDFJS.getDocument(DatashareClient.getFullUrl(this.document.url)).then(pdf => {
           if (this.doc.pages.length === 0) {
             this.doc.pages = new Array(pdf.numPages)
+            this.numberOfThumbnails = min([this.doc.pages.length, 10])
           }
           this.pdf = pdf
           return pdf
