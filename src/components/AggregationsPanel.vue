@@ -1,21 +1,23 @@
 <template>
   <transition name="slide-left">
-    <div class="aggregations-panel" v-show="showFilters">
-      <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
-        <facet-search :facet="selectedFacet" :query="facetQuery" />
-      </b-modal>
-      <div class="aggregations-panel__toolbar mx-3">
-        <ul class="nav">
-          <li class="nav-item">
-            <a class="nav-link p-0 text-uppercase font-weight-bold" href @click.prevent="clickOnHideFilters()">
-              <fa icon="filter" />
-              {{ $t('search.hideFilters') }}
-            </a>
-          </li>
-        </ul>
+    <div class="aggregations-panel d-flex align-items-start" v-show="showFilters">
+      <div class="aggregations-panel__sticky position-sticky align-self-end">
+        <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
+          <facet-search :facet="selectedFacet" :query="facetQuery" />
+        </b-modal>
+        <div class="aggregations-panel__sticky__toolbar mx-3">
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link p-0 text-uppercase font-weight-bold" href @click.prevent="clickOnHideFilters()">
+                <fa icon="filter" />
+                {{ $t('search.hideFilters') }}
+              </a>
+            </li>
+          </ul>
+        </div>
+        <index-selector />
+        <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
       </div>
-      <index-selector />
-      <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
     </div>
   </transition>
 </template>
@@ -126,64 +128,68 @@ export default {
       opacity: 0;
     }
 
-    & > .card {
-      margin: 0 $spacer $spacer;
+    &__sticky {
+      bottom: 2rem;
 
-      .card-header {
-        background: $aggregations-panel-bg;
-        position: sticky;
-        top:0;
-        z-index: 100;
-
-        & > h6 {
-          font-weight: bolder;
-          margin-bottom: 0;
-          padding-top: $spacer * .25;
-          text-transform: uppercase;
-          color: $gray-500;
-          background: transparent;
-          cursor: pointer;
-        }
+      &__toolbar {
+        font-size: 0.85rem;
+        line-height: $line-height-base * (1 - (85 - 95) / 95);
+        padding: 0.5rem 0;
       }
 
-      & > .list-group,
-      & > .card-body {
-        font-size: 0.9em;
-        color: $body-color;
-        padding:0;
-      }
+      & > .card {
+        margin: 0 $spacer $spacer;
 
-      & > .list-group {
+        .card-header {
+          background: $aggregations-panel-bg;
+          position: sticky;
+          top:0;
+          z-index: 100;
 
-        .facet__items {
-
-          &__search {
+          & > h6 {
+            font-weight: bolder;
+            margin-bottom: 0;
+            padding-top: $spacer * .25;
+            text-transform: uppercase;
             color: $gray-500;
-            display: flex;
-            flex-direction: row;
-            position: relative;
-
-            > input {
-              border: none;
-              width: 90%;
-            }
-
-            > svg {
-              margin: auto;
-            }
-          }
-
-          &__display {
+            background: transparent;
             cursor: pointer;
           }
         }
-      }
-    }
 
-    &__toolbar {
-      font-size: 0.85rem;
-      line-height: $line-height-base * (1 - (85 - 95) / 95);
-      padding: 0.5rem 0;
+        & > .list-group,
+        & > .card-body {
+          font-size: 0.9em;
+          color: $body-color;
+          padding:0;
+        }
+
+        & > .list-group {
+
+          .facet__items {
+
+            &__search {
+              color: $gray-500;
+              display: flex;
+              flex-direction: row;
+              position: relative;
+
+              > input {
+                border: none;
+                width: 90%;
+              }
+
+              > svg {
+                margin: auto;
+              }
+            }
+
+            &__display {
+              cursor: pointer;
+            }
+          }
+        }
+      }
     }
   }
 </style>
