@@ -55,15 +55,12 @@
 </template>
 
 <script>
-import { removeDiacritics } from '@/utils/strings'
 import facets from '@/mixins/facets'
 import PQueue from 'p-queue'
 import each from 'lodash/each'
 import get from 'lodash/get'
 import throttle from 'lodash/throttle'
 import sumBy from 'lodash/sumBy'
-import toLower from 'lodash/toLower'
-import toString from 'lodash/toString'
 
 const initialNumberOfFilesDisplayed = 5
 
@@ -152,9 +149,6 @@ export default {
     },
     toggleItems () {
       this.collapseItems = !this.collapseItems
-    },
-    normalize (str) {
-      return removeDiacritics(toLower(toString(str)))
     },
     shouldDisplayShowMoreAction () {
       return !this.hideShowMore && this.items.length > initialNumberOfFilesDisplayed

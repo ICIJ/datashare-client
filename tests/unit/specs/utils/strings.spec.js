@@ -1,4 +1,4 @@
-import { sliceIndexes, highlight, removeDiacritics } from '@/utils/strings'
+import { sliceIndexes, highlight } from '@/utils/strings'
 import escape from 'lodash/escape'
 
 describe('sliceIndexes', () => {
@@ -77,15 +77,5 @@ describe('highlight', () => {
   it('should return one mark with custom rest function', () => {
     expect(highlight('say hi to </the> world', [{ content: 'hi', index: 4 }], m => m.content, r => escape(r)))
       .toEqual('say hi to &lt;/the&gt; world')
-  })
-})
-
-describe('removeDiacritics', () => {
-  it('replace nothing on an empty string', () => {
-    expect(removeDiacritics('')).toEqual('')
-  })
-
-  it('replace è, û and é', () => {
-    expect(removeDiacritics('Crème brûlée')).toEqual('Creme brulee')
   })
 })

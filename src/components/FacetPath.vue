@@ -10,7 +10,7 @@
 import Facet from '@/components/Facet'
 import FacetPathTree from '@/components/FacetPathTree'
 import facets from '@/mixins/facets'
-import reduce from 'lodash/reduce'
+import map from 'lodash/map'
 import replace from 'lodash/replace'
 
 export default {
@@ -22,16 +22,17 @@ export default {
   },
   methods: {
     displayFirstLevel (items) {
-      return reduce(items, (tree, item) => {
-        tree.push({
+      return map(items, item => {
+        return {
           label: replace(item.key, this.$config.get('dataDir') + '/', ''),
           path: item.key,
           count: item.doc_count,
           children: [],
-          isLoaded: false
-        })
-        return tree
-      }, [])
+          isLoaded: false,
+          // A unique key create everytime the data from the server are updated
+          key: [(new Date()).getTime(), item.key].join('-')
+        }
+      })
     }
   }
 }
