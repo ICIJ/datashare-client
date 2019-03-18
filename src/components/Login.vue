@@ -9,7 +9,7 @@
         <ul class="list-group">
           <li class="list-group-item bg-light">
             <p>{{ $t('login.authentication_platform') }}</p>
-            <a class="btn btn-dark btn-lg" :href="getConfig('DS_AUTH_SIGNIN')">
+            <a class="btn btn-dark btn-lg" :href="signinUrl">
               <fa icon="user-shield" class="mr-2" />
               {{ $t('login.xemx') }}
             </a>
@@ -28,13 +28,11 @@
 </template>
 
 <script>
-import get from 'lodash/get'
-
 export default {
   name: 'Login',
-  methods: {
-    getConfig (name, defaultValue) {
-      return get(process.env, `VUE_APP_${name.toUpperCase()}`, defaultValue)
+  computed: {
+    signinUrl () {
+      return process.env.VUE_APP_DS_AUTH_SIGNIN
     }
   }
 }
