@@ -63,7 +63,7 @@ export default {
     },
     body () {
       const body = this.facet.body(bodybuilder().size(0), {
-        size: 5,
+        size: 1000,
         exclude: repeat('/.*', this.node.path.split('/').length + 1),
         include: `${this.node.path}/.*`
       })

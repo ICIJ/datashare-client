@@ -144,7 +144,7 @@ class FacetPath extends FacetDocument {
 
   body (body, options) {
     return body.agg('terms', 'dirname.tree', this.key, {
-      size: 500,
+      size: 1000,
       order: { '_key': 'asc' },
       exclude: Murmur.config.get('dataDir') + '/.*/.*',
       include: Murmur.config.get('dataDir') + '/.*',
