@@ -32,7 +32,6 @@
 
 <script>
 import PQueue from 'p-queue'
-import each from 'lodash/each'
 import get from 'lodash/get'
 import replace from 'lodash/replace'
 import repeat from 'lodash/repeat'
@@ -108,7 +107,7 @@ export default {
           this.loading = false
           this.isLoaded = true
           this.node.children = []
-          each(get(r, `aggregations.${this.facet.key}.buckets`, []), bucket => {
+          get(r, `aggregations.${this.facet.key}.buckets`, []).forEach(bucket => {
             this.node.children.push({
               label: replace(bucket.key, this.node.path + '/', ''),
               path: bucket.key,

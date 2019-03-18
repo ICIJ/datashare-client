@@ -1,5 +1,5 @@
 import castArray from 'lodash/castArray'
-import remove from 'lodash/remove'
+import without from 'lodash/without'
 import some from 'lodash/some'
 import startsWith from 'lodash/startsWith'
 import xor from 'lodash/xor'
@@ -25,7 +25,7 @@ export const mutations = {
     }
   },
   removePath (state, path) {
-    state.openPaths = remove(state.openPaths, path)
+    state.openPaths = without(state.openPaths, path)
   }
 }
 
