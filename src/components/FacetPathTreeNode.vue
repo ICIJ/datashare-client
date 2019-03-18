@@ -2,7 +2,7 @@
   <li v-if="node" :class="{ 'tree-node--has-children': hasChildren(), 'tree-node--active': hasValue(nodeParams) }" class="tree-node">
     <div class="d-flex flex-row">
       <div class="tree-node__label" :class="{ 'pb-1': !hasNoChildren() }">
-        <a @click="clickOnNode" :title="node.label" v-b-tooltip.hover>
+        <a @click="toggleNode" :title="node.label" v-b-tooltip.hover>
           <fa :icon="icon" fixed-width class="mr-1 tree-node__label__icon" :spin="loading" />
           {{ node.label }}
         </a>
@@ -22,7 +22,7 @@
       </div>
     </div>
     <ul v-show="hasChildren() && open" class="list-unstyled pl-3">
-      <facet-path-tree-node v-for="(child, i) in node.children" :facet="facet" :node="child" :key="i"></facet-path-tree-node>
+      <facet-path-tree-node v-for="(child, i) in node.children" :facet="facet" :node="child" :key="i" ref="treeNodes"></facet-path-tree-node>
     </ul>
     <div v-show="hasNoChildren() && open" class="text-muted pl-3">
       └ <span class="small">{{ $t('facet.noSubdirectories') }}</span>
@@ -86,11 +86,19 @@ export default {
     hasNoChildren () {
       return this.isLoaded && this.node.children && !this.node.children.length
     },
-    clickOnNode () {
-      this.$store.commit('treeView/togglePath', this.node.path)
-      if (this.open) {
-        this.getChildren()
-      }
+    toggleNode () {
+      return this.open ? this.closeNode() : this.openNode()
+    },
+    closeNode () {
+      this.$store.commit('treeView/removePath', this.node.path)
+      this.closeChildren()
+    },
+    openNode () {
+      this.$store.commit('treeView/addPath', this.node.path)
+      this.getChildren()
+    },
+    closeChildren () {
+      return (this.$refs.treeNodes || []).forEach(vm => vm.closeNode())
     },
     getChildren () {
       return this.queue.add(() => {
