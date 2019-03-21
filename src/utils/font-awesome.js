@@ -12,6 +12,7 @@ import { faBuilding } from '@fortawesome/free-solid-svg-icons/faBuilding'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons/faCaretRight'
 import { faCog } from '@fortawesome/free-solid-svg-icons/faCog'
+import { faDatabase } from '@fortawesome/free-solid-svg-icons/faDatabase'
 import { faDesktop } from '@fortawesome/free-solid-svg-icons/faDesktop'
 import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload'
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons/faEllipsisV'
@@ -55,6 +56,7 @@ library.add(
   faCaretDown,
   faCaretRight,
   faCog,
+  faDatabase,
   faDesktop,
   faDownload,
   faEllipsisV,
