@@ -10,6 +10,7 @@ import fetchPonyfill from 'fetch-ponyfill'
 import AppFooter from '@/components/AppFooter'
 import messages from '@/lang/en'
 import router from '@/router'
+import store from '@/store'
 
 const { fetch, Response } = fetchPonyfill()
 window.fetch = fetch
@@ -35,7 +36,7 @@ describe('AppFooter.vue', () => {
   beforeEach(() => {
     jest.spyOn(window, 'fetch')
     window.fetch.mockReturnValue(jsonOk({}))
-    wrapper = mount(AppFooter, { localVue, i18n, router })
+    wrapper = mount(AppFooter, { localVue, i18n, router, store })
   })
 
   afterEach(() => {
@@ -73,7 +74,7 @@ describe('AppFooter.vue', () => {
       'git.commit.id': 'sha1',
       'git.commit.id.abbrev': 'sha1_abbrev'
     }))
-    wrapper = mount(AppFooter, { localVue, i18n, router })
+    wrapper = mount(AppFooter, { localVue, i18n, router, store })
     await wrapper.vm.promise
 
     expect(wrapper.find('.app__footer__tooltip__server__value').text()).toEqual('sha1_abbrev')
@@ -86,13 +87,13 @@ describe('AppFooter.vue', () => {
 
   it('should display the interface in French if localStorage says so', () => {
     localStorage.setItem('lang', 'fr')
-    wrapper = mount(AppFooter, { localVue, i18n, router })
+    wrapper = mount(AppFooter, { localVue, i18n, router, store })
     expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('Français')
   })
 
   it('should display the interface in Spanish if localStorage says so', () => {
     localStorage.setItem('lang', 'es')
-    wrapper = mount(AppFooter, { localVue, i18n, router })
+    wrapper = mount(AppFooter, { localVue, i18n, router, store })
     expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('Español')
   })
 
@@ -127,7 +128,7 @@ describe('AppFooter.vue', () => {
 
   it('should NOT display the app__footer__addon in LOCAL mode', () => {
     Murmur.config.merge({ mode: 'SERVER' })
-    wrapper = mount(AppFooter, { localVue, i18n, router })
+    wrapper = mount(AppFooter, { localVue, i18n, router, store })
     expect(wrapper.findAll('.app__footer .app__footer__addon--homedir')).toHaveLength(0)
   })
 })

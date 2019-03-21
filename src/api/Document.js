@@ -1,23 +1,36 @@
 import last from 'lodash/last'
-import get from 'lodash/get'
+import pick from 'lodash/pick'
+import Murmur from '@icij/murmur'
+
 import EsDoc from './EsDoc'
 import moment from 'moment'
 
 export default class Document extends EsDoc {
   get shortId () {
-    return this.raw._id.slice(0, 10)
+    return this.id.slice(0, 10)
   }
   get path () {
-    return get(this, 'source.path', '')
+    return this.get('_source.path', '')
+  }
+  get folder () {
+    // Extract location parts
+    let parts = this.path.split('/')
+    // Remove the file name
+    parts.splice(-1, 1)
+    // And return the new path
+    return parts.join('/') + '/'
+  }
+  get location () {
+    return this.folder.split(Murmur.config.get('dataDir', process.env.VUE_APP_DATA_PREFIX)).pop()
   }
   get basename () {
     return last(this.path.split('/'))
   }
   get slicedName () {
-    if (this.source.extractionLevel === 0) {
+    if (this.get('_source.extractionLevel', 0) === 0) {
       return [ this.basename ]
     }
-    const distance = this.source.extractionLevel - 1
+    const distance = this.get('_source.extractionLevel') - 1
     // Sliced name for extracted doc is composed of:
     // - root basename
     // - distance with the top parent
@@ -47,7 +60,24 @@ export default class Document extends EsDoc {
   get index () {
     return this.raw._index
   }
+  get routerParams () {
+    return pick(this, ['index', 'id', 'routing'])
+  }
+  get serializedForStorage () {
+    return pick(this.raw, [
+      '_id',
+      '_routing',
+      '_version',
+      '_index',
+      '_source.path',
+      '_source.extractionLevel',
+      '_source.contentLength'
+    ])
+  }
   static get esName () {
     return 'Document'
+  }
+  static create (raw) {
+    return new Document(raw)
   }
 }

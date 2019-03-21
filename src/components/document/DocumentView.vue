@@ -112,11 +112,15 @@ export default {
     }
   },
   methods: {
-    getDoc (params = { id: this.id, routing: this.routing }) {
+    async getDoc (params = { id: this.id, routing: this.routing }) {
       this.isReady = false
-      return this.$store.dispatch('document/get', params).then(() => this.$store.dispatch('document/getParent')).then(() => this.$store.dispatch('document/getNamedEntities')).then(() => {
-        this.isReady = true
-      })
+      await this.$store.dispatch('document/get', params)
+      await this.$store.dispatch('document/getParent')
+      await this.$store.dispatch('document/getNamedEntities')
+      this.isReady = true
+      if (this.document) {
+        await this.$store.commit('userHistory/addDocument', this.document)
+      }
     },
     markedSourceContent () {
       if (this.document) {

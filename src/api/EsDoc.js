@@ -24,7 +24,13 @@ export default class EsDoc {
   get raw () {
     return this[_raw]
   }
+  get serializedForStorage () {
+    return this.raw
+  }
   static match (hit) {
     return hit._source.type === (this.esName || this.name)
+  }
+  static create (raw) {
+    return new EsDoc(raw)
   }
 }

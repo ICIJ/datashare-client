@@ -11,6 +11,7 @@ import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt'
 import { faBuilding } from '@fortawesome/free-solid-svg-icons/faBuilding'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons/faCaretRight'
+import { faClock } from '@fortawesome/free-solid-svg-icons/faClock'
 import { faCog } from '@fortawesome/free-solid-svg-icons/faCog'
 import { faDatabase } from '@fortawesome/free-solid-svg-icons/faDatabase'
 import { faDesktop } from '@fortawesome/free-solid-svg-icons/faDesktop'
@@ -55,6 +56,7 @@ library.add(
   faBuilding,
   faCaretDown,
   faCaretRight,
+  faClock,
   faCog,
   faDatabase,
   faDesktop,

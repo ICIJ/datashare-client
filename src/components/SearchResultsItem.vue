@@ -23,7 +23,6 @@
 
 <script>
 import get from 'lodash/get'
-import pick from 'lodash/pick'
 import uniqBy from 'lodash/uniqBy'
 
 import ner from '@/mixins/ner'
@@ -60,7 +59,7 @@ export default {
       return uniqBy(this.doc.get('inner_hits.NamedEntity.hits.hits', []), '_source.mention')
     },
     params () {
-      return pick(this.doc, ['index', 'id', 'routing'])
+      return this.doc.routerParams
     }
   },
   filters: {
