@@ -19,7 +19,7 @@
                 {{ $t('document.details') }}
               </a>
             </li>
-            <li class="document__header__nav__item list-inline-item" v-if="!isRemote">
+            <li class="document__header__nav__item list-inline-item" v-if="!isRemote || namedEntities.length">
               <a @click="tab = 'named_entities'" :class="{ active: tab === 'named_entities' }">
                 {{ $t('document.named_entities') }}
               </a>
