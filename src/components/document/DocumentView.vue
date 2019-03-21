@@ -6,7 +6,7 @@
     <div class="d-flex flex-column document m-3" v-if="document">
       <div class="document__header">
         <h3>
-          <document-sliced-name :document="document" />
+          <document-sliced-name interactive-root :document="document" />
           <a class="btn btn-link float-right" :href="getFullUrl" target="_blank" :title="$t('document.download_file')">
             <fa icon="download" class="text-white" />
             <span class="sr-only">{{ $t('document.download_button') }}</span>

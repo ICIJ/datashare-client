@@ -5,10 +5,19 @@
         ...
       </span>
       <span v-else-if="hasContentSlice(slice)" class="d-inline-flex flex-row  align-items-end">
-        <span class="document-sliced-name__item__short-id">{{ slice }}</span>
-        <span class="document-sliced-name__item__content-type">{{ contentType }}</span>
+        <span class="document-sliced-name__item__short-id">
+          {{ slice }}
+        </span>
+        <span class="document-sliced-name__item__content-type">
+          {{ contentType }}
+        </span>
       </span>
-      <span v-else class="document-sliced-name__item__root">{{ slice }}</span>
+      <router-link v-else-if="hasInteractiveRoot()" :to="{ name: 'document', params: rootParams }" class="document-sliced-name__item__root">
+        {{ slice }}
+      </router-link>
+      <span v-else class="document-sliced-name__item__root">
+        {{ slice }}
+      </span>
     </span>
   </span>
 </template>
@@ -19,7 +28,12 @@ import types from '@/utils/types.json'
 
 export default {
   props: {
-    document: Object
+    document: {
+      type: Object
+    },
+    interactiveRoot: {
+      type: Boolean
+    }
   },
   methods: {
     isFirstSlice (slice) {
@@ -33,6 +47,9 @@ export default {
     },
     hasContentSlice (slice) {
       return !this.isFirstSlice(slice) && this.isLastSlice(slice)
+    },
+    hasInteractiveRoot () {
+      return this.slices.length > 1 && this.interactiveRoot
     }
   },
   computed: {
@@ -41,6 +58,9 @@ export default {
     },
     contentType () {
       return get(types, [this.document.contentType, 'extensions'], [])[0]
+    },
+    rootParams () {
+      return { id: this.document.source.rootDocument || this.document.id }
     }
   }
 }
@@ -66,6 +86,14 @@ export default {
       &__content-type {
         font-weight: normal;
         opacity: 0.8;
+      }
+
+      &__root, &__root:hover {
+        color: inherit;
+
+        .document-sliced-name--sliced &:not(a) {
+          font-weight: normal;
+        }
       }
 
       .document-sliced-name--sliced &__root {
