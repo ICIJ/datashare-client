@@ -75,7 +75,8 @@ export default class Document extends EsDoc {
       '_index',
       '_source.path',
       '_source.extractionLevel',
-      '_source.contentLength'
+      '_source.contentLength',
+      '_source.contentType'
     ])
   }
   static get esName () {
