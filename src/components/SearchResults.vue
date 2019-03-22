@@ -18,11 +18,11 @@
       <search-results-header :response="response" :position="'bottom'" />
     </div>
     <div v-else>
-      <div class="search-results__header border-0 d-flex justify-content-center align-items-center py-5">
+      <div class="search-results__header border-0 py-5 d-flex flex-column text-center">
         <div class="search-results__header__number-of-results">
           {{ $t('search.results.no-result') }}
         </div>
-        <div class="ml-2">
+        <div class="mt-3" v-if="hasFacets">
           {{ $t('search.try') }}
           <reset-filters-button />
         </div>
@@ -51,6 +51,9 @@ export default {
     },
     hasResults () {
       return this.response.hits.length > 0
+    },
+    hasFacets () {
+      return this.$store.getters['search/activeFacets'].length > 0
     }
   },
   methods: {

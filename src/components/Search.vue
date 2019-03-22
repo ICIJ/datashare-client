@@ -85,6 +85,8 @@ export default {
     &__body {
 
       &__wrapper {
+        float: left;
+        display: flex;
 
         .search--show-document & {
           @media (max-width: $document-float-breakpoint-width) {
@@ -99,7 +101,6 @@ export default {
 
       &__aggregations-panel {
         width: $aggregations-panel-width;
-        float: left;
       }
 
       &__search-results {
@@ -107,10 +108,10 @@ export default {
         position: relative;
         max-width: $search-results-width;
         min-width: $search-results-width;
+        min-height: 100%;
         overflow: auto;
         border-left: 1px solid $gray-200;
         border-right: 1px solid $gray-200;
-        float: left;
 
         position: sticky;
         bottom: 0;
