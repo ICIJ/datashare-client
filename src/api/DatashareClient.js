@@ -31,6 +31,9 @@ export class DatashareClient {
   createIndex () {
     return this.sendAction('/api/index/create', { method: 'PUT', credentials: 'same-origin' })
   }
+  deleteAll () {
+    return this.sendAction('/api/index/delete/all', { method: 'DELETE', credentials: 'same-origin' })
+  }
   getVersion () {
     return this.sendAction('/version')
   }

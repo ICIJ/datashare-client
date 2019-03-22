@@ -1,33 +1,25 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
-import { createLocalVue, mount } from '@vue/test-utils'
-import bDropdown from 'bootstrap-vue/es/components/dropdown/dropdown'
-import bDropdownItem from 'bootstrap-vue/es/components/dropdown/dropdown-item'
-import bTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
-import fetchPonyfill from 'fetch-ponyfill'
-
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import BootstrapVue from 'bootstrap-vue'
 import AppFooter from '@/components/AppFooter'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
+import { EventBus } from '@/utils/event-bus'
+import { datashare } from '@/store/modules/indexing'
+import fetchPonyfill from 'fetch-ponyfill'
 
 const { fetch, Response } = fetchPonyfill()
 window.fetch = fetch
 
 const localVue = createLocalVue()
-
 localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
-
-localVue.component('b-dropdown', bDropdown)
-localVue.component('b-dropdown-item', bDropdownItem)
-localVue.component('b-tooltip', bTooltip)
-localVue.directive('b-tooltip', bTooltip)
-
+localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
-
 Murmur.config.set('userDir', '/home/foo/Datashare')
 
 describe('AppFooter.vue', () => {
@@ -36,6 +28,8 @@ describe('AppFooter.vue', () => {
   beforeEach(() => {
     jest.spyOn(window, 'fetch')
     window.fetch.mockReturnValue(jsonOk({}))
+    jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk({}))
     wrapper = mount(AppFooter, { localVue, i18n, router, store })
   })
 
@@ -74,7 +68,7 @@ describe('AppFooter.vue', () => {
       'git.commit.id': 'sha1',
       'git.commit.id.abbrev': 'sha1_abbrev'
     }))
-    wrapper = mount(AppFooter, { localVue, i18n, router, store })
+    wrapper = shallowMount(AppFooter, { localVue, i18n, router, store })
     await wrapper.vm.promise
 
     expect(wrapper.find('.app__footer__tooltip__server__value').text()).toEqual('sha1_abbrev')
@@ -126,10 +120,25 @@ describe('AppFooter.vue', () => {
     expect(wrapper.findAll('.app__footer .app__footer__addon--homedir')).toHaveLength(1)
   })
 
-  it('should NOT display the app__footer__addon in LOCAL mode', () => {
+  it('should NOT display the app__footer__addon in SERVER mode', () => {
     Murmur.config.merge({ mode: 'SERVER' })
-    wrapper = mount(AppFooter, { localVue, i18n, router, store })
+    wrapper = shallowMount(AppFooter, { localVue, i18n, router, store })
     expect(wrapper.findAll('.app__footer .app__footer__addon--homedir')).toHaveLength(0)
+  })
+
+  it('should display the delete index button', () => {
+    expect(wrapper.findAll('.app__footer .app__footer__addon--delete-index')).toHaveLength(1)
+  })
+
+  it('should emit an index::delete::all event on clicking on the delete index button', async () => {
+    const mockCallback = jest.fn()
+    EventBus.$on('index::delete::all', mockCallback)
+    wrapper.find('.app__footer .app__footer__addon--delete-index').trigger('click')
+
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+
+    expect(mockCallback.mock.calls).toHaveLength(1)
   })
 })
 

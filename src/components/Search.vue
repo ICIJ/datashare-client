@@ -25,6 +25,7 @@
 <script>
 import AggregationsPanel from '@/components/AggregationsPanel'
 import SearchResults from '@/components/SearchResults'
+import { EventBus } from '@/utils/event-bus'
 import { mapState } from 'vuex'
 
 export default {
@@ -32,6 +33,19 @@ export default {
   components: {
     AggregationsPanel,
     SearchResults
+  },
+  computed: {
+    ...mapState('search', {
+      query: 'query',
+      searchResponse: 'response',
+      isReady: 'isReady'
+    }),
+    searchQuery () {
+      return this.$store.getters['search/toRouteQuery']
+    },
+    showDocument () {
+      return this.$route.name === 'document'
+    }
   },
   beforeRouteUpdate (to, from, next) {
     if (to.name === 'search') {
@@ -49,28 +63,18 @@ export default {
   created () {
     this.search()
   },
-  computed: {
-    ...mapState('search', {
-      query: 'query',
-      searchResponse: 'response',
-      isReady: 'isReady'
-    }),
-    searchQuery () {
-      return this.$store.getters['search/toRouteQuery']
-    },
-    showDocument () {
-      return this.$route.name === 'document'
-    }
-  },
-  methods: {
-    search (queryOrParams) {
-      return this.$store.dispatch('search/query', queryOrParams)
-    }
+  mounted () {
+    EventBus.$on('index::delete::all', this.search)
   },
   watch: {
     isReady (isReady) {
       const method = isReady ? 'finish' : 'start'
       this.$Progress[method]()
+    }
+  },
+  methods: {
+    search (queryOrParams) {
+      return this.$store.dispatch('search/query', queryOrParams)
     }
   }
 }

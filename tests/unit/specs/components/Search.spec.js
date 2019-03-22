@@ -4,15 +4,15 @@ import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
-import { mount, createLocalVue } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import find from 'lodash/find'
-
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import Search from '@/components/Search'
+import { EventBus } from '@/utils/event-bus'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -20,7 +20,6 @@ localVue.use(Murmur)
 localVue.use(Vuex)
 localVue.use(VueProgressBar, { color: '#852308' })
 localVue.use(BootstrapVue)
-
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('Search.vue', () => {
@@ -168,7 +167,6 @@ describe('Search.vue', () => {
     namedEntityFacet.value = ['paris']
     store.commit('search/addFacetValue', namedEntityFacet)
     await wrapper.vm.search('*')
-
     expect(wrapper.findAll('.search-results-item').length).toEqual(1)
     expect(wrapper.findAll('.search-results-item .search-results-item__basename .document-sliced-name__item__root').at(0).text()).toEqual('doc_02.txt')
   })
@@ -193,4 +191,19 @@ describe('Search.vue', () => {
 
     expect(store.state.search.showFilters).toBeTruthy()
   })
+
+  it('should refresh the view on custom event', async () => {
+    const actions = { query: jest.fn() }
+    const store2 = new Vuex.Store({ modules: { search: { namespaced: true, actions } } })
+    wrapper = shallowMount(Search, { localVue, i18n, router, store: store2 })
+    EventBus.$emit('index::delete::all')
+    await delay(100)
+    expect(actions.query).toHaveBeenCalled()
+  })
 })
+
+function delay (t, v) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve.bind(null, v), t)
+  })
+}

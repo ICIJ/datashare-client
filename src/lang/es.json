@@ -318,7 +318,8 @@
     "sync_models": "Por favor marque esta casilla si actualmente está trabajando sin conexión a Internet.",
     "stop_task": "Detener esta tarea",
     "stop_pending_tasks": "Detener todas las tareas pendientes",
-    "delete_done_tasks": "Borrar tareas completadas"
+    "delete_done_tasks": "Borrar tareas completadas",
+    "delete_index": "Eliminar índice"
   },
   "menu": {
     "help": "Pedir ayuda",

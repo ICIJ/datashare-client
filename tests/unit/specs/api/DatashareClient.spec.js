@@ -67,6 +67,14 @@ describe('Datashare backend client', () => {
     )
   })
 
+  it('should return backend response to deleteAll', async () => {
+    ds.deleteAll().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
   it('should return backend response to getVersion', async () => {
     ds.getVersion().then(
       resp => resp.json().then(

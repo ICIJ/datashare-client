@@ -7,11 +7,15 @@
       <user-history />
     </slide-up-down>
     <div class="d-flex align-items-center text-nowrap">
-      <router-link :to="{ name: 'indexing' }"  class="app__footer__addon btn btn-sm text-secondary" :title="$t('menu.analyse')" v-b-tooltip  v-if="!isRemote">
+      <b-button class="app__footer__addon app__footer__addon--delete-index btn btn-sm text-secondary"
+              variant="link" @click="deleteAll" :title="$t('indexing.delete_index')" v-b-tooltip>
+      <fa icon="trash-alt" />
+    </b-button>
+    <router-link :to="{ name: 'indexing' }"  class="app__footer__addon app__footer__addon--analyze-documents btn btn-sm text-secondary" :title="$t('menu.analyse')" v-b-tooltip v-if="!isRemote">
         <fa icon="rocket" />
         <span class="sr-only">{{ $t('menu.analyse') }}</span>
       </router-link>
-      <div class="app__footer__addon app__footer__addon--homedir" :title="$t('footer.homedir')" v-b-tooltip  v-if="!isRemote">
+      <div class="app__footer__addon app__footer__addon--homedir" :title="$t('footer.homedir')" v-b-tooltip v-if="!isRemote">
         <fa icon="folder" class="mr-1" />
         {{ $config.get('mountedDataDir') || $config.get('dataDir') }}
       </div>
@@ -67,6 +71,7 @@
 <script>
 import utils from '@/mixins/utils'
 import DatashareClient from '@/api/DatashareClient'
+import { EventBus } from '@/utils/event-bus'
 import UserHistory from '@/components/UserHistory'
 import find from 'lodash/find'
 
@@ -136,7 +141,7 @@ export default {
       return this.promise.then(res => {
         this.serverHash = res['git.commit.id.abbrev']
         this.serverVersion = res['git.build.version']
-      })
+      }).catch(() => {})
     },
     changeLanguage (lang) {
       this.loadLanguageAsync(lang)
@@ -158,6 +163,9 @@ export default {
         return Promise.resolve(this.setI18nLanguage(lang))
       }
       return Promise.resolve(lang)
+    },
+    deleteAll () {
+      this.$store.dispatch('indexing/deleteAll').then(() => EventBus.$emit('index::delete::all'))
     }
   }
 }
@@ -180,6 +188,10 @@ export default {
       height: $app-footer-height;
       display: flex;
       align-items: center;
+
+      &--analyze-documents.btn {
+        border-left: 1px solid  rgba(white, .1);
+      }
 
       &--homedir {
         border-left: 1px solid #333;

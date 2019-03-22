@@ -4,6 +4,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import AggregationsPanel from '@/components/AggregationsPanel'
 import store from '@/store'
 import messages from '@/lang/en'
+import { EventBus } from '@/utils/event-bus'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -25,5 +26,13 @@ describe('AggregationsPanel.vue', () => {
     wrapper.find('.aggregations-panel .nav .nav-link').trigger('click')
 
     expect(wrapper.find('.aggregations-panel').isVisible()).toBeFalsy()
+  })
+
+  it('should call function refreshEachFacet on event index::delete::all emitted', async () => {
+    const refreshEachFacetStub = jest.fn()
+    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { refreshEachFacet: refreshEachFacetStub } })
+    EventBus.$emit('index::delete::all')
+
+    expect(refreshEachFacetStub).toHaveBeenCalled()
   })
 })

@@ -25,17 +25,16 @@
 <script>
 import { mapState } from 'vuex'
 import { EventBus } from '@/utils/event-bus'
-
 import FacetDate from '@/components/FacetDate'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetPath from '@/components/FacetPath'
 import FacetSearch from '@/components/FacetSearch'
 import FacetText from '@/components/FacetText'
 import IndexSelector from '@/components/IndexSelector'
-
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import forEach from 'lodash/forEach'
 import get from 'lodash/get'
+import isArray from 'lodash/isArray'
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
 
@@ -66,6 +65,7 @@ export default {
     this.$root.$on('facet::add-facet-values', this.addFacetValues)
     EventBus.$on('facet::search::add-facet-values', this.updateFacetSelectedValues)
     EventBus.$on('facet::search::reset-filters', this.resetFacetValues)
+    EventBus.$on('index::delete::all', this.refreshEachFacet)
   },
   data () {
     return {
@@ -100,8 +100,8 @@ export default {
     },
     resetFacetValues () {
       forEach(this.$refs, component => {
-        const facet = component[0]
-        if (facet) {
+        if (isArray(component) && component[0] && component[0].root) {
+          const facet = component[0]
           facet.root.resetFacetValues()
           if (facet.resetNamedEntityValues) {
             facet.resetNamedEntityValues()
@@ -111,6 +111,14 @@ export default {
     },
     clickOnHideFilters () {
       this.$store.commit('search/toggleFilters')
+    },
+    refreshEachFacet () {
+      forEach(this.$refs, component => {
+        if (isArray(component) && component[0] && component[0].root) {
+          component[0].root.aggregateWithLoading()
+        }
+      })
+      this.resetFacetValues()
     }
   }
 }

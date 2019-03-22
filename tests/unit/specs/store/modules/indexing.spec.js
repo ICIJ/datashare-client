@@ -113,6 +113,14 @@ describe('Indexing store', () => {
     expect(store.state.form.pipeline).toEqual('corenlp')
     expect(store.state.form.offline).toBeFalsy()
   })
+
+  it('should delete all the documents in the index', async () => {
+    await store.dispatch('deleteAll')
+
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/index/delete/all'),
+      { method: 'DELETE', credentials: 'same-origin' })
+  })
 })
 
 function jsonOk (body) {
