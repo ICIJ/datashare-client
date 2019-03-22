@@ -1,7 +1,7 @@
 <template>
   <transition name="slide-left">
     <div class="aggregations-panel d-flex align-items-start" v-show="showFilters">
-      <div class="aggregations-panel__sticky position-sticky align-self-end">
+      <div class="aggregations-panel__sticky">
         <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
           <facet-search :facet="selectedFacet" :query="facetQuery" />
         </b-modal>
@@ -135,9 +135,14 @@ export default {
       margin-left: -1 * $aggregations-panel-width !important;
       opacity: 0;
     }
-    
+
     &__sticky {
-      bottom: 2rem;
+
+      body:not(.modal-open) & {
+        align-self: flex-end;
+        position: sticky;
+        bottom: 2rem;
+      }
 
       &__toolbar {
         font-size: 0.85rem;
