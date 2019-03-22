@@ -12,13 +12,15 @@
           </div>
         </div>
       </div>
-      <div class="search__body__document" v-show="showDocument">
-        <router-link :to="{ name: 'search', query: searchQuery }" class="p-2 search__body__document__nav">
-          <fa icon="chevron-circle-left" class="text-white" />
-          {{ $t('search.back') }}
-        </router-link>
-        <router-view></router-view>
-      </div>
+      <transition name="slide-right">
+        <div class="search__body__document" v-show="showDocument">
+          <router-link :to="{ name: 'search', query: searchQuery }" class="p-2 search__body__document__nav">
+            <fa icon="chevron-circle-left" class="text-white" />
+            {{ $t('search.back') }}
+          </router-link>
+          <router-view></router-view>
+        </div>
+      </transition>
     </div>
   </div>
 </template>
@@ -92,12 +94,12 @@ export default {
 
         .search--show-document & {
           @media (max-width: $aggregations-panel-width + $search-results-width + $document-min-width + 20px) {
+            overflow: auto;
             background: $aggregations-panel-bg;
             position: fixed;
             top: var(--app-nav-height);
             height: calc(100% - var(--app-nav-height) - var(--app-footer-height));
             width: 100%;
-            overflow: auto;
           }
         }
       }
@@ -125,6 +127,15 @@ export default {
         background: $aggregations-panel-bg;
         padding: $spacer;
         margin-left: $aggregations-panel-width + $search-results-width;
+
+        &.slide-right-enter-active, &.slide-right-leave-active {
+          transition: .3s;
+        }
+
+        &.slide-right-enter, &.slide-right-leave-to {
+          opacity: 0;
+          transform: translateX(100%);
+        }
 
         .document {
           box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
@@ -165,7 +176,7 @@ export default {
             top: 0;
             bottom: 0;
             width: calc(100vw - #{$document-min-width});
-            @include gradient-x(rgba($dark, 0), rgba($dark, 0.5))
+            @include gradient-x(rgba($dark, 0), rgba($dark, 0.4))
           }
         }
       }
