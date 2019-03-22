@@ -15,7 +15,7 @@
       <transition name="slide-right">
         <div class="search__body__document" v-show="showDocument">
           <router-link :to="{ name: 'search', query: searchQuery }" class="p-2 search__body__document__nav">
-            <fa icon="chevron-circle-left" class="text-white" />
+            <fa icon="chevron-circle-left" />
             {{ $t('search.back') }}
           </router-link>
           <router-view></router-view>
@@ -52,11 +52,6 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     if (to.name === 'search') {
-      // Query is empty
-      if ([null, undefined, ''].indexOf(to.query.q) > -1) {
-        // Redirect to landing page
-        return next({ name: 'landing' })
-      }
       // Update the search's store using route query
       this.$store.dispatch('search/updateFromRouteQuery', to.query).then(this.search).then(next)
     } else {
@@ -85,7 +80,6 @@ export default {
 
 <style lang="scss">
   .search {
-    background: $aggregations-panel-bg;
     @include clearfix();
 
     &__body {
@@ -95,7 +89,6 @@ export default {
         .search--show-document & {
           @media (max-width: $aggregations-panel-width + $search-results-width + $document-min-width + 20px) {
             overflow: auto;
-            background: $aggregations-panel-bg;
             position: fixed;
             top: var(--app-nav-height);
             height: calc(100% - var(--app-nav-height) - var(--app-footer-height));
@@ -124,7 +117,6 @@ export default {
       }
 
       & &__document {
-        background: $aggregations-panel-bg;
         padding: $spacer;
         margin-left: $aggregations-panel-width + $search-results-width;
 

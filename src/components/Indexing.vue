@@ -1,5 +1,9 @@
 <template>
   <div class="indexing container pt-4">
+    <router-link :to="{ name: 'search' }" class="float-left py-2">
+      <fa icon="chevron-circle-left" />
+      {{ $t('search.back') }}
+    </router-link>
     <div class="text-right">
       <button class="btn btn-primary mr-2 btn-extract" type="button" @click="openExtractingForm">
         <fa icon="rocket" class="mr-2" />
@@ -65,6 +69,7 @@
           </button>
           <button class="btn btn-primary btn-delete-done-tasks"
                   type="button" :disabled="!isDoneTasks" @click="deleteDoneTasks">
+            <fa icon="trash-alt" class="mr-1" />
             {{ $t('indexing.delete_done_tasks') }}
           </button>
         </div>

@@ -230,14 +230,14 @@ export default {
               top: 100%;
               margin: $spacer;
               max-width: 280px;
-              background: $body-bg;
+              background: white;
               border: $gray-200 1px solid;
               box-shadow: 0 2px 10px 0 rgba(black,.05);
 
               &:before {
                 content:"";
                 border: ($spacer / 2) solid transparent;
-                border-bottom-color: $body-bg;
+                border-bottom-color: white;
                 position: absolute;
                 bottom: 100%;
                 right: $spacer;

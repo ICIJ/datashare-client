@@ -135,7 +135,7 @@ export default {
       margin-left: -1 * $aggregations-panel-width !important;
       opacity: 0;
     }
-
+    
     &__sticky {
       bottom: 2rem;
 
@@ -149,7 +149,6 @@ export default {
         margin: 0 $spacer $spacer;
 
         .card-header {
-          background: $aggregations-panel-bg;
           position: sticky;
           top:0;
           z-index: 100;
