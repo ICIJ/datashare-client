@@ -1,9 +1,9 @@
 <template>
   <div class="search" :class="{ 'search--show-document': showDocument }">
-    <div class="container-fluid px-0 search__body">
-      <div class="row no-gutters">
-        <aggregations-panel class="col search__body__aggregations-panel" />
-        <div class="col search__body__search-results">
+    <div class="px-0 search__body">
+      <div class="search__body__wrapper">
+        <aggregations-panel class="search__body__aggregations-panel" />
+        <div class="search__body__search-results">
           <search-results v-if="isReady" :response="searchResponse" :query.sync="query" />
           <div v-else>
             <content-placeholder />
@@ -11,12 +11,13 @@
             <content-placeholder />
           </div>
         </div>
-        <div class="col search__body__document" v-show="showDocument">
-          <router-link :to="{ name: 'search', query: searchQuery }" class="p-2 mx-2 mt-1 d-none d-md-inline-block d-xl-none">
-            {{ $t('search.back') }}
-          </router-link>
-          <router-view></router-view>
-        </div>
+      </div>
+      <div class="search__body__document" v-show="showDocument">
+        <router-link :to="{ name: 'search', query: searchQuery }" class="p-2 search__body__document__nav">
+          <fa icon="chevron-circle-left" class="text-white" />
+          {{ $t('search.back') }}
+        </router-link>
+        <router-view></router-view>
       </div>
     </div>
   </div>
@@ -83,38 +84,90 @@ export default {
 <style lang="scss">
   .search {
     background: $aggregations-panel-bg;
+    @include clearfix();
 
     &__body {
 
-      &__aggregations-panel.col {
-        max-width: $aggregations-panel-width;
-        min-height: calc(100vh - #{$app-nav-height});
+      &__wrapper {
 
-        @include media-breakpoint-down(lg) {
-          .search--show-document & {
-            display: none;
+        .search--show-document & {
+          @media (max-width: $aggregations-panel-width + $search-results-width + $document-min-width + 20px) {
+            background: $aggregations-panel-bg;
+            position: fixed;
+            top: var(--app-nav-height);
+            height: calc(100% - var(--app-nav-height) - var(--app-footer-height));
+            width: 100%;
+            overflow: auto;
           }
         }
       }
 
-      &__search-results.col {
+      &__aggregations-panel {
+        width: $aggregations-panel-width;
+        float: left;
+      }
+
+      &__search-results {
         background: white;
         position: relative;
-        max-width: 550px;
+        max-width: $search-results-width;
+        min-width: $search-results-width;
         overflow: auto;
         border-left: 1px solid $gray-200;
         border-right: 1px solid $gray-200;
+        float: left;
 
-        @include media-breakpoint-down(lg) {
-          .search--show-document & {
-            display: none;
-            max-width: 100%;
-          }
-        }
+        position: sticky;
+        bottom: 0;
       }
 
-      &__document {
+      & &__document {
         background: $aggregations-panel-bg;
+        padding: $spacer;
+        margin-left: $aggregations-panel-width + $search-results-width;
+
+        .document {
+          box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
+        }
+
+        &__nav {
+          display: none;
+          background: darken($primary, 10);
+          color: white;
+
+          @media (max-width: $aggregations-panel-width + $search-results-width + $document-min-width + 20px) {
+            display: block;
+          }
+        }
+
+        @media (max-width: $aggregations-panel-width + $search-results-width + $document-min-width + 20px) {
+          display: block;
+          z-index: 100;
+          position: absolute;
+          top: var(--app-nav-height);
+          right: 0;
+          padding: 0;
+          margin: 0;
+          width: $document-min-width;
+          min-height: 100vh;
+          background: white;
+
+          .document {
+            box-shadow: none;
+          }
+
+          &:after {
+            content: "";
+            pointer-events: none;
+            z-index: -1;
+            position: absolute;
+            right: 100%;
+            top: 0;
+            bottom: 0;
+            width: calc(100vw - #{$document-min-width});
+            @include gradient-x(rgba($dark, 0), rgba($dark, 0.5))
+          }
+        }
       }
     }
   }

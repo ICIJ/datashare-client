@@ -1,9 +1,9 @@
 <template>
   <div v-if="!isReady">
-    <content-placeholder class="document m-3 py-2 px-3" />
+    <content-placeholder class="document py-2 px-3" />
   </div>
   <div v-else>
-    <div class="d-flex flex-column document m-3" v-if="document">
+    <div class="d-flex flex-column document" v-if="document">
       <div class="document__header">
         <h3>
           <document-sliced-name interactive-root :document="document" />
@@ -144,18 +144,10 @@ export default {
 
 <style lang="scss">
 .document {
-  box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
-  border: $gray-200 1px solid;
+  overflow: hidden;
   background: white;
   min-height: 90vh;
-
-  @media (max-width: 1780px) {
-    margin-top: 0;
-  }
-
-  @include media-breakpoint-down(lg) {
-    margin-top: $spacer;
-  }
+  margin: 0;
 
   .badge-pill {
     overflow: hidden;
