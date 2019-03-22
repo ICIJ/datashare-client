@@ -168,7 +168,7 @@ export default {
             top: 0;
             bottom: 0;
             width: calc(100vw - #{$document-min-width});
-            @include gradient-x(rgba($light, 0), rgba($light, 0.4))
+            @include gradient-x(rgba($dark, 0), rgba($dark, 0.4))
           }
         }
       }
