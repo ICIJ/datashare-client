@@ -137,6 +137,7 @@ export default {
     }
 
     &__sticky {
+      overflow: hidden;
 
       body:not(.modal-open) & {
         align-self: flex-end;

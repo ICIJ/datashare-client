@@ -7,7 +7,7 @@
       <search-bar class="landing__form__search-bar" hide-settings />
       <div class="mt-5 text-white" v-if="showProjectsCards">
         <h2 class="text-uppercase h5">Projects</h2>
-        <project-cards />
+        <project-cards class="mt-3" />
       </div>
     </div>
   </div>
