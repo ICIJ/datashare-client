@@ -11,7 +11,7 @@
             <span class="app__nav__container__main__brand__beta mr-3">beta</span>
           </router-link>
           <div class="app__nav__container__main__search-bar col" v-if="isntLanding()">
-            <search-bar />
+            <search-bar class="px-0" />
           </div>
           <a class="app__nav__container__main__hamburger col" @click.prevent="toggleMenu()" href="#">
             <fa icon="bars" />
@@ -160,7 +160,7 @@ export default {
           font-size: 1.5rem;
           text-decoration: none;
 
-          @include media-breakpoint-down(md) {
+          @media (max-width: $document-float-breakpoint-width) {
             max-width: 220px;
           }
 
@@ -184,8 +184,8 @@ export default {
 
         &__search-bar.col {
           position: relative;
-          max-width: 550px;
-          padding: 0 $spacer;
+          max-width: $search-results-width;
+          padding: 0;
 
           .search-settings__popover {
             transform: translateY($spacer);

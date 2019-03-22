@@ -49,7 +49,7 @@ $input-focus-border-color: map-get($theme-colors, 'secondary');
 
 $btn-box-shadow: none;
 
-$popover-max-width: 550px;
+$popover-max-width: 480px;
 $popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
 $popover-border-color: white;
 $popover-header-bg: white;
@@ -78,5 +78,6 @@ $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
 $app-footer-height: $line-height-base * 1.2rem;
 $aggregations-panel-width: 320px;
-$search-results-width: 460px;
+$search-results-width: 480px;
 $document-min-width: 800px;
+$document-float-breakpoint-width:  $aggregations-panel-width + $search-results-width + $document-min-width + 20px;

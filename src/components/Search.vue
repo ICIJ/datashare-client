@@ -87,7 +87,7 @@ export default {
       &__wrapper {
 
         .search--show-document & {
-          @media (max-width: $aggregations-panel-width + $search-results-width + $document-min-width + 20px) {
+          @media (max-width: $document-float-breakpoint-width) {
             overflow: auto;
             position: fixed;
             top: var(--app-nav-height);
@@ -138,12 +138,12 @@ export default {
           background: darken($primary, 10);
           color: white;
 
-          @media (max-width: $aggregations-panel-width + $search-results-width + $document-min-width + 20px) {
+          @media (max-width: $document-float-breakpoint-width) {
             display: block;
           }
         }
 
-        @media (max-width: $aggregations-panel-width + $search-results-width + $document-min-width + 20px) {
+        @media (max-width: $document-float-breakpoint-width) {
           display: block;
           z-index: 100;
           position: absolute;
