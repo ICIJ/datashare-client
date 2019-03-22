@@ -332,7 +332,8 @@
   "footer": {
     "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
     "clientVersion": "Client",
-    "serverVersion": "Serveur"
+    "serverVersion": "Serveur",
+    "userHistory": "Votre historique"
   },
   "login": {
     "welcome": "Bienvenue sur Datashare",
@@ -341,5 +342,11 @@
     "xemx": "Se connecter avec Xemx",
     "support_desk": "Si vous avez besoin d'aide, veuillez visiter notre bureau support :",
     "ask_help": "Aide"
+  },
+  "userHistory": {
+    "heading": "Votre historique de navigation",
+    "description": "Les 500 derniers documents ouverts avec Datashare sur cet ordinateur.",
+    "empty": "Votre historique est vide.",
+    "clear": "Vider l'historique"
   }
 }

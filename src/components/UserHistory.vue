@@ -4,14 +4,16 @@
       <div class="user-history__header p-3">
         <button class="btn btn-sm btn-outline-secondary float-right" @click="clear" v-if="documents.length">
           <fa icon="trash-alt" class="mr-1" />
-          Clear history
+          {{ $t('userHistory.clear') }}
         </button>
-        <h4 class="h5">Your browsing history</h4>
+        <h4 class="h5">
+          {{ $t('userHistory.heading') }}
+        </h4>
         <p v-if="documents.length" class="m-0">
-          The last 500 documents you opened with Datashare from this computer.
+          {{ $t('userHistory.description') }}
         </p>
         <p v-else class="text-muted m-0">
-          Your history is empty
+          {{ $t('userHistory.empty') }}
         </p>
       </div>
       <ul class="list-unstyled user-history__list px-3 pb-4" v-if="documents.length">

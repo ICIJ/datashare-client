@@ -332,7 +332,8 @@
   "footer": {
     "homedir": "Move files to this directory in order to analyze them",
     "clientVersion": "Client",
-    "serverVersion": "Server"
+    "serverVersion": "Server",
+    "userHistory": "Your history"
   },
   "login": {
     "welcome": "Welcome to Datashare",
@@ -341,5 +342,11 @@
     "xemx": "Login with Xemx",
     "support_desk": "If you need any help, please visit our support desk:",
     "ask_help": "Ask for help"
+  },
+  "userHistory": {
+    "heading": "Your browsing history",
+    "description": "The last 500 documents you opened with Datashare from this computer.",
+    "empty": "Your history is empty",
+    "clear": "Clear history"
   }
 }

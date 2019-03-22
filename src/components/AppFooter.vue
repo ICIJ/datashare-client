@@ -46,7 +46,7 @@
       <div class="app__footer__addon app__footer__addon--history">
         <button  class="btn btn-sm btn-link text-white" @click="toggleUserHistory">
           <fa icon="clock" class="mr-1" />
-          Your history
+          {{ $t('footer.userHistory') }}
         </button>
       </div>
       <div class="app__footer__addon app__footer__addon--version" ref="appFooterVersion">
