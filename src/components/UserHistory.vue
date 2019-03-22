@@ -48,6 +48,7 @@ export default {
     position: relative;
 
     &__header {
+      z-index: 100;
       background: #222;
       position: sticky;
       top:0;
