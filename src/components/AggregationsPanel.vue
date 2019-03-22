@@ -1,6 +1,6 @@
 <template>
   <transition name="slide-left">
-    <div class="aggregations-panel d-flex align-items-start" v-show="showFilters">
+    <div class="aggregations-panel" v-show="showFilters">
       <div class="aggregations-panel__sticky">
         <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
           <facet-search :facet="selectedFacet" :query="facetQuery" />
@@ -126,6 +126,9 @@ export default {
 
 <style lang="scss">
   .aggregations-panel {
+
+    display: flex;
+    align-items: flex-start;
 
     &.slide-left-enter-active, &.slide-left-leave-active {
       transition: .3s;
