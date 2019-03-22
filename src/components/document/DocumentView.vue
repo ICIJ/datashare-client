@@ -7,7 +7,7 @@
       <div class="document__header">
         <h3>
           <document-sliced-name interactive-root :document="document" />
-          <a class="btn btn-outline-light float-right" :href="getFullUrl" target="_blank" :title="$t('document.download_file')">
+          <a class="btn btn-outline-light float-right" :href="document.fullUrl" target="_blank" :title="$t('document.download_file')">
             <fa icon="download" />
             {{ $t('document.download_button') }}
           </a>
@@ -79,7 +79,6 @@ import TiffViewer from '@/components/document/TiffViewer'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import { highlight } from '@/utils/strings'
-import DatashareClient from '@/api/DatashareClient'
 import escape from 'lodash/escape'
 import sortedUniqBy from 'lodash/sortedUniqBy'
 
@@ -106,10 +105,7 @@ export default {
       document: 'doc',
       parentDocument: 'parentDoc',
       namedEntities: 'namedEntities'
-    }),
-    getFullUrl () {
-      return DatashareClient.getFullUrl(this.document.url)
-    }
+    })
   },
   methods: {
     async getDoc (params = { id: this.id, routing: this.routing }) {

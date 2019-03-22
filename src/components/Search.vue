@@ -153,6 +153,7 @@ export default {
           padding: 0;
           margin: 0;
           width: $document-min-width;
+          max-width: calc(100vw - #{$spacer});
           min-height: 100vh;
           background: white;
 

@@ -2,6 +2,7 @@ import last from 'lodash/last'
 import pick from 'lodash/pick'
 import Murmur from '@icij/murmur'
 
+import DatashareClient from './DatashareClient'
 import EsDoc from './EsDoc'
 import moment from 'moment'
 
@@ -42,6 +43,9 @@ export default class Document extends EsDoc {
   }
   get url () {
     return '/api/index/src/' + this.index + '/' + this.id + '?routing=' + this.routing
+  }
+  get fullUrl () {
+    return DatashareClient.getFullUrl(this.url)
   }
   get contentType () {
     return this.source.contentType || 'unknown'

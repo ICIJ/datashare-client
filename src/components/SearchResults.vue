@@ -13,7 +13,13 @@
     <div v-if="hasResults">
       <search-results-header :response="response" :position="'top'" />
       <div class="search-results__items">
-        <search-results-item v-for="doc in response.hits" :key="doc.id" :doc="doc" />
+        <div v-for="doc in response.hits" :key="doc.id" class="search-results__items__item">
+          <a class="search-results__items__item__download btn btn-outline-primary btn-sm float-right m-3" :href="doc.fullUrl" target="_blank" :title="$t('document.download_file')">
+            <fa icon="download" />
+            <span class="sr-only">{{ $t('document.download_button') }}</span>
+          </a>
+          <search-results-item class="search-results__items__item__link" :doc="doc" />
+        </div>
       </div>
       <search-results-header :response="response" :position="'bottom'" />
     </div>
@@ -117,6 +123,24 @@ export default {
         &.disabled {
           color: $gray-500;
           cursor: inherit;
+        }
+      }
+    }
+
+    &__items {
+
+      &__item {
+        max-width: 100%;
+        overflow: hidden;
+
+        &__download {
+          z-index: 100;
+          position: relative;
+          visibility: hidden;
+        }
+
+        &:hover &__download {
+          visibility: visible;
         }
       }
     }
