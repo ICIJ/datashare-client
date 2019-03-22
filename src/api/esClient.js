@@ -85,7 +85,9 @@ export function datasharePlugin (Client, config, components) {
     body.sort(sortField, sortOrder)
   }
 
-  Client.prototype.searchDocs = function (index, query, facets = [], from = 0, size = 25, sort = 'relevance') {
+  Client.prototype.searchDocs = function (index, query = '*', facets = [], from = 0, size = 25, sort = 'relevance') {
+    // Avoid searching for nothing
+    query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     // Return a promise that build the body composed above
     return this.search({
       index: index,
@@ -100,7 +102,9 @@ export function datasharePlugin (Client, config, components) {
     )
   }
 
-  Client.prototype.searchFacet = function (index, facet, query, facets = [], isGlobalSearch = false, options = {}) {
+  Client.prototype.searchFacet = function (index, facet, query = '*', facets = [], isGlobalSearch = false, options = {}) {
+    // Avoid searching for nothing
+    query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     const body = facet.body(bodybuilder(), options)
     if (!isGlobalSearch) {
       each(facets, facet => facet.addFilter(body))

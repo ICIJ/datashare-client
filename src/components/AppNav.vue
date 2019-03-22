@@ -6,7 +6,7 @@
       </transition>
       <div class="app__nav__container row no-gutters">
         <div class="app__nav__container__main col row no-gutters">
-          <router-link class="app__nav__container__main__brand col d-flex justify-content-start align-items-center" :to="{ name: 'search' }">
+          <router-link class="app__nav__container__main__brand col d-flex justify-content-start align-items-center" :to="{ name: 'landing' }">
             <img src="~images/logo-color.svg" alt="Datashare" class="ml-3" />
             <span class="app__nav__container__main__brand__beta mr-3">beta</span>
           </router-link>

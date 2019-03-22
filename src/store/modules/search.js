@@ -13,7 +13,7 @@ import uniq from 'lodash/uniq'
 
 export function initialState () {
   return {
-    query: '*',
+    query: '',
     from: 0,
     size: 25,
     globalSearch: true,

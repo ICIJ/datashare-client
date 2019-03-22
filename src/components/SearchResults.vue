@@ -10,7 +10,7 @@
         </li>
       </div>
     </transition>
-    <div v-if="query && response.hits.length > 0">
+    <div v-if="hasResults">
       <search-results-header :response="response" :position="'top'" />
       <div class="search-results__items">
         <search-results-item v-for="doc in response.hits" :key="doc.id" :doc="doc" />
@@ -48,6 +48,9 @@ export default {
       set () {
         this.$store.commit('search/toggleFilters')
       }
+    },
+    hasResults () {
+      return this.response.hits.length > 0
     }
   },
   methods: {
