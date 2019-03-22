@@ -18,6 +18,9 @@ export const mutations = {
     state.rawDocuments.push(document.serializedForStorage)
     // Remove duplicates and only keep the 500 last docs
     state.rawDocuments = uniqBy(state.rawDocuments.reverse().slice(0, 500), '_id').reverse()
+  },
+  clear (state) {
+    state.rawDocuments = []
   }
 }
 

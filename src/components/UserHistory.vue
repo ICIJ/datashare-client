@@ -2,10 +2,19 @@
   <div class="user-history">
     <div class="container">
       <div class="user-history__header p-3">
+        <button class="btn btn-sm btn-outline-secondary float-right" @click="clear" v-if="documents.length">
+          <fa icon="trash-alt" class="mr-1" />
+          Clear history
+        </button>
         <h4 class="h5">Your browsing history</h4>
-        <p class="m-0">All the documents you opened with Datashare from this computer.</p>
+        <p v-if="documents.length" class="m-0">
+          The last 500 documents you opened with Datashare from this computer.
+        </p>
+        <p v-else class="text-muted m-0">
+          Your history is empty
+        </p>
       </div>
-      <ul class="list-unstyled user-history__list px-3">
+      <ul class="list-unstyled user-history__list px-3 pb-4" v-if="documents.length">
         <li v-for="(document, i) in documents" :key="i" class="user-history__list__item">
           <router-link :to="{ name: 'document', params: document.routerParams }" class="p-2 text-white d-block">
             <div class="font-weight-bold">
@@ -33,6 +42,11 @@ export default {
   computed: {
     documents () {
       return reverse(this.$store.getters['userHistory/getDocuments']())
+    }
+  },
+  methods: {
+    clear () {
+      this.$store.commit('userHistory/clear')
     }
   }
 }
