@@ -29,7 +29,7 @@ import ner from '@/mixins/ner'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 
 export default {
-  name: 'SearchResultsItem',
+  name: 'SearchResultsLink',
   mixins: [ner],
   props: ['doc'],
   components: {

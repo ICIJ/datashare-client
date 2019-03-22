@@ -3,7 +3,7 @@ import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import SearchResultsItem from '@/components/SearchResultsItem'
+import SearchResultsLink from '@/components/SearchResultsLink'
 import Document from '@/api/Document'
 import router from '@/router'
 
@@ -12,9 +12,9 @@ localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
 
-describe('SearchResultsItem.vue', () => {
+describe('SearchResultsLink.vue', () => {
   it('should reduce named entities : zero named entities', () => {
-    const wrapper = shallowMount(SearchResultsItem, {
+    const wrapper = shallowMount(SearchResultsLink, {
       localVue,
       router,
       propsData: {
@@ -30,7 +30,7 @@ describe('SearchResultsItem.vue', () => {
   })
 
   it('should reduce named entities : one named entities', () => {
-    const wrapper = shallowMount(SearchResultsItem, {
+    const wrapper = shallowMount(SearchResultsLink, {
       localVue,
       router,
       propsData: {
@@ -61,7 +61,7 @@ describe('SearchResultsItem.vue', () => {
   })
 
   it('should reduce named entities : two named entities', () => {
-    const wrapper = shallowMount(SearchResultsItem, {
+    const wrapper = shallowMount(SearchResultsLink, {
       localVue,
       router,
       propsData: {
@@ -97,7 +97,7 @@ describe('SearchResultsItem.vue', () => {
   })
 
   it('should reduce named entities : two named entities with duplicates', () => {
-    const wrapper = shallowMount(SearchResultsItem, {
+    const wrapper = shallowMount(SearchResultsLink, {
       localVue,
       router,
       propsData: {
@@ -138,7 +138,7 @@ describe('SearchResultsItem.vue', () => {
   })
 
   it('should display the correct location', () => {
-    const wrapper = shallowMount(SearchResultsItem, {
+    const wrapper = shallowMount(SearchResultsLink, {
       localVue,
       router,
       propsData: {

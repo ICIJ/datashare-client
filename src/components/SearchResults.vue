@@ -18,7 +18,7 @@
             <fa icon="download" />
             <span class="sr-only">{{ $t('document.download_button') }}</span>
           </a>
-          <search-results-item class="search-results__items__item__link" :doc="doc" />
+          <search-results-link class="search-results__items__item__link" :doc="doc" />
         </div>
       </div>
       <search-results-header :response="response" :position="'bottom'" />
@@ -39,13 +39,13 @@
 
 <script>
 import SearchResultsHeader from '@/components/SearchResultsHeader'
-import SearchResultsItem from '@/components/SearchResultsItem'
+import SearchResultsLink from '@/components/SearchResultsLink'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 
 export default {
   name: 'SearchResults',
   props: ['response', 'query'],
-  components: { SearchResultsHeader, SearchResultsItem, ResetFiltersButton },
+  components: { SearchResultsHeader, SearchResultsLink, ResetFiltersButton },
   computed: {
     showFilters: {
       get () {
