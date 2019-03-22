@@ -4,7 +4,7 @@
       <div v-show="showUserHistory" class="app__footer__user-history-backdrop" @click="toggleUserHistory"></div>
     </transition>
     <slide-up-down :active="showUserHistory" class="app__footer__user-history">
-      <user-history />
+      <user-history v-if="showUserHistory" />
     </slide-up-down>
     <div class="d-flex align-items-center text-nowrap">
       <b-button class="app__footer__addon app__footer__addon--delete-index btn btn-sm text-secondary"

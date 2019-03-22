@@ -106,15 +106,13 @@ export default {
       &__search-results {
         background: white;
         position: relative;
+        z-index: 0;
         max-width: $search-results-width;
         min-width: $search-results-width;
         min-height: 100%;
         overflow: auto;
         border-left: 1px solid $gray-200;
         border-right: 1px solid $gray-200;
-
-        position: sticky;
-        bottom: 0;
       }
 
       & &__document {
