@@ -19,6 +19,7 @@
             {{ $t('search.back') }}
           </router-link>
           <router-view></router-view>
+          <div class="search__body__document__backdrop"></div>
         </div>
       </transition>
     </div>
@@ -159,8 +160,7 @@ export default {
             box-shadow: none;
           }
 
-          &:after {
-            content: "";
+          &__backdrop {
             pointer-events: none;
             z-index: -1;
             position: absolute;
@@ -168,7 +168,7 @@ export default {
             top: 0;
             bottom: 0;
             width: calc(100vw - #{$document-min-width});
-            @include gradient-x(rgba($dark, 0), rgba($dark, 0.4))
+            @include gradient-x(rgba($light, 0), rgba($light, 0.4))
           }
         }
       }
