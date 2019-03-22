@@ -55,7 +55,7 @@ describe('SearchSettings.vue', () => {
 
     expect(wrapper.vm.selectedSize).toEqual('100')
     expect(router.push).toHaveBeenCalled()
-    expect(router.push).toHaveBeenCalledWith({ 'name': 'search', 'params': {}, 'path': '/', 'query': { 'index': '', 'q': '*', 'size': 100, 'sort': 'relevance' } })
+    expect(router.push).toHaveBeenCalledWith({ 'name': 'search', 'params': {}, 'path': '/', 'query': { 'index': '', 'q': '', 'size': 100, 'sort': 'relevance' } })
     expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
   })
 
@@ -72,7 +72,7 @@ describe('SearchSettings.vue', () => {
 
     expect(wrapper.vm.selectedSort).toEqual('sizeLargest')
     expect(router.push).toHaveBeenCalled()
-    expect(router.push).toHaveBeenCalledWith({ 'name': 'search', 'params': {}, 'path': '/', 'query': { 'index': '', 'q': '*', 'size': 25, 'sort': 'sizeLargest' } })
+    expect(router.push).toHaveBeenCalledWith({ 'name': 'search', 'params': {}, 'path': '/', 'query': { 'index': '', 'q': '', 'size': 25, 'sort': 'sizeLargest' } })
     expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
   })
 })

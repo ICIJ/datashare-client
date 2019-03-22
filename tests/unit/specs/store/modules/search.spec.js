@@ -335,7 +335,7 @@ describe('Search store', () => {
   })
 
   it('should return the default query parameters', () => {
-    expect(store.getters['search/toRouteQuery']).toEqual({ index: process.env.VUE_APP_ES_INDEX, q: '*', size: 25, sort: 'relevance' })
+    expect(store.getters['search/toRouteQuery']).toEqual({ index: process.env.VUE_APP_ES_INDEX, q: '', size: 25, sort: 'relevance' })
   })
 
   it('should return an advanced and faceted query parameters', () => {
