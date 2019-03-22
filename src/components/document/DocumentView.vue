@@ -170,6 +170,8 @@ export default {
         a {
           display: inline-block;
           text-transform: uppercase;
+          font-weight: bolder;
+          font-size: 0.9em;
           padding: $spacer * .75 $spacer;
           margin: 0;
           position: relative;
