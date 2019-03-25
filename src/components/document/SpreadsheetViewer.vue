@@ -3,7 +3,7 @@
     <template v-if="doc.active">
       <div class="spreadsheet-viewer__header">
         <div class="text-center mb-4">{{ Object.keys(doc.sheets).indexOf(doc.active) + 1 }} / {{ Object.keys(doc.sheets).length }}</div>
-        <div v-for="page in Object.keys(doc.sheets).length" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex spreadsheet-viewer__header__thumbnails">
+        <div v-for="page in Object.keys(doc.sheets).length" :key="page" @click="doc.active = Object.keys(doc.sheets)[page - 1]" class="mr-2 my-2 d-flex spreadsheet-viewer__header__thumbnails">
           <span class="d-flex align-items-center">{{ page }}</span>
           <div class="small ml-1 img-thumbnail text-truncate" v-html="displaySheet(Object.keys(doc.sheets)[page - 1])" />
         </div>
