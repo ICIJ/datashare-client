@@ -1,7 +1,7 @@
 <template>
   <transition name="slide-left">
     <div class="aggregations-panel" v-show="showFilters">
-      <div class="aggregations-panel__sticky">
+      <div class="aggregations-panel__sticky w-100">
         <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
           <facet-search :facet="selectedFacet" :query="facetQuery" />
         </b-modal>

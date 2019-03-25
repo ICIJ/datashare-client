@@ -13,7 +13,7 @@
         </div>
       </div>
       <transition name="slide-right">
-        <div class="search__body__document" v-show="showDocument">
+        <div class="search__body__document" :class="showFilters ? 'show-filters' : 'hide-filters'" v-show="showDocument">
           <router-link :to="{ name: 'search', query: searchQuery }" class="p-2 search__body__document__nav">
             <fa icon="chevron-circle-left" />
             {{ $t('search.back') }}
@@ -42,7 +42,8 @@ export default {
     ...mapState('search', {
       query: 'query',
       searchResponse: 'response',
-      isReady: 'isReady'
+      isReady: 'isReady',
+      showFilters: 'showFilters'
     }),
     searchQuery () {
       return this.$store.getters['search/toRouteQuery']
@@ -119,6 +120,10 @@ export default {
       & &__document {
         padding: $spacer;
         margin-left: $aggregations-panel-width + $search-results-width;
+
+        &.hide-filters {
+          margin-left: $search-results-width;
+        }
 
         &.slide-right-enter-active, &.slide-right-leave-active {
           transition: .3s;
