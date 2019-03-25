@@ -89,11 +89,11 @@ export const getters = {
 }
 
 export const mutations = {
-  reset (state, excluded_keys = ['index']) {
+  reset (state, excludedKeys = ['index']) {
     // acquire initial state
     const s = initialState()
     Object.keys(s).forEach(key => {
-      if (excluded_keys.indexOf(key) === -1) {
+      if (excludedKeys.indexOf(key) === -1) {
         state[key] = s[key]
       }
     })
@@ -191,8 +191,8 @@ export const mutations = {
 }
 
 export const actions = {
-  reset ({ commit, dispatch }) {
-    commit('reset')
+  reset ({ commit, dispatch }, excludedKeys) {
+    commit('reset', excludedKeys)
     return dispatch('query')
   },
   query ({ state, commit }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort }) {

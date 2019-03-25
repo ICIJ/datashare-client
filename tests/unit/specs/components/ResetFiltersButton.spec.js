@@ -32,19 +32,19 @@ describe('ResetFiltersButton.vue', function () {
   })
 
   it('shouldn\'t have facets', () => {
-    expect(wrapper.vm.hasFacets).toEqual(false)
+    expect(wrapper.vm.hasFacets).toBeFalsy()
   })
 
   it('should have facets', () => {
     store.commit('search/addFacetValue', { name: 'language', value: 'en' })
-    expect(wrapper.vm.hasFacets).toEqual(true)
+    expect(wrapper.vm.hasFacets).toBeTruthy()
   })
 
   it('should reset facets', () => {
     store.commit('search/addFacetValue', { name: 'language', value: 'en' })
-    expect(wrapper.vm.hasFacets).toEqual(true)
+    expect(wrapper.vm.hasFacets).toBeTruthy()
     wrapper.vm.resetFacets()
-    expect(wrapper.vm.hasFacets).toEqual(false)
+    expect(wrapper.vm.hasFacets).toBeFalsy()
   })
 
   it('should call router push on facets reset', () => {
@@ -54,5 +54,12 @@ describe('ResetFiltersButton.vue', function () {
     expect(router.push).not.toHaveBeenCalled()
     wrapper.vm.resetFacets()
     expect(router.push).toHaveBeenCalled()
+  })
+
+  it('should not change the globalSearch setting', () => {
+    store.commit('search/setGlobalSearch', false)
+    wrapper.vm.resetFacets()
+
+    expect(store.state.search.globalSearch).toBeFalsy()
   })
 })

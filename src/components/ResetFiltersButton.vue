@@ -16,7 +16,7 @@ export default {
   },
   methods: {
     resetFacets () {
-      this.$store.dispatch('search/reset')
+      this.$store.dispatch('search/reset', ['index', 'globalSearch'])
       this.$root.$emit('bv::hide::popover')
       EventBus.$emit('facet::search::reset-filters')
       // Change the route
