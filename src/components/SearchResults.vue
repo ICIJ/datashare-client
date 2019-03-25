@@ -132,11 +132,18 @@ export default {
       &__item {
         max-width: 100%;
         overflow: hidden;
+        position: relative;
 
         &__download {
           z-index: 100;
-          position: relative;
+          position: absolute;
+          top: 0;
+          right: 0;
           visibility: hidden;
+        }
+
+        &__link {
+          padding-right: 3rem;
         }
 
         &:hover &__download {
