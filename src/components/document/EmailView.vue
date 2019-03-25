@@ -4,7 +4,7 @@
       {{ document.title }}
     </h3>
     <ul class="list-unstyled email-view__thread m-0">
-      <li v-for="email in thread.hits" :key="email.id" class="email-view__thread__item" :class="{ 'email-view__thread__item--active': email.id === document.id }">
+      <li v-for="email in thread.hits" :key="email.id" class="email-view__thread__item" :class="{ 'email-view__thread__item--active': isActive(email) }">
         <router-link :to="{ name: 'email', params: routeParams(email) }" class="px-3 py-2 d-block">
           <div class="d-flex text-nowrap">
             <div class="w-100">
@@ -17,7 +17,7 @@
             </span>
           </div>
           <div class="d-flex">
-            <span class="email-view__thread__item__to text-muted text-nowrap mr-3" v-if="email.id === document.id">
+            <span class="email-view__thread__item__to text-muted text-nowrap mr-3" v-if="isActive(email)">
               to {{ email.messageTo }}
             </span>
             <span class="email-view__thread__item__excerpt text-muted text-truncate w-100" v-else>
@@ -25,7 +25,7 @@
             </span>
           </div>
         </router-link>
-        <div v-if="email.id === document.id">
+        <div v-if="isActive(email)">
           <div  class="email-view__thread__item__content p-3" v-html="email.contentHtml"></div>
           <div  class="email-view__thread__item__footer px-4 py-3 bg-light d-flex">
             <router-link :to="{ name: 'document', params: routeParams(email) }" class="align-self-end">
@@ -101,15 +101,18 @@ export default {
     ...mapState('document', {
       document: 'doc'
     }),
-    threadQuery () {
-      return reduce(this.threadQueryFields, (q, path, field) => {
+    threadBody () {
+      return reduce(this.threadQueryFields, (body, path, field) => {
         const value = this.document[field]
-        if (value) q.push(`${path}:'${value}'`)
-        return q
-      }, []).join(' OR ')
+        if (value) body.orQuery('match', path, value)
+        return body
+      }, bodybuilder())
     }
   },
   methods: {
+    isActive (email) {
+      return email.id === this.document.id
+    },
     routeParams (email) {
       return { id: email.id, index: email.index, routing: email.routing }
     },
@@ -123,14 +126,11 @@ export default {
     },
     async getThread () {
       try {
-        if (this.threadQuery) {
+        if (this.threadBody) {
           const raw = await esClient.search({
             index: this.index,
             type: 'doc',
-            body: bodybuilder()
-              .addQuery('query_string', { query: this.threadQuery })
-              .sort('metadata.tika_metadata_meta_creation_date', 'asc')
-              .build()
+            body: this.threadBody.sort('metadata.tika_metadata_meta_creation_date', 'asc').build()
           })
           return new Response(raw)
         }
