@@ -1,5 +1,5 @@
 <template>
-  <div class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed }">
+  <div class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop }">
     <img :src="thumbnailUrl" :alt="thumbnailAlt" class="document-thumbnail__image"/>
   </div>
 </template>
@@ -18,6 +18,9 @@ export default {
     size: {
       type: [Number, String],
       default: 'sm'
+    },
+    crop: {
+      type: Boolean
     }
   },
   data () {
@@ -35,22 +38,22 @@ export default {
     },
     filePath () {
       return escape(this.document.path)
-    },
-    $img () {
-      return this.$el.querySelector('.document-thumbnail__image')
     }
   },
   mounted () {
-    this.$img.addEventListener('load', () => this.$set(this, 'loaded', true))
-    this.$img.addEventListener('error', () => this.$set(this, 'erroed', true))
+    const $img = this.$el.querySelector('.document-thumbnail__image')
+    $img.addEventListener('load', () => {
+      this.$nextTick(() => this.$set(this, 'loaded', true))
+    })
+    $img.addEventListener('error', () => {
+      this.$nextTick(() => this.$set(this, 'erroed', true))
+    })
   }
 }
 </script>
 
 <style lang="scss">
   .document-thumbnail {
-    width: 80px;
-    height: 80px;
     min-width: 80px;
     position: relative;
     border: 1px solid $border-color;
@@ -60,6 +63,11 @@ export default {
     color: $text-muted;
     background: $body-bg;
 
+    &--crop {
+      width: 80px;
+      height: 80px;
+    }
+
     &--loaded:not(&--erroed) &__image {
       opacity: 1;
     }
@@ -67,6 +75,9 @@ export default {
     &__image {
       transition: opacity 300ms;
       opacity: 0;
+    }
+
+    &--crop &__image {
       position: absolute;
       min-height: 100%;
       min-width: 100%;

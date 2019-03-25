@@ -46,14 +46,17 @@
         </div>
         <div class="tab-pane text-pre-wrap" :class="{ active: tab === 'text' }" v-html="markedSourceContent()" v-if="tab === 'text'" />
         <div class="tab-pane d-flex flex-grow-1" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
-          <template v-if="document.contentType === 'application/pdf'">
+          <template v-if="isPdf">
             <pdf-viewer :document="document" />
           </template>
-          <template v-else-if="document.contentType === 'image/tiff'">
+          <template v-else-if="isTiff">
             <tiff-viewer :document="document" />
           </template>
-          <template v-else-if="document.contentType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || document.contentType === 'text/csv'">
+          <template v-else-if="isSpreadsheet">
             <spreadsheet-viewer :document="document" />
+          </template>
+          <template v-else-if="isImage">
+            <image-viewer :document="document" />
           </template>
           <template v-else>
             {{ $t('document.not_available') }}
@@ -73,6 +76,7 @@ import { mapState } from 'vuex'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
+import ImageViewer from '@/components/document/ImageViewer'
 import PdfViewer from '@/components/document/PdfViewer'
 import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
 import TiffViewer from '@/components/document/TiffViewer'
@@ -89,6 +93,7 @@ export default {
     DocumentSlicedName,
     DocumentTabDetails,
     DocumentTabNamedEntities,
+    ImageViewer,
     PdfViewer,
     SpreadsheetViewer,
     TiffViewer
@@ -105,7 +110,19 @@ export default {
       document: 'doc',
       parentDocument: 'parentDoc',
       namedEntities: 'namedEntities'
-    })
+    }),
+    isPdf () {
+      return this.document.contentType === 'application/pdf'
+    },
+    isTiff () {
+      return this.document.contentType === 'image/tiff'
+    },
+    isSpreadsheet () {
+      return ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'].indexOf() > -1
+    },
+    isImage () {
+      return this.document.contentType.indexOf('image/') === 0
+    }
   },
   methods: {
     async getDoc (params = { id: this.id, routing: this.routing }) {
