@@ -149,7 +149,7 @@ export const mixin = {
           ${this.labelToHuman(label)}
         </span>
         <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
-          ${item.doc_count}
+          ${this.$n(item.doc_count)}
         </span>
       `
     },
