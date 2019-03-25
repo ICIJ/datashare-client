@@ -42,14 +42,14 @@ describe('PdfViewer.vue', () => {
     await wrapper.vm.loadPage(1)
 
     expect(wrapper.find('.pdf-viewer .pdf-viewer__preview').exists()).toBeTruthy()
-    expect(wrapper.find('.pdf-viewer .pdf-viewer__preview .pdf-viewer__preview__header .form-control').element.value).toEqual('1')
-    expect(wrapper.find('.pdf-viewer .pdf-viewer__preview .pdf-viewer__preview__canvas').exists()).toBeTruthy()
+    expect(wrapper.find('.pdf-viewer .pdf-viewer__thumbnails .form-control').element.value).toEqual('1')
+    expect(wrapper.find('.pdf-viewer .pdf-viewer__preview__canvas').exists()).toBeTruthy()
   })
 
   it('should display a thumbnail by page', async () => {
     await wrapper.vm.loadPage(1)
 
-    expect(wrapper.find('.pdf-viewer .pdf-viewer__header .pdf-viewer__thumbnails').exists()).toBeTruthy()
-    expect(wrapper.findAll('.pdf-viewer .pdf-viewer__header .pdf-viewer__thumbnails img')).toHaveLength(2)
+    expect(wrapper.find('.pdf-viewer .pdf-viewer__thumbnails').exists()).toBeTruthy()
+    expect(wrapper.findAll('.pdf-viewer .pdf-viewer__thumbnails img')).toHaveLength(2)
   })
 })

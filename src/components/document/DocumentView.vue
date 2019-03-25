@@ -38,26 +38,15 @@
         </nav>
       </div>
       <div class="d-flex flex-grow-1 tab-content document__content">
-        <div class="tab-pane" :class="{active: tab === 'details'}" v-if="tab === 'details'">
+        <div class="tab-pane px-4 py-3" :class="{active: tab === 'details'}" v-if="tab === 'details'">
           <document-tab-details :document="document" :parentDocument="parentDocument" />
         </div>
-        <div class="tab-pane document__named-entities" :class="{active: tab === 'named_entities'}" v-if="tab === 'named_entities'">
+        <div class="tab-pane px-4 py-3 document__named-entities" :class="{active: tab === 'named_entities'}" v-if="tab === 'named_entities'">
           <document-tab-named-entities :document="document" />
         </div>
-        <div class="tab-pane text-pre-wrap" :class="{ active: tab === 'text' }" v-html="markedSourceContent()" v-if="tab === 'text'" />
-        <div class="tab-pane d-flex flex-grow-1" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
-          <template v-if="document.contentType === 'application/pdf'">
-            <pdf-viewer :document="document" />
-          </template>
-          <template v-else-if="document.contentType === 'image/tiff'">
-            <tiff-viewer :document="document" />
-          </template>
-          <template v-else-if="document.contentType === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' || document.contentType === 'text/csv'">
-            <spreadsheet-viewer :document="document" />
-          </template>
-          <template v-else>
-            {{ $t('document.not_available') }}
-          </template>
+        <div class="tab-pane px-4 py-3 text-pre-wrap" :class="{ active: tab === 'text' }" v-html="markedSourceContent()" v-if="tab === 'text'" />
+        <div class="tab-pane w-100" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
+          <document-tab-preview :document="document" />
         </div>
       </div>
     </div>
@@ -73,9 +62,8 @@ import { mapState } from 'vuex'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
-import PdfViewer from '@/components/document/PdfViewer'
-import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
-import TiffViewer from '@/components/document/TiffViewer'
+import DocumentTabPreview from '@/components/document/DocumentTabPreview'
+
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import { highlight } from '@/utils/strings'
@@ -89,9 +77,7 @@ export default {
     DocumentSlicedName,
     DocumentTabDetails,
     DocumentTabNamedEntities,
-    PdfViewer,
-    SpreadsheetViewer,
-    TiffViewer
+    DocumentTabPreview
   },
   props: ['id', 'routing'],
   data () {
@@ -195,10 +181,6 @@ export default {
         }
       }
     }
-  }
-
-  &__content {
-    padding: $spacer * 2 $spacer;
   }
 
   .text-pre-wrap {

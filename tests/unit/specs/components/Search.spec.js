@@ -52,7 +52,7 @@ describe('Search.vue', () => {
 
     expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('1 - 1')
     expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 1 document found')
-    expect(wrapper.find('.search-results-item__fragments').html()).toEqual('<div class="search-results-item__fragments">this is <mark>bar</mark> document</div>')
+    expect(wrapper.find('.search-results-link__fragments').html()).toEqual('<div class="search-results-link__fragments">this is <mark>bar</mark> document</div>')
   })
 
   it('should display 2 documents found', async () => {
@@ -63,7 +63,7 @@ describe('Search.vue', () => {
 
     expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('1 - 2')
     expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 2 documents found')
-    expect(wrapper.findAll('.search-results-item').length).toEqual(2)
+    expect(wrapper.findAll('.search-results-link').length).toEqual(2)
   })
 
   it('should make a link without routing for a document', async () => {
@@ -71,7 +71,7 @@ describe('Search.vue', () => {
 
     await wrapper.vm.search('document')
 
-    expect(wrapper.find('a.search-results-item').attributes().href).toMatch(/doc.txt$/)
+    expect(wrapper.find('a.search-results-link').attributes().href).toMatch(/doc.txt$/)
   })
 
   it('should make a link with routing for a child document', async () => {
@@ -80,7 +80,7 @@ describe('Search.vue', () => {
 
     await wrapper.vm.search('children')
 
-    expect(wrapper.find('a.search-results-item').attributes().href).toMatch(/child.txt\/parent.txt/)
+    expect(wrapper.find('a.search-results-link').attributes().href).toMatch(/child.txt\/parent.txt/)
   })
 
   it('should return 2 documents', async () => {
@@ -88,7 +88,7 @@ describe('Search.vue', () => {
 
     await wrapper.vm.search({ query: 'document', from: 0, size: 2 })
 
-    expect(wrapper.findAll('.search-results-item').length).toEqual(2)
+    expect(wrapper.findAll('.search-results-link').length).toEqual(2)
   })
 
   it('should return 3 documents', async () => {
@@ -96,7 +96,7 @@ describe('Search.vue', () => {
 
     await wrapper.vm.search({ query: 'document', from: 0, size: 3 })
 
-    expect(wrapper.findAll('.search-results-item').length).toEqual(3)
+    expect(wrapper.findAll('.search-results-link').length).toEqual(3)
   })
 
   it('should not display the pagination (1/2)', async () => {
@@ -130,7 +130,7 @@ describe('Search.vue', () => {
     expect(wrapper.findAll('.search-results__header__last-page').length).toEqual(2)
     expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('1 - 3')
     expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 4 documents found')
-    expect(wrapper.findAll('.search-results-item').length).toEqual(3)
+    expect(wrapper.findAll('.search-results-link').length).toEqual(3)
   })
 
   it('should display the first and the previous page as unavailable', async () => {
@@ -155,7 +155,7 @@ describe('Search.vue', () => {
     expect(wrapper.findAll('.search-results__header__last-page.disabled').length).toEqual(2)
     expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('4 - 4')
     expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 4 documents found')
-    expect(wrapper.findAll('.search-results-item').length).toEqual(1)
+    expect(wrapper.findAll('.search-results-link').length).toEqual(1)
   })
 
   it('should display only the document who has a NE person Paris', async () => {
@@ -167,8 +167,8 @@ describe('Search.vue', () => {
     namedEntityFacet.value = ['paris']
     store.commit('search/addFacetValue', namedEntityFacet)
     await wrapper.vm.search('*')
-    expect(wrapper.findAll('.search-results-item').length).toEqual(1)
-    expect(wrapper.findAll('.search-results-item .search-results-item__basename .document-sliced-name__item__root').at(0).text()).toEqual('doc_02.txt')
+    expect(wrapper.findAll('.search-results-link').length).toEqual(1)
+    expect(wrapper.findAll('.search-results-link .search-results-link__basename .document-sliced-name__item__root').at(0).text()).toEqual('doc_02.txt')
   })
 
   it('should hide the `Show filters` menu by default', async () => {
