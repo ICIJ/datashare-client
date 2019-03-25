@@ -12,8 +12,8 @@
     <template v-else-if="isImage">
       <image-viewer :document="document" />
     </template>
-    <template v-else class="px-4 py-3">
-      {{ $t('document.not_available') }}
+    <template v-else>
+      <div class="px-4 py-3">{{ $t('document.not_available') }}</div>
     </template>
   </div>
 </template>

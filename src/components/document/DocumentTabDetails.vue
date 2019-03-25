@@ -38,6 +38,14 @@
         </router-link>
       </div>
     </template>
+    <template v-if="document.threadIndex">
+      <div class="col-sm-3 font-weight-bold">{{ $t('document.thread_index') }}</div>
+      <div class="col-sm-9">
+        <router-link :to="{ name: 'search', query: { q: 'metadata.tika_metadata_message_raw_header_thread_index:' + document.threadIndex } }" class="document__content__parent">
+          {{ document.threadIndex }}
+        </router-link>
+      </div>
+    </template>
   </div>
 </template>
 
