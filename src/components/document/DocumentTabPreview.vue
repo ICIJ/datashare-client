@@ -19,10 +19,10 @@
 </template>
 
 <script>
-import ImageViewer from '@/components/document/ImageViewer'
-import PdfViewer from '@/components/document/PdfViewer'
-import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
-import TiffViewer from '@/components/document/TiffViewer'
+import ImageViewer from '@/components/document/viewers/ImageViewer'
+import PdfViewer from '@/components/document/viewers/PdfViewer'
+import SpreadsheetViewer from '@/components/document/viewers/SpreadsheetViewer'
+import TiffViewer from '@/components/document/viewers/TiffViewer'
 
 export default {
   name: 'DocumentTabPreview',

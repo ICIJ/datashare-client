@@ -2,7 +2,7 @@ import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { createServer } from 'http-server'
-import TiffViewer from '@/components/document/TiffViewer'
+import TiffViewer from '@/components/document/viewers/TiffViewer'
 import messages from '@/lang/en'
 
 const localVue = createLocalVue()

@@ -3,7 +3,7 @@ import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { createServer } from 'http-server'
-import PdfViewer from '@/components/document/PdfViewer'
+import PdfViewer from '@/components/document/viewers/PdfViewer'
 import messages from '@/lang/en'
 
 const localVue = createLocalVue()
