@@ -45,7 +45,7 @@ export default {
       return this.document.contentType === 'image/tiff'
     },
     isSpreadsheet () {
-      return ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'].indexOf() > -1
+      return ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'].indexOf(this.document.contentType) > -1
     },
     isImage () {
       return this.document.contentType.indexOf('image/') === 0

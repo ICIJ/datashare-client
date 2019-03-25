@@ -2,7 +2,7 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import { createServer } from 'http-server'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -38,7 +38,7 @@ describe('DocumentView.vue', () => {
 
   it('should display an error message if document is not found', async () => {
     const id = 'notfound'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await wrapper.vm.getDoc()
 
@@ -48,7 +48,7 @@ describe('DocumentView.vue', () => {
   it('should display a document', async () => {
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
     const id = 'foo.txt'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('this is foo document'))
@@ -60,7 +60,7 @@ describe('DocumentView.vue', () => {
 
   it('should mark named entities in the extracted text tab', async () => {
     const id = 'mydoc.txt'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('a NER doc with 2 NER2')
@@ -80,7 +80,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a document with named entities and escaped HTML', async () => {
     const id = 'html_doc.txt'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('a foo document <with>HTML</with>')
@@ -90,13 +90,12 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
     wrapper.vm.tab = 'text'
 
-    expect(wrapper.find('.text-pre-wrap').html()).toEqual(
-      '<div class="tab-pane text-pre-wrap active">a <mark class="ner bg-category-person">foo</mark> document &lt;with&gt;HTML&lt;/with&gt;</div>')
+    expect(wrapper.findAll('.text-pre-wrap mark')).toHaveLength(1)
   })
 
-  it('should call the SpreadsheetViewer stub for XLSX document', async () => {
+  it('should call the SpreadsheetViewer component for XLSX document', async () => {
     const id = 'spreadsheet.xlsx'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -106,12 +105,12 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
     wrapper.vm.tab = 'preview'
 
-    expect(wrapper.contains('spreadsheet-viewer-stub')).toBeTruthy()
+    expect(wrapper.contains('.spreadsheet-viewer')).toBeTruthy()
   })
 
-  it('should call the SpreadsheetViewer stub for CSV document', async () => {
+  it('should call the SpreadsheetViewer component for CSV document', async () => {
     const id = 'spreadsheet.csv'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -121,12 +120,12 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
     wrapper.vm.tab = 'preview'
 
-    expect(wrapper.contains('spreadsheet-viewer-stub')).toBeTruthy()
+    expect(wrapper.contains('.spreadsheet-viewer')).toBeTruthy()
   })
 
-  it('should call the PdfViewer stub for PDF document', async () => {
+  it('should call the PdfViewer component for PDF document', async () => {
     const id = 'document.pdf'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
+    const wrapper = mount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -136,12 +135,12 @@ describe('DocumentView.vue', () => {
     wrapper.vm.tab = 'preview'
     await wrapper.vm.getDoc()
 
-    expect(wrapper.contains('pdf-viewer-stub')).toBeTruthy()
+    expect(wrapper.contains('.pdf-viewer')).toBeTruthy()
   })
 
-  it('should call the TiffViewer stub for TIFF document', async () => {
+  it('should call the TiffViewer component for TIFF document', async () => {
     const id = 'image.tiff'
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
+    const wrapper = mount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('')
@@ -151,13 +150,13 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
     wrapper.vm.tab = 'preview'
 
-    expect(wrapper.contains('tiff-viewer-stub')).toBeTruthy()
+    expect(wrapper.contains('.tiff-viewer')).toBeTruthy()
   })
 
   it('should display the named entities tab in LOCAL mode', async () => {
     const id = 'foo.txt'
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('this is foo document'))
@@ -171,7 +170,7 @@ describe('DocumentView.vue', () => {
   it('should NOT display the named entities tab in SERVER mode', async () => {
     const id = 'foo.txt'
     Murmur.config.merge({ mode: 'SERVER' })
-    const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
       .withContent('this is foo document'))
