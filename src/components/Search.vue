@@ -48,7 +48,7 @@ export default {
       return this.$store.getters['search/toRouteQuery']
     },
     showDocument () {
-      return this.$route.name === 'document'
+      return ['document', 'email'].indexOf(this.$route.name) > -1
     }
   },
   beforeRouteUpdate (to, from, next) {

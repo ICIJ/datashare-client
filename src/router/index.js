@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import App from '@/components/App'
 import DocumentView from '@/components/document/DocumentView'
+import EmailView from '@/components/document/EmailView'
 import Indexing from '@/components/Indexing'
 import Landing from '@/components/Landing'
 import Login from '@/components/Login'
@@ -45,6 +46,12 @@ const router = new VueRouter({
               name: 'document',
               path: 'd/:index/:id/:routing?',
               component: DocumentView,
+              props: true
+            },
+            {
+              name: 'email',
+              path: 'e/:index/:id/:routing?',
+              component: EmailView,
               props: true
             }
           ]
