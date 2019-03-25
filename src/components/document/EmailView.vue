@@ -1,47 +1,153 @@
 <template>
-  <div class="email-view">
-    <pre>{{ thread }}</pre>
+  <div class="email-view px-2" v-if="document">
+    <h3 class="py-3">
+      {{ document.title }}
+    </h3>
+    <ul class="list-unstyled email-view__thread m-0">
+      <li v-for="email in thread.hits" :key="email.id" class="email-view__thread__item" :class="{ 'email-view__thread__item--active': email.id === document.id }">
+        <router-link :to="{ name: 'email', params: routeParams(email) }" class="px-3 py-2 d-block">
+          <div class="d-flex">
+            <div class="w-100">
+              <span class="email-view__thread__item__from mr-3">
+                {{ email.messageFrom }}
+              </span>
+              <span class="email-view__thread__item__to">
+                {{ email.messageTo }}
+              </span>
+            </div>
+            <span class="email-view__thread__item__date align-self-end">
+              {{ email.createdAt }}
+            </span>
+          </div>
+          <div class="d-flex">
+            <span class="email-view__thread__item__excerpt text-muted text-truncate w-100" v-if="email.id !== document.id">
+              {{ email.excerpt }}
+            </span>
+          </div>
+        </router-link>
+        <div v-if="email.id === document.id">
+          <div  class="email-view__thread__item__content p-3">
+            {{ email.source.content }}
+          </div>
+          <div  class="email-view__thread__item__footer px-3 py-2 bg-light d-flex">
+            <router-link :to="{ name: 'document', params: routeParams(email) }" class="align-self-end">
+              See detail
+            </router-link>
+          </div>
+        </div>
+      </li>
+    </ul>
   </div>
 </template>
 
+<style lang="scss">
+  .email-view {
+
+    &__thread {
+      border-bottom: 1px solid $border-color;
+      overflow: hidden;
+      background: white;
+      padding: 0;
+      margin: 0;
+
+      &__item {
+        border-bottom: 1px solid $border-color;
+
+        & > a {
+          color: $body-color;
+
+          &:hover {
+            text-decoration: none;
+          }
+        }
+
+        &--active {
+          position: relative;
+
+          &:before {
+            content: "";
+            border-left: 3px solid $secondary;
+            position: absolute;
+            top: 0;
+            left: 0;
+            bottom: 0;
+            box-shadow: 0 0 10px 0 $secondary;
+          }
+        }
+      }
+    }
+  }
+</style>
+
 <script>
+import reduce from 'lodash/reduce'
 import { mapState } from 'vuex'
+import bodybuilder from 'bodybuilder'
+
+import esClient from '@/api/esClient'
+import Response from '@/api/Response'
 
 export default {
   name: 'EmailView',
-  props: ['id', 'routing'],
+  props: ['index', 'id', 'routing'],
   data () {
     return {
-      thread: []
+      thread: [],
+      threadQueryFields: {
+        threadIndex: 'metadata.tika_metadata_message_raw_header_thread_index',
+        messageId: 'metadata.tika_metadata_message_raw_header_message_id'
+      }
     }
   },
   computed: {
     ...mapState('document', {
       document: 'doc'
-    })
+    }),
+    threadQuery () {
+      return reduce(this.threadQueryFields, (q, path, field) => {
+        const value = this.document[field]
+        if (value) q.push(`${path}:'${value}'`)
+        return q
+      }, []).join(' OR ')
+    }
   },
   methods: {
-    async getThread (params = { id: this.id, routing: this.routing }) {
+    routeParams (email) {
+      return { id: email.id, index: email.index, routing: email.routing }
+    },
+    async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
+      // Load the current document)
       await this.$store.dispatch('document/get', params)
-      this.thread = await this.$store.dispatch('document/getThread')
+      // Load it's thread (if any)
+      this.thread = await this.getThread()
+      // Add the document to the user's history
       await this.$store.commit('userHistory/addDocument', this.document)
+    },
+    async getThread () {
+      try {
+        if (this.threadQuery) {
+          const raw = await esClient.search({
+            index: this.index,
+            type: 'doc',
+            body: bodybuilder()
+              .addQuery('query_string', { query: this.threadQuery })
+              .sort('metadata.tika_metadata_meta_creation_date', 'asc')
+              .build()
+          })
+          return new Response(raw)
+        }
+        return Response.none()
+      } catch (e) {
+        return Response.none()
+      }
     }
   },
   beforeRouteEnter (to, _from, next) {
-    next(vm => vm.getThread(to.params))
+    next(vm => vm.getDoc(to.params))
   },
   beforeRouteUpdate (to, _from, next) {
-    this.getThread(to.params)
+    this.getDoc(to.params)
     next()
   }
 }
 </script>
-
-<style lang="scss">
-  .email-view {
-    overflow: hidden;
-    background: white;
-    min-height: 90vh;
-    margin: 0;
-  }
-</style>

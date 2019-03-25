@@ -1,3 +1,4 @@
+import isEmpty from 'lodash/isEmpty'
 import find from 'lodash/find'
 import get from 'lodash/get'
 import map from 'lodash/map'
@@ -11,7 +12,7 @@ const _raw = Symbol('raw')
 
 export default class Response {
   constructor (raw) {
-    this[_raw] = raw
+    this[_raw] = isEmpty(raw) ? Response.emptyRaw : raw
   }
   get (path, defaultValue) {
     return get(this[_raw], path, defaultValue)
@@ -45,7 +46,10 @@ export default class Response {
     return new Type(hit)
   }
   static none () {
-    return new Response({hits: {hits: [], total: 0}})
+    return new Response(Response.emptyRaw)
+  }
+  static get emptyRaw () {
+    return { hits: { hits: [], total: 0 } }
   }
   static get types () {
     return [Document, NamedEntity]

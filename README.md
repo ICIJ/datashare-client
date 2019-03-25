@@ -10,7 +10,6 @@ Vue CLI requires Node.js version 8.9 or above (8.11.0+ recommended) [[source](ht
 
 Tested with Node.js LTS 10.15.2.
 
-
 ## Install
 
 * Install system dependencies for [canvas support](https://github.com/Automattic/node-canvas) in testing environement:

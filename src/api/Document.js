@@ -2,6 +2,7 @@ import compact from 'lodash/compact'
 import first from 'lodash/first'
 import last from 'lodash/last'
 import pick from 'lodash/pick'
+import trim from 'lodash/trim'
 import truncate from 'lodash/truncate'
 import Murmur from '@icij/murmur'
 
@@ -32,8 +33,8 @@ export default class Document extends EsDoc {
   }
   get title () {
     return first(compact([
-      this.get('_source.metadata.tika_metadata_subject', null),
-      this.get('_source.metadata.tika_metadata_dc_title', null),
+      trim(this.get('_source.metadata.tika_metadata_subject', '')),
+      trim(this.get('_source.metadata.tika_metadata_dc_title', '')),
       this.basename,
       this.shortId
     ]))
@@ -95,6 +96,36 @@ export default class Document extends EsDoc {
   }
   get threadIndex () {
     return this.get('_source.metadata.tika_metadata_message_raw_header_thread_index', null)
+  }
+  get messageId () {
+    return this.get('_source.metadata.tika_metadata_message_raw_header_message_id', null)
+  }
+  get messageFrom () {
+    return this.get('_source.metadata.tika_metadata_message_from', null)
+  }
+  get messageTo () {
+    return this.get('_source.metadata.tika_metadata_message_to', null)
+  }
+  get excerpt () {
+    return truncate(trim(this.source.content), { length: 280 })
+  }
+  get createdAt () {
+    return this.get('_source.metadata.tika_metadata_meta_creation_date', null)
+  }
+  get isEmail () {
+    return this.contentType.indexOf('message/') === 0
+  }
+  get isPdf () {
+    return this.contentType === 'application/pdf'
+  }
+  get isTiff () {
+    return this.contentType === 'image/tiff'
+  }
+  get isSpreadsheet () {
+    return ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'].indexOf(this.contentType) > -1
+  }
+  get isImage () {
+    return this.contentType.indexOf('image/') === 0
   }
   static get esName () {
     return 'Document'
