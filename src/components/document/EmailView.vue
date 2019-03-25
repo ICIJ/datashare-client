@@ -1,35 +1,33 @@
 <template>
-  <div class="email-view px-2" v-if="document">
-    <h3 class="py-3">
+  <div class="email-view" v-if="document">
+    <h3 class="p-3">
       {{ document.title }}
     </h3>
     <ul class="list-unstyled email-view__thread m-0">
       <li v-for="email in thread.hits" :key="email.id" class="email-view__thread__item" :class="{ 'email-view__thread__item--active': email.id === document.id }">
         <router-link :to="{ name: 'email', params: routeParams(email) }" class="px-3 py-2 d-block">
-          <div class="d-flex">
+          <div class="d-flex text-nowrap">
             <div class="w-100">
-              <span class="email-view__thread__item__from mr-3">
+              <strong class="email-view__thread__item__from mr-3">
                 {{ email.messageFrom }}
-              </span>
-              <span class="email-view__thread__item__to">
-                {{ email.messageTo }}
-              </span>
+              </strong>
             </div>
-            <span class="email-view__thread__item__date align-self-end">
-              {{ email.createdAt }}
+            <span class="email-view__thread__item__date align-self-end small">
+              {{ email.creationDate }}
             </span>
           </div>
           <div class="d-flex">
-            <span class="email-view__thread__item__excerpt text-muted text-truncate w-100" v-if="email.id !== document.id">
+            <span class="email-view__thread__item__to text-muted text-nowrap mr-3" v-if="email.id === document.id">
+              to {{ email.messageTo }}
+            </span>
+            <span class="email-view__thread__item__excerpt text-muted text-truncate w-100" v-else>
               {{ email.excerpt }}
             </span>
           </div>
         </router-link>
         <div v-if="email.id === document.id">
-          <div  class="email-view__thread__item__content p-3">
-            {{ email.source.content }}
-          </div>
-          <div  class="email-view__thread__item__footer px-3 py-2 bg-light d-flex">
+          <div  class="email-view__thread__item__content p-3" v-html="email.contentHtml"></div>
+          <div  class="email-view__thread__item__footer px-4 py-3 bg-light d-flex">
             <router-link :to="{ name: 'document', params: routeParams(email) }" class="align-self-end">
               See detail
             </router-link>
@@ -44,7 +42,7 @@
   .email-view {
 
     &__thread {
-      border-bottom: 1px solid $border-color;
+      border-top: 1px solid $border-color;
       overflow: hidden;
       background: white;
       padding: 0;

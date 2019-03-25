@@ -18,7 +18,7 @@
             <fa icon="chevron-circle-left" />
             {{ $t('search.back') }}
           </router-link>
-          <router-view></router-view>
+          <router-view class="search__body__document__view"></router-view>
           <div class="search__body__document__backdrop"></div>
         </div>
       </transition>
@@ -117,7 +117,7 @@ export default {
       }
 
       & &__document {
-        padding: $spacer;
+        padding: 0;
         margin-left: $aggregations-panel-width + $search-results-width;
 
         &.slide-right-enter-active, &.slide-right-leave-active {
@@ -131,6 +131,15 @@ export default {
 
         .document {
           box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
+        }
+
+        &__view {
+          margin: $spacer;
+
+          @media (max-width: $document-float-breakpoint-width) {
+            margin: 0;
+            margin-bottom: var(--app-footer-height);
+          }
         }
 
         &__nav {

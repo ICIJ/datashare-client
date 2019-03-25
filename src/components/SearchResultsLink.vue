@@ -42,7 +42,7 @@ export default {
   },
   methods: {
     isActive () {
-      return this.$route.name === 'document' && get(this.$store.state, 'document.doc.id') === this.doc.id
+      return get(this.$store.state, 'document.doc.id') === this.doc.id && this.doc.id === this.$route.params.id
     }
   },
   computed: {

@@ -54,6 +54,12 @@ export default class Document extends EsDoc {
   get highlight () {
     return this.raw.highlight
   }
+  get contentHtml () {
+    const content = trim(this.get('_source.content', ''))
+    return content.split('\n').map(row => {
+      return `<p>${row}</p>`
+    }).join('')
+  }
   get url () {
     return '/api/index/src/' + this.index + '/' + this.id + '?routing=' + this.routing
   }
@@ -108,9 +114,6 @@ export default class Document extends EsDoc {
   }
   get excerpt () {
     return truncate(trim(this.source.content), { length: 280 })
-  }
-  get createdAt () {
-    return this.get('_source.metadata.tika_metadata_meta_creation_date', null)
   }
   get isEmail () {
     return this.contentType.indexOf('message/') === 0
