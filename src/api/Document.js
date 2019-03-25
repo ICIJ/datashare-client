@@ -93,6 +93,9 @@ export default class Document extends EsDoc {
       '_source.metadata.tika_metadata_dc_title'
     ])
   }
+  get threadIndex () {
+    return this.get('_source.metadata.tika_metadata_message_raw_header_thread_index', null)
+  }
   static get esName () {
     return 'Document'
   }
