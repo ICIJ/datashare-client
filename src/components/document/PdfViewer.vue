@@ -13,7 +13,7 @@
               / {{ doc.pages.length }}
             </span>
           </div>
-          <div v-for="page in numberOfThumbnails" :key="page" @click="doc.active = page" class="my-2 pdf-viewer__thumbnails__item">
+          <div v-for="page in numberOfThumbnails" :key="page" @click="doc.active = page" class="my-2 pdf-viewer__thumbnails__item" :class="{ 'pdf-viewer__thumbnails__item--active': doc.active === page }">
             <img :src="loadThumbnail(page)" />
             <span class="pdf-viewer__thumbnails__item__page">{{ page }}</span>
           </div>
@@ -149,6 +149,15 @@ export default {
         &:hover {
           border-color: $primary;
           box-shadow:0 0 0 0.1em rgba($primary, .2);
+        }
+
+        &--active, &--active:hover {
+          border-color: $secondary;
+        }
+
+        &--active &__page {
+          background: $secondary;
+          color: white;
         }
 
         &__page {
