@@ -1,5 +1,8 @@
+import compact from 'lodash/compact'
+import first from 'lodash/first'
 import last from 'lodash/last'
 import pick from 'lodash/pick'
+import truncate from 'lodash/truncate'
 import Murmur from '@icij/murmur'
 
 import DatashareClient from './DatashareClient'
@@ -27,16 +30,25 @@ export default class Document extends EsDoc {
   get basename () {
     return last(this.path.split('/'))
   }
+  get title () {
+    return first(compact([
+      this.get('_source.metadata.tika_metadata_subject', null),
+      this.get('_source.metadata.tika_metadata_dc_title', null),
+      this.basename,
+      this.shortId
+    ]))
+  }
   get slicedName () {
     if (this.get('_source.extractionLevel', 0) === 0) {
-      return [ this.basename ]
+      return [ this.title ]
     }
     const distance = this.get('_source.extractionLevel') - 1
     // Sliced name for extracted doc is composed of:
-    // - root basename
+    // - root title (if available)
     // - distance with the top parent
     // - shorter version of the document id
-    return [ this.basename ].concat([ distance ].slice(0, distance)).concat([ this.shortId ])
+    const root = this.parent ? truncate(this.parent.title, { length: 30 }) : this.basename
+    return [ root ].concat([ distance ].slice(0, distance)).concat([ this.shortId ])
   }
   get highlight () {
     return this.raw.highlight
@@ -76,7 +88,9 @@ export default class Document extends EsDoc {
       '_source.path',
       '_source.extractionLevel',
       '_source.contentLength',
-      '_source.contentType'
+      '_source.contentType',
+      '_source.metadata.tika_metadata_subject',
+      '_source.metadata.tika_metadata_dc_title'
     ])
   }
   static get esName () {

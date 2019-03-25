@@ -36,36 +36,46 @@ export const mutations = {
   parentDoc (state, raw) {
     if (raw !== null) {
       state.parentDoc = Response.instantiate(raw)
+      state.doc.setParent(raw)
     } else {
       state.parentDoc = null
     }
+    return state.parentDoc
   }
 }
 
 export const actions = {
-  get ({ commit, rootState }, idAndRouting) {
+  async get ({ commit, dispatch }, idAndRouting) {
     commit('idAndRouting', idAndRouting)
-    return esClient.getEsDoc(rootState.search.index, idAndRouting.id, idAndRouting.routing).then(
-      raw => commit('doc', raw),
-      _ => commit('doc', null)
-    )
-  },
-  getNamedEntities ({ commit, state, rootState }) {
-    return esClient.getNamedEntities(rootState.search.index, state.idAndRouting.id, state.idAndRouting.routing).then(
-      raw => commit('namedEntities', raw),
-      _ => commit('namedEntities', { hits: { hits: [] } })
-    )
-  },
-  getParent ({ commit, state, rootState }) {
-    if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
-      let currentDoc = state.doc.raw._source
-      return esClient.getEsDoc(rootState.search.index, currentDoc.parentDocument, currentDoc.rootDocument).then(
-        raw => commit('parentDoc', raw),
-        _ => commit('parentDoc', null)
-      )
-    } else {
-      return null
+    try {
+      const doc = await esClient.getEsDoc(idAndRouting.index, idAndRouting.id, idAndRouting.routing)
+      commit('doc', doc)
+    } catch {
+      commit('doc', null)
     }
+    return state.doc
+  },
+  async getNamedEntities ({ commit, state }) {
+    try {
+      const raw = await esClient.getNamedEntities(state.idAndRouting.index, state.idAndRouting.id, state.idAndRouting.routing)
+      commit('namedEntities', raw)
+    } catch {
+      commit('namedEntities', { hits: { hits: [] } })
+    }
+
+    return state.namedEntities
+  },
+  async getParent ({ commit, state }) {
+    if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
+      const currentDoc = state.doc.raw._source
+      try {
+        const doc = await esClient.getEsDoc(state.idAndRouting.index, currentDoc.parentDocument, currentDoc.rootDocument)
+        commit('parentDoc', doc)
+      } catch {
+        commit('parentDoc', null)
+      }
+    }
+    return state.parentDoc
   }
 }
 

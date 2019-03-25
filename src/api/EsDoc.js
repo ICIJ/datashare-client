@@ -1,11 +1,15 @@
 import extend from 'lodash/extend'
 import get from 'lodash/get'
 
+import Response from './Response'
+
 const _raw = Symbol('raw')
+const _parent = Symbol('parent')
 
 export default class EsDoc {
-  constructor (raw) {
+  constructor (raw, parent = null) {
     this[_raw] = raw
+    this.setParent(parent)
     this.map(raw)
   }
   map (raw) {
@@ -21,6 +25,12 @@ export default class EsDoc {
   get (path, defaultValue) {
     return get(this.raw, path, defaultValue)
   }
+  setParent (parent) {
+    this[_parent] = parent ? Response.instantiate(parent) : null
+  }
+  get parent () {
+    return this[_parent]
+  }
   get raw () {
     return this[_raw]
   }
@@ -30,7 +40,7 @@ export default class EsDoc {
   static match (hit) {
     return hit._source.type === (this.esName || this.name)
   }
-  static create (raw) {
-    return new EsDoc(raw)
+  static create (raw, parent) {
+    return new EsDoc(raw, parent)
   }
 }
