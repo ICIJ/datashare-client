@@ -1,5 +1,5 @@
 <template>
-  <div class="image-viewer text-center w-100 mb-3">
+  <div class="image-viewer m-auto p-3">
     <document-thumbnail :document="document" size="xl" class="d-inline-block" />
   </div>
 </template>
