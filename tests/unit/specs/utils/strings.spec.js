@@ -64,6 +64,11 @@ describe('highlight', () => {
     expect(highlight('say hi to the world', [{ content: 'hi', index: 4 }])).toEqual('say <mark>hi</mark> to the world')
   })
 
+  it('should return several marks with same mention', () => {
+    expect(highlight('Trump, Trump, Trump', [{ content: 'Trump', index: 0 }, { content: 'Trump', index: 7 }, { content: 'Trump', index: 14 }]))
+      .toEqual('<mark>Trump</mark>, <mark>Trump</mark>, <mark>Trump</mark>')
+  })
+
   it('should return 3 marks', () => {
     expect(highlight('say hi to the world', [{ content: 'say', index: 0 }, { content: 'hi', index: 4 }, { content: 'world', index: 14 }]))
       .toEqual('<mark>say</mark> <mark>hi</mark> to the <mark>world</mark>')
