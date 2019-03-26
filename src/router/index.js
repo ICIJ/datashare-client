@@ -34,6 +34,7 @@ const router = new VueRouter({
             if (to.query.q) {
               next({ name: 'search', query: to.query })
             }
+            next()
           }
         },
         {

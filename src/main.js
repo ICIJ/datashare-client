@@ -53,6 +53,7 @@ async function createApp (LocalVue = Vue) {
   store.commit('search/index', config.userIndices[0])
   // Render function returns a router-view component by default
   const render = h => h('router-view')
+  console.log(router)
   // Return an instance of the Vue construtor we receive.
   // We do not necessarily use the default Vue so we can use this function
   // from our unit tests
