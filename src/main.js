@@ -27,6 +27,7 @@ async function createApp (LocalVue = Vue) {
   // Murmur expores a config attribute which share a Config object
   // with the current vue instance.
   Murmur.config.merge(config)
+  Murmur.config.set('document-thumbnail.activated', !!process.env.VUE_APP_DS_PREVIEW_HOST)
   Murmur.config.set('content-placeholder.rows', [
     {
       height: '1em',
@@ -53,7 +54,6 @@ async function createApp (LocalVue = Vue) {
   store.commit('search/index', config.userIndices[0])
   // Render function returns a router-view component by default
   const render = h => h('router-view')
-  console.log(router)
   // Return an instance of the Vue construtor we receive.
   // We do not necessarily use the default Vue so we can use this function
   // from our unit tests

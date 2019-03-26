@@ -1,5 +1,5 @@
 <template>
-  <div class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop }">
+  <div v-if="isActivated" class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop }">
     <img :src="thumbnailUrl" :alt="thumbnailAlt" class="document-thumbnail__image"/>
   </div>
 </template>
@@ -38,16 +38,21 @@ export default {
     },
     filePath () {
       return escape(this.document.path)
+    },
+    isActivated () {
+      return this.$config.get('document-thumbnail.activated')
     }
   },
   mounted () {
-    const $img = this.$el.querySelector('.document-thumbnail__image')
-    $img.addEventListener('load', () => {
-      this.$nextTick(() => this.$set(this, 'loaded', true))
-    })
-    $img.addEventListener('error', () => {
-      this.$nextTick(() => this.$set(this, 'erroed', true))
-    })
+    if (this.isActivated) {
+      const $img = this.$el.querySelector('.document-thumbnail__image')
+      $img.addEventListener('load', () => {
+        this.$nextTick(() => this.$set(this, 'loaded', true))
+      })
+      $img.addEventListener('error', () => {
+        this.$nextTick(() => this.$set(this, 'erroed', true))
+      })
+    }
   }
 }
 </script>

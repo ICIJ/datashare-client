@@ -134,10 +134,10 @@ export default {
         }
 
         &__view {
-          margin: $spacer;
+          padding: $spacer;
 
           @media (max-width: $document-float-breakpoint-width) {
-            margin: 0;
+            padding: 0;
             margin-bottom: var(--app-footer-height);
           }
         }

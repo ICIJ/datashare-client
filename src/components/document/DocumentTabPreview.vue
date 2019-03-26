@@ -47,8 +47,11 @@ export default {
     isSpreadsheet () {
       return ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'].indexOf(this.document.contentType) > -1
     },
+    documentThumbnailAtivated () {
+      return this.$config.get('document-thumbnail.activated')
+    },
     isImage () {
-      return this.document.contentType.indexOf('image/') === 0
+      return this.documentThumbnailAtivated && this.document.contentType.indexOf('image/') === 0
     }
   }
 }
