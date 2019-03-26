@@ -45,7 +45,7 @@ export default class Response {
     return new Type(hit)
   }
   static none () {
-    return new Response({hits: {hits: [], total: 0}})
+    return new Response({ hits: { hits: [], total: 0 } })
   }
   static get types () {
     return [Document, NamedEntity]
