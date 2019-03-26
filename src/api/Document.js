@@ -39,6 +39,9 @@ export default class Document extends EsDoc {
       this.shortId
     ]))
   }
+  get cleanSubject () {
+    return this.title.replace(/((.{1,4})\s?:\s?)*(.+)/i, '$3')
+  }
   get slicedName () {
     if (this.get('_source.extractionLevel', 0) === 0) {
       return [ this.title ]
@@ -70,7 +73,13 @@ export default class Document extends EsDoc {
     return this.source.contentType || 'unknown'
   }
   get creationDate () {
-    return moment(this.source.metadata.tika_metadata_creation_date).format('LLL')
+    return new Date(this.source.metadata.tika_metadata_creation_date)
+  }
+  get creationDateHuman () {
+    return moment(this.creationDate).format('LLL')
+  }
+  get extractionLevel () {
+    return this.get('_source.extractionLevel', 0)
   }
   get humanSize () {
     if (this.source.contentLength === -1) return 'unknown'

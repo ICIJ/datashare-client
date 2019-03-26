@@ -13,7 +13,7 @@
               </strong>
             </div>
             <span class="email-view__thread__item__date align-self-end small">
-              {{ email.creationDate }}
+              {{ email.creationDateHuman }}
             </span>
           </div>
           <div class="d-flex">
@@ -90,7 +90,7 @@ export default {
   props: ['index', 'id', 'routing'],
   data () {
     return {
-      thread: [],
+      thread: { hits: [] },
       threadQueryFields: {
         threadIndex: 'metadata.tika_metadata_message_raw_header_thread_index',
         messageId: 'metadata.tika_metadata_message_raw_header_message_id'
@@ -102,11 +102,20 @@ export default {
       document: 'doc'
     }),
     threadBody () {
+      const body = bodybuilder()
+      // Select only the Documents and not the NamedEntities
+      body.query('match', 'type', 'Document')
+      // Select only the Documents at the same extraction level
+      body.query('match', 'extractionLevel', this.document.extractionLevel)
+
+      // Similar subject
+      body.query('match', 'metadata.tika_metadata_subject', `.*${this.document.cleanSubject}.*`)
+      // Collect all field data
       return reduce(this.threadQueryFields, (body, path, field) => {
         const value = this.document[field]
-        if (value) body.orQuery('match', path, value)
+        if (value) body.query('match', path, value)
         return body
-      }, bodybuilder())
+      }, body)
     }
   },
   methods: {
@@ -121,6 +130,9 @@ export default {
       await this.$store.dispatch('document/get', params)
       // Load it's thread (if any)
       this.thread = await this.getThread()
+      this.thread.push('hits.hits', this.document.raw)
+      this.thread.removeDuplicates()
+      this.thread.orderBy('creationDate', ['asc'])
       // Add the document to the user's history
       await this.$store.commit('userHistory/addDocument', this.document)
     },
@@ -136,6 +148,7 @@ export default {
         }
         return Response.none()
       } catch (e) {
+        console.log(e)
         return Response.none()
       }
     }

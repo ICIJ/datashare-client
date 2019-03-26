@@ -8,7 +8,7 @@
     <div class="col-sm-9 document__content__id">{{ document.id }}</div>
     <template v-if="document.source.metadata.tika_metadata_creation_date">
       <div class="col-sm-3 font-weight-bold">{{ $t('document.creation_date') }}</div>
-      <div class="col-sm-9 document__content__creation-date">{{ document.creationDate }}</div>
+      <div class="col-sm-9 document__content__creation-date">{{ document.creationDateHuman }}</div>
     </template>
     <template v-if="document.source.contentLength !== -1">
       <div class="col-sm-3 font-weight-bold">{{ $t('document.size') }}</div>

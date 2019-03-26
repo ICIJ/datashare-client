@@ -1,4 +1,5 @@
 import extend from 'lodash/extend'
+import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 
 import Response from './Response'
@@ -8,14 +9,14 @@ const _parent = Symbol('parent')
 
 export default class EsDoc {
   constructor (raw, parent = null) {
-    this[_raw] = raw
+    this[_raw] = cloneDeep(raw)
     this.setParent(parent)
     this.map(raw)
   }
   map (raw) {
     // Map the given object to document attribute
     return extend(this, {
-      id: raw._id,
+      id: raw._id || raw._id,
       routing: raw._routing || raw._id,
       version: raw._version,
       type: raw._type,
@@ -38,7 +39,8 @@ export default class EsDoc {
     return this.raw
   }
   static match (hit) {
-    return hit._source.type === (this.esName || this.name)
+    const raw = hit.raw || hit
+    return get(raw, '_source.type', 'Document') === (this.esName || this.name)
   }
   static create (raw, parent) {
     return new EsDoc(raw, parent)

@@ -4,6 +4,8 @@ import get from 'lodash/get'
 import map from 'lodash/map'
 import remove from 'lodash/remove'
 import set from 'lodash/set'
+import orderBy from 'lodash/orderBy'
+import uniqBy from 'lodash/uniqBy'
 
 import Document from './Document'
 import NamedEntity from './NamedEntity'
@@ -29,6 +31,12 @@ export default class Response {
     const arr = this.get(path, [])
     remove(arr, value)
     return this.set(path, [value].concat(arr))
+  }
+  orderBy (iteratees, orders) {
+    this.set('hits.hits', orderBy(this.get('hits.hits', []), iteratees, orders))
+  }
+  removeDuplicates () {
+    this.set('hits.hits', uniqBy(this.get('hits.hits', []), d => d._id))
   }
   get hits () {
     return map(this.get('hits.hits', []), hit => {
