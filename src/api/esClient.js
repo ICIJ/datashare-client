@@ -1,8 +1,7 @@
 import bodybuilder from 'bodybuilder'
-
-import each from 'lodash/each'
 import es from 'elasticsearch-browser'
 import { EventBus } from '@/utils/event-bus'
+import each from 'lodash/each'
 import replace from 'lodash/replace'
 
 // Custom API for datashare
@@ -22,19 +21,25 @@ export function datasharePlugin (Client, config, components) {
     })
   }
 
-  Client.prototype.getNamedEntities = function (index, docId, routing = null) {
-    return this.search({
+  Client.prototype.getNamedEntities = async function (index, docId, routing = null, size = 200) {
+    let response
+    let namedEntities = []
+    response = await this.search({
       index: index,
       type: 'doc',
-      size: 200,
+      size: size,
       routing: routing,
-      body: bodybuilder().query('parent_id', { type: 'NamedEntity', id: docId }).filter('term', 'isHidden', 'false').build()
-    }).then(function (data) {
-      return data
-    }, error => {
-      EventBus.$emit('http::error', error)
-      return null
+      body: bodybuilder().query('parent_id', { type: 'NamedEntity', id: docId }).filter('term', 'isHidden', 'false').build(),
+      scroll: '30s'
     })
+    while (response.hits && response.hits.hits.length) {
+      namedEntities.push(...response.hits.hits)
+      response = await this.scroll({
+        scrollId: response._scroll_id,
+        scroll: '30s'
+      })
+    }
+    return { hits: { hits: namedEntities } }
   }
 
   Client.prototype.addQueryToBody = function (query, body) {
