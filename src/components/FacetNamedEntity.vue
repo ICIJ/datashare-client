@@ -60,8 +60,8 @@ export default {
         '</div>' +
         '<div class="text-muted small facet__items__item__description">' +
         this.$t('aggregations.mentions.item', {
-          occurrences: this.$tc('aggregations.mentions.occurrence', count, { count: count }),
-          documents: this.$tc('aggregations.mentions.document', value, { count: value })
+          occurrences: this.$tc('aggregations.mentions.occurrence', count, { count: this.$n(count) }),
+          documents: this.$tc('aggregations.mentions.document', value, { count: this.$n(value) })
         }) +
         '</div>' +
         '</div>'
