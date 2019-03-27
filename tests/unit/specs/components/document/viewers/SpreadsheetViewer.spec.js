@@ -4,7 +4,7 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { createServer } from 'http-server'
 import bFormSelect from 'bootstrap-vue/es/components/form-select/form-select'
-import SpreadsheetViewer from '@/components/document/SpreadsheetViewer'
+import SpreadsheetViewer from '@/components/document/viewers/SpreadsheetViewer'
 import messages from '@/lang/en'
 
 const localVue = createLocalVue()

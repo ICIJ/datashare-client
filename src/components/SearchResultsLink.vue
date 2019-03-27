@@ -1,23 +1,26 @@
 <template>
-  <router-link :to="{ name: 'document', params }" class="search-results-item" :class="{ 'search-results-item--active': isActive() }">
-    <h5 class="search-results-item__basename">
-      <document-sliced-name :document="doc" />
-    </h5>
-    <span class="search-results-item__location small">
-      <fa icon="folder" class="mr-1" />
-      {{ location }}
-    </span>
-    <div class="search-results-item__fragments" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
-    <ul class="named-entities list-inline mt-3">
-      <li class="named-entity list-inline-item" v-for="ne in namedEntities" :key="ne._source.id"
-          :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
-        <router-link :to="{ name: 'document', params: { id: doc.id } }" class="badge badge-pill text-white"
-                     :class="[getCategoryClass(ne._source.category, 'bg-')]" v-b-tooltip.hover :title="ne._source.mention">
-          <fa :icon="getCategoryIcon(ne._source.category)" class="mr-1" />
-          {{ ne._source.mention | truncate }}
-        </router-link>
-      </li>
-    </ul>
+  <router-link :to="{ name: routeName, params }" class="search-results-link d-flex" :class="{ 'search-results-link--active': isActive() }">
+    <document-thumbnail :document="doc" class="search-results-link__thumbnail mr-3" crop />
+    <div>
+      <h5 class="search-results-link__basename">
+        <document-sliced-name :document="doc" />
+      </h5>
+      <span class="search-results-link__location small">
+        <fa icon="folder" class="mr-1" />
+        {{ location }}
+      </span>
+      <div class="search-results-link__fragments" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
+      <ul class="named-entities list-inline mt-3">
+        <li class="named-entity list-inline-link" v-for="ne in namedEntities" :key="ne._source.id"
+            :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
+          <router-link :to="{ name: 'document', params: { id: doc.id } }" class="badge badge-pill text-white"
+                       :class="[getCategoryClass(ne._source.category, 'bg-')]" v-b-tooltip.hover :title="ne._source.mention">
+            <fa :icon="getCategoryIcon(ne._source.category)" class="mr-1" />
+            {{ ne._source.mention | truncate }}
+          </router-link>
+        </li>
+      </ul>
+    </div>
   </router-link>
 </template>
 
@@ -27,17 +30,19 @@ import uniqBy from 'lodash/uniqBy'
 
 import ner from '@/mixins/ner'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
+import DocumentThumbnail from '@/components/DocumentThumbnail'
 
 export default {
   name: 'SearchResultsLink',
   mixins: [ner],
   props: ['doc'],
   components: {
-    DocumentSlicedName
+    DocumentSlicedName,
+    DocumentThumbnail
   },
   methods: {
     isActive () {
-      return this.$route.name === 'document' && get(this.$store.state, 'document.doc.id') === this.doc.id
+      return get(this.$store.state, 'document.doc.id') === this.doc.id && this.doc.id === this.$route.params.id
     }
   },
   computed: {
@@ -60,6 +65,9 @@ export default {
     },
     params () {
       return this.doc.routerParams
+    },
+    routeName () {
+      return this.doc.isEmail ? 'email' : 'document'
     }
   },
   filters: {
@@ -82,7 +90,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .search-results-item {
+  .search-results-link {
     padding: $spacer;
     border-bottom: 1px solid $gray-200;
     display: block;

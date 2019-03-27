@@ -27,6 +27,7 @@ async function createApp (LocalVue = Vue) {
   // Murmur expores a config attribute which share a Config object
   // with the current vue instance.
   Murmur.config.merge(config)
+  Murmur.config.set('document-thumbnail.activated', !!process.env.VUE_APP_DS_PREVIEW_HOST)
   Murmur.config.set('content-placeholder.rows', [
     {
       height: '1em',

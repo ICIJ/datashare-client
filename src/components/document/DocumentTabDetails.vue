@@ -8,7 +8,7 @@
     <div class="col-sm-9 document__content__id">{{ document.id }}</div>
     <template v-if="document.source.metadata.tika_metadata_creation_date">
       <div class="col-sm-3 font-weight-bold">{{ $t('document.creation_date') }}</div>
-      <div class="col-sm-9 document__content__creation-date">{{ document.creationDate }}</div>
+      <div class="col-sm-9 document__content__creation-date">{{ document.creationDateHuman }}</div>
     </template>
     <template v-if="document.source.contentLength !== -1">
       <div class="col-sm-3 font-weight-bold">{{ $t('document.size') }}</div>
@@ -35,6 +35,14 @@
       <div class="col-sm-9">
         <router-link :to="{ name: 'document', params: { id: document.source.parentDocument, routing: document.routing } }" class="document__content__parent">
           {{ parentDocument.basename }}
+        </router-link>
+      </div>
+    </template>
+    <template v-if="document.threadIndex">
+      <div class="col-sm-3 font-weight-bold">{{ $t('document.thread_index') }}</div>
+      <div class="col-sm-9">
+        <router-link :to="{ name: 'search', query: { q: 'metadata.tika_metadata_message_raw_header_thread_index:' + document.threadIndex } }" class="document__content__parent">
+          {{ document.threadIndex }}
         </router-link>
       </div>
     </template>

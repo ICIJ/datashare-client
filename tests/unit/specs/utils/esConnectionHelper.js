@@ -13,8 +13,8 @@ const esConnectionHelper = function () {
   beforeAll(async () => {
     await Promise.all(
       map(indices, async index => {
-        if (!await es.indices.exists({ index: index })) {
-          await es.indices.create({ index: index, body: { settings: esSettings, mappings: esMapping } })
+        if (!await es.indices.exists({ index })) {
+          await es.indices.create({ index, body: { settings: esSettings, mappings: esMapping } })
         }
       })
     )
@@ -23,7 +23,7 @@ const esConnectionHelper = function () {
   beforeEach(async () => {
     await Promise.all(
       map(indices, async index => {
-        await es.deleteByQuery({ index: index, conflicts: 'proceed', refresh: true, body: { query: { match_all: {} } } })
+        await es.deleteByQuery({ index, conflicts: 'proceed', refresh: true, body: { query: { match_all: {} } } })
       })
     )
     // Easy Tiger! Elasticsearch can hardly follow
@@ -33,7 +33,7 @@ const esConnectionHelper = function () {
   afterAll(async () => {
     await Promise.all(
       map(indices, async index => {
-        await es.indices.delete({ index: index, ignoreUnavailable: true })
+        await es.indices.delete({ index, ignoreUnavailable: true })
       })
     )
   })

@@ -1,23 +1,25 @@
 <template>
   <div class="pdf-viewer d-flex">
     <template v-if="doc.pages.length > 0">
-      <div id="pdf-viewer__header" class="pdf-viewer__header" @scroll="fetchMoreThumbnails">
+      <div id="pdf-viewer__header" class="bg-light px-3 py-2" @scroll="fetchMoreThumbnails">
         <div id="pdf-viewer__thumbnails" class="pdf-viewer__thumbnails">
-          <div class="text-center mb-4">{{ doc.active }} / {{ doc.pages.length }}</div>
-          <div v-for="page in numberOfThumbnails" :key="page" @click="doc.active = page" class="mr-2 my-2 d-flex flex-row-reverse">
-            <img class="ml-1 border border-primary" :src="loadThumbnail(page)" />
-            <span class="d-flex align-items-center">{{ page }}</span>
+          <div class="text-center mt-2 mb-4 d-flex align-items-center viewer__thumbnails__header">
+            <select class="form-control form-control-sm" v-model.number="doc.active">
+              <option v-for="page in doc.pages.length" :key="page">
+                {{ page }}
+              </option>
+            </select>
+            <span class="w-100">
+              / {{ doc.pages.length }}
+            </span>
+          </div>
+          <div v-for="page in numberOfThumbnails" :key="page" @click="doc.active = page" class="my-2 pdf-viewer__thumbnails__item" :class="{ 'pdf-viewer__thumbnails__item--active': doc.active === page }">
+            <img :src="loadThumbnail(page)" />
+            <span class="pdf-viewer__thumbnails__item__page">{{ page }}</span>
           </div>
         </div>
       </div>
-      <div class="pdf-viewer__preview">
-        <div class="pdf-viewer__preview__header">
-          <select class="form-control input-sm w-auto float-right mb-3" v-model.number="doc.active">
-            <option v-for="page in doc.pages.length" :key="page">
-              {{ page }}
-            </option>
-          </select>
-        </div>
+      <div class="pdf-viewer__preview w-100 p-3">
         <div v-if="loadPage(doc.active)">
           <img class="pdf-viewer__preview__canvas img-responsive img-thumbnail" :src="loadPage(doc.active)"/>
         </div>
@@ -132,22 +134,45 @@ export default {
 </script>
 
 <style lang="scss">
-.pdf-viewer {
-  position: relative;
+  .pdf-viewer {
+    position: relative;
+    min-height: 100%;
 
-  .pdf-viewer__header {
-    flex: 0 0 15%;
-    position: absolute;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    overflow: auto;
-  }
+    &__thumbnails {
+      min-width: 100px;
 
-  .pdf-viewer__preview {
-    flex: 0 0 85%;
-    margin-left: 15%;
-    padding-left: 1em;
+      &__item {
+        position: relative;
+        border:1px solid $border-color;
+        cursor: pointer;
+
+        &:hover {
+          border-color: $primary;
+          box-shadow:0 0 0 0.1em rgba($primary, .2);
+        }
+
+        &--active, &--active:hover {
+          border-color: $secondary;
+        }
+
+        &--active &__page {
+          background: $secondary;
+          color: white;
+        }
+
+        &__page {
+          position: absolute;
+          bottom: 0;
+          right: 0;
+          background: $light;
+          font-size: 0.8em;
+          padding: 0.2em 0.4em;
+          font-weight: bold;
+          border:1px solid $border-color;
+          border-right: 0;
+          border-bottom: 0;
+        }
+      }
+    }
   }
-}
 </style>

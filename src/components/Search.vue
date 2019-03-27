@@ -18,7 +18,7 @@
             <fa icon="chevron-circle-left" />
             {{ $t('search.back') }}
           </router-link>
-          <router-view></router-view>
+          <router-view class="search__body__document__view"></router-view>
           <div class="search__body__document__backdrop"></div>
         </div>
       </transition>
@@ -49,7 +49,7 @@ export default {
       return this.$store.getters['search/toRouteQuery']
     },
     showDocument () {
-      return this.$route.name === 'document'
+      return ['document', 'email'].indexOf(this.$route.name) > -1
     }
   },
   beforeRouteUpdate (to, from, next) {
@@ -118,7 +118,7 @@ export default {
       }
 
       & &__document {
-        padding: $spacer;
+        padding: 0;
         margin-left: $aggregations-panel-width + $search-results-width;
 
         &.hide-filters {
@@ -136,6 +136,15 @@ export default {
 
         .document {
           box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
+        }
+
+        &__view {
+          padding: $spacer;
+
+          @media (max-width: $document-float-breakpoint-width) {
+            padding: 0;
+            margin-bottom: var(--app-footer-height);
+          }
         }
 
         &__nav {

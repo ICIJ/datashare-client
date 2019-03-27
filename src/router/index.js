@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 
 import App from '@/components/App'
 import DocumentView from '@/components/document/DocumentView'
+import EmailView from '@/components/document/EmailView'
 import Indexing from '@/components/Indexing'
 import Landing from '@/components/Landing'
 import Login from '@/components/Login'
@@ -25,7 +26,16 @@ const router = new VueRouter({
         {
           name: 'landing',
           path: '',
-          component: Landing
+          component: Landing,
+          beforeEnter: (to, from, next) => {
+            // This allow to restore the search's state from localStorage
+            // even if we are loading this route from a children (where no
+            // query paramters are given).
+            if (to.query.q) {
+              next({ name: 'search', query: to.query })
+            }
+            next()
+          }
         },
         {
           name: 'search',
@@ -45,6 +55,12 @@ const router = new VueRouter({
               name: 'document',
               path: 'd/:index/:id/:routing?',
               component: DocumentView,
+              props: true
+            },
+            {
+              name: 'email',
+              path: 'e/:index/:id/:routing?',
+              component: EmailView,
               props: true
             }
           ]

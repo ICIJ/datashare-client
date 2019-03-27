@@ -295,7 +295,8 @@
     "generating_preview": "Generating preview...",
     "sheet": "Sheet",
     "search_directory": "Search within this directory",
-    "tiff_limitations": "The browser preview of this TIFF file may not show all the images. We suggest you download it in your computer to view all the contents."
+    "tiff_limitations": "The browser preview of this TIFF file may not show all the images. We suggest you download it in your computer to view all the contents.",
+    "thread_index": "Thread Index"
   },
   "indexing": {
     "yes": "Yes",
