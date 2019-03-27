@@ -53,7 +53,7 @@ describe('DocumentView.vue', () => {
     await letData(es).have(new IndexedDocument(id)
       .withContent('this is foo document'))
       .commit()
-    await wrapper.vm.getDoc()
+    await wrapper.vm.getDoc()    
 
     expect(wrapper.contains('.document__header')).toBeTruthy()
   })

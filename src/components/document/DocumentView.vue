@@ -79,7 +79,7 @@ export default {
     DocumentTabNamedEntities,
     DocumentTabPreview
   },
-  props: ['id', 'routing'],
+  props: ['id', 'routing', 'index'],
   data () {
     return {
       tab: 'details',
@@ -94,7 +94,7 @@ export default {
     })
   },
   methods: {
-    async getDoc (params = { id: this.id, routing: this.routing }) {
+    async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
       this.isReady = false
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')

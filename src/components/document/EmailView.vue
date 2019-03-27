@@ -1,7 +1,7 @@
 <template>
   <div class="email-view" v-if="document">
     <h3 class="p-3">
-      {{ document.title }}
+      {{ document.cleanSubject }}
     </h3>
     <ul class="list-unstyled email-view__thread m-0">
       <li v-for="email in thread.hits" :key="email.id" class="email-view__thread__item" :class="{ 'email-view__thread__item--active': isActive(email) }">

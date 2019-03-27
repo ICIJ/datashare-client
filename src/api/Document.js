@@ -10,7 +10,19 @@ import DatashareClient from './DatashareClient'
 import EsDoc from './EsDoc'
 import moment from 'moment'
 
+const _parent = Symbol('parent')
+
 export default class Document extends EsDoc {
+  constructor (raw, parent = null) {
+    super(raw)
+    this.setParent(parent)
+  }
+  setParent (parent) {
+    this[_parent] = parent ? new Document(parent) : null
+  }
+  get parent () {
+    return this[_parent]
+  }
   get shortId () {
     return this.id.slice(0, 10)
   }

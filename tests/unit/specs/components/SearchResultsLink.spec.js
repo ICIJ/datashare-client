@@ -1,4 +1,5 @@
 import VueI18n from 'vue-i18n'
+import Vuex from 'vuex'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
@@ -6,16 +7,19 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import SearchResultsLink from '@/components/SearchResultsLink'
 import Document from '@/api/Document'
 import router from '@/router'
+import store from '@/store'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
+localVue.use(Vuex)
 
 describe('SearchResultsLink.vue', () => {
   it('should reduce named entities : zero named entities', () => {
     const wrapper = shallowMount(SearchResultsLink, {
       localVue,
+      store,
       router,
       propsData: {
         'doc': new Document({
@@ -32,6 +36,7 @@ describe('SearchResultsLink.vue', () => {
   it('should reduce named entities : one named entities', () => {
     const wrapper = shallowMount(SearchResultsLink, {
       localVue,
+      store,
       router,
       propsData: {
         'doc': new Document({
@@ -63,6 +68,7 @@ describe('SearchResultsLink.vue', () => {
   it('should reduce named entities : two named entities', () => {
     const wrapper = shallowMount(SearchResultsLink, {
       localVue,
+      store,
       router,
       propsData: {
         'doc': new Document({
@@ -99,6 +105,7 @@ describe('SearchResultsLink.vue', () => {
   it('should reduce named entities : two named entities with duplicates', () => {
     const wrapper = shallowMount(SearchResultsLink, {
       localVue,
+      store,
       router,
       propsData: {
         'doc': new Document({
@@ -140,6 +147,7 @@ describe('SearchResultsLink.vue', () => {
   it('should display the correct location', () => {
     const wrapper = shallowMount(SearchResultsLink, {
       localVue,
+      store,
       router,
       propsData: {
         'doc': new Document({
