@@ -3,7 +3,6 @@ import Vuex from 'vuex'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-
 import SearchResultsLink from '@/components/SearchResultsLink'
 import Document from '@/api/Document'
 import router from '@/router'
@@ -21,12 +20,14 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       router,
+      store,
       propsData: {
         'doc': new Document({
           _id: 1,
           _source: {
-            path: 'a/b/c/foo.txt'
-          } })
+            path: 'doc.txt'
+          }
+        })
       }
     })
 
@@ -38,11 +39,12 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       router,
+      store,
       propsData: {
         'doc': new Document({
           _id: 1,
           _source: {
-            path: 'a/b/c/foo.txt'
+            path: 'doc.txt'
           },
           inner_hits: {
             NamedEntity: {
@@ -60,7 +62,8 @@ describe('SearchResultsLink.vue', () => {
           }
         }
         )
-      } })
+      }
+    })
 
     expect(wrapper.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }])
   })
@@ -70,6 +73,7 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       router,
+      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -107,11 +111,12 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       router,
+      store,
       propsData: {
         'doc': new Document({
           _id: 1,
           _source: {
-            path: 'a/b/c/foo.txt'
+            path: 'doc.txt'
           },
           inner_hits: {
             NamedEntity: {
@@ -149,15 +154,77 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       router,
+      store,
       propsData: {
         'doc': new Document({
           _id: 1,
           _source: {
             path: '/home/data/folder_01/folder_02/foo.txt'
-          } })
+          }
+        })
       }
     })
 
     expect(wrapper.vm.location).toEqual('.folder_01/folder_02/')
+  })
+
+  it('should display 0 occurrences if no query terms founded', () => {
+    const wrapper = shallowMount(SearchResultsLink, {
+      localVue,
+      router,
+      store,
+      propsData: {
+        'doc': new Document({
+          _id: 1,
+          _source: {
+            path: 'doc.txt',
+            content: 'content'
+          }
+        })
+      }
+    })
+    store.commit('search/query', 'test')
+
+    expect(wrapper.find('.search-results-item__occurrences').text()).toEqual('"test" (0)')
+  })
+
+  it('should display the number of occurrences for the query term', () => {
+    const wrapper = shallowMount(SearchResultsLink, {
+      localVue,
+      router,
+      store,
+      propsData: {
+        'doc': new Document({
+          _id: 1,
+          _source: {
+            path: 'doc.txt',
+            content: 'test content test content test'
+          }
+        })
+      }
+    })
+    store.commit('search/query', 'test')
+
+    expect(wrapper.find('.search-results-item__occurrences').text()).toEqual('"test" (3)')
+  })
+
+  it('should display the number of occurrences for each query term', () => {
+    const wrapper = shallowMount(SearchResultsLink, {
+      localVue,
+      router,
+      store,
+      propsData: {
+        'doc': new Document({
+          _id: 1,
+          _source: {
+            path: 'doc.txt',
+            content: 'test content test content test'
+          }
+        })
+      }
+    })
+    store.commit('search/query', 'content test')
+
+    expect(wrapper.find('.search-results-item__occurrences').text()).toEqual('"content" (2) "test" (3)')
   })
 })

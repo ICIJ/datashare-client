@@ -9,7 +9,10 @@
         <fa icon="folder" class="mr-1" />
         {{ location }}
       </span>
-      <div class="search-results-link__fragments" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
+      <div class="search-results-item__occurrences" v-if="this.query && this.query !== '*'">
+      {{ getQueryTermsOccurrences }}
+    </div>
+    <div class="search-results-link__fragments" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
       <ul class="named-entities list-inline mt-3">
         <li class="named-entity list-inline-link" v-for="ne in namedEntities" :key="ne._source.id"
             :title="ne._source.category + '/' + ne._source.extractor + '/' + ne._source.offset">
@@ -25,12 +28,15 @@
 </template>
 
 <script>
-import get from 'lodash/get'
-import uniqBy from 'lodash/uniqBy'
-
-import ner from '@/mixins/ner'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
+import ner from '@/mixins/ner'
+import { mapState } from 'vuex'
+import get from 'lodash/get'
+import map from 'lodash/map'
+import uniqBy from 'lodash/uniqBy'
+
+
 
 export default {
   name: 'SearchResultsLink',
@@ -46,6 +52,9 @@ export default {
     }
   },
   computed: {
+    ...mapState('search', {
+      query: 'query'
+    }),
     folder () {
       // Extract location parts
       let parts = this.doc.get('_source.path', '').split('/')
@@ -68,6 +77,15 @@ export default {
     },
     routeName () {
       return this.doc.isEmail ? 'email' : 'document'
+    },
+    getQueryTermsOccurrences () {
+      let result = ''
+      if (this.doc.source.content) {
+        map(this.query.split(' '), query => {
+          result += ` "${query}" (${(this.doc.source.content.match(new RegExp(query, 'gi')) || []).length})`
+        })
+      }
+      return result
     }
   },
   filters: {
@@ -140,6 +158,7 @@ export default {
       color: $gray-500;
     }
 
+    &__occurrences,
     &__fragments {
       font-size: 0.9em;
       color: $text-muted;

@@ -13,12 +13,13 @@ export function datasharePlugin (Client, config, components) {
       type: 'doc',
       id: id,
       routing: routing
-    }).then(function (data) {
-      return data
-    }, error => {
-      EventBus.$emit('http::error', error)
-      return null
-    })
+    }).then(
+      data => data,
+      error => {
+        EventBus.$emit('http::error', error)
+        return null
+      }
+    )
   }
 
   Client.prototype.getNamedEntities = async function (index, docId, routing = null, size = 200) {
@@ -136,7 +137,7 @@ export function datasharePlugin (Client, config, components) {
     // Select only the Documents and not the NamedEntities
     body.query('match', 'type', 'Document')
     // Add an option to exclude the content
-    body.rawOption('_source', { includes: ['*'], excludes: ['content'] })
+    body.rawOption('_source', { includes: ['*'] })
     // Add an option to highlight fragments in the results
     body.rawOption('highlight', {
       fields: {
