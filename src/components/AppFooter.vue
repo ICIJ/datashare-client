@@ -7,11 +7,11 @@
       <user-history v-if="showUserHistory" />
     </slide-up-down>
     <div class="d-flex align-items-center text-nowrap">
-      <b-button class="app__footer__addon app__footer__addon--delete-index btn btn-sm text-secondary"
-              variant="link" @click="deleteAll" :title="$t('indexing.delete_index')" v-b-tooltip>
-      <fa icon="trash-alt" />
-    </b-button>
-    <router-link :to="{ name: 'indexing' }"  class="app__footer__addon app__footer__addon--analyze-documents btn btn-sm text-secondary" :title="$t('menu.analyse')" v-b-tooltip v-if="!isRemote">
+      <confirm-button class="app__footer__addon app__footer__addon--delete-index btn btn-sm text-secondary" :confirmed="deleteAll" :title="$t('indexing.delete_index_label')" v-b-tooltip :label="$t('indexing.delete_index_label')" :description="$t('indexing.delete_index_description')">
+        <fa icon="trash-alt" />
+        <span class="sr-only">{{ $t('indexing.delete_index_label') }}</span>
+      </confirm-button>
+      <router-link :to="{ name: 'indexing' }"  class="app__footer__addon app__footer__addon--analyze-documents btn btn-sm text-secondary" :title="$t('menu.analyse')" v-b-tooltip v-if="!isRemote">
         <fa icon="rocket" />
         <span class="sr-only">{{ $t('menu.analyse') }}</span>
       </router-link>
@@ -164,8 +164,9 @@ export default {
       }
       return Promise.resolve(lang)
     },
-    deleteAll () {
-      this.$store.dispatch('indexing/deleteAll').then(() => EventBus.$emit('index::delete::all'))
+    async deleteAll () {
+      await this.$store.dispatch('indexing/deleteAll')
+      EventBus.$emit('index::delete::all')
     }
   }
 }

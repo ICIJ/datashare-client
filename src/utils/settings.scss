@@ -66,6 +66,9 @@ $kbd-padding-y: .2em;
 $kbd-padding-x: .4em;
 $kbd-bg: rgba(#222, .7);
 
+$tooltip-max-width: 260px !default;
+$tooltip-opacity: 1 !default;
+
 // Bootstrap variables and mixins must be available everywhere
 @import '~node_modules/bootstrap/scss/_functions.scss';
 @import '~node_modules/bootstrap/scss/_variables.scss';

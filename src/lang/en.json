@@ -321,7 +321,8 @@
     "stop_task": "Stop this task",
     "stop_pending_tasks": "Stop all pending tasks",
     "delete_done_tasks": "Clear done tasks",
-    "delete_index": "Delete index"
+    "delete_index_label": "Remove all your documents from Datashare",
+    "delete_index_description": "To be 100% safe, please remove your documents from the Datashare folder on your computer – don't forget to empty your trash bin of all Datashare documents! Make sure you have a copy of them in another secure place beforehand."
   },
   "menu": {
     "help": "Ask for help",

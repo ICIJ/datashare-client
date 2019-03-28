@@ -1,5 +1,5 @@
 <template>
-  <div class="email-view" v-if="document">
+  <div class="email-view" v-if="document && isReady">
     <h3 class="p-3">
       {{ document.cleanSubject }}
     </h3>
@@ -90,6 +90,7 @@ export default {
   props: ['index', 'id', 'routing'],
   data () {
     return {
+      isReady: false,
       thread: { hits: [] },
       threadQueryFields: {
         threadIndex: 'metadata.tika_metadata_message_raw_header_thread_index',
@@ -126,6 +127,7 @@ export default {
       return { id: email.id, index: email.index, routing: email.routing }
     },
     async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
+      this.isReady = false
       // Load the current document)
       await this.$store.dispatch('document/get', params)
       // Load it's thread (if any)
@@ -133,6 +135,7 @@ export default {
       this.thread.push('hits.hits', this.document.raw)
       this.thread.removeDuplicates()
       this.thread.orderBy('creationDate', ['asc'])
+      this.isReady = true
       // Add the document to the user's history
       await this.$store.commit('userHistory/addDocument', this.document)
     },
@@ -148,7 +151,6 @@ export default {
         }
         return Response.none()
       } catch (e) {
-        console.log(e)
         return Response.none()
       }
     }
@@ -157,8 +159,7 @@ export default {
     next(vm => vm.getDoc(to.params))
   },
   beforeRouteUpdate (to, _from, next) {
-    this.getDoc(to.params)
-    next()
+    this.getDoc(to.params).then(next)
   }
 }
 </script>

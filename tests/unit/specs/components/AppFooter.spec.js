@@ -130,14 +130,11 @@ describe('AppFooter.vue', () => {
     expect(wrapper.findAll('.app__footer .app__footer__addon--delete-index')).toHaveLength(1)
   })
 
-  it('should emit an index::delete::all event on clicking on the delete index button', async () => {
+  it('should emit an index::delete::all event when calling the deleteAll method', async () => {
     const mockCallback = jest.fn()
     EventBus.$on('index::delete::all', mockCallback)
-    wrapper.find('.app__footer .app__footer__addon--delete-index').trigger('click')
-
+    await wrapper.vm.deleteAll()
     await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
 })

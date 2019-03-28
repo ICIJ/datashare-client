@@ -89,6 +89,7 @@ export default {
       &__wrapper {
         float: left;
         display: flex;
+        min-height: calc(100% - var(--app-nav-height) - var(--app-footer-height));
 
         .search--show-document & {
           @media (max-width: $document-float-breakpoint-width) {
