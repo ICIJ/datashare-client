@@ -45,27 +45,6 @@ describe('Search.vue', () => {
     expect(wrapper.find('.search-results__header__number-of-results').text()).toEqual('No documents found')
   })
 
-  it('should display one document found', async () => {
-    await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
-
-    await wrapper.vm.search('bar')
-
-    expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('1 - 1')
-    expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 1 document found')
-    expect(wrapper.find('.search-results-link__fragments').html()).toEqual('<div class="search-results-link__fragments">this is <mark>bar</mark> document</div>')
-  })
-
-  it('should display 2 documents found', async () => {
-    await letData(es).have(new IndexedDocument('docs/bar1.txt').withContent('this is bar 1 document')).commit()
-    await letData(es).have(new IndexedDocument('docs/bar2.txt').withContent('this is bar 2 document')).commit()
-
-    await wrapper.vm.search('bar')
-
-    expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('1 - 2')
-    expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 2 documents found')
-    expect(wrapper.findAll('.search-results-link').length).toEqual(2)
-  })
-
   it('should make a link without routing for a document', async () => {
     await letData(es).have(new IndexedDocument('doc.txt').withContent('this is a document')).commit()
 
@@ -97,65 +76,6 @@ describe('Search.vue', () => {
     await wrapper.vm.search({ query: 'document', from: 0, size: 3 })
 
     expect(wrapper.findAll('.search-results-link').length).toEqual(3)
-  })
-
-  it('should not display the pagination (1/2)', async () => {
-    await wrapper.vm.search('*')
-
-    expect(wrapper.findAll('.search-results__header__first-page').length).toEqual(0)
-    expect(wrapper.findAll('.search-results__header__previous-page').length).toEqual(0)
-    expect(wrapper.findAll('.search-results__header__next-page').length).toEqual(0)
-    expect(wrapper.findAll('.search-results__header__last-page').length).toEqual(0)
-  })
-
-  it('should not display the pagination (2/2)', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is the first document')).commit()
-
-    await wrapper.vm.search('document')
-
-    expect(wrapper.findAll('.search-results__header__first-page').length).toEqual(0)
-    expect(wrapper.findAll('.search-results__header__previous-page').length).toEqual(0)
-    expect(wrapper.findAll('.search-results__header__next-page').length).toEqual(0)
-    expect(wrapper.findAll('.search-results__header__last-page').length).toEqual(0)
-  })
-
-  it('should display the pagination', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
-
-    await wrapper.vm.search({ query: 'document', from: 0, size: 3 })
-
-    expect(wrapper.findAll('.search-results__header__first-page').length).toEqual(2)
-    expect(wrapper.findAll('.search-results__header__previous-page').length).toEqual(2)
-    expect(wrapper.findAll('.search-results__header__next-page').length).toEqual(2)
-    expect(wrapper.findAll('.search-results__header__last-page').length).toEqual(2)
-    expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('1 - 3')
-    expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 4 documents found')
-    expect(wrapper.findAll('.search-results-link').length).toEqual(3)
-  })
-
-  it('should display the first and the previous page as unavailable', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
-
-    await wrapper.vm.search({ query: 'document', from: 0, size: 3 })
-
-    expect(wrapper.findAll('.search-results__header__first-page.disabled').length).toEqual(2)
-    expect(wrapper.findAll('.search-results__header__previous-page.disabled').length).toEqual(2)
-    expect(wrapper.findAll('.search-results__header__next-page.disabled').length).toEqual(0)
-    expect(wrapper.findAll('.search-results__header__last-page.disabled').length).toEqual(0)
-  })
-
-  it('should display the next and the last page as unavailable', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
-
-    await wrapper.vm.search({ query: 'document', from: 3, size: 3 })
-
-    expect(wrapper.findAll('.search-results__header__first-page.disabled').length).toEqual(0)
-    expect(wrapper.findAll('.search-results__header__previous-page.disabled').length).toEqual(0)
-    expect(wrapper.findAll('.search-results__header__next-page.disabled').length).toEqual(2)
-    expect(wrapper.findAll('.search-results__header__last-page.disabled').length).toEqual(2)
-    expect(wrapper.find('.search-results__header__progress__pagination').text()).toEqual('4 - 4')
-    expect(wrapper.find('.search-results__header__progress_number-of-results').text()).toEqual('on 4 documents found')
-    expect(wrapper.findAll('.search-results-link').length).toEqual(1)
   })
 
   it('should display only the document who has a NE person Paris', async () => {

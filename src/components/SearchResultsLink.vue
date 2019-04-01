@@ -36,8 +36,6 @@ import get from 'lodash/get'
 import map from 'lodash/map'
 import uniqBy from 'lodash/uniqBy'
 
-
-
 export default {
   name: 'SearchResultsLink',
   mixins: [ner],
