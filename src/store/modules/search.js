@@ -268,6 +268,7 @@ export const actions = {
     // Add the query to the state with a mutation to not triggering a search
     if (query.index) commit('index', query.index)
     if (query.q) commit('query', query.q)
+    if (query.from) commit('from', query.from)
     if (query.size) commit('size', query.size)
     if (query.sort) commit('sort', query.sort)
     // Iterate over the list of facet
