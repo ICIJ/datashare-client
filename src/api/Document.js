@@ -137,7 +137,7 @@ export default class Document extends EsDoc {
     return truncate(trim(this.source.content), { length: 280 })
   }
   get isEmail () {
-    return this.contentType.indexOf('message/') === 0
+    return this.contentType.indexOf('message/') === 0 || this.contentType === 'application/vnd.ms-outlook'
   }
   get isPdf () {
     return this.contentType === 'application/pdf'
