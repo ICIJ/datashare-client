@@ -67,6 +67,7 @@ export const getters = {
   toRouteQuery (state) {
     return {
       q: state.query,
+      from: state.from,
       size: state.size,
       sort: state.sort,
       index: state.index,

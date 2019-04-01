@@ -335,7 +335,7 @@ describe('Search store', () => {
   })
 
   it('should return the default query parameters', () => {
-    expect(store.getters['search/toRouteQuery']).toEqual({ index: process.env.VUE_APP_ES_INDEX, q: '', size: 25, sort: 'relevance' })
+    expect(store.getters['search/toRouteQuery']).toEqual({ index: process.env.VUE_APP_ES_INDEX, q: '', size: 25, sort: 'relevance', from: 0 })
   })
 
   it('should return an advanced and faceted query parameters', () => {
@@ -344,7 +344,7 @@ describe('Search store', () => {
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
-    expect(store.getters['search/toRouteQuery']).toEqual({ index: 'another-index', q: 'datashare', size: 12, sort: 'randomOrder', 'f[content-type]': ['TXT'] })
+    expect(store.getters['search/toRouteQuery']).toEqual({ index: 'another-index', q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[content-type]': ['TXT'] })
   })
 
   it('should reset the values of a facet', async () => {

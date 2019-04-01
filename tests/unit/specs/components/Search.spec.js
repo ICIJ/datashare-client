@@ -120,6 +120,11 @@ describe('Search.vue', () => {
     await delay(100)
     expect(actions.query).toHaveBeenCalled()
   })
+
+  it('should display a `Back to the search results` link', () => {
+    expect(wrapper.findAll('.search__body__document__nav')).toHaveLength(1)
+    expect(wrapper.findAll('.search__body__document__nav').at(0).attributes('href')).toEqual(`#/?q=&from=0&size=25&sort=relevance&index=${process.env.VUE_APP_ES_INDEX}`)
+  })
 })
 
 function delay (t, v) {

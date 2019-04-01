@@ -1,7 +1,6 @@
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount, createWrapper } from '@vue/test-utils'
-
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
 import store from '@/store'
@@ -31,14 +30,14 @@ describe('SearchSettings.vue', () => {
   afterAll(() => store.commit('search/reset'))
 
   it('should not be relative to the search, by default', () => {
-    expect(wrapper.vm.relativeSearch).toEqual(false)
+    expect(wrapper.vm.relativeSearch).toBeFalsy()
   })
 
   it('should emit a bv::hide::popover on relativeSearch change', () => {
     const rootWrapper = createWrapper(wrapper.vm.$root)
     wrapper.find('#input-global').setChecked()
 
-    expect(wrapper.vm.relativeSearch).toEqual(true)
+    expect(wrapper.vm.relativeSearch).toBeTruthy()
     expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
   })
 
@@ -55,7 +54,7 @@ describe('SearchSettings.vue', () => {
 
     expect(wrapper.vm.selectedSize).toEqual('100')
     expect(router.push).toHaveBeenCalled()
-    expect(router.push).toHaveBeenCalledWith({ 'name': 'search', 'params': {}, 'path': '/', 'query': { 'index': '', 'q': '', 'size': 100, 'sort': 'relevance' } })
+    expect(router.push).toHaveBeenCalledWith({ name: 'search', params: {}, path: '/', query: { index: '', q: '', size: 100, sort: 'relevance', from: 0 } })
     expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
   })
 
@@ -72,7 +71,7 @@ describe('SearchSettings.vue', () => {
 
     expect(wrapper.vm.selectedSort).toEqual('sizeLargest')
     expect(router.push).toHaveBeenCalled()
-    expect(router.push).toHaveBeenCalledWith({ 'name': 'search', 'params': {}, 'path': '/', 'query': { 'index': '', 'q': '', 'size': 25, 'sort': 'sizeLargest' } })
+    expect(router.push).toHaveBeenCalledWith({ name: 'search', params: {}, path: '/', query: { index: '', q: '', size: 25, sort: 'sizeLargest', from: 0 } })
     expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
   })
 })
