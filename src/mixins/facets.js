@@ -173,6 +173,7 @@ export const mixin = {
     },
     resetFacetValues () {
       this.selected = []
+      this.isAllSelected = true
     },
     changeSelectedValues () {
       this.isAllSelected = this.selected.length === 0
