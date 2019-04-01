@@ -79,21 +79,21 @@ describe('Search store', () => {
   it('should return document from local index', async () => {
     await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
     await store.dispatch('search/query', 'bar')
-    expect(store.state.search.response.hits.length).toEqual(1)
+    expect(store.state.search.response.hits).toHaveLength(1)
     expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
   })
 
   it('should return document from another index', async () => {
     await letData(es).have(new IndexedDocument('docs/bar.txt').toIndex(process.env.VUE_APP_ES_ANOTHER_INDEX).withContent('this is bar document')).commit()
     await store.dispatch('search/query', { index: process.env.VUE_APP_ES_ANOTHER_INDEX, query: 'bar', from: 0, size: 25 })
-    expect(store.state.search.response.hits.length).toEqual(1)
+    expect(store.state.search.response.hits).toHaveLength(1)
     expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
   })
 
   it('should get document from ElasticSearch', async () => {
     await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
     await store.dispatch('search/query', 'bar')
-    expect(store.state.search.response.hits.length).toEqual(1)
+    expect(store.state.search.response.hits).toHaveLength(1)
     expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
   })
 
@@ -104,9 +104,9 @@ describe('Search store', () => {
     await letData(es).have(new IndexedDocument('foo.pdf').withContentType('pdf').withContent('foo')).commit()
 
     await store.dispatch('search/query', '*')
-    expect(store.state.search.response.hits.length).toEqual(4)
+    expect(store.state.search.response.hits).toHaveLength(4)
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'pdf' })
-    expect(store.state.search.response.hits.length).toEqual(2)
+    expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should find 3 documents filtered by two content-type', async () => {
@@ -115,11 +115,11 @@ describe('Search store', () => {
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
-    expect(store.state.search.response.hits.length).toEqual(3)
+    expect(store.state.search.response.hits).toHaveLength(3)
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'pdf' })
-    expect(store.state.search.response.hits.length).toEqual(1)
+    expect(store.state.search.response.hits).toHaveLength(1)
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'csv' })
-    expect(store.state.search.response.hits.length).toEqual(2)
+    expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should not find documents after filtering by content-type', async () => {
@@ -128,9 +128,9 @@ describe('Search store', () => {
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
-    expect(store.state.search.response.hits.length).toEqual(3)
+    expect(store.state.search.response.hits).toHaveLength(3)
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'ico' })
-    expect(store.state.search.response.hits.length).toEqual(0)
+    expect(store.state.search.response.hits).toHaveLength(0)
   })
 
   it('should find documents after removing filter by content-type', async () => {
@@ -139,11 +139,11 @@ describe('Search store', () => {
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
-    expect(store.state.search.response.hits.length).toEqual(3)
+    expect(store.state.search.response.hits).toHaveLength(3)
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'ico' })
-    expect(store.state.search.response.hits.length).toEqual(0)
+    expect(store.state.search.response.hits).toHaveLength(0)
     await store.dispatch('search/removeFacetValue', { name: 'content-type', value: 'ico' })
-    expect(store.state.search.response.hits.length).toEqual(3)
+    expect(store.state.search.response.hits).toHaveLength(3)
   })
 
   it('should exclude documents with a specific content-type', async () => {
@@ -152,11 +152,11 @@ describe('Search store', () => {
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
-    expect(store.state.search.response.hits.length).toEqual(3)
+    expect(store.state.search.response.hits).toHaveLength(3)
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
-    expect(store.state.search.response.hits.length).toEqual(1)
+    expect(store.state.search.response.hits).toHaveLength(1)
     await store.dispatch('search/toggleFacet', 'content-type')
-    expect(store.state.search.response.hits.length).toEqual(2)
+    expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should exclude documents with a specific content-type and include them again', async () => {
@@ -167,7 +167,7 @@ describe('Search store', () => {
     await letData(es).have(new IndexedDocument('bar.ico').withContent('bar').withNer('name_02')).commit()
 
     await store.dispatch('search/addFacetValue', { name: 'named-entity-person', value: 'name_02' })
-    expect(store.state.search.response.hits.length).toEqual(2)
+    expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should filter documents if a named entity is selected', async () => {
@@ -180,9 +180,9 @@ describe('Search store', () => {
     await store.dispatch('search/query', '*')
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
     await store.dispatch('search/toggleFacet', 'content-type')
-    expect(store.state.search.response.hits.length).toEqual(3)
+    expect(store.state.search.response.hits).toHaveLength(3)
     await store.dispatch('search/toggleFacet', 'content-type')
-    expect(store.state.search.response.hits.length).toEqual(2)
+    expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should take into account the given facet', async () => {
@@ -247,21 +247,21 @@ describe('Search store', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
-    expect(store.state.search.response.hits.length).toEqual(2)
+    expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should return 3 documents', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
-    expect(store.state.search.response.hits.length).toEqual(3)
+    expect(store.state.search.response.hits).toHaveLength(3)
   })
 
   it('should return 1 document (1/3)', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 3, size: 3 })
-    expect(store.state.search.response.hits.length).toEqual(1)
+    expect(store.state.search.response.hits).toHaveLength(1)
   })
 
   it('should return 1 document (2/3)', async () => {
@@ -270,7 +270,7 @@ describe('Search store', () => {
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
     await store.dispatch('search/nextPage')
     expect(store.state.search.from).toEqual(3)
-    expect(store.state.search.response.hits.length).toEqual(1)
+    expect(store.state.search.response.hits).toHaveLength(1)
   })
 
   it('should return 1 document (3/3)', async () => {
@@ -280,7 +280,7 @@ describe('Search store', () => {
     await store.dispatch('search/nextPage')
     await store.dispatch('search/nextPage')
     expect(store.state.search.from).toEqual(3)
-    expect(store.state.search.response.hits.length).toEqual(1)
+    expect(store.state.search.response.hits).toHaveLength(1)
   })
 
   it('should return 4 documents on the first page', async () => {
@@ -288,7 +288,7 @@ describe('Search store', () => {
 
     await store.dispatch('search/firstPage')
     expect(store.state.search.from).toEqual(0)
-    expect(store.state.search.response.hits.length).toEqual(4)
+    expect(store.state.search.response.hits).toHaveLength(4)
   })
 
   it('should return 3 documents on the first page', async () => {
@@ -299,7 +299,7 @@ describe('Search store', () => {
     await store.dispatch('search/nextPage')
     await store.dispatch('search/firstPage')
     expect(store.state.search.from).toEqual(0)
-    expect(store.state.search.response.hits.length).toEqual(3)
+    expect(store.state.search.response.hits).toHaveLength(3)
   })
 
   it('should return 2 documents on the second page', async () => {
@@ -310,7 +310,7 @@ describe('Search store', () => {
     await store.dispatch('search/nextPage')
     await store.dispatch('search/previousPage')
     expect(store.state.search.from).toEqual(2)
-    expect(store.state.search.response.hits.length).toEqual(2)
+    expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should return 0 documents in total', async () => {
@@ -331,7 +331,7 @@ describe('Search store', () => {
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
     await store.dispatch('search/lastPage')
     expect(store.state.search.from).toEqual(3)
-    expect(store.state.search.response.hits.length).toEqual(2)
+    expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should return the default query parameters', () => {
