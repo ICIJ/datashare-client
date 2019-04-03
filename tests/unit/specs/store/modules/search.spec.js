@@ -264,55 +264,6 @@ describe('Search store', () => {
     expect(store.state.search.response.hits).toHaveLength(1)
   })
 
-  it('should return 1 document (2/3)', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
-
-    await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
-    await store.dispatch('search/nextPage')
-    expect(store.state.search.from).toEqual(3)
-    expect(store.state.search.response.hits).toHaveLength(1)
-  })
-
-  it('should return 1 document (3/3)', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
-
-    await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
-    await store.dispatch('search/nextPage')
-    await store.dispatch('search/nextPage')
-    expect(store.state.search.from).toEqual(3)
-    expect(store.state.search.response.hits).toHaveLength(1)
-  })
-
-  it('should return 4 documents on the first page', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
-
-    await store.dispatch('search/firstPage')
-    expect(store.state.search.from).toEqual(0)
-    expect(store.state.search.response.hits).toHaveLength(4)
-  })
-
-  it('should return 3 documents on the first page', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
-
-    await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
-    await store.dispatch('search/nextPage')
-    await store.dispatch('search/nextPage')
-    await store.dispatch('search/firstPage')
-    expect(store.state.search.from).toEqual(0)
-    expect(store.state.search.response.hits).toHaveLength(3)
-  })
-
-  it('should return 2 documents on the second page', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(5)).commit()
-
-    await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
-    await store.dispatch('search/nextPage')
-    await store.dispatch('search/nextPage')
-    await store.dispatch('search/previousPage')
-    expect(store.state.search.from).toEqual(2)
-    expect(store.state.search.response.hits).toHaveLength(2)
-  })
-
   it('should return 0 documents in total', async () => {
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.total).toEqual(0)
@@ -323,15 +274,6 @@ describe('Search store', () => {
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
     expect(store.state.search.response.total).toEqual(5)
-  })
-
-  it('should return the last page whose contains 2 documents', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(5)).commit()
-
-    await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
-    await store.dispatch('search/lastPage')
-    expect(store.state.search.from).toEqual(3)
-    expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should return the default query parameters', () => {

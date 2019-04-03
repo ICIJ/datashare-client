@@ -6,8 +6,6 @@ import castArray from 'lodash/castArray'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
-import floor from 'lodash/floor'
-import max from 'lodash/max'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
 
@@ -227,24 +225,6 @@ export const actions = {
       true,
       params.options
     ).then(raw => new Response(raw))
-  },
-  firstPage ({ commit, dispatch }) {
-    commit('from', 0)
-    return dispatch('query')
-  },
-  previousPage ({ state, commit, dispatch }) {
-    commit('from', max([0, state.from - state.size]))
-    return dispatch('query')
-  },
-  nextPage ({ state, commit, dispatch }) {
-    const nextFrom = state.from + state.size
-    nextFrom < state.response.total ? commit('from', nextFrom) : commit('from', state.from)
-    return dispatch('query')
-  },
-  lastPage ({ state, commit, dispatch }) {
-    const gap = (state.response.total % state.size === 0) ? 1 : 0
-    commit('from', state.size * (floor(state.response.total / state.size) - gap))
-    return dispatch('query')
   },
   addFacetValue ({ commit, dispatch }, facet) {
     commit('addFacetValue', facet)

@@ -6,6 +6,7 @@ import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import messages from '@/lang/en'
 import store from '@/store'
+import router from '@/router'
 import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
 
 const localVue = createLocalVue()
@@ -24,7 +25,7 @@ describe('SearchResultsHeader.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchResultsHeader, { localVue, i18n, store, propsData: { response: store.state.search.response } })
+    wrapper = shallowMount(SearchResultsHeader, { localVue, i18n, store, router, propsData: { response: store.state.search.response } })
     store.commit('search/reset')
   })
 
@@ -109,5 +110,41 @@ describe('SearchResultsHeader.vue', () => {
     expect(wrapper.findAll('.search-results__header__paging__last-page.disabled')).toHaveLength(1)
     expect(wrapper.find('.search-results__header__paging__progress__pagination').text()).toEqual('4 - 4')
     expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 4 documents found')
+  })
+
+  it('should generate the link to the first page', async () => {
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(15)).commit()
+
+    await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
+    wrapper.setProps({ response: store.state.search.response })
+
+    expect(wrapper.vm.firstPageLinkParameters()).toEqual({ name: 'search', query: { q: 'document', from: 0, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
+  })
+
+  it('should generate the link to the previous page', async () => {
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(15)).commit()
+
+    await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
+    wrapper.setProps({ response: store.state.search.response })
+
+    expect(wrapper.vm.previousPageLinkParameters()).toEqual({ name: 'search', query: { q: 'document', from: 3, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
+  })
+
+  it('should generate the link to the next page', async () => {
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(15)).commit()
+
+    await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
+    wrapper.setProps({ response: store.state.search.response })
+
+    expect(wrapper.vm.nextPageLinkParameters()).toEqual({ name: 'search', query: { q: 'document', from: 9, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
+  })
+
+  it('should generate the link to the last page', async () => {
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(15)).commit()
+
+    await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
+    wrapper.setProps({ response: store.state.search.response })
+
+    expect(wrapper.vm.lastPageLinkParameters()).toEqual({ name: 'search', query: { q: 'document', from: 12, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
 })

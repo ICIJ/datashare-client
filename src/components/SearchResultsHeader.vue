@@ -2,16 +2,20 @@
   <div>
     <div class="search-results__header">
       <div class="search-results__header__paging">
-        <div @click.prevent="firstPage"
-             :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__paging__first-page', 'px-2']"
+        <router-link
+             :to="firstPageLinkParameters()"
+             :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
+             class="search-results__header__paging__first-page px-2"
              v-b-tooltip.hover :title="$t('search.results.firstPage')" v-if="response.total > $store.state.search.size">
           <fa icon="angle-double-left" />
-        </div>
-        <div @click.prevent="previousPage"
-             :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled', 'search-results__header__paging__previous-page', 'px-2']"
+        </router-link>
+        <router-link
+             :to="previousPageLinkParameters()"
+             :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
+             class="search-results__header__paging__previous-page px-2"
              v-b-tooltip.hover :title="$t('search.results.previousPage')" v-if="response.total > $store.state.search.size">
           <fa icon="angle-left" />
-        </div>
+        </router-link>
         <div class="search-results__header__paging__progress">
           <div class="search-results__header__paging__progress__pagination">
             {{ $store.state.search.from + 1 }} - {{ lastDocument }}
@@ -20,22 +24,29 @@
             {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
           </div>
         </div>
-        <div @click.prevent="nextPage"
-             :class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__paging__next-page', 'px-2']"
+        <router-link
+             :to="nextPageLinkParameters()"
+             :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
+             class="search-results__header__paging__next-page px-2"
              v-b-tooltip.hover :title="$t('search.results.nextPage')" v-if="response.total > $store.state.search.size">
           <fa icon="angle-right" />
-        </div>
-        <div @click.prevent="lastPage"
-             :class="[isNextOrLastPageAvailable() ? '' : 'disabled', 'search-results__header__paging__last-page', 'px-2']"
+        </router-link>
+        <router-link
+             :to="lastPageLinkParameters()"
+             :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
+             class="search-results__header__paging__last-page px-2"
              v-b-tooltip.hover :title="$t('search.results.lastPage')" v-if="response.total > $store.state.search.size">
           <fa icon="angle-double-right" />
-        </div>
+        </router-link>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+import cloneDeep from 'lodash/cloneDeep'
+import floor from 'lodash/floor'
+import max from 'lodash/max'
 import min from 'lodash/min'
 
 export default {
@@ -52,25 +63,27 @@ export default {
     document.body.scrollTop = document.documentElement.scrollTop = 0
   },
   methods: {
-    firstPage () {
-      if (this.isFirstOrPreviousPageAvailable()) {
-        this.$store.dispatch('search/firstPage')
-      }
+    firstPageLinkParameters () {
+      let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
+      query.from = 0
+      return { name: 'search', query: query }
     },
-    previousPage () {
-      if (this.isFirstOrPreviousPageAvailable()) {
-        this.$store.dispatch('search/previousPage')
-      }
+    previousPageLinkParameters () {
+      let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
+      query.from = max([0, query.from - query.size])
+      return { name: 'search', query: query }
     },
-    nextPage () {
-      if (this.isNextOrLastPageAvailable()) {
-        this.$store.dispatch('search/nextPage')
-      }
+    nextPageLinkParameters () {
+      let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
+      const nextFrom = query.from + query.size
+      query.from = nextFrom < this.response.total ? nextFrom : query.from
+      return { name: 'search', query: query }
     },
-    lastPage () {
-      if (this.isNextOrLastPageAvailable()) {
-        this.$store.dispatch('search/lastPage')
-      }
+    lastPageLinkParameters () {
+      let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
+      const gap = (this.response.total % query.size === 0) ? 1 : 0
+      query.from = query.size * (floor(this.response.total / query.size) - gap)
+      return { name: 'search', query: query }
     },
     isFirstOrPreviousPageAvailable () {
       return this.$store.state.search.from !== 0
@@ -102,9 +115,14 @@ export default {
       }
 
       &__first-page,
+      &__first-page:hover,
       &__previous-page,
+      &__previous-page:hover,
       &__next-page,
-      &__last-page {
+      &__next-page:hover,
+      &__last-page,
+      &__last-page:hover {
+        color: inherit;
         cursor: pointer;
       }
 
