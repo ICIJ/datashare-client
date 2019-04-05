@@ -39,35 +39,27 @@
           <fa icon="angle-double-right" />
         </router-link>
       </div>
-      <div class="search-results__header__applied-filters py-1" v-if="queryTerms.length && position === 'top'">
-        <search-results-applied-filter v-for="term in queryTerms" :key="term" :term="term" />
-      </div>
+      <search-results-applied-filters v-if="position === 'top'" />
     </div>
   </div>
 </template>
 
 <script>
-import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
+import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 import cloneDeep from 'lodash/cloneDeep'
-import filter from 'lodash/filter'
 import floor from 'lodash/floor'
 import max from 'lodash/max'
 import min from 'lodash/min'
-import split from 'lodash/split'
-import uniq from 'lodash/uniq'
 
 export default {
   name: 'SearchResultsHeader',
   components: {
-    SearchResultsAppliedFilter
+    SearchResultsAppliedFilters
   },
   props: ['response', 'position'],
   computed: {
     lastDocument () {
       return min([this.response.total, this.$store.state.search.from + this.$store.state.search.size])
-    },
-    queryTerms () {
-      return filter(uniq(split(this.$store.state.search.query, ' ')), i => i !== '*')
     }
   },
   mounted () {
@@ -143,10 +135,6 @@ export default {
         color: $gray-500;
         cursor: inherit;
       }
-    }
-
-    &__applied-filters {
-      border-bottom: 1px solid $gray-200;
     }
   }
 </style>

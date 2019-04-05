@@ -148,30 +148,21 @@ describe('SearchResultsHeader.vue', () => {
     expect(wrapper.vm.lastPageLinkParameters()).toEqual({ name: 'search', query: { q: 'document', from: 12, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
 
-  it('should display no applied filters', async () => {
+  it('should display an applied filters component on top position', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(3)).commit()
 
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
     wrapper.setProps({ response: store.state.search.response, position: 'top' })
 
-    expect(wrapper.findAll('.search-results__header__applied-filters')).toHaveLength(0)
+    expect(wrapper.findAll('search-results-applied-filters-stub')).toHaveLength(1)
   })
 
-  it('should display 2 applied filters', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document test').count(3)).commit()
+  it('should not display an applied filters component on bottom position', async () => {
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(3)).commit()
 
-    await store.dispatch('search/query', { query: 'document test', from: 0, size: 3 })
-    wrapper.setProps({ response: store.state.search.response, position: 'top' })
+    await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
+    wrapper.setProps({ response: store.state.search.response, position: 'bottom' })
 
-    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
-  })
-
-  it('should merge 2 identical terms', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document test').count(3)).commit()
-
-    await store.dispatch('search/query', { query: 'test test', from: 0, size: 3 })
-    wrapper.setProps({ response: store.state.search.response, position: 'top' })
-
-    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
+    expect(wrapper.findAll('search-results-applied-filters-stub')).toHaveLength(0)
   })
 })
