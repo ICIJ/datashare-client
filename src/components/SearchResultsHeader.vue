@@ -40,17 +40,14 @@
         </router-link>
       </div>
       <div class="search-results__header__active-filters py-1" v-if="queryTerms.length && position === 'top'">
-        <b-badge v-for="term in queryTerms" :key="term" class="ml-2 search-results__header__active-filters__filter" @click.prevent="deleteQueryTerm(term)">
-          {{ term }}
-          <fa icon="times" />
-        </b-badge>
+        <search-results-applied-filter v-for="term in queryTerms" :key="term" :term="term" />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { mapState } from 'vuex'
+import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
 import cloneDeep from 'lodash/cloneDeep'
 import filter from 'lodash/filter'
 import floor from 'lodash/floor'
@@ -61,16 +58,16 @@ import uniq from 'lodash/uniq'
 
 export default {
   name: 'SearchResultsHeader',
+  components: {
+    SearchResultsAppliedFilter
+  },
   props: ['response', 'position'],
   computed: {
-    ...mapState('search', {
-      query: 'query'
-    }),
     lastDocument () {
       return min([this.response.total, this.$store.state.search.from + this.$store.state.search.size])
     },
     queryTerms () {
-      return filter(uniq(split(this.query, ' ')), i => i !== '*')
+      return filter(uniq(split(this.$store.state.search.query, ' ')), i => i !== '*')
     }
   },
   mounted () {
@@ -106,11 +103,6 @@ export default {
     },
     isNextOrLastPageAvailable () {
       return this.$store.state.search.from + this.$store.state.search.size < this.$store.state.search.response.total
-    },
-    deleteQueryTerm (term) {
-      return this.$store.dispatch('search/deleteQueryTerm', term).then(() => {
-        return this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
-      })
     }
   }
 }

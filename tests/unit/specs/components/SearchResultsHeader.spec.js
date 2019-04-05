@@ -8,13 +8,11 @@ import messages from '@/lang/en'
 import store from '@/store'
 import router from '@/router'
 import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
-import BBadge from 'bootstrap-vue/es/components/badge/badge'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.directive('b-tooltip', vBTooltip)
-localVue.component('b-badge', BBadge)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchResultsHeader.vue', () => {
@@ -154,26 +152,26 @@ describe('SearchResultsHeader.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(3)).commit()
 
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
-    wrapper.setProps({ response: store.state.search.response })
+    wrapper.setProps({ response: store.state.search.response, position: 'top' })
 
-    expect(wrapper.findAll('.search-results__header__active-filters__filter')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results__header__active-filters')).toHaveLength(0)
   })
 
   it('should display 2 active filters', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document test').count(3)).commit()
 
     await store.dispatch('search/query', { query: 'document test', from: 0, size: 3 })
-    wrapper.setProps({ response: store.state.search.response })
+    wrapper.setProps({ response: store.state.search.response, position: 'top' })
 
-    expect(wrapper.findAll('.search-results__header__active-filters__filter')).toHaveLength(2)
+    expect(wrapper.findAll('.search-results__header__active-filters search-results-applied-filter-stub')).toHaveLength(2)
   })
 
   it('should merge 2 identical terms', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document test').count(3)).commit()
 
     await store.dispatch('search/query', { query: 'test test', from: 0, size: 3 })
-    wrapper.setProps({ response: store.state.search.response })
+    wrapper.setProps({ response: store.state.search.response, position: 'top' })
 
-    expect(wrapper.findAll('.search-results__header__active-filters__filter')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results__header__active-filters search-results-applied-filter-stub')).toHaveLength(1)
   })
 })
