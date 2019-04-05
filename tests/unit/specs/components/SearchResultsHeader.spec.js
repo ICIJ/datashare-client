@@ -148,22 +148,22 @@ describe('SearchResultsHeader.vue', () => {
     expect(wrapper.vm.lastPageLinkParameters()).toEqual({ name: 'search', query: { q: 'document', from: 12, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
 
-  it('should display no active filters', async () => {
+  it('should display no applied filters', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(3)).commit()
 
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
     wrapper.setProps({ response: store.state.search.response, position: 'top' })
 
-    expect(wrapper.findAll('.search-results__header__active-filters')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results__header__applied-filters')).toHaveLength(0)
   })
 
-  it('should display 2 active filters', async () => {
+  it('should display 2 applied filters', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document test').count(3)).commit()
 
     await store.dispatch('search/query', { query: 'document test', from: 0, size: 3 })
     wrapper.setProps({ response: store.state.search.response, position: 'top' })
 
-    expect(wrapper.findAll('.search-results__header__active-filters search-results-applied-filter-stub')).toHaveLength(2)
+    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
   })
 
   it('should merge 2 identical terms', async () => {
@@ -172,6 +172,6 @@ describe('SearchResultsHeader.vue', () => {
     await store.dispatch('search/query', { query: 'test test', from: 0, size: 3 })
     wrapper.setProps({ response: store.state.search.response, position: 'top' })
 
-    expect(wrapper.findAll('.search-results__header__active-filters search-results-applied-filter-stub')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
   })
 })

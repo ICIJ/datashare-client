@@ -1,5 +1,5 @@
 <template>
-  <b-badge class="ml-2 search-results__header__active-filters__filter" @click.prevent="deleteQueryTerm(term)">
+  <b-badge class="ml-2 search-results__header__applied-filters__filter" @click.prevent="deleteQueryTerm(term)">
     {{ term }}
     <fa icon="times" />
   </b-badge>
@@ -19,6 +19,8 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss">
+  .search-results__header__applied-filters__filter {
+    cursor: pointer;
+  }
 </style>

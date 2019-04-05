@@ -15,7 +15,7 @@ describe('SearchResultsAppliedFilter.vue', () => {
   })
 
   it('should display a filter', () => {
-    expect(wrapper.findAll('.search-results__header__active-filters__filter')).toHaveLength(1)
-    expect(wrapper.find('.search-results__header__active-filters__filter').text()).toEqual('trump')
+    expect(wrapper.findAll('.search-results__header__applied-filters__filter')).toHaveLength(1)
+    expect(wrapper.find('.search-results__header__applied-filters__filter').text()).toEqual('trump')
   })
 })

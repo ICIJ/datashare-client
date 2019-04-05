@@ -39,7 +39,7 @@
           <fa icon="angle-double-right" />
         </router-link>
       </div>
-      <div class="search-results__header__active-filters py-1" v-if="queryTerms.length && position === 'top'">
+      <div class="search-results__header__applied-filters py-1" v-if="queryTerms.length && position === 'top'">
         <search-results-applied-filter v-for="term in queryTerms" :key="term" :term="term" />
       </div>
     </div>
@@ -145,12 +145,8 @@ export default {
       }
     }
 
-    &__active-filters {
+    &__applied-filters {
       border-bottom: 1px solid $gray-200;
-
-      &__filter {
-        cursor: pointer;
-      }
     }
   }
 </style>
