@@ -39,7 +39,7 @@
           <fa icon="angle-double-right" />
         </router-link>
       </div>
-      <div class="search-results__header__active-filters py-1" v-if="queryTerms.length">
+      <div class="search-results__header__active-filters py-1" v-if="queryTerms.length && position === 'top'">
         <b-badge v-for="term in queryTerms" :key="term" class="ml-2 search-results__header__active-filters__filter" @click.prevent="deleteQueryTerm(term)">
           {{ term }}
           <fa icon="times" />
