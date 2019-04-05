@@ -6,7 +6,9 @@ import castArray from 'lodash/castArray'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
+import join from 'lodash/join'
 import reduce from 'lodash/reduce'
+import split from 'lodash/split'
 import uniq from 'lodash/uniq'
 
 export function initialState () {
@@ -267,6 +269,11 @@ export const actions = {
         }
       })
     })
+  },
+  deleteQueryTerm ({ state, commit, dispatch }, term) {
+    const newQuery = filter(split(state.query, ' '), i => i !== term)
+    commit('query', newQuery.length === 0 ? '*' : join(newQuery, ' '))
+    return dispatch('query')
   }
 }
 

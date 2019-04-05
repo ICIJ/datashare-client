@@ -332,4 +332,25 @@ describe('Search store', () => {
     await store.dispatch('search/updateFromRouteQuery', { 'f[content-type]': ['new_type'] })
     expect(store.getters['search/findFacet']('content-type').values[0]).toEqual('new_type')
   })
+
+  it('should not delete the term from the query if it doesn\'t exist', async () => {
+    store.commit('search/query', '*')
+    await store.dispatch('search/deleteQueryTerm', 'term')
+
+    expect(store.state.search.query).toEqual('*')
+  })
+
+  it('should delete the term from the query', async () => {
+    store.commit('search/query', 'this is a query')
+    await store.dispatch('search/deleteQueryTerm', 'is')
+
+    expect(store.state.search.query).toEqual('this a query')
+  })
+
+  it('should delete all occurrences of the term from the query', async () => {
+    store.commit('search/query', 'this is is is a query')
+    await store.dispatch('search/deleteQueryTerm', 'is')
+
+    expect(store.state.search.query).toEqual('this a query')
+  })
 })
