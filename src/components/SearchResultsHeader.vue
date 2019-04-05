@@ -108,8 +108,9 @@ export default {
       return this.$store.state.search.from + this.$store.state.search.size < this.$store.state.search.response.total
     },
     deleteQueryTerm (term) {
-      this.$store.dispatch('search/deleteQueryTerm', term)
-      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
+      return this.$store.dispatch('search/deleteQueryTerm', term).then(() => {
+        return this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
+      })
     }
   }
 }
