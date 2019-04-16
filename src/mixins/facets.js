@@ -1,3 +1,4 @@
+import { EventBus } from '@/utils/event-bus'
 import camelCase from 'lodash/camelCase'
 import find from 'lodash/find'
 import flatten from 'lodash/flatten'
@@ -48,6 +49,11 @@ export const mixin = {
     if (this.root.$on) {
       this.root.$on('add-facet-values', value => this.$emit('add-facet-values', value))
     }
+    EventBus.$on('facet::search::update', facetName => {
+      if (this.facet.name === facetName) {
+        this.selectedValuesFromStore()
+      }
+    })
   },
   computed: {
     root () {

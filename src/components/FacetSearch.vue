@@ -20,16 +20,15 @@
 </template>
 
 <script>
-import get from 'lodash/get'
-import throttle from 'lodash/throttle'
-import infiniteScroll from 'vue-infinite-scroll'
-import PQueue from 'p-queue'
-
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
 import FacetPath from '@/components/FacetPath'
 import { EventBus } from '@/utils/event-bus'
 import facets from '@/mixins/facets'
+import infiniteScroll from 'vue-infinite-scroll'
+import PQueue from 'p-queue'
+import get from 'lodash/get'
+import throttle from 'lodash/throttle'
 
 export default {
   name: 'FacetSearch',

@@ -1,6 +1,6 @@
 import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { IndexedDocuments, letData } from 'tests/unit/es_utils'
+import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import store from '@/store'
 
@@ -35,6 +35,15 @@ describe('SearchResultsAppliedFilters.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document test').count(3)).commit()
 
     await store.dispatch('search/query', { query: 'test test', from: 0, size: 3 })
+
+    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
+  })
+
+  it('should display 1 applied filter', async () => {
+    await letData(es).have(new IndexedDocument('doc.txt').withContentType('text/plain')).commit()
+    await store.dispatch('search/query', { query: '*' })
+
+    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
 
     expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
   })
