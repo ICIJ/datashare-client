@@ -50,6 +50,9 @@ import cloneDeep from 'lodash/cloneDeep'
 import floor from 'lodash/floor'
 import max from 'lodash/max'
 import min from 'lodash/min'
+import split from 'lodash/split'
+import uniq from 'lodash/uniq'
+import compact from 'lodash/compact'
 
 export default {
   name: 'SearchResultsHeader',
@@ -60,6 +63,9 @@ export default {
   computed: {
     lastDocument () {
       return min([this.response.total, this.$store.state.search.from + this.$store.state.search.size])
+    },
+    queryTerms () {
+      return compact(filter(uniq(split(this.query, ' ')), i => i !== '*'))
     }
   },
   mounted () {
