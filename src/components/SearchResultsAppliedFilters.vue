@@ -6,6 +6,7 @@
 
 <script>
 import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
+import compact from 'lodash/compact'
 import concat from 'lodash/concat'
 import filter from 'lodash/filter'
 import map from 'lodash/map'
@@ -20,7 +21,7 @@ export default {
   computed: {
     filters () {
       let filters = []
-      map(filter(uniq(split(this.$store.state.search.query, ' ')), i => i !== '*'), value => {
+      map(filter(compact(uniq(split(this.$store.state.search.query, ' '))), i => i !== '*'), value => {
         filters = concat(filters, { value: value })
       })
       map(this.$store.state.search.facets, facet => {
