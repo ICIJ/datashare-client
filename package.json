@@ -36,6 +36,7 @@
     "vue-infinite-scroll": "^2.0.2",
     "vue-progressbar": "^0.7.4",
     "vue-router": "^3.0.1",
+    "vue-sticky-directive": "^0.0.8",
     "vuex": "^3.0.1",
     "vuex-map-fields": "^1.1.6",
     "vuex-persistedstate": "^2.5.4",

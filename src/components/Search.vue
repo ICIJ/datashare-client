@@ -12,8 +12,8 @@
           </div>
         </div>
       </div>
-      <transition name="slide-right">
-        <div class="search__body__document" :class="showFilters ? 'show-filters' : 'hide-filters'" v-show="showDocument">
+      <transition>
+        <div class="search__body__document " :class="showFilters ? 'show-filters' : 'hide-filters'" v-show="showDocument">
           <router-link :to="{ name: 'search', query: searchQuery }" class="p-2 search__body__document__nav">
             <fa icon="chevron-circle-left" />
             {{ $t('search.back') }}
@@ -85,21 +85,13 @@ export default {
     @include clearfix();
 
     &__body {
+      display: flex;
 
       &__wrapper {
-        float: left;
         display: flex;
-        min-height: calc(100% - var(--app-nav-height) - var(--app-footer-height));
-
-        .search--show-document & {
-          @media (max-width: $document-float-breakpoint-width) {
-            overflow: auto;
-            position: fixed;
-            top: var(--app-nav-height);
-            height: calc(100% - var(--app-nav-height) - var(--app-footer-height));
-            width: 100%;
-          }
-        }
+        float: left;
+        align-items: flex-start;
+        min-height: calc(100vh - var(--app-nav-height) - var(--app-footer-height));
       }
 
       &__aggregations-panel {
@@ -118,13 +110,16 @@ export default {
         border-right: 1px solid $gray-200;
       }
 
+      &__aggregations-panel, &__search-results, &__document {
+        align-self: flex-end;
+        position: sticky;
+        bottom: var(--app-footer-height);
+        min-height: calc(100vh - var(--app-footer-height));
+      }
+
       & &__document {
         padding: 0;
-        margin-left: $aggregations-panel-width + $search-results-width;
-
-        &.hide-filters {
-          margin-left: $search-results-width;
-        }
+        width: 100%;
 
         &.slide-right-enter-active, &.slide-right-leave-active {
           transition: .3s;
@@ -161,12 +156,11 @@ export default {
         @media (max-width: $document-float-breakpoint-width) {
           display: block;
           z-index: 100;
-          position: absolute;
-          top: var(--app-nav-height);
+          position: sticky;
           right: 0;
           padding: 0;
           margin: 0;
-          width: $document-min-width;
+          min-width: $document-min-width;
           max-width: calc(100vw - #{$spacer});
           min-height: 100vh;
           background: white;
@@ -185,6 +179,11 @@ export default {
             width: calc(100vw - #{$document-min-width});
             @include gradient-x(rgba($dark, 0), rgba($dark, 0.4))
           }
+        }
+
+        @media (max-width: $document-min-width) {
+          width: 100%;
+          min-width: 100%;
         }
       }
     }

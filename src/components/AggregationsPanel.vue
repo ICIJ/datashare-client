@@ -142,12 +142,6 @@ export default {
     &__sticky {
       overflow: hidden;
 
-      body:not(.modal-open) & {
-        align-self: flex-end;
-        position: sticky;
-        bottom: 2rem;
-      }
-
       &__toolbar {
         font-size: 0.85rem;
         line-height: $line-height-base * (1 - (85 - 95) / 95);
