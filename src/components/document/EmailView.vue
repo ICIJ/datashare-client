@@ -78,9 +78,11 @@
 </style>
 
 <script>
+import findIndex from 'lodash/findIndex'
 import reduce from 'lodash/reduce'
 import { mapState } from 'vuex'
 import bodybuilder from 'bodybuilder'
+import VueScrollTo from 'vue-scrollto'
 
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
@@ -102,13 +104,15 @@ export default {
     ...mapState('document', {
       document: 'doc'
     }),
+    activeDocumentIndex () {
+      return findIndex(this.thread.hits, this.isActive)
+    },
     threadBody () {
       const body = bodybuilder()
       // Select only the Documents and not the NamedEntities
       body.query('match', 'type', 'Document')
       // Select only the Documents at the same extraction level
       body.query('match', 'extractionLevel', this.document.extractionLevel)
-
       // Similar subject
       body.query('match', 'metadata.tika_metadata_subject', `.*${this.document.cleanSubject}.*`)
       // Collect all field data
@@ -126,6 +130,16 @@ export default {
     routeParams (email) {
       return { id: email.id, index: email.index, routing: email.routing }
     },
+    async scrollToActive () {
+      // Element must be mounted
+      await this.$nextTick()
+      // For the first email, we go to the top of the page
+      if (this.activeDocumentIndex === 0) return VueScrollTo.scrollTo({ y: 0 })
+      // Get the offset from the navbar height (which is sticky)
+      const offset = -parseInt(this.$root.$el.style.getPropertyValue('--search-document-navbar-height'))
+      // Scroll to the active item with a slight offset
+      VueScrollTo.scrollTo(this.$el.querySelector('.email-view__thread__item--active'), { offset })
+    },
     async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
       this.isReady = false
       // Load the current document)
@@ -138,6 +152,8 @@ export default {
       this.isReady = true
       // Add the document to the user's history
       await this.$store.commit('userHistory/addDocument', this.document)
+      // Scroll to the active doc
+      this.scrollToActive()
     },
     async getThread () {
       try {

@@ -110,7 +110,18 @@ export default {
       return this.searchResponse.hits[this.currentDocumentIndex + 1]
     }
   },
+  mounted () {
+    this.saveComponentHeight()
+  },
+  updated () {
+    this.saveComponentHeight()
+  },
   methods: {
+    saveComponentHeight () {
+      const height = `${this.$el.offsetHeight}px`
+      // Save component height in a CSS variable after it's been update
+      this.$root.$el.style.setProperty('--search-document-navbar-height', height)
+    },
     async goToDocument (document) {
       const name = document.isEmail ? 'email' : 'document'
       return this.$router.push({ name, params: document.routerParams })
