@@ -5,16 +5,16 @@
     </h3>
     <ul class="list-unstyled email-view__thread m-0">
       <li v-for="email in thread.hits" :key="email.id" class="email-view__thread__item" :class="{ 'email-view__thread__item--active': isActive(email) }">
-        <router-link :to="{ name: 'email', params: routeParams(email) }" class="px-3 py-2 d-block">
+        <router-link :to="{ name: 'email', params: routeParams(email) }" class="px-3 py-2 d-block" v-once>
           <div class="d-flex text-nowrap">
             <div class="w-100">
               <strong class="email-view__thread__item__from mr-3">
                 {{ email.messageFrom }}
               </strong>
             </div>
-            <span class="email-view__thread__item__date align-self-end small">
-              {{ email.creationDateHuman }}
-            </span>
+            <abbr class="email-view__thread__item__date align-self-end small" :title="email.creationDateHuman" v-b-tooltip>
+              {{ $d(email.creationDate) }}
+            </abbr>
           </div>
           <div class="d-flex">
             <span class="email-view__thread__item__to text-muted text-nowrap mr-3" v-if="isActive(email)">
@@ -25,7 +25,7 @@
             </span>
           </div>
         </router-link>
-        <div v-if="isActive(email)">
+        <div v-if="isActive(email)" v-once>
           <div  class="email-view__thread__item__content p-3" v-html="email.contentHtml"></div>
           <div  class="email-view__thread__item__footer px-4 py-3 bg-light d-flex">
             <router-link :to="{ name: 'document', params: routeParams(email) }" class="align-self-end">

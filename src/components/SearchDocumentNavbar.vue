@@ -29,6 +29,8 @@
     position: sticky;
     top: 0;
     z-index: 100;
+    background: $body-bg;
+    box-shadow: 0 0 $spacer 0 $body-bg;
 
     @media (max-width: $document-float-breakpoint-width) {
       color: white;
