@@ -20,7 +20,7 @@
             <span class="email-view__thread__item__to text-muted text-nowrap mr-3" v-if="isActive(email)">
               to {{ email.messageTo }}
             </span>
-            <span class="email-view__thread__item__excerpt text-muted text-truncate w-100" v-else>
+            <span class="email-view__thread__item__excerpt text-muted w-100" v-else>
               {{ email.excerpt }}
             </span>
           </div>

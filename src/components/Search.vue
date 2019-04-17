@@ -14,10 +14,7 @@
       </div>
       <transition>
         <div class="search__body__document " :class="showFilters ? 'show-filters' : 'hide-filters'" v-show="showDocument">
-          <router-link :to="{ name: 'search', query: searchQuery }" class="p-2 search__body__document__nav">
-            <fa icon="chevron-circle-left" />
-            {{ $t('search.back') }}
-          </router-link>
+          <search-document-navbar />
           <router-view class="search__body__document__view"></router-view>
           <div class="search__body__document__backdrop"></div>
         </div>
@@ -28,6 +25,7 @@
 
 <script>
 import AggregationsPanel from '@/components/AggregationsPanel'
+import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import SearchResults from '@/components/SearchResults'
 import { EventBus } from '@/utils/event-bus'
 import { mapState } from 'vuex'
@@ -36,6 +34,7 @@ export default {
   name: 'Search',
   components: {
     AggregationsPanel,
+    SearchDocumentNavbar,
     SearchResults
   },
   computed: {
@@ -45,9 +44,6 @@ export default {
       isReady: 'isReady',
       showFilters: 'showFilters'
     }),
-    searchQuery () {
-      return this.$store.getters['search/toRouteQuery']
-    },
     showDocument () {
       return ['document', 'email'].indexOf(this.$route.name) > -1
     }
@@ -86,6 +82,7 @@ export default {
 
     &__body {
       display: flex;
+      flex-wrap: nowrap;
 
       &__wrapper {
         display: flex;
@@ -120,6 +117,7 @@ export default {
       & &__document {
         padding: 0;
         width: 100%;
+        max-width: calc(100% - #{$search-results-width} - #{$aggregations-panel-width});
 
         &.slide-right-enter-active, &.slide-right-leave-active {
           transition: .3s;
@@ -136,20 +134,11 @@ export default {
 
         &__view {
           padding: $spacer;
+          padding-top: 0;
 
           @media (max-width: $document-float-breakpoint-width) {
             padding: 0;
             margin-bottom: var(--app-footer-height);
-          }
-        }
-
-        &__nav {
-          display: none;
-          background: darken($primary, 10);
-          color: white;
-
-          @media (max-width: $document-float-breakpoint-width) {
-            display: block;
           }
         }
 

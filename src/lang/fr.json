@@ -47,7 +47,17 @@
     },
     "reset_filters": "Réinitialiser les filtres",
     "back": "Retour aux résultats de recherche",
-    "try": "Vous devriez essayer de"
+    "try": "Vous devriez essayer de",
+    "nav": {
+      "previous": {
+        "label": "Précédent",
+        "tooltip": "Document précédent"
+      },
+      "next": {
+        "label": "Suivant",
+        "tooltip": "Document suivant"
+      }
+    }
   },
   "facet": {
     "none": "Aucune valeur distincte",

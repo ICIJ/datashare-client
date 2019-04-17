@@ -253,6 +253,14 @@ export const actions = {
     commit('toggleFacet', name)
     return dispatch('query')
   },
+  previousPage ({ state, commit, dispatch }, name) {
+    commit('from', state.from - state.size)
+    return dispatch('query')
+  },
+  nextPage ({ state, commit, dispatch }, name) {
+    commit('from', state.from + state.size)
+    return dispatch('query')
+  },
   updateFromRouteQuery ({ state, commit }, query) {
     // Reset all existing options
     commit('reset', ['index', 'globalSearch'])

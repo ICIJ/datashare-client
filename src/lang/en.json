@@ -47,7 +47,17 @@
     },
     "reset_filters": "Reset filters",
     "back": "Back to the search results",
-    "try": "You may try to"
+    "try": "You may try to",
+    "nav": {
+      "previous": {
+        "label": "Previous",
+        "tooltip": "Previous document"
+      },
+      "next": {
+        "label": "Next",
+        "tooltip": "Next document"
+      }
+    }
   },
   "facet": {
     "none": "No values",

@@ -9263,6 +9263,12 @@ vue-router@^3.0.1:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/vue-router/-/vue-router-3.0.2.tgz#dedc67afe6c4e2bc25682c8b1c2a8c0d7c7e56be"
 
+vue-shortkey@^3.1.6:
+  version "3.1.6"
+  resolved "https://registry.yarnpkg.com/vue-shortkey/-/vue-shortkey-3.1.6.tgz#a8632d4ddab9a07f77deae372cad3a66da85e493"
+  dependencies:
+    vue "^2.1.0"
+
 vue-sticky-directive@^0.0.8:
   version "0.0.8"
   resolved "https://registry.yarnpkg.com/vue-sticky-directive/-/vue-sticky-directive-0.0.8.tgz#54876b2511b22a91d0155b23fc4becffdfda73b3"
@@ -9284,6 +9290,10 @@ vue-template-compiler@^2.5.16:
 vue-template-es2015-compiler@^1.6.0, vue-template-es2015-compiler@^1.9.0:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/vue-template-es2015-compiler/-/vue-template-es2015-compiler-1.9.1.tgz#1ee3bc9a16ecbf5118be334bb15f9c46f82f5825"
+
+vue@^2.1.0:
+  version "2.6.10"
+  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
 
 vue@^2.5.2, vue@^2.5.x:
   version "2.6.8"
