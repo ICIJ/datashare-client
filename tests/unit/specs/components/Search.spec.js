@@ -122,8 +122,8 @@ describe('Search.vue', () => {
   })
 
   it('should display a `Back to the search results` link', () => {
-    expect(wrapper.findAll('.search__body__document__nav')).toHaveLength(1)
-    expect(wrapper.findAll('.search__body__document__nav').at(0).attributes('href')).toEqual(`#/?q=&from=0&size=25&sort=relevance&index=${process.env.VUE_APP_ES_INDEX}`)
+    expect(wrapper.findAll('.search-document-navbar')).toHaveLength(1)
+    expect(wrapper.find('.search-document-navbar__back').attributes('href')).toEqual(`#/?q=&from=0&size=25&sort=relevance&index=${process.env.VUE_APP_ES_INDEX}`)
   })
 })
 

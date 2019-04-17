@@ -138,7 +138,6 @@ export default {
 
           @media (max-width: $document-float-breakpoint-width) {
             padding: 0;
-            margin-bottom: var(--app-footer-height);
           }
         }
 

@@ -1,10 +1,10 @@
 <template>
-  <div class="search-document-navbar px-3 py-2" v-if="currentDocumentIndex > -1">
+  <div class="search-document-navbar px-3 py-2">
     <router-link :to="{ name: 'search', query }" class="search-document-navbar__back">
       <fa icon="chevron-circle-left" />
       {{ $t('search.back') }}
     </router-link>
-    <span class="search-document-navbar__nav ml-auto btn-group">
+    <span class="search-document-navbar__nav ml-auto btn-group" v-if="currentDocumentIndex > -1">
       <a @click="goToPreviousDocument" v-if="hasPreviousDocument" class="btn btn-sm py-0" :title="$t('search.nav.previous.tooltip')" v-b-tooltip>
         <fa icon="angle-left" />
         <span class="d-sm-none d-md-inline">
