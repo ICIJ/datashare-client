@@ -67,10 +67,10 @@ export const getters = {
   findFacet (state) {
     return name => find(state.facets, { name })
   },
-  queryHasChanged (state) {
-    const props = ['index', 'from', 'size', 'sort']
-    return routeQuery => {
-      return routeQuery.q !== state.query || !isEqual(pick(routeQuery, props), pick(state, props))
+  queryHasChanged () {
+    const props = ['q', 'index', 'from', 'size', 'sort']
+    return (from, to) => {
+      return !isEqual(pick(from, props), pick(to, props))
     }
   },
   toRouteQuery (state) {
