@@ -51,11 +51,11 @@
     "nav": {
       "previous": {
         "label": "Précédent",
-        "tooltip": "Document précédent"
+        "tooltip": "Document précédent (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
       },
       "next": {
         "label": "Suivant",
-        "tooltip": "Document suivant"
+        "tooltip": "Document suivant (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
       }
     }
   },
