@@ -5,13 +5,13 @@
       {{ $t('search.back') }}
     </router-link>
     <span class="search-document-navbar__nav ml-auto btn-group" v-if="currentDocumentIndex > -1">
-      <a @click="goToPreviousDocument" v-if="hasPreviousDocument" class="btn btn-sm py-0" :title="$t('search.nav.previous.tooltip')" v-b-tooltip>
+      <a @click="goToPreviousDocument" v-shortkey="['ctrl', 'arrowleft']" @shortkey="goToPreviousDocument" v-if="hasPreviousDocument" class="btn btn-sm py-0" :title="$t('search.nav.previous.tooltip')" v-b-tooltip>
         <fa icon="angle-left" />
         <span class="d-sm-none d-md-inline">
         {{ $t('search.nav.previous.label') }}
         </span>
       </a>
-      <a @click="goToNextDocument" v-if="hasNextDocument" class="btn btn-sm py-0" :title="$t('search.nav.next.tooltip')" v-b-tooltip>
+      <a @click="goToNextDocument" v-shortkey="['ctrl', 'arrowright']" @shortkey="goToNextDocument" v-if="hasNextDocument" class="btn btn-sm py-0" :title="$t('search.nav.next.tooltip')" v-b-tooltip>
         <span class="d-sm-none d-md-inline">
           {{ $t('search.nav.next.label') }}
         </span>

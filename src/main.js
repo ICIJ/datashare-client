@@ -3,6 +3,7 @@ import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
+import VueShortkey from 'vue-shortkey'
 
 import router from '@/router'
 import messages from '@/lang/en'
@@ -19,6 +20,7 @@ async function createApp (LocalVue = Vue) {
   LocalVue.use(VueProgressBar, { color: '#852308' })
   LocalVue.use(BootstrapVue)
   LocalVue.use(Murmur)
+  LocalVue.use(VueShortkey)
 
   const i18n = new VueI18n({ locale: 'en', fallbackLocale: 'en', messages: { 'en': messages } })
   const ds = new DatashareClient()
