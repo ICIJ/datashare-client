@@ -1,10 +1,14 @@
 import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
+import VueI18n from 'vue-i18n'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import store from '@/store'
+import messages from '@/lang/en'
 
 const localVue = createLocalVue()
+localVue.use(VueI18n)
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchResultsAppliedFilters.vue', () => {
   esConnectionHelper()
@@ -12,7 +16,7 @@ describe('SearchResultsAppliedFilters.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchResultsAppliedFilters, { localVue, store })
+    wrapper = shallowMount(SearchResultsAppliedFilters, { localVue, i18n, store })
   })
 
   it('should display no applied filters (1/2)', async () => {

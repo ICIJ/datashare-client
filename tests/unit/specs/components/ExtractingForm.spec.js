@@ -4,7 +4,6 @@ import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import fetchPonyfill from 'fetch-ponyfill'
-
 import ExtractingForm from '@/components/ExtractingForm'
 import messages from '@/lang/en'
 import router from '@/router'
@@ -19,7 +18,6 @@ localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
-
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('ExtractingForm.vue', () => {

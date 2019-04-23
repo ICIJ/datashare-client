@@ -26,7 +26,9 @@ export default {
       })
       map(this.$store.state.search.facets, facet => {
         map(facet.values, value => {
-          filters = concat(filters, { value: value, name: facet.name })
+          const label = facet.itemLabel ? facet.itemLabel({ key: value }) : value
+          const translatedLabel = this.$te(label) ? this.$t(label) : label
+          filters = concat(filters, { value: translatedLabel, name: facet.name })
         })
       })
       return filters
