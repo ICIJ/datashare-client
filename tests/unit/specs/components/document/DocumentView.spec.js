@@ -53,44 +53,9 @@ describe('DocumentView.vue', () => {
     await letData(es).have(new IndexedDocument(id)
       .withContent('this is foo document'))
       .commit()
-    await wrapper.vm.getDoc()    
+    await wrapper.vm.getDoc()
 
     expect(wrapper.contains('.document__header')).toBeTruthy()
-  })
-
-  it('should mark named entities in the extracted text tab', async () => {
-    const id = 'mydoc.txt'
-    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
-
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('a NER doc with 2 NER2')
-      .withNer('NER', 2, 'CATEGORY1')
-      .withNer('NER2', 17, 'CATEGORY2'))
-      .commit()
-
-    await wrapper.vm.getDoc()
-    wrapper.vm.tab = 'text'
-
-    expect(wrapper.findAll('mark')).toHaveLength(2)
-    expect(wrapper.findAll('mark').at(0).text()).toEqual('NER')
-    expect(wrapper.findAll('mark').at(0).classes()).toContain('bg-category-category1')
-    expect(wrapper.findAll('mark').at(1).text()).toEqual('NER2')
-    expect(wrapper.findAll('mark').at(1).classes()).toContain('bg-category-category2')
-  })
-
-  it('should display a document with named entities and escaped HTML', async () => {
-    const id = 'html_doc.txt'
-    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
-
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('a foo document <with>HTML</with>')
-      .withNer('foo', 2))
-      .commit()
-
-    await wrapper.vm.getDoc()
-    wrapper.vm.tab = 'text'
-
-    expect(wrapper.findAll('.text-pre-wrap mark')).toHaveLength(1)
   })
 
   it('should call the SpreadsheetViewer component for XLSX document', async () => {

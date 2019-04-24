@@ -38,13 +38,15 @@
         </nav>
       </div>
       <div class="d-flex flex-grow-1 tab-content document__content">
-        <div class="tab-pane px-4 py-3" :class="{active: tab === 'details'}" v-if="tab === 'details'">
+        <div class="tab-pane px-4 py-3" :class="{ active: tab === 'details' }" v-if="tab === 'details'">
           <document-tab-details :document="document" :parentDocument="parentDocument" />
         </div>
-        <div class="tab-pane px-4 py-3 document__named-entities" :class="{active: tab === 'named_entities'}" v-if="tab === 'named_entities'">
+        <div class="tab-pane px-4 py-3 document__named-entities" :class="{ active: tab === 'named_entities' }" v-if="tab === 'named_entities'">
           <document-tab-named-entities :document="document" />
         </div>
-        <div class="tab-pane px-4 py-3 text-pre-wrap" :class="{ active: tab === 'text' }" v-html="markedSourceContent()" v-if="tab === 'text'" />
+        <div class="tab-pane px-4 py-3 text-pre-wrap" :class="{ active: tab === 'text' }" v-if="tab === 'text'">
+          <document-tab-extracted-text :document="document" :named-entities="namedEntities" />
+        </div>
         <div class="tab-pane w-100" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
           <document-tab-preview :document="document" />
         </div>
@@ -62,21 +64,18 @@ import { mapState } from 'vuex'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
+import DocumentTabExtractedText from '@/components/document/DocumentTabExtractedText'
 import DocumentTabPreview from '@/components/document/DocumentTabPreview'
-
-import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
-import { highlight } from '@/utils/strings'
-import escape from 'lodash/escape'
-import sortedUniqBy from 'lodash/sortedUniqBy'
 
 export default {
   name: 'document-view',
-  mixins: [ner, utils],
+  mixins: [utils],
   components: {
     DocumentSlicedName,
     DocumentTabDetails,
     DocumentTabNamedEntities,
+    DocumentTabExtractedText,
     DocumentTabPreview
   },
   props: ['id', 'routing', 'index'],
@@ -102,13 +101,6 @@ export default {
       this.isReady = true
       if (this.document) {
         await this.$store.commit('userHistory/addDocument', this.document)
-      }
-    },
-    markedSourceContent () {
-      if (this.document) {
-        return highlight(this.document.source.content, sortedUniqBy(this.namedEntities, ne => ne.source.offset), m => {
-          return `<mark class="ner ${this.getCategoryClass(m.category, 'bg-')}">${m.source.mention}</mark>`
-        }, r => escape(r), m => m.source.mention)
       }
     }
   },
