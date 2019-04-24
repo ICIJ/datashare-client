@@ -137,7 +137,7 @@ export function datasharePlugin (Client, config, components) {
     // Select only the Documents and not the NamedEntities
     body.query('match', 'type', 'Document')
     // Add an option to exclude the content
-    body.rawOption('_source', { includes: ['*'] })
+    body.rawOption('_source', { includes: ['*'], excludes: ['content'] })
     // Add an option to highlight fragments in the results
     body.rawOption('highlight', {
       fields: {

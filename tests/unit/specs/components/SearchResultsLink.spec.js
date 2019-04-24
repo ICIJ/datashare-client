@@ -20,7 +20,6 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       router,
-      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -39,7 +38,6 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       router,
-      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -73,7 +71,6 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       router,
-      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -111,7 +108,6 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       router,
-      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -154,7 +150,6 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       router,
-      store,
       propsData: {
         'doc': new Document({
           _id: 1,
@@ -166,65 +161,5 @@ describe('SearchResultsLink.vue', () => {
     })
 
     expect(wrapper.vm.location).toEqual('.folder_01/folder_02/')
-  })
-
-  it('should display 0 occurrences if no query terms founded', () => {
-    const wrapper = shallowMount(SearchResultsLink, {
-      localVue,
-      router,
-      store,
-      propsData: {
-        'doc': new Document({
-          _id: 1,
-          _source: {
-            path: 'doc.txt',
-            content: 'content'
-          }
-        })
-      }
-    })
-    store.commit('search/query', 'test')
-
-    expect(wrapper.find('.search-results-item__occurrences').text()).toEqual('"test" (0)')
-  })
-
-  it('should display the number of occurrences for the query term', () => {
-    const wrapper = shallowMount(SearchResultsLink, {
-      localVue,
-      router,
-      store,
-      propsData: {
-        'doc': new Document({
-          _id: 1,
-          _source: {
-            path: 'doc.txt',
-            content: 'test content test content test'
-          }
-        })
-      }
-    })
-    store.commit('search/query', 'test')
-
-    expect(wrapper.find('.search-results-item__occurrences').text()).toEqual('"test" (3)')
-  })
-
-  it('should display the number of occurrences for each query term', () => {
-    const wrapper = shallowMount(SearchResultsLink, {
-      localVue,
-      router,
-      store,
-      propsData: {
-        'doc': new Document({
-          _id: 1,
-          _source: {
-            path: 'doc.txt',
-            content: 'test content test content test'
-          }
-        })
-      }
-    })
-    store.commit('search/query', 'content test')
-
-    expect(wrapper.find('.search-results-item__occurrences').text()).toEqual('"content" (2) "test" (3)')
   })
 })
