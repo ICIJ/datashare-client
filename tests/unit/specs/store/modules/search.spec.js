@@ -33,7 +33,7 @@ describe('Search store', () => {
     store.commit('search/toggleFilters')
     store.dispatch('search/reset')
 
-    expect(omit(store.state.search, ['index', 'isReady', 'facets']).sort()).toEqual(omit(initialState, ['index', 'isReady', 'facets']).sort())
+    expect(omit(store.state.search, ['index', 'isReady', 'facets'])).toEqual(omit(initialState, ['index', 'isReady', 'facets']))
     expect(store.state.search.index).toEqual('another-index')
     expect(store.state.search.isReady).toEqual(false)
     expect(find(store.state.search.facets, { name: 'content-type' }).values).toEqual([])
