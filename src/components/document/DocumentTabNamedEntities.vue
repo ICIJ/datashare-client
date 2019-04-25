@@ -35,7 +35,7 @@ import groupBy from 'lodash/groupBy'
 import orderBy from 'lodash/orderBy'
 
 export default {
-  name: 'document-tab-named-entities',
+  name: 'DocumentTabNamedEntities',
   props: ['document'],
   mixins: [ner, utils],
   computed: {

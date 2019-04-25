@@ -69,7 +69,7 @@ import DocumentTabPreview from '@/components/document/DocumentTabPreview'
 import utils from '@/mixins/utils'
 
 export default {
-  name: 'document-view',
+  name: 'DocumentView',
   mixins: [utils],
   components: {
     DocumentSlicedName,

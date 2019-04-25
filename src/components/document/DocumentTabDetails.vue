@@ -53,7 +53,7 @@
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 
 export default {
-  name: 'document-tab-details',
+  name: 'DocumentTabDetails',
   props: ['document', 'parentDocument'],
   computed: {
     documentPath () {
