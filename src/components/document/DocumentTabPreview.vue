@@ -32,11 +32,7 @@ export default {
     SpreadsheetViewer,
     TiffViewer
   },
-  props: {
-    document: {
-      type: Object
-    }
-  },
+  props: ['document'],
   computed: {
     isPdf () {
       return this.document.contentType === 'application/pdf'

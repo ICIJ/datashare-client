@@ -11,14 +11,7 @@ import sortedUniqBy from 'lodash/sortedUniqBy'
 export default {
   name: 'DocumentTabExtractedText',
   mixins: [ner],
-  props: {
-    document: {
-      type: Object
-    },
-    namedEntities: {
-      type: Array
-    }
-  },
+  props: ['document', 'namedEntities'],
   methods: {
     markedSourceContent () {
       if (this.document) {
