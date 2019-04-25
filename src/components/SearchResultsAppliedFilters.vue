@@ -6,12 +6,8 @@
 
 <script>
 import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
-import compact from 'lodash/compact'
 import concat from 'lodash/concat'
-import filter from 'lodash/filter'
 import map from 'lodash/map'
-import split from 'lodash/split'
-import uniq from 'lodash/uniq'
 
 export default {
   name: 'SearchResultsAppliedFilters',
@@ -21,8 +17,8 @@ export default {
   computed: {
     filters () {
       let filters = []
-      map(filter(compact(uniq(split(this.$store.state.search.query, ' '))), i => i !== '*'), value => {
-        filters = concat(filters, { value: value })
+      map(this.$store.getters['search/retrieveQueryTerms'], term => {
+        filters = concat(filters, { value: term })
       })
       map(this.$store.state.search.facets, facet => {
         map(facet.values, value => {

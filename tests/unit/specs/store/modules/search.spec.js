@@ -370,4 +370,28 @@ describe('Search store', () => {
     expect(store.getters['search/queryHasChanged']({ sort: 'sort' }, { sort: 'sort' })).toBeFalsy()
     expect(store.getters['search/queryHasChanged']({ other_field: 'previous_value' }, { other_field: 'next_value' })).toBeFalsy()
   })
+
+  it('should display no applied filters (1/2)', () => {
+    store.commit('search/query', '*')
+
+    expect(store.getters['search/retrieveQueryTerms']).toEqual([])
+  })
+
+  it('should display no applied filters (2/2)', () => {
+    store.commit('search/query', '   ')
+
+    expect(store.getters['search/retrieveQueryTerms']).toEqual([])
+  })
+
+  it('should display 2 applied filters', () => {
+    store.commit('search/query', 'document test')
+
+    expect(store.getters['search/retrieveQueryTerms']).toEqual(['document', 'test'])
+  })
+
+  it('should merge 2 identical terms', () => {
+    store.commit('search/query', 'test test')
+
+    expect(store.getters['search/retrieveQueryTerms']).toEqual(['test'])
+  })
 })

@@ -4,11 +4,14 @@ import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/
 import { FacetDate, FacetNamedEntity, FacetPath, FacetText, namedEntityCategoryTranslation } from '@/store/facetsStore'
 
 import castArray from 'lodash/castArray'
+import concat from 'lodash/concat'
+import compact from 'lodash/compact'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
 import isEqual from 'lodash/isEqual'
 import join from 'lodash/join'
+import map from 'lodash/map'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
 import split from 'lodash/split'
@@ -95,6 +98,13 @@ export const getters = {
         return memo
       }, {})
     }
+  },
+  retrieveQueryTerms (state) {
+    let terms = []
+    map(filter(compact(uniq(split(state.query, ' '))), i => i !== '*'), value => {
+      terms = concat(terms, value)
+    })
+    return terms
   }
 }
 

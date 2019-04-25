@@ -44,7 +44,7 @@
         <div class="tab-pane px-4 py-3 document__named-entities" :class="{ active: tab === 'named_entities' }" v-if="tab === 'named_entities'">
           <document-tab-named-entities :document="document" />
         </div>
-        <div class="tab-pane px-4 py-3 text-pre-wrap" :class="{ active: tab === 'text' }" v-if="tab === 'text'">
+        <div class="tab-pane px-4 py-3" :class="{ active: tab === 'text' }" v-if="tab === 'text'">
           <document-tab-extracted-text :document="document" :named-entities="namedEntities" />
         </div>
         <div class="tab-pane w-100" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
@@ -173,10 +173,6 @@ export default {
         }
       }
     }
-  }
-
-  .text-pre-wrap {
-    white-space: pre-wrap;
   }
 
   .ner {
