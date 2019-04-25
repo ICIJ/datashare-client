@@ -15,8 +15,8 @@
         <nav class="document__header__nav">
           <ul class="list-inline m-0">
             <li class="document__header__nav__item list-inline-item">
-              <a @click="tab = 'details'" :class="{ active: tab === 'details' }">
-                {{ $t('document.details') }}
+              <a @click="tab = 'text'" :class="{ active: tab === 'text' }">
+                {{ $t('document.extracted_text') }}
               </a>
             </li>
             <li class="document__header__nav__item list-inline-item" v-if="!isRemote || namedEntities.length">
@@ -25,30 +25,30 @@
               </a>
             </li>
             <li class="document__header__nav__item list-inline-item">
-              <a @click="tab = 'text'" :class="{ active: tab === 'text' }">
-                {{ $t('document.extracted_text') }}
+              <a @click="tab = 'preview'" :class="{ active: tab === 'preview' }">
+                {{ $t('document.preview') }}
               </a>
             </li>
             <li class="document__header__nav__item list-inline-item">
-              <a @click="tab = 'preview'" :class="{ active: tab === 'preview' }">
-                {{ $t('document.preview') }}
+              <a @click="tab = 'details'" :class="{ active: tab === 'details' }">
+                {{ $t('document.details') }}
               </a>
             </li>
           </ul>
         </nav>
       </div>
       <div class="d-flex flex-grow-1 tab-content document__content">
-        <div class="tab-pane px-4 py-3" :class="{ active: tab === 'details' }" v-if="tab === 'details'">
-          <document-tab-details :document="document" :parentDocument="parentDocument" />
+        <div class="tab-pane px-4 py-3" :class="{ active: tab === 'text' }" v-if="tab === 'text'">
+          <document-tab-extracted-text :document="document" :named-entities="namedEntities" />
         </div>
         <div class="tab-pane px-4 py-3 document__named-entities" :class="{ active: tab === 'named_entities' }" v-if="tab === 'named_entities'">
           <document-tab-named-entities :document="document" />
         </div>
-        <div class="tab-pane px-4 py-3" :class="{ active: tab === 'text' }" v-if="tab === 'text'">
-          <document-tab-extracted-text :document="document" :named-entities="namedEntities" />
-        </div>
         <div class="tab-pane w-100" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
           <document-tab-preview :document="document" />
+        </div>
+        <div class="tab-pane px-4 py-3" :class="{ active: tab === 'details' }" v-if="tab === 'details'">
+          <document-tab-details :document="document" :parentDocument="parentDocument" />
         </div>
       </div>
     </div>
@@ -81,7 +81,7 @@ export default {
   props: ['id', 'routing', 'index'],
   data () {
     return {
-      tab: 'details',
+      tab: 'text',
       isReady: false
     }
   },
