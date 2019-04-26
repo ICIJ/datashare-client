@@ -4,7 +4,6 @@
       <li v-for="term in this.getQueryTerms()" :key="term.label">
         {{ term.label }} ({{ term.length }})
       </li>
-      <!-- {{ getQueryTerms() }}-->
     </ul>
     <div class="text-pre-wrap" v-html="markedSourceContent()" />
   </div>
@@ -23,7 +22,7 @@ import sortedUniqBy from 'lodash/sortedUniqBy'
 export default {
   name: 'DocumentTabExtractedText',
   mixins: [ner],
-  props: ['document', 'namedEntities'],
+  props: ['document', 'namedEntities', 'showNamedEntities'],
   computed: {
     ...mapState('search', {
       query: 'query'
@@ -32,9 +31,13 @@ export default {
   methods: {
     markedSourceContent () {
       if (this.document) {
-        return highlight(this.document.source.content, sortedUniqBy(this.namedEntities, ne => ne.source.offset), m => {
-          return `<mark class="ner ${this.getCategoryClass(m.category, 'bg-')}">${m.source.mention}</mark>`
-        }, r => escape(r), m => m.source.mention)
+        if (this.showNamedEntities) {
+          return highlight(this.document.source.content, sortedUniqBy(this.namedEntities, ne => ne.source.offset), m => {
+            return `<mark class="ner ${this.getCategoryClass(m.category, 'bg-')}">${m.source.mention}</mark>`
+          }, r => escape(r), m => m.source.mention)
+        } else {
+          return this.document.source.content
+        }
       }
     },
     getQueryTerms () {

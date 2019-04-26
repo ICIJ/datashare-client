@@ -16,6 +16,7 @@ describe('Document store', () => {
   })
 
   it('should reset the store state', () => {
+    store.commit('document/toggleShowNamedEntities')
     store.commit('document/reset')
 
     expect(store.state.document).toEqual(initialState())
@@ -66,5 +67,17 @@ describe('Document store', () => {
     await store.dispatch('document/getParent')
 
     expect(store.state.document.parentDoc.id).toEqual(parentNode[0].id)
+  })
+
+  /* Show Named Entities Toggle */
+  it('should get the "showNamedEntities" status', () => {
+    expect(store.state.document.showNamedEntities).toBeTruthy()
+  })
+
+  it('should toggle the "showNamedEntities" status', () => {
+    store.commit('document/toggleShowNamedEntities')
+    expect(store.state.document.showNamedEntities).toBeFalsy()
+    store.commit('document/toggleShowNamedEntities')
+    expect(store.state.document.showNamedEntities).toBeTruthy()
   })
 })

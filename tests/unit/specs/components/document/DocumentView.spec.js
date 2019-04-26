@@ -119,7 +119,7 @@ describe('DocumentView.vue', () => {
   })
 
   it('should display the named entities tab in LOCAL mode', async () => {
-    const id = 'foo.txt'
+    const id = 'doc.txt'
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
     const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
@@ -133,7 +133,7 @@ describe('DocumentView.vue', () => {
   })
 
   it('should NOT display the named entities tab in SERVER mode', async () => {
-    const id = 'foo.txt'
+    const id = 'doc.txt'
     Murmur.config.merge({ mode: 'SERVER' })
     const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
@@ -144,5 +144,32 @@ describe('DocumentView.vue', () => {
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(3)
     expect(wrapper.findAll('.document .document__header__nav__item').at(1).text()).not.toContain('Named Entities')
+  })
+
+  it('should contains a "See highlights" toggle in the document header', async () => {
+    const id = 'doc.txt'
+    const wrapper = mount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('this is foo document'))
+      .commit()
+    await wrapper.vm.getDoc()
+
+    expect(wrapper.findAll('.document .document__header .document__header__see-highlights')).toHaveLength(1)
+  })
+
+  it('should change the document state of showNamedEntities', async () => {
+    const id = 'doc.txt'
+    const wrapper = mount(DocumentView, { localVue, i18n, router, store, propsData: { id } })
+
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('this is foo document'))
+      .commit()
+    await wrapper.vm.getDoc()
+    expect(wrapper.vm.showNamedEntities).toBeTruthy()
+
+    wrapper.findAll('.document .document__header .document__header__see-highlights').at(0).trigger('click')
+
+    expect(wrapper.vm.showNamedEntities).toBeFalsy()
   })
 })

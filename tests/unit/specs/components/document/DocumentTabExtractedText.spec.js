@@ -28,7 +28,15 @@ describe('DocumentTabExtractedText.vue', () => {
       .withNer('NER2', 17, 'CATEGORY2'))
       .commit()
     await store.dispatch('document/get', { id: id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, { localVue, store, propsData: { document: store.state.document.doc, namedEntities: store.state.document.namedEntities } })
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: store.state.document.namedEntities,
+        showNamedEntities: true
+      }
+    })
 
     expect(wrapper.findAll('mark')).toHaveLength(2)
     expect(wrapper.findAll('mark').at(0).text()).toEqual('NER')
@@ -44,9 +52,37 @@ describe('DocumentTabExtractedText.vue', () => {
       .withNer('foo', 2))
       .commit()
     await store.dispatch('document/get', { id: id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, { localVue, store, propsData: { document: store.state.document.doc, namedEntities: store.state.document.namedEntities } })
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: store.state.document.namedEntities,
+        showNamedEntities: true
+      }
+    })
 
     expect(wrapper.findAll('mark')).toHaveLength(1)
+  })
+
+  it('should display a document without named entities', async () => {
+    const id = 'html_doc.txt'
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('a foo document <with>HTML</with>')
+      .withNer('foo', 2))
+      .commit()
+    await store.dispatch('document/get', { id: id }).then(() => store.dispatch('document/getNamedEntities'))
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: store.state.document.namedEntities,
+        showNamedEntities: false
+      }
+    })
+
+    expect(wrapper.findAll('mark')).toHaveLength(0)
   })
 
   it('should display query terms with occurrences in decreasing order', async () => {
@@ -57,7 +93,15 @@ describe('DocumentTabExtractedText.vue', () => {
       .commit()
     await store.dispatch('document/get', { id: id }).then(() => store.dispatch('document/getNamedEntities'))
     store.commit('search/query', 'result test document')
-    const wrapper = shallowMount(DocumentTabExtractedText, { localVue, store, propsData: { document: store.state.document.doc, namedEntities: store.state.document.namedEntities } })
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: store.state.document.namedEntities,
+        showNamedEntities: true
+      }
+    })
 
     expect(wrapper.findAll('ul')).toHaveLength(1)
     expect(wrapper.findAll('ul li')).toHaveLength(3)

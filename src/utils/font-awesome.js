@@ -38,6 +38,8 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt'
 import { faSync } from '@fortawesome/free-solid-svg-icons/faSync'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt'
+import { faToggleOff } from '@fortawesome/free-solid-svg-icons/faToggleOff'
+import { faToggleOn } from '@fortawesome/free-solid-svg-icons/faToggleOn'
 import { faUndo } from '@fortawesome/free-solid-svg-icons/faUndo'
 import { faUserShield } from '@fortawesome/free-solid-svg-icons/faUserShield'
 
@@ -84,6 +86,8 @@ library.add(
   faSignOutAlt,
   faTimesCircle,
   faTrashAlt,
+  faToggleOff,
+  faToggleOn,
   faUndo,
   faUserShield
 )

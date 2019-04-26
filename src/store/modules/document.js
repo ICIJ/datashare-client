@@ -6,7 +6,8 @@ export function initialState () {
     idAndRouting: null,
     doc: null,
     namedEntities: [],
-    parentDoc: null
+    parentDoc: null,
+    showNamedEntities: true
   }
 }
 
@@ -41,6 +42,9 @@ export const mutations = {
       state.parentDoc = null
     }
     return state.parentDoc
+  },
+  toggleShowNamedEntities (state) {
+    state.showNamedEntities = !state.showNamedEntities
   }
 }
 
@@ -50,7 +54,7 @@ export const actions = {
     try {
       const doc = await esClient.getEsDoc(rootState.search.index, idAndRouting.id, idAndRouting.routing)
       commit('doc', doc)
-    } catch {
+    } catch (_) {
       commit('doc', null)
     }
     return state.doc
@@ -59,7 +63,7 @@ export const actions = {
     try {
       const raw = await esClient.getNamedEntities(rootState.search.index, state.idAndRouting.id, state.idAndRouting.routing)
       commit('namedEntities', raw)
-    } catch {
+    } catch (_) {
       commit('namedEntities', { hits: { hits: [] } })
     }
     return state.namedEntities
@@ -70,7 +74,7 @@ export const actions = {
       try {
         const doc = await esClient.getEsDoc(rootState.search.index, currentDoc.parentDocument, currentDoc.rootDocument)
         commit('parentDoc', doc)
-      } catch {
+      } catch (_) {
         commit('parentDoc', null)
       }
     }
