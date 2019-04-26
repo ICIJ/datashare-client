@@ -39,8 +39,10 @@
       "sort": {
         "sort": "Sort by",
         "relevance": "Relevance",
-        "dateNewest": "Date (newest)",
-        "dateOldest": "Date (oldest)",
+        "dateNewest": "Indexing date (newest)",
+        "dateOldest": "Indexing date (oldest)",
+        "creationDateNewest": "Creation date (newest)",
+        "creationDateOldest": "Creation date (oldest)",
         "sizeLargest": "Size (decreasing)",
         "sizeSmallest": "Size (increasing)"
       }

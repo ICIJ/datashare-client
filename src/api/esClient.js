@@ -71,6 +71,14 @@ export function datasharePlugin (Client, config, components) {
         sortField = '_score'
         sortOrder = 'desc'
         break
+      case 'creationDateNewest' :
+        sortField = 'metadata.tika_metadata_creation_date'
+        sortOrder = 'desc'
+        break
+      case 'creationDateOldest' :
+        sortField = 'metadata.tika_metadata_creation_date'
+        sortOrder = 'asc'
+        break
       case 'dateNewest' :
         sortField = 'extractionDate'
         sortOrder = 'desc'

@@ -83,7 +83,15 @@ export default {
       relativeSearch: !this.$store.state.search.globalSearch,
       sizes: [10, 25, 50, 100],
       selectedSize: this.$store.state.search.size,
-      sorts: ['relevance', 'dateNewest', 'dateOldest', 'sizeLargest', 'sizeSmallest'],
+      sorts: [
+        'relevance',
+        'dateNewest',
+        'dateOldest',
+        'creationDateNewest',
+        'creationDateOldest',
+        'sizeLargest',
+        'sizeSmallest'
+      ],
       selectedSort: this.$store.state.search.sort,
       // https://vuejs.org/v2/guide/reactivity.html#Declaring-Reactive-Properties
       container: ''

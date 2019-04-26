@@ -50,7 +50,7 @@ describe('SearchSettings.vue', () => {
     jest.spyOn(router, 'push')
     wrapper = shallowMount(SearchSettings, { localVue, i18n, store, router })
     const rootWrapper = createWrapper(wrapper.vm.$root)
-    wrapper.findAll('#input-page-size option').at(3).setSelected()
+    wrapper.findAll('#input-page-size option').at(5).setSelected()
 
     expect(wrapper.vm.selectedSize).toEqual('100')
     expect(router.push).toHaveBeenCalled()
@@ -67,7 +67,7 @@ describe('SearchSettings.vue', () => {
     jest.spyOn(router, 'push')
     wrapper = shallowMount(SearchSettings, { localVue, i18n, store, router })
     const rootWrapper = createWrapper(wrapper.vm.$root)
-    wrapper.findAll('#input-sort option').at(3).setSelected()
+    wrapper.findAll('#input-sort option').at(5).setSelected()
 
     expect(wrapper.vm.selectedSort).toEqual('sizeLargest')
     expect(router.push).toHaveBeenCalled()

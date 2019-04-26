@@ -39,8 +39,10 @@
       "sort": {
         "sort": "Tri par",
         "relevance": "Pertinence",
-        "dateNewest": "Date (décroissante)",
-        "dateOldest": "Date (croissante)",
+        "dateNewest": "Date d'ajout (décroissante)",
+        "dateOldest": "Date d'ajout (croissante)",
+        "creationDateNewest": "Date de création (décroissante)",
+        "creationDateOldest": "Date de création (croissante)",
         "sizeLargest": "Taille (décroissante)",
         "sizeSmallest": "Taille (croissante)"
       }
