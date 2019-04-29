@@ -6,7 +6,8 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "test:unit": "vue-cli-service test:unit --runInBand",
+    "test:unit": "vue-cli-service test:unit --testPathPattern=\/unit\/ --runInBand",
+    "test:integration": "vue-cli-service test:unit --testPathPattern=\/integration\/ --runInBand",
     "test:e2e": "vue-cli-service test:e2e",
     "test": "yarn test:unit && yarn test:e2e"
   },

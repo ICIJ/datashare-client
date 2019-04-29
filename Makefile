@@ -12,3 +12,6 @@ install:
 
 unit:
 		yarn test:unit
+
+integration:
+		yarn test:integration
