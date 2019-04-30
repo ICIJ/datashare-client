@@ -27,8 +27,5 @@ jobs:
           name: run unit tests
           command: make unit
       - run:
-          name: run integration tests
-          command: make integration
-      - run:
           name: make distribution
           command: make dist

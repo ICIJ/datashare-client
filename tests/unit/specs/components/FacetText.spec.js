@@ -17,7 +17,6 @@ const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(Vuex)
-
 localVue.component('b-form-checkbox', vBFormCheckbox)
 localVue.component('b-form-checkbox-group', vBFormCheckboxGroup)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
