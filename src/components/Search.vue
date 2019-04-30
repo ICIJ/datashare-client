@@ -49,7 +49,7 @@ export default {
     }
   },
   beforeRouteUpdate (to, from, next) {
-    if (to.name === 'search' && this.$store.getters['search/queryHasChanged'](from.query, to.query)) {
+    if (to.name === 'search') {
       // Update the search's store using route query
       this.$store.dispatch('search/updateFromRouteQuery', to.query).then(this.search).then(next)
     } else {

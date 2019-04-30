@@ -354,23 +354,6 @@ describe('Search store', () => {
     expect(store.state.search.query).toEqual('this a query')
   })
 
-  it('should detect that the query has changed', () => {
-    expect(store.getters['search/queryHasChanged']({ q: 'previous_query' }, { q: 'next_query' })).toBeTruthy()
-    expect(store.getters['search/queryHasChanged']({ index: 'previous_index' }, { index: 'next_index' })).toBeTruthy()
-    expect(store.getters['search/queryHasChanged']({ from: 'previous_from' }, { from: 'next_from' })).toBeTruthy()
-    expect(store.getters['search/queryHasChanged']({ size: 'previous_size' }, { size: 'next_size' })).toBeTruthy()
-    expect(store.getters['search/queryHasChanged']({ sort: 'previous_sort' }, { sort: 'next_sort' })).toBeTruthy()
-  })
-
-  it('should not detect any change in the query', () => {
-    expect(store.getters['search/queryHasChanged']({ q: 'query' }, { q: 'query' })).toBeFalsy()
-    expect(store.getters['search/queryHasChanged']({ index: 'index' }, { index: 'index' })).toBeFalsy()
-    expect(store.getters['search/queryHasChanged']({ from: 'from' }, { from: 'from' })).toBeFalsy()
-    expect(store.getters['search/queryHasChanged']({ size: 'size' }, { size: 'size' })).toBeFalsy()
-    expect(store.getters['search/queryHasChanged']({ sort: 'sort' }, { sort: 'sort' })).toBeFalsy()
-    expect(store.getters['search/queryHasChanged']({ other_field: 'previous_value' }, { other_field: 'next_value' })).toBeFalsy()
-  })
-
   it('should display no applied filters (1/2)', () => {
     store.commit('search/query', '*')
 

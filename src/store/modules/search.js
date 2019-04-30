@@ -2,17 +2,14 @@ import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import { FacetDate, FacetNamedEntity, FacetPath, FacetText, namedEntityCategoryTranslation } from '@/store/facetsStore'
-
 import castArray from 'lodash/castArray'
 import concat from 'lodash/concat'
 import compact from 'lodash/compact'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
-import isEqual from 'lodash/isEqual'
 import join from 'lodash/join'
 import map from 'lodash/map'
-import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
 import split from 'lodash/split'
 import uniq from 'lodash/uniq'
@@ -69,12 +66,6 @@ export const getters = {
   },
   findFacet (state) {
     return name => find(state.facets, { name })
-  },
-  queryHasChanged () {
-    const props = ['q', 'index', 'from', 'size', 'sort']
-    return (from, to) => {
-      return !isEqual(pick(from, props), pick(to, props))
-    }
   },
   toRouteQuery (state) {
     return {
