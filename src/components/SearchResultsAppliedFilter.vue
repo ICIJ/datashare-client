@@ -15,6 +15,7 @@ export default {
     async deleteQueryTerm () {
       if ('name' in this.filter) {
         await this.$store.dispatch('search/removeFacetValue', this.filter)
+        this.$root.$emit('facet::search::update', this.filter.name)
         EventBus.$emit('facet::search::update', this.filter.name)
       } else {
         await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
