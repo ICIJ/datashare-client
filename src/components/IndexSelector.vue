@@ -13,12 +13,12 @@
 </template>
 
 <script>
-import facets from '@/mixins/facets'
+import utils from '@/mixins/utils'
 import map from 'lodash/map'
 
 export default {
   name: 'IndexSelector',
-  mixins: [facets],
+  mixins: [utils],
   data () {
     return {
       indices: [],

@@ -2,6 +2,7 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import App from '@/components/App'
 import router from '@/router'
+import store from '@/store'
 import utils from '@/mixins/utils'
 import VueProgressBar from 'vue-progressbar'
 
@@ -19,5 +20,14 @@ describe('utils mixin', () => {
     Murmur.config.merge({ mode: 'SERVER' })
     const wrapper = shallowMount(App, { localVue, mixins: [utils], router })
     expect(wrapper.vm.isRemote).toBeTruthy()
+  })
+
+  it('should refresh the route', () => {
+    const wrapper = shallowMount(App, { localVue, mixins: [utils], router, store })
+    jest.spyOn(router, 'push')
+
+    wrapper.vm.refreshRoute()
+
+    expect(router.push).toHaveBeenCalled()
   })
 })

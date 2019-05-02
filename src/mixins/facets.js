@@ -1,4 +1,5 @@
 import { EventBus } from '@/utils/event-bus'
+import utils from '@/mixins/utils'
 import camelCase from 'lodash/camelCase'
 import find from 'lodash/find'
 import flatten from 'lodash/flatten'
@@ -13,6 +14,7 @@ import upperFirst from 'lodash/upperFirst'
 import last from 'lodash/last'
 
 export const mixin = {
+  mixins: [utils],
   props: {
     facet: {
       type: Object
@@ -128,12 +130,6 @@ export const mixin = {
     },
     isReversed () {
       return this.$store.getters['search/isFacetReversed'](this.facet.name)
-    },
-    refreshRoute () {
-      this.$router.push({
-        name: 'search',
-        query: this.$store.getters['search/toRouteQuery']
-      })
     },
     escapeRegExp (str) {
       // eslint-disable-next-line no-useless-escape
