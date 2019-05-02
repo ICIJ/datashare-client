@@ -1,6 +1,6 @@
 <template>
-  <b-badge class="ml-2 search-results__header__applied-filters__filter" @click.prevent="deleteQueryTerm(filter)">
-    {{ filter.value }}
+  <b-badge class="ml-2 search-results__header__applied-filters__filter" @click.prevent="deleteQueryTerm()">
+    {{ filter.label }}
     <fa icon="times" />
   </b-badge>
 </template>
@@ -12,19 +12,14 @@ export default {
   name: 'SearchResultsAppliedFilter',
   props: ['filter'],
   methods: {
-    deleteQueryTerm (filter) {
-      let promise
-      if ('name' in filter) {
-        promise = this.$store.dispatch('search/removeFacetValue', filter)
+    async deleteQueryTerm () {
+      if ('name' in this.filter) {
+        await this.$store.dispatch('search/removeFacetValue', this.filter)
+        EventBus.$emit('facet::search::update', this.filter.name)
       } else {
-        promise = this.$store.dispatch('search/deleteQueryTerm', filter.value)
+        await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
       }
-      return promise.then(() => {
-        if ('name' in filter) {
-          EventBus.$emit('facet::search::update', filter.name)
-        }
-        return this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
-      })
+      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
     }
   }
 }
