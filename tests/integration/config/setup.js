@@ -1,4 +1,3 @@
-// setup.js
 const puppeteer = require('puppeteer')
 const mkdirp = require('mkdirp')
 const path = require('path')

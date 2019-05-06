@@ -34,7 +34,7 @@ module.exports = {
     'jest-canvas-mock'
   ],
   preset: 'jest-puppeteer',
-  globalSetup: './setup.js',
-  globalTeardown: './teardown.js',
-  testEnvironment: './puppeteer_environment.js'
+  globalSetup: './tests/integration/config/setup.js',
+  globalTeardown: './tests/integration/config/teardown.js',
+  testEnvironment: './tests/integration/config/puppeteer_environment.js'
 }

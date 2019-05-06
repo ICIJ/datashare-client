@@ -1,4 +1,3 @@
-// puppeteer_environment.js
 const NodeEnvironment = require('jest-environment-node')
 const fs = require('fs')
 const path = require('path')

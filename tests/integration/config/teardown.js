@@ -1,4 +1,3 @@
-// teardown.js
 const os = require('os')
 const rimraf = require('rimraf')
 const path = require('path')
