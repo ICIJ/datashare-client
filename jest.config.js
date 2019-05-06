@@ -33,7 +33,7 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.(js|vue)'
   ],
-  testURL: 'http://localhost:9090/',
+  testURL: process.env.VUE_APP_DS_HOST,
   setupFiles: [
     'jest-canvas-mock'
   ],
