@@ -9,7 +9,7 @@
     "test:unit": "vue-cli-service test:unit --testPathPattern=/unit/ --runInBand",
     "test:integration": "vue-cli-service test:unit --testPathPattern=/integration/ --runInBand",
     "test:e2e": "vue-cli-service test:e2e",
-    "test": "yarn test:unit && yarn test:e2e"
+    "test": "yarn test:unit && yarn test:integration && yarn test:e2e"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.4",

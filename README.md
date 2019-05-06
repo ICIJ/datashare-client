@@ -53,7 +53,10 @@ yarn build
 yarn lint
 
 # run unit tests serially with jest
-yarn test:unit
+make unit
+
+# run integration tests serially with jest
+make integration
 
 # run e2e tests
 yarn test:e2e
