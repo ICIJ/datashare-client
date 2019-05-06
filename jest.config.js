@@ -29,8 +29,12 @@ module.exports = {
   collectCoverageFrom: [
     'src/**/*.(js|vue)'
   ],
-  testURL: 'http://localhost/',
+  testURL: 'http://localhost:9090/',
   setupFiles: [
     'jest-canvas-mock'
-  ]
+  ],
+  preset: 'jest-puppeteer',
+  globalSetup: './setup.js',
+  globalTeardown: './teardown.js',
+  testEnvironment: './puppeteer_environment.js'
 }
