@@ -1,3 +1,7 @@
+const { defaults } = require('jest-config')
+
+const { TEST_MODE } = process.env
+
 module.exports = {
   moduleFileExtensions: [
     'js',
@@ -33,8 +37,8 @@ module.exports = {
   setupFiles: [
     'jest-canvas-mock'
   ],
-  preset: 'jest-puppeteer',
-  globalSetup: './tests/integration/config/setup.js',
-  globalTeardown: './tests/integration/config/teardown.js',
-  testEnvironment: './tests/integration/config/puppeteer_environment.js'
+  preset: TEST_MODE === 'integration' ? 'jest-puppeteer' : defaults.preset,
+  globalSetup: TEST_MODE === 'integration' ? './tests/integration/config/setup.js' : defaults.globalSetup,
+  globalTeardown: TEST_MODE === 'integration' ? './tests/integration/config/teardown.js' : defaults.globalTeardown,
+  testEnvironment: TEST_MODE === 'integration' ? './tests/integration/config/puppeteer_environment.js' : defaults.testEnvironment
 }
