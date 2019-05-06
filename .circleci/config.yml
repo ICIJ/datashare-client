@@ -18,7 +18,7 @@ jobs:
       - checkout
       - run:
           name: apt-get install
-          command: sudo apt-get -y update && apt-get -y install libxcomposite1 libxcursor1 libxi6 libxtst6 libnss3 libcups2 libxss1 libxrandr2 libasound2 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0
+          command: sudo apt-get -y install libxcomposite1 libxcursor1 libxi6 libxtst6 libnss3 libcups2 libxss1 libxrandr2 libasound2 libatk1.0-0 libatk-bridge2.0-0 libgtk-3-0
       - run:
           name: make install
           command: make install
