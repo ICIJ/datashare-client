@@ -24,16 +24,13 @@ module.exports = {
   snapshotSerializers: [
     'jest-serializer-vue'
   ],
-  testMatch: [
-    '**/tests/unit/**/*.spec.js',
-    '**/tests/integration/**/*.spec.js'
-  ],
+  testMatch: TEST_MODE === 'integration' ? ['**/tests/integration/**/*.spec.js'] : ['**/tests/unit/**/*.spec.js'],
   coverageDirectory: 'tests/unit/coverage',
   collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.(js|vue)'
   ],
-  testURL: TEST_MODE === 'integration' ? 'http://localhost:9876/' : 'http://localhost:9090/',
+  testURL: 'http://localhost:9090/',
   setupFiles: [
     'jest-canvas-mock'
   ],
