@@ -11,8 +11,8 @@ localVue.use(Murmur)
 describe('Search.vue', () => {
   it('should refresh the view on custom event', () => {
     const actions = { query: jest.fn() }
-    const store2 = new Vuex.Store({ modules: { search: { namespaced: true, actions } } })
-    shallowMount(Search, { localVue, router, store: store2 })
+    const store = new Vuex.Store({ modules: { search: { namespaced: true, actions } } })
+    shallowMount(Search, { localVue, router, store })
     EventBus.$emit('index::delete::all')
     expect(actions.query).toHaveBeenCalled()
   })
