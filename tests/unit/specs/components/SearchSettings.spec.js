@@ -6,7 +6,7 @@ import messages from '@/lang/en'
 import store from '@/store'
 import router from '@/router'
 import SearchSettings from '@/components/SearchSettings'
-import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
+import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)

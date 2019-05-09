@@ -47,13 +47,11 @@ describe('IndexSelector.vue', () => {
   it('should change the selected index and refresh the route', async () => {
     Murmur.config.merge({ userIndices: ['first-index', 'second-index'] })
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-
     const spyRefreshRoute = jest.spyOn(wrapper.vm, 'refreshRoute')
     expect(spyRefreshRoute).not.toBeCalled()
 
     wrapper.findAll('option').at(1).setSelected()
+    await wrapper.vm.$nextTick()
 
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(1)
@@ -63,11 +61,13 @@ describe('IndexSelector.vue', () => {
   it('should change the selected index and reset filters', async () => {
     Murmur.config.merge({ userIndices: ['first-index', 'second-index'] })
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
+
     store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
-    await wrapper.vm.$nextTick()
     expect(store.getters['search/toRouteQuery']['f[content-type]']).not.toBeUndefined()
 
     wrapper.findAll('option').at(1).setSelected()
+    await wrapper.vm.$nextTick()
+
     expect(store.getters['search/toRouteQuery']['f[content-type]']).toBeUndefined()
     expect(store.getters['search/toRouteQuery'].index).toEqual('second-index')
   })

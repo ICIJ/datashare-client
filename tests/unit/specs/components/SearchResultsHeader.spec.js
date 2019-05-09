@@ -7,7 +7,7 @@ import Murmur from '@icij/murmur'
 import messages from '@/lang/en'
 import store from '@/store'
 import router from '@/router'
-import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
+import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)

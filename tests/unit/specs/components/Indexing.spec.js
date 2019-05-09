@@ -3,15 +3,13 @@ import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import fetchPonyfill from 'fetch-ponyfill'
-
 import Indexing from '@/components/Indexing'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
-import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
+import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 import DatashareClient from '@/api/DatashareClient'
-
 const { Response } = fetchPonyfill()
 
 const localVue = createLocalVue()
@@ -19,7 +17,6 @@ localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.directive('b-tooltip', vBTooltip)
-
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('Indexing.vue', () => {

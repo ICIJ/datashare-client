@@ -91,7 +91,7 @@ export const mixin = {
       ].map(this.escapeRegExp))
     },
     options () {
-      return map(this.items, item => { return { value: item.key, text: this.getItemLabel(item) } })
+      return map(this.items, item => { return { value: item.key, html: this.getItemLabel(item) } })
     }
   },
   methods: {
