@@ -7,13 +7,11 @@ import store from '@/store'
 import router from '@/router'
 import SearchSettings from '@/components/SearchSettings'
 import vBTooltip from 'bootstrap-vue/es/components/tooltip/tooltip'
-import FontAwesomeIcon from '@/components/FontAwesomeIcon'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.directive('b-tooltip', vBTooltip)
-localVue.component('font-awesome-icon', FontAwesomeIcon)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchSettings.vue', () => {

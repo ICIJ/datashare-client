@@ -354,6 +354,34 @@ describe('Search store', () => {
     expect(store.state.search.query).toEqual('this a query')
   })
 
+  it('should delete "AND" boolean operator on first applied filter deletion, if any', async () => {
+    store.commit('search/query', 'term_01 AND term_02')
+    await store.dispatch('search/deleteQueryTerm', 'term_01')
+
+    expect(store.state.search.query).toEqual('term_02')
+  })
+
+  it('should delete "OR" boolean operator on first applied filter deletion, if any', async () => {
+    store.commit('search/query', 'term_01 OR term_02')
+    await store.dispatch('search/deleteQueryTerm', 'term_01')
+
+    expect(store.state.search.query).toEqual('term_02')
+  })
+
+  it('should delete "AND" boolean operator on last applied filter deletion, if any', async () => {
+    store.commit('search/query', 'term_01 AND term_02')
+    await store.dispatch('search/deleteQueryTerm', 'term_02')
+
+    expect(store.state.search.query).toEqual('term_01')
+  })
+
+  it('should delete "OR" boolean operator on last applied filter deletion, if any', async () => {
+    store.commit('search/query', 'term_01 OR term_02')
+    await store.dispatch('search/deleteQueryTerm', 'term_02')
+
+    expect(store.state.search.query).toEqual('term_01')
+  })
+
   it('should display no applied filters (1/2)', () => {
     store.commit('search/query', '*')
 
@@ -376,5 +404,11 @@ describe('Search store', () => {
     store.commit('search/query', 'test test')
 
     expect(store.getters['search/retrieveQueryTerms']).toEqual(['test'])
+  })
+
+  it('should filter on boolean operators "AND" and "OR"', () => {
+    store.commit('search/query', 'term_01 AND term_02 OR term_03 AND term_04')
+
+    expect(store.getters['search/retrieveQueryTerms']).toEqual(['term_01', 'term_02', 'term_03', 'term_04'])
   })
 })

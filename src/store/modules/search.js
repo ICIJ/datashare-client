@@ -5,10 +5,15 @@ import { FacetDate, FacetNamedEntity, FacetPath, FacetText, namedEntityCategoryT
 import castArray from 'lodash/castArray'
 import concat from 'lodash/concat'
 import compact from 'lodash/compact'
+import drop from 'lodash/drop'
+import dropRight from 'lodash/dropRight'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
+import head from 'lodash/head'
+import includes from 'lodash/includes'
 import join from 'lodash/join'
+import last from 'lodash/last'
 import map from 'lodash/map'
 import reduce from 'lodash/reduce'
 import split from 'lodash/split'
@@ -92,7 +97,7 @@ export const getters = {
   },
   retrieveQueryTerms (state) {
     let terms = []
-    map(filter(compact(uniq(split(state.query, ' '))), i => i !== '*'), value => {
+    map(filter(compact(uniq(split(state.query, ' '))), item => !includes(['*', 'AND', 'OR'], item)), value => {
       terms = concat(terms, value)
     })
     return terms
@@ -289,7 +294,14 @@ export const actions = {
     })
   },
   deleteQueryTerm ({ state, commit, dispatch }, term) {
-    const newQuery = filter(split(state.query, ' '), i => i !== term)
+    const booleanOperators = ['AND', 'OR']
+    let newQuery = filter(split(state.query, ' '), i => i !== term)
+    if (includes(booleanOperators, last(newQuery))) {
+      newQuery = dropRight(newQuery)
+    }
+    if (includes(booleanOperators, head(newQuery))) {
+      newQuery = drop(newQuery)
+    }
     commit('query', newQuery.length === 0 ? '*' : join(newQuery, ' '))
     return dispatch('query')
   }

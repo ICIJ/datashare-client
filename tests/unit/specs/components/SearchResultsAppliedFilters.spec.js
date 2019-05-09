@@ -1,62 +1,101 @@
 import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 import VueI18n from 'vue-i18n'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import BBadge from 'bootstrap-vue/es/components/badge/badge'
 import store from '@/store'
+import router from '@/router'
 import messages from '@/lang/en'
+import Murmur from '@icij/murmur'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(Murmur)
+localVue.component('b-badge', BBadge)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchResultsAppliedFilters.vue', () => {
-  esConnectionHelper()
-  const es = esConnectionHelper.es
   let wrapper
 
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsAppliedFilters, { localVue, i18n, store })
   })
 
-  it('should display no applied filters (1/2)', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(3)).commit()
+  afterEach(async () => {
+    await store.dispatch('search/reset')
+  })
 
+  it('should display no applied filters (1/2)', async () => {
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
 
     expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(0)
   })
 
   it('should display no applied filters (2/2)', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(3)).commit()
-
     await store.dispatch('search/query', { query: '   ', from: 0, size: 3 })
 
     expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(0)
   })
 
   it('should display 2 applied filters', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document test').count(3)).commit()
-
     await store.dispatch('search/query', { query: 'document test', from: 0, size: 3 })
 
     expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
   })
 
   it('should merge 2 identical terms', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document test').count(3)).commit()
-
     await store.dispatch('search/query', { query: 'test test', from: 0, size: 3 })
 
     expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
   })
 
   it('should display 1 applied filter', async () => {
-    await letData(es).have(new IndexedDocument('doc.txt').withContentType('text/plain')).commit()
     await store.dispatch('search/query', { query: '*' })
-
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
 
     expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
+  })
+
+  it('should filter on the "AND" boolean operator', async () => {
+    await store.dispatch('search/query', { query: 'trump AND lalilou', from: 0, size: 3 })
+
+    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
+  })
+
+  it('should filter on the "OR" boolean operator', async () => {
+    await store.dispatch('search/query', { query: 'trump OR lalilou', from: 0, size: 3 })
+
+    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
+  })
+
+  it('should remove the "AND" on first applied filter deletion', async () => {
+    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+
+    await store.dispatch('search/query', { query: 'term_01 AND term_02', from: 0, size: 3 })
+    wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).trigger('click')
+    expect(store.state.search.query).toBe('term_02')
+  })
+
+  it('should remove the "OR" on first applied filter deletion', async () => {
+    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+
+    await store.dispatch('search/query', { query: 'term_01 OR term_02', from: 0, size: 3 })
+    wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).trigger('click')
+    expect(store.state.search.query).toBe('term_02')
+  })
+
+  it('should remove the "AND" on last applied filter deletion', async () => {
+    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+
+    await store.dispatch('search/query', { query: 'term_01 AND term_02', from: 0, size: 3 })
+    wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
+    expect(store.state.search.query).toBe('term_01')
+  })
+
+  it('should remove the "OR" on last applied filter deletion', async () => {
+    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+
+    await store.dispatch('search/query', { query: 'term_01 OR term_02', from: 0, size: 3 })
+    wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
+    expect(store.state.search.query).toBe('term_01')
   })
 })

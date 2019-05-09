@@ -137,10 +137,10 @@ describe('SearchResults.vue', () => {
     await letData(es).have(new IndexedDocument('doc_02').withContent('firs').withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('doc_03').withContent('foxes').withContentType('type_02')).commit()
 
-    wrapper = await createView('contentType:"type_01"')
+    wrapper = await createView('contentType:type_01')
     expect(wrapper.findAll('.search-results__items__item__link')).toHaveLength(2)
 
-    wrapper = await createView('contentType:"type_02"')
+    wrapper = await createView('contentType:type_02')
     expect(wrapper.findAll('.search-results__items__item__link')).toHaveLength(1)
   })
 
