@@ -92,13 +92,15 @@ export default {
       }
 
       &__aggregations-panel {
+        position: relative;
         width: $aggregations-panel-width;
+        z-index: 20;
       }
 
       &__search-results {
         background: white;
         position: relative;
-        z-index: 0;
+        z-index: 10;
         max-width: $search-results-width;
         min-width: $search-results-width;
         min-height: 100%;
