@@ -16,7 +16,7 @@
         <div class="search__body__document " :class="showFilters ? 'show-filters' : 'hide-filters'" v-show="showDocument">
           <search-document-navbar />
           <router-view class="search__body__document__view"></router-view>
-          <div class="search__body__document__backdrop"></div>
+          <router-link :to="{ name: 'search', query }" class="search__body__document__backdrop" />
         </div>
       </transition>
     </div>
@@ -156,18 +156,18 @@ export default {
           background: white;
 
           .document {
-            box-shadow: none;
+            box-shadow: $modal-content-box-shadow-sm-up;
           }
 
           &__backdrop {
-            pointer-events: none;
+            cursor: auto;
             z-index: -1;
             position: absolute;
             right: 100%;
             top: 0;
             bottom: 0;
             width: calc(100vw - #{$document-min-width});
-            @include gradient-x(rgba($dark, 0), rgba($dark, 0.4))
+            background: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
           }
         }
 
