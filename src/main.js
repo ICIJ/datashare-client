@@ -26,7 +26,7 @@ async function createApp (LocalVue = Vue) {
   const ds = new DatashareClient()
   // Get the config object
   const config = await ds.getConfig().then(res => res.json())
-  // Murmur expores a config attribute which share a Config object
+  // Murmur exposes a config attribute which share a Config object
   // with the current vue instance.
   Murmur.config.merge(config)
   Murmur.config.set('document-thumbnail.activated', !!process.env.VUE_APP_DS_PREVIEW_HOST)
@@ -56,7 +56,7 @@ async function createApp (LocalVue = Vue) {
   store.commit('search/index', config.userIndices[0])
   // Render function returns a router-view component by default
   const render = h => h('router-view')
-  // Return an instance of the Vue construtor we receive.
+  // Return an instance of the Vue constructor we receive.
   // We do not necessarily use the default Vue so we can use this function
   // from our unit tests
   return new LocalVue({ i18n, router, store, render }).$mount('#app')

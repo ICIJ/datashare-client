@@ -1,19 +1,24 @@
 import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import BBadge from 'bootstrap-vue/es/components/badge/badge'
-import Murmur from '@icij/murmur'
+import { mount, shallowMount } from '@vue/test-utils'
 import store from '@/store'
 import router from '@/router'
 import find from 'lodash/find'
+import { createApp } from '@/main'
+import fetchPonyfill from 'fetch-ponyfill'
 
-const localVue = createLocalVue()
-localVue.use(Murmur)
-localVue.component('b-badge', BBadge)
+const { fetch, Response } = fetchPonyfill()
+window.fetch = fetch
 
 describe('SearchResultsAppliedFilter.vue', () => {
-  let wrapper
+  let wrapper, localVue
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    const app = document.createElement('div')
+    app.setAttribute('id', 'app')
+    document.body.appendChild(app)
+    window.fetch = jest.fn()
+    window.fetch.mockReturnValue(jsonOk({ userIndices: [] }))
+    localVue = await createApp()
     wrapper = shallowMount(SearchResultsAppliedFilter, { localVue, store, router, propsData: { filter: { label: 'Trump', value: 'trump' } } })
   })
 
@@ -60,3 +65,13 @@ describe('SearchResultsAppliedFilter.vue', () => {
     expect(mockCallback.mock.calls).toHaveLength(0)
   })
 })
+
+function jsonOk (body) {
+  const mockResponse = new Response(JSON.stringify(body), {
+    status: 200,
+    headers: {
+      'Content-type': 'application/json'
+    }
+  })
+  return Promise.resolve(mockResponse)
+}
