@@ -2,8 +2,9 @@ import Vue from 'vue'
 import { createLocalVue } from '@vue/test-utils'
 import { createApp } from '@/main'
 import fetchPonyfill from 'fetch-ponyfill'
+import { jsonOk } from 'tests/unit/tests_utils'
 
-const { fetch, Response } = fetchPonyfill()
+const { fetch } = fetchPonyfill()
 window.fetch = fetch
 
 describe('main', () => {
@@ -38,13 +39,3 @@ describe('main', () => {
     expect(vm.$store.state.search.index).toEqual('first-index')
   })
 })
-
-function jsonOk (body) {
-  const mockResponse = new Response(JSON.stringify(body), {
-    status: 200,
-    headers: {
-      'Content-type': 'application/json'
-    }
-  })
-  return Promise.resolve(mockResponse)
-}

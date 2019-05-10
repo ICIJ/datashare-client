@@ -2,7 +2,6 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
-import fetchPonyfill from 'fetch-ponyfill'
 import Indexing from '@/components/Indexing'
 import messages from '@/lang/en'
 import router from '@/router'
@@ -10,7 +9,7 @@ import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
 import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 import DatashareClient from '@/api/DatashareClient'
-const { Response } = fetchPonyfill()
+import { jsonOk } from 'tests/unit/tests_utils'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -185,13 +184,3 @@ describe('Indexing.vue', () => {
     expect(wrapper.vm.getProgress(0.995, 'RUNNING')).toEqual(99)
   })
 })
-
-function jsonOk (body) {
-  const mockResponse = new Response(JSON.stringify(body), {
-    status: 200,
-    headers: {
-      'Content-type': 'application/json'
-    }
-  })
-  return Promise.resolve(mockResponse)
-}

@@ -10,8 +10,9 @@ import store from '@/store'
 import { EventBus } from '@/utils/event-bus'
 import { datashare } from '@/store/modules/indexing'
 import fetchPonyfill from 'fetch-ponyfill'
+import { jsonOk } from 'tests/unit/tests_utils'
 
-const { fetch, Response } = fetchPonyfill()
+const { fetch } = fetchPonyfill()
 window.fetch = fetch
 
 const localVue = createLocalVue()
@@ -138,13 +139,3 @@ describe('AppFooter.vue', () => {
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
 })
-
-function jsonOk (body) {
-  const mockResponse = new Response(JSON.stringify(body), {
-    status: 200,
-    headers: {
-      'Content-type': 'application/json'
-    }
-  })
-  return Promise.resolve(mockResponse)
-}

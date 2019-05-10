@@ -3,9 +3,8 @@ import Vue from 'vue'
 import cloneDeep from 'lodash/cloneDeep'
 import DatashareClient from '@/api/DatashareClient'
 import { actions, getters, mutations, state, datashare } from '@/store/modules/indexing'
-import fetchPonyfill from 'fetch-ponyfill'
+import { jsonOk } from 'tests/unit/tests_utils'
 
-const { Response } = fetchPonyfill()
 Vue.use(Vuex)
 
 describe('Indexing store', () => {
@@ -122,13 +121,3 @@ describe('Indexing store', () => {
       { method: 'DELETE', credentials: 'same-origin' })
   })
 })
-
-function jsonOk (body) {
-  const mockResponse = new Response(JSON.stringify(body), {
-    status: 200,
-    headers: {
-      'Content-type': 'application/json'
-    }
-  })
-  return Promise.resolve(mockResponse)
-}

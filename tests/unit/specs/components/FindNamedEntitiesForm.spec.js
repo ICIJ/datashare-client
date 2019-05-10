@@ -3,23 +3,19 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import fetchPonyfill from 'fetch-ponyfill'
-
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
-
-const { Response } = fetchPonyfill()
+import { jsonOk } from 'tests/unit/tests_utils'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
-
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('FindNamedEntitiesForm.vue', () => {
@@ -78,13 +74,3 @@ describe('FindNamedEntitiesForm.vue', () => {
     expect(w.contains('.find-named-entities-form__offline')).toBeFalsy()
   })
 })
-
-function jsonOk (body) {
-  const mockResponse = new Response(JSON.stringify(body), {
-    status: 200,
-    headers: {
-      'Content-type': 'application/json'
-    }
-  })
-  return Promise.resolve(mockResponse)
-}

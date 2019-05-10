@@ -3,15 +3,13 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import fetchPonyfill from 'fetch-ponyfill'
 import ExtractingForm from '@/components/ExtractingForm'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
-
-const { Response } = fetchPonyfill()
+import { jsonOk } from 'tests/unit/tests_utils'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -59,13 +57,3 @@ describe('ExtractingForm.vue', () => {
     expect(wrapper.vm.ocr).toBeFalsy()
   })
 })
-
-function jsonOk (body) {
-  const mockResponse = new Response(JSON.stringify(body), {
-    status: 200,
-    headers: {
-      'Content-type': 'application/json'
-    }
-  })
-  return Promise.resolve(mockResponse)
-}
