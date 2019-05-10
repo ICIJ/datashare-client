@@ -15,141 +15,10 @@ localVue.use(BootstrapVue)
 localVue.use(Vuex)
 
 describe('SearchResultsLink.vue', () => {
-  it('should reduce named entities : zero named entities', () => {
-    const wrapper = shallowMount(SearchResultsLink, {
-      localVue,
-      store,
-      router,
-      propsData: {
-        doc: new Document({
-          _id: 1,
-          _source: {
-            path: 'doc.txt'
-          }
-        })
-      }
-    })
-
-    expect(wrapper.vm.namedEntities).toEqual([])
-  })
-
-  it('should reduce named entities : one named entities', () => {
-    const wrapper = shallowMount(SearchResultsLink, {
-      localVue,
-      store,
-      router,
-      propsData: {
-        doc: new Document({
-          _id: 1,
-          _source: {
-            path: 'doc.txt'
-          },
-          inner_hits: {
-            NamedEntity: {
-              hits: {
-                hits: [
-                  {
-                    _source: {
-                      id: 'id',
-                      mention: 'foo'
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        }
-        )
-      }
-    })
-
-    expect(wrapper.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }])
-  })
-
-  it('should reduce named entities : two named entities', () => {
-    const wrapper = shallowMount(SearchResultsLink, {
-      localVue,
-      store,
-      router,
-      propsData: {
-        doc: new Document({
-          _id: 1,
-          _source: {
-            path: 'a/b/c/foo.txt'
-          },
-          inner_hits: {
-            NamedEntity: {
-              hits: {
-                hits: [
-                  {
-                    _source: {
-                      id: 'id',
-                      mention: 'foo'
-                    }
-                  }, {
-                    _source: {
-                      id: 'id_bar',
-                      mention: 'bar'
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        })
-      }
-    })
-
-    expect(wrapper.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }, { _source: { id: 'id_bar', mention: 'bar' } }])
-  })
-
-  it('should reduce named entities : two named entities with duplicates', () => {
-    const wrapper = shallowMount(SearchResultsLink, {
-      localVue,
-      store,
-      router,
-      propsData: {
-        doc: new Document({
-          _id: 1,
-          _source: {
-            path: 'doc.txt'
-          },
-          inner_hits: {
-            NamedEntity: {
-              hits: {
-                hits: [
-                  {
-                    _source: {
-                      id: 'id',
-                      mention: 'foo'
-                    }
-                  }, {
-                    _source: {
-                      id: 'id2',
-                      mention: 'foo'
-                    }
-                  }, {
-                    _source: {
-                      id: 'id_bar',
-                      mention: 'bar'
-                    }
-                  }
-                ]
-              }
-            }
-          }
-        })
-      }
-    })
-
-    expect(wrapper.vm.namedEntities).toEqual([{ _source: { id: 'id', mention: 'foo' } }, { _source: { id: 'id_bar', mention: 'bar' } }])
-  })
-
   it('should display the correct location', () => {
     const wrapper = shallowMount(SearchResultsLink, {
       localVue,
       store,
-      router,
       propsData: {
         doc: new Document({
           _id: 1,
@@ -176,7 +45,7 @@ describe('SearchResultsLink.vue', () => {
       }
     })
 
-    expect(wrapper.find('.search-results-link').attributes().href).toMatch(/foo\/foo$/)
+    expect(wrapper.find('.search-results-link').attributes('href')).toMatch(/foo\/foo$/)
   })
 
   it('should make a link with routing for a child document', () => {
@@ -193,10 +62,11 @@ describe('SearchResultsLink.vue', () => {
       }
     })
 
-    expect(wrapper.find('.search-results-link').attributes().href).toMatch(/child\/parent$/)
+    expect(wrapper.find('.search-results-link').attributes('href')).toMatch(/child\/parent$/)
   })
 
   it('should display the document sliced name', () => {
+    Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] })
     const wrapper = mount(SearchResultsLink, {
       localVue,
       store,
