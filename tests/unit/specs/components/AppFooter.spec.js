@@ -1,8 +1,6 @@
-import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import BootstrapVue from 'bootstrap-vue'
+import { mount, shallowMount } from '@vue/test-utils'
 import AppFooter from '@/components/AppFooter'
 import messages from '@/lang/en'
 import router from '@/router'
@@ -11,33 +9,40 @@ import { EventBus } from '@/utils/event-bus'
 import { datashare } from '@/store/modules/indexing'
 import fetchPonyfill from 'fetch-ponyfill'
 import { jsonOk } from 'tests/unit/tests_utils'
+import { createApp } from '@/main'
 
 const { fetch } = fetchPonyfill()
 window.fetch = fetch
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
-Murmur.config.set('userDir', '/home/foo/Datashare')
-
 describe('AppFooter.vue', () => {
-  let wrapper
+  let wrapper, appVue, i18n
+
+  beforeAll(async () => {
+    const app = document.createElement('div')
+    app.setAttribute('id', 'app')
+    document.body.appendChild(app)
+    window.fetch = jest.fn()
+    window.fetch.mockReturnValue(jsonOk({ userIndices: [] }))
+    appVue = await createApp()
+    i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+  })
 
   beforeEach(() => {
     jest.spyOn(window, 'fetch')
     window.fetch.mockReturnValue(jsonOk({}))
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk({}))
-    wrapper = mount(AppFooter, { localVue, i18n, router, store })
+    wrapper = mount(AppFooter, { appVue, i18n, router, store })
   })
 
   afterEach(() => {
     localStorage.removeItem('lang')
     i18n.locale = 'en'
+    window.fetch.mockRestore()
+    datashare.fetch.mockRestore()
   })
+
+  afterAll(() => window.fetch.mockRestore())
 
   it('should display client git sha1', () => {
     const sha1 = wrapper.vm.clientHash
@@ -69,7 +74,7 @@ describe('AppFooter.vue', () => {
       'git.commit.id': 'sha1',
       'git.commit.id.abbrev': 'sha1_abbrev'
     }))
-    wrapper = shallowMount(AppFooter, { localVue, i18n, router, store })
+    wrapper = shallowMount(AppFooter, { appVue, i18n, router, store })
     await wrapper.vm.promise
 
     expect(wrapper.find('.app__footer__tooltip__server__value').text()).toEqual('sha1_abbrev')
@@ -82,13 +87,13 @@ describe('AppFooter.vue', () => {
 
   it('should display the interface in French if localStorage says so', () => {
     localStorage.setItem('lang', 'fr')
-    wrapper = mount(AppFooter, { localVue, i18n, router, store })
+    wrapper = mount(AppFooter, { appVue, i18n, router, store })
     expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('Français')
   })
 
   it('should display the interface in Spanish if localStorage says so', () => {
     localStorage.setItem('lang', 'es')
-    wrapper = mount(AppFooter, { localVue, i18n, router, store })
+    wrapper = mount(AppFooter, { appVue, i18n, router, store })
     expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('Español')
   })
 
@@ -123,7 +128,7 @@ describe('AppFooter.vue', () => {
 
   it('should NOT display the app__footer__addon in SERVER mode', () => {
     Murmur.config.merge({ mode: 'SERVER' })
-    wrapper = shallowMount(AppFooter, { localVue, i18n, router, store })
+    wrapper = shallowMount(AppFooter, { appVue, i18n, router, store })
     expect(wrapper.findAll('.app__footer .app__footer__addon--homedir')).toHaveLength(0)
   })
 

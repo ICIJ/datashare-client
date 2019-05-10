@@ -1,36 +1,37 @@
-import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { shallowMount } from '@vue/test-utils'
 import ExtractingForm from '@/components/ExtractingForm'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
+import { createApp } from '@/main'
 import { jsonOk } from 'tests/unit/tests_utils'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
-
 describe('ExtractingForm.vue', () => {
-  let wrapper
+  let wrapper, appVue, i18n
+
+  beforeAll(async () => {
+    const app = document.createElement('div')
+    app.setAttribute('id', 'app')
+    document.body.appendChild(app)
+    window.fetch = jest.fn()
+    window.fetch.mockReturnValue(jsonOk({ userIndices: [] }))
+    appVue = await createApp()
+    i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+  })
 
   beforeEach(() => {
-    wrapper = shallowMount(ExtractingForm, { localVue, i18n, router, store })
+    wrapper = shallowMount(ExtractingForm, { appVue, i18n, router, store })
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk({}))
     datashare.fetch.mockClear()
   })
 
-  afterEach(() => {
-    store.commit('indexing/reset')
-  })
+  afterEach(() => store.commit('indexing/reset'))
+
+  afterAll(() => window.fetch.mockRestore())
 
   it('should call extract action without OCR option, by default', () => {
     wrapper.vm.submitExtract()

@@ -1,5 +1,4 @@
 import fetchPonyfill from 'fetch-ponyfill'
-
 const { Response } = fetchPonyfill()
 
 function jsonOk (body) {
