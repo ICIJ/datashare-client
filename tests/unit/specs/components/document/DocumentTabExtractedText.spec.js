@@ -4,9 +4,13 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import Murmur from '@icij/murmur'
 import store from '@/store'
+import VueI18n from 'vue-i18n'
+import messages from '@/lang/en'
 
 const localVue = createLocalVue()
 localVue.use(Murmur)
+localVue.use(VueI18n)
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('DocumentTabExtractedText.vue', () => {
   esConnectionHelper()
@@ -21,44 +25,44 @@ describe('DocumentTabExtractedText.vue', () => {
   })
 
   it('should mark named entities in the extracted text tab', async () => {
-    const id = 'mydoc.txt'
+    const id = 'doc'
     await letData(es).have(new IndexedDocument(id)
-      .withContent('a NER doc with 2 NER2')
-      .withNer('NER', 2, 'CATEGORY1')
-      .withNer('NER2', 17, 'CATEGORY2'))
+      .withContent('content')
+      .withNer('ner_01', 2, 'category_01')
+      .withNer('ner_02', 17, 'category_02'))
       .commit()
-    await store.dispatch('document/get', { id: id }).then(() => store.dispatch('document/getNamedEntities'))
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
     const wrapper = shallowMount(DocumentTabExtractedText, {
       localVue,
       store,
+      i18n,
       propsData: {
         document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities,
-        showNamedEntities: true
+        namedEntities: store.state.document.namedEntities
       }
     })
 
     expect(wrapper.findAll('mark')).toHaveLength(2)
-    expect(wrapper.findAll('mark').at(0).text()).toEqual('NER')
-    expect(wrapper.findAll('mark').at(0).classes()).toContain('bg-category-category1')
-    expect(wrapper.findAll('mark').at(1).text()).toEqual('NER2')
-    expect(wrapper.findAll('mark').at(1).classes()).toContain('bg-category-category2')
+    expect(wrapper.findAll('mark').at(0).text()).toEqual('ner_01')
+    expect(wrapper.findAll('mark').at(0).classes()).toContain('bg-category-category_01')
+    expect(wrapper.findAll('mark').at(1).text()).toEqual('ner_02')
+    expect(wrapper.findAll('mark').at(1).classes()).toContain('bg-category-category_02')
   })
 
   it('should display a document with named entities and escaped HTML', async () => {
-    const id = 'html_doc.txt'
+    const id = 'doc'
     await letData(es).have(new IndexedDocument(id)
-      .withContent('a foo document <with>HTML</with>')
-      .withNer('foo', 2))
+      .withContent('content')
+      .withNer('ner', 2))
       .commit()
-    await store.dispatch('document/get', { id: id }).then(() => store.dispatch('document/getNamedEntities'))
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
     const wrapper = shallowMount(DocumentTabExtractedText, {
       localVue,
       store,
+      i18n,
       propsData: {
         document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities,
-        showNamedEntities: true
+        namedEntities: store.state.document.namedEntities
       }
     })
 
@@ -66,19 +70,20 @@ describe('DocumentTabExtractedText.vue', () => {
   })
 
   it('should display a document without named entities', async () => {
-    const id = 'html_doc.txt'
+    const id = 'doc'
     await letData(es).have(new IndexedDocument(id)
-      .withContent('a foo document <with>HTML</with>')
-      .withNer('foo', 2))
+      .withContent('content')
+      .withNer('ner', 2))
       .commit()
-    await store.dispatch('document/get', { id: id }).then(() => store.dispatch('document/getNamedEntities'))
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+    store.commit('document/toggleShowNamedEntities')
     const wrapper = shallowMount(DocumentTabExtractedText, {
       localVue,
       store,
+      i18n,
       propsData: {
         document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities,
-        showNamedEntities: false
+        namedEntities: store.state.document.namedEntities
       }
     })
 
@@ -86,20 +91,19 @@ describe('DocumentTabExtractedText.vue', () => {
   })
 
   it('should display query terms with occurrences in decreasing order', async () => {
-    const id = 'html_doc.txt'
+    const id = 'doc'
     await letData(es).have(new IndexedDocument(id)
-      .withContent('document result test document test test ')
-      .withNer('foo', 2))
+      .withContent('document result test document test test '))
       .commit()
-    await store.dispatch('document/get', { id: id }).then(() => store.dispatch('document/getNamedEntities'))
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
     store.commit('search/query', 'result test document')
     const wrapper = shallowMount(DocumentTabExtractedText, {
       localVue,
       store,
+      i18n,
       propsData: {
         document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities,
-        showNamedEntities: true
+        namedEntities: store.state.document.namedEntities
       }
     })
 
@@ -108,5 +112,47 @@ describe('DocumentTabExtractedText.vue', () => {
     expect(wrapper.findAll('ul li').at(0).text()).toEqual('test (3)')
     expect(wrapper.findAll('ul li').at(1).text()).toEqual('document (2)')
     expect(wrapper.findAll('ul li').at(2).text()).toEqual('result (1)')
+  })
+
+  it('should contains a "See highlights" toggle', async () => {
+    const id = 'doc'
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('content'))
+      .commit()
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      i18n,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: store.state.document.namedEntities
+      }
+    })
+
+    expect(wrapper.findAll('.document__header__see-highlights')).toHaveLength(1)
+  })
+
+  it('should change the document state of showNamedEntities', async () => {
+    const id = 'doc'
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('content'))
+      .commit()
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      i18n,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: store.state.document.namedEntities
+      }
+    })
+
+    expect(wrapper.vm.showNamedEntities).toBeTruthy()
+
+    wrapper.findAll('.document__header__see-highlights').at(0).trigger('click')
+
+    expect(wrapper.vm.showNamedEntities).toBeFalsy()
   })
 })

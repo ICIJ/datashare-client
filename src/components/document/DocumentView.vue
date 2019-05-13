@@ -11,10 +11,6 @@
             <fa icon="download" />
             {{ $t('document.download_button') }}
           </a>
-          <span class="document__header__see-highlights btn text-light float-right" :title="$t('document.highlights_caution')" @click="toggleShowNamedEntities">
-            <fa :icon="showNamedEntities ? 'toggle-on' : 'toggle-off'" />
-            {{ $t('document.see_highlights') }}
-          </span>
         </h3>
         <nav class="document__header__nav">
           <ul class="list-inline m-0">
@@ -43,7 +39,7 @@
       </div>
       <div class="d-flex flex-grow-1 tab-content document__content">
         <div class="tab-pane px-4 py-3" :class="{ active: tab === 'text' }" v-if="tab === 'text'">
-          <document-tab-extracted-text :document="document" :named-entities="namedEntities" :show-named-entities="showNamedEntities" />
+          <document-tab-extracted-text :document="document" :named-entities="namedEntities" />
         </div>
         <div class="tab-pane px-4 py-3 document__named-entities" :class="{ active: tab === 'named_entities' }" v-if="tab === 'named_entities'">
           <document-tab-named-entities :document="document" />
@@ -93,8 +89,7 @@ export default {
     ...mapState('document', {
       document: 'doc',
       parentDocument: 'parentDoc',
-      namedEntities: 'namedEntities',
-      showNamedEntities: 'showNamedEntities'
+      namedEntities: 'namedEntities'
     })
   },
   methods: {
@@ -107,9 +102,6 @@ export default {
       if (this.document) {
         await this.$store.commit('userHistory/addDocument', this.document)
       }
-    },
-    toggleShowNamedEntities () {
-      this.$store.commit('document/toggleShowNamedEntities')
     }
   },
   beforeRouteEnter (to, _from, next) {

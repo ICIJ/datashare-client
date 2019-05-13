@@ -1,5 +1,9 @@
 <template>
   <div>
+    <div class="document__header__see-highlights mb-3" :title="$t('document.highlights_caution')" @click="toggleShowNamedEntities">
+      <fa :icon="showNamedEntities ? 'toggle-on' : 'toggle-off'" />
+      {{ $t('document.see_highlights') }}
+    </div>
     <ul class="search-results-item__occurrences" v-if="this.query && this.query !== '*'">
       <li v-for="term in this.getQueryTerms()" :key="term.label">
         {{ term.label }} ({{ term.length }})
@@ -22,11 +26,10 @@ import sortedUniqBy from 'lodash/sortedUniqBy'
 export default {
   name: 'DocumentTabExtractedText',
   mixins: [ner],
-  props: ['document', 'namedEntities', 'showNamedEntities'],
+  props: ['document', 'namedEntities'],
   computed: {
-    ...mapState('search', {
-      query: 'query'
-    })
+    ...mapState('search', ['query']),
+    ...mapState('document', ['showNamedEntities'])
   },
   methods: {
     markedSourceContent () {
@@ -48,6 +51,9 @@ export default {
         })
       }
       return orderBy(result, ['length'], ['desc'])
+    },
+    toggleShowNamedEntities () {
+      this.$store.commit('document/toggleShowNamedEntities')
     }
   }
 }
