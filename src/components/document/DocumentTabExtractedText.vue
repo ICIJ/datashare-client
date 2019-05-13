@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="document__header__see-highlights mb-3" :title="$t('document.highlights_caution')" @click="toggleShowNamedEntities">
+    <div class="document__header__see-highlights mb-3" :title="$t('document.highlights_caution')" @click="toggleShowNamedEntities" v-if="namedEntities.length">
       <fa :icon="showNamedEntities ? 'toggle-on' : 'toggle-off'" />
       {{ $t('document.see_highlights') }}
     </div>
