@@ -48,6 +48,7 @@ export default {
       if (this.$route.name === 'search' && this.$route.query.q === this.query) return false
       // Change the route after update the store with the new query
       this.$store.commit('search/query', this.query)
+      this.$store.commit('search/from', 0)
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
       // And emit an event for those listening...
       this.$emit('submit', this.query)

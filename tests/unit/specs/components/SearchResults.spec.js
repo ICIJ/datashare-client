@@ -13,8 +13,8 @@ localVue.use(VueI18n)
 localVue.use(Murmur)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
-async function createView (query = '*', size) {
-  const response = await store.dispatch('search/query', { query: query, from: 0, size: size })
+async function createView (query = '*', from = 0, size = 25) {
+  const response = await store.dispatch('search/query', { query, from, size })
   return shallowMount(SearchResults, {
     localVue,
     i18n,
@@ -47,14 +47,14 @@ describe('SearchResults.vue', () => {
 
   it('should return 2 documents', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(4)).commit()
-    wrapper = await createView('document', 2)
+    wrapper = await createView('document', 0, 2)
 
     expect(wrapper.findAll('.search-results__items__item__link')).toHaveLength(2)
   })
 
   it('should return 3 documents', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(4)).commit()
-    wrapper = await createView('document', 3)
+    wrapper = await createView('document', 0, 3)
 
     expect(wrapper.findAll('.search-results__items__item__link')).toHaveLength(3)
   })

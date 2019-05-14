@@ -212,7 +212,7 @@ export const actions = {
     return dispatch('query')
   },
   query ({ state, commit }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort }) {
-    commit('index', (typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.index === 'undefined' ? state.index : queryOrParams.index))
+    commit('index', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.index === 'undefined' ? state.index : queryOrParams.index)
     commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.query === 'undefined' ? queryOrParams : queryOrParams.query)
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.from === 'undefined' ? state.from : queryOrParams.from)
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.size === 'undefined' ? state.size : queryOrParams.size)

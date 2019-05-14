@@ -48,4 +48,11 @@ describe('SearchBar.vue', function () {
     wrapper.vm.submit()
     expect(wrapper.vm.$store.state.search.query).toEqual('bar')
   })
+
+  it('should reset the from search parameter to 0', () => {
+    store.commit('search/from', 12)
+    wrapper.vm.submit()
+
+    expect(store.state.search.from).toBe(0)
+  })
 })
