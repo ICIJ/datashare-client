@@ -4,7 +4,7 @@
       <div class="search__body__wrapper">
         <aggregations-panel class="search__body__aggregations-panel" />
         <div class="search__body__search-results">
-          <search-results v-if="isReady" :response="searchResponse" :query.sync="query" />
+          <search-results v-if="isReady" :response="response" :query.sync="query" />
           <div v-else>
             <content-placeholder />
             <content-placeholder />
@@ -38,12 +38,7 @@ export default {
     SearchResults
   },
   computed: {
-    ...mapState('search', {
-      query: 'query',
-      searchResponse: 'response',
-      isReady: 'isReady',
-      showFilters: 'showFilters'
-    }),
+    ...mapState('search', ['query', 'response', 'isReady', 'showFilters']),
     showDocument () {
       return ['document', 'email'].indexOf(this.$route.name) > -1
     }

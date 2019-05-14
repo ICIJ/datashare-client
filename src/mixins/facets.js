@@ -79,7 +79,7 @@ export const mixin = {
       return this.offset + this.pageSize
     },
     resultPath () {
-      return `aggregations.${this.facet.key}.buckets`
+      return ['aggregations', this.facet.key, 'buckets']
     },
     queryTokens () {
       return uniq([

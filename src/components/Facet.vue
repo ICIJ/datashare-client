@@ -59,6 +59,7 @@ import facets from '@/mixins/facets'
 import PQueue from 'p-queue'
 import each from 'lodash/each'
 import get from 'lodash/get'
+import join from 'lodash/join'
 import throttle from 'lodash/throttle'
 import sumBy from 'lodash/sumBy'
 
@@ -129,7 +130,7 @@ export default {
         return this.queue.add(() => {
           return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options })
             .then(r => {
-              this.totalCount = get(r, `aggregations.${this.facet.key}.sum_other_doc_count`, 0) + sumBy(get(r, this.resultPath, []), 'doc_count')
+              this.totalCount = get(r, ['aggregations', this.facet.key, 'sum_other_doc_count'], 0) + sumBy(get(r, this.resultPath, []), 'doc_count')
               this.results = this.addInvertedFacets(r)
               this.isReady = this.queue.pending === 1
               // If this search is global, it means the no values for this query
@@ -142,7 +143,7 @@ export default {
     addInvertedFacets (response) {
       if (!this.isGlobal && this.facetFilter && this.facetFilter.reverse) {
         each(this.facetFilter.values, key => {
-          response.prepend(this.resultPath, { key })
+          response.prepend(join(this.resultPath, '.'), { key })
         })
       }
       return response

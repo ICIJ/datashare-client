@@ -76,6 +76,7 @@
     "path": "Path",
     "indexing-date": "Indexing date",
     "extraction-level": "Extraction level",
+    "creation-date": "Creation date",
     "projects": "Projects",
     "deleteNamedEntity": "Delete this Named Entity",
     "showMore": "Show more",

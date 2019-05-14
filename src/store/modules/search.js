@@ -33,7 +33,8 @@ export function initialState () {
       new FacetNamedEntity('named-entity-location', 'byMentions', true, namedEntityCategoryTranslation['named-entity-location']),
       new FacetPath('path', 'byDirname', false),
       new FacetDate('indexing-date', 'extractionDate', false, item => item.key_as_string),
-      new FacetText('extraction-level', 'extractionLevel', false, item => getExtractionLevelTranslationKey(item.key))
+      new FacetText('extraction-level', 'extractionLevel', false, item => getExtractionLevelTranslationKey(item.key)),
+      new FacetDate('creation-date', 'metadata.tika_metadata_creation_date', false, item => item.key_as_string)
     ],
     sort: 'relevance',
     response: Response.none(),
