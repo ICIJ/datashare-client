@@ -22,6 +22,7 @@ describe('DocumentTabExtractedText.vue', () => {
 
   afterEach(() => {
     store.commit('document/reset')
+    store.commit('search/reset')
   })
 
   it('should mark named entities in the extracted text tab', async () => {
@@ -74,7 +75,7 @@ describe('DocumentTabExtractedText.vue', () => {
     await letData(es).have(new IndexedDocument(id)
       .withContent('document result test document test test '))
       .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+    await store.dispatch('document/get', { id })
     store.commit('search/query', 'result test document')
     const wrapper = shallowMount(DocumentTabExtractedText, {
       localVue,
@@ -118,7 +119,7 @@ describe('DocumentTabExtractedText.vue', () => {
     await letData(es).have(new IndexedDocument(id)
       .withContent('content'))
       .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+    await store.dispatch('document/get', { id })
     const wrapper = shallowMount(DocumentTabExtractedText, {
       localVue,
       store,
@@ -175,5 +176,28 @@ describe('DocumentTabExtractedText.vue', () => {
     })
 
     expect(wrapper.findAll('mark')).toHaveLength(0)
+  })
+
+  it('should highlight the query terms', async () => {
+    const id = 'doc'
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('this is the full content'))
+      .commit()
+    await store.dispatch('document/get', { id })
+    await store.dispatch('search/query', 'content full')
+    store.commit('document/toggleShowNamedEntities')
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      i18n,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: store.state.document.namedEntities
+      }
+    })
+
+    expect(wrapper.findAll('mark')).toHaveLength(2)
+    expect(wrapper.findAll('mark.yellow-0')).toHaveLength(1)
+    expect(wrapper.findAll('mark.yellow-1')).toHaveLength(1)
   })
 })
