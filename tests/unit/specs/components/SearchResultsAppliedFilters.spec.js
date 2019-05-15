@@ -49,7 +49,6 @@ describe('SearchResultsAppliedFilters.vue', () => {
   })
 
   it('should display 1 applied filter', async () => {
-    await store.dispatch('search/query', { query: '*' })
     await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
 
     expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
@@ -97,5 +96,21 @@ describe('SearchResultsAppliedFilters.vue', () => {
     await store.dispatch('search/query', { query: 'term_01 OR term_02', from: 0, size: 3 })
     wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
     expect(store.state.search.query).toBe('term_01')
+  })
+
+  it('should display the label of a facet (1/2)', async () => {
+    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
+    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+
+    expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).text()).toBe('Plain text document')
+  })
+
+  it('should display the label of a facet (2/2)', async () => {
+    await store.dispatch('search/addFacetValue', { name: 'indexing-date', value: '1556668800000' })
+    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+
+    expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).text()).toBe('2019-05')
   })
 })
