@@ -411,4 +411,10 @@ describe('Search store', () => {
 
     expect(store.getters['search/retrieveQueryTerms']).toEqual(['term_01', 'term_02', 'term_03', 'term_04'])
   })
+
+  it('should not split an exact search sentence', () => {
+    store.commit('search/query', 'term_01 "and an exact term" term_02')
+
+    expect(store.getters['search/retrieveQueryTerms']).toEqual(['term_01', 'and an exact term', 'term_02'])
+  })
 })

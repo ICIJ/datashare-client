@@ -16,6 +16,7 @@ import join from 'lodash/join'
 import last from 'lodash/last'
 import map from 'lodash/map'
 import reduce from 'lodash/reduce'
+import replace from 'lodash/replace'
 import split from 'lodash/split'
 import uniq from 'lodash/uniq'
 
@@ -98,8 +99,8 @@ export const getters = {
   },
   retrieveQueryTerms (state) {
     let terms = []
-    map(filter(compact(uniq(split(state.query, ' '))), item => !includes(['*', 'AND', 'OR'], item)), value => {
-      terms = concat(terms, value)
+    map(filter(compact(uniq(split(state.query, / (?=(?:[^"]*"[^"]*")*[^"]*$)/gi))), item => !includes(['*', 'AND', 'OR'], item)), value => {
+      terms = concat(terms, replace(value, /"/g, ''))
     })
     return terms
   }
