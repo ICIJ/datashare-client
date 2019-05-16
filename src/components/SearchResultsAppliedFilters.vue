@@ -25,7 +25,7 @@ export default {
         map(facet.values, value => {
           let label = facet.itemLabel ? facet.itemLabel({ key: value, key_as_string: value }) : value
           label = this.$te(label) ? this.$t(label) : label
-          if (facet.constructor.name === new FacetDate().constructor.name) {
+          if (facet.component === new FacetDate().component) {
             const date = new Date(parseInt(label))
             label = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
           }
