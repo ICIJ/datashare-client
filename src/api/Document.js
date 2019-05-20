@@ -168,6 +168,9 @@ export default class Document extends EsDoc {
   get hasTranslations () {
     return this.translations.length > 0
   }
+  get hasNerTags () {
+    return this.get('_source.nerTags', []).length > 0
+  }
   static get esName () {
     return 'Document'
   }

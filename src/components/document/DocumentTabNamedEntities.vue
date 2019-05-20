@@ -1,6 +1,6 @@
 <template>
   <div class="p-3">
-    <div v-if="!isRemote && document.source.nerTags.length === 0" class="document__named-entities--not--searched">
+    <div v-if="!isRemote && !document.hasNerTags" class="document__named-entities--not--searched">
       <div v-html="$t('document.named_entites_not_searched', { indexing_link: '#/indexing' })"></div>
     </div>
     <div v-else-if="groupByCategories(namedEntities).length === 0" class="document__named-entities--not--found">
