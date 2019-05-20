@@ -17,7 +17,7 @@ import '@/main.scss'
 async function createApp (LocalVue = Vue) {
   LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
   LocalVue.use(VueI18n)
-  LocalVue.use(VueProgressBar, { color: '#852308' })
+  LocalVue.use(VueProgressBar, { color: '#FA4070' })
   LocalVue.use(BootstrapVue)
   LocalVue.use(Murmur)
   LocalVue.use(VueShortkey)
