@@ -99,7 +99,7 @@ export const getters = {
   },
   retrieveQueryTerms (state) {
     let terms = []
-    map(filter(compact(uniq(split(state.query, / (?=(?:[^"]*"[^"]*")*[^"]*$)/gi))), item => !includes(['*', 'AND', 'OR'], item)), value => {
+    map(filter(compact(uniq(split(state.query, / (?=(?:[^"]*"[^"]*")*[^"]*$)/gi))), item => !includes(['*', 'AND', 'OR', 'NOT'], item)), value => {
       terms = concat(terms, replace(value, /"/g, ''))
     })
     return terms

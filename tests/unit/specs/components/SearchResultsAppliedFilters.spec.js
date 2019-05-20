@@ -66,6 +66,12 @@ describe('SearchResultsAppliedFilters.vue', () => {
     expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
   })
 
+  it('should filter on the "NOT" boolean operator', async () => {
+    await store.dispatch('search/query', { query: 'NOT trump', from: 0, size: 3 })
+
+    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
+  })
+
   it('should remove the "AND" on first applied filter deletion', async () => {
     wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
 
