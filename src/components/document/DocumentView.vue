@@ -24,7 +24,7 @@
         </nav>
       </div>
       <div class="d-flex flex-grow-1 tab-content document__content">
-        <div class="tab-pane w-100" :class="{ active: isTabActive(tab.name) }" v-for="tab in visibleTabs" :key="tab.name">
+        <div class="document__content__pane tab-pane w-100" :class="tabClass(tab.name)" v-for="tab in visibleTabs" :key="tab.name">
           <component v-if="isTabActive(tab.name)" :is="tab.component" v-bind="tab.props"></component>
         </div>
       </div>
@@ -82,6 +82,12 @@ export default {
     activateTab (name) {
       this.activeTab = name
       return name
+    },
+    tabClass (name) {
+      return {
+        'active': this.isTabActive(name),
+        ['document__content__pane--' + name]: true
+      }
     }
   },
   computed: {
@@ -96,7 +102,7 @@ export default {
     tabs () {
       return [
         {
-          name: 'extracted_text',
+          name: 'extracted-text',
           label: 'document.extracted_text',
           component: DocumentTabExtractedText,
           icon: 'align-left',
@@ -116,7 +122,7 @@ export default {
           }
         },
         {
-          name: 'named_entities',
+          name: 'named-entities',
           label: 'document.named_entities',
           hidden: this.isRemote,
           component: DocumentTabNamedEntities,

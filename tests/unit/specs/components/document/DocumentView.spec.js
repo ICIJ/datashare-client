@@ -68,7 +68,7 @@ describe('DocumentView.vue', () => {
       .commit()
 
     await wrapper.vm.getDoc()
-    wrapper.vm.tab = 'preview'
+    wrapper.vm.activateTab('preview')
 
     expect(wrapper.contains('.spreadsheet-viewer')).toBeTruthy()
   })
@@ -83,7 +83,7 @@ describe('DocumentView.vue', () => {
       .commit()
 
     await wrapper.vm.getDoc()
-    wrapper.vm.tab = 'preview'
+    wrapper.vm.activateTab('preview')
 
     expect(wrapper.contains('.spreadsheet-viewer')).toBeTruthy()
   })
@@ -97,7 +97,7 @@ describe('DocumentView.vue', () => {
       .withContentType('application/pdf'))
       .commit()
 
-    wrapper.vm.tab = 'preview'
+    wrapper.vm.activateTab('preview')
     await wrapper.vm.getDoc()
 
     expect(wrapper.contains('.pdf-viewer')).toBeTruthy()
@@ -113,7 +113,7 @@ describe('DocumentView.vue', () => {
       .commit()
 
     await wrapper.vm.getDoc()
-    wrapper.vm.tab = 'preview'
+    wrapper.vm.activateTab('preview')
 
     expect(wrapper.contains('.tiff-viewer')).toBeTruthy()
   })

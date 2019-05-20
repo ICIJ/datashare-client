@@ -6,7 +6,7 @@
           <span class="text-muted">
             {{ $t('facet.lang.' + translation.source_language) }}
           </span>
-          <fa icon="angle-right" />
+          <fa icon="angle-right" class="mx-1" />
           <span class="font-weight-bold">
             {{ $t('facet.lang.' + translation.target_language) }}
           </span>
