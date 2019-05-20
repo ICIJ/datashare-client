@@ -66,7 +66,7 @@ describe('Document store', () => {
     await store.dispatch('document/get', { id: childNode[0].id, routing: childNode[0].routing })
     await store.dispatch('document/getParent')
 
-    expect(store.state.document.parentDoc.id).toEqual(parentNode[0].id)
+    expect(store.state.document.parentDocument.id).toEqual(parentNode[0].id)
   })
 
   /* Show Named Entities Toggle */

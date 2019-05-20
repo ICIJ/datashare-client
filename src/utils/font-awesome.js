@@ -1,3 +1,4 @@
+import { faAlignLeft } from '@fortawesome/free-solid-svg-icons/faAlignLeft'
 import { faAmbulance } from '@fortawesome/free-solid-svg-icons/faAmbulance'
 import { faAngleDoubleLeft } from '@fortawesome/free-solid-svg-icons/faAngleDoubleLeft'
 import { faAngleDoubleRight } from '@fortawesome/free-solid-svg-icons/faAngleDoubleRight'
@@ -21,12 +22,15 @@ import { faEllipsisV } from '@fortawesome/free-solid-svg-icons/faEllipsisV'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons/faExclamationTriangle'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
+import { faEye } from '@fortawesome/free-solid-svg-icons/faEye'
 import { faFile } from '@fortawesome/free-solid-svg-icons/faFile'
 import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter'
 import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder'
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen'
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons/faInfoCircle'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons/faIdBadge'
+import { faLanguage } from '@fortawesome/free-solid-svg-icons/faLanguage'
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons/faMapMarkerAlt'
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle'
@@ -46,6 +50,7 @@ import { faUserShield } from '@fortawesome/free-solid-svg-icons/faUserShield'
 import { library } from '@fortawesome/fontawesome-svg-core'
 
 library.add(
+  faAlignLeft,
   faAmbulance,
   faAngleDoubleLeft,
   faAngleDoubleRight,
@@ -69,12 +74,15 @@ library.add(
   faExclamationTriangle,
   faExternalLinkAlt,
   faEyeSlash,
+  faEye,
   faFile,
   faFilter,
   faFolder,
   faFolderOpen,
   faGlobe,
   faIdBadge,
+  faInfoCircle,
+  faLanguage,
   faMapMarkerAlt,
   faPlus,
   faQuestionCircle,

@@ -1,4 +1,6 @@
+import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
+import filter from 'lodash/filter'
 import first from 'lodash/first'
 import last from 'lodash/last'
 import pick from 'lodash/pick'
@@ -19,6 +21,11 @@ export default class Document extends EsDoc {
   }
   setParent (parent) {
     this[_parent] = parent ? new Document(parent) : null
+  }
+  nl2br (str) {
+    return trim(str).split('\n').map(row => {
+      return `<p>${row}</p>`
+    }).join('')
   }
   get parent () {
     return this[_parent]
@@ -70,10 +77,7 @@ export default class Document extends EsDoc {
     return this.raw.highlight
   }
   get contentHtml () {
-    const content = trim(this.get('_source.content', ''))
-    return content.split('\n').map(row => {
-      return `<p>${row}</p>`
-    }).join('')
+    return this.nl2br(this.get('_source.content', ''))
   }
   get url () {
     return '/api/index/src/' + this.index + '/' + this.id + '?routing=' + this.routing
@@ -136,6 +140,16 @@ export default class Document extends EsDoc {
   get excerpt () {
     return truncate(trim(this.source.content), { length: 280 })
   }
+  get translations () {
+    const translations = this.get('_source.content_translated', [])
+    return filter(translations, t => t.content !== '')
+  }
+  get translationsHtml () {
+    return cloneDeep(this.translations).map(translation => {
+      translation['content'] = this.nl2br(translation['content'])
+      return translation
+    })
+  }
   get isEmail () {
     return this.contentType.indexOf('message/') === 0 || this.contentType === 'application/vnd.ms-outlook'
   }
@@ -150,6 +164,9 @@ export default class Document extends EsDoc {
   }
   get isImage () {
     return this.contentType.indexOf('image/') === 0
+  }
+  get hasTranslations () {
+    return this.translations.length > 0
   }
   static get esName () {
     return 'Document'

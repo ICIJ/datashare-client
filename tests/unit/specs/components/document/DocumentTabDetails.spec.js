@@ -57,7 +57,7 @@ describe('DocumentTabDetails.vue', () => {
     await letData(es).have(new IndexedDocument(parentDocument)).commit()
     await letData(es).have(new IndexedDocument(document).withParent(parentDocument)).commit()
     await store.dispatch('document/get', { id: document, routing: parentDocument }).then(() => store.dispatch('document/getParent'))
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, router, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDoc } })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, router, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument } })
 
     expect(wrapper.findAll('.row div').at(1).text()).toEqual(document)
     expect(wrapper.findAll('.row div').at(15).text()).toEqual('1st')

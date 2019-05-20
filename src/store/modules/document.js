@@ -6,7 +6,7 @@ export function initialState () {
     idAndRouting: null,
     doc: null,
     namedEntities: [],
-    parentDoc: null,
+    parentDocument: null,
     showNamedEntities: true
   }
 }
@@ -22,7 +22,7 @@ export const mutations = {
   idAndRouting (state, idAndRouting) {
     state.idAndRouting = idAndRouting
     state.doc = null
-    state.parentDoc = null
+    state.parentDocument = null
   },
   doc (state, raw) {
     if (raw !== null) {
@@ -34,14 +34,14 @@ export const mutations = {
   namedEntities (state, raw) {
     state.namedEntities = new Response(raw).hits
   },
-  parentDoc (state, raw) {
+  parentDocument (state, raw) {
     if (raw !== null) {
-      state.parentDoc = Response.instantiate(raw)
+      state.parentDocument = Response.instantiate(raw)
       state.doc.setParent(raw)
     } else {
-      state.parentDoc = null
+      state.parentDocument = null
     }
-    return state.parentDoc
+    return state.parentDocument
   },
   toggleShowNamedEntities (state) {
     state.showNamedEntities = !state.showNamedEntities
@@ -73,12 +73,12 @@ export const actions = {
       const currentDoc = state.doc.raw._source
       try {
         const doc = await esClient.getEsDoc(rootState.search.index, currentDoc.parentDocument, currentDoc.rootDocument)
-        commit('parentDoc', doc)
+        commit('parentDocument', doc)
       } catch (_) {
-        commit('parentDoc', null)
+        commit('parentDocument', null)
       }
     }
-    return state.parentDoc
+    return state.parentDocument
   }
 }
 

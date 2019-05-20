@@ -14,41 +14,18 @@
         </h3>
         <nav class="document__header__nav">
           <ul class="list-inline m-0">
-            <li class="document__header__nav__item list-inline-item">
-              <a @click="tab = 'text'" :class="{ active: tab === 'text' }">
-                {{ $t('document.extracted_text') }}
-              </a>
-            </li>
-            <li class="document__header__nav__item list-inline-item" v-if="!isRemote || namedEntities.length">
-              <a @click="tab = 'named_entities'" :class="{ active: tab === 'named_entities' }">
-                {{ $t('document.named_entities') }}
-              </a>
-            </li>
-            <li class="document__header__nav__item list-inline-item">
-              <a @click="tab = 'preview'" :class="{ active: tab === 'preview' }">
-                {{ $t('document.preview') }}
-              </a>
-            </li>
-            <li class="document__header__nav__item list-inline-item">
-              <a @click="tab = 'details'" :class="{ active: tab === 'details' }">
-                {{ $t('document.details') }}
+            <li class="document__header__nav__item list-inline-item" v-for="tab in visibleTabs" :key="tab.name">
+              <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
+                <fa :icon="tab.icon" v-if="tab.icon" class="mr-2" />
+                {{ $t(tab.label) }}
               </a>
             </li>
           </ul>
         </nav>
       </div>
       <div class="d-flex flex-grow-1 tab-content document__content">
-        <div class="tab-pane px-4 py-3" :class="{ active: tab === 'text' }" v-if="tab === 'text'">
-          <document-tab-extracted-text :document="document" :named-entities="namedEntities" />
-        </div>
-        <div class="tab-pane px-4 py-3 document__named-entities" :class="{ active: tab === 'named_entities' }" v-if="tab === 'named_entities'">
-          <document-tab-named-entities :document="document" />
-        </div>
-        <div class="tab-pane w-100" :class="{ active: tab === 'preview' }" v-if="tab === 'preview'">
-          <document-tab-preview :document="document" />
-        </div>
-        <div class="tab-pane px-4 py-3" :class="{ active: tab === 'details' }" v-if="tab === 'details'">
-          <document-tab-details :document="document" :parentDocument="parentDocument" />
+        <div class="tab-pane w-100" :class="{ active: isTabActive(tab.name) }" v-for="tab in visibleTabs" :key="tab.name">
+          <component v-if="isTabActive(tab.name)" :is="tab.component" v-bind="tab.props"></component>
         </div>
       </div>
     </div>
@@ -60,12 +37,14 @@
 </template>
 
 <script>
+import filter from 'lodash/filter'
 import { mapState } from 'vuex'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
 import DocumentTabExtractedText from '@/components/document/DocumentTabExtractedText'
 import DocumentTabPreview from '@/components/document/DocumentTabPreview'
+import DocumentTabTranslations from '@/components/document/DocumentTabTranslations'
 import utils from '@/mixins/utils'
 
 export default {
@@ -76,21 +55,15 @@ export default {
     DocumentTabDetails,
     DocumentTabNamedEntities,
     DocumentTabExtractedText,
-    DocumentTabPreview
+    DocumentTabPreview,
+    DocumentTabTranslations
   },
   props: ['id', 'routing', 'index'],
   data () {
     return {
-      tab: 'text',
+      activeTab: 'extracted_text',
       isReady: false
     }
-  },
-  computed: {
-    ...mapState('document', {
-      document: 'doc',
-      parentDocument: 'parentDoc',
-      namedEntities: 'namedEntities'
-    })
   },
   methods: {
     async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
@@ -102,6 +75,76 @@ export default {
       if (this.document) {
         await this.$store.commit('userHistory/addDocument', this.document)
       }
+    },
+    isTabActive (name) {
+      return this.activeTab === name
+    },
+    activateTab (name) {
+      this.activeTab = name
+      return name
+    }
+  },
+  computed: {
+    ...mapState('document', {
+      document: 'doc',
+      namedEntities: 'namedEntities',
+      parentDocument: 'parentDocument'
+    }),
+    visibleTabs () {
+      return filter(this.tabs, t => !t.hidden)
+    },
+    tabs () {
+      return [
+        {
+          name: 'extracted_text',
+          label: 'document.extracted_text',
+          component: DocumentTabExtractedText,
+          icon: 'align-left',
+          props: {
+            document: this.document,
+            namedEntities: this.namedEntities
+          }
+        },
+        {
+          name: 'translations',
+          label: 'document.translations',
+          component: DocumentTabTranslations,
+          hidden: !this.document.hasTranslations,
+          icon: 'globe',
+          props: {
+            document: this.document
+          }
+        },
+        {
+          name: 'named_entities',
+          label: 'document.named_entities',
+          hidden: this.isRemote,
+          component: DocumentTabNamedEntities,
+          icon: 'database',
+          props: {
+            document: this.document
+          }
+        },
+        {
+          name: 'preview',
+          label: 'document.preview',
+          component: DocumentTabPreview,
+          icon: 'eye',
+          props: {
+            document: this.document
+          }
+        },
+        {
+          name: 'details',
+          label: 'document.details',
+          component: DocumentTabDetails,
+          icon: 'info-circle',
+          props: {
+            document: this.document,
+            parentDocument: this.parentDocument
+          }
+        }
+      ]
     }
   },
   beforeRouteEnter (to, _from, next) {
