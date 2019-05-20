@@ -297,6 +297,7 @@
     "details": "Details",
     "named_entities": "Entitiés nommées",
     "extracted_text": "Texte",
+    "translations": "Traductions",
     "preview": "Prévisualisation",
     "download_button": "Télécharger",
     "download_file": "Télécharger le fichier source",

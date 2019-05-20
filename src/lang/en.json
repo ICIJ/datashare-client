@@ -298,6 +298,7 @@
     "details": "Details",
     "named_entities": "Named Entities",
     "extracted_text": "Extracted text",
+    "translations": "Translations",
     "preview": "Preview",
     "download_button": "Download",
     "download_file": "Download source file",

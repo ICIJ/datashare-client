@@ -61,7 +61,7 @@ export default {
   props: ['id', 'routing', 'index'],
   data () {
     return {
-      activeTab: 'extracted_text',
+      activeTab: 'extracted-text',
       isReady: false
     }
   },

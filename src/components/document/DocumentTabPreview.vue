@@ -13,7 +13,7 @@
       <image-viewer :document="document" />
     </template>
     <template v-else>
-      {{ $t('document.not_available') }}
+      <div class="p-3">{{ $t('document.not_available') }}</div>
     </template>
   </div>
 </template>
