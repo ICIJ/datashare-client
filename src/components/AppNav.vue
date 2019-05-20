@@ -1,54 +1,52 @@
 <template>
-  <headroom :z-index="1000" :offset="250" :on-unpin="onPin">
-    <header class="app__nav" :class="{ 'app__nav--collapse': collapseMenu }">
-      <transition name="fade">
-        <div class="app__nav__mask" v-if="!collapseMenu" @click="toggleMenu"></div>
-      </transition>
-      <div class="app__nav__container row no-gutters">
-        <div class="app__nav__container__main col row no-gutters">
-          <router-link class="app__nav__container__main__brand col d-flex justify-content-start align-items-center" :to="{ name: 'landing' }">
-            <img src="~images/logo-color.svg" alt="Datashare" class="ml-3" />
-            <span class="app__nav__container__main__brand__beta mr-3">beta</span>
-          </router-link>
-          <div class="app__nav__container__main__search-bar col" v-if="isntLanding()">
-            <search-bar class="px-0" />
-          </div>
-          <a class="app__nav__container__main__hamburger col" @click.prevent="toggleMenu()" href="#">
-            <fa icon="bars" />
-          </a>
-          <ul class="app__nav__container__main__menu list-unstyled col" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
-            <li class="list-unstyled-item app__nav__container__main__menu__item border-right ml-auto" v-if="!isRemote">
-              <router-link :to="{ name: 'indexing' }">
-                <fa icon="rocket" class="mr-1" />
-                {{ $t('menu.analyse') }}
-              </router-link>
-            </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item app__nav__container__main__menu__item--documents" v-if="!isRemote">
-              <a :href="getAddDocumentsLink()" target="_blank">
-                {{ $t('menu.addDocuments') }}
-              </a>
-            </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item" :class="{ 'ml-auto': isRemote }">
-              <a href="https://icij.gitbook.io/datashare" target="_blank">
-                {{ $t('menu.faq') }}
-              </a>
-            </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item app__nav__container__main__menu__item--help">
-              <a :href="getHelpLink()" target="_blank">
-                {{ $t('menu.help') }}
-              </a>
-            </li>
-            <li class="list-unstyled-item app__nav__container__main__menu__item logout border-left" v-if="isRemote">
-              <a :href="logoutLink">
-                <fa icon="sign-out-alt" class="mr-1" />
-                {{ $t('menu.logout') }}
-              </a>
-            </li>
-          </ul>
+  <header class="app__nav" :class="{ 'app__nav--collapse': collapseMenu }">
+    <transition name="fade">
+      <div class="app__nav__mask" v-if="!collapseMenu" @click="toggleMenu"></div>
+    </transition>
+    <div class="app__nav__container row no-gutters">
+      <div class="app__nav__container__main col row no-gutters">
+        <router-link class="app__nav__container__main__brand col d-flex justify-content-start align-items-center" :to="{ name: 'landing' }">
+          <img src="~images/logo-color.svg" alt="Datashare" class="ml-3" />
+          <span class="app__nav__container__main__brand__beta mr-3">beta</span>
+        </router-link>
+        <div class="app__nav__container__main__search-bar col" v-if="isntLanding()">
+          <search-bar class="px-0" />
         </div>
+        <a class="app__nav__container__main__hamburger col" @click.prevent="toggleMenu()" href="#">
+          <fa icon="bars" />
+        </a>
+        <ul class="app__nav__container__main__menu list-unstyled col" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
+          <li class="list-unstyled-item app__nav__container__main__menu__item border-right ml-auto" v-if="!isRemote">
+            <router-link :to="{ name: 'indexing' }">
+              <fa icon="rocket" class="mr-1" />
+              {{ $t('menu.analyse') }}
+            </router-link>
+          </li>
+          <li class="list-unstyled-item app__nav__container__main__menu__item app__nav__container__main__menu__item--documents" v-if="!isRemote">
+            <a :href="getAddDocumentsLink()" target="_blank">
+              {{ $t('menu.addDocuments') }}
+            </a>
+          </li>
+          <li class="list-unstyled-item app__nav__container__main__menu__item" :class="{ 'ml-auto': isRemote }">
+            <a href="https://icij.gitbook.io/datashare" target="_blank">
+              {{ $t('menu.faq') }}
+            </a>
+          </li>
+          <li class="list-unstyled-item app__nav__container__main__menu__item app__nav__container__main__menu__item--help">
+            <a :href="getHelpLink()" target="_blank">
+              {{ $t('menu.help') }}
+            </a>
+          </li>
+          <li class="list-unstyled-item app__nav__container__main__menu__item logout border-left" v-if="isRemote">
+            <a :href="logoutLink">
+              <fa icon="sign-out-alt" class="mr-1" />
+              {{ $t('menu.logout') }}
+            </a>
+          </li>
+        </ul>
       </div>
-    </header>
-  </headroom>
+    </div>
+  </header>
 </template>
 
 <script>
@@ -97,9 +95,6 @@ export default {
     },
     isntLanding () {
       return this.$route.name !== 'landing'
-    },
-    onPin () {
-      this.$root.$emit('bv::hide::popover')
     },
     getAddDocumentsLink () {
       let link

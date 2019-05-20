@@ -35,8 +35,6 @@ export default {
     // In CSS variables so they can be updated
     --app-nav-height: #{$app-nav-height};
     --app-footer-height: #{$app-footer-height};
-
-    margin-top: var(--app-nav-height);
     margin-bottom: var(--app-footer-height);
   }
 </style>
