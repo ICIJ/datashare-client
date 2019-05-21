@@ -18,6 +18,7 @@ import { highlight } from '@/utils/strings'
 import ner from '@/mixins/ner'
 import { mapState } from 'vuex'
 import concat from 'lodash/concat'
+import filter from 'lodash/filter'
 import map from 'lodash/map'
 import orderBy from 'lodash/orderBy'
 import sortedUniqBy from 'lodash/sortedUniqBy'
@@ -34,29 +35,31 @@ export default {
     markedSourceContent () {
       if (this.document) {
         let markedSourceContent = this.document.source.content
-        map(this.$store.getters['search/retrieveQueryTerms'], (term, index) => {
-          markedSourceContent = markedSourceContent.replace(new RegExp(term.label, 'gi'), match => {
-            return `<mark class="query-term yellow-${index}">${match}</mark>`
-          })
+        const queryTerms = this.retrieveQueryTerms()
+        map(queryTerms, (term, index) => {
+          markedSourceContent = markedSourceContent.replace(new RegExp(term.label, 'gi'), match => `<mark class="query-term yellow-${index}">${match}</mark>`)
         })
         if (this.showNamedEntities) {
-          return highlight(markedSourceContent, sortedUniqBy(this.namedEntities, ne => ne.source.offset),
+          markedSourceContent = highlight(markedSourceContent, sortedUniqBy(this.namedEntities, ne => ne.source.offset),
             m => `<mark class="ner ${this.getCategoryClass(m.category, 'bg-')}">${m.source.mention}</mark>`,
             r => r,
             m => m.source.mention)
-        } else {
-          return markedSourceContent
         }
+        return markedSourceContent
       }
     },
     getQueryTerms () {
       let result = []
       if (this.document.source.content) {
-        map(this.$store.getters['search/retrieveQueryTerms'], term => {
+        const queryTerms = this.retrieveQueryTerms()
+        map(queryTerms, term => {
           result = concat(result, { label: term.label, length: (this.document.source.content.match(new RegExp(term.label, 'gi')) || []).length })
         })
       }
       return orderBy(result, ['length'], ['desc'])
+    },
+    retrieveQueryTerms () {
+      return filter(this.$store.getters['search/retrieveQueryTerms'], item => ['', 'content'].includes(item.field))
     },
     toggleShowNamedEntities () {
       this.$store.commit('document/toggleShowNamedEntities')

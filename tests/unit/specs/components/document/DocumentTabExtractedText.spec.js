@@ -70,30 +70,6 @@ describe('DocumentTabExtractedText.vue', () => {
     expect(wrapper.findAll('mark')).toHaveLength(1)
   })
 
-  it('should display query terms with occurrences in decreasing order', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('document result test document test test '))
-      .commit()
-    await store.dispatch('document/get', { id })
-    store.commit('search/query', 'result test document')
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
-    })
-
-    expect(wrapper.findAll('ul')).toHaveLength(1)
-    expect(wrapper.findAll('ul li')).toHaveLength(3)
-    expect(wrapper.findAll('ul li').at(0).text()).toEqual('test (3)')
-    expect(wrapper.findAll('ul li').at(1).text()).toEqual('document (2)')
-    expect(wrapper.findAll('ul li').at(2).text()).toEqual('result (1)')
-  })
-
   it('should contain a "See highlights" toggle', async () => {
     const id = 'doc'
     await letData(es).have(new IndexedDocument(id)
@@ -176,6 +152,52 @@ describe('DocumentTabExtractedText.vue', () => {
     })
 
     expect(wrapper.findAll('mark')).toHaveLength(0)
+  })
+
+  it('should display query terms with occurrences in decreasing order', async () => {
+    const id = 'doc'
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('document result test document test test '))
+      .commit()
+    await store.dispatch('document/get', { id })
+    store.commit('search/query', 'result test document')
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      i18n,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: store.state.document.namedEntities
+      }
+    })
+
+    expect(wrapper.findAll('ul')).toHaveLength(1)
+    expect(wrapper.findAll('ul li')).toHaveLength(3)
+    expect(wrapper.findAll('ul li').at(0).text()).toEqual('test (3)')
+    expect(wrapper.findAll('ul li').at(1).text()).toEqual('document (2)')
+    expect(wrapper.findAll('ul li').at(2).text()).toEqual('result (1)')
+  })
+
+  it('should not display the query terms on a specific field but content', async () => {
+    const id = 'doc'
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('term_01'))
+      .commit()
+    await store.dispatch('document/get', { id })
+    store.commit('search/query', 'content:term_01 field_name:term_02')
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      i18n,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: store.state.document.namedEntities
+      }
+    })
+
+    expect(wrapper.findAll('ul')).toHaveLength(1)
+    expect(wrapper.findAll('ul li')).toHaveLength(1)
+    expect(wrapper.findAll('ul li').at(0).text()).toEqual('term_01 (1)')
   })
 
   it('should highlight the query terms', async () => {
