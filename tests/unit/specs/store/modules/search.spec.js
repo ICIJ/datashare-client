@@ -398,49 +398,49 @@ describe('Search store', () => {
     it('should retrieve 1 applied filter', () => {
       store.commit('search/query', 'term_01')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', term: 'term_01' }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01' }])
     })
 
     it('should retrieve 2 applied filters', () => {
       store.commit('search/query', 'term_01 term_02')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', term: 'term_01' }, { field: '', term: 'term_02' }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01' }, { field: '', label: 'term_02' }])
     })
 
     it('should retrieve 3 applied filters', () => {
       store.commit('search/query', 'term_01 term_02 term_03')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', term: 'term_01' }, { field: '', term: 'term_02' }, { field: '', term: 'term_03' }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01' }, { field: '', label: 'term_02' }, { field: '', label: 'term_03' }])
     })
 
     it('should merge 2 identical terms', () => {
       store.commit('search/query', 'term_01 term_01')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', term: 'term_01' }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01' }])
     })
 
     it('should filter on boolean operators "AND" and "OR"', () => {
       store.commit('search/query', 'term_01 AND term_02 OR term_03')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', term: 'term_01' }, { field: '', term: 'term_02' }, { field: '', term: 'term_03' }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01' }, { field: '', label: 'term_02' }, { field: '', label: 'term_03' }])
     })
 
     it('should not split an exact search sentence', () => {
       store.commit('search/query', 'term_01 "and an exact term" term_02')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', term: 'term_01' }, { field: '', term: 'and an exact term' }, { field: '', term: 'term_02' }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01' }, { field: '', label: 'and an exact term' }, { field: '', label: 'term_02' }])
     })
 
     it('should filter on prefix', () => {
       store.commit('search/query', 'NOT term_01 -term_02 +term_03')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', term: 'term_01' }, { field: '', term: 'term_02' }, { field: '', term: 'term_03' }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01' }, { field: '', label: 'term_02' }, { field: '', label: 'term_03' }])
     })
 
     it('should display field name', () => {
       store.commit('search/query', 'field_name:term_01')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: 'field_name', term: 'term_01' }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: 'field_name', label: 'term_01' }])
     })
   })
 })

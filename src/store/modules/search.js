@@ -102,9 +102,8 @@ export const getters = {
     function getTerm (object, path) {
       const term = get(object, join([path, 'term'], '.'), '')
       const field = get(object, join([path, 'field'], '.'), '')
-      if (term !== '*' && term !== '' && !includes(map(terms, 'term'), term)) {
-        const termObject = { field: field === '<implicit>' ? '' : field, term: term }
-        terms = concat(terms, termObject)
+      if (term !== '*' && term !== '' && !includes(map(terms, 'label'), term)) {
+        terms = concat(terms, { field: field === '<implicit>' ? '' : field, label: term })
       }
     }
     function retTerms (query) {

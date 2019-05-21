@@ -19,7 +19,7 @@ export default {
     filters () {
       let filters = []
       map(this.$store.getters['search/retrieveQueryTerms'], term => {
-        filters = concat(filters, { label: term.term, value: term.term })
+        filters = concat(filters, { label: term.label, value: term.label })
       })
       map(this.$store.state.search.facets, facet => {
         map(facet.values, value => {
