@@ -6146,6 +6146,11 @@ lru-cache@~2.6.5:
   version "2.6.5"
   resolved "https://registry.yarnpkg.com/lru-cache/-/lru-cache-2.6.5.tgz#e56d6354148ede8d7707b58d143220fd08df0fd5"
 
+lucene@^2.0.3:
+  version "2.0.3"
+  resolved "https://registry.yarnpkg.com/lucene/-/lucene-2.0.3.tgz#45f46af9f346eada7e438642fb82e1914da1a6d2"
+  integrity sha512-QM3pGC1k9fObTgi02dtahkbIkJGutPDwtN1LgDT563IV3hPggcFXfIroUSFKDjy9QAYNOcRcgynpjBQXmdk7NA==
+
 make-dir@^1.0.0:
   version "1.3.0"
   resolved "https://registry.yarnpkg.com/make-dir/-/make-dir-1.3.0.tgz#79c1033b80515bd6d24ec9933e860ca75ee27f0c"
