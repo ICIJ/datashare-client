@@ -35,7 +35,7 @@ export default {
       if (this.document) {
         let markedSourceContent = this.document.source.content
         map(this.$store.getters['search/retrieveQueryTerms'], (term, index) => {
-          markedSourceContent = markedSourceContent.replace(new RegExp(term, 'gi'), match => {
+          markedSourceContent = markedSourceContent.replace(new RegExp(term.term, 'gi'), match => {
             return `<mark class="query-term yellow-${index}">${match}</mark>`
           })
         })
@@ -53,7 +53,7 @@ export default {
       let result = []
       if (this.document.source.content) {
         map(this.$store.getters['search/retrieveQueryTerms'], term => {
-          result = concat(result, { label: term, length: (this.document.source.content.match(new RegExp(term, 'gi')) || []).length })
+          result = concat(result, { label: term.term, length: (this.document.source.content.match(new RegExp(term.term, 'gi')) || []).length })
         })
       }
       return orderBy(result, ['length'], ['desc'])

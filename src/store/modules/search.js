@@ -2,21 +2,21 @@ import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import { FacetDate, FacetNamedEntity, FacetPath, FacetText, namedEntityCategoryTranslation } from '@/store/facetsStore'
+import lucene from 'lucene'
 import castArray from 'lodash/castArray'
 import concat from 'lodash/concat'
-import compact from 'lodash/compact'
 import drop from 'lodash/drop'
 import dropRight from 'lodash/dropRight'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
+import get from 'lodash/get'
 import head from 'lodash/head'
 import includes from 'lodash/includes'
 import join from 'lodash/join'
 import last from 'lodash/last'
 import map from 'lodash/map'
 import reduce from 'lodash/reduce'
-import replace from 'lodash/replace'
 import split from 'lodash/split'
 import uniq from 'lodash/uniq'
 
@@ -99,9 +99,22 @@ export const getters = {
   },
   retrieveQueryTerms (state) {
     let terms = []
-    map(filter(compact(uniq(split(state.query, / (?=(?:[^"]*"[^"]*")*[^"]*$)/gi))), item => !includes(['*', 'AND', 'OR', 'NOT'], item)), value => {
-      terms = concat(terms, replace(value, /"/g, ''))
-    })
+    function getTerm (object, path) {
+      const term = get(object, join([path, 'term'], '.'), '')
+      const field = get(object, join([path, 'field'], '.'), '')
+      if (term !== '*' && term !== '' && !includes(map(terms, 'term'), term)) {
+        const termObject = { field: field === '<implicit>' ? '' : field, term: term }
+        terms = concat(terms, termObject)
+      }
+    }
+    function retTerms (query) {
+      getTerm(query, 'left')
+      getTerm(query, 'right')
+      if (get(query, 'right.left', null) !== null) {
+        retTerms(get(query, 'right'))
+      }
+    }
+    retTerms(lucene.parse(state.query))
     return terms
   }
 }
