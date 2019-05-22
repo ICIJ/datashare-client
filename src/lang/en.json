@@ -44,7 +44,9 @@
         "creationDateNewest": "Creation date (newest)",
         "creationDateOldest": "Creation date (oldest)",
         "sizeLargest": "Size (decreasing)",
-        "sizeSmallest": "Size (increasing)"
+        "sizeSmallest": "Size (increasing)",
+        "path": "File path (A to Z)",
+        "pathReverse": "File path (Z to A)"
       }
     },
     "reset_filters": "Reset filters",

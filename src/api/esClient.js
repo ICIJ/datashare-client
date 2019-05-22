@@ -67,10 +67,6 @@ export function datasharePlugin (Client, config, components) {
     let sortField
     let sortOrder
     switch (sort) {
-      case 'relevance' :
-        sortField = '_score'
-        sortOrder = 'desc'
-        break
       case 'creationDateNewest' :
         sortField = 'metadata.tika_metadata_creation_date'
         sortOrder = 'desc'
@@ -95,6 +91,17 @@ export function datasharePlugin (Client, config, components) {
         sortField = 'contentLength'
         sortOrder = 'asc'
         break
+      case 'path' :
+        sortField = 'path'
+        sortOrder = 'asc'
+        break
+      case 'pathReverse' :
+        sortField = 'path'
+        sortOrder = 'desc'
+        break
+      default:
+        sortField = '_score'
+        sortOrder = 'desc'
     }
     body.sort(sortField, sortOrder)
   }

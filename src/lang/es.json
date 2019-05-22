@@ -41,8 +41,12 @@
         "relevance": "Relevancia",
         "dateNewest": "Fecha (más reciente)",
         "dateOldest": "Fecha (más antiguo)",
+        "creationDateNewest": "Creation date (newest)",
+        "creationDateOldest": "Creation date (oldest)",
         "sizeLargest": "Tamaño (disminuyendo)",
-        "sizeSmallest": "Tamaño (aumentado)"
+        "sizeSmallest": "Tamaño (aumentado)",
+        "path": "File path (A to Z)",
+        "pathReverse": "File path (Z to A)"
       }
     },
     "reset_filters": "Resetear filtros",

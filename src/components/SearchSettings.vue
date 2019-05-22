@@ -90,7 +90,9 @@ export default {
         'creationDateNewest',
         'creationDateOldest',
         'sizeLargest',
-        'sizeSmallest'
+        'sizeSmallest',
+        'path',
+        'pathReverse'
       ],
       selectedSort: this.$store.state.search.sort,
       // https://vuejs.org/v2/guide/reactivity.html#Declaring-Reactive-Properties

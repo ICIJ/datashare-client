@@ -44,7 +44,9 @@
         "creationDateNewest": "Date de création (décroissante)",
         "creationDateOldest": "Date de création (croissante)",
         "sizeLargest": "Taille (décroissante)",
-        "sizeSmallest": "Taille (croissante)"
+        "sizeSmallest": "Taille (croissante)",
+        "path": "Chemin du fichier (A à Z)",
+        "pathReverse": "Chemin du fichier (Z à A)"
       }
     },
     "reset_filters": "Réinitialiser les filtres",
