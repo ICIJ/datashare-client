@@ -10,7 +10,7 @@ import uniqBy from 'lodash/uniqBy'
 import Document from './Document'
 import NamedEntity from './NamedEntity'
 
-const _raw = Symbol('raw')
+const _raw = '_RAW'
 
 export default class Response {
   constructor (raw) {

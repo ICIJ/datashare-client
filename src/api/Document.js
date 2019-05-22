@@ -13,7 +13,7 @@ import DatashareClient from './DatashareClient'
 import EsDoc from './EsDoc'
 import moment from 'moment'
 
-const _parent = Symbol('parent')
+const _parent = '_PARENT'
 
 export default class Document extends EsDoc {
   constructor (raw, parent = null) {
