@@ -11,11 +11,11 @@
             {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
           </button>
         </div>
-        <div v-html="currentContentHtml" class=" px-3 py-2"></div>
+        <div v-html="currentContentHtml" class="document-translated-content__translation__header__content px-3 py-2"></div>
       </div>
     </template>
     <template v-else>
-      <div v-html="document.contentHtml"></div>
+      <div class="document-translated-content__original" v-html="document.contentHtml"></div>
     </template>
   </div>
 </template>
