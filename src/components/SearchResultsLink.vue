@@ -1,7 +1,7 @@
 <template>
-  <router-link :to="{ name: routeName, params }" class="search-results-link d-flex" :class="{ 'search-results-link--active': isActive() }">
-    <document-thumbnail :document="doc" class="search-results-link__thumbnail mr-3" crop />
-    <div>
+  <router-link :to="{ name: routeName, params }" class="search-results-link d-flex align-self-stretch flex-nowrap" :class="{ 'search-results-link--active': isActive() }">
+    <document-thumbnail :document="doc" class="search-results-link__thumbnail" crop />
+    <div class="search-results-link__wrapper">
       <h5 class="search-results-link__basename">
         <document-sliced-name :document="doc" />
       </h5>
@@ -76,7 +76,6 @@ export default {
 
 <style lang="scss">
   .search-results-link {
-    padding: $spacer;
     border-bottom: 1px solid $gray-200;
     display: block;
 
@@ -101,6 +100,17 @@ export default {
         bottom: 0;
         box-shadow: 0 0 10px 0 $secondary;
       }
+    }
+
+    &__thumbnail {
+      margin: $spacer;
+      margin-right: 0;
+    }
+
+    &__wrapper {
+      margin: $spacer;
+      min-width: 0;
+      flex-grow: 1;
     }
 
     &__basename {

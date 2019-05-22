@@ -108,6 +108,11 @@ export default {
           top: 0;
           right: 0;
           visibility: hidden;
+          box-shadow:0 0 $spacer $spacer mix($secondary, white, 5%);
+
+          &:hover {
+            box-shadow:0 0 $spacer $spacer white;
+          }
         }
 
         &__link {
