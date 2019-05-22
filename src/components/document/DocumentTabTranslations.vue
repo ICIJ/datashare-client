@@ -4,9 +4,10 @@
       <li v-for="(translation, index) in document.translationsHtml" class="card mb-4" :key="index">
         <div class="mb-2 bg-light p-2">
           <span class="text-muted">
-            {{ $t('facet.lang.' + translation.source_language) }}
+            <fa icon="globe" class="mr-2" />
+            <abbr :title="$t(`facet.lang.${translation.source_language}`)">Detected language</abbr>
           </span>
-          <fa icon="angle-right" class="mx-1" />
+          <fa icon="angle-right" class="mx-2" />
           <span class="font-weight-bold">
             {{ $t('facet.lang.' + translation.target_language) }}
           </span>

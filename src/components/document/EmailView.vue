@@ -25,8 +25,8 @@
             </span>
           </div>
         </router-link>
-        <div v-if="isActive(email)" v-once>
-          <div  class="email-view__thread__item__content p-3" v-html="email.contentHtml"></div>
+        <div v-if="isActive(email)">
+          <document-translated-content  class="email-view__thread__item__content p-3" :document="email" />
           <div  class="email-view__thread__item__footer px-4 py-3 bg-light d-flex">
             <router-link :to="{ name: 'document', params: routeParams(email) }" class="align-self-end">
               See detail
@@ -86,10 +86,14 @@ import VueScrollTo from 'vue-scrollto'
 
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
+import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
 
 export default {
   name: 'EmailView',
   props: ['index', 'id', 'routing'],
+  components: {
+    DocumentTranslatedContent
+  },
   data () {
     return {
       isReady: false,
@@ -176,6 +180,11 @@ export default {
   },
   beforeRouteUpdate (to, _from, next) {
     this.getDoc(to.params).then(next)
+  },
+  mounted () {
+    if (!this.isReady) {
+      this.getDoc()
+    }
   }
 }
 </script>

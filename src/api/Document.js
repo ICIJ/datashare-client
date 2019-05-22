@@ -1,5 +1,7 @@
+import some from 'lodash/some'
 import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
+import find from 'lodash/find'
 import filter from 'lodash/filter'
 import first from 'lodash/first'
 import last from 'lodash/last'
@@ -26,6 +28,19 @@ export default class Document extends EsDoc {
     return trim(str).split('\n').map(row => {
       return `<p>${row}</p>`
     }).join('')
+  }
+  hasTranslationsIn (target_language) {
+    return some(this.translations, { target_language })
+  }
+  translationIn (target_language) {
+    return find(this.translations, { target_language })
+  }
+  translatedContentIn (target_language) {
+    const translation = this.translationIn(target_language)
+    return translation ? translation.content : null
+  }
+  translatedContentHtmlIn (target_language) {
+    return this.nl2br(this.translatedContentIn(target_language))
   }
   get parent () {
     return this[_parent]
@@ -89,7 +104,11 @@ export default class Document extends EsDoc {
     return this.source.contentType || 'unknown'
   }
   get creationDate () {
-    return new Date(this.source.metadata.tika_metadata_creation_date)
+    try {
+      return new Date(this.source.metadata.tika_metadata_creation_date)
+    } catch {
+      return null
+    }
   }
   get creationDateHuman () {
     return moment(this.creationDate).format('LLL')

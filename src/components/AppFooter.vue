@@ -166,6 +166,7 @@ export default {
     },
     async deleteAll () {
       await this.$store.dispatch('indexing/deleteAll')
+      this.$store.commit('userHistory/clear')
       EventBus.$emit('index::delete::all')
     }
   }
