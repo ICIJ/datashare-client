@@ -37,7 +37,7 @@ describe('SpreadsheetViewer.vue', () => {
 
     await wrapper.vm.getWorkbook()
 
-    expect(wrapper.find('.spreadsheet-viewer .alert').text()).toContain('404 Not Found')
+    expect(wrapper.find('.spreadsheet-viewer .alert').text()).toContain('Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.')
   })
 
   it('should load a csv content file', async () => {

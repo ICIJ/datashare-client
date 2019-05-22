@@ -33,7 +33,7 @@ describe('TiffViewer.vue', () => {
 
     await wrapper.vm.loadPage(1)
 
-    expect(wrapper.find('.tiff-viewer .alert').text()).toContain('404 Not Found')
+    expect(wrapper.find('.tiff-viewer .alert').text()).toContain('Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.')
   })
 
   it('should load a tiff content file', async () => {

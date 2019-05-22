@@ -6,9 +6,7 @@ export const mixin = {
     getSource (document) {
       return ds.getSource(document).catch(error => {
         if (error.response && error.response.status === 404) {
-          this.$toasted.show(this.$root.$t('document.error_not_found'),
-            { type: 'error', position: 'bottom-right' })
-            .goAway(10000)
+          throw new Error(this.$t('document.error_not_found'))
         }
         throw error
       })
