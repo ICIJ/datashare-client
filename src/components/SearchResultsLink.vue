@@ -114,7 +114,7 @@ export default {
     }
 
     &__basename {
-      font-size: 1.1em;
+      font-size: 1rem;
       margin: 0;
     }
 

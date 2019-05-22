@@ -11,10 +11,10 @@
         <span v-html="getNamedEntityLabel({ key: $t('facet.all'), doc_count: totalCount, byDocs: { value: total } })"></span>
       </b-form-checkbox>
       <div v-for="item in items" :key="item.key" class="facet__items__item d-flex">
-        <b-form-checkbox v-model="selected" @change="toggleValue(item)" class="w-100" :value="item.key">
+        <b-form-checkbox v-model="selected" @change="toggleValue(item)" class="facet__items__item__checkbox w-100 mt-0 mr-0" :value="item.key">
           <span v-html="getNamedEntityLabel(item)"></span>
         </b-form-checkbox>
-        <div class="col facet__items__item__menu">
+        <div class="facet__items__item__menu" v-if="!isRemote">
           <b-dropdown class="h-100 my-2" no-caret dropright offset="25">
             <template slot="button-content" class="px-1">
               <fa icon="ellipsis-v" />
@@ -34,6 +34,7 @@
 import Facet from '@/components/Facet'
 import facets from '@/mixins/facets'
 import ner from '@/mixins/ner'
+import utils from '@/mixins/utils'
 import { EventBus } from '@/utils/event-bus'
 import DatashareClient from '@/api/DatashareClient'
 import get from 'lodash/get'
@@ -43,7 +44,7 @@ const datashare = new DatashareClient()
 export default {
   name: 'FacetNamedEntity',
   components: { Facet },
-  mixins: [facets, ner],
+  mixins: [facets, ner, utils],
   computed: {
     total () {
       return this.$store.state.search.response.total
@@ -55,15 +56,15 @@ export default {
       const count = get(item, 'doc_count', 0)
       const value = get(item, 'byDocs.value', 0)
       return '<div class="col-auto py-1 pl-2 facet__items__item__body">' +
-        '<div class="badge badge-pill badge-light mr-1 text-uppercase facet__items__item__body__key">' +
-        label +
-        '</div>' +
-        '<div class="text-muted small facet__items__item__description">' +
-        this.$t('aggregations.mentions.item', {
-          occurrences: this.$tc('aggregations.mentions.occurrence', count, { count: this.$n(count) }),
-          documents: this.$tc('aggregations.mentions.document', value, { count: this.$n(value) })
-        }) +
-        '</div>' +
+          '<div class="badge badge-pill badge-light mr-1 text-uppercase d-inline facet__items__item__body__key">' +
+            label +
+          '</div>' +
+          '<div class="text-muted small facet__items__item__description">' +
+            this.$t('aggregations.mentions.item', {
+              occurrences: this.$tc('aggregations.mentions.occurrence', count, { count: this.$n(count) }),
+              documents: this.$tc('aggregations.mentions.document', value, { count: this.$n(value) })
+            }) +
+          '</div>' +
         '</div>'
     },
     resetNamedEntityValues (evt) {
@@ -93,22 +94,30 @@ export default {
     label.custom-control-label::before, label.custom-control-label::after {
       top: 1rem;
     }
+
     .facet__items__item {
 
       &:hover .facet__items__item__menu {
         visibility: visible;
       }
 
+      &__checkbox {
+        max-width: calc(100% - 3rem)
+      }
+
       &__body {
         border-left: 1px dashed $card-border-color !important;
         flex-grow: 1;
-        flex-basis: 50%;
         min-width: 0;
+        display: flex;
+        flex-direction: column;
+        align-items: start;
 
         &__key {
           display: inline-block;
           overflow: hidden;
           max-width: 100%;
+          min-width: 0;
           text-overflow: ellipsis;
         }
       }
