@@ -4,8 +4,6 @@
     <router-view />
     <app-footer />
     <vue-progress-bar />
-    <portal-target name="modal-outlet" />
-    <portal-target name="tooltip-outlet" />
   </div>
 </template>
 
@@ -13,14 +11,12 @@
 import DatashareClient from '@/api/DatashareClient'
 import AppFooter from './AppFooter'
 import AppNav from './AppNav'
-import { PortalTarget } from 'portal-vue'
 
 export default {
   name: 'App',
   components: {
     AppFooter,
-    AppNav,
-    PortalTarget
+    AppNav
   },
   created () {
     if (process.env.NODE_ENV === 'production') {

@@ -15,11 +15,9 @@
         <index-selector />
         <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
       </div>
-      <portal to="modal-outlet">
-        <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
-          <facet-search :facet="selectedFacet" :query="facetQuery" />
-        </b-modal>
-      </portal>
+      <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
+        <facet-search :facet="selectedFacet" :query="facetQuery" />
+      </b-modal>
     </div>
   </transition>
 </template>
@@ -39,7 +37,6 @@ import get from 'lodash/get'
 import isArray from 'lodash/isArray'
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
-import { Portal } from 'portal-vue'
 
 export default {
   name: 'AggregationsPanel',
@@ -50,8 +47,7 @@ export default {
     FacetSearch,
     FacetText,
     IndexSelector,
-    bModal,
-    Portal
+    bModal
   },
   mounted () {
     this.$watch(() => map(this.$refs, (ref, key) => get(ref, '0.root.isReady', false)), () => {
