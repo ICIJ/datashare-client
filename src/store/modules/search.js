@@ -8,6 +8,7 @@ import concat from 'lodash/concat'
 import drop from 'lodash/drop'
 import dropRight from 'lodash/dropRight'
 import each from 'lodash/each'
+import endsWith from 'lodash/endsWith'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
 import get from 'lodash/get'
@@ -99,21 +100,24 @@ export const getters = {
   },
   retrieveQueryTerms (state) {
     let terms = []
-    function getTerm (object, path) {
+    function getTerm (object, path, start, operator) {
       const term = get(object, join([path, 'term'], '.'), '')
       const field = get(object, join([path, 'field'], '.'), '')
+      const prefix = get(object, join([path, 'prefix'], '.'), '')
+      const negation = ['-', '!'].includes(prefix) || start === 'NOT' || endsWith(operator, 'NOT')
       if (term !== '*' && term !== '' && !includes(map(terms, 'label'), term)) {
-        terms = concat(terms, { field: field === '<implicit>' ? '' : field, label: term })
+        terms = concat(terms, { field: field === '<implicit>' ? '' : field, label: term, negation })
       }
     }
-    function retTerms (query) {
-      getTerm(query, 'left')
-      getTerm(query, 'right')
-      if (get(query, 'right.left', null) !== null) {
-        retTerms(get(query, 'right'))
+    function retTerms (query, operator) {
+      getTerm(query, 'left', get(query, 'start', null), operator)
+      if (get(query, 'right.left', null) === null) {
+        getTerm(query, 'right', null, get(query, 'operator', null))
+      } else {
+        retTerms(get(query, 'right'), get(query, 'operator', null))
       }
     }
-    retTerms(lucene.parse(state.query))
+    retTerms(lucene.parse(state.query), null)
     return terms
   }
 }
