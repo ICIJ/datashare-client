@@ -47,7 +47,7 @@ export default {
       return this.$config.get('document-thumbnail.activated')
     },
     isImage () {
-      return this.documentThumbnailAtivated && this.document.contentType.indexOf('image/') === 0
+      return this.document.contentType.indexOf('image/') === 0
     }
   }
 }

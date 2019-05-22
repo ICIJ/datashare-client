@@ -1,19 +1,29 @@
 <template>
   <div class="image-viewer m-auto p-3">
-    <document-thumbnail :document="document" size="xl" class="d-inline-block" />
+    <img :src="href" class="d-inline-block" />
   </div>
 </template>
 
 <script>
-import DocumentThumbnail from '@/components/DocumentThumbnail'
-
 export default {
   name: 'ImageViewer',
-  components: { DocumentThumbnail },
   props: {
     document: {
       type: Object
     }
+  },
+  computed: {
+    href () {
+      const url = new URL(this.document.fullUrl)
+      url.searchParams.set('inline', true)
+      return url.href
+    }
   }
 }
 </script>
+
+<style>
+  .image-viewer img {
+    max-width: 100%;
+  }
+</style>
