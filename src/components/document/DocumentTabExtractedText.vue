@@ -35,7 +35,7 @@ export default {
     markedSourceContent () {
       if (this.document) {
         let markedSourceContent = this.document.source.content
-        const queryTerms = this.retrieveQueryTerms()
+        const queryTerms = this.getQueryTerms()
         map(queryTerms, (term, index) => {
           markedSourceContent = markedSourceContent.replace(new RegExp(term.label, 'gi'), match => `<mark class="query-term yellow-${index}">${match}</mark>`)
         })
