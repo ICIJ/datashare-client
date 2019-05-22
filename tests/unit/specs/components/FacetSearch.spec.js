@@ -122,7 +122,7 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should filter the list according to facetQuery', async () => {
-    for (const type of ['pdf', 'doc', 'docx', 'html', 'css', 'js', 'tx', 'vue', 'txt', 'xls']) {
+    for await (const type of ['jade', 'doc', 'docx', 'html', 'css', 'js', 'tx', 'vue', 'txt', 'xls']) {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
 
@@ -134,7 +134,7 @@ describe('FacetSearch.vue', () => {
     await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
 
-    wrapper.vm.facetQuery = 'pdf'
+    wrapper.vm.facetQuery = 'jade'
     await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
   })
