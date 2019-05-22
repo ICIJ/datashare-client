@@ -24,99 +24,51 @@ describe('SearchResultsAppliedFilters.vue', () => {
     await store.dispatch('search/reset')
   })
 
-  it('should display no applied filters (1/2)', async () => {
-    await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
+  describe('displays applied filters', () => {
+    it('should display 2 applied filters', async () => {
+      await store.dispatch('search/query', { query: 'document test', from: 0, size: 3 })
 
-    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(0)
+      expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
+    })
+
+    it('should display 1 applied filter', async () => {
+      await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
+
+      expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
+    })
+
+    it('should display the label of a facet', async () => {
+      await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
+      wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+
+      expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter')).toHaveLength(1)
+      expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).text()).toBe('Plain text document')
+    })
+
+    it('should display the label of a facet date', async () => {
+      await store.dispatch('search/addFacetValue', { name: 'indexing-date', value: '1556668800000' })
+      wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+
+      expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter')).toHaveLength(1)
+      expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).text()).toBe('2019-05')
+    })
   })
 
-  it('should display no applied filters (2/2)', async () => {
-    await store.dispatch('search/query', { query: '   ', from: 0, size: 3 })
+  describe('deletes applied filters', () => {
+    it('should remove the "AND" on last applied filter deletion', async () => {
+      wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
 
-    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(0)
-  })
+      await store.dispatch('search/query', { query: 'term_01 AND term_02', from: 0, size: 3 })
+      wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
+      expect(store.state.search.query).toBe('term_01')
+    })
 
-  it('should display 2 applied filters', async () => {
-    await store.dispatch('search/query', { query: 'document test', from: 0, size: 3 })
+    it('should remove the "OR" on last applied filter deletion', async () => {
+      wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
 
-    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
-  })
-
-  it('should merge 2 identical terms', async () => {
-    await store.dispatch('search/query', { query: 'test test', from: 0, size: 3 })
-
-    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
-  })
-
-  it('should display 1 applied filter', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
-
-    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
-  })
-
-  it('should filter on the "AND" boolean operator', async () => {
-    await store.dispatch('search/query', { query: 'trump AND lalilou', from: 0, size: 3 })
-
-    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
-  })
-
-  it('should filter on the "OR" boolean operator', async () => {
-    await store.dispatch('search/query', { query: 'trump OR lalilou', from: 0, size: 3 })
-
-    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
-  })
-
-  it('should filter on the "NOT" boolean operator', async () => {
-    await store.dispatch('search/query', { query: 'NOT trump', from: 0, size: 3 })
-
-    expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
-  })
-
-  it('should remove the "AND" on first applied filter deletion', async () => {
-    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
-
-    await store.dispatch('search/query', { query: 'term_01 AND term_02', from: 0, size: 3 })
-    wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).trigger('click')
-    expect(store.state.search.query).toBe('term_02')
-  })
-
-  it('should remove the "OR" on first applied filter deletion', async () => {
-    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
-
-    await store.dispatch('search/query', { query: 'term_01 OR term_02', from: 0, size: 3 })
-    wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).trigger('click')
-    expect(store.state.search.query).toBe('term_02')
-  })
-
-  it('should remove the "AND" on last applied filter deletion', async () => {
-    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
-
-    await store.dispatch('search/query', { query: 'term_01 AND term_02', from: 0, size: 3 })
-    wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
-    expect(store.state.search.query).toBe('term_01')
-  })
-
-  it('should remove the "OR" on last applied filter deletion', async () => {
-    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
-
-    await store.dispatch('search/query', { query: 'term_01 OR term_02', from: 0, size: 3 })
-    wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
-    expect(store.state.search.query).toBe('term_01')
-  })
-
-  it('should display the label of a facet (1/2)', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
-    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
-
-    expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter')).toHaveLength(1)
-    expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).text()).toBe('Plain text document')
-  })
-
-  it('should display the label of a facet (2/2)', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'indexing-date', value: '1556668800000' })
-    wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
-
-    expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter')).toHaveLength(1)
-    expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).text()).toBe('2019-05')
+      await store.dispatch('search/query', { query: 'term_01 OR term_02', from: 0, size: 3 })
+      wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
+      expect(store.state.search.query).toBe('term_01')
+    })
   })
 })
