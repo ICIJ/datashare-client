@@ -35,18 +35,17 @@
 <script>
 import PDFJS from 'pdfjs-dist'
 import Worker from 'pdfjs-dist/build/pdf.worker'
-import DatashareClient from '@/api/DatashareClient'
 import min from 'lodash/min'
+import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 (typeof window !== 'undefined' ? window : {}).pdfjsWorker = Worker
 
 PDFJS.GlobalWorkerOptions.workerSrc = 'static/js/pdf.worker.js'
 
-const ds = new DatashareClient()
-
 export default {
   name: 'pdf-viewer',
   props: ['document'],
+  mixins: [datashareSourceMixin],
   data () {
     return {
       message: this.$t('document.generating_preview'),
@@ -74,7 +73,7 @@ export default {
       if (this.pdf !== null) {
         return new Promise(resolve => resolve(this.pdf))
       } else {
-        return ds.getSource(this.document)
+        return this.getSource(this.document)
           .then(r => r.arrayBuffer())
           .then(arrayBuffer => PDFJS.getDocument(new Uint8Array(arrayBuffer)))
           .then(pdf => {

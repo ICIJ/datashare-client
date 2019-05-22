@@ -26,13 +26,12 @@
 
 <script>
 import XLSX from 'xlsx'
-import DatashareClient from '@/api/DatashareClient'
-
-const ds = new DatashareClient()
+import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 export default {
   name: 'spreadsheet-viewer',
   props: ['document'],
+  mixins: [datashareSourceMixin],
   data () {
     return {
       message: this.$t('document.generating_preview'),
@@ -55,7 +54,7 @@ export default {
       })
     },
     xlsx () {
-      return ds.getSource(this.document)
+      return this.getSource(this.document)
         .then(r => r.arrayBuffer())
         .then(arrayBuffer => {
           let arr = ''
