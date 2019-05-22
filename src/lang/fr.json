@@ -61,6 +61,11 @@
       }
     }
   },
+  "documentTranslatedContent": {
+    "detected": "Langue detectée",
+    "viewOriginal": "Voir le texte d'origine",
+    "viewTranslated": "Voir le texte traduit"
+  },
   "facet": {
     "none": "Aucune valeur distincte",
     "seeAll": "Chercher dans toute la base de données",

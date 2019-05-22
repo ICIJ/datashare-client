@@ -49,6 +49,11 @@
     "back": "Regresar a resultados de búsqueda",
     "try": "Usted puede intentar a"
   },
+  "documentTranslatedContent": {
+    "detected": "Detected language",
+    "viewOriginal": "View original text",
+    "viewTranslated": "View translated text"
+  },
   "facet": {
     "none": "No hay valores",
     "seeAll": "Buscar el base de datos entero",
