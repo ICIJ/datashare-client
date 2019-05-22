@@ -23,51 +23,63 @@ describe('SearchResultsAppliedFilter.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { label: 'Trump', value: 'trump' } } })
+    wrapper = shallowMount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: false } } })
   })
 
   afterAll(() => window.fetch.mockRestore())
 
-  it('should display a filter', () => {
-    expect(wrapper.findAll('.search-results__header__applied-filters__filter')).toHaveLength(1)
-    expect(wrapper.find('.search-results__header__applied-filters__filter').text()).toEqual('Trump')
+  describe('displays applied filter', () => {
+    it('should display a filter', () => {
+      expect(wrapper.findAll('.search-results__header__applied-filters__filter')).toHaveLength(1)
+      expect(wrapper.find('.search-results__header__applied-filters__filter').text()).toEqual('term_01')
+      expect(wrapper.findAll('.search-results__header__applied-filters__filter.strikethrough')).toHaveLength(0)
+    })
+
+    it('should display an applied filter as strikethrough if excluded', () => {
+      wrapper = shallowMount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: true } } })
+
+      expect(wrapper.findAll('.search-results__header__applied-filters__filter')).toHaveLength(1)
+      expect(wrapper.find('.search-results__header__applied-filters__filter').text()).toEqual('term_01')
+      expect(wrapper.findAll('.search-results__header__applied-filters__filter.strikethrough')).toHaveLength(1)
+    })
   })
 
-  it('should click on a badge to delete an applied filter', () => {
-    wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { value: 'trump' } } })
-    const deleteQueryTermMock = jest.spyOn(wrapper.vm, 'deleteQueryTerm')
+  describe('deletes applied filter', () => {
+    it('should click on a badge to delete an applied filter', () => {
+      wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: false } } })
+      const deleteQueryTermMock = jest.spyOn(wrapper.vm, 'deleteQueryTerm')
 
-    wrapper.find('.search-results__header__applied-filters__filter').trigger('click')
+      wrapper.find('.search-results__header__applied-filters__filter').trigger('click')
 
-    expect(deleteQueryTermMock).toBeCalledTimes(1)
-  })
+      expect(deleteQueryTermMock).toBeCalledTimes(1)
+    })
 
-  it('should delete the query term', async () => {
-    store.commit('search/addFacetValue', { name: 'content-type', value: 'trump' })
-    expect(find(store.state.search.facets, { name: 'content-type' }).values).toHaveLength(1)
-    wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { name: 'content-type', label: 'Trump', value: 'trump' } } })
+    it('should delete the query term', async () => {
+      store.commit('search/addFacetValue', { name: 'content-type', value: 'term_01' })
+      wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { name: 'content-type', label: 'term_01', value: 'term_01', field: '', negation: false } } })
 
-    wrapper.find('.search-results__header__applied-filters__filter').trigger('click')
+      wrapper.find('.search-results__header__applied-filters__filter').trigger('click')
 
-    expect(find(store.state.search.facets, { name: 'content-type' }).values).toHaveLength(0)
-  })
+      expect(find(store.state.search.facets, { name: 'content-type' }).values).toHaveLength(0)
+    })
 
-  it('should emit an event facet::search::update once the applied filter is deleted from the store', async () => {
-    wrapper = shallowMount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { name: 'facet-name', label: 'Trump', value: 'trump' } } })
-    const mockCallback = jest.fn()
-    wrapper.vm.$root.$on('facet::search::update', mockCallback)
+    it('should emit an event facet::search::update once the applied filter is deleted from the store', async () => {
+      wrapper = shallowMount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { name: 'facet-name', label: 'term_01', value: 'term_01', field: '', negation: false } } })
+      const mockCallback = jest.fn()
+      wrapper.vm.$root.$on('facet::search::update', mockCallback)
 
-    await wrapper.vm.deleteQueryTerm()
+      await wrapper.vm.deleteQueryTerm()
 
-    expect(mockCallback.mock.calls).toHaveLength(1)
-  })
+      expect(mockCallback.mock.calls).toHaveLength(1)
+    })
 
-  it('should not emit an event facet::search::update once the applied filter is deleted from the store', async () => {
-    const mockCallback = jest.fn()
-    wrapper.vm.$root.$on('facet::search::update', mockCallback)
+    it('should not emit an event facet::search::update once the applied filter is deleted from the store', async () => {
+      const mockCallback = jest.fn()
+      wrapper.vm.$root.$on('facet::search::update', mockCallback)
 
-    await wrapper.vm.deleteQueryTerm()
+      await wrapper.vm.deleteQueryTerm()
 
-    expect(mockCallback.mock.calls).toHaveLength(0)
+      expect(mockCallback.mock.calls).toHaveLength(0)
+    })
   })
 })

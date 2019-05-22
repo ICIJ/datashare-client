@@ -31,26 +31,35 @@ describe('SearchResultsAppliedFilters.vue', () => {
       expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
     })
 
-    it('should display 1 applied filter', async () => {
-      await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
+    it('should display 1 applied filter', () => {
+      store.commit('search/addFacetValue', { name: 'content-type', value: 'term_01' })
 
       expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
     })
 
-    it('should display the label of a facet', async () => {
-      await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
-      wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+    it('should translate the label of a facet', () => {
+      store.commit('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
 
-      expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter')).toHaveLength(1)
-      expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).text()).toBe('Plain text document')
+      expect(wrapper.vm.filters[0].label).toEqual('Plain text document')
     })
 
-    it('should display the label of a facet date', async () => {
-      await store.dispatch('search/addFacetValue', { name: 'indexing-date', value: '1556668800000' })
-      wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+    it('should translate the label of a facet date', () => {
+      store.commit('search/addFacetValue', { name: 'indexing-date', value: '1556668800000' })
 
-      expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter')).toHaveLength(1)
-      expect(wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(0).text()).toBe('2019-05')
+      expect(wrapper.vm.filters[0].label).toEqual('2019-05')
+    })
+
+    it('should set facet as positive applied facet', () => {
+      store.commit('search/addFacetValue', { name: 'content-type', value: 'term_01' })
+
+      expect(wrapper.vm.filters[0].negation).toBeFalsy()
+    })
+
+    it('should set excluded facet as negative applied facet', () => {
+      store.commit('search/addFacetValue', { name: 'content-type', value: 'term_01' })
+      store.commit('search/toggleFacet', 'content-type')
+
+      expect(wrapper.vm.filters[0].negation).toBeTruthy()
     })
   })
 

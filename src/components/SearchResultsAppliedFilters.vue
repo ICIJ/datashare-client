@@ -19,7 +19,8 @@ export default {
     filters () {
       let filters = []
       map(this.$store.getters['search/retrieveQueryTerms'], term => {
-        filters = concat(filters, { label: term.label, value: term.label })
+        term.value = term.label
+        filters = concat(filters, term)
       })
       map(this.$store.state.search.facets, facet => {
         map(facet.values, value => {
@@ -29,7 +30,7 @@ export default {
             const date = new Date(parseInt(label))
             label = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
           }
-          filters = concat(filters, { name: facet.name, label: label, value: value })
+          filters = concat(filters, { name: facet.name, label, value, negation: facet.reverse })
         })
       })
       return filters

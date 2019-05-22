@@ -1,5 +1,5 @@
 <template>
-  <b-badge class="ml-2 search-results__header__applied-filters__filter" @click.prevent="deleteQueryTerm()">
+  <b-badge class="ml-2 search-results__header__applied-filters__filter" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()">
     {{ filter.label }}
     <fa icon="times" />
   </b-badge>
@@ -29,5 +29,9 @@ export default {
 <style lang="scss">
   .search-results__header__applied-filters__filter {
     cursor: pointer;
+
+    &.strikethrough {
+      text-decoration: line-through;
+    }
   }
 </style>
