@@ -5,8 +5,8 @@
       {{ $t('document.see_highlights') }}
     </div>
     <ul class="search-results-item__occurrences" v-if="this.query && this.query !== '*'">
-      <li v-for="(term, index) in this.getQueryTerms()" :key="term.label">
-        <mark :class="['query-term', 'yellow-' + index]">{{ term.label }}</mark> ({{ term.length }})
+      <li v-for="(term, index) in getQueryTerms()" :key="term.label">
+        <mark :class="['query-term', 'yellow-' + index, term.negation ? 'strikethrough' : '']">{{ term.label }}</mark> ({{ term.length }})
       </li>
     </ul>
     <div class="text-pre-wrap" v-html="markedSourceContent()" />
@@ -49,14 +49,15 @@ export default {
       }
     },
     getQueryTerms () {
-      let result = []
+      let terms = []
       if (this.document.source.content) {
         const queryTerms = this.retrieveQueryTerms()
         map(queryTerms, term => {
-          result = concat(result, { label: term.label, length: (this.document.source.content.match(new RegExp(term.label, 'gi')) || []).length })
+          term.length = (this.document.source.content.match(new RegExp(term.label, 'gi')) || []).length
+          terms = concat(terms, term)
         })
       }
-      return orderBy(result, ['length'], ['desc'])
+      return orderBy(terms, ['length'], ['desc'])
     },
     retrieveQueryTerms () {
       return filter(this.$store.getters['search/retrieveQueryTerms'], item => ['', 'content'].includes(item.field))
@@ -74,6 +75,9 @@ export default {
   }
 
   .query-term {
+    &.strikethrough {
+      text-decoration: line-through;
+    }
     &.yellow-0 {
       background-color: #CD6226;
     }

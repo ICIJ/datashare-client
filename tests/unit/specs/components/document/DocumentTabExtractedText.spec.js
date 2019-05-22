@@ -200,6 +200,28 @@ describe('DocumentTabExtractedText.vue', () => {
     expect(wrapper.findAll('ul li').at(0).text()).toEqual('term_01 (1)')
   })
 
+  it('should stroke the negative query terms', async () => {
+    const id = 'doc'
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('term_01'))
+      .commit()
+    await store.dispatch('document/get', { id })
+    store.commit('search/query', '-term_02')
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      i18n,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: store.state.document.namedEntities
+      }
+    })
+
+    expect(wrapper.findAll('ul')).toHaveLength(1)
+    expect(wrapper.findAll('ul li')).toHaveLength(1)
+    expect(wrapper.findAll('ul li mark.strikethrough')).toHaveLength(1)
+  })
+
   it('should highlight the query terms', async () => {
     const id = 'doc'
     await letData(es).have(new IndexedDocument(id)
