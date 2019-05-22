@@ -42,6 +42,8 @@ import min from 'lodash/min'
 
 PDFJS.GlobalWorkerOptions.workerSrc = 'static/js/pdf.worker.js'
 
+const ds = new DatashareClient()
+
 export default {
   name: 'pdf-viewer',
   props: ['document'],
@@ -72,14 +74,17 @@ export default {
       if (this.pdf !== null) {
         return new Promise(resolve => resolve(this.pdf))
       } else {
-        return PDFJS.getDocument(DatashareClient.getFullUrl(this.document.url)).then(pdf => {
-          if (this.doc.pages.length === 0) {
-            this.doc.pages = new Array(pdf.numPages)
-            this.numberOfThumbnails = min([this.doc.pages.length, 10])
-          }
-          this.pdf = pdf
-          return pdf
-        })
+        return ds.getSource(this.document)
+          .then(r => r.arrayBuffer())
+          .then(arrayBuffer => PDFJS.getDocument(new Uint8Array(arrayBuffer)))
+          .then(pdf => {
+            if (this.doc.pages.length === 0) {
+              this.doc.pages = new Array(pdf.numPages)
+              this.numberOfThumbnails = min([this.doc.pages.length, 10])
+            }
+            this.pdf = pdf
+            return pdf
+          })
       }
     },
     loadPage (p) {

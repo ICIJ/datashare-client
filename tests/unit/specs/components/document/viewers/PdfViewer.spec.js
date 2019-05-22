@@ -35,7 +35,7 @@ describe('PdfViewer.vue', () => {
 
     await wrapper.vm.loadPage(1)
 
-    expect(wrapper.find('.pdf-viewer .alert').text()).toContain('Missing PDF')
+    expect(wrapper.find('.pdf-viewer .alert').text()).toContain('404 Not Found')
   })
 
   it('should load a pdf content file', async () => {
