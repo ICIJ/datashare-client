@@ -2,7 +2,7 @@ import extend from 'lodash/extend'
 import cloneDeep from 'lodash/cloneDeep'
 import get from 'lodash/get'
 
-const _raw = Symbol('raw')
+const _raw = '_RAW'
 
 export default class EsDoc {
   constructor (raw) {
