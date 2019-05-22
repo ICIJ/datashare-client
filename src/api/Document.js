@@ -3,7 +3,6 @@ import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
-import first from 'lodash/first'
 import last from 'lodash/last'
 import pick from 'lodash/pick'
 import trim from 'lodash/trim'
@@ -66,12 +65,12 @@ export default class Document extends EsDoc {
     return last(this.path.split('/'))
   }
   get title () {
-    return first(compact([
-      trim(this.get('_source.metadata.tika_metadata_subject', '')),
-      trim(this.get('_source.metadata.tika_metadata_dc_title', '')),
-      this.basename,
-      this.shortId
-    ]))
+    const titles = [ this.shortId, this.basename ]
+    if (this.isEmail) {
+      titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
+      titles.push(trim(this.get('_source.metadata.tika_metadata_subject', '')))
+    }
+    return last(compact(titles))
   }
   get cleanSubject () {
     return this.title.replace(/((.{1,4})\s?:\s?)*(.+)/i, '$3')
