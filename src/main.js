@@ -12,6 +12,7 @@ import DatashareClient from '@/api/DatashareClient'
 
 import '@/utils/font-awesome'
 import '@/main.scss'
+import Toasted from 'vue-toasted'
 
 /* eslint-disable no-new */
 async function createApp (LocalVue = Vue) {
@@ -21,6 +22,7 @@ async function createApp (LocalVue = Vue) {
   LocalVue.use(BootstrapVue)
   LocalVue.use(Murmur)
   LocalVue.use(VueShortkey)
+  Vue.use(Toasted)
 
   const i18n = new VueI18n({ locale: 'en', fallbackLocale: 'en', messages: { 'en': messages } })
   const ds = new DatashareClient()

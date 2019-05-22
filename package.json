@@ -43,6 +43,7 @@
     "vue-scrollto": "^2.15.0",
     "vue-shortkey": "^3.1.6",
     "vue-sticky-directive": "^0.0.8",
+    "vue-toasted": "^1.1.27",
     "vuex": "^3.0.1",
     "vuex-map-fields": "^1.1.6",
     "vuex-persistedstate": "^2.5.4",
