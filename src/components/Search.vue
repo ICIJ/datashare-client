@@ -135,6 +135,7 @@ export default {
 
           @media (max-width: $document-float-breakpoint-width) {
             padding: 0;
+            box-shadow: $modal-content-box-shadow-sm-up;
           }
         }
 
@@ -149,10 +150,6 @@ export default {
           max-width: calc(100vw - #{$spacer});
           min-height: 100vh;
           background: white;
-
-          .document {
-            box-shadow: $modal-content-box-shadow-sm-up;
-          }
 
           &__backdrop {
             cursor: auto;

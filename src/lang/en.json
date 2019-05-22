@@ -61,6 +61,11 @@
       }
     }
   },
+  "documentTranslatedContent": {
+    "detected": "Detected language",
+    "viewOriginal": "View original text",
+    "viewTranslated": "View translated text"
+  },
   "facet": {
     "none": "No values",
     "seeAll": "Search the entire database",

@@ -4,11 +4,11 @@
       <div class="document-translated-content__translation">
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />
-          <abbr :title="$t(`facet.lang.${document.translationIn(language).source_language}`)">Detected language</abbr>
+          <abbr :title="$t(`facet.lang.${document.translationIn(language).source_language}`)">{{ $t('documentTranslatedContent.detected') }}</abbr>
           <fa icon="angle-right" class="mx-2" />
           <strong>{{ $t(`facet.lang.${language}`) }}</strong>
           <button class="btn btn-sm btn-link ml-3" @click="toggleOriginalContent">
-            {{ showOriginal ? 'View translated text' : 'View original text' }}
+            {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
           </button>
         </div>
         <div v-html="currentContentHtml" class=" px-3 py-2"></div>
