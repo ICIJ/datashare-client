@@ -34,9 +34,11 @@ describe('FacetSearch.vue', () => {
   const es = esConnectionHelper.es
   let wrapper
 
-  beforeEach(() => {
+  beforeEach(async () => {
+    await store.commit('search/reset')
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.search.facets, { name: 'content-type' }) } })
+    const facet = find(store.state.search.facets, { name: 'content-type' })
+    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, facet } })
   })
 
   it('should display 2 items', async () => {
@@ -46,7 +48,7 @@ describe('FacetSearch.vue', () => {
     await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('list.html').withContentType('text/html')).commit()
 
-    await wrapper.vm.search()
+    await wrapper.vm.startOver()
 
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
   })
@@ -58,7 +60,7 @@ describe('FacetSearch.vue', () => {
     await letData(es).have(new IndexedDocument('index.css').withContentType('text/css')).commit()
     await letData(es).have(new IndexedDocument('index.php').withContentType('text/php')).commit()
 
-    await wrapper.vm.search()
+    await wrapper.vm.startOver()
 
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
 
@@ -72,7 +74,7 @@ describe('FacetSearch.vue', () => {
     for (const type of ['pdf', 'doc', 'docx', 'html', 'css', 'js', 'tx', 'vue', 'txt', 'xls']) {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
-    await wrapper.vm.search()
+    await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
     await wrapper.vm.next()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
@@ -99,11 +101,12 @@ describe('FacetSearch.vue', () => {
     for (const type of ['pdf', 'doc', 'docx', 'html', 'css', 'js', 'tx', 'vue', 'txt', 'xls']) {
       await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
     }
-    await wrapper.vm.search()
+    await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
     await wrapper.vm.next()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
-    await wrapper.vm.search(true)
+
+    await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
     await wrapper.vm.next()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
@@ -111,7 +114,7 @@ describe('FacetSearch.vue', () => {
 
   it('should create query tokens', async () => {
     wrapper.vm.facetQuery = 'iCij'
-    await wrapper.vm.search()
+    await wrapper.vm.startOver()
     expect(wrapper.vm.queryTokens).toContain('iCij')
     expect(wrapper.vm.queryTokens).toContain('icij')
     expect(wrapper.vm.queryTokens).toContain('ICIJ')
@@ -124,15 +127,15 @@ describe('FacetSearch.vue', () => {
     }
 
     wrapper.vm.facetQuery = ''
-    await wrapper.vm.search()
+    await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(8)
 
     wrapper.vm.facetQuery = 'doc'
-    await wrapper.vm.search()
+    await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
 
     wrapper.vm.facetQuery = 'pdf'
-    await wrapper.vm.search()
+    await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
   })
 
@@ -144,9 +147,9 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should emit a facet::hide::named-entities event on click to delete named entity', async () => {
-    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
+    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is a naz document').withNer('naz')).commit()
-    await wrapper.vm.search()
+    await wrapper.vm.startOver()
 
     const mockCallback = jest.fn()
     EventBus.$on('facet::hide::named-entities', mockCallback)
@@ -157,9 +160,9 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should call the search function after a named entity deletion', async () => {
-    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
+    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is a naz document').withNer('naz')).commit()
-    await wrapper.vm.search()
+    await wrapper.vm.startOver()
 
     const spySearch = jest.spyOn(wrapper.vm, 'search')
     expect(spySearch).not.toBeCalled()
