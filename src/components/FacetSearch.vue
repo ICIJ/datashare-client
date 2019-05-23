@@ -55,6 +55,10 @@ export default {
     infiniteScroll: {
       type: Boolean,
       default: true
+    },
+    throttle: {
+      type: Number,
+      default: 600
     }
   },
   components: {
@@ -97,6 +101,7 @@ export default {
       if ($state && all.length < this.size) $state.complete()
       // Mark this page as loaded
       if ($state) $state.loaded()
+      await this.$nextTick()
     },
     async startOver () {
       this.offset = 0
@@ -114,7 +119,7 @@ export default {
   },
   computed: {
     startOverWithThrottle () {
-      return throttle(this.startOver, 600)
+      return this.throttle > 0 ? throttle(this.startOver, this.throttle) : this.startOver
     }
   }
 }

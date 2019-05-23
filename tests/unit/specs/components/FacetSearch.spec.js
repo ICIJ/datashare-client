@@ -38,7 +38,7 @@ describe('FacetSearch.vue', () => {
     await store.commit('search/reset')
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
     const facet = find(store.state.search.facets, { name: 'content-type' })
-    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, facet } })
+    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet } })
   })
 
   it('should display 2 items', async () => {
@@ -172,7 +172,7 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should emit a facet::hide::named-entities event on click to delete named entity', async () => {
-    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
+    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is a naz document').withNer('naz')).commit()
     await wrapper.vm.startOver()
 
@@ -185,7 +185,7 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should call the search function after a named entity deletion', async () => {
-    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
+    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withContent('this is a naz document').withNer('naz')).commit()
     await wrapper.vm.startOver()
 
