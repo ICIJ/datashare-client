@@ -53,25 +53,7 @@ describe('AppFooter.vue', () => {
 
   it('should display server git sha1 and version', async () => {
     window.fetch.mockReturnValue(jsonOk({
-      'git.commit.message.short': '[launchBack] Increase Java RAM to 4Go',
-      'git.build.user.name': 'Bruno Thomas',
-      'git.remote.origin.url': 'git@github.com:ICIJ/datashare.git',
-      'git.dirty': 'true',
-      'git.build.user.email': 'bruno@barreverte.fr',
-      'git.closest.tag.name': '',
-      'git.branch': 'master',
-      'git.tags': '',
-      'git.build.time': '2018-07-19T10:30:50+0200',
-      'git.commit.user.email': 'anne.lhote@gmail.com',
-      'git.build.host': 'dev',
-      'git.commit.id.describe-short': '6240439-dirty',
-      'git.closest.tag.commit.count': '',
-      'git.commit.message.full': '[launchBack] Increase Java RAM to 4Go',
-      'git.commit.user.name': 'annelhote',
-      'git.commit.time': '2018-07-18T15:23:59+0200',
-      'git.commit.id.describe': '6240439-dirty',
       'git.build.version': 'version',
-      'git.commit.id': 'sha1',
       'git.commit.id.abbrev': 'sha1_abbrev'
     }))
     wrapper = shallowMount(AppFooter, { appVue, i18n, router, store })
@@ -134,6 +116,12 @@ describe('AppFooter.vue', () => {
 
   it('should display the delete index button', () => {
     expect(wrapper.findAll('.app__footer .app__footer__addon--delete-index')).toHaveLength(1)
+  })
+
+  it('should NOT display the delete index button in SERVER mode', () => {
+    Murmur.config.merge({ mode: 'SERVER' })
+    wrapper = shallowMount(AppFooter, { appVue, i18n, router, store })
+    expect(wrapper.findAll('.app__footer .app__footer__addon--delete-index')).toHaveLength(0)
   })
 
   it('should emit an index::delete::all event when calling the deleteAll method', async () => {

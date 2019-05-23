@@ -7,7 +7,7 @@
       <user-history v-if="showUserHistory" />
     </slide-up-down>
     <div class="d-flex align-items-center text-nowrap">
-      <confirm-button class="app__footer__addon app__footer__addon--delete-index btn btn-sm text-secondary" :confirmed="deleteAll" :title="$t('indexing.delete_index_label')" v-b-tooltip :label="$t('indexing.delete_index_label')" :description="$t('indexing.delete_index_description')">
+      <confirm-button class="app__footer__addon app__footer__addon--delete-index btn btn-sm text-secondary" :confirmed="deleteAll" :title="$t('indexing.delete_index_label')" v-b-tooltip :label="$t('indexing.delete_index_label')" :description="$t('indexing.delete_index_description')" v-if="!isRemote">
         <fa icon="trash-alt" />
         <span class="sr-only">{{ $t('indexing.delete_index_label') }}</span>
       </confirm-button>
