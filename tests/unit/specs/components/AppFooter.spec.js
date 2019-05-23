@@ -28,6 +28,7 @@ describe('AppFooter.vue', () => {
   })
 
   beforeEach(() => {
+    Murmur.config.merge({ mode: 'LOCAL' })
     jest.spyOn(window, 'fetch')
     window.fetch.mockReturnValue(jsonOk({}))
     jest.spyOn(datashare, 'fetch')
