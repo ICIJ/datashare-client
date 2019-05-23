@@ -26,8 +26,8 @@ module.exports = {
     'jest-serializer-vue'
   ],
   testMatch: TEST_MODE === 'integration' ? ['**/tests/integration/**/*.spec.js'] : ['**/tests/unit/**/*.spec.js'],
-  coverageDirectory: 'tests/unit/coverage',
-  collectCoverage: false,
+  coverageDirectory: '<rootDir>/tests/unit/coverage',
+  collectCoverage: true,
   collectCoverageFrom: [
     'src/**/*.(js|vue)'
   ],

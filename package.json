@@ -113,5 +113,17 @@
       "vue-cli-service lint",
       "git add"
     ]
+  },
+  "majestic": {
+    "jestScriptPath": "./node_modules/@vue/cli-service/bin/vue-cli-service.js",
+    "env": {
+      "TEST_MODE": "unit"
+    },
+    "args": [
+      "test:unit",
+      "--config=./jest.config.js",
+      "--testPathPattern=/unit/",
+      "--runInBand"
+    ]
   }
 }
