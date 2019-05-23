@@ -151,15 +151,15 @@ describe('FacetSearch.vue', () => {
     await letData(es).have(new IndexedDocument('index.txt').withContentType('txt')).commit()
     await letData(es).have(new IndexedDocument('index.xls').withContentType('xls')).commit()
 
-    wrapper.vm.facetQuery = ''
+    wrapper.setData({ facetQuery: '' })
     await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(8)
 
-    wrapper.vm.facetQuery = 'doc'
+    wrapper.setData({ facetQuery: 'doc' })
     await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
 
-    wrapper.vm.facetQuery = 'jade'
+    wrapper.setData({ facetQuery: 'jade' })
     await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
   })

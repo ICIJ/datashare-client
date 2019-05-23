@@ -8,12 +8,15 @@
         </span>
       </label>
     </form>
-    <div v-show="items.length" class="mt-4 facet-search__items card">
+    <div v-show="items.length" class="mt-4 facet-search__items card" :key="infiniteId">
       <component class="border-0"
                  :is="facet.component"
                  :async-items="items"
                  @add-facet-values="onAddedFacetValues"
-                 hide-search hide-header hide-show-more v-bind="{ facet }"></component>
+                 hide-search
+                 hide-header
+                 hide-show-more
+                 v-bind="{ facet }"></component>
     </div>
     <infinite-loading @infinite="next" :identifier="infiniteId" v-if="infiniteScroll">
       <span slot="no-more" class="text-muted"></span>
@@ -92,26 +95,23 @@ export default {
       // Load the facet using a body build using the facet configuration
       const options = { size: this.size, include: `.*(${this.queryTokens.join('|')}).*` }
       const data = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options })
-      // Extract the slice we need for this page (if any)
       const all = get(data, this.resultPath, [])
-      const slice = all.slice(this.items.length, this.items.length + this.pageSize)
       // Add the new items to the end of the items if needed
-      this.items = this.items.concat(slice)
+      this.$set(this, 'items', all)
       // Did we reach the end?
       if ($state && all.length < this.size) $state.complete()
       // Mark this page as loaded
       if ($state) $state.loaded()
-      await this.$nextTick()
     },
-    async startOver () {
-      this.offset = 0
-      this.items = []
-      this.infiniteId = uniqueId()
-      await this.search()
+    startOver () {
+      this.$set(this, 'offset', 0)
+      this.$set(this, 'items', [])
+      this.$set(this, 'infiniteId', uniqueId())
+      return this.search()
     },
-    async next ($state) {
+    next ($state) {
       this.offset += this.pageSize
-      await this.search($state)
+      return this.search($state)
     },
     onAddedFacetValues (component) {
       EventBus.$emit('facet::search::add-facet-values', component)
