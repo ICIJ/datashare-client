@@ -71,9 +71,18 @@ describe('FacetSearch.vue', () => {
 
   it('should paginate 10 items on 10 pages', async () => {
     wrapper.vm.pageSize = 1
-    for (const type of ['pdf', 'doc', 'docx', 'html', 'css', 'js', 'tx', 'vue', 'txt', 'xls']) {
-      await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
-    }
+
+    await letData(es).have(new IndexedDocument('index.pdf').withContentType('pdf')).commit()
+    await letData(es).have(new IndexedDocument('index.doc').withContentType('doc')).commit()
+    await letData(es).have(new IndexedDocument('index.docx').withContentType('docx')).commit()
+    await letData(es).have(new IndexedDocument('index.html').withContentType('html')).commit()
+    await letData(es).have(new IndexedDocument('index.css').withContentType('css')).commit()
+    await letData(es).have(new IndexedDocument('index.js').withContentType('js')).commit()
+    await letData(es).have(new IndexedDocument('index.tx').withContentType('tx')).commit()
+    await letData(es).have(new IndexedDocument('index.vue').withContentType('vue')).commit()
+    await letData(es).have(new IndexedDocument('index.txt').withContentType('txt')).commit()
+    await letData(es).have(new IndexedDocument('index.xls').withContentType('xls')).commit()
+
     await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
     await wrapper.vm.next()
@@ -98,9 +107,18 @@ describe('FacetSearch.vue', () => {
 
   it('should paginate 10 items on 2 pages, and start over', async () => {
     wrapper.vm.pageSize = 5
-    for (const type of ['pdf', 'doc', 'docx', 'html', 'css', 'js', 'tx', 'vue', 'txt', 'xls']) {
-      await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
-    }
+
+    await letData(es).have(new IndexedDocument('index.pdf').withContentType('pdf')).commit()
+    await letData(es).have(new IndexedDocument('index.doc').withContentType('doc')).commit()
+    await letData(es).have(new IndexedDocument('index.docx').withContentType('docx')).commit()
+    await letData(es).have(new IndexedDocument('index.html').withContentType('html')).commit()
+    await letData(es).have(new IndexedDocument('index.css').withContentType('css')).commit()
+    await letData(es).have(new IndexedDocument('index.js').withContentType('js')).commit()
+    await letData(es).have(new IndexedDocument('index.tx').withContentType('tx')).commit()
+    await letData(es).have(new IndexedDocument('index.vue').withContentType('vue')).commit()
+    await letData(es).have(new IndexedDocument('index.txt').withContentType('txt')).commit()
+    await letData(es).have(new IndexedDocument('index.xls').withContentType('xls')).commit()
+
     await wrapper.vm.startOver()
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
     await wrapper.vm.next()
@@ -122,9 +140,16 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should filter the list according to facetQuery', async () => {
-    for await (const type of ['jade', 'doc', 'docx', 'html', 'css', 'js', 'tx', 'vue', 'txt', 'xls']) {
-      await letData(es).have(new IndexedDocument(`index.${type}`).withContentType(type)).commit()
-    }
+    await letData(es).have(new IndexedDocument('index.jade').withContentType('jade')).commit()
+    await letData(es).have(new IndexedDocument('index.doc').withContentType('doc')).commit()
+    await letData(es).have(new IndexedDocument('index.docx').withContentType('docx')).commit()
+    await letData(es).have(new IndexedDocument('index.html').withContentType('html')).commit()
+    await letData(es).have(new IndexedDocument('index.css').withContentType('css')).commit()
+    await letData(es).have(new IndexedDocument('index.js').withContentType('js')).commit()
+    await letData(es).have(new IndexedDocument('index.tx').withContentType('tx')).commit()
+    await letData(es).have(new IndexedDocument('index.vue').withContentType('vue')).commit()
+    await letData(es).have(new IndexedDocument('index.txt').withContentType('txt')).commit()
+    await letData(es).have(new IndexedDocument('index.xls').withContentType('xls')).commit()
 
     wrapper.vm.facetQuery = ''
     await wrapper.vm.startOver()
