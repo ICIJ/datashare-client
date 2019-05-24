@@ -1,5 +1,5 @@
 <template>
-  <div class="email-view" v-if="document && isReady">
+  <div class="email-view p-0" v-if="document && isReady">
     <h3 class="p-3">
       {{ document.cleanSubject }}
     </h3>
@@ -40,6 +40,12 @@
 
 <style lang="scss">
   .email-view {
+    background: white;
+    margin:0 $spacer;
+
+    @media (max-width: $document-float-breakpoint-width) {
+      margin: 0;
+    }
 
     &__thread {
       border-top: 1px solid $border-color;
@@ -137,12 +143,13 @@ export default {
     async scrollToActive (duration = 1) {
       // Element must be mounted
       await this.$nextTick()
+      let element = this.$el.querySelector('.email-view__thread__item--active')
       // For the first email, we go to the top of the page
-      if (this.activeDocumentIndex === 0) return VueScrollTo.scrollTo({ y: 0 }, duration)
+      if (this.activeDocumentIndex === 0) element = this.$el
       // Get the offset from the navbar height (which is sticky)
       const offset = -parseInt(this.$root.$el.style.getPropertyValue('--search-document-navbar-height'))
       // Scroll to the active item with a slight offset
-      VueScrollTo.scrollTo(this.$el.querySelector('.email-view__thread__item--active'), duration, { offset })
+      VueScrollTo.scrollTo(element, duration, { offset })
     },
     async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
       this.isReady = false

@@ -4,19 +4,23 @@
       <fa icon="chevron-circle-left" />
       {{ $t('search.back') }}
     </router-link>
-    <span class="search-document-navbar__nav ml-auto btn-group" v-if="currentDocumentIndex > -1">
-      <a @click="goToPreviousDocument" v-shortkey="['ctrl', 'arrowleft']" @shortkey="goToPreviousDocument" v-if="hasPreviousDocument" class="btn btn-sm py-0" :title="$t('search.nav.previous.tooltip')" v-b-tooltip.html>
+    <a class="btn btn-sm py-0 ml-auto mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument">
+      <fa icon="download" />
+      {{ $t('document.download_button') }}
+    </a>
+    <span class="search-document-navbar__nav btn-group" v-if="currentDocumentIndex > -1">
+      <button @click="goToPreviousDocument" v-shortkey="['ctrl', 'arrowleft']" @shortkey="goToPreviousDocument" :disabled="!hasPreviousDocument" class="btn btn-sm py-0" :title="$t('search.nav.previous.tooltip')" v-b-tooltip.html>
         <fa icon="angle-left" />
         <span class="d-sm-none d-md-inline">
         {{ $t('search.nav.previous.label') }}
         </span>
-      </a>
-      <a @click="goToNextDocument" v-shortkey="['ctrl', 'arrowright']" @shortkey="goToNextDocument" v-if="hasNextDocument" class="btn btn-sm py-0" :title="$t('search.nav.next.tooltip')" v-b-tooltip.html>
+      </button>
+      <button @click="goToNextDocument" v-shortkey="['ctrl', 'arrowright']" @shortkey="goToNextDocument" :disabled="!hasNextDocument" class="btn btn-sm py-0" :title="$t('search.nav.next.tooltip')" v-b-tooltip.html>
         <span class="d-sm-none d-md-inline">
           {{ $t('search.nav.next.label') }}
         </span>
         <fa icon="angle-right" />
-      </a>
+      </button>
     </span>
   </div>
 </template>
@@ -24,16 +28,17 @@
 <style lang="scss" scoped>
   .search-document-navbar {
     display: flex;
-    width: 100%;
     align-items: center;
     position: sticky;
     top: 0;
     z-index: 100;
     background: $body-bg;
+    margin: $spacer $spacer 0;
+    color: white;
+    background: darken($primary, 10);
 
     @media (max-width: $document-float-breakpoint-width) {
-      color: white;
-      background: darken($primary, 10);
+      margin: 0;
     }
 
     &__back {

@@ -7,10 +7,6 @@
       <div class="document__header">
         <h3>
           <document-sliced-name interactive-root :document="document" />
-          <a class="btn btn-outline-light float-right" :href="document.fullUrl" target="_blank" :title="$t('document.download_file')">
-            <fa icon="download" />
-            {{ $t('document.download_button') }}
-          </a>
         </h3>
         <nav class="document__header__nav">
           <ul class="list-inline m-0">
