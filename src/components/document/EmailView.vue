@@ -134,15 +134,15 @@ export default {
     routeParams (email) {
       return { id: email.id, index: email.index, routing: email.routing }
     },
-    async scrollToActive () {
+    async scrollToActive (duration = 1) {
       // Element must be mounted
       await this.$nextTick()
       // For the first email, we go to the top of the page
-      if (this.activeDocumentIndex === 0) return VueScrollTo.scrollTo({ y: 0 })
+      if (this.activeDocumentIndex === 0) return VueScrollTo.scrollTo({ y: 0 }, duration)
       // Get the offset from the navbar height (which is sticky)
       const offset = -parseInt(this.$root.$el.style.getPropertyValue('--search-document-navbar-height'))
       // Scroll to the active item with a slight offset
-      VueScrollTo.scrollTo(this.$el.querySelector('.email-view__thread__item--active'), { offset })
+      VueScrollTo.scrollTo(this.$el.querySelector('.email-view__thread__item--active'), duration, { offset })
     },
     async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
       this.isReady = false
