@@ -455,4 +455,55 @@ describe('Search store', () => {
       expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: true }, { field: '', label: 'term_03', negation: true }])
     })
   })
+
+  describe('deleteQueryTerm', () => {
+    it('should delete 1 simple query term', async () => {
+      store.commit('search/query', 'term_01')
+      await store.dispatch('search/deleteQueryTerm', 'term_01')
+
+      expect(store.state.search.query).toEqual('')
+    })
+
+    it('should delete 1 simple prefixed query term', async () => {
+      store.commit('search/query', '-term_01')
+      await store.dispatch('search/deleteQueryTerm', 'term_01')
+
+      expect(store.state.search.query).toEqual('')
+    })
+
+    it('should delete 1 simple negative query term', async () => {
+      store.commit('search/query', 'NOT term_01')
+      await store.dispatch('search/deleteQueryTerm', 'term_01')
+
+      expect(store.state.search.query).toEqual('')
+    })
+
+    it('should delete a term from a complex query', async () => {
+      store.commit('search/query', 'term_01 AND term_02')
+      await store.dispatch('search/deleteQueryTerm', 'term_02')
+
+      expect(store.state.search.query).toEqual('term_01')
+    })
+
+    it('should delete a negative term from a complex query', async () => {
+      store.commit('search/query', 'term_01 AND NOT term_02')
+      await store.dispatch('search/deleteQueryTerm', 'term_02')
+
+      expect(store.state.search.query).toEqual('term_01')
+    })
+
+    it('should delete a term from a recursive query', async () => {
+      store.commit('search/query', 'term_01 term_02 term_03')
+      await store.dispatch('search/deleteQueryTerm', 'term_03')
+
+      expect(store.state.search.query).toEqual('term_01 term_02')
+    })
+
+    it('should delete duplicated term from a query', async () => {
+      store.commit('search/query', 'term_01 term_02 term_01')
+      await store.dispatch('search/deleteQueryTerm', 'term_01')
+
+      expect(store.state.search.query).toEqual('term_02')
+    })
+  })
 })

@@ -5,20 +5,17 @@ import { FacetDate, FacetNamedEntity, FacetPath, FacetText, namedEntityCategoryT
 import lucene from 'lucene'
 import castArray from 'lodash/castArray'
 import concat from 'lodash/concat'
-import drop from 'lodash/drop'
-import dropRight from 'lodash/dropRight'
 import each from 'lodash/each'
 import endsWith from 'lodash/endsWith'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
 import get from 'lodash/get'
-import head from 'lodash/head'
+import has from 'lodash/has'
 import includes from 'lodash/includes'
 import join from 'lodash/join'
-import last from 'lodash/last'
 import map from 'lodash/map'
+import omit from 'lodash/omit'
 import reduce from 'lodash/reduce'
-import split from 'lodash/split'
 import uniq from 'lodash/uniq'
 
 export function initialState () {
@@ -312,15 +309,16 @@ export const actions = {
     })
   },
   deleteQueryTerm ({ state, commit, dispatch }, term) {
-    const booleanOperators = ['AND', 'OR']
-    let newQuery = filter(split(state.query, ' '), i => i !== term)
-    if (includes(booleanOperators, last(newQuery))) {
-      newQuery = dropRight(newQuery)
+    function deleteQueryTermFromSimpleQuery (query) {
+      if (get(query, 'left.term', '') === term) query = omit(query, 'left')
+      if (get(query, 'right.term', '') === term) query = omit(query, 'right')
+      if (has(query, 'start') && !has(query, 'left')) query = omit(query, 'start')
+      if (has(query, 'operator') && (!has(query, 'left') || !has(query, 'right'))) query = omit(query, 'operator')
+      if (has(query, 'right.left')) query.right = deleteQueryTermFromSimpleQuery(get(query, 'right', null))
+      return query
     }
-    if (includes(booleanOperators, head(newQuery))) {
-      newQuery = drop(newQuery)
-    }
-    commit('query', newQuery.length === 0 ? '*' : join(newQuery, ' '))
+    const query = deleteQueryTermFromSimpleQuery(lucene.parse(state.query))
+    commit('query', lucene.toString(query))
     return dispatch('query')
   }
 }
