@@ -44,7 +44,7 @@ export class DatashareClient {
     return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT', credentials: 'same-origin' })
   }
   static getFullUrl (path) {
-    const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.hostname}`
+    const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)
     return url.href
   }
