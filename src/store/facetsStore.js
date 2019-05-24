@@ -124,7 +124,7 @@ class FacetDate extends FacetDocument {
       format: 'yyyy-MM',
       order: { '_key': 'desc' },
       min_doc_count: 1
-    }, this.key)
+    }, this.key, a => a.agg('bucket_sort', { size: 8 }, 'bucket_sort_truncate'))
   }
 }
 
