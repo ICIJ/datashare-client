@@ -499,6 +499,13 @@ describe('Search store', () => {
       expect(store.state.search.query).toEqual('term_01 term_02')
     })
 
+    it('should delete a negative term from a recursive query', async () => {
+      store.commit('search/query', 'term_01 AND NOT term_02 term_03')
+      await store.dispatch('search/deleteQueryTerm', 'term_02')
+
+      expect(store.state.search.query).toEqual('term_01 term_03')
+    })
+
     it('should delete duplicated term from a query', async () => {
       store.commit('search/query', 'term_01 term_02 term_01')
       await store.dispatch('search/deleteQueryTerm', 'term_01')
