@@ -83,6 +83,10 @@ class IndexedDocument {
     this.extractionDate = indexingDate
     return this
   }
+  withCreationDate (creationDate) {
+    this.metadata.tika_metadata_creation_date = creationDate
+    return this
+  }
   withLanguage (language) {
     this.language = language
     return this

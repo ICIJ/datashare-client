@@ -249,4 +249,22 @@ describe('Search facets', () => {
 
     expect(response.aggregations.byMentions.buckets).toHaveLength(2)
   })
+
+  // Creation date facet
+  it('should merge all missing data', async () => {
+    await letData(es).have(new IndexedDocument('doc_01.txt').withCreationDate('2018-04-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withCreationDate('2018-05-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt')).commit()
+
+    const response = await store.dispatch('search/queryFacet', { name: 'creation-date', options: { size: 8 } })
+
+    expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets).toHaveLength(3)
+    expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[0].key).toEqual(1525132800000)
+    expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[0].doc_count).toEqual(1)
+    expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[1].key).toEqual(1522540800000)
+    expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[1].doc_count).toEqual(1)
+    expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].key).toEqual(0)
+    expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].doc_count).toEqual(2)
+  })
 })
