@@ -118,13 +118,13 @@ class FacetDate extends FacetDocument {
     })
   }
 
-  body (body) {
+  body (body, options) {
     return body.agg('date_histogram', this.key, {
       interval: '1M',
       format: 'yyyy-MM',
       order: { '_key': 'desc' },
       min_doc_count: 1
-    }, this.key, a => a.agg('bucket_sort', { size: 8 }, 'bucket_sort_truncate'))
+    }, this.key, a => a.agg('bucket_sort', { size: options.size }, 'bucket_sort_truncate'))
   }
 }
 

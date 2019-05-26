@@ -205,30 +205,13 @@ describe('Search facets', () => {
     await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-04-06T20:20:20.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-05-04T20:20:20.001Z')).commit()
 
-    const response = await store.dispatch('search/queryFacet', { name: 'indexing-date' })
+    const response = await store.dispatch('search/queryFacet', { name: 'indexing-date', options: { size: 8 } })
 
     expect(response.aggregations.extractionDate.buckets).toHaveLength(2)
     expect(response.aggregations.extractionDate.buckets[0].key).toEqual(1525132800000)
     expect(response.aggregations.extractionDate.buckets[0].doc_count).toEqual(1)
     expect(response.aggregations.extractionDate.buckets[1].key).toEqual(1522540800000)
     expect(response.aggregations.extractionDate.buckets[1].doc_count).toEqual(2)
-  })
-
-  it('should return 8 items maximum for any date facet', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-01-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-02-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-03-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withIndexingDate('2018-04-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_05.txt').withIndexingDate('2018-05-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_06.txt').withIndexingDate('2018-06-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_07.txt').withIndexingDate('2018-07-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_08.txt').withIndexingDate('2018-08-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_09.txt').withIndexingDate('2018-09-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_10.txt').withIndexingDate('2018-10-01T00:00:00.001Z')).commit()
-
-    const response = await store.dispatch('search/queryFacet', { name: 'indexing-date' })
-
-    expect(response.aggregations.extractionDate.buckets).toHaveLength(8)
   })
 
   // Named entities facet

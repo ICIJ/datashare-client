@@ -126,7 +126,7 @@ export default {
     aggregate () {
       if (this.facet) {
         const prefix = this.facet.prefix ? this.$config.get('dataDir') + '/' : ''
-        const options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : {}
+        const options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : { size: this.size }
         return this.queue.add(() => {
           return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options })
             .then(r => {

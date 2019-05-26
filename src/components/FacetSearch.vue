@@ -34,6 +34,7 @@ import get from 'lodash/get'
 import throttle from 'lodash/throttle'
 import uniqueId from 'lodash/uniqueId'
 
+import FacetDate from '@/components/FacetDate'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
 import FacetPath from '@/components/FacetPath'
@@ -65,6 +66,7 @@ export default {
     }
   },
   components: {
+    FacetDate,
     FacetNamedEntity,
     FacetText,
     FacetPath,

@@ -197,4 +197,22 @@ describe('FacetSearch.vue', () => {
     expect(spySearch).toBeCalled()
     expect(spySearch).toBeCalledTimes(1)
   })
+
+  it('should display all the indexing dates', async () => {
+    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'indexing-date' }) } })
+    await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-01-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-02-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-03-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_04.txt').withIndexingDate('2018-04-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_05.txt').withIndexingDate('2018-05-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_06.txt').withIndexingDate('2018-06-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_07.txt').withIndexingDate('2018-07-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_08.txt').withIndexingDate('2018-08-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_09.txt').withIndexingDate('2018-09-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_10.txt').withIndexingDate('2018-10-01T00:00:00.001Z')).commit()
+    await wrapper.vm.startOver()
+    await wrapper.vm.next()
+
+    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
+  })
 })
