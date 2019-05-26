@@ -19,7 +19,7 @@ describe('Search facets', () => {
 
   afterEach(() => store.commit('search/reset'))
 
-  describe('Commun facet', () => {
+  describe('Common facet', () => {
     it('should reset the store state', async () => {
       const initialState = cloneDeep(store.state.search)
       await store.commit('search/reset')
@@ -273,6 +273,14 @@ describe('Search facets', () => {
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[1].doc_count).toEqual(1)
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].key).toEqual(0)
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].doc_count).toEqual(2)
+    })
+
+    it('should count only Document types and not the NamedEntities', async () => {
+      await letData(es).have(new IndexedDocument('doc_01.txt').withCreationDate('2018-04-01T00:00:00.001Z').withNer('term_01')).commit()
+
+      const response = await store.dispatch('search/queryFacet', { name: 'creation-date', options: { size: 8 } })
+
+      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets).toHaveLength(1)
     })
   })
 })
