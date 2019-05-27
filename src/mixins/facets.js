@@ -113,12 +113,12 @@ export const mixin = {
       this.refreshRoute()
     },
     addValue (item) {
-      this.isAllSelected = false
       this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
       this.refreshRoute()
     },
     toggleValue (item) {
       this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
+      this.isAllSelected = !this.$store.getters['search/hasFacetValues'](this.facet.name)
       this.$emit('add-facet-values', this.facet, this.selected.selected)
     },
     invert () {
