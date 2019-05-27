@@ -10,16 +10,16 @@ const localVue = createLocalVue()
 localVue.use(VueProgressBar, { color: '#852308' })
 localVue.use(Murmur)
 
-describe('utils mixin', () => {
+describe('mixin utils', () => {
   it('should NOT be in SERVER mode', () => {
     const wrapper = shallowMount(App, { localVue, mixins: [utils], router })
-    expect(wrapper.vm.isRemote).toBeFalsy()
+    expect(wrapper.vm.isServer).toBeFalsy()
   })
 
   it('should be in SERVER mode', () => {
     Murmur.config.merge({ mode: 'SERVER' })
     const wrapper = shallowMount(App, { localVue, mixins: [utils], router })
-    expect(wrapper.vm.isRemote).toBeTruthy()
+    expect(wrapper.vm.isServer).toBeTruthy()
   })
 
   it('should refresh the route', () => {

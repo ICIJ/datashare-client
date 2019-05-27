@@ -120,7 +120,7 @@ export default {
         {
           name: 'named-entities',
           label: 'document.named_entities',
-          hidden: this.isRemote && !this.document.hasNerTags,
+          hidden: this.isServer && !this.document.hasNerTags,
           component: DocumentTabNamedEntities,
           icon: 'database',
           props: {

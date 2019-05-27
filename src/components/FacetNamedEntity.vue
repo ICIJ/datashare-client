@@ -14,7 +14,7 @@
         <b-form-checkbox v-model="selected" @change="toggleValue(item)" class="facet__items__item__checkbox w-100 mt-0 mr-0" :value="item.key">
           <span v-html="getNamedEntityLabel(item)"></span>
         </b-form-checkbox>
-        <div class="facet__items__item__menu" v-if="!isRemote">
+        <div class="facet__items__item__menu" v-if="!isServer">
           <b-dropdown class="h-100 my-2" no-caret dropright offset="25">
             <template slot="button-content" class="px-1">
               <fa icon="ellipsis-v" />

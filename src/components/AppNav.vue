@@ -16,18 +16,18 @@
           <fa icon="bars" />
         </a>
         <ul class="app__nav__container__main__menu list-unstyled col" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
-          <li class="list-unstyled-item app__nav__container__main__menu__item border-right ml-auto" v-if="!isRemote">
+          <li class="list-unstyled-item app__nav__container__main__menu__item border-right ml-auto" v-if="!isServer">
             <router-link :to="{ name: 'indexing' }">
               <fa icon="rocket" class="mr-1" />
               {{ $t('menu.analyse') }}
             </router-link>
           </li>
-          <li class="list-unstyled-item app__nav__container__main__menu__item app__nav__container__main__menu__item--documents" v-if="!isRemote">
+          <li class="list-unstyled-item app__nav__container__main__menu__item app__nav__container__main__menu__item--documents" v-if="!isServer">
             <a :href="getAddDocumentsLink()" target="_blank">
               {{ $t('menu.addDocuments') }}
             </a>
           </li>
-          <li class="list-unstyled-item app__nav__container__main__menu__item" :class="{ 'ml-auto': isRemote }">
+          <li class="list-unstyled-item app__nav__container__main__menu__item" :class="{ 'ml-auto': isServer }">
             <a href="https://icij.gitbook.io/datashare" target="_blank">
               {{ $t('menu.faq') }}
             </a>
@@ -37,7 +37,7 @@
               {{ $t('menu.help') }}
             </a>
           </li>
-          <li class="list-unstyled-item app__nav__container__main__menu__item logout border-left" v-if="isRemote">
+          <li class="list-unstyled-item app__nav__container__main__menu__item logout border-left" v-if="isServer">
             <a :href="logoutLink">
               <fa icon="sign-out-alt" class="mr-1" />
               {{ $t('menu.logout') }}
@@ -114,7 +114,7 @@ export default {
       return link
     },
     getHelpLink () {
-      return this.isRemote ? 'https://jira.icij.org/servicedesk/customer/portal/4/create/108' : 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
+      return this.isServer ? 'https://jira.icij.org/servicedesk/customer/portal/4/create/108' : 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
     }
   }
 }

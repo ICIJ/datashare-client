@@ -39,7 +39,7 @@
         </label>
       </div>
     </div>
-    <div class="find-named-entities-form__offline form-group pl-4" v-if="!isRemote">
+    <div class="find-named-entities-form__offline form-group pl-4" v-if="!isServer">
       <b-form-checkbox id="syncModels" v-model="offline">
         {{ $t('indexing.sync_models') }}
       </b-form-checkbox>
