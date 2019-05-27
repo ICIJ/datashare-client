@@ -107,3 +107,17 @@ $ ./launchBack -d /path/to/data
 
 - ***NOTE 1*** : `/path/to/data` must end with `data`
 - ***NOTE 2*** : the `--cors` is already set in the shell script
+
+## Run tests inside [Majestic](https://github.com/Raathigesh/majestic)
+
+Majestic is a "zero config GUI for Jest". First, you need to install it global:
+
+```
+npm install -g majestic
+```
+
+Then run Majestic and open [localhost:4000](http://localhost:4000):
+
+```
+yarn run test:unit:majestic
+```
