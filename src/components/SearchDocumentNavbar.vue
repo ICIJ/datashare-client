@@ -9,13 +9,13 @@
       {{ $t('document.download_button') }}
     </a>
     <span class="search-document-navbar__nav btn-group" v-if="currentDocumentIndex > -1">
-      <button @click="goToPreviousDocument" v-shortkey="['ctrl', 'arrowleft']" @shortkey="goToPreviousDocument" :disabled="!hasPreviousDocument" class="btn btn-sm py-0" :title="$t('search.nav.previous.tooltip')" v-b-tooltip.html>
+      <button @click="goToPreviousDocument" v-shortkey="['ctrl', 'arrowleft']" @shortkey="goToPreviousDocument" :disabled="!hasPreviousDocument" class="btn btn-sm py-0" :title="$t('search.nav.previous.tooltip')" v-b-tooltip.html.topleft>
         <fa icon="angle-left" />
         <span class="d-sm-none d-md-inline">
         {{ $t('search.nav.previous.label') }}
         </span>
       </button>
-      <button @click="goToNextDocument" v-shortkey="['ctrl', 'arrowright']" @shortkey="goToNextDocument" :disabled="!hasNextDocument" class="btn btn-sm py-0" :title="$t('search.nav.next.tooltip')" v-b-tooltip.html>
+      <button @click="goToNextDocument" v-shortkey="['ctrl', 'arrowright']" @shortkey="goToNextDocument" :disabled="!hasNextDocument" class="btn btn-sm py-0" :title="$t('search.nav.next.tooltip')" v-b-tooltip.html.topleft>
         <span class="d-sm-none d-md-inline">
           {{ $t('search.nav.next.label') }}
         </span>
