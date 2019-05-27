@@ -28,18 +28,18 @@ export default class Document extends EsDoc {
       return `<p>${row}</p>`
     }).join('')
   }
-  hasTranslationsIn (target_language) {
-    return some(this.translations, { target_language })
+  hasTranslationsIn (targetLanguage) {
+    return some(this.translations, { target_language: targetLanguage })
   }
-  translationIn (target_language) {
-    return find(this.translations, { target_language })
+  translationIn (targetLanguage) {
+    return find(this.translations, { target_language: targetLanguage })
   }
-  translatedContentIn (target_language) {
-    const translation = this.translationIn(target_language)
+  translatedContentIn (targetLanguage) {
+    const translation = this.translationIn(targetLanguage)
     return translation ? translation.content : null
   }
-  translatedContentHtmlIn (target_language) {
-    return this.nl2br(this.translatedContentIn(target_language))
+  translatedContentHtmlIn (targetLanguage) {
+    return this.nl2br(this.translatedContentIn(targetLanguage))
   }
   get parent () {
     return this[_parent]
@@ -103,14 +103,15 @@ export default class Document extends EsDoc {
     return this.source.contentType || 'unknown'
   }
   get creationDate () {
-    try {
-      return new Date(this.source.metadata.tika_metadata_creation_date)
-    } catch {
+    const creationDate = this.source.metadata.tika_metadata_creation_date
+    if (creationDate && !isNaN(Date.parse(creationDate))) {
+      return new Date(creationDate)
+    } else {
       return null
     }
   }
   get creationDateHuman () {
-    return moment(this.creationDate).format('LLL')
+    return this.creationDate ? moment(this.creationDate).format('LLL') : null
   }
   get extractionLevel () {
     return this.get('_source.extractionLevel', 0)

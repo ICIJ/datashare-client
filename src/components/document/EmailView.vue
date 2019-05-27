@@ -12,7 +12,7 @@
                 {{ email.messageFrom }}
               </strong>
             </div>
-            <abbr class="email-view__thread__item__date align-self-end small" :title="email.creationDateHuman" v-b-tooltip>
+            <abbr class="email-view__thread__item__date align-self-end small" :title="email.creationDateHuman" v-if="email.creationDate" v-b-tooltip>
               {{ $d(email.creationDate) }}
             </abbr>
           </div>
