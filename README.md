@@ -110,7 +110,7 @@ $ ./launchBack -d /path/to/data
 
 ## Run tests inside [Majestic](https://github.com/Raathigesh/majestic)
 
-Majestic is a "zero config GUI for Jest". First, you need to install it global:
+Majestic is a "zero config GUI for Jest". First, you need to install it globally:
 
 ```
 npm install -g majestic
