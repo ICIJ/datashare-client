@@ -30,16 +30,15 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-import get from 'lodash/get'
-import throttle from 'lodash/throttle'
-import uniqueId from 'lodash/uniqueId'
-
 import FacetDate from '@/components/FacetDate'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
 import FacetPath from '@/components/FacetPath'
 import { EventBus } from '@/utils/event-bus'
 import facets from '@/mixins/facets'
+import get from 'lodash/get'
+import throttle from 'lodash/throttle'
+import uniqueId from 'lodash/uniqueId'
 
 export default {
   name: 'FacetSearch',
@@ -96,9 +95,8 @@ export default {
       if (!this.facet) return
       // Load the facet using a body build using the facet configuration
       const options = { size: this.size, include: `.*(${this.queryTokens.join('|')}).*` }
-      const data = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options })
+      const data = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
       const all = get(data, this.resultPath, [])
-      // Add the new items to the end of the items if needed
       this.$set(this, 'items', all)
       // Did we reach the end?
       if ($state && all.length < this.size) $state.complete()
