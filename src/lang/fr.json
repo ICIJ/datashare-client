@@ -340,8 +340,7 @@
     "sync_models": "Hors ligne",
     "stop_task": "Arrêter cette tâche",
     "stop_pending_tasks": "Arrêter toutes les tâches en cours",
-    "delete_done_tasks": "Supprimer les tâches terminées",
-    "delete_index": "Supprimer l'index"
+    "delete_done_tasks": "Supprimer les tâches terminées"
   },
   "menu": {
     "help": "Aide",
