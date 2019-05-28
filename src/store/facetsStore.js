@@ -109,10 +109,14 @@ class FacetDate extends FacetDocument {
   queryBuilder (body, param, func) {
     return body.query('bool', sub => {
       param.values.forEach(date => {
-        let gte = new Date(parseInt(date))
-        let tmp = new Date(parseInt(date))
-        let lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
-        sub[func]('range', this.key, { gte, lte })
+        if (parseInt(date) === 0) {
+          sub['notQuery']('exists', this.key)
+        } else {
+          const gte = new Date(parseInt(date))
+          const tmp = new Date(parseInt(date))
+          const lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
+          sub[func]('range', this.key, { gte, lte })
+        }
       })
       return sub
     })

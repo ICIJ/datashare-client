@@ -2,7 +2,6 @@ import SearchResults from '@/components/SearchResults'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import find from 'lodash/find'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 import messages from '@/lang/en'
@@ -59,14 +58,27 @@ describe('SearchResults.vue', () => {
     expect(wrapper.findAll('.search-results__items__item__link')).toHaveLength(3)
   })
 
-  it('should display only the document who has a NE person Paris', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContent('first document').withNer('paris', 1, 'LOCATION')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContent('second document').withNer('paris', 1, 'PERSON')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContent('third document').withNer('paris', 1, 'PERSON')).commit()
+  it('should display all the documents that have a NE person Paris', async () => {
+    await letData(es).have(new IndexedDocument('doc_01')
+      .withNer('paris', 1, 'LOCATION')).commit()
+    await letData(es).have(new IndexedDocument('doc_02')
+      .withNer('paris')).commit()
+    await letData(es).have(new IndexedDocument('doc_03')
+      .withNer('paris')).commit()
 
-    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
-    namedEntityFacet.value = ['paris']
-    store.commit('search/addFacetValue', namedEntityFacet)
+    store.commit('search/addFacetValue', { name: 'named-entity-person', value: 'paris' })
+    wrapper = await createView()
+
+    expect(wrapper.findAll('.search-results__items__item__link')).toHaveLength(2)
+  })
+
+  it('should display all the documents without creation date', async () => {
+    await letData(es).have(new IndexedDocument('doc_01')
+      .withCreationDate('2018-05-01T00:00:00.000Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_03')).commit()
+
+    store.commit('search/addFacetValue', { name: 'creation-date', value: 0 })
     wrapper = await createView()
 
     expect(wrapper.findAll('.search-results__items__item__link')).toHaveLength(2)
