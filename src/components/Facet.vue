@@ -128,7 +128,7 @@ export default {
         const prefix = this.facet.prefix ? this.$config.get('dataDir') + '/' : ''
         const options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : { size: this.size }
         return this.queue.add(() => {
-          return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: options })
+          return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
             .then(r => {
               this.totalCount = get(r, ['aggregations', this.facet.key, 'sum_other_doc_count'], 0) + sumBy(get(r, this.resultPath, []), 'doc_count')
               this.results = this.addInvertedFacets(r)

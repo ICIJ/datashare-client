@@ -29,7 +29,7 @@ export default {
           count: item.doc_count,
           children: [],
           isLoaded: false,
-          // A unique key create everytime the data from the server are updated
+          // A unique key created every time the data from the server are updated
           key: [(new Date()).getTime(), item.key].join('-')
         }
       })

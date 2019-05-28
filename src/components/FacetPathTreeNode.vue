@@ -32,13 +32,10 @@
 
 <script>
 import PQueue from 'p-queue'
-import get from 'lodash/get'
-import replace from 'lodash/replace'
-import repeat from 'lodash/repeat'
-import bodybuilder from 'bodybuilder'
-
 import facets from '@/mixins/facets'
-import esClient from '@/api/esClient'
+import get from 'lodash/get'
+import repeat from 'lodash/repeat'
+import replace from 'lodash/replace'
 
 export default {
   name: 'FacetPathTreeNode',
@@ -59,14 +56,6 @@ export default {
   computed: {
     nodeParams () {
       return { key: this.node.path }
-    },
-    body () {
-      const body = this.facet.body(bodybuilder().size(0), {
-        size: 1000,
-        exclude: repeat('/.*', this.node.path.split('/').length + 1),
-        include: `${this.node.path}/.*`
-      })
-      return body.build()
     },
     icon () {
       if (this.loading) {
@@ -101,9 +90,12 @@ export default {
     },
     getChildren () {
       return this.queue.add(() => {
-        const index = this.$store.state.search.index
         this.loading = true
-        return esClient.search({ index, body: this.body }).then(async r => {
+        const options = {
+          exclude: repeat('/.*', this.node.path.split('/').length + 1),
+          include: `${this.node.path}/.*`
+        }
+        return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options }).then(async r => {
           this.loading = false
           this.isLoaded = true
           this.node.children = []
