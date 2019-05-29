@@ -34,7 +34,8 @@ export const mixin = {
     asyncItems: {
       type: Array,
       default: null
-    }
+    },
+    asyncTotalCount: 0
   },
   data () {
     return {

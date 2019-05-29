@@ -12,6 +12,7 @@
       <component class="border-0"
                  :is="facet.component"
                  :async-items="items"
+                 :async-total-count="totalCount"
                  @add-facet-values="onAddedFacetValues"
                  hide-search
                  hide-header
@@ -37,6 +38,7 @@ import FacetPath from '@/components/FacetPath'
 import { EventBus } from '@/utils/event-bus'
 import facets from '@/mixins/facets'
 import get from 'lodash/get'
+import sumBy from 'lodash/sumBy'
 import throttle from 'lodash/throttle'
 import uniqueId from 'lodash/uniqueId'
 
@@ -75,7 +77,8 @@ export default {
     return {
       facetQuery: this.query || '',
       items: [],
-      infiniteId: uniqueId()
+      infiniteId: uniqueId(),
+      totalCount: 0
     }
   },
   mounted () {
@@ -98,6 +101,7 @@ export default {
       const data = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
       const all = get(data, this.resultPath, [])
       this.$set(this, 'items', all)
+      this.$set(this, 'totalCount', sumBy(all, 'doc_count'))
       // Did we reach the end?
       if ($state && all.length < this.size) $state.complete()
       // Mark this page as loaded

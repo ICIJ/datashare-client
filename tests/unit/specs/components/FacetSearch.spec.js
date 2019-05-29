@@ -4,7 +4,6 @@ import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import find from 'lodash/find'
-
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { EventBus } from '@/utils/event-bus'
@@ -26,7 +25,6 @@ localVue.use(Vuex)
 localVue.use(BootstrapVue)
 localVue.use(VueI18n)
 localVue.use(Murmur)
-
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('FacetSearch.vue', () => {
@@ -34,8 +32,8 @@ describe('FacetSearch.vue', () => {
   const es = esConnectionHelper.es
   let wrapper
 
-  beforeEach(async () => {
-    await store.commit('search/reset')
+  beforeEach(() => {
+    store.commit('search/reset')
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
     const facet = find(store.state.search.facets, { name: 'content-type' })
     wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet } })
@@ -214,5 +212,17 @@ describe('FacetSearch.vue', () => {
     await wrapper.vm.next()
 
     expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
+  })
+
+  it('should display the total count of content type', async () => {
+    await letData(es).have(new IndexedDocument('doc_01').withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('doc_02').withContentType('type_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_03').withContentType('type_03')).commit()
+
+    await wrapper.vm.startOver()
+
+    expect(wrapper.findAll('.facet-search .facet__items__all')).toHaveLength(1)
+    expect(wrapper.find('.facet-search .facet__items__all .facet__items__item__label').text()).toBe('All')
+    expect(wrapper.find('.facet-search .facet__items__all .facet__items__item__count').text()).toBe('3')
   })
 })
