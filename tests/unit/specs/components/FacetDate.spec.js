@@ -62,7 +62,7 @@ describe('FacetDate.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.vm.root.items).toHaveLength(1)
-    expect(wrapper.find('.facet__items__item .facet__items__item__label').text()).toEqual('Missing')
+    expect(wrapper.find('.facet__items__item .facet__items__item__label').text()).toEqual('Missing date')
     expect(wrapper.find('.facet__items__item .facet__items__item__count').text()).toEqual('2')
   })
 })

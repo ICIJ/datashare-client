@@ -44,9 +44,15 @@ describe('SearchResultsAppliedFilters.vue', () => {
     })
 
     it('should translate the label of a facet date', () => {
-      store.commit('search/addFacetValue', { name: 'indexing-date', value: '1556668800000' })
+      store.commit('search/addFacetValue', { name: 'creation-date', value: 1556668800000 })
 
       expect(wrapper.vm.filters[0].label).toEqual('2019-05')
+    })
+
+    it('should say that a date is missing if so', () => {
+      store.commit('search/addFacetValue', { name: 'creation-date', value: 0 })
+
+      expect(wrapper.vm.filters[0].label).toEqual('Missing date')
     })
 
     it('should set facet as positive applied facet', () => {
@@ -64,19 +70,21 @@ describe('SearchResultsAppliedFilters.vue', () => {
   })
 
   describe('deletes applied filters', () => {
-    it('should remove the "AND" on last applied filter deletion', async () => {
+    beforeEach(() => {
       wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+    })
 
+    it('should remove the "AND" on last applied filter deletion', async () => {
       await store.dispatch('search/query', { query: 'term_01 AND term_02', from: 0, size: 3 })
       wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
+
       expect(store.state.search.query).toBe('term_01')
     })
 
     it('should remove the "OR" on last applied filter deletion', async () => {
-      wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
-
       await store.dispatch('search/query', { query: 'term_01 OR term_02', from: 0, size: 3 })
       wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
+
       expect(store.state.search.query).toBe('term_01')
     })
   })
