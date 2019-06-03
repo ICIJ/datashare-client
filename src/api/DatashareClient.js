@@ -43,13 +43,16 @@ export class DatashareClient {
   deleteNamedEntitiesByMentionNorm (mentionNorm) {
     return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT', credentials: 'same-origin' })
   }
+  getSource (document) {
+    return this.sendAction(document.url, { credentials: 'same-origin' })
+  }
+  getStarredDocuments (project) {
+    return this.sendAction(`/api/document/project/starred/${encodeURIComponent(project)}`)
+  }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)
     return url.href
-  }
-  getSource (document) {
-    return this.sendAction(document.url, { credentials: 'same-origin' })
   }
   sendAction (url, params) {
     return this.fetch(DatashareClient.getFullUrl(url), params).then(r => {
