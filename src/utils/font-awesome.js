@@ -39,6 +39,7 @@ import { faRocket } from '@fortawesome/free-solid-svg-icons/faRocket'
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch'
 import { faServer } from '@fortawesome/free-solid-svg-icons/faServer'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt'
+import { faStar } from '@fortawesome/free-solid-svg-icons/faStar'
 import { faSync } from '@fortawesome/free-solid-svg-icons/faSync'
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle'
@@ -47,6 +48,8 @@ import { faToggleOff } from '@fortawesome/free-solid-svg-icons/faToggleOff'
 import { faToggleOn } from '@fortawesome/free-solid-svg-icons/faToggleOn'
 import { faUndo } from '@fortawesome/free-solid-svg-icons/faUndo'
 import { faUserShield } from '@fortawesome/free-solid-svg-icons/faUserShield'
+
+import { faStar as farStar } from '@fortawesome/free-regular-svg-icons/faStar'
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 
@@ -91,13 +94,15 @@ library.add(
   faRocket,
   faServer,
   faSearch,
-  faSync,
   faSignOutAlt,
+  faStar,
+  faSync,
   faTimes,
   faTimesCircle,
   faTrashAlt,
   faToggleOff,
   faToggleOn,
   faUndo,
-  faUserShield
+  faUserShield,
+  farStar
 )

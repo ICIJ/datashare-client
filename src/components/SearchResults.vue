@@ -18,6 +18,10 @@
             <fa icon="download" />
             <span class="sr-only">{{ $t('document.download_button') }}</span>
           </a>
+          <a class="search-results__items__item__star btn btn-outline-primary btn-sm float-right m-3" :href="doc.fullUrl" target="_blank" :title="$t('document.star_file')">
+            <fa :icon="['far', 'star']" />
+            <span class="sr-only">{{ $t('document.star_button') }}</span>
+          </a>
           <search-results-link class="search-results__items__item__link" :doc="doc" />
         </div>
       </div>
@@ -102,7 +106,8 @@ export default {
         overflow: hidden;
         position: relative;
 
-        &__download {
+        &__download,
+        &__star {
           z-index: 100;
           position: absolute;
           top: 0;
@@ -115,11 +120,16 @@ export default {
           }
         }
 
-        &__link {
-          padding-right: 3rem;
+        &__star {
+          right: 50px;
         }
 
-        &:hover &__download {
+        &__link {
+          padding-right: 7rem;
+        }
+
+        &:hover &__download,
+        &:hover &__star {
           visibility: visible;
         }
       }
