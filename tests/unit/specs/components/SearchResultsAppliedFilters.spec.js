@@ -50,7 +50,7 @@ describe('SearchResultsAppliedFilters.vue', () => {
     })
 
     it('should say that a date is missing if so', () => {
-      store.commit('search/addFacetValue', { name: 'creation-date', value: 0 })
+      store.commit('search/addFacetValue', { name: 'creation-date', value: -62167219200000 })
 
       expect(wrapper.vm.filters[0].label).toEqual('Missing date')
     })

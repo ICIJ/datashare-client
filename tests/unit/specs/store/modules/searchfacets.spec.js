@@ -271,7 +271,7 @@ describe('Search facets', () => {
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[0].doc_count).toEqual(1)
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[1].key).toEqual(1522540800000)
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[1].doc_count).toEqual(1)
-      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].key).toEqual(0)
+      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].key).toEqual(-62167219200000)
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].doc_count).toEqual(2)
     })
 
