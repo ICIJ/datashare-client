@@ -18,10 +18,10 @@
     "showFilters": "Afficher les filtres",
     "settings": {
       "title": "Paramètres de recherche",
-      "contextualize": "Contextualiser les résulats de la recherche avec les facets:",
-      "contextualize_explanation": "Les facets dans la colonne de gauche seront mises à jour en fonction des résultats de recherche.",
-      "reset_filters": "Réinitialiser les filtres des facets",
-      "reset_filters_explanation": "Supprime les facets sélectionnés de la recherche",
+      "contextualize": "Contextualiser les résulats de la recherche avec les filtres:",
+      "contextualize_explanation": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche.",
+      "reset_filters": "Réinitialiser les filtres",
+      "reset_filters_explanation": "Supprime les filtres sélectionnés de la recherche",
       "results_per_page": "Nombre de résultats par page",
       "sort_by": "Trier les résultats par"
     },
@@ -83,11 +83,13 @@
     "path": "Chemin du fichier",
     "indexing-date": "Date d'indexation",
     "extraction-level": "Niveau d'extraction",
+    "creation-date": "Date de création",
     "projects": "Projets",
     "deleteNamedEntity": "Supprimer cette Entité Nommée",
     "showMore": "Voir plus",
     "local-index": "Mes documents",
     "all": "Tous",
+    "missing": "Data manquante",
     "lang": {
       "all": "Tous",
       "ABKHAZIAN": "Abkhaze",
@@ -300,9 +302,9 @@
     "content_language": "Langue",
     "content_type": "Type",
     "content_encoding": "Encodage",
-    "parent_document": "Document Parent",
-    "details": "Details",
-    "named_entities": "Entitiés nommées",
+    "parent_document": "Document parent",
+    "details": "Détails",
+    "named_entities": "Entités nommées",
     "extracted_text": "Texte",
     "translations": "Traductions",
     "preview": "Prévisualisation",
@@ -316,7 +318,10 @@
     "sheet": "Feuille",
     "search_directory": "Chercher dans ce dossier",
     "tiff_limitations": "La prévisualisation des fichiers TIFF dans le navigateur peut ne pas montrer toutes les images. Nous vous conseillons de le télécharger afin de voir tout le contenu.",
-    "error_not_found": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre répertoire Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible."
+    "thread_index": "ID du fil de discussion",
+    "see_highlights": "Afficher les entités nommées",
+    "highlights_caution": "Attention ! Les entités nommées seront surlignées et cacheront le texte. Ceci n'affectera cependant pas les résultats de recherche.",
+    "error_not_found": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre fichier Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible."
   },
   "indexing": {
     "yes": "Oui",
@@ -326,7 +331,7 @@
     "empty": "Vous n'avez pas encore démarré de tâches",
     "extract_text": "Extraire le texte",
     "extracting_header": "Pendant l'indexation, voulez-vous aussi extraire le texte des images et des PDFs ?",
-    "extracting_subheader": "Si oui, Datashare appliquera de l'OCR (Optical Character Recognition). Cela peut prendre jusqu'à 10 fois plus de temps.",
+    "extracting_subheader": "Si oui, Datashare appliquera l'OCR (Optical Character Recognition). Cela peut prendre jusqu'à 10 fois plus de temps.",
     "find_named_entities": "Trouver les personnes, organisations et lieux",
     "find_named_entities_header": "Quelle technologie voulez-vous utiliser pour trouver les entités nommées ?",
     "find_named_entities_subheader": "Datashare applique des modèles de Traitement de Language Naturel. Veuillez choisir l'un d'eux:",
@@ -340,7 +345,9 @@
     "sync_models": "Hors ligne",
     "stop_task": "Arrêter cette tâche",
     "stop_pending_tasks": "Arrêter toutes les tâches en cours",
-    "delete_done_tasks": "Supprimer les tâches terminées"
+    "delete_done_tasks": "Supprimer les tâches terminées",
+    "delete_index_label": "Effacer tous les documents de Datashare",
+    "delete_index_description": "Pour être en sécurité, effacez tous les documents dans le fichier Datashare de votre ordinateur - n'oubliez pas de vider tous les documents Datashare de votre corbeille également ! Assurez-vous d'avoir gardé une copie de vos documents dans un endroit sûr."
   },
   "menu": {
     "help": "Aide",
