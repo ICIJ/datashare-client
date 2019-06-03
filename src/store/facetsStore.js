@@ -130,7 +130,7 @@ class FacetDate extends FacetDocument {
         format: 'yyyy-MM',
         order: { '_key': 'desc' },
         min_doc_count: 1,
-        missing: '1970-01'
+        missing: '0000-01'
       }, this.key, a => a.agg('bucket_sort', { size: options.size }, 'bucket_sort_truncate'))
   }
 }
