@@ -50,7 +50,6 @@
 </template>
 
 <script>
-import { headroom } from 'vue-headroom'
 import SearchBar from '@/components/SearchBar'
 import utils from '@/mixins/utils'
 import { getOS } from '@/utils/utils'
@@ -60,7 +59,6 @@ export default {
   name: 'AppNav',
   mixins: [utils],
   components: {
-    headroom,
     SearchBar
   },
   data () {
