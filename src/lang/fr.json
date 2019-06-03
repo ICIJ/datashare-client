@@ -316,7 +316,7 @@
     "sheet": "Feuille",
     "search_directory": "Chercher dans ce dossier",
     "tiff_limitations": "La prévisualisation des fichiers TIFF dans le navigateur peut ne pas montrer toutes les images. Nous vous conseillons de le télécharger afin de voir tout le contenu.",
-    "error_not_found": "Votre fichier a été indexé dans datashare mais le fichier n'est plus présent dans votre répertoire Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible."
+    "error_not_found": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre répertoire Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible."
   },
   "indexing": {
     "yes": "Oui",
