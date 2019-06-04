@@ -87,7 +87,7 @@ export default {
     }
   },
   mounted () {
-    EventBus.$on('facet::hide::named-entities', () => this.$refs.facet.aggregate())
+    EventBus.$on('facet::hide::named-entities', () => this.$refs.facet ? this.$refs.facet.aggregate() : null)
   }
 }
 </script>
