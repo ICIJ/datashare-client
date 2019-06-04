@@ -16,12 +16,12 @@
     "search-in": "Buscar en",
     "hideFilters": "Ocultar los filtros",
     "showFilters": "Mostrar los filtros",
+    "contextualizeFiltersLabel": "Contextualizar",
+    "contextualizeFiltersDescription": "Las facetas en el panel izquierdo se actualizarán de acuerdo con los resultados de la búsqueda.",
+    "resetFiltersLabel": "Restablecer",
+    "resetFiltersDescription": "Eliminar faceta seleccionada de la búsqueda.",
     "settings": {
       "title": "Configuración de búsqueda",
-      "contextualize": "Contextualizar los resultados de búsqueda con las facetas:",
-      "contextualize_explanation": "Las facetas en el panel izquierdo se actualizarán de acuerdo con los resultados de la búsqueda.",
-      "reset_filters": "Restablecer las facetas del filtro",
-      "reset_filters_explanation": "Eliminar faceta seleccionada de la búsqueda.",
       "results_per_page": "Número de resultados por página",
       "sort_by": "Ordenar resultados por"
     },

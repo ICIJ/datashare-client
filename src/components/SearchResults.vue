@@ -3,7 +3,7 @@
     <transition name="slide-up">
       <div class="nav search-results__toolbar p-0" v-show="!showFilters">
         <li class="nav-item">
-          <a class="nav-link text-uppercase font-weight-bold" href @click.prevent="clickOnShowFilters()">
+          <a class="nav-link font-weight-bold" href @click.prevent="clickOnShowFilters()">
             <fa icon="filter" />
             {{ $t('search.showFilters') }}
           </a>

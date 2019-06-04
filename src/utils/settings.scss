@@ -47,6 +47,7 @@ $special-font-family: "Medel", $headings-font-family;
 $text-muted: #717171;
 
 $input-focus-border-color: map-get($theme-colors, 'secondary');
+$custom-control-indicator-checked-bg: $tertiary;
 
 $btn-box-shadow: none;
 

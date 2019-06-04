@@ -31,14 +31,6 @@ describe('SearchSettings.vue', () => {
     expect(wrapper.vm.relativeSearch).toBeFalsy()
   })
 
-  it('should emit a bv::hide::popover on relativeSearch change', () => {
-    const rootWrapper = createWrapper(wrapper.vm.$root)
-    wrapper.find('#input-global').setChecked()
-
-    expect(wrapper.vm.relativeSearch).toBeTruthy()
-    expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
-  })
-
   it('should display the dropdown to choose the number of results per page', async () => {
     expect(wrapper.findAll('#input-page-size')).toHaveLength(1)
     expect(wrapper.vm.selectedSize).toEqual(25)

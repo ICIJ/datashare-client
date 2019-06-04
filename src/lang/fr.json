@@ -16,12 +16,12 @@
     "search-in": "Rechercher dans",
     "hideFilters": "Cacher les filtres",
     "showFilters": "Afficher les filtres",
+    "contextualizeFiltersLabel": "Contextualiser",
+    "contextualizeFiltersDescription": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche",
+    "resetFiltersLabel": "Réinitialiser",
+    "resetFiltersDescription": "Supprime les filtres sélectionnés de la recherche",
     "settings": {
       "title": "Paramètres de recherche",
-      "contextualize": "Contextualiser les résulats de la recherche avec les filtres:",
-      "contextualize_explanation": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche.",
-      "reset_filters": "Réinitialiser les filtres",
-      "reset_filters_explanation": "Supprime les filtres sélectionnés de la recherche",
       "results_per_page": "Nombre de résultats par page",
       "sort_by": "Trier les résultats par"
     },

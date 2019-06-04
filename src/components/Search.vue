@@ -13,7 +13,7 @@
         </div>
       </div>
       <transition>
-        <div class="search__body__document " :class="showFilters ? 'show-filters' : 'hide-filters'" v-show="showDocument">
+        <div class="search__body__document " :class="showFilters ? 'show-filters' : 'show-filters'" v-show="showDocument">
           <search-document-navbar />
           <router-view class="search__body__document__view"></router-view>
           <router-link :to="{ name: 'search', query }" class="search__body__document__backdrop" />
@@ -114,6 +114,7 @@ export default {
         padding: 0;
         width: 100%;
         max-width: calc(100% - #{$search-results-width} - #{$aggregations-panel-width});
+        border-radius: $card-border-radius;
 
         &.slide-right-enter-active, &.slide-right-leave-active {
           transition: .3s;
@@ -149,6 +150,7 @@ export default {
           max-width: calc(100vw - #{$spacer});
           min-height: 100vh;
           background: white;
+          border-radius: 0;
 
           &__backdrop {
             cursor: auto;

@@ -2,13 +2,31 @@
   <transition name="slide-left">
     <div class="aggregations-panel" v-show="showFilters">
       <div class="aggregations-panel__sticky w-100">
-        <div class="aggregations-panel__sticky__toolbar px-2 py-2 bg-primary">
+        <div class="aggregations-panel__sticky__toolbar bg-primary">
           <ul class="nav">
-            <li class="nav-item">
-              <a class="nav-link p-0 text-uppercase text-white font-weight-bold" href @click.prevent="clickOnHideFilters()">
-                <fa icon="filter" />
-                {{ $t('search.hideFilters') }}
-              </a>
+            <li class="nav-item border-right">
+              <button class="nav-link text-white font-weight-bold p-2 btn btn-sm" @click="hideFilters()" id="btn-hide-filters">
+                <fa icon="chevron-left" class="mx-1" />
+                <span class="sr-only">
+                  {{ $t('search.hideFilters') }}
+                </span>
+              </button>
+              <b-tooltip placement="bottom" target="btn-hide-filters" :title="$t('search.hideFilters')" />
+            </li>
+            <li class="nav-item ml-auto">
+              <div class="custom-control custom-switch">
+                <input type="checkbox" :checked="filtersContextualized" class="custom-control-input" id="input-contextualize-filters" @change="toggleContextualizeFilters($event.target.checked)">
+                <label class="custom-control-label text-white font-weight-bold btn btn-sm pl-0 pr-2 pb-2 pt-0 mt-2" for="input-contextualize-filters" id="label-contextualize-filters">
+                  {{ $t('search.contextualizeFiltersLabel') }}
+                </label>
+                <b-tooltip placement="bottom" target="label-contextualize-filters" :title="$t('search.contextualizeFiltersDescription')" />
+              </div>
+            </li>
+            <li class="nav-item border-left">
+              <button class="nav-link text-white font-weight-bold btn btn-sm px-2" id="btn-reset-filters" @click="resetFilters()" :disabled="!hasFilters">
+                {{ $t('search.resetFiltersLabel') }}
+              </button>
+              <b-tooltip placement="bottom" target="btn-reset-filters" :title="$t('search.resetFiltersDescription')" />
             </li>
           </ul>
         </div>
@@ -62,7 +80,14 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['facets', 'showFilters'])
+    ...mapState('search', ['facets', 'showFilters']),
+    // Shortcut for the checkbox state
+    filtersContextualized () {
+      return !this.$store.state.search.globalSearch
+    },
+    hasFilters () {
+      return this.$store.getters['search/activeFacets'].length > 0
+    }
   },
   methods: {
     asyncFacetSearch (selectedFacet, facetQuery) {
@@ -95,8 +120,18 @@ export default {
         }
       })
     },
-    clickOnHideFilters () {
+    resetFilters () {
+      this.$store.dispatch('search/reset', ['index', 'globalSearch'])
+      this.$root.$emit('bv::hide::popover')
+      EventBus.$emit('facet::search::reset-filters')
+      // Change the route
+      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
+    },
+    hideFilters () {
       this.$store.commit('search/toggleFilters')
+    },
+    toggleContextualizeFilters (toggler) {
+      this.$store.commit('search/setGlobalSearch', !toggler)
     },
     refreshEachFacet () {
       forEach(this.$refs, component => {
@@ -134,6 +169,10 @@ export default {
         margin: $spacer 0 0 $spacer;
         color: white;
         border-radius: $card-border-radius;
+
+        .border-left, .border-right {
+          border-color: rgba(white, 0.3) !important;
+        }
       }
 
       & > .card {

@@ -13,36 +13,6 @@
       </template>
       <div class="search-settings__popover">
         <div class="row py-2">
-          <div class="col-8">
-            <p class="m-0">
-              <label for="input-global" class="m-0">
-                {{ $t('search.settings.contextualize') }}
-              </label>
-            </p>
-            <p class="text-muted m-0">
-              {{ $t('search.settings.contextualize_explanation') }}
-            </p>
-          </div>
-          <div class="col-4 text-right">
-            <input type="checkbox" id="input-global" v-model="relativeSearch" />
-          </div>
-        </div>
-        <div class="row py-2">
-          <div class="col-8">
-            <p class="m-0">
-              <label class="m-0">
-                {{ $t('search.settings.reset_filters') }}
-              </label>
-            </p>
-            <p class="text-muted m-0">
-              {{ $t('search.settings.reset_filters_explanation') }}
-            </p>
-          </div>
-          <div class="col-4 text-right">
-            <reset-filters-button />
-          </div>
-        </div>
-        <div class="row py-2">
           <label class="col-8" for="input-page-size">
             {{ $t('search.settings.results_per_page') }}
           </label>
@@ -73,14 +43,12 @@
 
 <script>
 import bPopover from 'bootstrap-vue/es/components/popover/popover'
-import ResetFiltersButton from '@/components/ResetFiltersButton'
 
 export default {
   name: 'SearchSettings',
-  components: { bPopover, ResetFiltersButton },
+  components: { bPopover },
   data () {
     return {
-      relativeSearch: !this.$store.state.search.globalSearch,
       sizes: [10, 25, 50, 100],
       selectedSize: this.$store.state.search.size,
       sorts: [
@@ -105,12 +73,6 @@ export default {
       default: 'auto'
     }
   },
-  watch: {
-    relativeSearch (relativeSearch) {
-      this.$store.commit('search/setGlobalSearch', !relativeSearch)
-      this.$root.$emit('bv::hide::popover')
-    }
-  },
   methods: {
     changeSize () {
       // Store new search size into store
@@ -133,7 +95,8 @@ export default {
 <style lang="scss">
   .search-settings {
     &__popover {
-      width: 100%;
+      width: 390px;
+      max-width: 90vw;
     }
   }
 </style>

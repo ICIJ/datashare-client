@@ -36,9 +36,11 @@
     margin: $spacer $spacer 0;
     color: white;
     background: darken($primary, 10);
+    border-radius: $card-border-radius $card-border-radius 0 0;
 
     @media (max-width: $document-float-breakpoint-width) {
       margin: 0;
+      border-radius: 0;
     }
 
     &__back {
