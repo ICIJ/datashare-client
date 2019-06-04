@@ -18,7 +18,7 @@
             <fa icon="download" />
             <span class="sr-only">{{ $t('document.download_button') }}</span>
           </a>
-          <a class="search-results__items__item__star btn btn-outline-primary btn-sm float-right m-3" :href="doc.fullUrl" target="_blank" :title="$t('document.star_file')">
+          <a class="search-results__items__item__star btn btn-outline-primary btn-sm float-right m-3" :href="doc.fullUrl" target="_blank" :title="$t('document.star_file')" v-if="hasFeature('BOOKMARKS')">
             <fa :icon="['far', 'star']" />
             <span class="sr-only">{{ $t('document.star_button') }}</span>
           </a>
@@ -45,10 +45,12 @@
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import SearchResultsLink from '@/components/SearchResultsLink'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
+import features from '@/mixins/features'
 
 export default {
   name: 'SearchResults',
   props: ['response', 'query'],
+  mixins: [features],
   components: { SearchResultsHeader, SearchResultsLink, ResetFiltersButton },
   computed: {
     showFilters: {
