@@ -29,17 +29,17 @@ describe('SearchResultsHeader.vue', () => {
     store.commit('search/reset')
   })
 
-  it('should display one document found', async () => {
+  it('should display one document', async () => {
     await letData(es).have(new IndexedDocument('doc.txt').withContent('bar')).commit()
 
     await store.dispatch('search/query', 'bar')
     wrapper.setProps({ response: store.state.search.response })
 
     expect(wrapper.find('.search-results__header__paging__progress__pagination').text()).toEqual('1 - 1')
-    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 1 document found')
+    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 1 document')
   })
 
-  it('should display 2 documents found', async () => {
+  it('should display 2 documents', async () => {
     await letData(es).have(new IndexedDocument('doc_011.txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withContent('bar')).commit()
 
@@ -47,7 +47,7 @@ describe('SearchResultsHeader.vue', () => {
     wrapper.setProps({ response: store.state.search.response })
 
     expect(wrapper.find('.search-results__header__paging__progress__pagination').text()).toEqual('1 - 2')
-    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 2 documents found')
+    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 2 documents')
   })
 
   it('should not display the pagination (1/2)', async () => {
@@ -83,7 +83,7 @@ describe('SearchResultsHeader.vue', () => {
     expect(wrapper.findAll('.search-results__header__paging__next-page')).toHaveLength(1)
     expect(wrapper.findAll('.search-results__header__paging__last-page')).toHaveLength(1)
     expect(wrapper.find('.search-results__header__paging__progress__pagination').text()).toEqual('1 - 3')
-    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 4 documents found')
+    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 4 documents')
   })
 
   it('should display the first and the previous page as unavailable', async () => {
@@ -109,7 +109,7 @@ describe('SearchResultsHeader.vue', () => {
     expect(wrapper.findAll('.search-results__header__paging__next-page.disabled')).toHaveLength(1)
     expect(wrapper.findAll('.search-results__header__paging__last-page.disabled')).toHaveLength(1)
     expect(wrapper.find('.search-results__header__paging__progress__pagination').text()).toEqual('4 - 4')
-    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 4 documents found')
+    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 4 documents')
   })
 
   it('should generate the link to the first page', async () => {

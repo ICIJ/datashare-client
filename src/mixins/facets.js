@@ -92,7 +92,12 @@ export const mixin = {
       ].map(this.escapeRegExp))
     },
     options () {
-      return map(this.items, item => { return { value: item.key, html: this.getItemLabel(item) } })
+      return map(this.items, item => {
+        return {
+          value: item.key,
+          html: this.getItemLabel(item)
+        }
+      })
     }
   },
   methods: {
@@ -127,7 +132,7 @@ export const mixin = {
       this.refreshRoute()
     },
     hasValues () {
-      return this.isReady && this.$store.getters['search/hasFacetValues'](this.facet.name)
+      return this.$store.getters['search/hasFacetValues'](this.facet.name)
     },
     isReversed () {
       return this.$store.getters['search/isFacetReversed'](this.facet.name)

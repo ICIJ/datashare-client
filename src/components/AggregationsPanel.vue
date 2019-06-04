@@ -2,10 +2,10 @@
   <transition name="slide-left">
     <div class="aggregations-panel" v-show="showFilters">
       <div class="aggregations-panel__sticky w-100">
-        <div class="aggregations-panel__sticky__toolbar mx-3">
+        <div class="aggregations-panel__sticky__toolbar px-2 py-2 bg-primary">
           <ul class="nav">
             <li class="nav-item">
-              <a class="nav-link p-0 text-uppercase font-weight-bold" href @click.prevent="clickOnHideFilters()">
+              <a class="nav-link p-0 text-uppercase text-white font-weight-bold" href @click.prevent="clickOnHideFilters()">
                 <fa icon="filter" />
                 {{ $t('search.hideFilters') }}
               </a>
@@ -13,7 +13,7 @@
           </ul>
         </div>
         <index-selector />
-        <component v-for="facet in sortedFacets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
+        <component v-for="facet in facets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
       </div>
       <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
         <facet-search :facet="selectedFacet" :query="facetQuery" />
@@ -33,10 +33,7 @@ import FacetText from '@/components/FacetText'
 import IndexSelector from '@/components/IndexSelector'
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import forEach from 'lodash/forEach'
-import get from 'lodash/get'
 import isArray from 'lodash/isArray'
-import map from 'lodash/map'
-import sortBy from 'lodash/sortBy'
 
 export default {
   name: 'AggregationsPanel',
@@ -50,16 +47,6 @@ export default {
     bModal
   },
   mounted () {
-    this.$watch(() => map(this.$refs, (ref, key) => get(ref, '0.root.isReady', false)), () => {
-      this.sortedFacets = sortBy(this.facets, facet => {
-        const root = get(this, `$refs.${facet.name}.0.root`, {})
-        if (root.isReady) {
-          return root.facetQuery === '' || !root.hasResults
-        } else {
-          return false
-        }
-      })
-    })
     // Watch for $root event
     this.$root.$on('facet::async-search', this.asyncFacetSearch)
     this.$root.$on('facet::add-facet-values', this.addFacetValues)
@@ -70,7 +57,6 @@ export default {
   data () {
     return {
       relativeSearch: !this.$store.state.search.globalSearch,
-      sortedFacets: this.$store.state.search.facets,
       selectedFacet: null,
       facetQuery: null
     }
@@ -129,6 +115,7 @@ export default {
 
     display: flex;
     align-items: flex-start;
+    padding-bottom: $spacer;
 
     &.slide-left-enter-active, &.slide-left-leave-active {
       transition: .3s;
@@ -144,16 +131,22 @@ export default {
       &__toolbar {
         font-size: 0.85rem;
         line-height: $line-height-base * (1 - (85 - 95) / 95);
-        padding: 0.5rem 0;
+        margin: $spacer 0 0 $spacer;
+        color: white;
+        border-radius: $card-border-radius;
       }
 
       & > .card {
-        margin: 0 $spacer $spacer;
+        margin: $spacer 0 0 $spacer;
+        border-width: 0;
 
         .card-header {
           position: sticky;
           top:0;
           z-index: 100;
+          border-width: 0;
+          background: inherit;
+          border-radius: $card-border-radius;
 
           & > h6 {
             font-weight: bolder;
@@ -168,7 +161,7 @@ export default {
 
         & > .list-group,
         & > .card-body {
-          font-size: 0.9em;
+          font-size: 0.8rem;
           color: $body-color;
           padding:0;
         }
@@ -182,10 +175,13 @@ export default {
               display: flex;
               flex-direction: row;
               position: relative;
+              background: $gray-100;
+              border: 0;
 
               > input {
                 border: none;
                 width: 90%;
+                background: transparent;
               }
 
               > svg {

@@ -1,17 +1,17 @@
 <template>
-  <div v-if="!isGloballyEmpty" class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet--hide-header': hideHeader  }">
+  <div v-if="!isGloballyEmpty" class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet--hide-header': hideHeader, 'facet--has-values': hasValues() }">
     <slot name="header" v-if="!hideHeader">
       <div class="card-header px-2 d-flex">
         <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate">
-          <fa :icon="headerIcon" />
+          <fa :icon="headerIcon" class="float-right" />
           <template>
             <slot name="title">
               {{ $t('facet.' + facet.name) }}
             </slot>
           </template>
         </h6>
-        <span v-if="hasValues()" class="btn-group">
-          <button class="d-inline-flex btn btn-sm btn-outline-dark py-0" @click="invert" :class="{ 'active': isReversed() }">
+        <span v-if="hasValues() && !collapseItems" class="btn-group">
+          <button class="d-inline-flex btn btn-sm btn-outline-dark py-0 ml-2" @click="invert" :class="{ 'active': isReversed() }">
             <fa icon="eye-slash" class="mr-1 mt-1" />
             {{ $t('facet.invert') }}
           </button>
@@ -21,7 +21,7 @@
     <slide-up-down class="list-group list-group-flush facet__items" :active="!collapseItems">
       <slot name="search" v-if="!hideSearch">
         <form @submit.prevent="asyncFacetSearch" v-if="facet.isSearchable">
-          <label class="list-group facet__items__search border-bottom py-2 px-2">
+          <label class="list-group facet__items__search py-2 px-2">
             <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.name) + '...'" />
             <fa icon="search" class="float-right" />
           </label>
@@ -40,7 +40,7 @@
         </b-form-checkbox>
         <b-form-checkbox-group stacked v-model="selected" :options="options" class="list-group-item facet__items__item p-0 border-0" @input="changeSelectedValues" />
       </slot>
-      <div class="list-group-item facet__items__display" @click="asyncFacetSearch" v-if="shouldDisplayShowMoreAction()">
+      <div class="list-group-item facet__items__display border-top-0" @click="asyncFacetSearch" v-if="shouldDisplayShowMoreAction()">
         <span>{{ $t('facet.showMore') }}</span>
       </div>
       <div v-if="noResults" class="p-2 text-center small text-muted">
@@ -76,7 +76,7 @@ export default {
       display: {
         size: initialNumberOfFilesDisplayed
       },
-      collapseItems: false,
+      collapseItems: !this.asyncItems,
       isReady: !!this.asyncItems,
       isGloballyEmpty: this.$store.state.search.globalSearch && !this.asyncItems,
       queue: new PQueue({ concurrency: 1 }),
@@ -87,6 +87,10 @@ export default {
     facetQuery () {
       this.searchWithThrottle()
     }
+  },
+  mounted () {
+    // Default collapse state depends of the selected values
+    this.collapseItems = !this.asyncItems && !this.hasValues()
   },
   created () {
     // Are we using an "offline" components?
@@ -104,7 +108,7 @@ export default {
       return this.asyncTotalCount || this.totalCount
     },
     headerIcon () {
-      return this.collapseItems ? 'caret-right' : 'caret-down'
+      return this.collapseItems ? 'plus' : 'minus'
     },
     hasResults () {
       return this.isReady && this.items.length > 0
@@ -132,18 +136,20 @@ export default {
       if (this.facet) {
         const prefix = this.facet.prefix ? this.$config.get('dataDir') + '/' : ''
         const options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${this.queryTokens.join('|')}).*` } : { size: this.size }
-        return this.queue.add(() => {
-          return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
-            .then(r => {
-              this.totalCount = get(r, ['aggregations', this.facet.key, 'sum_other_doc_count'], 0) + sumBy(get(r, this.resultPath, []), 'doc_count')
-              this.results = this.addInvertedFacets(r)
-              this.isReady = this.queue.pending === 1
-              // If this search is global, it means the no values for this query
-              // means no values at all for this facet
-              this.isGloballyEmpty = this.$store.state.search.globalSearch && this.totalCount === 0
-            })
+        return this.queue.add(async () => {
+          const res = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
+          const sumOtherDocCount = get(res, ['aggregations', this.facet.key, 'sum_other_doc_count'], 0)
+          const sumDocCount = sumBy(get(res, this.resultPath, []), 'doc_count')
+          this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)
+          this.$set(this, 'results', this.addInvertedFacets(res))
+          this.$set(this, 'isReady', this.queue.pending === 1)
+          // If this search is global, it means the no values for this query
+          // means no values at all for this facet
+          this.$set(this, 'isGloballyEmpty', this.$store.state.search.globalSearch && this.totalCount === 0 && this.facetQuery === '')
+          return this.results
         })
       }
+      return this.queue.onEmpty()
     },
     addInvertedFacets (response) {
       if (!this.isGlobal && this.facetFilter && this.facetFilter.reverse) {
@@ -187,6 +193,25 @@ export default {
     &.facet--reversed {
       input:checked + label {
         text-decoration: line-through;
+      }
+    }
+
+    &.facet--has-values {
+      box-shadow: 0 0 0 2px $warning;
+    }
+
+    &__items {
+
+      & &__search {
+        margin: 0 0.5rem;
+      }
+
+      & &__display {
+        margin: 0;
+        padding: 0 2.25rem 0.5rem;
+        text-align: center;
+        font-size: 0.8rem;
+        font-weight: bolder;
       }
     }
   }

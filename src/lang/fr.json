@@ -28,7 +28,7 @@
     "results": {
       "match": "dans le doc",
       "entities": "nb entités",
-      "results": "1 document trouvé | %{total} documents trouvés",
+      "results": "1 document | %{total} documents",
       "no-result": "Aucun document trouvé.",
       "on": "sur",
       "perPage": "par page",

@@ -2,7 +2,7 @@
   <div class="facet card facet--hide-show-more facet--hide-search" v-if="indices.length > 1">
     <div class="card-header">
       <h6 @click="toggleItems">
-        <fa :icon="headerIcon" />
+        <fa :icon="headerIcon" class="float-right"/>
         {{ $t('facet.projects') }}
       </h6>
     </div>
@@ -35,11 +35,11 @@ export default {
       }
     },
     headerIcon () {
-      return this.collapseItems ? 'caret-right' : 'caret-down'
+      return this.collapseItems ? 'plus' : 'minus'
     }
   },
   created () {
-    this.indices = map(this.$config.get('userIndices', []), index => { return { value: index, text: index } })
+    this.indices = map(this.$config.get('userIndices', []), value => { return { value, text: value } })
   },
   methods: {
     select (value) {

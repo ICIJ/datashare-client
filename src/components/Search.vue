@@ -3,7 +3,7 @@
     <div class="px-0 search__body">
       <div class="search__body__wrapper">
         <aggregations-panel class="search__body__aggregations-panel" />
-        <div class="search__body__search-results">
+        <div class="search__body__search-results my-3 ml-3">
           <search-results v-if="isReady" :response="response" :query.sync="query" />
           <div v-else>
             <content-placeholder />
@@ -100,8 +100,7 @@ export default {
         min-width: $search-results-width;
         min-height: 100%;
         overflow: auto;
-        border-left: 1px solid $gray-200;
-        border-right: 1px solid $gray-200;
+        border-radius: $card-border-radius;
       }
 
       &__aggregations-panel, &__search-results, &__document {

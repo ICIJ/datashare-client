@@ -59,7 +59,7 @@ describe('FacetNamedEntity.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__description').at(0).text()).toEqual('one occurrence in one doc')
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__count').at(0).attributes('data-original-title')).toEqual('one occurrence in one doc')
   })
 
   it('should display 2 named entities in one document', async () => {
@@ -82,7 +82,7 @@ describe('FacetNamedEntity.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__description').at(0).text()).toEqual('3 occurrences in 2 docs')
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__count').at(0).attributes('data-original-title')).toEqual('3 occurrences in 2 docs')
   })
 
   it('should display 3 named entities in 2 documents in correct order', async () => {
@@ -405,21 +405,20 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__item').at(2).text()).toContain('person_04')
   })
 
-  it('should prepend a selected and inverted Named Entity in the items, and remove it from the rest of the items', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')
-      .withNer('person_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')
-      .withNer('person_02')).commit()
+  it('should prepend a selected and inverted Named Entity in the items, and show it in the list of facet items', async () => {
+    await letData(es).have(new IndexedDocument('doc_01').withNer('anne')).commit()
+    await letData(es).have(new IndexedDocument('doc_02').withNer('bruno')).commit()
 
     const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
-    namedEntityFacet.value = ['person_01']
+    namedEntityFacet.value = ['anne']
     store.commit('search/addFacetValue', namedEntityFacet)
     store.commit('search/toggleFacet', 'named-entity-person')
+    store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(0).text()).toBe('person_01')
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__key').at(1).text()).toBe('person_02')
+    expect(wrapper.findAll('.facet__items__item').at(0).find('.facet__items__item__body__key').text()).toBe('anne')
+    expect(wrapper.findAll('.facet__items__item').at(1).find('.facet__items__item__body__key').text()).toBe('bruno')
   })
 
   it('should filter facets items on 2 named entities from different categories', async () => {
@@ -460,7 +459,7 @@ describe('FacetNamedEntity.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__description').at(0).text()).toContain('one occurrence in one doc')
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__body__count').at(0).attributes('data-original-title')).toContain('one occurrence in one doc')
   })
 
   it('should display an "All" item on top of others items, and this item should be active by default', async () => {
@@ -474,7 +473,6 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__all')).toHaveLength(1)
     expect(wrapper.find('.facet__items__all .custom-control-input').element.checked).toBeTruthy()
     expect(wrapper.findAll('.facet__items__all .facet__items__item__body__key').at(0).text()).toEqual('All')
-    expect(wrapper.findAll('.facet__items__all .facet__items__item__description').at(0).text()).toEqual('one occurrence in one doc')
   })
 
   it('should load and checked the facet values stored in store', async () => {

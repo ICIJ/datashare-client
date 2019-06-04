@@ -6,16 +6,27 @@
       </span>
       {{ $t('facet.' + facet.name) }}
     </template>
-    <template slot="items" slot-scope="{ items, totalCount }">
-      <b-form-checkbox v-model="isAllSelected" @click.native="resetNamedEntityValues" class="facet__items__all mb-0">
-        <span v-html="getNamedEntityLabel({ key: $t('facet.all'), doc_count: totalCount, byDocs: { value: total } })"></span>
+    <template slot="items" slot-scope="{ items }">
+      <b-form-checkbox v-model="isAllSelected" @click.native="resetNamedEntityValues" class="facet__items__all">
+        <div class="py-1 facet__items__item__body">
+           <div class="facet__items__item__body__key facet__items__item__body__key--all text-uppercase d-inline badge badge-light">
+             {{ $t('facet.all') }}
+           </div>
+         </div>
       </b-form-checkbox>
       <div v-for="item in items" :key="item.key" class="facet__items__item d-flex">
         <b-form-checkbox v-model="selected" @change="toggleValue(item)" class="facet__items__item__checkbox w-100 mt-0 mr-0" :value="item.key">
-          <span v-html="getNamedEntityLabel(item)"></span>
+          <div class="py-1 facet__items__item__body">
+            <div class="text-uppercase d-inline facet__items__item__body__key text-truncate badge badge-light"  :class="getCategoryClass(facet.category, 'border-')">
+              {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
+            </div>
+            <div class="facet__items__item__body__count badge text-light ml-0" :class="getCategoryClass(facet.category, 'bg-')" v-b-tooltip :title="itemTitle(item)">
+              {{ $n(item.doc_count || 0) }} | {{ item.byDocs ? $n(item.byDocs.value || 0) : 0 }}
+            </div>
+          </div>
         </b-form-checkbox>
         <div class="facet__items__item__menu" v-if="!isServer">
-          <b-dropdown class="h-100 my-2" no-caret dropright offset="25">
+          <b-dropdown class="h-100" no-caret dropright offset="25">
             <template slot="button-content" class="px-1">
               <fa icon="ellipsis-v" />
             </template>
@@ -51,22 +62,6 @@ export default {
     }
   },
   methods: {
-    getNamedEntityLabel (item) {
-      const label = this.facet.itemLabel ? this.facet.itemLabel(item) : item.key
-      const count = get(item, 'doc_count', 0)
-      const value = get(item, 'byDocs.value', 0)
-      return '<div class="col-auto py-1 pl-2 facet__items__item__body">' +
-          '<div class="badge badge-pill badge-light mr-1 text-uppercase d-inline facet__items__item__body__key">' +
-            label +
-          '</div>' +
-          '<div class="text-muted small facet__items__item__description">' +
-            this.$t('aggregations.mentions.item', {
-              occurrences: this.$tc('aggregations.mentions.occurrence', count, { count: this.$n(count) }),
-              documents: this.$tc('aggregations.mentions.document', value, { count: this.$n(value) })
-            }) +
-          '</div>' +
-        '</div>'
-    },
     resetNamedEntityValues (evt) {
       if (evt && this.isAllSelected) {
         evt.preventDefault()
@@ -81,6 +76,14 @@ export default {
       return datashare.deleteNamedEntitiesByMentionNorm(mentionNorm).then(() => {
         EventBus.$emit('facet::hide::named-entities')
       })
+    },
+    itemTitle (item) {
+      const occurrencesCount = item.doc_count || 0
+      const documentsCount = get(item, 'byDocs.value', 0)
+      return this.$t('aggregations.mentions.item', {
+        occurrences: this.$tc('aggregations.mentions.occurrence', occurrencesCount, { count: occurrencesCount }),
+        documents: this.$tc('aggregations.mentions.document', documentsCount, { count: documentsCount })
+      })
     }
   },
   mounted () {
@@ -91,8 +94,10 @@ export default {
 
 <style lang="scss">
   .facet--named-entity {
+
     label.custom-control-label::before, label.custom-control-label::after {
-      top: 1rem;
+      top: 50%;
+      transform: translateY(-50%);
     }
 
     .facet__items__item {
@@ -106,45 +111,58 @@ export default {
       }
 
       &__body {
-        border-left: 1px dashed $card-border-color !important;
         flex-grow: 1;
         min-width: 0;
         display: flex;
-        flex-direction: column;
-        align-items: flex-start;
+        flex-direction: row;
+        align-items: center;
+        justify-content: flex-start;
 
         &__key {
           display: inline-block;
           overflow: hidden;
           max-width: 100%;
           min-width: 0;
-          text-overflow: ellipsis;
-        }
-      }
+          margin-right: 0;
+          float: left;
+          border-radius: 0.5em 0 0 0.5em;
+          border: 1px solid transparent;
 
-      &__description {
-        font-style: italic;
-        white-space: nowrap;
-        max-width: 100%;
-        overflow: hidden;
-        text-overflow: ellipsis;
+          &--all {
+            border-radius: 0.5em;
+            border: 1px solid transparent;
+          }
+        }
+
+        &__count {
+          border: 1px solid transparent;
+          border-radius: 0 0.5em 0.5em 0;
+        }
       }
 
       &__menu {
         flex-basis: 2.5em;
         flex-grow: 0;
         visibility: hidden;
+        position: relative;
+
+        .btn-group {
+          position: absolute;
+          right: 0;
+          top: 0;
+        }
 
         .btn-group > .btn {
           background-color: transparent;
           border: none;
           color: grey;
-          padding: 0;
-          height: 2em;
-          line-height: 2em;
-          width: 2em;
+          padding: 0.2rem;
           border-radius: 50% !important;
           text-align: center;
+          font-size: 0.8rem;
+          width: 1.5rem;
+          height: 1.5rem;
+          line-height: 1;
 
           &:focus, &:focus:active, &:active {
             background-color: theme-color('light');

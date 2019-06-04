@@ -32,6 +32,7 @@ import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons/faIdBadge'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons/faLanguage'
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons/faMapMarkerAlt'
+import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus'
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle'
 import { faRedo } from '@fortawesome/free-solid-svg-icons/faRedo'
@@ -88,6 +89,7 @@ library.add(
   faInfoCircle,
   faLanguage,
   faMapMarkerAlt,
+  faMinus,
   faPlus,
   faQuestionCircle,
   faRedo,
