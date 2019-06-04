@@ -2,7 +2,7 @@
   <transition name="slide-left">
     <div class="aggregations-panel" v-show="showFilters">
       <div class="aggregations-panel__sticky w-100">
-        <div class="aggregations-panel__sticky__toolbar bg-primary">
+        <div class="aggregations-panel__sticky__toolbar">
           <ul class="nav">
             <li class="nav-item border-right">
               <button class="nav-link text-white font-weight-bold p-2 btn btn-sm" @click="hideFilters()" id="btn-hide-filters">
@@ -168,6 +168,7 @@ export default {
         line-height: $line-height-base * (1 - (85 - 95) / 95);
         margin: $spacer 0 0 $spacer;
         color: white;
+        background: darken($primary, 10);
         border-radius: $card-border-radius;
 
         .border-left, .border-right {
