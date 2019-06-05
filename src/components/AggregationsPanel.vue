@@ -187,13 +187,11 @@ export default {
 
         .card-header {
           position: sticky;
-          top: $spacer;
+          top: 0;
           z-index: 100;
           border-width: 0;
           background: inherit;
           border-radius: $card-border-radius;
-          // Fake a gap between the top of the window when the header is in sticky mode
-          box-shadow: 0 -1 * $spacer 0 0 $body-bg;
 
           & > h6 {
             font-weight: bolder;
