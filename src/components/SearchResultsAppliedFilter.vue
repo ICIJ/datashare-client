@@ -1,5 +1,5 @@
 <template>
-  <b-badge class="ml-2 search-results__header__applied-filters__filter" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()">
+  <b-badge variant="dark" class="ml-2 search-results__header__applied-filters__filter" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()">
     {{ filter.label }}
     <fa icon="times" />
   </b-badge>
