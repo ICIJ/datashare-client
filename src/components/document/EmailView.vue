@@ -70,7 +70,7 @@
 
           &:before {
             content: "";
-            border-left: 3px solid $secondary;
+            border-left: 2px solid $secondary;
             position: absolute;
             top: 0;
             left: 0;

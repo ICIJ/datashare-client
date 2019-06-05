@@ -174,6 +174,11 @@ export default {
         .border-left, .border-right {
           border-color: rgba(white, 0.3) !important;
         }
+
+        .custom-control-input:checked ~ .custom-control-label::before {
+          background-color: $tertiary;
+          border-color: $tertiary;
+        }
       }
 
       & > .card {

@@ -32,7 +32,6 @@
     position: sticky;
     top: 0;
     z-index: 100;
-    background: $body-bg;
     margin: $spacer $spacer 0;
     color: white;
     background: darken($primary, 10);

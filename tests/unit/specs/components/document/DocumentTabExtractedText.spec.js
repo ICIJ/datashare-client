@@ -5,11 +5,13 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import Murmur from '@icij/murmur'
 import store from '@/store'
 import VueI18n from 'vue-i18n'
+import BootstrapVue from 'bootstrap-vue'
 import messages from '@/lang/en'
 
 const localVue = createLocalVue()
 localVue.use(Murmur)
 localVue.use(VueI18n)
+localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('DocumentTabExtractedText.vue', () => {
@@ -29,8 +31,8 @@ describe('DocumentTabExtractedText.vue', () => {
     const id = 'doc'
     await letData(es).have(new IndexedDocument(id)
       .withContent('content')
-      .withNer('ner_01', 2, 'category_01')
-      .withNer('ner_02', 17, 'category_02'))
+      .withNer('ner_01', 2, 'person')
+      .withNer('ner_02', 17, 'location'))
       .commit()
     await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
     const wrapper = shallowMount(DocumentTabExtractedText, {
@@ -45,9 +47,9 @@ describe('DocumentTabExtractedText.vue', () => {
 
     expect(wrapper.findAll('mark')).toHaveLength(2)
     expect(wrapper.findAll('mark').at(0).text()).toEqual('ner_01')
-    expect(wrapper.findAll('mark').at(0).classes()).toContain('bg-category-category_01')
+    expect(wrapper.findAll('mark').at(0).classes()).toContain('ner--category-person')
     expect(wrapper.findAll('mark').at(1).text()).toEqual('ner_02')
-    expect(wrapper.findAll('mark').at(1).classes()).toContain('bg-category-category_02')
+    expect(wrapper.findAll('mark').at(1).classes()).toContain('ner--category-location')
   })
 
   it('should display a document with named entities and escaped HTML', async () => {
@@ -87,7 +89,7 @@ describe('DocumentTabExtractedText.vue', () => {
       }
     })
 
-    expect(wrapper.findAll('.document__header__see-highlights')).toHaveLength(1)
+    expect(wrapper.findAll('.document__extracted-text__header__see-highlights')).toHaveLength(1)
   })
 
   it('should not contain a "See highlights" toggle if there is no named entities', async () => {
@@ -106,7 +108,7 @@ describe('DocumentTabExtractedText.vue', () => {
       }
     })
 
-    expect(wrapper.findAll('.document__header__see-highlights')).toHaveLength(0)
+    expect(wrapper.findAll('.document__extracted-text__header__see-highlights')).toHaveLength(0)
   })
 
   it('should change the document state of showNamedEntities', async () => {
@@ -128,7 +130,7 @@ describe('DocumentTabExtractedText.vue', () => {
 
     expect(wrapper.vm.showNamedEntities).toBeTruthy()
 
-    wrapper.findAll('.document__header__see-highlights').at(0).trigger('click')
+    wrapper.findAll('.document__extracted-text__header__see-highlights label').at(0).trigger('click')
 
     expect(wrapper.vm.showNamedEntities).toBeFalsy()
   })
@@ -172,11 +174,13 @@ describe('DocumentTabExtractedText.vue', () => {
         }
       })
 
-      expect(wrapper.findAll('ul')).toHaveLength(1)
-      expect(wrapper.findAll('ul li')).toHaveLength(3)
-      expect(wrapper.findAll('ul li').at(0).text()).toEqual('test (3)')
-      expect(wrapper.findAll('ul li').at(1).text()).toEqual('document (2)')
-      expect(wrapper.findAll('ul li').at(2).text()).toEqual('result (1)')
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item')).toHaveLength(3)
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item__label').at(0).text()).toEqual('test')
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item__count').at(0).text()).toEqual('3')
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item__label').at(1).text()).toEqual('document')
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item__count').at(1).text()).toEqual('2')
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item__label').at(2).text()).toEqual('result')
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item__count').at(2).text()).toEqual('1')
     })
 
     it('should not display the query terms on a specific field but content', async () => {
@@ -198,7 +202,8 @@ describe('DocumentTabExtractedText.vue', () => {
 
       expect(wrapper.findAll('ul')).toHaveLength(1)
       expect(wrapper.findAll('ul li')).toHaveLength(1)
-      expect(wrapper.findAll('ul li').at(0).text()).toEqual('term_01 (1)')
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item__label').at(0).text()).toEqual('term_01')
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item__count').at(0).text()).toEqual('1')
     })
 
     it('should stroke the negative query terms', async () => {
@@ -220,7 +225,7 @@ describe('DocumentTabExtractedText.vue', () => {
 
       expect(wrapper.findAll('ul')).toHaveLength(1)
       expect(wrapper.findAll('ul li')).toHaveLength(1)
-      expect(wrapper.findAll('ul li mark.strikethrough')).toHaveLength(1)
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item--negation')).toHaveLength(1)
     })
   })
 
@@ -241,13 +246,10 @@ describe('DocumentTabExtractedText.vue', () => {
       }
     })
 
-    expect(wrapper.findAll('ul li mark.yellow-0')).toHaveLength(1)
-    expect(wrapper.find('ul li mark.yellow-0').text()).toBe('full')
-    expect(wrapper.findAll('mark.yellow-0')).toHaveLength(1)
-    expect(wrapper.find('mark.yellow-0').text()).toBe('full')
-    expect(wrapper.findAll('ul li mark.yellow-1')).toHaveLength(1)
-    expect(wrapper.find('ul li mark.yellow-1').text()).toBe('content')
-    expect(wrapper.findAll('mark.yellow-1')).toHaveLength(1)
-    expect(wrapper.find('mark.yellow-1').text()).toBe('content')
+    expect(wrapper.findAll('.document__extracted-text__header__terms__item--index-0')).toHaveLength(1)
+    expect(wrapper.find('.document__extracted-text__header__terms__item--index-0 .document__extracted-text__header__terms__item__label').text()).toBe('full')
+
+    expect(wrapper.findAll('.document__extracted-text__header__terms__item--index-1')).toHaveLength(1)
+    expect(wrapper.find('.document__extracted-text__header__terms__item--index-1 .document__extracted-text__header__terms__item__label').text()).toBe('content')
   })
 })

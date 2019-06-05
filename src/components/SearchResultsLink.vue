@@ -9,7 +9,7 @@
         <fa icon="folder" class="mr-1" />
         {{ location }}
       </span>
-      <div class="search-results-link__fragments" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
+      <div class="search-results-link__fragments small" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
     </div>
   </router-link>
 </template>
@@ -93,7 +93,7 @@ export default {
 
       &:before {
         content: "";
-        border-left: 3px solid $secondary;
+        border-left: 2px solid $secondary;
         position: absolute;
         top: 0;
         left: 0;

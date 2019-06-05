@@ -1,3 +1,6 @@
+import { icon as faIcon } from '@fortawesome/fontawesome-svg-core'
+console.log()
+
 export const mixin = {
   methods: {
     getCategoryIcon (category = '') {
@@ -9,6 +12,11 @@ export const mixin = {
     },
     getCategoryClass (category = 'muted', prefix = '') {
       return `${prefix}category-${category.toLowerCase()}`
+    },
+    getCategoryIconSvg (category = '') {
+      const iconName = this.getCategoryIcon(category)
+      const iconRendering = faIcon({ prefix: 'fas', iconName })
+      return iconRendering ? iconRendering.html[0] : null
     }
   }
 }
