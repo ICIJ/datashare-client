@@ -1,5 +1,5 @@
 <template>
-  <div class="landing d-flex justify-content-center align-item-center flex-column">
+  <div class="landing d-flex justify-content-center align-item-center flex-column py-5">
     <div class="landing__form">
       <h1 class="landing__form__heading text-special">
         <img src="~images/logo-white.svg" alt="Datashare" />
@@ -37,10 +37,10 @@ export default {
     &__form {
       z-index: 100;
       position: relative;
+      top: -2 * $spacer;
       max-width: 660px;
       width: 100%;
       margin: auto;
-      padding: 3rem 0;
 
       &__heading {
         text-align: center;
