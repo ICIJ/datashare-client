@@ -30,16 +30,20 @@
     display: flex;
     align-items: center;
     position: sticky;
-    top: 0;
+    top: $spacer;
     z-index: 100;
     margin: $spacer $spacer 0;
     color: white;
     background: darken($primary, 10);
     border-radius: $card-border-radius $card-border-radius 0 0;
+    // Fake a gap between the top of the window and the navbar in sticky mode
+    box-shadow: 0 -2 * $spacer 0 0 $body-bg;
 
     @media (max-width: $document-float-breakpoint-width) {
       margin: 0;
       border-radius: 0;
+      top: 0;
+      box-shadow: none;
     }
 
     &__back {
