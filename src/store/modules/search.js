@@ -38,6 +38,7 @@ export function initialState () {
     sort: 'relevance',
     response: Response.none(),
     isReady: true,
+    error: null,
     index: '',
     showFilters: true
   }
@@ -151,6 +152,9 @@ export const mutations = {
   isReady (state, isReady = !state.isReady) {
     state.isReady = isReady
   },
+  error (state, error = null) {
+    state.error = error
+  },
   index (state, index) {
     state.index = index
     state.response = Response.none()
@@ -226,17 +230,23 @@ export const actions = {
     commit('reset', excludedKeys)
     return dispatch('query')
   },
-  query ({ state, commit }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort }) {
+  async query ({ state, commit }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort }) {
     commit('index', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.index === 'undefined' ? state.index : queryOrParams.index)
     commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.query === 'undefined' ? queryOrParams : queryOrParams.query)
     commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.from === 'undefined' ? state.from : queryOrParams.from)
     commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.size === 'undefined' ? state.size : queryOrParams.size)
     commit('sort', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.sort === 'undefined' ? state.sort : queryOrParams.sort)
     commit('isReady', false)
-    return esClient.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort).then(raw => {
+    commit('error', null)
+    try {
+      const raw = await esClient.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort)
       commit('buildResponse', raw)
       return raw
-    })
+    } catch (error) {
+      commit('isReady', true)
+      commit('error', error)
+      throw error
+    }
   },
   queryFacet ({ state, getters }, params) {
     return esClient.searchFacet(

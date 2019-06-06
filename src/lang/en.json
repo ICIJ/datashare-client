@@ -11,6 +11,14 @@
     "relative": "Relative to the search"
   },
   "search": {
+    "errors": {
+      "bad-request": "Your search query is wrong",
+      "internal-error": "The server encountered a problem",
+      "no-connections": "The server is not connected",
+      "not-found": "Nothing was found",
+      "service-unavailable": "The server is unable to satisfy your request",
+      "something-wrong": "Something went wrong."
+    },
     "placeholder": "Search in documents...",
     "buttonlabel": "Search",
     "search-in": "Search in",

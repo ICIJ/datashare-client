@@ -4,7 +4,10 @@
       <div class="search__body__wrapper">
         <aggregations-panel class="search__body__aggregations-panel" />
         <div class="search__body__search-results my-3 ml-3">
-          <search-results v-if="isReady" :response="response" :query.sync="query" />
+          <div v-if="!!error" class="py-5 text-center">
+            {{ errorMessage }}
+          </div>
+          <search-results v-else-if="isReady" :response="response" :query.sync="query" />
           <div v-else>
             <content-placeholder />
             <content-placeholder />
@@ -24,11 +27,13 @@
 </template>
 
 <script>
+import get from 'lodash/get'
 import AggregationsPanel from '@/components/AggregationsPanel'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import SearchResults from '@/components/SearchResults'
 import { EventBus } from '@/utils/event-bus'
 import { mapState } from 'vuex'
+import{ errors as esErrors } from 'elasticsearch-browser'
 
 export default {
   name: 'Search',
@@ -37,16 +42,40 @@ export default {
     SearchDocumentNavbar,
     SearchResults
   },
+  data () {
+    return {
+      errorMessages: {
+        "BadRequest": 'search.errors.bad-request',
+        "InternalServerError": 'search.errors.internal-error',
+        "NoConnections": 'search.errors.no-connections',
+        "NotFound": 'search.errors.not-found',
+        "ServiceUnavailable": 'search.errors.service-unavailable'
+      }
+    }
+  },
   computed: {
-    ...mapState('search', ['query', 'response', 'isReady', 'showFilters']),
+    ...mapState('search', ['query', 'response', 'isReady', 'showFilters', 'error']),
     showDocument () {
       return ['document', 'email'].indexOf(this.$route.name) > -1
+    },
+    errorMessage () {
+      const defaultMessage = this.$t('search.errors.something-wrong')
+      for (const type in this.errorMessages) {
+        // The error is an instance of the key and it exist as a translation key
+        if (this.error instanceof esErrors[type] && this.$te(this.errorMessages[type])) {
+          return this.$t(this.errorMessages[type])
+        }
+      }
+      return get(this.error, 'body.error.root_cause.0.reason', defaultMessage)
     }
   },
   beforeRouteUpdate (to, from, next) {
     if (to.name === 'search') {
       // Update the search's store using route query
-      this.$store.dispatch('search/updateFromRouteQuery', to.query).then(this.search).then(next)
+      this.$store.dispatch('search/updateFromRouteQuery', to.query)
+        .catch(this.wrongQuery)
+        .then(this.search)
+        .then(next)
     } else {
       next()
     }
@@ -64,8 +93,16 @@ export default {
     }
   },
   methods: {
-    search (queryOrParams) {
-      return this.$store.dispatch('search/query', queryOrParams)
+    async search (queryOrParams) {
+      try {
+        const result = await this.$store.dispatch('search/query', queryOrParams)
+        return result
+      } catch {
+        this.wrongQuery()
+      }
+    },
+    wrongQuery () {
+      this.$Progress.finish()
     }
   }
 }
