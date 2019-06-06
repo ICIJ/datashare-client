@@ -331,7 +331,10 @@
     "thread_index": "Thread ID",
     "see_highlights": "Show named entities",
     "highlights_caution": "Warning! the named entities will be highlighted and may replace text underneath. This does not impact your search results.",
-    "error_not_found": "Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available."
+    "error_not_found": "Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.",
+    "search": "Search",
+    "find": "Find in document",
+    "of": "of"
   },
   "indexing": {
     "yes": "Yes",

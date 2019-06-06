@@ -1,5 +1,4 @@
 import { icon as faIcon } from '@fortawesome/fontawesome-svg-core'
-console.log()
 
 export const mixin = {
   methods: {

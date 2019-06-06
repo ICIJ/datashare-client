@@ -10,6 +10,23 @@
           <b-tooltip placement="bottom" target="label-see-highlights" :title="$t('document.highlights_caution')" />
         </div>
       </div>
+      <div class="document__header__search form-inline" v-show="isSearchBarShown">
+        <div class="document__header__search__term form-group p-2">
+          <label class="sr-only">{{ $t('document.search') }}</label>
+          <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" />
+        </div>
+        <div class="document__header__search__count form-group p-2" v-if="this.searchTerm.length > 0">
+          {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
+        </div>
+        <div class="form-group p-2">
+          <button class="document__header__search__previous btn btn-lg" @click="findPreviousOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
+            <fa icon="angle-up" />
+          </button>
+          <button class="document__header__search__next btn btn-lg" @click="findNextOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
+            <fa icon="angle-down" />
+          </button>
+        </div>
+      </div>
       <div class="col">
         <div class="p-3" v-if="showTermsList" v-once>
           <div class="mb-3">Researched terms in this document:</div>
@@ -28,7 +45,7 @@
         </div>
       </div>
     </div>
-    <div class="document__extracted-text__content p-3" v-html="markedSourceContent()" />
+    <div class="document__extracted-text__content p-3" v-html="content" />
   </div>
 </template>
 
@@ -64,6 +81,22 @@ export default {
     namedEntityMarkTemplate () {
       return template('<mark class="ner <%= classNames %>" title="<%= extractor %>"><%= icon %> <%= mention %></mark>')
     }
+  },
+  data () {
+    return {
+      content: '',
+      isSearchBarShown: false,
+      searchTerm: '',
+      searchIndex: 0,
+      searchOccurrences: 0
+    }
+  },
+  mounted () {
+    this.content = this.markedSourceContent()
+    window.addEventListener('keydown', this.showSearchBar)
+  },
+  beforeDestroy () {
+    window.removeEventListener('keydown', this.showSearchBar)
   },
   methods: {
     namedEntityMark (ne) {
@@ -112,6 +145,43 @@ export default {
         'document__extracted-text__header__terms__item--negation': term.negation,
         [`document__extracted-text__header__terms__item--index-${index}`]: true
       }
+    },
+    showSearchBar (event) {
+      if (event.ctrlKey && event.key === 'f') {
+        event.preventDefault()
+        this.isSearchBarShown = true
+        this.$nextTick(() => this.$refs.search.focus())
+      }
+    },
+    hideSearchBar () {
+      this.isSearchBarShown = false
+    },
+    startSearch () {
+      this.searchOccurrences = (this.markedSourceContent().match(new RegExp('(?![^<]*>)' + this.searchTerm, 'gi')) || []).length
+      this.searchIndex = this.searchOccurrences > 0 ? 1 : 0
+      this.highlightTerm()
+    },
+    findPreviousOccurrence () {
+      if (this.searchOccurrences > 0) {
+        this.searchIndex = this.searchIndex === 1 ? this.searchOccurrences : this.searchIndex - 1
+        this.highlightTerm()
+      }
+    },
+    findNextOccurrence () {
+      if (this.searchOccurrences > 0) {
+        this.searchIndex = this.searchIndex === this.searchOccurrences ? 1 : this.searchIndex + 1
+        this.highlightTerm()
+      }
+    },
+    highlightTerm () {
+      if (this.searchTerm.length === 0) {
+        this.content = this.markedSourceContent()
+      } else if (this.searchOccurrences > 0) {
+        this.content = this.markedSourceContent().replace(
+          RegExp(`^(?:[\\s\\S]*?(?![^<]*>)${this.searchTerm}){${this.searchIndex}}`, 'im'),
+          match => match.replace(RegExp(`${this.searchTerm}$`, 'i'), `<mark class="query-term yellow-search">${this.searchTerm}</mark>`)
+        )
+      }
     }
   }
 }
@@ -154,6 +224,10 @@ export default {
 
       mark {
         border-bottom: 3px solid transparent;
+
+        &.yellow-search {
+          background-color: yellow;
+        }
       }
     }
   }
