@@ -18,7 +18,7 @@
           </div>
           <div class="d-flex">
             <span class="email-view__thread__item__to text-muted text-nowrap mr-3" v-if="isActive(email)">
-              to {{ email.messageTo }}
+              {{ $t('email.to') }} {{ email.messageTo }}
             </span>
             <span class="email-view__thread__item__excerpt text-muted w-100" v-else>
               {{ email.excerpt }}
@@ -29,7 +29,7 @@
           <document-translated-content  class="email-view__thread__item__content p-3" :document="email" />
           <div  class="email-view__thread__item__footer px-4 py-3 bg-light d-flex">
             <router-link :to="{ name: 'document', params: routeParams(email) }" class="align-self-end">
-              See detail
+              {{ $t('email.detail') }}
             </router-link>
           </div>
         </div>

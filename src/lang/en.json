@@ -337,6 +337,10 @@
     "of": "of",
     "researched_terms": "Researched terms in this document:"
   },
+  "email": {
+    "detail": "See detail",
+    "to": "to"
+  },
   "indexing": {
     "yes": "Yes",
     "no": "No",
