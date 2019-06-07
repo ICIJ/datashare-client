@@ -149,12 +149,12 @@ export default {
     showSearchBar (event) {
       if (event.ctrlKey && event.key === 'f') {
         event.preventDefault()
-        this.isSearchBarShown = true
+        this.$set(this, 'isSearchBarShown', true)
         this.$nextTick(() => this.$refs.search.focus())
       }
     },
     hideSearchBar () {
-      this.isSearchBarShown = false
+      this.$set(this, 'isSearchBarShown', false)
     },
     startSearch () {
       this.searchOccurrences = (this.markedSourceContent().match(new RegExp('(?![^<]*>)' + this.searchTerm, 'gi')) || []).length
