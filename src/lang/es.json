@@ -51,7 +51,17 @@
     },
     "reset_filters": "Resetear filtros",
     "back": "Regresar a resultados de búsqueda",
-    "try": "Usted puede intentar a"
+    "try": "Usted puede intentar a",
+    "nav": {
+      "previous": {
+        "label": "Anterior",
+        "tooltip": "Documento anterior (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
+      },
+      "next": {
+        "label": "Siguiente",
+        "tooltip": "Documento siguiente (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
+      }
+    }
   },
   "documentTranslatedContent": {
     "detected": "Detected language",
@@ -63,6 +73,7 @@
     "seeAll": "Buscar el base de datos entero",
     "noMatches": "No hay coincidencias. <br /> Presione <kbd> Ingrese </kbd> para buscar en cada de los documentos",
     "noResults": "No hay coincidencias",
+    "noSubdirectories": "No hay subdirectorios",
     "invert": "Excluir",
     "content-type": "Tipo de archivo",
     "language": "Idiomas",
@@ -72,11 +83,13 @@
     "path": "Ruta",
     "indexing-date": "Fecha de indexación\n ",
     "extraction-level": "Nivel de extracción",
+    "creation-date": "Fecha de creación",
     "projects": "Proyectos",
     "deleteNamedEntity": "Eliminar esta Entidad Identificada",
     "showMore": "Ver más",
     "local-index": "Mis documentos",
     "all": "Todos",
+    "missing": "Fecha faltante",
     "lang": {
       "all": "Todos",
       "ABKHAZIAN": "Abjasio",
@@ -304,7 +317,10 @@
     "generating_preview": "Generando visualización previa...",
     "sheet": "Hoja",
     "search_directory": "Buscar dentro de este directorio",
-    "tiff_limitations": "La vista previa del navegador de este archivo TIFF puede no mostrar todas las imágenes. Le sugerimos que lo descargue en su computadora para ver todos los contenidos."
+    "tiff_limitations": "La vista previa del navegador de este archivo TIFF puede no mostrar todas las imágenes. Le sugerimos que lo descargue en su computadora para ver todos los contenidos.",
+    "thread_index": "Índice de hilo",
+    "see_highlights": "Mostrat entidades con nombre",
+    "highlights_caution": "¡Advertencia! Las entidades con nombre se resaltarán y pueden reemplazar el texto debajo. Esto no afecta los resultados de su búsqueda",
   },
   "indexing": {
     "yes": "Sí",
@@ -328,7 +344,10 @@
     "sync_models": "Por favor marque esta casilla si actualmente está trabajando sin conexión a Internet.",
     "stop_task": "Detener esta tarea",
     "stop_pending_tasks": "Detener todas las tareas pendientes",
-    "delete_done_tasks": "Borrar tareas completadas"
+    "delete_done_tasks": "Borrar tareas completadas",
+    "delete_index_label": "Elimina todos tus documentos de Datashare",
+    "delete_index_description": "Para estar 100% seguro, elimine sus documentos de la carpeta Datashare de su computadora. ¡No olvide vaciar su papelera de todos los documentos de Datashare! Asegúrese de tener una copia de ellos en otro lugar seguro de antemano."
+  },
   },
   "menu": {
     "help": "Pedir ayuda",
@@ -340,7 +359,8 @@
   "footer": {
     "homedir": "Mueve archivos a este directorio para analizarlos",
     "clientVersion": "Cliente",
-    "serverVersion": "Servidor"
+    "serverVersion": "Servidor",
+    "userHistory": "Tu historia"
   },
   "login": {
     "welcome": "Beinvenido a Datashare",
@@ -349,5 +369,11 @@
     "xemx": "Iniciar sesión con Xemx",
     "support_desk": "Si necesita ayuda, por favor visite nuestro servicio de asistencia:",
     "ask_help": "Pedir ayuda"
+  },
+  "userHistory": {
+    "heading": "Tu historial de navegación",
+    "description": "Los últimos 500 documentos que abriste con Datashare desde esta computadora",
+    "empty": "Tu historia está vacía",
+    "clear": "Borrar historia"
   }
 }
