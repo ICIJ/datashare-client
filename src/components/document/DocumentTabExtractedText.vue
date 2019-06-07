@@ -10,19 +10,19 @@
           <b-tooltip placement="bottom" target="label-see-highlights" :title="$t('document.highlights_caution')" />
         </div>
       </div>
-      <div class="document__header__search form-inline" v-show="isSearchBarShown">
-        <div class="document__header__search__term form-group p-2">
+      <div class="document__extracted-text__header__search form-inline" v-show="isSearchBarShown">
+        <div class="document__extracted-text__header__search__term form-group p-2">
           <label class="sr-only">{{ $t('document.search') }}</label>
           <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" />
         </div>
-        <div class="document__header__search__count form-group p-2" v-if="this.searchTerm.length > 0">
+        <div class="document__extracted-text__header__search__count form-group p-2" v-if="this.searchTerm.length > 0">
           {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
         </div>
         <div class="form-group p-2">
-          <button class="document__header__search__previous btn btn-lg" @click="findPreviousOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
+          <button class="document__extracted-text__header__search__previous btn btn-lg" @click="findPreviousOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
             <fa icon="angle-up" />
           </button>
-          <button class="document__header__search__next btn btn-lg" @click="findNextOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
+          <button class="document__extracted-text__header__search__next btn btn-lg" @click="findNextOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
             <fa icon="angle-down" />
           </button>
         </div>
