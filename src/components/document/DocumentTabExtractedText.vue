@@ -29,7 +29,7 @@
       </div>
       <div class="col">
         <div class="p-3" v-if="showTermsList" v-once>
-          <div class="mb-3">Researched terms in this document:</div>
+          <div class="mb-3">{{ $t('document.researched_terms') }}</div>
           <ul class="document__extracted-text__header__terms list-inline m-0">
             <li v-for="(term, index) in getQueryTerms()" :key="term.label" class="mb-2 list-inline-item">
               <mark class="document__extracted-text__header__terms__item" :style="getTermIndexBorderColor(index)" :class="getTermIndexClass(index, term)">

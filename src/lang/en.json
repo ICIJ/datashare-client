@@ -334,7 +334,8 @@
     "error_not_found": "Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.",
     "search": "Search",
     "find": "Find in document",
-    "of": "of"
+    "of": "of",
+    "researched_terms": "Researched terms in this document:"
   },
   "indexing": {
     "yes": "Yes",
