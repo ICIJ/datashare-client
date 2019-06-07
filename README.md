@@ -89,8 +89,8 @@ There are three parameters to use when using the backend in dev mode :
 You can just use the [datashare.sh](https://github.com/ICIJ/datashare/blob/master/datashare-dist/src/main/datashare.sh) script that will download and launch the services used by datashare (i.e. redis and elasticsearch) :
 
 ```
-$ cd where/is/your/data
-$ /path/to/datashare.sh -w --cors '*'
+cd where/is/your/data
+/path/to/datashare.sh -w --cors '*'
 ```
 
 Then the script will ask you where your data is, you can just type enter as by default it is the current directory. And when the NLP models should be stored.
@@ -102,7 +102,7 @@ There is a shell script [launchBack.sh](https://github.com/ICIJ/datashare/blob/m
 After having compiled java code, you can launch the script with :
 
 ```
-$ ./launchBack -d /path/to/data
+./launchBack -d /path/to/data
 ```
 
 - ***NOTE 1*** : `/path/to/data` must end with `data`
@@ -120,4 +120,12 @@ Then run Majestic and open [localhost:4000](http://localhost:4000):
 
 ```
 yarn run test:unit:majestic
+```
+
+## Internationalisation
+
+To retrieve the list of the keys translated into English but not present in the other languages files :
+
+```
+./bin/compareTranslations.sh
 ```
