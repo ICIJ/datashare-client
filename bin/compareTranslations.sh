@@ -1,18 +1,20 @@
 #!/bin/bash
 
-files=($(ls src/lang))
+I18N_FILES_PATH='src/lang'
+I18N_MASTER_FILE_NAME='en.json'
 
+
+files=($(ls ${I18N_FILES_PATH}))
 for file in ${files[@]}
 do
-  if [[ ${file} != 'en.json' ]]; then
+  if [[ ${file} != ${I18N_MASTER_FILE_NAME} ]]; then
     echo 'Translation for file : ' ${file}
-    # Level 01
-    diff <(cat src/lang/en.json | jq 'to_entries? | .[].key') <(cat src/lang/${file} | jq 'to_entries? | .[].key')
-    # Level 02
-    diff <(cat src/lang/en.json | jq 'to_entries? | .[].value | to_entries? | .[].key') <(cat src/lang/es.json | jq 'to_entries? | .[].value | to_entries? | .[].key')
-    # Level 03
-    diff <(cat src/lang/en.json | jq 'to_entries? | .[].value | to_entries? | .[].value | to_entries? | .[].key') <(cat src/lang/es.json | jq 'to_entries? | .[].value | to_entries? | .[].value | to_entries? | .[].key')
-    # Level 04
-    diff <(cat src/lang/en.json | jq 'to_entries? | .[].value | to_entries? | .[].value | to_entries? | .[].value | to_entries? | .[].key') <(cat src/lang/es.json | jq 'to_entries? | .[].value | to_entries? | .[].value | to_entries? | .[].value | to_entries? | .[].key')
+    keys=($(diff <(jq -r '[paths | join(".")]'  ${I18N_FILES_PATH}/${I18N_MASTER_FILE_NAME}) <(jq -r '[paths | join(".")]' ${I18N_FILES_PATH}/${file})))
+    for key in ${keys[@]}
+    do
+      if [[ ${#key} > 2 ]]; then
+        echo ${key}
+      fi
+    done
   fi
 done
