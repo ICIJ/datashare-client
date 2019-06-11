@@ -3,12 +3,15 @@ import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
+import get from 'lodash/get'
 import last from 'lodash/last'
 import pick from 'lodash/pick'
 import trim from 'lodash/trim'
 import truncate from 'lodash/truncate'
+import { extname } from 'path'
 import Murmur from '@icij/murmur'
 
+import types from '@/utils/types.json'
 import DatashareClient from './DatashareClient'
 import EsDoc from './EsDoc'
 import moment from 'moment'
@@ -64,6 +67,9 @@ export default class Document extends EsDoc {
   get basename () {
     return last(this.path.split('/'))
   }
+  get extension () {
+    return extname(this.basename).toLowerCase()
+  }
   get title () {
     const titles = [ this.shortId, this.basename ]
     if (this.isEmail) {
@@ -101,6 +107,27 @@ export default class Document extends EsDoc {
   }
   get contentType () {
     return this.source.contentType || 'unknown'
+  }
+  get contentTypeLabel () {
+    return get(types, [this.contentType, 'label'], null)
+  }
+  get contentTypeDescription () {
+    return get(types, [this.contentType, 'description'], {})
+  }
+  get contentTypeWarning () {
+    return get(types, [this.contentType, 'warning'], {})
+  }
+  get standardExtension () {
+    return get(types, [this.contentType, 'extensions', 0], null)
+  }
+  get standardExtensions () {
+    return get(types, [this.contentType, 'extensions'], [])
+  }
+  get hasStandardExtension () {
+    return this.standardExtensions.indexOf(this.extension) > -1
+  }
+  get hasContentTypeWarning () {
+    return !!get(types, [this.contentType, 'warning'], false)
   }
   get creationDate () {
     const creationDate = this.source.metadata.tika_metadata_creation_date

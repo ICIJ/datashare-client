@@ -60,6 +60,9 @@
       "next": {
         "label": "Suivant",
         "tooltip": "Document suivant (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
+      },
+      "document": {
+        "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>%{extension}</code> before you can open it."
       }
     }
   },

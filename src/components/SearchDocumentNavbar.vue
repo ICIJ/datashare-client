@@ -4,10 +4,15 @@
       <fa icon="chevron-circle-left" />
       {{ $t('search.back') }}
     </router-link>
-    <a class="btn btn-sm py-0 ml-auto mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument">
-      <fa icon="download" />
-      {{ $t('document.download_button') }}
-    </a>
+    <div v-if="currentDocument" class="ml-auto">
+      <a class="btn btn-sm py-0 mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument" id="search-document-navbar-download">
+        <fa icon="download" />
+        {{ $t('document.download_button') }}
+      </a>
+      <b-popover target="search-document-navbar-download" triggers="hover focus" :title="currentDocument.contentTypeLabel">
+        <document-type-card :document="currentDocument" />
+      </b-popover>
+    </div>
     <span class="search-document-navbar__nav btn-group" v-if="currentDocumentIndex > -1">
       <button @click="goToPreviousDocument" v-shortkey="['ctrl', 'arrowleft']" @shortkey="goToPreviousDocument" :disabled="!hasPreviousDocument" class="btn btn-sm py-0" :title="$t('search.nav.previous.tooltip')" v-b-tooltip.html.topleft>
         <fa icon="angle-left" />
@@ -65,9 +70,13 @@ import first from 'lodash/first'
 import last from 'lodash/last'
 import findIndex from 'lodash/findIndex'
 import { mapState } from 'vuex'
+import DocumentTypeCard from './DocumentTypeCard'
 
 export default {
   name: 'SearchDocumentNavbar',
+  components: {
+    DocumentTypeCard
+  },
   computed: {
     ...mapState('search', { searchResponse: 'response' }),
     ...mapState('document', { currentDocument: 'doc' }),
