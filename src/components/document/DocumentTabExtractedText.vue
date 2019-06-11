@@ -150,7 +150,11 @@ export default {
       if (event.ctrlKey && event.key === 'f') {
         event.preventDefault()
         this.$set(this, 'isSearchBarShown', true)
-        this.$nextTick(() => this.$refs.search.focus())
+        this.$nextTick(() => {
+          if (this.$refs.search) {
+            this.$refs.search.focus()
+          }
+        })
       }
     },
     hideSearchBar () {
