@@ -1,7 +1,7 @@
 <template>
   <div class="container-fluid">
     <div class="row border-bottom document__extracted-text__header" v-if="showHeader">
-      <div class="col-3 order-2 border-left py-3 text-center" v-if="showNerToggler">
+      <div class="col-5 order-2 border-left py-3" v-if="showNerToggler">
         <div class="custom-control custom-switch document__extracted-text__header__see-highlights">
           <input type="checkbox" :checked="showNamedEntities" class="custom-control-input" id="input-see-highlights" @change="toggleShowNamedEntities">
           <label class="custom-control-label font-weight-bold" for="input-see-highlights" id="label-see-highlights">
@@ -9,22 +9,22 @@
           </label>
           <b-tooltip placement="bottom" target="label-see-highlights" :title="$t('document.highlights_caution')" />
         </div>
-      </div>
-      <div class="document__extracted-text__header__search form-inline" v-show="isSearchBarShown">
-        <div class="document__extracted-text__header__search__term form-group p-2">
-          <label class="sr-only">{{ $t('document.search') }}</label>
-          <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" />
-        </div>
-        <div class="document__extracted-text__header__search__count form-group p-2" v-if="this.searchTerm.length > 0">
-          {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
-        </div>
-        <div class="form-group p-2">
-          <button class="document__extracted-text__header__search__previous btn btn-lg" @click="findPreviousOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
-            <fa icon="angle-up" />
-          </button>
-          <button class="document__extracted-text__header__search__next btn btn-lg" @click="findNextOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
-            <fa icon="angle-down" />
-          </button>
+        <div class="document__extracted-text__header__search form-inline" v-show="isSearchBarShown">
+          <div class="document__extracted-text__header__search__term form-group p-2">
+            <label class="sr-only">{{ $t('document.search') }}</label>
+            <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" />
+          </div>
+          <div class="document__extracted-text__header__search__count form-group" v-if="this.searchTerm.length > 0">
+            {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
+          </div>
+          <div class="form-group">
+            <button class="document__extracted-text__header__search__previous btn btn-sm p-2" @click="findPreviousOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
+              <fa icon="angle-up" />
+            </button>
+            <button class="document__extracted-text__header__search__next btn btn-sm p-2" @click="findNextOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
+              <fa icon="angle-down" />
+            </button>
+          </div>
         </div>
       </div>
       <div class="col">
@@ -151,9 +151,7 @@ export default {
         event.preventDefault()
         this.$set(this, 'isSearchBarShown', true)
         this.$nextTick(() => {
-          if (this.$refs.search) {
-            this.$refs.search.focus()
-          }
+          if (this.$refs.search) this.$refs.search.focus()
         })
       }
     },
@@ -185,6 +183,7 @@ export default {
           RegExp(`^(?:[\\s\\S]*?(?![^<]*>)${this.searchTerm}){${this.searchIndex}}`, 'im'),
           match => match.replace(RegExp(`${this.searchTerm}$`, 'i'), `<mark class="query-term yellow-search">${this.searchTerm}</mark>`)
         )
+        this.$nextTick(() => this.$el.querySelector('.query-term').scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' }))
       }
     }
   }

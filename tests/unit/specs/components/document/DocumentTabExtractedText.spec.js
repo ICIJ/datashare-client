@@ -14,6 +14,8 @@ localVue.use(VueI18n)
 localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
+window.HTMLElement.prototype.scrollIntoView = jest.fn()
+
 describe('DocumentTabExtractedText.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
