@@ -1,5 +1,7 @@
-import store from '@/store'
+import Vue from 'vue'
+import Vuex from 'vuex'
 import Response from '@/api/Response'
+import { actions, getters, mutations, state, datashare } from '@/store/modules/search'
 import Document from '@/api/Document'
 import NamedEntity from '@/api/NamedEntity'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -7,16 +9,30 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import omit from 'lodash/omit'
+import { jsonOk } from 'tests/unit/tests_utils'
+
+Vue.use(Vuex)
 
 describe('Search store', () => {
+  let store
   esConnectionHelper()
   let es = esConnectionHelper.es
   // High timeout because multiple searches can be heavy for the Elasticsearch
   jest.setTimeout(1e4)
 
+  beforeAll(() => {
+    store = new Vuex.Store({ modules: { search: { namespaced: true, actions, getters, mutations, state } } })
+  })
+
+  beforeEach(() => {
+    jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk({}))
+  })
+
   afterEach(() => {
     store.dispatch('search/reset')
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+    datashare.fetch.mockClear()
   })
 
   it('should define a store module', () => {
@@ -39,24 +55,20 @@ describe('Search store', () => {
     expect(find(store.state.search.facets, { name: 'content-type' }).values).toEqual([])
   })
 
-  it('should change the state after `query` mutation', () => {
-    store.commit('search/query', 'bar')
+  it('should change the state after `query` mutation', async () => {
+    await store.dispatch('search/query', 'bar')
     expect(store.state.search.query).toEqual('bar')
-  })
-
-  it('should change query value after `query` action', () => {
-    store.commit('search/query', 'bar')
-    store.dispatch('search/query', 'foo')
-    expect(store.state.search.query).toEqual('foo')
   })
 
   it('should build a Response object from raw value', () => {
     store.commit('search/buildResponse', {
-      hits: {
-        hits: [
-          { _source: { type: 'Document' }, _id: 'foo' },
-          { _source: { type: 'NamedEntity' }, _id: 'bar' }
-        ]
+      raw: {
+        hits: {
+          hits: [
+            { _source: { type: 'Document' }, _id: 'foo' },
+            { _source: { type: 'NamedEntity' }, _id: 'bar' }
+          ]
+        }
       }
     })
     expect(store.state.search.response).toBeInstanceOf(Response)
@@ -64,11 +76,13 @@ describe('Search store', () => {
 
   it('should build a correct Response object from raw value', () => {
     store.commit('search/buildResponse', {
-      hits: {
-        hits: [
-          { _source: { type: 'Document' }, _id: 'foo' },
-          { _source: { type: 'NamedEntity' }, _id: 'bar' }
-        ]
+      raw: {
+        hits: {
+          hits: [
+            { _source: { type: 'Document' }, _id: 'foo' },
+            { _source: { type: 'NamedEntity' }, _id: 'bar' }
+          ]
+        }
       }
     })
     expect(store.state.search.response.hits[0]).toBeInstanceOf(Document)
@@ -512,5 +526,13 @@ describe('Search store', () => {
 
       expect(store.state.search.query).toEqual('term_02')
     })
+  })
+
+  it('should return the list of the starredDocuments', async () => {
+    jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk([42]))
+    await store.dispatch('search/query', 'foo')
+
+    expect(store.state.search.starredDocuments).toContain(42)
   })
 })

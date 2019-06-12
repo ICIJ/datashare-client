@@ -2,6 +2,7 @@ import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import { FacetDate, FacetNamedEntity, FacetPath, FacetText, namedEntityCategoryTranslation } from '@/store/facetsStore'
+import DatashareClient from '@/api/DatashareClient'
 import lucene from 'lucene'
 import castArray from 'lodash/castArray'
 import concat from 'lodash/concat'
@@ -17,6 +18,8 @@ import map from 'lodash/map'
 import omit from 'lodash/omit'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
+
+export const datashare = new DatashareClient()
 
 export function initialState () {
   return {
@@ -40,7 +43,8 @@ export function initialState () {
     isReady: true,
     error: null,
     index: '',
-    showFilters: true
+    showFilters: true,
+    starredDocuments: []
   }
 }
 
@@ -159,9 +163,10 @@ export const mutations = {
     state.index = index
     state.response = Response.none()
   },
-  buildResponse (state, raw) {
+  buildResponse (state, { raw, starredDocuments }) {
     state.isReady = true
     state.response = new Response(raw)
+    state.starredDocuments = starredDocuments
   },
   setFacets (state, facets) {
     state.facets = facets
@@ -240,7 +245,11 @@ export const actions = {
     commit('error', null)
     try {
       const raw = await esClient.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort)
-      commit('buildResponse', raw)
+      const starredDocuments = await datashare.getStarredDocuments(state.index).then(r => {
+        const tmp = r.clone()
+        return tmp.json()
+      })
+      commit('buildResponse', { raw, starredDocuments })
       return raw
     } catch (error) {
       commit('isReady', true)
@@ -337,7 +346,7 @@ export const actions = {
 export default {
   namespaced: true,
   state,
-  actions,
   getters,
+  actions,
   mutations
 }

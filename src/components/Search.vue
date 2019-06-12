@@ -7,7 +7,7 @@
           <div v-if="!!error" class="py-5 text-center">
             {{ errorMessage }}
           </div>
-          <search-results v-else-if="isReady" :response="response" :query.sync="query" />
+          <search-results v-else-if="isReady" :response="response" :query.sync="query" :starred-documents="starredDocuments" />
           <div v-else>
             <content-placeholder />
             <content-placeholder />
@@ -33,7 +33,7 @@ import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import SearchResults from '@/components/SearchResults'
 import { EventBus } from '@/utils/event-bus'
 import { mapState } from 'vuex'
-import{ errors as esErrors } from 'elasticsearch-browser'
+import { errors as esErrors } from 'elasticsearch-browser'
 
 export default {
   name: 'Search',
@@ -45,16 +45,16 @@ export default {
   data () {
     return {
       errorMessages: {
-        "BadRequest": 'search.errors.bad-request',
-        "InternalServerError": 'search.errors.internal-error',
-        "NoConnections": 'search.errors.no-connections',
-        "NotFound": 'search.errors.not-found',
-        "ServiceUnavailable": 'search.errors.service-unavailable'
+        'BadRequest': 'search.errors.bad-request',
+        'InternalServerError': 'search.errors.internal-error',
+        'NoConnections': 'search.errors.no-connections',
+        'NotFound': 'search.errors.not-found',
+        'ServiceUnavailable': 'search.errors.service-unavailable'
       }
     }
   },
   computed: {
-    ...mapState('search', ['query', 'response', 'isReady', 'showFilters', 'error']),
+    ...mapState('search', ['query', 'response', 'starredDocuments', 'isReady', 'showFilters', 'error']),
     showDocument () {
       return ['document', 'email'].indexOf(this.$route.name) > -1
     },
@@ -97,7 +97,7 @@ export default {
       try {
         const result = await this.$store.dispatch('search/query', queryOrParams)
         return result
-      } catch {
+      } catch (_) {
         this.wrongQuery()
       }
     },

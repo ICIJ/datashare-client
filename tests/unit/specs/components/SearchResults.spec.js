@@ -6,6 +6,8 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 import messages from '@/lang/en'
 import store from '@/store'
+import { datashare } from '@/store/modules/search'
+import { jsonOk } from 'tests/unit/tests_utils'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -13,12 +15,12 @@ localVue.use(Murmur)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 async function createView (query = '*', from = 0, size = 25) {
-  const response = await store.dispatch('search/query', { query, from, size })
+  await store.dispatch('search/query', { query, from, size })
   return shallowMount(SearchResults, {
     localVue,
     i18n,
     store,
-    propsData: { response: response.hits, query }
+    propsData: { response: store.state.search.response, query, starredDocuments: [] }
   })
 }
 
@@ -34,7 +36,11 @@ describe('SearchResults.vue', () => {
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })
 
-  beforeEach(() => store.commit('search/reset'))
+  beforeEach(() => {
+    store.commit('search/reset')
+    jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk({}))
+  })
 
   describe('filter the results', () => {
     it('should display no documents found', async () => {
@@ -191,6 +197,18 @@ describe('SearchResults.vue', () => {
 
       expect(wrapper.findAll('.search-results__items__item__star')).toHaveLength(5)
       expect(wrapper.find('.search-results__items__item__star fa-stub').attributes('icon')).toContain('far')
+    })
+
+    it('should display a filled star if document is starred, an empty one otherwise', async () => {
+      await letData(es).have(new IndexedDocument('doc_01').withContent('this should be an exact content')).commit()
+      await letData(es).have(new IndexedDocument('doc_02').withContent('this should be an approximate content')).commit()
+      wrapper = await createView()
+
+      wrapper.setProps({ starredDocuments: ['doc_01'] })
+
+      expect(wrapper.findAll('.search-results__items__item__star')).toHaveLength(2)
+      expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('fa,star')
+      expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(1).attributes('icon')).toEqual('far,star')
     })
   })
 })

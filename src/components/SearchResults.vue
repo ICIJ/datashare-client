@@ -19,7 +19,7 @@
             <span class="sr-only">{{ $t('document.download_button') }}</span>
           </a>
           <a class="search-results__items__item__star btn btn-outline-primary btn-sm float-right m-3" :href="doc.fullUrl" target="_blank" :title="$t('document.star_file')" v-if="hasFeature('BOOKMARKS')">
-            <fa :icon="['far', 'star']" />
+            <fa :icon="[isStarred(doc.id), 'star']" />
             <span class="sr-only">{{ $t('document.star_button') }}</span>
           </a>
           <search-results-link class="search-results__items__item__link" :doc="doc" />
@@ -49,7 +49,7 @@ import features from '@/mixins/features'
 
 export default {
   name: 'SearchResults',
-  props: ['response', 'query'],
+  props: ['response', 'query', 'starredDocuments'],
   mixins: [features],
   components: { SearchResultsHeader, SearchResultsLink, ResetFiltersButton },
   computed: {
@@ -71,6 +71,9 @@ export default {
   methods: {
     clickOnShowFilters () {
       this.showFilters = !this.showFilters
+    },
+    isStarred (documentId) {
+      return this.starredDocuments.indexOf(documentId) >= 0 ? 'fa' : 'far'
     }
   }
 }
