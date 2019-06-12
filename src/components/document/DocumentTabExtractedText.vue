@@ -1,5 +1,22 @@
 <template>
   <div class="container-fluid">
+    <div class="document__extracted-text__header__search form-inline" v-show="isSearchBarShown">
+      <div class="document__extracted-text__header__search__term form-group p-2">
+        <label class="sr-only">{{ $t('document.search') }}</label>
+        <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" />
+      </div>
+      <div class="document__extracted-text__header__search__count form-group" v-if="this.searchTerm.length > 0">
+        {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
+      </div>
+      <div class="form-group">
+        <button class="document__extracted-text__header__search__previous btn btn-sm p-2" @click="findPreviousOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
+          <fa icon="angle-up" />
+        </button>
+        <button class="document__extracted-text__header__search__next btn btn-sm p-2" @click="findNextOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
+          <fa icon="angle-down" />
+        </button>
+      </div>
+    </div>
     <div class="row border-bottom document__extracted-text__header" v-if="showHeader">
       <div class="col-5 order-2 border-left py-3" v-if="showNerToggler">
         <div class="custom-control custom-switch document__extracted-text__header__see-highlights">
@@ -8,23 +25,6 @@
             {{ $t('document.see_highlights') }}
           </label>
           <b-tooltip placement="bottom" target="label-see-highlights" :title="$t('document.highlights_caution')" />
-        </div>
-        <div class="document__extracted-text__header__search form-inline" v-show="isSearchBarShown">
-          <div class="document__extracted-text__header__search__term form-group p-2">
-            <label class="sr-only">{{ $t('document.search') }}</label>
-            <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" />
-          </div>
-          <div class="document__extracted-text__header__search__count form-group" v-if="this.searchTerm.length > 0">
-            {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
-          </div>
-          <div class="form-group">
-            <button class="document__extracted-text__header__search__previous btn btn-sm p-2" @click="findPreviousOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
-              <fa icon="angle-up" />
-            </button>
-            <button class="document__extracted-text__header__search__next btn btn-sm p-2" @click="findNextOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
-              <fa icon="angle-down" />
-            </button>
-          </div>
         </div>
       </div>
       <div class="col">
