@@ -31,7 +31,7 @@ export default {
   },
   computed: {
     thumbnailUrl () {
-      return `${process.env.VUE_APP_DS_PREVIEW_HOST}/api/v1/thumbnail?file_path=${this.filePath}&page=${this.page}&size=${this.size}`
+      return `${process.env.VUE_APP_DS_PREVIEW_HOST}/api/v1/thumbnail/${this.document.index}/${this.document.id}?routing=${this.document.routing}&page=${this.page}&size=${this.size}`
     },
     thumbnailAlt () {
       return `${this.document.basename} preview`
