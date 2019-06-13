@@ -32,7 +32,7 @@ describe('Indexing.vue', () => {
   })
 
   it('should start polling tasks on beforeRouteEnter and stop polling tasks on beforeRouteLeave', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
     await Indexing.beforeRouteEnter(undefined, undefined, jest.fn())
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
@@ -97,7 +97,7 @@ describe('Indexing.vue', () => {
   })
 
   it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     expect(wrapper.vm.tasks.length).toEqual(1)
 
@@ -110,7 +110,7 @@ describe('Indexing.vue', () => {
   })
 
   it('should call a backend endpoint on click on the "Delete done tasks" button', () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     expect(wrapper.vm.tasks.length).toEqual(1)
 
@@ -132,7 +132,7 @@ describe('Indexing.vue', () => {
   })
 
   it('should call a backend endpoint on click on a "Stop task" icon', () => {
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
 
     expect(wrapper.findAll('.btn-stop-task').length).toEqual(1)

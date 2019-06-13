@@ -25,7 +25,7 @@ describe('ExtractingForm.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(ExtractingForm, { appVue, i18n, router, store })
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
     datashare.fetch.mockClear()
   })
 

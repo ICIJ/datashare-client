@@ -39,7 +39,7 @@ describe('SearchResults.vue', () => {
   beforeEach(() => {
     store.commit('search/reset')
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
   })
 
   describe('filter the results', () => {

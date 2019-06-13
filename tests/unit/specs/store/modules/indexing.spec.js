@@ -16,7 +16,7 @@ describe('Indexing store', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
   })
 
   afterEach(() => {

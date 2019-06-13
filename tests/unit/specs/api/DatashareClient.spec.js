@@ -9,7 +9,7 @@ const datashare = new DatashareClient()
 describe('Datashare backend client', () => {
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk({}, 200))
+    datashare.fetch.mockReturnValue(jsonOk())
   })
 
   it('should return backend response to index', async () => {

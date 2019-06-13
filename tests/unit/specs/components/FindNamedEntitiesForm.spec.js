@@ -24,7 +24,7 @@ describe('FindNamedEntitiesForm.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
     datashare.fetch.mockClear()
   })
 

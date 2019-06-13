@@ -18,8 +18,8 @@ jest.mock('@/api/DatashareClient', () => {
   const { jsonOk } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      deleteNamedEntitiesByMentionNorm: jest.fn().mockReturnValue(jsonOk({})),
-      getStarredDocuments: jest.fn().mockReturnValue(jsonOk({}))
+      deleteNamedEntitiesByMentionNorm: jest.fn().mockReturnValue(jsonOk()),
+      getStarredDocuments: jest.fn().mockReturnValue(jsonOk())
     }
   })
 })

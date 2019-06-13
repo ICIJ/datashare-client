@@ -39,7 +39,7 @@ describe('FacetPath.vue', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
   })
 
   afterAll(() => datashare.fetch.mockRestore())

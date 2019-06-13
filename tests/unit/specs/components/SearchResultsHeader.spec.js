@@ -28,7 +28,7 @@ describe('SearchResultsHeader.vue', () => {
     wrapper = shallowMount(SearchResultsHeader, { localVue, i18n, store, router, propsData: { response: store.state.search.response } })
     store.commit('search/reset')
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
   })
 
   afterAll(() => datashare.fetch.mockRestore())

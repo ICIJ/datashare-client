@@ -21,7 +21,7 @@ describe('SearchResultsAppliedFilters.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsAppliedFilters, { localVue, i18n, store })
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk({}))
+    datashare.fetch.mockReturnValue(jsonOk())
   })
 
   afterEach(async () => store.dispatch('search/reset'))
