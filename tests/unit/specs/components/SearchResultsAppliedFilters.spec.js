@@ -6,6 +6,8 @@ import store from '@/store'
 import router from '@/router'
 import messages from '@/lang/en'
 import Murmur from '@icij/murmur'
+import { datashare } from '@/store/modules/search'
+import { jsonOk } from 'tests/unit/tests_utils'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -18,11 +20,13 @@ describe('SearchResultsAppliedFilters.vue', () => {
 
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsAppliedFilters, { localVue, i18n, store })
+    jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk({}))
   })
 
-  afterEach(async () => {
-    await store.dispatch('search/reset')
-  })
+  afterEach(async () => store.dispatch('search/reset'))
+
+  afterAll(() => datashare.fetch.mockRestore())
 
   describe('displays applied filters', () => {
     it('should display 2 applied filters', async () => {

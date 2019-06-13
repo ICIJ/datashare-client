@@ -8,6 +8,8 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import FacetPath from '@/components/FacetPath'
 import messages from '@/lang/en'
 import store from '@/store'
+import { datashare } from '@/store/modules/search'
+import { jsonOk } from 'tests/unit/tests_utils'
 import find from 'lodash/find'
 
 const localVue = createLocalVue()
@@ -34,6 +36,13 @@ describe('FacetPath.vue', () => {
     })
     store.commit('search/reset')
   })
+
+  beforeEach(() => {
+    jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk({}))
+  })
+
+  afterAll(() => datashare.fetch.mockRestore())
 
   it('should display an empty tree', async () => {
     await wrapper.vm.root.aggregate()

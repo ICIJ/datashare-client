@@ -6,19 +6,21 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import { EventBus } from '@/utils/event-bus'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import noop from 'lodash/noop'
-import find from 'lodash/find'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import mixin from '@/mixins/facets'
+import find from 'lodash/find'
+import noop from 'lodash/noop'
 
 jest.mock('@/api/DatashareClient', () => {
-  return jest.fn().mockImplementation(() => {
-    return { deleteNamedEntitiesByMentionNorm: jest.fn().mockImplementation(() => {
-      return Promise.resolve()
-    }) }
+  const { jsonOk } = require('tests/unit/tests_utils')
+  return jest.fn(() => {
+    return {
+      deleteNamedEntitiesByMentionNorm: jest.fn().mockReturnValue(jsonOk({})),
+      getStarredDocuments: jest.fn().mockReturnValue(jsonOk({}))
+    }
   })
 })
 
@@ -45,6 +47,8 @@ describe('FacetNamedEntity.vue', () => {
   })
 
   afterEach(() => store.commit('search/reset'))
+
+  afterAll(() => jest.unmock('@/api/DatashareClient'))
 
   it('should display empty list', async () => {
     await wrapper.vm.root.aggregate()

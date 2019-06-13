@@ -8,6 +8,8 @@ import messages from '@/lang/en'
 import store from '@/store'
 import router from '@/router'
 import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
+import { datashare } from '@/store/modules/search'
+import { jsonOk } from 'tests/unit/tests_utils'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -20,14 +22,16 @@ describe('SearchResultsHeader.vue', () => {
   const es = esConnectionHelper.es
   let wrapper
 
-  beforeAll(() => {
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-  })
+  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsHeader, { localVue, i18n, store, router, propsData: { response: store.state.search.response } })
     store.commit('search/reset')
+    jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk({}))
   })
+
+  afterAll(() => datashare.fetch.mockRestore())
 
   it('should display one document', async () => {
     await letData(es).have(new IndexedDocument('doc.txt').withContent('bar')).commit()

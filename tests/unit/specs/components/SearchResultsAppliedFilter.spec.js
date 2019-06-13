@@ -2,10 +2,11 @@ import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
 import { mount, shallowMount } from '@vue/test-utils'
 import store from '@/store'
 import router from '@/router'
-import find from 'lodash/find'
 import { createApp } from '@/main'
 import fetchPonyfill from 'fetch-ponyfill'
+import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
+import find from 'lodash/find'
 
 const { fetch } = fetchPonyfill()
 window.fetch = fetch
@@ -24,9 +25,14 @@ describe('SearchResultsAppliedFilter.vue', () => {
 
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: false } } })
+    jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk({}))
   })
 
-  afterAll(() => window.fetch.mockRestore())
+  afterAll(() => {
+    window.fetch.mockRestore()
+    datashare.fetch.mockRestore()
+  })
 
   describe('displays applied filter', () => {
     it('should display a filter', () => {

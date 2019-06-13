@@ -2,6 +2,8 @@ import store from '@/store'
 import { initialState } from '@/store/modules/document'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { datashare } from '@/store/modules/search'
+import { jsonOk } from 'tests/unit/tests_utils'
 
 describe('Document store', () => {
   esConnectionHelper()
@@ -9,7 +11,14 @@ describe('Document store', () => {
 
   beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
+  beforeEach(() => {
+    jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk({}))
+  })
+
   afterEach(() => store.commit('document/reset'))
+
+  afterAll(() => datashare.fetch.mockRestore())
 
   it('should define a store module', () => {
     expect(store.state.document).not.toBeUndefined()

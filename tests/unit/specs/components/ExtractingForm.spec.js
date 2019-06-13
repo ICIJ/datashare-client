@@ -30,7 +30,10 @@ describe('ExtractingForm.vue', () => {
 
   afterEach(() => store.commit('indexing/reset'))
 
-  afterAll(() => window.fetch.mockRestore())
+  afterAll(() => {
+    window.fetch.mockRestore()
+    datashare.fetch.mockRestore()
+  })
 
   it('should call extract action without OCR option, by default', () => {
     wrapper.vm.submitExtract()
