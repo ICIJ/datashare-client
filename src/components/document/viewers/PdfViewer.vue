@@ -14,7 +14,8 @@
             </span>
           </div>
           <div v-for="page in numberOfThumbnails" :key="page" @click="doc.active = page" class="my-2 pdf-viewer__thumbnails__item" :class="{ 'pdf-viewer__thumbnails__item--active': doc.active === page }">
-            <img :src="loadThumbnail(page)" />
+            <!--img :src="loadThumbnail(page)" /-->
+            <document-thumbnail :document="document" size="100" :page="page - 1" />
             <span class="pdf-viewer__thumbnails__item__page">{{ page }}</span>
           </div>
         </div>
@@ -33,6 +34,7 @@
 </template>
 
 <script>
+import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
 import PDFJS from 'pdfjs-dist'
 import Worker from 'pdfjs-dist/build/pdf.worker'
 import min from 'lodash/min'
@@ -46,6 +48,9 @@ export default {
   name: 'pdf-viewer',
   props: ['document'],
   mixins: [datashareSourceMixin],
+  components: {
+    DocumentThumbnail
+  },
   data () {
     return {
       message: this.$t('document.generating_preview'),

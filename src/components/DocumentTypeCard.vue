@@ -1,6 +1,6 @@
 <template>
   <div class="document-type-card">
-    <document-thumbnail :document="document" size="xs" class="float-left mr-2 mb-2" crop />
+    <document-thumbnail :document="document" class="float-left mr-2 mb-2" crop />
     <p class="m-0">
       {{ localizedDescription }}
       <strong v-if="!document.hasStandardExtension" class="font-weight-bold" v-html="$t('search.nav.document.extensionWarning', { extension: document.standardExtension })"></strong>
