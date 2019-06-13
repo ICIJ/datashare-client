@@ -1,9 +1,9 @@
 import fetchPonyfill from 'fetch-ponyfill'
 const { Response } = fetchPonyfill()
 
-function jsonOk (body) {
+function jsonOk (body, status = 200) {
   const mockResponse = new Response(JSON.stringify(body), {
-    status: 200,
+    status,
     headers: {
       'Content-type': 'application/json'
     }
