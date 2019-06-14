@@ -1,48 +1,50 @@
 <template>
-  <div class="container-fluid">
-    <div class="document__extracted-text__header__search form-inline" v-show="isSearchBarShown">
-      <div class="document__extracted-text__header__search__term form-group p-2">
+  <div class="document__extracted-text">
+    <div class="container-fluid">
+      <div class="row border-bottom document__extracted-text__header" v-if="showHeader">
+        <div class="col-5 order-2 border-left py-3">
+          <div class="custom-control custom-switch document__extracted-text__header__see-highlights" v-if="showNerToggler">
+            <input type="checkbox" :checked="showNamedEntities" class="custom-control-input" id="input-see-highlights" @change="toggleShowNamedEntities">
+            <label class="custom-control-label font-weight-bold" for="input-see-highlights" id="label-see-highlights">
+              {{ $t('document.see_highlights') }}
+            </label>
+            <b-tooltip placement="bottom" target="label-see-highlights" :title="$t('document.highlights_caution')" />
+          </div>
+        </div>
+        <div class="col">
+          <div class="p-3" v-if="showTermsList" v-once>
+            <div class="mb-3">{{ $t('document.researched_terms') }}</div>
+            <ul class="document__extracted-text__header__terms list-inline m-0">
+              <li v-for="(term, index) in getQueryTerms()" :key="term.label" class="mb-2 list-inline-item">
+                <mark class="document__extracted-text__header__terms__item" :style="getTermIndexBorderColor(index)" :class="getTermIndexClass(index, term)">
+                  <span class="document__extracted-text__header__terms__item__label">
+                    {{ term.label }}
+                  </span>
+                  <span class="document__extracted-text__header__terms__item__count py-0" :style="getTermIndexBackgroundColor(index)">
+                    {{ term.length }}
+                  </span>
+                </mark>
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="document__extracted-text__search form-inline" :class="{ 'document__extracted-text__search--visible': isSearchBarShown }">
+      <div class="document__extracted-text__search__term form-group py-2 px-3">
         <label class="sr-only">{{ $t('document.search') }}</label>
         <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" />
       </div>
-      <div class="document__extracted-text__header__search__count form-group" v-if="this.searchTerm.length > 0">
+      <div class="document__extracted-text__search__count form-group" v-if="this.searchTerm.length > 0">
         {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
       </div>
       <div class="form-group">
-        <button class="document__extracted-text__header__search__previous btn btn-sm p-2" @click="findPreviousOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
+        <button class="document__extracted-text__search__previous btn btn-sm p-2" @click="findPreviousOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
           <fa icon="angle-up" />
         </button>
-        <button class="document__extracted-text__header__search__next btn btn-sm p-2" @click="findNextOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
+        <button class="document__extracted-text__search__next btn btn-sm p-2" @click="findNextOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
           <fa icon="angle-down" />
         </button>
-      </div>
-    </div>
-    <div class="row border-bottom document__extracted-text__header" v-if="showHeader">
-      <div class="col-5 order-2 border-left py-3" v-if="showNerToggler">
-        <div class="custom-control custom-switch document__extracted-text__header__see-highlights">
-          <input type="checkbox" :checked="showNamedEntities" class="custom-control-input" id="input-see-highlights" @change="toggleShowNamedEntities">
-          <label class="custom-control-label font-weight-bold" for="input-see-highlights" id="label-see-highlights">
-            {{ $t('document.see_highlights') }}
-          </label>
-          <b-tooltip placement="bottom" target="label-see-highlights" :title="$t('document.highlights_caution')" />
-        </div>
-      </div>
-      <div class="col">
-        <div class="p-3" v-if="showTermsList" v-once>
-          <div class="mb-3">{{ $t('document.researched_terms') }}</div>
-          <ul class="document__extracted-text__header__terms list-inline m-0">
-            <li v-for="(term, index) in getQueryTerms()" :key="term.label" class="mb-2 list-inline-item">
-              <mark class="document__extracted-text__header__terms__item" :style="getTermIndexBorderColor(index)" :class="getTermIndexClass(index, term)">
-                <span class="document__extracted-text__header__terms__item__label">
-                  {{ term.label }}
-                </span>
-                <span class="document__extracted-text__header__terms__item__count py-0" :style="getTermIndexBackgroundColor(index)">
-                  {{ term.length }}
-                </span>
-              </mark>
-            </li>
-          </ul>
-        </div>
       </div>
     </div>
     <div class="document__extracted-text__content p-3" v-html="content" />
@@ -157,6 +159,7 @@ export default {
     },
     hideSearchBar () {
       this.$set(this, 'isSearchBarShown', false)
+      this.content = this.markedSourceContent()
     },
     startSearch () {
       this.searchOccurrences = (this.markedSourceContent().match(new RegExp('(?![^<]*>)' + this.searchTerm, 'gi')) || []).length
@@ -176,6 +179,7 @@ export default {
       }
     },
     highlightTerm () {
+      this.$set(this, 'isSearchBarShown', true)
       if (this.searchTerm.length === 0) {
         this.content = this.markedSourceContent()
       } else if (this.searchOccurrences > 0) {
@@ -192,6 +196,7 @@ export default {
 
 <style lang="scss">
   .document__extracted-text {
+    position: relative;
 
     &__header {
 
@@ -219,6 +224,17 @@ export default {
             text-decoration: line-through;
           }
         }
+      }
+    }
+
+    &__search {
+      position: static;
+      top: var(--search-document-navbar-height);
+      left: 0;
+      @include gradient-y($white, $light);
+
+      &--visible {
+        position: sticky;
       }
     }
 

@@ -163,7 +163,6 @@ export default {
 
 <style lang="scss">
 .document {
-  overflow: hidden;
   background: white;
   min-height: 90vh;
   margin: 0;
