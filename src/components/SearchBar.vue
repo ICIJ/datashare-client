@@ -1,12 +1,23 @@
 <template>
   <form class="search-bar form-row align-items-center container-fluid py-3" :id="uniqueId" @submit.prevent="submit">
     <div class="input-group col">
-      <input v-model="query" type="search" :placeholder="$t('search.placeholder')" class="form-control">
+      <input v-model="query" type="search" :placeholder="$t('search.placeholder')" class="form-control search-bar__input">
       <div class="input-group-append">
-        <button type="submit" class="btn btn-primary">
+        <button type="submit" class="btn btn-primary search-bar__submit">
           {{ $t('search.buttonlabel') }}
         </button>
       </div>
+      <span class="search-bar__typeahead">
+        <a href="https://icij.gitbook.io/datashare/all/search-with-operators" target="_blank" class="d-flex justify-content-between">
+          <span>
+            <fa icon="book" class="mr-1" />
+            Tips to improve searching
+          </span>
+          <span class="text-muted">
+            (AND, OR, ...)
+          </span>
+        </a>
+      </span>
     </div>
     <div class="col-auto px-0 pl-2" v-if="!hideSettings">
       <search-settings placement="bottomleft" :container="uniqueId" />
@@ -61,3 +72,40 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .search-bar {
+    &__input ~ &__typeahead {
+      position: absolute;
+      top: 100%;
+      left: 5px;
+      right: 5px;
+      background: mix($input-border-color, white);
+      border: 1px solid $input-border-color;
+      border-top: 0;
+      padding: $spacer / 2 $spacer;
+      font-size: 0.9rem;
+      display: none;
+      z-index: 100;
+      border-radius: 0 0 $input-border-radius $input-border-radius;
+    }
+
+    & &__input:focus  {
+      border-radius: $input-border-radius 0 0 0;
+      box-shadow: none;
+
+      & ~ .search-bar__typeahead {
+        display: block;
+      }
+
+      & ~ .input-group-append .search-bar__submit {
+        border-bottom-right-radius: 0 !important;
+      }
+    }
+
+    & .input-group > .input-group-append > &__submit.btn {
+      border-top-right-radius: $input-border-radius;
+      border-bottom-right-radius: $input-border-radius;
+    }
+  }
+</style>

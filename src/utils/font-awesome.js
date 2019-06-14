@@ -9,6 +9,7 @@ import { faAngleUp } from '@fortawesome/free-solid-svg-icons/faAngleUp'
 import { faBan } from '@fortawesome/free-solid-svg-icons/faBan'
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
 import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt'
+import { faBook } from '@fortawesome/free-solid-svg-icons/faBook'
 import { faBuilding } from '@fortawesome/free-solid-svg-icons/faBuilding'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons/faCaretRight'
@@ -69,6 +70,7 @@ library.add(
   faBars,
   faBan,
   faBolt,
+  faBook,
   faBuilding,
   faCaretDown,
   faCaretRight,
