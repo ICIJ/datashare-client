@@ -227,6 +227,12 @@ export const mutations = {
   },
   toggleFilters (state) {
     state.showFilters = !state.showFilters
+  },
+  removeFromStarredDocuments (state, documentId) {
+    state.starredDocuments.splice(state.starredDocuments.indexOf(documentId), 1)
+  },
+  pushFromStarredDocuments (state, documentId) {
+    state.starredDocuments.push(documentId)
   }
 }
 
@@ -340,6 +346,13 @@ export const actions = {
     const query = deleteQueryTermFromSimpleQuery(lucene.parse(state.query))
     commit('query', lucene.toString(query))
     return dispatch('query')
+  },
+  toggleStarDocument ({ state, commit }, documentId) {
+    if (state.starredDocuments.indexOf(documentId) >= 0) {
+      datashare.unstarDocument(state.index, documentId).then(commit('removeFromStarredDocuments', documentId))
+    } else {
+      datashare.starDocument(state.index, documentId).then(commit('pushFromStarredDocuments', documentId))
+    }
   }
 }
 

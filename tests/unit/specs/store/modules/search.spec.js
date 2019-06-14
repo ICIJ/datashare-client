@@ -528,11 +528,41 @@ describe('Search store', () => {
     })
   })
 
-  it('should return the list of the starredDocuments', async () => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk([42]))
-    await store.dispatch('search/query', 'foo')
+  describe('starredDocuments', () => {
+    it('should return the list of the starredDocuments', async () => {
+      jest.spyOn(datashare, 'fetch')
+      datashare.fetch.mockReturnValue(jsonOk([42]))
+      await store.dispatch('search/query', 'foo')
 
-    expect(store.state.search.starredDocuments).toContain(42)
+      expect(store.state.search.starredDocuments).toEqual([42])
+    })
+
+    it('should remove a documentId from the list of the starredDocuments', () => {
+      store.state.search.starredDocuments = [12, 42]
+      store.commit('search/removeFromStarredDocuments', 42)
+
+      expect(store.state.search.starredDocuments).toEqual([12])
+    })
+
+    it('should push a documentId from the list of the starredDocuments', () => {
+      store.state.search.starredDocuments = [12]
+      store.commit('search/pushFromStarredDocuments', 42)
+
+      expect(store.state.search.starredDocuments).toEqual([12, 42])
+    })
+
+    it('should toggle a starred documentId, push it if it is not starred', async () => {
+      store.state.search.starredDocuments = []
+      await store.dispatch('search/toggleStarDocument', 42)
+
+      expect(store.state.search.starredDocuments).toEqual([42])
+    })
+
+    it('should toggle a starred documentId, remove it if it is starred', async () => {
+      store.state.search.starredDocuments = [42]
+      await store.dispatch('search/toggleStarDocument', 42)
+
+      expect(store.state.search.starredDocuments).toEqual([])
+    })
   })
 })

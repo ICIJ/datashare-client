@@ -49,6 +49,12 @@ export class DatashareClient {
   getStarredDocuments (project) {
     return this.sendAction(`/api/document/project/starred/${encodeURIComponent(project)}`)
   }
+  starDocument (project, documentId) {
+    return this.sendAction(`/api/document/project/star/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT', credentials: 'same-origin' })
+  }
+  unstarDocument (project, documentId) {
+    return this.sendAction(`/api/document/project/unstar/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT', credentials: 'same-origin' })
+  }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)
