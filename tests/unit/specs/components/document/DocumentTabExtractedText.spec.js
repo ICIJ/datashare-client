@@ -272,7 +272,7 @@ describe('DocumentTabExtractedText.vue', () => {
       }
     })
 
-    expect(wrapper.find('.document__extracted-text__search').isVisible()).toBeFalsy()
+    expect(wrapper.find('.document__extracted-text__search--visible').exists()).toBeFalsy()
   })
 
   it('should display the search term form on keypress ctrl + F', async () => {
@@ -296,7 +296,7 @@ describe('DocumentTabExtractedText.vue', () => {
     wrapper.trigger('keydown', { ctrlKey: true, key: 'f' })
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.document__extracted-text__search').isVisible()).toBeTruthy()
+    expect(wrapper.find('.document__extracted-text__search--visible').exists()).toBeTruthy()
 
     wrapper.destroy()
   })
@@ -322,10 +322,10 @@ describe('DocumentTabExtractedText.vue', () => {
     wrapper.trigger('keydown', { ctrlKey: true, key: 'f' })
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.document__extracted-text__search').isVisible()).toBeTruthy()
+    expect(wrapper.find('.document__extracted-text__search--visible').exists()).toBeTruthy()
 
-    wrapper.find('.document__extracted-text__header__search__term input').trigger('keyup.esc')
-    expect(wrapper.find('.document__extracted-text__search').isVisible()).toBeFalsy()
+    wrapper.find('.document__extracted-text__search__term input').trigger('keyup.esc')
+    expect(wrapper.find('.document__extracted-text__search--visible').exists()).toBeFalsy()
 
     wrapper.destroy()
   })
