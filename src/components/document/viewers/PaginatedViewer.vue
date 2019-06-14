@@ -13,7 +13,7 @@
           </span>
         </div>
         <div v-for="page in pagesRange" :key="page" @click="active = page" class="my-2 paginated-viewer__thumbnails__item" :class="{ 'paginated-viewer__thumbnails__item--active': active === page }">
-          <document-thumbnail :document="document" size="150" :page="page" />
+          <document-thumbnail :document="document" size="150" :page="page" lazy />
           <span class="paginated-viewer__thumbnails__item__page">
             {{ page }}
           </span>

@@ -37,7 +37,11 @@ export default {
     SpreadsheetViewer,
     TiffViewer
   },
-  props: ['document'],
+  props: {
+    document: {
+      type: Object
+    }
+  },
   data () {
     return {
       paginatedTypes: [

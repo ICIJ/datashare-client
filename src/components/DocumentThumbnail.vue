@@ -1,12 +1,17 @@
 <template>
   <div v-if="isActivated" class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop }">
-    <img :src="thumbnailUrl" :alt="thumbnailAlt" class="document-thumbnail__image"/>
+    <component :is="component" :src="thumbnailUrl" :alt="thumbnailAlt" class="document-thumbnail__image"/>
   </div>
 </template>
 
 <script>
+import VLazyImage from 'v-lazy-image'
+
 export default {
   name: 'DocumentThumbnail',
+  components: {
+    VLazyImage
+  },
   props: {
     document: {
       type: Object
@@ -20,6 +25,9 @@ export default {
       default: 'sm'
     },
     crop: {
+      type: Boolean
+    },
+    lazy: {
       type: Boolean
     }
   },
@@ -41,6 +49,9 @@ export default {
     },
     isActivated () {
       return this.$config.get('document-thumbnail.activated')
+    },
+    component () {
+      return this.lazy ? 'v-lazy-image' : 'img'
     }
   },
   mounted () {
@@ -60,6 +71,7 @@ export default {
 <style lang="scss">
   .document-thumbnail {
     min-width: 80px;
+    min-height: 2rem;
     position: relative;
     border: 1px solid $border-color;
     border-radius: $gray-200;
@@ -73,7 +85,7 @@ export default {
       height: 80px;
     }
 
-    &--loaded:not(&--erroed) &__image {
+    &--loaded:not(&--erroed) &__image, .v-lazy-image-loaded {
       opacity: 1;
     }
 
