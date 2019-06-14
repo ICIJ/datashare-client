@@ -18,7 +18,7 @@
             <fa icon="download" />
             <span class="sr-only">{{ $t('document.download_button') }}</span>
           </a>
-          <a class="search-results__items__item__star btn btn-outline-primary btn-sm float-right m-3" href :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)">
+          <a class="search-results__items__item__star btn btn-outline-primary btn-sm float-right m-3" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)">
             <fa :icon="[isStarred(doc.id), 'star']" />
             <span class="sr-only">{{ $t('document.star_button') }}</span>
           </a>
