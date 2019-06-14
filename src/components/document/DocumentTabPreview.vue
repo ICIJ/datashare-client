@@ -1,6 +1,9 @@
 <template>
   <div class="d-flex h-100">
-    <template v-if="isPdf">
+    <template v-if="isPaginatedViewerActivated && isPaginated">
+      <paginated-viewer :document="document" />
+    </template>
+    <template v-else-if="isPdf">
       <pdf-viewer :document="document" />
     </template>
     <template v-else-if="isTiff">
@@ -21,6 +24,7 @@
 <script>
 import ImageViewer from '@/components/document/viewers/ImageViewer'
 import PdfViewer from '@/components/document/viewers/PdfViewer'
+import PaginatedViewer from '@/components/document/viewers/PaginatedViewer'
 import SpreadsheetViewer from '@/components/document/viewers/SpreadsheetViewer'
 import TiffViewer from '@/components/document/viewers/TiffViewer'
 
@@ -28,12 +32,29 @@ export default {
   name: 'DocumentTabPreview',
   components: {
     ImageViewer,
+    PaginatedViewer,
     PdfViewer,
     SpreadsheetViewer,
     TiffViewer
   },
   props: ['document'],
+  data () {
+    return {
+      paginatedTypes: [
+        'application/pdf',
+        'application/msword',
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+        'application/vnd.openxmlformats-officedocument.presentationml.presentation'
+      ]
+    }
+  },
   computed: {
+    isPaginatedViewerActivated () {
+      return this.$config.get('document-thumbnail.activated')
+    },
+    isPaginated () {
+      return this.paginatedTypes.indexOf(this.document.contentType) > -1
+    },
     isPdf () {
       return this.document.contentType === 'application/pdf'
     },
