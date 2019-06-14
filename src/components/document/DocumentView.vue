@@ -173,7 +173,7 @@ export default {
   }
 
   &__header {
-    @include gradient-directional(darken($primary, 10), $primary);
+    @include gradient-directional(theme-color(dark), $primary);
     color: white;
     padding: $spacer * 2 $spacer;
     padding-bottom: 0;

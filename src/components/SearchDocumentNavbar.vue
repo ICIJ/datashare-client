@@ -1,5 +1,5 @@
 <template>
-  <div class="search-document-navbar px-3 py-2">
+  <div class="search-document-navbar px-3 py-2 bg-dark text-white">
     <router-link :to="{ name: 'search', query }" class="search-document-navbar__back">
       <fa icon="chevron-circle-left" />
       {{ $t('search.back') }}
@@ -38,8 +38,6 @@
     top: 0;
     z-index: 100;
     margin: $spacer $spacer 0;
-    color: white;
-    background: darken($primary, 10);
     border-radius: $card-border-radius $card-border-radius 0 0;
 
     @media (max-width: $document-float-breakpoint-width) {

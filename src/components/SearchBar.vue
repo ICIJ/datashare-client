@@ -3,7 +3,7 @@
     <div class="input-group col">
       <input v-model="query" type="search" :placeholder="$t('search.placeholder')" class="form-control search-bar__input">
       <div class="input-group-append">
-        <button type="submit" class="btn btn-primary search-bar__submit">
+        <button type="submit" class="btn btn-dark search-bar__submit">
           {{ $t('search.buttonlabel') }}
         </button>
       </div>
