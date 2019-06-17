@@ -7,11 +7,13 @@ import store from '@/store'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import messages from '@/lang/en'
+import VueShortkey from 'vue-shortkey'
 
 const localVue = createLocalVue()
 localVue.use(Murmur)
 localVue.use(VueI18n)
 localVue.use(BootstrapVue)
+localVue.directive('shortkey', VueShortkey)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
@@ -273,61 +275,6 @@ describe('DocumentTabExtractedText.vue', () => {
     })
 
     expect(wrapper.find('.document__extracted-text__search--visible').exists()).toBeFalsy()
-  })
-
-  it('should display the search term form on keypress ctrl + F', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('this is a full full content')
-      .withNer('ner', 0))
-      .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      },
-      attachToDocument: true
-    })
-
-    wrapper.trigger('keydown', { ctrlKey: true, key: 'f' })
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.find('.document__extracted-text__search--visible').exists()).toBeTruthy()
-
-    wrapper.destroy()
-  })
-
-  it('should hide the search term form on keypress escape', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('this is a full full content')
-      .withNer('ner', 0))
-      .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      },
-      attachToDocument: true
-    })
-
-    wrapper.trigger('keydown', { ctrlKey: true, key: 'f' })
-    await wrapper.vm.$nextTick()
-
-    expect(wrapper.find('.document__extracted-text__search--visible').exists()).toBeTruthy()
-
-    wrapper.find('.document__extracted-text__search__term input').trigger('keyup.esc')
-    expect(wrapper.find('.document__extracted-text__search--visible').exists()).toBeFalsy()
-
-    wrapper.destroy()
   })
 
   it('should highlight the first occurrence of the searched term', async () => {

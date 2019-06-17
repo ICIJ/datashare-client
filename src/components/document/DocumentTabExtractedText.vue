@@ -33,7 +33,7 @@
     <div class="document__extracted-text__search form-inline" :class="{ 'document__extracted-text__search--visible': isSearchBarShown }">
       <div class="document__extracted-text__search__term form-group py-2 px-3">
         <label class="sr-only">{{ $t('document.search') }}</label>
-        <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" />
+        <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" v-shortkey="['ctrl', 'f']" @shortkey="showSearchBar" />
       </div>
       <div class="document__extracted-text__search__count form-group" v-if="this.searchTerm.length > 0">
         {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
@@ -95,10 +95,6 @@ export default {
   },
   mounted () {
     this.content = this.markedSourceContent()
-    window.addEventListener('keydown', this.showSearchBar)
-  },
-  beforeDestroy () {
-    window.removeEventListener('keydown', this.showSearchBar)
   },
   methods: {
     namedEntityMark (ne) {
@@ -148,14 +144,11 @@ export default {
         [`document__extracted-text__header__terms__item--index-${index}`]: true
       }
     },
-    showSearchBar (event) {
-      if (event.ctrlKey && event.key === 'f') {
-        event.preventDefault()
-        this.$set(this, 'isSearchBarShown', true)
-        this.$nextTick(() => {
-          if (this.$refs.search) this.$refs.search.focus()
-        })
-      }
+    showSearchBar () {
+      this.$set(this, 'isSearchBarShown', true)
+      this.$nextTick(() => {
+        if (this.$refs.search) this.$refs.search.focus()
+      })
     },
     hideSearchBar () {
       this.$set(this, 'isSearchBarShown', false)
@@ -187,7 +180,7 @@ export default {
           RegExp(`^(?:[\\s\\S]*?(?![^<]*>)${this.searchTerm}){${this.searchIndex}}`, 'im'),
           match => match.replace(RegExp(`${this.searchTerm}$`, 'i'), `<mark class="query-term yellow-search">${this.searchTerm}</mark>`)
         )
-        this.$nextTick(() => this.$el.querySelector('.query-term').scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'nearest' }))
+        this.$nextTick(() => this.$el.querySelector('.query-term').scrollIntoView({ block: 'center', inline: 'nearest' }))
       }
     }
   }
