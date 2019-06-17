@@ -33,7 +33,7 @@
     <div class="document__extracted-text__search form-inline" :class="{ 'document__extracted-text__search--visible': isSearchBarShown }">
       <div class="document__extracted-text__search__term form-group py-2 px-3">
         <label class="sr-only">{{ $t('document.search') }}</label>
-        <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" v-shortkey="['ctrl', 'f']" @shortkey="showSearchBar" />
+        <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" v-shortkey="getShortkey()" @shortkey="showSearchBar" />
       </div>
       <div class="document__extracted-text__search__count form-group" v-if="this.searchTerm.length > 0">
         {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
@@ -55,6 +55,7 @@
 import { highlight } from '@/utils/strings'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
+import { getOS } from '@/utils/utils'
 import { mapState } from 'vuex'
 import concat from 'lodash/concat'
 import filter from 'lodash/filter'
@@ -182,6 +183,17 @@ export default {
         )
         this.$nextTick(() => this.$el.querySelector('.query-term').scrollIntoView({ block: 'center', inline: 'nearest' }))
       }
+    },
+    getShortkey () {
+      let shortKey
+      switch (getOS()) {
+        case 'mac' :
+          shortKey = ['meta', 'f']
+          break
+        default :
+          shortKey = ['ctrl', 'f']
+      }
+      return shortKey
     }
   }
 }

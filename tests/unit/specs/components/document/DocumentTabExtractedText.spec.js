@@ -8,6 +8,13 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import messages from '@/lang/en'
 import VueShortkey from 'vue-shortkey'
+import { getOS } from '@/utils/utils'
+
+jest.mock('@/utils/utils', () => {
+  return {
+    getOS: jest.fn()
+  }
+})
 
 const localVue = createLocalVue()
 localVue.use(Murmur)
@@ -23,6 +30,8 @@ describe('DocumentTabExtractedText.vue', () => {
   const es = esConnectionHelper.es
 
   beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
+
+  beforeEach(() => getOS.mockReset())
 
   afterEach(() => {
     store.commit('document/reset')
@@ -380,5 +389,44 @@ describe('DocumentTabExtractedText.vue', () => {
 
     expect(wrapper.vm.searchOccurrences).toEqual(2)
     expect(wrapper.vm.content).toEqual('this is a <full /> <mark class="query-term yellow-search">full</mark> <div class="full other">full text in it</div> content')
+  })
+
+  it('should return shortkeys for mac', async () => {
+    getOS.mockImplementation(() => 'mac')
+    const id = 'doc'
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('content'))
+      .commit()
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      i18n,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: []
+      }
+    })
+
+    expect(wrapper.vm.getShortkey()).toEqual(['meta', 'f'])
+  })
+
+  it('should return shortkeys for other OS', async () => {
+    const id = 'doc'
+    await letData(es).have(new IndexedDocument(id)
+      .withContent('content'))
+      .commit()
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+    const wrapper = shallowMount(DocumentTabExtractedText, {
+      localVue,
+      store,
+      i18n,
+      propsData: {
+        document: store.state.document.doc,
+        namedEntities: []
+      }
+    })
+
+    expect(wrapper.vm.getShortkey()).toEqual(['ctrl', 'f'])
   })
 })

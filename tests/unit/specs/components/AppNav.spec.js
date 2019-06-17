@@ -29,9 +29,7 @@ describe('AppNav.vue', () => {
     i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
   })
 
-  beforeEach(() => {
-    getOS.mockReset()
-  })
+  beforeEach(() => getOS.mockReset())
 
   it('should display a menu', () => {
     const wrapper = shallowMount(AppNav, { appVue, i18n, router, store })
