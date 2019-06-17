@@ -408,7 +408,7 @@ describe('DocumentTabExtractedText.vue', () => {
       }
     })
 
-    expect(wrapper.vm.getShortkey()).toEqual(['meta', 'f'])
+    expect(wrapper.vm.getShortkey().showSearchBar).toEqual(['meta', 'f'])
   })
 
   it('should return shortkeys for other OS', async () => {
@@ -427,6 +427,6 @@ describe('DocumentTabExtractedText.vue', () => {
       }
     })
 
-    expect(wrapper.vm.getShortkey()).toEqual(['ctrl', 'f'])
+    expect(wrapper.vm.getShortkey().showSearchBar).toEqual(['ctrl', 'f'])
   })
 })

@@ -33,7 +33,7 @@
     <div class="document__extracted-text__search form-inline" :class="{ 'document__extracted-text__search--visible': isSearchBarShown }">
       <div class="document__extracted-text__search__term form-group py-2 px-3">
         <label class="sr-only">{{ $t('document.search') }}</label>
-        <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" @keyup.enter="findNextOccurrence" @keyup.esc="hideSearchBar" v-shortkey="getShortkey()" @shortkey="showSearchBar" />
+        <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" v-shortkey="getShortkey()" @shortkey="shortkeyAction" />
       </div>
       <div class="document__extracted-text__search__count form-group" v-if="this.searchTerm.length > 0">
         {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
@@ -139,10 +139,22 @@ export default {
     toggleShowNamedEntities () {
       this.$store.commit('document/toggleShowNamedEntities')
     },
-    getTermIndexClass (index, term) {
-      return {
-        'document__extracted-text__header__terms__item--negation': term.negation,
-        [`document__extracted-text__header__terms__item--index-${index}`]: true
+    shortkeyAction (event) {
+      switch (event.srcKey) {
+        case 'showSearchBar':
+          this.showSearchBar()
+          break
+        case 'hideSearchBar':
+          this.hideSearchBar()
+          break
+        case 'findPreviousOccurrence':
+        case 'findPreviousOccurrence2':
+          this.findPreviousOccurrence()
+          break
+        case 'findNextOccurrence':
+        case 'findNextOccurrence2':
+          this.findNextOccurrence()
+          break
       }
     },
     showSearchBar () {
@@ -154,6 +166,12 @@ export default {
     hideSearchBar () {
       this.$set(this, 'isSearchBarShown', false)
       this.content = this.markedSourceContent()
+    },
+    getTermIndexClass (index, term) {
+      return {
+        'document__extracted-text__header__terms__item--negation': term.negation,
+        [`document__extracted-text__header__terms__item--index-${index}`]: true
+      }
     },
     startSearch () {
       this.searchOccurrences = (this.markedSourceContent().match(new RegExp('(?![^<]*>)' + this.searchTerm, 'gi')) || []).length
@@ -188,10 +206,24 @@ export default {
       let shortKey
       switch (getOS()) {
         case 'mac' :
-          shortKey = ['meta', 'f']
+          shortKey = {
+            'showSearchBar': ['meta', 'f'],
+            'hideSearchBar': ['esc'],
+            'findPreviousOccurrence': ['shift', 'enter'],
+            'findPreviousOccurrence2': ['shift', 'f3'],
+            'findNextOccurrence': ['enter'],
+            'findNextOccurrence2': ['f3']
+          }
           break
         default :
-          shortKey = ['ctrl', 'f']
+          shortKey = {
+            'showSearchBar': ['ctrl', 'f'],
+            'hideSearchBar': ['esc'],
+            'findPreviousOccurrence': ['shift', 'enter'],
+            'findPreviousOccurrence2': ['shift', 'f3'],
+            'findNextOccurrence': ['enter'],
+            'findNextOccurrence2': ['f3']
+          }
       }
       return shortKey
     }
