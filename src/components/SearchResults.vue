@@ -18,8 +18,8 @@
             <fa icon="download" />
             <span class="sr-only">{{ $t('document.download_button') }}</span>
           </a>
-          <a class="search-results__items__item__star btn btn-outline-primary btn-sm float-right m-3" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)">
-            <fa :icon="[isStarred(doc.id), 'star']" />
+          <a class="search-results__items__item__star btn btn-outline-primary btn-sm float-right m-3" :class="[isStarred(doc.id) ? 'starred' : '']" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)">
+            <fa :icon="[isStarred(doc.id) ? 'fa' : 'far', 'star']" />
             <span class="sr-only">{{ $t('document.star_button') }}</span>
           </a>
           <search-results-link class="search-results__items__item__link" :doc="doc" />
@@ -45,12 +45,10 @@
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import SearchResultsLink from '@/components/SearchResultsLink'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
-import features from '@/mixins/features'
 
 export default {
   name: 'SearchResults',
   props: ['response', 'query', 'starredDocuments'],
-  mixins: [features],
   components: { SearchResultsHeader, SearchResultsLink, ResetFiltersButton },
   computed: {
     showFilters: {
@@ -73,7 +71,7 @@ export default {
       this.showFilters = !this.showFilters
     },
     isStarred (documentId) {
-      return this.starredDocuments.indexOf(documentId) >= 0 ? 'fa' : 'far'
+      return this.starredDocuments.indexOf(documentId) >= 0
     },
     toggleStarDocument (documentId) {
       return this.$store.dispatch('search/toggleStarDocument', documentId)
@@ -123,12 +121,18 @@ export default {
           visibility: hidden;
           box-shadow:0 0 $spacer $spacer mix($secondary, white, 5%);
 
+          &.starred {
+            border-color: transparent;
+            box-shadow: none;
+            visibility: visible;
+          }
+
           &:hover {
             box-shadow:0 0 $spacer $spacer white;
           }
         }
 
-        &__star {
+        &__download {
           right: 50px;
         }
 
@@ -138,6 +142,8 @@ export default {
 
         &:hover &__download,
         &:hover &__star {
+          border-color: $primary;
+          box-shadow:0 0 $spacer $spacer mix($secondary, white, 5%);
           visibility: visible;
         }
       }
