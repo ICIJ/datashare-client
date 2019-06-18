@@ -1,7 +1,7 @@
 <template>
   <div v-if="!isGloballyEmpty" class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet--hide-header': hideHeader, 'facet--has-values': hasValues() }">
     <slot name="header" v-if="!hideHeader">
-      <div class="card-header px-2 d-flex">
+      <div class="card-header px-2 d-flex facet__header">
         <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate pt-0">
           <fa :icon="headerIcon" class="float-right" />
           <template>
@@ -10,8 +10,8 @@
             </slot>
           </template>
         </h6>
-        <span v-if="hasValues() && !collapseItems" class="btn-group">
-          <button class="d-inline-flex btn btn-sm btn-outline-dark py-0 ml-2" @click="invert" :class="{ 'active': isReversed() }">
+        <span v-if="hasValues() && !collapseItems">
+          <button class="d-inline-flex btn btn-sm btn-outline-dark py-0 ml-2 btn-group facet__header__invert" @click="invert" :class="{ 'active': isReversed() }">
             <fa icon="eye-slash" class="mr-1 mt-1" />
             {{ $t('facet.invert') }}
           </button>
@@ -171,6 +171,14 @@ export default {
 
 <style lang="scss">
   .facet {
+
+    &__header {
+
+      &__invert.btn {
+        position: relative;
+        top: -0.3rem;
+      }
+    }
 
     .custom-checkbox {
       display: block;
