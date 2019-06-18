@@ -8,7 +8,6 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import messages from '@/lang/en'
 import VueShortkey from 'vue-shortkey'
-import VueSanitize from 'vue-sanitize'
 import { getOS } from '@/utils/utils'
 
 jest.mock('@/utils/utils', () => {
@@ -21,7 +20,6 @@ const localVue = createLocalVue()
 localVue.use(Murmur)
 localVue.use(VueI18n)
 localVue.use(BootstrapVue)
-localVue.use(VueSanitize)
 localVue.directive('shortkey', VueShortkey)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 

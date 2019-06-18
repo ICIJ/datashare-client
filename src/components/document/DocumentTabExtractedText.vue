@@ -66,6 +66,7 @@ import map from 'lodash/map'
 import orderBy from 'lodash/orderBy'
 import sortedUniqBy from 'lodash/sortedUniqBy'
 import template from 'lodash/template'
+import xss from 'xss'
 
 export default {
   name: 'DocumentTabExtractedText',
@@ -100,6 +101,9 @@ export default {
     this.content = this.markedSourceContent()
   },
   methods: {
+    xss (html) {
+      return xss(html, { stripIgnoreTag: true, whiteList: { mark: ['style', 'class', 'title'] } })
+    },
     namedEntityMark (ne) {
       const extractor = ne.source.extractor
       const icon = this.getCategoryIconSvg(ne.source.category)
@@ -109,7 +113,7 @@ export default {
     },
     markedSourceContent () {
       if (this.document) {
-        let content = this.$sanitize(this.document.source.content, { allowedTags: [] })
+        let content = this.document.source.content
         // Add the named entities marks
         if (this.showNamedEntities) {
           const sortedNamedEntities = sortedUniqBy(this.namedEntities, ne => ne.source.offset)
@@ -121,7 +125,7 @@ export default {
           const fn = match => `<mark style="border-color: ${this.getTermIndexColor(index)}">${match}</mark>`
           content = content.replace(needle, fn)
         })
-        return content
+        return this.xss(content)
       }
     },
     getQueryTerms () {
@@ -129,7 +133,7 @@ export default {
       if (this.document.source.content) {
         const queryTerms = this.retrieveQueryTerms()
         map(queryTerms, term => {
-          term.length = (this.$sanitize(this.document.source.content, { allowedTags: [] }).match(new RegExp(term.label, 'gi')) || []).length
+          term.length = (this.xss(this.document.source.content).match(new RegExp(term.label, 'gi')) || []).length
           terms = concat(terms, term)
         })
       }
