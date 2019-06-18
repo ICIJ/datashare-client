@@ -14,13 +14,13 @@
       </b-popover>
     </div>
     <span class="search-document-navbar__nav btn-group" v-if="currentDocumentIndex > -1">
-      <button @click="goToPreviousDocument" v-shortkey="['ctrl', 'arrowleft']" @shortkey="goToPreviousDocument" :disabled="!hasPreviousDocument" class="btn btn-sm py-0" :title="$t('search.nav.previous.tooltip')" v-b-tooltip.html.topleft>
+      <button @click="goToPreviousDocument" v-shortkey="[getShortkey, 'arrowleft']" @shortkey="goToPreviousDocument" :disabled="!hasPreviousDocument" class="btn btn-sm py-0" :title="$t('search.nav.previous.tooltip')" v-b-tooltip.html.topleft>
         <fa icon="angle-left" />
         <span class="d-sm-none d-md-inline">
           {{ $t('search.nav.previous.label') }}
         </span>
       </button>
-      <button @click="goToNextDocument" v-shortkey="['ctrl', 'arrowright']" @shortkey="goToNextDocument" :disabled="!hasNextDocument" class="btn btn-sm py-0" :title="$t('search.nav.next.tooltip')" v-b-tooltip.html.topleft>
+      <button @click="goToNextDocument" v-shortkey="[getShortkey, 'arrowright']" @shortkey="goToNextDocument" :disabled="!hasNextDocument" class="btn btn-sm py-0" :title="$t('search.nav.next.tooltip')" v-b-tooltip.html.topleft>
         <span class="d-sm-none d-md-inline">
           {{ $t('search.nav.next.label') }}
         </span>
@@ -30,45 +30,13 @@
   </div>
 </template>
 
-<style lang="scss" scoped>
-  .search-document-navbar {
-    display: flex;
-    align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    margin: $spacer $spacer 0;
-    border-radius: $card-border-radius $card-border-radius 0 0;
-
-    @media (max-width: $document-float-breakpoint-width) {
-      margin: 0;
-      border-radius: 0;
-    }
-
-    &__back {
-      color: inherit;
-      display: none;
-
-      @media (max-width: $document-float-breakpoint-width) {
-        display: inline;
-      }
-    }
-
-    &__nav .btn {
-      cursor: pointer;
-      background: transparent;
-      color: inherit;
-      border-color: currentColor;
-    }
-  }
-</style>
-
 <script>
+import { mapState } from 'vuex'
+import DocumentTypeCard from '@/components/DocumentTypeCard'
+import { getOS } from '@/utils/utils'
+import findIndex from 'lodash/findIndex'
 import first from 'lodash/first'
 import last from 'lodash/last'
-import findIndex from 'lodash/findIndex'
-import { mapState } from 'vuex'
-import DocumentTypeCard from './DocumentTypeCard'
 
 export default {
   name: 'SearchDocumentNavbar',
@@ -122,6 +90,9 @@ export default {
     },
     nextDocument () {
       return this.searchResponse.hits[this.currentDocumentIndex + 1]
+    },
+    getShortkey () {
+      return getOS() === 'mac' ? 'meta' : 'ctrl'
     }
   },
   mounted () {
@@ -157,3 +128,36 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .search-document-navbar {
+    display: flex;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    margin: $spacer $spacer 0;
+    border-radius: $card-border-radius $card-border-radius 0 0;
+
+    @media (max-width: $document-float-breakpoint-width) {
+      margin: 0;
+      border-radius: 0;
+    }
+
+    &__back {
+      color: inherit;
+      display: none;
+
+      @media (max-width: $document-float-breakpoint-width) {
+        display: inline;
+      }
+    }
+
+    &__nav .btn {
+      cursor: pointer;
+      background: transparent;
+      color: inherit;
+      border-color: currentColor;
+    }
+  }
+</style>
