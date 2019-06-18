@@ -63,11 +63,13 @@
     "nav": {
       "previous": {
         "label": "Previous",
-        "tooltip": "Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
+        "tooltipMac": "Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)",
+        "tooltipOthers": "Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
       },
       "next": {
         "label": "Next",
-        "tooltip": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
+        "tooltipMac": "Next document (<kbd>⌘</kbd> + <kbd>→</kbd>)",
+        "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
       },
       "document": {
         "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>%{extension}</code> before you can open it."

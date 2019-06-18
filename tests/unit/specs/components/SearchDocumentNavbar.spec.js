@@ -45,4 +45,20 @@ describe('SearchDocumentNavbar.vue', () => {
 
     expect(wrapper.vm.getShortkey).toEqual('ctrl')
   })
+
+  it('should return the tooltip for mac', () => {
+    getOS.mockImplementation(() => 'mac')
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+    const wrapper = mount(SearchDocumentNavbar, { localVue, i18n, router, store })
+
+    expect(wrapper.vm.previousTooltip).toEqual('Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)')
+  })
+
+  it('should return the tooltip for NOT mac', () => {
+    getOS.mockImplementation(() => 'linux')
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+    const wrapper = mount(SearchDocumentNavbar, { localVue, i18n, router, store })
+
+    expect(wrapper.vm.previousTooltip).toEqual('Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)')
+  })
 })
