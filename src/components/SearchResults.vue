@@ -14,14 +14,16 @@
       <search-results-header :response="response" :position="'top'" />
       <div class="search-results__items">
         <div v-for="doc in response.hits" :key="doc.id" class="search-results__items__item">
-          <a class="search-results__items__item__download btn btn-outline-primary btn-sm float-right m-3" :href="doc.fullUrl" target="_blank" :title="$t('document.download_file')">
-            <fa icon="download" />
-            <span class="sr-only">{{ $t('document.download_button') }}</span>
-          </a>
-          <a class="search-results__items__item__star btn btn-outline-primary btn-sm float-right m-3" :class="[isStarred(doc.id) ? 'starred' : '']" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)">
-            <fa :icon="[isStarred(doc.id) ? 'fa' : 'far', 'star']" />
-            <span class="sr-only">{{ $t('document.star_button') }}</span>
-          </a>
+          <div class="search-results__items__item__actions btn-group-vertical position-absolute">
+            <a class="search-results__items__item__star btn btn-outline-primary btn-sm" :class="[isStarred(doc.id) ? 'starred' : '']" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)">
+              <fa :icon="[isStarred(doc.id) ? 'fa' : 'far', 'star']" />
+              <span class="sr-only">{{ $t('document.star_button') }}</span>
+            </a>
+            <a class="search-results__items__item__download btn btn-outline-primary btn-sm" :href="doc.fullUrl" target="_blank" :title="$t('document.download_file')">
+              <fa icon="download" />
+              <span class="sr-only">{{ $t('document.download_button') }}</span>
+            </a>
+          </div>
           <search-results-link class="search-results__items__item__link" :doc="doc" />
         </div>
       </div>
@@ -112,14 +114,26 @@ export default {
         overflow: hidden;
         position: relative;
 
-        &__download,
-        &__star {
+        &__actions {
           z-index: 100;
           position: absolute;
-          top: 0;
-          right: 0;
+          top: $spacer;
+          right: $spacer * 0.5;
           visibility: hidden;
           box-shadow:0 0 $spacer $spacer mix($secondary, white, 5%);
+
+          &:hover {
+            box-shadow:0 0 $spacer $spacer white;
+          }
+
+          .btn {
+            transition: none;
+            font-size: 0.9rem;
+            padding: $spacer * 0.10 $spacer * 0.25;
+          }
+        }
+
+        &__star {
 
           &.starred {
             border-color: transparent;
@@ -127,24 +141,18 @@ export default {
             visibility: visible;
           }
 
-          &:hover {
-            box-shadow:0 0 $spacer $spacer white;
-          }
-        }
-
-        &__download {
-          right: 50px;
         }
 
         &__link {
           padding-right: 7rem;
         }
 
-        &:hover &__download,
-        &:hover &__star {
-          border-color: $primary;
-          box-shadow:0 0 $spacer $spacer mix($secondary, white, 5%);
+        &:hover &__actions {
           visibility: visible;
+
+          .btn {
+            border-color: $primary;
+          }
         }
       }
     }
