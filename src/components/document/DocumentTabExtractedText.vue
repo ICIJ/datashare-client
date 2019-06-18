@@ -30,13 +30,15 @@
         </div>
       </div>
     </div>
-    <div class="document__extracted-text__search form-inline" :class="{ 'document__extracted-text__search--visible': isSearchBarShown }">
-      <div class="document__extracted-text__search__term form-group py-2 px-3">
+    <div class="document__extracted-text__search form-inline px-3" :class="{ 'document__extracted-text__search--visible': isSearchBarShown }">
+      <div class="form-group py-2 mr-2">
         <label class="sr-only">{{ $t('document.search') }}</label>
-        <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control" v-shortkey="getShortkey()" @shortkey="shortkeyAction" />
-      </div>
-      <div class="document__extracted-text__search__count form-group" v-if="this.searchTerm.length > 0">
-        {{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}
+        <div class="input-group">
+          <input v-model="searchTerm" @input="startSearch" :placeholder="$t('document.find')" ref="search" class="form-control document__extracted-text__search__term" v-shortkey="getShortkey()" @shortkey="shortkeyAction" />
+          <div class="document__extracted-text__search__count input-group-append" v-if="this.searchTerm.length > 0">
+            <span class="input-group-text">{{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}</span>
+          </div>
+        </div>
       </div>
       <div class="form-group">
         <button class="document__extracted-text__search__previous btn btn-sm p-2" @click="findPreviousOccurrence" :disabled="searchOccurrences === 0 || this.searchTerm.length === 0">
@@ -265,6 +267,7 @@ export default {
     }
 
     &__search {
+      justify-content: end;
       position: static;
       top: var(--search-document-navbar-height);
       left: 0;
@@ -272,6 +275,15 @@ export default {
 
       &--visible {
         position: sticky;
+      }
+
+      &.form-inline .input-group {
+        width: 300px;
+
+        .input-group-text {
+          border-left: 0;
+          background: $input-bg;
+        }
       }
     }
 
@@ -282,6 +294,7 @@ export default {
         border-bottom: 3px solid transparent;
 
         &.yellow-search {
+          padding: 0;
           background-color: yellow;
         }
       }
