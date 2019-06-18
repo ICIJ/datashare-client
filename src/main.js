@@ -4,7 +4,7 @@ import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import VueShortkey from 'vue-shortkey'
-
+import VueSanitize from 'vue-sanitize'
 import router from '@/router'
 import messages from '@/lang/en'
 import store from '@/store'
@@ -21,6 +21,7 @@ async function createApp (LocalVue = Vue) {
   LocalVue.use(BootstrapVue)
   LocalVue.use(Murmur)
   LocalVue.use(VueShortkey)
+  LocalVue.use(VueSanitize)
 
   const i18n = new VueI18n({ locale: 'en', fallbackLocale: 'en', messages: { 'en': messages } })
   const ds = new DatashareClient()

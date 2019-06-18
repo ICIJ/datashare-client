@@ -8,6 +8,7 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import messages from '@/lang/en'
 import VueShortkey from 'vue-shortkey'
+import VueSanitize from 'vue-sanitize'
 import { getOS } from '@/utils/utils'
 
 jest.mock('@/utils/utils', () => {
@@ -20,6 +21,7 @@ const localVue = createLocalVue()
 localVue.use(Murmur)
 localVue.use(VueI18n)
 localVue.use(BootstrapVue)
+localVue.use(VueSanitize)
 localVue.directive('shortkey', VueShortkey)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
@@ -38,135 +40,140 @@ describe('DocumentTabExtractedText.vue', () => {
     store.commit('search/reset')
   })
 
-  it('should mark named entities in the extracted text tab', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('content')
-      .withNer('ner_01', 2, 'person')
-      .withNer('ner_02', 17, 'location'))
-      .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+  describe('the extracted text content', () => {
+    it('should mark named entities in the extracted text tab', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('content')
+        .withNer('ner_01', 2, 'person')
+        .withNer('ner_02', 17, 'location'))
+        .commit()
+      await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.findAll('mark')).toHaveLength(2)
+      expect(wrapper.findAll('mark').at(0).text()).toEqual('ner_01')
+      expect(wrapper.findAll('mark').at(0).classes()).toContain('ner--category-person')
+      expect(wrapper.findAll('mark').at(1).text()).toEqual('ner_02')
+      expect(wrapper.findAll('mark').at(1).classes()).toContain('ner--category-location')
     })
 
-    await wrapper.vm.$nextTick()
+    it('should sanitize the HTML in the extracted text', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'))
+        .commit()
+      await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
 
-    expect(wrapper.findAll('mark')).toHaveLength(2)
-    expect(wrapper.findAll('mark').at(0).text()).toEqual('ner_01')
-    expect(wrapper.findAll('mark').at(0).classes()).toContain('ner--category-person')
-    expect(wrapper.findAll('mark').at(1).text()).toEqual('ner_02')
-    expect(wrapper.findAll('mark').at(1).classes()).toContain('ner--category-location')
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.find('.document__extracted-text__content').html()).toEqual('<div class="document__extracted-text__content p-3">this is a content with some images and links</div>')
+    })
   })
 
-  it('should display a document with named entities and escaped HTML', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('content')
-      .withNer('ner', 2))
-      .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+  describe('the "Show named entities" toggle', () => {
+    it('should contain a "Show named entities" toggle', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('content')
+        .withNer('ner', 2))
+        .commit()
+      await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
+
+      expect(wrapper.findAll('.document__extracted-text__header__see-highlights')).toHaveLength(1)
     })
 
-    expect(wrapper.findAll('mark')).toHaveLength(1)
-  })
+    it('should not contain a "Show named entities" toggle if there is no named entities', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('content'))
+        .commit()
+      await store.dispatch('document/get', { id })
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
 
-  it('should contain a "See highlights" toggle', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('content')
-      .withNer('ner', 2))
-      .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+      expect(wrapper.findAll('.document__extracted-text__header__see-highlights')).toHaveLength(0)
     })
 
-    expect(wrapper.findAll('.document__extracted-text__header__see-highlights')).toHaveLength(1)
-  })
+    it('should change the document state of showNamedEntities', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('content')
+        .withNer('ner', 2))
+        .commit()
+      await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
 
-  it('should not contain a "See highlights" toggle if there is no named entities', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('content'))
-      .commit()
-    await store.dispatch('document/get', { id })
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+      expect(wrapper.vm.showNamedEntities).toBeTruthy()
+
+      wrapper.findAll('.document__extracted-text__header__see-highlights label').at(0).trigger('click')
+
+      expect(wrapper.vm.showNamedEntities).toBeFalsy()
     })
 
-    expect(wrapper.findAll('.document__extracted-text__header__see-highlights')).toHaveLength(0)
-  })
+    it('should display a document without named entities', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('content')
+        .withNer('ner', 2))
+        .commit()
+      await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+      store.commit('document/toggleShowNamedEntities')
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
 
-  it('should change the document state of showNamedEntities', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('content')
-      .withNer('ner', 2))
-      .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+      expect(wrapper.findAll('mark')).toHaveLength(0)
     })
-
-    expect(wrapper.vm.showNamedEntities).toBeTruthy()
-
-    wrapper.findAll('.document__extracted-text__header__see-highlights label').at(0).trigger('click')
-
-    expect(wrapper.vm.showNamedEntities).toBeFalsy()
-  })
-
-  it('should display a document without named entities', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('content')
-      .withNer('ner', 2))
-      .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    store.commit('document/toggleShowNamedEntities')
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
-    })
-
-    expect(wrapper.findAll('mark')).toHaveLength(0)
   })
 
   describe('lists the query terms but the ones about specific field other than "content"', () => {
@@ -240,193 +247,172 @@ describe('DocumentTabExtractedText.vue', () => {
       expect(wrapper.findAll('ul li')).toHaveLength(1)
       expect(wrapper.findAll('.document__extracted-text__header__terms__item--negation')).toHaveLength(1)
     })
+
+    it('should highlight the query terms with the same color than in the list', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('this is a full full content'))
+        .commit()
+      await store.dispatch('document/get', { id })
+      store.commit('search/query', 'full content')
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
+
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item--index-0')).toHaveLength(1)
+      expect(wrapper.find('.document__extracted-text__header__terms__item--index-0 .document__extracted-text__header__terms__item__label').text()).toBe('full')
+
+      expect(wrapper.findAll('.document__extracted-text__header__terms__item--index-1')).toHaveLength(1)
+      expect(wrapper.find('.document__extracted-text__header__terms__item--index-1 .document__extracted-text__header__terms__item__label').text()).toBe('content')
+    })
   })
 
-  it('should highlight the query terms with the same color than in the list', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('this is a full full content'))
-      .commit()
-    await store.dispatch('document/get', { id })
-    store.commit('search/query', 'full content')
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+  describe('search term', () => {
+    it('should hide the search term form by default', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('this is a full full content')
+        .withNer('ner', 0))
+        .commit()
+      await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
+
+      expect(wrapper.find('.document__extracted-text__search--visible').exists()).toBeFalsy()
     })
 
-    expect(wrapper.findAll('.document__extracted-text__header__terms__item--index-0')).toHaveLength(1)
-    expect(wrapper.find('.document__extracted-text__header__terms__item--index-0 .document__extracted-text__header__terms__item__label').text()).toBe('full')
+    it('should highlight the first occurrence of the searched term', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('this is a full full content'))
+        .commit()
+      await store.dispatch('document/get', { id })
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
 
-    expect(wrapper.findAll('.document__extracted-text__header__terms__item--index-1')).toHaveLength(1)
-    expect(wrapper.find('.document__extracted-text__header__terms__item--index-1 .document__extracted-text__header__terms__item__label').text()).toBe('content')
-  })
+      wrapper.vm.$set(wrapper.vm, 'searchTerm', 'full')
+      wrapper.vm.startSearch()
 
-  it('should hide the search term form by default', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('this is a full full content')
-      .withNer('ner', 0))
-      .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+      expect(wrapper.vm.content).toEqual('this is a <mark class="query-term yellow-search">full</mark> full content')
     })
 
-    expect(wrapper.find('.document__extracted-text__search--visible').exists()).toBeFalsy()
-  })
+    it('should be case insensitive', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('this is a full FulL content fuLL'))
+        .commit()
+      await store.dispatch('document/get', { id })
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
 
-  it('should highlight the first occurrence of the searched term', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('this is a full full content'))
-      .commit()
-    await store.dispatch('document/get', { id })
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+      wrapper.vm.$set(wrapper.vm, 'searchTerm', 'full')
+      wrapper.vm.startSearch()
+
+      expect(wrapper.vm.searchOccurrences).toEqual(3)
     })
 
-    wrapper.vm.$set(wrapper.vm, 'searchTerm', 'full')
-    wrapper.vm.startSearch()
+    it('should find the previous and next occurrence, as a loop', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('this is a full full content'))
+        .commit()
+      await store.dispatch('document/get', { id })
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
 
-    expect(wrapper.vm.content).toEqual('this is a <mark class="query-term yellow-search">full</mark> full content')
-  })
+      wrapper.vm.$set(wrapper.vm, 'searchTerm', 'full')
+      wrapper.vm.startSearch()
 
-  it('should be case insensitive', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('this is a full FulL content fuLL'))
-      .commit()
-    await store.dispatch('document/get', { id })
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+      expect(wrapper.vm.searchIndex).toEqual(1)
+      expect(wrapper.vm.content).toEqual('this is a <mark class="query-term yellow-search">full</mark> full content')
+
+      wrapper.vm.findNextOccurrence()
+
+      expect(wrapper.vm.searchIndex).toEqual(2)
+      expect(wrapper.vm.content).toEqual('this is a full <mark class="query-term yellow-search">full</mark> content')
+
+      wrapper.vm.findNextOccurrence()
+
+      expect(wrapper.vm.searchIndex).toEqual(1)
+      expect(wrapper.vm.content).toEqual('this is a <mark class="query-term yellow-search">full</mark> full content')
+
+      wrapper.vm.findPreviousOccurrence()
+
+      expect(wrapper.vm.searchIndex).toEqual(2)
+      expect(wrapper.vm.content).toEqual('this is a full <mark class="query-term yellow-search">full</mark> content')
     })
 
-    wrapper.vm.$set(wrapper.vm, 'searchTerm', 'full')
-    wrapper.vm.startSearch()
+    it('should return shortkeys for mac', async () => {
+      getOS.mockImplementation(() => 'mac')
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('content'))
+        .commit()
+      await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: []
+        }
+      })
 
-    expect(wrapper.vm.searchOccurrences).toEqual(3)
-  })
-
-  it('should find the previous and next occurrence, as a loop', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('this is a full full content'))
-      .commit()
-    await store.dispatch('document/get', { id })
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+      expect(wrapper.vm.getShortkey().showSearchBar).toEqual(['meta', 'f'])
     })
 
-    wrapper.vm.$set(wrapper.vm, 'searchTerm', 'full')
-    wrapper.vm.startSearch()
+    it('should return shortkeys for other OS', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('content'))
+        .commit()
+      await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: []
+        }
+      })
 
-    expect(wrapper.vm.searchIndex).toEqual(1)
-    expect(wrapper.vm.content).toEqual('this is a <mark class="query-term yellow-search">full</mark> full content')
-
-    wrapper.vm.findNextOccurrence()
-
-    expect(wrapper.vm.searchIndex).toEqual(2)
-    expect(wrapper.vm.content).toEqual('this is a full <mark class="query-term yellow-search">full</mark> content')
-
-    wrapper.vm.findNextOccurrence()
-
-    expect(wrapper.vm.searchIndex).toEqual(1)
-    expect(wrapper.vm.content).toEqual('this is a <mark class="query-term yellow-search">full</mark> full content')
-
-    wrapper.vm.findPreviousOccurrence()
-
-    expect(wrapper.vm.searchIndex).toEqual(2)
-    expect(wrapper.vm.content).toEqual('this is a full <mark class="query-term yellow-search">full</mark> content')
-  })
-
-  it('should not parse the HTML part', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('this is a <full /> full <div class="full other">full text in it</div> content'))
-      .commit()
-    await store.dispatch('document/get', { id })
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: store.state.document.namedEntities
-      }
+      expect(wrapper.vm.getShortkey().showSearchBar).toEqual(['ctrl', 'f'])
     })
-
-    wrapper.vm.$set(wrapper.vm, 'searchTerm', 'full')
-    wrapper.vm.startSearch()
-
-    expect(wrapper.vm.searchOccurrences).toEqual(2)
-    expect(wrapper.vm.content).toEqual('this is a <full /> <mark class="query-term yellow-search">full</mark> <div class="full other">full text in it</div> content')
-  })
-
-  it('should return shortkeys for mac', async () => {
-    getOS.mockImplementation(() => 'mac')
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('content'))
-      .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: []
-      }
-    })
-
-    expect(wrapper.vm.getShortkey().showSearchBar).toEqual(['meta', 'f'])
-  })
-
-  it('should return shortkeys for other OS', async () => {
-    const id = 'doc'
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('content'))
-      .commit()
-    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabExtractedText, {
-      localVue,
-      store,
-      i18n,
-      propsData: {
-        document: store.state.document.doc,
-        namedEntities: []
-      }
-    })
-
-    expect(wrapper.vm.getShortkey().showSearchBar).toEqual(['ctrl', 'f'])
   })
 })

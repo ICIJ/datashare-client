@@ -10,6 +10,7 @@ import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import DocumentView from '@/components/document/DocumentView'
+import VueSanitize from 'vue-sanitize'
 import VueShortkey from 'vue-shortkey'
 
 const localVue = createLocalVue()
@@ -17,6 +18,7 @@ localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
+localVue.use(VueSanitize)
 localVue.directive('shortkey', VueShortkey)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 

@@ -107,7 +107,7 @@ export default {
     },
     markedSourceContent () {
       if (this.document) {
-        let content = this.document.source.content
+        let content = this.$sanitize(this.document.source.content, { allowedTags: [] })
         // Add the named entities marks
         if (this.showNamedEntities) {
           const sortedNamedEntities = sortedUniqBy(this.namedEntities, ne => ne.source.offset)
@@ -127,7 +127,7 @@ export default {
       if (this.document.source.content) {
         const queryTerms = this.retrieveQueryTerms()
         map(queryTerms, term => {
-          term.length = (this.document.source.content.match(new RegExp(term.label, 'gi')) || []).length
+          term.length = (this.$sanitize(this.document.source.content, { allowedTags: [] }).match(new RegExp(term.label, 'gi')) || []).length
           terms = concat(terms, term)
         })
       }
