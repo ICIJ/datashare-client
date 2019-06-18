@@ -7,8 +7,8 @@
           {{ $t('search.buttonlabel') }}
         </button>
       </div>
-      <span class="search-bar__typeahead">
-        <a href="https://icij.gitbook.io/datashare/all/search-with-operators" target="_blank" class="d-flex justify-content-between">
+      <a class="search-bar__typeahead" href="https://icij.gitbook.io/datashare/all/search-with-operators" target="_blank">
+        <span class="d-flex justify-content-between">
           <span>
             <fa icon="book" class="mr-1" />
             Tips to improve searching
@@ -16,8 +16,8 @@
           <span class="text-muted">
             (AND, OR, ...)
           </span>
-        </a>
-      </span>
+        </span>
+      </a>
     </div>
     <div class="col-auto px-0 pl-2" v-if="!hideSettings">
       <search-settings placement="bottomleft" :container="uniqueId" />
@@ -90,7 +90,7 @@ export default {
       border-radius: 0 0 $input-border-radius $input-border-radius;
     }
 
-    & &__input:focus  {
+    & &__input:focus, .input-group:hover &__input  {
       border-radius: $input-border-radius 0 0 0;
       box-shadow: none;
 

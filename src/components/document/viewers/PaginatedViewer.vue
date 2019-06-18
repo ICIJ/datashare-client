@@ -61,7 +61,7 @@ export default {
       return range(this.meta.pages)
     },
     metaUrl () {
-      return `${process.env.VUE_APP_DS_PREVIEW_HOST}/api/v1/thumbnail/${this.document.index}/${this.document.id}.json?routing=${this.document.routing}`
+      return `${this.$config.get('document-thumbnail.host')}/api/v1/thumbnail/${this.document.index}/${this.document.id}.json?routing=${this.document.routing}`
     }
   }
 }
