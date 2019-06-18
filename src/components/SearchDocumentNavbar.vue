@@ -9,7 +9,7 @@
         <fa icon="download" />
         {{ $t('document.download_button') }}
       </a>
-      <b-popover target="search-document-navbar-download" triggers="hover focus" :title="currentDocument.contentTypeLabel">
+      <b-popover target="search-document-navbar-download" triggers="hover focus" placement="bottomleft" :title="currentDocument.contentTypeLabel">
         <document-type-card :document="currentDocument" />
       </b-popover>
     </div>

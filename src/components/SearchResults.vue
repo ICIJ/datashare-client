@@ -15,11 +15,11 @@
       <div class="search-results__items">
         <div v-for="doc in response.hits" :key="doc.id" class="search-results__items__item">
           <div class="search-results__items__item__actions btn-group-vertical position-absolute">
-            <a class="search-results__items__item__star btn btn-outline-primary btn-sm" :class="[isStarred(doc.id) ? 'starred' : '']" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)">
+            <a class="search-results__items__item__star btn btn-outline-primary btn-sm" :class="[isStarred(doc.id) ? 'starred' : '']" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)" v-b-tooltip.left>
               <fa :icon="[isStarred(doc.id) ? 'fa' : 'far', 'star']" />
               <span class="sr-only">{{ $t('document.star_button') }}</span>
             </a>
-            <a class="search-results__items__item__download btn btn-outline-primary btn-sm" :href="doc.fullUrl" target="_blank" :title="$t('document.download_file')">
+            <a class="search-results__items__item__download btn btn-outline-primary btn-sm" :href="doc.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip.left>
               <fa icon="download" />
               <span class="sr-only">{{ $t('document.download_button') }}</span>
             </a>
