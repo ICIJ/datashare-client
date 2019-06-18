@@ -2,7 +2,7 @@
   <div v-if="!isGloballyEmpty" class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet--hide-header': hideHeader, 'facet--has-values': hasValues() }">
     <slot name="header" v-if="!hideHeader">
       <div class="card-header px-2 d-flex">
-        <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate">
+        <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate pt-0">
           <fa :icon="headerIcon" class="float-right" />
           <template>
             <slot name="title">
@@ -178,6 +178,7 @@ export default {
 
       label {
         display: block;
+        padding-top: 0.2rem;
 
         & > span {
           display: flex;

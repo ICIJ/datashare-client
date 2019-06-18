@@ -1,7 +1,7 @@
 <template>
   <div class="facet card facet--hide-show-more facet--hide-search" v-if="indices.length > 1">
-    <div class="card-header">
-      <h6 @click="toggleItems">
+    <div class="card-header px-2">
+      <h6 @click="toggleItems" class="pt-0">
         <fa :icon="headerIcon" class="float-right"/>
         {{ $t('facet.projects') }}
       </h6>

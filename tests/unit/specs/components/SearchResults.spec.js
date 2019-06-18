@@ -1,5 +1,6 @@
 import SearchResults from '@/components/SearchResults'
 import VueI18n from 'vue-i18n'
+import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -12,6 +13,7 @@ import { jsonOk } from 'tests/unit/tests_utils'
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
+localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 async function createView (query = '*', from = 0, size = 25) {
