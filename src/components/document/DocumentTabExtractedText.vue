@@ -3,7 +3,7 @@
     <div class="container-fluid">
       <div class="row border-bottom document__extracted-text__header" v-if="showHeader">
         <div class="col-5 order-2 border-left py-3">
-          <div class="custom-control custom-switch document__extracted-text__header__see-highlights" v-if="showNerToggler">
+          <div class="custom-control custom-switch document__extracted-text__header__see-highlights" v-if="showNerToggle">
             <input type="checkbox" :checked="showNamedEntities" class="custom-control-input" id="input-see-highlights" @change="toggleShowNamedEntities">
             <label class="custom-control-label font-weight-bold" for="input-see-highlights" id="label-see-highlights">
               {{ $t('document.see_highlights') }}
@@ -75,14 +75,14 @@ export default {
   computed: {
     ...mapState('search', ['query']),
     ...mapState('document', ['showNamedEntities']),
-    showNerToggler () {
+    showNerToggle () {
       return !!this.namedEntities.length
     },
     showTermsList () {
       return !!this.getQueryTerms().length
     },
     showHeader () {
-      return this.showTermsList || this.showNerToggler
+      return this.showTermsList || this.showNerToggle
     },
     namedEntityMarkTemplate () {
       return template('<mark class="ner <%= classNames %>" title="<%= extractor %>"><%= icon %> <%= mention %></mark>')
@@ -144,6 +144,7 @@ export default {
     },
     toggleShowNamedEntities () {
       this.$store.commit('document/toggleShowNamedEntities')
+      this.content = this.markedSourceContent()
     },
     shortkeyAction (event) {
       switch (event.srcKey) {
