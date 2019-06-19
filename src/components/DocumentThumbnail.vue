@@ -1,17 +1,16 @@
 <template>
   <div v-if="isActivated" class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop }">
-    <component :is="component" :src="thumbnailUrl" :alt="thumbnailAlt" class="document-thumbnail__image"/>
+    <img :src="thumbnailSrc" :alt="thumbnailAlt" class="document-thumbnail__image" />
   </div>
 </template>
 
 <script>
-import VLazyImage from 'v-lazy-image'
+import { getCookie } from 'tiny-cookie'
+import kebabCase from 'lodash/kebabCase'
+import startCase from 'lodash/startCase'
 
 export default {
   name: 'DocumentThumbnail',
-  components: {
-    VLazyImage
-  },
   props: {
     document: {
       type: Object
@@ -34,7 +33,9 @@ export default {
   data () {
     return {
       loaded: false,
-      erroed: false
+      erroed: false,
+      thumbnailSrc: null,
+      observer: null
     }
   },
   computed: {
@@ -50,20 +51,67 @@ export default {
     isActivated () {
       return this.$config.get('document-thumbnail.activated')
     },
-    component () {
-      return this.lazy ? 'v-lazy-image' : 'img'
+    lazyLoadable () {
+      return window && "IntersectionObserver" in window
+    },
+    sessionIdHeaderValue () {
+      return getCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    },
+    sessionIdHeaderName () {
+      let dsCookieName = kebabCase(process.env.VUE_APP_DS_COOKIE_NAME)
+      dsCookieName = dsCookieName.split('-').map(startCase).join('-')
+      return `X-${dsCookieName}`
     }
   },
-  mounted () {
-    if (this.isActivated) {
-      const $img = this.$el.querySelector('.document-thumbnail__image')
-      $img.addEventListener('load', () => {
-        this.$nextTick(() => this.$set(this, 'loaded', true))
+  methods: {
+    arrayBufferToBase64(buffer) {
+      let binary = ''
+      const bytes = [].slice.call(new Uint8Array(buffer))
+      bytes.forEach(b => binary += String.fromCharCode(b))
+      // Create a base64 string from a string
+      return btoa(binary)
+    },
+    async fetch () {
+      const request = new Request(this.thumbnailUrl);
+      const response = await fetch(request, {
+        method: 'GET',
+        cache: 'default',
+        headers: {
+          [this.sessionIdHeaderName]: this.sessionIdHeaderValue
+        }
       })
-      $img.addEventListener('error', () => {
-        this.$nextTick(() => this.$set(this, 'erroed', true))
+      const buffer = await response.arrayBuffer()
+      const base64Flag = 'data:image/jpeg;base64,'
+      const imageStr = this.arrayBufferToBase64(buffer)
+      return base64Flag + imageStr
+    },
+    async fetchAndLoad () {
+      try {
+        this.thumbnailSrc = await this.fetch()
+        this.$set(this, 'loaded', true)
+      } catch {
+        this.$set(this, 'erroed', true)
+      }
+    },
+    bindObserver () {
+      this.observer = new IntersectionObserver(async entries => {
+        if (entries[0].isIntersecting) {
+          this.observer.disconnect()
+          await this.fetchAndLoad()
+          await this.$nextTick()
+        }
       })
+      // Observe the component element
+      this.observer.observe(this.$el)
     }
+  },
+  async mounted () {
+    // This component can be deactivated globally
+    if (!this.isActivated) return
+    // This component can be lazy loaded
+    if (this.lazy && this.lazyLoadable) return this.bindObserver()
+    // Fetch directly
+    await this.fetchAndLoad()
   }
 }
 </script>
@@ -85,7 +133,7 @@ export default {
       height: 80px;
     }
 
-    &--loaded:not(&--erroed) &__image, .v-lazy-image-loaded {
+    &--loaded:not(&--erroed) &__image {
       opacity: 1;
     }
 
