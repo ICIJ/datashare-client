@@ -251,10 +251,7 @@ export const actions = {
     commit('error', null)
     try {
       const raw = await esClient.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort)
-      const starredDocuments = await datashare.getStarredDocuments(state.index).then(r => {
-        const tmp = r.clone()
-        return tmp.json()
-      })
+      const starredDocuments = await datashare.getStarredDocuments(state.index).then(r => r.clone().json())
       commit('buildResponse', { raw, starredDocuments })
       return raw
     } catch (error) {

@@ -6,14 +6,18 @@
              :to="firstPageLinkParameters()"
              :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
              class="search-results__header__paging__first-page px-2"
-             v-b-tooltip.hover :title="$t('search.results.firstPage')" v-if="response.total > $store.state.search.size">
+             v-b-tooltip.hover
+             :title="$t('search.results.firstPage')"
+             v-if="response.total > $store.state.search.size">
           <fa icon="angle-double-left" />
         </router-link>
         <router-link
              :to="previousPageLinkParameters()"
              :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
              class="search-results__header__paging__previous-page px-2"
-             v-b-tooltip.hover :title="$t('search.results.previousPage')" v-if="response.total > $store.state.search.size">
+             v-b-tooltip.hover
+             :title="$t('search.results.previousPage')"
+             v-if="response.total > $store.state.search.size">
           <fa icon="angle-left" />
         </router-link>
         <div class="search-results__header__paging__progress">
@@ -28,14 +32,18 @@
              :to="nextPageLinkParameters()"
              :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
              class="search-results__header__paging__next-page px-2"
-             v-b-tooltip.hover :title="$t('search.results.nextPage')" v-if="response.total > $store.state.search.size">
+             v-b-tooltip.hover
+             :title="$t('search.results.nextPage')"
+             v-if="response.total > $store.state.search.size">
           <fa icon="angle-right" />
         </router-link>
         <router-link
              :to="lastPageLinkParameters()"
              :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
              class="search-results__header__paging__last-page px-2"
-             v-b-tooltip.hover :title="$t('search.results.lastPage')" v-if="response.total > $store.state.search.size">
+             v-b-tooltip.hover
+             :title="$t('search.results.lastPage')"
+             v-if="response.total > $store.state.search.size">
           <fa icon="angle-double-right" />
         </router-link>
       </div>
