@@ -2,7 +2,7 @@
   <div v-if="isActivated" class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop }">
     <img :src="thumbnailSrc" :alt="thumbnailAlt" class="document-thumbnail__image" />
     <span class="document-thumbnail__spinner" v-if="!loaded && !erroed">
-      <fa icon="sync" spin />
+      <content-placeholder :rows="spinnerRows" class="p-0" />
     </span>
   </div>
 </template>
@@ -38,7 +38,13 @@ export default {
       loaded: false,
       erroed: false,
       thumbnailSrc: null,
-      observer: null
+      observer: null,
+      spinnerRows: [
+        {
+          height: '100%',
+          boxes: [[0, '100%']]
+        }
+      ]
     }
   },
   computed: {
@@ -157,11 +163,17 @@ export default {
 
     &__spinner {
       position: absolute;
-      top: 50%;
-      left: 50%;
-      transform: translate(-50%, -50%);
-      font-size: 1.5rem;
-      color: rgba(#000, .1);
+      top: 0;
+      left: 0;
+      bottom: 0;
+      right: 0;
+
+      .content-placeholder,
+      .content-placeholder__wrapper,
+      .content-placeholder__wrapper__row  {
+        width: 100%;
+        height: 100%;
+      }
     }
   }
 </style>
