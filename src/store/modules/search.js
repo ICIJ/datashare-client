@@ -1,7 +1,7 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
-import { FacetDate, FacetNamedEntity, FacetPath, FacetText, namedEntityCategoryTranslation } from '@/store/facetsStore'
+import { FacetText, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation } from '@/store/facetsStore'
 import DatashareClient from '@/api/DatashareClient'
 import lucene from 'lucene'
 import castArray from 'lodash/castArray'

@@ -226,11 +226,4 @@ class FacetNamedEntity extends FacetType {
   }
 }
 
-class FacetIndex extends FacetText {
-  constructor (name, key, isSearchable, category = 'PERSON') {
-    super(name, key, isSearchable, null)
-    this.component = 'FacetIndex'
-  }
-}
-
-export { FacetDate, FacetPath, FacetText, FacetNamedEntity, FacetIndex, namedEntityCategoryTranslation }
+export { FacetText, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation }

@@ -30,10 +30,11 @@
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-import FacetDate from '@/components/FacetDate'
-import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetText from '@/components/FacetText'
+import FacetYesNo from '@/components/FacetYesNo'
+import FacetDate from '@/components/FacetDate'
 import FacetPath from '@/components/FacetPath'
+import FacetNamedEntity from '@/components/FacetNamedEntity'
 import { EventBus } from '@/utils/event-bus'
 import facets from '@/mixins/facets'
 import get from 'lodash/get'
@@ -66,10 +67,11 @@ export default {
     }
   },
   components: {
-    FacetDate,
-    FacetNamedEntity,
     FacetText,
+    FacetYesNo,
+    FacetDate,
     FacetPath,
+    FacetNamedEntity,
     InfiniteLoading
   },
   data () {

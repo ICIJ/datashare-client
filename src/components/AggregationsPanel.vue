@@ -43,11 +43,12 @@
 <script>
 import { mapState } from 'vuex'
 import { EventBus } from '@/utils/event-bus'
-import FacetDate from '@/components/FacetDate'
-import FacetNamedEntity from '@/components/FacetNamedEntity'
-import FacetPath from '@/components/FacetPath'
-import FacetSearch from '@/components/FacetSearch'
 import FacetText from '@/components/FacetText'
+import FacetYesNo from '@/components/FacetYesNo'
+import FacetDate from '@/components/FacetDate'
+import FacetPath from '@/components/FacetPath'
+import FacetNamedEntity from '@/components/FacetNamedEntity'
+import FacetSearch from '@/components/FacetSearch'
 import IndexSelector from '@/components/IndexSelector'
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import forEach from 'lodash/forEach'
@@ -56,11 +57,12 @@ import isArray from 'lodash/isArray'
 export default {
   name: 'AggregationsPanel',
   components: {
-    FacetDate,
-    FacetNamedEntity,
-    FacetPath,
-    FacetSearch,
     FacetText,
+    FacetYesNo,
+    FacetDate,
+    FacetPath,
+    FacetNamedEntity,
+    FacetSearch,
     IndexSelector,
     bModal
   },
