@@ -9,11 +9,11 @@
       </div>
       <a class="search-bar__typeahead" href="https://icij.gitbook.io/datashare/all/search-with-operators" target="_blank">
         <span class="d-flex justify-content-between">
-          <span>
+          <span class="mr-1">
             <fa icon="book" class="mr-1" />
             Tips to improve searching
           </span>
-          <span class="text-muted">
+          <span class="text-muted text-truncate">
             (AND, OR, ...)
           </span>
         </span>
