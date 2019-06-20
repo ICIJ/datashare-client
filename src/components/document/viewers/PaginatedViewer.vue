@@ -1,5 +1,8 @@
 <template>
-  <div class="paginated-viewer d-flex" v-if="meta.previewable">
+  <div v-if="!isReady" class="p-3 w-100 text-muted">
+    {{ $t('document.fetching') }}
+  </div>
+  <div class="paginated-viewer d-flex" v-else-if="meta.previewable">
     <div id="paginated-viewer__header" class="bg-light px-3 py-2">
       <div id="paginated-viewer__thumbnails" class="paginated-viewer__thumbnails">
         <div class="text-center mt-2 mb-4 d-flex align-items-center viewer__thumbnails__header" v-if="isReady">
@@ -52,9 +55,11 @@ export default {
     }
   },
   async mounted () {
+    this.$Progress.start()
     const response = await fetch(this.metaUrl)
     this.meta = await response.json()
     this.isReady = true
+    this.$Progress.finish()
   },
   computed: {
     pagesRange () {
