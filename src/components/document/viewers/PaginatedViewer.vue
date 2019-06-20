@@ -23,7 +23,7 @@
         </div>
       </div>
     </div>
-    <div class="paginated-viewer__preview w-100 p-3 text-center">
+    <div class="paginated-viewer__preview p-3 text-center">
       <document-thumbnail :document="document" size="1200" :page="active" :key="active" class="w-auto d-inline-block" />
     </div>
   </div>
@@ -100,7 +100,7 @@ export default {
     min-width: 100%;
 
     &__thumbnails {
-      min-width: 100px;
+      width: 120px;
 
       &__item {
         position: relative;
@@ -137,6 +137,10 @@ export default {
     }
 
     &__preview {
+      width: 110%;
+      flex-grow: 1;
+      min-width: 0;
+
       img {
         max-width: 100%;
       }
