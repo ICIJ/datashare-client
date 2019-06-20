@@ -108,7 +108,6 @@ export default {
         if (entries[0].isIntersecting) {
           this.observer.disconnect()
           await this.fetchAndLoad()
-          await this.$nextTick()
         }
       })
       // Observe the component element
