@@ -326,7 +326,8 @@
     "thread_index": "ID du fil de discussion",
     "see_highlights": "Afficher les entités nommées",
     "highlights_caution": "Attention ! Les entités nommées seront surlignées et cacheront le texte. Ceci n'affectera cependant pas les résultats de recherche.",
-    "error_not_found": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre fichier Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible."
+    "error_not_found": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre fichier Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible.",
+    "fetching": "Chargement de la prévisualisation..."
   },
   "indexing": {
     "yes": "Oui",

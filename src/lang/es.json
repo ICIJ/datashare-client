@@ -325,7 +325,8 @@
     "tiff_limitations": "La vista previa del navegador de este archivo TIFF puede no mostrar todas las imágenes. Le sugerimos que lo descargue en su computadora para ver todos los contenidos.",
     "thread_index": "Índice de hilo",
     "see_highlights": "Mostrat entidades con nombre",
-    "highlights_caution": "¡Advertencia! Las entidades con nombre se resaltarán y pueden reemplazar el texto debajo. Esto no afecta los resultados de su búsqueda"
+    "highlights_caution": "¡Advertencia! Las entidades con nombre se resaltarán y pueden reemplazar el texto debajo. Esto no afecta los resultados de su búsqueda",
+    "fetching": "Fetching preview..."
   },
   "indexing": {
     "yes": "Sí",
