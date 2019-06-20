@@ -49,8 +49,8 @@ describe('Indexing.vue', () => {
       { name: 'foo.baz@456', progress: 0.2, state: 'RUNNING' }])
 
     expect(wrapper.findAll('li.indexing__tasks').length).toEqual(2)
-    expect(wrapper.findAll('li.indexing__tasks').at(0).text()).toContain('bar (123)')
-    expect(wrapper.findAll('li.indexing__tasks').at(1).text()).toContain('baz (456)')
+    expect(wrapper.findAll('li.indexing__tasks').at(0).text()).toContain('bar 123')
+    expect(wrapper.findAll('li.indexing__tasks').at(1).text()).toContain('baz 456')
   })
 
   it('should display the extract and the find named entities buttons', () => {

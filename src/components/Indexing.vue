@@ -39,10 +39,12 @@
         <ul class="list-group list-group-flush" v-if="tasks.length">
           <li v-for="task in tasks" :key="task.name" class="indexing__tasks list-group-item d-flex">
             <div class="col">
-              {{ taskLabel(task.name) }}
-              <span class="badge badge-pill small float-right">
+              <div class="d-flex align-items-end mb-1">
+                <span v-html="taskLabel(task.name)" class="w-100"></span>
+                <span class="badge small mr-auto">
                 {{ task.state }}
-              </span>
+                </span>
+              </div>
               <div class="indexing__tasks__progress progress">
                 <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar"
                      :style="'width: ' + getProgress(task.progress, task.state) + '%'" :aria-valuenow="getProgress(task.progress, task.state)"
@@ -144,7 +146,7 @@ export default {
     },
     taskLabel (name) {
       let nameAndId = last(name.split('.')).split('@')
-      return nameAndId[0] + ' (' + nameAndId[1] + ')'
+      return nameAndId[0] + ' <span class="badge badge-light text-muted">' + nameAndId[1] + '</span>'
     },
     taskStateToClass (state) {
       switch (state) {
