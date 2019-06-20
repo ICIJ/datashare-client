@@ -33,7 +33,11 @@
 </template>
 
 <script>
+import { getCookie } from 'tiny-cookie'
+import kebabCase from 'lodash/kebabCase'
+import startCase from 'lodash/startCase'
 import range from 'lodash/range'
+
 import fetchPonyfill from 'fetch-ponyfill'
 import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
 
@@ -56,7 +60,7 @@ export default {
   },
   async mounted () {
     this.$Progress.start()
-    const response = await fetch(this.metaUrl)
+    const response = await fetch(this.metaUrl, this.metaOptions)
     this.meta = await response.json()
     this.isReady = true
     this.$Progress.finish()
@@ -67,6 +71,23 @@ export default {
     },
     metaUrl () {
       return `${this.$config.get('document-thumbnail.host')}/api/v1/thumbnail/${this.document.index}/${this.document.id}.json?routing=${this.document.routing}`
+    },
+    metaOptions () {
+      return {
+        method: 'GET',
+        cache: 'default',
+        headers: {
+          [this.sessionIdHeaderName]: this.sessionIdHeaderValue
+        }
+      }
+    },
+    sessionIdHeaderValue () {
+      return getCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    },
+    sessionIdHeaderName () {
+      let dsCookieName = kebabCase(process.env.VUE_APP_DS_COOKIE_NAME)
+      dsCookieName = dsCookieName.split('-').map(startCase).join('-')
+      return `x-${dsCookieName}`
     }
   }
 }
