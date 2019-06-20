@@ -1,6 +1,9 @@
 <template>
   <div v-if="isActivated" class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop }">
     <img :src="thumbnailSrc" :alt="thumbnailAlt" class="document-thumbnail__image" />
+    <span class="document-thumbnail__spinner" v-if="!loaded && !erroed">
+      <fa icon="sync" spin />
+    </span>
   </div>
 </template>
 
@@ -80,6 +83,7 @@ export default {
           [this.sessionIdHeaderName]: this.sessionIdHeaderValue
         }
       })
+      if(!response.ok) throw Error('Unable to fetch the thumbnail')
       const buffer = await response.arrayBuffer()
       const base64Flag = 'data:image/jpeg;base64,'
       const imageStr = this.arrayBufferToBase64(buffer)
@@ -119,7 +123,7 @@ export default {
 <style lang="scss">
   .document-thumbnail {
     min-width: 80px;
-    min-height: 2rem;
+    min-height: 3rem;
     position: relative;
     border: 1px solid $border-color;
     border-radius: $gray-200;
@@ -149,6 +153,15 @@ export default {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
+    }
+
+    &__spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.5rem;
+      color: rgba(#000, .1);
     }
   }
 </style>
