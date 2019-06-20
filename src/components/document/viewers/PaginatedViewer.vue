@@ -24,7 +24,7 @@
       </div>
     </div>
     <div class="paginated-viewer__preview w-100 p-3 text-center">
-      <document-thumbnail :document="document" size="1200" :page="active" class="w-auto d-inline-block" />
+      <document-thumbnail :document="document" size="1200" :page="active" :key="active" class="w-auto d-inline-block" />
     </div>
   </div>
   <div class="p-3" v-else>
