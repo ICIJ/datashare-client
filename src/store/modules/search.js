@@ -1,7 +1,7 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
-import { FacetText, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation } from '@/store/facetsStore'
+import { FacetText, FacetYesNo, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation } from '@/store/facetsStore'
 import DatashareClient from '@/api/DatashareClient'
 import lucene from 'lucene'
 import castArray from 'lodash/castArray'
@@ -28,6 +28,7 @@ export function initialState () {
     size: 25,
     globalSearch: true,
     facets: [
+      new FacetYesNo('starred', '_id', false),
       new FacetText('content-type', 'contentType', true, item => getDocumentTypeLabel(item.key)),
       new FacetText('language', 'language', false, item => `facet.lang.${item.key}`),
       new FacetNamedEntity('named-entity-person', 'byMentions', true, namedEntityCategoryTranslation['named-entity-person']),
@@ -189,7 +190,6 @@ export const mutations = {
     }
   },
   addFacetValues (state, { facet, values }) {
-    // Look for existing facet for this name
     const existingFacet = find(state.facets, { name: facet.name })
     if (existingFacet) {
       existingFacet.values = values
@@ -198,7 +198,6 @@ export const mutations = {
     }
   },
   removeFacetValue (state, facet) {
-    // Look for facet for this name
     const existingFacet = find(state.facets, { name: facet.name })
     if (existingFacet) {
       // Filter the values for this name to remove the given value
@@ -206,14 +205,12 @@ export const mutations = {
     }
   },
   excludeFacet (state, name) {
-    // Look for facet for this name
     const existingFacet = find(state.facets, { name })
     if (existingFacet) {
       existingFacet.reverse = true
     }
   },
   toggleFacet (state, name) {
-    // Look for facet for this name
     const existingFacet = find(state.facets, { name })
     if (existingFacet) {
       existingFacet.reverse = !existingFacet.reverse
@@ -233,6 +230,12 @@ export const mutations = {
   },
   pushFromStarredDocuments (state, documentId) {
     state.starredDocuments.push(documentId)
+  },
+  setStarredDocuments (state, { facet, starredDocuments }) {
+    const existingFacet = find(state.facets, { name: facet.name })
+    if (existingFacet) {
+      existingFacet.starredDocuments = starredDocuments
+    }
   }
 }
 

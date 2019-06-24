@@ -38,7 +38,9 @@
             <span v-html="getItemLabel({ key: 'all', key_as_string: 'all', doc_count: calculatedCount })"></span>
           </slot>
         </b-form-checkbox>
-        <b-form-checkbox-group stacked v-model="selected" :options="options" class="list-group-item facet__items__item p-0 border-0" @input="changeSelectedValues" />
+        <slot name="item">
+          <b-form-checkbox-group stacked v-model="selected" :options="options" class="list-group-item facet__items__item p-0 border-0" @input="changeSelectedValues" />
+        </slot>
       </slot>
       <div class="list-group-item facet__items__display border-top-0" @click="asyncFacetSearch" v-if="shouldDisplayShowMoreAction()">
         <span>{{ $t('facet.showMore') }}</span>

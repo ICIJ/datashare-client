@@ -74,6 +74,22 @@ class FacetText {
   }
 }
 
+class FacetYesNo extends FacetText {
+  constructor (name, key, isSearchable, labelFun) {
+    super(name, key, isSearchable, labelFun)
+    this.component = 'FacetYesNo'
+    this.starredDocuments = []
+  }
+
+  addChildIncludeFilter (body, param) {
+    if (param.values[0]) {
+      return body.addFilter('terms', this.key, this.starredDocuments)
+    } else {
+      return body.notFilter('terms', this.key, this.starredDocuments)
+    }
+  }
+}
+
 class FacetType extends FacetText {
   constructor (name, key, isSearchable, labelFun) {
     super(name, key, isSearchable, labelFun)
@@ -226,4 +242,4 @@ class FacetNamedEntity extends FacetType {
   }
 }
 
-export { FacetText, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation }
+export { FacetText, FacetYesNo, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation }

@@ -49,10 +49,6 @@ describe('Search facets', () => {
       expect(store.getters['search/getFacet']({ name: 'yo-type' })).toBeUndefined()
     })
 
-    it('should have a facet with a body method', () => {
-      expect(store.state.search.facets[0]).toHaveProperty('body')
-    })
-
     it('should add a facet', () => {
       const length = store.state.search.facets.length
       store.commit('search/addFacet', new FacetText('test', 'key', true, null))
@@ -281,6 +277,17 @@ describe('Search facets', () => {
       const response = await store.dispatch('search/queryFacet', { name: 'creation-date', options: { size: 8 } })
 
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets).toHaveLength(1)
+    })
+  })
+
+  describe('Starred facet', () => {
+    it('should define a `starred` facet correctly (name, key, type and starredDocuments)', () => {
+      const facet = find(store.state.search.facets, { name: 'starred' })
+
+      expect(typeof facet).toBe('object')
+      expect(facet.key).toEqual('_id')
+      expect(facet.constructor.name).toEqual('FacetYesNo')
+      expect(facet.starredDocuments).toEqual([])
     })
   })
 })
