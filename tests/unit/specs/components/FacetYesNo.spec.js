@@ -58,19 +58,19 @@ describe('FacetYesNo.vue', () => {
     await letData(es).have(new IndexedDocument('doc')).commit()
 
     expect(wrapper.vm.selected).toEqual([])
-    expect(wrapper.vm.root.isAllSelected).toEqual(true)
+    expect(wrapper.vm.root.isAllSelected).toBeTruthy()
 
     wrapper.findAll('.facet__items__item .custom-control-input').at(0).trigger('click')
     expect(wrapper.vm.selected).toEqual([true])
-    expect(wrapper.vm.root.isAllSelected).toEqual(false)
+    expect(wrapper.vm.root.isAllSelected).toBeFalsy()
 
     wrapper.findAll('.facet__items__item .custom-control-input').at(1).trigger('click')
     expect(wrapper.vm.selected).toEqual([false])
-    expect(wrapper.vm.root.isAllSelected).toEqual(false)
+    expect(wrapper.vm.root.isAllSelected).toBeFalsy()
 
     wrapper.findAll('.facet__items__item .custom-control-input').at(1).trigger('click')
     expect(wrapper.vm.selected).toEqual([])
-    expect(wrapper.vm.root.isAllSelected).toEqual(true)
+    expect(wrapper.vm.root.isAllSelected).toBeTruthy()
   })
 
   it('should select the starred documents', async () => {
