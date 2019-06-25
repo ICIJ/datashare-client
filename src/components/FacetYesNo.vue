@@ -28,10 +28,10 @@ export default {
     options () {
       return [{
         value: true,
-        html: `${capitalize(this.facet.name)}`
+        html: `<span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">${capitalize(this.labelToHuman(this.facet.name))}</span>`
       }, {
         value: false,
-        html: `Not ${this.facet.name}`
+        html: `<span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">${capitalize(this.labelToHuman('facet.not'))} ${this.labelToHuman(this.facet.name)}</span>`
       }]
     }
   },
