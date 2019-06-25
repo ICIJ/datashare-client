@@ -33,7 +33,7 @@
         <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
       </div>
       <slot v-else-if="items.length > 0" name="items" :items="items" :total-count="totalCount" :facetQuery="facetQuery">
-        <b-form-checkbox v-model="isAllSelected" @change="resetFacetValues" class="facet__items__all mb-0">
+        <b-form-checkbox v-model="isAllSelected" @change.native="resetFacetValues" class="facet__items__all mb-0">
           <slot name="all">
             <span v-html="getItemLabel({ key: 'all', key_as_string: 'all', doc_count: calculatedCount })"></span>
           </slot>
