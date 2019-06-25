@@ -78,4 +78,10 @@ describe('FacetYesNo.vue', () => {
 
     expect(wrapper.vm.starredDocuments).toEqual(['doc_01', 'doc_02'])
   })
+
+  it('should hide the "Show more" button', async () => {
+    await letData(es).have(new IndexedDocument('doc')).commit()
+
+    expect(wrapper.findAll('.facet__items__display')).toHaveLength(0)
+  })
 })
