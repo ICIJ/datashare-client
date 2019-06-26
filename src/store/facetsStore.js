@@ -88,6 +88,10 @@ class FacetYesNo extends FacetText {
       return body.notFilter('terms', this.key, this.starredDocuments)
     }
   }
+
+  body (body, options) {
+    return body.query('match', 'type', 'Document').agg('terms', this.key, this.key, options)
+  }
 }
 
 class FacetType extends FacetText {
