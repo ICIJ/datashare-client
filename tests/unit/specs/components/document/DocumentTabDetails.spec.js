@@ -43,24 +43,33 @@ describe('DocumentTabDetails.vue', () => {
   })
 
   it('should display the document type', async () => {
-    const id = 'doc_01.txt'
+    const id = 'doc_01'
     await letData(es).have(new IndexedDocument(id).withContentType('application/pdf')).commit()
     await store.dispatch('document/get', { id })
     const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, propsData: { document: store.state.document.doc } })
 
-    expect(wrapper.findAll('.row div').at(11).text()).toEqual('Portable Document Format (PDF)')
+    expect(wrapper.find('.document__content__content-type').text()).toEqual('Portable Document Format (PDF)')
   })
 
   it('should display a child document', async () => {
-    const document = 'document.txt'
-    const parentDocument = 'parentDocument.txt'
+    const document = 'document'
+    const parentDocument = 'parentDocument'
     await letData(es).have(new IndexedDocument(parentDocument)).commit()
     await letData(es).have(new IndexedDocument(document).withParent(parentDocument)).commit()
     await store.dispatch('document/get', { id: document, routing: parentDocument }).then(() => store.dispatch('document/getParent'))
     const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, router, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument } })
 
-    expect(wrapper.findAll('.row div').at(1).text()).toEqual(document)
-    expect(wrapper.findAll('.row div').at(15).text()).toEqual('1st')
-    expect(wrapper.findAll('.row div').at(17).text()).toEqual(parentDocument)
+    expect(wrapper.find('.document__content__basename').text()).toEqual(document)
+    expect(wrapper.find('.document__content__tree-level').text()).toEqual('1st')
+    expect(wrapper.find('.document__content__parent').text()).toEqual(parentDocument)
+  })
+
+  it('should display a message if the creation date is missing', async () => {
+    const id = 'doc_02'
+    await letData(es).have(new IndexedDocument(id)).commit()
+    await store.dispatch('document/get', { id })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, propsData: { document: store.state.document.doc } })
+
+    expect(wrapper.find('.document__content__creation-date').text()).toEqual('Missing date')
   })
 })

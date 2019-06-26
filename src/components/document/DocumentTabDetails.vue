@@ -7,10 +7,8 @@
       <div class="col-sm-9 document__content__path">{{ documentPath }}</div>
       <div class="col-sm-3 font-weight-bold">{{ $t('document.id') }}</div>
       <div class="col-sm-9 document__content__id">{{ document.id }}</div>
-      <template v-if="document.source.metadata.tika_metadata_creation_date">
-        <div class="col-sm-3 font-weight-bold">{{ $t('document.creation_date') }}</div>
-        <div class="col-sm-9 document__content__creation-date">{{ document.creationDateHuman }}</div>
-      </template>
+      <div class="col-sm-3 font-weight-bold">{{ $t('document.creation_date') }}</div>
+      <div class="col-sm-9 document__content__creation-date">{{ document.source.metadata.tika_metadata_creation_date ? document.creationDateHuman : $t('facet.missing') }}</div>
       <template v-if="document.source.contentLength !== -1">
         <div class="col-sm-3 font-weight-bold">{{ $t('document.size') }}</div>
         <div class="col-sm-9 document__content__size">{{ document.humanSize }}</div>
@@ -21,7 +19,7 @@
       </template>
       <template v-if="document.source.contentType !== 'unknown'">
         <div class="col-sm-3 font-weight-bold">{{ $t('document.content_type') }}</div>
-        <div class="col-sm-9">{{ getDocumentTypeLabel(document.source.contentType) }}</div>
+        <div class="col-sm-9 document__content__content-type">{{ getDocumentTypeLabel(document.source.contentType) }}</div>
       </template>
       <template v-if="document.source.contentEncoding !== 'unknown'">
         <div class="col-sm-3 font-weight-bold">{{ $t('document.content_encoding') }}</div>
