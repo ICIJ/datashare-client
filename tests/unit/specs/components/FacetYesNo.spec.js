@@ -33,6 +33,7 @@ describe('FacetYesNo.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
+  jest.setTimeout(1e4)
 
   beforeEach(() => {
     wrapper = mount(FacetYesNo, {
@@ -48,7 +49,7 @@ describe('FacetYesNo.vue', () => {
   afterAll(() => jest.unmock('@/api/DatashareClient'))
 
   it('should display 2 items for the starred facet', async () => {
-    await letData(es).have(new IndexedDocument('doc')).commit()
+    await letData(es).have(new IndexedDocument('doc_01')).commit()
 
     expect(wrapper.findAll('.facet__items__item .custom-control-label')).toHaveLength(2)
     expect(wrapper.findAll('.facet__items__item .custom-control-label').at(0).text()).toEqual('Starred')
@@ -56,7 +57,7 @@ describe('FacetYesNo.vue', () => {
   })
 
   it('should change the selected value', async () => {
-    await letData(es).have(new IndexedDocument('doc')).commit()
+    await letData(es).have(new IndexedDocument('doc_02')).commit()
 
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
@@ -75,13 +76,13 @@ describe('FacetYesNo.vue', () => {
   })
 
   it('should select the starred documents', async () => {
-    await letData(es).have(new IndexedDocument('doc')).commit()
+    await letData(es).have(new IndexedDocument('doc_03')).commit()
 
     expect(wrapper.vm.starredDocuments).toEqual(['doc_01', 'doc_02'])
   })
 
   it('should hide the "Show more" button', async () => {
-    await letData(es).have(new IndexedDocument('doc')).commit()
+    await letData(es).have(new IndexedDocument('doc_04')).commit()
 
     expect(wrapper.findAll('.facet__items__display')).toHaveLength(0)
   })
