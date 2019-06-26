@@ -17,16 +17,16 @@
       </span>
     </div>
     <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
-      <div slot="modal-title">
+      <template #modal-title>
         <fa icon="rocket" class="mr-2" />
         {{ $t('indexing.extract_text') }}
-      </div>
+      </template>
       <extracting-form id="extracting-form" :finally="closeExtractingForm" />
     </b-modal>
     <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md">
-      <div slot="modal-title">
+      <template #modal-title>
         {{ $t('indexing.find_named_entities') }}
-      </div>
+      </template>
       <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm" />
     </b-modal>
     <div class="mt-4">

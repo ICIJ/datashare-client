@@ -55,7 +55,7 @@
       </div>
       <div class="app__footer__addon app__footer__addon--lang">
         <b-dropdown variant="link" size="sm" no-caret>
-          <template slot="button-content">
+          <template #button-content>
             <fa icon="globe" class="mr-1" />
             {{ currentLanguage.label }}
           </template>

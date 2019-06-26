@@ -1,12 +1,12 @@
 <template>
   <facet v-bind="$props" class="facet--named-entity" ref="facet">
-    <template slot="title">
+    <template #title>
       <span class="col-2 facet__items__item__icon pl-2 pr-0" :class="getCategoryClass(facet.category, 'text-')">
         <fa :icon="getCategoryIcon(facet.category)" />
       </span>
       {{ $t('facet.' + facet.name) }}
     </template>
-    <template slot="items" slot-scope="{ items }">
+    <template #items="{ items }">
       <b-form-checkbox v-model="isAllSelected" @click.native="resetNamedEntityValues" class="facet__items__all">
         <div class="py-1 facet__items__item__body">
            <div class="facet__items__item__body__key facet__items__item__body__key--all text-uppercase d-inline badge badge-light">
@@ -27,7 +27,7 @@
         </b-form-checkbox>
         <div class="facet__items__item__menu" v-if="!isServer">
           <b-dropdown class="h-100" no-caret dropright offset="25">
-            <template slot="button-content" class="px-1">
+            <template #button-content class="px-1">
               <fa icon="ellipsis-v" />
             </template>
             <b-dropdown-item @click="deleteNamedEntitiesByMentionNorm(item.key)">

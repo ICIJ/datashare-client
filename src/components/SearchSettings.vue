@@ -7,7 +7,7 @@
       </span>
     </button>
     <b-popover target="toggleSettings" triggers="click" :placement="placement" :container="container">
-      <template slot="title">
+      <template #title>
         <fa icon="cog" />
         {{ $t('search.settings.title') }}
       </template>

@@ -20,7 +20,9 @@
                  v-bind="{ facet }"></component>
     </div>
     <infinite-loading @infinite="next" :identifier="infiniteId" v-if="infiniteScroll" spinner="bubbles">
-      <span slot="no-more" class="text-muted"></span>
+      <template #no-more>
+        <span class="text-muted"></span>
+      </template>
     </infinite-loading>
     <div v-show="!items.length" class="text-muted text-center p-2 mt-4">
       {{ $t('facet.noResults') }}

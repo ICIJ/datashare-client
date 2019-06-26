@@ -1,6 +1,6 @@
 <template>
   <facet v-bind="propsWithout('hide-show-more')" hide-show-more ref="facet">
-    <template slot="item">
+    <template #item>
       <b-form-checkbox-group stacked v-model="selected" :options="options" class="list-group-item facet__items__item p-0 border-0" @change="changeYesNoValue" />
     </template>
   </facet>

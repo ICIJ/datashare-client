@@ -1,6 +1,6 @@
 <template>
   <facet v-bind="propsWithout('hide-show-more')" hide-show-more ref="facet">
-    <template slot="items" slot-scope="{ items }">
+    <template #items="{ items }">
       <facet-path-tree :tree-data="displayFirstLevel(items)" :facet="facet"></facet-path-tree>
     </template>
   </facet>

@@ -1,6 +1,6 @@
 <template>
   <facet v-bind="$props" ref="facet">
-    <template slot="all">
+    <template #all>
       <span v-html="getItemLabel({ key: 'all', key_as_string: 'all', doc_count: totalCount })"></span>
     </template>
   </facet>
