@@ -53,9 +53,9 @@ describe('FacetYesNo.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item .custom-control-label')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item .custom-control-label').at(0).text()).toEqual('Starred')
-    expect(wrapper.findAll('.facet__items__item .custom-control-label').at(1).text()).toEqual('Not starred')
+    expect(wrapper.findAll('.facet__items__item .custom-control-label .facet__items__item__label')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item .custom-control-label .facet__items__item__label').at(0).text()).toEqual('Starred')
+    expect(wrapper.findAll('.facet__items__item .custom-control-label .facet__items__item__label').at(1).text()).toEqual('Not starred')
   })
 
   it('should change the selected value', async () => {
