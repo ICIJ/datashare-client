@@ -86,6 +86,27 @@ describe('DocumentTabExtractedText.vue', () => {
 
       expect(wrapper.find('.document__extracted-text__content').html()).toEqual('<div class="document__extracted-text__content p-3">this is a content with some images and links</div>')
     })
+
+    it('should not sanitize the <mark /> tags in the extracted text', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('this is a <mark>document</mark>'))
+        .commit()
+      await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
+      const wrapper = shallowMount(DocumentTabExtractedText, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc,
+          namedEntities: store.state.document.namedEntities
+        }
+      })
+
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.find('.document__extracted-text__content').html()).toEqual('<div class="document__extracted-text__content p-3">this is a <mark>document</mark></div>')
+    })
   })
 
   describe('the "Show named entities" toggle', () => {
