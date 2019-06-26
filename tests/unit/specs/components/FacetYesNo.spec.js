@@ -92,4 +92,16 @@ describe('FacetYesNo.vue', () => {
 
     expect(wrapper.findAll('.facet__items__display')).toHaveLength(0)
   })
+
+  it('should display the results count', async () => {
+    await letData(es).have(new IndexedDocument('doc_05')).commit()
+    await letData(es).have(new IndexedDocument('doc_06')).commit()
+    await letData(es).have(new IndexedDocument('doc_07')).commit()
+
+    await wrapper.vm.root.aggregate()
+
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__count')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__count').at(0).text()).toEqual('2')
+    expect(wrapper.findAll('.facet__items__item .facet__items__item__count').at(1).text()).toEqual('1')
+  })
 })

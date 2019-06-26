@@ -28,10 +28,24 @@ export default {
     options () {
       return [{
         value: true,
-        html: `<span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">${capitalize(this.labelToHuman(this.facet.name))}</span>`
+        html: `
+          <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
+            ${capitalize(this.labelToHuman(this.facet.name))}
+          </span>
+          <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
+            ${this.starredDocuments.length}
+          </span>
+        `
       }, {
         value: false,
-        html: `<span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">${capitalize(this.labelToHuman('facet.not'))} ${this.labelToHuman(this.facet.name)}</span>`
+        html: `
+          <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
+            ${capitalize(this.labelToHuman('facet.not'))} ${this.labelToHuman(this.facet.name)}
+          </span>
+          <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
+            ${this.root.calculatedCount - this.starredDocuments.length}
+          </span>
+        `
       }]
     }
   },
