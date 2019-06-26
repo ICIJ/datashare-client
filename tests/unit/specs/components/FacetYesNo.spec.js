@@ -42,6 +42,7 @@ describe('FacetYesNo.vue', () => {
       store,
       propsData: { facet: find(store.state.search.facets, { name: 'starred' }) }
     })
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })
 
   afterAll(() => jest.unmock('@/api/DatashareClient'))
