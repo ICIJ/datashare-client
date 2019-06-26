@@ -51,6 +51,8 @@ describe('FacetYesNo.vue', () => {
   it('should display 2 items for the starred facet', async () => {
     await letData(es).have(new IndexedDocument('doc_01')).commit()
 
+    await wrapper.vm.root.aggregate()
+
     expect(wrapper.findAll('.facet__items__item .custom-control-label')).toHaveLength(2)
     expect(wrapper.findAll('.facet__items__item .custom-control-label').at(0).text()).toEqual('Starred')
     expect(wrapper.findAll('.facet__items__item .custom-control-label').at(1).text()).toEqual('Not starred')
@@ -58,6 +60,8 @@ describe('FacetYesNo.vue', () => {
 
   it('should change the selected value', async () => {
     await letData(es).have(new IndexedDocument('doc_02')).commit()
+
+    await wrapper.vm.root.aggregate()
 
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
@@ -83,6 +87,8 @@ describe('FacetYesNo.vue', () => {
 
   it('should hide the "Show more" button', async () => {
     await letData(es).have(new IndexedDocument('doc_04')).commit()
+
+    await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__display')).toHaveLength(0)
   })
