@@ -230,12 +230,6 @@ export const mutations = {
   },
   pushFromStarredDocuments (state, documentId) {
     state.starredDocuments.push(documentId)
-  },
-  setStarredDocuments (state, { facet, starredDocuments }) {
-    const existingFacet = find(state.facets, { name: facet.name })
-    if (existingFacet) {
-      existingFacet.starredDocuments = starredDocuments
-    }
   }
 }
 

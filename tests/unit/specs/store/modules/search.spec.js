@@ -564,10 +564,5 @@ describe('Search store', () => {
 
       expect(store.state.search.starredDocuments).toEqual([])
     })
-
-    it('should setStarredDocuments for facet', () => {
-      store.commit('search/setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: ['doc_01', 'doc_02'] })
-      expect(store.getters['search/findFacet']('starred').starredDocuments).toEqual(['doc_01', 'doc_02'])
-    })
   })
 })
