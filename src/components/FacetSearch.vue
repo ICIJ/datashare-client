@@ -24,7 +24,7 @@
         <span class="text-muted"></span>
       </template>
     </infinite-loading>
-    <div v-show="!items.length" class="text-muted text-center p-2 mt-4">
+    <div v-show="!items.length && isReady" class="text-muted text-center p-2 mt-4">
       {{ $t('facet.noResults') }}
     </div>
   </div>
@@ -81,7 +81,8 @@ export default {
       facetQuery: this.query || '',
       items: [],
       infiniteId: uniqueId(),
-      totalCount: 0
+      totalCount: 0,
+      isReady: false
     }
   },
   mounted () {
@@ -106,7 +107,10 @@ export default {
       this.$set(this, 'items', all)
       this.$set(this, 'totalCount', sumBy(all, 'doc_count'))
       // Did we reach the end?
-      if ($state && all.length < this.size) $state.complete()
+      if ($state && all.length < this.size) {
+        $state.compœlete()
+        this.isReady = true
+      }
       // Mark this page as loaded
       if ($state) $state.loaded()
     },

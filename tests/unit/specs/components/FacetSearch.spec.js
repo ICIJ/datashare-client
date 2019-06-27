@@ -3,7 +3,6 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
-import find from 'lodash/find'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { EventBus } from '@/utils/event-bus'
@@ -11,12 +10,14 @@ import FacetSearch from '@/components/FacetSearch'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
+import find from 'lodash/find'
 
 jest.mock('@/api/DatashareClient', () => {
-  return jest.fn().mockImplementation(() => {
-    return { deleteNamedEntitiesByMentionNorm: jest.fn().mockImplementation(() => {
-      return Promise.resolve()
-    }) }
+  const { jsonOk } = require('tests/unit/tests_utils')
+  return jest.fn(() => {
+    return {
+      deleteNamedEntitiesByMentionNorm: jest.fn().mockReturnValue(jsonOk())
+    }
   })
 })
 
@@ -38,6 +39,8 @@ describe('FacetSearch.vue', () => {
     const facet = find(store.state.search.facets, { name: 'content-type' })
     wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet } })
   })
+
+  afterAll(() => jest.unmock('@/api/DatashareClient'))
 
   describe('pagination', () => {
     it('should display 2 items', async () => {
@@ -224,6 +227,23 @@ describe('FacetSearch.vue', () => {
 
       expect(spySearch).toBeCalled()
       expect(spySearch).toBeCalledTimes(1)
+    })
+  })
+
+  describe('spinner', () => {
+    it('should display a "No results" message if so"', async () => {
+      await letData(es).have(new IndexedDocument('doc_01')
+        .withContentType('type_01')).commit()
+      await letData(es).have(new IndexedDocument('doc_02')
+        .withContentType('type_02')).commit()
+      await wrapper.vm.startOver()
+
+      expect(wrapper.findAll('.facet-search > div.text-muted').isVisible()).toBeFalsy()
+
+      wrapper.setData({ facetQuery: 'not_existing_type' })
+      await wrapper.vm.search({ complete: jest.fn, loaded: jest.fn })
+
+      expect(wrapper.findAll('.facet-search > div.text-muted').isVisible()).toBeTruthy()
     })
   })
 
