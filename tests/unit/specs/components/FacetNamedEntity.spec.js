@@ -232,7 +232,7 @@ describe('FacetNamedEntity.vue', () => {
       expect(mockCallback.mock.calls).toHaveLength(1)
     })
 
-    it('should reload the facet after a named entity deletion', async () => {
+    it('should call the aggregate function after a named entity deletion', async () => {
       await letData(es).have(new IndexedDocument('doc_01')
         .withNer('person_01')).commit()
 

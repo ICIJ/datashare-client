@@ -11,7 +11,15 @@ import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import find from 'lodash/find'
-import map from 'lodash/map'
+
+jest.mock('@/api/DatashareClient', () => {
+  const { jsonOk } = require('tests/unit/tests_utils')
+  return jest.fn(() => {
+    return {
+      getStarredDocuments: jest.fn().mockReturnValue(jsonOk(['doc_01', 'doc_02']))
+    }
+  })
+})
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -38,11 +46,7 @@ describe('FacetYesNo.vue', () => {
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })
 
-  afterEach(() => {
-    map(store.state.search.starredDocuments, documentId => {
-      store.commit('search/removeFromStarredDocuments', documentId)
-    })
-  })
+  afterAll(() => jest.unmock('@/api/DatashareClient'))
 
   it('should display 2 items for the starred facet', async () => {
     await letData(es).have(new IndexedDocument('doc_01')).commit()
@@ -75,6 +79,12 @@ describe('FacetYesNo.vue', () => {
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
   })
 
+  it('should select the starred documents', async () => {
+    await letData(es).have(new IndexedDocument('doc_03')).commit()
+
+    expect(wrapper.vm.starredDocuments).toEqual(['doc_01', 'doc_02'])
+  })
+
   it('should hide the "Show more" button', async () => {
     await letData(es).have(new IndexedDocument('doc_04')).commit()
 
@@ -87,28 +97,11 @@ describe('FacetYesNo.vue', () => {
     await letData(es).have(new IndexedDocument('doc_05')).commit()
     await letData(es).have(new IndexedDocument('doc_06')).commit()
     await letData(es).have(new IndexedDocument('doc_07')).commit()
-    store.commit('search/pushFromStarredDocuments', 'doc_05')
-    store.commit('search/pushFromStarredDocuments', 'doc_06')
+
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item .facet__items__item__count')).toHaveLength(2)
     expect(wrapper.findAll('.facet__items__item .facet__items__item__count').at(0).text()).toEqual('2')
     expect(wrapper.findAll('.facet__items__item .facet__items__item__count').at(1).text()).toEqual('1')
-  })
-
-  it('should reload the facet after a newly starred document', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')).commit()
-    await letData(es).have(new IndexedDocument('doc_03')).commit()
-    await letData(es).have(new IndexedDocument('doc_04')).commit()
-    store.commit('search/pushFromStarredDocuments', 'doc_01')
-    store.commit('search/pushFromStarredDocuments', 'doc_02')
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__count').at(0).text()).toEqual('2')
-
-    store.commit('search/pushFromStarredDocuments', 'doc_04')
-
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__count').at(0).text()).toEqual('3')
   })
 })
