@@ -108,7 +108,7 @@ export default {
       this.$set(this, 'totalCount', sumBy(all, 'doc_count'))
       // Did we reach the end?
       if ($state && all.length < this.size) {
-        $state.compœlete()
+        $state.complete()
         this.isReady = true
       }
       // Mark this page as loaded
