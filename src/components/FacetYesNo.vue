@@ -57,6 +57,9 @@ export default {
   beforeUpdate () {
     this.$store.commit('search/setStarredDocuments', { facet: this.facet, starredDocuments: this.starredDocuments })
   },
+  created () {
+    return this.$store.dispatch('search/getStarredDocuments')
+  },
   methods: {
     changeYesNoValue (item) {
       switch (item.length) {

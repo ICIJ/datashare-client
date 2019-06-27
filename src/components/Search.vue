@@ -7,7 +7,7 @@
           <div v-if="!!error" class="py-5 text-center">
             {{ errorMessage }}
           </div>
-          <search-results v-else-if="isReady" :response="response" :query.sync="query" :starred-documents="starredDocuments" />
+          <search-results v-else-if="isReady" :response="response" :query.sync="query" />
           <div v-else>
             <content-placeholder />
             <content-placeholder />
@@ -54,7 +54,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['query', 'response', 'starredDocuments', 'isReady', 'showFilters', 'error']),
+    ...mapState('search', ['query', 'response', 'isReady', 'showFilters', 'error']),
     showDocument () {
       return ['document', 'email'].indexOf(this.$route.name) > -1
     },

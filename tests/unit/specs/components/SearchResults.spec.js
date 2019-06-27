@@ -206,7 +206,7 @@ describe('SearchResults.vue', () => {
       await letData(es).have(new IndexedDocument('doc_02')).commit()
       wrapper = await createView()
 
-      wrapper.setProps({ starredDocuments: ['doc_01'] })
+      store.commit('search/starredDocuments', ['doc_01'])
 
       expect(wrapper.findAll('.search-results__items__item__star')).toHaveLength(2)
       expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('fa,star')

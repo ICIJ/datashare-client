@@ -164,10 +164,12 @@ export const mutations = {
     state.index = index
     state.response = Response.none()
   },
-  buildResponse (state, { raw, starredDocuments }) {
+  starredDocuments (state, starredDocuments) {
+    state.starredDocuments = starredDocuments
+  },
+  buildResponse (state, raw) {
     state.isReady = true
     state.response = new Response(raw)
-    state.starredDocuments = starredDocuments
   },
   setFacets (state, facets) {
     state.facets = facets
@@ -255,7 +257,8 @@ export const actions = {
     try {
       const raw = await esClient.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort)
       const starredDocuments = await datashare.getStarredDocuments(state.index).then(r => r.clone().json())
-      commit('buildResponse', { raw, starredDocuments })
+      commit('starredDocuments', starredDocuments)
+      commit('buildResponse', raw)
       return raw
     } catch (error) {
       commit('isReady', true)
@@ -353,6 +356,10 @@ export const actions = {
     } else {
       datashare.starDocument(state.index, documentId).then(commit('pushFromStarredDocuments', documentId))
     }
+  },
+  async getStarredDocuments ({ state, commit }) {
+    const starredDocuments = await datashare.getStarredDocuments(state.index).then(r => r.clone().json())
+    commit('starredDocuments', starredDocuments)
   }
 }
 

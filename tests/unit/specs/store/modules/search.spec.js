@@ -62,13 +62,11 @@ describe('Search store', () => {
 
   it('should build a Response object from raw value', () => {
     store.commit('search/buildResponse', {
-      raw: {
-        hits: {
-          hits: [
-            { _source: { type: 'Document' }, _id: 'foo' },
-            { _source: { type: 'NamedEntity' }, _id: 'bar' }
-          ]
-        }
+      hits: {
+        hits: [
+          { _source: { type: 'Document' }, _id: 'foo' },
+          { _source: { type: 'NamedEntity' }, _id: 'bar' }
+        ]
       }
     })
     expect(store.state.search.response).toBeInstanceOf(Response)
@@ -76,13 +74,11 @@ describe('Search store', () => {
 
   it('should build a correct Response object from raw value', () => {
     store.commit('search/buildResponse', {
-      raw: {
-        hits: {
-          hits: [
-            { _source: { type: 'Document' }, _id: 'foo' },
-            { _source: { type: 'NamedEntity' }, _id: 'bar' }
-          ]
-        }
+      hits: {
+        hits: [
+          { _source: { type: 'Document' }, _id: 'foo' },
+          { _source: { type: 'NamedEntity' }, _id: 'bar' }
+        ]
       }
     })
     expect(store.state.search.response.hits[0]).toBeInstanceOf(Document)

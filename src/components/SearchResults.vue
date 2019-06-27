@@ -44,15 +44,17 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import SearchResultsLink from '@/components/SearchResultsLink'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 
 export default {
   name: 'SearchResults',
-  props: ['response', 'query', 'starredDocuments'],
+  props: ['response', 'query'],
   components: { SearchResultsHeader, SearchResultsLink, ResetFiltersButton },
   computed: {
+    ...mapState('search', ['starredDocuments']),
     showFilters: {
       get () {
         return this.$store.state.search.showFilters
