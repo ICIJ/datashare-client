@@ -27,7 +27,7 @@ export default {
             ${capitalize(this.labelToHuman(this.facet.name))}
           </span>
           <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
-            ${this.starredDocuments.length}
+            ${this.$n(this.starredDocuments.length)}
           </span>
         `
       }, {
@@ -37,7 +37,7 @@ export default {
             ${capitalize(this.labelToHuman('facet.not'))} ${this.labelToHuman(this.facet.name)}
           </span>
           <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
-            ${this.root.calculatedCount - this.starredDocuments.length}
+            ${this.$n(this.root.calculatedCount - this.starredDocuments.length)}
           </span>
         `
       }]
