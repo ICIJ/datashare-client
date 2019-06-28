@@ -78,7 +78,7 @@ export default {
       return this.starredDocuments.indexOf(documentId) >= 0
     },
     toggleStarDocument (documentId) {
-      return this.$store.dispatch('search/toggleStarDocument', documentId)
+      return this.$store.dispatch('search/toggleStarDocument', documentId).then(this.$root.$emit('facet::starred:refresh'))
     }
   }
 }

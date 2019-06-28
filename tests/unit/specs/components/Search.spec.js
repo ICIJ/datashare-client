@@ -9,11 +9,21 @@ const localVue = createLocalVue()
 localVue.use(Murmur)
 
 describe('Search.vue', () => {
-  it('should refresh the view on custom event', () => {
-    const actions = { query: jest.fn() }
+  let wrapper, actions
+
+  beforeEach(() => {
+    actions = { query: jest.fn() }
     const store = new Vuex.Store({ modules: { search: { namespaced: true, actions } } })
-    shallowMount(Search, { localVue, router, store })
+    wrapper = shallowMount(Search, { localVue, router, store })
+  })
+
+  it('should refresh the view on custom event', () => {
     EventBus.$emit('index::delete::all')
-    expect(actions.query).toHaveBeenCalled()
+    expect(actions.query).toHaveBeenCalledTimes(2)
+  })
+
+  it('should execute a new search on event "facet::starred:refresh"', () => {
+    wrapper.vm.$root.$emit('facet::starred:refresh')
+    expect(actions.query).toHaveBeenCalledTimes(2)
   })
 })

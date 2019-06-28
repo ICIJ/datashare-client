@@ -85,6 +85,7 @@ export default {
   },
   mounted () {
     EventBus.$on('index::delete::all', this.search)
+    this.$root.$on('facet::starred:refresh', this.search)
   },
   watch: {
     isReady (isReady) {

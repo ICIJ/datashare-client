@@ -221,6 +221,7 @@ describe('SearchResults.vue', () => {
       expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('far,star')
 
       wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
+      await wrapper.vm.$nextTick()
 
       expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
       expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('fa,star')
@@ -234,10 +235,23 @@ describe('SearchResults.vue', () => {
       expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
       expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('fa,star')
 
-      await wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
+      wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
+      await wrapper.vm.$nextTick()
 
       expect(wrapper.vm.starredDocuments).toEqual([])
       expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('far,star')
+    })
+
+    it('should raise an "facet::starred:refresh" event on click on star', async () => {
+      await letData(es).have(new IndexedDocument('doc_01')).commit()
+      wrapper = await createView()
+      const mockCallback = jest.fn()
+      wrapper.vm.$root.$on('facet::starred:refresh', mockCallback)
+
+      wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
+      await wrapper.vm.$nextTick()
+
+      expect(mockCallback.mock.calls).toHaveLength(1)
     })
   })
 })

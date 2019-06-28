@@ -354,9 +354,15 @@ export const actions = {
   },
   toggleStarDocument ({ state, commit }, documentId) {
     if (state.starredDocuments.indexOf(documentId) >= 0) {
-      datashare.unstarDocument(state.index, documentId).then(commit('removeFromStarredDocuments', documentId))
+      return datashare.unstarDocument(state.index, documentId).then(() => {
+        commit('removeFromStarredDocuments', documentId)
+        commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
+      })
     } else {
-      datashare.starDocument(state.index, documentId).then(commit('pushFromStarredDocuments', documentId))
+      return datashare.starDocument(state.index, documentId).then(() => {
+        commit('pushFromStarredDocuments', documentId)
+        commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
+      })
     }
   },
   getStarredDocuments ({ state, commit }) {

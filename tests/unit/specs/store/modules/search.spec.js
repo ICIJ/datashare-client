@@ -555,16 +555,18 @@ describe('Search store', () => {
 
     it('should toggle a starred documentId, push it if it is not starred', async () => {
       store.state.search.starredDocuments = []
-      await store.dispatch('search/toggleStarDocument', 42)
+      await store.dispatch('search/toggleStarDocument', 45)
 
-      expect(store.state.search.starredDocuments).toEqual([42])
+      expect(store.state.search.starredDocuments).toEqual([45])
+      expect(store.getters['search/findFacet']('starred').starredDocuments).toEqual([45])
     })
 
     it('should toggle a starred documentId, remove it if it is starred', async () => {
-      store.state.search.starredDocuments = [42]
-      await store.dispatch('search/toggleStarDocument', 42)
+      store.state.search.starredDocuments = [48]
+      await store.dispatch('search/toggleStarDocument', 48)
 
       expect(store.state.search.starredDocuments).toEqual([])
+      expect(store.getters['search/findFacet']('starred').starredDocuments).toEqual([])
     })
 
     it('should setStarredDocuments for facet', () => {
