@@ -7,24 +7,18 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import Facet from '@/components/Facet'
 import facets from '@/mixins/facets'
 import utils from '@/mixins/utils'
-import DatashareClient from '@/api/DatashareClient'
 import capitalize from 'lodash/capitalize'
-
-const datashare = new DatashareClient()
 
 export default {
   name: 'FacetYesNo',
   components: { Facet },
   mixins: [facets, utils],
-  data () {
-    return {
-      starredDocuments: []
-    }
-  },
   computed: {
+    ...mapState('search', ['starredDocuments']),
     options () {
       return [{
         value: true,
@@ -49,13 +43,8 @@ export default {
       }]
     }
   },
-  async mounted () {
+  mounted () {
     this.root.$on('reset-facet-values', () => this.changeYesNoValue([]))
-    this.starredDocuments = await datashare.getStarredDocuments(this.$store.state.search.index).then(r => r.clone().json())
-    this.$store.commit('search/setStarredDocuments', { facet: this.facet, starredDocuments: this.starredDocuments })
-  },
-  beforeUpdate () {
-    this.$store.commit('search/setStarredDocuments', { facet: this.facet, starredDocuments: this.starredDocuments })
   },
   created () {
     return this.$store.dispatch('search/getStarredDocuments')

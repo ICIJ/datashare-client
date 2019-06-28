@@ -16,7 +16,7 @@ jest.mock('@/api/DatashareClient', () => {
   const { jsonOk } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      getStarredDocuments: jest.fn().mockReturnValue(jsonOk(['doc_01', 'doc_02']))
+      getStarredDocuments: jest.fn().mockReturnValue(jsonOk())
     }
   })
 })
@@ -79,10 +79,11 @@ describe('FacetYesNo.vue', () => {
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
   })
 
-  it('should select the starred documents', async () => {
+  it('should fetch the starred documents', async () => {
+    store.commit('search/starredDocuments', ['doc_03'])
     await letData(es).have(new IndexedDocument('doc_03')).commit()
 
-    expect(wrapper.vm.starredDocuments).toEqual(['doc_01', 'doc_02'])
+    expect(wrapper.vm.starredDocuments).toEqual(['doc_03'])
   })
 
   it('should hide the "Show more" button', async () => {
@@ -94,6 +95,7 @@ describe('FacetYesNo.vue', () => {
   })
 
   it('should display the results count', async () => {
+    store.commit('search/starredDocuments', ['doc_05', 'doc_06'])
     await letData(es).have(new IndexedDocument('doc_05')).commit()
     await letData(es).have(new IndexedDocument('doc_06')).commit()
     await letData(es).have(new IndexedDocument('doc_07')).commit()

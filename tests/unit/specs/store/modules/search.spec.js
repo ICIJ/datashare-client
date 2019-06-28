@@ -343,6 +343,12 @@ describe('Search store', () => {
     expect(store.getters['search/findFacet']('content-type').values[0]).toEqual('new_type')
   })
 
+  it('should not change the starredDocuments from facet "starred"', async () => {
+    store.commit('search/setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: ['doc_01', 'doc_02'] })
+    await store.dispatch('search/updateFromRouteQuery', {})
+    expect(store.getters['search/findFacet']('starred').starredDocuments).toEqual(['doc_01', 'doc_02'])
+  })
+
   it('should not delete the term from the query if it doesn\'t exist', async () => {
     store.commit('search/query', '*')
     await store.dispatch('search/deleteQueryTerm', 'term')
@@ -526,11 +532,11 @@ describe('Search store', () => {
 
   describe('starredDocuments', () => {
     it('should return the list of the starredDocuments', async () => {
-      jest.spyOn(datashare, 'fetch')
       datashare.fetch.mockReturnValue(jsonOk([42]))
-      await store.dispatch('search/query', 'foo')
+      await store.dispatch('search/getStarredDocuments')
 
       expect(store.state.search.starredDocuments).toEqual([42])
+      expect(store.getters['search/findFacet']('starred').starredDocuments).toEqual([42])
     })
 
     it('should remove a documentId from the list of the starredDocuments', () => {

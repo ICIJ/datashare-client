@@ -256,8 +256,6 @@ export const actions = {
     commit('error', null)
     try {
       const raw = await esClient.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort)
-      const starredDocuments = await datashare.getStarredDocuments(state.index).then(r => r.clone().json())
-      commit('starredDocuments', starredDocuments)
       commit('buildResponse', raw)
       return raw
     } catch (error) {
@@ -312,7 +310,9 @@ export const actions = {
   },
   updateFromRouteQuery ({ state, commit }, query) {
     // Reset all existing options
-    commit('reset', ['index', 'globalSearch'])
+    let existingFacet = find(state.facets, { name: 'starred' })
+    const tmp = existingFacet.starredDocuments
+    commit('reset', ['index', 'globalSearch', 'starredDocuments'])
     // Add the query to the state with a mutation to not triggering a search
     if (query.index) commit('index', query.index)
     if (query.q) commit('query', query.q)
@@ -335,6 +335,8 @@ export const actions = {
         }
       })
     })
+    existingFacet = find(state.facets, { name: 'starred' })
+    commit('setStarredDocuments', { facet: existingFacet, starredDocuments: tmp })
   },
   deleteQueryTerm ({ state, commit, dispatch }, term) {
     function deleteQueryTermFromSimpleQuery (query) {
@@ -357,9 +359,11 @@ export const actions = {
       datashare.starDocument(state.index, documentId).then(commit('pushFromStarredDocuments', documentId))
     }
   },
-  async getStarredDocuments ({ state, commit }) {
-    const starredDocuments = await datashare.getStarredDocuments(state.index).then(r => r.clone().json())
-    commit('starredDocuments', starredDocuments)
+  getStarredDocuments ({ state, commit }) {
+    return datashare.getStarredDocuments(state.index).then(r => r.clone().json()).then(starredDocuments => {
+      commit('starredDocuments', starredDocuments)
+      commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments })
+    })
   }
 }
 
