@@ -250,6 +250,7 @@ describe('SearchResults.vue', () => {
 
       wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
       await wrapper.vm.$nextTick()
+      await wrapper.vm.$nextTick()
 
       expect(mockCallback.mock.calls).toHaveLength(1)
     })
