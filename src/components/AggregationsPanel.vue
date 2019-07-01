@@ -70,8 +70,8 @@ export default {
     // Watch for $root event
     this.$root.$on('facet::async-search', this.asyncFacetSearch)
     this.$root.$on('facet::add-facet-values', this.addFacetValues)
+    this.$root.$on('facet::search::reset-filters', this.resetFacetValues)
     EventBus.$on('facet::search::add-facet-values', this.updateFacetSelectedValues)
-    EventBus.$on('facet::search::reset-filters', this.resetFacetValues)
     EventBus.$on('index::delete::all', this.refreshEachFacet)
   },
   data () {
@@ -94,10 +94,8 @@ export default {
   methods: {
     asyncFacetSearch (selectedFacet, facetQuery) {
       if (this.$refs.asyncFacetSearch) {
-        // Set properties
         this.$set(this, 'selectedFacet', selectedFacet)
         this.$set(this, 'facetQuery', facetQuery)
-        // Display the modal
         this.$refs.asyncFacetSearch.show()
       }
     },
@@ -125,8 +123,7 @@ export default {
     resetFilters () {
       this.$store.dispatch('search/reset', ['index', 'globalSearch'])
       this.$root.$emit('bv::hide::popover')
-      EventBus.$emit('facet::search::reset-filters')
-      // Change the route
+      this.$root.$emit('facet::search::reset-filters')
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
     },
     hideFilters () {

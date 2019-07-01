@@ -2,6 +2,7 @@ import VueI18n from 'vue-i18n'
 import { shallowMount } from '@vue/test-utils'
 import AggregationsPanel from '@/components/AggregationsPanel'
 import store from '@/store'
+import router from '@/router'
 import messages from '@/lang/en'
 import { EventBus } from '@/utils/event-bus'
 import { createApp } from '@/main'
@@ -21,7 +22,7 @@ describe('AggregationsPanel.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(AggregationsPanel, { appVue, i18n, store })
+    wrapper = shallowMount(AggregationsPanel, { appVue, i18n, router, store })
   })
 
   afterAll(() => window.fetch.mockRestore())
@@ -36,11 +37,28 @@ describe('AggregationsPanel.vue', () => {
     expect(wrapper.find('.aggregations-panel').isVisible()).toBeFalsy()
   })
 
+  it('should call function resetFacetValues on event facet::search::reset-filters emitted', async () => {
+    const resetFacetValuesStub = jest.fn()
+    wrapper = shallowMount(AggregationsPanel, { appVue, i18n, store, methods: { resetFacetValues: resetFacetValuesStub } })
+    wrapper.vm.$root.$emit('facet::search::reset-filters')
+
+    expect(resetFacetValuesStub).toHaveBeenCalled()
+  })
+
   it('should call function refreshEachFacet on event index::delete::all emitted', async () => {
     const refreshEachFacetStub = jest.fn()
     wrapper = shallowMount(AggregationsPanel, { appVue, i18n, store, methods: { refreshEachFacet: refreshEachFacetStub } })
     EventBus.$emit('index::delete::all')
 
     expect(refreshEachFacetStub).toHaveBeenCalled()
+  })
+
+  it('should emit an event "facet::search::reset-filters" on filters reset', () => {
+    const mockCallback = jest.fn()
+    wrapper.vm.$root.$on('facet::search::reset-filters', mockCallback)
+
+    wrapper.vm.resetFilters()
+
+    expect(mockCallback.mock.calls).toHaveLength(1)
   })
 })

@@ -14,7 +14,6 @@
 
 <script>
 import utils from '@/mixins/utils'
-import { EventBus } from '@/utils/event-bus'
 import map from 'lodash/map'
 
 export default {
@@ -46,7 +45,7 @@ export default {
     select (value) {
       this.$store.commit('search/index', value)
       this.$store.dispatch('search/reset')
-      EventBus.$emit('facet::search::reset-filters')
+      this.$root.$emit('facet::search::reset-filters')
       this.refreshRoute()
     },
     toggleItems () {

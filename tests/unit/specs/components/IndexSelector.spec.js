@@ -2,14 +2,12 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import { createLocalVue, mount } from '@vue/test-utils'
-import find from 'lodash/find'
-
 import Murmur from '@icij/murmur'
 import IndexSelector from '@/components/IndexSelector'
 import router from '@/router'
 import store from '@/store'
 import messages from '@/lang/en'
-import { EventBus } from '@/utils/event-bus'
+import find from 'lodash/find'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -63,7 +61,7 @@ describe('IndexSelector.vue', () => {
     Murmur.config.merge({ userIndices: ['first-index', 'second-index'] })
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
     const mockCallback = jest.fn()
-    EventBus.$on('facet::search::reset-filters', mockCallback)
+    wrapper.vm.$root.$on('facet::search::reset-filters', mockCallback)
 
     store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
     expect(store.getters['search/toRouteQuery']['f[content-type]']).not.toBeUndefined()

@@ -62,4 +62,13 @@ describe('ResetFiltersButton.vue', function () {
 
     expect(store.state.search.globalSearch).toBeFalsy()
   })
+
+  it('should emit an event "facet::search::reset-filters" on facets reset', () => {
+    const mockCallback = jest.fn()
+    wrapper.vm.$root.$on('facet::search::reset-filters', mockCallback)
+
+    wrapper.vm.resetFacets()
+
+    expect(mockCallback.mock.calls).toHaveLength(1)
+  })
 })
