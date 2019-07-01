@@ -9,6 +9,7 @@ import IndexSelector from '@/components/IndexSelector'
 import router from '@/router'
 import store from '@/store'
 import messages from '@/lang/en'
+import { EventBus } from '@/utils/event-bus'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -58,17 +59,20 @@ describe('IndexSelector.vue', () => {
     expect(store.getters['search/toRouteQuery'].index).toEqual('second-index')
   })
 
-  it('should change the selected index and reset filters', async () => {
+  it('should change the selected index, reset filters and emit an event "facet::search::reset-filters"', async () => {
     Murmur.config.merge({ userIndices: ['first-index', 'second-index'] })
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
+    const mockCallback = jest.fn()
+    EventBus.$on('facet::search::reset-filters', mockCallback)
 
     store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
     expect(store.getters['search/toRouteQuery']['f[content-type]']).not.toBeUndefined()
+    expect(mockCallback.mock.calls).toHaveLength(0)
 
-    wrapper.findAll('option').at(1).setSelected()
-    await wrapper.vm.$nextTick()
+    await wrapper.findAll('option').at(1).setSelected()
 
-    expect(store.getters['search/toRouteQuery']['f[content-type]']).toBeUndefined()
     expect(store.getters['search/toRouteQuery'].index).toEqual('second-index')
+    expect(store.getters['search/toRouteQuery']['f[content-type]']).toBeUndefined()
+    expect(mockCallback.mock.calls).toHaveLength(1)
   })
 })
