@@ -40,27 +40,53 @@ describe('ResetFiltersButton.vue', function () {
     expect(wrapper.vm.hasFacets).toBeTruthy()
   })
 
-  it('should reset facets', () => {
+  it('should reset facets on facets reset', () => {
     store.commit('search/addFacetValue', { name: 'language', value: 'en' })
-    expect(wrapper.vm.hasFacets).toBeTruthy()
+
     wrapper.vm.resetFacets()
+
     expect(wrapper.vm.hasFacets).toBeFalsy()
   })
 
-  it('should call router push on facets reset', () => {
-    jest.spyOn(router, 'push')
-    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store })
+  it('should reset query on facets reset', () => {
+    store.commit('search/query', 'this is a query')
 
-    expect(router.push).not.toHaveBeenCalled()
     wrapper.vm.resetFacets()
-    expect(router.push).toHaveBeenCalled()
+
+    expect(store.state.search.query).toBe('')
   })
 
-  it('should not change the globalSearch setting', () => {
+  it('should not change the index on facets reset', () => {
+    store.commit('search/index', 'my-index')
+
+    wrapper.vm.resetFacets()
+
+    expect(store.state.search.index).toBe('my-index')
+  })
+
+  it('should not change the globalSearch setting on facets reset', () => {
     store.commit('search/setGlobalSearch', false)
+
     wrapper.vm.resetFacets()
 
     expect(store.state.search.globalSearch).toBeFalsy()
+  })
+
+  it('should not change the starredDocuments on facets reset', () => {
+    store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
+
+    wrapper.vm.resetFacets()
+
+    expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
+  })
+
+  it('should emit an event "bv::hide::popover" on facets reset', () => {
+    const mockCallback = jest.fn()
+    wrapper.vm.$root.$on('bv::hide::popover', mockCallback)
+
+    wrapper.vm.resetFacets()
+
+    expect(mockCallback.mock.calls).toHaveLength(1)
   })
 
   it('should emit an event "facet::search::reset-filters" on facets reset', () => {
@@ -70,5 +96,14 @@ describe('ResetFiltersButton.vue', function () {
     wrapper.vm.resetFacets()
 
     expect(mockCallback.mock.calls).toHaveLength(1)
+  })
+
+  it('should call router push on facets reset', () => {
+    jest.spyOn(router, 'push')
+    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store })
+
+    wrapper.vm.resetFacets()
+
+    expect(router.push).toHaveBeenCalled()
   })
 })

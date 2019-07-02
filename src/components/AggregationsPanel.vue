@@ -120,7 +120,7 @@ export default {
       })
     },
     resetFilters () {
-      this.$store.dispatch('search/reset', ['index', 'globalSearch'])
+      this.$store.dispatch('search/reset', ['index', 'globalSearch', 'starredDocuments'])
       this.$root.$emit('bv::hide::popover')
       this.$root.$emit('facet::search::reset-filters')
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })

@@ -60,4 +60,20 @@ describe('AggregationsPanel.vue', () => {
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
+
+  it('should not reset the starredDocuments on filters reset', () => {
+    store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
+
+    wrapper.vm.resetFilters()
+
+    expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
+  })
+
+  it('should reset the query on filters reset', () => {
+    store.commit('search/query', 'another query')
+
+    wrapper.vm.resetFilters()
+
+    expect(store.state.search.query).toBe('')
+  })
 })
