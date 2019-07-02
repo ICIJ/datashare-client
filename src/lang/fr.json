@@ -308,7 +308,7 @@
     "content_type": "Type",
     "content_encoding": "Encodage",
     "parent_document": "Document parent",
-    "details": "Détails",
+    "details": "Tags & Détails",
     "named_entities": "Entités nommées",
     "extracted_text": "Texte",
     "translations": "Traductions",
