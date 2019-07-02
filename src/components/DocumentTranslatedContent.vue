@@ -16,11 +16,11 @@
             {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
           </button>
         </div>
-        <document-content class="document-translated-content__translation__header__content" :document="document" :named-entities="namedEntities" :translated-content="translatedContent" />
+        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :named-entities="namedEntities" :translated-content="translatedContent" />
       </div>
     </template>
     <template v-else>
-      <document-content class="document-translated-content__original" :document="document" :named-entities="namedEntities" />
+      <document-content ref="content" class="document-translated-content__original" :document="document" :named-entities="namedEntities" />
     </template>
   </div>
 </template>
@@ -48,6 +48,7 @@ export default {
       if (!this.showOriginal) {
         return this.document.translatedContentIn(this.language)
       }
+      return null
     }
   }
 }

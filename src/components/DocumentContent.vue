@@ -2,6 +2,7 @@
 import xss from 'xss'
 import compact from 'lodash/compact'
 import identity from 'lodash/identity'
+import map from 'lodash/map'
 import sortedUniqBy from 'lodash/sortedUniqBy'
 import template from 'lodash/template'
 import throttle from 'lodash/throttle'
@@ -38,30 +39,43 @@ export default {
   },
   data () {
     return {
-      contentTransformed: '',
+      transformedContent: '',
       localSearchIndex: 0,
       localSearchOccurrences: 0,
       localSearchTerm: '',
-      hasStickyToolbox: false,
-      showNamedEntities: true
+      hasStickyToolbox: false
     }
   },
   async mounted () {
-    this.contentTransformed = await this.contentPipeline()
+    await this.transformContent()
   },
   watch: {
     localSearchTerm: throttle(async function () {
-      this.contentTransformed = await this.contentPipeline()
+      await this.transformContent()
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     }, 300),
     async showNamedEntities () {
-      this.contentTransformed = await this.contentPipeline()
+      await this.transformContent()
     },
     async translatedContent () {
-      this.contentTransformed = await this.contentPipeline()
+      await this.transformContent()
     }
   },
   methods: {
+    async transformContent () {
+      this.transformedContent = await this.contentPipeline()
+    },
+    replaceInChildNodes (element, needle, replacement) {
+      if (element.nodeName === '#text') {
+        return element.nodeValue.replace(needle, replacement)
+      } else {
+        const html = map(element.childNodes, child => {
+          return this.replaceInChildNodes(child, needle, replacement)
+        })
+        element.innerHTML = html.join('')
+      }
+      return element.outerHTML
+    },
     buildNamedEntityMark (ne) {
       const extractor = ne.source.extractor
       const mention = ne.source.mention
@@ -75,7 +89,7 @@ export default {
     addGlobalSearchMarks (content) {
       return this.globalSearchTermsInContent(content).reduce((content, term, index) => {
         const needle = new RegExp(term.label, 'gi')
-        const fn = match => `<mark style="border-color: ${this.getTermIndexColor(index)}">${match}</mark>`
+        const fn = match => `<mark class="global-search-term" style="border-color: ${this.getTermIndexColor(index)}">${match}</mark>`
         return content.replace(needle, fn)
       }, content)
     },
@@ -87,10 +101,12 @@ export default {
 
       if (this.localSearchOccurrences === 0) return content
 
-      const needle = RegExp(`^(?:[\\s\\S]*?(?![^<]*>)(${this.localSearchTerm}))`, 'gim')
-      return content.replace(needle, (match, p1) => {
-        return match.replace(p1, `<mark class="local-search-term">${p1}</mark>`)
-      })
+      const needle = RegExp(`(${this.localSearchTerm})`, 'gim')
+      const parser = new DOMParser()
+      const dom = parser.parseFromString(content, 'text/html')
+
+      this.replaceInChildNodes(dom.body, needle, '<mark class="local-search-term">$1</mark>')
+      return dom.body.innerHTML
     },
     addLineBreaks (content) {
       return trim(content).split('\n').map(row => `<p>${row}</p>`).join('')
@@ -118,12 +134,20 @@ export default {
       const activeSearchTerm = searchTerms[this.localSearchIndex - 1]
       searchTerms.forEach(term => term.classList.remove('local-search-term--active'))
       if (activeSearchTerm) {
-        activeSearchTerm.scrollIntoView({ block: 'center', inline: 'nearest' })
         activeSearchTerm.classList.add('local-search-term--active')
+        activeSearchTerm.scrollIntoView({ block: 'center', inline: 'nearest' })
       }
     }
   },
   computed: {
+    showNamedEntities: {
+      set (toggler) {
+        this.$store.commit('document/toggleShowNamedEntities', toggler)
+      },
+      get () {
+        return this.$store.state.document.showNamedEntities
+      }
+    },
     contentPipelineFunctions () {
       return compact([
         // Named entities cannot be added on translated content
@@ -169,9 +193,7 @@ export default {
       </div>
       <b-tooltip placement="bottom" target="label-ner-toggler" :title="$t('document.highlights_caution')" />
     </div>
-    <div class="document-content__body container-fluid">
-      <div v-html="contentTransformed" class="py-3"></div>
-    </div>
+    <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
   </div>
 </template>
 

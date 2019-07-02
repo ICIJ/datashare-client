@@ -43,8 +43,8 @@ export const mutations = {
     }
     return state.parentDocument
   },
-  toggleShowNamedEntities (state) {
-    state.showNamedEntities = !state.showNamedEntities
+  toggleShowNamedEntities (state, toggler = null) {
+    state.showNamedEntities = (toggler !== null ? toggler : !state.showNamedEntities)
   }
 }
 

@@ -1,13 +1,18 @@
 import Murmur from '@icij/murmur'
 import VueI18n from 'vue-i18n'
+import VueShortkey from 'vue-shortkey'
+import Vuex from 'vuex'
 import { createLocalVue, mount } from '@vue/test-utils'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 import Document from '@/api/Document'
 import en from '@/lang/en'
+import store from '@/store'
 
 const localVue = createLocalVue()
+localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
+localVue.use(VueShortkey)
 const i18n = new VueI18n({ locale: 'en', messages: { en } })
 
 describe('DocumentTranslatedContent.vue', () => {
@@ -22,8 +27,8 @@ describe('DocumentTranslatedContent.vue', () => {
       }
     })
 
-    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, propsData: { document } })
-    expect(wrapper.find('.document-translated-content__translation__header__content').text()).toEqual('First')
+    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, store, propsData: { document } })
+    expect(wrapper.vm.translatedContent).toEqual('First')
   })
 
   it('should show no translations', async () => {
@@ -35,8 +40,9 @@ describe('DocumentTranslatedContent.vue', () => {
       }
     })
 
-    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, propsData: { document } })
-    expect(wrapper.find('.document-translated-content__original').text()).toEqual('Premier')
+    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, store, propsData: { document } })
+    await wrapper.vm.$refs.content.transformContent()
+    expect(wrapper.find('.document-translated-content__original .document-content__body').text()).toEqual('Premier')
   })
 
   it('should show no translations when the content is empty', async () => {
@@ -50,8 +56,9 @@ describe('DocumentTranslatedContent.vue', () => {
       }
     })
 
-    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, propsData: { document } })
-    expect(wrapper.find('.document-translated-content__original').text()).toEqual('Premier')
+    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, store, propsData: { document } })
+    await wrapper.vm.$refs.content.transformContent()
+    expect(wrapper.find('.document-translated-content__original .document-content__body').text()).toEqual('Premier')
   })
 
   it('shouldn\'t show italian translation', async () => {
@@ -65,8 +72,9 @@ describe('DocumentTranslatedContent.vue', () => {
       }
     })
 
-    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, propsData: { document } })
-    expect(wrapper.find('.document-translated-content__original').text()).toEqual('Premier')
+    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, store, propsData: { document } })
+    await wrapper.vm.$refs.content.transformContent()
+    expect(wrapper.find('.document-translated-content__original .document-content__body').text()).toEqual('Premier')
   })
 
   it('should show an English translation from Italian', async () => {
@@ -74,14 +82,14 @@ describe('DocumentTranslatedContent.vue', () => {
       _source: {
         content: 'Secondo',
         content_translated: [
-          { content: 'Second', source_language: 'ITLIAN', target_language: 'ENGLISH' }
+          { content: 'Second', source_language: 'ITALIAN', target_language: 'ENGLISH' }
         ],
-        language: 'ITLIAN'
+        language: 'ITALIAN'
       }
     })
 
-    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, propsData: { document } })
-    expect(wrapper.find('.document-translated-content__translation__header__content').text()).toEqual('Second')
+    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, store, propsData: { document } })
+    expect(wrapper.vm.translatedContent).toEqual('Second')
   })
 
   it('should show an English translation from Italian then show the original', async () => {
@@ -89,17 +97,17 @@ describe('DocumentTranslatedContent.vue', () => {
       _source: {
         content: 'Secondo',
         content_translated: [
-          { content: 'Second', source_language: 'ITLIAN', target_language: 'ENGLISH' }
+          { content: 'Second', source_language: 'ITALIAN', target_language: 'ENGLISH' }
         ],
-        language: 'ITLIAN'
+        language: 'ITALIAN'
       }
     })
 
-    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, propsData: { document } })
-    expect(wrapper.find('.document-translated-content__translation__header__content').text()).toEqual('Second')
+    const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, store, propsData: { document } })
+    expect(wrapper.vm.translatedContent).toEqual('Second')
     wrapper.vm.toggleOriginalContent()
-    expect(wrapper.find('.document-translated-content__translation__header__content').text()).toEqual('Secondo')
+    expect(wrapper.vm.translatedContent).toEqual(null)
     wrapper.vm.toggleOriginalContent()
-    expect(wrapper.find('.document-translated-content__translation__header__content').text()).toEqual('Second')
+    expect(wrapper.vm.translatedContent).toEqual('Second')
   })
 })

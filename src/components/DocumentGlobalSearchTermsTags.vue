@@ -1,9 +1,11 @@
 <script>
 import { mapGetters } from 'vuex'
 import utils from '@/mixins/utils'
+import store from '@/store'
 
 export default {
   name: 'DocumentGlobalSearchTermsTags',
+  store,
   mixins: [ utils ],
   props: {
     document: Object
