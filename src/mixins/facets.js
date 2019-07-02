@@ -187,6 +187,7 @@ export const mixin = {
     changeSelectedValues () {
       this.isAllSelected = this.selected.length === 0
       this.$root.$emit('facet::add-facet-values', this.facet, this.selected)
+      this.$store.commit('search/from', 0)
       this.$emit('add-facet-values', this.facet, this.selected)
       this.refreshRoute()
     }

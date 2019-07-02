@@ -273,8 +273,16 @@ describe('FacetText.vue', () => {
 
     expect(wrapper.emitted('add-facet-values')).toHaveLength(1)
     expect(rootWrapper.emitted('facet::add-facet-values')).toHaveLength(1)
-    expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(1)
+  })
+
+  it('should reset the from query on click on facet item', async () => {
+    store.commit('search/from', 25)
+    await letData(es).have(new IndexedDocument('doc_01').withContentType('type_01')).commit()
+    await wrapper.vm.root.aggregate()
+    wrapper.find('.facet__items__item .custom-checkbox:nth-child(1) input').trigger('click')
+
+    expect(store.state.search.from).toBe(0)
   })
 
   it('should return facets from another index', async () => {
