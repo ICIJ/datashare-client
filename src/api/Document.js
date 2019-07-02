@@ -1,4 +1,9 @@
-import some from 'lodash/some'
+import types from '@/utils/types.json'
+import DatashareClient from './DatashareClient'
+import EsDoc from './EsDoc'
+import moment from 'moment'
+import { extname } from 'path'
+import Murmur from '@icij/murmur'
 import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
 import find from 'lodash/find'
@@ -6,15 +11,9 @@ import filter from 'lodash/filter'
 import get from 'lodash/get'
 import last from 'lodash/last'
 import pick from 'lodash/pick'
+import some from 'lodash/some'
 import trim from 'lodash/trim'
 import truncate from 'lodash/truncate'
-import { extname } from 'path'
-import Murmur from '@icij/murmur'
-
-import types from '@/utils/types.json'
-import DatashareClient from './DatashareClient'
-import EsDoc from './EsDoc'
-import moment from 'moment'
 
 const _parent = '_PARENT'
 
@@ -52,6 +51,9 @@ export default class Document extends EsDoc {
   }
   get path () {
     return this.get('_source.path', '')
+  }
+  get tags () {
+    return this.get('_source.tags', [])
   }
   get folder () {
     // Extract location parts

@@ -25,4 +25,9 @@ describe('Document', () => {
     let doc = new Document({ _source: { contentLength: 12345678 } })
     expect(doc.humanSize).toEqual('11.77 MB (12345678 B)')
   })
+
+  it('should display tags', () => {
+    let doc = new Document({ _source: { tags: ['tag_01', 'tag_02'] } })
+    expect(doc.tags).toEqual(['tag_01', 'tag_02'])
+  })
 })

@@ -65,11 +65,20 @@ describe('DocumentTabDetails.vue', () => {
   })
 
   it('should display a message if the creation date is missing', async () => {
-    const id = 'doc_02'
+    const id = 'document'
     await letData(es).have(new IndexedDocument(id)).commit()
     await store.dispatch('document/get', { id })
     const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, propsData: { document: store.state.document.doc } })
 
     expect(wrapper.find('.document__content__creation-date').text()).toEqual('Missing date')
+  })
+
+  it('should display the tags', async () => {
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id).withTags(['tag_01', 'tag_02'])).commit()
+    await store.dispatch('document/get', { id })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, propsData: { document: store.state.document.doc } })
+
+    expect(wrapper.findAll('.document__content__tags__tag')).toHaveLength(2)
   })
 })

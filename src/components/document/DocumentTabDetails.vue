@@ -45,6 +45,14 @@
           </router-link>
         </div>
       </template>
+      <template v-if="document.tags.length > 0">
+        <div class="col-sm-3 font-weight-bold">{{ $t('document.tags') }}</div>
+        <div class="col-sm-9 document__content__tags">
+          <div class="document__content__tags__tag" v-for="tag in document.tags" :key="tag">
+            <fa icon="tag" class="fa-rotate-90 mr-2" />{{ tag }}
+          </div>
+        </div>
+      </template>
     </div>
   </div>
 </template>

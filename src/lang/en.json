@@ -343,7 +343,8 @@
     "find": "Find in document",
     "of": "of",
     "researched_terms": "In this document:",
-    "fetching": "Fetching preview..."
+    "fetching": "Fetching preview...",
+    "tags": "Tags"
   },
   "email": {
     "detail": "See detail",

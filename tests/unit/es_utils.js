@@ -104,6 +104,10 @@ class IndexedDocument {
     this.nerTags.push(pipeline)
     return this
   }
+  withTags (tags) {
+    this.tags = tags
+    return this
+  }
   hasParent () {
     return this.parentDocument !== undefined
   }

@@ -59,15 +59,6 @@ export const actions = {
     }
     return state.doc
   },
-  async getNamedEntities ({ commit, rootState, state }) {
-    try {
-      const raw = await esClient.getNamedEntities(rootState.search.index, state.idAndRouting.id, state.idAndRouting.routing)
-      commit('namedEntities', raw)
-    } catch (_) {
-      commit('namedEntities', { hits: { hits: [] } })
-    }
-    return state.namedEntities
-  },
   async getParent ({ commit, rootState, state }) {
     if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
       const currentDoc = state.doc.raw._source
@@ -79,6 +70,15 @@ export const actions = {
       }
     }
     return state.parentDocument
+  },
+  async getNamedEntities ({ commit, rootState, state }) {
+    try {
+      const raw = await esClient.getNamedEntities(rootState.search.index, state.idAndRouting.id, state.idAndRouting.routing)
+      commit('namedEntities', raw)
+    } catch (_) {
+      commit('namedEntities', { hits: { hits: [] } })
+    }
+    return state.namedEntities
   }
 }
 

@@ -1,3 +1,5 @@
+import Document from '@/api/Document'
+import NamedEntity from '@/api/NamedEntity'
 import isEmpty from 'lodash/isEmpty'
 import find from 'lodash/find'
 import get from 'lodash/get'
@@ -6,9 +8,6 @@ import remove from 'lodash/remove'
 import set from 'lodash/set'
 import orderBy from 'lodash/orderBy'
 import uniqBy from 'lodash/uniqBy'
-
-import Document from './Document'
-import NamedEntity from './NamedEntity'
 
 const _raw = '_RAW'
 
