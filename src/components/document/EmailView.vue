@@ -26,7 +26,7 @@
           </div>
         </router-link>
         <div v-if="isActive(email)">
-          <document-translated-content  class="email-view__thread__item__content p-3" :document="email" />
+          <document-translated-content  class="email-view__thread__item__content" :document="email" />
           <div  class="email-view__thread__item__footer px-4 py-3 bg-light d-flex">
             <router-link :to="{ name: 'document', params: routeParams(email) }" class="align-self-end">
               {{ $t('email.detail') }}
@@ -49,7 +49,6 @@
 
     &__thread {
       border-top: 1px solid $border-color;
-      overflow: hidden;
       background: white;
       padding: 0;
       margin: 0;

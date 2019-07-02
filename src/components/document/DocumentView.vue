@@ -35,6 +35,7 @@
 <script>
 import filter from 'lodash/filter'
 import { mapState } from 'vuex'
+
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
@@ -47,12 +48,7 @@ export default {
   name: 'DocumentView',
   mixins: [utils],
   components: {
-    DocumentSlicedName,
-    DocumentTabDetails,
-    DocumentTabNamedEntities,
-    DocumentTabExtractedText,
-    DocumentTabPreview,
-    DocumentTabTranslations
+    DocumentSlicedName
   },
   props: ['id', 'routing', 'index'],
   data () {

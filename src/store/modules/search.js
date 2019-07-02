@@ -16,6 +16,7 @@ import includes from 'lodash/includes'
 import join from 'lodash/join'
 import map from 'lodash/map'
 import omit from 'lodash/omit'
+import orderBy from 'lodash/orderBy'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
 
@@ -122,6 +123,25 @@ export const getters = {
     }
     retTerms(lucene.parse(state.query), null)
     return terms
+  },
+  retrieveContentQueryTerms (state, getters) {
+    const fields = ['', 'content']
+    return filter(getters.retrieveQueryTerms, item => fields.includes(item.field))
+  },
+  retrieveContentQueryTermsInDocument (state, getters) {
+    return document => {
+      const content = get(document, 'source.content', '')
+      return getters.retrieveContentQueryTermsInContent(content)
+    }
+  },
+  retrieveContentQueryTermsInContent (state, getters) {
+    return content => {
+      const terms = getters.retrieveContentQueryTerms.map(term => {
+        term.length = (content.match(new RegExp(term.label, 'gi')) || []).length
+        return term
+      })
+      return orderBy(terms, ['length'], ['desc'])
+    }
   }
 }
 

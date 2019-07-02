@@ -1,7 +1,7 @@
 <template>
   <div class="document-translated-content" :class="{ 'document-translated-content--original': showOriginal }">
     <template v-if="document.hasTranslationsIn(language)">
-      <div class="document-translated-content__translation">
+      <div class="document-translated-content__translation m-3">
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />
           <abbr :title="$t(`facet.lang.${document.source.language}`)" v-if="document.translationIn(language).source_language === document.source.language">
@@ -16,19 +16,22 @@
             {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
           </button>
         </div>
-        <div v-html="currentContentHtml" class="document-translated-content__translation__header__content px-3 py-2"></div>
+        <document-content class="document-translated-content__translation__header__content" :document="document" :named-entities="namedEntities" :translated-content="translatedContent" />
       </div>
     </template>
     <template v-else>
-      <div class="document-translated-content__original" v-html="document.contentHtml"></div>
+      <document-content class="document-translated-content__original" :document="document" :named-entities="namedEntities" />
     </template>
   </div>
 </template>
 
 <script>
+import DocumentContent from './DocumentContent.vue'
+
 export default {
   name: 'DocumentTranslatedContent',
-  props: ['document'],
+  props: ['document', 'namedEntities'],
+  components: { DocumentContent },
   data () {
     return {
       language: 'ENGLISH',
@@ -41,11 +44,9 @@ export default {
     }
   },
   computed: {
-    currentContentHtml () {
-      if (this.showOriginal) {
-        return this.document.contentHtml
-      } else {
-        return this.document.translatedContentHtmlIn(this.language)
+    translatedContent () {
+      if (!this.showOriginal) {
+        return this.document.translatedContentIn(this.language)
       }
     }
   }
@@ -56,16 +57,20 @@ export default {
   .document-translated-content {
 
     &__translation {
-      background: $translation-bg;
-      box-shadow: 0 0 0 2px $translation-bg inset;
+
+      box-shadow: 0 0 0 3px $translation-bg inset;
 
       .document-translated-content--original & {
-        background: transparent;
+        box-shadow: none;
+
+        &__header {
+          background: transparent;
+        }
       }
 
       &__header {
         background: $translation-bg;
-        color: rgba(darken($translation-bg, 60), 0.5);
+        color: rgba(darken($translation-bg, 70), 0.7);
       }
     }
   }
