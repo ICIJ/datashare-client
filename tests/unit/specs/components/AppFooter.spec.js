@@ -5,7 +5,6 @@ import AppFooter from '@/components/AppFooter'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
-import { EventBus } from '@/utils/event-bus'
 import { datashare } from '@/store/modules/indexing'
 import fetchPonyfill from 'fetch-ponyfill'
 import { jsonOk } from 'tests/unit/tests_utils'
@@ -127,9 +126,10 @@ describe('AppFooter.vue', () => {
 
   it('should emit an index::delete::all event when calling the deleteAll method', async () => {
     const mockCallback = jest.fn()
-    EventBus.$on('index::delete::all', mockCallback)
+    wrapper.vm.$root.$on('index::delete::all', mockCallback)
+
     await wrapper.vm.deleteAll()
-    await wrapper.vm.$nextTick()
+
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
 })

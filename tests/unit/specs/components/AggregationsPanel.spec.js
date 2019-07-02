@@ -4,7 +4,6 @@ import AggregationsPanel from '@/components/AggregationsPanel'
 import store from '@/store'
 import router from '@/router'
 import messages from '@/lang/en'
-import { EventBus } from '@/utils/event-bus'
 import { createApp } from '@/main'
 import { jsonOk } from 'tests/unit/tests_utils'
 
@@ -48,7 +47,7 @@ describe('AggregationsPanel.vue', () => {
   it('should call function refreshEachFacet on event index::delete::all emitted', async () => {
     const refreshEachFacetStub = jest.fn()
     wrapper = shallowMount(AggregationsPanel, { appVue, i18n, store, methods: { refreshEachFacet: refreshEachFacetStub } })
-    EventBus.$emit('index::delete::all')
+    wrapper.vm.$root.$emit('index::delete::all')
 
     expect(refreshEachFacetStub).toHaveBeenCalled()
   })

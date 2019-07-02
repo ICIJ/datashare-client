@@ -71,7 +71,6 @@
 <script>
 import utils from '@/mixins/utils'
 import DatashareClient from '@/api/DatashareClient'
-import { EventBus } from '@/utils/event-bus'
 import UserHistory from '@/components/UserHistory'
 import find from 'lodash/find'
 
@@ -167,7 +166,7 @@ export default {
     async deleteAll () {
       await this.$store.dispatch('indexing/deleteAll')
       this.$store.commit('userHistory/clear')
-      EventBus.$emit('index::delete::all')
+      this.$root.$emit('index::delete::all')
     }
   }
 }

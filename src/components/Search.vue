@@ -31,7 +31,6 @@ import get from 'lodash/get'
 import AggregationsPanel from '@/components/AggregationsPanel'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import SearchResults from '@/components/SearchResults'
-import { EventBus } from '@/utils/event-bus'
 import { mapState } from 'vuex'
 import { errors as esErrors } from 'elasticsearch-browser'
 
@@ -86,7 +85,7 @@ export default {
     this.search()
   },
   mounted () {
-    EventBus.$on('index::delete::all', this.search)
+    this.$root.$on('index::delete::all', this.search)
     this.$root.$on('facet::starred:refresh', this.search)
   },
   watch: {

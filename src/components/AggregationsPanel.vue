@@ -67,12 +67,11 @@ export default {
     bModal
   },
   mounted () {
-    // Watch for $root event
     this.$root.$on('facet::async-search', this.asyncFacetSearch)
     this.$root.$on('facet::add-facet-values', this.addFacetValues)
     this.$root.$on('facet::search::reset-filters', this.resetFacetValues)
+    this.$root.$on('index::delete::all', this.refreshEachFacet)
     EventBus.$on('facet::search::add-facet-values', this.updateFacetSelectedValues)
-    EventBus.$on('index::delete::all', this.refreshEachFacet)
   },
   data () {
     return {

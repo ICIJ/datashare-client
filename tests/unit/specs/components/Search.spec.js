@@ -4,7 +4,6 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import router from '@/router'
 import store from '@/store'
-import { EventBus } from '@/utils/event-bus'
 import VueProgressBar from 'vue-progressbar'
 
 const localVue = createLocalVue()
@@ -21,7 +20,7 @@ describe('Search.vue', () => {
   })
 
   it('should refresh the view on custom event', () => {
-    EventBus.$emit('index::delete::all')
+    wrapper.vm.$root.$emit('index::delete::all')
     expect(actions.query).toHaveBeenCalledTimes(2)
   })
 
