@@ -42,7 +42,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import { EventBus } from '@/utils/event-bus'
 import FacetText from '@/components/FacetText'
 import FacetYesNo from '@/components/FacetYesNo'
 import FacetDate from '@/components/FacetDate'
@@ -71,7 +70,7 @@ export default {
     this.$root.$on('facet::add-facet-values', this.addFacetValues)
     this.$root.$on('facet::search::reset-filters', this.resetFacetValues)
     this.$root.$on('index::delete::all', this.refreshEachFacet)
-    EventBus.$on('facet::search::add-facet-values', this.updateFacetSelectedValues)
+    this.$root.$on('facet::search::add-facet-values', this.updateFacetSelectedValues)
   },
   data () {
     return {

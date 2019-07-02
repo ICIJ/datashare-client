@@ -37,7 +37,6 @@ import FacetYesNo from '@/components/FacetYesNo'
 import FacetDate from '@/components/FacetDate'
 import FacetPath from '@/components/FacetPath'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
-import { EventBus } from '@/utils/event-bus'
 import facets from '@/mixins/facets'
 import get from 'lodash/get'
 import sumBy from 'lodash/sumBy'
@@ -87,7 +86,7 @@ export default {
   },
   mounted () {
     this.startOver()
-    EventBus.$on('facet::hide::named-entities', () => this.startOver())
+    this.$root.$on('facet::hide::named-entities', () => this.startOver())
   },
   watch: {
     facetQuery () {
@@ -125,7 +124,7 @@ export default {
       return this.search($state)
     },
     onAddedFacetValues (component) {
-      EventBus.$emit('facet::search::add-facet-values', component)
+      this.$root.$emit('facet::search::add-facet-values', component)
     }
   },
   computed: {

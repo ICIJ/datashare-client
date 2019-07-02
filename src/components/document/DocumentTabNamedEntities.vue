@@ -31,7 +31,6 @@
 import { mapState } from 'vuex'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
-import { EventBus } from '@/utils/event-bus'
 import capitalize from 'lodash/capitalize'
 import groupBy from 'lodash/groupBy'
 import orderBy from 'lodash/orderBy'
@@ -41,12 +40,10 @@ export default {
   props: ['document'],
   mixins: [ner, utils],
   computed: {
-    ...mapState('document', {
-      namedEntities: 'namedEntities'
-    })
+    ...mapState('document', ['namedEntities'])
   },
   mounted () {
-    EventBus.$on('facet::hide::named-entities', () => this.$store.dispatch('document/getNamedEntities'))
+    this.$root.$on('facet::hide::named-entities', () => this.$store.dispatch('document/getNamedEntities'))
   },
   methods: {
     groupByCategories (array) {

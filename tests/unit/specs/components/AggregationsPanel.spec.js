@@ -45,11 +45,21 @@ describe('AggregationsPanel.vue', () => {
   })
 
   it('should call function refreshEachFacet on event index::delete::all emitted', async () => {
-    const refreshEachFacetStub = jest.fn()
-    wrapper = shallowMount(AggregationsPanel, { appVue, i18n, store, methods: { refreshEachFacet: refreshEachFacetStub } })
+    const refreshEachFacetMock = jest.fn()
+    wrapper = shallowMount(AggregationsPanel, { appVue, i18n, store, methods: { refreshEachFacet: refreshEachFacetMock } })
+
     wrapper.vm.$root.$emit('index::delete::all')
 
-    expect(refreshEachFacetStub).toHaveBeenCalled()
+    expect(refreshEachFacetMock).toHaveBeenCalled()
+  })
+
+  it('should call function updateFacetSelectedValues on event facet::search::add-facet-values emitted', async () => {
+    const updateFacetSelectedValuesMock = jest.fn()
+    wrapper = shallowMount(AggregationsPanel, { appVue, i18n, store, methods: { updateFacetSelectedValues: updateFacetSelectedValuesMock } })
+
+    wrapper.vm.$root.$emit('facet::search::add-facet-values')
+
+    expect(updateFacetSelectedValuesMock).toHaveBeenCalled()
   })
 
   it('should emit an event "facet::search::reset-filters" on filters reset', () => {

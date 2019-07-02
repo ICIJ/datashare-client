@@ -5,7 +5,6 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { EventBus } from '@/utils/event-bus'
 import FacetSearch from '@/components/FacetSearch'
 import messages from '@/lang/en'
 import router from '@/router'
@@ -208,7 +207,7 @@ describe('FacetSearch.vue', () => {
       await wrapper.vm.startOver()
 
       const mockCallback = jest.fn()
-      EventBus.$on('facet::hide::named-entities', mockCallback)
+      wrapper.vm.$root.$on('facet::hide::named-entities', mockCallback)
 
       await wrapper.find('.facet__items__item__menu .dropdown-item:first-child').trigger('click')
 
@@ -278,5 +277,14 @@ describe('FacetSearch.vue', () => {
     expect(wrapper.findAll('.facet-search .facet__items__all')).toHaveLength(1)
     expect(wrapper.find('.facet-search .facet__items__all .facet__items__item__label').text()).toBe('All')
     expect(wrapper.find('.facet-search .facet__items__all .facet__items__item__count').text()).toBe('3')
+  })
+
+  it('should emit an event "facet::search::add-facet-values" on adding facet values', () => {
+    const mockCallback = jest.fn()
+    wrapper.vm.$root.$on('facet::search::add-facet-values', mockCallback)
+
+    wrapper.vm.onAddedFacetValues()
+
+    expect(mockCallback.mock.calls).toHaveLength(1)
   })
 })

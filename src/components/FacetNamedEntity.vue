@@ -46,7 +46,6 @@ import Facet from '@/components/Facet'
 import facets from '@/mixins/facets'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
-import { EventBus } from '@/utils/event-bus'
 import DatashareClient from '@/api/DatashareClient'
 import get from 'lodash/get'
 
@@ -74,7 +73,7 @@ export default {
     },
     deleteNamedEntitiesByMentionNorm (mentionNorm) {
       return datashare.deleteNamedEntitiesByMentionNorm(mentionNorm).then(() => {
-        EventBus.$emit('facet::hide::named-entities')
+        this.$root.$emit('facet::hide::named-entities')
       })
     },
     itemTitle (item) {
@@ -87,7 +86,7 @@ export default {
     }
   },
   mounted () {
-    EventBus.$on('facet::hide::named-entities', () => this.$refs.facet ? this.$refs.facet.aggregate() : null)
+    this.$root.$on('facet::hide::named-entities', () => this.$refs.facet ? this.$refs.facet.aggregate() : null)
   }
 }
 </script>

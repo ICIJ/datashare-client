@@ -5,7 +5,6 @@ import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEnti
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
 import store from '@/store'
-import { EventBus } from '@/utils/event-bus'
 import Murmur from '@icij/murmur'
 import BootstrapVue from 'bootstrap-vue'
 
@@ -75,7 +74,7 @@ describe('DocumentTabNamedEntities.vue', () => {
     expect(wrapper.findAll('.badge-pill')).toHaveLength(2)
 
     await indexBuilder.hideNer('mention_02')
-    EventBus.$emit('facet::hide::named-entities')
+    wrapper.vm.$root.$emit('facet::hide::named-entities')
     await delay(100)
     expect(wrapper.findAll('.badge-pill')).toHaveLength(1)
   })

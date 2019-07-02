@@ -3,7 +3,6 @@ import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
-import { EventBus } from '@/utils/event-bus'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
@@ -225,7 +224,7 @@ describe('FacetNamedEntity.vue', () => {
 
       await wrapper.vm.root.aggregate()
       const mockCallback = jest.fn()
-      EventBus.$on('facet::hide::named-entities', mockCallback)
+      wrapper.vm.$root.$on('facet::hide::named-entities', mockCallback)
 
       await wrapper.find('.facet__items__item .facet__items__item__menu .dropdown-item:first-child').trigger('click')
 
