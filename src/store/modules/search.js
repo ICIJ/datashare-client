@@ -154,6 +154,10 @@ export const mutations = {
         state[key] = s[key]
       }
     })
+    const existingFacet = find(state.facets, { name: 'starred' })
+    if (existingFacet) {
+      existingFacet.starredDocuments = state.starredDocuments
+    }
   },
   setGlobalSearch (state, globalSearch) {
     state.globalSearch = globalSearch
@@ -329,9 +333,6 @@ export const actions = {
     return dispatch('query')
   },
   updateFromRouteQuery ({ state, commit }, query) {
-    // Reset all existing options
-    let existingFacet = find(state.facets, { name: 'starred' })
-    const tmp = existingFacet.starredDocuments
     commit('reset', ['index', 'globalSearch', 'starredDocuments'])
     // Add the query to the state with a mutation to not triggering a search
     if (query.index) commit('index', query.index)
@@ -355,8 +356,6 @@ export const actions = {
         }
       })
     })
-    existingFacet = find(state.facets, { name: 'starred' })
-    commit('setStarredDocuments', { facet: existingFacet, starredDocuments: tmp })
   },
   deleteQueryTerm ({ state, commit, dispatch }, term) {
     function deleteQueryTermFromSimpleQuery (query) {

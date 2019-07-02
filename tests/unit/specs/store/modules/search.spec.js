@@ -55,6 +55,22 @@ describe('Search store', () => {
     expect(find(store.state.search.facets, { name: 'content-type' }).values).toEqual([])
   })
 
+  it('should not reset the starredDocuments from the facet', () => {
+    store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
+
+    store.dispatch('search/reset', ['starredDocuments'])
+
+    expect(find(store.state.search.facets, { name: 'starred' }).starredDocuments).toEqual(['doc_01', 'doc_02'])
+  })
+
+  it('should not reset the starredDocuments', () => {
+    store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
+
+    store.dispatch('search/reset', ['starredDocuments'])
+
+    expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
+  })
+
   it('should change the state after `query` mutation', async () => {
     await store.dispatch('search/query', 'bar')
     expect(store.state.search.query).toEqual('bar')
@@ -343,10 +359,12 @@ describe('Search store', () => {
     expect(store.getters['search/findFacet']('content-type').values[0]).toEqual('new_type')
   })
 
-  it('should not change the starredDocuments from facet "starred"', async () => {
-    store.commit('search/setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: ['doc_01', 'doc_02'] })
+  it('should not change the starredDocuments', async () => {
+    store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
+
     await store.dispatch('search/updateFromRouteQuery', {})
-    expect(store.getters['search/findFacet']('starred').starredDocuments).toEqual(['doc_01', 'doc_02'])
+
+    expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
   })
 
   it('should not delete the term from the query if it doesn\'t exist', async () => {
