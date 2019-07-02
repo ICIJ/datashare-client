@@ -104,6 +104,16 @@ export default {
           }
         },
         {
+          name: 'details',
+          label: 'document.details',
+          component: DocumentTabDetails,
+          icon: 'info-circle',
+          props: {
+            document: this.document,
+            parentDocument: this.parentDocument
+          }
+        },
+        {
           name: 'translations',
           label: 'document.translations',
           component: DocumentTabTranslations,
@@ -130,16 +140,6 @@ export default {
           icon: 'eye',
           props: {
             document: this.document
-          }
-        },
-        {
-          name: 'details',
-          label: 'document.details',
-          component: DocumentTabDetails,
-          icon: 'info-circle',
-          props: {
-            document: this.document,
-            parentDocument: this.parentDocument
           }
         }
       ]

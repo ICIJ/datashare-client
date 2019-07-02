@@ -131,7 +131,7 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(4)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(1).text()).toContain('Named Entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(2).text()).toContain('Named Entities')
   })
 
   it('should NOT display the named entities tab in SERVER mode', async () => {
@@ -145,6 +145,6 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(3)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(1).text()).not.toContain('Named Entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(2).text()).not.toContain('Named Entities')
   })
 })
