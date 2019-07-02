@@ -19,7 +19,7 @@
         <div class="search__body__document " :class="showFilters ? 'show-filters' : 'show-filters'" v-show="showDocument">
           <search-document-navbar />
           <router-view class="search__body__document__view"></router-view>
-          <router-link :to="{ name: 'search', query }" class="search__body__document__backdrop" />
+          <router-link :to="{ name: 'search', query: toRouteQuery }" class="search__body__document__backdrop" />
         </div>
       </transition>
     </div>
@@ -55,6 +55,9 @@ export default {
   },
   computed: {
     ...mapState('search', ['query', 'response', 'isReady', 'showFilters', 'error']),
+    toRouteQuery () {
+      return this.$store.getters['search/toRouteQuery']
+    },
     showDocument () {
       return ['document', 'email'].indexOf(this.$route.name) > -1
     },
@@ -71,7 +74,6 @@ export default {
   },
   beforeRouteUpdate (to, from, next) {
     if (to.name === 'search') {
-      // Update the search's store using route query
       this.$store.dispatch('search/updateFromRouteQuery', to.query)
         .catch(this.wrongQuery)
         .then(this.search)
