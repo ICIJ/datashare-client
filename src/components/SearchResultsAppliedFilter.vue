@@ -6,8 +6,6 @@
 </template>
 
 <script>
-import { EventBus } from '@/utils/event-bus'
-
 export default {
   name: 'SearchResultsAppliedFilter',
   props: ['filter'],
@@ -16,7 +14,6 @@ export default {
       if ('name' in this.filter) {
         await this.$store.dispatch('search/removeFacetValue', this.filter)
         this.$root.$emit('facet::search::update', this.filter.name)
-        EventBus.$emit('facet::search::update', this.filter.name)
       } else {
         await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
       }

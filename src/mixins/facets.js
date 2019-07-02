@@ -1,9 +1,9 @@
-import { EventBus } from '@/utils/event-bus'
 import utils from '@/mixins/utils'
 import camelCase from 'lodash/camelCase'
 import find from 'lodash/find'
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
+import last from 'lodash/last'
 import map from 'lodash/map'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
@@ -11,7 +11,6 @@ import toLower from 'lodash/toLower'
 import toUpper from 'lodash/toUpper'
 import uniq from 'lodash/uniq'
 import upperFirst from 'lodash/upperFirst'
-import last from 'lodash/last'
 
 export const mixin = {
   mixins: [utils],
@@ -52,7 +51,7 @@ export const mixin = {
     if (this.root.$on) {
       this.root.$on('add-facet-values', value => this.$emit('add-facet-values', value))
     }
-    EventBus.$on('facet::search::update', facetName => {
+    this.$root.$on('facet::search::update', facetName => {
       if (this.facet.name === facetName) {
         this.selectedValuesFromStore()
       }
