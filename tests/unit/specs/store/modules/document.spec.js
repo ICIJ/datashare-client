@@ -98,4 +98,14 @@ describe('Document store', () => {
 
     expect(store.state.document.doc.tags).toEqual(['tag_02'])
   })
+
+  it('should tag a document', async () => {
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id).withTags(['tag_01'])).commit()
+    await store.dispatch('document/get', { id: id })
+
+    await store.dispatch('document/tag', { documentId: id, tags: ['tag_02'] })
+
+    expect(store.state.document.doc.tags).toEqual(['tag_01', 'tag_02'])
+  })
 })

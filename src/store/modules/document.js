@@ -52,6 +52,9 @@ export const mutations = {
   },
   untag (state, tags = []) {
     map(tags, tag => state.doc.tags.splice(state.doc.tags.indexOf(tag), 1))
+  },
+  tag (state, tags = []) {
+    map(tags, tag => state.doc.tags.push(tag))
   }
 }
 
@@ -89,6 +92,9 @@ export const actions = {
   },
   untag ({ commit, rootState, state }, { documentId, tags }) {
     return datashare.untagDocument(rootState.search.index, documentId, tags).then(() => commit('untag', tags))
+  },
+  tag ({ commit, rootState, state }, { documentId, tags }) {
+    return datashare.tagDocument(rootState.search.index, documentId, tags).then(() => commit('tag', tags))
   }
 }
 

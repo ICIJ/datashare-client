@@ -11,10 +11,13 @@ import router from '@/router'
 import '@/utils/font-awesome'
 import { datashare } from '@/store/modules/document'
 import { jsonOk } from 'tests/unit/tests_utils'
+import { BForm, BFormInput } from 'bootstrap-vue'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
+localVue.component('b-form', BForm)
+localVue.component('b-form-input', BFormInput)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('DocumentTabDetails.vue', () => {
@@ -82,16 +85,7 @@ describe('DocumentTabDetails.vue', () => {
     expect(wrapper.find('.document__content__creation-date').text()).toEqual('Missing date')
   })
 
-  it('should not display tags if none', async () => {
-    const id = 'document'
-    await letData(es).have(new IndexedDocument(id)).commit()
-    await store.dispatch('document/get', { id })
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, propsData: { document: store.state.document.doc } })
-
-    expect(wrapper.findAll('.document__content__tags')).toHaveLength(0)
-  })
-
-  it('should display tags if any, with delete button', async () => {
+  it('should display tags, with delete button', async () => {
     const id = 'document'
     await letData(es).have(new IndexedDocument(id).withTags(['tag_01', 'tag_02'])).commit()
     await store.dispatch('document/get', { id })
@@ -111,5 +105,27 @@ describe('DocumentTabDetails.vue', () => {
     await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.document__content__tags__tag')).toHaveLength(1)
+  })
+
+  it('should display form to add new tag', async () => {
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id)).commit()
+    await store.dispatch('document/get', { id })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
+
+    expect(wrapper.findAll('.document__content__tags__add')).toHaveLength(1)
+  })
+
+  it('should add a new tag', async () => {
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id).withTags(['tag_01'])).commit()
+    await store.dispatch('document/get', { id })
+    const wrapper = mount(DocumentTabDetails, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
+
+    wrapper.vm.tag = 'tag_02'
+    wrapper.findAll('.document__content__tags__add').at(0).trigger('submit')
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.findAll('.document__content__tags__tag')).toHaveLength(2)
   })
 })

@@ -58,6 +58,9 @@ export class DatashareClient {
   untagDocument (project, documentId, tags) {
     return this.sendAction(`/api/document/project/untag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT', body: JSON.stringify(tags), credentials: 'same-origin' })
   }
+  tagDocument (project, documentId, tags) {
+    return this.sendAction(`/api/document/project/tag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT', body: JSON.stringify(tags), credentials: 'same-origin' })
+  }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)

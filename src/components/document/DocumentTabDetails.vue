@@ -45,7 +45,7 @@
           </router-link>
         </div>
       </template>
-      <template v-if="document.tags.length > 0">
+      <template>
         <div class="col-sm-3 font-weight-bold">{{ $t('document.tags') }}</div>
         <div class="col-sm-9 document__content__tags">
           <div class="document__content__tags__tag" v-for="tag in document.tags" :key="tag">
@@ -53,6 +53,9 @@
             {{ tag }}
             <fa icon="times-circle" class="document__content__tags__tag__delete" @click="untag(tag)"/>
           </div>
+          <b-form @submit.prevent="submitTag" class="document__content__tags__add w-50">
+            <b-form-input id="new-tag" v-model="tag" required placeholder="New tag" />
+          </b-form>
         </div>
       </template>
     </div>
@@ -65,6 +68,11 @@ import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/
 export default {
   name: 'DocumentTabDetails',
   props: ['document', 'parentDocument'],
+  data () {
+    return {
+      tag: ''
+    }
+  },
   computed: {
     documentPath () {
       if (this.$config.get('mountedDataDir')) {
@@ -78,6 +86,11 @@ export default {
     getExtractionLevelTranslationKey,
     async untag (tag) {
       await this.$store.dispatch('document/untag', { documentId: this.document.id, tags: [tag] })
+    },
+    async submitTag () {
+      await this.$store.dispatch('document/tag', { documentId: this.document.id, tags: [this.tag] }).then(() => {
+        this.tag = ''
+      })
     }
   }
 }
