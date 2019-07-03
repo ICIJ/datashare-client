@@ -21,7 +21,7 @@ export function sliceIndexes (str, indexes) {
 
 export function highlight (str = '', marks = [], markFun = (m => `<mark>${m.content}</mark>`), restFun = identity, contentFun = (m => m.content)) {
   let docContentSlices = sliceIndexes(str, map(marks, m => m.index))
-  let docContentMarked = map(zip(takeRight(docContentSlices, marks.length), marks), ([slice, mark]) => {
+  let docContentMarked = map(zip(takeRight(docContentSlices, marks.length), marks), ([slice = '', mark]) => {
     return markFun(mark) + restFun(slice.substring(contentFun(mark).length))
   })
   return docContentSlices[0] + docContentMarked.join('')
