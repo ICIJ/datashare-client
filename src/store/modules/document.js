@@ -1,5 +1,9 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
+import DatashareClient from '@/api/DatashareClient'
+import map from 'lodash/map'
+
+export const datashare = new DatashareClient()
 
 export function initialState () {
   return {
@@ -45,6 +49,9 @@ export const mutations = {
   },
   toggleShowNamedEntities (state, toggler = null) {
     state.showNamedEntities = (toggler !== null ? toggler : !state.showNamedEntities)
+  },
+  untag (state, tags = []) {
+    map(tags, tag => state.doc.tags.splice(state.doc.tags.indexOf(tag), 1))
   }
 }
 
@@ -79,12 +86,15 @@ export const actions = {
       commit('namedEntities', { hits: { hits: [] } })
     }
     return state.namedEntities
+  },
+  untag ({ commit, rootState, state }, { documentId, tags }) {
+    return datashare.untagDocument(rootState.search.index, documentId, tags).then(() => commit('untag', tags))
   }
 }
 
 export default {
   namespaced: true,
   state,
-  actions,
-  mutations
+  mutations,
+  actions
 }

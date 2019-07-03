@@ -6,10 +6,10 @@ import Document from '@/api/Document'
 import NamedEntity from '@/api/NamedEntity'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { jsonOk } from 'tests/unit/tests_utils'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import omit from 'lodash/omit'
-import { jsonOk } from 'tests/unit/tests_utils'
 
 Vue.use(Vuex)
 

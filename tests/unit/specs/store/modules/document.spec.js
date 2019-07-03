@@ -1,8 +1,7 @@
 import store from '@/store'
-import { initialState } from '@/store/modules/document'
+import { datashare, initialState } from '@/store/modules/document'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
 
 describe('Document store', () => {
@@ -16,9 +15,10 @@ describe('Document store', () => {
     datashare.fetch.mockReturnValue(jsonOk())
   })
 
-  afterEach(() => store.commit('document/reset'))
-
-  afterAll(() => datashare.fetch.mockRestore())
+  afterEach(() => {
+    store.commit('document/reset')
+    datashare.fetch.mockClear()
+  })
 
   it('should define a store module', () => {
     expect(store.state.document).not.toBeUndefined()
@@ -32,15 +32,28 @@ describe('Document store', () => {
   })
 
   it('should get the document', async () => {
-    const id = 'doc.txt'
+    const id = 'document'
     await letData(es).have(new IndexedDocument(id).withContent('This is the document.')).commit()
     await store.dispatch('document/get', { id: id })
 
     expect(store.state.document.doc.id).toEqual(id)
   })
 
+  it('should get the parent document', async () => {
+    await letData(es).have(new IndexedDocument('parent').withContent('This is parent.')).commit()
+    await store.dispatch('search/query', 'parent')
+    const parentNode = store.state.search.response.hits
+    await letData(es).have(new IndexedDocument('child').withContent('This is child.').withParent(parentNode[0].id)).commit()
+    await store.dispatch('search/query', 'child')
+    const childNode = store.state.search.response.hits
+    await store.dispatch('document/get', { id: childNode[0].id, routing: childNode[0].routing })
+    await store.dispatch('document/getParent')
+
+    expect(store.state.document.parentDocument.id).toEqual(parentNode[0].id)
+  })
+
   it('should get the document\'s named entities', async () => {
-    const id = 'doc.txt'
+    const id = 'document'
     await letData(es).have(new IndexedDocument(id).withContent('This is the document.').withNer('naz')).commit()
     await store.dispatch('document/get', { id: id })
     await store.dispatch('document/getNamedEntities')
@@ -50,7 +63,7 @@ describe('Document store', () => {
   })
 
   it('should get only the not hidden document\'s named entities', async () => {
-    const id = 'doc.txt'
+    const id = 'document'
     await letData(es).have(new IndexedDocument(id).withContent('This is the document.')
       .withNer('entity_01', 42, 'ORGANIZATION', false)
       .withNer('entity_02', 43, 'ORGANIZATION', true)
@@ -65,20 +78,6 @@ describe('Document store', () => {
     expect(store.state.document.namedEntities[1].raw._routing).toEqual(id)
   })
 
-  it('should get the parent document', async () => {
-    await letData(es).have(new IndexedDocument('parent.txt').withContent('This is parent.')).commit()
-    await store.dispatch('search/query', 'parent')
-    const parentNode = store.state.search.response.hits
-    await letData(es).have(new IndexedDocument('child.txt').withContent('This is child.').withParent(parentNode[0].id)).commit()
-    await store.dispatch('search/query', 'child')
-    const childNode = store.state.search.response.hits
-    await store.dispatch('document/get', { id: childNode[0].id, routing: childNode[0].routing })
-    await store.dispatch('document/getParent')
-
-    expect(store.state.document.parentDocument.id).toEqual(parentNode[0].id)
-  })
-
-  /* Show Named Entities Toggle */
   it('should get the "showNamedEntities" status', () => {
     expect(store.state.document.showNamedEntities).toBeTruthy()
   })
@@ -88,5 +87,15 @@ describe('Document store', () => {
     expect(store.state.document.showNamedEntities).toBeFalsy()
     store.commit('document/toggleShowNamedEntities')
     expect(store.state.document.showNamedEntities).toBeTruthy()
+  })
+
+  it('should untag a document', async () => {
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id).withTags(['tag_01', 'tag_02'])).commit()
+    await store.dispatch('document/get', { id: id })
+
+    await store.dispatch('document/untag', { documentId: id, tags: ['tag_01'] })
+
+    expect(store.state.document.doc.tags).toEqual(['tag_02'])
   })
 })

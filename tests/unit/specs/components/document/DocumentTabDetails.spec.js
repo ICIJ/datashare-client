@@ -1,13 +1,16 @@
 import VueI18n from 'vue-i18n'
 import { createServer } from 'http-server'
 import Murmur from '@icij/murmur'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import messages from '@/lang/en'
 import store from '@/store'
 import router from '@/router'
+import '@/utils/font-awesome'
+import { datashare } from '@/store/modules/document'
+import { jsonOk } from 'tests/unit/tests_utils'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -25,9 +28,15 @@ describe('DocumentTabDetails.vue', () => {
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })
 
+  beforeEach(() => {
+    jest.spyOn(datashare, 'fetch')
+    datashare.fetch.mockReturnValue(jsonOk())
+  })
+
   afterEach(() => {
     store.commit('document/reset')
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
+    datashare.fetch.mockRestore()
   })
 
   afterAll(() => httpServer.close())
@@ -73,12 +82,34 @@ describe('DocumentTabDetails.vue', () => {
     expect(wrapper.find('.document__content__creation-date').text()).toEqual('Missing date')
   })
 
-  it('should display the tags', async () => {
+  it('should not display tags if none', async () => {
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id)).commit()
+    await store.dispatch('document/get', { id })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, propsData: { document: store.state.document.doc } })
+
+    expect(wrapper.findAll('.document__content__tags')).toHaveLength(0)
+  })
+
+  it('should display tags if any, with delete button', async () => {
     const id = 'document'
     await letData(es).have(new IndexedDocument(id).withTags(['tag_01', 'tag_02'])).commit()
     await store.dispatch('document/get', { id })
     const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, propsData: { document: store.state.document.doc } })
 
     expect(wrapper.findAll('.document__content__tags__tag')).toHaveLength(2)
+    expect(wrapper.findAll('.document__content__tags__tag__delete')).toHaveLength(2)
+  })
+
+  it('should delete a tag on click on it', async () => {
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id).withTags(['tag_01', 'tag_02'])).commit()
+    await store.dispatch('document/get', { id })
+    const wrapper = mount(DocumentTabDetails, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
+
+    wrapper.findAll('.document__content__tags__tag__delete').at(0).trigger('click')
+    await wrapper.vm.$nextTick()
+
+    expect(wrapper.findAll('.document__content__tags__tag')).toHaveLength(1)
   })
 })

@@ -42,8 +42,6 @@ describe('AppFooter.vue', () => {
     datashare.fetch.mockRestore()
   })
 
-  afterAll(() => window.fetch.mockRestore())
-
   it('should display client git sha1', () => {
     const sha1 = wrapper.vm.clientHash
 
