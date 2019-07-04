@@ -24,11 +24,6 @@
         </router-link>
         <div v-if="isActive(email)">
           <document-translated-content class="document-thread__list__email__content" :document="email" />
-          <div  class="document-thread__list__email__footer px-4 py-3 bg-light d-flex">
-            <router-link :to="{ name: 'document', params: routeParams(email) }" class="align-self-end">
-              {{ $t('email.detail') }}
-            </router-link>
-          </div>
         </div>
       </li>
     </ul>
@@ -166,8 +161,6 @@ export default {
       this.isReady = true
       // Add the document to the user's history
       await this.$store.commit('userHistory/addDocument', this.document)
-      // Scroll to the active doc
-      this.scrollToActive()
     },
     async getThread () {
       try {
