@@ -54,7 +54,7 @@
             <fa icon="times-circle" class="document__content__tags__tag__delete" @click="untag(tag)"/>
           </div>
           <b-form @submit.prevent="submitTag" class="document__content__tags__add w-50">
-            <b-form-input id="new-tag" v-model="tag" required placeholder="New tag" />
+            <b-form-input id="new-tag" v-model="tag" autofocus required placeholder="New tag" />
           </b-form>
         </div>
       </template>
