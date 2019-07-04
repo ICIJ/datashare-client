@@ -344,7 +344,9 @@
     "of": "of",
     "researched_terms": "In this document:",
     "fetching": "Fetching preview...",
-    "tags": "Tags"
+    "tags": "Tags",
+    "showMoreDetails": "Show more details",
+    "lessMoreDetails": "Show less details"
   },
   "email": {
     "detail": "See detail",

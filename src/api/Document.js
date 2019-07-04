@@ -8,6 +8,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
+import keys from 'lodash/keys'
 import get from 'lodash/get'
 import last from 'lodash/last'
 import pick from 'lodash/pick'
@@ -39,6 +40,16 @@ export default class Document extends EsDoc {
   translatedContentIn (targetLanguage) {
     const translation = this.translationIn(targetLanguage)
     return translation ? translation.content : null
+  }
+  meta (name, defaultValue) {
+    const tikaMetadataName = `metadata.tika_metadata_${this.shortMetaName(name)}`
+    return get(this.source, tikaMetadataName, defaultValue)
+  }
+  shortMetaName (name) {
+    return name.replace('tika_metadata_', '')
+  }
+  get metas () {
+    return keys(this.source.metadata || {})
   }
   get parent () {
     return this[_parent]
