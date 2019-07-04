@@ -1,12 +1,12 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import App from '@/components/App'
-import DocumentView from '@/components/document/DocumentView'
-import Indexing from '@/components/Indexing'
-import Landing from '@/components/Landing'
-import Login from '@/components/Login'
-import Search from '@/components/Search'
+import App from '@/pages/App'
+import DocumentView from '@/pages/DocumentView'
+import Indexing from '@/pages/Indexing'
+import Landing from '@/pages/Landing'
+import Login from '@/pages/Login'
+import Search from '@/pages/Search'
 
 import store from '@/store'
 import { isAuthenticated } from '@/utils/utils'

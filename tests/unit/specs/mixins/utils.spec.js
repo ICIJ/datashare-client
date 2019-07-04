@@ -1,6 +1,6 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import App from '@/components/App'
+import App from '@/pages/App'
 import router from '@/router'
 import store from '@/store'
 import utils from '@/mixins/utils'

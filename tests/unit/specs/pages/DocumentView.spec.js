@@ -9,7 +9,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
-import DocumentView from '@/components/document/DocumentView'
+import DocumentView from '@/pages/DocumentView'
 import VueShortkey from 'vue-shortkey'
 
 const localVue = createLocalVue()

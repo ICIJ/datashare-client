@@ -1,4 +1,4 @@
-import Search from '@/components/Search'
+import Search from '@/pages/Search'
 import Vuex from 'vuex'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'

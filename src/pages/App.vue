@@ -9,8 +9,8 @@
 
 <script>
 import DatashareClient from '@/api/DatashareClient'
-import AppFooter from './AppFooter'
-import AppNav from './AppNav'
+import AppFooter from '@/components/AppFooter'
+import AppNav from '@/components/AppNav'
 
 export default {
   name: 'App',
