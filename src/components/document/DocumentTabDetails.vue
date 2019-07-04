@@ -5,8 +5,8 @@
         <h5>
           Details
         </h5>
-        <p class="text-muted small">
-          Those information are extraction from the document's metadata.
+        <p class="text-muted">
+          These information are extracted from the document's metadata.
         </p>
         <div class="row document__content__details__item">
           <div class="col-sm-4 font-weight-bold">{{ $t('document.id') }}</div>
@@ -114,8 +114,8 @@
         <h5>
           {{ $t('document.tags') }}
         </h5>
-        <p class="text-muted small">
-          These tag are visible for all users.
+        <p class="text-muted">
+          These tags are visible for all users.
         </p>
 
         <b-form @submit.prevent="submitTag" class="document__content__tags__add">
