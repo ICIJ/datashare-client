@@ -10,7 +10,7 @@
         </p>
 
         <div class="row document__content__details__item" v-for="field in canonicalFields" :key="field.name" v-if="field.value && field.value !== 'unknown'">
-          <div class="col-sm-4 font-weight-bold d-flex justify-content-between">
+          <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
             <div class="text-truncate mr-1 w-100" :title="field.name">
               {{ field.label }}
             </div>
@@ -30,7 +30,7 @@
         </div>
 
         <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name" v-if="metadataVisible">
-          <div class="col-sm-4 font-weight-bold d-flex justify-content-between">
+          <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
             <div class="text-truncate mr-1 w-100" :title="name">
               <var>{{ document.shortMetaName(name) }}</var>
             </div>
