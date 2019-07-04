@@ -51,7 +51,7 @@ describe('DocumentTabDetails.vue', () => {
     await store.dispatch('document/get', { id })
     const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, propsData: { document: store.state.document.doc } })
 
-    expect(wrapper.findAll('.row div').at(3).text()).toEqual('C:/Users/ds/docs/foo.txt')
+    expect(wrapper.find('.document__content__path').text()).toEqual('C:/Users/ds/docs/foo.txt')
   })
 
   it('should display the document type', async () => {
