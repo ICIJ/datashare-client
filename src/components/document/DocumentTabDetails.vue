@@ -84,13 +84,13 @@ export default {
   methods: {
     getDocumentTypeLabel,
     getExtractionLevelTranslationKey,
-    async untag (tag) {
-      await this.$store.dispatch('document/untag', { documentId: this.document.id, tags: [tag] })
-    },
     async submitTag () {
-      await this.$store.dispatch('document/tag', { documentId: this.document.id, tags: [this.tag] }).then(() => {
+      await this.$store.dispatch('document/tag', { documentId: this.document.id, routingId: this.document.routing, tags: [this.tag] }).then(() => {
         this.tag = ''
       })
+    },
+    async untag (tag) {
+      await this.$store.dispatch('document/untag', { documentId: this.document.id, routingId: this.document.routing, tags: [tag] })
     }
   }
 }

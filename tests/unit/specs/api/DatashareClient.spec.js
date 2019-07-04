@@ -132,16 +132,16 @@ describe('Datashare backend client', () => {
     )
   })
 
-  it('should return backend response to untagDocument', async () => {
-    datashare.untagDocument('project', 'documentId', ['tag_01']).then(
+  it('should return backend response to tagDocument', async () => {
+    datashare.tagDocument('project', 'documentId', 'routingId', ['tag_01']).then(
       resp => resp.json().then(
         json => expect(json).toEqual({})
       )
     )
   })
 
-  it('should return backend response to tagDocument', async () => {
-    datashare.tagDocument('project', 'documentId', ['tag_01']).then(
+  it('should return backend response to untagDocument', async () => {
+    datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01']).then(
       resp => resp.json().then(
         json => expect(json).toEqual({})
       )

@@ -90,11 +90,11 @@ export const actions = {
     }
     return state.namedEntities
   },
-  untag ({ commit, rootState, state }, { documentId, tags }) {
-    return datashare.untagDocument(rootState.search.index, documentId, tags).then(() => commit('untag', tags))
+  tag ({ commit, rootState, state }, { documentId, routingId, tags }) {
+    return datashare.tagDocument(rootState.search.index, documentId, routingId, tags).then(() => commit('tag', tags))
   },
-  tag ({ commit, rootState, state }, { documentId, tags }) {
-    return datashare.tagDocument(rootState.search.index, documentId, tags).then(() => commit('tag', tags))
+  untag ({ commit, rootState, state }, { documentId, routingId, tags }) {
+    return datashare.untagDocument(rootState.search.index, documentId, routingId, tags).then(() => commit('untag', tags))
   }
 }
 
