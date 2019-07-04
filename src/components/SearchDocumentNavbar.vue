@@ -152,11 +152,7 @@ export default {
 
     &__back {
       color: inherit;
-      display: none;
-
-      @media (max-width: $document-float-breakpoint-width) {
-        display: inline;
-      }
+      display: inline;
     }
 
     &__nav .btn {

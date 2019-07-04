@@ -3,6 +3,7 @@
     <app-nav />
     <router-view />
     <app-footer />
+    <scroll-tracker />
     <vue-progress-bar />
   </div>
 </template>
@@ -11,12 +12,14 @@
 import DatashareClient from '@/api/DatashareClient'
 import AppFooter from '@/components/AppFooter'
 import AppNav from '@/components/AppNav'
+import ScrollTracker from '@/components/ScrollTracker'
 
 export default {
   name: 'App',
   components: {
     AppFooter,
-    AppNav
+    AppNav,
+    ScrollTracker
   },
   created () {
     if (process.env.NODE_ENV === 'production') {

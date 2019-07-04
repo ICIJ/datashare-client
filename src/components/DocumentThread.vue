@@ -35,10 +35,6 @@
     background: black;
     margin:$spacer;
 
-    @media (max-width: $document-float-breakpoint-width) {
-      margin: 0;
-    }
-
     &__list {
       border: 1px solid $border-color;
       border-bottom: 0;
@@ -78,9 +74,7 @@
 <script>
 import findIndex from 'lodash/findIndex'
 import reduce from 'lodash/reduce'
-import { mapState } from 'vuex'
 import bodybuilder from 'bodybuilder'
-import VueScrollTo from 'vue-scrollto'
 
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
@@ -111,9 +105,6 @@ export default {
     }
   },
   computed: {
-    ...mapState('document', {
-      document: 'doc'
-    }),
     activeDocumentIndex () {
       return findIndex(this.thread.hits, this.isActive)
     },
@@ -140,16 +131,17 @@ export default {
     routeParams (email) {
       return { id: email.id, index: email.index, routing: email.routing }
     },
-    async scrollToActive (duration = 1) {
+    async scrollToActive () {
       // Element must be mounted
       await this.$nextTick()
+      // Use the active email
       let element = this.$el.querySelector('.document-thread__list__email--active')
       // For the first email, we go to the top of the page
       if (this.activeDocumentIndex === 0) element = this.$el
       // Get the offset from the navbar height (which is sticky)
       const offset = -parseInt(this.$root.$el.style.getPropertyValue('--search-document-navbar-height'))
-      // Scroll to the active item with a slight offset
-      VueScrollTo.scrollTo(element, duration, { offset })
+      // Use the scroll-tracker component
+      this.$root.$emit('scroll-tracker:request', element, offset)
     },
     async init () {
       this.isReady = false
@@ -161,6 +153,8 @@ export default {
       this.isReady = true
       // Add the document to the user's history
       await this.$store.commit('userHistory/addDocument', this.document)
+      // Scroll to the active email
+      await this.scrollToActive()
     },
     async getThread () {
       try {

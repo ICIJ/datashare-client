@@ -66,6 +66,7 @@ export default {
       this.isReady = true
       if (this.document) {
         await this.$store.commit('userHistory/addDocument', this.document)
+        this.$root.$emit('scroll-tracker:request', this.$root.$el)
       }
     },
     isTabActive (name) {
