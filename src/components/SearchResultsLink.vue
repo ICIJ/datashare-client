@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: routeName, params }" class="search-results-link d-flex align-self-stretch flex-nowrap" :class="{ 'search-results-link--active': isActive() }">
+  <router-link :to="{ name: 'document', params }" class="search-results-link d-flex align-self-stretch flex-nowrap" :class="{ 'search-results-link--active': isActive() }">
     <document-thumbnail :document="doc" class="search-results-link__thumbnail" crop lazy />
     <div class="search-results-link__wrapper">
       <h5 class="search-results-link__basename">
@@ -50,9 +50,6 @@ export default {
     },
     params () {
       return this.doc.routerParams
-    },
-    routeName () {
-      return this.doc.isEmail ? 'email' : 'document'
     }
   },
   filters: {

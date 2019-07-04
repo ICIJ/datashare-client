@@ -40,9 +40,6 @@ export default class Document extends EsDoc {
     const translation = this.translationIn(targetLanguage)
     return translation ? translation.content : null
   }
-  translatedContentHtmlIn (targetLanguage) {
-    return this.nl2br(this.translatedContentIn(targetLanguage))
-  }
   get parent () {
     return this[_parent]
   }
@@ -97,9 +94,6 @@ export default class Document extends EsDoc {
   }
   get highlight () {
     return this.raw.highlight
-  }
-  get contentHtml () {
-    return this.nl2br(this.get('_source.content', ''))
   }
   get url () {
     return '/api/index/src/' + this.index + '/' + this.id + '?routing=' + this.routing

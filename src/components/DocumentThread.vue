@@ -1,33 +1,30 @@
 <template>
-  <div class="email-view p-0" v-if="document && isReady">
-    <h3 class="p-3">
-      {{ document.cleanSubject }}
-    </h3>
-    <ul class="list-unstyled email-view__thread m-0">
-      <li v-for="email in thread.hits" :key="email.id" class="email-view__thread__item" :class="{ 'email-view__thread__item--active': isActive(email) }">
-        <router-link :to="{ name: 'email', params: routeParams(email) }" class="px-3 py-2 d-block" v-once>
+  <div class="document-thread p-0" v-if="document && isReady">
+    <ul class="list-unstyled document-thread__list m-0">
+      <li v-for="email in thread.hits" :key="email.id" class="document-thread__list__email" :class="{ 'document-thread__list__email--active': isActive(email) }">
+        <router-link :to="{ name: 'document', params: routeParams(email) }" class="px-3 py-2 d-block" v-once>
           <div class="d-flex text-nowrap">
             <div class="w-100">
-              <strong class="email-view__thread__item__from mr-3">
+              <strong class="document-thread__list__email__from mr-3">
                 {{ email.messageFrom }}
               </strong>
             </div>
-            <abbr class="email-view__thread__item__date align-self-end small" :title="email.creationDateHuman" v-if="email.creationDate" v-b-tooltip>
+            <abbr class="document-thread__list__email__date align-self-end small" :title="email.creationDateHuman" v-if="email.creationDate" v-b-tooltip>
               {{ $d(email.creationDate) }}
             </abbr>
           </div>
           <div class="d-flex">
-            <span class="email-view__thread__item__to text-muted text-nowrap mr-3" v-if="isActive(email)">
+            <span class="document-thread__list__email__to text-muted text-nowrap mr-3" v-if="isActive(email)">
               {{ $t('email.to') }} {{ email.messageTo }}
             </span>
-            <span class="email-view__thread__item__excerpt text-muted w-100" v-else>
+            <span class="document-thread__list__email__excerpt text-muted w-100" v-else>
               {{ email.excerpt }}
             </span>
           </div>
         </router-link>
         <div v-if="isActive(email)">
-          <document-translated-content  class="email-view__thread__item__content" :document="email" />
-          <div  class="email-view__thread__item__footer px-4 py-3 bg-light d-flex">
+          <document-translated-content class="document-thread__list__email__content" :document="email" />
+          <div  class="document-thread__list__email__footer px-4 py-3 bg-light d-flex">
             <router-link :to="{ name: 'document', params: routeParams(email) }" class="align-self-end">
               {{ $t('email.detail') }}
             </router-link>
@@ -39,21 +36,22 @@
 </template>
 
 <style lang="scss">
-  .email-view {
-    background: white;
-    margin:0 $spacer;
+  .document-thread {
+    background: black;
+    margin:$spacer;
 
     @media (max-width: $document-float-breakpoint-width) {
       margin: 0;
     }
 
-    &__thread {
-      border-top: 1px solid $border-color;
+    &__list {
+      border: 1px solid $border-color;
+      border-bottom: 0;
       background: white;
       padding: 0;
       margin: 0;
 
-      &__item {
+      &__email {
         border-bottom: 1px solid $border-color;
 
         & > a {
@@ -94,8 +92,16 @@ import Response from '@/api/Response'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
 
 export default {
-  name: 'EmailView',
-  props: ['index', 'id', 'routing'],
+  name: 'DocumentThread',
+  props: {
+    document: {
+      type: Object
+    },
+    namedEntities: {
+      type: Array,
+      default: () => ([])
+    }
+  },
   components: {
     DocumentTranslatedContent
   },
@@ -142,7 +148,7 @@ export default {
     async scrollToActive (duration = 1) {
       // Element must be mounted
       await this.$nextTick()
-      let element = this.$el.querySelector('.email-view__thread__item--active')
+      let element = this.$el.querySelector('.document-thread__list__email--active')
       // For the first email, we go to the top of the page
       if (this.activeDocumentIndex === 0) element = this.$el
       // Get the offset from the navbar height (which is sticky)
@@ -150,10 +156,8 @@ export default {
       // Scroll to the active item with a slight offset
       VueScrollTo.scrollTo(element, duration, { offset })
     },
-    async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
+    async init () {
       this.isReady = false
-      // Load the current document)
-      await this.$store.dispatch('document/get', params)
       // Load it's thread (if any)
       this.thread = await this.getThread()
       this.thread.push('hits.hits', this.document.raw)
@@ -181,16 +185,14 @@ export default {
       }
     }
   },
-  beforeRouteEnter (to, _from, next) {
-    next(vm => vm.getDoc(to.params))
+  beforeRouteEnter (_to, _from, next) {
+    next(this.init)
   },
-  beforeRouteUpdate (to, _from, next) {
-    this.getDoc(to.params).then(next)
+  beforeRouteUpdate (_to, _from, next) {
+    this.init().then(next)
   },
   mounted () {
-    if (!this.isReady) {
-      this.getDoc()
-    }
+    this.init()
   }
 }
 </script>
