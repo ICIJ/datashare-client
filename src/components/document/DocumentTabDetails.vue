@@ -8,92 +8,36 @@
         <p class="text-muted">
           These information are extracted from the document's metadata.
         </p>
-        <div class="row document__content__details__item">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.id') }}</div>
-          <div class="col-sm-8 document__content__id">
-            <div class="overflow-auto w-100 text-nowrap">
-              <code>
-                {{ document.id }}
-              </code>
+
+        <div class="row document__content__details__item" v-for="field in canonicalFields" :key="field.name" v-if="field.value && field.value !== 'unknown'">
+          <div class="col-sm-4 font-weight-bold d-flex justify-content-between">
+            <div class="text-truncate mr-1 w-100" :title="field.name">
+              {{ field.label }}
+            </div>
+            <div class="mr-auto document__content__details__item__search">
+              <router-link :to="{ name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value) } }">
+                <fa icon="search" />
+              </router-link>
+            </div>
+          </div>
+          <div class="col-sm-8">
+            <div class="overflow-auto w-100 text-nowrap" :class="field.class">
+              <component :is="field.component || 'div'">
+                {{ field.value }}
+              </component>
             </div>
           </div>
         </div>
-        <div class="row document__content__details__item">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.name') }}</div>
-          <div class="col-sm-8 document__content__basename">{{ document.basename }}</div>
-        </div>
 
-        <div class="row document__content__details__item">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.path') }}</div>
-          <div class="col-sm-8 document__content__path">
-            <div class="overflow-auto w-100 text-nowrap">
-              {{ documentPath }}
-            </div>
-          </div>
-        </div>
-
-        <div class="row document__content__details__item">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.creation_date') }}</div>
-          <div class="col-sm-8 document__content__creation-date">{{ document.meta('creation_date') ? document.meta('creation_date') : $t('facet.missing') }}</div>
-        </div>
-
-        <div class="row document__content__details__item">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.author') }}</div>
-          <div class="col-sm-8 document__content__extraction-date">{{ document.meta('author') }}</div>
-        </div>
-
-        <div class="row document__content__details__item">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.extraction_date') }}</div>
-          <div class="col-sm-8 document__content__extraction-date">{{ document.source.extractionDate }}</div>
-        </div>
-
-        <div class="row document__content__details__item" v-if="document.source.contentLength !== -1">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.size') }}</div>
-          <div class="col-sm-8 document__content__size">{{ document.humanSize }}</div>
-        </div>
-
-        <div class="row document__content__details__item" v-if="document.source.language !== 'UNKNOWN'">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.content_language') }}</div>
-          <div class="col-sm-8">{{ $te(`facet.lang.${document.source.language}`) ? $t(`facet.lang.${document.source.language}`): document.source.language }}</div>
-        </div>
-
-        <div class="row document__content__details__item" v-if="document.source.contentType !== 'unknown'">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.content_type') }}</div>
-          <div class="col-sm-8 document__content__content-type">{{ getDocumentTypeLabel(document.source.contentType) }}</div>
-        </div>
-
-        <div class="row document__content__details__item" v-if="document.source.contentEncoding !== 'unknown'">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.content_encoding') }}</div>
-          <div class="col-sm-8">{{ document.source.contentEncoding }}</div>
-        </div>
-
-        <div class="row document__content__details__item" v-if="document.source.extractionLevel > 0">
-          <div class="col-sm-4 font-weight-bold">{{ $t('facet.extraction-level') }}</div>
-          <div class="col-sm-8 document__content__tree-level">{{ $t(getExtractionLevelTranslationKey(document.source.extractionLevel)) }}</div>
-        </div>
-
-        <div class="row document__content__details__item" v-if="document.source.extractionLevel > 0 && parentDocument">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.parent_document') }}</div>
-          <div class="col-sm-8">
-            <router-link :to="{ name: 'document', params: { id: document.source.parentDocument, routing: document.routing } }" class="document__content__parent">
-              {{ parentDocument.basename }}
-            </router-link>
-          </div>
-        </div>
-
-        <div class="row document__content__details__item" v-if="document.threadIndex">
-          <div class="col-sm-4 font-weight-bold">{{ $t('document.thread_index') }}</div>
-          <div class="col-sm-8">
-            <router-link :to="{ name: 'search', query: { q: 'metadata.tika_metadata_message_raw_header_thread_index:' + document.threadIndex } }" class="document__content__parent">
-              {{ document.threadIndex }}
-            </router-link>
-          </div>
-        </div>
-
-        <div class="row document__content__details__item" v-for="name in document.metas" :key="name" v-if="metadataVisible">
-          <div class="col-sm-4 font-weight-bold">
-            <div class="text-truncate" :title="name">
+        <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name" v-if="metadataVisible">
+          <div class="col-sm-4 font-weight-bold d-flex justify-content-between">
+            <div class="text-truncate mr-1 w-100" :title="name">
               <var>{{ document.shortMetaName(name) }}</var>
+            </div>
+            <div class="mr-auto document__content__details__item__search">
+              <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name) } }">
+                <fa icon="search" />
+              </router-link>
             </div>
           </div>
           <div class="col-sm-8">
@@ -134,6 +78,10 @@
 </template>
 
 <script>
+import filter from 'lodash/filter'
+import get from 'lodash/get'
+import map from 'lodash/map'
+
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 
 export default {
@@ -151,6 +99,98 @@ export default {
         return this.document.source.path.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
       }
       return this.document.source.path
+    },
+    metaFieldsNames () {
+      return filter(this.document.metas, name => {
+        return map(this.canonicalFields, 'name').indexOf(name) === -1
+      })
+    },
+    canonicalFields () {
+      return [
+        {
+          name: '_id',
+          label: this.$t('document.id'),
+          class: 'document__content__id',
+          value: this.document.id,
+          component: 'code'
+        },
+        {
+          name: 'name',
+          label: this.$t('document.name'),
+          class: 'document__content__basename',
+          value: this.document.basename
+        },
+        {
+          name: 'path',
+          label: this.$t('document.path'),
+          class: 'document__content__path',
+          value: this.documentPath
+        },
+        {
+          name: 'metadata.tika_metadata_creation_date',
+          label: this.$t('document.creation_date'),
+          class: 'document__content__creation-date',
+          value: this.document.meta('creation_date')
+        },
+        {
+          name: 'metadata.tika_metadata_author',
+          label: this.$t('document.author'),
+          class: 'document__content__author',
+          value: this.document.meta('author')
+        },
+        {
+          name: 'extractionDate',
+          label: this.$t('document.extraction_date'),
+          class: 'document__content__extraction-date',
+          value: this.document.source.extractionDate
+        },
+        {
+          name: 'contentLength',
+          label: this.$t('document.size'),
+          class: 'document__content__content-length',
+          value: this.document.humanSize,
+          rawValue: this.document.source.contentLength
+        },
+        {
+          name: 'language',
+          label: this.$t('document.content_language'),
+          class: 'document__content__language',
+          value: this.$t(`facet.lang.${this.document.source.language}`),
+          rawValue: this.document.source.language
+        },
+        {
+          name: 'contentType',
+          label: this.$t('document.content_type'),
+          class: 'document__content__content-type',
+          value: this.getDocumentTypeLabel(this.document.source.contentType),
+          rawValue: this.document.source.contentType
+        },
+        {
+          name: 'contentEncoding',
+          label: this.$t('document.content_encoding'),
+          class: 'document__content__content-encoding',
+          value: this.document.source.contentEncoding
+        },
+        {
+          name: 'extractionLevel',
+          label: this.$t('facet.extraction-level'),
+          class: 'document__content__tree-level',
+          value: this.$t(this.getExtractionLevelTranslationKey(this.document.source.extractionLevel)),
+          rawValue: this.document.source.extractionLevel
+        },
+        {
+          name: 'metadata.tika_metadata_message_raw_header_thread_index',
+          label: this.$t('document.thread_index'),
+          class: 'document__content__thread',
+          value: this.document.threadIndex
+        },
+        {
+          name: 'parentDocument',
+          label: this.$t('document.parent'),
+          class: 'document__content__parent',
+          value: get(this, 'parentDocument.basename', null)
+        }
+      ]
     }
   },
   methods: {
@@ -161,7 +201,7 @@ export default {
       this.tag = ''
     },
     async untag (tag) {
-      await this.$store.dispatch('document/untag', { documentId: this.document.id, routingId: this.document.routing, tags: [tag] })
+      this.$store.dispatch('document/untag', { documentId: this.document.id, routingId: this.document.routing, tags: [tag] })
     }
   }
 }
@@ -182,6 +222,14 @@ export default {
 
         &__item {
           padding: $spacer * 0.3 0;
+
+          &__search {
+            display: none;
+          }
+
+          &:hover &__search {
+            display: block;
+          }
         }
 
         &__item:nth-child(even) {

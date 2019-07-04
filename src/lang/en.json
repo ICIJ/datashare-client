@@ -346,7 +346,7 @@
     "fetching": "Fetching preview...",
     "tags": "Tags",
     "showMoreDetails": "Show more details",
-    "lessMoreDetails": "Show less details",
+    "showLessDetails": "Show less details",
     "author": "Author",
     "extraction_date": "Indexing date"
   },

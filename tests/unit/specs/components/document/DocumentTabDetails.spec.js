@@ -1,7 +1,7 @@
 import VueI18n from 'vue-i18n'
 import { createServer } from 'http-server'
 import Murmur from '@icij/murmur'
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
@@ -76,13 +76,13 @@ describe('DocumentTabDetails.vue', () => {
     expect(wrapper.find('.document__content__parent').text()).toEqual(parentDocument)
   })
 
-  it('should display a message if the creation date is missing', async () => {
+  it('should not display the creation date if its missing', async () => {
     const id = 'document'
     await letData(es).have(new IndexedDocument(id)).commit()
     await store.dispatch('document/get', { id })
     const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, propsData: { document: store.state.document.doc } })
 
-    expect(wrapper.find('.document__content__creation-date').text()).toEqual('Missing date')
+    expect(wrapper.find('.document__content__creation-date').exists()).toBeFalsy()
   })
 
   it('should display tags, with delete button', async () => {
@@ -99,9 +99,9 @@ describe('DocumentTabDetails.vue', () => {
     const id = 'document'
     await letData(es).have(new IndexedDocument(id).withTags(['tag_01', 'tag_02'])).commit()
     await store.dispatch('document/get', { id })
-    const wrapper = mount(DocumentTabDetails, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
 
-    await wrapper.findAll('.document__content__tags__tag__delete').at(0).trigger('click')
+    await wrapper.vm.untag('tag_01')
     await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.document__content__tags__tag')).toHaveLength(1)
@@ -120,10 +120,10 @@ describe('DocumentTabDetails.vue', () => {
     const id = 'document'
     await letData(es).have(new IndexedDocument(id).withTags(['tag_01'])).commit()
     await store.dispatch('document/get', { id })
-    const wrapper = mount(DocumentTabDetails, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
 
     wrapper.vm.tag = 'tag_02'
-    await wrapper.findAll('.document__content__tags__add').at(0).trigger('submit')
+    await wrapper.vm.submitTag()
     await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.document__content__tags__tag')).toHaveLength(2)
