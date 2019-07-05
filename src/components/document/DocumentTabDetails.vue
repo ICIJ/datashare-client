@@ -200,7 +200,7 @@ export default {
       await this.$store.dispatch('document/tag', { documentId: this.document.id, routingId: this.document.routing, tags: [this.tag] })
       this.tag = ''
     },
-    async untag (tag) {
+    untag (tag) {
       this.$store.dispatch('document/untag', { documentId: this.document.id, routingId: this.document.routing, tags: [tag] })
     }
   }

@@ -54,7 +54,11 @@ export const mutations = {
     map(tags, tag => state.doc.tags.splice(state.doc.tags.indexOf(tag), 1))
   },
   tag (state, tags = []) {
-    map(tags, tag => state.doc.tags.push(tag))
+    map(tags, tag => {
+      if (state.doc.tags.indexOf(tag) === -1) {
+        state.doc.tags.push(tag)
+      }
+    })
   }
 }
 

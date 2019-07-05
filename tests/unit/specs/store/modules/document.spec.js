@@ -99,6 +99,16 @@ describe('Document store', () => {
     expect(store.state.document.doc.tags).toEqual(['tag_01', 'tag_02'])
   })
 
+  it('should not tag a document if it already has the same tag', async () => {
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id).withTags(['tag_01'])).commit()
+    await store.dispatch('document/get', { id: id })
+
+    await store.dispatch('document/tag', { documentId: id, routingId: id, tags: ['tag_01'] })
+
+    expect(store.state.document.doc.tags).toEqual(['tag_01'])
+  })
+
   it('should untag a document', async () => {
     const id = 'document'
     await letData(es).have(new IndexedDocument(id).withTags(['tag_01', 'tag_02'])).commit()
