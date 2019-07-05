@@ -348,7 +348,8 @@
     "showMoreDetails": "Show more details",
     "showLessDetails": "Show less details",
     "author": "Author",
-    "extraction_date": "Indexing date"
+    "extraction_date": "Indexing date",
+    "parent": "Parent"
   },
   "email": {
     "detail": "See detail",
