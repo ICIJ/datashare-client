@@ -27,6 +27,12 @@ module.exports = {
         })
     })
 
+    // Use a specific loader for workers
+    config.module.rule('worker')
+      .test(/\.worker\.js$/)
+      .use('worker-loader')
+      .loader('worker-loader')
+
     // Aliases configuration
     config.resolve.alias
       .set('images', resolve('src/assets/images'))

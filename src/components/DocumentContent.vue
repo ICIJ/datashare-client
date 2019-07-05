@@ -12,7 +12,7 @@ import { mapGetters } from 'vuex'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import { highlight } from '@/utils/strings'
-import LocalSearchWorker from '!!worker-loader!@/utils/local-search-worker'
+import LocalSearchWorker from '@/utils/local-search.worker'
 
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags.vue'
@@ -68,10 +68,13 @@ export default {
     async transformContent () {
       this.transformedContent = await this.contentPipeline()
     },
-    createLocalSearchWorker () {
+    terminateLocalSearchWorker () {
       if (this.localSearchWorker !== null) {
         this.localSearchWorker.terminate()
       }
+    },
+    createLocalSearchWorker () {
+      this.terminateLocalSearchWorker()
       this.localSearchWorker = new LocalSearchWorker()
     },
     buildNamedEntityMark (ne) {
@@ -104,6 +107,7 @@ export default {
           this.localSearchOccurrences = data.localSearchOccurrences
           this.localSearchIndex = data.localSearchIndex
           this.localSearchWorkerInProgress = false
+          this.terminateLocalSearchWorker()
           resolve(data.content)
         }))
         // Ignore errors
