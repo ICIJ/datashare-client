@@ -99,9 +99,8 @@ export default {
 
       this.createLocalSearchWorker()
       this.localSearchWorkerInProgress = true
-      this.localSearchWorker.postMessage({ content, localSearchTerm })
 
-      return new Promise(resolve => {
+      const workerPromise = new Promise(resolve => {
         // We receive a content from the worker
         this.localSearchWorker.addEventListener('message', once(({ data }) => {
           this.localSearchOccurrences = data.localSearchOccurrences
@@ -113,6 +112,10 @@ export default {
         // Ignore errors
         this.localSearchWorker.onerror = () => { resolve(content) }
       })
+
+      this.localSearchWorker.postMessage({ content, localSearchTerm })
+
+      return workerPromise
     },
     addLineBreaks (content) {
       return trim(content).split('\n').map(row => `<p>${row}</p>`).join('')

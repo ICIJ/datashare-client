@@ -1,5 +1,6 @@
 import map from 'lodash/map'
 import { DOMParser } from 'xmldom'
+import FakeWorker from './fake-worker.js'
 
 function replaceInChildNodes (element, needle, replacement) {
   if (element.nodeName === '#text') {
@@ -25,7 +26,7 @@ function addLocalSearchMarks (content = '', localSearchTerm = '') {
   const parser = new DOMParser()
   const dom = parser.parseFromString(content, 'text/html')
 
-  replaceInChildNodes(dom, needle, '<mark class="local-search-term">$1</mark>')
+  replaceInChildNodes(dom.body || dom, needle, '<mark class="local-search-term">$1</mark>')
 
   return {
     content: dom.innerHTML,
@@ -34,8 +35,16 @@ function addLocalSearchMarks (content = '', localSearchTerm = '') {
   }
 }
 
-self.addEventListener('message', function ({ data }) {
+self.addEventListener('message', ({ data }) => {
   const result = addLocalSearchMarks(data.content, data.localSearchTerm)
   // Send the data to the worker host
   self.postMessage(result)
 })
+
+export default class LocalSearchWorker extends FakeWorker {
+  postMessage (data) {
+    const result = addLocalSearchMarks(data.content, data.localSearchTerm)
+    // Send the data to parent method (which pass the data to the host)
+    super.postMessage(result)
+  }
+}

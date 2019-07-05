@@ -47,6 +47,7 @@
     "vuex-persistedstate": "^2.5.4",
     "whatwg-fetch": "^3.0.0",
     "xlsx": "^0.14.3",
+    "xmldom": "^0.1.27",
     "xss": "^1.0.6"
   },
   "devDependencies": {
