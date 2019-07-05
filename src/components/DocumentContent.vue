@@ -161,9 +161,9 @@ export default {
       return compact([
         // Named entities cannot be added on translated content
         (this.shouldApplyNamedEntitiesMarks ? this.addNamedEntitiesMarks : null),
+        this.sanitizeHtml,
         this.addLocalSearchMarks,
         this.addGlobalSearchMarks,
-        this.sanitizeHtml,
         this.addLineBreaks
       ])
     },
@@ -247,6 +247,11 @@ export default {
 
       &--active {
         background: #38D878;
+      }
+
+      > .global-search-term {
+        background: transparent;
+        color: inherit;
       }
     }
   }
