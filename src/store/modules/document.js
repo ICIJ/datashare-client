@@ -31,6 +31,7 @@ export const mutations = {
   doc (state, raw) {
     if (raw !== null) {
       state.doc = Response.instantiate(raw)
+      state.doc.tags.sort()
     } else {
       state.doc = null
     }
@@ -57,6 +58,7 @@ export const mutations = {
     map(tags, tag => {
       if (state.doc.tags.indexOf(tag) === -1) {
         state.doc.tags.push(tag)
+        state.doc.tags.sort()
       }
     })
   }

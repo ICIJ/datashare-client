@@ -99,6 +99,24 @@ describe('Document store', () => {
     expect(store.state.document.doc.tags).toEqual(['tag_01', 'tag_02'])
   })
 
+  it('should sort the tags of the document by alphabetical order', async () => {
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id).withTags(['tag_z', 'tag_a'])).commit()
+    await store.dispatch('document/get', { id: id })
+
+    expect(store.state.document.doc.tags).toEqual(['tag_a', 'tag_z'])
+  })
+
+  it('should sort the tags of the document after a tag addition', async () => {
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id).withTags(['tag_z'])).commit()
+    await store.dispatch('document/get', { id: id })
+
+    await store.dispatch('document/tag', { documentId: id, routingId: id, tags: ['tag_a'] })
+
+    expect(store.state.document.doc.tags).toEqual(['tag_a', 'tag_z'])
+  })
+
   it('should not tag a document if it already has the same tag', async () => {
     const id = 'document'
     await letData(es).have(new IndexedDocument(id).withTags(['tag_01'])).commit()
