@@ -12,6 +12,8 @@ process.env.VUE_APP_GIT_BRANCH = gitRevisionPlugin.branch()
 module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
+  // @see https://github.com/webpack-contrib/worker-loader/issues/177
+  parallel: false,
   chainWebpack: config => {
     // Resource loader configuration:
     // 4 named rules must include this loader
