@@ -2,7 +2,7 @@ import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
-import { createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { createServer } from 'http-server'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -146,5 +146,53 @@ describe('DocumentView.vue', () => {
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(3)
     expect(wrapper.findAll('.document .document__header__nav__item').at(2).text()).not.toContain('Named Entities')
+  })
+
+  describe('navigate through tasb as loop', () => {
+    it('should set the previous tab as active', async () => {
+      const id = 'document'
+      const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+      await letData(es).have(new IndexedDocument(id)).commit()
+      await wrapper.vm.getDoc()
+
+      wrapper.vm.activeTab = 'details'
+      wrapper.vm.goToPreviousTab()
+
+      expect(wrapper.vm.activeTab).toBe('extracted-text')
+    })
+
+    it('should set the next tab as active', async () => {
+      const id = 'document'
+      const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+      await letData(es).have(new IndexedDocument(id)).commit()
+      await wrapper.vm.getDoc()
+
+      wrapper.vm.goToNextTab()
+
+      expect(wrapper.vm.activeTab).toBe('details')
+    })
+
+    it('should set the last tab as active', async () => {
+      const id = 'document'
+      const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+      await letData(es).have(new IndexedDocument(id)).commit()
+      await wrapper.vm.getDoc()
+
+      wrapper.vm.goToPreviousTab()
+
+      expect(wrapper.vm.activeTab).toBe('preview')
+    })
+
+    it('should set the first tab as active', async () => {
+      const id = 'document'
+      const wrapper = shallowMount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
+      await letData(es).have(new IndexedDocument(id)).commit()
+      await wrapper.vm.getDoc()
+
+      wrapper.vm.activeTab = 'preview'
+      wrapper.vm.goToNextTab()
+
+      expect(wrapper.vm.activeTab).toBe('extracted-text')
+    })
   })
 })

@@ -3,7 +3,7 @@
     <content-placeholder class="document py-2 px-3" />
   </div>
   <div v-else>
-    <div class="d-flex flex-column document" v-if="document">
+    <div class="d-flex flex-column document" v-if="document" v-shortkey="{ goToPreviousTab: ['arrowleft'], goToNextTab: ['arrowright']}" @shortkey="shortKeyAction">
       <div class="document__header">
         <h3>
           <document-sliced-name interactive-root :document="document" />
@@ -34,6 +34,7 @@
 
 <script>
 import filter from 'lodash/filter'
+import findIndex from 'lodash/findIndex'
 import { mapState } from 'vuex'
 
 import DocumentSlicedName from '@/components/DocumentSlicedName'
@@ -81,6 +82,26 @@ export default {
         'active': this.isTabActive(name),
         ['document__content__pane--' + name]: true
       }
+    },
+    shortKeyAction (event) {
+      switch (event.srcKey) {
+        case 'goToPreviousTab':
+          this.goToPreviousTab()
+          break
+        case 'goToNextTab':
+          this.goToNextTab()
+          break
+      }
+    },
+    goToPreviousTab () {
+      const indexActiveTab = findIndex(this.visibleTabs, tab => tab.name === this.activeTab)
+      const indexPreviousActiveTab = indexActiveTab === 0 ? this.visibleTabs.length - 1 : indexActiveTab - 1
+      this.activeTab = this.visibleTabs[indexPreviousActiveTab].name
+    },
+    goToNextTab () {
+      const indexActiveTab = findIndex(this.visibleTabs, tab => tab.name === this.activeTab)
+      const indexNextActiveTab = indexActiveTab === this.visibleTabs.length - 1 ? 0 : indexActiveTab + 1
+      this.activeTab = this.visibleTabs[indexNextActiveTab].name
     }
   },
   computed: {
