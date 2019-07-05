@@ -11,7 +11,6 @@ import { mapState } from 'vuex'
 import Facet from '@/components/Facet'
 import facets from '@/mixins/facets'
 import utils from '@/mixins/utils'
-import capitalize from 'lodash/capitalize'
 
 export default {
   name: 'FacetYesNo',
@@ -24,7 +23,7 @@ export default {
         value: true,
         html: `
           <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
-            ${capitalize(this.labelToHuman(this.facet.name))}
+            ${this.labelToHuman(this.facet.name)}
           </span>
           <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
             ${this.$n(this.starredDocuments.length)}
@@ -34,7 +33,7 @@ export default {
         value: false,
         html: `
           <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
-            ${capitalize(this.labelToHuman('facet.not'))} ${this.labelToHuman(this.facet.name)}
+            ${this.labelToHuman('facet.not_starred')}
           </span>
           <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
             ${this.$n(this.root.calculatedCount - this.starredDocuments.length)}

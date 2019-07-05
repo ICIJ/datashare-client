@@ -103,8 +103,8 @@
     "local-index": "My documents",
     "all": "All",
     "missing": "Missing date",
-    "starred": "starred",
-    "not": "not",
+    "starred": "Starred",
+    "not_starred": "Not starred",
     "lang": {
       "all": "All",
       "ABKHAZIAN": "Abkhazian",
