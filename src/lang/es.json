@@ -318,7 +318,7 @@
     "not_found": "Documento no encontrado",
     "not_available": "La vista previa está disponible solo para algunos formatos: pdf, csv, xlsx, tiff y rtf.",
     "named_entities_not_found": "No se han encontrado entidades con nombre",
-    "named_entites_not_searched": "<p>Documento no analizado.</p><p class=\"text-muted small\">Para buscar entidades con nombre, vaya a <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> y comience una nueva tarea \"@:indexing.find_named_entities\".</p>",
+    "named_entities_not_searched": "<p>Documento no analizado.</p><p class=\"text-muted small\">Para buscar entidades con nombre, vaya a <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> y comience una nueva tarea \"@:indexing.find_named_entities\".</p>",
     "generating_preview": "Generando visualización previa...",
     "sheet": "Hoja",
     "search_directory": "Buscar dentro de este directorio",

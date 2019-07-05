@@ -330,7 +330,7 @@
     "not_found": "Document not found",
     "not_available": "Preview is available only for some formats: pdf, csv, xlsx, tiff and rtf.",
     "named_entities_not_found": "No named entities found",
-    "named_entites_not_searched": "<p>Document not analyzed.</p><p class=\"text-muted small\">To search named entities, go to <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> and start a new task \"@:indexing.find_named_entities\".</p>",
+    "named_entities_not_searched": "<p>Document not analyzed.</p><p class=\"text-muted small\">To search named entities, go to <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> and start a new task \"@:indexing.find_named_entities\".</p>",
     "generating_preview": "Generating preview...",
     "sheet": "Sheet",
     "search_directory": "Search within this directory",
