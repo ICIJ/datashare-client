@@ -11,28 +11,28 @@ export class DatashareClient {
     }
   }
   index (options) {
-    return this.sendAction(`/api/task/index/file`, { method: 'POST', body: JSON.stringify({ options }), credentials: 'same-origin' })
+    return this.sendAction(`/api/task/index/file`, { method: 'POST', body: JSON.stringify({ options }) })
   }
   findNames (pipeline, options) {
-    return this.sendAction(`/api/task/findNames/${pipeline}`, { method: 'POST', body: JSON.stringify({ options }), credentials: 'same-origin' })
+    return this.sendAction(`/api/task/findNames/${pipeline}`, { method: 'POST', body: JSON.stringify({ options }) })
   }
   stopPendingTasks () {
-    return this.sendAction('/api/task/stopAll', { method: 'PUT', credentials: 'same-origin' })
+    return this.sendAction('/api/task/stopAll', { method: 'PUT' })
   }
   stopTask (name) {
-    return this.sendAction((`/api/task/stop/${encodeURIComponent(name)}`), { method: 'PUT', credentials: 'same-origin' })
+    return this.sendAction((`/api/task/stop/${encodeURIComponent(name)}`), { method: 'PUT' })
   }
   deleteDoneTasks () {
-    return this.sendAction('/api/task/clean', { method: 'POST', body: '{}', credentials: 'same-origin' })
+    return this.sendAction('/api/task/clean', { method: 'POST', body: '{}' })
   }
   getTasks () {
-    return this.sendAction('/api/task/all', { credentials: 'same-origin' })
+    return this.sendAction('/api/task/all')
   }
   createIndex () {
-    return this.sendAction('/api/index/create', { method: 'PUT', credentials: 'same-origin' })
+    return this.sendAction('/api/index/create', { method: 'PUT' })
   }
   deleteAll () {
-    return this.sendAction('/api/index/delete/all', { method: 'DELETE', credentials: 'same-origin' })
+    return this.sendAction('/api/index/delete/all', { method: 'DELETE' })
   }
   getVersion () {
     return this.sendAction('/version')
@@ -41,32 +41,32 @@ export class DatashareClient {
     return this.sendAction('/api/config')
   }
   deleteNamedEntitiesByMentionNorm (mentionNorm) {
-    return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT', credentials: 'same-origin' })
+    return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT' })
   }
   getSource (document) {
-    return this.sendAction(document.url, { credentials: 'same-origin' })
+    return this.sendAction(document.url)
   }
   getStarredDocuments (project) {
     return this.sendAction(`/api/document/project/starred/${encodeURIComponent(project)}`)
   }
   starDocument (project, documentId) {
-    return this.sendAction(`/api/document/project/star/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT', credentials: 'same-origin' })
+    return this.sendAction(`/api/document/project/star/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT' })
   }
   unstarDocument (project, documentId) {
-    return this.sendAction(`/api/document/project/unstar/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT', credentials: 'same-origin' })
+    return this.sendAction(`/api/document/project/unstar/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT' })
   }
   tagDocument (project, documentId, routingId, tags) {
-    return this.sendAction(`/api/document/project/tag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags), credentials: 'same-origin' })
+    return this.sendAction(`/api/document/project/tag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) })
   }
   untagDocument (project, documentId, routingId, tags) {
-    return this.sendAction(`/api/document/project/untag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags), credentials: 'same-origin' })
+    return this.sendAction(`/api/document/project/untag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) })
   }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)
     return url.href
   }
-  sendAction (url, params) {
+  sendAction (url, params = {}) {
     return this.fetch(DatashareClient.getFullUrl(url), params).then(r => {
       if (r.status >= 200 && r.status < 300) {
         return r

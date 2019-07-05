@@ -37,7 +37,7 @@ describe('FindNamedEntitiesForm.vue', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
-      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }), credentials: 'same-origin' })
+      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
   })
 
   it('should call findNames action with OpenNLP pipeline', () => {
@@ -46,7 +46,7 @@ describe('FindNamedEntitiesForm.vue', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/OPENNLP'),
-      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }), credentials: 'same-origin' })
+      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
   })
 
   it('should call findNames action with no models synchronization', () => {
@@ -56,7 +56,7 @@ describe('FindNamedEntitiesForm.vue', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
-      { method: 'POST', body: JSON.stringify({ options: { syncModels: false } }), credentials: 'same-origin' })
+      { method: 'POST', body: JSON.stringify({ options: { syncModels: false } }) })
   })
 
   it('should reset the modal params on submitting the form', async () => {

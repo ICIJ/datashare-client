@@ -41,7 +41,7 @@ describe('ExtractingForm.vue', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
-      { method: 'POST', body: JSON.stringify({ options: { ocr: false } }), credentials: 'same-origin' })
+      { method: 'POST', body: JSON.stringify({ options: { ocr: false } }) })
   })
 
   it('should call extract action with OCR option', () => {
@@ -50,7 +50,7 @@ describe('ExtractingForm.vue', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
-      { method: 'POST', body: JSON.stringify({ options: { ocr: true } }), credentials: 'same-origin' })
+      { method: 'POST', body: JSON.stringify({ options: { ocr: true } }) })
   })
 
   it('should reset the modal params on submitting the form', async () => {

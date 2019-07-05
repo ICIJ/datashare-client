@@ -36,8 +36,7 @@ describe('Indexing.vue', () => {
     await Indexing.beforeRouteEnter(undefined, undefined, jest.fn())
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/all'),
-      { credentials: 'same-origin' })
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/all'), {})
     expect(store.state.indexing.pollHandle).not.toBeNull()
 
     Indexing.beforeRouteLeave(undefined, undefined, jest.fn())
@@ -105,7 +104,7 @@ describe('Indexing.vue', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stopAll'),
-      { method: 'PUT', credentials: 'same-origin' })
+      { method: 'PUT' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
@@ -118,7 +117,7 @@ describe('Indexing.vue', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean'),
-      { method: 'POST', body: '{}', credentials: 'same-origin' })
+      { method: 'POST', body: '{}' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
@@ -141,7 +140,7 @@ describe('Indexing.vue', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
-      { method: 'PUT', credentials: 'same-origin' })
+      { method: 'PUT' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 

@@ -40,7 +40,7 @@ describe('Indexing store', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
-      { method: 'POST', body: JSON.stringify({ options: { ocr: false } }), credentials: 'same-origin' })
+      { method: 'POST', body: JSON.stringify({ options: { ocr: false } }) })
   })
 
   it('should execute a default find named entities action', async () => {
@@ -48,7 +48,7 @@ describe('Indexing store', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
-      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }), credentials: 'same-origin' })
+      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
   })
 
   it('should stop pending tasks', async () => {
@@ -60,7 +60,7 @@ describe('Indexing store', () => {
     expect(store.state.tasks.length).toEqual(0)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stopAll'),
-      { method: 'PUT', credentials: 'same-origin' })
+      { method: 'PUT' })
   })
 
   it('should stop the task named 456', async () => {
@@ -73,7 +73,7 @@ describe('Indexing store', () => {
     expect(store.state.tasks.length).toEqual(1)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
-      { method: 'PUT', credentials: 'same-origin' })
+      { method: 'PUT' })
   })
 
   it('should delete done tasks', async () => {
@@ -85,7 +85,7 @@ describe('Indexing store', () => {
     expect(store.state.tasks.length).toEqual(0)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean'),
-      { method: 'POST', body: '{}', credentials: 'same-origin' })
+      { method: 'POST', body: '{}' })
   })
 
   it('should stop polling jobs', async () => {
@@ -118,6 +118,6 @@ describe('Indexing store', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/index/delete/all'),
-      { method: 'DELETE', credentials: 'same-origin' })
+      { method: 'DELETE' })
   })
 })
