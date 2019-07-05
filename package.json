@@ -83,7 +83,9 @@
       "plugin:vue/essential",
       "@vue/standard"
     ],
-    "rules": {},
+    "rules": {
+      "import/no-webpack-loader-syntax": "off"
+    },
     "parserOptions": {
       "parser": "babel-eslint"
     }

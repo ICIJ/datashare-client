@@ -13,6 +13,7 @@ import { faBook } from '@fortawesome/free-solid-svg-icons/faBook'
 import { faBuilding } from '@fortawesome/free-solid-svg-icons/faBuilding'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons/faCaretRight'
+import { faCircleNotch } from '@fortawesome/free-solid-svg-icons/faCircleNotch'
 import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons/faChevronCircleLeft'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft'
 import { faCheckSquare } from '@fortawesome/free-solid-svg-icons/faCheckSquare'
@@ -74,6 +75,7 @@ library.add(
   faBuilding,
   faCaretDown,
   faCaretRight,
+  faCircleNotch,
   faCheckSquare,
   faChevronCircleLeft,
   faChevronLeft,

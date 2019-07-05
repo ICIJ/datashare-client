@@ -2,16 +2,17 @@
 import xss from 'xss'
 import compact from 'lodash/compact'
 import identity from 'lodash/identity'
-import map from 'lodash/map'
+import once from 'lodash/once'
 import sortedUniqBy from 'lodash/sortedUniqBy'
 import template from 'lodash/template'
 import throttle from 'lodash/throttle'
 import trim from 'lodash/trim'
 import { mapGetters } from 'vuex'
 
-import { highlight } from '@/utils/strings'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
+import { highlight } from '@/utils/strings'
+import LocalSearchWorker from '!!worker-loader!@/utils/local-search-worker'
 
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags.vue'
@@ -39,11 +40,13 @@ export default {
   },
   data () {
     return {
-      transformedContent: '',
+      hasStickyToolbox: false,
       localSearchIndex: 0,
       localSearchOccurrences: 0,
       localSearchTerm: '',
-      hasStickyToolbox: false
+      localSearchWorker: null,
+      localSearchWorkerInProgress: false,
+      transformedContent: ''
     }
   },
   async mounted () {
@@ -65,16 +68,11 @@ export default {
     async transformContent () {
       this.transformedContent = await this.contentPipeline()
     },
-    replaceInChildNodes (element, needle, replacement) {
-      if (element.nodeName === '#text') {
-        return element.nodeValue.replace(needle, replacement)
-      } else {
-        const html = map(element.childNodes, child => {
-          return this.replaceInChildNodes(child, needle, replacement)
-        })
-        element.innerHTML = html.join('')
+    createLocalSearchWorker () {
+      if (this.localSearchWorker !== null) {
+        this.localSearchWorker.terminate()
       }
-      return element.outerHTML
+      this.localSearchWorker = new LocalSearchWorker()
     },
     buildNamedEntityMark (ne) {
       const extractor = ne.source.extractor
@@ -93,20 +91,24 @@ export default {
         return content.replace(needle, fn)
       }, content)
     },
-    addLocalSearchMarks (content) {
-      if (this.localSearchTerm.length === 0) return content
+    addLocalSearchMarks (content, localSearchTerm = this.localSearchTerm) {
+      if (localSearchTerm.length === 0) return content
 
-      this.localSearchOccurrences = (content.match(new RegExp('(?![^<]*>)' + this.localSearchTerm, 'gi')) || []).length
-      this.localSearchIndex = Number(!!this.localSearchOccurrences)
+      this.createLocalSearchWorker()
+      this.localSearchWorkerInProgress = true
+      this.localSearchWorker.postMessage({ content, localSearchTerm })
 
-      if (this.localSearchOccurrences === 0) return content
-
-      const needle = RegExp(`(${this.localSearchTerm})`, 'gim')
-      const parser = new DOMParser()
-      const dom = parser.parseFromString(content, 'text/html')
-
-      this.replaceInChildNodes(dom.body, needle, '<mark class="local-search-term">$1</mark>')
-      return dom.body.innerHTML
+      return new Promise(resolve => {
+        // We receive a content from the worker
+        this.localSearchWorker.addEventListener('message', once(({ data }) => {
+          this.localSearchOccurrences = data.localSearchOccurrences
+          this.localSearchIndex = data.localSearchIndex
+          this.localSearchWorkerInProgress = false
+          resolve(data.content)
+        }))
+        // Ignore errors
+        this.localSearchWorker.onerror = () => { resolve(content) }
+      })
     },
     addLineBreaks (content) {
       return trim(content).split('\n').map(row => `<p>${row}</p>`).join('')
@@ -182,7 +184,15 @@ export default {
   <div class="document-content">
     <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
       <document-global-search-terms-tags :document="document" class="p-3 w-100" />
-      <document-local-search-input class="ml-auto" :document="document" v-model="localSearchTerm" @next="findNextLocalSearchTerm" @previous="findPreviousLocalSearchTerm" :search-occurrences="localSearchOccurrences" :search-index="localSearchIndex" v-bind:activated.sync="hasStickyToolbox" />
+      <document-local-search-input class="ml-auto"
+        v-model="localSearchTerm"
+        v-bind:activated.sync="hasStickyToolbox"
+        @next="findNextLocalSearchTerm"
+        @previous="findPreviousLocalSearchTerm"
+        :document="document"
+        :search-occurrences="localSearchOccurrences"
+        :search-index="localSearchIndex"
+        :search-worker-in-progress="localSearchWorkerInProgress" />
     </div>
     <div class="document-content__ner-toggler" v-if="showNamedEntitiesToggler">
       <div class="custom-control custom-switch">

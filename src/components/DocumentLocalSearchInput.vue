@@ -24,6 +24,9 @@ export default {
     searchOccurrences: {
       type: Number,
       default: 0
+    },
+    searchWorkerInProgress: {
+      type: Boolean
     }
   },
   data () {
@@ -109,8 +112,13 @@ export default {
       <label class="sr-only">{{ $t('document.search') }}</label>
       <div class="input-group">
         <input :value="searchTerm" @input="$emit('input', $event.target.value)" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="shortkeys" @shortkey="shortkeyAction" />
-        <div class="document-local-search-input__count input-group-append" v-if="this.searchTerm.length > 0">
-          <span class="input-group-text">{{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}</span>
+        <div class="document-local-search-input__count input-group-append" v-if="searchTerm.length > 0">
+          <span v-if="searchWorkerInProgress" class="input-group-text">
+            <fa icon="circle-notch" spin />
+          </span>
+          <span v-else class="input-group-text">
+            <span>{{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}</span>
+          </span>
         </div>
       </div>
     </div>
