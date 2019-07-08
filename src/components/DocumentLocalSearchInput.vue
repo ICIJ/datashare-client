@@ -61,6 +61,7 @@ export default {
     deactivateSearchBar () {
       this.$emit('update:activated', false)
       this.$set(this, 'isActive', false)
+      this.$emit('input', '')
     },
     shortkeyAction ({ srcKey }) {
       if (this.shortkeysActions[srcKey]) {

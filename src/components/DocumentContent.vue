@@ -12,7 +12,7 @@ import { mapGetters } from 'vuex'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import { highlight } from '@/utils/strings'
-import LocalSearchWorker from '@/utils/local-search.worker'
+import LocalSearchWorker from '@/utils/local-search.worker.js'
 
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags.vue'
