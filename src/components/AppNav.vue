@@ -177,8 +177,21 @@ export default {
 
         &__search-bar.col {
           position: relative;
-          max-width: $search-results-width;
+          margin-left: $spacer;
           padding: 0;
+
+          & .input-group {
+            width: auto;
+          }
+
+          input[type=text] {
+            width: 100vw;
+            max-width: $search-results-width;
+
+            @media (max-width: $document-float-breakpoint-width) {
+              max-width: 20vw;
+            }
+          }
 
           .search-settings__popover {
             transform: translateY($spacer);

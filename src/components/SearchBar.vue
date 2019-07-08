@@ -1,7 +1,7 @@
 <template>
-  <form class="search-bar form-row align-items-center container-fluid py-3" :id="uniqueId" @submit.prevent="submit">
-    <div class="input-group col">
-      <input v-model="query" type="search" :placeholder="$t('search.placeholder')" class="form-control search-bar__input">
+  <form class="search-bar d-flex align-items-center container-fluid py-3" :id="uniqueId" @submit.prevent="submit">
+    <div class="input-group">
+      <input v-model="query" type="text" :placeholder="$t('search.placeholder')" class="form-control search-bar__input">
       <div class="input-group-append">
         <button type="submit" class="btn btn-dark search-bar__submit">
           {{ $t('search.buttonlabel') }}
@@ -19,7 +19,7 @@
         </span>
       </a>
     </div>
-    <div class="col-auto px-0 pl-2" v-if="!hideSettings">
+    <div class="px-0 pl-2" v-if="!hideSettings">
       <search-settings placement="bottomleft" :container="uniqueId" />
     </div>
   </form>
@@ -75,11 +75,17 @@ export default {
 
 <style lang="scss">
   .search-bar {
+
+    .input-group {
+      white-space: nowrap;
+      flex-wrap: nowrap;
+    }
+
     &__input ~ &__typeahead {
       position: absolute;
       top: 100%;
-      left: 5px;
-      right: 5px;
+      left: 0;
+      right: 0;
       background: mix($input-border-color, white);
       border: 1px solid $input-border-color;
       border-top: 0;
