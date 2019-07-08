@@ -107,6 +107,7 @@ export default {
     &__basename {
       font-size: 1rem;
       margin: 0;
+      word-break: break-all;
     }
 
     &__location {

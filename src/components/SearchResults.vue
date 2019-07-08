@@ -141,7 +141,6 @@ export default {
         &__actions {
           margin: $spacer $spacer * 0.5;
           visibility: hidden;
-          box-shadow:0 0 $spacer $spacer mix($secondary, white, 5%);
 
           .btn {
             background: white;
