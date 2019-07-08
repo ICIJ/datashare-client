@@ -67,6 +67,11 @@ const router = new VueRouter({
       ]
     },
     {
+      name: 'document-simplified',
+      path: '/ds/:index/:id/:routing?',
+      component: DocumentView
+    },
+    {
       path: '/login',
       component: Login,
       meta: {

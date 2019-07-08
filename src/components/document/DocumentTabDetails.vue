@@ -29,10 +29,10 @@
           </div>
         </div>
 
-        <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name" v-if="metadataVisible">
+        <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name" v-if="metadataVisible" v-once>
           <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
             <div class="text-truncate mr-1 w-100" :title="name">
-              <var>{{ document.shortMetaName(name) }}</var>
+              <var>{{ document.shortMetaName(name) | startCase }}</var>
             </div>
             <div class="mr-auto document__content__details__item__search">
               <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name) } }">
@@ -81,12 +81,16 @@
 import filter from 'lodash/filter'
 import get from 'lodash/get'
 import map from 'lodash/map'
+import startCase from 'lodash/startCase'
 
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 
 export default {
   name: 'DocumentTabDetails',
   props: ['document', 'parentDocument'],
+  filters: {
+    startCase
+  },
   data () {
     return {
       tag: '',

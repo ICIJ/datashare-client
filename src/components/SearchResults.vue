@@ -14,17 +14,20 @@
       <search-results-header :response="response" :position="'top'" />
       <div class="search-results__items">
         <div v-for="doc in response.hits" :key="doc.id" class="search-results__items__item">
-          <div class="search-results__items__item__actions btn-group-vertical position-absolute">
+          <search-results-link class="search-results__items__item__link w-100" :doc="doc" />
+          <div class="search-results__items__item__actions btn-group-vertical">
             <a class="search-results__items__item__star btn btn-outline-primary btn-sm" :class="[isStarred(doc.id) ? 'starred' : '']" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)" v-b-tooltip.left>
-              <fa :icon="[isStarred(doc.id) ? 'fa' : 'far', 'star']" />
+              <fa :icon="[isStarred(doc.id) ? 'fa' : 'far', 'star']" fa-fw />
               <span class="sr-only">{{ $t('document.star_button') }}</span>
             </a>
             <a class="search-results__items__item__download btn btn-outline-primary btn-sm" :href="doc.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip.left>
-              <fa icon="download" />
+              <fa icon="download" fa-fw  />
               <span class="sr-only">{{ $t('document.download_button') }}</span>
             </a>
+            <router-link-popup :to="{ name: 'document-simplified', params: doc.routerParams }" class="btn btn-sm btn-outline-primary" :title="$t('document.external_window')" v-b-tooltip.left>
+              <fa icon="external-link-alt" fa-fw />
+            </router-link-popup>
           </div>
-          <search-results-link class="search-results__items__item__link" :doc="doc" />
         </div>
       </div>
       <search-results-header :response="response" :position="'bottom'" />
@@ -45,14 +48,21 @@
 
 <script>
 import { mapState } from 'vuex'
+
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import SearchResultsLink from '@/components/SearchResultsLink'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
+import RouterLinkPopup from '@/components/RouterLinkPopup'
 
 export default {
   name: 'SearchResults',
   props: ['response', 'query'],
-  components: { SearchResultsHeader, SearchResultsLink, ResetFiltersButton },
+  components: {
+    SearchResultsHeader,
+    SearchResultsLink,
+    ResetFiltersButton,
+    RouterLinkPopup
+  },
   computed: {
     ...mapState('search', ['starredDocuments']),
     showFilters: {
@@ -116,13 +126,12 @@ export default {
       &__item {
         max-width: 100%;
         overflow: hidden;
-        position: relative;
+        display: flex;
+        direction: row;
+        border-bottom: 1px solid $gray-200;
 
         &__actions {
-          z-index: 100;
-          position: absolute;
-          top: $spacer;
-          right: $spacer * 0.5;
+          margin: $spacer $spacer * 0.5;
           visibility: hidden;
           box-shadow:0 0 $spacer $spacer mix($secondary, white, 5%);
 
@@ -145,10 +154,6 @@ export default {
             visibility: visible;
           }
 
-        }
-
-        &__link {
-          padding-right: 7rem;
         }
 
         &:hover &__actions {

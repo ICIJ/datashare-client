@@ -73,7 +73,6 @@ export default {
 
 <style lang="scss">
   .search-results-link {
-    border-bottom: 1px solid $gray-200;
     display: block;
 
     &:hover {
