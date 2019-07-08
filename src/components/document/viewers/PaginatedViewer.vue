@@ -107,6 +107,10 @@ export default {
         border:1px solid $border-color;
         cursor: pointer;
 
+        img {
+          width: 100%;
+        }
+
         &:hover {
           border-color: $primary;
           box-shadow:0 0 0 0.1em rgba($primary, .2);

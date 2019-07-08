@@ -120,8 +120,7 @@ export default {
       this.$root.$el.style.setProperty('--search-document-navbar-height', height)
     },
     async goToDocument (document) {
-      const name = document.isEmail ? 'email' : 'document'
-      return this.$router.push({ name, params: document.routerParams })
+      return this.$router.push({ name: 'document', params: document.routerParams })
     },
     async goToPreviousDocument () {
       if (this.navRequiresPreviousPage) {
