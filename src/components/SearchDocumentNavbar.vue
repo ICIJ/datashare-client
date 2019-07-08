@@ -1,6 +1,6 @@
 <template>
   <div class="search-document-navbar px-3 py-2 bg-dark text-white">
-    <router-link :to="{ name: 'search', query }" class="search-document-navbar__back">
+    <router-link :to="{ name: 'search', query }" class="search-document-navbar__back" v-shortkey="[ 'esc' ]"  @shortkey.native="back()">
       <fa icon="chevron-circle-left" />
       {{ $t('search.back') }}
     </router-link>
@@ -114,6 +114,9 @@ export default {
     this.saveComponentHeight()
   },
   methods: {
+    back () {
+      this.$router.push({ name: 'search', query: this.query })
+    },
     saveComponentHeight () {
       const height = `${this.$el.offsetHeight}px`
       // Save component height in a CSS variable after it's been update
