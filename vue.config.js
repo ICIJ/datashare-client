@@ -13,7 +13,7 @@ module.exports = {
   lintOnSave: false,
   runtimeCompiler: true,
   // @see https://github.com/webpack-contrib/worker-loader/issues/177
-  parallel: false,
+  parallel: process.env.NODE_ENV !== 'production',
   chainWebpack: config => {
     // Resource loader configuration:
     // 4 named rules must include this loader

@@ -73,18 +73,18 @@ export default {
       return {
         mac: {
           activateSearchBar: ['meta', 'f'],
-          deactivateSearchBar: ['esc'],
+          deactivateSearchBar: this.isActive ? ['esc'] : [],
           findPreviousOccurrence: ['shift', 'enter'],
           findPreviousOccurrenceAlt: ['shift', 'f3'],
-          findNextOccurrence: ['enter'],
+          findNextOccurrence: this.isActive ? ['enter'] : [],
           findNextOccurrenceAlt: ['f3']
         },
         default: {
           activateSearchBar: ['ctrl', 'f'],
-          deactivateSearchBar: ['esc'],
+          deactivateSearchBar: this.isActive ? ['esc'] : [],
           findPreviousOccurrence: ['shift', 'enter'],
           findPreviousOccurrenceAlt: ['shift', 'f3'],
-          findNextOccurrence: ['enter'],
+          findNextOccurrence: this.isActive ? ['enter'] : [],
           findNextOccurrenceAlt: ['f3']
         }
       }

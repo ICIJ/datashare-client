@@ -75,11 +75,6 @@ export default {
   .search-results-link {
     display: block;
 
-    &:hover {
-      text-decoration: none;
-      background: mix($secondary, white, 5%);
-    }
-
     &:visited:not(&--active) &__basename {
       color: mix(#609, white, 50%);
     }
