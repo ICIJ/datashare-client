@@ -48,6 +48,17 @@ describe('FacetYesNo.vue', () => {
 
   afterAll(() => jest.unmock('@/api/DatashareClient'))
 
+  it('should display "All" as the first item', async () => {
+    await letData(es).have(new IndexedDocument('doc_01')).commit()
+    await letData(es).have(new IndexedDocument('doc_02')).commit()
+
+    await wrapper.vm.root.aggregate()
+
+    expect(wrapper.findAll('.facet__items__all')).toHaveLength(1)
+    expect(wrapper.find('.facet__items__all .facet__items__item__label').text()).toEqual('All')
+    expect(wrapper.find('.facet__items__all .facet__items__item__count').text()).toEqual('2')
+  })
+
   it('should display 2 items for the starred facet', async () => {
     await letData(es).have(new IndexedDocument('doc_01')).commit()
 

@@ -23,7 +23,7 @@ export default {
         value: true,
         html: `
           <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
-            ${this.labelToHuman(this.facet.name)}
+            ${this.labelToHuman('facet.starred')}
           </span>
           <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
             ${this.$n(this.starredDocuments.length)}

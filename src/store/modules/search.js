@@ -29,7 +29,7 @@ export function initialState () {
     size: 25,
     globalSearch: true,
     facets: [
-      new FacetYesNo('starred', '_id', false, item => item.key ? 'facet.starred' : 'facet.not_starred'),
+      new FacetYesNo('starred', '_id', false, () => 'all'),
       new FacetText('content-type', 'contentType', true, item => getDocumentTypeLabel(item.key)),
       new FacetText('language', 'language', false, item => `facet.lang.${item.key}`),
       new FacetNamedEntity('named-entity-person', 'byMentions', true, namedEntityCategoryTranslation['named-entity-person']),
