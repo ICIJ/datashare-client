@@ -23,7 +23,7 @@
           </div>
         </router-link>
         <div v-if="isActive(email)">
-          <document-translated-content class="document-thread__list__email__content" :document="email" />
+          <document-translated-content class="document-thread__list__email__content" :document="email" :named-entities="namedEntities" />
         </div>
       </li>
     </ul>
