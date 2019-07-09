@@ -6,6 +6,7 @@ import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import { getOS } from '@/utils/utils'
+import VueShortkey from 'vue-shortkey'
 
 jest.mock('@/utils/utils', () => {
   return {
@@ -17,6 +18,7 @@ jest.mock('@/utils/utils', () => {
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
+localVue.use(VueShortkey)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchDocumentNavbar.vue', () => {
