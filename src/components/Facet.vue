@@ -10,7 +10,7 @@
             </slot>
           </template>
         </h6>
-        <span v-if="hasValues() && !collapseItems">
+        <span v-if="hasValues() && !collapseItems && !hideExclude">
           <button class="d-inline-flex btn btn-sm btn-outline-dark py-0 ml-2 btn-group facet__header__invert" @click="invert" :class="{ 'active': isReversed() }">
             <fa icon="eye-slash" class="mr-1 mt-1" />
             {{ $t('facet.invert') }}

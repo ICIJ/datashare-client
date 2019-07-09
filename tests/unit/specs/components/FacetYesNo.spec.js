@@ -117,4 +117,15 @@ describe('FacetYesNo.vue', () => {
     expect(wrapper.findAll('.facet__items__item .facet__items__item__count').at(0).text()).toEqual('2')
     expect(wrapper.findAll('.facet__items__item .facet__items__item__count').at(1).text()).toEqual('1')
   })
+
+  it('should not display the exclude button', async () => {
+    await letData(es).have(new IndexedDocument('doc_08')).commit()
+
+    await wrapper.vm.root.aggregate()
+    await wrapper.findAll('.facet__items__item .custom-control-input').at(0).trigger('click')
+    store.commit('search/addFacetValue', { name: 'starred', value: true })
+    wrapper.vm.root.collapseItems = false
+
+    expect(wrapper.findAll('.facet__header__invert')).toHaveLength(0)
+  })
 })

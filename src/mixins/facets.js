@@ -30,6 +30,10 @@ export const mixin = {
       type: Boolean,
       default: false
     },
+    hideExclude: {
+      type: Boolean,
+      default: false
+    },
     asyncItems: {
       type: Array,
       default: null
