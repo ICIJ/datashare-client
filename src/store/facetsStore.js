@@ -2,6 +2,12 @@ import Murmur from '@icij/murmur'
 import includes from 'lodash/includes'
 import some from 'lodash/some'
 
+const starredLabel = {
+  all: 'facet.all',
+  true: 'facet.starred',
+  false: 'facet.not_starred'
+}
+
 const namedEntityCategoryTranslation = {
   'named-entity-person': 'PERSON',
   'named-entity-organization': 'ORGANIZATION',
@@ -246,4 +252,4 @@ class FacetNamedEntity extends FacetType {
   }
 }
 
-export { FacetText, FacetYesNo, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation }
+export { FacetText, FacetYesNo, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation, starredLabel }

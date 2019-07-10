@@ -1,7 +1,7 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
-import { FacetText, FacetYesNo, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation } from '@/store/facetsStore'
+import { FacetText, FacetYesNo, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation, starredLabel } from '@/store/facetsStore'
 import DatashareClient from '@/api/DatashareClient'
 import lucene from 'lucene'
 import castArray from 'lodash/castArray'
@@ -29,7 +29,7 @@ export function initialState () {
     size: 25,
     globalSearch: true,
     facets: [
-      new FacetYesNo('starred', '_id', false, () => 'all'),
+      new FacetYesNo('starred', '_id', false, item => get(starredLabel, item.key, '')),
       new FacetText('content-type', 'contentType', true, item => getDocumentTypeLabel(item.key)),
       new FacetText('language', 'language', false, item => `facet.lang.${item.key}`),
       new FacetNamedEntity('named-entity-person', 'byMentions', true, namedEntityCategoryTranslation['named-entity-person']),
