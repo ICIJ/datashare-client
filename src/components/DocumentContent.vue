@@ -7,6 +7,7 @@ import sortedUniqBy from 'lodash/sortedUniqBy'
 import template from 'lodash/template'
 import throttle from 'lodash/throttle'
 import trim from 'lodash/trim'
+import memoize from 'lodash/memoize'
 import { mapGetters } from 'vuex'
 
 import ner from '@/mixins/ner'
@@ -83,17 +84,17 @@ export default {
       const classNames = this.getCategoryClass(ne.source.category, 'ner--')
       return this.namedEntityMarkTemplate({ classNames, extractor, mention })
     },
-    addNamedEntitiesMarks (content) {
+    addNamedEntitiesMarks: memoize(function (content) {
       const sortedNamedEntities = sortedUniqBy(this.namedEntities, ne => ne.source.offset)
       return highlight(content, sortedNamedEntities, this.buildNamedEntityMark, identity, m => m.source.mention)
-    },
-    addGlobalSearchMarks (content) {
+    }),
+    addGlobalSearchMarks: memoize(function (content) {
       return this.globalSearchTermsInContent(content).reduce((content, term, index) => {
         const needle = new RegExp(term.label, 'gi')
         const fn = match => `<mark class="global-search-term" style="border-color: ${this.getTermIndexColor(index)}">${match}</mark>`
         return content.replace(needle, fn)
       }, content)
-    },
+    }),
     addLocalSearchMarks (content, localSearchTerm = this.localSearchTerm) {
       if (localSearchTerm.length === 0) return content
 
@@ -117,13 +118,16 @@ export default {
 
       return workerPromise
     },
-    addLineBreaks (content) {
-      return trim(content).split('\n').map(row => `<p>${row}</p>`).join('')
-    },
-    sanitizeHtml (content) {
+    addLineBreaks: memoize(function (content) {
+      return content.split('\n').map(trim).map(row => `<p>${row}</p>`).join('')
+    }),
+    deleteEmptyParagraphs: memoize(function (content) {
+      return content.replace(new RegExp('<p>\s*<\/p>', 'gm'), '')
+    }),
+    sanitizeHtml: memoize(function (content) {
       const whiteList = { mark: ['style', 'class', 'title'], p: true }
       return xss(content, { stripIgnoreTag: true, whiteList })
-    },
+    }),
     // The pipeline that transforms the content must be asynchrone
     async contentPipeline () {
       return this.contentPipelineFunctions.reduce(async (content, fn) => {
@@ -164,7 +168,8 @@ export default {
         this.sanitizeHtml,
         this.addLocalSearchMarks,
         this.addGlobalSearchMarks,
-        this.addLineBreaks
+        this.addLineBreaks,
+        this.deleteEmptyParagraphs
       ])
     },
     showNamedEntitiesToggler () {

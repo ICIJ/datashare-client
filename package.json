@@ -85,7 +85,8 @@
       "@vue/standard"
     ],
     "rules": {
-      "import/no-webpack-loader-syntax": "off"
+      "import/no-webpack-loader-syntax": "off",
+      "no-useless-escape": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"
