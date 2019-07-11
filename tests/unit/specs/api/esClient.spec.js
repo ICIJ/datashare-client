@@ -1,7 +1,7 @@
 import bodybuilder from 'bodybuilder'
 import { EventBus } from '@/utils/event-bus'
 import esClient from '@/api/esClient'
-import { FacetText } from '@/store/facetsStore'
+import { FacetText, FacetNamedEntity } from '@/store/facetsStore'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
@@ -70,14 +70,14 @@ describe('esClient', () => {
                   query: '*',
                   default_field: '*'
                 } }, {
-                has_parent: {
-                  parent_type: 'Document',
+                has_child: {
+                  type: 'NamedEntity',
                   inner_hits: {
                     size: 30
                   },
                   query: {
                     match: {
-                      content: '*'
+                      mention: '*'
                     }
                   }
                 }
@@ -108,14 +108,14 @@ describe('esClient', () => {
                   query: 'path:\\/home\\/datashare\\/path\\/*',
                   default_field: '*'
                 } }, {
-                has_parent: {
-                  parent_type: 'Document',
+                has_child: {
+                  type: 'NamedEntity',
                   inner_hits: {
                     size: 30
                   },
                   query: {
                     match: {
-                      content: 'path:\\/home\\/datashare\\/path\\/*'
+                      mention: 'path:\\/home\\/datashare\\/path\\/*'
                     }
                   }
                 }
@@ -144,7 +144,7 @@ describe('esClient', () => {
   })
 
   it('should return all the named entities after scrolling', async () => {
-    const docId = 'doc.txt'
+    const docId = 'doc'
     await letData(es).have(new IndexedDocument(docId)
       .withNer('ne_01')
       .withNer('ne_02')
@@ -159,7 +159,28 @@ describe('esClient', () => {
       .withNer('ne_11')
       .withNer('ne_12')
     ).commit()
+
     const response = await esClient.getNamedEntities(index, docId, docId, 5)
+
     expect(response.hits.hits).toHaveLength(12)
+  })
+
+  it('should return all the named entities', async () => {
+    await letData(es).have(new IndexedDocument('doc_01')
+      .withContent('this is a document')
+      .withNer('ne_01')
+    ).commit()
+    await letData(es).have(new IndexedDocument('doc_02')
+      .withNer('document')
+    ).commit()
+    await letData(es).have(new IndexedDocument('doc_03')
+      .withContent('nothing to write')
+      .withNer('another')
+    ).commit()
+    const facet = new FacetNamedEntity('named-entity-person', 'byMentions', true, 'PERSON')
+
+    const response = await esClient.searchFacet(index, facet, 'document')
+
+    expect(response.aggregations.byMentions.buckets).toHaveLength(2)
   })
 })

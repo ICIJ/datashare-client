@@ -592,4 +592,13 @@ describe('Search store', () => {
       expect(store.getters['search/findFacet']('starred').starredDocuments).toEqual(['doc_01', 'doc_02'])
     })
   })
+
+  it('should find document on querying the NamedEntity', async () => {
+    await letData(es).have(new IndexedDocument('doc_01').withNer('test')).commit()
+
+    await store.dispatch('search/query', 'test')
+
+    expect(store.state.search.response.hits).toHaveLength(1)
+    expect(store.state.search.response.hits[0].basename).toEqual('doc_01')
+  })
 })

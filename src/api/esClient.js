@@ -54,7 +54,20 @@ export function datasharePlugin (Client, config, components) {
       .addQuery('bool', b => b
         // Add the query string to the body
         .orQuery('query_string', { query, default_field: '*' })
-        // Add match for namedentity containing the query string
+        .orQuery('has_child', 'type', 'NamedEntity', {
+          'inner_hits': {
+            'size': 30
+          }
+        }, sub => sub.query('match', 'mention', query))
+      )
+  }
+
+  Client.prototype.addQueryToFacet = function (query, body) {
+    query = replace(query, /\//g, '\\/')
+    body.query('match_all')
+      .addQuery('bool', b => b
+        // Add the query string to the body
+        .orQuery('query_string', { query, default_field: '*' })
         .orQuery('has_parent', 'parent_type', 'Document', {
           'inner_hits': {
             'size': 30
@@ -129,7 +142,7 @@ export function datasharePlugin (Client, config, components) {
     const body = facet.body(bodybuilder(), options)
     if (!isGlobalSearch) {
       each(facets, facet => facet.addFilter(body))
-      this.addQueryToBody(query, body)
+      this.addQueryToFacet(query, body)
     }
     return esClient.search({
       index,
