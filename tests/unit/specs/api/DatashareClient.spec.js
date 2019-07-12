@@ -148,6 +148,14 @@ describe('Datashare backend client', () => {
     )
   })
 
+  it('should return backend response to batchSearch', async () => {
+    datashare.batchSearch('project', 'name', 'description', 'csvFile').then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
+  })
+
   it('should emit an error if the backend response has a bad status', async () => {
     datashare.fetch.mockReturnValue(jsonOk({}, 42))
     const mockCallback = jest.fn()

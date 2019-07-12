@@ -408,5 +408,16 @@
     "description": "The last 500 documents you opened with Datashare from this computer.",
     "empty": "Your history is empty",
     "clear": "Clear history"
+  },
+  "batchSearch": {
+    "title": "Batch Search",
+    "nameLabel": "Name:",
+    "namePlaceholder": "Search name",
+    "descriptionLabel": "Description:",
+    "descriptionPlaceholder": "Search description",
+    "fileLabel": "CSV file:",
+    "fileDescription": "Only CSV format accepted.",
+    "filePlaceholder": "Choose a file...",
+    "submit": "Submit"
   }
 }

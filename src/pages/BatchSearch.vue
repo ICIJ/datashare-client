@@ -4,13 +4,13 @@
       <div class="card">
         <div class="card-header">
           <h3 class="h5 m-0">
-            Batch Searches
+            {{ $t('batchSearch.title') }}
           </h3>
         </div>
         <div class="m-4">
           <b-form-group
             id="group-name"
-            label="Name:"
+            :label="$t('batchSearch.nameLabel')"
             label-for="name"
           >
             <b-form-input
@@ -18,39 +18,38 @@
               v-model="name"
               type="text"
               required
-              placeholder="Search name"
+              :placeholder="$t('batchSearch.namePlaceholder')"
             ></b-form-input>
           </b-form-group>
           <b-form-group
             id="group-description"
-            label="Description:"
+            :label="$t('batchSearch.descriptionLabel')"
             label-for="description"
           >
             <b-form-textarea
               id="description"
               v-model="description"
-              placeholder="Search description"
+              :placeholder="$t('batchSearch.descriptionPlaceholder')"
               rows="3"
               max-rows="6"
             ></b-form-textarea>
           </b-form-group>
           <b-form-group
             id="group-file"
-            label="CSV file:"
+            :label="$t('batchSearch.fileLabel')"
             label-for="file"
-            description="Only CSV format accepted."
+            :description="$t('batchSearch.fileDescription')"
           >
             <b-form-file
               v-model="csvFile"
-              placeholder="Choose a file..."
-              drop-placeholder="Drop file here..."
+              :placeholder="$t('batchSearch.filePlaceholder')"
               accept=".csv"
               required
             ></b-form-file>
           </b-form-group>
         </div>
         <div class="card-footer text-right border-0">
-          <b-button type="submit" variant="primary">Submit</b-button>
+          <b-button type="submit" variant="primary">{{ $t('batchSearch.submit') }}</b-button>
         </div>
       </div>
     </b-form>
