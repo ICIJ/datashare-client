@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
-import batchSearches from './modules/batchSearches'
+import batchSearch from './modules/batchSearch'
 import document from './modules/document'
 import indexing from './modules/indexing'
 import search from './modules/search'
@@ -11,7 +11,7 @@ import userHistory from './modules/userHistory'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  modules: { batchSearches, document, indexing, search, treeView, userHistory },
+  modules: { batchSearch, document, indexing, search, treeView, userHistory },
   strict: process.env.NODE_ENV !== 'production',
   plugins: [
     createPersistedState({

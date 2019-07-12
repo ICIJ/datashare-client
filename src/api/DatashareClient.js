@@ -61,6 +61,13 @@ export class DatashareClient {
   untagDocument (project, documentId, routingId, tags) {
     return this.sendAction(`/api/document/project/untag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) })
   }
+  batchSearch (project, name, description, csvFile) {
+    const form = new FormData()
+    form.append('name', name)
+    form.append('description', description)
+    form.append('csvFile', csvFile)
+    return this.sendAction(`/api/batch/search/${encodeURIComponent(project)}`, { method: 'POST', body: form })
+  }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)

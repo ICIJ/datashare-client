@@ -7,7 +7,7 @@ import Indexing from '@/pages/Indexing'
 import Landing from '@/pages/Landing'
 import Login from '@/pages/Login'
 import Search from '@/pages/Search'
-import BatchSearches from '@/pages/BatchSearches'
+import BatchSearch from '@/pages/BatchSearch'
 
 import store from '@/store'
 import { isAuthenticated } from '@/utils/utils'
@@ -30,7 +30,7 @@ const router = new VueRouter({
           beforeEnter: (to, from, next) => {
             // This allow to restore the search's state from localStorage
             // even if we are loading this route from a children (where no
-            // query paramters are given).
+            // query parameters are given).
             if (to.query.q) {
               next({ name: 'search', query: to.query })
             }
@@ -44,7 +44,7 @@ const router = new VueRouter({
           beforeEnter: (to, from, next) => {
             // This allow to restore the search's state from localStorage
             // even if we are loading this route from a children (where no
-            // query paramters are given).
+            // query parameters are given).
             if (to.name === 'search') {
               store.dispatch('search/updateFromRouteQuery', to.query)
             }
@@ -66,9 +66,9 @@ const router = new VueRouter({
           component: Indexing
         },
         {
-          name: 'batchsearches',
-          path: 'batch-searches',
-          component: BatchSearches
+          name: 'batchsearch',
+          path: 'batch-search',
+          component: BatchSearch
         }
       ]
     },

@@ -15,7 +15,7 @@
           >
             <b-form-input
               id="name"
-              :value="name"
+              v-model="name"
               type="text"
               required
               placeholder="Search name"
@@ -28,7 +28,7 @@
           >
             <b-form-textarea
               id="description"
-              :value="description"
+              v-model="description"
               placeholder="Search description"
               rows="3"
               max-rows="6"
@@ -41,8 +41,7 @@
             description="Only CSV format accepted."
           >
             <b-form-file
-              :value="file"
-              :state="Boolean(file)"
+              v-model="csvFile"
               placeholder="Choose a file..."
               drop-placeholder="Drop file here..."
               accept=".csv"
@@ -59,16 +58,37 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
 export default {
   name: 'BatchSearches',
   computed: {
-    ...mapState('batchSearches', ['name', 'description', 'file'])
+    name: {
+      get () {
+        return this.$store.state.batchSearch.name
+      },
+      set (name) {
+        this.$store.commit('batchSearch/name', name)
+      }
+    },
+    description: {
+      get () {
+        return this.$store.state.batchSearch.description
+      },
+      set (description) {
+        this.$store.commit('batchSearch/description', description)
+      }
+    },
+    csvFile: {
+      get () {
+        return this.$store.state.batchSearch.csvFile
+      },
+      set (csvFile) {
+        this.$store.commit('batchSearch/csvFile', csvFile)
+      }
+    }
   },
   methods: {
     onSubmit () {
-      this.$store.dispatch('batchSearches/onSubmit')
+      this.$store.dispatch('batchSearch/onSubmit')
     }
   }
 }
