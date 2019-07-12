@@ -108,7 +108,9 @@
     "description": {
       "en": "Open using Word, OpenOffice or LibreOffice."
     },
-    "warning": "This file contains executable code. Ensure you have macros disabled before opening it."
+    "warning": {
+      "en": "This file contains executable code. Ensure you have macros disabled before opening it."
+    }
   },
   "application/vnd.ms-word.template.macroenabled.12": {
     "label": "Word template (with macros)",
@@ -118,7 +120,9 @@
     "description": {
       "en": "Open using Word, OpenOffice or LibreOffice."
     },
-    "warning": "This file contains executable code. Ensure you have macros disabled before opening it."
+    "warning": {
+      "en": "This file contains executable code. Ensure you have macros disabled before opening it."
+    }
   },
   "application/x-msaccess": {
     "label": "Access database",
@@ -188,7 +192,9 @@
     "description": {
       "en": "A vector drawing document that can only be opened using Microsoft Visio."
     },
-    "warning": "Visio files may contain VBA macro code. Ensure macros are disabled in Visio before opening this file or it's possible that your system will be compromised."
+    "warning": {
+      "en": "Visio files may contain VBA macro code. Ensure macros are disabled in Visio before opening this file or it's possible that your system will be compromised."
+    }
   },
   "application/vnd.wordperfect": {
     "label": "Wordperfect document",
@@ -227,7 +233,9 @@
     "description": {
       "en": "Open using Excel, OpenOffice or LibreOffice."
     },
-    "warning": "This file contains executable code. Ensure you have macros disabled before opening it."
+    "warning": {
+      "en": "This file contains executable code. Ensure you have macros disabled before opening it."
+    }
   },
   "application/vnd.ms-excel.sheet.binary.macroenabled.12": {
     "label": "Excel Binary Workbook",
@@ -237,7 +245,9 @@
     "description": {
       "en": "Open using Excel, OpenOffice or LibreOffice."
     },
-    "warning": "This file contains executable code. Ensure you have macros disabled before opening it."
+    "warning": {
+      "en": "This file contains executable code. Ensure you have macros disabled before opening it."
+    }
   },
   "application/vnd.ms-excel.sheet.4": {
     "label": "Excel 4.0 spreadsheet",
@@ -317,7 +327,9 @@
     "description": {
       "en": "Open using whatever browser you normally use."
     },
-    "warning": "This file contains executable code. Ensure you have Javascript disabled before opening it in you browser."
+    "warning": {
+      "en": "This file contains executable code. Ensure you have Javascript disabled before opening it in you browser."
+    }
   },
   "application/xml": {
     "label": "XML document",
@@ -364,7 +376,9 @@
     "description": {
       "en": "Open using a plain text editor. This file is unlikely to contain any information that's useful to non-programmers."
     },
-    "warning": "Do not execute this script.",
+    "warning": {
+      "en": "Do not execute this script."
+    },
     "preview": "yes"
   },
   "application/vnd.ms-tnef": {
@@ -394,7 +408,9 @@
     "description": {
       "en": "Open using whatever browser you normally use."
     },
-    "warning": "This file contains executable code. Ensure you have Javascript disabled before opening it in you browser."
+    "warning": {
+      "en": "This file contains executable code. Ensure you have Javascript disabled before opening it in you browser."
+    }
   },
   "text/plain": {
     "label": "Plain text document",
@@ -463,7 +479,9 @@
     "description": {
       "en": "A PHP script source file. Open using an IDE or plain text editor."
     },
-    "warning": "Do not execute this file.",
+    "warning": {
+      "en": "Do not execute this file."
+    },
     "preview": "yes"
   },
   "text/x-vbasic": {
@@ -471,7 +489,9 @@
     "description": {
       "en": "VBA script embedded in a document. Open using an IDE or plain text editor. Unlikely to contain information useful to non-programmers."
     },
-    "warning": "Do not execute this script.",
+    "warning": {
+      "en": "Do not execute this script."
+    },
     "preview": "yes"
   },
   "text/x-vbscript": {
@@ -482,7 +502,9 @@
     "description": {
       "en": "Open using an IDE or plain text editor. Unlikely to contain information useful to non-programmers."
     },
-    "warning": "Do not execute this script.",
+    "warning": {
+      "en": "Do not execute this script."
+    },
     "preview": "yes"
   },
   "text/x-jsp": {
@@ -505,7 +527,9 @@
     "description": {
       "en": "A Microsoft Visual Basic source code file that typically contains most of the logic for generating a dynamic Web page. Unlikely to be useful to non-programmers. Open using a plain text editor or IDE."
     },
-    "warning": "Do not run this program.",
+    "warning": {
+      "en": "Do not run this program."
+    },
     "preview": "yes"
   },
   "text/x-vcard": {
@@ -676,7 +700,9 @@
     "description": {
       "en": "Unpack the file using an MSI extractor/unpacker."
     },
-    "warning": "Do not run the installer."
+    "warning": {
+      "en": "Do not run the installer."
+    }
   },
   "application/x-bplist": {
     "label": "Binary property list",
@@ -742,7 +768,9 @@
     "description": {
       "en": "This is a Windows executable file or software library that either runs or is part of an application."
     },
-    "warning": "Do not attempt to run this file. It is provided only for reference."
+    "warning": {
+      "en": "Do not attempt to run this file. It is provided only for reference."
+    }
   },
   "application/x-dosexec": {
     "label": "Windows executable",
@@ -752,7 +780,9 @@
     "description": {
       "en": "This is a Windows executable file."
     },
-    "warning": "Do not attempt to run this file. It is provided only for reference."
+    "warning": {
+      "en": "Do not attempt to run this file. It is provided only for reference."
+    }
   },
   "application/x-ms-owner": {
     "label": "MS owner file",
@@ -795,7 +825,9 @@
     "description": {
       "en": "A Shockwave Flash Player (SWF) file."
     },
-    "warning": "Do not open this file using Flash player or in your browser unless you've disabled local file access."
+    "warning": {
+      "en": "Do not open this file using Flash player or in your browser unless you've disabled local file access."
+    }
   },
   "audio/x-wav": {
     "label": "WAV audio",
@@ -936,7 +968,9 @@
     "description": {
       "en": "Java bytecode that can be executed using the Java Virtual Machine."
     },
-    "warning": "Do not run this file."
+    "warning": {
+      "en": "Do not run this file."
+    }
   },
   "multipart/appledouble": {
     "label": "AppleDouble metadata",

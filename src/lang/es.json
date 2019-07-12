@@ -11,6 +11,14 @@
     "relative": "Relacionado a la búsqueda"
   },
   "search": {
+    "errors": {
+      "bad-request": "Su búsqueda es incorrecta",
+      "internal-error": "Se ha producido un error con el servidor de búsqueda",
+      "no-connections": "El servidor no responde",
+      "not-found": "No hay resultados",
+      "service-unavailable": "El servidor no puede responder a la búsqueda",
+      "something-wrong": "Error"
+    },
     "placeholder": "Buscar en documentos...",
     "buttonlabel": "Buscar",
     "search-in": "Buscar en",
@@ -95,6 +103,8 @@
     "local-index": "Mis documentos",
     "all": "Todos",
     "missing": "Fecha faltante",
+    "starred": "Marcados",
+    "not_starred": "No marcados",
     "lang": {
       "all": "Todos",
       "ABKHAZIAN": "Abjasio",
@@ -314,7 +324,10 @@
     "translations": "Translations",
     "preview": "Vista previa",
     "download_button": "Descargar",
+    "external_window": "Abrir en una nueva ventana",
     "download_file": "Descargar el archivo fuente",
+    "star_button": "Marcar como favorito",
+    "star_file": "Marcar como favorito",
     "not_found": "Documento no encontrado",
     "not_available": "La vista previa está disponible solo para algunos formatos: pdf, csv, xlsx, tiff y rtf.",
     "named_entities_not_found": "No se han encontrado entidades con nombre",
@@ -326,7 +339,22 @@
     "thread_index": "Índice de hilo",
     "see_highlights": "Mostrat entidades con nombre",
     "highlights_caution": "¡Advertencia! Las entidades con nombre se resaltarán y pueden reemplazar el texto debajo. Esto no afecta los resultados de su búsqueda",
-    "fetching": "Fetching preview..."
+    "error_not_found": "Su archivo se ha indexado en Datashare, pero el archivo ya no está presente en su archivo Datashare en su computadora. La vista previa no está disponible.",
+    "search": "Buscar",
+    "find": "Buscar dentro de este archivo",
+    "of": "de",
+    "researched_terms": "En este archivo:",
+    "fetching": "Cargando vista previa...",
+    "tags": "Etiquetas",
+    "showMoreDetails": "Más detalles",
+    "showLessDetails": "Menos detalles",
+    "author": "Autor",
+    "extraction_date": "Fecha de índice",
+    "parent": "Archivo de base"
+  },
+  "email": {
+    "detail": "Más detalles",
+    "to": "Para"
   },
   "indexing": {
     "yes": "Sí",

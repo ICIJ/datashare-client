@@ -11,6 +11,14 @@
     "relative": "Relatifs à la recherche"
   },
   "search": {
+    "errors": {
+      "bad-request": "Votre recherche contient une erreur",
+      "internal-error": "Le serveur a été confronté à une erreur",
+      "no-connections": "Le serveur n'est pas connecté",
+      "not-found": "Aucun résultat",
+      "service-unavailable": "Le serveur ne peut pas répondre à la demande",
+      "something-wrong": "Erreur"
+    },
     "placeholder": "Rechercher dans les documents...",
     "buttonlabel": "Rechercher",
     "search-in": "Rechercher dans",
@@ -94,7 +102,9 @@
     "showMore": "Voir plus",
     "local-index": "Mes documents",
     "all": "Tous",
-    "missing": "Data manquante",
+    "missing": "Date manquante",
+    "starred": "Favoris",
+    "not_starred": "Non favoris",
     "lang": {
       "all": "Tous",
       "ABKHAZIAN": "Abkhaze",
@@ -314,7 +324,10 @@
     "translations": "Traductions",
     "preview": "Prévisualisation",
     "download_button": "Télécharger",
+    "external_window": "Ouvrir dans une nouvelle fenêtre",
     "download_file": "Télécharger le fichier source",
+    "star_button": "Mettre en favoris",
+    "star_file": "Mettre en favoris",
     "not_found": "Document non trouvé",
     "not_available": "La prévisualisation n'est disponible que pour certains formats : pdf, csv, xlsx, tiff et rtf.",
     "named_entities_not_found": "Pas d'entités nommées trouvées",
@@ -327,7 +340,21 @@
     "see_highlights": "Afficher les entités nommées",
     "highlights_caution": "Attention ! Les entités nommées seront surlignées et cacheront le texte. Ceci n'affectera cependant pas les résultats de recherche.",
     "error_not_found": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre fichier Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible.",
-    "fetching": "Chargement de la prévisualisation..."
+    "search": "Rechercher",
+    "find": "Rechercher dans le document",
+    "of": "de",
+    "researched_terms": "Dans ce document:",
+    "fetching": "Chargement de la prévisualisation...",
+    "tags": "Tags",
+    "showMoreDetails": "Afficher plus de détails",
+    "showLessDetails": "Afficher moins de détails",
+    "author": "Auteur",
+    "extraction_date": "Date d'indexation",
+    "parent": "Parent"
+  },
+  "email": {
+    "detail": "Voir les détails",
+    "to": "À"
   },
   "indexing": {
     "yes": "Oui",
