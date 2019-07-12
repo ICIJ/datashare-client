@@ -1,9 +1,9 @@
-import Vuex from 'vuex'
 import Vue from 'vue'
-import cloneDeep from 'lodash/cloneDeep'
+import Vuex from 'vuex'
 import DatashareClient from '@/api/DatashareClient'
 import { actions, getters, mutations, state, datashare } from '@/store/modules/indexing'
 import { jsonOk } from 'tests/unit/tests_utils'
+import cloneDeep from 'lodash/cloneDeep'
 
 Vue.use(Vuex)
 
