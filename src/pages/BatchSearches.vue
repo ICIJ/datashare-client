@@ -1,6 +1,6 @@
 <template>
   <div class="batchsearches container pt-4">
-    <b-form @submit="onSubmit" @reset="onReset">
+    <b-form @submit.prevent="onSubmit">
       <div class="card">
         <div class="card-header">
           <h3 class="h5 m-0">
@@ -15,7 +15,7 @@
           >
             <b-form-input
               id="name"
-              v-model="name"
+              :value="name"
               type="text"
               required
               placeholder="Search name"
@@ -28,7 +28,7 @@
           >
             <b-form-textarea
               id="description"
-              v-model="description"
+              :value="description"
               placeholder="Search description"
               rows="3"
               max-rows="6"
@@ -39,10 +39,9 @@
             label="CSV file:"
             label-for="file"
             description="Only CSV format accepted."
-            required
           >
             <b-form-file
-              v-model="file"
+              :value="file"
               :state="Boolean(file)"
               placeholder="Choose a file..."
               drop-placeholder="Drop file here..."
@@ -60,19 +59,16 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   name: 'BatchSearches',
-  data () {
-    return {
-      name: '',
-      description: '',
-      file: null
-    }
+  computed: {
+    ...mapState('batchSearches', ['name', 'description', 'file'])
   },
   methods: {
     onSubmit () {
-    },
-    onReset () {
+      this.$store.dispatch('batchSearches/onSubmit')
     }
   }
 }
