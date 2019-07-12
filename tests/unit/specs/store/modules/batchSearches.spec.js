@@ -38,4 +38,29 @@ describe('BatchSearch store', () => {
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl(`/api/batch/search/${index}`),
       { method: 'POST', body: form })
   })
+
+  it('should reset the form after submission success', async () => {
+    store.state.batchSearch.name = 'name'
+    store.state.batchSearch.description = 'description'
+    store.state.batchSearch.csvFile = 'csvFile'
+
+    await store.dispatch('batchSearch/onSubmit')
+
+    expect(store.state.batchSearch.name).toBe('')
+    expect(store.state.batchSearch.description).toBe('')
+    expect(store.state.batchSearch.csvFile).toBeNull()
+  })
+
+  it('should NOT reset the form after submission fail', async () => {
+    datashare.fetch.mockReturnValue(jsonOk({}, 500))
+    store.state.batchSearch.name = 'name'
+    store.state.batchSearch.description = 'description'
+    store.state.batchSearch.csvFile = 'csvFile'
+
+    await store.dispatch('batchSearch/onSubmit')
+
+    expect(store.state.batchSearch.name).toBe('name')
+    expect(store.state.batchSearch.description).toBe('description')
+    expect(store.state.batchSearch.csvFile).not.toBeNull()
+  })
 })

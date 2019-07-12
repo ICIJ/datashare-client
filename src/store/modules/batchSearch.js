@@ -13,6 +13,10 @@ export function initialState () {
 export const state = initialState
 
 export const mutations = {
+  reset (state) {
+    const s = initialState()
+    Object.keys(s).forEach(key => { state[key] = s[key] })
+  },
   name (state, name) {
     state.name = name
   },
@@ -25,8 +29,10 @@ export const mutations = {
 }
 
 export const actions = {
-  onSubmit ({ rootState, state }) {
-    return datashare.batchSearch(rootState.search.index, state.name, state.description, state.csvFile)
+  onSubmit ({ rootState, state, commit }) {
+    try {
+      datashare.batchSearch(rootState.search.index, state.name, state.description, state.csvFile).then(() => commit('reset'))
+    } catch (e) {}
   }
 }
 
