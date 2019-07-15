@@ -23,8 +23,8 @@
 </template>
 
 <script>
-import get from 'lodash/get'
 import types from '@/utils/types.json'
+import get from 'lodash/get'
 
 export default {
   props: {
