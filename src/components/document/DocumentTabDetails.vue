@@ -1,77 +1,79 @@
 <template>
   <div class="container-fluid py-3 document__content">
-    <div class="row">
-      <div class="col-8 document__content__details h-100">
-        <h5>
-          Details
-        </h5>
-        <p class="text-muted">
-          These information are extracted from the document's metadata.
-        </p>
+    <div class="document__content__tags">
+      <h5>
+        {{ $t('document.tags') }}
+      </h5>
+      <p class="text-muted">
+        These tags are visible for all users.
+      </p>
+      <div class="row mb-3">
+        <div class="col-md-4 mb-3">
+          <b-form @submit.prevent="submitTag" class="document__content__tags__add">
+            <b-form-input id="new-tag" size="sm" v-model="tag" autofocus required placeholder="Add a new tag" />
+          </b-form>
+        </div>
+        <div class="col-md-8">
+          <ul class="document__content__tags list-unstyled mb-0 mt-1">
+            <li class="document__content__tags__tag badge badge-light border badge-pill mr-2 mb-1" v-for="tag in document.tags" :key="tag">
+              {{ tag }}
+              <fa icon="times" class="document__content__tags__tag__delete fa-fw" @click="untag(tag)" />
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
 
-        <div class="row document__content__details__item" v-for="field in canonicalFields" :key="field.name" v-if="field.value && field.value !== 'unknown'">
-          <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
-            <div class="text-truncate mr-1 w-100" :title="field.name">
-              {{ field.label }}
-            </div>
-            <div class="mr-auto document__content__details__item__search">
-              <router-link :to="{ name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value) } }">
-                <fa icon="search" />
-              </router-link>
-            </div>
+    <div class="document__content__details">
+      <h5>
+        Details
+      </h5>
+      <p class="text-muted">
+        These information are extracted from the document's metadata.
+      </p>
+
+      <div class="row document__content__details__item" v-for="field in canonicalFields" :key="field.name" v-if="field.value && field.value !== 'unknown'">
+        <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
+          <div class="text-truncate mr-1 w-100" :title="field.name">
+            {{ field.label }}
           </div>
-          <div class="col-sm-8">
-            <div class="overflow-auto w-100 text-nowrap" :class="field.class">
-              <component :is="field.component || 'div'">
-                {{ field.value }}
-              </component>
-            </div>
+          <div class="mr-auto document__content__details__item__search">
+            <router-link :to="{ name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value) } }">
+              <fa icon="search" />
+            </router-link>
           </div>
         </div>
-
-        <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name" v-if="metadataVisible" v-once>
-          <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
-            <div class="text-truncate mr-1 w-100" :title="name">
-              <var>{{ document.shortMetaName(name) | startCase }}</var>
-            </div>
-            <div class="mr-auto document__content__details__item__search">
-              <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name) } }">
-                <fa icon="search" />
-              </router-link>
-            </div>
+        <div class="col-sm-8">
+          <div class="w-100 text-truncate" :class="field.class">
+            <component :is="field.component || 'div'" :title="field.value">
+              {{ field.value }}
+            </component>
           </div>
-          <div class="col-sm-8">
-            <div class="overflow-auto w-100 text-nowrap">
-              {{ document.meta(name) }}
-            </div>
-          </div>
-        </div>
-
-        <div class="text-center mt-4">
-          <button @click="metadataVisible = !metadataVisible" class="btn btn-outline-primary btn-sm">
-            {{ $t(metadataVisible ? 'document.showLessDetails' : 'document.showMoreDetails') }}
-          </button>
         </div>
       </div>
 
-      <div class="col-4 border-left">
-        <h5>
-          {{ $t('document.tags') }}
-        </h5>
-        <p class="text-muted">
-          These tags are visible for all users.
-        </p>
+      <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name" v-if="metadataVisible" v-once>
+        <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
+          <div class="text-truncate mr-1 w-100" :title="name">
+            <var>{{ document.shortMetaName(name) | startCase }}</var>
+          </div>
+          <div class="mr-auto document__content__details__item__search">
+            <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name) } }">
+              <fa icon="search" />
+            </router-link>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="w-100 text-truncate">
+            {{ document.meta(name) }}
+          </div>
+        </div>
+      </div>
 
-        <b-form @submit.prevent="submitTag" class="document__content__tags__add">
-          <b-form-input id="new-tag" size="sm" v-model="tag" autofocus required placeholder="Add a new tag" />
-        </b-form>
-
-        <ul class="document__content__tags list-unstyled mt-3">
-          <li class="document__content__tags__tag badge badge-light border badge-pill mr-2 mb-2" v-for="tag in document.tags" :key="tag">
-            {{ tag }}
-            <fa icon="times" class="document__content__tags__tag__delete fa-fw" @click="untag(tag)" />
-          </li>
-        </ul>
+      <div class="text-center mt-4">
+        <button @click="metadataVisible = !metadataVisible" class="btn btn-outline-primary btn-sm">
+          {{ $t(metadataVisible ? 'document.showLessDetails' : 'document.showMoreDetails') }}
+        </button>
       </div>
     </div>
   </div>
