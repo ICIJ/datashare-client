@@ -49,12 +49,12 @@ describe('BatchSearch.vue', () => {
   })
 
   it('should call the store', () => {
+    const state = {
+      batchSearches: []
+    }
     const actions = {
       onSubmit: jest.fn(),
       getBatchSearches: jest.fn()
-    }
-    const state = {
-      batchSearches: []
     }
     const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
     wrapper = shallowMount(BatchSearch, { localVue, i18n, store })
