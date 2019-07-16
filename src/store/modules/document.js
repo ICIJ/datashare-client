@@ -34,6 +34,9 @@ export const mutations = {
       state.doc = null
     }
   },
+  tags (state, tags) {
+    state.doc.tags = tags
+  },
   namedEntities (state, raw) {
     state.namedEntities = new Response(raw).hits
   },
@@ -56,6 +59,15 @@ export const actions = {
     commit('idAndRouting', idAndRouting)
     try {
       const doc = await esClient.getEsDoc(rootState.search.index, idAndRouting.id, idAndRouting.routing)
+      commit('doc', doc)
+    } catch (_) {
+      commit('doc', null)
+    }
+    return state.doc
+  },
+  async refresh ({ commit, rootState, state, dispatch }) {
+    try {
+      const doc = await esClient.getEsDoc(rootState.search.index, state.idAndRouting.id, state.idAndRouting.routing)
       commit('doc', doc)
     } catch (_) {
       commit('doc', null)

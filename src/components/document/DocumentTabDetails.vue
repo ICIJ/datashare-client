@@ -10,7 +10,7 @@
       <div class="row mb-3">
         <div class="col-md-4 mb-3">
           <b-form @submit.prevent="submitTag" class="document__content__tags__add">
-            <b-form-input id="new-tag" size="sm" v-model="tag" autofocus required placeholder="Add a new tag" />
+            <b-form-input id="new-tag" size="sm" v-model="tag" autofocus required placeholder="Add a new tag" :disabled="updatingTags" />
           </b-form>
         </div>
         <div class="col-md-8">
@@ -96,7 +96,8 @@ export default {
   data () {
     return {
       tag: '',
-      metadataVisible: false
+      metadataVisible: false,
+      updatingTags: false
     }
   },
   computed: {
@@ -203,13 +204,17 @@ export default {
     getDocumentTypeLabel,
     getExtractionLevelTranslationKey,
     async submitTag () {
+      this.updatingTags = true
       await this.$store.dispatch('document/tag', { documentId: this.document.id, routingId: this.document.routing, tags: [this.tag] })
-      await this.$store.dispatch('document/get', { id: this.document.id, routing: this.document.routing })
+      await this.$store.dispatch('document/refresh')
       this.tag = ''
+      this.updatingTags = false
     },
     async untag (tag) {
+      this.updatingTags = true
       await this.$store.dispatch('document/untag', { documentId: this.document.id, routingId: this.document.routing, tags: [tag] })
-      await this.$store.dispatch('document/get', { id: this.document.id, routing: this.document.routing })
+      await this.$store.dispatch('document/refresh')
+      this.updatingTags = false
     }
   }
 }
