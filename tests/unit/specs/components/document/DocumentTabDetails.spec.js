@@ -112,7 +112,6 @@ describe('DocumentTabDetails.vue', () => {
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/tag/${process.env.VUE_APP_ES_INDEX}/${id}?routing=${id}`),
       { method: 'PUT', body: JSON.stringify(['tag_02']) })
     expect(esClient.getEsDoc).toHaveBeenCalledTimes(1)
-    expect(esClient.getEsDoc).toBeCalledWith(process.env.VUE_APP_ES_INDEX, id, id)
   })
 
   it('should call API endpoint to remove a tag and then reload the document from ES', async () => {
@@ -128,7 +127,6 @@ describe('DocumentTabDetails.vue', () => {
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/untag/${process.env.VUE_APP_ES_INDEX}/${id}?routing=${id}`),
       { method: 'PUT', body: JSON.stringify(['tag_01']) })
     expect(esClient.getEsDoc).toHaveBeenCalledTimes(1)
-    expect(esClient.getEsDoc).toBeCalledWith(process.env.VUE_APP_ES_INDEX, id, id)
   })
 
   it('should display form to add new tag', async () => {
