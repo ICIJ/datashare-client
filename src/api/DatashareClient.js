@@ -68,6 +68,9 @@ export class DatashareClient {
     form.append('csvFile', csvFile)
     return this.sendAction(`/api/batch/search/${encodeURIComponent(project)}`, { method: 'POST', body: form })
   }
+  getBatchSearches () {
+    return this.sendAction('/api/batch/search')
+  }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)

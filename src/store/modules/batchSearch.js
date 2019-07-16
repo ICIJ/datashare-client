@@ -6,16 +6,18 @@ export function initialState () {
   return {
     name: '',
     description: '',
-    csvFile: null
+    csvFile: null,
+    batchSearches: []
   }
 }
 
 export const state = initialState
 
 export const mutations = {
-  reset (state) {
-    const s = initialState()
-    Object.keys(s).forEach(key => { state[key] = s[key] })
+  resetForm (state) {
+    state.name = ''
+    state.description = ''
+    state.csvFile = null
   },
   name (state, name) {
     state.name = name
@@ -25,13 +27,22 @@ export const mutations = {
   },
   csvFile (state, csvFile) {
     state.csvFile = csvFile
+  },
+  batchSearches (state, batchSearches) {
+    state.batchSearches = batchSearches
   }
 }
 
 export const actions = {
-  onSubmit ({ rootState, state, commit }) {
+  getBatchSearches ({ commit }) {
+    return datashare.getBatchSearches().then(r => r.json()).then(batchSearches => commit('batchSearches', batchSearches))
+  },
+  onSubmit ({ rootState, state, commit, dispatch }) {
     try {
-      datashare.batchSearch(rootState.search.index, state.name, state.description, state.csvFile).then(() => commit('reset'))
+      return datashare.batchSearch(rootState.search.index, state.name, state.description, state.csvFile).then(r => {
+        commit('resetForm')
+        return dispatch('getBatchSearches')
+      })
     } catch (e) {}
   }
 }

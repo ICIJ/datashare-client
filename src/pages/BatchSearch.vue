@@ -1,5 +1,5 @@
 <template>
-  <div class="batchsearches container pt-4">
+  <div class="batchsearch container pt-4">
     <b-form @submit.prevent="onSubmit">
       <div class="card">
         <div class="card-header">
@@ -53,13 +53,38 @@
         </div>
       </div>
     </b-form>
+    <div class="batchsearch__list">
+      <div class="container py-3" v-if="batchSearches.length">
+        <div v-for="batchSearch in batchSearches" :key="batchSearch.uuid" class="row my-3">
+          <div class="col col-sm-2">
+            {{ batchSearch.project.name }}
+          </div>
+          <div class="col col-sm-2">
+            {{ batchSearch.name }}
+          </div>
+          <div class="col col-sm-2">
+            {{ batchSearch.description }}
+          </div>
+          <div class="col col-sm-3">
+            {{ batchSearch.queries }}
+          </div>
+          <div class="col col-sm-3">
+            {{ moment(batchSearch.date).format('LLL') }}
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+import moment from 'moment'
+
 export default {
   name: 'BatchSearches',
   computed: {
+    ...mapState('batchSearch', ['batchSearches']),
     name: {
       get () {
         return this.$store.state.batchSearch.name
@@ -85,10 +110,14 @@ export default {
       }
     }
   },
+  mounted () {
+    return this.$store.dispatch('batchSearch/getBatchSearches')
+  },
   methods: {
     onSubmit () {
-      this.$store.dispatch('batchSearch/onSubmit')
-    }
+      return this.$store.dispatch('batchSearch/onSubmit')
+    },
+    moment
   }
 }
 </script>

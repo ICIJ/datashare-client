@@ -27,6 +27,7 @@ describe('BatchSearch store', () => {
     store.state.batchSearch.name = 'name'
     store.state.batchSearch.description = 'description'
     store.state.batchSearch.csvFile = 'csvFile'
+    datashare.fetch.mockClear()
 
     await store.dispatch('batchSearch/onSubmit')
 
@@ -34,9 +35,22 @@ describe('BatchSearch store', () => {
     form.append('name', 'name')
     form.append('description', 'description')
     form.append('csvFile', 'csvFile')
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toHaveBeenCalledTimes(2)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl(`/api/batch/search/${index}`),
       { method: 'POST', body: form })
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})
+  })
+
+  it('should reset the form', () => {
+    store.state.batchSearch.name = 'name'
+    store.state.batchSearch.description = 'description'
+    store.state.batchSearch.csvFile = 'csvFile'
+
+    store.commit('batchSearch/resetForm')
+
+    expect(store.state.batchSearch.name).toBe('')
+    expect(store.state.batchSearch.description).toBe('')
+    expect(store.state.batchSearch.csvFile).toBeNull()
   })
 
   it('should reset the form after submission success', async () => {
@@ -57,10 +71,12 @@ describe('BatchSearch store', () => {
     store.state.batchSearch.description = 'description'
     store.state.batchSearch.csvFile = 'csvFile'
 
-    await store.dispatch('batchSearch/onSubmit')
-
-    expect(store.state.batchSearch.name).toBe('name')
-    expect(store.state.batchSearch.description).toBe('description')
-    expect(store.state.batchSearch.csvFile).not.toBeNull()
+    try {
+      await store.dispatch('batchSearch/onSubmit')
+    } catch (e) {
+      expect(store.state.batchSearch.name).toBe('name')
+      expect(store.state.batchSearch.description).toBe('description')
+      expect(store.state.batchSearch.csvFile).not.toBeNull()
+    }
   })
 })
