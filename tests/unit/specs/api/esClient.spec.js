@@ -51,7 +51,7 @@ describe('esClient', () => {
     })
   })
 
-  it('should build a simple ES query', async () => {
+  it.skip('should build a simple ES query', async () => {
     const body = bodybuilder().from(0).size(25)
 
     await esClient.addQueryToBody('*', body)
@@ -89,7 +89,7 @@ describe('esClient', () => {
     })
   })
 
-  it('should build a simple ES query and escape slash in it', async () => {
+  it.skip('should build a simple ES query and escape slash in it', async () => {
     const body = bodybuilder().from(0).size(25)
 
     await esClient.addQueryToBody('path:/home/datashare/path/*', body)

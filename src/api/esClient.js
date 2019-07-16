@@ -54,11 +54,12 @@ export function datasharePlugin (Client, config, components) {
       .addQuery('bool', b => b
         // Add the query string to the body
         .orQuery('query_string', { query, default_field: '*' })
-        .orQuery('has_child', 'type', 'NamedEntity', {
-          'inner_hits': {
-            'size': 30
-          }
-        }, sub => sub.query('match', 'mention', query))
+        // #TODO : To fix
+        // .orQuery('has_child', 'type', 'NamedEntity', {
+        //   'inner_hits': {
+        //     'size': 30
+        //   }
+        // }, sub => sub.query('match', 'mention', query))
       )
   }
 
