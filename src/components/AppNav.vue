@@ -51,6 +51,7 @@
 
 <script>
 import SearchBar from '@/components/SearchBar'
+import settings from '@/utils/settings'
 import utils from '@/mixins/utils'
 import { getOS } from '@/utils/utils'
 import DatashareClient from '@/api/DatashareClient'
@@ -95,21 +96,8 @@ export default {
       return this.$route.name !== 'landing'
     },
     getAddDocumentsLink () {
-      let link
-      switch (getOS()) {
-        case 'mac' :
-          link = 'https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare'
-          break
-        case 'windows' :
-          link = 'https://icij.gitbook.io/datashare/windows/how-to-add-documents-to-datashare'
-          break
-        case 'linux' :
-          link = 'https://icij.gitbook.io/datashare/linux/how-to-add-documents-to-datashare'
-          break
-        default :
-          link = 'https://icij.gitbook.io/datashare/'
-      }
-      return link
+      const os = getOS()
+      return settings.documentationLinks.indexing[os] || settings.documentationLinks.indexing.default
     },
     getHelpLink () {
       return this.isServer ? 'https://jira.icij.org/servicedesk/customer/portal/4/create/108' : 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
