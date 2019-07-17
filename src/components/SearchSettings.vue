@@ -1,6 +1,6 @@
 <template>
   <span class="search-settings">
-    <button type="button" class="btn btn-dark" id="toggleSettings" :title="$t('search.settings.title')" v-b-tooltip.hover>
+    <button type="button" class="btn btn-dark" id="toggleSettings" :title="$t('search.settings.title')" v-b-tooltip.hover.bottomleft>
       <fa icon="cog" />
       <span class="sr-only">
         {{ $t('search.settings.title') }}

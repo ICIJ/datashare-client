@@ -4,7 +4,7 @@
       <div class="input-group">
         <input v-model="query" type="text" :placeholder="$t('search.placeholder')" class="form-control search-bar__input">
         <div class="input-group-append">
-          <a v-if="!tips" class="search-bar__tips-addon input-group-text pl-1" :class="{ 'search-bar__tips-addon--active': showTips }" :href="operatorLinks" target="_blank" title="Tips to improve searching" v-b-tooltip>
+          <a v-if="!tips" class="search-bar__tips-addon input-group-text pl-1" :class="{ 'search-bar__tips-addon--active': showTips }" :href="operatorLinks" target="_blank" title="Tips to improve searching" v-b-tooltip.bottomleft>
             <fa icon="question-circle" />
           </a>
           <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="search-bar__field" right>
@@ -142,10 +142,12 @@ export default {
       background: white;
       transition: $input-transition, color .15s ease-in-out;
       color: transparent;
+      pointer-events: none;
     }
 
     &__tips-addon--active.input-group-text {
       color: $link-color;
+      pointer-events: all;
     }
 
     &__field.show .btn.dropdown-toggle,
