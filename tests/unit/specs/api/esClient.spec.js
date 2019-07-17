@@ -51,7 +51,7 @@ describe('esClient', () => {
     })
   })
 
-  it.skip('should build a simple ES query', async () => {
+  it('should build a simple ES query', async () => {
     const body = bodybuilder().from(0).size(25)
 
     await esClient.addQueryToBody('*', body)
@@ -64,24 +64,9 @@ describe('esClient', () => {
           must: [{
             match_all: {}
           }, {
-            bool: {
-              should: [{
-                query_string: {
-                  query: '*',
-                  default_field: '*'
-                } }, {
-                has_child: {
-                  type: 'NamedEntity',
-                  inner_hits: {
-                    size: 30
-                  },
-                  query: {
-                    match: {
-                      mention: '*'
-                    }
-                  }
-                }
-              }]
+            query_string: {
+              query: '*',
+              default_field: '*'
             }
           }]
         }
@@ -89,7 +74,7 @@ describe('esClient', () => {
     })
   })
 
-  it.skip('should build a simple ES query and escape slash in it', async () => {
+  it('should build a simple ES query and escape slash in it', async () => {
     const body = bodybuilder().from(0).size(25)
 
     await esClient.addQueryToBody('path:/home/datashare/path/*', body)
@@ -102,24 +87,9 @@ describe('esClient', () => {
           must: [{
             match_all: {}
           }, {
-            bool: {
-              should: [{
-                query_string: {
-                  query: 'path:\\/home\\/datashare\\/path\\/*',
-                  default_field: '*'
-                } }, {
-                has_child: {
-                  type: 'NamedEntity',
-                  inner_hits: {
-                    size: 30
-                  },
-                  query: {
-                    match: {
-                      mention: 'path:\\/home\\/datashare\\/path\\/*'
-                    }
-                  }
-                }
-              }]
+            query_string: {
+              query: 'path:\\/home\\/datashare\\/path\\/*',
+              default_field: '*'
             }
           }]
         }

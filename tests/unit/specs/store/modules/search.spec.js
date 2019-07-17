@@ -601,4 +601,16 @@ describe('Search store', () => {
     expect(store.state.search.response.hits).toHaveLength(1)
     expect(store.state.search.response.hits[0].basename).toEqual('doc_01')
   })
+
+  it('should find document on querying the NamedEntity with a complex query', async () => {
+    await letData(es).have(new IndexedDocument('doc_01').withContent('test').withNer('ner_01')).commit()
+    await letData(es).have(new IndexedDocument('doc_02').withNer('ner_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_03').withNer('test')).commit()
+
+    await store.dispatch('search/query', '(test AND ner_*) OR test')
+
+    expect(store.state.search.response.hits).toHaveLength(2)
+    expect(store.state.search.response.hits[0].basename).toEqual('doc_01')
+    expect(store.state.search.response.hits[1].basename).toEqual('doc_03')
+  })
 })
