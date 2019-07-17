@@ -1,19 +1,29 @@
 <template>
-  <form class="search-bar d-flex align-items-center container-fluid py-3" :id="uniqueId" @submit.prevent="submit">
-    <div class="input-group">
-      <input v-model="query" type="text" :placeholder="$t('search.placeholder')" class="form-control search-bar__input">
-      <div class="input-group-append">
-        <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="search-bar__field" right v-if="hasFeature('SEARCH_FIELD')">
-          <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key">
-            {{ $t('search.field.' + key) }}
-          </b-dropdown-item>
-        </b-dropdown>
-        <button type="submit" class="btn btn-dark search-bar__submit">
-          {{ $t('search.buttonlabel') }}
-        </button>
+  <form class="search-bar py-3 container-fluid" :id="uniqueId" @submit.prevent="submit">
+    <div class="d-flex align-items-center">
+      <div class="input-group">
+        <input v-model="query" type="text" :placeholder="$t('search.placeholder')" class="form-control search-bar__input">
+        <div class="input-group-append">
+          <a v-if="!tips" class="search-bar__tips-addon input-group-text pl-1" :class="{ 'search-bar__tips-addon--active': showTips }" :href="operatorLinks" target="_blank" title="Tips to improve searching" v-b-tooltip>
+            <fa icon="question-circle" />
+          </a>
+          <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="search-bar__field" right>
+            <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key">
+              {{ $t('search.field.' + key) }}
+            </b-dropdown-item>
+          </b-dropdown>
+          <button type="submit" class="btn btn-dark search-bar__submit">
+            {{ $t('search.buttonlabel') }}
+          </button>
+        </div>
       </div>
-      <a class="search-bar__typeahead" href="https://icij.gitbook.io/datashare/all/search-with-operators" target="_blank">
-        <span class="d-flex justify-content-between">
+      <div class="px-0 pl-2" v-if="settings">
+        <search-settings placement="bottomleft" :container="uniqueId" />
+      </div>
+    </div>
+    <slide-up-down :active="showTips" v-if="tips">
+      <a class="search-bar__tips" :href="operatorLinks" target="_blank">
+        <span>
           <span class="mr-1">
             <fa icon="book" class="mr-1" />
             Tips to improve searching
@@ -23,26 +33,23 @@
           </span>
         </span>
       </a>
-    </div>
-    <div class="px-0 pl-2" v-if="!hideSettings">
-      <search-settings placement="bottomleft" :container="uniqueId" />
-    </div>
+    </slide-up-down>
   </form>
 </template>
 
 <script>
 import uniqueId from 'lodash/uniqueId'
 import SearchSettings from './SearchSettings'
-import features from '@/mixins/features'
 import settings from '@/utils/settings'
 
 export default {
   name: 'SearchBar',
-  mixins: [ features ],
   props: {
-    hideSettings: {
-      type: Boolean,
-      default: false
+    tips: {
+      type: Boolean
+    },
+    settings: {
+      type: Boolean
     },
     fieldOptions: {
       type: Array,
@@ -56,8 +63,10 @@ export default {
   },
   data () {
     return {
+      showTips: false,
       query: this.$store.state.search.query,
-      field: this.$store.state.search.field
+      field: this.$store.state.search.field,
+      operatorLinks: settings.documentationLinks.operators.default
     }
   },
   mounted () {
@@ -83,6 +92,11 @@ export default {
     uniqueId () {
       return uniqueId('search-bar-')
     }
+  },
+  watch: {
+    query () {
+      this.showTips = this.query !== ''
+    }
   }
 }
 </script>
@@ -95,15 +109,43 @@ export default {
       flex-wrap: nowrap;
     }
 
+    &__input.form-control {
+      border-right: 0;
+
+      &:focus ~ .input-group-append .search-bar__field .btn,
+      &:focus ~ .input-group-append .search-bar__tips-addon {
+        border-top-color: $input-focus-border-color;
+        border-bottom-color: $input-focus-border-color;
+      }
+
+      &:focus  {
+        box-shadow: none;
+      }
+    }
+
     &__field {
+      border-left: dashed 1px  $input-border-color;
 
       .btn {
         color: $text-muted;
         border: 1px solid $input-border-color;
         border-left: 0;
         box-shadow: $input-box-shadow;
-
       }
+    }
+
+    &__tips-addon.input-group-text {
+      color: $text-muted;
+      border-left: 0;
+      border-right: 0;
+      box-shadow: $input-box-shadow;
+      background: white;
+      transition: $input-transition, color .15s ease-in-out;
+      color: transparent;
+    }
+
+    &__tips-addon--active.input-group-text {
+      color: $link-color;
     }
 
     &__field.show .btn.dropdown-toggle,
@@ -115,39 +157,10 @@ export default {
       border-left: 0;
     }
 
-    &__input.form-control {
-      border-right-style: dashed;
-
-      &:focus  ~ .input-group-append .search-bar__field .btn {
-        border-color: $input-focus-border-color;
-      }
-
-      &:focus, .input-group:hover &  {
-        border-radius: $input-border-radius 0 0 0;
-        box-shadow: none;
-        border-right-color: $input-border-color;
-
-        & ~ .search-bar__typeahead {
-          display: block;
-        }
-
-        & ~ .input-group-append .search-bar__submit {
-          border-bottom-right-radius: 0 !important;
-        }
-      }
-    }
-
-    &__typeahead {
-      position: absolute;
-      top: 100%;
-      left: 0;
-      right: 0;
-      background: mix($input-border-color, white, 30%);
-      border: 1px solid $input-border-color;
-      border-top: 0;
-      padding: $spacer / 2 $spacer;
+    &__tips {
+      display: block;
+      padding: $spacer / 2 0 0;
       font-size: 0.9rem;
-      display: none;
       z-index: 100;
       border-radius: 0 0 $input-border-radius $input-border-radius;
     }

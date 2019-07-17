@@ -4,7 +4,7 @@
       <h1 class="landing__form__heading text-special">
         <img src="~images/logo-white.svg" alt="Datashare" />
       </h1>
-      <search-bar class="landing__form__search-bar" hide-settings />
+      <search-bar class="landing__form__search-bar" tips />
       <div class="mt-5 text-white" v-if="showProjectsCards">
         <h2 class="text-uppercase h5">Projects</h2>
         <project-cards class="mt-3" />

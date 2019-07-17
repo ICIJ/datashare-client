@@ -10,7 +10,7 @@
           <span class="app__nav__container__main__brand__beta mr-3">beta</span>
         </router-link>
         <div class="app__nav__container__main__search-bar flex-grow-1" v-if="isntLanding()">
-          <search-bar class="px-0" />
+          <search-bar class="px-0" settings />
         </div>
         <a class="app__nav__container__main__hamburger px-3 ml-auto" @click.prevent="toggleMenu()" href="#">
           <fa icon="bars" />
