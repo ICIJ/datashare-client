@@ -3,6 +3,11 @@
     <div class="input-group">
       <input v-model="query" type="text" :placeholder="$t('search.placeholder')" class="form-control search-bar__input">
       <div class="input-group-append">
+        <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="search-bar__field" right v-if="hasFeature('SEARCH_FIELD')">
+          <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key">
+            {{ $t('search.field.' + key) }}
+          </b-dropdown-item>
+        </b-dropdown>
         <button type="submit" class="btn btn-dark search-bar__submit">
           {{ $t('search.buttonlabel') }}
         </button>
@@ -26,11 +31,13 @@
 </template>
 
 <script>
-import SearchSettings from './SearchSettings'
 import uniqueId from 'lodash/uniqueId'
+import SearchSettings from './SearchSettings'
+import features from '@/mixins/features'
 
 export default {
   name: 'SearchBar',
+  mixins: [ features ],
   props: {
     hideSettings: {
       type: Boolean,
@@ -42,7 +49,16 @@ export default {
   },
   data () {
     return {
-      query: this.$store.state.search.query
+      query: this.$store.state.search.query,
+      fieldOptions: [
+        'all',
+        'title',
+        'author',
+        'recipients',
+        'content',
+        'path',
+        'thread_id'
+      ]
     }
   },
   mounted () {
@@ -68,6 +84,14 @@ export default {
   computed: {
     uniqueId () {
       return uniqueId('search-bar-')
+    },
+    field: {
+      get () {
+        return this.$store.state.search.field
+      },
+      set (field) {
+        this.$store.commit('search/field', field)
+      }
     }
   }
 }
@@ -81,12 +105,54 @@ export default {
       flex-wrap: nowrap;
     }
 
-    &__input ~ &__typeahead {
+    &__field {
+
+      .btn {
+        color: $text-muted;
+        border: 1px solid $input-border-color;
+        border-left: 0;
+        box-shadow: $input-box-shadow;
+
+      }
+    }
+
+    &__field.show .btn.dropdown-toggle,
+    &__field .btn.dropdown-toggle:hover,
+    &__field .btn.dropdown-toggle:active {
+      background: transparent;
+      box-shadow: $input-box-shadow;
+      border:1px solid $input-border-color;
+      border-left: 0;
+    }
+
+    &__input.form-control {
+      border-right-style: dashed;
+
+      &:focus  ~ .input-group-append .search-bar__field .btn {
+        border-color: $input-focus-border-color;
+      }
+
+      &:focus, .input-group:hover &  {
+        border-radius: $input-border-radius 0 0 0;
+        box-shadow: none;
+        border-right-color: $input-border-color;
+
+        & ~ .search-bar__typeahead {
+          display: block;
+        }
+
+        & ~ .input-group-append .search-bar__submit {
+          border-bottom-right-radius: 0 !important;
+        }
+      }
+    }
+
+    &__typeahead {
       position: absolute;
       top: 100%;
       left: 0;
       right: 0;
-      background: mix($input-border-color, white);
+      background: mix($input-border-color, white, 30%);
       border: 1px solid $input-border-color;
       border-top: 0;
       padding: $spacer / 2 $spacer;
@@ -94,19 +160,6 @@ export default {
       display: none;
       z-index: 100;
       border-radius: 0 0 $input-border-radius $input-border-radius;
-    }
-
-    & &__input:focus, .input-group:hover &__input  {
-      border-radius: $input-border-radius 0 0 0;
-      box-shadow: none;
-
-      & ~ .search-bar__typeahead {
-        display: block;
-      }
-
-      & ~ .input-group-append .search-bar__submit {
-        border-bottom-right-radius: 0 !important;
-      }
     }
 
     & .input-group > .input-group-append > &__submit.btn {

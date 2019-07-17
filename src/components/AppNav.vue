@@ -4,18 +4,18 @@
       <div class="app__nav__mask" v-if="!collapseMenu" @click="toggleMenu"></div>
     </transition>
     <div class="app__nav__container row no-gutters">
-      <div class="app__nav__container__main col row no-gutters">
-        <router-link class="app__nav__container__main__brand col d-flex justify-content-start align-items-center" :to="{ name: 'landing' }">
+      <div class="app__nav__container__main col d-flex">
+        <router-link class="app__nav__container__main__brand d-flex justify-content-start align-items-center" :to="{ name: 'landing' }">
           <img src="~images/logo-color.svg" alt="Datashare" class="ml-3" />
           <span class="app__nav__container__main__brand__beta mr-3">beta</span>
         </router-link>
-        <div class="app__nav__container__main__search-bar col" v-if="isntLanding()">
+        <div class="app__nav__container__main__search-bar flex-grow-1" v-if="isntLanding()">
           <search-bar class="px-0" />
         </div>
-        <a class="app__nav__container__main__hamburger col" @click.prevent="toggleMenu()" href="#">
+        <a class="app__nav__container__main__hamburger pr-3" @click.prevent="toggleMenu()" href="#">
           <fa icon="bars" />
         </a>
-        <ul class="app__nav__container__main__menu list-unstyled col" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
+        <ul class="app__nav__container__main__menu list-unstyled d-flex mb-0" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
           <li class="list-unstyled-item app__nav__container__main__menu__item border-right ml-auto" v-if="!isServer">
             <router-link :to="{ name: 'indexing' }">
               <fa icon="rocket" class="mr-1" />
@@ -145,11 +145,12 @@ export default {
         min-height: var(--app-nav-height);
         white-space: nowrap;
 
-        &__brand.col, &__brand:hover, &__brand:focus, &__brand {
+        &__brand, &__brand:hover, &__brand:focus, &__brand {
           color: inherit;
           padding: $spacer;
           pointer-events: auto;
           max-width: $aggregations-panel-width;
+          width: 100%;
           font-size: 1.5rem;
           text-decoration: none;
 
@@ -175,40 +176,20 @@ export default {
           margin-left: 0.5em;
         }
 
-        &__search-bar.col {
+        &__search-bar {
           position: relative;
-          margin-left: $spacer;
-          padding: 0;
-
-          & .input-group {
-            width: auto;
-          }
-
-          input[type=text] {
-            width: 100vw;
-            max-width: $search-results-width;
-
-            @media (max-width: $document-float-breakpoint-width) {
-              max-width: 20vw;
-            }
-          }
-
-          .search-settings__popover {
-            transform: translateY($spacer);
-          }
+          padding: 0 $spacer;
         }
 
         & &__hamburger {
           cursor: pointer;
           color: inherit;
           pointer-events: auto;
-          max-width: 3.5rem;
           font-size: 1.5rem;
           line-height: var(--app-nav-height);
           height: var(--app-nav-height);
           display: none;
           text-align: center;
-          margin-left: auto;
 
           @include media-breakpoint-down(lg) {
             display: block;
@@ -216,45 +197,43 @@ export default {
         }
 
         &__menu {
-          display: flex;
-          flex-grow: 1;
-          margin: 0;
+          margin-left: auto;
 
           @include media-breakpoint-down(lg) {
+            flex-direction: column;
             display: block;
             transition: opacity 300ms;
+            border-radius: $dropdown-border-radius;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            margin: $spacer;
+            max-width: 280px;
+            background: white;
+            border: $gray-200 1px solid;
+            box-shadow: 0 2px 10px 0 rgba(black,.05);
+
+            &:before {
+              content:"";
+              border: ($spacer / 2) solid transparent;
+              border-bottom-color: white;
+              position: absolute;
+              bottom: 100%;
+              right: $spacer;
+            }
 
             .app__nav--collapse & {
               opacity: 0;
               pointer-events: none;
             }
 
-            &.col {
-              border-radius: $dropdown-border-radius;
-              position: absolute;
-              right: 0;
-              top: 100%;
-              margin: $spacer;
-              max-width: 280px;
-              background: white;
-              border: $gray-200 1px solid;
-              box-shadow: 0 2px 10px 0 rgba(black,.05);
+            &__item {
 
-              &:before {
-                content:"";
-                border: ($spacer / 2) solid transparent;
-                border-bottom-color: white;
-                position: absolute;
-                bottom: 100%;
-                right: $spacer;
-              }
-            }
-
-            &.col &__item {
               a {
                 display: block;
                 border-bottom: $gray-200 1px solid;
                 padding: $spacer;
+                width:100%;
               }
 
               &:last-child a {
@@ -264,20 +243,22 @@ export default {
           }
 
           &__item {
+
             & > a {
-              padding: $spacer * 1.5 $spacer;
+              height: 100%;
+              padding: $spacer * 1.5 $spacer * 0.75;
               display: inline-block;
               color: $body-color;
               font-weight: bolder;
               position: relative;
               transition: .4s;
               font-family: $headings-font-family;
-              border-bottom: 3px solid transparent;
 
-              &:hover {
+              &:hover, &.router-link-active {
                 color: $secondary;
                 text-decoration: none;
                 border-color: $secondary;
+                box-shadow:0 -3px 0 0 $secondary inset;
               }
             }
           }

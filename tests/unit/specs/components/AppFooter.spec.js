@@ -36,7 +36,7 @@ describe('AppFooter.vue', () => {
   })
 
   afterEach(() => {
-    localStorage.removeItem('lang')
+    localStorage.removeItem('locale')
     i18n.locale = 'en'
     window.fetch.mockRestore()
     datashare.fetch.mockRestore()
@@ -62,44 +62,44 @@ describe('AppFooter.vue', () => {
   })
 
   it('should display the interfaces in English by default', () => {
-    expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('English')
+    expect(wrapper.find('.app__footer__addon--locale button').text()).toEqual('English')
   })
 
   it('should display the interface in French if localStorage says so', () => {
-    localStorage.setItem('lang', 'fr')
+    localStorage.setItem('locale', 'fr')
     wrapper = mount(AppFooter, { appVue, i18n, router, store })
-    expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('Français')
+    expect(wrapper.find('.app__footer__addon--locale button').text()).toEqual('Français')
   })
 
   it('should display the interface in Spanish if localStorage says so', () => {
-    localStorage.setItem('lang', 'es')
+    localStorage.setItem('locale', 'es')
     wrapper = mount(AppFooter, { appVue, i18n, router, store })
-    expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('Español')
+    expect(wrapper.find('.app__footer__addon--locale button').text()).toEqual('Español')
   })
 
   it('should display a lang bar with 3 languages', () => {
-    expect(wrapper.find('.app__footer__addon--lang').exists()).toBeTruthy()
-    expect(wrapper.findAll('.app__footer__addon--lang .dropdown-item').length).toEqual(3)
+    expect(wrapper.find('.app__footer__addon--locale').exists()).toBeTruthy()
+    expect(wrapper.findAll('.app__footer__addon--locale .dropdown-item').length).toEqual(3)
   })
 
   it('should switch from English to French interface language', async () => {
-    expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('English')
+    expect(wrapper.find('.app__footer__addon--locale button').text()).toEqual('English')
 
-    wrapper.findAll('.app__footer__addon--lang .dropdown-item').at(1).trigger('click')
+    wrapper.findAll('.app__footer__addon--locale .dropdown-item').at(1).trigger('click')
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('Français')
-    expect(localStorage.getItem('lang')).toEqual('fr')
+    expect(wrapper.find('.app__footer__addon--locale button').text()).toEqual('Français')
+    expect(localStorage.getItem('locale')).toEqual('fr')
   })
 
   it('should switch from English to Spanish interface language', async () => {
-    expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('English')
+    expect(wrapper.find('.app__footer__addon--locale button').text()).toEqual('English')
 
-    wrapper.findAll('.app__footer__addon--lang .dropdown-item').at(2).trigger('click')
+    wrapper.findAll('.app__footer__addon--locale .dropdown-item').at(2).trigger('click')
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.app__footer__addon--lang button').text()).toEqual('Español')
-    expect(localStorage.getItem('lang')).toEqual('es')
+    expect(wrapper.find('.app__footer__addon--locale button').text()).toEqual('Español')
+    expect(localStorage.getItem('locale')).toEqual('es')
   })
 
   it('should display the app__footer__addon in LOCAL mode', () => {

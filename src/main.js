@@ -8,6 +8,7 @@ import router from '@/router'
 import messages from '@/lang/en'
 import store from '@/store'
 import DatashareClient from '@/api/DatashareClient'
+import settings from '@/utils/settings'
 
 import '@/utils/font-awesome'
 import '@/main.scss'
@@ -16,12 +17,16 @@ import '@/main.scss'
 async function createApp (LocalVue = Vue) {
   LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
   LocalVue.use(VueI18n)
-  LocalVue.use(VueProgressBar, { color: '#FA4070' })
+  LocalVue.use(VueProgressBar, { color: settings.progressBar.color })
   LocalVue.use(BootstrapVue)
   LocalVue.use(Murmur)
   LocalVue.use(VueShortkey)
 
-  const i18n = new VueI18n({ locale: 'en', fallbackLocale: 'en', messages: { 'en': messages } })
+  const i18n = new VueI18n({
+    locale: settings.defaultLocale,
+    fallbackLocale: settings.defaultLocale,
+    messages: { [settings.defaultLocale]: messages }
+  })
   const ds = new DatashareClient()
   // Get the config object
   const config = await ds.getConfig().then(res => res.json())
@@ -30,28 +35,7 @@ async function createApp (LocalVue = Vue) {
   Murmur.config.merge(config)
   Murmur.config.set('document-thumbnail.activated', !!config.previewHost)
   Murmur.config.set('document-thumbnail.host', config.previewHost)
-  Murmur.config.set('content-placeholder.rows', [
-    {
-      height: '1em',
-      boxes: [[0, '5em']]
-    },
-    {
-      height: '1em',
-      boxes: [[0, '5em'], ['1em', '60%']]
-    },
-    {
-      height: '1em',
-      boxes: [[0, '5em']]
-    },
-    {
-      height: '1em',
-      boxes: [[0, '5em'], ['1em', '40%']]
-    },
-    {
-      height: '1em',
-      boxes: [[0, '5em']]
-    }
-  ])
+  Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
   // Select the first user's index as default index
   store.commit('search/index', config.userIndices[0])
   // Render function returns a router-view component by default

@@ -53,14 +53,14 @@
         <fa icon="bolt" class="mr-1" />
         {{ serverVersion }}
       </div>
-      <div class="app__footer__addon app__footer__addon--lang">
+      <div class="app__footer__addon app__footer__addon--locale">
         <b-dropdown variant="link" size="sm" no-caret>
           <template #button-content>
             <fa icon="globe" class="mr-1" />
             {{ currentLanguage.label }}
           </template>
-          <b-dropdown-item v-for="lang in languages" :key="lang.key" @click.prevent="changeLanguage(lang.key)" :active="lang === currentLanguage">
-            {{ lang.label }}
+          <b-dropdown-item v-for="locale in locales" :key="locale.key" @click.prevent="changeLanguage(locale.key)" :active="locale === currentLanguage">
+            {{ locale.label }}
           </b-dropdown-item>
         </b-dropdown>
       </div>
@@ -69,10 +69,11 @@
 </template>
 
 <script>
+import find from 'lodash/find'
 import utils from '@/mixins/utils'
 import DatashareClient from '@/api/DatashareClient'
 import UserHistory from '@/components/UserHistory'
-import find from 'lodash/find'
+import settings from '@/utils/settings'
 
 export default {
   name: 'AppFooter',
@@ -95,17 +96,8 @@ export default {
       serverVersion: '',
       promise: null,
       showUserHistory: false,
-      languages: [{
-        key: 'en',
-        label: 'English'
-      }, {
-        key: 'fr',
-        label: 'Français'
-      }, {
-        key: 'es',
-        label: 'Español'
-      }],
-      loadedLanguages: ['en']
+      locales: settings.locales,
+      loadedLocales: [ settings.defaultLocale ]
     }
   },
   watch: {
@@ -122,9 +114,9 @@ export default {
       return process.env.VUE_APP_GIT_HASH.substring(0, 7)
     },
     currentLanguage () {
-      const lang = localStorage.getItem('lang') ? localStorage.getItem('lang') : this.$i18n.locale
-      this.loadLanguageAsync(lang)
-      return find(this.languages, { key: lang })
+      const locale = localStorage.getItem('locale') ? localStorage.getItem('locale') : this.$i18n.locale
+      this.loadLanguageAsync(locale)
+      return find(this.locales, { key: locale })
     }
   },
   methods: {
@@ -142,26 +134,26 @@ export default {
         this.serverVersion = res['git.build.version']
       }).catch(() => {})
     },
-    changeLanguage (lang) {
-      this.loadLanguageAsync(lang)
+    changeLanguage (locale) {
+      this.loadLanguageAsync(locale)
     },
-    setI18nLanguage (lang) {
-      localStorage.setItem('lang', lang)
-      this.$i18n.locale = lang
-      return lang
+    setI18nLanguage (locale) {
+      localStorage.setItem('locale', locale)
+      this.$i18n.locale = locale
+      return locale
     },
-    loadLanguageAsync (lang) {
-      if (this.$i18n.locale !== lang) {
-        if (!this.loadedLanguages.includes(lang)) {
-          return import(/* webpackChunkName: "[request]" */ '@/lang/' + lang + '.json').then(messages => {
-            this.$i18n.setLocaleMessage(lang, messages.default)
-            this.loadedLanguages.push(lang)
-            return this.setI18nLanguage(lang)
+    loadLanguageAsync (locale) {
+      if (this.$i18n.locale !== locale) {
+        if (!this.loadedLocales.includes(locale)) {
+          return import(/* webpackChunkName: "[request]" */ '@/lang/' + locale + '.json').then(messages => {
+            this.$i18n.setLocaleMessage(locale, messages.default)
+            this.loadedLocales.push(locale)
+            return this.setI18nLanguage(locale)
           })
         }
-        return Promise.resolve(this.setI18nLanguage(lang))
+        return Promise.resolve(this.setI18nLanguage(locale))
       }
-      return Promise.resolve(lang)
+      return Promise.resolve(locale)
     },
     async deleteAll () {
       await this.$store.dispatch('indexing/deleteAll')
@@ -203,7 +195,7 @@ export default {
         font-weight: bold;
       }
 
-      &--lang {
+      &--locale {
         .btn, .btn:hover, .btn:focus {
           border: none;
           color: white;

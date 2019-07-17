@@ -41,6 +41,7 @@ export function initialState () {
       new FacetDate('creation-date', 'metadata.tika_metadata_creation_date', false, item => item.key === -62167219200000 ? 'facet.missing' : item.key_as_string)
     ],
     sort: 'relevance',
+    field: 'all',
     response: Response.none(),
     isReady: true,
     error: null,
@@ -187,6 +188,9 @@ export const mutations = {
   index (state, index) {
     state.index = index
     state.response = Response.none()
+  },
+  field (state, field) {
+    state.field = field
   },
   starredDocuments (state, starredDocuments) {
     state.starredDocuments = starredDocuments

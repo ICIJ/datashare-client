@@ -19,6 +19,15 @@
       "service-unavailable": "The server is unable to satisfy your request",
       "something-wrong": "Something went wrong."
     },
+    "field": {
+      "all": "All fields",
+      "title": "Title",
+      "author": "Author",
+      "recipients": "Recipients",
+      "content": "Content",
+      "path": "Path",
+      "thread_id": "Thread ID"
+    },
     "placeholder": "Search in documents...",
     "buttonlabel": "Search",
     "search-in": "Search in",
