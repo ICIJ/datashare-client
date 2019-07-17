@@ -27,9 +27,7 @@ export default class Document extends EsDoc {
     this[_parent] = parent ? new Document(parent) : null
   }
   nl2br (str) {
-    return trim(str).split('\n').map(row => {
-      return `<p>${row}</p>`
-    }).join('')
+    return trim(str).split('\n').map(row => `<p>${row}</p>`).join('')
   }
   hasTranslationsIn (targetLanguage) {
     return some(this.translations, { target_language: targetLanguage })

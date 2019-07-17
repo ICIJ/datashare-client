@@ -43,7 +43,7 @@ export function datasharePlugin (Client, config, components) {
     return { hits: { hits: namedEntities } }
   }
 
-  Client.prototype.addQueryToBody = function (query, body) {
+  Client.prototype.addQueryToBody = function (query, body, default_field = '*') {
     // Create a top-level "MUST query" which contain a "SHOULD query" including
     // a query_string and NamedEntity. If we don't add a `match_all` query,
     // Bodybuilder ignores the query context, a MUST, and replace it by the none
@@ -53,7 +53,7 @@ export function datasharePlugin (Client, config, components) {
     body.query('match_all')
       .addQuery('bool', b => b
         // Add the query string to the body
-        .orQuery('query_string', { query, default_field: '*' })
+        .orQuery('query_string', { query, default_field })
         // #TODO : To fix
         // .orQuery('has_child', 'type', 'NamedEntity', {
         //   'inner_hits': {
@@ -63,12 +63,12 @@ export function datasharePlugin (Client, config, components) {
       )
   }
 
-  Client.prototype.addQueryToFacet = function (query, body) {
+  Client.prototype.addQueryToFacet = function (query, body, default_field = '*') {
     query = replace(query, /\//g, '\\/')
     body.query('match_all')
       .addQuery('bool', b => b
         // Add the query string to the body
-        .orQuery('query_string', { query, default_field: '*' })
+        .orQuery('query_string', { query, default_field })
         .orQuery('has_parent', 'parent_type', 'Document', {
           'inner_hits': {
             'size': 30

@@ -26,7 +26,7 @@
       "recipients": "Recipients",
       "content": "Content",
       "path": "Path",
-      "thread_id": "Thread ID"
+      "thread": "Thread ID"
     },
     "placeholder": "Search in documents...",
     "buttonlabel": "Search",

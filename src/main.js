@@ -16,11 +16,11 @@ import '@/main.scss'
 /* eslint-disable no-new */
 async function createApp (LocalVue = Vue) {
   LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
-  LocalVue.use(VueI18n)
-  LocalVue.use(VueProgressBar, { color: settings.progressBar.color })
   LocalVue.use(BootstrapVue)
   LocalVue.use(Murmur)
+  LocalVue.use(VueI18n)
   LocalVue.use(VueShortkey)
+  LocalVue.use(VueProgressBar, { color: settings.progressBar.color })
 
   const i18n = new VueI18n({
     locale: settings.defaultLocale,

@@ -34,6 +34,7 @@
 import uniqueId from 'lodash/uniqueId'
 import SearchSettings from './SearchSettings'
 import features from '@/mixins/features'
+import settings from '@/utils/settings'
 
 export default {
   name: 'SearchBar',
@@ -42,6 +43,10 @@ export default {
     hideSettings: {
       type: Boolean,
       default: false
+    },
+    fieldOptions: {
+      type: Array,
+      default: settings.searchFields.map(field => field.key)
     }
   },
   components: {
@@ -49,16 +54,7 @@ export default {
   },
   data () {
     return {
-      query: this.$store.state.search.query,
-      fieldOptions: [
-        'all',
-        'title',
-        'author',
-        'recipients',
-        'content',
-        'path',
-        'thread_id'
-      ]
+      query: this.$store.state.search.query
     }
   },
   mounted () {

@@ -1,6 +1,7 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
+import settings from '@/utils/settings'
 import { FacetText, FacetYesNo, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation, starredLabel } from '@/store/facetsStore'
 import DatashareClient from '@/api/DatashareClient'
 import lucene from 'lucene'
@@ -40,8 +41,8 @@ export function initialState () {
       new FacetText('extraction-level', 'extractionLevel', false, item => getExtractionLevelTranslationKey(item.key)),
       new FacetDate('creation-date', 'metadata.tika_metadata_creation_date', false, item => item.key === -62167219200000 ? 'facet.missing' : item.key_as_string)
     ],
-    sort: 'relevance',
-    field: 'all',
+    sort: settings.defaultSearchSort,
+    field: settings.defaultSearchField,
     response: Response.none(),
     isReady: true,
     error: null,
@@ -190,7 +191,8 @@ export const mutations = {
     state.response = Response.none()
   },
   field (state, field) {
-    state.field = field
+    const fields = settings.searchFields.map(field => field.key)
+    state.field = fields.indexOf(field) > -1 ? field : settings.defaultSearchField
   },
   starredDocuments (state, starredDocuments) {
     state.starredDocuments = starredDocuments

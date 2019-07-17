@@ -24,6 +24,8 @@ export default {
     ]
   },
   defaultLocale: 'en',
+  defaultSearchField: 'all',
+  defaultSearchSort: 'relevance',
   documentationLinks: {
     indexing: {
       mac: 'https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare',
@@ -48,5 +50,35 @@ export default {
   ],
   progressBar: {
     color: '#FA4070'
-  }
+  },
+  searchFields: [
+    {
+      key: 'all',
+      fields: ['*']
+    },
+    {
+      key: 'title',
+      fields: []
+    },
+    {
+      key: 'author',
+      fields: []
+    },
+    {
+      key: 'recipients',
+      fields: []
+    },
+    {
+      key: 'content',
+      fields: []
+    },
+    {
+      key: 'path',
+      fields: []
+    },
+    {
+      key: 'thread',
+      fields: []
+    }
+  ]
 }
