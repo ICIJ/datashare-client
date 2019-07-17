@@ -194,7 +194,10 @@ export default {
 <template>
   <div class="document-content">
     <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
-      <document-global-search-terms-tags :document="document" class="p-3 w-100" />
+      <document-global-search-terms-tags
+        :document="document"
+        @select="localSearchTerm = $event.value"
+        class="p-3 w-100" />
       <document-local-search-input class="ml-auto"
         v-model="localSearchTerm"
         v-bind:activated.sync="hasStickyToolbox"

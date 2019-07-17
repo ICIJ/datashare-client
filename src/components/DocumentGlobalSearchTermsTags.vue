@@ -36,7 +36,7 @@ export default {
     </div>
     <ul class="list-inline m-0">
       <li v-for="(term, index) in terms" :key="term.label" class="list-inline-item">
-        <mark class="document-global-search-terms-tags__item" :style="getTermIndexBorderColor(index)" :class="getTermIndexClass(index, term)">
+        <mark class="document-global-search-terms-tags__item" :style="getTermIndexBorderColor(index)" :class="getTermIndexClass(index, term)" @click="$emit('select', term)">
           <span class="document-global-search-terms-tags__item__label">
             {{ term.label }}
           </span>
@@ -54,6 +54,11 @@ export default {
 
     &__item {
       border-bottom: 3px solid transparent;
+      cursor: pointer;
+
+      &:hover {
+        box-shadow: 0 3px 0 0 darken(theme-color('mark'), 20%);
+      }
 
       & &__count {
         position: relative;
