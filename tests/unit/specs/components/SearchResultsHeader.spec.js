@@ -122,7 +122,7 @@ describe('SearchResultsHeader.vue', () => {
     await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
     wrapper.setProps({ response: store.state.search.response })
 
-    expect(wrapper.vm.firstPageLinkParameters()).toEqual({ name: 'search', query: { q: 'document', from: 0, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
+    expect(wrapper.vm.firstPageLinkParameters()).toMatchObject({ name: 'search', query: { q: 'document', from: 0, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
 
   it('should generate the link to the previous page', async () => {
@@ -131,7 +131,7 @@ describe('SearchResultsHeader.vue', () => {
     await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
     wrapper.setProps({ response: store.state.search.response })
 
-    expect(wrapper.vm.previousPageLinkParameters()).toEqual({ name: 'search', query: { q: 'document', from: 3, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
+    expect(wrapper.vm.previousPageLinkParameters()).toMatchObject({ name: 'search', query: { q: 'document', from: 3, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
 
   it('should generate the link to the next page', async () => {
@@ -140,7 +140,7 @@ describe('SearchResultsHeader.vue', () => {
     await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
     wrapper.setProps({ response: store.state.search.response })
 
-    expect(wrapper.vm.nextPageLinkParameters()).toEqual({ name: 'search', query: { q: 'document', from: 9, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
+    expect(wrapper.vm.nextPageLinkParameters()).toMatchObject({ name: 'search', query: { q: 'document', from: 9, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
 
   it('should generate the link to the last page', async () => {
@@ -149,7 +149,7 @@ describe('SearchResultsHeader.vue', () => {
     await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
     wrapper.setProps({ response: store.state.search.response })
 
-    expect(wrapper.vm.lastPageLinkParameters()).toEqual({ name: 'search', query: { q: 'document', from: 12, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
+    expect(wrapper.vm.lastPageLinkParameters()).toMatchObject({ name: 'search', query: { q: 'document', from: 12, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
 
   it('should display an applied filters component on top position', async () => {

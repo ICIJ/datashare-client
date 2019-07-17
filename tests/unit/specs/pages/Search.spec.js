@@ -35,6 +35,6 @@ describe('Search.vue', () => {
 
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.search__body__document__backdrop').props('to')).toEqual({ name: 'search', query: { q: 'this is a query', from: 0, size: 25, sort: 'relevance', index: '' } })
+    expect(wrapper.find('.search__body__document__backdrop').props('to')).toMatchObject({ name: 'search', query: { q: 'this is a query', from: 0, size: 25, sort: 'relevance', index: '' } })
   })
 })

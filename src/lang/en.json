@@ -21,6 +21,7 @@
     },
     "field": {
       "all": "All fields",
+      "tags": "Tags",
       "title": "Title",
       "author": "Author",
       "recipients": "Recipients",

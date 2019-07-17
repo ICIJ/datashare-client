@@ -12,7 +12,7 @@
         <div class="app__nav__container__main__search-bar flex-grow-1" v-if="isntLanding()">
           <search-bar class="px-0" />
         </div>
-        <a class="app__nav__container__main__hamburger pr-3" @click.prevent="toggleMenu()" href="#">
+        <a class="app__nav__container__main__hamburger px-3 ml-auto" @click.prevent="toggleMenu()" href="#">
           <fa icon="bars" />
         </a>
         <ul class="app__nav__container__main__menu list-unstyled d-flex mb-0" :class="{ 'app__nav__container__main__menu--collapse': collapseMenu }">
@@ -167,6 +167,7 @@ export default {
         &__search-bar {
           position: relative;
           padding: 0 $spacer;
+          max-width: 770px;
         }
 
         & &__hamburger {

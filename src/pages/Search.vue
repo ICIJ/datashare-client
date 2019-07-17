@@ -99,7 +99,7 @@ export default {
       try {
         const result = await this.$store.dispatch('search/query', queryOrParams)
         return result
-      } catch (_) {
+      } catch {
         this.wrongQuery()
       }
     },

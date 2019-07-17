@@ -18,6 +18,8 @@ import join from 'lodash/join'
 import map from 'lodash/map'
 import omit from 'lodash/omit'
 import orderBy from 'lodash/orderBy'
+import range from 'lodash/range'
+import random from 'lodash/random'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
 
@@ -58,6 +60,11 @@ export const getters = {
   getFacet (state) {
     return predicate => find(state.facets, predicate)
   },
+  getFields (state) {
+    return () => {
+      return find(settings.searchFields, { key: state.field }).fields
+    }
+  },
   hasFacetValue (state) {
     return item => !!find(state.facets, facet => {
       return facet.name === item.name && facet.values.indexOf(item.value) > -1
@@ -88,6 +95,7 @@ export const getters = {
       size: state.size,
       sort: state.sort,
       index: state.index,
+      field: state.field,
       ...reduce(state.facets, (memo, facetValue) => {
         // We need to look for the facet's definition in order to us its `id`
         // as key for tge URL params. This was we track configured facet instead
@@ -102,6 +110,13 @@ export const getters = {
         }
         return memo
       }, {})
+    }
+  },
+  toRouteQueryWithStamp (state, getters) {
+    return {
+      ...getters.toRouteQuery,
+      // A random string of 6 chars
+      stamp: String.fromCharCode.apply(null, range(6).map(() => random(97, 122)))
     }
   },
   retrieveQueryTerms (state) {
@@ -276,16 +291,26 @@ export const actions = {
     commit('reset', excludedKeys)
     return dispatch('query')
   },
-  async query ({ state, commit }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort }) {
-    commit('index', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.index === 'undefined' ? state.index : queryOrParams.index)
-    commit('query', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.query === 'undefined' ? queryOrParams : queryOrParams.query)
-    commit('from', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.from === 'undefined' ? state.from : queryOrParams.from)
-    commit('size', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.size === 'undefined' ? state.size : queryOrParams.size)
-    commit('sort', typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams.sort === 'undefined' ? state.sort : queryOrParams.sort)
+  async query ({ state, commit, getters }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort, field: state.field }) {
+    const queryHasntValue = (key) => typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams[key] === 'undefined'
+    commit('index', queryHasntValue('index') ? state.index : queryOrParams.index)
+    commit('query', queryHasntValue('query') ? queryOrParams : queryOrParams.query)
+    commit('from', queryHasntValue('from') ? state.from : queryOrParams.from)
+    commit('size', queryHasntValue('size') ? state.size : queryOrParams.size)
+    commit('sort', queryHasntValue('sort') ? state.sort : queryOrParams.sort)
+    commit('field', queryHasntValue('field') ? state.field : queryOrParams.field)
     commit('isReady', false)
     commit('error', null)
     try {
-      const raw = await esClient.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort)
+      const raw = await esClient.searchDocs(
+        state.index,
+        state.query,
+        state.facets,
+        state.from,
+        state.size,
+        state.sort,
+        getters.getFields()
+      )
       commit('buildResponse', raw)
       return raw
     } catch (error) {
@@ -301,7 +326,8 @@ export const actions = {
       state.query,
       state.facets,
       state.globalSearch,
-      params.options
+      params.options,
+      getters.getFields()
     ).then(raw => new Response(raw))
   },
   queryFacetGlobally ({ state, getters }, params) {
@@ -311,7 +337,8 @@ export const actions = {
       '*',
       state.facets,
       true,
-      params.options
+      params.options,
+      getters.getFields()
     ).then(raw => new Response(raw))
   },
   addFacetValue ({ commit, dispatch }, facet) {
@@ -341,11 +368,12 @@ export const actions = {
   updateFromRouteQuery ({ state, commit }, query) {
     commit('reset', ['index', 'globalSearch', 'starredDocuments'])
     // Add the query to the state with a mutation to not triggering a search
-    if (query.index) commit('index', query.index)
     if (query.q) commit('query', query.q)
+    if (query.index) commit('index', query.index)
     if (query.from) commit('from', query.from)
     if (query.size) commit('size', query.size)
     if (query.sort) commit('sort', query.sort)
+    if (query.field) commit('field', query.field)
     // Iterate over the list of facet
     each(state.facets, facet => {
       // The facet key are formatted in the URL as follow.

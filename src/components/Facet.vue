@@ -28,9 +28,9 @@
         </form>
       </slot>
       <div v-if="!isReady">
-        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
-        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
-        <content-placeholder class="list-group-item py-2 px-3" :rows="placeholderRows" />
+        <content-placeholder class="list-group-item border-0 py-2 px-3" :rows="placeholderRows" />
+        <content-placeholder class="list-group-item border-0 py-2 px-3" :rows="placeholderRows" />
+        <content-placeholder class="list-group-item border-0 py-2 px-3" :rows="placeholderRows" />
       </div>
       <slot v-else-if="items.length > 0" name="items" :items="items" :total-count="totalCount" :facetQuery="facetQuery">
         <b-form-checkbox v-model="isAllSelected" @change.native="resetFacetValues" class="facet__items__all mb-0">

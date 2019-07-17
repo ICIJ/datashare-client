@@ -29,7 +29,7 @@ describe('SearchDocumentNavbar.vue', () => {
     const wrapper = mount(SearchDocumentNavbar, { localVue, i18n, router, store })
 
     expect(wrapper.findAll('.search-document-navbar')).toHaveLength(1)
-    expect(wrapper.find('.search-document-navbar .search-document-navbar__back').attributes('href')).toEqual(`#/?q=&from=0&size=25&sort=relevance&index=${process.env.VUE_APP_ES_INDEX}`)
+    expect(wrapper.find('.search-document-navbar .search-document-navbar__back').attributes('href')).toEqual(`#/?q=&from=0&size=25&sort=relevance&index=${process.env.VUE_APP_ES_INDEX}&field=all`)
   })
 
   it('should return shortkey for mac', () => {

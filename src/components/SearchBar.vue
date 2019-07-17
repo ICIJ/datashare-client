@@ -46,7 +46,9 @@ export default {
     },
     fieldOptions: {
       type: Array,
-      default: settings.searchFields.map(field => field.key)
+      default () {
+        return settings.searchFields.map(field => field.key)
+      }
     }
   },
   components: {
@@ -54,7 +56,8 @@ export default {
   },
   data () {
     return {
-      query: this.$store.state.search.query
+      query: this.$store.state.search.query,
+      field: this.$store.state.search.field
     }
   },
   mounted () {
@@ -67,12 +70,11 @@ export default {
   methods: {
     submit () {
       this.index = (this.index === '' ? this.$config.get('userIndices', [])[0] : this.index)
-      // Did the route change? If not, do nothing
-      if (this.$route.name === 'search' && this.$route.query.q === this.query) return false
       // Change the route after update the store with the new query
+      this.$store.commit('search/field', this.field)
       this.$store.commit('search/query', this.query)
       this.$store.commit('search/from', 0)
-      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
+      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQueryWithStamp'] })
       // And emit an event for those listening...
       this.$emit('submit', this.query)
     }
@@ -80,14 +82,6 @@ export default {
   computed: {
     uniqueId () {
       return uniqueId('search-bar-')
-    },
-    field: {
-      get () {
-        return this.$store.state.search.field
-      },
-      set (field) {
-        this.$store.commit('search/field', field)
-      }
     }
   }
 }

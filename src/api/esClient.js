@@ -43,7 +43,7 @@ export function datasharePlugin (Client, config, components) {
     return { hits: { hits: namedEntities } }
   }
 
-  Client.prototype.addQueryToBody = function (query, body, default_field = '*') {
+  Client.prototype.addQueryToBody = function (query, body, fields = []) {
     // Create a top-level "MUST query" which contain a "SHOULD query" including
     // a query_string and NamedEntity. If we don't add a `match_all` query,
     // Bodybuilder ignores the query context, a MUST, and replace it by the none
@@ -53,7 +53,11 @@ export function datasharePlugin (Client, config, components) {
     body.query('match_all')
       .addQuery('bool', b => b
         // Add the query string to the body
-        .orQuery('query_string', { query, default_field })
+        .orQuery('query_string', {
+          query,
+          fields: fields.length ? fields : undefined,
+          default_field: fields.length ? undefined : '*'
+        })
         // #TODO : To fix
         // .orQuery('has_child', 'type', 'NamedEntity', {
         //   'inner_hits': {
@@ -63,12 +67,16 @@ export function datasharePlugin (Client, config, components) {
       )
   }
 
-  Client.prototype.addQueryToFacet = function (query, body, default_field = '*') {
+  Client.prototype.addQueryToFacet = function (query, body, fields = []) {
     query = replace(query, /\//g, '\\/')
     body.query('match_all')
       .addQuery('bool', b => b
         // Add the query string to the body
-        .orQuery('query_string', { query, default_field })
+        .orQuery('query_string', {
+          query,
+          fields: fields.length ? fields : undefined,
+          default_field: fields.length ? undefined : '*'
+        })
         .orQuery('has_parent', 'parent_type', 'Document', {
           'inner_hits': {
             'size': 30
@@ -120,14 +128,14 @@ export function datasharePlugin (Client, config, components) {
     body.sort(sortField, sortOrder)
   }
 
-  Client.prototype.searchDocs = function (index, query = '*', facets = [], from = 0, size = 25, sort = 'relevance') {
+  Client.prototype.searchDocs = function (index, query = '*', facets = [], from = 0, size = 25, sort = 'relevance', fields = []) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     // Return a promise that build the body composed above
     return this.search({
       index: index,
       type: 'doc',
-      body: this._buildBody(from, size, facets, query, sort).build()
+      body: this._buildBody(from, size, facets, query, sort, fields).build()
     }).then(
       data => data,
       error => {
@@ -137,13 +145,13 @@ export function datasharePlugin (Client, config, components) {
     )
   }
 
-  Client.prototype.searchFacet = function (index, facet, query = '*', facets = [], isGlobalSearch = false, options = {}) {
+  Client.prototype.searchFacet = function (index, facet, query = '*', facets = [], isGlobalSearch = false, options = {}, fields = []) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     const body = facet.body(bodybuilder(), options)
     if (!isGlobalSearch) {
       each(facets, facet => facet.addFilter(body))
-      this.addQueryToFacet(query, body)
+      this.addQueryToFacet(query, body, fields)
     }
     return esClient.search({
       index,
@@ -158,10 +166,10 @@ export function datasharePlugin (Client, config, components) {
     )
   }
 
-  Client.prototype._buildBody = function (from, size, facets, query, sort) {
+  Client.prototype._buildBody = function (from, size, facets, query, sort, fields = []) {
     const body = bodybuilder().from(from).size(size)
     this._addFacetsToBody(facets, body)
-    this.addQueryToBody(query, body)
+    this.addQueryToBody(query, body, fields)
     this.addSortToBody(sort, body)
     // Select only the Documents and not the NamedEntities
     body.query('match', 'type', 'Document')

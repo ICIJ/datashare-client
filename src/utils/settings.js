@@ -54,31 +54,46 @@ export default {
   searchFields: [
     {
       key: 'all',
-      fields: ['*']
+      fields: []
+    },
+    {
+      key: 'tags',
+      fields: ['tags']
     },
     {
       key: 'title',
-      fields: []
+      fields: [
+        'metadata.tika_metadata_dc_title',
+        'metadata.tika_metadata_title'
+      ]
     },
     {
       key: 'author',
-      fields: []
+      fields: [
+        'metadata.tika_metadata_message_from',
+        'metadata.tika_metadata_message_from_email',
+        'metadata.tika_metadata_message_from_name',
+        'metadata.tika_metadata_author',
+        'metadata.tika_metadata_meta_author',
+        'metadata.tika_metadata_creator',
+        'metadata.tika_metadata_dc_creator'
+      ]
     },
     {
       key: 'recipients',
-      fields: []
+      fields: ['metadata.tika_metadata_message_to']
     },
     {
       key: 'content',
-      fields: []
+      fields: ['content']
     },
     {
       key: 'path',
-      fields: []
+      fields: ['path']
     },
     {
       key: 'thread',
-      fields: []
+      fields: ['metadata.tika_metadata_message_raw_header_thread_index']
     }
   ]
 }
