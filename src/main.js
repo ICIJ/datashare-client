@@ -19,7 +19,7 @@ async function createApp (LocalVue = Vue) {
   LocalVue.use(BootstrapVue)
   LocalVue.use(Murmur)
   LocalVue.use(VueI18n)
-  LocalVue.use(VueShortkey)
+  LocalVue.use(VueShortkey, { prevent: settings.hotKeyPrevented })
   LocalVue.use(VueProgressBar, { color: settings.progressBar.color })
 
   const i18n = new VueI18n({
