@@ -139,7 +139,7 @@ export default {
     },
     typingTerms: throttle(async function () {
       try {
-        this.tags = this.query.length < 2 ? [] : await this.searchTags(this.tagCandidates())
+        this.tags = this.suggestionsAllowed ? await this.searchTags(this.tagCandidates()) : []
       } catch {
         this.hideSuggestions()
       }
@@ -162,6 +162,9 @@ export default {
   computed: {
     uniqueId () {
       return uniqueId('search-bar-')
+    },
+    suggestionsAllowed () {
+      return ['all', 'tags'].indexOf(this.field) > -1 && this.query.length > 1
     }
   },
   watch: {
