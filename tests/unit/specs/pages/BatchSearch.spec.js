@@ -5,6 +5,7 @@ import Vuex from 'vuex'
 import messages from '@/lang/en'
 import store from '@/store'
 import BootstrapVue from 'bootstrap-vue'
+import Murmur from '@icij/murmur'
 
 jest.mock('@/api/DatashareClient', () => {
   const { jsonOk } = require('tests/unit/tests_utils')
@@ -32,11 +33,14 @@ jest.mock('@/api/DatashareClient', () => {
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
+localVue.use(Murmur)
 localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('BatchSearch.vue', () => {
   let wrapper
+
+  beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(() => {
     wrapper = shallowMount(BatchSearch, { localVue, i18n, store })

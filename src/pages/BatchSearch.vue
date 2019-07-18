@@ -35,6 +35,18 @@
             ></b-form-textarea>
           </b-form-group>
           <b-form-group
+            id="group-project"
+            :label="$t('batchSearch.projectLabel')"
+            label-for="project"
+            v-if="isServer"
+          >
+            <b-form-select
+              v-model="selectedIndex"
+              :options="indices"
+              required
+            ></b-form-select>
+          </b-form-group>
+          <b-form-group
             id="group-file"
             :label="$t('batchSearch.fileLabel')"
             label-for="file"
@@ -73,13 +85,17 @@
 
 <script>
 import { mapState } from 'vuex'
+import utils from '@/mixins/utils'
 import moment from 'moment'
 import capitalize from 'lodash/capitalize'
+import map from 'lodash/map'
 
 export default {
   name: 'BatchSearches',
+  mixins: [utils],
   data () {
     return {
+      indices: [],
       fields: [
         {
           key: 'project.name',
@@ -127,6 +143,14 @@ export default {
         this.$store.commit('batchSearch/description', description)
       }
     },
+    selectedIndex: {
+      get: function () {
+        return this.$store.state.batchSearch.index
+      },
+      set: function (index) {
+        this.$store.commit('batchSearch/index', index)
+      }
+    },
     csvFile: {
       get () {
         return this.$store.state.batchSearch.csvFile
@@ -140,6 +164,7 @@ export default {
     }
   },
   mounted () {
+    this.indices = map(this.$config.get('userIndices', []), value => { return { value, text: value } })
     return this.$store.dispatch('batchSearch/getBatchSearches')
   },
   methods: {

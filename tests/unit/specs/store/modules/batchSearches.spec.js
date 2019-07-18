@@ -26,6 +26,7 @@ describe('BatchSearch store', () => {
   it('should call the API', async () => {
     store.state.batchSearch.name = 'name'
     store.state.batchSearch.description = 'description'
+    store.state.batchSearch.index = 'index'
     store.state.batchSearch.csvFile = 'csvFile'
     datashare.fetch.mockClear()
 
@@ -36,7 +37,7 @@ describe('BatchSearch store', () => {
     form.append('description', 'description')
     form.append('csvFile', 'csvFile')
     expect(datashare.fetch).toHaveBeenCalledTimes(2)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl(`/api/batch/search/${index}`),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search/index'),
       { method: 'POST', body: form })
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})
   })

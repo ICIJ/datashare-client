@@ -428,6 +428,7 @@
     "fileLabel": "CSV file:",
     "fileDescription": "Only CSV format accepted.",
     "filePlaceholder": "Choose a file...",
-    "submit": "Submit"
+    "submit": "Submit",
+    "projectLabel": "Project"
   }
 }
