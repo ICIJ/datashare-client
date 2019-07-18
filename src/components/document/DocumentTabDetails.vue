@@ -7,21 +7,7 @@
       <p class="text-muted">
         These tags are visible for all users.
       </p>
-      <div class="row mb-3">
-        <div class="col-md-4 mb-3">
-          <b-form @submit.prevent="submitTag" class="document__content__tags__add">
-            <b-form-input id="new-tag" size="sm" v-model="tag" autofocus required placeholder="Add a new tag" :disabled="updatingTags" />
-          </b-form>
-        </div>
-        <div class="col-md-8">
-          <ul class="document__content__tags list-unstyled mb-0 mt-1">
-            <li class="document__content__tags__tag badge badge-light border badge-pill mr-2 mb-1" v-for="tag in document.tags" :key="tag">
-              {{ tag }}
-              <fa icon="times" class="document__content__tags__tag__delete fa-fw" @click="untag(tag)" />
-            </li>
-          </ul>
-        </div>
-      </div>
+      <document-tags-form :document="document" />
     </div>
 
     <div class="document__content__details">
@@ -84,20 +70,22 @@ import filter from 'lodash/filter'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import startCase from 'lodash/startCase'
+import DocumentTagsForm from '@/components/DocumentTagsForm.vue'
 
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 
 export default {
   name: 'DocumentTabDetails',
   props: ['document', 'parentDocument'],
+  components: {
+    DocumentTagsForm
+  },
   filters: {
     startCase
   },
   data () {
     return {
-      tag: '',
-      metadataVisible: false,
-      updatingTags: false
+      metadataVisible: false
     }
   },
   computed: {
@@ -202,20 +190,7 @@ export default {
   },
   methods: {
     getDocumentTypeLabel,
-    getExtractionLevelTranslationKey,
-    async submitTag () {
-      this.updatingTags = true
-      await this.$store.dispatch('document/tag', { documentId: this.document.id, routingId: this.document.routing, tags: [this.tag] })
-      await this.$store.dispatch('document/refresh')
-      this.tag = ''
-      this.updatingTags = false
-    },
-    async untag (tag) {
-      this.updatingTags = true
-      await this.$store.dispatch('document/untag', { documentId: this.document.id, routingId: this.document.routing, tags: [tag] })
-      await this.$store.dispatch('document/refresh')
-      this.updatingTags = false
-    }
+    getExtractionLevelTranslationKey
   }
 }
 </script>
@@ -247,24 +222,6 @@ export default {
 
         &__item:nth-child(even) {
           background: #f3f3f3;
-        }
-      }
-
-      &__tags__tag {
-        font-size: 1rem;
-        cursor: pointer;
-
-        &__delete {
-          font-size: 0.9rem;
-          color: $text-muted;
-
-          &:hover {
-            color: $danger;
-          }
-        }
-
-        &--hidden {
-          display: none;
         }
       }
     }
