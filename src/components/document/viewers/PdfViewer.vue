@@ -75,7 +75,10 @@ export default {
       } else {
         return this.getSource(this.document)
           .then(r => r.arrayBuffer())
-          .then(arrayBuffer => PDFJS.getDocument(new Uint8Array(arrayBuffer)))
+          .then(arrayBuffer => {
+            const pdf = PDFJS.getDocument(new Uint8Array(arrayBuffer))
+            return pdf.promise
+          })
           .then(pdf => {
             if (this.doc.pages.length === 0) {
               this.doc.pages = new Array(pdf.numPages)
@@ -99,11 +102,12 @@ export default {
     },
     renderPage (pdf, p) {
       return pdf.getPage(p).then(page => {
-        const viewport = page.getViewport(3)
+        const viewport = page.getViewport({ scale: 3 })
         const canvas = document.createElement('canvas')
         canvas.height = viewport.height
         canvas.width = viewport.width
-        return page.render({ canvasContext: canvas.getContext('2d'), viewport }).then(() => {
+        const render = page.render({ canvasContext: canvas.getContext('2d'), viewport })
+        return render.promise.then(() => {
           this.$set(this.doc.pages, p - 1, canvas.toDataURL())
           return this.doc.pages[p - 1]
         })
@@ -122,12 +126,13 @@ export default {
     },
     renderThumbnail (pdf, p) {
       return pdf.getPage(p).then(page => {
-        const viewport = page.getViewport(1)
+        const viewport = page.getViewport({ scale: 1 })
         const canvas = document.createElement('canvas')
         canvas.width = 96
         canvas.height = 137
         const scale = Math.min(canvas.width / viewport.width, canvas.height / viewport.height)
-        return page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport(scale) }).then(() => {
+        const render = page.render({ canvasContext: canvas.getContext('2d'), viewport: page.getViewport({ scale }) })
+        return render.promise.then(() => {
           this.$set(this.doc.thumbs, p - 1, canvas.toDataURL())
           return this.doc.thumbs[p - 1]
         })

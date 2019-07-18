@@ -7,11 +7,13 @@ import messagesFr from '@/lang/fr'
 import router from '@/router'
 import store from '@/store'
 import SearchBar from '@/components/SearchBar'
+import BootstrapVue from 'bootstrap-vue'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(Vuex)
+localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchBar.vue', function () {
