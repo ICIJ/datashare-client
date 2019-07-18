@@ -1,6 +1,16 @@
 <script>
+import bodybuilder from 'bodybuilder'
+import VueBootstrapTypeahead from 'vue-bootstrap-typeahead/dist/VueBootstrapTypeahead.umd'
+import get from 'lodash/get'
+import map from 'lodash/map'
+import throttle from 'lodash/throttle'
+import esClient from '@/api/esClient'
+
 export default {
   name: 'DocumentTagsForm',
+  components: {
+    VueBootstrapTypeahead
+  },
   props: {
     document: {
       type: Object
@@ -9,15 +19,29 @@ export default {
   data () {
     return {
       tag: '',
+      tags: [],
       updatingTags: false
     }
   },
+  watch: {
+    tag: throttle(async function (value) {
+      const include = `.*${value.toLowerCase()}.*`
+      const body = bodybuilder().size(0).aggregation('terms', 'tags', { include }).build()
+      const response = await esClient.search({ index: this.document.index, body })
+      const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
+      this.tags = map(buckets, 'key')
+    }, 200)
+  },
   methods: {
     async addTag () {
+      // Skip empty tag
+      if (this.updatingTags || !this.tag || !this.tag.length) return
       this.updatingTags = true
       await this.$store.dispatch('document/tag', { documentId: this.document.id, routingId: this.document.routing, tags: [this.tag] })
       await this.$store.dispatch('document/refresh')
-      this.tag = ''
+      // Hard reset the tag value
+      // @see pending PR https://github.com/alexurquhart/vue-bootstrap-typeahead/pull/21
+      this.$refs.typeahead.inputValue = ''
       this.updatingTags = false
     },
     async deleteTag (tag) {
@@ -33,9 +57,17 @@ export default {
 <template>
   <div class="document-tags-form row mb-3">
     <div class="col-md-4 mb-3">
-      <b-form @submit.prevent="addTag" class="document-tags-form__add">
-        <b-form-input id="new-tag" size="sm" v-model="tag" autofocus required placeholder="Add a new tag" :disabled="updatingTags" />
-      </b-form>
+      <form @submit.prevent="addTag" class="document-tags-form__add" @click="tag = ''">
+        <vue-bootstrap-typeahead
+          ref="typeahead"
+          v-model="tag"
+          size="sm"
+          :input-class="updatingTags ? 'disabled' : '' "
+          :data="tags"
+          @hit="addTag($event)"
+          min-matching-chars="1"
+          placeholder="Add a new tag" />
+      </form>
     </div>
     <div class="col-md-8">
       <ul class="document-tags-form list-unstyled mb-0 mt-1">
@@ -51,14 +83,38 @@ export default {
 <style lang="scss">
   .document-tags-form  {
     font-size: 1rem;
-    cursor: pointer;
 
-    &__delete {
-      font-size: 0.9rem;
-      color: $text-muted;
+    &__add {
 
-      &:hover {
-        color: $danger;
+      input.disabled {
+        pointer-events: none;
+        background-color: $input-disabled-bg;
+        // iOS fix for unreadable disabled content; see https://github.com/twbs/bootstrap/issues/11655.
+        opacity: 1;
+      }
+
+      .vbt-autcomplete-list {
+
+        &:empty {
+          display: none;
+        }
+
+        .list-group-item {
+          padding:  $spacer * 0.5;
+        }
+      }
+    }
+
+    &__tag {
+
+      &__delete {
+        font-size: 0.9rem;
+        color: $text-muted;
+        cursor: pointer;
+
+        &:hover {
+          color: $danger;
+        }
       }
     }
   }
