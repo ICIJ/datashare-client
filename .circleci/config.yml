@@ -3,6 +3,7 @@ jobs:
   build:
     docker:
       - image: circleci/node:10.15.2
+      - image: node:10.15.2
       - image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
         environment:
           - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
