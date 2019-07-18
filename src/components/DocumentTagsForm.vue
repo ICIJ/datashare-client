@@ -64,8 +64,8 @@ export default {
           size="sm"
           :input-class="updatingTags ? 'disabled' : '' "
           :data="tags"
+          :min-matching-chars="1"
           @hit="addTag($event)"
-          min-matching-chars="1"
           placeholder="Add a new tag" />
       </form>
     </div>
