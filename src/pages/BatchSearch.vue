@@ -53,26 +53,20 @@
         </div>
       </div>
     </b-form>
-    <div class="batchsearch__list">
-      <div class="container py-3" v-if="batchSearches.length">
-        <div v-for="batchSearch in batchSearches" :key="batchSearch.uuid" class="row my-3">
-          <div class="col col-sm-2">
-            {{ batchSearch.project.name }}
-          </div>
-          <div class="col col-sm-2">
-            {{ batchSearch.name }}
-          </div>
-          <div class="col col-sm-2">
-            {{ batchSearch.description }}
-          </div>
-          <div class="col col-sm-3">
-            {{ batchSearch.queries }}
-          </div>
-          <div class="col col-sm-3">
-            {{ moment(batchSearch.date).format('LLL') }}
-          </div>
-        </div>
-      </div>
+    <div class="batchsearch__list my-3">
+      <b-table striped hover :fields="fields" :items="items">
+        <template #queries="row">
+          <ul>
+            <li v-for="query in row.item.queries" :key="query">{{ query }}</li>
+          </ul>
+        </template>
+        <template #state="row">
+          {{ capitalize(row.item.state) }}
+        </template>
+        <template #date="row">
+          {{ moment(row.item.date).format('LLL') }}
+        </template>
+      </b-table>
     </div>
   </div>
 </template>
@@ -80,9 +74,41 @@
 <script>
 import { mapState } from 'vuex'
 import moment from 'moment'
+import capitalize from 'lodash/capitalize'
 
 export default {
   name: 'BatchSearches',
+  data () {
+    return {
+      fields: [
+        {
+          key: 'project.name',
+          label: 'Project name',
+          sortable: true
+        },
+        {
+          key: 'name',
+          label: 'Serarch name'
+        },
+        {
+          key: 'description',
+          sortable: true
+        },
+        {
+          key: 'queries',
+          sortable: true
+        },
+        {
+          key: 'state',
+          sortable: true
+        },
+        {
+          key: 'date',
+          sortable: true
+        }
+      ]
+    }
+  },
   computed: {
     ...mapState('batchSearch', ['batchSearches']),
     name: {
@@ -108,6 +134,9 @@ export default {
       set (csvFile) {
         this.$store.commit('batchSearch/csvFile', csvFile)
       }
+    },
+    items () {
+      return this.batchSearches
     }
   },
   mounted () {
@@ -117,7 +146,8 @@ export default {
     onSubmit () {
       return this.$store.dispatch('batchSearch/onSubmit')
     },
-    moment
+    moment,
+    capitalize
   }
 }
 </script>

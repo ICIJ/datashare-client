@@ -1,5 +1,5 @@
 import BatchSearch from '@/pages/BatchSearch'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
 import messages from '@/lang/en'
@@ -65,9 +65,8 @@ describe('BatchSearch.vue', () => {
   })
 
   it('should list the searches', async () => {
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
+    wrapper = mount(BatchSearch, { localVue, i18n, store })
 
-    expect(wrapper.findAll('.batchsearch .batchsearch__list .row')).toHaveLength(2)
+    expect(wrapper.findAll('.batchsearch .batchsearch__list tbody tr')).toHaveLength(2)
   })
 })
