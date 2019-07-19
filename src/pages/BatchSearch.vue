@@ -65,11 +65,18 @@
         </div>
       </div>
     </b-form>
-    <div class="batchsearch__list my-3">
-      <b-table striped hover :fields="fields" :items="items">
+    <div class="batchsearch__items my-3">
+      <b-table striped hover :fields="fields" :items="items" tbody-tr-class="batchsearch__items__item">
+        <template #name="row">
+          <router-link :to="{ name: 'batchsearchpage', params: { id: row.item.uuid }, query: { index: row.item.project.id } }" class="batchsearch__items__item__link">
+            {{ row.item.name }}
+          </router-link>
+        </template>
         <template #queries="row">
           <ul>
-            <li v-for="query in row.item.queries" :key="query">{{ query }}</li>
+            <li v-for="query in row.item.queries" :key="query">
+              {{ query }}
+            </li>
           </ul>
         </template>
         <template #state="row">
@@ -99,12 +106,12 @@ export default {
       fields: [
         {
           key: 'project.name',
-          label: 'Project name',
+          label: 'Project Name',
           sortable: true
         },
         {
           key: 'name',
-          label: 'Serarch name'
+          label: 'Search Name'
         },
         {
           key: 'description',
@@ -163,7 +170,7 @@ export default {
       return this.batchSearches
     }
   },
-  mounted () {
+  created () {
     this.indices = map(this.$config.get('userIndices', []), value => { return { value, text: value } })
     return this.$store.dispatch('batchSearch/getBatchSearches')
   },

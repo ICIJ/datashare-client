@@ -4,6 +4,7 @@ import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
 import messages from '@/lang/en'
 import store from '@/store'
+import router from '@/router'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 
@@ -13,14 +14,14 @@ jest.mock('@/api/DatashareClient', () => {
     return {
       getBatchSearches: jest.fn().mockReturnValue(jsonOk([{
         uuid: 1,
-        project: { name: 'project_01' },
+        project: { id: 'project_01', name: 'project_01' },
         name: 'name_01',
         description: 'description_01',
         queries: ['query_01'],
         date: '2019-01-01'
       }, {
         uuid: 2,
-        project: { name: 'project_02' },
+        project: { id: 'project_02', name: 'project_02' },
         name: 'name_02',
         description: 'description_02',
         queries: ['query_02'],
@@ -68,9 +69,17 @@ describe('BatchSearch.vue', () => {
     expect(actions.onSubmit).toHaveBeenCalled()
   })
 
-  it('should list the searches', async () => {
-    wrapper = mount(BatchSearch, { localVue, i18n, store })
+  it('should list the searches', () => {
+    wrapper = mount(BatchSearch, { localVue, i18n, store, router })
 
-    expect(wrapper.findAll('.batchsearch .batchsearch__list tbody tr')).toHaveLength(2)
+    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item')).toHaveLength(2)
+  })
+
+  it('should display a link to batch search page', () => {
+    wrapper = mount(BatchSearch, { localVue, i18n, store, router })
+
+    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link')).toHaveLength(2)
+    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link').at(0).attributes('href')).toBe('#/batch-search/1?index=project_01')
+    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link').at(1).attributes('href')).toBe('#/batch-search/2?index=project_02')
   })
 })

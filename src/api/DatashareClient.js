@@ -71,6 +71,9 @@ export class DatashareClient {
   getBatchSearches () {
     return this.sendAction('/api/batch/search')
   }
+  getBatchSearch (batchId) {
+    return this.sendAction(`/api/batch/search/result/${encodeURIComponent(batchId)}`)
+  }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)

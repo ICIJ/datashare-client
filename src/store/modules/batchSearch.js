@@ -8,7 +8,8 @@ export function initialState () {
     description: '',
     index: '',
     csvFile: null,
-    batchSearches: []
+    batchSearches: [],
+    batchSearch: []
   }
 }
 
@@ -35,6 +36,9 @@ export const mutations = {
   },
   batchSearches (state, batchSearches) {
     state.batchSearches = batchSearches
+  },
+  batchSearch (state, batchSearch) {
+    state.batchSearch = batchSearch
   }
 }
 
@@ -49,6 +53,9 @@ export const actions = {
         return dispatch('getBatchSearches')
       })
     } catch (e) {}
+  },
+  getBatchSearch ({ commit }, batchId) {
+    return datashare.getBatchSearch(batchId).then(r => r.clone().json()).then(batchSearch => commit('batchSearch', batchSearch))
   }
 }
 

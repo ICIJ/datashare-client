@@ -22,7 +22,7 @@
                 <span class="sr-only">{{ $t('document.star_button') }}</span>
               </a>
               <a class="search-results__items__item__download btn btn-outline-primary btn-sm" :href="doc.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip.left>
-                <fa icon="download" fa-fw  />
+                <fa icon="download" fa-fw />
                 <span class="sr-only">{{ $t('document.download_button') }}</span>
               </a>
               <router-link-popup :to="{ name: 'document-simplified', params: doc.routerParams }" class="btn btn-sm btn-outline-primary" :title="$t('document.external_window')" v-b-tooltip.left>

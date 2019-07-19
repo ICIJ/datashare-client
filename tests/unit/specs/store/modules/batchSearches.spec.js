@@ -7,11 +7,10 @@ import Vue from 'vue'
 Vue.use(Vuex)
 
 describe('BatchSearch store', () => {
-  let index, store
+  let store
 
   beforeAll(() => {
-    index = process.env.VUE_APP_ES_INDEX
-    store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, actions, getters, mutations, state }, search: { namespaced: true, state: { index } } } })
+    store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, actions, getters, mutations, state } } })
   })
 
   beforeEach(() => {
@@ -23,61 +22,74 @@ describe('BatchSearch store', () => {
     datashare.fetch.mockClear()
   })
 
-  it('should call the API', async () => {
-    store.state.batchSearch.name = 'name'
-    store.state.batchSearch.description = 'description'
-    store.state.batchSearch.index = 'index'
-    store.state.batchSearch.csvFile = 'csvFile'
-    datashare.fetch.mockClear()
+  describe('mutations', () => {
+    it('should reset the form', () => {
+      store.state.batchSearch.name = 'name'
+      store.state.batchSearch.description = 'description'
+      store.state.batchSearch.csvFile = 'csvFile'
 
-    await store.dispatch('batchSearch/onSubmit')
+      store.commit('batchSearch/resetForm')
 
-    const form = new FormData()
-    form.append('name', 'name')
-    form.append('description', 'description')
-    form.append('csvFile', 'csvFile')
-    expect(datashare.fetch).toHaveBeenCalledTimes(2)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search/index'),
-      { method: 'POST', body: form })
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})
+      expect(store.state.batchSearch.name).toBe('')
+      expect(store.state.batchSearch.description).toBe('')
+      expect(store.state.batchSearch.csvFile).toBeNull()
+    })
   })
 
-  it('should reset the form', () => {
-    store.state.batchSearch.name = 'name'
-    store.state.batchSearch.description = 'description'
-    store.state.batchSearch.csvFile = 'csvFile'
+  describe('actions', () => {
+    it('should submit the new batch search form with complete information', async () => {
+      store.state.batchSearch.name = 'name'
+      store.state.batchSearch.description = 'description'
+      store.state.batchSearch.index = 'index'
+      store.state.batchSearch.csvFile = 'csvFile'
+      datashare.fetch.mockClear()
 
-    store.commit('batchSearch/resetForm')
-
-    expect(store.state.batchSearch.name).toBe('')
-    expect(store.state.batchSearch.description).toBe('')
-    expect(store.state.batchSearch.csvFile).toBeNull()
-  })
-
-  it('should reset the form after submission success', async () => {
-    store.state.batchSearch.name = 'name'
-    store.state.batchSearch.description = 'description'
-    store.state.batchSearch.csvFile = 'csvFile'
-
-    await store.dispatch('batchSearch/onSubmit')
-
-    expect(store.state.batchSearch.name).toBe('')
-    expect(store.state.batchSearch.description).toBe('')
-    expect(store.state.batchSearch.csvFile).toBeNull()
-  })
-
-  it('should NOT reset the form after submission fail', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}, 500))
-    store.state.batchSearch.name = 'name'
-    store.state.batchSearch.description = 'description'
-    store.state.batchSearch.csvFile = 'csvFile'
-
-    try {
       await store.dispatch('batchSearch/onSubmit')
-    } catch (e) {
-      expect(store.state.batchSearch.name).toBe('name')
-      expect(store.state.batchSearch.description).toBe('description')
-      expect(store.state.batchSearch.csvFile).not.toBeNull()
-    }
+
+      const form = new FormData()
+      form.append('name', 'name')
+      form.append('description', 'description')
+      form.append('csvFile', 'csvFile')
+      expect(datashare.fetch).toHaveBeenCalledTimes(2)
+      expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search/index'),
+        { method: 'POST', body: form })
+      expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})
+    })
+
+    it('should reset the form after submission success', async () => {
+      store.state.batchSearch.name = 'name'
+      store.state.batchSearch.description = 'description'
+      store.state.batchSearch.csvFile = 'csvFile'
+
+      await store.dispatch('batchSearch/onSubmit')
+
+      expect(store.state.batchSearch.name).toBe('')
+      expect(store.state.batchSearch.description).toBe('')
+      expect(store.state.batchSearch.csvFile).toBeNull()
+    })
+
+    it('should NOT reset the form after submission fail', async () => {
+      datashare.fetch.mockReturnValue(jsonOk({}, 500))
+      store.state.batchSearch.name = 'name'
+      store.state.batchSearch.description = 'description'
+      store.state.batchSearch.csvFile = 'csvFile'
+
+      try {
+        await store.dispatch('batchSearch/onSubmit')
+      } catch (e) {
+        expect(store.state.batchSearch.name).toBe('name')
+        expect(store.state.batchSearch.description).toBe('description')
+        expect(store.state.batchSearch.csvFile).not.toBeNull()
+      }
+    })
+
+    it('should retrieve a batch search according to its id', async () => {
+      const batchSearch = { uuid: '42' }
+      datashare.fetch.mockReturnValue(jsonOk(batchSearch))
+
+      await store.dispatch('batchSearch/getBatchSearch', 1)
+
+      expect(store.state.batchSearch.batchSearch).toEqual(batchSearch)
+    })
   })
 })
