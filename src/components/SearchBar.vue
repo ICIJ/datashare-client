@@ -188,7 +188,9 @@ export default {
       return uniqueId('search-bar-')
     },
     suggestionsAllowed () {
-      return ['all', settings.suggestedImplicitField].indexOf(this.field) > -1 && this.termCandidates().length
+      const terms = this.termCandidates().map(t => t.term)
+      const lastTerm = last(terms) || ''
+      return ['all', settings.suggestedImplicitField].indexOf(this.field) > -1 && lastTerm.length > 1
     }
   },
   watch: {
