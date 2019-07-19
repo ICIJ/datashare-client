@@ -68,7 +68,7 @@
     <div class="batchsearch__items my-3">
       <b-table striped hover :fields="fields" :items="items" tbody-tr-class="batchsearch__items__item">
         <template #name="row">
-          <router-link :to="{ name: 'batchsearchpage', params: { id: row.item.uuid }, query: { index: row.item.project.id } }" class="batchsearch__items__item__link">
+          <router-link :to="{ name: 'batchsearchresults', params: { index: row.item.project.id, id: row.item.uuid } }" class="batchsearch__items__item__link">
             {{ row.item.name }}
           </router-link>
         </template>

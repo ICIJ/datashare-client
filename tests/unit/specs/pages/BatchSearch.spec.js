@@ -79,7 +79,7 @@ describe('BatchSearch.vue', () => {
     wrapper = mount(BatchSearch, { localVue, i18n, store, router })
 
     expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link')).toHaveLength(2)
-    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link').at(0).attributes('href')).toBe('#/batch-search/1?index=project_01')
-    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link').at(1).attributes('href')).toBe('#/batch-search/2?index=project_02')
+    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link').at(0).attributes('href')).toBe('#/batch-search/project_01/1')
+    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link').at(1).attributes('href')).toBe('#/batch-search/project_02/2')
   })
 })

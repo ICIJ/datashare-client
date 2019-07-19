@@ -1,4 +1,4 @@
-import BatchSearchPage from '@/pages/BatchSearchPage'
+import BatchSearchResults from '@/pages/BatchSearchResults'
 import { createLocalVue, mount } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
@@ -45,27 +45,27 @@ localVue.use(Murmur)
 localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
-describe('BatchSearchPage.vue', () => {
+describe('BatchSearchResults.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = mount(BatchSearchPage, { localVue, i18n, store, router })
-    wrapper.vm.$route.query.index = 'index'
+    wrapper = mount(BatchSearchResults, { localVue, i18n, store, router })
+    wrapper.vm.$route.params.index = 'index'
   })
 
   it('should display the list of the queries of this batch search', async () => {
     await store.dispatch('batchSearch/getBatchSearch', 12)
 
-    expect(wrapper.findAll('.batchsearchpage')).toHaveLength(1)
-    expect(wrapper.findAll('.batchsearchpage .batchsearchpage__queries__query')).toHaveLength(3)
+    expect(wrapper.findAll('.batchsearchresults')).toHaveLength(1)
+    expect(wrapper.findAll('.batchsearchresults .batchsearchresults__queries__query')).toHaveLength(3)
   })
 
   it('should display a link to document page', async () => {
     await store.dispatch('batchSearch/getBatchSearch', 12)
 
-    expect(wrapper.findAll('.batchsearchpage__queries .batchsearchpage__queries__query__link')).toHaveLength(3)
-    expect(wrapper.findAll('.batchsearchpage__queries .batchsearchpage__queries__query__link').at(0).attributes('href')).toBe('#/d/index/42/42')
-    expect(wrapper.findAll('.batchsearchpage__queries .batchsearchpage__queries__query__link').at(1).attributes('href')).toBe('#/d/index/43/42')
-    expect(wrapper.findAll('.batchsearchpage__queries .batchsearchpage__queries__query__link').at(2).attributes('href')).toBe('#/d/index/44/42')
+    expect(wrapper.findAll('.batchsearchresults__queries .batchsearchresults__queries__query__link')).toHaveLength(3)
+    expect(wrapper.findAll('.batchsearchresults__queries .batchsearchresults__queries__query__link').at(0).attributes('href')).toBe('#/d/index/42/42')
+    expect(wrapper.findAll('.batchsearchresults__queries .batchsearchresults__queries__query__link').at(1).attributes('href')).toBe('#/d/index/43/42')
+    expect(wrapper.findAll('.batchsearchresults__queries .batchsearchresults__queries__query__link').at(2).attributes('href')).toBe('#/d/index/44/42')
   })
 })

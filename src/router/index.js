@@ -8,7 +8,7 @@ import Landing from '@/pages/Landing'
 import Login from '@/pages/Login'
 import Search from '@/pages/Search'
 import BatchSearch from '@/pages/BatchSearch'
-import BatchSearchPage from '@/pages/BatchSearchPage'
+import BatchSearchResults from '@/pages/BatchSearchResults'
 
 import store from '@/store'
 import { isAuthenticated } from '@/utils/utils'
@@ -72,9 +72,9 @@ const router = new VueRouter({
           component: BatchSearch
         },
         {
-          name: 'batchsearchpage',
-          path: 'batch-search/:id',
-          component: BatchSearchPage
+          name: 'batchsearchresults',
+          path: 'batch-search/:index/:id',
+          component: BatchSearchResults
         }
       ]
     },

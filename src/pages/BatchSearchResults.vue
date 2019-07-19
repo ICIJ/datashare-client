@@ -1,11 +1,11 @@
 <template>
-  <div class="batchsearchpage batchsearchpage__queries container container-fluid w-100">
-    <b-table striped hover bordered :fields="fields" :items="batchSearch" tbody-tr-class="batchsearchpage__queries__query">
+  <div class="batchsearchresults batchsearchresults__queries container container-fluid w-100">
+    <b-table striped hover bordered :fields="fields" :items="batchSearch" tbody-tr-class="batchsearchresults__queries__query">
       <template #documentNumber="row">
         {{ row.item.documentNumber + 1 }}
       </template>
       <template #documentPath="row">
-        <router-link :to="{ name: 'document', params: { index: $route.query.index, id: row.item.documentId, routing: row.item.rootId } }" target="_blank" class="batchsearchpage__queries__query__link">
+        <router-link :to="{ name: 'document', params: { index: $route.params.index, id: row.item.documentId, routing: row.item.rootId } }" target="_blank" class="batchsearchresults__queries__query__link">
           {{ getFileName(row.item.documentPath) }}
         </router-link>
       </template>
@@ -23,7 +23,7 @@ import moment from 'moment'
 import last from 'lodash/last'
 
 export default {
-  name: 'BatchSearchPage',
+  name: 'BatchSearchResults',
   data () {
     return {
       fields: [
