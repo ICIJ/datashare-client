@@ -226,18 +226,6 @@ describe('FacetText.vue', () => {
     expect(wrapper.vm.root.totalCount).toEqual(0)
   })
 
-  it('should filter facet values - Uppercase situation 1/2', async () => {
-    await letData(es).have(new IndexedDocument('index_01.txt').withContentType('TEXT/CSV')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContentType('PLAIN/TEXT')).commit()
-
-    wrapper.vm.root.facetQuery = 'tex'
-
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.vm.root.items).toHaveLength(2)
-    expect(wrapper.vm.root.totalCount).toEqual(2)
-  })
-
   it('should filter facet values - Uppercase situation 2/2', async () => {
     await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/csv')).commit()
     await letData(es).have(new IndexedDocument('index_02.txt').withContentType('plain/text')).commit()

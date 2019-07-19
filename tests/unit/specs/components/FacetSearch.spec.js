@@ -153,13 +153,10 @@ describe('FacetSearch.vue', () => {
 
   describe('search', () => {
     it('should create query tokens', async () => {
-      wrapper.setData({ facetQuery: 'iCij' })
+      wrapper.setData({ facetQuery: 'ICIJ' })
       await wrapper.vm.startOver()
 
-      expect(wrapper.vm.queryTokens).toContain('iCij')
       expect(wrapper.vm.queryTokens).toContain('icij')
-      expect(wrapper.vm.queryTokens).toContain('ICIJ')
-      expect(wrapper.vm.queryTokens).toContain('ICij')
     })
 
     it('should filter the list according to facetQuery', async () => {

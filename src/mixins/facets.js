@@ -7,10 +7,6 @@ import last from 'lodash/last'
 import map from 'lodash/map'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
-import toLower from 'lodash/toLower'
-import toUpper from 'lodash/toUpper'
-import uniq from 'lodash/uniq'
-import upperFirst from 'lodash/upperFirst'
 
 export const mixin = {
   mixins: [utils],
@@ -86,13 +82,7 @@ export const mixin = {
       return ['aggregations', this.facet.key, 'buckets']
     },
     queryTokens () {
-      return uniq([
-        this.facetQuery,
-        toLower(this.facetQuery),
-        toUpper(this.facetQuery),
-        upperFirst(this.facetQuery)
-      // And escape the string for use in REGEX
-      ].map(this.escapeRegExp))
+      return [ this.escapeRegExp(this.facetQuery.toLowerCase()) ]
     },
     options () {
       return map(this.items, item => {

@@ -17,8 +17,13 @@
           </button>
         </div>
         <div class="search-bar__suggestions dropdown-menu" :class="{ show: !!suggestions.length }">
-          <a class="dropdown-item search-bar__suggestions__item px-3" v-for="term in suggestions" :key="term" @click="selectTerm(term)">
-            <span v-html="injectTermInQuery(term)"></span>
+          <a class="dropdown-item search-bar__suggestions__item px-3 d-flex" v-for="{ key, doc_count } in suggestions" :key="key" @click="selectTerm(key)">
+            <div class="flex-grow-1 text-truncate">
+              <span v-html="injectTermInQuery(key)"></span>
+            </div>
+            <div>
+              <span class="badge badge-pill badge-light">{{ doc_count }}</span>
+            </div>
           </a>
         </div>
       </div>
@@ -117,8 +122,7 @@ export default {
       const include = `.*${escapeRegExp(candidate.term).toLowerCase()}.*`
       const body = bodybuilder().size(0).aggregation('terms', field, { include }).build()
       const response = await esClient.search({ index, body })
-      const buckets = get(response, `aggregations.agg_terms_${field}.buckets`, [])
-      return map(buckets, 'key')
+      return get(response, `aggregations.agg_terms_${field}.buckets`, [])
     },
     termCandidates (ast = null) {
       // Parse the query by default

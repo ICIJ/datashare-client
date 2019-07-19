@@ -101,5 +101,5 @@ export default {
     }
   ],
   suggestedFields: ['<implicit>', 'tags', 'contentType', 'path', 'mentionNorm'],
-  suggestedImplicitField: 'tags'
+  suggestedImplicitField: 'mentionNorm'
 }
