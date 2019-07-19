@@ -421,14 +421,29 @@
   },
   "batchSearch": {
     "title": "Batch Search",
-    "nameLabel": "Name:",
-    "namePlaceholder": "Search name",
-    "descriptionLabel": "Description:",
-    "descriptionPlaceholder": "Search description",
-    "fileLabel": "CSV file:",
-    "fileDescription": "Only CSV format accepted.",
-    "filePlaceholder": "Choose a file...",
-    "submit": "Submit",
-    "projectLabel": "Project"
+    "form": {
+      "nameLabel": "Name:",
+      "namePlaceholder": "Search name",
+      "descriptionLabel": "Description:",
+      "descriptionPlaceholder": "Search description",
+      "projectLabel": "Project",
+      "fileLabel": "CSV file:",
+      "fileDescription": "Only CSV format accepted.",
+      "filePlaceholder": "Choose a file...",
+      "submit": "Submit"
+    },
+    "projectName": "Project Name",
+    "searchName": "Search Name",
+    "description": "Description",
+    "queries": "Queries",
+    "state": "State",
+    "date": "Date"
+  },
+  "batchSearchResults": {
+    "title": "Batch Search Results",
+    "index": "Index",
+    "query": "Query",
+    "documentName": "Document Name",
+    "creationDate": "Creation Date"
   }
 }

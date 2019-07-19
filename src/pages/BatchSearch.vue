@@ -10,7 +10,7 @@
         <div class="m-4">
           <b-form-group
             id="group-name"
-            :label="$t('batchSearch.nameLabel')"
+            :label="$t('batchSearch.form.nameLabel')"
             label-for="name"
           >
             <b-form-input
@@ -18,25 +18,25 @@
               v-model="name"
               type="text"
               required
-              :placeholder="$t('batchSearch.namePlaceholder')"
+              :placeholder="$t('batchSearch.form.namePlaceholder')"
             ></b-form-input>
           </b-form-group>
           <b-form-group
             id="group-description"
-            :label="$t('batchSearch.descriptionLabel')"
+            :label="$t('batchSearch.form.descriptionLabel')"
             label-for="description"
           >
             <b-form-textarea
               id="description"
               v-model="description"
-              :placeholder="$t('batchSearch.descriptionPlaceholder')"
+              :placeholder="$t('batchSearch.form.descriptionPlaceholder')"
               rows="3"
               max-rows="6"
             ></b-form-textarea>
           </b-form-group>
           <b-form-group
             id="group-project"
-            :label="$t('batchSearch.projectLabel')"
+            :label="$t('batchSearch.form.projectLabel')"
             label-for="project"
             v-if="isServer"
           >
@@ -48,20 +48,20 @@
           </b-form-group>
           <b-form-group
             id="group-file"
-            :label="$t('batchSearch.fileLabel')"
+            :label="$t('batchSearch.form.fileLabel')"
             label-for="file"
-            :description="$t('batchSearch.fileDescription')"
+            :description="$t('batchSearch.form.fileDescription')"
           >
             <b-form-file
               v-model="csvFile"
-              :placeholder="$t('batchSearch.filePlaceholder')"
+              :placeholder="$t('batchSearch.form.filePlaceholder')"
               accept=".csv"
               required
             ></b-form-file>
           </b-form-group>
         </div>
         <div class="card-footer text-right border-0">
-          <b-button type="submit" variant="primary">{{ $t('batchSearch.submit') }}</b-button>
+          <b-button type="submit" variant="primary">{{ $t('batchSearch.form.submit') }}</b-button>
         </div>
       </div>
     </b-form>
@@ -106,27 +106,31 @@ export default {
       fields: [
         {
           key: 'project.name',
-          label: 'Project Name',
+          label: this.$t('batchSearch.projectName'),
           sortable: true
         },
         {
           key: 'name',
-          label: 'Search Name'
+          label: this.$t('batchSearch.searchName')
         },
         {
           key: 'description',
+          label: this.$t('batchSearch.description'),
           sortable: true
         },
         {
           key: 'queries',
+          label: this.$t('batchSearch.queries'),
           sortable: true
         },
         {
           key: 'state',
+          label: this.$t('batchSearch.state'),
           sortable: true
         },
         {
           key: 'date',
+          label: this.$t('batchSearch.date'),
           sortable: true
         }
       ]
