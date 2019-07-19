@@ -116,13 +116,16 @@ export default {
       this.$emit('submit', this.query)
     },
     async suggestTerms (candidates) {
+      const query = this.query
       const index = this.$store.state.search.index
       const candidate = last(candidates)
       const field = candidate.field === '<implicit>' ? settings.suggestedImplicitField : candidate.field
       const include = `.*${escapeRegExp(candidate.term).toLowerCase()}.*`
       const body = bodybuilder().size(0).aggregation('terms', field, { include }).build()
       const response = await esClient.search({ index, body })
-      return get(response, `aggregations.agg_terms_${field}.buckets`, [])
+      const suggestions = get(response, `aggregations.agg_terms_${field}.buckets`, [])
+      // Return an object to check later if the promise result is still appliable
+      return { query, suggestions }
     },
     termCandidates (ast = null) {
       try {
@@ -164,7 +167,13 @@ export default {
     },
     typingTerms: throttle(async function () {
       try {
-        this.suggestions = this.suggestionsAllowed ? await this.suggestTerms(this.termCandidates()) : []
+        if (this.suggestionsAllowed) {
+          const { suggestions, query } = await this.suggestTerms(this.termCandidates())
+          // Is the query still valid
+          this.suggestions = query === this.query ? suggestions : []
+        } else {
+          this.suggestions = []
+        }
       } catch {
         this.hideSuggestions()
       }
