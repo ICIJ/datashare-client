@@ -2,7 +2,15 @@
   <form class="search-bar py-3 container-fluid" :id="uniqueId" @submit.prevent="submit">
     <div class="d-flex align-items-center">
       <div class="input-group">
-        <input v-model="query" :placeholder="$t('search.placeholder')" class="form-control search-bar__input" @blur="hideSuggestionsAfterDelay" @keyup="typingTerms" @focus="typingTerms" />
+        <input
+          v-model="query"
+          v-shortkey="{ up: ['arrowup'], down: ['arrowdown'], esc: ['esc'], enter: ['enter'] }"
+          :placeholder="$t('search.placeholder')"
+          class="form-control search-bar__input"
+          @blur="hideSuggestionsAfterDelay"
+          @keyup="typingTerms"
+          @focus="typingTerms"
+          @shortkey="navigateSuggestions($event)" />
         <div class="input-group-append">
           <a v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" :href="operatorLinks" target="_blank" title="Tips to improve searching" v-b-tooltip.bottomleft>
             <fa icon="question-circle" />
@@ -17,7 +25,7 @@
           </button>
         </div>
         <div class="search-bar__suggestions dropdown-menu" :class="{ show: !!suggestions.length }">
-          <a class="dropdown-item search-bar__suggestions__item px-3 d-flex" v-for="{ key, doc_count } in suggestions" :key="key" @click="selectTerm(key)">
+          <a class="dropdown-item search-bar__suggestions__item px-3 d-flex" v-for="({ key, doc_count }, index) in suggestions" :key="key" @click="selectTerm(key)" :class="{ active: index === activeSuggestionIndex }">
             <div class="flex-grow-1 text-truncate">
               <span v-html="injectTermInQuery(key)"></span>
             </div>
@@ -95,7 +103,8 @@ export default {
       query: this.$store.state.search.query,
       field: this.$store.state.search.field,
       operatorLinks: settings.documentationLinks.operators.default,
-      suggestions: []
+      suggestions: [],
+      activeSuggestionIndex: -1
     }
   },
   mounted () {
@@ -107,6 +116,7 @@ export default {
   },
   methods: {
     submit () {
+      this.hideSuggestions()
       // Change the route after update the store with the new query
       this.$store.commit('search/field', this.field)
       this.$store.commit('search/query', this.query)
@@ -167,6 +177,7 @@ export default {
     },
     typingTerms: throttle(async function () {
       try {
+        this.activeSuggestionIndex = -1
         if (this.suggestionsAllowed) {
           const { suggestions, query } = await this.suggestTerms(this.termCandidates())
           // Is the query still valid
@@ -180,8 +191,11 @@ export default {
     }, 200),
     selectTerm(term) {
       this.query = this.injectTermInQuery(term, null, false)
-      this.hideSuggestions()
       this.submit()
+    },
+    selectActiveTerm() {
+      const { key } = this.suggestions[this.activeSuggestionIndex]
+      this.query = this.injectTermInQuery(key, null, false)
     },
     hideSuggestions () {
       this.suggestions = []
@@ -190,6 +204,30 @@ export default {
       setTimeout(() => {
         this.$nextTick(this.hideSuggestions)
       }, 200)
+    },
+    navigateSuggestions ({ srcKey }) {
+      switch (srcKey) {
+        case 'up':
+          this.activatePreviousSuggestion()
+          break
+        case 'down':
+          this.activateNextSuggestion()
+          break
+        case 'esc':
+          this.hideSuggestions()
+          break
+        case 'enter':
+          this.submit()
+          break
+      }
+    },
+    activatePreviousSuggestion () {
+      this.activeSuggestionIndex = Math.max(this.activeSuggestionIndex - 1, 0)
+      this.selectActiveTerm()
+    },
+    activateNextSuggestion () {
+      this.activeSuggestionIndex = Math.min(this.activeSuggestionIndex + 1, this.suggestions.length - 1)
+      this.selectActiveTerm()
     }
   },
   computed: {
@@ -279,7 +317,7 @@ export default {
       & &__item.dropdown-item {
         cursor: pointer;
 
-        &:active, &:focus {
+        &:active, &:focus, &.active {
           color: white;
         }
       }
