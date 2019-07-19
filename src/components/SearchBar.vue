@@ -125,17 +125,21 @@ export default {
       return get(response, `aggregations.agg_terms_${field}.buckets`, [])
     },
     termCandidates (ast = null) {
-      // Parse the query by default
-      ast = ast === null ? lucene.parse(this.query) : ast
-      // List of terms to return
-      let terms = []
-      // Use recursive call for branches
-      if (ast.left) terms = terms.concat(this.termCandidates(ast.left))
-      if (ast.right) terms = terms.concat(this.termCandidates(ast.right))
-      // Only <implicit> and tag fields are can be read
-      if (settings.suggestedFields.indexOf(ast.field) > -1) terms.push(ast)
-      // Return all the terms
-      return terms
+      try {
+        // List of terms to return
+        let terms = []
+        // Parse the query by default
+        ast = ast === null ? lucene.parse(this.query) : ast
+        // Use recursive call for branches
+        if (ast.left) terms = terms.concat(this.termCandidates(ast.left))
+        if (ast.right) terms = terms.concat(this.termCandidates(ast.right))
+        // Only <implicit> and tag fields are can be read
+        if (settings.suggestedFields.indexOf(ast.field) > -1) terms.push(ast)
+        // Return all the terms
+        return terms
+      } catch {
+        return []
+      }
     },
     replaceLastTermCandidate(term, ast = null, highlight = true) {
       // Parse the query by default
@@ -151,8 +155,12 @@ export default {
       return ast
     },
     injectTermInQuery(term, ast = null, highlight = true) {
-      ast = this.replaceLastTermCandidate(term, ast, highlight)
-      return lucene.toString(ast)
+      try {
+        ast = this.replaceLastTermCandidate(term, ast, highlight)
+        return lucene.toString(ast)
+      } catch {
+        return this.query
+      }
     },
     typingTerms: throttle(async function () {
       try {

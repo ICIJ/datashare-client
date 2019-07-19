@@ -138,8 +138,12 @@ export const getters = {
         retTerms(get(query, 'right'), get(query, 'operator', null))
       }
     }
-    retTerms(lucene.parse(state.query), null)
-    return terms
+    try {
+      retTerms(lucene.parse(state.query), null)
+      return terms
+    } catch {
+      return []
+    }
   },
   retrieveContentQueryTerms (state, getters) {
     const fields = ['', 'content']
