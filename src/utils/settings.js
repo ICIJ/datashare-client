@@ -99,5 +99,7 @@ export default {
       key: 'thread',
       fields: ['metadata.tika_metadata_message_raw_header_thread_index']
     }
-  ]
+  ],
+  suggestedFields: ['<implicit>', 'tags', 'contentType', 'path', 'mentionNorm'],
+  suggestedImplicitField: 'tags'
 }

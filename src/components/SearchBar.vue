@@ -16,9 +16,9 @@
             {{ $t('search.buttonlabel') }}
           </button>
         </div>
-        <div class="search-bar__suggestions dropdown-menu" :class="{ show: !!tags.length }">
-          <a class="dropdown-item search-bar__suggestions__item px-3" v-for="tag in tags" :key="tag" @click="selectTag(tag)">
-            tag:<strong>{{ tag }}</strong>
+        <div class="search-bar__suggestions dropdown-menu" :class="{ show: !!suggestions.length }">
+          <a class="dropdown-item search-bar__suggestions__item px-3" v-for="term in suggestions" :key="term" @click="selectTerm(term)">
+            <span v-html="injectTermInQuery(term)"></span>
           </a>
         </div>
       </div>
@@ -48,6 +48,7 @@ import bodybuilder from 'bodybuilder'
 import get from 'lodash/get'
 import last from 'lodash/last'
 import map from 'lodash/map'
+import some from 'lodash/some'
 import throttle from 'lodash/throttle'
 import lucene from 'lucene'
 
@@ -57,6 +58,11 @@ import settings from '@/utils/settings'
 
 function escapeRegExp(str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+function escapeLucenneChars(str) {
+  const escapable = [" ", "+", "-", "&&", "||", "!", "(", ")", "{", "}", "[", "]", "^", "~", "?", ":", "\\", "/"]
+  return some(escapable, char => str.indexOf(char) > -1) ? JSON.stringify(str) : str
 }
 
 export default {
@@ -84,7 +90,7 @@ export default {
       query: this.$store.state.search.query,
       field: this.$store.state.search.field,
       operatorLinks: settings.documentationLinks.operators.default,
-      tags: []
+      suggestions: []
     }
   },
   mounted () {
@@ -104,54 +110,60 @@ export default {
       // And emit an event for those listening...
       this.$emit('submit', this.query)
     },
-    async searchTags (values) {
+    async suggestTerms (candidates) {
       const index = this.$store.state.search.index
-      const include = last(values.map(v => `.*${escapeRegExp(v).toLowerCase()}.*`))
-      const body = bodybuilder().size(0).aggregation('terms', 'tags', { include }).build()
+      const candidate = last(candidates)
+      const field = candidate.field === '<implicit>' ? settings.suggestedImplicitField : candidate.field
+      const include = `.*${escapeRegExp(candidate.term).toLowerCase()}.*`
+      const body = bodybuilder().size(0).aggregation('terms', field, { include }).build()
       const response = await esClient.search({ index, body })
-      const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
+      const buckets = get(response, `aggregations.agg_terms_${field}.buckets`, [])
       return map(buckets, 'key')
     },
-    tagCandidates (ast = null) {
+    termCandidates (ast = null) {
       // Parse the query by default
       ast = ast === null ? lucene.parse(this.query) : ast
       // List of terms to return
       let terms = []
       // Use recursive call for branches
-      if (ast.left) terms = terms.concat(this.tagCandidates(ast.left))
-      if (ast.right) terms = terms.concat(this.tagCandidates(ast.right))
+      if (ast.left) terms = terms.concat(this.termCandidates(ast.left))
+      if (ast.right) terms = terms.concat(this.termCandidates(ast.right))
       // Only <implicit> and tag fields are can be read
-      if (['<implicit>', 'tag'].indexOf(ast.field) > -1) terms.push(ast.term)
+      if (settings.suggestedFields.indexOf(ast.field) > -1) terms.push(ast)
       // Return all the terms
       return terms
     },
-    replaceLastTagCandidates(term, ast = null) {
+    replaceLastTermCandidate(term, ast = null, highlight = true) {
       // Parse the query by default
       ast = ast === null ? lucene.parse(this.query) : ast
       // Use recursive call for branches
-      if (ast.right) this.replaceLastTagCandidates(term, ast.right)
-      else if (ast.left) this.replaceLastTagCandidates(term, ast.left)
+      if (ast.right) this.replaceLastTermCandidate(term, ast.right, highlight)
+      else if (ast.left) this.replaceLastTermCandidate(term, ast.left, highlight)
       // Only <implicit> and tag fields are can be read
-      else if (['<implicit>', 'tag'].indexOf(ast.field) > -1 && ast.term === last(this.tagCandidates())) {
-        ast.term = term
+      else if (settings.suggestedFields.indexOf(ast.field) > -1 && ast.term === last(this.termCandidates()).term) {
+        ast.term = ast.quoted ? term : escapeLucenneChars(term)
+        ast.term = highlight ? `<strong>${ast.term}</strong>` : ast.term
       }
       return ast
     },
+    injectTermInQuery(term, ast = null, highlight = true) {
+      ast = this.replaceLastTermCandidate(term, ast, highlight)
+      return lucene.toString(ast)
+    },
     typingTerms: throttle(async function () {
       try {
-        this.tags = this.suggestionsAllowed ? await this.searchTags(this.tagCandidates()) : []
+        this.suggestions = this.suggestionsAllowed ? await this.suggestTerms(this.termCandidates()) : []
       } catch {
         this.hideSuggestions()
       }
     }, 200),
-    selectTag(term) {
-      const ast = this.replaceLastTagCandidates(term)
-      this.query = lucene.toString(ast)
+    selectTerm(term) {
+      this.query = this.injectTermInQuery(term, null, false)
       this.hideSuggestions()
       this.submit()
     },
     hideSuggestions () {
-      this.tags = []
+      this.suggestions = []
     },
     hideSuggestionsAfterDelay () {
       setTimeout(() => {
@@ -164,7 +176,7 @@ export default {
       return uniqueId('search-bar-')
     },
     suggestionsAllowed () {
-      return ['all', 'tags'].indexOf(this.field) > -1 && this.query.length > 1
+      return ['all', settings.suggestedImplicitField].indexOf(this.field) > -1 && this.termCandidates().length
     }
   },
   watch: {
