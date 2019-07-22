@@ -5,11 +5,13 @@
 </template>
 
 <script>
+import { defaultSearchField } from '@/utils/settings'
+
 export default {
   name: 'ResetFiltersButton',
   computed: {
     hasFacets () {
-      return this.$store.getters['search/activeFacets'].length > 0
+      return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== defaultSearchField
     }
   },
   methods: {
