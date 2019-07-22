@@ -39,7 +39,7 @@
         <div class="search-results__header__number-of-results">
           {{ $t('search.results.no-result') }}
         </div>
-        <div class="mt-3" v-if="hasFacets">
+        <div class="mt-3" v-if="hasFilters">
           {{ $t('search.try') }}
           <reset-filters-button />
         </div>
@@ -55,7 +55,7 @@ import SearchResultsHeader from '@/components/SearchResultsHeader'
 import SearchResultsLink from '@/components/SearchResultsLink'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
-import { defaultSearchField } from '@/utils/settings'
+import settings from '@/utils/settings'
 
 export default {
   name: 'SearchResults',
@@ -79,8 +79,8 @@ export default {
     hasResults () {
       return this.response.hits.length > 0
     },
-    hasFacets () {
-      return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== defaultSearchField
+    hasFilters () {
+      return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
     }
   },
   methods: {

@@ -1,17 +1,17 @@
 <template>
-  <button class="btn btn-outline-secondary btn-sm" id="input-reset" @click="resetFacets" :disabled="!hasFacets">
+  <button class="btn btn-outline-secondary btn-sm" id="input-reset" @click="resetFacets" :disabled="!hasFilters">
     {{ $t('search.reset_filters') }}
   </button>
 </template>
 
 <script>
-import { defaultSearchField } from '@/utils/settings'
+import settings from '@/utils/settings'
 
 export default {
   name: 'ResetFiltersButton',
   computed: {
-    hasFacets () {
-      return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== defaultSearchField
+    hasFilters () {
+      return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
     }
   },
   methods: {

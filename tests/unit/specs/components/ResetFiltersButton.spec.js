@@ -15,8 +15,8 @@ describe('ResetFiltersButton.vue', function () {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store })
     store.commit('search/reset')
+    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store })
   })
 
   it('should display a disabled button, by default', () => {
@@ -32,12 +32,12 @@ describe('ResetFiltersButton.vue', function () {
   })
 
   it('shouldn\'t have facets', () => {
-    expect(wrapper.vm.hasFacets).toBeFalsy()
+    expect(wrapper.vm.hasFilters).toBeFalsy()
   })
 
   it('should have facets', () => {
     store.commit('search/addFacetValue', { name: 'language', value: 'en' })
-    expect(wrapper.vm.hasFacets).toBeTruthy()
+    expect(wrapper.vm.hasFilters).toBeTruthy()
   })
 
   it('should reset facets on facets reset', () => {
@@ -45,7 +45,7 @@ describe('ResetFiltersButton.vue', function () {
 
     wrapper.vm.resetFacets()
 
-    expect(wrapper.vm.hasFacets).toBeFalsy()
+    expect(wrapper.vm.hasFilters).toBeFalsy()
   })
 
   it('should reset query on facets reset', () => {
