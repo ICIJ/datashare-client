@@ -15,7 +15,7 @@
           <a v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" :href="operatorLinks" target="_blank" title="Tips to improve searching" v-b-tooltip.bottomleft>
             <fa icon="question-circle" />
           </a>
-          <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="search-bar__field" right>
+          <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
             <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key">
               {{ $t('search.field.' + key) }}
             </b-dropdown-item>
@@ -111,6 +111,9 @@ export default {
     this.$store.subscribe((mutation) => {
       if (mutation.type === 'search/query') {
         this.query = mutation.payload
+      }
+      if (mutation.type === 'search/reset') {
+        this.field = this.$store.state.search.field
       }
     })
   },
@@ -272,6 +275,16 @@ export default {
 
     &__field {
       border-left: dashed 1px  $input-border-color;
+
+      &--selected:after {
+        content:"";
+        position: absolute;
+        top: 1px;
+        right: 1px;
+        left: 0;
+        bottom: 1px;
+        border: 2px solid $tertiary;
+      }
 
       .btn {
         color: $text-muted;
