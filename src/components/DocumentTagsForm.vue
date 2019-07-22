@@ -23,6 +23,11 @@ export default {
       updatingTags: false
     }
   },
+  mounted () {
+    const input = get(this, '$refs.typeahead.$el', this.$el).querySelector('input[type=search]')
+    // Foucs the input (if any)
+    if (input) input.focus()
+  },
   watch: {
     tag: throttle(async function (value) {
       const include = `.*${value.toLowerCase()}.*`
