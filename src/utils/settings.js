@@ -68,7 +68,9 @@ export default {
       key: 'title',
       fields: [
         'metadata.tika_metadata_dc_title',
-        'metadata.tika_metadata_title'
+        'metadata.tika_metadata_title',
+        'metadata.tika_metadata_subject',
+        'path'
       ]
     },
     {
