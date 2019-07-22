@@ -55,6 +55,7 @@ import SearchResultsHeader from '@/components/SearchResultsHeader'
 import SearchResultsLink from '@/components/SearchResultsLink'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
+import { defaultSearchField } from '@/utils/settings'
 
 export default {
   name: 'SearchResults',
@@ -79,7 +80,7 @@ export default {
       return this.response.hits.length > 0
     },
     hasFacets () {
-      return this.$store.getters['search/activeFacets'].length > 0
+      return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== defaultSearchField
     }
   },
   methods: {
