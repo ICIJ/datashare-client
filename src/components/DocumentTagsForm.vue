@@ -38,7 +38,7 @@ export default {
     }, 200)
   },
   methods: {
-    async addTag () {
+    async addTag (event) {
       // Skip empty tag
       if (this.updatingTags || !this.tag || !this.tag.length) return
       this.updatingTags = true

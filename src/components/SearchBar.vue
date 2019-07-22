@@ -4,7 +4,7 @@
       <div class="input-group">
         <input
           v-model="query"
-          v-shortkey="{ up: ['arrowup'], down: ['arrowdown'], esc: ['esc'], enter: ['enter'] }"
+          v-shortkey="{ up: ['arrowup'], down: ['arrowdown'], esc: ['esc'] }"
           :placeholder="$t('search.placeholder')"
           class="form-control search-bar__input"
           @blur="hideSuggestionsAfterDelay"
@@ -205,20 +205,20 @@ export default {
         this.$nextTick(this.hideSuggestions)
       }, 200)
     },
-    navigateSuggestions ({ srcKey }) {
-      switch (srcKey) {
-        case 'up':
-          this.activatePreviousSuggestion()
-          break
-        case 'down':
-          this.activateNextSuggestion()
-          break
-        case 'esc':
-          this.hideSuggestions()
-          break
-        case 'enter':
-          this.submit()
-          break
+    navigateSuggestions (event) {
+      // Skip this method if the input doesn't have the focus
+      if (event.target === document.activeElement) {
+        switch (event.srcKey) {
+          case 'up':
+            this.activatePreviousSuggestion()
+            break
+          case 'down':
+            this.activateNextSuggestion()
+            break
+          case 'esc':
+            this.hideSuggestions()
+            break
+        }
       }
     },
     activatePreviousSuggestion () {
