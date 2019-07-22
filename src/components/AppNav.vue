@@ -6,7 +6,8 @@
     <div class="app__nav__container row no-gutters">
       <div class="app__nav__container__main col d-flex">
         <router-link class="app__nav__container__main__brand d-flex justify-content-start align-items-center" :to="{ name: 'landing' }">
-          <img src="~images/logo-color.svg" alt="Datashare" class="ml-3" />
+          <img src="~images/logo-color.svg" alt="Datashare" class="app__nav__container__main__brand__logo app__nav__container__main__brand__logo--normal" />
+          <img src="~images/logo-color-symbol.svg" alt="Datashare" class="app__nav__container__main__brand__logo app__nav__container__main__brand__logo--symbol" />
           <span class="app__nav__container__main__brand__beta mr-3">beta</span>
         </router-link>
         <div class="app__nav__container__main__search-bar flex-grow-1" v-if="isntLanding()">
@@ -138,17 +139,36 @@ export default {
           padding: $spacer;
           pointer-events: auto;
           max-width: $aggregations-panel-width;
+          margin-right: $spacer;
           width: 100%;
           font-size: 1.5rem;
           text-decoration: none;
 
           @media (max-width: $document-float-breakpoint-width) {
-            max-width: 220px;
+            margin-right: 0;
+            max-width: 100%;
+            width: auto;
+          }
+        }
+
+        &__brand__logo {
+          color: black;
+          height: $app-nav-brand-height;
+
+          &--normal {
+            display: inline-block;
+
+            @media (max-width: $document-float-breakpoint-width) {
+              display: none;
+            }
           }
 
-          svg, img {
-            color: black;
-            height: $app-nav-brand-height;
+          &--symbol {
+            display: none;
+
+            @media (max-width: $document-float-breakpoint-width) {
+              display: inline-block;
+            }
           }
         }
 
@@ -162,11 +182,15 @@ export default {
           position: relative;
           top: -0.5em;
           margin-left: 0.5em;
+
+          @media (max-width: $document-float-breakpoint-width) {
+            display: none;
+          }
         }
 
         &__search-bar {
           position: relative;
-          padding: 0 $spacer;
+          padding: 0;
           max-width: 770px;
         }
 

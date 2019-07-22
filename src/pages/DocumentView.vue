@@ -5,10 +5,10 @@
   <div v-else>
     <div class="d-flex flex-column document" v-if="document" v-shortkey="{ goToPreviousTab: ['arrowleft'], goToNextTab: ['arrowright']}" @shortkey="shortKeyAction">
       <div class="document__header">
-        <h3>
+        <h3 class="document__header__name">
           <document-sliced-name interactive-root :document="document" />
         </h3>
-        <nav class="document__header__nav">
+        <nav class="document__header__nav text-nowrap overflow-auto">
           <ul class="list-inline m-0">
             <li class="document__header__nav__item list-inline-item" v-for="tab in visibleTabs" :key="tab.name">
               <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
@@ -192,13 +192,17 @@ export default {
   &__header {
     @include gradient-directional(theme-color(dark), $primary);
     color: white;
-    padding: $spacer * 2 $spacer;
+    padding: $spacer * 2 0;
     padding-bottom: 0;
     display: inline-block;
     width: 100%;
 
+    &__name {
+      padding: 0 $spacer;
+    }
+
     &__nav {
-      padding-top: $spacer;
+      padding: $spacer $spacer 0;
 
       & &__item  {
         margin:0;
@@ -207,7 +211,7 @@ export default {
           display: inline-block;
           text-transform: uppercase;
           font-weight: bolder;
-          font-size: 0.9em;
+          font-size: 0.8em;
           padding: $spacer * .75 $spacer;
           margin: 0;
           position: relative;
