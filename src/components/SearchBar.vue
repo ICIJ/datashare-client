@@ -7,8 +7,8 @@
           :placeholder="$t('search.placeholder')"
           class="form-control search-bar__input"
           @blur="hideSuggestionsAfterDelay"
-          @keyup="typingTerms"
-          @focus="typingTerms" />
+          @input="searchTerms"
+          @focus="searchTerms" />
         <div class="input-group-append">
           <a v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" :href="operatorLinks" target="_blank" title="Tips to improve searching" v-b-tooltip.bottomleft>
             <fa icon="question-circle" />
@@ -190,12 +190,7 @@ export default {
     selectTerm (term) {
       this.query = term ? this.injectTermInQuery(term.key, null, false) : this.query
     },
-    typingTerms: throttle(async function (event) {
-      // Skip arrow keys and escape
-      if (IGNORED_KEYS.indexOf(event.which) > -1) return
-      // Escape will close the suggestions
-      if (event.which === 27) return this.hideSuggestions()
-
+    searchTerms: throttle(async function () {
       try {
         this.activeSuggestionIndex = -1
         if (this.suggestionsAllowed) {
