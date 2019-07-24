@@ -2,6 +2,10 @@ import map from 'lodash/map'
 import { DOMParser } from 'xmldom'
 import FakeWorker from './fake-worker.js'
 
+function escapeRegExp (str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
 function replaceInChildNodes (element, needle, replacement) {
   if (element.nodeName === '#text') {
     return element.nodeValue.replace(needle, replacement)
@@ -15,14 +19,15 @@ function replaceInChildNodes (element, needle, replacement) {
 }
 
 function addLocalSearchMarks (content = '', localSearchTerm = '') {
-  const localSearchOccurrences = (content.match(new RegExp('(?![^<]*>)' + localSearchTerm, 'gi')) || []).length
+  const escapedLocalSearchTerm = escapeRegExp(localSearchTerm)
+  const localSearchOccurrences = (content.match(new RegExp('(?![^<]*>)' + escapedLocalSearchTerm, 'gi')) || []).length
   const localSearchIndex = Number(!!localSearchOccurrences)
 
   if (localSearchOccurrences === 0) {
     return { content, localSearchIndex, localSearchOccurrences }
   }
 
-  const needle = RegExp(`(${localSearchTerm})`, 'gim')
+  const needle = RegExp(`(${escapedLocalSearchTerm})`, 'gim')
   const parser = new DOMParser()
   const dom = parser.parseFromString(content, 'text/html')
 
