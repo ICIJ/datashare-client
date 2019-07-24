@@ -4,13 +4,11 @@
       <div class="input-group">
         <input
           v-model="query"
-          v-shortkey="{ up: ['arrowup'], down: ['arrowdown'], esc: ['esc'] }"
           :placeholder="$t('search.placeholder')"
           class="form-control search-bar__input"
           @blur="hideSuggestionsAfterDelay"
           @keyup="typingTerms"
-          @focus="typingTerms"
-          @shortkey="navigateSuggestions($event)" />
+          @focus="typingTerms" />
         <div class="input-group-append">
           <a v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" :href="operatorLinks" target="_blank" title="Tips to improve searching" v-b-tooltip.bottomleft>
             <fa icon="question-circle" />
@@ -24,16 +22,25 @@
             {{ $t('search.buttonlabel') }}
           </button>
         </div>
-        <div class="search-bar__suggestions dropdown-menu" :class="{ show: !!suggestions.length }">
-          <a class="dropdown-item search-bar__suggestions__item px-3 d-flex" v-for="({ key, doc_count }, index) in suggestions" :key="key" @click="selectTerm(key)" :class="{ active: index === activeSuggestionIndex }">
-            <div class="flex-grow-1 text-truncate">
-              <span v-html="injectTermInQuery(key)"></span>
+
+        <selectable-dropdown class="search-bar__suggestions dropdown-menu"
+          ref="suggestions"
+          @input="selectTerm"
+          @click="submit"
+          @deactivate="hideSuggestions"
+          :hide="!suggestions.length"
+          :items="suggestions">
+          <template v-slot:item-label="{ item }">
+            <div class="d-flex">
+              <div class="flex-grow-1 text-truncate">
+                <span v-html="injectTermInQuery(item.key)"></span>
+              </div>
+              <div>
+                <span class="badge badge-pill badge-light">{{ item.doc_count }}</span>
+              </div>
             </div>
-            <div>
-              <span class="badge badge-pill badge-light">{{ doc_count }}</span>
-            </div>
-          </a>
-        </div>
+          </template>
+        </selectable-dropdown>
       </div>
       <div class="px-0 pl-2" v-if="settings">
         <search-settings placement="bottomleft" :container="uniqueId" />
@@ -78,6 +85,9 @@ function escapeLucenneChars(str) {
   return some(escapable, char => str.indexOf(char) > -1) ? JSON.stringify(str) : str
 }
 
+// Enter, Escape, Arrow Up, Arrow Down
+const IGNORED_KEYS = [13, 38, 40]
+
 export default {
   name: 'SearchBar',
   props: {
@@ -103,8 +113,7 @@ export default {
       query: this.$store.state.search.query,
       field: this.$store.state.search.field,
       operatorLinks: settings.documentationLinks.operators.default,
-      suggestions: [],
-      activeSuggestionIndex: -1
+      suggestions: []
     }
   },
   mounted () {
@@ -178,13 +187,22 @@ export default {
         return this.query
       }
     },
-    typingTerms: throttle(async function () {
+    selectTerm (term) {
+      this.query = term ? this.injectTermInQuery(term.key, null, false) : this.query
+    },
+    typingTerms: throttle(async function (event) {
+      // Skip arrow keys and escape
+      if (IGNORED_KEYS.indexOf(event.which) > -1) return
+      // Escape will close the suggestions
+      if (event.which === 27) return this.hideSuggestions()
+
       try {
         this.activeSuggestionIndex = -1
         if (this.suggestionsAllowed) {
           const { suggestions, query } = await this.suggestTerms(this.termCandidates())
           // Is the query still valid
           this.suggestions = query === this.query ? suggestions : []
+          this.$refs.suggestions.activeItemIndexes = []
         } else {
           this.suggestions = []
         }
@@ -192,14 +210,6 @@ export default {
         this.hideSuggestions()
       }
     }, 200),
-    selectTerm(term) {
-      this.query = this.injectTermInQuery(term, null, false)
-      this.submit()
-    },
-    selectActiveTerm() {
-      const { key } = this.suggestions[this.activeSuggestionIndex]
-      this.query = this.injectTermInQuery(key, null, false)
-    },
     hideSuggestions () {
       this.suggestions = []
     },
@@ -207,30 +217,6 @@ export default {
       setTimeout(() => {
         this.$nextTick(this.hideSuggestions)
       }, 200)
-    },
-    navigateSuggestions (event) {
-      // Skip this method if the input doesn't have the focus
-      if (event.target === document.activeElement) {
-        switch (event.srcKey) {
-          case 'up':
-            this.activatePreviousSuggestion()
-            break
-          case 'down':
-            this.activateNextSuggestion()
-            break
-          case 'esc':
-            this.hideSuggestions()
-            break
-        }
-      }
-    },
-    activatePreviousSuggestion () {
-      this.activeSuggestionIndex = Math.max(this.activeSuggestionIndex - 1, 0)
-      this.selectActiveTerm()
-    },
-    activateNextSuggestion () {
-      this.activeSuggestionIndex = Math.min(this.activeSuggestionIndex + 1, this.suggestions.length - 1)
-      this.selectActiveTerm()
     }
   },
   computed: {
@@ -319,15 +305,19 @@ export default {
       border-left: 0;
     }
 
-    &__suggestions {
-      position: absolute;
+    & &__suggestions.dropdown-menu {
+      position: absolute !important;
       top: 100%;
       left: 0;
       right: 0;
+    }
+
+    &__suggestions {
+
       margin-top: $dropdown-spacer;
       box-shadow: $dropdown-box-shadow;
 
-      & &__item.dropdown-item {
+      & .dropdown-item {
         cursor: pointer;
 
         &:active, &:focus, &.active {
