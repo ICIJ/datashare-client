@@ -316,7 +316,8 @@
       "level_08": "8th",
       "level_09": "9th",
       "level_10": "10th"
-    }
+    },
+    "tags": "Tags"
   },
   "document": {
     "name": "File name",

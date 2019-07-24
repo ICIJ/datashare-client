@@ -33,6 +33,7 @@ export function initialState () {
     globalSearch: true,
     facets: [
       new FacetYesNo('starred', '_id', false, item => get(starredLabel, item.key, '')),
+      new FacetText('tags', 'tags', true),
       new FacetText('content-type', 'contentType', true, item => getDocumentTypeLabel(item.key)),
       new FacetText('language', 'language', false, item => `facet.lang.${item.key}`),
       new FacetNamedEntity('named-entity-person', 'byMentions', true, namedEntityCategoryTranslation['named-entity-person']),
