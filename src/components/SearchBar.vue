@@ -26,7 +26,7 @@
         <selectable-dropdown class="search-bar__suggestions dropdown-menu"
           ref="suggestions"
           @input="selectTerm"
-          @click="submit"
+          @click.native="submit"
           @deactivate="hideSuggestions"
           :hide="!suggestions.length"
           :items="suggestions">
