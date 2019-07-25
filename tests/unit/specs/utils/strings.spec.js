@@ -1,4 +1,4 @@
-import { sliceIndexes, highlight } from '@/utils/strings'
+import { sliceIndexes, highlight, addLocalSearchMarks } from '@/utils/strings'
 import escape from 'lodash/escape'
 
 describe('sliceIndexes', () => {
@@ -82,5 +82,72 @@ describe('highlight', () => {
   it('should return one mark with custom rest function', () => {
     expect(highlight('say hi to </the> world', [{ content: 'hi', index: 4 }], m => m.content, r => escape(r)))
       .toEqual('say hi to &lt;/the&gt; world')
+  })
+})
+
+describe('addLocalSearchMarks', () => {
+  it('should wrap "dolor" with tags in string without HTML', () => {
+    const { content } = addLocalSearchMarks('Lorem ipsum dolor', 'dolor')
+    expect(content).toBe('Lorem ipsum <mark class="local-search-term">dolor</mark>')
+  })
+
+  it('shouldn\'t wrap anything', () => {
+    const { content } = addLocalSearchMarks('Lorem ipsum dolor', 'sit amet')
+    expect(content).toBe('Lorem ipsum dolor')
+  })
+
+  it('should wrap "DOLOR" with tags in string without HTML', () => {
+    const { content } = addLocalSearchMarks('Lorem ipsum DOLOR', 'dolor')
+    expect(content).toBe('Lorem ipsum <mark class="local-search-term">DOLOR</mark>')
+  })
+
+  it('should wrap "DOLOR" with tags in uppercase string without HTML', () => {
+    const { content } = addLocalSearchMarks('LOREM IPSUM DOLOR', 'dolor')
+    expect(content).toBe('LOREM IPSUM <mark class="local-search-term">DOLOR</mark>')
+  })
+
+  it('should wrap "dolor" with tags string without HTML even with a toekn in uppercase', () => {
+    const { content } = addLocalSearchMarks('Lorem ipsum dolor', 'DOLOR')
+    expect(content).toBe('Lorem ipsum <mark class="local-search-term">dolor</mark>')
+  })
+
+  it('should wrap "Lorem ipsum" with tags string without HTML even with a toekn in camelcase', () => {
+    const { content } = addLocalSearchMarks('Lorem ipsum dolor', 'Lorem Ipsum')
+    expect(content).toBe('<mark class="local-search-term">Lorem ipsum</mark> dolor')
+  })
+
+  it('should wrap "Lorem" with tags in string without HTML', () => {
+    const { content } = addLocalSearchMarks('Lorem ipsum dolor', 'Lorem')
+    expect(content).toBe('<mark class="local-search-term">Lorem</mark> ipsum dolor')
+  })
+
+  it('should wrap "dolor" with tags in string with HTML', () => {
+    const { content } = addLocalSearchMarks('Lorem <strong>ipsum</strong> dolor', 'dolor')
+    expect(content).toBe('Lorem <strong>ipsum</strong> <mark class="local-search-term">dolor</mark>')
+  })
+
+  it('should wrap "ipsum" with tags in string with HTML', () => {
+    const { content } = addLocalSearchMarks('Lorem <strong>ipsum</strong> dolor', 'ipsum')
+    expect(content).toBe('Lorem <strong><mark class="local-search-term">ipsum</mark></strong> dolor')
+  })
+
+  it('should wrap "ipsum" with tags in string with HTML, wrapped with a span', () => {
+    const { content } = addLocalSearchMarks('<span>Lorem <strong>ipsum</strong> dolor</span>', 'ipsum')
+    expect(content).toBe('<span>Lorem <strong><mark class="local-search-term">ipsum</mark></strong> dolor</span>')
+  })
+
+  it('should wrap "dolor" in a deeply nested string', () => {
+    const { content } = addLocalSearchMarks('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>', 'dolor')
+    expect(content).toBe('<i>Lorem</i> <strong>ipsum <span><mark class="local-search-term">dolor</mark></span></strong>')
+  })
+
+  it('should wrap "Lorem" in a deeply nested string', () => {
+    const { content } = addLocalSearchMarks('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>', 'lorem')
+    expect(content).toBe('<i><mark class="local-search-term">Lorem</mark></i> <strong>ipsum <span>dolor</span></strong>')
+  })
+
+  it('shouldn\'t wrap "Lorem ipsum" in different tags', () => {
+    const { content } = addLocalSearchMarks('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>', 'Lorem ipsum')
+    expect(content).toBe('<i>Lorem</i> <strong>ipsum <span>dolor</span></strong>')
   })
 })

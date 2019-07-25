@@ -2,6 +2,48 @@ import identity from 'lodash/identity'
 import map from 'lodash/map'
 import takeRight from 'lodash/takeRight'
 import zip from 'lodash/zip'
+import cheerio from 'cheerio'
+
+export function escapeRegExp (str) {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+}
+
+export function replaceInChildNodes (element, needle, replacement) {
+  if (element.type === 'text') {
+    const index = element.parent.children.indexOf(element)
+    const node = cheerio(element.parent.children[index])
+    node.replaceWith(element.nodeValue.replace(needle, replacement))
+  } else if (element.type === 'tag') {
+    element.childNodes.forEach(child => replaceInChildNodes(child, needle, replacement))
+  } else {
+    element.toArray().forEach(child => replaceInChildNodes(child, needle, replacement))
+  }
+}
+
+export function addLocalSearchMarks (content, localSearchTerm = '') {
+  const escapedLocalSearchTerm = escapeRegExp(localSearchTerm)
+  const localSearchOccurrences = (content.match(new RegExp('(?![^<]*>)' + escapedLocalSearchTerm, 'gi')) || []).length
+  const localSearchIndex = Number(!!localSearchOccurrences)
+
+  try {
+    if (localSearchOccurrences === 0) throw new Error()
+
+    const needle = RegExp(`(${escapedLocalSearchTerm})`, 'gim')
+    const dom = cheerio.load(content || '<div></div>')
+    if (!dom) throw new Error()
+
+    replaceInChildNodes(dom('body'), needle, '<mark class="local-search-term">$1</mark>')
+
+    return {
+      content: dom('body').html(),
+      localSearchIndex,
+      localSearchOccurrences
+    }
+  // Silently fails
+  } catch (error) {
+    return { content, localSearchIndex, localSearchOccurrences }
+  }
+}
 
 export function sliceIndexes (str, indexes) {
   if (str.length === 0) return []

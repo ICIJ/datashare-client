@@ -1,44 +1,6 @@
-import map from 'lodash/map'
-import { DOMParser } from 'xmldom'
+
 import FakeWorker from './fake-worker.js'
-
-function escapeRegExp (str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
-
-function replaceInChildNodes (element, needle, replacement) {
-  if (element.nodeName === '#text') {
-    return element.nodeValue.replace(needle, replacement)
-  } else {
-    const html = map(element.childNodes, child => {
-      return replaceInChildNodes(child, needle, replacement)
-    })
-    element.innerHTML = html.join('')
-  }
-  return element.outerHTML
-}
-
-function addLocalSearchMarks (content = '', localSearchTerm = '') {
-  const escapedLocalSearchTerm = escapeRegExp(localSearchTerm)
-  const localSearchOccurrences = (content.match(new RegExp('(?![^<]*>)' + escapedLocalSearchTerm, 'gi')) || []).length
-  const localSearchIndex = Number(!!localSearchOccurrences)
-
-  if (localSearchOccurrences === 0) {
-    return { content, localSearchIndex, localSearchOccurrences }
-  }
-
-  const needle = RegExp(`(${escapedLocalSearchTerm})`, 'gim')
-  const parser = new DOMParser()
-  const dom = parser.parseFromString(content, 'text/html')
-
-  replaceInChildNodes(dom.body || dom, needle, '<mark class="local-search-term">$1</mark>')
-
-  return {
-    content: dom.innerHTML,
-    localSearchIndex,
-    localSearchOccurrences
-  }
-}
+import { addLocalSearchMarks } from './strings.js'
 
 self.addEventListener('message', ({ data }) => {
   const result = addLocalSearchMarks(data.content, data.localSearchTerm)
