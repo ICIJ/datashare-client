@@ -2,8 +2,7 @@
   <div class="search" :class="{ 'search--show-document': showDocument }">
     <div class="px-0 search__body">
       <div class="search__body__wrapper">
-        <aggregations-panel class="search__body__aggregations-panel" />
-        <div class="search__body__search-results my-3 ml-3">
+        <div class="search__body__search-results mb-3 ml-3">
           <div v-if="!!error" class="py-5 text-center">
             {{ errorMessage }}
           </div>
@@ -15,20 +14,17 @@
           </div>
         </div>
       </div>
-      <transition>
-        <div class="search__body__document " :class="showFilters ? 'show-filters' : 'show-filters'" v-show="showDocument">
-          <search-document-navbar />
-          <router-view class="search__body__document__view"></router-view>
-          <router-link :to="{ name: 'search', query: toRouteQuery }" class="search__body__document__backdrop" />
-        </div>
-      </transition>
+      <div class="search__body__document" :class="showFilters ? 'show-filters' : 'show-filters'" v-show="showDocument">
+        <search-document-navbar />
+        <router-view class="search__body__document__view"></router-view>
+      </div>
+      <router-link v-if="showDocument" class="search__body__backdrop" :to="{ name: 'search', query: toRouteQuery }"></router-link>
     </div>
   </div>
 </template>
 
 <script>
 import get from 'lodash/get'
-import AggregationsPanel from '@/components/AggregationsPanel'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import SearchResults from '@/components/SearchResults'
 import { mapState } from 'vuex'
@@ -37,7 +33,6 @@ import { errors as esErrors } from 'elasticsearch-browser'
 export default {
   name: 'Search',
   components: {
-    AggregationsPanel,
     SearchDocumentNavbar,
     SearchResults
   },
@@ -120,15 +115,8 @@ export default {
 
       &__wrapper {
         display: flex;
-        float: left;
         align-items: flex-start;
         min-height: calc(100vh - var(--app-nav-height) - var(--app-footer-height));
-      }
-
-      &__aggregations-panel {
-        position: relative;
-        width: $aggregations-panel-width;
-        z-index: 20;
       }
 
       &__search-results {
@@ -140,31 +128,43 @@ export default {
         min-height: 100%;
         overflow: auto;
         border-radius: $card-border-radius;
-      }
 
-      &__aggregations-panel, &__search-results, &__document {
-        align-self: flex-end;
         position: sticky;
+        align-self: flex-end;
         bottom: var(--app-footer-height);
         min-height: calc(100vh - var(--app-footer-height));
+      }
+
+      &__backdrop {
+        cursor: pointer;
+        z-index: 10;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        width: 100%;
+        background: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
+        display: none;
+
+        @media (max-width: $document-float-breakpoint-width) {
+          display: block;
+        }
       }
 
       & &__document {
         padding: 0;
         width: 100%;
-        max-width: calc(100% - #{$search-results-width} - #{$aggregations-panel-width});
+        max-width: calc(100% - #{$search-results-width});
         border-radius: $card-border-radius;
-
-        &.slide-right-enter-active, &.slide-right-leave-active {
-          transition: .3s;
-        }
-
-        &.slide-right-enter, &.slide-right-leave-to {
-          opacity: 0;
-          transform: translateX(100%);
-        }
+        align-self: start;
+        z-index: 100;
+        position: sticky;
+        top: 0;
+        right: 0;
+        padding: 0;
+        margin: 0;
 
         .document {
+          min-height: 100vh;
           box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
         }
 
@@ -179,28 +179,11 @@ export default {
         }
 
         @media (max-width: $document-float-breakpoint-width) {
-          display: block;
-          z-index: 100;
-          position: sticky;
-          right: 0;
-          padding: 0;
-          margin: 0;
-          min-width: $document-min-width;
-          max-width: calc(100vw - #{$spacer});
-          min-height: 100vh;
+          margin-top: calc(-1 * var(--app-nav-height));
+          min-width: calc(100% - #{$search-results-width * 0.5});
+          max-width: calc(100vw - #{$document-min-width} - var(--app-sidebar-width));
           background: white;
           border-radius: 0;
-
-          &__backdrop {
-            cursor: auto;
-            z-index: -1;
-            position: absolute;
-            right: 100%;
-            top: 0;
-            bottom: 0;
-            width: calc(100vw - #{$document-min-width});
-            background: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
-          }
         }
 
         @media (max-width: $document-min-width) {

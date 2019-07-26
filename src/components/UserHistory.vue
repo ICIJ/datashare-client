@@ -61,16 +61,16 @@ export default {
 
 <style lang="scss">
   .user-history {
-    color: white;
     font-size: 0.8rem;
-    background: #222;
+    background: $app-footer-bg;
+    color: $app-footer-color;
     max-height: 60vh;
     overflow: auto;
     position: relative;
 
     &__header {
       z-index: 100;
-      background: #222;
+      background: $app-footer-bg;
       position: sticky;
       top:0;
     }

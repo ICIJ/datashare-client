@@ -6,6 +6,7 @@ import { faAngleDown } from '@fortawesome/free-solid-svg-icons/faAngleDown'
 import { faAngleLeft } from '@fortawesome/free-solid-svg-icons/faAngleLeft'
 import { faAngleRight } from '@fortawesome/free-solid-svg-icons/faAngleRight'
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons/faAngleUp'
+import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft'
 import { faBan } from '@fortawesome/free-solid-svg-icons/faBan'
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
 import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt'
@@ -36,9 +37,11 @@ import { faInfoCircle } from '@fortawesome/free-solid-svg-icons/faInfoCircle'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons/faIdBadge'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons/faLanguage'
+import { faLayerGroup } from '@fortawesome/free-solid-svg-icons/faLayerGroup'
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons/faMapMarkerAlt'
 import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus'
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
+import { faQuestion } from '@fortawesome/free-solid-svg-icons/faQuestion'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle'
 import { faRedo } from '@fortawesome/free-solid-svg-icons/faRedo'
 import { faRocket } from '@fortawesome/free-solid-svg-icons/faRocket'
@@ -69,6 +72,7 @@ library.add(
   faAngleLeft,
   faAngleRight,
   faAngleUp,
+  faArrowLeft,
   faBars,
   faBan,
   faBolt,
@@ -99,9 +103,11 @@ library.add(
   faIdBadge,
   faInfoCircle,
   faLanguage,
+  faLayerGroup,
   faMapMarkerAlt,
   faMinus,
   faPlus,
+  faQuestion,
   faQuestionCircle,
   faRedo,
   faRocket,

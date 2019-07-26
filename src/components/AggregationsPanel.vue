@@ -2,7 +2,7 @@
   <transition name="slide-left">
     <div class="aggregations-panel" v-show="showFilters">
       <div class="aggregations-panel__sticky w-100">
-        <div class="aggregations-panel__sticky__toolbar bg-dark text-white">
+        <div class="aggregations-panel__sticky__toolbar border d-none">
           <ul class="nav">
             <li class="nav-item border-right">
               <button class="nav-link text-white font-weight-bold p-2 btn btn-sm" @click="hideFilters()" id="btn-hide-filters">
@@ -144,10 +144,18 @@ export default {
 
 <style lang="scss">
   .aggregations-panel {
+    $panel-bg: lighten($app-bg, 10%);
+    $card-bg: darken($panel-bg, 5%);
+    $panel-color: white;
 
+    background: $panel-bg;
+    color: $panel-color;
     display: flex;
     align-items: flex-start;
     padding-bottom: $spacer;
+    padding-right: $spacer;
+    width:100%;
+    max-width: $aggregations-panel-width;
 
     &.slide-left-enter-active, &.slide-left-leave-active {
       transition: .3s;
@@ -179,6 +187,7 @@ export default {
       & > .card {
         margin: $spacer 0 0 $spacer;
         border-width: 0;
+        background: $card-bg;
 
         .card-header {
           position: sticky;
@@ -192,33 +201,38 @@ export default {
             font-weight: bolder;
             margin-bottom: 0;
             padding-top: $spacer * .25;
-            text-transform: uppercase;
-            color: $gray-500;
             background: transparent;
             cursor: pointer;
+            font-size: 0.9rem;
+            color: rgba(white, 0.6);
           }
         }
 
         & > .list-group,
         & > .card-body {
           font-size: 0.8rem;
-          color: $body-color;
+          color: inherit;
           padding:0;
+        }
+
+        .list-group-item {
+          background: $card-bg;
         }
 
         & > .list-group {
 
+
           .facet__items {
 
             &__search {
-              color: $gray-500;
               display: flex;
               flex-direction: row;
               position: relative;
-              background: $gray-100;
+              background: darken($card-bg, 5);
               border: 0;
 
               > input {
+                color: $panel-color;
                 border: none;
                 width: 90%;
                 background: transparent;
@@ -231,6 +245,10 @@ export default {
 
             &__display {
               cursor: pointer;
+            }
+
+            &__item {
+              background: inherit;
             }
           }
         }

@@ -169,12 +169,12 @@ export default {
     z-index: $zindex-fixed;
     position: fixed;
     bottom: 0;
-    left: 0;
-    width: 100%;
+    right: 0;
+    left: var(--app-sidebar-width);
     height: $app-footer-height;
-    color: white;
     font-size: 0.8rem;
-    background: #222;
+    background: $app-footer-bg;
+    color: $app-footer-color;
 
     &__addon {
       padding: 0 .5em;
@@ -183,7 +183,7 @@ export default {
       align-items: center;
 
       &--analyze-documents.btn {
-        border-left: 1px solid  rgba(white, .1);
+        border-left: 1px solid  rgba($app-footer-color, .1);
       }
 
       &--homedir {
@@ -198,7 +198,7 @@ export default {
       &--locale {
         .btn, .btn:hover, .btn:focus {
           border: none;
-          color: white;
+          color: $app-footer-color;
           text-decoration: none;
         }
 

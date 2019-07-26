@@ -256,6 +256,7 @@ export default {
 
     &__field {
       border-left: dashed 1px  $input-border-color;
+      background: $input-bg;
 
       &--selected:after {
         content:"";

@@ -150,7 +150,7 @@ export default {
     position: sticky;
     top: 0;
     z-index: 100;
-    margin: $spacer $spacer 0;
+    margin: 0 $spacer 0;
     border-radius: $card-border-radius $card-border-radius 0 0;
 
     @media (max-width: $document-float-breakpoint-width) {

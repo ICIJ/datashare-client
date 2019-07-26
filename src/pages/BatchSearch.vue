@@ -122,18 +122,22 @@ export default {
       margin: 0;
     }
 
-     & &__form {
+     & .batch-search-form {
        min-width: 1;
        flex:0 0 440px;
 
        .card {
          border: 2px solid $tertiary;
-         box-shadow: 0 0 10px 0 rgba($dark, .2);
+         box-shadow: 0 0 10px 0 rgba($dark, .1);
        }
     }
 
+    &__explaination {
+      padding: $spacer * 3 0;
+    }
+
     &__items {
-      position: relative;
+      position: static;
       margin-top: $spacer;
       border-radius: $card-border-radius 0 0 0;
       background: white;
@@ -144,6 +148,7 @@ export default {
       }
 
       .batch-search-results {
+        z-index: 100;
         position: absolute;
         right: 0;
         top: 0;
@@ -153,7 +158,7 @@ export default {
         max-width: 660px;
         background: white;
         padding: $spacer 0;
-        border-radius: $card-border-radius 0 0 0;
+        border-radius: 20px 0 0 0;
         box-shadow: 0 0 10px 0 rgba($dark, .2);
       }
     }

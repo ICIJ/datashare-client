@@ -5,14 +5,10 @@
     </transition>
     <div class="app__nav__container row no-gutters">
       <div class="app__nav__container__main col d-flex">
-        <router-link class="app__nav__container__main__brand d-flex justify-content-start align-items-center" :to="{ name: 'landing' }">
-          <img src="~images/logo-color.svg" alt="Datashare" class="app__nav__container__main__brand__logo app__nav__container__main__brand__logo--normal" />
-          <img src="~images/logo-color-symbol.svg" alt="Datashare" class="app__nav__container__main__brand__logo app__nav__container__main__brand__logo--symbol" />
-          <span class="app__nav__container__main__brand__beta mr-3">beta</span>
-        </router-link>
-        <div class="app__nav__container__main__search-bar flex-grow-1" v-if="isntLanding()">
+        <div class="app__nav__container__main__search-bar flex-grow-1 px-3" v-if="isntLanding()">
           <search-bar class="px-0" settings />
         </div>
+        <!--
         <a class="app__nav__container__main__hamburger px-3 ml-auto" @click.prevent="toggleMenu()" href="#">
           <fa icon="bars" />
         </a>
@@ -45,6 +41,7 @@
             </a>
           </li>
         </ul>
+        -->
       </div>
     </div>
   </header>
@@ -109,12 +106,11 @@ export default {
 
 <style lang="scss">
   .app__nav {
-    z-index: $zindex-fixed;
+    z-index: 100;
     position: relative;
     width: 100%;
     color: $body-color;
     width: auto;
-    box-shadow: 0 2px 10px 0 rgba(black,.05);
 
     &__mask {
       background: rgba(black, 0.5);
@@ -130,68 +126,14 @@ export default {
       &__main {
         position:relative;
         z-index: $zindex-fixed + 30;
-        background:white;
+        border-radius: $border-radius-lg 0 0 0;
         min-height: var(--app-nav-height);
         white-space: nowrap;
-
-        &__brand, &__brand:hover, &__brand:focus, &__brand {
-          color: inherit;
-          padding: $spacer;
-          pointer-events: auto;
-          max-width: $aggregations-panel-width;
-          margin-right: $spacer;
-          width: 100%;
-          font-size: 1.5rem;
-          text-decoration: none;
-
-          @media (max-width: $document-float-breakpoint-width) {
-            margin-right: 0;
-            max-width: 100%;
-            width: auto;
-          }
-        }
-
-        &__brand__logo {
-          color: black;
-          height: $app-nav-brand-height;
-
-          &--normal {
-            display: inline-block;
-
-            @media (max-width: $document-float-breakpoint-width) {
-              display: none;
-            }
-          }
-
-          &--symbol {
-            display: none;
-
-            @media (max-width: $document-float-breakpoint-width) {
-              display: inline-block;
-            }
-          }
-        }
-
-        &__brand__beta {
-          font-size: .6em;
-          background: $saddle-red;
-          padding: .05em .2em;
-          display: inline-block;
-          height: auto;
-          color: white;
-          position: relative;
-          top: -0.5em;
-          margin-left: 0.5em;
-
-          @media (max-width: $document-float-breakpoint-width) {
-            display: none;
-          }
-        }
 
         &__search-bar {
           position: relative;
           padding: 0;
-          max-width: 770px;
+          // max-width: calc(#{$aggregations-panel-width + $search-results-width} + #{$spacer});
         }
 
         & &__hamburger {
