@@ -54,8 +54,10 @@ export const actions = {
       })
     } catch (e) {}
   },
-  getBatchSearch ({ commit }, batchId) {
-    return datashare.getBatchSearch(batchId).then(r => r.clone().json()).then(batchSearch => commit('batchSearch', batchSearch))
+  async getBatchSearchResults ({ commit }, batchId) {
+    const batchSearch = await datashare.getBatchSearchResults(batchId).then(r => r.clone().json())
+    commit('batchSearch', batchSearch)
+    return batchSearch
   }
 }
 

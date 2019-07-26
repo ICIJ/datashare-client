@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     documents () {
-      return reverse(this.$store.getters['userHistory/getDocuments']())
+      return reverse(this.$store.getters['userHistory/getDocuments']().slice(-100))
     }
   },
   methods: {

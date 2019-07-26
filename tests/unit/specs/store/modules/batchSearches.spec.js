@@ -46,13 +46,12 @@ describe('BatchSearch store', () => {
 
       await store.dispatch('batchSearch/onSubmit')
 
-      const form = new FormData()
-      form.append('name', 'name')
-      form.append('description', 'description')
-      form.append('csvFile', 'csvFile')
+      const body = new FormData()
+      body.append('name', 'name')
+      body.append('description', 'description')
+      body.append('csvFile', 'csvFile')
       expect(datashare.fetch).toHaveBeenCalledTimes(2)
-      expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search/index'),
-        { method: 'POST', body: form })
+      expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search/index'), { method: 'POST', body })
       expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})
     })
 
@@ -87,7 +86,7 @@ describe('BatchSearch store', () => {
       const batchSearch = { uuid: '42' }
       datashare.fetch.mockReturnValue(jsonOk(batchSearch))
 
-      await store.dispatch('batchSearch/getBatchSearch', 1)
+      await store.dispatch('batchSearch/getBatchSearchResults', 1)
 
       expect(store.state.batchSearch.batchSearch).toEqual(batchSearch)
     })

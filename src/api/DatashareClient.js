@@ -71,7 +71,7 @@ export class DatashareClient {
   getBatchSearches () {
     return this.sendAction('/api/batch/search')
   }
-  getBatchSearch (batchId) {
+  getBatchSearchResults (batchId) {
     return this.sendAction(`/api/batch/search/result/${encodeURIComponent(batchId)}`)
   }
   static getFullUrl (path) {

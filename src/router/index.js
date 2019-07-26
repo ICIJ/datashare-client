@@ -67,14 +67,17 @@ const router = new VueRouter({
           component: Indexing
         },
         {
-          name: 'batchsearch',
+          name: 'batch-search',
           path: 'batch-search',
-          component: BatchSearch
-        },
-        {
-          name: 'batchsearchresults',
-          path: 'batch-search/:index/:id',
-          component: BatchSearchResults
+          component: BatchSearch,
+          children: [
+            {
+              name: 'batch-search.results',
+              path: ':index/:uuid',
+              component: BatchSearchResults,
+              props: true
+            }
+          ]
         }
       ]
     },

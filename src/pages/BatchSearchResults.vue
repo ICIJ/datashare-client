@@ -1,17 +1,20 @@
 <template>
-  <div class="batchsearchresults container container-fluid">
-    <div class="batchsearchresults__title my-3">
-      <h3>
-        {{ $t('batchSearchResults.title') }}
+  <div class="batch-search-results">
+    <div class="d-flex my-2 mx-3">
+      <h3 class="text-truncate flex-grow-1">
+        {{ meta.name }}
       </h3>
+      <router-link :to="{ name: 'batch-search' }" class="p-2">
+        <fa icon="times" size="lg" />
+      </router-link>
     </div>
-    <div class="batchsearchresults__queries">
-      <b-table striped hover bordered :fields="fields" :items="batchSearch" tbody-tr-class="batchsearchresults__queries__query">
+    <div class="batch-search-results__queries">
+      <b-table striped hover bordered :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query">
         <template #documentNumber="row">
           {{ row.item.documentNumber + 1 }}
         </template>
         <template #documentPath="row">
-          <router-link :to="{ name: 'document', params: { index: $route.params.index, id: row.item.documentId, routing: row.item.rootId } }" target="_blank" class="batchsearchresults__queries__query__link">
+          <router-link :to="{ name: 'document', params: { index: $route.params.index, id: row.item.documentId, routing: row.item.rootId } }" target="_blank" class="batch-search-results__queries__query__link">
             {{ getFileName(row.item.documentPath) }}
           </router-link>
         </template>
@@ -24,15 +27,24 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import store from '@/store'
 import moment from 'moment'
 import last from 'lodash/last'
+import find from 'lodash/find'
 
 export default {
   name: 'BatchSearchResults',
+  props: {
+    uuid: {
+      type: String
+    },
+    index: {
+      type: String
+    }
+  },
   data () {
     return {
+      results: [],
       fields: [
         {
           key: 'documentNumber',
@@ -56,17 +68,20 @@ export default {
       ]
     }
   },
-  computed: {
-    ...mapState('batchSearch', ['batchSearch'])
-  },
-  beforeRouteEnter (to, from, next) {
-    return store.dispatch('batchSearch/getBatchSearch', to.params.id).then(() => next())
+  async beforeRouteEnter (to, from, next) {
+    const results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid)
+    next(vm => { vm.results = results })
   },
   methods: {
     getFileName (documentPath) {
       return last(documentPath.split('/'))
     },
     moment
+  },
+  computed: {
+    meta () {
+      return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || { }
+    }
   }
 }
 </script>
