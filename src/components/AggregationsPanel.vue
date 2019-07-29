@@ -144,11 +144,10 @@ export default {
 
 <style lang="scss">
   .aggregations-panel {
-    $panel-bg: lighten($app-bg, 10%);
-    $card-bg: darken($panel-bg, 5%);
+    $card-bg: darken($aggregations-panel-bg, 5%);
     $panel-color: white;
 
-    background: $panel-bg;
+    background: $aggregations-panel-bg;
     color: $panel-color;
     display: flex;
     align-items: flex-start;
@@ -156,6 +155,7 @@ export default {
     padding-right: $spacer;
     width:100%;
     max-width: $aggregations-panel-width;
+    min-height: calc(100vh -  var(--app-footer-height));
 
     &.slide-left-enter-active, &.slide-left-leave-active {
       transition: .3s;
@@ -192,7 +192,7 @@ export default {
         .card-header {
           position: sticky;
           top: 0;
-          z-index: 100;
+          z-index: 10;
           border-width: 0;
           background: inherit;
           border-radius: $card-border-radius;

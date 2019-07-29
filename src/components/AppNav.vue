@@ -106,7 +106,7 @@ export default {
 
 <style lang="scss">
   .app__nav {
-    z-index: 100;
+    z-index: 10;
     position: relative;
     width: 100%;
     color: $body-color;
@@ -133,7 +133,6 @@ export default {
         &__search-bar {
           position: relative;
           padding: 0;
-          // max-width: calc(#{$aggregations-panel-width + $search-results-width} + #{$spacer});
         }
 
         & &__hamburger {

@@ -1,23 +1,25 @@
 <template>
   <div class="search" :class="{ 'search--show-document': showDocument }">
     <div class="px-0 search__body">
-      <div class="search__body__wrapper">
-        <div class="search__body__search-results mb-3 ml-3">
-          <div v-if="!!error" class="py-5 text-center">
-            {{ errorMessage }}
-          </div>
-          <search-results v-else-if="isReady" :response="response" :query.sync="query" />
-          <div v-else>
-            <content-placeholder />
-            <content-placeholder />
-            <content-placeholder />
-          </div>
+      <vue-perfect-scrollbar class="search__body__search-results">
+        <div v-if="!!error" class="py-5 text-center">
+          {{ errorMessage }}
         </div>
-      </div>
-      <div class="search__body__document" :class="showFilters ? 'show-filters' : 'show-filters'" v-show="showDocument">
-        <search-document-navbar />
-        <router-view class="search__body__document__view"></router-view>
-      </div>
+        <search-results v-else-if="isReady" :response="response" :query.sync="query" />
+        <div v-else>
+          <content-placeholder />
+          <content-placeholder />
+          <content-placeholder />
+        </div>
+      </vue-perfect-scrollbar>
+      <transition name="slide-right">
+        <div class="search__body__document d-flex flex-column" v-if="showDocument">
+          <search-document-navbar />
+          <vue-perfect-scrollbar class="flex-grow-1">
+            <router-view class="search__body__document__view" />
+          </vue-perfect-scrollbar>
+        </div>
+      </transition>
       <router-link v-if="showDocument" class="search__body__backdrop" :to="{ name: 'search', query: toRouteQuery }"></router-link>
     </div>
   </div>
@@ -29,12 +31,14 @@ import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import SearchResults from '@/components/SearchResults'
 import { mapState } from 'vuex'
 import { errors as esErrors } from 'elasticsearch-browser'
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'Search',
   components: {
     SearchDocumentNavbar,
-    SearchResults
+    SearchResults,
+    VuePerfectScrollbar
   },
   data () {
     return {
@@ -53,7 +57,7 @@ export default {
       return this.$store.getters['search/toRouteQuery']
     },
     showDocument () {
-      return ['document', 'email'].indexOf(this.$route.name) > -1
+      return ['document'].indexOf(this.$route.name) > -1
     },
     errorMessage () {
       const defaultMessage = this.$t('search.errors.something-wrong')
@@ -110,34 +114,67 @@ export default {
     @include clearfix();
 
     &__body {
-      display: flex;
-      flex-wrap: nowrap;
+      height: calc(100vh - var(--app-nav-height) - var(--app-footer-height));
+      position: relative;
+      overflow: hidden;
 
-      &__wrapper {
-        display: flex;
-        align-items: flex-start;
-        min-height: calc(100vh - var(--app-nav-height) - var(--app-footer-height));
+      &__document, &__search-results {
+        position: absolute;
+        z-index: 10;
+        top: 0;
+        bottom: $spacer;
       }
 
       &__search-results {
+        left: $spacer;
         background: white;
-        position: relative;
-        z-index: 10;
-        max-width: $search-results-width;
-        min-width: $search-results-width;
-        min-height: 100%;
-        overflow: auto;
+        width: calc(#{$search-results-width}  - #{$spacer * 2});
+        border-radius: $card-border-radius;
+      }
+
+      &__document {
+        right: $spacer;
+        padding: 0;
+        margin: 0;
+
+        width: 100%;
+        max-width: calc(100% - #{$search-results-width} - #{$spacer});
         border-radius: $card-border-radius;
 
-        position: sticky;
-        align-self: flex-end;
-        bottom: var(--app-footer-height);
-        min-height: calc(100vh - var(--app-footer-height));
+
+        &.slide-right-enter-active, &.slide-right-leave-active {
+          transition: .3s;
+        }
+
+        &.slide-right-enter, &.slide-right-leave-to {
+          transform: translateX(100%);
+          opacity: 0;
+        }
+
+
+        .document {
+          min-height: 100vh;
+          box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
+        }
+
+        @media (max-width: $document-float-breakpoint-width) {
+          right: 0;
+          width: $document-min-width;
+          max-width: calc(100vw - var(--app-sidebar-width));
+          background: white;
+          border-radius: 0;
+
+          z-index: 20;
+          position: fixed;
+          top: 0;
+          bottom: var(--app-footer-height);
+          box-shadow: $modal-content-box-shadow-sm-up;
+        }
       }
 
       &__backdrop {
         cursor: pointer;
-        z-index: 10;
+        z-index: 15;
         position: fixed;
         top: 0;
         bottom: 0;
@@ -147,48 +184,6 @@ export default {
 
         @media (max-width: $document-float-breakpoint-width) {
           display: block;
-        }
-      }
-
-      & &__document {
-        padding: 0;
-        width: 100%;
-        max-width: calc(100% - #{$search-results-width});
-        border-radius: $card-border-radius;
-        align-self: start;
-        z-index: 100;
-        position: sticky;
-        top: 0;
-        right: 0;
-        padding: 0;
-        margin: 0;
-
-        .document {
-          min-height: 100vh;
-          box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
-        }
-
-        &__view {
-          padding: $spacer;
-          padding-top: 0;
-
-          @media (max-width: $document-float-breakpoint-width) {
-            padding: 0;
-            box-shadow: $modal-content-box-shadow-sm-up;
-          }
-        }
-
-        @media (max-width: $document-float-breakpoint-width) {
-          margin-top: calc(-1 * var(--app-nav-height));
-          min-width: calc(100% - #{$search-results-width * 0.5});
-          max-width: calc(100vw - #{$document-min-width} - var(--app-sidebar-width));
-          background: white;
-          border-radius: 0;
-        }
-
-        @media (max-width: $document-min-width) {
-          width: 100%;
-          min-width: 100%;
         }
       }
     }

@@ -4,7 +4,9 @@
       <app-sidebar />
     </div>
     <div class="app__main flex-grow-1 d-flex">
-      <aggregations-panel v-if="['search', 'document'].indexOf($route.name) > -1" />
+      <vue-perfect-scrollbar class="app__main__aggregations-panel">
+        <aggregations-panel v-if="['search', 'document'].indexOf($route.name) > -1" />
+      </vue-perfect-scrollbar>
       <div class="flex-grow-1">
         <app-nav v-if="['search', 'document'].indexOf($route.name) > -1" />
         <router-view />
@@ -23,6 +25,7 @@ import AppFooter from '@/components/AppFooter'
 import AppNav from '@/components/AppNav'
 import AppSidebar from '@/components/AppSidebar'
 import ScrollTracker from '@/components/ScrollTracker'
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'App',
@@ -31,7 +34,8 @@ export default {
     AppFooter,
     AppNav,
     AppSidebar,
-    ScrollTracker
+    ScrollTracker,
+    VuePerfectScrollbar
   },
   created () {
     if (process.env.NODE_ENV === 'production') {
@@ -57,6 +61,11 @@ export default {
       mask:  0 0 no-repeat luminance url('../assets/images/corner-top.svg'),
              0 0 no-repeat luminance linear-gradient(white 0%, white 100%);
       mask-composite: exclude;
+
+      &__aggregations-panel {
+        height: calc(100vh -  var(--app-footer-height));
+        background: $aggregations-panel-bg;
+      }
     }
   }
 </style>
