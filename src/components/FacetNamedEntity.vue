@@ -9,7 +9,7 @@
     <template #items="{ items }">
       <b-form-checkbox v-model="isAllSelected" @click.native="resetNamedEntityValues" class="facet__items__all">
         <div class="py-1 facet__items__item__body">
-           <div class="facet__items__item__body__key facet__items__item__body__key--all text-uppercase d-inline badge badge-light">
+           <div class="facet__items__item__body__key facet__items__item__body__key--all text-uppercase d-inline badge">
              {{ $t('facet.all') }}
            </div>
          </div>
@@ -17,7 +17,7 @@
       <div v-for="item in items" :key="item.key" class="facet__items__item d-flex">
         <b-form-checkbox v-model="selected" @change="toggleValue(item)" class="facet__items__item__checkbox w-100 mt-0 mr-0" :value="item.key">
           <div class="py-1 facet__items__item__body">
-            <div class="text-uppercase d-inline facet__items__item__body__key text-truncate badge badge-light"  :class="getCategoryClass(facet.category, 'border-')">
+            <div class="text-uppercase d-inline facet__items__item__body__key text-truncate badge"  :class="getCategoryClass(facet.category, 'border-')">
               {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
             </div>
             <div class="facet__items__item__body__count badge text-light ml-0" :class="getCategoryClass(facet.category, 'bg-')" v-b-tooltip :title="itemTitle(item)">

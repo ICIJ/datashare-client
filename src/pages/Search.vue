@@ -1,5 +1,15 @@
 <template>
   <div class="search" :class="{ 'search--show-document': showDocument }">
+    <div class="d-flex">
+      <transition name="slide-left">
+        <button class="search__show-filters align-self-center ml-3 btn btn-link px-0" @click="clickOnShowFilters()" v-if="!showFilters" :title="$t('search.showFilters')" v-b-tooltip.right>
+          <fa icon="arrow-right" />
+          <span class="sr-only">{{ $t('search.showFilters') }}</span>
+          <span class="search__show-filters__counter badge badge-warning badge-pill" v-if="activeFilters">{{ activeFilters }}</span>
+        </button>
+      </transition>
+      <app-nav class="flex-grow-1" />
+    </div>
     <div class="px-0 search__body">
       <vue-perfect-scrollbar class="search__body__search-results">
         <div v-if="!!error" class="py-5 text-center">
@@ -27,6 +37,7 @@
 
 <script>
 import get from 'lodash/get'
+import AppNav from '@/components/AppNav'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import SearchResults from '@/components/SearchResults'
 import { mapState } from 'vuex'
@@ -36,6 +47,7 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 export default {
   name: 'Search',
   components: {
+    AppNav,
     SearchDocumentNavbar,
     SearchResults,
     VuePerfectScrollbar
@@ -68,6 +80,17 @@ export default {
         }
       }
       return get(this.error, 'body.error.root_cause.0.reason', defaultMessage)
+    },
+    showFilters: {
+      get () {
+        return this.$store.state.search.showFilters
+      },
+      set () {
+        this.$store.commit('search/toggleFilters')
+      }
+    },
+    activeFilters () {
+      return this.$store.getters['search/activeFacets'].length
     }
   },
   beforeRouteUpdate (to, from, next) {
@@ -104,6 +127,9 @@ export default {
     },
     wrongQuery () {
       this.$Progress.finish()
+    },
+    clickOnShowFilters () {
+      this.showFilters = !this.showFilters
     }
   }
 }
@@ -112,6 +138,41 @@ export default {
 <style lang="scss">
   .search {
     @include clearfix();
+
+    &__show-filters.btn {
+      position: relative;
+      display: block;
+      height: 40px;
+      width: 40px;
+      flex-grow: 40px;
+      min-width: 1;
+      text-align: center;
+      line-height: 40px;
+      border-radius: 1.5rem;
+      padding: 0;
+      border-radius: 20px;
+      background: $aggregations-panel-bg;
+      color: white;
+
+      &:hover {
+        background: lighten($aggregations-panel-bg, 10%);
+        color: white;
+      }
+
+      &.slide-left-enter-active, &.slide-left-leave-active {
+        transition: .3s;
+      }
+
+      &.slide-left-enter, &.slide-left-leave-to {
+        width: 0;
+        flex-grow: 0px;
+        opacity: 0;
+      }
+    }
+
+    &__show-filters__counter.badge.badge-pill {
+      position: absolute;
+    }
 
     &__body {
       height: calc(100vh - var(--app-nav-height) - var(--app-footer-height));
@@ -141,7 +202,6 @@ export default {
         max-width: calc(100% - #{$search-results-width} - #{$spacer});
         border-radius: $card-border-radius;
 
-
         &.slide-right-enter-active, &.slide-right-leave-active {
           transition: .3s;
         }
@@ -150,7 +210,6 @@ export default {
           transform: translateX(100%);
           opacity: 0;
         }
-
 
         .document {
           min-height: 100vh;

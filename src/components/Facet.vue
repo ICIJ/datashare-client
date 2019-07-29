@@ -3,7 +3,6 @@
     <slot name="header" v-if="!hideHeader">
       <div class="card-header px-2 d-flex facet__header">
         <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate pt-0">
-          <fa :icon="headerIcon" class="float-right" />
           <template>
             <slot name="title">
               {{ $t('facet.' + facet.name) }}
@@ -11,11 +10,12 @@
           </template>
         </h6>
         <span v-if="hasValues() && !collapseItems && !hideExclude">
-          <button class="d-inline-flex btn btn-sm btn-outline-dark py-0 ml-2 btn-group facet__header__invert" @click="invert" :class="{ 'active': isReversed() }">
+          <button class="d-inline-flex btn btn-sm btn-outline-light py-0 mr-2 btn-group facet__header__invert" @click="invert" :class="{ 'active': isReversed() }">
             <fa icon="eye-slash" class="mr-1 mt-1" />
             {{ $t('facet.invert') }}
           </button>
         </span>
+        <fa :icon="headerIcon"  @click="toggleItems" class="float-right" />
       </div>
     </slot>
     <slide-up-down class="list-group list-group-flush facet__items" :active="!collapseItems">

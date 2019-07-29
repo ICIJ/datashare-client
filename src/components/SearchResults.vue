@@ -1,15 +1,5 @@
 <template>
   <div class="search-results">
-    <transition name="slide-up">
-      <div class="nav search-results__toolbar p-0" v-show="!showFilters">
-        <li class="nav-item">
-          <a class="nav-link font-weight-bold" href @click.prevent="clickOnShowFilters()">
-            <fa icon="filter" />
-            {{ $t('search.showFilters') }}
-          </a>
-        </li>
-      </div>
-    </transition>
     <div v-if="hasResults">
       <search-results-header :response="response" :position="'top'" />
       <div class="search-results__items">
@@ -68,14 +58,6 @@ export default {
   },
   computed: {
     ...mapState('search', ['starredDocuments']),
-    showFilters: {
-      get () {
-        return this.$store.state.search.showFilters
-      },
-      set () {
-        this.$store.commit('search/toggleFilters')
-      }
-    },
     hasResults () {
       return this.response.hits.length > 0
     },
@@ -84,9 +66,6 @@ export default {
     }
   },
   methods: {
-    clickOnShowFilters () {
-      this.showFilters = !this.showFilters
-    },
     isStarred (documentId) {
       return this.starredDocuments.indexOf(documentId) >= 0
     },

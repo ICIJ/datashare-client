@@ -229,9 +229,10 @@ export default {
       margin-bottom: 0;
       background: $light;
       position: static;
-      top: var(--search-document-navbar-height);
+      top: $spacer;
       left: 0;
       z-index: 50;
+      box-shadow: 0 -1 * $spacer 0 0 white;
 
       &--sticky {
         position: sticky;

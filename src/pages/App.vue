@@ -8,7 +8,6 @@
         <aggregations-panel v-if="['search', 'document'].indexOf($route.name) > -1" />
       </vue-perfect-scrollbar>
       <div class="flex-grow-1">
-        <app-nav v-if="['search', 'document'].indexOf($route.name) > -1" />
         <router-view />
         <app-footer />
         <scroll-tracker />
@@ -22,7 +21,6 @@
 import AggregationsPanel from '@/components/AggregationsPanel'
 import DatashareClient from '@/api/DatashareClient'
 import AppFooter from '@/components/AppFooter'
-import AppNav from '@/components/AppNav'
 import AppSidebar from '@/components/AppSidebar'
 import ScrollTracker from '@/components/ScrollTracker'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
@@ -32,7 +30,6 @@ export default {
   components: {
     AggregationsPanel,
     AppFooter,
-    AppNav,
     AppSidebar,
     ScrollTracker,
     VuePerfectScrollbar

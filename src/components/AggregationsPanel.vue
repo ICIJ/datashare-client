@@ -2,18 +2,9 @@
   <transition name="slide-left">
     <div class="aggregations-panel" v-show="showFilters">
       <div class="aggregations-panel__sticky w-100">
-        <div class="aggregations-panel__sticky__toolbar border d-none">
+        <div class="aggregations-panel__sticky__toolbar">
           <ul class="nav">
-            <li class="nav-item border-right">
-              <button class="nav-link text-white font-weight-bold p-2 btn btn-sm" @click="hideFilters()" id="btn-hide-filters">
-                <fa icon="chevron-left" class="mx-1" />
-                <span class="sr-only">
-                  {{ $t('search.hideFilters') }}
-                </span>
-              </button>
-              <b-tooltip placement="bottom" target="btn-hide-filters" :title="$t('search.hideFilters')" />
-            </li>
-            <li class="nav-item ml-auto">
+            <li class="nav-item">
               <div class="custom-control custom-switch">
                 <input type="checkbox" :checked="filtersContextualized" class="custom-control-input" id="input-contextualize-filters" @change="toggleContextualizeFilters($event.target.checked)">
                 <label class="custom-control-label text-white font-weight-bold btn btn-sm pl-0 pr-2 pb-2 pt-0 mt-2" for="input-contextualize-filters" id="label-contextualize-filters">
@@ -27,6 +18,15 @@
                 {{ $t('search.resetFiltersLabel') }}
               </button>
               <b-tooltip placement="bottom" target="btn-reset-filters" :title="$t('search.resetFiltersDescription')" />
+            </li>
+            <li class="nav-item ml-auto">
+              <button class="nav-link text-white font-weight-bold p-2 btn btn-sm" @click="hideFilters()" id="btn-hide-filters">
+                <fa icon="arrow-left" class="mx-1" />
+                <span class="sr-only">
+                  {{ $t('search.hideFilters') }}
+                </span>
+              </button>
+              <b-tooltip placement="bottom" target="btn-hide-filters" :title="$t('search.hideFilters')" />
             </li>
           </ul>
         </div>
@@ -162,7 +162,7 @@ export default {
     }
 
     &.slide-left-enter, &.slide-left-leave-to {
-      margin-left: -1 * $aggregations-panel-width !important;
+      transform: translateX(-100%);
       opacity: 0;
     }
 
@@ -172,10 +172,15 @@ export default {
         font-size: 0.85rem;
         line-height: $line-height-base * (1 - (85 - 95) / 95);
         margin: $spacer 0 0 $spacer;
-        border-radius: $card-border-radius;
+        border-bottom: rgba(white, 0.1) 1px solid;
+        padding: 0 0 $spacer;
 
-        .border-left, .border-right {
-          border-color: rgba(white, 0.3) !important;
+        .nav {
+          height: $app-nav-brand-height;
+        }
+
+        .border-left {
+          border-color: rgba(white, 0.1) !important;
         }
 
         .custom-control-input:checked ~ .custom-control-label::before {
