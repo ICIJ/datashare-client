@@ -1,6 +1,6 @@
 <template>
   <div class="app-sidebar" :class="{ 'app-sidebar--reduced': reduced }">
-    <div class="app-sidebar__container">
+    <vue-perfect-scrollbar class="app-sidebar__container">
       <div class="d-flex align-items-center justify-content-center">
         <router-link class="app-sidebar__container__brand align-items-center flex-grow-1" :to="{ name: 'landing' }">
           <img src="~images/logo-white.svg" alt="Datashare" class="app-sidebar__container__brand__logo" />
@@ -77,13 +77,18 @@
           </a>
         </li>
       </ul>
-    </div>
+    </vue-perfect-scrollbar>
   </div>
 </template>
 
 <script>
+  import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+
   export default {
     name: 'AppSidebar',
+    components: {
+      VuePerfectScrollbar
+    },
     data () {
       return {
         reduced: false
@@ -123,6 +128,7 @@
     }
 
     &__container {
+      max-height: 100vh;
 
       &__brand, &__brand:hover, &__brand:focus, &__brand {
         color: inherit;
