@@ -170,7 +170,7 @@ export const getters = {
 }
 
 export const mutations = {
-  reset (state, excludedKeys = ['index']) {
+  reset (state, excludedKeys = ['index', 'showFilters']) {
     // acquire initial state
     const s = initialState()
     Object.keys(s).forEach(key => {
@@ -373,7 +373,7 @@ export const actions = {
     return dispatch('query')
   },
   updateFromRouteQuery ({ state, commit }, query) {
-    commit('reset', ['index', 'globalSearch', 'starredDocuments'])
+    commit('reset', ['index', 'globalSearch', 'starredDocuments', 'showFilters'])
     // Add the query to the state with a mutation to not triggering a search
     if (query.q) commit('query', query.q)
     if (query.index) commit('index', query.index)
