@@ -100,6 +100,9 @@ export default {
       loadedLocales: [ settings.defaultLocale ]
     }
   },
+  mounted () {
+    this.$root.$on('history::toggle', this.toggleUserHistory)
+  },
   watch: {
     '$route' () {
       this.showUserHistory = false
@@ -214,7 +217,7 @@ export default {
       left: 0;
       width: 100%;
       height: 100vh;
-      background: rgba(black, .8);
+      background: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
 
       &.fade-enter-active, &.fade-leave-active {
         transition: .3s;

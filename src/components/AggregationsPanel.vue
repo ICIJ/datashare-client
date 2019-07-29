@@ -3,7 +3,7 @@
     <div class="aggregations-panel" v-show="showFilters">
       <div class="aggregations-panel__sticky w-100">
         <div class="aggregations-panel__sticky__toolbar">
-          <ul class="nav">
+          <ul class="nav flex-nowrap">
             <li class="nav-item">
               <div class="custom-control custom-switch">
                 <input type="checkbox" :checked="filtersContextualized" class="custom-control-input" id="input-contextualize-filters" @change="toggleContextualizeFilters($event.target.checked)">

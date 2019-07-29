@@ -106,7 +106,7 @@ export default {
 
 <style lang="scss">
   .app__nav {
-    z-index: 10;
+    z-index: 15;
     position: relative;
     width: 100%;
     color: $body-color;

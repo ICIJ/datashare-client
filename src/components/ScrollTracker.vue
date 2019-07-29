@@ -9,10 +9,6 @@ export default {
     timeout: {
       type: Number,
       default: 3000
-    },
-    container: {
-      type: [Object, String],
-      default: 'body'
     }
   },
   data () {
@@ -21,6 +17,7 @@ export default {
       offset: 0,
       timeoutHolder: null,
       target: null,
+      container: 'body',
       visible: false
     }
   },
@@ -29,14 +26,15 @@ export default {
     this.$root.$on('scroll-tracker:request', this.request)
   },
   methods: {
-    request (target, offset = 0) {
+    request (target, offset = 0, container = this.container) {
       this.target = target
       this.offset = offset
+      this.container = container
       this.toggle(this.shouldBeVisible())
     },
     scrollToTarget () {
       this.hide()
-      VueScrollTo.scrollTo(this.target, 200, { offset: this.offset })
+      VueScrollTo.scrollTo(this.target, 200, { offset: this.offset, container: this.container })
     },
     toggle (toggler = !this.visible) {
       return toggler ? this.show() : this.hide()

@@ -39,7 +39,7 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item">
-          <a href="#" class="app-sidebar__container__menu__item__link" title="Your history" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a href="#" class="app-sidebar__container__menu__item__link" title="Your history" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
             <fa icon="clock" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               Your history

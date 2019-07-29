@@ -1,7 +1,7 @@
 <template>
   <form class="search-bar py-3 container-fluid" :id="uniqueId" @submit.prevent="submit">
     <div class="d-flex align-items-center">
-      <div class="input-group">
+      <div class="input-group" :class="{ ['input-group-' + size]: true }">
         <input
           v-model="query"
           :placeholder="$t('search.placeholder')"
@@ -43,7 +43,7 @@
         </selectable-dropdown>
       </div>
       <div class="px-0 pl-2" v-if="settings">
-        <search-settings placement="bottomleft" :container="uniqueId" />
+        <search-settings placement="bottomleft" :size="size" :container="uniqueId" />
       </div>
     </div>
     <slide-up-down :active="showTips" v-if="tips">
@@ -102,6 +102,10 @@ export default {
       default () {
         return settings.searchFields.map(field => field.key)
       }
+    },
+    size: {
+      type: String,
+      default: 'md'
     }
   },
   components: {

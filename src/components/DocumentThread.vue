@@ -141,7 +141,8 @@ export default {
       // Get the offset from the navbar height (which is sticky)
       const offset = -parseInt(this.$root.$el.style.getPropertyValue('--search-document-navbar-height'))
       // Use the scroll-tracker component
-      this.$root.$emit('scroll-tracker:request', element, offset)
+      const $container = this.$el.closest('.ps-container')
+      this.$root.$emit('scroll-tracker:request', element, offset, $container)
     },
     async init () {
       this.isReady = false

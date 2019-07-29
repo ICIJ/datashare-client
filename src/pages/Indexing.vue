@@ -1,6 +1,6 @@
 <template>
   <div class="indexing container pt-4">
-    <router-link :to="{ name: 'search' }" class="float-left py-2">
+    <router-link :to="{ name: 'search' }" class="py-2">
       <fa icon="chevron-circle-left" />
       {{ $t('search.back') }}
     </router-link>
