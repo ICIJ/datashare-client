@@ -36,7 +36,7 @@ describe('Search store', () => {
   })
 
   it('should define a store module', () => {
-    expect(store.state.search).not.toEqual(undefined)
+    expect(store.state.search).not.toBeUndefined()
   })
 
   it('should reset to initial state', () => {
