@@ -3,7 +3,7 @@
     <content-placeholder class="document py-2 px-3" />
   </div>
   <div v-else>
-    <div class="d-flex flex-column document" v-if="document" v-shortkey="{ goToPreviousTab: ['arrowleft'], goToNextTab: ['arrowright']}" @shortkey="shortKeyAction">
+    <div class="d-flex flex-column document" v-if="document" v-shortkey="{ goToPreviousTab: goToPreviousTabShortkey, goToNextTab: goToNextTabShortkey}" @shortkey="shortKeyAction">
       <div class="document__header">
         <h3 class="document__header__name">
           <document-sliced-name interactive-root :document="document" />
@@ -36,6 +36,7 @@
 import filter from 'lodash/filter'
 import findIndex from 'lodash/findIndex'
 import { mapState } from 'vuex'
+import { getOS } from '@/utils/utils'
 
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
@@ -165,6 +166,12 @@ export default {
           }
         }
       ]
+    },
+    goToPreviousTabShortkey () {
+      return getOS() === 'mac' ? ['meta', 'option', 'arrowdown'] : ['ctrl', 'alt', 'pagedown']
+    },
+    goToNextTabShortkey () {
+      return getOS() === 'mac' ? ['meta', 'option', 'arrowup'] : ['ctrl', 'alt', 'pageup']
     }
   },
   beforeRouteEnter (to, _from, next) {
