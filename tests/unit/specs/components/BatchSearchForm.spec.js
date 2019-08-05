@@ -1,4 +1,4 @@
-import BatchSearchForm from '@/pages/BatchSearchForm'
+import BatchSearchForm from '@/components/BatchSearchForm'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'

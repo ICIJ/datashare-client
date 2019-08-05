@@ -41,7 +41,7 @@ import moment from 'moment'
 import capitalize from 'lodash/capitalize'
 
 import utils from '@/mixins/utils'
-import BatchSearchForm from './BatchSearchForm'
+import BatchSearchForm from '@/components/BatchSearchForm'
 
 export default {
   name: 'BatchSearches',
