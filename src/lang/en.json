@@ -441,10 +441,10 @@
     "date": "Date"
   },
   "batchSearchResults": {
-    "title": "Batch Search Results",
     "index": "Index",
     "query": "Query",
     "documentName": "Document Name",
-    "creationDate": "Creation Date"
+    "creationDate": "Creation Date",
+    "downloadResults": "Download results"
   }
 }

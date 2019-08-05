@@ -50,7 +50,7 @@
               required></b-form-file>
           </b-form-group>
         </div>
-        <div class="card-footer text-right border-0">
+        <div class="card-footer text-right b-0">
           <b-button type="submit" variant="primary">{{ $t('batchSearch.form.submit') }}</b-button>
         </div>
       </div>

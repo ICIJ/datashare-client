@@ -48,24 +48,25 @@ const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 describe('BatchSearchResults.vue', () => {
   let wrapper
 
-  beforeEach(() => {
-    wrapper = mount(BatchSearchResults, { localVue, i18n, store, router })
+  beforeEach(async () => {
+    wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } } })
     wrapper.vm.$route.params.index = 'index'
+    wrapper.vm.results = await store.dispatch('batchSearch/getBatchSearchResults', 12)
   })
 
-  it('should display the list of the queries of this batch search', async () => {
-    wrapper.vm.results = await store.dispatch('batchSearch/getBatchSearchResults', 12)
-
+  it('should display the list of the queries of this batch search', () => {
     expect(wrapper.findAll('.batch-search-results')).toHaveLength(1)
     expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query')).toHaveLength(3)
   })
 
-  it('should display a link to document page', async () => {
-    wrapper.vm.results = await store.dispatch('batchSearch/getBatchSearchResults', 12)
+  it('should display a link to document page', () => {
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries .batch-search-results__queries__query__link')).toHaveLength(3)
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries .batch-search-results__queries__query__link').at(0).attributes('href')).toBe('#/d/index/42/42')
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries .batch-search-results__queries__query__link').at(1).attributes('href')).toBe('#/d/index/43/42')
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries .batch-search-results__queries__query__link').at(2).attributes('href')).toBe('#/d/index/44/42')
+  })
 
-    expect(wrapper.findAll('.batch-search-results__queries .batch-search-results__queries__query__link')).toHaveLength(3)
-    expect(wrapper.findAll('.batch-search-results__queries .batch-search-results__queries__query__link').at(0).attributes('href')).toBe('#/d/index/42/42')
-    expect(wrapper.findAll('.batch-search-results__queries .batch-search-results__queries__query__link').at(1).attributes('href')).toBe('#/d/index/43/42')
-    expect(wrapper.findAll('.batch-search-results__queries .batch-search-results__queries__query__link').at(2).attributes('href')).toBe('#/d/index/44/42')
+  it('should display a button to download the results as a CSV file', () => {
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__download')).toHaveLength(1)
   })
 })

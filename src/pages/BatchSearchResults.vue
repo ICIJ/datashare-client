@@ -23,6 +23,12 @@
         </template>
       </b-table>
     </div>
+    <div class="batch-search-results__download text-right b-0 pr-4">
+      <b-button variant="primary" :href="downloadLink">
+        <fa icon="download" />
+        {{ $t('batchSearchResults.downloadResults') }}
+      </b-button>
+    </div>
   </div>
 </template>
 
@@ -31,6 +37,8 @@ import store from '@/store'
 import moment from 'moment'
 import last from 'lodash/last'
 import find from 'lodash/find'
+
+import DatashareClient from '@/api/DatashareClient'
 
 export default {
   name: 'BatchSearchResults',
@@ -72,16 +80,19 @@ export default {
     const results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid)
     next(vm => { vm.results = results })
   },
+  computed: {
+    meta () {
+      return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || { }
+    },
+    downloadLink () {
+      return DatashareClient.getFullUrl(`/api/batch/search/result/csv/${this.uuid}`)
+    }
+  },
   methods: {
     getFileName (documentPath) {
       return last(documentPath.split('/'))
     },
     moment
-  },
-  computed: {
-    meta () {
-      return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || { }
-    }
   }
 }
 </script>
