@@ -5,7 +5,7 @@
         <batch-search-form />
       </div>
       <div class="batch-search__items col">
-        <div class="batch-search__items__explaination">
+        <div class="batch-search__items__explanation">
           <div class="container">
             <h3>
               {{ $t('batchSearch.title') }}
@@ -120,7 +120,7 @@ export default {
       background: white;
       overflow: hidden;
 
-      &__explaination {
+      &__explanation {
         padding: $spacer * 3 0;
       }
 
