@@ -109,8 +109,8 @@ export const actions = {
   resetExtractForm ({ commit }) {
     commit('resetExtractForm')
   },
-  deleteAll () {
-    return datashare.deleteAll().then(r => r.text())
+  deleteAll ({ rootState }) {
+    return datashare.deleteAll(rootState.search.index).then(r => r.text())
   }
 }
 

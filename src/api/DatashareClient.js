@@ -31,8 +31,8 @@ export class DatashareClient {
   createIndex () {
     return this.sendAction('/api/index/create', { method: 'PUT' })
   }
-  deleteAll () {
-    return this.sendAction('/api/index/delete/all', { method: 'DELETE' })
+  deleteAll (projectId) {
+    return this.sendAction(`/api/project/id/${encodeURIComponent(projectId)}`, { method: 'DELETE' })
   }
   getVersion () {
     return this.sendAction('/version')
