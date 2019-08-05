@@ -12,7 +12,7 @@ jest.mock('@/api/DatashareClient', () => {
   const { jsonOk } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      getBatchSearch: jest.fn().mockReturnValue(jsonOk([{
+      getBatchSearchResults: jest.fn().mockReturnValue(jsonOk([{
         creationDate: '2011-10-11T04:12:49.000+0000',
         documentId: 42,
         documentNumber: 0,
@@ -54,18 +54,18 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should display the list of the queries of this batch search', async () => {
-    await store.dispatch('batchSearch/getBatchSearch', 12)
+    wrapper.vm.results = await store.dispatch('batchSearch/getBatchSearchResults', 12)
 
-    expect(wrapper.findAll('.batchsearchresults')).toHaveLength(1)
-    expect(wrapper.findAll('.batchsearchresults .batchsearchresults__queries__query')).toHaveLength(3)
+    expect(wrapper.findAll('.batch-search-results')).toHaveLength(1)
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query')).toHaveLength(3)
   })
 
   it('should display a link to document page', async () => {
-    await store.dispatch('batchSearch/getBatchSearch', 12)
+    wrapper.vm.results = await store.dispatch('batchSearch/getBatchSearchResults', 12)
 
-    expect(wrapper.findAll('.batchsearchresults__queries .batchsearchresults__queries__query__link')).toHaveLength(3)
-    expect(wrapper.findAll('.batchsearchresults__queries .batchsearchresults__queries__query__link').at(0).attributes('href')).toBe('#/d/index/42/42')
-    expect(wrapper.findAll('.batchsearchresults__queries .batchsearchresults__queries__query__link').at(1).attributes('href')).toBe('#/d/index/43/42')
-    expect(wrapper.findAll('.batchsearchresults__queries .batchsearchresults__queries__query__link').at(2).attributes('href')).toBe('#/d/index/44/42')
+    expect(wrapper.findAll('.batch-search-results__queries .batch-search-results__queries__query__link')).toHaveLength(3)
+    expect(wrapper.findAll('.batch-search-results__queries .batch-search-results__queries__query__link').at(0).attributes('href')).toBe('#/d/index/42/42')
+    expect(wrapper.findAll('.batch-search-results__queries .batch-search-results__queries__query__link').at(1).attributes('href')).toBe('#/d/index/43/42')
+    expect(wrapper.findAll('.batch-search-results__queries .batch-search-results__queries__query__link').at(2).attributes('href')).toBe('#/d/index/44/42')
   })
 })

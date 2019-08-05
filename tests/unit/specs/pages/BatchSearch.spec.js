@@ -50,36 +50,20 @@ describe('BatchSearch.vue', () => {
   afterAll(() => jest.unmock('@/api/DatashareClient'))
 
   it('should display the form', () => {
-    expect(wrapper.findAll('.batchsearch b-form-stub')).toHaveLength(1)
-  })
-
-  it('should call the store', () => {
-    const state = {
-      batchSearches: []
-    }
-    const actions = {
-      onSubmit: jest.fn(),
-      getBatchSearches: jest.fn()
-    }
-    const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
-    wrapper = shallowMount(BatchSearch, { localVue, i18n, store })
-
-    wrapper.vm.onSubmit()
-
-    expect(actions.onSubmit).toHaveBeenCalled()
+    expect(wrapper.findAll('.batch-search .batch-search__form')).toHaveLength(1)
   })
 
   it('should list the searches', () => {
     wrapper = mount(BatchSearch, { localVue, i18n, store, router })
 
-    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.batch-search__items .batch-search__items__item')).toHaveLength(2)
   })
 
   it('should display a link to batch search page', () => {
     wrapper = mount(BatchSearch, { localVue, i18n, store, router })
 
-    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link')).toHaveLength(2)
-    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link').at(0).attributes('href')).toBe('#/batch-search/project_01/1')
-    expect(wrapper.findAll('.batchsearch__items .batchsearch__items__item__link').at(1).attributes('href')).toBe('#/batch-search/project_02/2')
+    expect(wrapper.findAll('.batch-search__items .batch-search__items__item__link')).toHaveLength(2)
+    expect(wrapper.findAll('.batch-search__items .batch-search__items__item__link').at(0).attributes('href')).toBe('#/batch-search/project_01/1')
+    expect(wrapper.findAll('.batch-search__items .batch-search__items__item__link').at(1).attributes('href')).toBe('#/batch-search/project_02/2')
   })
 })
