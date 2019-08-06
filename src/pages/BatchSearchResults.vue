@@ -9,7 +9,7 @@
       </router-link>
     </div>
     <div class="batch-search-results__info d-flex my-2 mx-3">
-      <dl class="row">
+      <dl class="row" v-if="Object.keys(meta).length !== 0">
         <dt class="col-sm-3">{{ $t('batchSearch.projectName') }}</dt>
         <dd class="col-sm-9">{{ meta.project.name }}</dd>
         <dt class="col-sm-3">{{ $t('batchSearch.description') }}</dt>
@@ -104,9 +104,9 @@ export default {
       filter: ''
     }
   },
-  async beforeRouteEnter (to, from, next) {
-    const results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid, 0, 100)
-    next(vm => { vm.results = results })
+  async beforeRouteUpdate (to, from, next) {
+    this.results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid, 0, 100)
+    next()
   },
   computed: {
     meta () {
