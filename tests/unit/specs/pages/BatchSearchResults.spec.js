@@ -49,10 +49,17 @@ describe('BatchSearchResults.vue', () => {
   let wrapper
 
   beforeEach(async () => {
+    store.commit('batchSearch/batchSearches', [{
+      uuid: '12',
+      project: { name: 'ProjectName' },
+      description: 'This is the description of the batch search',
+      queries: ['query_01', 'query_02', 'query_03'],
+      state: 'SUCCESS',
+      date: '2019-07-18T14:45:34.869+0000'
+    }])
     wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12' } })
     wrapper.vm.$route.params.index = 'index'
     wrapper.vm.results = await store.dispatch('batchSearch/getBatchSearchResults', 12)
-    store.commit('batchSearch/batchSearches', [{ uuid: '12', queries: ['query_01', 'query_02', 'query_03'] }])
   })
 
   it('should display the list of the queries of this batch search', () => {
@@ -61,10 +68,10 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should display a link to document page', () => {
-    expect(wrapper.findAll('.batch-search-results__queries__query__link')).toHaveLength(3)
-    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(0).attributes('href')).toBe('#/d/index/42/42')
-    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(1).attributes('href')).toBe('#/d/index/43/42')
-    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(2).attributes('href')).toBe('#/d/index/44/42')
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query__link')).toHaveLength(3)
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query__link').at(0).attributes('href')).toBe('#/d/index/42/42')
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query__link').at(1).attributes('href')).toBe('#/d/index/43/42')
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query__link').at(2).attributes('href')).toBe('#/d/index/44/42')
   })
 
   it('should display a button to download the results as a CSV file', () => {
@@ -73,5 +80,10 @@ describe('BatchSearchResults.vue', () => {
 
   it('should display the queries filters', () => {
     expect(wrapper.findAll('.batch-search-results .batch-search-results__filters a')).toHaveLength(4)
+  })
+
+  it('should display info about the BatchSearch', () => {
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__info')).toHaveLength(1)
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__info dd')).toHaveLength(4)
   })
 })

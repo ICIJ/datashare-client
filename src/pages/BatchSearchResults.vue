@@ -1,6 +1,7 @@
 <template>
   <div class="batch-search-results">
-    <div class="d-flex my-2 mx-3">
+    <div class="batch-search-results__title d-flex my-2 mx-3">
+      {{ meta }}
       <h3 class="text-truncate flex-grow-1">
         {{ meta.name }}
       </h3>
@@ -8,11 +9,23 @@
         <fa icon="times" size="lg" />
       </router-link>
     </div>
-    <div class="d-flex my-2 mx-3">
+    <div class="batch-search-results__info d-flex my-2 mx-3">
+      <dl class="row">
+        <dt class="col-sm-3">{{ $t('batchSearch.projectName') }}</dt>
+        <dd class="col-sm-9">{{ meta.project.name }}</dd>
+        <dt class="col-sm-3">{{ $t('batchSearch.description') }}</dt>
+        <dd class="col-sm-9">{{ meta.description }}</dd>
+        <dt class="col-sm-3">{{ $t('batchSearch.state') }}</dt>
+        <dd class="col-sm-9">{{ capitalize(meta.state) }}</dd>
+        <dt class="col-sm-3">{{ $t('batchSearch.date') }}</dt>
+        <dd class="col-sm-9">{{ moment(meta.date).format('LLL') }}</dd>
+      </dl>
+    </div>
+    <div class="batch-search-results__download d-flex my-2 mx-3">
       <div>
         {{ $t('batchSearchResults.sample') }}
       </div>
-      <div class="batch-search-results__download ml-2">
+      <div class="ml-2">
         <a :href="downloadLink">
           <fa icon="download" />
           {{ $t('batchSearchResults.downloadResults') }}
@@ -48,6 +61,7 @@
 <script>
 import store from '@/store'
 import moment from 'moment'
+import capitalize from 'lodash/capitalize'
 import last from 'lodash/last'
 import find from 'lodash/find'
 
@@ -110,16 +124,22 @@ export default {
     setFilter (filter) {
       this.filter = filter
     },
+    capitalize,
     moment
   }
 }
 </script>
 
 <style lang="scss">
-.batch-search-results {
+.batch-search {
+  .batch-search-results {
+    .row {
+      min-height: auto;
+    }
 
-  &__filters {
-    overflow-x: auto;
+    &__filters {
+      overflow-x: auto;
+    }
   }
 }
 </style>
