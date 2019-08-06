@@ -19,8 +19,16 @@
         </a>
       </div>
     </div>
+    <div class="batch-search-results__filters d-flex my-2 mx-3">
+      <a @click.prevent="setFilter('')" href>
+        {{ $t('batchSearchResults.all') }}
+      </a>
+      <a v-for="query in meta.queries" :key="query" @click.prevent="setFilter(query)" href class="ml-2">
+        {{ query }}
+      </a>
+    </div>
     <div class="batch-search-results__queries">
-      <b-table striped hover bordered :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query">
+      <b-table striped hover bordered :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query" :filter="filter">
         <template #documentNumber="row">
           {{ row.item.documentNumber + 1 }}
         </template>
@@ -79,7 +87,8 @@ export default {
           label: this.$t('batchSearchResults.creationDate'),
           sortable: true
         }
-      ]
+      ],
+      filter: ''
     }
   },
   async beforeRouteEnter (to, from, next) {
@@ -98,7 +107,19 @@ export default {
     getFileName (documentPath) {
       return last(documentPath.split('/'))
     },
+    setFilter (filter) {
+      this.filter = filter
+    },
     moment
   }
 }
 </script>
+
+<style lang="scss">
+.batch-search-results {
+
+  &__filters {
+    overflow-x: auto;
+  }
+}
+</style>

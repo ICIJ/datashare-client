@@ -446,6 +446,7 @@
     "documentName": "Document Name",
     "creationDate": "Creation Date",
     "downloadResults": "Download results",
-    "sample": "Sample of the first 100 result(s)."
+    "sample": "Sample of the first 100 result(s).",
+    "all": "All"
   }
 }
