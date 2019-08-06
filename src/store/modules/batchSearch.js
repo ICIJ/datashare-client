@@ -6,7 +6,7 @@ export function initialState () {
   return {
     name: '',
     description: '',
-    index: '',
+    index: 'local-datashare',
     csvFile: null,
     batchSearches: [],
     batchSearch: []
@@ -19,7 +19,7 @@ export const mutations = {
   resetForm (state) {
     state.name = ''
     state.description = ''
-    state.index = ''
+    state.index = 'local-datashare'
     state.csvFile = null
   },
   name (state, name) {

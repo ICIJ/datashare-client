@@ -60,10 +60,10 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should display a link to document page', () => {
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries .batch-search-results__queries__query__link')).toHaveLength(3)
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries .batch-search-results__queries__query__link').at(0).attributes('href')).toBe('#/d/index/42/42')
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries .batch-search-results__queries__query__link').at(1).attributes('href')).toBe('#/d/index/43/42')
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries .batch-search-results__queries__query__link').at(2).attributes('href')).toBe('#/d/index/44/42')
+    expect(wrapper.findAll('.batch-search-results__queries__query__link')).toHaveLength(3)
+    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(0).attributes('href')).toBe('#/d/index/42/42')
+    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(1).attributes('href')).toBe('#/d/index/43/42')
+    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(2).attributes('href')).toBe('#/d/index/44/42')
   })
 
   it('should display a button to download the results as a CSV file', () => {
