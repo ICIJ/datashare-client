@@ -8,6 +8,17 @@
         <fa icon="times" size="lg" />
       </router-link>
     </div>
+    <div class="d-flex my-2 mx-3">
+      <div>
+        {{ $t('batchSearchResults.sample') }}
+      </div>
+      <div class="batch-search-results__download ml-2">
+        <a :href="downloadLink">
+          <fa icon="download" />
+          {{ $t('batchSearchResults.downloadResults') }}
+        </a>
+      </div>
+    </div>
     <div class="batch-search-results__queries">
       <b-table striped hover bordered :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query">
         <template #documentNumber="row">
@@ -22,12 +33,6 @@
           {{ moment(row.item.creationDate).isValid() ? moment(row.item.creationDate).format('LLL') : '' }}
         </template>
       </b-table>
-    </div>
-    <div class="batch-search-results__download text-right b-0 pr-4">
-      <b-button variant="primary" :href="downloadLink">
-        <fa icon="download" />
-        {{ $t('batchSearchResults.downloadResults') }}
-      </b-button>
     </div>
   </div>
 </template>
@@ -71,13 +76,14 @@ export default {
         },
         {
           key: 'creationDate',
-          label: this.$t('batchSearchResults.creationDate')
+          label: this.$t('batchSearchResults.creationDate'),
+          sortable: true
         }
       ]
     }
   },
   async beforeRouteEnter (to, from, next) {
-    const results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid)
+    const results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid, 0, 100)
     next(vm => { vm.results = results })
   },
   computed: {

@@ -445,6 +445,7 @@
     "query": "Query",
     "documentName": "Document Name",
     "creationDate": "Creation Date",
-    "downloadResults": "Download results"
+    "downloadResults": "Download results",
+    "sample": "Sample of the first 100 result(s)."
   }
 }
