@@ -1,7 +1,6 @@
 <template>
   <div class="batch-search-results">
     <div class="batch-search-results__title d-flex my-2 mx-3">
-      {{ meta }}
       <h3 class="text-truncate flex-grow-1">
         {{ meta.name }}
       </h3>
