@@ -3,17 +3,24 @@ import { actions, getters, mutations, state, datashare } from '@/store/modules/b
 import { jsonOk } from 'tests/unit/tests_utils'
 import Vuex from 'vuex'
 import Vue from 'vue'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import Murmur from '@icij/murmur'
 
 Vue.use(Vuex)
 
 describe('BatchSearch store', () => {
+  esConnectionHelper()
+  const es = esConnectionHelper.es
   let store
 
   beforeAll(() => {
+    Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] })
     store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, actions, getters, mutations, state } } })
   })
 
   beforeEach(() => {
+    store.commit('batchSearch/index', process.env.VUE_APP_ES_INDEX)
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk())
   })
@@ -83,12 +90,13 @@ describe('BatchSearch store', () => {
     })
 
     it('should retrieve a batch search according to its id', async () => {
-      const batchSearch = { uuid: '42' }
+      await letData(es).have(new IndexedDocument('12').withContentType('type_01')).commit()
+      const batchSearch = [{ contentType: 'type_01', documentId: 12, rootId: 12 }]
       datashare.fetch.mockReturnValue(jsonOk(batchSearch))
 
-      await store.dispatch('batchSearch/getBatchSearchResults', 1)
+      await store.dispatch('batchSearch/getBatchSearchResults')
 
-      expect(store.state.batchSearch.batchSearch).toEqual(batchSearch)
+      expect(store.state.batchSearch.results).toEqual(batchSearch)
     })
   })
 })

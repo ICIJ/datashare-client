@@ -66,13 +66,12 @@
 import store from '@/store'
 import moment from 'moment'
 import capitalize from 'lodash/capitalize'
-import map from 'lodash/map'
 import last from 'lodash/last'
 import find from 'lodash/find'
 
 import DatashareClient from '@/api/DatashareClient'
-import esClient from '@/api/esClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
+import { mapState } from 'vuex'
 
 export default {
   name: 'BatchSearchResults',
@@ -86,7 +85,6 @@ export default {
   },
   data () {
     return {
-      results: [],
       fields: [
         {
           key: 'documentNumber',
@@ -117,25 +115,15 @@ export default {
       filter: ''
     }
   },
-  async beforeRouteEnter (to, from, next) {
-    let results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid, 0, 100)
-    await Promise.all(map(results, async result => {
-      const doc = await esClient.getEsDoc(to.params.index, result.documentId, result.rootId)
-      result.contentType = doc._source.contentType
-    }))
-    next(vm => {
-      vm.results = results
-    })
+  beforeRouteEnter (to, from, next) {
+    next(vm => vm.getBatchSearchResults(to.params))
   },
-  async beforeRouteUpdate (to, from, next) {
-    this.results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid, 0, 100)
-    await Promise.all(map(this.results, async result => {
-      const doc = await esClient.getEsDoc(to.params.index, result.documentId, result.rootId)
-      result.contentType = doc._source.contentType
-    }))
+  beforeRouteUpdate (to, from, next) {
+    this.getBatchSearchResults(to.params)
     next()
   },
   computed: {
+    ...mapState('batchSearch', ['results']),
     meta () {
       return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || { }
     },
@@ -144,6 +132,9 @@ export default {
     }
   },
   methods: {
+    async getBatchSearchResults (params) {
+      await store.dispatch('batchSearch/getBatchSearchResults', params.uuid, 0, 100)
+    },
     getFileName (documentPath) {
       return last(documentPath.split('/'))
     },

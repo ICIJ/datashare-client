@@ -1,4 +1,7 @@
+import map from 'lodash/map'
+
 import DatashareClient from '@/api/DatashareClient'
+import esClient from '@/api/esClient'
 
 export const datashare = new DatashareClient()
 
@@ -9,7 +12,7 @@ export function initialState () {
     index: 'local-datashare',
     csvFile: null,
     batchSearches: [],
-    batchSearch: []
+    results: []
   }
 }
 
@@ -37,8 +40,8 @@ export const mutations = {
   batchSearches (state, batchSearches) {
     state.batchSearches = batchSearches
   },
-  batchSearch (state, batchSearch) {
-    state.batchSearch = batchSearch
+  results (state, results) {
+    state.results = results
   }
 }
 
@@ -54,10 +57,13 @@ export const actions = {
       })
     } catch (e) {}
   },
-  async getBatchSearchResults ({ commit }, batchId, from = 0, size = 100) {
-    const batchSearch = await datashare.getBatchSearchResults(batchId, from, size).then(r => r.clone().json())
-    commit('batchSearch', batchSearch)
-    return batchSearch
+  async getBatchSearchResults ({ state, commit }, batchId, from = 0, size = 100) {
+    const results = await datashare.getBatchSearchResults(batchId, from, size).then(r => r.clone().json())
+    await Promise.all(map(results, async result => {
+      const doc = await esClient.getEsDoc(state.index, result.documentId, result.rootId)
+      result.contentType = doc._source.contentType
+    }))
+    commit('results', results)
   }
 }
 
