@@ -78,6 +78,11 @@ export default {
           key: 'date',
           label: this.$t('batchSearch.date'),
           sortable: true
+        },
+        {
+          key: 'nbResults',
+          label: this.$t('batchSearch.nbResults'),
+          sortable: true
         }
       ]
     }

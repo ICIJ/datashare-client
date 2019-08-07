@@ -438,7 +438,8 @@
     "description": "Description",
     "queries": "Queries",
     "state": "State",
-    "date": "Date"
+    "date": "Date",
+    "nbResults": "Number of results"
   },
   "batchSearchResults": {
     "index": "Index",

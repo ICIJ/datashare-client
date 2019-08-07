@@ -1,5 +1,5 @@
 import BatchSearch from '@/pages/BatchSearch'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
 import messages from '@/lang/en'
@@ -18,14 +18,16 @@ jest.mock('@/api/DatashareClient', () => {
         name: 'name_01',
         description: 'description_01',
         queries: ['query_01'],
-        date: '2019-01-01'
+        date: '2019-01-01',
+        nbResults: 2
       }, {
         uuid: 2,
         project: { id: 'project_02', name: 'project_02' },
         name: 'name_02',
         description: 'description_02',
         queries: ['query_02'],
-        date: '2019-01-01'
+        date: '2019-01-01',
+        nbResults: 3
       }]))
     }
   })
@@ -44,7 +46,7 @@ describe('BatchSearch.vue', () => {
   beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(() => {
-    wrapper = shallowMount(BatchSearch, { localVue, i18n, store })
+    wrapper = mount(BatchSearch, { localVue, i18n, store, router })
   })
 
   afterAll(() => jest.unmock('@/api/DatashareClient'))
@@ -54,16 +56,16 @@ describe('BatchSearch.vue', () => {
   })
 
   it('should list the searches', () => {
-    wrapper = mount(BatchSearch, { localVue, i18n, store, router })
-
     expect(wrapper.findAll('.batch-search__items .batch-search__items__item')).toHaveLength(2)
   })
 
   it('should display a link to batch search page', () => {
-    wrapper = mount(BatchSearch, { localVue, i18n, store, router })
-
     expect(wrapper.findAll('.batch-search__items .batch-search__items__item__link')).toHaveLength(2)
     expect(wrapper.findAll('.batch-search__items .batch-search__items__item__link').at(0).attributes('href')).toBe('#/batch-search/project_01/1')
     expect(wrapper.findAll('.batch-search__items .batch-search__items__item__link').at(1).attributes('href')).toBe('#/batch-search/project_02/2')
+  })
+
+  it('should display 7 columns of info per row', () => {
+    expect(wrapper.findAll('.batch-search__items .batch-search__items__item:nth-child(1) td')).toHaveLength(7)
   })
 })
