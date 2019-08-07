@@ -117,6 +117,16 @@ export default {
       filter: ''
     }
   },
+  async beforeRouteEnter (to, from, next) {
+    let results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid, 0, 100)
+    await Promise.all(map(results, async result => {
+      const doc = await esClient.getEsDoc(to.params.index, result.documentId, result.rootId)
+      result.contentType = doc._source.contentType
+    }))
+    next(vm => {
+      vm.results = results
+    })
+  },
   async beforeRouteUpdate (to, from, next) {
     this.results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid, 0, 100)
     await Promise.all(map(this.results, async result => {
