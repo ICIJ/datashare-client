@@ -10,14 +10,16 @@
     </div>
     <div class="batch-search-results__info d-flex my-2 mx-3">
       <dl class="row" v-if="Object.keys(meta).length !== 0">
-        <dt class="col-sm-3">{{ $t('batchSearch.projectName') }}</dt>
-        <dd class="col-sm-9">{{ meta.project.name }}</dd>
-        <dt class="col-sm-3">{{ $t('batchSearch.description') }}</dt>
-        <dd class="col-sm-9">{{ meta.description }}</dd>
-        <dt class="col-sm-3">{{ $t('batchSearch.state') }}</dt>
-        <dd class="col-sm-9">{{ capitalize(meta.state) }}</dd>
-        <dt class="col-sm-3">{{ $t('batchSearch.date') }}</dt>
-        <dd class="col-sm-9">{{ moment(meta.date).format('LLL') }}</dd>
+        <dt class="col-sm-4 text-right">{{ $t('batchSearch.projectName') }}</dt>
+        <dd class="col-sm-8">{{ meta.project.name }}</dd>
+        <dt class="col-sm-4 text-right">{{ $t('batchSearch.description') }}</dt>
+        <dd class="col-sm-8">{{ meta.description }}</dd>
+        <dt class="col-sm-4 text-right">{{ $t('batchSearch.state') }}</dt>
+        <dd class="col-sm-8">{{ capitalize(meta.state) }}</dd>
+        <dt class="col-sm-4 text-right">{{ $t('batchSearch.date') }}</dt>
+        <dd class="col-sm-8">{{ moment(meta.date).format('LLL') }}</dd>
+        <dt class="col-sm-4 text-right">{{ $t('batchSearch.nbResults') }}</dt>
+        <dd class="col-sm-8">{{ meta.nbResults }}</dd>
       </dl>
     </div>
     <div class="batch-search-results__download d-flex my-2 mx-3">

@@ -84,6 +84,6 @@ describe('BatchSearchResults.vue', () => {
 
   it('should display info about the BatchSearch', () => {
     expect(wrapper.findAll('.batch-search-results .batch-search-results__info')).toHaveLength(1)
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__info dd')).toHaveLength(4)
+    expect(wrapper.findAll('.batch-search-results .batch-search-results__info dd')).toHaveLength(5)
   })
 })
