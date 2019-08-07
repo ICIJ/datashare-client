@@ -52,6 +52,9 @@
         <template #creationDate="row">
           {{ moment(row.item.creationDate).isValid() ? moment(row.item.creationDate).format('LLL') : '' }}
         </template>
+        <template #contentType="row">
+          {{ getDocumentTypeLabel(row.item.contentType) }}
+        </template>
       </b-table>
     </div>
   </div>
@@ -61,10 +64,13 @@
 import store from '@/store'
 import moment from 'moment'
 import capitalize from 'lodash/capitalize'
+import map from 'lodash/map'
 import last from 'lodash/last'
 import find from 'lodash/find'
 
 import DatashareClient from '@/api/DatashareClient'
+import esClient from '@/api/esClient'
+import { getDocumentTypeLabel } from '@/utils/utils'
 
 export default {
   name: 'BatchSearchResults',
@@ -99,6 +105,11 @@ export default {
           key: 'creationDate',
           label: this.$t('batchSearchResults.creationDate'),
           sortable: true
+        },
+        {
+          key: 'contentType',
+          label: this.$t('batchSearchResults.contentType'),
+          sortable: true
         }
       ],
       filter: ''
@@ -106,6 +117,10 @@ export default {
   },
   async beforeRouteUpdate (to, from, next) {
     this.results = await store.dispatch('batchSearch/getBatchSearchResults', to.params.uuid, 0, 100)
+    await Promise.all(map(this.results, async result => {
+      const doc = await esClient.getEsDoc(to.params.index, result.documentId, result.rootId)
+      result.contentType = doc._source.contentType
+    }))
     next()
   },
   computed: {
@@ -124,7 +139,8 @@ export default {
       this.filter = filter
     },
     capitalize,
-    moment
+    moment,
+    getDocumentTypeLabel
   }
 }
 </script>

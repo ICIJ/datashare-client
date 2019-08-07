@@ -445,6 +445,7 @@
     "query": "Query",
     "documentName": "Document Name",
     "creationDate": "Creation Date",
+    "contentType": "Content Type",
     "downloadResults": "Download results",
     "sample": "Sample of the first 100 result(s).",
     "all": "All"
