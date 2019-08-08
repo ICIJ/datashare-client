@@ -59,15 +59,15 @@ Shift + Enter
 * Windows / Linux:
 
 ```text
-Control (ctrl) + alt + ↑ 
-Control (ctrl) + alt + ↓ 
+Control (ctrl) + alt + ⇞ (pageup) 
+Control (ctrl) + alt + ⇟ (pagedown)
 ```
 
 *  Mac:
 
 ```
-Command (⌘) + option (⌥) + ↑
-Command (⌘) + option (⌥) + ↓
+Command (⌘) + option (⌥) + ↑ (arrow up)
+Command (⌘) + option (⌥) + ↓ (arrow down)
 ```
 
 ![](../.gitbook/assets/tabs.png)
