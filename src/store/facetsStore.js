@@ -15,7 +15,7 @@ const namedEntityCategoryTranslation = {
 }
 
 class FacetText {
-  constructor (name, key, isSearchable, labelFun) {
+  constructor (name, key, isSearchable, labelFun, alternativeSearch) {
     this.name = name
     this.key = key
     this.isSearchable = isSearchable
@@ -23,6 +23,7 @@ class FacetText {
     this.reverse = false
     this.values = []
     this.component = 'FacetText'
+    this.alternativeSearch = alternativeSearch
   }
 
   itemParam (item) {

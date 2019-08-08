@@ -238,7 +238,7 @@ describe('FacetText.vue', () => {
     expect(wrapper.vm.root.totalCount).toEqual(2)
   })
 
-  it('should filter facet values on facet label', async () => {
+  it('should filter facet values on facet item', async () => {
     await letData(es).have(new IndexedDocument('index_01.txt').withContentType('application/pdf')).commit()
     await letData(es).have(new IndexedDocument('index_02.txt').withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')).commit()
     await letData(es).have(new IndexedDocument('index_03.txt').withContentType('image/wmf')).commit()
@@ -250,6 +250,17 @@ describe('FacetText.vue', () => {
 
     expect(wrapper.vm.root.items).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(2)
+  })
+
+  it('should filter facet values on facet label', async () => {
+    await letData(es).have(new IndexedDocument('doc_01').withContentType('message/rfc822')).commit()
+
+    wrapper.vm.root.facetQuery = 'Internet'
+
+    await wrapper.vm.root.aggregate()
+
+    expect(wrapper.vm.root.items).toHaveLength(1)
+    expect(wrapper.vm.root.totalCount).toEqual(1)
   })
 
   it('should fire 2 events on click on facet item', async () => {

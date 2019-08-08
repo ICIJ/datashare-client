@@ -4,6 +4,7 @@ import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/
 import settings from '@/utils/settings'
 import { FacetText, FacetYesNo, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation, starredLabel } from '@/store/facetsStore'
 import DatashareClient from '@/api/DatashareClient'
+import types from '@/utils/types.json'
 import lucene from 'lucene'
 import castArray from 'lodash/castArray'
 import concat from 'lodash/concat'
@@ -34,7 +35,7 @@ export function initialState () {
     facets: [
       new FacetYesNo('starred', '_id', false, item => get(starredLabel, item.key, '')),
       new FacetText('tags', 'tags', true),
-      new FacetText('content-type', 'contentType', true, item => getDocumentTypeLabel(item.key)),
+      new FacetText('content-type', 'contentType', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (item.label.includes(query)) return key })),
       new FacetText('language', 'language', false, item => `facet.lang.${item.key}`),
       new FacetNamedEntity('named-entity-person', 'byMentions', true, namedEntityCategoryTranslation['named-entity-person']),
       new FacetNamedEntity('named-entity-organization', 'byMentions', true, namedEntityCategoryTranslation['named-entity-organization']),
