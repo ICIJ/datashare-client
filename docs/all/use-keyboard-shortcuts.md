@@ -56,21 +56,21 @@ Shift + Enter
 
 ### Navigate a document's tabs
 
-For Windows and Linux:
+* Windows / Linux:
 
 ```text
 Control (ctrl) + alt + ↑ 
 Control (ctrl) + alt + ↓ 
 ```
 
-For Mac:
+*  Mac:
 
 ```
 Command (⌘) + option (⌥) + ↑
 Command (⌘) + option (⌥) + ↓
 ```
 
-
+![](../.gitbook/assets/tabs.png)
 
 ### Go back to search results
 
