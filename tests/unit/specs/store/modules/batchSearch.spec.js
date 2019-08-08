@@ -33,12 +33,14 @@ describe('BatchSearch store', () => {
     it('should reset the form', () => {
       store.state.batchSearch.name = 'name'
       store.state.batchSearch.description = 'description'
+      store.state.batchSearch.index = 'new_index'
       store.state.batchSearch.csvFile = 'csvFile'
 
       store.commit('batchSearch/resetForm')
 
       expect(store.state.batchSearch.name).toBe('')
       expect(store.state.batchSearch.description).toBe('')
+      expect(store.state.batchSearch.index).toBe('local-datashare')
       expect(store.state.batchSearch.csvFile).toBeNull()
     })
   })
@@ -65,12 +67,14 @@ describe('BatchSearch store', () => {
     it('should reset the form after submission success', async () => {
       store.state.batchSearch.name = 'name'
       store.state.batchSearch.description = 'description'
+      store.state.batchSearch.index = 'index'
       store.state.batchSearch.csvFile = 'csvFile'
 
       await store.dispatch('batchSearch/onSubmit')
 
       expect(store.state.batchSearch.name).toBe('')
       expect(store.state.batchSearch.description).toBe('')
+      expect(store.state.batchSearch.index).toBe('local-datashare')
       expect(store.state.batchSearch.csvFile).toBeNull()
     })
 
@@ -78,6 +82,7 @@ describe('BatchSearch store', () => {
       datashare.fetch.mockReturnValue(jsonOk({}, 500))
       store.state.batchSearch.name = 'name'
       store.state.batchSearch.description = 'description'
+      store.state.batchSearch.index = 'index'
       store.state.batchSearch.csvFile = 'csvFile'
 
       try {
@@ -85,6 +90,7 @@ describe('BatchSearch store', () => {
       } catch (e) {
         expect(store.state.batchSearch.name).toBe('name')
         expect(store.state.batchSearch.description).toBe('description')
+        expect(store.state.batchSearch.index).toBe('index')
         expect(store.state.batchSearch.csvFile).not.toBeNull()
       }
     })
@@ -96,7 +102,10 @@ describe('BatchSearch store', () => {
 
       await store.dispatch('batchSearch/getBatchSearchResults')
 
-      expect(store.state.batchSearch.results).toEqual(batchSearch)
+      expect(store.state.batchSearch.results).toHaveLength(1)
+      expect(store.state.batchSearch.results[0].documentId).toBe(12)
+      expect(store.state.batchSearch.results[0].rootId).toBe(12)
+      expect(store.state.batchSearch.results[0].document).not.toBeNull()
     })
   })
 })

@@ -55,7 +55,7 @@
           {{ moment(row.item.creationDate).isValid() ? moment(row.item.creationDate).format('LLL') : '' }}
         </template>
         <template #contentType="row">
-          {{ getDocumentTypeLabel(row.item.contentType) }}
+          {{ getDocumentTypeLabel(row.item.document.contentType) }}
         </template>
       </b-table>
     </div>
@@ -109,6 +109,11 @@ export default {
         {
           key: 'contentType',
           label: this.$t('batchSearchResults.contentType'),
+          sortable: true
+        },
+        {
+          key: 'document.humanSize',
+          label: this.$t('batchSearchResults.size'),
           sortable: true
         }
       ],
