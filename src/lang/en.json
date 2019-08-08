@@ -103,6 +103,7 @@
     "named-entity-person": "People",
     "named-entity-location": "Locations",
     "named-entity-organization": "Organizations",
+    "named-entity-email": "Emails",
     "path": "Path",
     "indexing-date": "Indexing date",
     "extraction-level": "Extraction level",

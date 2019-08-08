@@ -6,7 +6,8 @@ export const mixin = {
       return {
         person: 'id-badge',
         organization: 'building',
-        location: 'map-marker-alt'
+        location: 'map-marker-alt',
+        email: 'envelope'
       }[category.toLowerCase()] || 'ban'
     },
     getCategoryClass (category = 'muted', prefix = '') {

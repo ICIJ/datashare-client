@@ -23,6 +23,7 @@ import { faDatabase } from '@fortawesome/free-solid-svg-icons/faDatabase'
 import { faDesktop } from '@fortawesome/free-solid-svg-icons/faDesktop'
 import { faDownload } from '@fortawesome/free-solid-svg-icons/faDownload'
 import { faEllipsisV } from '@fortawesome/free-solid-svg-icons/faEllipsisV'
+import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope'
 import { faExclamationTriangle } from '@fortawesome/free-solid-svg-icons/faExclamationTriangle'
 import { faExternalLinkAlt } from '@fortawesome/free-solid-svg-icons/faExternalLinkAlt'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
@@ -85,6 +86,7 @@ library.add(
   faDesktop,
   faDownload,
   faEllipsisV,
+  faEnvelope,
   faExclamationTriangle,
   faExternalLinkAlt,
   faEyeSlash,

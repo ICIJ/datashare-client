@@ -30,7 +30,8 @@ $theme-colors: (
   category-ban: $secondary,
   category-person: #ff6699,
   category-organization: darken($warning, 5),
-  category-location: #4cd9aa
+  category-location: #4cd9aa,
+  category-email: #33beff
 );
 
 $enable-shadows: true;
