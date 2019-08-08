@@ -168,10 +168,10 @@ export default {
       ]
     },
     goToPreviousTabShortkey () {
-      return getOS() === 'mac' ? ['meta', 'option', 'arrowdown'] : ['ctrl', 'alt', 'pagedown']
+      return getOS() === 'mac' ? ['meta', 'alt', 'arrowdown'] : ['ctrl', 'alt', 'pagedown']
     },
     goToNextTabShortkey () {
-      return getOS() === 'mac' ? ['meta', 'option', 'arrowup'] : ['ctrl', 'alt', 'pageup']
+      return getOS() === 'mac' ? ['meta', 'alt', 'arrowup'] : ['ctrl', 'alt', 'pageup']
     }
   },
   beforeRouteEnter (to, _from, next) {
