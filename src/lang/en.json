@@ -385,6 +385,7 @@
     "opennlp": "Open NLP",
     "mitie": "Mitie",
     "ixapipe": "Ixa Pipe",
+    "email": "Email extraction",
     "default": "By default - Offers the highest probability of working in most documents",
     "sync_models": "Please check this box if you are currently working offline with no internet connection.",
     "stop_task": "Stop this task",

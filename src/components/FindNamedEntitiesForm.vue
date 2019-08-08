@@ -38,6 +38,12 @@
           {{ $t('indexing.ixapipe') }}
         </label>
       </div>
+      <div class="custom-control custom-radio">
+        <input class="custom-control-input" type="radio" id="pipeline_email" value="email" v-model="pipeline">
+        <label class="custom-control-label" for="pipeline_email">
+          {{ $t('indexing.email') }}
+        </label>
+      </div>
     </div>
     <div class="find-named-entities-form__offline form-group pl-4" v-if="!isServer">
       <b-form-checkbox id="syncModels" v-model="offline">

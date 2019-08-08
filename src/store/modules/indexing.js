@@ -75,6 +75,9 @@ export const actions = {
       case 'ixapipe':
         datashare.findNames('IXAPIPE', { syncModels: !state.form.offline })
         break
+      case 'email':
+        datashare.findNames('EMAIL', { syncModels: false })
+        break
     }
   },
   stopPendingTasks ({ commit }) {
