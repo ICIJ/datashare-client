@@ -36,7 +36,7 @@ Command (⌘) + F
 
 ![](../.gitbook/assets/screenshot-2019-07-05-at-12.08.51.png)
 
-### ... and go from one occurrence to the next / previous occurrence
+**... and go from one occurrence to the next / previous occurrence**
 
 Go to next occurrence:
 
@@ -53,6 +53,24 @@ Shift + Enter
 ![](../.gitbook/assets/screenshot-2019-07-05-at-12.33.58.png)
 
 ### 
+
+### Navigate a document's tabs
+
+For Windows and Linux:
+
+```text
+Control (ctrl) + alt + ↑ 
+Control (ctrl) + alt + ↓ 
+```
+
+For Mac:
+
+```
+Command (⌘) + option (⌥) + ↑
+Command (⌘) + option (⌥) + ↓
+```
+
+
 
 ### Go back to search results
 
