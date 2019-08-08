@@ -430,7 +430,7 @@
       "descriptionPlaceholder": "Search description",
       "projectLabel": "Project",
       "fileLabel": "CSV file:",
-      "fileDescription": "Only CSV format accepted.",
+      "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
       "filePlaceholder": "Choose a file...",
       "submit": "Submit"
     },
