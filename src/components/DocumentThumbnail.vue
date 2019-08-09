@@ -61,7 +61,7 @@ export default {
       return this.$config.get('document-thumbnail.activated')
     },
     lazyLoadable () {
-      return window && "IntersectionObserver" in window
+      return window && 'IntersectionObserver' in window
     },
     sessionIdHeaderValue () {
       return getCookie(process.env.VUE_APP_DS_COOKIE_NAME)
@@ -73,15 +73,15 @@ export default {
     }
   },
   methods: {
-    arrayBufferToBase64(buffer) {
+    arrayBufferToBase64 (buffer) {
       let binary = ''
       const bytes = [].slice.call(new Uint8Array(buffer))
-      bytes.forEach(b => binary += String.fromCharCode(b))
+      bytes.forEach(b => { binary += String.fromCharCode(b) })
       // Create a base64 string from a string
       return btoa(binary)
     },
     async fetch () {
-      const request = new Request(this.thumbnailUrl);
+      const request = new Request(this.thumbnailUrl)
       const response = await fetch(request, {
         method: 'GET',
         cache: 'default',
@@ -89,7 +89,7 @@ export default {
           [this.sessionIdHeaderName]: this.sessionIdHeaderValue
         }
       })
-      if(!response.ok) throw Error('Unable to fetch the thumbnail')
+      if (!response.ok) throw Error('Unable to fetch the thumbnail')
       const buffer = await response.arrayBuffer()
       const base64Flag = 'data:image/jpeg;base64,'
       const imageStr = this.arrayBufferToBase64(buffer)
@@ -99,8 +99,8 @@ export default {
       try {
         this.thumbnailSrc = await this.fetch()
         this.$set(this, 'loaded', true)
-      } catch {
-        this.$set(this, 'erroed', true)
+      } catch (_) {
+        this.$set(this, 'error', true)
       }
     },
     bindObserver () {
