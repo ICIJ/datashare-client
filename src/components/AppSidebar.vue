@@ -14,7 +14,7 @@
       </div>
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'landing' }" class="app-sidebar__container__menu__item__link" title="Search in documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link :to="{ name: 'search', query }" class="app-sidebar__container__menu__item__link" title="Search in documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="search" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.search') }}
@@ -131,6 +131,9 @@ export default {
     }
   },
   computed: {
+    query () {
+      return this.$store.getters['search/toRouteQueryWithStamp']
+    },
     tooltipsClass () {
       return this.reduced ? '' : 'd-none'
     },
@@ -247,7 +250,7 @@ export default {
             font-size: 0.9rem;
             font-weight: bold;
 
-            &.router-link-exact-active, &:hover, &:active {
+            &.router-link-active, &:hover, &:active {
               color: white;
               background: rgba(white, .05);
             }
