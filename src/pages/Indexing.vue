@@ -1,35 +1,42 @@
 <template>
-  <div class="indexing container pt-4">
-    <router-link :to="{ name: 'search' }" class="py-2">
-      <fa icon="chevron-circle-left" />
-      {{ $t('search.back') }}
-    </router-link>
-    <div class="text-right">
-      <button class="btn btn-primary mr-2 btn-extract" type="button" @click="openExtractingForm">
-        <fa icon="rocket" class="mr-2" />
-        {{ $t('indexing.extract_text') }}
-      </button>
-      <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
-        <button class="btn btn-primary btn-find-named-entites" type="button"
-                :disabled="isPendingTasks" @click="openFindNamedEntitiesForm">
-          {{ $t('indexing.find_named_entities') }}
-        </button>
-      </span>
+  <div class="indexing">
+    <div class="indexing__explaination bg-white">
+      <div class="container py-5">
+        <div class="float-right">
+          <div class="text-right">
+            <button class="btn btn-primary mr-2 btn-extract" type="button" @click="openExtractingForm">
+              <fa icon="rocket" class="mr-2" />
+              {{ $t('indexing.extract_text') }}
+            </button>
+            <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
+              <button class="btn btn-primary btn-find-named-entites" type="button"
+                      :disabled="isPendingTasks" @click="openFindNamedEntitiesForm">
+                <fa icon="user-tag" class="mr-2" />
+                {{ $t('indexing.find_named_entities') }}
+              </button>
+            </span>
+          </div>
+          <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
+            <template #modal-title>
+              <fa icon="rocket" class="mr-2" />
+              {{ $t('indexing.extract_text') }}
+            </template>
+            <extracting-form id="extracting-form" :finally="closeExtractingForm" />
+          </b-modal>
+          <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md">
+            <template #modal-title>
+              {{ $t('indexing.find_named_entities') }}
+            </template>
+            <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm" />
+          </b-modal>
+        </div>
+        <h3>
+          {{ $t('indexing.title') }}
+        </h3>
+        <p class="m-0" v-html="$t('indexing.description', { howToLink })"></p>
+      </div>
     </div>
-    <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
-      <template #modal-title>
-        <fa icon="rocket" class="mr-2" />
-        {{ $t('indexing.extract_text') }}
-      </template>
-      <extracting-form id="extracting-form" :finally="closeExtractingForm" />
-    </b-modal>
-    <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md">
-      <template #modal-title>
-        {{ $t('indexing.find_named_entities') }}
-      </template>
-      <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm" />
-    </b-modal>
-    <div class="mt-4">
+    <div class="mt-4 container">
       <div class="card">
         <div class="card-header">
           <h3 class="h5 m-0">
@@ -85,6 +92,8 @@ import { mapState } from 'vuex'
 import bModal from 'bootstrap-vue/es/components/modal/modal'
 import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
+import settings from '@/utils/settings'
+import { getOS } from '@/utils/utils'
 import store from '@/store'
 import filter from 'lodash/filter'
 import last from 'lodash/last'
@@ -102,6 +111,10 @@ export default {
     },
     findNamedEntitiesTooltip () {
       return this.isPendingTasks ? this.$t('indexing.find_named_entities_tooltip') : ''
+    },
+    howToLink () {
+      const os = getOS()
+      return settings.documentationLinks.indexing[os] || settings.documentationLinks.indexing.default
     }
   },
   mounted () {

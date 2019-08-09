@@ -117,14 +117,7 @@ export default {
 <style lang="scss">
   .batch-search {
 
-    .row {
-      min-height: calc(100vh - var(--app-nav-height));
-      margin: 0;
-    }
-
      & .batch-search-form {
-       min-width: 1;
-       flex:0 0 440px;
 
        .card {
          border: 2px solid $tertiary;

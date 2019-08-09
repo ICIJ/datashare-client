@@ -373,6 +373,8 @@
     "to": "To"
   },
   "indexing": {
+    "title": "Analyze your documents",
+    "description": "Please <a href=\"%{howToLink}\" target=\"_blank\">read the documentation</a> about adding documents.",
     "yes": "Yes",
     "no": "No",
     "go": "Go",
@@ -401,7 +403,7 @@
   },
   "menu": {
     "help": "Ask for help",
-    "analyse": "Analyze my documents",
+    "analyse": "Analyze your  documents",
     "batch": "Batch searches",
     "search": "Search in documents",
     "history": "Your history",
@@ -423,23 +425,24 @@
     "ask_help": "Ask for help"
   },
   "userHistory": {
-    "heading": "Your browsing history",
+    "heading": "Your history",
     "description": "The last 500 documents you opened with Datashare from this computer.",
     "empty": "Your history is empty",
     "clear": "Clear history"
   },
   "batchSearch": {
-    "title": "Batch Search",
+    "description": "Search multiple terms and documents at once.",
+    "title": "Batch searches",
     "form": {
-      "nameLabel": "Name:",
-      "namePlaceholder": "Search name",
+      "nameLabel": "Name of your new batch search:",
+      "namePlaceholder": "",
       "descriptionLabel": "Description:",
-      "descriptionPlaceholder": "Search description",
+      "descriptionPlaceholder": "",
       "projectLabel": "Project",
       "fileLabel": "CSV file:",
       "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
       "filePlaceholder": "Choose a file...",
-      "submit": "Submit"
+      "submit": "Add"
     },
     "projectName": "Project Name",
     "searchName": "Search Name",

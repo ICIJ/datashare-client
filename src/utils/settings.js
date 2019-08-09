@@ -31,7 +31,7 @@ export default {
       mac: 'https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare',
       windows: 'https://icij.gitbook.io/datashare/windows/how-to-add-documents-to-datashare',
       linux: 'https://icij.gitbook.io/datashare/linux/how-to-add-documents-to-datashare',
-      default: 'https://icij.gitbook.io/datashare/'
+      default: 'ttps://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare'
     },
     operators: {
       default: 'https://icij.gitbook.io/datashare/all/search-with-operators'

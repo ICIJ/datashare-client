@@ -1,22 +1,34 @@
 <template>
   <div class="batch-search-form">
-    <b-form @submit.prevent="onSubmit" class="m-3">
+    <b-form @submit.prevent="onSubmit">
       <div class="card">
         <div class="m-4">
-          <h3 class="h5 mb-4">
-            New batch search
-          </h3>
-          <b-form-group
-            id="group-name"
-            :label="$t('batchSearch.form.nameLabel')"
-            label-for="name">
-            <b-form-input
-              id="name"
-              v-model="name"
-              type="text"
-              required
-              :placeholder="$t('batchSearch.form.namePlaceholder')"></b-form-input>
-          </b-form-group>
+          <div class="row">
+            <b-form-group
+              id="group-name"
+              :label="$t('batchSearch.form.nameLabel')"
+              label-for="name"
+              class="col">
+              <b-form-input
+                id="name"
+                v-model="name"
+                type="text"
+                required
+                :placeholder="$t('batchSearch.form.namePlaceholder')"></b-form-input>
+            </b-form-group>
+            <b-form-group
+              id="group-file"
+              :label="$t('batchSearch.form.fileLabel')"
+              label-for="file"
+              :description="$t('batchSearch.form.fileDescription')"
+              class="col">
+              <b-form-file
+                v-model="csvFile"
+                :placeholder="$t('batchSearch.form.filePlaceholder')"
+                accept=".csv"
+                required></b-form-file>
+            </b-form-group>
+          </div>
           <b-form-group
             id="group-description"
             :label="$t('batchSearch.form.descriptionLabel')"
@@ -25,7 +37,7 @@
               id="description"
               v-model="description"
               :placeholder="$t('batchSearch.form.descriptionPlaceholder')"
-              rows="3"
+              rows="2"
               max-rows="6"></b-form-textarea>
           </b-form-group>
           <b-form-group
@@ -38,19 +50,8 @@
               :options="indices"
               required></b-form-select>
           </b-form-group>
-          <b-form-group
-            id="group-file"
-            :label="$t('batchSearch.form.fileLabel')"
-            label-for="file"
-            :description="$t('batchSearch.form.fileDescription')">
-            <b-form-file
-              v-model="csvFile"
-              :placeholder="$t('batchSearch.form.filePlaceholder')"
-              accept=".csv"
-              required></b-form-file>
-          </b-form-group>
         </div>
-        <div class="card-footer text-right b-0">
+        <div class="card-body text-right pt-0">
           <b-button type="submit" variant="primary">{{ $t('batchSearch.form.submit') }}</b-button>
         </div>
       </div>

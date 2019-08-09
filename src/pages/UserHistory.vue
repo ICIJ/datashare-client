@@ -1,22 +1,26 @@
 <template>
   <div class="user-history">
-    <div class="container">
-      <div class="user-history__header py-4">
-        <button class="btn btn-sm btn-outline-secondary float-right" @click="clear" v-if="documents.length">
-          <fa icon="trash-alt" class="mr-1" />
-          {{ $t('userHistory.clear') }}
-        </button>
-        <h3>
-          {{ $t('userHistory.heading') }}
-        </h3>
-        <p v-if="documents.length" class="m-0">
-          {{ $t('userHistory.description') }}
-        </p>
-        <p v-else class="text-muted m-0">
-          {{ $t('userHistory.empty') }}
-        </p>
+    <div class="bg-white">
+      <div class="container">
+        <div class="user-history__header py-5">
+          <button class="btn btn-primary float-right" @click="clear" v-if="documents.length">
+            <fa icon="trash-alt" class="mr-1" />
+            {{ $t('userHistory.clear') }}
+          </button>
+          <h3>
+            {{ $t('userHistory.heading') }}
+          </h3>
+          <p v-if="documents.length" class="m-0">
+            {{ $t('userHistory.description') }}
+          </p>
+          <p v-else class="text-muted m-0">
+            {{ $t('userHistory.empty') }}
+          </p>
+        </div>
       </div>
-      <ul class="list-unstyled user-history__list card mb-4 small" v-if="documents.length">
+    </div>
+    <div class="container mt-4">
+      <ul class="list-unstyled user-history__list card mb-4" v-if="documents.length">
         <li v-for="(document, i) in documents" :key="i" class="user-history__list__item">
           <router-link :to="{ name: 'document', params: document.routerParams }" class="p-2 d-block d-flex">
             <document-thumbnail :document="document" size="40" crop lazy class="mr-2 user-history__list__item__preview" />
