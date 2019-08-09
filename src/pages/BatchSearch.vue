@@ -13,7 +13,12 @@
             <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
           </div>
         </div>
-        <b-table striped hover responsive :fields="fields" :items="items" thead-tr-class="text-nowrap" tbody-tr-class="batch-search__items__item">
+        <div v-if="!isReady">
+          <content-placeholder :rows="rows" class="p-0 my-3" />
+          <content-placeholder :rows="rows" class="p-0 my-3" />
+          <content-placeholder :rows="rows" class="p-0 my-3" />
+        </div>
+        <b-table v-else striped hover responsive :fields="fields" :items="items" thead-tr-class="text-nowrap" tbody-tr-class="batch-search__items__item">
           <template #name="row">
             <router-link :to="{ name: 'batch-search.results', params: { index: row.item.project.id, uuid: row.item.uuid } }" class="batch-search__items__item__link">
               {{ row.item.name }}
@@ -84,6 +89,13 @@ export default {
           label: this.$t('batchSearch.nbResults'),
           sortable: true
         }
+      ],
+      isReady: false,
+      rows: [
+        {
+          height: '1em',
+          boxes: [['10%', '80%']]
+        }
       ]
     }
   },
@@ -91,7 +103,9 @@ export default {
     ...mapState('batchSearch', { items: 'batchSearches' })
   },
   created () {
-    return this.$store.dispatch('batchSearch/getBatchSearches')
+    return this.$store.dispatch('batchSearch/getBatchSearches').then(() => {
+      this.isReady = true
+    })
   },
   methods: {
     moment,
