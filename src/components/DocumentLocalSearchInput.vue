@@ -108,11 +108,11 @@ export default {
 </script>
 
 <template>
-  <div class="document-local-search-input form-inline px-3" :class="{ 'document-local-search-input--active': isActive }">
+  <div class="document-local-search-input form-inline px-3" :class="{ 'document-local-search-input--active': isActive, 'document-local-search-input--pristine': searchTerm.length > 0 }">
     <div class="form-group py-2 mr-2">
       <label class="sr-only">{{ $t('document.search') }}</label>
       <div class="input-group">
-        <input :value="searchTerm" @input="$emit('input', $event.target.value)" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="shortkeys" @shortkey="shortkeyAction" />
+        <input type="search" :value="searchTerm" @input="$emit('input', $event.target.value)" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="shortkeys" @shortkey="shortkeyAction" />
         <div class="document-local-search-input__count input-group-append" v-if="searchTerm.length > 0">
           <span v-if="searchWorkerInProgress" class="input-group-text">
             <fa icon="circle-notch" spin />
@@ -138,6 +138,18 @@ export default {
   .document-local-search-input {
     justify-content: flex-end;
     white-space: nowrap;
+
+    &--pristine.form-inline .input-group &__term {
+      border-radius: 1.5em 0 0 1.5em;
+    }
+
+    &.form-inline &__term {
+      border-radius: 1.5em;
+    }
+
+    &__count .input-group-text {
+      border-radius: 0 1.5em 1.5em 0;
+    }
 
     &.form-inline {
       white-space: nowrap;

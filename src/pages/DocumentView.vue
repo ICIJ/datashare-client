@@ -198,7 +198,7 @@ export default {
   }
 
   &__header {
-    @include gradient-directional(theme-color(dark), $primary);
+    @include gradient-directional($primary, theme-color(dark));
     color: white;
     padding: $spacer * 2 0;
     padding-bottom: 0;

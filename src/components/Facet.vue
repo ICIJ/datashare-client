@@ -45,9 +45,9 @@
       <div class="list-group-item facet__items__display border-top-0" @click="asyncFacetSearch" v-if="shouldDisplayShowMoreAction()">
         <span>{{ $t('facet.showMore') }}</span>
       </div>
-      <div v-if="noResults" class="p-2 text-center small text-muted">
+      <div v-if="noResults" class="p-2 text-center text-muted">
         {{ $t('facet.none') }}<br />
-        <a @click="asyncFacetSearch" href="#">
+        <a @click="asyncFacetSearch" href="#" class="text-white text-underline">
           {{ $t('facet.seeAll') }}
         </a>
       </div>
@@ -176,6 +176,10 @@ export default {
 
 <style lang="scss">
   .facet {
+
+    .content-placeholder .content-placeholder__wrapper__row__box {
+      background: darken($aggregations-panel-bg, 5%);
+    }
 
     &__header {
 

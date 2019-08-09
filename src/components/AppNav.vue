@@ -1,9 +1,9 @@
 <template>
   <header class="app__nav">
     <div class="app__nav__container">
-      <div class="app__nav__container__main">
-        <div class="app__nav__container__main__search-bar px-3">
-          <search-bar class="px-0" settings />
+      <div class="app__nav__container__main py-3">
+        <div class="app__nav__container__main__search-bar px-3 py-0">
+          <search-bar class="p-0" settings />
         </div>
       </div>
     </div>
@@ -47,7 +47,6 @@ export default {
         position:relative;
         z-index: $zindex-fixed + 30;
         border-radius: $border-radius-lg 0 0 0;
-        min-height: var(--app-nav-height);
         white-space: nowrap;
 
         &__search-bar {

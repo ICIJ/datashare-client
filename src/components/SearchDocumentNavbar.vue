@@ -12,21 +12,21 @@
       <b-popover target="search-document-navbar-download" triggers="hover focus" placement="bottomleft" :title="currentDocument.contentTypeLabel">
         <document-type-card :document="currentDocument" />
       </b-popover>
-      <span class="search-document-navbar__nav btn-group" v-if="currentDocumentIndex > -1">
-        <button @click="goToPreviousDocument" v-shortkey="[getShortkey, 'arrowleft']" @shortkey="goToPreviousDocument" :disabled="!hasPreviousDocument" class="btn btn-sm btn-outline-light py-0" :title="previousTooltip" v-b-tooltip.html.bottomleft>
+      <span class="search-document-navbar__nav" v-if="currentDocumentIndex > -1">
+        <button @click="goToPreviousDocument" v-shortkey="[getShortkey, 'arrowleft']" @shortkey="goToPreviousDocument" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" :title="previousTooltip" v-b-tooltip.html.bottomleft>
           <fa icon="angle-left" />
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.previous.label') }}
           </span>
         </button>
-        <button @click="goToNextDocument" v-shortkey="[getShortkey, 'arrowright']" @shortkey="goToNextDocument" :disabled="!hasNextDocument" class="btn btn-sm btn-outline-light py-0" :title="nextTooltip" v-b-tooltip.html.bottomleft>
+        <button @click="goToNextDocument" v-shortkey="[getShortkey, 'arrowright']" @shortkey="goToNextDocument" :disabled="!hasNextDocument" class="btn btn-sm btn-link text-white py-0" :title="nextTooltip" v-b-tooltip.html.bottomleft>
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.next.label') }}
           </span>
           <fa icon="angle-right" />
         </button>
       </span>
-      <router-link-popup :to="{ name: 'document-simplified', params: currentDocument.routerParams }" class="btn btn-sm btn-outline-light ml-2 py-0" :title="$t('document.external_window')" v-b-tooltip.bottomleft>
+      <router-link-popup :to="{ name: 'document-simplified', params: currentDocument.routerParams }" class="btn btn-sm btn-link text-white py-0" :title="$t('document.external_window')" v-b-tooltip.bottomleft>
         <fa icon="external-link-alt" />
       </router-link-popup>
     </div>
@@ -159,6 +159,7 @@ export default {
     }
 
     &__back {
+      font-size: 0.875rem;
       color: inherit;
       display: inline;
     }

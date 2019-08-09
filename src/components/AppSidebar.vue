@@ -8,7 +8,7 @@
         </router-link>
         <div>
           <a @click="hideSidebar()" class="app-sidebar__container__toggler">
-            <fa icon="arrow-left" />
+            <fa icon="bars" />
           </a>
         </div>
       </div>
@@ -21,19 +21,19 @@
             </span>
           </router-link>
         </li>
-        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="!isServer">
-          <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" title="Analyze my documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
-            <fa icon="rocket" fixed-width />
-            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t('menu.analyse') }}
-            </span>
-          </router-link>
-        </li>
         <li class="app-sidebar__container__menu__item" v-if="hasFeature('BATCH_SEARCHES')">
           <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" title="Batch searches" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="layer-group" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.batch') }}
+            </span>
+          </router-link>
+        </li>
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="!isServer">
+          <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" title="Analyze my documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
+            <fa icon="rocket" fixed-width />
+            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+              {{ $t('menu.analyse') }}
             </span>
           </router-link>
         </li>
@@ -83,8 +83,8 @@
         </li>
       </ul>
     </vue-perfect-scrollbar>
-    <div class="app-sidebar__version text-center">
-      <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" />
+    <div class="app-sidebar__version text-left">
+      <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" class="d-inline-block" :no-icon="reduced" />
     </div>
     <div class="app-sidebar__data-location" v-if="!reduced && !isServer">
       <mounted-data-location />
@@ -279,7 +279,7 @@ export default {
 
     &__version, &__data-location {
       color: rgba(white, 0.6);
-      padding: 0 $spacer $spacer * 0.75;
+      padding: 0 $spacer * 1.5 $spacer;
       font-size: 0.8rem;
     }
   }

@@ -130,12 +130,10 @@ export default {
     min-width: 80px;
     min-height: 3rem;
     position: relative;
-    border: 1px solid $border-color;
     border-radius: $gray-200;
     overflow: hidden;
     font-size: 0.5rem;
     color: $text-muted;
-    background: $body-bg;
 
     &--crop {
       width: 80px;

@@ -1,13 +1,11 @@
 <template>
   <div class="search" :class="{ 'search--show-document': showDocument }">
     <div class="d-flex">
-      <transition name="slide-left">
-        <button class="search__show-filters align-self-center ml-3 btn btn-link px-0" @click="clickOnShowFilters()" v-if="!showFilters" :title="$t('search.showFilters')" v-b-tooltip.right>
-          <fa icon="arrow-right" />
-          <span class="sr-only">{{ $t('search.showFilters') }}</span>
-          <span class="search__show-filters__counter badge badge-warning badge-pill" v-if="activeFilters">{{ activeFilters }}</span>
-        </button>
-      </transition>
+      <button class="search__show-filters align-self-center ml-3 btn btn-link px-0" @click="clickOnShowFilters()" v-if="!showFilters" :title="$t('search.showFilters')" v-b-tooltip.right>
+        <fa icon="arrow-right" />
+        <span class="sr-only">{{ $t('search.showFilters') }}</span>
+        <span class="search__show-filters__counter badge badge-warning badge-pill" v-if="activeFilters">{{ activeFilters }}</span>
+      </button>
       <app-nav class="flex-grow-1" />
     </div>
     <div class="px-0 search__body">
@@ -157,16 +155,6 @@ export default {
       &:hover {
         background: lighten($aggregations-panel-bg, 10%);
         color: white;
-      }
-
-      &.slide-left-enter-active, &.slide-left-leave-active {
-        transition: .3s;
-      }
-
-      &.slide-left-enter, &.slide-left-leave-to {
-        width: 0;
-        flex-grow: 0px;
-        opacity: 0;
       }
     }
 

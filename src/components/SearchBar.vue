@@ -1,5 +1,5 @@
 <template>
-  <form class="search-bar py-3 container-fluid" :id="uniqueId" @submit.prevent="submit">
+  <form class="search-bar container-fluid" :id="uniqueId" @submit.prevent="submit">
     <div class="d-flex align-items-center">
       <div class="input-group" :class="{ ['input-group-' + size]: true }">
         <input
@@ -42,7 +42,7 @@
           </template>
         </selectable-dropdown>
       </div>
-      <div class="px-0 pl-2" v-if="settings">
+      <div class="px-0" v-if="settings">
         <search-settings placement="bottomleft" :size="size" :container="uniqueId" />
       </div>
     </div>
@@ -244,6 +244,11 @@ export default {
       flex-wrap: nowrap;
     }
 
+    .input-group-md &__input.form-control,
+    .input-group-lg &__input.form-control {
+      border-radius: 1.5em 0 0 1.5em;
+    }
+
     &__input.form-control {
       border-right: 0;
 
@@ -261,6 +266,7 @@ export default {
     &__field {
       border-left: dashed 1px  $input-border-color;
       background: $input-bg;
+      font-size: inherit;
 
       &--selected:after {
         content:"";
@@ -277,6 +283,10 @@ export default {
         border: 1px solid $input-border-color;
         border-left: 0;
         box-shadow: $input-box-shadow;
+
+        .input-group-lg & {
+          font-size: 1.25rem;
+        }
       }
     }
 
@@ -335,8 +345,8 @@ export default {
     }
 
     & .input-group > .input-group-append > &__submit.btn {
-      border-top-right-radius: $input-border-radius;
-      border-bottom-right-radius: $input-border-radius;
+      border-top-right-radius: 1.5em;
+      border-bottom-right-radius: 1.5em;
     }
   }
 </style>

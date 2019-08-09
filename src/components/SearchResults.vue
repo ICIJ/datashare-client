@@ -7,15 +7,15 @@
           <search-results-link class="search-results__items__item__link" :doc="doc" />
           <div class="">
             <div class="search-results__items__item__actions btn-group-vertical">
-              <a class="search-results__items__item__star btn btn-outline-primary btn-sm" :class="[isStarred(doc.id) ? 'starred' : '']" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)" v-b-tooltip.left>
+              <a class="search-results__items__item__star btn btn-link btn-sm" :class="[isStarred(doc.id) ? 'starred' : '']" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)" v-b-tooltip.left>
                 <fa :icon="[isStarred(doc.id) ? 'fa' : 'far', 'star']" fa-fw />
                 <span class="sr-only">{{ $t('document.star_button') }}</span>
               </a>
-              <a class="search-results__items__item__download btn btn-outline-primary btn-sm" :href="doc.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip.left>
+              <a class="search-results__items__item__download btn btn-link btn-sm" :href="doc.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip.left>
                 <fa icon="download" fa-fw />
                 <span class="sr-only">{{ $t('document.download_button') }}</span>
               </a>
-              <router-link-popup :to="{ name: 'document-simplified', params: doc.routerParams }" class="btn btn-sm btn-outline-primary" :title="$t('document.external_window')" v-b-tooltip.left>
+              <router-link-popup :to="{ name: 'document-simplified', params: doc.routerParams }" class="btn btn-sm btn-link" :title="$t('document.external_window')" v-b-tooltip.left>
                 <fa icon="external-link-alt" fa-fw />
               </router-link-popup>
             </div>
@@ -123,7 +123,6 @@ export default {
           visibility: hidden;
 
           .btn {
-            background: white;
             transition: none;
             font-size: 0.9rem;
             padding: $spacer * 0.10 $spacer * 0.25;
@@ -144,6 +143,7 @@ export default {
           visibility: visible;
 
           .btn {
+            background: white;
             border-color: $primary;
           }
         }
