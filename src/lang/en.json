@@ -431,7 +431,7 @@
     "clear": "Clear history"
   },
   "batchSearch": {
-    "description": "Search multiple terms and documents at once.",
+    "lead": "Search multiple terms and documents at once.",
     "title": "Batch searches",
     "form": {
       "nameLabel": "Name of your new batch search:",
