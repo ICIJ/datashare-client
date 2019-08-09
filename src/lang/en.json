@@ -362,7 +362,8 @@
     "showLessDetails": "Show less details",
     "author": "Author",
     "extraction_date": "Indexing date",
-    "parent": "Parent"
+    "parent": "Parent",
+    "in_metadata": "in metadata"
   },
   "email": {
     "detail": "See detail",

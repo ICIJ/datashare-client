@@ -33,9 +33,34 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
   describe('lists the query terms but the ones about specific field other than "content"', () => {
     it('should display query terms with occurrences in decreasing order', async () => {
       const id = 'doc'
-      await letData(es).have(new IndexedDocument(id).withContent('document result test document test test ')).commit()
+      await letData(es).have(new IndexedDocument(id).withContent('document result test document test test')).commit()
       await store.dispatch('document/get', { id })
-      store.commit('search/query', 'result test document')
+      store.commit('search/query', 'result test document lalilou')
+      const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
+        localVue,
+        store,
+        i18n,
+        propsData: {
+          document: store.state.document.doc
+        }
+      })
+
+      expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(4)
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toEqual('test')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toEqual('3')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(1).text()).toEqual('document')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(1).text()).toEqual('2')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(2).text()).toEqual('result')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(2).text()).toEqual('1')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(3).text()).toEqual('lalilou')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(3).text()).toEqual('0')
+    })
+
+    it('should display query terms in metadata with specific message and in last position', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id).withContent('message').withMetadata('bruno message')).commit()
+      await store.dispatch('document/get', { id })
+      store.commit('search/query', 'bruno lalilou message')
       const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
         localVue,
         store,
@@ -46,12 +71,12 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
       })
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(3)
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toEqual('test')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toEqual('3')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(1).text()).toEqual('document')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(1).text()).toEqual('2')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(2).text()).toEqual('result')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(2).text()).toEqual('1')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toEqual('message')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toEqual('1')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(1).text()).toEqual('lalilou')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(1).text()).toEqual('0')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(2).text()).toEqual('bruno')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(2).text()).toEqual('in metadata')
     })
 
     it('should not display the query terms on a specific field but content', async () => {

@@ -57,7 +57,9 @@ class IndexedDocument {
     this.join = { name: 'Document' }
     this.type = 'Document'
     this.metadata = {
-      tika_metadata_content_type: null
+      tika_metadata_another_metadata: null,
+      tika_metadata_content_type: null,
+      tika_metadata_creation_date: null
     }
     this.nerList = []
     this.nerTags = []
@@ -85,6 +87,10 @@ class IndexedDocument {
   }
   withCreationDate (creationDate) {
     this.metadata.tika_metadata_creation_date = creationDate
+    return this
+  }
+  withMetadata (metadata) {
+    this.metadata.tika_metadata_another_metadata = metadata
     return this
   }
   withLanguage (language) {

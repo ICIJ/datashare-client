@@ -23,6 +23,7 @@ import range from 'lodash/range'
 import random from 'lodash/random'
 import reduce from 'lodash/reduce'
 import uniq from 'lodash/uniq'
+import values from 'lodash/values'
 
 export const datashare = new DatashareClient()
 
@@ -143,7 +144,7 @@ export const getters = {
     try {
       retTerms(lucene.parse(state.query), null)
       return terms
-    } catch {
+    } catch (_) {
       return []
     }
   },
@@ -153,18 +154,18 @@ export const getters = {
   },
   retrieveContentQueryTermsInDocument (state, getters) {
     return document => {
+      const metadata = join(values(get(document, 'source.metadata', '')), ' ')
+      getters.retrieveContentQueryTermsInContent(metadata, 'metadata')
       const content = get(document, 'source.content', '')
-      return getters.retrieveContentQueryTermsInContent(content)
+      getters.retrieveContentQueryTermsInContent(content, 'length')
+      return orderBy(getters.retrieveContentQueryTerms, ['length'], ['desc']).sort(a => a.length === 0 && a.metadata > 0)
     }
   },
   retrieveContentQueryTermsInContent (state, getters) {
-    return content => {
-      const terms = getters.retrieveContentQueryTerms.map(term => {
-        term.length = (content.match(new RegExp(term.label, 'gi')) || []).length
-        return term
-      })
-      return orderBy(terms, ['length'], ['desc'])
-    }
+    return (content, field) => getters.retrieveContentQueryTerms.map(term => {
+      term[field] = (content.match(new RegExp(term.label, 'gi')) || []).length
+      return term
+    })
   }
 }
 

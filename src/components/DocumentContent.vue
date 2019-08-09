@@ -88,7 +88,7 @@ export default {
       return highlight(content, sortedNamedEntities, this.buildNamedEntityMark, identity, m => m.source.mention)
     },
     addGlobalSearchMarks (content) {
-      return this.globalSearchTermsInContent(content).reduce((content, term, index) => {
+      return this.globalSearchTermsInContent(content, 'length').reduce((content, term, index) => {
         const needle = new RegExp(term.label, 'gi')
         const fn = match => `<mark class="global-search-term" style="border-color: ${this.getTermIndexColor(index)}">${match}</mark>`
         return content.replace(needle, fn)
@@ -127,7 +127,7 @@ export default {
       const whiteList = { mark: ['style', 'class', 'title'], p: true }
       return xss(content, { stripIgnoreTag: true, whiteList })
     },
-    // The pipeline that transforms the content must be asynchrone
+    // The pipeline that transforms the content must be asynchronous
     async contentPipeline () {
       return this.contentPipelineFunctions.reduce(async (content, fn) => {
         return fn(await content)
