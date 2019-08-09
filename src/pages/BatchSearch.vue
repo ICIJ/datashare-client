@@ -1,18 +1,16 @@
 <template>
   <div class="batch-search h-100">
-    <div class="row no-gutters">
-      <div class="col batch-search__form">
-        <batch-search-form />
+    <div class="batch-search__explanation bg-white py-5">
+      <div class="container">
+        <h3>
+          {{ $t('batchSearch.title') }}
+        </h3>
+        <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
       </div>
-      <div class="batch-search__items col">
-        <div class="batch-search__items__explanation">
-          <div class="container">
-            <h3>
-              {{ $t('batchSearch.title') }}
-            </h3>
-            <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
-          </div>
-        </div>
+    </div>
+    <div class="container pt-4">
+      <batch-search-form class="batch-search__form" />
+      <div class="batch-search__items">
         <div v-if="!isReady">
           <content-placeholder :rows="rows" class="p-0 my-3" />
           <content-placeholder :rows="rows" class="p-0 my-3" />

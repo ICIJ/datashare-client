@@ -47,7 +47,7 @@ describe('AppSidebar.vue', () => {
     Murmur.config.merge({ mode: 'LOCAL' })
     const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
     expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').length).toEqual(1)
-    expect(wrapper.vm.addDocumentsLink).toEqual('https://icij.gitbook.io/datashare/')
+    expect(wrapper.vm.addDocumentsLink).toEqual('https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare')
   })
 
   it('should display the Mac link to the doc', () => {
