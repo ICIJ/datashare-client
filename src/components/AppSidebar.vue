@@ -14,7 +14,7 @@
       </div>
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'landing' }" class="app-sidebar__container__menu__item__link" title="Search in documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link :to="{ name: 'landing' }" class="app-sidebar__container__menu__item__link" title="Search in documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="search" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               Search in documents
@@ -22,15 +22,15 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="!isServer">
-          <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" title="Analyze my documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" title="Analyze my documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="rocket" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               Analyze my documents
             </span>
           </router-link>
         </li>
-        <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" title="Batch searches" v-b-tooltip.right="{ customClass: tooltipsClass }">
+        <li class="app-sidebar__container__menu__item" v-if="hasFeature('BATCH_SEARCHES')">
+          <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" title="Batch searches" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="layer-group" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               Batch searches
@@ -38,7 +38,7 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'user-history' }" class="app-sidebar__container__menu__item__link" title="Your history" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
+          <router-link :to="{ name: 'user-history' }" class="app-sidebar__container__menu__item__link" title="Your history" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
             <fa icon="clock" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               Your history
@@ -48,7 +48,7 @@
       </ul>
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
-          <a href="" class="app-sidebar__container__menu__item__link" title="FAQ" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a href="" class="app-sidebar__container__menu__item__link" title="FAQ" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="question" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               FAQ
@@ -56,7 +56,7 @@
           </a>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--help">
-          <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" title="Ask for help" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" title="Ask for help" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="ambulance" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               Ask for help
@@ -66,7 +66,7 @@
       </ul>
       <ul class="app-sidebar__container__menu list-unstyled mb-0">
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--locale">
-          <locales-dropdown class="app-sidebar__container__menu__item__link text-left text-wrap" v-slot="{ currentLocale }">
+          <locales-dropdown class="app-sidebar__container__menu__item__link text-left text-wrap" v-slot="{ currentLocale }">
             <fa icon="globe" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ currentLocale.label }}
@@ -74,7 +74,7 @@
           </locales-dropdown>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
-          <a href="" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a href="" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="sign-out-alt" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               Logout
@@ -93,55 +93,56 @@
 </template>
 
 <script>
-  import { getOS } from '@/utils/utils'
-  import utils from '@/mixins/utils'
-  import settings from '@/utils/settings'
-  import LocalesDropdown from './LocalesDropdown.vue'
-  import MountedDataLocation from './MountedDataLocation.vue'
-  import VersionNumber from './VersionNumber.vue'
-  import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+import { getOS } from '@/utils/utils'
+import utils from '@/mixins/utils'
+import features from '@/mixins/features'
+import settings from '@/utils/settings'
+import LocalesDropdown from './LocalesDropdown.vue'
+import MountedDataLocation from './MountedDataLocation.vue'
+import VersionNumber from './VersionNumber.vue'
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
-  export default {
-    name: 'AppSidebar',
-    mixins: [utils],
-    components: {
-      LocalesDropdown,
-      MountedDataLocation,
-      VersionNumber,
-      VuePerfectScrollbar
-    },
-    data () {
-      return {
-        reduced: false
-      }
-    },
-    mounted () {
+export default {
+  name: 'AppSidebar',
+  mixins: [utils, features],
+  components: {
+    LocalesDropdown,
+    MountedDataLocation,
+    VersionNumber,
+    VuePerfectScrollbar
+  },
+  data () {
+    return {
+      reduced: false
+    }
+  },
+  mounted () {
+    this.$nextTick(this.saveComponentWidth)
+  },
+  methods: {
+    hideSidebar () {
+      this.reduced = !this.reduced
       this.$nextTick(this.saveComponentWidth)
     },
-    methods: {
-      hideSidebar () {
-        this.reduced = !this.reduced
-        this.$nextTick(this.saveComponentWidth)
-      },
-      saveComponentWidth () {
-        const width = `${this.$el.offsetWidth}px`
-        // Save component width in a CSS variable after it's been update
-        this.$root.$el.style.setProperty('--app-sidebar-width', width)
-      }
+    saveComponentWidth () {
+      const width = `${this.$el.offsetWidth}px`
+      // Save component width in a CSS variable after it's been update
+      this.$root.$el.style.setProperty('--app-sidebar-width', width)
+    }
+  },
+  computed: {
+    tooltipsClass () {
+      return this.reduced ? '' : 'd-none'
     },
-    computed: {
-      tooltipsClass () {
-        return this.reduced ? '' : 'd-none'
-      },
-      addDocumentsLink () {
-        const os = getOS()
-        return settings.documentationLinks.indexing[os] || settings.documentationLinks.indexing.default
-      },
-      helpLink () {
-        return this.isServer ? 'https://jira.icij.org/servicedesk/customer/portal/4/create/108' : 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
-      }
+    addDocumentsLink () {
+      const os = getOS()
+      return settings.documentationLinks.indexing[os] || settings.documentationLinks.indexing.default
+    },
+    helpLink () {
+      return this.isServer ? 'https://jira.icij.org/servicedesk/customer/portal/4/create/108' : 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
     }
   }
+}
 </script>
 
 <style lang="scss">
@@ -245,7 +246,6 @@
             font-size: 0.9rem;
             font-weight: bold;
 
-
             &.router-link-exact-active, &:hover, &:active {
               color: white;
               background: rgba(white, .05);
@@ -272,7 +272,7 @@
       position: relative;
       box-shadow: 0 -0.5 * $spacer 0.5 * $spacer 0 $app-bg;
     }
-    
+
     &__version, &__data-location {
       color: rgba(white, 0.6);
       padding: 0 $spacer $spacer * 0.75;
