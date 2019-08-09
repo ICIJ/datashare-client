@@ -41,7 +41,12 @@
         {{ query }}
       </a>
     </div>
-    <div class="batch-search-results__queries">
+    <div v-if="!isReady">
+      <content-placeholder :rows="rows" class="p-0 my-3" />
+      <content-placeholder :rows="rows" class="p-0 my-3" />
+      <content-placeholder :rows="rows" class="p-0 my-3" />
+    </div>
+    <div v-else class="batch-search-results__queries">
       <b-table striped hover bordered :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query" :filter="filter">
         <template #documentNumber="row">
           {{ row.item.documentNumber + 1 }}
@@ -117,7 +122,14 @@ export default {
           sortable: true
         }
       ],
-      filter: ''
+      filter: '',
+      isReady: false,
+      rows: [
+        {
+          height: '1em',
+          boxes: [['10%', '80%']]
+        }
+      ]
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -139,6 +151,7 @@ export default {
   methods: {
     async getBatchSearchResults (params) {
       await store.dispatch('batchSearch/getBatchSearchResults', params.uuid, 0, 100)
+      this.isReady = true
     },
     getFileName (documentPath) {
       return last(documentPath.split('/'))
