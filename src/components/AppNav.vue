@@ -38,9 +38,8 @@ export default {
   .app__nav {
     z-index: 15;
     position: relative;
-    width: 100%;
-    color: $body-color;
     width: auto;
+    color: $body-color;
 
     &__container {
 
@@ -54,6 +53,7 @@ export default {
         &__search-bar {
           position: relative;
           padding: 0;
+          max-width: 880px;
         }
       }
     }

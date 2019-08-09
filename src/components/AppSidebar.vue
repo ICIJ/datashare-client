@@ -17,7 +17,7 @@
           <router-link :to="{ name: 'landing' }" class="app-sidebar__container__menu__item__link" title="Search in documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="search" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              Search in documents
+              {{ $t('menu.search') }}
             </span>
           </router-link>
         </li>
@@ -25,7 +25,7 @@
           <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" title="Analyze my documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="rocket" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              Analyze my documents
+              {{ $t('menu.analyse') }}
             </span>
           </router-link>
         </li>
@@ -33,7 +33,7 @@
           <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" title="Batch searches" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="layer-group" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              Batch searches
+              {{ $t('menu.batch') }}
             </span>
           </router-link>
         </li>
@@ -41,7 +41,7 @@
           <router-link :to="{ name: 'user-history' }" class="app-sidebar__container__menu__item__link" title="Your history" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
             <fa icon="clock" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              Your history
+              {{ $t('menu.history') }}
             </span>
           </router-link>
         </li>
@@ -51,7 +51,7 @@
           <a href="" class="app-sidebar__container__menu__item__link" title="FAQ" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="question" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              FAQ
+              {{ $t('menu.faq') }}
             </span>
           </a>
         </li>
@@ -59,7 +59,7 @@
           <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" title="Ask for help" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="ambulance" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              Ask for help
+              {{ $t('menu.help') }}
             </span>
           </a>
         </li>
@@ -77,7 +77,7 @@
           <a href="" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="sign-out-alt" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              Logout
+              {{ $t('menu.logout') }}
             </span>
           </a>
         </li>
@@ -149,6 +149,7 @@ export default {
   .app-sidebar {
     height: 100vh;
     color: white;
+    background: $app-bg;
     min-width: 60px;
     max-width: $app-sidebar-width;
     width: $app-sidebar-width;

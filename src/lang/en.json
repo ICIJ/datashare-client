@@ -402,6 +402,9 @@
   "menu": {
     "help": "Ask for help",
     "analyse": "Analyze my documents",
+    "batch": "Batch searches",
+    "search": "Search in documents",
+    "history": "Your history",
     "logout": "Logout",
     "addDocuments": "How to add documents",
     "faq": "FAQ"
@@ -409,8 +412,7 @@
   "footer": {
     "homedir": "Move files to this directory in order to analyze them",
     "clientVersion": "Client",
-    "serverVersion": "Server",
-    "userHistory": "Your history"
+    "serverVersion": "Server"
   },
   "login": {
     "welcome": "Welcome to Datashare",
