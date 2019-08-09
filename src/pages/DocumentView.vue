@@ -128,7 +128,7 @@ export default {
         },
         {
           name: 'details',
-          label: 'document.details',
+          label: 'document.tab_details',
           component: DocumentTabDetails,
           icon: 'info-circle',
           props: {

@@ -5,19 +5,17 @@
         {{ $t('document.tags') }}
       </h5>
       <p class="text-muted">
-        These tags are visible for all users.
+        {{ $t('document.tags_visibility') }}
       </p>
       <document-tags-form :document="document" />
     </div>
-
     <div class="document__content__details">
       <h5>
-        Details
+        {{ $t('document.details') }}
       </h5>
       <p class="text-muted">
-        These information are extracted from the document's metadata.
+        {{ $t('document.details_info') }}
       </p>
-
       <div class="row document__content__details__item" v-for="field in canonicalFields" :key="field.name" v-if="field.value && field.value !== 'unknown'">
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
           <div class="text-truncate mr-1 w-100" :title="field.name">
@@ -37,7 +35,6 @@
           </div>
         </div>
       </div>
-
       <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name" v-if="metadataVisible" v-once>
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
           <div class="text-truncate mr-1 w-100" :title="name">
@@ -55,7 +52,6 @@
           </div>
         </div>
       </div>
-
       <div class="text-center mt-4">
         <button @click="metadataVisible = !metadataVisible" class="btn btn-outline-primary btn-sm">
           {{ $t(metadataVisible ? 'document.showLessDetails' : 'document.showMoreDetails') }}
