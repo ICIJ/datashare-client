@@ -2,13 +2,14 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import App from '@/pages/App'
+import BatchSearch from '@/pages/BatchSearch'
+import BatchSearchResults from '@/pages/BatchSearchResults'
 import DocumentView from '@/pages/DocumentView'
 import Indexing from '@/pages/Indexing'
 import Landing from '@/pages/Landing'
 import Login from '@/pages/Login'
 import Search from '@/pages/Search'
-import BatchSearch from '@/pages/BatchSearch'
-import BatchSearchResults from '@/pages/BatchSearchResults'
+import UserHistory from '@/pages/UserHistory'
 
 import store from '@/store'
 import { isAuthenticated } from '@/utils/utils'
@@ -78,6 +79,11 @@ const router = new VueRouter({
               props: true
             }
           ]
+        },
+        {
+          name: 'user-history',
+          path: 'user-history',
+          component: UserHistory
         }
       ]
     },

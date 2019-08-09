@@ -1,22 +1,42 @@
-import Search from '@/pages/Search'
-import Vuex from 'vuex'
+import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import router from '@/router'
-import store from '@/store'
 import VueProgressBar from 'vue-progressbar'
+import VueI18n from 'vue-i18n'
+import Vuex from 'vuex'
+
+import Search from '@/pages/Search'
+import messages from '@/lang/en'
+import router from '@/router'
+import { actions, getters, state, mutations } from '@/store/modules/search'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 const localVue = createLocalVue()
+localVue.use(BootstrapVue)
 localVue.use(Murmur)
-localVue.use(VueProgressBar, { color: '#000' })
+localVue.use(VueI18n)
+localVue.use(VueProgressBar)
+localVue.use(Vuex)
+
+const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('Search.vue', () => {
-  let wrapper, actions
+  let wrapper, localStore
 
   beforeEach(() => {
-    actions = { query: jest.fn() }
-    const store = new Vuex.Store({ modules: { search: { namespaced: true, actions } } })
-    wrapper = shallowMount(Search, { localVue, router, store })
+    localStore = new Vuex.Store({
+      modules: {
+        search: {
+          getters,
+          state,
+          mutations,
+          namespaced: true,
+          actions: Object.assign(actions, {
+            query: jest.fn()
+          })
+        }
+      }
+    })
+    wrapper = shallowMount(Search, { localVue, router, i18n, store: localStore })
   })
 
   it('should refresh the view on custom event', () => {
@@ -30,11 +50,8 @@ describe('Search.vue', () => {
   })
 
   it('should redirect to the complete query', async () => {
-    wrapper = shallowMount(Search, { localVue, router, store })
-    store.commit('search/query', 'this is a query')
-
+    localStore.commit('search/query', 'this is a query')
     await wrapper.vm.$nextTick()
-
-    expect(wrapper.find('.search__body__document__backdrop').props('to')).toMatchObject({ name: 'search', query: { q: 'this is a query', from: 0, size: 25, sort: 'relevance', index: '' } })
+    expect(wrapper.find('.search__body__backdrop').props('to')).toMatchObject({ name: 'search', query: { q: 'this is a query' } })
   })
 })

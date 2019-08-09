@@ -31,7 +31,7 @@ describe('AggregationsPanel.vue', () => {
   })
 
   it('should hide the aggregation panel on click on `Hide filters`', () => {
-    wrapper.find('.aggregations-panel .nav .nav-link').trigger('click')
+    wrapper.find('.aggregations-panel__sticky__toolbar__item--hide-filters').trigger('click')
 
     expect(wrapper.find('.aggregations-panel').isVisible()).toBeFalsy()
   })

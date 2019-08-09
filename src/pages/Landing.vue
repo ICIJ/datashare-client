@@ -33,7 +33,7 @@ export default {
 <style lang="scss" scoped>
   .landing {
     position: relative;
-    min-height: calc(100vh - var(--app-footer-height));
+    min-height: 100vh;
     @include gradient-directional($primary, $secondary);
 
     &__form {

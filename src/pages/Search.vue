@@ -30,7 +30,7 @@
           </vue-perfect-scrollbar>
         </div>
       </transition>
-      <router-link v-if="showDocument" class="search__body__backdrop" :to="{ name: 'search', query: toRouteQuery }"></router-link>
+      <router-link v-show="showDocument" class="search__body__backdrop" :to="{ name: 'search', query: toRouteQuery }"></router-link>
     </div>
   </div>
 </template>
@@ -175,7 +175,7 @@ export default {
     }
 
     &__body {
-      height: calc(100vh - var(--app-nav-height) - var(--app-footer-height));
+      height: calc(100vh - var(--app-nav-height));
       position: relative;
       overflow: hidden;
 
@@ -226,7 +226,7 @@ export default {
           z-index: 20;
           position: fixed;
           top: 0;
-          bottom: var(--app-footer-height);
+          bottom: 0;
           box-shadow: $modal-content-box-shadow-sm-up;
         }
       }

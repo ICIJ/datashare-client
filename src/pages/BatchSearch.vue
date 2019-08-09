@@ -118,7 +118,7 @@ export default {
   .batch-search {
 
     .row {
-      min-height: calc(100vh - var(--app-nav-height) - var(--app-footer-height));
+      min-height: calc(100vh - var(--app-nav-height));
       margin: 0;
     }
 
@@ -130,10 +130,6 @@ export default {
          border: 2px solid $tertiary;
          box-shadow: 0 0 10px 0 rgba($dark, .1);
        }
-    }
-
-    &__explaination {
-      padding: $spacer * 3 0;
     }
 
     &__items {

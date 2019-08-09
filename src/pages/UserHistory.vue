@@ -1,14 +1,14 @@
 <template>
   <div class="user-history">
     <div class="container">
-      <div class="user-history__header p-3">
+      <div class="user-history__header py-4">
         <button class="btn btn-sm btn-outline-secondary float-right" @click="clear" v-if="documents.length">
           <fa icon="trash-alt" class="mr-1" />
           {{ $t('userHistory.clear') }}
         </button>
-        <h4 class="h5">
+        <h3>
           {{ $t('userHistory.heading') }}
-        </h4>
+        </h3>
         <p v-if="documents.length" class="m-0">
           {{ $t('userHistory.description') }}
         </p>
@@ -16,9 +16,9 @@
           {{ $t('userHistory.empty') }}
         </p>
       </div>
-      <ul class="list-unstyled user-history__list px-3 pb-4" v-if="documents.length">
+      <ul class="list-unstyled user-history__list card mb-4 small" v-if="documents.length">
         <li v-for="(document, i) in documents" :key="i" class="user-history__list__item">
-          <router-link :to="{ name: 'document', params: document.routerParams }" class="p-2 text-white d-block d-flex">
+          <router-link :to="{ name: 'document', params: document.routerParams }" class="p-2 d-block d-flex">
             <document-thumbnail :document="document" size="40" crop lazy class="mr-2 user-history__list__item__preview" />
             <div>
               <div class="font-weight-bold">
@@ -61,16 +61,14 @@ export default {
 
 <style lang="scss">
   .user-history {
-    font-size: 0.8rem;
-    background: $app-footer-bg;
-    color: $app-footer-color;
-    max-height: 60vh;
+    background: $body-bg;
+    color: $body-color;
     overflow: auto;
     position: relative;
 
     &__header {
       z-index: 100;
-      background: $app-footer-bg;
+      background: inherit;
       position: sticky;
       top:0;
     }
@@ -80,7 +78,7 @@ export default {
       &__item {
 
         &:nth-child(odd) {
-          background: rgba(white, .1)
+          background: rgba(black, .05)
         }
 
         a:hover {
@@ -90,7 +88,7 @@ export default {
         }
 
         &__location {
-          color: rgba(white, .6);
+          color: $text-muted;
         }
 
         & &__preview.document-thumbnail--crop {

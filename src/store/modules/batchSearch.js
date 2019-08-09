@@ -47,8 +47,10 @@ export const mutations = {
 }
 
 export const actions = {
-  getBatchSearches ({ commit }) {
-    return datashare.getBatchSearches().then(r => r.clone().json()).then(batchSearches => commit('batchSearches', batchSearches))
+  async getBatchSearches ({ commit }) {
+    const batchSearches = await datashare.getBatchSearches().then(r => r.clone().json())
+    commit('batchSearches', batchSearches)
+    return batchSearches
   },
   onSubmit ({ state, commit, dispatch }) {
     try {

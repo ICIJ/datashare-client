@@ -84,12 +84,9 @@ $input-box-shadow: none;
 
 $app-bg: #2d2e33;
 $app-border-radius: 1rem;
-$app-footer-bg: darken($app-bg, 10%);
-$app-footer-color: #fff;
 
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
-$app-footer-height: $line-height-base * 1.2rem;
 $app-sidebar-width: 290px;
 
 $aggregations-panel-width: 320px;

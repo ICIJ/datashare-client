@@ -9,7 +9,6 @@
       </vue-perfect-scrollbar>
       <div class="flex-grow-1">
         <router-view />
-        <app-footer />
         <scroll-tracker />
         <vue-progress-bar />
       </div>
@@ -20,7 +19,6 @@
 <script>
 import AggregationsPanel from '@/components/AggregationsPanel'
 import DatashareClient from '@/api/DatashareClient'
-import AppFooter from '@/components/AppFooter'
 import AppSidebar from '@/components/AppSidebar'
 import ScrollTracker from '@/components/ScrollTracker'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
@@ -29,7 +27,6 @@ export default {
   name: 'App',
   components: {
     AggregationsPanel,
-    AppFooter,
     AppSidebar,
     ScrollTracker,
     VuePerfectScrollbar
@@ -46,21 +43,22 @@ export default {
   .app {
     // In CSS variables so they can be updated
     --app-nav-height: #{$app-nav-height};
-    --app-footer-height: #{$app-footer-height};
     --app-sidebar-width: #{$app-sidebar-width};
 
     background: $app-bg;
     min-height: 100vh;
 
     &__main {
+      box-shadow: $box-shadow-lg;
       background: $body-bg;
-      padding-bottom: var(--app-footer-height);
+      padding-bottom: 0;
       mask:  0 0 no-repeat luminance url('../assets/images/corner-top.svg'),
+             0 100% no-repeat luminance url('../assets/images/corner-bottom.svg'),
              0 0 no-repeat luminance linear-gradient(white 0%, white 100%);
       mask-composite: exclude;
 
       &__aggregations-panel {
-        height: calc(100vh -  var(--app-footer-height));
+        height: 100vh;
         background: $aggregations-panel-bg;
       }
     }

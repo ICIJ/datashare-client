@@ -92,7 +92,7 @@ export default {
 
   .scroll-tracker {
     position: fixed;
-    bottom: var(--app-footer-height);
+    bottom: 0;
     left: 50%;
     transform: translateX(-50%);
     margin: $spacer 0;

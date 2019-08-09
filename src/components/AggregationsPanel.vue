@@ -5,7 +5,7 @@
         <div class="aggregations-panel__sticky__toolbar">
           <ul class="nav flex-nowrap">
             <li class="nav-item">
-              <div class="custom-control custom-switch">
+              <div class="custom-control custom-switch aggregations-panel__sticky__toolbar__item">
                 <input type="checkbox" :checked="filtersContextualized" class="custom-control-input" id="input-contextualize-filters" @change="toggleContextualizeFilters($event.target.checked)">
                 <label class="custom-control-label text-white font-weight-bold btn btn-sm pl-0 pr-2 pb-2 pt-0 mt-2" for="input-contextualize-filters" id="label-contextualize-filters">
                   {{ $t('search.contextualizeFiltersLabel') }}
@@ -14,13 +14,13 @@
               </div>
             </li>
             <li class="nav-item border-left">
-              <button class="nav-link text-white font-weight-bold btn btn-sm px-2" id="btn-reset-filters" @click="resetFilters()" :disabled="!hasFilters">
+              <button class="nav-link text-white font-weight-bold btn btn-sm px-2 aggregations-panel__sticky__toolbar__item" id="btn-reset-filters" @click="resetFilters()" :disabled="!hasFilters">
                 {{ $t('search.resetFiltersLabel') }}
               </button>
               <b-tooltip placement="bottom" target="btn-reset-filters" :title="$t('search.resetFiltersDescription')" />
             </li>
             <li class="nav-item ml-auto">
-              <button class="nav-link text-white font-weight-bold p-2 btn btn-sm" @click="hideFilters()" id="btn-hide-filters">
+              <button class="nav-link text-white font-weight-bold p-2 btn btn-sm aggregations-panel__sticky__toolbar__item aggregations-panel__sticky__toolbar__item--hide-filters" @click="hideFilters()" id="btn-hide-filters">
                 <fa icon="arrow-left" class="mx-1" />
                 <span class="sr-only">
                   {{ $t('search.hideFilters') }}
@@ -155,7 +155,7 @@ export default {
     padding-right: $spacer;
     width:100%;
     max-width: $aggregations-panel-width;
-    min-height: calc(100vh -  var(--app-footer-height));
+    min-height: 100vh;
 
     &.slide-left-enter-active, &.slide-left-leave-active {
       transition: .3s;

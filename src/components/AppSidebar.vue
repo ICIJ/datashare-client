@@ -1,6 +1,6 @@
 <template>
-  <div class="app-sidebar" :class="{ 'app-sidebar--reduced': reduced }">
-    <vue-perfect-scrollbar class="app-sidebar__container">
+  <div class="app-sidebar d-flex flex-column" :class="{ 'app-sidebar--reduced': reduced }">
+    <vue-perfect-scrollbar class="app-sidebar__container flex-grow-1 d-flex flex-column">
       <div class="d-flex align-items-center justify-content-center">
         <router-link class="app-sidebar__container__brand align-items-center flex-grow-1" :to="{ name: 'landing' }">
           <img src="~images/logo-white.svg" alt="Datashare" class="app-sidebar__container__brand__logo" />
@@ -12,7 +12,6 @@
           </a>
         </div>
       </div>
-
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <router-link :to="{ name: 'landing' }" class="app-sidebar__container__menu__item__link" title="Search in documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
@@ -22,7 +21,7 @@
             </span>
           </router-link>
         </li>
-        <li class="app-sidebar__container__menu__item">
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="!isServer">
           <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" title="Analyze my documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="rocket" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -39,15 +38,14 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item">
-          <a href="#" class="app-sidebar__container__menu__item__link" title="Your history" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
+          <router-link :to="{ name: 'user-history' }" class="app-sidebar__container__menu__item__link" title="Your history" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
             <fa icon="clock" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               Your history
             </span>
-          </a>
+          </router-link>
         </li>
       </ul>
-
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <a href="" class="app-sidebar__container__menu__item__link" title="FAQ" v-b-tooltip.right="{ customClass: tooltipsClass }">
@@ -57,8 +55,8 @@
             </span>
           </a>
         </li>
-        <li class="app-sidebar__container__menu__item">
-          <a href="" class="app-sidebar__container__menu__item__link" title="Ask for help" v-b-tooltip.right="{ customClass: tooltipsClass }">
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--help">
+          <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" title="Ask for help" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="ambulance" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               Ask for help
@@ -66,9 +64,16 @@
           </a>
         </li>
       </ul>
-
-      <ul class="app-sidebar__container__menu list-unstyled">
-        <li class="app-sidebar__container__menu__item">
+      <ul class="app-sidebar__container__menu list-unstyled mb-0">
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--locale">
+          <locales-dropdown class="app-sidebar__container__menu__item__link text-left text-wrap" v-slot="{ currentLocale }">
+            <fa icon="globe" fixed-width />
+            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+              {{ currentLocale.label }}
+            </span>
+          </locales-dropdown>
+        </li>
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
           <a href="" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="sign-out-alt" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -78,15 +83,31 @@
         </li>
       </ul>
     </vue-perfect-scrollbar>
+    <div class="app-sidebar__version text-center">
+      <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" />
+    </div>
+    <div class="app-sidebar__data-location" v-if="!reduced && !isServer">
+      <mounted-data-location />
+    </div>
   </div>
 </template>
 
 <script>
+  import { getOS } from '@/utils/utils'
+  import utils from '@/mixins/utils'
+  import settings from '@/utils/settings'
+  import LocalesDropdown from './LocalesDropdown.vue'
+  import MountedDataLocation from './MountedDataLocation.vue'
+  import VersionNumber from './VersionNumber.vue'
   import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
   export default {
     name: 'AppSidebar',
+    mixins: [utils],
     components: {
+      LocalesDropdown,
+      MountedDataLocation,
+      VersionNumber,
       VuePerfectScrollbar
     },
     data () {
@@ -111,6 +132,13 @@
     computed: {
       tooltipsClass () {
         return this.reduced ? '' : 'd-none'
+      },
+      addDocumentsLink () {
+        const os = getOS()
+        return settings.documentationLinks.indexing[os] || settings.documentationLinks.indexing.default
+      },
+      helpLink () {
+        return this.isServer ? 'https://jira.icij.org/servicedesk/customer/portal/4/create/108' : 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
       }
     }
   }
@@ -118,17 +146,19 @@
 
 <style lang="scss">
   .app-sidebar {
+    height: 100vh;
     color: white;
     min-width: 60px;
     max-width: $app-sidebar-width;
     width: $app-sidebar-width;
+    position: sticky;
+    top: 0;
 
     &--reduced {
       width: auto;
     }
 
     &__container {
-      max-height: 100vh;
 
       &__brand, &__brand:hover, &__brand:focus, &__brand {
         color: inherit;
@@ -200,16 +230,21 @@
           right: $spacer;
         }
 
-        &__item {
-          font-size: 0.9rem;
-          font-weight: bold;
+        &.border-0:before {
+          display: none;
+        }
 
-          &__link {
-            display: block;
+        &__item {
+
+          &__link, &__link.btn {
             margin: $spacer * 0.5 $spacer;
             padding: $spacer * 0.75;
             color: rgba(white, 0.6);
             display: flex;
+            border-radius: 0;
+            font-size: 0.9rem;
+            font-weight: bold;
+
 
             &.router-link-exact-active, &:hover, &:active {
               color: white;
@@ -230,6 +265,18 @@
           }
         }
       }
+    }
+
+    &__version {
+      z-index: 100;
+      position: relative;
+      box-shadow: 0 -0.5 * $spacer 0.5 * $spacer 0 $app-bg;
+    }
+    
+    &__version, &__data-location {
+      color: rgba(white, 0.6);
+      padding: 0 $spacer $spacer * 0.75;
+      font-size: 0.8rem;
     }
   }
 </style>
