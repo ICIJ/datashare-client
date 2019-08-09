@@ -33,13 +33,21 @@
         </a>
       </div>
     </div>
-    <div class="batch-search-results__filters d-flex my-2 mx-3">
-      <a @click.prevent="setFilter('')" href>
-        {{ $t('batchSearchResults.all') }}
-      </a>
-      <a v-for="query in meta.queries" :key="query" @click.prevent="setFilter(query)" href class="ml-2">
+    <div class="batch-search-results__selected-queries my-2 mx-3">
+      <h5>
+        {{ $t('batchSearch.queries') }}
+      </h5>
+      <selectable-dropdown
+        class="batch-search-results__selected-queries__dropdown"
+        deactivate-keys
+        :items="meta.queries"
+        multiple
+        v-if="meta.queries && meta.queries.length > 1"
+        v-model="selectedQueries"
+      ></selectable-dropdown>
+      <div v-else v-for="query in meta.queries" :key="query" class="batch-search-results__selected-queries__list">
         {{ query }}
-      </a>
+      </div>
     </div>
     <div v-if="!isReady">
       <content-placeholder :rows="rows" class="p-0 my-3" />
@@ -47,7 +55,7 @@
       <content-placeholder :rows="rows" class="p-0 my-3" />
     </div>
     <div v-else class="batch-search-results__queries">
-      <b-table striped hover bordered :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query" :filter="filter">
+      <b-table striped hover bordered :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query" :filter="selectedQueries" :filter-function="filter">
         <template #documentNumber="row">
           {{ row.item.documentNumber + 1 }}
         </template>
@@ -73,6 +81,7 @@ import moment from 'moment'
 import capitalize from 'lodash/capitalize'
 import last from 'lodash/last'
 import find from 'lodash/find'
+import includes from 'lodash/includes'
 
 import DatashareClient from '@/api/DatashareClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
@@ -122,7 +131,7 @@ export default {
           sortable: true
         }
       ],
-      filter: '',
+      selectedQueries: [],
       isReady: false,
       rows: [
         {
@@ -156,8 +165,8 @@ export default {
     getFileName (documentPath) {
       return last(documentPath.split('/'))
     },
-    setFilter (filter) {
-      this.filter = filter
+    filter (item, filter) {
+      return includes(filter, item.query)
     },
     capitalize,
     moment,
@@ -173,8 +182,10 @@ export default {
       min-height: auto;
     }
 
-    &__filters {
-      overflow-x: auto;
+    &__selected-queries__dropdown {
+      max-height: 15rem;
+      overflow: auto;
+      width: 100%;
     }
   }
 }

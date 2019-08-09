@@ -68,6 +68,13 @@ describe('BatchSearchResults.vue', () => {
       queries: ['query_01', 'query_02', 'query_03'],
       state: 'SUCCESS',
       date: '2019-07-18T14:45:34.869+0000'
+    }, {
+      uuid: '13',
+      project: { name: 'ProjectName2' },
+      description: 'Another description',
+      queries: ['query_04'],
+      state: 'SUCCESS',
+      date: '2019-07-28T14:45:34.869+0000'
     }])
     wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX } })
     wrapper.vm.$route.params.index = process.env.VUE_APP_ES_INDEX
@@ -75,27 +82,39 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should display the list of the queries of this batch search', () => {
-    expect(wrapper.findAll('.batch-search-results')).toHaveLength(1)
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query')).toHaveLength(3)
+    expect(wrapper.find('.batch-search-results').exists()).toBeTruthy()
+    expect(wrapper.findAll('.batch-search-results__queries__query')).toHaveLength(3)
   })
 
   it('should display a link to document page', () => {
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query__link')).toHaveLength(3)
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query__link').at(0).attributes('href')).toBe(`#/d/${process.env.VUE_APP_ES_INDEX}/42/42`)
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query__link').at(1).attributes('href')).toBe(`#/d/${process.env.VUE_APP_ES_INDEX}/43/43`)
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__queries__query__link').at(2).attributes('href')).toBe(`#/d/${process.env.VUE_APP_ES_INDEX}/44/44`)
+    expect(wrapper.findAll('.batch-search-results__queries__query__link')).toHaveLength(3)
+    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(0).attributes('href')).toBe(`#/d/${process.env.VUE_APP_ES_INDEX}/42/42`)
+    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(1).attributes('href')).toBe(`#/d/${process.env.VUE_APP_ES_INDEX}/43/43`)
+    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(2).attributes('href')).toBe(`#/d/${process.env.VUE_APP_ES_INDEX}/44/44`)
   })
 
   it('should display a button to download the results as a CSV file', () => {
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__download')).toHaveLength(1)
+    expect(wrapper.find('.batch-search-results__download').exists()).toBeTruthy()
   })
 
-  it('should display the queries filters', () => {
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__filters a')).toHaveLength(4)
+  it('should display a selectable dropdown with queries', () => {
+    expect(wrapper.find('.batch-search-results__selected-queries').exists()).toBeTruthy()
+    expect(wrapper.find('.batch-search-results__selected-queries__dropdown').exists()).toBeTruthy()
+    expect(wrapper.findAll('.batch-search-results__selected-queries__dropdown span')).toHaveLength(3)
+    expect(wrapper.find('.batch-search-results__selected-queries__list').exists()).toBeFalsy()
+  })
+
+  it('should not ad dropdown but a simple list if there is only one query', async () => {
+    wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: process.env.VUE_APP_ES_INDEX } })
+
+    expect(wrapper.find('.batch-search-results__selected-queries').exists()).toBeTruthy()
+    expect(wrapper.find('.batch-search-results__selected-queries__list').exists()).toBeTruthy()
+    expect(wrapper.find('.batch-search-results__selected-queries__list').text()).toEqual('query_04')
+    expect(wrapper.find('.batch-search-results__selected-queries__dropdown').exists()).toBeFalsy()
   })
 
   it('should display info about the BatchSearch', () => {
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__info')).toHaveLength(1)
-    expect(wrapper.findAll('.batch-search-results .batch-search-results__info dd')).toHaveLength(5)
+    expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
+    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(5)
   })
 })
