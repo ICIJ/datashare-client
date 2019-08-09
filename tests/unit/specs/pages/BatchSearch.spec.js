@@ -45,8 +45,9 @@ describe('BatchSearch.vue', () => {
 
   beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
-  beforeEach(() => {
+  beforeEach(async () => {
     wrapper = mount(BatchSearch, { localVue, i18n, store, router })
+    await wrapper.vm.$nextTick()
   })
 
   afterAll(() => jest.unmock('@/api/DatashareClient'))

@@ -71,7 +71,7 @@ describe('BatchSearchResults.vue', () => {
     }])
     wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX } })
     wrapper.vm.$route.params.index = process.env.VUE_APP_ES_INDEX
-    await store.dispatch('batchSearch/getBatchSearchResults', 0, 10)
+    await wrapper.vm.getBatchSearchResults({ uuid: 12 })
   })
 
   it('should display the list of the queries of this batch search', () => {
