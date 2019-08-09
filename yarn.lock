@@ -3650,8 +3650,8 @@ ecc-jsbn@~0.1.1:
     safer-buffer "^2.1.0"
 
 ecstatic@^3.0.0:
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/ecstatic/-/ecstatic-3.3.0.tgz#91cd417d152abf85b37b1ab3ebf3bd25cdc64e80"
+  version "3.3.2"
+  resolved "https://registry.yarnpkg.com/ecstatic/-/ecstatic-3.3.2.tgz#6d1dd49814d00594682c652adb66076a69d46c48"
   dependencies:
     he "^1.1.1"
     mime "^1.6.0"
@@ -7070,11 +7070,7 @@ mime@1.6.0, mime@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/mime/-/mime-1.6.0.tgz#32cd9e5c64553bd58d19a568af452acff04981b1"
 
-mime@^2.0.3:
-  version "2.4.0"
-  resolved "https://registry.yarnpkg.com/mime/-/mime-2.4.0.tgz#e051fd881358585f3279df333fe694da0bcffdd6"
-
-mime@^2.4.2:
+mime@^2.0.3, mime@^2.4.2:
   version "2.4.3"
   resolved "https://registry.yarnpkg.com/mime/-/mime-2.4.3.tgz#229687331e86f68924e6cb59e1cdd937f18275fe"
 
