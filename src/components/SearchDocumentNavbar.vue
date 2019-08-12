@@ -147,9 +147,6 @@ export default {
   .search-document-navbar {
     display: flex;
     align-items: center;
-    position: sticky;
-    top: 0;
-    z-index: 100;
     margin: 0;
     border-radius: $card-border-radius $card-border-radius 0 0;
 
