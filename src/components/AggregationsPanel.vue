@@ -111,6 +111,7 @@ export default {
       forEach(this.$refs, component => {
         if (isArray(component) && component[0] && component[0].root) {
           const facet = component[0]
+          facet.root.facetQuery = ''
           facet.root.resetFacetValues()
           if (facet.resetNamedEntityValues) {
             facet.resetNamedEntityValues()
@@ -225,7 +226,6 @@ export default {
         }
 
         & > .list-group {
-
 
           .facet__items {
 
