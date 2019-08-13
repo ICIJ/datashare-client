@@ -253,14 +253,37 @@ describe('FacetText.vue', () => {
   })
 
   it('should filter facet values on facet label', async () => {
-    await letData(es).have(new IndexedDocument('doc_01').withContentType('message/rfc822')).commit()
+    await letData(es).have(new IndexedDocument('doc_01')
+      .withContentType('message/rfc822')).commit()
+    await letData(es).have(new IndexedDocument('doc_02')
+      .withContentType('another_type')).commit()
+    await letData(es).have(new IndexedDocument('doc_03')
+      .withContentType('message/rfc822')).commit()
 
     wrapper.vm.root.facetQuery = 'Internet'
 
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.vm.root.items).toHaveLength(1)
-    expect(wrapper.vm.root.totalCount).toEqual(1)
+    expect(wrapper.vm.root.items[0].doc_count).toEqual(2)
+    expect(wrapper.vm.root.totalCount).toEqual(2)
+  })
+
+  it('should filter facet values on facet label in capital letters', async () => {
+    await letData(es).have(new IndexedDocument('doc_01')
+      .withContentType('message/rfc822')).commit()
+    await letData(es).have(new IndexedDocument('doc_02')
+      .withContentType('another_type')).commit()
+    await letData(es).have(new IndexedDocument('doc_03')
+      .withContentType('message/rfc822')).commit()
+
+    wrapper.vm.root.facetQuery = 'EMAIL'
+
+    await wrapper.vm.root.aggregate()
+
+    expect(wrapper.vm.root.items).toHaveLength(1)
+    expect(wrapper.vm.root.items[0].doc_count).toEqual(2)
+    expect(wrapper.vm.root.totalCount).toEqual(2)
   })
 
   it('should fire 2 events on click on facet item', async () => {

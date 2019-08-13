@@ -22,6 +22,7 @@ import orderBy from 'lodash/orderBy'
 import range from 'lodash/range'
 import random from 'lodash/random'
 import reduce from 'lodash/reduce'
+import toLower from 'lodash/toLower'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
 
@@ -36,7 +37,7 @@ export function initialState () {
     facets: [
       new FacetYesNo('starred', '_id', false, item => get(starredLabel, item.key, '')),
       new FacetText('tags', 'tags', true),
-      new FacetText('content-type', 'contentType', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (item.label.includes(query)) return key })),
+      new FacetText('content-type', 'contentType', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })),
       new FacetText('language', 'language', false, item => `facet.lang.${item.key}`),
       new FacetNamedEntity('named-entity-person', 'byMentions', true, namedEntityCategoryTranslation['named-entity-person']),
       new FacetNamedEntity('named-entity-organization', 'byMentions', true, namedEntityCategoryTranslation['named-entity-organization']),

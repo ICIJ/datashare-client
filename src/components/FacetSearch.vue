@@ -43,6 +43,7 @@ import concat from 'lodash/concat'
 import get from 'lodash/get'
 import sumBy from 'lodash/sumBy'
 import throttle from 'lodash/throttle'
+import toLower from 'lodash/toLower'
 import uniqueId from 'lodash/uniqueId'
 
 export default {
@@ -102,7 +103,7 @@ export default {
     async search ($state) {
       if (!this.facet) return
       // Load the facet using a body build using the facet configuration
-      const alternativeSearch = this.facetQuery !== '' && this.facet.alternativeSearch ? compact(this.facet.alternativeSearch(this.facetQuery)) : []
+      const alternativeSearch = this.facetQuery !== '' && this.facet.alternativeSearch ? compact(this.facet.alternativeSearch(toLower(this.facetQuery))) : []
       const options = { size: this.size, include: `.*(${concat(alternativeSearch, this.queryTokens).join('|')}).*` }
       const data = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
       const all = get(data, this.resultPath, [])

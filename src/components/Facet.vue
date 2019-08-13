@@ -66,6 +66,7 @@ import concat from 'lodash/concat'
 import each from 'lodash/each'
 import get from 'lodash/get'
 import join from 'lodash/join'
+import toLower from 'lodash/toLower'
 import sumBy from 'lodash/sumBy'
 import throttle from 'lodash/throttle'
 
@@ -139,7 +140,7 @@ export default {
     aggregate () {
       if (this.facet) {
         const prefix = this.facet.prefix ? this.$config.get('dataDir') + '/' : ''
-        const alternativeSearch = this.facetQuery !== '' && this.facet.alternativeSearch ? compact(this.facet.alternativeSearch(this.facetQuery)) : []
+        const alternativeSearch = this.facetQuery !== '' && this.facet.alternativeSearch ? compact(this.facet.alternativeSearch(toLower(this.facetQuery))) : []
         const options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${concat(alternativeSearch, this.queryTokens).join('|')}).*` } : { size: this.size }
         return this.queue.add(async () => {
           const res = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
