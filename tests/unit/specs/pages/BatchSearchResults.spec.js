@@ -13,28 +13,31 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
     return {
-      getBatchSearchResults: jest.fn().mockReturnValue(Promise.resolve([{
-        creationDate: '2011-10-11T04:12:49.000+0000',
-        documentId: 42,
-        documentNumber: 0,
-        documentPath: 'this/is/a/path/42',
-        query: 'query_01',
-        rootId: 42
-      }, {
-        creationDate: '2011-10-11T04:12:49.000+0000',
-        documentId: 43,
-        documentNumber: 1,
-        documentPath: 'this/is/a/path/43',
-        query: 'query_01',
-        rootId: 43
-      }, {
-        creationDate: '2011-10-11T04:12:49.000+0000',
-        documentId: 44,
-        documentNumber: 2,
-        documentPath: 'this/is/a/path/44',
-        query: 'query_02',
-        rootId: 44
-      }]))
+      getBatchSearches: jest.fn().mockReturnValue(jsonOk([])),
+      getBatchSearchResults: jest.fn().mockReturnValue(Promise.resolve([
+        {
+          creationDate: '2011-10-11T04:12:49.000+0000',
+          documentId: 42,
+          documentNumber: 0,
+          documentPath: 'this/is/a/path/42',
+          query: 'query_01',
+          rootId: 42
+        }, {
+          creationDate: '2011-10-11T04:12:49.000+0000',
+          documentId: 43,
+          documentNumber: 1,
+          documentPath: 'this/is/a/path/43',
+          query: 'query_01',
+          rootId: 43
+        }, {
+          creationDate: '2011-10-11T04:12:49.000+0000',
+          documentId: 44,
+          documentNumber: 2,
+          documentPath: 'this/is/a/path/44',
+          query: 'query_02',
+          rootId: 44
+        }
+      ]))
     }
   })
 })
@@ -75,7 +78,7 @@ describe('BatchSearchResults.vue', () => {
     }])
     wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX } })
     wrapper.vm.$route.params.index = process.env.VUE_APP_ES_INDEX
-    await wrapper.vm.getBatchSearchResults({ uuid: 12 })
+    await wrapper.vm.fetch()
   })
 
   afterEach(() => store.commit('batchSearch/reset'))
@@ -96,24 +99,8 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__download').exists()).toBeTruthy()
   })
 
-  it('should display a selectable dropdown with queries', () => {
-    expect(wrapper.find('.batch-search-results__selected-queries').exists()).toBeTruthy()
-    expect(wrapper.find('.batch-search-results__selected-queries__dropdown').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__selected-queries__dropdown span')).toHaveLength(3)
-    expect(wrapper.find('.batch-search-results__selected-queries__list').exists()).toBeFalsy()
-  })
-
-  it('should not ad dropdown but a simple list if there is only one query', async () => {
-    wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: process.env.VUE_APP_ES_INDEX } })
-
-    expect(wrapper.find('.batch-search-results__selected-queries').exists()).toBeTruthy()
-    expect(wrapper.find('.batch-search-results__selected-queries__list').exists()).toBeTruthy()
-    expect(wrapper.find('.batch-search-results__selected-queries__list').text()).toEqual('query_04')
-    expect(wrapper.find('.batch-search-results__selected-queries__dropdown').exists()).toBeFalsy()
-  })
-
   it('should display info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(5)
+    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(4)
   })
 })

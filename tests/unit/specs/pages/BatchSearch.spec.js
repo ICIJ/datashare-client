@@ -51,10 +51,6 @@ describe('BatchSearch.vue', () => {
 
   afterAll(() => jest.unmock('@/api/DatashareClient'))
 
-  it('should display the form', () => {
-    expect(wrapper.findAll('.batch-search .batch-search__form')).toHaveLength(1)
-  })
-
   it('should list the searches', () => {
     expect(wrapper.findAll('.batch-search__items .batch-search__items__item')).toHaveLength(2)
   })

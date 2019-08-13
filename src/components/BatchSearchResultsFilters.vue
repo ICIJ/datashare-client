@@ -12,7 +12,7 @@
           multiple
           v-if="meta.queries && meta.queries.length > 1"
           v-model="selectedQueries"></selectable-dropdown>
-        <div v-else v-for="query in meta.queries" :key="query" class="batch-search-results-filters__selected-queries__list">
+        <div v-else v-for="query in meta.queries" :key="query" class="batch-search-results-filters__queries__list">
           {{ query }}
         </div>
       </div>
