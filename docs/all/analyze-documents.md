@@ -34,17 +34,18 @@ Select '**CoreNLP'**, if you want to use the one with the highest probability of
 
 ![](../.gitbook/assets/nlp.png)
 
-6. You can now see running tasks and their progress. After they are done, you can click '**Clear done tasks'** to stop displaying tasks that are completed.
+7. To extract email addresses in your documents, re-click on 'Find people, organizations and locations' and **select 'Email extraction'**:
+
+![](../.gitbook/assets/email-extraction.png)
+
+8. You can now see running tasks and their progress. After they are done, you can click '**Clear done tasks'** to stop displaying tasks that are completed.
 
 ![](../.gitbook/assets/clear.png)
 
   
-7. You can search your indexed documents without having to wait for all tasks to be done. To access your documents, click '**Search in documents'**.
+9. You can search your indexed documents without having to wait for all tasks to be done. To access your documents, click '**Search in documents'**.
 
 ![](../.gitbook/assets/search-in-docs.png)
 
-  
-
-
-Now let's [search your documents](https://icij.gitbook.io/datashare/all/explore-documents)!
+Now let's [search your documents](https://icij.gitbook.io/datashare/all/explore-documents).
 
