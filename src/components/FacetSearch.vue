@@ -38,6 +38,8 @@ import FacetDate from '@/components/FacetDate'
 import FacetPath from '@/components/FacetPath'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import facets from '@/mixins/facets'
+import compact from 'lodash/compact'
+import concat from 'lodash/concat'
 import get from 'lodash/get'
 import sumBy from 'lodash/sumBy'
 import throttle from 'lodash/throttle'
@@ -100,7 +102,8 @@ export default {
     async search ($state) {
       if (!this.facet) return
       // Load the facet using a body build using the facet configuration
-      const options = { size: this.size, include: `.*(${this.queryTokens.join('|')}).*` }
+      const alternativeSearch = this.facetQuery !== '' && this.facet.alternativeSearch ? compact(this.facet.alternativeSearch(this.facetQuery)) : []
+      const options = { size: this.size, include: `.*(${concat(alternativeSearch, this.queryTokens).join('|')}).*` }
       const data = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
       const all = get(data, this.resultPath, [])
       this.$set(this, 'items', all)

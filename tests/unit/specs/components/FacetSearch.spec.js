@@ -284,4 +284,20 @@ describe('FacetSearch.vue', () => {
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
+
+  it('should filter facet values on facet label', async () => {
+    await letData(es).have(new IndexedDocument('doc_01')
+      .withContentType('message/rfc822')).commit()
+    await letData(es).have(new IndexedDocument('doc_02')
+      .withContentType('another_type')).commit()
+    await letData(es).have(new IndexedDocument('doc_03')
+      .withContentType('message/rfc822')).commit()
+    wrapper.vm.facetQuery = 'Internet'
+
+    await wrapper.vm.search()
+
+    expect(wrapper.vm.items).toHaveLength(1)
+    expect(wrapper.vm.items[0].doc_count).toEqual(2)
+    expect(wrapper.vm.totalCount).toEqual(2)
+  })
 })
