@@ -88,5 +88,5 @@ Now, if one tick PNG image, as the Contextualize button is on, the Languages fil
 
 To reset all filters at the same time, click 'Reset':
 
-![](../.gitbook/assets/reset.png)
+![](../.gitbook/assets/reset%20%281%29.png)
 
