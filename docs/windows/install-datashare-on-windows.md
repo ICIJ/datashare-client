@@ -39,5 +39,5 @@ Datashare is installing.
 
 ![](../.gitbook/assets/capture-de-cran-31.png)
 
-That's all for now! Bravo! You're now ready to the next step. Let's [open Datashare](https://icij.gitbook.io/datashare/windows/open-datashare-on-windows)!
+You're now ready to the next step. Let's [open Datashare](https://icij.gitbook.io/datashare/windows/open-datashare-on-windows).
 

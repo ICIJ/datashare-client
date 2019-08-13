@@ -53,5 +53,5 @@ CONTAINER ID    IMAGE     COMMAND      CREATED     STATUS      PORTS          NA
 * provide CLI to run Datashare extract, index, name finding tasks
 * provide a WEB GUI to run Datashare extract, index, name finding tasks, and search in the documents
 
-Let's [open Datashare now](https://icij.gitbook.io/datashare/linux/open-datashare-on-linux)!
+Let's [open Datashare now](https://icij.gitbook.io/datashare/linux/open-datashare-on-linux).
 

@@ -57,5 +57,5 @@ If Docker Desktop offers to log in with Docker ID, **do NOT log in and** **close
 
 ![](../.gitbook/assets/screen-shot-2019-02-01-at-10.29.43-am.png)
 
-That's all for now! Bravo! You're now ready to take the next step: let's [open Datashare](https://icij.gitbook.io/datashare/mac/open-datashare-on-mac)!
+You're now ready to take the next step: let's [open Datashare](https://icij.gitbook.io/datashare/mac/open-datashare-on-mac).
 
