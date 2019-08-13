@@ -427,7 +427,7 @@ export const actions = {
     }
   },
   getStarredDocuments ({ state, commit }) {
-    return datashare.getStarredDocuments(state.index).then(r => r.clone().json()).then(starredDocuments => {
+    return datashare.getStarredDocuments(state.index).then(starredDocuments => {
       commit('starredDocuments', starredDocuments)
       commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments })
     })

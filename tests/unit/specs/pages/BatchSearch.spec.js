@@ -9,10 +9,9 @@ import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 
 jest.mock('@/api/DatashareClient', () => {
-  const { jsonOk } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      getBatchSearches: jest.fn().mockReturnValue(jsonOk([{
+      getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([{
         uuid: 1,
         project: { id: 'project_01', name: 'project_01' },
         name: 'name_01',

@@ -91,9 +91,6 @@ export const actions = {
   },
   loadTasks ({ commit }) {
     return datashare.getTasks()
-      .then(resp => {
-        return resp.json().catch(() => [])
-      })
       .then(raw => {
         commit('updateTasks', raw)
         return raw

@@ -59,8 +59,7 @@ export default {
   methods: {
     async fetchVersion () {
       const datashare = new DatashareClient()
-      const res = await datashare.getVersion()
-      return res.json()
+      return datashare.getVersion()
     },
     async setVersion () {
       const version = await this.fetchVersion()

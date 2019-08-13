@@ -29,7 +29,7 @@ async function createApp (LocalVue = Vue) {
   })
   const ds = new DatashareClient()
   // Get the config object
-  const config = await ds.getConfig().then(res => res.json())
+  const config = await ds.getConfig()
   // Murmur exposes a config attribute which share a Config object
   // with the current vue instance.
   Murmur.config.merge(config)

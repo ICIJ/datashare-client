@@ -44,7 +44,7 @@ export class DatashareClient {
     return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT' })
   }
   getSource (document) {
-    return this.sendAction(document.url)
+    return this.sendAction(document.url, {}, false)
   }
   getStarredDocuments (project) {
     return this.sendAction(`/api/document/project/starred/${encodeURIComponent(project)}`)
@@ -82,10 +82,10 @@ export class DatashareClient {
     const url = new URL(path, base)
     return url.href
   }
-  sendAction (url, params = {}) {
+  sendAction (url, params = {}, json = true) {
     return this.fetch(DatashareClient.getFullUrl(url), params).then(r => {
       if (r.status >= 200 && r.status < 300) {
-        return r
+        return json ? r.clone().json() : r
       } else {
         EventBus.$emit('http::error', r)
         const error = new Error(`${r.status} ${r.statusText}`)

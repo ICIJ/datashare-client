@@ -1,5 +1,5 @@
-import extend from 'lodash/extend'
 import cloneDeep from 'lodash/cloneDeep'
+import extend from 'lodash/extend'
 import get from 'lodash/get'
 
 const _raw = '_RAW'

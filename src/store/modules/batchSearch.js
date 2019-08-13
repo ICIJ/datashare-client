@@ -20,6 +20,10 @@ export function initialState () {
 export const state = initialState
 
 export const mutations = {
+  reset (state) {
+    const s = initialState()
+    Object.keys(s).forEach(key => { state[key] = s[key] })
+  },
   resetForm (state) {
     state.name = ''
     state.description = ''
@@ -47,10 +51,10 @@ export const mutations = {
 }
 
 export const actions = {
-  async getBatchSearches ({ commit }) {
-    const batchSearches = await datashare.getBatchSearches().then(r => r.clone().json())
-    commit('batchSearches', batchSearches)
-    return batchSearches
+  getBatchSearches ({ commit }) {
+    return datashare.getBatchSearches().then(batchSearches => {
+      return commit('batchSearches', batchSearches)
+    })
   },
   onSubmit ({ state, commit, dispatch }) {
     try {
@@ -61,12 +65,12 @@ export const actions = {
     } catch (_) {}
   },
   async getBatchSearchResults ({ state, commit }, batchId, from = 0, size = 100) {
-    const results = await datashare.getBatchSearchResults(batchId, from, size).then(r => r.clone().json())
+    const results = await datashare.getBatchSearchResults(batchId, from, size)
     await Promise.all(map(results, async result => {
       const raw = await esClient.getEsDoc(state.index, result.documentId, result.rootId)
       result.document = Response.instantiate(raw)
     }))
-    commit('results', results)
+    return commit('results', results)
   },
   deleteBatchSearches ({ commit }) {
     return datashare.deleteBatchSearches().then(commit('batchSearches', []))

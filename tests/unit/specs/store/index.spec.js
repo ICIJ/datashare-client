@@ -1,7 +1,7 @@
 import store from '@/store'
 
 describe('store', () => {
-  it('should instanciate an object', () => {
+  it('should instantiate an object', () => {
     expect(store).toBeInstanceOf(Object)
   })
 

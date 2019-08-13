@@ -197,7 +197,7 @@ describe('SearchResults.vue', () => {
       expect(wrapper.vm.starredDocuments).toEqual([])
       expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('far,star')
 
-      wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
+      await wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
       await wrapper.vm.$nextTick()
 
       expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
@@ -212,7 +212,7 @@ describe('SearchResults.vue', () => {
       expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
       expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('fa,star')
 
-      wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
+      await wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
       await wrapper.vm.$nextTick()
 
       expect(wrapper.vm.starredDocuments).toEqual([])

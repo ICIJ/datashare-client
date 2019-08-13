@@ -11,10 +11,9 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('@/api/DatashareClient', () => {
-  const { jsonOk } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      getBatchSearchResults: jest.fn().mockReturnValue(jsonOk([{
+      getBatchSearchResults: jest.fn().mockReturnValue(Promise.resolve([{
         creationDate: '2011-10-11T04:12:49.000+0000',
         documentId: 42,
         documentNumber: 0,
@@ -52,12 +51,10 @@ describe('BatchSearchResults.vue', () => {
   const es = esConnectionHelper.es
   let wrapper
 
-  beforeAll(() => {
-    Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] })
-    store.commit('batchSearch/index', process.env.VUE_APP_ES_INDEX)
-  })
+  beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
+    store.commit('batchSearch/index', process.env.VUE_APP_ES_INDEX)
     await letData(es).have(new IndexedDocument('42').withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43').withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44').withContentType('type_01')).commit()
@@ -80,6 +77,8 @@ describe('BatchSearchResults.vue', () => {
     wrapper.vm.$route.params.index = process.env.VUE_APP_ES_INDEX
     await wrapper.vm.getBatchSearchResults({ uuid: 12 })
   })
+
+  afterEach(() => store.commit('batchSearch/reset'))
 
   it('should display the list of the queries of this batch search', () => {
     expect(wrapper.find('.batch-search-results').exists()).toBeTruthy()

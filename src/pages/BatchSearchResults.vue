@@ -158,9 +158,10 @@ export default {
     }
   },
   methods: {
-    async getBatchSearchResults (params) {
-      await store.dispatch('batchSearch/getBatchSearchResults', params.uuid, 0, 100)
-      this.isReady = true
+    getBatchSearchResults (params) {
+      return store.dispatch('batchSearch/getBatchSearchResults', params.uuid, 0, 100).then(() => {
+        this.isReady = true
+      })
     },
     getFileName (documentPath) {
       return last(documentPath.split('/'))
