@@ -1,20 +1,30 @@
 ---
 description: >-
-  You can search with the main search bar, and also within a document thanks to
-  control or command + F.
+  You can search with the main search bar, with operators, and also within a
+  document thanks to control or command + F.
 ---
 
 # Search documents
 
-1. To see all your documents, empty the search bar or leave the asterisk and click '**Search'**:
+1. To see all your documents \(you need to have [added documents](https://icij.gitbook.io/datashare/mac/add-documents-to-datashare-on-mac) to Datashare and[ have analyzed](https://icij.gitbook.io/datashare/all/analyze-documents) them before\), click '**Search in documents'**:
 
-![](../.gitbook/assets/2.png)
+![](../.gitbook/assets/search-in-documents.png)
 
+To collapse the left menu, **click the 'hamburger menu'** :
 
+![](../.gitbook/assets/collapse.png)
 
-2. You can search for specific documents by **typing terms** in the search bar. 
+You will gain room to better explore your documents:
 
-**Important: to make your searches more precise, you can** [**search with operators \(AND, OR, ....\)**](https://icij.gitbook.io/datashare/all/search-with-operators)
+![](../.gitbook/assets/screenshot-2019-08-13-at-11.08.00.png)
+
+2. Search for specific documents. **Type terms** in the search bar, **press Enter** or **click 'Search'**:
+
+![](../.gitbook/assets/marie.png)
+
+**IMPORTANT: to make your searches more precise, search with operators \(AND, OR, ....\). Read more** [**here**](https://icij.gitbook.io/datashare/all/search-with-operators)**.**
+
+![](../.gitbook/assets/operators.png)
 
 3. You can search **in specific fields** like tags, title, author, recipient, content, path or thread ID. Click 'All fields' and select your choice in the dropdown menu:
 
