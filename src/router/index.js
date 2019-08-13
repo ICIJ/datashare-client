@@ -1,6 +1,10 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
+import AggregationsPanel from '@/components/AggregationsPanel'
+import BatchSearchForm from '@/components/BatchSearchForm'
+import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
+
 import App from '@/pages/App'
 import BatchSearch from '@/pages/BatchSearch'
 import BatchSearchResults from '@/pages/BatchSearchResults'
@@ -42,7 +46,10 @@ const router = new VueRouter({
         {
           name: 'search',
           path: '',
-          component: Search,
+          components: {
+            default: Search,
+            sidebar: AggregationsPanel
+          },
           beforeEnter: (to, from, next) => {
             // This allow to restore the search's state from localStorage
             // even if we are loading this route from a children (where no
@@ -70,15 +77,22 @@ const router = new VueRouter({
         {
           name: 'batch-search',
           path: 'batch-search',
-          component: BatchSearch,
-          children: [
-            {
-              name: 'batch-search.results',
-              path: ':index/:uuid',
-              component: BatchSearchResults,
-              props: true
-            }
-          ]
+          components: {
+            default: BatchSearch,
+            sidebar: BatchSearchForm
+          }
+        },
+        {
+          name: 'batch-search.results',
+          path: 'batch-search/:index/:uuid',
+          components: {
+            default: BatchSearchResults,
+            sidebar: BatchSearchResultsFilters
+          },
+          props: {
+            default: true,
+            sidebar: true
+          }
         },
         {
           name: 'user-history',

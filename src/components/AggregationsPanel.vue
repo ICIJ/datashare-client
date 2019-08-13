@@ -1,43 +1,41 @@
 <template>
-  <transition name="slide-left">
-    <div class="aggregations-panel" v-show="showFilters">
-      <div class="aggregations-panel__sticky w-100">
-        <div class="aggregations-panel__sticky__toolbar">
-          <ul class="nav flex-nowrap">
-            <li class="nav-item">
-              <div class="custom-control custom-switch aggregations-panel__sticky__toolbar__item">
-                <input type="checkbox" :checked="filtersContextualized" class="custom-control-input" id="input-contextualize-filters" @change="toggleContextualizeFilters($event.target.checked)">
-                <label class="custom-control-label text-white font-weight-bold btn btn-sm pl-0 pr-2 pb-2 pt-0 mt-2" for="input-contextualize-filters" id="label-contextualize-filters">
-                  {{ $t('search.contextualizeFiltersLabel') }}
-                </label>
-                <b-tooltip placement="bottom" target="label-contextualize-filters" :title="$t('search.contextualizeFiltersDescription')" />
-              </div>
-            </li>
-            <li class="nav-item border-left">
-              <button class="nav-link text-white font-weight-bold btn btn-sm px-2 aggregations-panel__sticky__toolbar__item" id="btn-reset-filters" @click="resetFilters()" :disabled="!hasFilters">
-                {{ $t('search.resetFiltersLabel') }}
-              </button>
-              <b-tooltip placement="bottom" target="btn-reset-filters" :title="$t('search.resetFiltersDescription')" />
-            </li>
-            <li class="nav-item ml-auto">
-              <button class="nav-link text-white font-weight-bold p-2 btn btn-sm aggregations-panel__sticky__toolbar__item aggregations-panel__sticky__toolbar__item--hide-filters" @click="hideFilters()" id="btn-hide-filters">
-                <fa icon="arrow-left" class="mx-1" />
-                <span class="sr-only">
-                  {{ $t('search.hideFilters') }}
-                </span>
-              </button>
-              <b-tooltip placement="bottom" target="btn-hide-filters" :title="$t('search.hideFilters')" />
-            </li>
-          </ul>
-        </div>
-        <index-selector />
-        <component v-for="facet in facets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
+  <div class="aggregations-panel" v-show="showFilters">
+    <div class="aggregations-panel__sticky w-100">
+      <div class="aggregations-panel__sticky__toolbar">
+        <ul class="nav flex-nowrap">
+          <li class="nav-item">
+            <div class="custom-control custom-switch aggregations-panel__sticky__toolbar__item">
+              <input type="checkbox" :checked="filtersContextualized" class="custom-control-input" id="input-contextualize-filters" @change="toggleContextualizeFilters($event.target.checked)">
+              <label class="custom-control-label text-white font-weight-bold btn btn-sm pl-0 pr-2 pb-2 pt-0 mt-2" for="input-contextualize-filters" id="label-contextualize-filters">
+                {{ $t('search.contextualizeFiltersLabel') }}
+              </label>
+              <b-tooltip placement="bottom" target="label-contextualize-filters" :title="$t('search.contextualizeFiltersDescription')" />
+            </div>
+          </li>
+          <li class="nav-item border-left">
+            <button class="nav-link text-white font-weight-bold btn btn-sm px-2 aggregations-panel__sticky__toolbar__item" id="btn-reset-filters" @click="resetFilters()" :disabled="!hasFilters">
+              {{ $t('search.resetFiltersLabel') }}
+            </button>
+            <b-tooltip placement="bottom" target="btn-reset-filters" :title="$t('search.resetFiltersDescription')" />
+          </li>
+          <li class="nav-item ml-auto">
+            <button class="nav-link text-white font-weight-bold p-2 btn btn-sm aggregations-panel__sticky__toolbar__item aggregations-panel__sticky__toolbar__item--hide-filters" @click="hideFilters()" id="btn-hide-filters">
+              <fa icon="arrow-left" class="mx-1" />
+              <span class="sr-only">
+                {{ $t('search.hideFilters') }}
+              </span>
+            </button>
+            <b-tooltip placement="bottom" target="btn-hide-filters" :title="$t('search.hideFilters')" />
+          </li>
+        </ul>
       </div>
-      <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
-        <facet-search :facet="selectedFacet" :query="facetQuery" />
-      </b-modal>
+      <index-selector />
+      <component v-for="facet in facets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
     </div>
-  </transition>
+    <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
+      <facet-search :facet="selectedFacet" :query="facetQuery" />
+    </b-modal>
+  </div>
 </template>
 
 <script>
@@ -154,18 +152,8 @@ export default {
     align-items: flex-start;
     padding-bottom: $spacer;
     padding-right: $spacer;
-    width:100%;
-    max-width: $aggregations-panel-width;
+    width: $app-context-sidebar-width;
     min-height: 100vh;
-
-    &.slide-left-enter-active, &.slide-left-leave-active {
-      transition: .3s;
-    }
-
-    &.slide-left-enter, &.slide-left-leave-to {
-      transform: translateX(-100%);
-      opacity: 0;
-    }
 
     &__sticky {
 

@@ -169,7 +169,7 @@ export default {
         color: inherit;
         padding: $spacer;
         pointer-events: auto;
-        max-width: $aggregations-panel-width;
+        max-width: $app-context-sidebar-width;
         width: 100%;
         font-size: 1.5rem;
         text-decoration: none;

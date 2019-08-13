@@ -88,8 +88,8 @@ $app-border-radius: 1rem;
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
 $app-sidebar-width: 290px;
+$app-context-sidebar-width: 320px;
 
-$aggregations-panel-width: 320px;
 $aggregations-panel-bg: lighten($app-bg, 10%);
 $search-results-width: 420px;
 

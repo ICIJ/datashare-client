@@ -434,6 +434,7 @@
     "lead": "Search multiple terms and documents at once.",
     "title": "Batch searches",
     "form": {
+      "heading": "New batch search",
       "nameLabel": "Name of your new batch search:",
       "namePlaceholder": "",
       "descriptionLabel": "Description:",
@@ -462,5 +463,10 @@
     "downloadResults": "Download results",
     "sample": "Sample of the first 100 result(s).",
     "all": "All"
+  },
+  "batchSearchResultsFilters": {
+    "queries": {
+      "heading": "Filter by queries"
+    }
   }
 }

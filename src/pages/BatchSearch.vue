@@ -11,8 +11,7 @@
       </div>
     </div>
     <div class="container pt-4">
-      <batch-search-form class="batch-search__form" />
-      <div class="batch-search__items">
+      <div class="batch-search__items card">
         <div v-if="!isReady">
           <content-placeholder :rows="rows" class="p-0 my-3" />
           <content-placeholder :rows="rows" class="p-0 my-3" />
@@ -34,7 +33,6 @@
             {{ moment(row.item.date).format('LLL') }}
           </template>
         </b-table>
-        <router-view />
       </div>
     </div>
   </div>
@@ -46,12 +44,10 @@ import moment from 'moment'
 import capitalize from 'lodash/capitalize'
 
 import utils from '@/mixins/utils'
-import BatchSearchForm from '@/components/BatchSearchForm'
 
 export default {
   name: 'BatchSearches',
   mixins: [ utils ],
-  components: { BatchSearchForm },
   data () {
     return {
       fields: [
@@ -102,10 +98,9 @@ export default {
   computed: {
     ...mapState('batchSearch', { items: 'batchSearches' })
   },
-  created () {
-    return this.$store.dispatch('batchSearch/getBatchSearches').then(() => {
-      this.isReady = true
-    })
+  async created () {
+    await this.$store.dispatch('batchSearch/getBatchSearches')
+    this.isReady = true
   },
   methods: {
     moment,
@@ -132,23 +127,16 @@ export default {
       background: white;
       overflow: hidden;
 
-      &__explanation {
-        padding: $spacer * 3 0;
+      table {
+        margin: 0;
+
+        thead th {
+          border-top: 0;
+        }
       }
 
-      .batch-search-results {
-        z-index: 100;
-        position: absolute;
-        right: 0;
-        top: 0;
-        bottom: 0;
-        width: 100%;
-        overflow: auto;
-        max-width: 660px;
-        background: white;
-        padding: $spacer 0;
-        border-radius: 20px 0 0 0;
-        box-shadow: 0 0 10px 0 rgba($dark, .2);
+      &__explanation {
+        padding: $spacer * 3 0;
       }
     }
   }

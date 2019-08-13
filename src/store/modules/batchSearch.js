@@ -13,6 +13,7 @@ export function initialState () {
     index: 'local-datashare',
     csvFile: null,
     batchSearches: [],
+    selectedQueries: [],
     results: []
   }
 }
@@ -47,6 +48,9 @@ export const mutations = {
   },
   results (state, results) {
     state.results = results
+  },
+  selectedQueries (state, selectedQueries) {
+    state.selectedQueries = selectedQueries
   }
 }
 

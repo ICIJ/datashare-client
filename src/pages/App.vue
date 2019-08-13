@@ -4,13 +4,15 @@
       <app-sidebar />
     </div>
     <div class="app__main flex-grow-1 d-flex">
-      <vue-perfect-scrollbar class="app__main__aggregations-panel">
-        <aggregations-panel v-if="['search', 'document'].indexOf($route.name) > -1" />
+      <vue-perfect-scrollbar class="app__main__context-sidebar">
+        <transition name="slide-left">
+          <router-view name="sidebar" />
+        </transition>
       </vue-perfect-scrollbar>
       <div class="flex-grow-1">
-        <router-view />
         <scroll-tracker />
         <vue-progress-bar />
+        <router-view />
       </div>
     </div>
   </div>
@@ -57,9 +59,23 @@ export default {
              0 0 no-repeat luminance linear-gradient(white 0%, white 100%);
       mask-composite: exclude;
 
-      &__aggregations-panel {
+      &__context-sidebar {
+        position: sticky;
+        top: 0;
         height: 100vh;
         background: $aggregations-panel-bg;
+
+        /**
+         * Disabled
+        & > .slide-left-enter-active,
+        & > .slide-left-leave-active {
+          transition: .2s;
+        }
+
+        & > .slide-left-enter,
+        & > .slide-left-leave-to {
+          transform: translateX(-100%);
+        } */
       }
     }
   }

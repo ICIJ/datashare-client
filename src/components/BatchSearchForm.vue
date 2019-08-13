@@ -1,14 +1,17 @@
 <template>
   <div class="batch-search-form">
     <b-form @submit.prevent="onSubmit">
-      <div class="card">
-        <div class="m-4">
+      <div class="card m-3">
+        <h6 class="card-header">
+          {{ $t('batchSearch.form.heading') }}
+        </h6>
+        <div class="card-body pb-1 small">
           <div class="row">
             <b-form-group
               id="group-name"
               :label="$t('batchSearch.form.nameLabel')"
               label-for="name"
-              class="col">
+              class="col-12">
               <b-form-input
                 id="name"
                 v-model="name"
@@ -115,3 +118,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .batch-search-form {
+    width: $app-context-sidebar-width;
+  }
+</style>
