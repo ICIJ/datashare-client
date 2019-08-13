@@ -9,7 +9,7 @@ description: 'You can tag documents, search for tagged documents and delete your
 * Open the document by clicking on its title
 * Click the second tab 'Tags & Details'
 
-![](../.gitbook/assets/tags%20%281%29.png)
+![](../.gitbook/assets/tags%20%282%29.png)
 
 * Type your tag
 * Press 'Enter'

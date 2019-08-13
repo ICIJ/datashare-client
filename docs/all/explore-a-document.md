@@ -10,17 +10,17 @@ description: >-
 
 In 'Extracted Text', you can read the text of a document as extracted by Datashare:
 
-![](../.gitbook/assets/et.png)
+![](../.gitbook/assets/et%20%281%29.png)
 
-Please beware that Datashare show named entities by default. This can overwrite some original text with wrong named entities. It is thus important to **always verify original text** by deactivating named entity overwriting. To do so, please: 
+Please beware that Datashare show named entities by default. **This can overwrite some original text with wrong named entities.** It is thus important to **always verify original text** by deactivating named entity overwriting. To do so, please: 
 
-* Turn off the toggle button ‘Show named entities’ and read the extracted text
-* Check the ‘Preview’ of original document if available
-* Check the document at its original location or by clicking the pink button ‘Download’, opening and reading the original document
+* **Turn off** the toggle button ‘**Show named entities**’ and read the extracted text
+* Check the ‘**Preview’** of original document if available
+* Check the original document at its original location or by clicking the pink button ‘**Download**’
 
 
 
-You can **search for terms within this document:**
+**Search for terms within this document:**
 
 * Press **Command\(⌘\) + F** \(on Mac\) or **Control + F** \(on Windows and Linux\) or click on the search bar above your Extracted Text
 * Type what you search for
@@ -31,7 +31,7 @@ _To know all the shortcuts in Datashare, please read '_[_Use keyboard shortcuts_
 
 This also counts the number of occurrences of your searched terms in this document:
 
-![](../.gitbook/assets/screen-shot-2019-06-26-at-11.26.39-am.png)
+![](../.gitbook/assets/find-f.png)
 
 
 
@@ -39,19 +39,21 @@ This also counts the number of occurrences of your searched terms in this docume
 
 In 'Tags & Details', you can read the document's details. It's all the metadata as they appear in the original file. Please click '**Show more details**' to get all metadata:
 
-![](../.gitbook/assets/tags%20%281%29.png)
+![](../.gitbook/assets/t-and-d.png)
 
 You can also read the tags you previously wrote for this document, like 'test1', 'test2' and 'test3' in the example below:
 
-![](../.gitbook/assets/tags2.png)
+![](../.gitbook/assets/tags%20%281%29.png)
 
 You can then search for the documents you tagged:
 
-* type the tag\(s\) in the main search bar 
-* click 'All fields' and select 'Tags'
-* click 'Search'
+* **Type the tag\(s\)** in the main search bar 
+* Click '**All fields**' and select '**Tags**'
+* Click '**Search**' or press '**Enter**'
 
-To learn more about tags, please read 'Tag a document'.
+![](../.gitbook/assets/search-tags.png)
+
+To learn more about tags, please read '[Tag a document](https://icij.gitbook.io/datashare/all/tag-documents)'.
 
 ## **Named Entities**
 
