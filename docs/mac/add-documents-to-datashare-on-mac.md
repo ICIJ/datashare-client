@@ -31,7 +31,7 @@ You can drag and drop it in 'Favorites' on the left of this window to allow quic
 
 6. Datashare opens in your default internet browser. Click on '**Analyze documents'** on the top navigation bar in Datashare.
 
-![](../.gitbook/assets/group30.png)
+![](../.gitbook/assets/analyze.png)
 
-Congrats! You're now ready to [analyze your documents in Datashare](https://icij.gitbook.io/datashare/all/analyze-documents)! 
+You're now ready to [analyze your documents in Datashare](https://icij.gitbook.io/datashare/all/analyze-documents). 
 
