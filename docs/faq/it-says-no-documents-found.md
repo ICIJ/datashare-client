@@ -2,7 +2,7 @@
 
 * If you were able to see documents during your current session, you might have active filters that prevent Datashare from displaying documents, as no document might correspond to your current search. You can check in your URL if you see active filters and if you're **comfortable with the possibility of loosing your previously selected filters**, click '**Reset filters'**.
 
-![](../.gitbook/assets/screenshot-2019-07-05-at-15.22.06.png)
+![](../.gitbook/assets/reset-button.png)
 
 
 
