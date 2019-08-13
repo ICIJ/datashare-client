@@ -10,7 +10,7 @@ description: >-
 2. **Move the documents you want to add to Datashare into this folder**.
 3. **Open Datashare** to extract text and eventually find people, organizations and locations in your documents.
 
-You can now [analyze your documents](https://icij.gitbook.io/datashare/all/analyze-documents)!
+You can now [analyze your documents](https://icij.gitbook.io/datashare/all/analyze-documents).
 
 
 
