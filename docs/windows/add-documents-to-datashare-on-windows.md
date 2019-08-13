@@ -17,7 +17,7 @@ description: >-
 
 3. Once Datashare has opened, click on 'Analyze documents' on the top navigation bar in Datashare:​
 
-![](../.gitbook/assets/group30%20%281%29.png)
+![](../.gitbook/assets/analyze%20%281%29.png)
 
-Congrats! You're now ready to [analyze your documents in Datashare](https://icij.gitbook.io/datashare/all/analyze-documents)! 
+You're now ready to [analyze your documents in Datashare](https://icij.gitbook.io/datashare/all/analyze-documents). 
 
