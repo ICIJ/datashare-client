@@ -19,6 +19,7 @@ export default {
   methods: {
     async deleteAll () {
       await this.$store.dispatch('indexing/deleteAll')
+      await this.$store.dispatch('batchSearch/deleteBatchSearches')
       this.$store.commit('userHistory/clear')
       this.$root.$emit('index::delete::all')
     }

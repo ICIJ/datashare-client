@@ -14,7 +14,7 @@ export const getters = {
 export const mutations = {
   addDocument (state, document) {
     // We only save raw info about the document to avoid saving to many
-    // information in browser memiry
+    // information in browser memory
     state.rawDocuments.push(document.serializedForStorage)
     // Remove duplicates and only keep the 500 last docs
     state.rawDocuments = uniqBy(state.rawDocuments.reverse().slice(0, 500), '_id').reverse()

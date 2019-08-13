@@ -74,6 +74,9 @@ export class DatashareClient {
   getBatchSearchResults (batchId, from = 0, size = 100) {
     return this.sendAction(`/api/batch/search/result/${encodeURIComponent(batchId)}?from=${encodeURIComponent(from.toString())}&size=${encodeURIComponent(size.toString())}`)
   }
+  deleteBatchSearches () {
+    return this.sendAction('/api/batch/search', { method: 'DELETE' })
+  }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)

@@ -58,7 +58,7 @@ export const actions = {
         commit('resetForm')
         return dispatch('getBatchSearches')
       })
-    } catch (e) {}
+    } catch (_) {}
   },
   async getBatchSearchResults ({ state, commit }, batchId, from = 0, size = 100) {
     const results = await datashare.getBatchSearchResults(batchId, from, size).then(r => r.clone().json())
@@ -67,6 +67,9 @@ export const actions = {
       result.document = Response.instantiate(raw)
     }))
     commit('results', results)
+  },
+  deleteBatchSearches ({ commit }) {
+    return datashare.deleteBatchSearches().then(commit('batchSearches', []))
   }
 }
 
