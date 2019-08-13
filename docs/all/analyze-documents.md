@@ -6,9 +6,9 @@ description: >-
 
 # Analyze documents
 
-1. To index and have your documents in Datashare, click '**Analyze documents'** on the top bar of Datashare in your browser.
+1. To index and have your documents in Datashare, click '**Analyze documents'**.
 
-![](../.gitbook/assets/1%20%282%29.png)
+![](../.gitbook/assets/analyze%20%281%29.png)
 
 2. You're now on '[http://localhost:8080/\#/indexing](http://localhost:8080/#/indexing)'. Click '**Extract text'** so that Datashare can extract the texts from your files.
 
