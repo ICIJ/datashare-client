@@ -9,7 +9,7 @@ description: 'You can tag documents, search for tagged documents and delete your
 * Open the document by clicking on its title
 * Click the second tab 'Tags & Details'
 
-![](../.gitbook/assets/tags%20%282%29.png)
+![](../.gitbook/assets/t-and-d.png)
 
 * Type your tag
 * Press 'Enter'
@@ -25,9 +25,9 @@ To find all your documents tagged **with specific tag\(s\)**:
 * Type the tag\(s\) in the main search bar
 * Select 'Tags' in the field dropdown menu
 
-![](../.gitbook/assets/screenshot-2019-07-24-at-16.08.02.png)
+![](../.gitbook/assets/tag-test1.png)
 
-* Click 'Search'
+* Click '**Search**' or press '**Enter**'
 
 The results are all the documents tagged with the tag\(s\) you typed in the search bar.
 

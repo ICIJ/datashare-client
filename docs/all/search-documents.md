@@ -45,7 +45,7 @@ _To know all the shortcuts in Datashare, please read '_[_Use keyboard shortcuts_
 
 This also counts the number of occurrences of your searched terms in this document:
 
-![](../.gitbook/assets/screen-shot-2019-06-26-at-11.26.39-am.png)
+![](../.gitbook/assets/find-f.png)
 
 
 
