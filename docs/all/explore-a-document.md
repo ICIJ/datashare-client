@@ -59,7 +59,7 @@ To learn more about tags, please read '[Tag a document](https://icij.gitbook.io/
 
 In 'Named Entities', you can read the name of people, organizations and locations as well as the number of their occurrences in the document:
 
-![](../.gitbook/assets/screenshot-2019-07-16-at-16.03.52.png)
+![](../.gitbook/assets/named-entities-tab.png)
 
 Please beware that there can still be some errors due to the technology of Named Entity Extraction \(NER\) on which Datashare relies.
 
@@ -71,7 +71,7 @@ In 'Preview', you can read the original document.
 
 'Preview' is available for some formats only.
 
-![](../.gitbook/assets/preview.png)
+![](../.gitbook/assets/preview-tab.png)
 
 
 
