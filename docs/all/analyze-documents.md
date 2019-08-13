@@ -49,7 +49,11 @@ Select '**CoreNLP'**, if you want to use the one with the highest probability of
 
 ## Extract email addresses
 
-To extract email addresses in your documents, re-click on 'Find people, organizations and locations' and **select 'Email extraction'**:
+To extract email addresses in your documents:
+
+* re-click on **'Find people, organizations and locations'** 
+* click ****the last radio button **'Email extraction'**
+* click '**Go**'
 
 ![](../.gitbook/assets/email-extraction.png)
 
