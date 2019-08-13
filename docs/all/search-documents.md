@@ -28,11 +28,11 @@ You will gain room to better explore your documents:
 
 3. You can search **in specific fields** like tags, title, author, recipient, content, path or thread ID. Click 'All fields' and select your choice in the dropdown menu:
 
-![](../.gitbook/assets/field-search.png)
+![](../.gitbook/assets/fields.png)
 
-4. In the 'All fields' category, when you start typing terms, you can see suggestions of named entities \(name of people, organizations and locations in Datashare\) in a dropdown menu:
+4. In the 'All fields' category, when you start typing terms, you can see suggestions of named entities \(name of people, organizations and locations in Datashare\) in a dropdown menu, with **their number of occurrences in all your documents** \(here, "marie curie" appears 1 time in the documents and "marie skiodowska curie" 1 time as well\):
 
-![](../.gitbook/assets/ne-search.png)
+![](../.gitbook/assets/ne.png)
 
 5. Once you opened a document, you can **search for terms in this document:**
 
