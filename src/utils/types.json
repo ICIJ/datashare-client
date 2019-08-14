@@ -391,7 +391,7 @@
     }
   },
   "message/rfc822": {
-    "label": "Internet Message Format email",
+    "label": "Internet Message Format (email)",
     "extensions": [
       ".eml"
     ],
