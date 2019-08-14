@@ -79,24 +79,24 @@ export default {
     firstPageLinkParameters () {
       let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
       query.from = 0
-      return { name: 'search', query: query }
+      return { name: 'search', query }
     },
     previousPageLinkParameters () {
       let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
       query.from = max([0, query.from - query.size])
-      return { name: 'search', query: query }
+      return { name: 'search', query }
     },
     nextPageLinkParameters () {
       let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
       const nextFrom = query.from + query.size
       query.from = nextFrom < this.response.total ? nextFrom : query.from
-      return { name: 'search', query: query }
+      return { name: 'search', query }
     },
     lastPageLinkParameters () {
       let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
       const gap = (this.response.total % query.size === 0) ? 1 : 0
       query.from = query.size * (floor(this.response.total / query.size) - gap)
-      return { name: 'search', query: query }
+      return { name: 'search', query }
     },
     isFirstOrPreviousPageAvailable () {
       return this.$store.state.search.from !== 0

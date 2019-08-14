@@ -119,7 +119,7 @@ export default {
       try {
         const result = await this.$store.dispatch('search/query', queryOrParams)
         return result
-      } catch {
+      } catch (_) {
         this.wrongQuery()
       }
     },
