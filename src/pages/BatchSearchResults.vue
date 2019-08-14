@@ -66,22 +66,38 @@
           </b-table>
         </div>
       </div>
+      <div>
+        <span @click="fetchFirstBatchSearchResults" class="p-2">
+          <fa icon="angle-double-left" />
+        </span>
+        <span @click="fetchPreviousBatchSearchResults" class="p-2">
+          <fa icon="angle-left" />
+        </span>
+        <span @click="fetchNextBatchSearchResults" class="p-2">
+          <fa icon="angle-right" />
+        </span>
+        <span @click="fetchLastBatchSearchResults" class="p-2">
+          <fa icon="angle-double-right" />
+        </span>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import store from '@/store'
 import moment from 'moment'
 import capitalize from 'lodash/capitalize'
-import last from 'lodash/last'
 import find from 'lodash/find'
+import floor from 'lodash/floor'
 import includes from 'lodash/includes'
 import { mapState } from 'vuex'
+import last from 'lodash/last'
+import max from 'lodash/max'
 
 import DatashareClient from '@/api/DatashareClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
-import store from '@/store'
 
 export default {
   name: 'BatchSearchResults',
@@ -136,7 +152,9 @@ export default {
           height: '1em',
           boxes: [['10%', '80%']]
         }
-      ]
+      ],
+      from: 0,
+      size: 5
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -160,15 +178,33 @@ export default {
   },
   methods: {
     async fetch () {
-      await this.fetchBatchSearchResults()
       await this.fetchBatchSearches()
+      await this.fetchBatchSearchResults()
       this.isReady = true
-    },
-    fetchBatchSearchResults () {
-      return store.dispatch('batchSearch/getBatchSearchResults', this.uuid, 0, 100)
     },
     fetchBatchSearches () {
       return store.dispatch('batchSearch/getBatchSearches')
+    },
+    fetchFirstBatchSearchResults () {
+      this.from = 0
+      this.fetchBatchSearchResults()
+    },
+    fetchPreviousBatchSearchResults () {
+      this.from = max([0, this.from - this.size])
+      this.fetchBatchSearchResults()
+    },
+    fetchNextBatchSearchResults () {
+      const nextFrom = this.from + this.size
+      this.from = nextFrom < this.meta.nbResults ? nextFrom : this.from
+      this.fetchBatchSearchResults()
+    },
+    fetchLastBatchSearchResults () {
+      const gap = (this.meta.nbResults % this.size === 0) ? 1 : 0
+      this.from = this.size * (floor(this.meta.nbResults / this.size) - gap)
+      this.fetchBatchSearchResults()
+    },
+    fetchBatchSearchResults () {
+      return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from: this.from, size: this.size })
     },
     getFileName (documentPath) {
       return last(documentPath.split('/'))
