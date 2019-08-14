@@ -32,7 +32,7 @@ export class DatashareClient {
     return this.sendAction('/api/index/create', { method: 'PUT' })
   }
   deleteAll (projectId) {
-    return this.sendAction(`/api/project/id/${encodeURIComponent(projectId)}`, { method: 'DELETE' })
+    return this.sendAction(`/api/project/id/${encodeURIComponent(projectId)}`, { method: 'DELETE' }, false)
   }
   getVersion () {
     return this.sendAction('/version')
@@ -75,7 +75,7 @@ export class DatashareClient {
     return this.sendAction(`/api/batch/search/result/${encodeURIComponent(batchId)}?from=${encodeURIComponent(from.toString())}&size=${encodeURIComponent(size.toString())}`)
   }
   deleteBatchSearches () {
-    return this.sendAction('/api/batch/search', { method: 'DELETE' })
+    return this.sendAction('/api/batch/search', { method: 'DELETE' }, false)
   }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
