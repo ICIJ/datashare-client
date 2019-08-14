@@ -27,7 +27,9 @@
             {{ row.item.queries.length }} queries
           </template>
           <template #state="row">
-            {{ capitalize(row.item.state) }}
+            <span class="badge badge-darker">
+              {{ capitalize(row.item.state) }}
+            </span>
           </template>
           <template #date="row">
             {{ moment(row.item.date).format('LLL') }}
