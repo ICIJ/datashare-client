@@ -100,7 +100,7 @@ export default {
         this.thumbnailSrc = await this.fetch()
         this.$set(this, 'loaded', true)
       } catch (_) {
-        this.$set(this, 'error', true)
+        this.$set(this, 'erroed', true)
       }
     },
     bindObserver () {
@@ -130,10 +130,10 @@ export default {
     min-width: 80px;
     min-height: 3rem;
     position: relative;
-    border-radius: $gray-200;
     overflow: hidden;
     font-size: 0.5rem;
     color: $text-muted;
+    background: $body-bg;
 
     &--crop {
       width: 80px;
