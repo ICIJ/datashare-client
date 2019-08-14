@@ -11,10 +11,9 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('@/api/DatashareClient', () => {
-  const { jsonOk } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      getBatchSearches: jest.fn().mockReturnValue(jsonOk([
+      getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([
         {
           uuid: '12',
           project: { name: 'ProjectName' },
@@ -31,7 +30,7 @@ jest.mock('@/api/DatashareClient', () => {
           date: '2019-07-28T14:45:34.869+0000'
         }
       ])),
-      getBatchSearchResults: jest.fn().mockReturnValue(jsonOk([
+      getBatchSearchResults: jest.fn().mockReturnValue(Promise.resolve([
         {
           creationDate: '2011-10-11T04:12:49.000+0000',
           documentId: 42,
