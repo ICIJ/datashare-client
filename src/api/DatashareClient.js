@@ -66,7 +66,7 @@ export class DatashareClient {
     form.append('name', name)
     form.append('description', description)
     form.append('csvFile', csvFile)
-    return this.sendAction(`/api/batch/search/${encodeURIComponent(project)}`, { method: 'POST', body: form })
+    return this.sendAction(`/api/batch/search/${encodeURIComponent(project)}`, { method: 'POST', body: form }, false)
   }
   getBatchSearches () {
     return this.sendAction('/api/batch/search')
