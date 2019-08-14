@@ -451,7 +451,8 @@
     "queries": "Queries",
     "state": "State",
     "date": "Date",
-    "nbResults": "Number of results"
+    "nbResults": "Number of results",
+    "query": "no queries | 1 query | {count} queries"
   },
   "batchSearchResults": {
     "index": "Index",

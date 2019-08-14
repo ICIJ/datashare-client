@@ -24,7 +24,7 @@
             </router-link>
           </template>
           <template #queries="row">
-            {{ row.item.queries.length }} queries
+            {{ $tc('batchSearch.query', row.item.queries.length) }}
           </template>
           <template #state="row">
             <span class="badge badge-darker">
