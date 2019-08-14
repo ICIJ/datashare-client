@@ -1,8 +1,4 @@
-import map from 'lodash/map'
-
 import DatashareClient from '@/api/DatashareClient'
-import esClient from '@/api/esClient'
-import Response from '@/api/Response'
 
 export const datashare = new DatashareClient()
 
@@ -69,10 +65,6 @@ export const actions = {
   },
   async getBatchSearchResults ({ state, commit }, batchId, from = 0, size = 100) {
     const results = await datashare.getBatchSearchResults(batchId, from, size)
-    await Promise.all(map(results, async result => {
-      const raw = await esClient.getEsDoc(state.index, result.documentId, result.rootId)
-      result.document = Response.instantiate(raw)
-    }))
     return commit('results', results)
   },
   deleteBatchSearches ({ commit }) {

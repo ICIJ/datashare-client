@@ -58,7 +58,10 @@
               {{ moment(row.item.creationDate).isValid() ? moment(row.item.creationDate).format('LLL') : '' }}
             </template>
             <template #contentType="row">
-              {{ getDocumentTypeLabel(row.item.document.contentType) }}
+              {{ getDocumentTypeLabel(row.item.contentType) }}
+            </template>
+            <template #contentLength="row">
+              {{  row.item.contentLength | humanSize }}
             </template>
           </b-table>
         </div>
@@ -68,16 +71,17 @@
 </template>
 
 <script>
-import store from '@/store'
 import moment from 'moment'
 import capitalize from 'lodash/capitalize'
 import last from 'lodash/last'
 import find from 'lodash/find'
 import includes from 'lodash/includes'
+import { mapState } from 'vuex'
 
 import DatashareClient from '@/api/DatashareClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
-import { mapState } from 'vuex'
+import humanSize from '@/filters/humanSize'
+import store from '@/store'
 
 export default {
   name: 'BatchSearchResults',
@@ -88,6 +92,9 @@ export default {
     index: {
       type: String
     }
+  },
+  filters: {
+    humanSize
   },
   data () {
     return {
@@ -118,7 +125,7 @@ export default {
           sortable: true
         },
         {
-          key: 'document.humanSize',
+          key: 'contentLength',
           label: this.$t('batchSearchResults.size'),
           sortable: true
         }
