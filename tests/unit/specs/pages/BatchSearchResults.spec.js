@@ -13,7 +13,23 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
     return {
-      getBatchSearches: jest.fn().mockReturnValue(jsonOk([])),
+      getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([
+        {
+          uuid: '12',
+          project: { name: 'ProjectName' },
+          description: 'This is the description of the batch search',
+          queries: ['query_01', 'query_02', 'query_03'],
+          state: 'SUCCESS',
+          date: '2019-07-18T14:45:34.869+0000'
+        }, {
+          uuid: '13',
+          project: { name: 'ProjectName2' },
+          description: 'Another description',
+          queries: ['query_04'],
+          state: 'SUCCESS',
+          date: '2019-07-28T14:45:34.869+0000'
+        }
+      ])),
       getBatchSearchResults: jest.fn().mockReturnValue(Promise.resolve([
         {
           creationDate: '2011-10-11T04:12:49.000+0000',
@@ -76,8 +92,10 @@ describe('BatchSearchResults.vue', () => {
       state: 'SUCCESS',
       date: '2019-07-28T14:45:34.869+0000'
     }])
-    wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX } })
-    wrapper.vm.$route.params.index = process.env.VUE_APP_ES_INDEX
+    const propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
+    wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData })
+    // Needed to build the route
+    Object.assign(wrapper.vm.$route.params, propsData)
     await wrapper.vm.fetch()
   })
 

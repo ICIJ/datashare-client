@@ -80,6 +80,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     await letData(es).have(new IndexedDocument('42').withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43').withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44').withContentType('type_01')).commit()
+
     store.commit('batchSearch/batchSearches', [{
       uuid: '12',
       project: { name: 'ProjectName' },
@@ -105,7 +106,6 @@ describe('BatchSearchResultsFilters.vue', () => {
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown').exists()).toBeTruthy()
     expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown span')).toHaveLength(3)
-    expect(wrapper.find('.batch-search-results-filters__queries__list').exists()).toBeFalsy()
   })
 
   it('should not ad dropdown but a simple list if there is only one query', async () => {
