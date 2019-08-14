@@ -98,7 +98,7 @@ describe('BatchSearch store', () => {
       const batchSearch = [{ contentType: 'type_01', documentId: 12, rootId: 12 }]
       datashare.fetch.mockReturnValue(jsonOk(batchSearch))
 
-      await store.dispatch('batchSearch/getBatchSearchResults')
+      await store.dispatch('batchSearch/getBatchSearchResults', { batchId: 12 })
 
       expect(store.state.batchSearch.results).toHaveLength(1)
       expect(store.state.batchSearch.results[0].documentId).toBe(12)
