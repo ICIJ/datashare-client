@@ -63,6 +63,14 @@
             </span>
           </a>
         </li>
+        <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" v-bind:key="meta.resourcePath">
+          <router-link :to="{ name: 'docs', params: meta }" class="app-sidebar__container__menu__item__link">
+            <fa icon="book" fixed-width />
+            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+              {{ meta.title }}
+            </span>
+          </router-link>
+        </li>
       </ul>
       <ul class="app-sidebar__container__menu list-unstyled mb-0">
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--locale">
@@ -96,6 +104,7 @@
 import { getOS } from '@/utils/utils'
 import utils from '@/mixins/utils'
 import features from '@/mixins/features'
+import docs from '@/mixins/docs'
 import settings from '@/utils/settings'
 import LocalesDropdown from './LocalesDropdown.vue'
 import MountedDataLocation from './MountedDataLocation.vue'
@@ -104,7 +113,7 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'AppSidebar',
-  mixins: [utils, features],
+  mixins: [docs, features, utils],
   components: {
     LocalesDropdown,
     MountedDataLocation,

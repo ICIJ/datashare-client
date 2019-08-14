@@ -1,6 +1,7 @@
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const { join } = require('path')
 const { setCookie } = require('tiny-cookie')
+const marked = require('marked')
 
 const resolve = filepath => join(__dirname, filepath)
 const gitRevisionPlugin = new GitRevisionPlugin()
@@ -28,6 +29,28 @@ module.exports = {
           ]
         })
     })
+
+    // Add custom loader
+    config.resolveLoader.modules.add('./loaders')
+
+    const renderer = new marked.Renderer()
+    renderer.image = function (href, title, text) {
+      href = href.replace('../.gitbook', '/docs/.gitbook')
+      return marked.Renderer.prototype.image.call(this, href, title, text)
+    }
+
+    // Ignore markdown files
+    config.module.rule('markdown')
+      .test(/\.md$/)
+      .use('html-loader')
+      .loader('html-loader')
+      .end()
+      .use('markdown-loader')
+      .loader('markdown-loader')
+      .options({ renderer })
+      .end()
+      .use('metadata-strip-loader')
+      .loader('metadata-strip-loader')
 
     // Use a specific loader for workers
     config.module.rule('worker')
