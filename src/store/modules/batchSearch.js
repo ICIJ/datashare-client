@@ -60,12 +60,11 @@ export const actions = {
       return commit('batchSearches', batchSearches)
     })
   },
-  onSubmit ({ state, commit, dispatch }) {
+  async onSubmit ({ state, commit, dispatch }) {
     try {
-      return datashare.batchSearch(state.index, state.name, state.description, state.csvFile).then(() => {
-        commit('resetForm')
-        return dispatch('getBatchSearches')
-      })
+      await datashare.batchSearch(state.index, state.name, state.description, state.csvFile)
+      commit('resetForm')
+      return dispatch('getBatchSearches')
     } catch (_) {}
   },
   async getBatchSearchResults ({ state, commit }, batchId, from = 0, size = 100) {
