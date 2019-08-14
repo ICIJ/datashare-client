@@ -45,7 +45,7 @@
           {{ $t('batchSearchResults.sample') }}
         </p>
         <div class="card">
-          <b-table striped hover bordered :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query" :filter="selectedQueries" :filter-function="filter">
+          <b-table striped hover :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query" :filter="selectedQueries" :filter-function="filter">
             <template #documentNumber="row">
               {{ row.item.documentNumber + 1 }}
             </template>
