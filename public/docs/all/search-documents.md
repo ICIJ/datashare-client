@@ -34,6 +34,10 @@ You will gain room to better explore your documents:
 
 ![](../.gitbook/assets/ne.png)
 
+If you run [email extraction](https://icij.gitbook.io/datashare/all/analyze-documents#extract-email-addresses), email addresses will also be suggested:
+
+![](../.gitbook/assets/email-suggested.png)
+
 5. Once a document is opened, you can **search for terms in this document:**
 
 * Press **Command \(⌘\) + F** \(on Mac\) or **Control + F** \(on Windows and Linux\) or click on the search bar above your Extracted Text
