@@ -63,7 +63,7 @@
             </span>
           </a>
         </li>
-        <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" v-bind:key="meta.resourcePath">
+        <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" v-bind:key="meta.resourcePath" v-if="!reduced">
           <router-link :to="{ name: 'docs', params: meta }" class="app-sidebar__container__menu__item__link">
             <fa icon="book" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
