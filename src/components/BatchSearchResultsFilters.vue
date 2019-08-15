@@ -54,6 +54,7 @@ export default {
 <style lang="scss">
   .batch-search-results-filters {
     max-width: $app-context-sidebar-width;
+    min-width: $app-context-sidebar-width;
     width: 100%;
 
     &__queries {

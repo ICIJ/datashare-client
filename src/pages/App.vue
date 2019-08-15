@@ -59,7 +59,7 @@ export default {
              0 0 no-repeat luminance linear-gradient(white 0%, white 100%);
       mask-composite: exclude;
 
-      &__context-sidebar {
+      & &__context-sidebar {
         position: sticky;
         top: 0;
         height: 100vh;
