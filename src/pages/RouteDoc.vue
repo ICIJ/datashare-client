@@ -87,6 +87,25 @@ export default {
         max-width: 750px;
         max-height: 60vh;
       }
+
+      blockquote {
+        padding: 1rem;
+        background-color: $gray-100;
+        margin-bottom: $spacer;
+
+        pre {
+          padding: 0;
+          margin-top: 0;
+          margin-bottom: 0;
+          background-color: transparent;
+          border: 0;
+
+          code {
+            @include font-size(inherit);
+            color: $gray-900; // Effectively the base text color
+          }
+        }
+      }
     }
   }
 </style>
