@@ -8,7 +8,7 @@ description: >-
 
 ## Extract text
 
-1. To index and have your documents in Datashare, click '**Analyze documents'**.
+1. To index and have your documents in Datashare, click '**Analyze your documents'**.
 
 ![](../.gitbook/assets/analyze%20%281%29.png)
 
@@ -51,9 +51,9 @@ Select '**CoreNLP'**, if you want to use the one with the highest probability of
 
 To extract email addresses in your documents:
 
-* re-click on **'Find people, organizations and locations'** 
-* click ****the last radio button **'Email extraction'**
-* click '**Go**'
+* Re-click on **'Find people, organizations and locations'** 
+* Click ****the last radio button **'Email extraction'**
+* Click '**Go**'
 
 ![](../.gitbook/assets/email-extraction.png)
 
