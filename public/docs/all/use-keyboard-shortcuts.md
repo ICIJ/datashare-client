@@ -1,3 +1,7 @@
+---
+description: Shortcuts help do some actions faster.
+---
+
 # Use keyboard shortcuts
 
 ### **Go to the next / previous document**
@@ -16,9 +20,7 @@ Command (⌘) + →
 Command (⌘) + ←
 ```
 
-![](../.gitbook/assets/screenshot-2019-07-05-at-12.29.54.png)
-
-### \*\*\*\*
+![](../.gitbook/assets/next-document.png)
 
 ### **Find in document...**
 
@@ -34,7 +36,7 @@ Control + F
 Command (⌘) + F
 ```
 
-![](../.gitbook/assets/screenshot-2019-07-05-at-12.08.51.png)
+![](../.gitbook/assets/find-in-document-f.png)
 
 **... and go from one occurrence to the next / previous occurrence**
 
@@ -50,9 +52,7 @@ Go to previous occurrence:
 Shift + Enter
 ```
 
-![](../.gitbook/assets/screenshot-2019-07-05-at-12.33.58.png)
-
-### 
+![](../.gitbook/assets/previous-next-occurrence.png)
 
 ### Navigate a document's tabs
 
@@ -70,7 +70,7 @@ Command (⌘) + option (⌥) + ↑ (arrow up)
 Command (⌘) + option (⌥) + ↓ (arrow down)
 ```
 
-![](../.gitbook/assets/tabs.png)
+![](../.gitbook/assets/navigate-between-tabs-in-a-doc.png)
 
 ### Go back to search results
 
@@ -80,5 +80,5 @@ Once you opened a document, go back to search results:
 Esc
 ```
 
-![](../.gitbook/assets/esc.png)
+![](../.gitbook/assets/back-to-search-results.png)
 
