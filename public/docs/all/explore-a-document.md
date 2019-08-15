@@ -27,7 +27,7 @@ Please beware that Datashare show named entities by default. **This can overwrit
 * Press **ENTER** to go from one occurrence to the **next** one
 * Presse **SHIFT + ENTER** to go from one occurrence to the **previous** one
 
-_To know all the shortcuts in Datashare, please read '_[_Use keyboard shortcuts_](https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts)_'._
+_\(To know all the shortcuts in Datashare, please read '_[_Use keyboard shortcuts_](https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts)_'.\)_
 
 This also counts the number of occurrences of your searched terms in this document:
 
@@ -41,7 +41,7 @@ In 'Tags & Details', you can read the document's details. It's all the metadata 
 
 ![](../.gitbook/assets/t-and-d.png)
 
-You can also read the tags you previously wrote for this document, like 'test1', 'test2' and 'test3' in the example below:
+You can also read the tags you previously wrote for this document, like '**test1**', '**test2**' and '**test3**' in the example below:
 
 ![](../.gitbook/assets/tags%20%281%29.png)
 
