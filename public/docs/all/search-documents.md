@@ -51,7 +51,9 @@ This also counts the number of occurrences of your searched terms in this docume
 
 ![](../.gitbook/assets/find-f.png)
 
+If you run [email extraction](https://icij.gitbook.io/datashare/all/analyze-documents#extract-email-addresses) and searched for one or several email addresses, if the email adresses are in the email's metadata \(recipient, sender or other field\), there will be a '**in metadata**' label attached to the email addresses:
 
+![](../.gitbook/assets/in-metadata.png)
 
 
 
