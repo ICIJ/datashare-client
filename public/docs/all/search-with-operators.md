@@ -10,7 +10,7 @@ description: >-
 
 To have all documents mentioning an exact phrase, you can use double quotes.
 
-> Example: “Alicia Martinez’s bank account in Portugal”
+_Example: “Alicia Martinez’s bank account in Portugal”_
 
 
 
@@ -18,9 +18,9 @@ To have all documents mentioning an exact phrase, you can use double quotes.
 
 To have all documents mentioning all or one of the queried terms, you can use a simple space between your queries or 'OR'. You need to write 'OR' with **all letters uppercase**.
 
-> Example: Alicia Martinez
+_Example: Alicia Martinez_
 
-> Same search: Alicia OR Martinez
+_Same search: Alicia OR Martinez_
 
 
 
