@@ -59,8 +59,7 @@ const router = new VueRouter({
               'all/search-documents.md',
               'all/filter-documents.md',
               'all/search-with-operators.md',
-              'all/star-documents.md',
-              'all/tag-documents.md'
+              'all/star-documents.md'
             ]
           },
           components: {

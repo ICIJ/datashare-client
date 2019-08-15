@@ -48,7 +48,7 @@
       </ul>
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
-          <a href="" class="app-sidebar__container__menu__item__link" title="FAQ" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a href="https://icij.gitbook.io/datashare/faq/" target="_blank" class="app-sidebar__container__menu__item__link" title="FAQ" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="question" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.faq') }}

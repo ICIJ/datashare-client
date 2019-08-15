@@ -1,6 +1,6 @@
 <template>
   <div class="route-doc">
-    <div class="bg-white">
+    <div class="bg-white border-bottom">
       <div class="container">
         <div class="route-doc__header py-5">
           <h3>
@@ -12,8 +12,8 @@
         </div>
       </div>
     </div>
-    <div class="container mt-4">
-      <div class="route-doc__content" v-html="html"></div>
+    <div class="container">
+      <div class="route-doc__content card card-body my-4" v-html="html"></div>
     </div>
   </div>
 </template>
@@ -60,6 +60,8 @@ export default {
 
 <style lang="scss">
   .route-doc {
+    min-height: 100vh;
+
     &__header {
       &__description {
         max-width: 880px;

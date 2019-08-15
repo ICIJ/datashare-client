@@ -4,6 +4,7 @@ import VueProgressBar from 'vue-progressbar'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import VueShortkey from 'vue-shortkey'
+import VueScrollTo from 'vue-scrollto'
 import router from '@/router'
 import messages from '@/lang/en'
 import store from '@/store'
@@ -19,8 +20,9 @@ async function createApp (LocalVue = Vue) {
   LocalVue.use(BootstrapVue)
   LocalVue.use(Murmur)
   LocalVue.use(VueI18n)
-  LocalVue.use(VueShortkey, { prevent: settings.hotKeyPrevented })
   LocalVue.use(VueProgressBar, { color: settings.progressBar.color })
+  LocalVue.use(VueShortkey, { prevent: settings.hotKeyPrevented })
+  LocalVue.use(VueScrollTo)
 
   const i18n = new VueI18n({
     locale: settings.defaultLocale,

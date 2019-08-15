@@ -33,9 +33,10 @@ module.exports = {
     // Add custom loader
     config.resolveLoader.modules.add('./loaders')
 
+    // Quick and dirty Markdown renderer that rewrites image src
     const renderer = new marked.Renderer()
     renderer.image = function (href, title, text) {
-      href = href.replace('../.gitbook', '/docs/.gitbook')
+      href = href.replace(/(\.\.\/)*\.gitbook/, '/docs/.gitbook')
       return marked.Renderer.prototype.image.call(this, href, title, text)
     }
 

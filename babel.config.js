@@ -2,8 +2,14 @@ module.exports = {
   presets: [
     '@vue/app'
   ],
-  plugins: [
-    // This is needed so require.context (from Webpack) also works in Jest
-    'transform-require-context'
-  ]
+  env: {
+    test: {
+      plugins: [
+        // "require.context()" is transformed into a dummy function so the code can
+        // run safely outside of the Webpack environment.
+        'transform-require-context'
+      ]
+    }
+  }
+
 }

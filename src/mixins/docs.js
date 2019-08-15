@@ -16,6 +16,7 @@ const ROUTE_DOCS_META = ROUTE_DOCS_PATH.map(path => {
   // Import metadata for this Markdown file
   return require(`!!json-loader!metadata-loader!../../public/docs/${path}`)
 })
+console.log(ROUTE_DOCS_META)
 
 export default {
   methods: {
