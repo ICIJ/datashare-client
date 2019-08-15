@@ -18,7 +18,7 @@ Your new tag is now displayed on this page.
 
 You can add several tags.
 
-## Search for tagged documents with tag filter
+## Search tags with tag filter
 
 * Open the second filter untitled '**Tags**'
 * You see the tags **by frequency** and the number of tagged documents
@@ -27,7 +27,7 @@ You can add several tags.
 
 ![](../.gitbook/assets/tag-filter.png)
 
-## Search for tagged documents with main search bar
+## Search tags with main search bar
 
 To find all your documents tagged **with specific tag\(s\)**:
 
