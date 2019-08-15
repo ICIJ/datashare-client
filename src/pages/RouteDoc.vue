@@ -93,6 +93,10 @@ export default {
         background-color: $gray-100;
         margin-bottom: $spacer;
 
+        *:last-of-type {
+          margin-bottom: 0;
+        }
+
         pre {
           padding: 0;
           margin-top: 0;

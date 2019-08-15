@@ -14,7 +14,8 @@
             <ul class="list-unstyled route-docs-links__item__outline">
               <li v-for="(heading, index) in meta.headings" v-bind:key="index">
                 <a href="#" v-scroll-to="`#${heading.id}`" class="route-docs-links__item__outline__heading" :class="{ 'route-docs-links__item__outline__heading--last': index === meta.headings.length -1}">
-                  <div class="text-truncate" v-html="heading.text"></div>
+                  <div class="text-truncate" v-html="heading.text">
+                  </div>
                 </a>
               </li>
             </ul>
