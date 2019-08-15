@@ -71,9 +71,9 @@ export default {
         padding-bottom: $list-group-item-padding-y;
 
         &__heading {
-          padding: $list-group-item-padding-y * 0.2 $list-group-item-padding-x;
-          margin-left: $list-group-item-padding-x;
-          overflow: hidden;
+          padding: $list-group-item-padding-y * 0.2 $list-group-item-padding-x * 0.2;
+          margin-left: calc(#{$list-group-item-padding-x} + 1.2rem);
+          margin-right: $list-group-item-padding-x;
           position: relative;
           display: block;
 
@@ -87,7 +87,7 @@ export default {
             font-family: $font-family-monospace;
             font-size: 1.5rem;
             position: absolute;
-            left: 0;
+            right: 100%;
             top: 50%;
             transform: translateY(-50%);
             width: $list-group-item-padding-x;

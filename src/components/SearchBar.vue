@@ -10,9 +10,9 @@
           @input="searchTerms"
           @focus="searchTerms" />
         <div class="input-group-append">
-          <a v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" :href="operatorLinks" target="_blank" title="Tips to improve searching" v-b-tooltip.bottomleft>
+          <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }" v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" title="Tips to improve searching" v-b-tooltip.bottomleft>
             <fa icon="question-circle" />
-          </a>
+          </router-link>
           <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
             <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key">
               {{ $t('search.field.' + key) }}
@@ -47,7 +47,7 @@
       </div>
     </div>
     <slide-up-down :active="showTips" v-if="tips">
-      <a class="search-bar__tips" :href="operatorLinks" target="_blank">
+      <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }" class="search-bar__tips">
         <span>
           <span class="mr-1">
             <fa icon="book" class="mr-1" />
@@ -57,7 +57,7 @@
             (AND, OR, ...)
           </span>
         </span>
-      </a>
+      </router-link>
     </slide-up-down>
   </form>
 </template>

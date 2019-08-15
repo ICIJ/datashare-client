@@ -167,7 +167,7 @@ export default {
       position: relative;
       overflow: hidden;
 
-      &__document, &__search-results {
+      & &__document, & &__search-results {
         position: absolute;
         z-index: 10;
         top: 0;
