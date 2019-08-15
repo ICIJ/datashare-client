@@ -74,9 +74,9 @@ export default {
         await this.$store.dispatch('search/toggleStarDocument', documentId)
       } catch (_) {
         // Does... nothing yet!
-      } finally {
-        this.$root.$emit('facet::starred:refresh')
+        console.log(_)
       }
+      this.$root.$emit('facet::starred:refresh')
     }
   }
 }

@@ -197,7 +197,7 @@ describe('SearchResults.vue', () => {
       expect(wrapper.vm.starredDocuments).toEqual([])
       expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('far,star')
 
-      await wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
+      await wrapper.vm.toggleStarDocument(wrapper.vm.response.hits[0].id)
       await wrapper.vm.$nextTick()
 
       expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
@@ -212,7 +212,7 @@ describe('SearchResults.vue', () => {
       expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
       expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('fa,star')
 
-      await wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
+      await wrapper.vm.toggleStarDocument(wrapper.vm.response.hits[0].id)
       await wrapper.vm.$nextTick()
 
       expect(wrapper.vm.starredDocuments).toEqual([])
@@ -225,8 +225,7 @@ describe('SearchResults.vue', () => {
       const mockCallback = jest.fn()
       wrapper.vm.$root.$on('facet::starred:refresh', mockCallback)
 
-      wrapper.findAll('.search-results__items__item__star').at(0).trigger('click')
-      await wrapper.vm.$nextTick()
+      await wrapper.vm.toggleStarDocument(wrapper.vm.response.hits[0])
       await wrapper.vm.$nextTick()
 
       expect(mockCallback.mock.calls).toHaveLength(1)
