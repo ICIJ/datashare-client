@@ -43,7 +43,8 @@ export default {
 
 <style lang="scss">
   .route-docs-links {
-    width: $app-context-sidebar-width;
+    max-width: $app-context-sidebar-width;
+    width: 100%;
 
     &__item {
       padding-bottom: 0;

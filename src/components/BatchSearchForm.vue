@@ -121,6 +121,7 @@ export default {
 
 <style lang="scss">
   .batch-search-form {
-    width: $app-context-sidebar-width;
+    max-width: $app-context-sidebar-width;
+    width: 100%;
   }
 </style>

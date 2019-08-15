@@ -86,6 +86,10 @@ export default {
         display: block;
         max-width: 750px;
         max-height: 60vh;
+
+        @media (max-width: 1370px) {
+          max-width: 100%;
+        }
       }
 
       blockquote {

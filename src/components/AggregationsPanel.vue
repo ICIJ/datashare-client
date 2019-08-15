@@ -146,13 +146,14 @@ export default {
     $card-bg: darken($aggregations-panel-bg, 5%);
     $panel-color: white;
 
+    max-width: $app-context-sidebar-width;
+    width: 100%;
     background: $aggregations-panel-bg;
     color: $panel-color;
     display: flex;
     align-items: flex-start;
     padding-bottom: $spacer;
     padding-right: $spacer;
-    width: $app-context-sidebar-width;
     min-height: 100vh;
 
     &__sticky {
