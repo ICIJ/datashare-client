@@ -12,7 +12,7 @@ To have all documents mentioning an exact phrase, you can use double quotes.
 
 > Example: “Alicia Martinez’s bank account in Portugal”
 
-\*\*\*\*
+
 
 **OR or space**
 
@@ -22,7 +22,7 @@ To have all documents mentioning all or one of the queried terms, you can use a 
 
 > Same search: Alicia OR Martinez
 
-\*\*\*\*
+
 
 **AND**
 
@@ -30,7 +30,7 @@ To have all documents mentioning all the queried terms, you can use 'AND' betwee
 
 > Example: Alicia AND Martinez
 
-\*\*\*\*
+
 
 **NOT**
 
@@ -38,7 +38,7 @@ To have all documents NOT mentioning some queried terms, you can use 'NOT' befor
 
 > Example: NOT Martinez
 
-\*\*\*\*
+
 
 **Please note that you can combine operators**
 
@@ -46,7 +46,7 @@ Parentheses should be used whenever multiple operators are used together.
 
 > Example: \(\(Alicia AND Martinez\) OR \(Delaware AND Pekin\) OR Grey\) AND NOT parking lot
 
-\*\*\*\*
+
 
 **Wildcards**
 
@@ -56,7 +56,7 @@ If you search faithf?l, the search engine will look for all words with all possi
 >
 > Example: Alicia Mar\*z
 
-\*\*\*\*
+
 
 **Fuzziness**
 
@@ -66,7 +66,7 @@ If you search for similar terms \(to catch typos for example\), you can use ~. "
 >
 > Example: Datashare~1
 
-\*\*\*\*
+
 
 **Proximity searches**
 
@@ -74,7 +74,7 @@ If you search for similar terms \(to catch typos for example\), you can use ~. "
 
 > Example: "fox quick"~5
 
-\*\*\*\*
+
 
 **Boosting operators**
 
@@ -82,7 +82,7 @@ If you search for similar terms \(to catch typos for example\), you can use ~. "
 
 > Example: "fox quick"~5
 
-\*\*\*\*
+
 
 **Date range and searches using metadata fields**
 
