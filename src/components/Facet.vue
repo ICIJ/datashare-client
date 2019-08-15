@@ -9,52 +9,50 @@
             </slot>
           </template>
         </h6>
-        <span v-if="hasValues() && !collapseItems && !hideExclude">
+        <span v-if="hasValues() && !collapseItems && !hideExclude && isReady">
           <button class="d-inline-flex btn btn-sm btn-outline-light py-0 mr-2 btn-group facet__header__invert" @click="invert" :class="{ 'active': isReversed() }">
             <fa icon="eye-slash" class="mr-1 mt-1" />
             {{ $t('facet.invert') }}
           </button>
         </span>
-        <fa :icon="headerIcon"  @click="toggleItems" class="float-right" />
+        <fa v-if="isReady" :icon="headerIcon"  @click="toggleItems" class="float-right" />
+        <fa v-else icon="circle-notch" spin class="float-right" />
       </div>
     </slot>
-    <slide-up-down class="list-group list-group-flush facet__items" :active="!collapseItems">
-      <slot name="search" v-if="!hideSearch">
-        <form @submit.prevent="asyncFacetSearch" v-if="facet.isSearchable">
-          <label class="list-group facet__items__search py-2 px-2">
-            <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.name) + '...'" />
-            <fa icon="search" class="float-right" />
-          </label>
-        </form>
-      </slot>
-      <div v-if="!isReady">
-        <content-placeholder class="list-group-item border-0 py-2 px-3" :rows="placeholderRows" />
-        <content-placeholder class="list-group-item border-0 py-2 px-3" :rows="placeholderRows" />
-        <content-placeholder class="list-group-item border-0 py-2 px-3" :rows="placeholderRows" />
-      </div>
-      <slot v-else-if="items.length > 0" name="items" :items="items" :total-count="totalCount" :facetQuery="facetQuery">
-        <b-form-checkbox v-model="isAllSelected" @change.native="resetFacetValues" class="facet__items__all mb-0">
-          <slot name="all">
-            <span v-html="getItemLabel({ key: 'all', key_as_string: 'all', doc_count: calculatedCount })"></span>
-          </slot>
-        </b-form-checkbox>
-        <slot name="item">
-          <b-form-checkbox-group stacked v-model="selected" :options="options" class="list-group-item facet__items__item p-0 border-0" @input="changeSelectedValues" />
+    <transition name="slide">
+      <div class="list-group list-group-flush facet__items" v-show="isReady && !collapseItems">
+        <slot name="search" v-if="!hideSearch">
+          <form @submit.prevent="asyncFacetSearch" v-if="facet.isSearchable">
+            <label class="list-group facet__items__search py-2 px-2">
+              <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.name) + '...'" />
+              <fa icon="search" class="float-right" />
+            </label>
+          </form>
         </slot>
-      </slot>
-      <div class="list-group-item facet__items__display border-top-0" @click="asyncFacetSearch" v-if="shouldDisplayShowMoreAction()">
-        <span>{{ $t('facet.showMore') }}</span>
+        <slot v-if="items.length > 0" name="items" :items="items" :total-count="totalCount" :facetQuery="facetQuery">
+          <b-form-checkbox v-model="isAllSelected" @change.native="resetFacetValues" class="facet__items__all mb-0">
+            <slot name="all">
+              <span v-html="getItemLabel({ key: 'all', key_as_string: 'all', doc_count: calculatedCount })"></span>
+            </slot>
+          </b-form-checkbox>
+          <slot name="item">
+            <b-form-checkbox-group stacked v-model="selected" :options="options" class="list-group-item facet__items__item p-0 border-0" @input="changeSelectedValues" />
+          </slot>
+        </slot>
+        <div class="list-group-item facet__items__display border-top-0" @click="asyncFacetSearch" v-if="shouldDisplayShowMoreAction()">
+          <span>{{ $t('facet.showMore') }}</span>
+        </div>
+        <div v-if="noResults" class="p-2 text-center text-muted">
+          {{ $t('facet.none') }}<br />
+          <a @click="asyncFacetSearch" href="#" class="text-white text-underline">
+            {{ $t('facet.seeAll') }}
+          </a>
+        </div>
+        <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
+          <span v-html="$t('facet.noMatches')"></span>
+        </div>
       </div>
-      <div v-if="noResults" class="p-2 text-center text-muted">
-        {{ $t('facet.none') }}<br />
-        <a @click="asyncFacetSearch" href="#" class="text-white text-underline">
-          {{ $t('facet.seeAll') }}
-        </a>
-      </div>
-      <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
-        <span v-html="$t('facet.noMatches')"></span>
-      </div>
-    </slide-up-down>
+    </transition>
   </div>
 </template>
 
@@ -166,7 +164,9 @@ export default {
       return response
     },
     toggleItems () {
-      this.collapseItems = !this.collapseItems
+      if (this.isReady) {
+        this.collapseItems = !this.collapseItems
+      }
     },
     shouldDisplayShowMoreAction () {
       return !this.hideShowMore && this.items.length > initialNumberOfFilesDisplayed
@@ -220,6 +220,15 @@ export default {
     }
 
     &__items {
+      max-height: 500px;
+
+      &.slide-enter-active, &.slide-leave-active {
+        transition: .3s max-height;
+      }
+
+      &.slide-enter, &.slide-leave-to {
+        max-height: 0;
+      }
 
       & &__search {
         margin: 0 0.5rem;

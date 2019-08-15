@@ -138,3 +138,13 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .facet-search {
+    &__items {
+      .facet__items {
+        max-height: none;
+      }
+    }
+  }
+</style>
