@@ -181,7 +181,8 @@ export default {
         border-radius: $card-border-radius;
       }
 
-      &__document {
+      & &__document {
+        z-index: 20;
         right: $spacer;
         padding: 0;
         margin: 0;
