@@ -8,17 +8,15 @@ description: Shortcuts help do some actions faster.
 
 * Windows / Linux
 
-> ```text
 > Control + → 
+>
 > Control + ←
-> ```
 
 * Mac
 
-> ```text
-> Command (⌘) + → 
-> Command (⌘) + ←
-> ```
+> Command \(⌘\) + → 
+>
+> Command \(⌘\) + ←
 
 ![](../.gitbook/assets/next-document.png)
 
@@ -26,15 +24,11 @@ description: Shortcuts help do some actions faster.
 
 * Windows / Linux
 
-> ```text
 > Control + F
-> ```
 
 * Mac
 
-> ```text
-> Command (⌘) + F
-> ```
+> Command \(⌘\) + F
 
 ![](../.gitbook/assets/find-in-document-f.png)
 
@@ -42,15 +36,11 @@ description: Shortcuts help do some actions faster.
 
 * Go to next occurrence
 
-> ```text
 > Enter
-> ```
 
 * Go to previous occurrence
 
-> ```text
 > Shift + Enter
-> ```
 
 ![](../.gitbook/assets/previous-next-occurrence.png)
 
@@ -58,17 +48,15 @@ description: Shortcuts help do some actions faster.
 
 * Windows / Linux
 
-> ```text
-> Control (ctrl) + alt + ⇞ (pageup) 
-> Control (ctrl) + alt + ⇟ (pagedown)
-> ```
+> Control \(ctrl\) + alt + ⇞ \(pageup\) 
+>
+> Control \(ctrl\) + alt + ⇟ \(pagedown\)
 
 *  Mac
 
-> ```
-> Command (⌘) + option (⌥) + ↑ (arrow up)
-> Command (⌘) + option (⌥) + ↓ (arrow down)
-> ```
+> Command \(⌘\) + option \(⌥\) + ↑ \(arrow up\)
+>
+> Command \(⌘\) + option \(⌥\) + ↓ \(arrow down\)
 
 ![](../.gitbook/assets/navigate-between-tabs-in-a-doc.png)
 
@@ -76,9 +64,7 @@ description: Shortcuts help do some actions faster.
 
 Once you opened a document, go back to search results:
 
-> ```text
 > Esc
-> ```
 
 ![](../.gitbook/assets/back-to-search-results.png)
 
