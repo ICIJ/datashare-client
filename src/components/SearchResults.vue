@@ -69,10 +69,14 @@ export default {
     isStarred (documentId) {
       return this.starredDocuments.indexOf(documentId) >= 0
     },
-    toggleStarDocument (documentId) {
-      return this.$store.dispatch('search/toggleStarDocument', documentId).then(() => {
+    async toggleStarDocument (documentId) {
+      try {
+        await this.$store.dispatch('search/toggleStarDocument', documentId)
+      } catch (_) {
+        // Does... nothing yet!
+      } finally {
         this.$root.$emit('facet::starred:refresh')
-      })
+      }
     }
   }
 }

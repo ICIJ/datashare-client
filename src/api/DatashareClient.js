@@ -50,16 +50,16 @@ export class DatashareClient {
     return this.sendAction(`/api/document/project/starred/${encodeURIComponent(project)}`)
   }
   starDocument (project, documentId) {
-    return this.sendAction(`/api/document/project/star/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT' })
+    return this.sendAction(`/api/document/project/star/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT' }, false)
   }
   unstarDocument (project, documentId) {
-    return this.sendAction(`/api/document/project/unstar/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT' })
+    return this.sendAction(`/api/document/project/unstar/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT' }, false)
   }
   tagDocument (project, documentId, routingId, tags) {
-    return this.sendAction(`/api/document/project/tag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) })
+    return this.sendAction(`/api/document/project/tag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
   }
   untagDocument (project, documentId, routingId, tags) {
-    return this.sendAction(`/api/document/project/untag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) })
+    return this.sendAction(`/api/document/project/untag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
   }
   batchSearch (project, name, description, csvFile) {
     const form = new FormData()
@@ -82,17 +82,16 @@ export class DatashareClient {
     const url = new URL(path, base)
     return url.href
   }
-  sendAction (url, params = {}, json = true) {
-    return this.fetch(DatashareClient.getFullUrl(url), params).then(r => {
-      if (r.status >= 200 && r.status < 300) {
-        return json ? r.clone().json() : r
-      } else {
-        EventBus.$emit('http::error', r)
-        const error = new Error(`${r.status} ${r.statusText}`)
-        error.response = r
-        throw error
-      }
-    })
+  async sendAction (url, params = {}, json = true) {
+    const r = await this.fetch(DatashareClient.getFullUrl(url), params)
+    if (r.status >= 200 && r.status < 300) {
+      return json ? r.clone().json() : r
+    } else {
+      EventBus.$emit('http::error', r)
+      const error = new Error(`${r.status} ${r.statusText}`)
+      error.response = r
+      throw error
+    }
   }
 }
 

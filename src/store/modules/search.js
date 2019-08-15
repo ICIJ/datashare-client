@@ -413,17 +413,15 @@ export const actions = {
     commit('query', lucene.toString(query))
     return dispatch('query')
   },
-  toggleStarDocument ({ state, commit }, documentId) {
+  async toggleStarDocument ({ state, commit }, documentId) {
     if (state.starredDocuments.indexOf(documentId) >= 0) {
-      return datashare.unstarDocument(state.index, documentId).then(() => {
-        commit('removeFromStarredDocuments', documentId)
-        commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
-      })
+      await datashare.unstarDocument(state.index, documentId)
+      commit('removeFromStarredDocuments', documentId)
+      commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
     } else {
-      return datashare.starDocument(state.index, documentId).then(() => {
-        commit('pushFromStarredDocuments', documentId)
-        commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
-      })
+      await datashare.starDocument(state.index, documentId)
+      commit('pushFromStarredDocuments', documentId)
+      commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
     }
   },
   getStarredDocuments ({ state, commit }) {
