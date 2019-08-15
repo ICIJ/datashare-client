@@ -6,69 +6,69 @@ description: Shortcuts help do some actions faster.
 
 ### **Go to the next / previous document**
 
-* Windows / Linux:
+* Windows / Linux
 
-```text
-Control + → 
-Control + ←
-```
+> ```text
+> Control + → 
+> Control + ←
+> ```
 
-* Mac:
+* Mac
 
-```text
-Command (⌘) + → 
-Command (⌘) + ←
-```
+> ```text
+> Command (⌘) + → 
+> Command (⌘) + ←
+> ```
 
 ![](../.gitbook/assets/next-document.png)
 
 ### **Find in document...**
 
-* Windows / Linux:
+* Windows / Linux
 
-```text
-Control + F
-```
+> ```text
+> Control + F
+> ```
 
-* Mac:
+* Mac
 
-```text
-Command (⌘) + F
-```
+> ```text
+> Command (⌘) + F
+> ```
 
 ![](../.gitbook/assets/find-in-document-f.png)
 
 **... and go from one occurrence to the next / previous occurrence**
 
-Go to next occurrence:
+* Go to next occurrence
 
-```text
-Enter
-```
+> ```text
+> Enter
+> ```
 
-Go to previous occurrence:
+* Go to previous occurrence
 
-```text
-Shift + Enter
-```
+> ```text
+> Shift + Enter
+> ```
 
 ![](../.gitbook/assets/previous-next-occurrence.png)
 
 ### Navigate a document's tabs
 
-* Windows / Linux:
+* Windows / Linux
 
-```text
-Control (ctrl) + alt + ⇞ (pageup) 
-Control (ctrl) + alt + ⇟ (pagedown)
-```
+> ```text
+> Control (ctrl) + alt + ⇞ (pageup) 
+> Control (ctrl) + alt + ⇟ (pagedown)
+> ```
 
-*  Mac:
+*  Mac
 
-```
-Command (⌘) + option (⌥) + ↑ (arrow up)
-Command (⌘) + option (⌥) + ↓ (arrow down)
-```
+> ```
+> Command (⌘) + option (⌥) + ↑ (arrow up)
+> Command (⌘) + option (⌥) + ↓ (arrow down)
+> ```
 
 ![](../.gitbook/assets/navigate-between-tabs-in-a-doc.png)
 
@@ -76,9 +76,9 @@ Command (⌘) + option (⌥) + ↓ (arrow down)
 
 Once you opened a document, go back to search results:
 
-```text
-Esc
-```
+> ```text
+> Esc
+> ```
 
 ![](../.gitbook/assets/back-to-search-results.png)
 
