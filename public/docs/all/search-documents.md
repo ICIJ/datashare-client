@@ -26,7 +26,7 @@ You will gain room to better explore your documents:
 
 ![](../.gitbook/assets/operators.png)
 
-3. You can search **in specific fields** like tags, title, author, recipient, content, path or thread ID. Click 'All fields' and select your choice in the dropdown menu:
+3. You can search **in specific fields** like tags, title, author, recipient, content, path or thread ID. Click **'All fields**' and **select your choice** in the dropdown menu:
 
 ![](../.gitbook/assets/fields.png)
 
@@ -34,14 +34,14 @@ You will gain room to better explore your documents:
 
 ![](../.gitbook/assets/ne.png)
 
-5. Once you opened a document, you can **search for terms in this document:**
+5. Once a document is opened, you can **search for terms in this document:**
 
-* Press **Command\(⌘\) + F** \(on Mac\) or **Control + F** \(on Windows and Linux\) or click on the search bar above your Extracted Text
+* Press **Command \(⌘\) + F** \(on Mac\) or **Control + F** \(on Windows and Linux\) or click on the search bar above your Extracted Text
 * Type what you search for
 * Press **ENTER** to go from one occurrence to the **next** one
 * Presse **SHIFT + ENTER** to go from one occurrence to the **previous** one
 
-_To know all the shortcuts in Datashare, please read '_[_Use keyboard shortcuts_](https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts)_'._
+_\(To know all the shortcuts in Datashare, please read '_[_Use keyboard shortcuts_](https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts)_'.\)_
 
 This also counts the number of occurrences of your searched terms in this document:
 
