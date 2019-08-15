@@ -33,7 +33,9 @@ This also counts the number of occurrences of your searched terms in this docume
 
 ![](../.gitbook/assets/find-f.png)
 
+If you run [email extraction](https://icij.gitbook.io/datashare/all/analyze-documents#extract-email-addresses) and searched for one or several email addresses, if the email adresses are in the email's metadata \(recipient, sender or other field\), there will be a '**in metadata**' label attached to the email addresses:
 
+![](../.gitbook/assets/in-metadata.png)
 
 ## **Tags & Details**
 
@@ -62,6 +64,10 @@ In 'Named Entities', you can read the name of people, organizations and location
 ![](../.gitbook/assets/named-entities-tab.png)
 
 Please beware that there can still be some errors due to the technology of Named Entity Extraction \(NER\) on which Datashare relies.
+
+If you run email extraction, you will see a **list of the extracted emails:**
+
+![](../.gitbook/assets/email-list.png)
 
 
 
