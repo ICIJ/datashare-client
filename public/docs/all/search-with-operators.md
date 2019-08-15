@@ -60,7 +60,7 @@ If you search faithf?l, the search engine will look for all words with all possi
 
 **Fuzziness**
 
-If you search for similar terms \(to catch typos for example\), you can use ~. "_The default edit distance is 2, but an edit distance of 1 should be sufficient to catch 80% of all human misspellings. It can be specified as: quikc~1_" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
+If you search for similar terms \(to catch typos for example\), you can use the [tilde symbol](https://en.wikipedia.org/wiki/Tilde). "_The default edit distance is 2, but an edit distance of 1 should be sufficient to catch 80% of all human misspellings. It can be specified as: quikc~1_" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
 > Example: quikc~ brwn~ foks~
 >
