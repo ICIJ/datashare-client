@@ -16,13 +16,15 @@ const ROUTE_DOCS_META = ROUTE_DOCS_PATH.map(path => {
   // Import metadata for this Markdown file
   return require(`!!json-loader!metadata-loader!../../public/docs/${path}`)
 })
-console.log(ROUTE_DOCS_META)
 
 export default {
   methods: {
     findRouteDocMeta (path) {
       const resourcePath = trimStart(path, '/').split('?').shift()
       return find(ROUTE_DOCS_META, { resourcePath })
+    },
+    findRouteDocMetaBySlug (slug) {
+      return find(ROUTE_DOCS_META, { slug })
     },
     isRouteDocValid (path) {
       // We use the browser's URL parser to extract config filter

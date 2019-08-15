@@ -10,7 +10,7 @@
             <fa icon="book" class="mr-2" />
             {{ meta.title }}
           </router-link>
-          <slide-up-down :active="meta.headings.length && isActive(meta)">
+          <slide-up-down :active="!!meta.headings.length && isActive(meta)">
             <ul class="list-unstyled route-docs-links__item__outline">
               <li v-for="(heading, index) in meta.headings" v-bind:key="index">
                 <a href="#" v-scroll-to="`#${heading.id}`" class="route-docs-links__item__outline__heading" :class="{ 'route-docs-links__item__outline__heading--last': index === meta.headings.length -1}">
@@ -36,7 +36,7 @@ export default {
   mixins: [ docs ],
   methods: {
     isActive (meta) {
-      return get(this, '$route.params.resourcePath', null) === meta.resourcePath
+      return get(this, '$route.params.slug', null) === meta.slug
     }
   }
 }

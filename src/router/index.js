@@ -130,7 +130,7 @@ const router = new VueRouter({
         },
         {
           name: 'docs',
-          path: 'docs/:resourcePath',
+          path: 'docs/:slug',
           components: {
             default: RouteDoc,
             sidebar: RouteDocsLinks

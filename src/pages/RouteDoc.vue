@@ -12,8 +12,8 @@
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="route-doc__content card card-body my-4" v-html="html"></div>
+    <div class="container py-4">
+      <div class="route-doc__content card card-body" v-html="html"></div>
     </div>
   </div>
 </template>
@@ -25,7 +25,7 @@ export default {
   name: 'RouteDoc',
   mixins: [ docs ],
   props: {
-    resourcePath: {
+    slug: {
       type: String
     }
   },
@@ -36,21 +36,22 @@ export default {
   },
   computed: {
     meta () {
-      return this.findRouteDocMeta(this.resourcePath)
+      return this.findRouteDocMetaBySlug(this.slug)
     }
   },
   mounted () {
     this.fetch()
   },
   beforeRouteEnter (to, from, next) {
-    next(vm => vm.fetch(to.params.resourcePath))
+    next(vm => vm.fetch(to.params.slug))
   },
   async beforeRouteUpdate (to, from, next) {
-    await this.fetch(to.params.resourcePath)
+    await this.fetch(to.params.slug)
     next()
   },
   methods: {
-    async fetch (resourcePath = this.resourcePath) {
+    async fetch (slug = this.slug) {
+      const { resourcePath } = this.findRouteDocMetaBySlug(slug)
       const module = await import(/* webpackChunkName: "[request]" */ `../../public/docs/${resourcePath}`)
       this.html = module.default
     }
