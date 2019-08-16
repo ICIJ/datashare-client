@@ -160,10 +160,6 @@ export default {
 
     &--grid {
 
-      &.search .search__body__results {
-        width: 100%;
-      }
-
       &.search .search__body__backdrop {
         display: block;
       }
@@ -202,6 +198,10 @@ export default {
         z-index: 10;
         top: 0;
         bottom: $spacer;
+      }
+
+      & &__results {
+        width: 100%;
       }
 
       & &__document {

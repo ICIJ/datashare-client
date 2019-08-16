@@ -8,6 +8,10 @@
       <fa icon="th" />
       <span class="sr-only">View in grid</span>
     </button>
+    <button class="btn search-layout-selector__button" :class="{ 'search-layout-selector__button--active': layout === 'table' }" @click="layout = 'table'" title="View in table" v-b-tooltip>
+      <fa icon="bars" />
+      <span class="sr-only">View in table</span>
+    </button>
   </div>
 </template>
 

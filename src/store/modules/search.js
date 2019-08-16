@@ -55,7 +55,7 @@ export function initialState () {
     index: '',
     showFilters: true,
     starredDocuments: [],
-    layout: 'list'
+    layout: 'table'
   }
 }
 
