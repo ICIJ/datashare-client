@@ -22,7 +22,11 @@ async function createView (query = '*', from = 0, size = 25) {
     localVue,
     i18n,
     store,
-    propsData: { response: store.state.search.response, query, starredDocuments: store.state.search.starredDocuments }
+    propsData: {
+      response: store.state.search.response,
+      starredDocuments: store.state.search.starredDocuments,
+      query
+    }
   })
 }
 
@@ -166,69 +170,6 @@ describe('SearchResults.vue', () => {
 
       wrapper = await createView('"this should be an exact content"')
       expect(wrapper.findAll('.search-results__items__item__link')).toHaveLength(1)
-    })
-  })
-
-  describe('star a document', () => {
-    it('should display an empty star by default', async () => {
-      await letData(es).have(new IndexedDocuments().setBaseName('doc').count(5)).commit()
-      wrapper = await createView()
-
-      expect(wrapper.findAll('.search-results__items__item__star')).toHaveLength(5)
-      expect(wrapper.find('.search-results__items__item__star fa-stub').attributes('icon')).toContain('far')
-    })
-
-    it('should display a filled star if document is starred, an empty one otherwise', async () => {
-      await letData(es).have(new IndexedDocument('doc_01')).commit()
-      await letData(es).have(new IndexedDocument('doc_02')).commit()
-      wrapper = await createView()
-
-      store.commit('search/starredDocuments', ['doc_01'])
-
-      expect(wrapper.findAll('.search-results__items__item__star')).toHaveLength(2)
-      expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('fa,star')
-      expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(1).attributes('icon')).toEqual('far,star')
-    })
-
-    it('should replace an empty star by a filled one on click on it', async () => {
-      await letData(es).have(new IndexedDocument('doc_01')).commit()
-      wrapper = await createView()
-
-      expect(wrapper.vm.starredDocuments).toEqual([])
-      expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('far,star')
-
-      await wrapper.vm.toggleStarDocument(wrapper.vm.response.hits[0].id)
-      await wrapper.vm.$nextTick()
-
-      expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
-      expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('fa,star')
-    })
-
-    it('should replace a filled star by an empty one on click on it', async () => {
-      await letData(es).have(new IndexedDocument('doc_01')).commit()
-      wrapper = await createView()
-      store.commit('search/pushFromStarredDocuments', 'doc_01')
-
-      expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
-      expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('fa,star')
-
-      await wrapper.vm.toggleStarDocument(wrapper.vm.response.hits[0].id)
-      await wrapper.vm.$nextTick()
-
-      expect(wrapper.vm.starredDocuments).toEqual([])
-      expect(wrapper.findAll('.search-results__items__item__star fa-stub').at(0).attributes('icon')).toEqual('far,star')
-    })
-
-    it('should raise an "facet::starred:refresh" event on click on star', async () => {
-      await letData(es).have(new IndexedDocument('doc_01')).commit()
-      wrapper = await createView()
-      const mockCallback = jest.fn()
-      wrapper.vm.$root.$on('facet::starred:refresh', mockCallback)
-
-      await wrapper.vm.toggleStarDocument(wrapper.vm.response.hits[0])
-      await wrapper.vm.$nextTick()
-
-      expect(mockCallback.mock.calls).toHaveLength(1)
     })
   })
 })

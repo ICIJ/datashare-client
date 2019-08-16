@@ -20,7 +20,7 @@ describe('SearchResultsLink.vue', () => {
       localVue,
       store,
       propsData: {
-        doc: new Document({
+        document: new Document({
           _id: 1,
           _source: {
             path: '/home/data/folder_01/folder_02/foo.txt'
@@ -38,7 +38,7 @@ describe('SearchResultsLink.vue', () => {
       store,
       router,
       propsData: {
-        doc: new Document({
+        document: new Document({
           _id: 'foo',
           _index: process.env.VUE_APP_ES_INDEX
         })
@@ -54,7 +54,7 @@ describe('SearchResultsLink.vue', () => {
       store,
       router,
       propsData: {
-        doc: new Document({
+        document: new Document({
           _id: 'child',
           _index: process.env.VUE_APP_ES_INDEX,
           _routing: 'parent'
@@ -72,7 +72,7 @@ describe('SearchResultsLink.vue', () => {
       store,
       router,
       propsData: {
-        doc: new Document({
+        document: new Document({
           _id: 'doc.txt',
           _index: process.env.VUE_APP_ES_INDEX,
           inner_hits: {

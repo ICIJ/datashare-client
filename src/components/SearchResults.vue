@@ -3,22 +3,10 @@
     <div v-if="hasResults">
       <search-results-header :response="response" :position="'top'" />
       <div class="search-results__items">
-        <div v-for="doc in response.hits" :key="doc.id" class="search-results__items__item mw-100">
-          <search-results-link class="search-results__items__item__link" :doc="doc" />
-          <div class="">
-            <div class="search-results__items__item__actions btn-group-vertical">
-              <a class="search-results__items__item__star btn btn-link btn-sm" :class="[isStarred(doc.id) ? 'starred' : '']" href @click.prevent="" :title="$t('document.star_file')" @click="toggleStarDocument(doc.id)" v-b-tooltip.left>
-                <fa :icon="[isStarred(doc.id) ? 'fa' : 'far', 'star']" fa-fw />
-                <span class="sr-only">{{ $t('document.star_button') }}</span>
-              </a>
-              <a class="search-results__items__item__download btn btn-link btn-sm" :href="doc.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip.left>
-                <fa icon="download" fa-fw />
-                <span class="sr-only">{{ $t('document.download_button') }}</span>
-              </a>
-              <router-link-popup :to="{ name: 'document-simplified', params: doc.routerParams }" class="btn btn-sm btn-link" :title="$t('document.external_window')" v-b-tooltip.left>
-                <fa icon="external-link-alt" fa-fw />
-              </router-link-popup>
-            </div>
+        <div v-for="document in response.hits" :key="document.id" class="search-results__items__item mw-100">
+          <search-results-link class="search-results__items__item__link" :document="document" />
+          <div>
+            <document-actions :document="document" vertical class="search-results__items__item__actions" />
           </div>
         </div>
       </div>
@@ -39,25 +27,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-
+import DocumentActions from '@/components/DocumentActions'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import SearchResultsLink from '@/components/SearchResultsLink'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
-import RouterLinkPopup from '@/components/RouterLinkPopup'
 import settings from '@/utils/settings'
 
 export default {
   name: 'SearchResults',
   props: ['response', 'query'],
   components: {
-    SearchResultsHeader,
-    SearchResultsLink,
+    DocumentActions,
     ResetFiltersButton,
-    RouterLinkPopup
+    SearchResultsHeader,
+    SearchResultsLink
   },
   computed: {
-    ...mapState('search', ['starredDocuments']),
     hasResults () {
       return this.response.hits.length > 0
     },
@@ -72,11 +57,9 @@ export default {
     async toggleStarDocument (documentId) {
       try {
         await this.$store.dispatch('search/toggleStarDocument', documentId)
-      } catch (_) {
-        // Does... nothing yet!
-        console.log(_)
+      } finally {
+        this.$root.$emit('facet::starred:refresh')
       }
-      this.$root.$emit('facet::starred:refresh')
     }
   }
 }
@@ -123,7 +106,7 @@ export default {
         }
 
         &__actions {
-          margin: $spacer $spacer * 0.5;
+          margin: $spacer;
           visibility: hidden;
 
           .btn {
@@ -131,16 +114,14 @@ export default {
             font-size: 0.9rem;
             padding: $spacer * 0.10 $spacer * 0.25;
           }
-        }
 
-        &__star {
-
-          &.starred {
-            border-color: transparent;
-            box-shadow: none;
-            visibility: visible;
+          .document-actions__star {
+            &.starred {
+              border-color: transparent;
+              box-shadow: none;
+              visibility: visible;
+            }
           }
-
         }
 
         &:hover &__actions {

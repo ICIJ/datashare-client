@@ -1,15 +1,15 @@
 <template>
   <router-link :to="{ name: 'document', params }" class="search-results-link d-flex align-self-stretch flex-nowrap" :class="{ 'search-results-link--active': isActive() }">
-    <document-thumbnail :document="doc" class="search-results-link__thumbnail" crop lazy />
+    <document-thumbnail :document="document" class="search-results-link__thumbnail" crop lazy />
     <div class="search-results-link__wrapper">
       <h5 class="search-results-link__basename">
-        <document-sliced-name :document="doc" />
+        <document-sliced-name :document="document" />
       </h5>
       <span class="search-results-link__location small">
         <fa icon="folder" class="mr-1" />
         {{ location }}
       </span>
-      <div class="search-results-link__fragments small" v-if="doc.highlight" v-html="doc.highlight.content.join(' [...] ')"></div>
+      <div class="search-results-link__fragments small" v-if="document.highlight" v-html="document.highlight.content.join(' [...] ')"></div>
     </div>
   </router-link>
 </template>
@@ -23,20 +23,24 @@ import get from 'lodash/get'
 export default {
   name: 'SearchResultsLink',
   mixins: [ner],
-  props: ['doc'],
+  props: {
+    document: {
+      type: Object
+    }
+  },
   components: {
     DocumentSlicedName,
     DocumentThumbnail
   },
   methods: {
     isActive () {
-      return get(this.$store.state, 'document.doc.id') === this.doc.id && this.doc.id === this.$route.params.id
+      return get(this.$store.state, 'document.document.id') === this.document.id && this.document.id === this.$route.params.id
     }
   },
   computed: {
     folder () {
       // Extract location parts
-      let parts = this.doc.get('_source.path', '').split('/')
+      let parts = this.document.get('_source.path', '').split('/')
       // Remove the file name
       parts.splice(-1, 1)
       // And return the new path
@@ -49,7 +53,7 @@ export default {
       return { q: `path:${this.folder}*` }
     },
     params () {
-      return this.doc.routerParams
+      return this.document.routerParams
     }
   },
   filters: {
