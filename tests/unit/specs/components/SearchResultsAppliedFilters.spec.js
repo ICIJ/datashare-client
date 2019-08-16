@@ -32,13 +32,13 @@ describe('SearchResultsAppliedFilters.vue', () => {
     it('should display 2 applied filters', async () => {
       await store.dispatch('search/query', { query: 'document test', from: 0, size: 3 })
 
-      expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
+      expect(wrapper.findAll('.search-results-header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
     })
 
     it('should display 1 applied filter', () => {
       store.commit('search/addFacetValue', { name: 'content-type', value: 'term_01' })
 
-      expect(wrapper.findAll('.search-results__header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
+      expect(wrapper.findAll('.search-results-header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
     })
 
     it('should translate the label of a facet', () => {
@@ -86,14 +86,14 @@ describe('SearchResultsAppliedFilters.vue', () => {
 
     it('should remove the "AND" on last applied filter deletion', async () => {
       await store.dispatch('search/query', { query: 'term_01 AND term_02', from: 0, size: 3 })
-      wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
+      wrapper.findAll('.search-results-header__applied-filters .search-results-header__applied-filters__filter').at(1).trigger('click')
 
       expect(store.state.search.query).toBe('term_01')
     })
 
     it('should remove the "OR" on last applied filter deletion', async () => {
       await store.dispatch('search/query', { query: 'term_01 OR term_02', from: 0, size: 3 })
-      wrapper.findAll('.search-results__header__applied-filters .search-results__header__applied-filters__filter').at(1).trigger('click')
+      wrapper.findAll('.search-results-header__applied-filters .search-results-header__applied-filters__filter').at(1).trigger('click')
 
       expect(store.state.search.query).toBe('term_01')
     })

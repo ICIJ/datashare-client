@@ -1,5 +1,5 @@
 <template>
-  <div class="search" :class="{ 'search--show-document': showDocument }">
+  <div class="search" :class="{ 'search--show-document': showDocument, [`search--${layout}`]: true }">
     <div class="d-flex">
       <button class="search__show-filters align-self-center ml-3 btn btn-link px-0" @click="clickOnShowFilters()" v-if="!showFilters" :title="$t('search.showFilters')" v-b-tooltip.right>
         <fa icon="arrow-right" />
@@ -9,11 +9,11 @@
       <app-nav class="flex-grow-1" />
     </div>
     <div class="px-0 search__body">
-      <vue-perfect-scrollbar class="search__body__search-results-list">
+      <vue-perfect-scrollbar class="search__body__search-results search__body__results">
         <div v-if="!!error" class="py-5 text-center">
           {{ errorMessage }}
         </div>
-        <search-results-list v-else-if="isReady" />
+        <search-results v-else-if="isReady" :layout="layout" />
         <div v-else>
           <content-placeholder />
           <content-placeholder />
@@ -37,7 +37,7 @@
 import get from 'lodash/get'
 import AppNav from '@/components/AppNav'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
-import SearchResultsList from '@/components/SearchResultsList'
+import SearchResults from '@/components/SearchResults'
 import { mapState } from 'vuex'
 import { errors as esErrors } from 'elasticsearch-browser'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
@@ -47,7 +47,7 @@ export default {
   components: {
     AppNav,
     SearchDocumentNavbar,
-    SearchResultsList,
+    SearchResults,
     VuePerfectScrollbar
   },
   data () {
@@ -62,7 +62,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['isReady', 'showFilters', 'error']),
+    ...mapState('search', ['isReady', 'showFilters', 'error', 'layout']),
     toRouteQuery () {
       return this.$store.getters['search/toRouteQuery']
     },
@@ -158,8 +158,38 @@ export default {
       }
     }
 
-    &__show-filters__counter.badge.badge-pill {
-      position: absolute;
+    &--grid {
+
+      &.search .search__body__results {
+        width: 100%;
+      }
+
+      &.search .search__body__backdrop {
+        display: block;
+      }
+
+      &.search .search__body__document {
+        z-index: 20;
+        position: fixed;
+        top: 0;
+        bottom: 0;
+        right: 0;
+        width: $document-min-width;
+        max-width: calc(100vw - var(--app-sidebar-width));
+        background: white;
+        border-radius: 0;
+        box-shadow: $modal-content-box-shadow-sm-up;
+      }
+    }
+
+    &--list {
+
+      &.search .search__body__results {
+        left: $spacer;
+        background: white;
+        width: calc(#{$search-results-list-width}  - #{$spacer * 2});
+        border-radius: $card-border-radius;
+      }
     }
 
     &__body {
@@ -167,18 +197,11 @@ export default {
       position: relative;
       overflow: hidden;
 
-      & &__document, & &__search-results-list {
+      & &__document, & &__results {
         position: absolute;
         z-index: 10;
         top: 0;
         bottom: $spacer;
-      }
-
-      &__search-results-list {
-        left: $spacer;
-        background: white;
-        width: calc(#{$search-results-list-width}  - #{$spacer * 2});
-        border-radius: $card-border-radius;
       }
 
       & &__document {

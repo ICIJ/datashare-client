@@ -36,17 +36,17 @@ describe('SearchResultsAppliedFilter.vue', () => {
 
   describe('displays applied filter', () => {
     it('should display a filter', () => {
-      expect(wrapper.findAll('.search-results__header__applied-filters__filter')).toHaveLength(1)
-      expect(wrapper.find('.search-results__header__applied-filters__filter').text()).toEqual('term_01')
-      expect(wrapper.findAll('.search-results__header__applied-filters__filter.strikethrough')).toHaveLength(0)
+      expect(wrapper.findAll('.search-results-header__applied-filters__filter')).toHaveLength(1)
+      expect(wrapper.find('.search-results-header__applied-filters__filter').text()).toEqual('term_01')
+      expect(wrapper.findAll('.search-results-header__applied-filters__filter.strikethrough')).toHaveLength(0)
     })
 
     it('should display an applied filter as strikethrough if excluded', () => {
       wrapper = shallowMount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: true } } })
 
-      expect(wrapper.findAll('.search-results__header__applied-filters__filter')).toHaveLength(1)
-      expect(wrapper.find('.search-results__header__applied-filters__filter').text()).toEqual('term_01')
-      expect(wrapper.findAll('.search-results__header__applied-filters__filter.strikethrough')).toHaveLength(1)
+      expect(wrapper.findAll('.search-results-header__applied-filters__filter')).toHaveLength(1)
+      expect(wrapper.find('.search-results-header__applied-filters__filter').text()).toEqual('term_01')
+      expect(wrapper.findAll('.search-results-header__applied-filters__filter.strikethrough')).toHaveLength(1)
     })
   })
 
@@ -55,7 +55,7 @@ describe('SearchResultsAppliedFilter.vue', () => {
       wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: false } } })
       const deleteQueryTermMock = jest.spyOn(wrapper.vm, 'deleteQueryTerm')
 
-      wrapper.find('.search-results__header__applied-filters__filter').trigger('click')
+      wrapper.find('.search-results-header__applied-filters__filter').trigger('click')
 
       expect(deleteQueryTermMock).toBeCalledTimes(1)
     })
@@ -64,7 +64,7 @@ describe('SearchResultsAppliedFilter.vue', () => {
       store.commit('search/addFacetValue', { name: 'content-type', value: 'term_01' })
       wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { name: 'content-type', label: 'term_01', value: 'term_01', field: '', negation: false } } })
 
-      wrapper.find('.search-results__header__applied-filters__filter').trigger('click')
+      wrapper.find('.search-results-header__applied-filters__filter').trigger('click')
 
       expect(find(store.state.search.facets, { name: 'content-type' }).values).toHaveLength(0)
     })

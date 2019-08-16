@@ -54,7 +54,8 @@ export function initialState () {
     error: null,
     index: '',
     showFilters: true,
-    starredDocuments: []
+    starredDocuments: [],
+    layout: 'list'
   }
 }
 
@@ -223,6 +224,9 @@ export const mutations = {
   buildResponse (state, raw) {
     state.isReady = true
     state.response = new Response(raw)
+  },
+  appendToResponse (state, raw) {
+    state.response.append(raw)
   },
   setFacets (state, facets) {
     state.facets = facets

@@ -1,11 +1,11 @@
 <template>
   <div>
-    <div class="search-results__header">
-      <div class="search-results__header__paging">
+    <div class="search-results-header" :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
+      <div class="search-results-header__paging">
         <router-link
              :to="firstPageLinkParameters()"
              :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
-             class="search-results__header__paging__first-page px-2"
+             class="search-results-header__paging__first-page px-2"
              v-b-tooltip.hover
              :title="$t('search.results.firstPage')"
              v-if="response.total > $store.state.search.size">
@@ -14,24 +14,24 @@
         <router-link
              :to="previousPageLinkParameters()"
              :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
-             class="search-results__header__paging__previous-page px-2"
+             class="search-results-header__paging__previous-page px-2"
              v-b-tooltip.hover
              :title="$t('search.results.previousPage')"
              v-if="response.total > $store.state.search.size">
           <fa icon="angle-left" />
         </router-link>
-        <div class="search-results__header__paging__progress">
-          <div class="search-results__header__paging__progress__pagination">
+        <div class="search-results-header__paging__progress">
+          <div class="search-results-header__paging__progress__pagination">
             {{ $store.state.search.from + 1 }} - {{ lastDocument }}
           </div>&nbsp;
-          <div class="search-results__header__paging__progress_number-of-results">
+          <div class="search-results-header__paging__progress_number-of-results">
             {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
           </div>
         </div>
         <router-link
              :to="nextPageLinkParameters()"
              :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
-             class="search-results__header__paging__next-page px-2"
+             class="search-results-header__paging__next-page px-2"
              v-b-tooltip.hover
              :title="$t('search.results.nextPage')"
              v-if="response.total > $store.state.search.size">
@@ -40,7 +40,7 @@
         <router-link
              :to="lastPageLinkParameters()"
              :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
-             class="search-results__header__paging__last-page px-2"
+             class="search-results-header__paging__last-page px-2"
              v-b-tooltip.hover
              :title="$t('search.results.lastPage')"
              v-if="response.total > $store.state.search.size">
@@ -53,22 +53,34 @@
 </template>
 
 <script>
-import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
+import { mapState } from 'vuex'
 import cloneDeep from 'lodash/cloneDeep'
 import floor from 'lodash/floor'
 import max from 'lodash/max'
 import min from 'lodash/min'
+
+import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 
 export default {
   name: 'SearchResultsHeader',
   components: {
     SearchResultsAppliedFilters
   },
-  props: ['response', 'position'],
+  props: {
+    position: {
+      type: String,
+      default: 'top',
+      validator: value => ['top', 'bottom'].indexOf(value) >= -1
+    },
+    bordered: {
+      type: Boolean
+    }
+  },
   computed: {
     lastDocument () {
       return min([this.response.total, this.$store.state.search.from + this.$store.state.search.size])
-    }
+    },
+    ...mapState('search', ['response'])
   },
   mounted () {
     // Force page to scroll top at each load
@@ -109,10 +121,15 @@ export default {
 </script>
 
 <style lang="scss">
-  .search-results__header {
+  .search-results-header {
+
+    &--bordered {
+      &.search-results-header--top { border-bottom: 1px solid $gray-200; }
+      &.search-results-header--bottom { border-top: 1px solid $gray-200; }
+    }
+
     &__paging {
       padding: $spacer * 0.5 $spacer;
-      border-bottom: 1px solid $gray-200;
       font-size: 0.95em;
       color: $text-muted;
       display: inline-flex;

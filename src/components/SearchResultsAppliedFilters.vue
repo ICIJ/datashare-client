@@ -1,5 +1,5 @@
 <template>
-  <div class="search-results__header__applied-filters py-1" v-if="filters.length">
+  <div class="search-results-header__applied-filters py-1" v-if="filters.length">
     <search-results-applied-filter v-for="(filter, index) in filters" :key="index" :filter="filter" />
   </div>
 </template>
@@ -40,7 +40,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .search-results__header__applied-filters {
+  .search-results-header__applied-filters {
     border-bottom: 1px solid $gray-200;
   }
 </style>

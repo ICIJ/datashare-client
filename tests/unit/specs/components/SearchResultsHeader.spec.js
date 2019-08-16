@@ -25,7 +25,7 @@ describe('SearchResultsHeader.vue', () => {
   beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchResultsHeader, { localVue, i18n, store, router, propsData: { response: store.state.search.response } })
+    wrapper = shallowMount(SearchResultsHeader, { localVue, i18n, store, router })
     store.commit('search/reset')
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk())
@@ -37,10 +37,10 @@ describe('SearchResultsHeader.vue', () => {
     await letData(es).have(new IndexedDocument('doc.txt').withContent('bar')).commit()
 
     await store.dispatch('search/query', 'bar')
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.search-results__header__paging__progress__pagination').text()).toEqual('1 - 1')
-    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 1 document')
+    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('1 - 1')
+    expect(wrapper.find('.search-results-header__paging__progress_number-of-results').text()).toEqual('on 1 document')
   })
 
   it('should display 2 documents', async () => {
@@ -48,79 +48,79 @@ describe('SearchResultsHeader.vue', () => {
     await letData(es).have(new IndexedDocument('doc_02.txt').withContent('bar')).commit()
 
     await store.dispatch('search/query', 'bar')
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.search-results__header__paging__progress__pagination').text()).toEqual('1 - 2')
-    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 2 documents')
+    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('1 - 2')
+    expect(wrapper.find('.search-results-header__paging__progress_number-of-results').text()).toEqual('on 2 documents')
   })
 
   it('should not display the pagination (1/2)', async () => {
     await store.dispatch('search/query', '*')
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.findAll('.search-results__header__paging__first-page')).toHaveLength(0)
-    expect(wrapper.findAll('.search-results__header__paging__previous-page')).toHaveLength(0)
-    expect(wrapper.findAll('.search-results__header__paging__next-page')).toHaveLength(0)
-    expect(wrapper.findAll('.search-results__header__paging__last-page')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__first-page')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__previous-page')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__next-page')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__last-page')).toHaveLength(0)
   })
 
   it('should not display the pagination (2/2)', async () => {
     await letData(es).have(new IndexedDocument('doc.txt').withContent('document')).commit()
 
     await store.dispatch('search/query', 'document')
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.findAll('.search-results__header__paging__first-page')).toHaveLength(0)
-    expect(wrapper.findAll('.search-results__header__paging__previous-page')).toHaveLength(0)
-    expect(wrapper.findAll('.search-results__header__paging__next-page')).toHaveLength(0)
-    expect(wrapper.findAll('.search-results__header__paging__last-page')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__first-page')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__previous-page')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__next-page')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__last-page')).toHaveLength(0)
   })
 
   it('should display the pagination', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.findAll('.search-results__header__paging__first-page')).toHaveLength(1)
-    expect(wrapper.findAll('.search-results__header__paging__previous-page')).toHaveLength(1)
-    expect(wrapper.findAll('.search-results__header__paging__next-page')).toHaveLength(1)
-    expect(wrapper.findAll('.search-results__header__paging__last-page')).toHaveLength(1)
-    expect(wrapper.find('.search-results__header__paging__progress__pagination').text()).toEqual('1 - 3')
-    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 4 documents')
+    expect(wrapper.findAll('.search-results-header__paging__first-page')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results-header__paging__previous-page')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results-header__paging__next-page')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results-header__paging__last-page')).toHaveLength(1)
+    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('1 - 3')
+    expect(wrapper.find('.search-results-header__paging__progress_number-of-results').text()).toEqual('on 4 documents')
   })
 
   it('should display the first and the previous page as unavailable', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.findAll('.search-results__header__paging__first-page.disabled')).toHaveLength(1)
-    expect(wrapper.findAll('.search-results__header__paging__previous-page.disabled')).toHaveLength(1)
-    expect(wrapper.findAll('.search-results__header__paging__next-page.disabled')).toHaveLength(0)
-    expect(wrapper.findAll('.search-results__header__paging__last-page.disabled')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__first-page.disabled')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results-header__paging__previous-page.disabled')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results-header__paging__next-page.disabled')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__last-page.disabled')).toHaveLength(0)
   })
 
   it('should display the next and the last page as unavailable', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 3, size: 3 })
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.findAll('.search-results__header__paging__first-page.disabled')).toHaveLength(0)
-    expect(wrapper.findAll('.search-results__header__paging__previous-page.disabled')).toHaveLength(0)
-    expect(wrapper.findAll('.search-results__header__paging__next-page.disabled')).toHaveLength(1)
-    expect(wrapper.findAll('.search-results__header__paging__last-page.disabled')).toHaveLength(1)
-    expect(wrapper.find('.search-results__header__paging__progress__pagination').text()).toEqual('4 - 4')
-    expect(wrapper.find('.search-results__header__paging__progress_number-of-results').text()).toEqual('on 4 documents')
+    expect(wrapper.findAll('.search-results-header__paging__first-page.disabled')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__previous-page.disabled')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__paging__next-page.disabled')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results-header__paging__last-page.disabled')).toHaveLength(1)
+    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('4 - 4')
+    expect(wrapper.find('.search-results-header__paging__progress_number-of-results').text()).toEqual('on 4 documents')
   })
 
   it('should generate the link to the first page', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(15)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.firstPageLinkParameters()).toMatchObject({ name: 'search', query: { q: 'document', from: 0, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
@@ -129,7 +129,7 @@ describe('SearchResultsHeader.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(15)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.previousPageLinkParameters()).toMatchObject({ name: 'search', query: { q: 'document', from: 3, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
@@ -138,7 +138,7 @@ describe('SearchResultsHeader.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(15)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.nextPageLinkParameters()).toMatchObject({ name: 'search', query: { q: 'document', from: 9, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
@@ -147,7 +147,7 @@ describe('SearchResultsHeader.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(15)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 6, size: 3 })
-    wrapper.setProps({ response: store.state.search.response })
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.lastPageLinkParameters()).toMatchObject({ name: 'search', query: { q: 'document', from: 12, size: 3, sort: 'relevance', index: 'datashare-testjs' } })
   })
@@ -156,7 +156,7 @@ describe('SearchResultsHeader.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(3)).commit()
 
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
-    wrapper.setProps({ response: store.state.search.response, position: 'top' })
+    wrapper.setProps({ position: 'top' })
 
     expect(wrapper.findAll('search-results-applied-filters-stub')).toHaveLength(1)
   })
@@ -165,7 +165,7 @@ describe('SearchResultsHeader.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(3)).commit()
 
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
-    wrapper.setProps({ response: store.state.search.response, position: 'bottom' })
+    wrapper.setProps({ position: 'bottom' })
 
     expect(wrapper.findAll('search-results-applied-filters-stub')).toHaveLength(0)
   })

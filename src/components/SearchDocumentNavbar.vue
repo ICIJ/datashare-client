@@ -148,7 +148,7 @@ export default {
     display: flex;
     align-items: center;
     margin: 0;
-    border-radius: $card-border-radius $card-border-radius 0 0;
+    border-radius: inherit inherit 0 0;
 
     @media (max-width: $document-float-breakpoint-width) {
       margin: 0;

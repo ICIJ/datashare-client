@@ -37,6 +37,10 @@ export default class Response {
   removeDuplicates () {
     this.set('hits.hits', uniqBy(this.get('hits.hits', []), d => d._id))
   }
+  append (raw) {
+    const response = new Response(raw)
+    response.hits.forEach(hit => this.push('hits.hits', hit))
+  }
   get hits () {
     return map(this.get('hits.hits', []), hit => {
       return Response.instantiate(hit)

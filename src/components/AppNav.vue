@@ -45,6 +45,10 @@ export default {
       z-index: 15;
     }
 
+    .search--grid & {
+      z-index: 15;
+    }
+
     &__container {
 
       &__main {
