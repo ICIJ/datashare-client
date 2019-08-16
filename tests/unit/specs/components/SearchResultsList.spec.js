@@ -21,12 +21,7 @@ async function createView (query = '*', from = 0, size = 25) {
   return shallowMount(SearchResultsList, {
     localVue,
     i18n,
-    store,
-    propsData: {
-      response: store.state.search.response,
-      starredDocuments: store.state.search.starredDocuments,
-      query
-    }
+    store
   })
 }
 

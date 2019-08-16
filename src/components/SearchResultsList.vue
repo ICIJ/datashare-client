@@ -27,6 +27,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import DocumentActions from '@/components/DocumentActions'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import SearchResultsListLink from '@/components/SearchResultsListLink'
@@ -34,8 +36,7 @@ import ResetFiltersButton from '@/components/ResetFiltersButton'
 import settings from '@/utils/settings'
 
 export default {
-  name: 'SearchResults',
-  props: ['response', 'query'],
+  name: 'SearchResultsList',
   components: {
     DocumentActions,
     ResetFiltersButton,
@@ -48,7 +49,8 @@ export default {
     },
     hasFilters () {
       return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
-    }
+    },
+    ...mapState('search', ['query', 'response'])
   }
 }
 </script>

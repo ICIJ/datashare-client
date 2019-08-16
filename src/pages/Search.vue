@@ -13,7 +13,7 @@
         <div v-if="!!error" class="py-5 text-center">
           {{ errorMessage }}
         </div>
-        <search-results-list v-else-if="isReady" :response="response" :query.sync="query" />
+        <search-results-list v-else-if="isReady" />
         <div v-else>
           <content-placeholder />
           <content-placeholder />
@@ -62,7 +62,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['query', 'response', 'isReady', 'showFilters', 'error']),
+    ...mapState('search', ['isReady', 'showFilters', 'error']),
     toRouteQuery () {
       return this.$store.getters['search/toRouteQuery']
     },
