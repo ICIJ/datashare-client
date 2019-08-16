@@ -1,15 +1,15 @@
 <template>
-  <router-link :to="{ name: 'document', params }" class="search-results-link d-flex align-self-stretch flex-nowrap" :class="{ 'search-results-link--active': isActive() }">
-    <document-thumbnail :document="document" class="search-results-link__thumbnail" crop lazy />
-    <div class="search-results-link__wrapper">
-      <h5 class="search-results-link__basename">
+  <router-link :to="{ name: 'document', params }" class="search-results-list-link d-flex align-self-stretch flex-nowrap">
+    <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy />
+    <div class="search-results-list-link__wrapper">
+      <h5 class="search-results-list-link__basename">
         <document-sliced-name :document="document" />
       </h5>
-      <span class="search-results-link__location small">
+      <span class="search-results-list-link__location small">
         <fa icon="folder" class="mr-1" />
         {{ location }}
       </span>
-      <div class="search-results-link__fragments small" v-if="document.highlight" v-html="document.highlight.content.join(' [...] ')"></div>
+      <div class="search-results-list-link__fragments small" v-if="document.highlight" v-html="document.highlight.content.join(' [...] ')"></div>
     </div>
   </router-link>
 </template>
@@ -18,7 +18,6 @@
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
 import ner from '@/mixins/ner'
-import get from 'lodash/get'
 
 export default {
   name: 'SearchResultsLink',
@@ -31,11 +30,6 @@ export default {
   components: {
     DocumentSlicedName,
     DocumentThumbnail
-  },
-  methods: {
-    isActive () {
-      return get(this.$store.state, 'document.document.id') === this.document.id && this.document.id === this.$route.params.id
-    }
   },
   computed: {
     folder () {
@@ -76,14 +70,14 @@ export default {
 </script>
 
 <style lang="scss">
-  .search-results-link {
+  .search-results-list-link {
     display: block;
 
-    &:visited:not(&--active) &__basename {
+    &:visited:not(.router-link-active) &__basename {
       color: mix(#609, white, 50%);
     }
 
-    &--active {
+    &.router-link-active {
       position: relative;
 
       &:before {

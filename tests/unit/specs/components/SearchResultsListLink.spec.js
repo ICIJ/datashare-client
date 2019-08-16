@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import SearchResultsLink from '@/components/SearchResultsLink'
+import SearchResultsListLink from '@/components/SearchResultsListLink'
 import Document from '@/api/Document'
 import router from '@/router'
 import store from '@/store'
@@ -14,9 +14,9 @@ localVue.use(Murmur)
 localVue.use(BootstrapVue)
 localVue.use(Vuex)
 
-describe('SearchResultsLink.vue', () => {
+describe('SearchResultsListLink.vue', () => {
   it('should display the correct location', () => {
-    const wrapper = shallowMount(SearchResultsLink, {
+    const wrapper = shallowMount(SearchResultsListLink, {
       localVue,
       store,
       propsData: {
@@ -33,7 +33,7 @@ describe('SearchResultsLink.vue', () => {
   })
 
   it('should make a link without routing for a document', () => {
-    const wrapper = mount(SearchResultsLink, {
+    const wrapper = mount(SearchResultsListLink, {
       localVue,
       store,
       router,
@@ -45,11 +45,11 @@ describe('SearchResultsLink.vue', () => {
       }
     })
 
-    expect(wrapper.find('.search-results-link').attributes('href')).toMatch(/foo\/foo$/)
+    expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/foo\/foo$/)
   })
 
   it('should make a link with routing for a child document', () => {
-    const wrapper = mount(SearchResultsLink, {
+    const wrapper = mount(SearchResultsListLink, {
       localVue,
       store,
       router,
@@ -62,12 +62,12 @@ describe('SearchResultsLink.vue', () => {
       }
     })
 
-    expect(wrapper.find('.search-results-link').attributes('href')).toMatch(/child\/parent$/)
+    expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/child\/parent$/)
   })
 
   it('should display the document sliced name', () => {
     Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] })
-    const wrapper = mount(SearchResultsLink, {
+    const wrapper = mount(SearchResultsListLink, {
       localVue,
       store,
       router,
@@ -92,6 +92,6 @@ describe('SearchResultsLink.vue', () => {
         })
       }
     })
-    expect(wrapper.findAll('.search-results-link .search-results-link__basename .document-sliced-name__item__root').at(0).text()).toEqual('doc.txt')
+    expect(wrapper.findAll('.search-results-list-link .search-results-list-link__basename .document-sliced-name__item__root').at(0).text()).toEqual('doc.txt')
   })
 })

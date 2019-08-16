@@ -1,20 +1,20 @@
 <template>
-  <div class="search-results">
+  <div class="search-results-list">
     <div v-if="hasResults">
-      <search-results-header :response="response" :position="'top'" />
-      <div class="search-results__items">
-        <div v-for="document in response.hits" :key="document.id" class="search-results__items__item mw-100">
-          <search-results-link class="search-results__items__item__link" :document="document" />
+      <search-results-list-link :response="response" :position="'top'" />
+      <div class="search-results-list__items">
+        <div v-for="document in response.hits" :key="document.id" class="search-results-list__items__item mw-100">
+          <search-results-list-link class="search-results-list__items__item__link" :document="document" />
           <div>
-            <document-actions :document="document" vertical class="search-results__items__item__actions" />
+            <document-actions :document="document" vertical class="search-results-list__items__item__actions" />
           </div>
         </div>
       </div>
-      <search-results-header :response="response" :position="'bottom'" />
+      <search-results-list-link :response="response" :position="'bottom'" />
     </div>
     <div v-else>
-      <div class="search-results__header border-0 py-5 d-flex flex-column text-center">
-        <div class="search-results__header__number-of-results">
+      <div class="search-results-list__header border-0 py-5 d-flex flex-column text-center">
+        <div class="search-results-list__header__number-of-results">
           {{ $t('search.results.no-result') }}
         </div>
         <div class="mt-3" v-if="hasFilters">
@@ -29,7 +29,7 @@
 <script>
 import DocumentActions from '@/components/DocumentActions'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
-import SearchResultsLink from '@/components/SearchResultsLink'
+import SearchResultsListLink from '@/components/SearchResultsListLink'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import settings from '@/utils/settings'
 
@@ -40,7 +40,7 @@ export default {
     DocumentActions,
     ResetFiltersButton,
     SearchResultsHeader,
-    SearchResultsLink
+    SearchResultsListLink
   },
   computed: {
     hasResults () {
@@ -66,7 +66,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .search-results {
+  .search-results-list {
 
     &__toolbar {
       font-size: 0.85rem;

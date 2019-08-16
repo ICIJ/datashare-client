@@ -9,11 +9,11 @@
       <app-nav class="flex-grow-1" />
     </div>
     <div class="px-0 search__body">
-      <vue-perfect-scrollbar class="search__body__search-results">
+      <vue-perfect-scrollbar class="search__body__search-results-list">
         <div v-if="!!error" class="py-5 text-center">
           {{ errorMessage }}
         </div>
-        <search-results v-else-if="isReady" :response="response" :query.sync="query" />
+        <search-results-list v-else-if="isReady" :response="response" :query.sync="query" />
         <div v-else>
           <content-placeholder />
           <content-placeholder />
@@ -37,7 +37,7 @@
 import get from 'lodash/get'
 import AppNav from '@/components/AppNav'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
-import SearchResults from '@/components/SearchResults'
+import SearchResultsList from '@/components/SearchResultsList'
 import { mapState } from 'vuex'
 import { errors as esErrors } from 'elasticsearch-browser'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
@@ -47,7 +47,7 @@ export default {
   components: {
     AppNav,
     SearchDocumentNavbar,
-    SearchResults,
+    SearchResultsList,
     VuePerfectScrollbar
   },
   data () {
@@ -167,17 +167,17 @@ export default {
       position: relative;
       overflow: hidden;
 
-      & &__document, & &__search-results {
+      & &__document, & &__search-results-list {
         position: absolute;
         z-index: 10;
         top: 0;
         bottom: $spacer;
       }
 
-      &__search-results {
+      &__search-results-list {
         left: $spacer;
         background: white;
-        width: calc(#{$search-results-width}  - #{$spacer * 2});
+        width: calc(#{$search-results-list-width}  - #{$spacer * 2});
         border-radius: $card-border-radius;
       }
 
@@ -188,7 +188,7 @@ export default {
         margin: 0;
 
         width: 100%;
-        max-width: calc(100% - #{$search-results-width} - #{$spacer});
+        max-width: calc(100% - #{$search-results-list-width} - #{$spacer});
         border-radius: $card-border-radius;
 
         &.slide-right-enter-active, &.slide-right-leave-active {

@@ -77,7 +77,7 @@ const router = new VueRouter({ routes: [
   }
 ] })
 
-describe('BatchSearchResults.vue', () => {
+describe('BatchSearchResultsList.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
