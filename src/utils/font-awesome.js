@@ -53,6 +53,8 @@ import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt'
 import { faStar } from '@fortawesome/free-solid-svg-icons/faStar'
 import { faSync } from '@fortawesome/free-solid-svg-icons/faSync'
 import { faTag } from '@fortawesome/free-solid-svg-icons/faTag'
+import { faTh } from '@fortawesome/free-solid-svg-icons/faTh'
+import { faThList } from '@fortawesome/free-solid-svg-icons/faThList'
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
 import { faTimesCircle } from '@fortawesome/free-solid-svg-icons/faTimesCircle'
 import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt'
@@ -121,6 +123,8 @@ library.add(
   faStar,
   faSync,
   faTag,
+  faTh,
+  faThList,
   faTimes,
   faTimesCircle,
   faTrashAlt,

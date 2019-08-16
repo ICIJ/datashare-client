@@ -1,10 +1,11 @@
 <template>
   <header class="app__nav">
     <div class="app__nav__container">
-      <div class="app__nav__container__main py-3">
-        <div class="app__nav__container__main__search-bar px-3 py-0">
+      <div class="app__nav__container__main py-3 d-flex align-items-center">
+        <div class="app__nav__container__main__search-bar px-3 py-0 flex-grow-1">
           <search-bar class="p-0" settings />
         </div>
+        <search-layout-selector class="ml-auto px-3" />
       </div>
     </div>
   </header>
@@ -12,11 +13,13 @@
 
 <script>
 import SearchBar from '@/components/SearchBar'
+import SearchLayoutSelector from '@/components/SearchLayoutSelector'
 
 export default {
   name: 'AppNav',
   components: {
-    SearchBar
+    SearchBar,
+    SearchLayoutSelector
   },
   mounted () {
     this.saveComponentHeight()
