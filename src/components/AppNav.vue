@@ -36,10 +36,14 @@ export default {
 
 <style lang="scss">
   .app__nav {
-    z-index: 15;
+    z-index: 25;
     position: relative;
     width: auto;
     color: $body-color;
+
+    @media (max-width: $document-float-breakpoint-width) {
+      z-index: 15;
+    }
 
     &__container {
 

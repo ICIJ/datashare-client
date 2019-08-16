@@ -206,16 +206,15 @@ export default {
         }
 
         @media (max-width: $document-float-breakpoint-width) {
+          z-index: 20;
+          position: fixed;
+          top: 0;
+          bottom: 0;
           right: 0;
           width: $document-min-width;
           max-width: calc(100vw - var(--app-sidebar-width));
           background: white;
           border-radius: 0;
-
-          z-index: 20;
-          position: fixed;
-          top: 0;
-          bottom: 0;
           box-shadow: $modal-content-box-shadow-sm-up;
         }
       }
