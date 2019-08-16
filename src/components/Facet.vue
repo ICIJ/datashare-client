@@ -216,7 +216,7 @@ export default {
     }
 
     &.facet--has-values {
-      box-shadow: 0 0 0 2px $tertiary,  0 0 10px 0 rgba($tertiary, .2);
+      box-shadow: 0 0 0 2px $tertiary, 0 0 10px 0 rgba($tertiary, .2);
     }
 
     &__items {
