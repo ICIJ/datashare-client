@@ -1,4 +1,5 @@
 import types from '@/utils/types.json'
+import { findIcon, defaultIcon } from '@/utils/font-awesome-files'
 import DatashareClient from './DatashareClient'
 import EsDoc from './EsDoc'
 import moment from 'moment'
@@ -128,6 +129,11 @@ export default class Document extends EsDoc {
   }
   get contentTypeWarning () {
     return get(types, [this.contentType, 'warning'], {})
+  }
+  get contentTypeIcon () {
+    const extensions = get(types, [this.contentType, 'extensions'], [])
+    const icon = get(types, [this.contentType, 'icon'], null)
+    return icon ? findIcon(icon) : find(extensions.map(findIcon)) || defaultIcon
   }
   get standardExtension () {
     return get(types, [this.contentType, 'extensions', 0], null)

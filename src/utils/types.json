@@ -29,6 +29,7 @@
   },
   "application/vnd.openxmlformats-officedocument.wordprocessingml.document": {
     "label": "Word 2007 document",
+    "icon": "word",
     "extensions": [
       ".docx"
     ],
@@ -38,6 +39,7 @@
   },
   "application/vnd.openxmlformats-officedocument.wordprocessingml.template": {
     "label": "Word 2007 template",
+    "icon": "word",
     "extensions": [
       ".dotx"
     ],
@@ -47,6 +49,7 @@
   },
   "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet": {
     "label": "Excel 2007 Workbook",
+    "icon": "excel",
     "extensions": [
       ".xlsx"
     ],
@@ -56,6 +59,7 @@
   },
   "application/vnd.openxmlformats-officedocument.presentationml.presentation": {
     "label": "PowerPoint 2007 presentation",
+    "icon": "powerpoint",
     "extensions": [
       ".pptx"
     ],
@@ -65,6 +69,7 @@
   },
   "application/vnd.openxmlformats-officedocument.presentationml.slideshow": {
     "label": "PowerPoint 2007 slideshow",
+    "icon": "powerpoint",
     "extensions": [
       ".ppsx"
     ],
@@ -74,6 +79,7 @@
   },
   "application/vnd.ms-spreadsheetml": {
     "label": "Excel 2003 XML spreadsheet",
+    "icon": "excel",
     "extensions": [
       ".xml"
     ],
@@ -83,6 +89,7 @@
   },
   "application/vnd.ms-wordml": {
     "label": "Word 2003 XML document",
+    "icon": "word",
     "extensions": [
       ".xml"
     ],
@@ -92,6 +99,7 @@
   },
   "application/msword": {
     "label": "Word 97-2003 document",
+    "icon": "word",
     "extensions": [
       ".doc",
       ".dot"
@@ -102,6 +110,7 @@
   },
   "application/vnd.ms-word.document.macroenabled.12": {
     "label": "Word document (with macros)",
+    "icon": "word",
     "extensions": [
       ".docm"
     ],
@@ -114,6 +123,7 @@
   },
   "application/vnd.ms-word.template.macroenabled.12": {
     "label": "Word template (with macros)",
+    "icon": "word",
     "extensions": [
       ".dotm"
     ],
@@ -207,6 +217,7 @@
   },
   "application/rtf": {
     "label": "RTF document",
+    "icon": "alt",
     "extensions": [
       ".rtf"
     ],
@@ -216,6 +227,7 @@
   },
   "application/vnd.ms-excel": {
     "label": "Excel 95-2003 spreadsheet",
+    "icon": "excel",
     "extensions": [
       ".xls",
       ".xlt",
@@ -239,6 +251,7 @@
   },
   "application/vnd.ms-excel.sheet.binary.macroenabled.12": {
     "label": "Excel Binary Workbook",
+    "icon": "excel",
     "extensions": [
       ".xlsb"
     ],
@@ -251,6 +264,7 @@
   },
   "application/vnd.ms-excel.sheet.4": {
     "label": "Excel 4.0 spreadsheet",
+    "icon": "excel",
     "extensions": [
       ".xls"
     ],
@@ -260,6 +274,7 @@
   },
   "application/vnd.ms-excel.sheet.3": {
     "label": "Excel 3.0 spreadsheet",
+    "icon": "excel",
     "extensions": [
       ".xls"
     ],
@@ -269,6 +284,7 @@
   },
   "application/vnd.ms-powerpoint": {
     "label": "PowerPoint 95-2003 presentation",
+    "icon": "powerpoint",
     "extensions": [
       ".ppt"
     ],
@@ -311,6 +327,7 @@
   },
   "application/vnd.ms-htmlhelp": {
     "label": "Compiled HTML Help",
+    "icon": "code",
     "extensions": [
       ".chm"
     ],
@@ -320,6 +337,7 @@
   },
   "application/xhtml+xml": {
     "label": "XHTML document",
+    "icon": "code",
     "extensions": [
       ".html",
       ".htm"
@@ -333,6 +351,7 @@
   },
   "application/xml": {
     "label": "XML document",
+    "icon": "code",
     "extensions": [
       ".xml"
     ],
@@ -370,6 +389,7 @@
   },
   "application/javascript": {
     "label": "JavaScript",
+    "icon": "code",
     "extensions": [
       ".js"
     ],
@@ -383,6 +403,7 @@
   },
   "application/vnd.ms-tnef": {
     "label": "TNEF email attachment",
+    "icon": "archive",
     "extensions": [
       ".dat"
     ],
@@ -414,6 +435,7 @@
   },
   "text/plain": {
     "label": "Plain text document",
+    "icon": "alt",
     "extensions": [
       ".txt"
     ],
@@ -424,6 +446,7 @@
   },
   "text/csv": {
     "label": "CSV file",
+    "icon": "csv",
     "extensions": [
       ".csv"
     ],
@@ -576,6 +599,7 @@
   },
   "image/tiff": {
     "label": "TIFF image",
+    "icon": "image",
     "extensions": [
       ".tif",
       ".tiff"
@@ -586,6 +610,7 @@
   },
   "image/jpeg": {
     "label": "JPEG image",
+    "icon": "image",
     "extensions": [
       ".jpg",
       ".jpeg"
@@ -597,6 +622,7 @@
   },
   "image/x-ms-bmp": {
     "label": "Bitmap image",
+    "icon": "image",
     "extensions": [
       ".bmp"
     ],
@@ -606,6 +632,7 @@
   },
   "image/gif": {
     "label": "GIF image",
+    "icon": "image",
     "extensions": [
       ".gif"
     ],
@@ -616,6 +643,7 @@
   },
   "image/png": {
     "label": "PNG image",
+    "icon": "image",
     "extensions": [
       ".png"
     ],
@@ -626,6 +654,7 @@
   },
   "image/vnd.adobe.photoshop": {
     "label": "Photoshop PSD",
+    "icon": "image",
     "extensions": [
       ".psd",
       ".psb",
@@ -638,6 +667,7 @@
   },
   "image/wmf": {
     "label": "Windows Metafile image",
+    "icon": "image",
     "extensions": [
       ".wmf"
     ],
@@ -647,6 +677,7 @@
   },
   "image/emf": {
     "label": "Windows Enhanced Metafile image",
+    "icon": "image",
     "extensions": [
       ".emf"
     ],
@@ -656,6 +687,7 @@
   },
   "image/vnd.microsoft.icon": {
     "label": "Favicon",
+    "icon": "image",
     "extensions": [
       ".ico"
     ],
@@ -666,6 +698,7 @@
   },
   "image/svg+xml": {
     "label": "SVG image",
+    "icon": "image",
     "extensions": [
       ".svg"
     ],
@@ -676,6 +709,7 @@
   },
   "image/vnd.dwg": {
     "label": "AutoCAD drawing",
+    "icon": "image",
     "extensions": [
       ".dwg"
     ],
@@ -685,6 +719,7 @@
   },
   "image/icns": {
     "label": "Apple Icon Image",
+    "icon": "image",
     "extensions": [
       ".icns"
     ],
@@ -694,6 +729,7 @@
   },
   "application/x-ms-installer": {
     "label": "Windows Installer (MSI)",
+    "icon": "archive",
     "extensions": [
       ".msi"
     ],
@@ -725,6 +761,7 @@
   },
   "application/zip": {
     "label": "ZIP archive",
+    "icon": "archive",
     "extensions": [
       ".zip"
     ],
@@ -734,6 +771,7 @@
   },
   "application/gzip": {
     "label": "GZIP archive",
+    "icon": "archive",
     "extensions": [
       ".gz"
     ],
@@ -743,6 +781,7 @@
   },
   "application/x-rar-compressed": {
     "label": "RAR archive",
+    "icon": "archive",
     "extensions": [
       ".rar"
     ],
@@ -752,6 +791,7 @@
   },
   "application/x-7z-compressed": {
     "label": "7-Zip archive",
+    "icon": "archive",
     "extensions": [
       ".7z"
     ],
@@ -831,6 +871,7 @@
   },
   "audio/x-wav": {
     "label": "WAV audio",
+    "icon": "audio",
     "extensions": [
       ".wav"
     ],
@@ -840,6 +881,7 @@
   },
   "audio/mpeg": {
     "label": "MPEG audio",
+    "icon": "audio",
     "extensions": [
       ".mp3"
     ],
@@ -849,6 +891,7 @@
   },
   "audio/x-ms-wma": {
     "label": "Windows Media Audio",
+    "icon": "audio",
     "extensions": [
       ".wma"
     ],
@@ -858,6 +901,7 @@
   },
   "video/mpeg": {
     "label": "MPEG video",
+    "icon": "video",
     "extensions": [
       ".mpeg"
     ],
@@ -867,6 +911,7 @@
   },
   "video/x-ms-wmv": {
     "label": "Windows Media Video",
+    "icon": "video",
     "extensions": [
       ".wmv"
     ],
@@ -876,6 +921,7 @@
   },
   "video/x-ms-asf": {
     "label": "ASF video",
+    "icon": "video",
     "extensions": [
       ".asf"
     ],
@@ -885,6 +931,7 @@
   },
   "video/x-msvideo": {
     "label": "AVI video",
+    "icon": "video",
     "extensions": [
       ".avi"
     ],
@@ -894,6 +941,7 @@
   },
   "application/mp4": {
     "label": "MP4 audio/video",
+    "icon": "video",
     "extensions": [
       ".mp4",
       ".mov"
