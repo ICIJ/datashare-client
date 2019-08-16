@@ -1,7 +1,7 @@
 <template>
   <form class="search-bar container-fluid" :id="uniqueId" @submit.prevent="submit">
     <div class="d-flex align-items-center">
-      <div class="input-group" :class="{ ['input-group-' + size]: true }">
+      <div class="input-group" :class="{ ['input-group-' + size]: true }">
         <input
           v-model="query"
           :placeholder="$t('search.placeholder')"
@@ -67,7 +67,6 @@ import uniqueId from 'lodash/uniqueId'
 import bodybuilder from 'bodybuilder'
 import get from 'lodash/get'
 import last from 'lodash/last'
-import map from 'lodash/map'
 import some from 'lodash/some'
 import throttle from 'lodash/throttle'
 import lucene from 'lucene'
@@ -76,17 +75,14 @@ import SearchSettings from './SearchSettings'
 import esClient from '@/api/esClient'
 import settings from '@/utils/settings'
 
-function escapeRegExp(str) {
+function escapeRegExp (str) {
   return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-function escapeLucenneChars(str) {
-  const escapable = [" ", "+", "-", "&&", "||", "!", "(", ")", "{", "}", "[", "]", "^", "~", "?", ":", "\\", "/"]
+function escapeLuceneChars (str) {
+  const escapable = [' ', '+', '-', '&&', '||', '!', '(', ')', '{', '}', '[', ']', '^', '~', '?', ':', '\\', '/']
   return some(escapable, char => str.indexOf(char) > -1) ? JSON.stringify(str) : str
 }
-
-// Enter, Escape, Arrow Up, Arrow Down
-const IGNORED_KEYS = [13, 38, 40]
 
 export default {
   name: 'SearchBar',
@@ -166,11 +162,11 @@ export default {
         if (settings.suggestedFields.indexOf(ast.field) > -1) terms.push(ast)
         // Return all the terms
         return terms
-      } catch {
+      } catch (_) {
         return []
       }
     },
-    replaceLastTermCandidate(term, ast = null, highlight = true) {
+    replaceLastTermCandidate (term, ast = null, highlight = true) {
       // Parse the query by default
       ast = ast === null ? lucene.parse(this.query) : ast
       // Use recursive call for branches
@@ -178,16 +174,16 @@ export default {
       else if (ast.left) this.replaceLastTermCandidate(term, ast.left, highlight)
       // Only <implicit> and tag fields are can be read
       else if (settings.suggestedFields.indexOf(ast.field) > -1 && ast.term === last(this.termCandidates()).term) {
-        ast.term = ast.quoted ? term : escapeLucenneChars(term)
+        ast.term = ast.quoted ? term : escapeLuceneChars(term)
         ast.term = highlight ? `<strong>${ast.term}</strong>` : ast.term
       }
       return ast
     },
-    injectTermInQuery(term, ast = null, highlight = true) {
+    injectTermInQuery (term, ast = null, highlight = true) {
       try {
         ast = this.replaceLastTermCandidate(term, ast, highlight)
         return lucene.toString(ast)
-      } catch {
+      } catch (_) {
         return this.query
       }
     },
@@ -198,14 +194,14 @@ export default {
       try {
         this.activeSuggestionIndex = -1
         if (this.suggestionsAllowed) {
-          const { suggestions, query } = await this.suggestTerms(this.termCandidates())
+          const { suggestions, query } = await this.suggestTerms(this.termCandidates())
           // Is the query still valid
           this.suggestions = query === this.query ? suggestions : []
           this.$refs.suggestions.activeItemIndexes = []
         } else {
           this.suggestions = []
         }
-      } catch {
+      } catch (_) {
         this.hideSuggestions()
       }
     }, 200),
