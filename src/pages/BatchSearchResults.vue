@@ -66,19 +66,19 @@
           </b-table>
         </div>
       </div>
-      <div>
-        <span @click="fetchFirstBatchSearchResults" class="p-2">
+      <div class="batch-search-results__paging">
+        <router-link :to="firstPageLinkParameters" class="p-2">
           <fa icon="angle-double-left" />
-        </span>
-        <span @click="fetchPreviousBatchSearchResults" class="p-2">
+        </router-link>
+        <router-link :to="previousPageLinkParameters" class="p-2">
           <fa icon="angle-left" />
-        </span>
-        <span @click="fetchNextBatchSearchResults" class="p-2">
+        </router-link>
+        <router-link :to="nextPageLinkParameters" class="p-2">
           <fa icon="angle-right" />
-        </span>
-        <span @click="fetchLastBatchSearchResults" class="p-2">
+        </router-link>
+        <router-link :to="lastPageLinkParameters" class="p-2">
           <fa icon="angle-double-right" />
-        </span>
+        </router-link>
       </div>
     </div>
   </div>
@@ -154,7 +154,7 @@ export default {
         }
       ],
       from: 0,
-      size: 5
+      size: 100
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -174,6 +174,24 @@ export default {
     },
     selectedQueries () {
       return this.$store.state.batchSearch.selectedQueries
+    },
+    firstPageLinkParameters () {
+      const from = 0
+      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from, size: this.$route.query.size } }
+    },
+    previousPageLinkParameters () {
+      const from = max([0, this.$route.query.from - this.$route.query.size])
+      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from, size: this.$route.query.size } }
+    },
+    nextPageLinkParameters () {
+      const nextFrom = parseInt(this.$route.query.from) + parseInt(this.$route.query.size)
+      const from = nextFrom < this.meta.nbResults ? nextFrom : this.$route.query.from
+      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from, size: this.$route.query.size } }
+    },
+    lastPageLinkParameters () {
+      const gap = (this.meta.nbResults % this.$route.query.size === 0) ? 1 : 0
+      const from = this.$route.query.size * (floor(this.meta.nbResults / this.$route.query.size) - gap)
+      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from, size: this.$route.query.size } }
     }
   },
   methods: {
@@ -185,26 +203,8 @@ export default {
     fetchBatchSearches () {
       return store.dispatch('batchSearch/getBatchSearches')
     },
-    fetchFirstBatchSearchResults () {
-      this.from = 0
-      this.fetchBatchSearchResults()
-    },
-    fetchPreviousBatchSearchResults () {
-      this.from = max([0, this.from - this.size])
-      this.fetchBatchSearchResults()
-    },
-    fetchNextBatchSearchResults () {
-      const nextFrom = this.from + this.size
-      this.from = nextFrom < this.meta.nbResults ? nextFrom : this.from
-      this.fetchBatchSearchResults()
-    },
-    fetchLastBatchSearchResults () {
-      const gap = (this.meta.nbResults % this.size === 0) ? 1 : 0
-      this.from = this.size * (floor(this.meta.nbResults / this.size) - gap)
-      this.fetchBatchSearchResults()
-    },
     fetchBatchSearchResults () {
-      return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from: this.from, size: this.size })
+      return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from: this.$route.query.from, size: this.$route.query.size })
     },
     getFileName (documentPath) {
       return last(documentPath.split('/'))

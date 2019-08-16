@@ -4,11 +4,11 @@ import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
 import messages from '@/lang/en'
 import store from '@/store'
-import router from '@/router'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import VueRouter from 'vue-router'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -20,14 +20,16 @@ jest.mock('@/api/DatashareClient', () => {
           description: 'This is the description of the batch search',
           queries: ['query_01', 'query_02', 'query_03'],
           state: 'SUCCESS',
-          date: '2019-07-18T14:45:34.869+0000'
+          date: '2019-07-18T14:45:34.869+0000',
+          nbResults: 172
         }, {
           uuid: '13',
           project: { name: 'ProjectName2' },
           description: 'Another description',
           queries: ['query_04'],
           state: 'SUCCESS',
-          date: '2019-07-28T14:45:34.869+0000'
+          date: '2019-07-28T14:45:34.869+0000',
+          nbResults: 15
         }
       ])),
       getBatchSearchResults: jest.fn().mockReturnValue(Promise.resolve([
@@ -63,7 +65,17 @@ localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
+localVue.use(VueRouter)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const router = new VueRouter({ routes: [
+  {
+    path: 'batch-search/:index/:uuid',
+    name: 'batch-search.results'
+  }, {
+    name: 'document',
+    path: '/d/:index/:id/:routing?'
+  }
+] })
 
 describe('BatchSearchResults.vue', () => {
   esConnectionHelper()
@@ -83,19 +95,20 @@ describe('BatchSearchResults.vue', () => {
       description: 'This is the description of the batch search',
       queries: ['query_01', 'query_02', 'query_03'],
       state: 'SUCCESS',
-      date: '2019-07-18T14:45:34.869+0000'
+      date: '2019-07-18T14:45:34.869+0000',
+      nbResults: 172
     }, {
       uuid: '13',
       project: { name: 'ProjectName2' },
       description: 'Another description',
       queries: ['query_04'],
       state: 'SUCCESS',
-      date: '2019-07-28T14:45:34.869+0000'
+      date: '2019-07-28T14:45:34.869+0000',
+      nbResults: 15
     }])
     const propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
     wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData })
-    // Needed to build the route
-    Object.assign(wrapper.vm.$route.params, propsData)
+    await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { from: 50, size: 25 } })
     await wrapper.vm.fetch()
   })
 
@@ -120,5 +133,31 @@ describe('BatchSearchResults.vue', () => {
   it('should display info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
     expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(4)
+  })
+
+  describe('should generate paging links', () => {
+    beforeEach(async () => {
+      await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { from: 50, size: 25 } })
+    })
+
+    it('should display pagination links', () => {
+      expect(wrapper.findAll('.batch-search-results__paging').exists()).toBeTruthy()
+    })
+
+    it('first results page link', () => {
+      expect(wrapper.vm.firstPageLinkParameters).toEqual({ name: 'batch-search.results', params: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, query: { from: 0, size: 25 } })
+    })
+
+    it('previous results page link', () => {
+      expect(wrapper.vm.previousPageLinkParameters).toEqual({ name: 'batch-search.results', params: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, query: { from: 25, size: 25 } })
+    })
+
+    it('next results page link', () => {
+      expect(wrapper.vm.nextPageLinkParameters).toEqual({ name: 'batch-search.results', params: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, query: { from: 75, size: 25 } })
+    })
+
+    it('last results page link', () => {
+      expect(wrapper.vm.lastPageLinkParameters).toEqual({ name: 'batch-search.results', params: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, query: { from: 150, size: 25 } })
+    })
   })
 })
