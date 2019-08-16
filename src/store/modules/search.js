@@ -6,6 +6,7 @@ import { FacetText, FacetYesNo, FacetDate, FacetPath, FacetNamedEntity, namedEnt
 import DatashareClient from '@/api/DatashareClient'
 import types from '@/utils/types.json'
 import lucene from 'lucene'
+import { escapeRegExp } from '@/utils/strings'
 import castArray from 'lodash/castArray'
 import concat from 'lodash/concat'
 import each from 'lodash/each'
@@ -165,7 +166,7 @@ export const getters = {
   },
   retrieveContentQueryTermsInContent (state, getters) {
     return (content, field) => getters.retrieveContentQueryTerms.map(term => {
-      term[field] = (content.match(new RegExp(term.label, 'gi')) || []).length
+      term[field] = (content.match(new RegExp(escapeRegExp(term.label), 'gi')) || []).length
       return term
     })
   }

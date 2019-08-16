@@ -1,4 +1,5 @@
 import utils from '@/mixins/utils'
+import { escapeRegExp } from '@/utils/strings'
 import camelCase from 'lodash/camelCase'
 import find from 'lodash/find'
 import flatten from 'lodash/flatten'
@@ -82,7 +83,7 @@ export const mixin = {
       return ['aggregations', this.facet.key, 'buckets']
     },
     queryTokens () {
-      return [ this.escapeRegExp(this.facetQuery.toLowerCase()) ]
+      return [ escapeRegExp(this.facetQuery.toLowerCase()) ]
     },
     options () {
       return map(this.items, item => {
@@ -129,10 +130,6 @@ export const mixin = {
     },
     isReversed () {
       return this.$store.getters['search/isFacetReversed'](this.facet.name)
-    },
-    escapeRegExp (str) {
-      // eslint-disable-next-line no-useless-escape
-      return str.replace(/[\-\[\]\/\{\}\(\)\*\+\?\.\\\^\$\|]/g, '\\$&')
     },
     watchedForUpdate (state) {
       if (!state.search.globalSearch) {

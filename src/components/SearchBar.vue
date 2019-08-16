@@ -74,10 +74,7 @@ import lucene from 'lucene'
 import SearchSettings from './SearchSettings'
 import esClient from '@/api/esClient'
 import settings from '@/utils/settings'
-
-function escapeRegExp (str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
-}
+import { escapeRegExp } from '@/utils/strings'
 
 function escapeLuceneChars (str) {
   const escapable = [' ', '+', '-', '&&', '||', '!', '(', ')', '{', '}', '[', ']', '^', '~', '?', ':', '\\', '/']
