@@ -1,7 +1,7 @@
 <template>
   <div class="search-results-list">
     <div v-if="hasResults">
-      <search-results-list-link :response="response" :position="'top'" />
+      <search-results-header :response="response" :position="'top'" />
       <div class="search-results-list__items">
         <div v-for="document in response.hits" :key="document.id" class="search-results-list__items__item mw-100">
           <search-results-list-link class="search-results-list__items__item__link" :document="document" />
@@ -10,7 +10,7 @@
           </div>
         </div>
       </div>
-      <search-results-list-link :response="response" :position="'bottom'" />
+      <search-results-header :response="response" :position="'bottom'" />
     </div>
     <div v-else>
       <div class="search-results-list__header border-0 py-5 d-flex flex-column text-center">
@@ -48,18 +48,6 @@ export default {
     },
     hasFilters () {
       return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
-    }
-  },
-  methods: {
-    isStarred (documentId) {
-      return this.starredDocuments.indexOf(documentId) >= 0
-    },
-    async toggleStarDocument (documentId) {
-      try {
-        await this.$store.dispatch('search/toggleStarDocument', documentId)
-      } finally {
-        this.$root.$emit('facet::starred:refresh')
-      }
     }
   }
 }
