@@ -48,7 +48,7 @@ export default {
       z-index: 15;
     }
 
-    .search--grid & {
+    .search--grid &, .search--table & {
       z-index: 15;
     }
 

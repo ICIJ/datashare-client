@@ -158,7 +158,7 @@ export default {
       }
     }
 
-    &--grid {
+    &--grid, &--table {
 
       &.search .search__body__backdrop {
         display: block;

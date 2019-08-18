@@ -1,8 +1,8 @@
 <template>
-  <div v-if="isActivated" class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop }">
+  <div v-if="isActivated" class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop, [`document-thumbnail--${size}`]: true }">
     <img :src="thumbnailSrc" :alt="thumbnailAlt" class="document-thumbnail__image" />
-    <span class="document-thumbnail__spinner" v-if="!loaded && !erroed">
-      <content-placeholder :rows="spinnerRows" class="p-0" />
+    <span class="document-thumbnail__placeholder" v-if="!loaded">
+      <fa :icon="document.contentTypeIcon" />
     </span>
   </div>
 </template>
@@ -38,13 +38,7 @@ export default {
       loaded: false,
       erroed: false,
       thumbnailSrc: null,
-      observer: null,
-      spinnerRows: [
-        {
-          height: '100%',
-          boxes: [[0, '100%']]
-        }
-      ]
+      observer: null
     }
   },
   computed: {
@@ -131,9 +125,8 @@ export default {
     min-height: 3rem;
     position: relative;
     overflow: hidden;
-    font-size: 0.5rem;
-    color: $text-muted;
     background: $body-bg;
+    color: mix($body-bg, $text-muted, 70%);
 
     &--crop {
       width: 80px;
@@ -158,19 +151,17 @@ export default {
       transform: translate(-50%, -50%);
     }
 
-    &__spinner {
+    &__placeholder {
       position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
 
-      .content-placeholder,
-      .content-placeholder__wrapper,
-      .content-placeholder__wrapper__row  {
-        width: 100%;
-        height: 100%;
-      }
+      .document-thumbnail--xs & { font-size: 2rem; }
+      .document-thumbnail--sm & { font-size: 3rem; }
+      .document-thumbnail--md & { font-size: 4rem; }
+      .document-thumbnail--lg & { font-size: 5rem; }
+      .document-thumbnail--xl & { font-size: 6rem; }
     }
   }
 </style>
