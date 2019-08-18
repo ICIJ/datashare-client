@@ -128,6 +128,12 @@ export default {
     background: $body-bg;
     color: mix($body-bg, $text-muted, 70%);
 
+    &--xs { font-size: 2rem; }
+    &--sm { font-size: 3rem; }
+    &--md { font-size: 4rem; }
+    &--lg { font-size: 5rem; }
+    &--xl { font-size: 6rem; }
+
     &--crop {
       width: 80px;
       height: 80px;
@@ -156,12 +162,6 @@ export default {
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-
-      .document-thumbnail--xs & { font-size: 2rem; }
-      .document-thumbnail--sm & { font-size: 3rem; }
-      .document-thumbnail--md & { font-size: 4rem; }
-      .document-thumbnail--lg & { font-size: 5rem; }
-      .document-thumbnail--xl & { font-size: 6rem; }
     }
   }
 </style>
