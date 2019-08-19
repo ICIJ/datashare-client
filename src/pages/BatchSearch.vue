@@ -19,7 +19,7 @@
         </div>
         <b-table v-else striped hover responsive :fields="fields" :items="items" thead-tr-class="text-nowrap" tbody-tr-class="batch-search__items__item">
           <template #name="row">
-            <router-link :to="{ name: 'batch-search.results', params: { index: row.item.project.id, uuid: row.item.uuid }, query: { from: 0, size: 100 } }" class="batch-search__items__item__link">
+            <router-link :to="{ name: 'batch-search.results', params: { index: row.item.project.id, uuid: row.item.uuid }, query: { from: 0, size } }" class="batch-search__items__item__link">
               {{ row.item.name }}
             </router-link>
           </template>
@@ -44,7 +44,7 @@
 import { mapState } from 'vuex'
 import moment from 'moment'
 import capitalize from 'lodash/capitalize'
-
+import settings from '@/utils/settings'
 import utils from '@/mixins/utils'
 
 export default {
@@ -98,7 +98,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('batchSearch', { items: 'batchSearches' })
+    ...mapState('batchSearch', { items: 'batchSearches' }),
+    size () {
+      return settings.batchSearchResultsSize
+    }
   },
   async created () {
     await this.$store.dispatch('batchSearch/getBatchSearches')

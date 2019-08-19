@@ -57,8 +57,8 @@ describe('BatchSearch.vue', () => {
 
   it('should display a link to batch search page with from and size as URL query string', () => {
     expect(wrapper.findAll('.batch-search__items__item__link')).toHaveLength(2)
-    expect(wrapper.findAll('.batch-search__items__item__link').at(0).attributes('href')).toBe('#/batch-search/project_01/1?from=0&size=5')
-    expect(wrapper.findAll('.batch-search__items__item__link').at(1).attributes('href')).toBe('#/batch-search/project_02/2?from=0&size=5')
+    expect(wrapper.findAll('.batch-search__items__item__link').at(0).attributes('href')).toBe('#/batch-search/project_01/1?from=0&size=100')
+    expect(wrapper.findAll('.batch-search__items__item__link').at(1).attributes('href')).toBe('#/batch-search/project_02/2?from=0&size=100')
   })
 
   it('should display 7 columns of info per row', () => {

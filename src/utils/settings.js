@@ -105,5 +105,6 @@ export default {
     }
   ],
   suggestedFields: ['<implicit>', 'tags', 'contentType', 'path', 'mentionNorm'],
-  suggestedImplicitField: 'mentionNorm'
+  suggestedImplicitField: 'mentionNorm',
+  batchSearchResultsSize: 100
 }
