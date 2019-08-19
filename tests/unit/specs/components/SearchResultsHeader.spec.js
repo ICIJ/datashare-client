@@ -39,7 +39,7 @@ describe('SearchResultsHeader.vue', () => {
     await store.dispatch('search/query', 'bar')
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('1 - 1')
+    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('1 – 1')
     expect(wrapper.find('.search-results-header__paging__progress_number-of-results').text()).toEqual('on 1 document')
   })
 
@@ -50,7 +50,7 @@ describe('SearchResultsHeader.vue', () => {
     await store.dispatch('search/query', 'bar')
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('1 - 2')
+    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('1 – 2')
     expect(wrapper.find('.search-results-header__paging__progress_number-of-results').text()).toEqual('on 2 documents')
   })
 
@@ -86,7 +86,7 @@ describe('SearchResultsHeader.vue', () => {
     expect(wrapper.findAll('.search-results-header__paging__previous-page')).toHaveLength(1)
     expect(wrapper.findAll('.search-results-header__paging__next-page')).toHaveLength(1)
     expect(wrapper.findAll('.search-results-header__paging__last-page')).toHaveLength(1)
-    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('1 - 3')
+    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('1 – 3')
     expect(wrapper.find('.search-results-header__paging__progress_number-of-results').text()).toEqual('on 4 documents')
   })
 
@@ -112,7 +112,7 @@ describe('SearchResultsHeader.vue', () => {
     expect(wrapper.findAll('.search-results-header__paging__previous-page.disabled')).toHaveLength(0)
     expect(wrapper.findAll('.search-results-header__paging__next-page.disabled')).toHaveLength(1)
     expect(wrapper.findAll('.search-results-header__paging__last-page.disabled')).toHaveLength(1)
-    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('4 - 4')
+    expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toEqual('4 – 4')
     expect(wrapper.find('.search-results-header__paging__progress_number-of-results').text()).toEqual('on 4 documents')
   })
 
