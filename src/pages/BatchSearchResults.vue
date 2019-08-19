@@ -66,28 +66,7 @@
           </b-table>
         </div>
       </div>
-      <div class="batch-search-results__paging" v-if="meta.nbResults > $route.query.size">
-        <router-link
-          :to="firstPageLinkParameters"
-          class="px-2">
-          <fa icon="angle-double-left" />
-        </router-link>
-        <router-link
-          :to="previousPageLinkParameters"
-          class="px-2">
-          <fa icon="angle-left" />
-        </router-link>
-        <router-link
-          :to="nextPageLinkParameters"
-          class="px-2">
-          <fa icon="angle-right" />
-        </router-link>
-        <router-link
-          :to="lastPageLinkParameters"
-          class="px-2">
-          <fa icon="angle-double-right" />
-        </router-link>
-      </div>
+      <pagination :total="meta.nbResults" :get-to-template="getToTemplate"></pagination>
     </div>
   </div>
 </template>
@@ -95,20 +74,22 @@
 <script>
 import store from '@/store'
 import moment from 'moment'
+import { mapState } from 'vuex'
 import capitalize from 'lodash/capitalize'
 import find from 'lodash/find'
-import floor from 'lodash/floor'
 import includes from 'lodash/includes'
-import { mapState } from 'vuex'
 import last from 'lodash/last'
-import max from 'lodash/max'
 
 import DatashareClient from '@/api/DatashareClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
+import Pagination from '@/components/Pagination'
 
 export default {
   name: 'BatchSearchResults',
+  components: {
+    Pagination
+  },
   props: {
     uuid: {
       type: String
@@ -166,9 +147,15 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next(vm => vm.fetch())
+    next(vm => {
+      vm.from = parseInt(to.query.from)
+      vm.size = parseInt(to.query.size)
+      vm.fetch()
+    })
   },
   async beforeRouteUpdate (to, from, next) {
+    this.from = parseInt(to.query.from)
+    this.size = parseInt(to.query.size)
     await this.fetch()
     next()
   },
@@ -182,24 +169,6 @@ export default {
     },
     selectedQueries () {
       return this.$store.state.batchSearch.selectedQueries
-    },
-    firstPageLinkParameters () {
-      const from = 0
-      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from, size: this.$route.query.size } }
-    },
-    previousPageLinkParameters () {
-      const from = max([0, this.$route.query.from - this.$route.query.size])
-      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from, size: this.$route.query.size } }
-    },
-    nextPageLinkParameters () {
-      const nextFrom = parseInt(this.$route.query.from) + parseInt(this.$route.query.size)
-      const from = nextFrom < this.meta.nbResults ? nextFrom : this.$route.query.from
-      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from, size: this.$route.query.size } }
-    },
-    lastPageLinkParameters () {
-      const gap = (this.meta.nbResults % this.$route.query.size === 0) ? 1 : 0
-      const from = this.$route.query.size * (floor(this.meta.nbResults / this.$route.query.size) - gap)
-      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from, size: this.$route.query.size } }
     }
   },
   methods: {
@@ -212,13 +181,16 @@ export default {
       return store.dispatch('batchSearch/getBatchSearches')
     },
     fetchBatchSearchResults () {
-      return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from: this.$route.query.from, size: this.$route.query.size })
+      return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from: this.from, size: this.size })
     },
     getFileName (documentPath) {
       return last(documentPath.split('/'))
     },
     filter (item, filter) {
       return includes(filter, item.query)
+    },
+    getToTemplate () {
+      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from: this.from, size: this.size } }
     },
     capitalize,
     moment,

@@ -134,35 +134,4 @@ describe('BatchSearchResultsList.vue', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
     expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(4)
   })
-
-  describe('should generate paging links', () => {
-    beforeEach(async () => {
-      await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { from: 50, size: 25 } })
-    })
-
-    it('should display pagination links', () => {
-      expect(wrapper.findAll('.batch-search-results__paging').exists()).toBeTruthy()
-    })
-
-    it('should NOT display pagination links', async () => {
-      await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { from: 0, size: 200 } })
-      expect(wrapper.findAll('.batch-search-results__paging').exists()).toBeFalsy()
-    })
-
-    it('first results page link', () => {
-      expect(wrapper.vm.firstPageLinkParameters).toEqual({ name: 'batch-search.results', params: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, query: { from: 0, size: 25 } })
-    })
-
-    it('previous results page link', () => {
-      expect(wrapper.vm.previousPageLinkParameters).toEqual({ name: 'batch-search.results', params: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, query: { from: 25, size: 25 } })
-    })
-
-    it('next results page link', () => {
-      expect(wrapper.vm.nextPageLinkParameters).toEqual({ name: 'batch-search.results', params: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, query: { from: 75, size: 25 } })
-    })
-
-    it('last results page link', () => {
-      expect(wrapper.vm.lastPageLinkParameters).toEqual({ name: 'batch-search.results', params: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, query: { from: 150, size: 25 } })
-    })
-  })
 })
