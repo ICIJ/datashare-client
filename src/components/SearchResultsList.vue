@@ -57,6 +57,8 @@ export default {
 
 <style lang="scss">
   .search-results-list {
+    background: white;
+    border-radius: $card-border-radius;
 
     &__toolbar {
       font-size: 0.85rem;

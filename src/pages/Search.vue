@@ -15,9 +15,9 @@
         </div>
         <search-results v-else-if="isReady" :layout="layout" />
         <div v-else>
-          <content-placeholder />
-          <content-placeholder />
-          <content-placeholder />
+          <content-placeholder class="bg-white p-3 mb-3" />
+          <content-placeholder class="bg-white p-3 mb-3" />
+          <content-placeholder class="bg-white p-3 mb-3" />
         </div>
       </vue-perfect-scrollbar>
       <transition name="slide-right">
@@ -181,10 +181,8 @@ export default {
     &--list {
 
       &.search .search__body__results {
-        left: $spacer;
-        background: white;
+        right: auto;
         width: calc(#{$search-results-list-width}  - #{$spacer * 2});
-        border-radius: $card-border-radius;
       }
     }
 
@@ -201,7 +199,8 @@ export default {
       }
 
       & &__results {
-        width: 100%;
+        left: $spacer;
+        right: $spacer;
       }
 
       & &__document {

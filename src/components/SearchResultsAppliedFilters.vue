@@ -38,9 +38,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  .search-results-header__applied-filters {
-    border-bottom: 1px solid $gray-200;
-  }
-</style>
