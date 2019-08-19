@@ -66,17 +66,25 @@
           </b-table>
         </div>
       </div>
-      <div class="batch-search-results__paging">
-        <router-link :to="firstPageLinkParameters" class="p-2">
+      <div class="batch-search-results__paging" v-if="meta.nbResults > $route.query.size">
+        <router-link
+          :to="firstPageLinkParameters"
+          class="px-2">
           <fa icon="angle-double-left" />
         </router-link>
-        <router-link :to="previousPageLinkParameters" class="p-2">
+        <router-link
+          :to="previousPageLinkParameters"
+          class="px-2">
           <fa icon="angle-left" />
         </router-link>
-        <router-link :to="nextPageLinkParameters" class="p-2">
+        <router-link
+          :to="nextPageLinkParameters"
+          class="px-2">
           <fa icon="angle-right" />
         </router-link>
-        <router-link :to="lastPageLinkParameters" class="p-2">
+        <router-link
+          :to="lastPageLinkParameters"
+          class="px-2">
           <fa icon="angle-double-right" />
         </router-link>
       </div>

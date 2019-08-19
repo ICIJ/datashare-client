@@ -144,6 +144,11 @@ describe('BatchSearchResultsList.vue', () => {
       expect(wrapper.findAll('.batch-search-results__paging').exists()).toBeTruthy()
     })
 
+    it('should NOT display pagination links', async () => {
+      await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { from: 0, size: 200 } })
+      expect(wrapper.findAll('.batch-search-results__paging').exists()).toBeFalsy()
+    })
+
     it('first results page link', () => {
       expect(wrapper.vm.firstPageLinkParameters).toEqual({ name: 'batch-search.results', params: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, query: { from: 0, size: 25 } })
     })
