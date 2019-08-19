@@ -9,7 +9,7 @@
             <document-thumbnail :document="document" size="md" />
           </router-link>
           <router-link class="search-results-grid__items__item__title py-2 px-3 small text-truncate" :to="{ name: 'document', params: document.routerParams }">
-            {{ document.title }}
+            <document-sliced-name :document="document" class="d-inline" />
           </router-link>
         </div>
       </div>
@@ -33,6 +33,7 @@
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
+import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
@@ -44,6 +45,7 @@ export default {
     DocumentActions,
     DocumentThumbnail,
     ResetFiltersButton,
+    DocumentSlicedName,
     SearchResultsHeader
   },
   computed: {
