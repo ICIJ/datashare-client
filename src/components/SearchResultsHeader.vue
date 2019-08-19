@@ -2,10 +2,18 @@
   <div>
     <div class="search-results-header" :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
       <div class="search-results-header__paging">
+        <div class="search-results-header__paging__progress text-truncate">
+          <span class="search-results-header__paging__progress__pagination">
+            {{ $store.state.search.from + 1 }} – {{ lastDocument }}
+          </span>
+          <span class="search-results-header__paging__progress_number-of-results">
+            {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
+          </span>
+        </div>
         <router-link
              :to="firstPageLinkParameters()"
              :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
-             class="search-results-header__paging__first-page px-2"
+             class="search-results-header__paging__first-page search-results-header__paging__angle px-2"
              v-b-tooltip.hover
              :title="$t('search.results.firstPage')"
              v-if="response.total > $store.state.search.size">
@@ -14,24 +22,16 @@
         <router-link
              :to="previousPageLinkParameters()"
              :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
-             class="search-results-header__paging__previous-page px-2"
+             class="search-results-header__paging__previous-page search-results-header__paging__angle px-2 mr-2"
              v-b-tooltip.hover
              :title="$t('search.results.previousPage')"
              v-if="response.total > $store.state.search.size">
           <fa icon="angle-left" />
         </router-link>
-        <div class="search-results-header__paging__progress">
-          <div class="search-results-header__paging__progress__pagination">
-            {{ $store.state.search.from + 1 }} - {{ lastDocument }}
-          </div>&nbsp;
-          <div class="search-results-header__paging__progress_number-of-results">
-            {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
-          </div>
-        </div>
         <router-link
              :to="nextPageLinkParameters()"
              :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
-             class="search-results-header__paging__next-page px-2"
+             class="search-results-header__paging__next-page search-results-header__paging__angle px-2"
              v-b-tooltip.hover
              :title="$t('search.results.nextPage')"
              v-if="response.total > $store.state.search.size">
@@ -40,10 +40,10 @@
         <router-link
              :to="lastPageLinkParameters()"
              :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
-             class="search-results-header__paging__last-page px-2"
+             class="search-results-header__paging__last-page search-results-header__paging__angle px-2"
              v-b-tooltip.hover
              :title="$t('search.results.lastPage')"
-             v-if="response.total > $store.state.search.size">
+             v-if="response.total > $store.state.search.size && !searchWindowTooLarge">
           <fa icon="angle-double-right" />
         </router-link>
       </div>
@@ -79,6 +79,9 @@ export default {
   computed: {
     lastDocument () {
       return min([this.response.total, this.$store.state.search.from + this.$store.state.search.size])
+    },
+    searchWindowTooLarge () {
+      return (this.response.total + this.$store.state.search.size) >= this.$config.get('search.maxWindowSize', 1e4)
     },
     ...mapState('search', ['response'])
   },
@@ -137,21 +140,15 @@ export default {
 
       &__progress {
         flex: 1 auto;
-        text-align: center;
 
         > div {
           display: inline-block;
         }
       }
 
-      &__first-page,
-      &__first-page:hover,
-      &__previous-page,
-      &__previous-page:hover,
-      &__next-page,
-      &__next-page:hover,
-      &__last-page,
-      &__last-page:hover {
+      &__angle,
+      &__angle:hover {
+        font-size: 1.1em;
         color: inherit;
         cursor: pointer;
       }

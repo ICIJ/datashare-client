@@ -62,7 +62,7 @@ export default {
 
 <style lang="scss">
   .search-results-grid {
-    padding: 0 $spacer $spacer;
+    padding: 0 0 $spacer;
 
     &__items {
       display: grid;

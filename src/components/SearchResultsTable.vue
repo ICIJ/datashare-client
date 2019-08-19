@@ -98,7 +98,7 @@ export default {
 
 <style lang="scss">
   .search-results-table {
-    padding: 0 $spacer $spacer;
+    padding: 0 0 $spacer;
 
     &__items {
 
