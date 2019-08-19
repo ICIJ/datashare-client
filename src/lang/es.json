@@ -40,10 +40,6 @@
       "no-result": "No se han encontrado documentos",
       "on": "en",
       "perPage": "por página",
-      "firstPage": "Ir a primera página",
-      "previousPage": "Ir a página anterior",
-      "nextPage": "Ir a página siguiente",
-      "lastPage": "Ir a última página",
       "sort": {
         "sort": "Ordenar por",
         "relevance": "Relevancia",
@@ -75,6 +71,12 @@
         "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>%{extension}</code> before you can open it."
       }
     }
+  },
+  "pagination": {
+    "firstPage": "Ir a primera página",
+    "previousPage": "Ir a página anterior",
+    "nextPage": "Ir a página siguiente",
+    "lastPage": "Ir a última página"
   },
   "documentTranslatedContent": {
     "detected": "Detected language",
