@@ -10,42 +10,40 @@
             {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
           </span>
         </div>
-        <router-link
-             :to="firstPageLinkParameters()"
-             :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
-             class="search-results-header__paging__first-page search-results-header__paging__angle px-2"
-             v-b-tooltip.hover
-             :title="$t('search.results.firstPage')"
-             v-if="response.total > $store.state.search.size">
-          <fa icon="angle-double-left" />
-        </router-link>
-        <router-link
-             :to="previousPageLinkParameters()"
-             :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
-             class="search-results-header__paging__previous-page search-results-header__paging__angle px-2 mr-2"
-             v-b-tooltip.hover
-             :title="$t('search.results.previousPage')"
-             v-if="response.total > $store.state.search.size">
-          <fa icon="angle-left" />
-        </router-link>
-        <router-link
-             :to="nextPageLinkParameters()"
-             :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
-             class="search-results-header__paging__next-page search-results-header__paging__angle px-2"
-             v-b-tooltip.hover
-             :title="$t('search.results.nextPage')"
-             v-if="response.total > $store.state.search.size">
-          <fa icon="angle-right" />
-        </router-link>
-        <router-link
-             :to="lastPageLinkParameters()"
-             :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
-             class="search-results-header__paging__last-page search-results-header__paging__angle px-2"
-             v-b-tooltip.hover
-             :title="$t('search.results.lastPage')"
-             v-if="response.total > $store.state.search.size && !searchWindowTooLarge">
-          <fa icon="angle-double-right" />
-        </router-link>
+        <div v-if="total > $store.state.search.size && !searchWindowTooLarge">
+          <router-link
+            :to="firstPageLinkParameters()"
+            :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
+            class="search-results-header__paging__first-page search-results-header__paging__angle px-2"
+            v-b-tooltip.hover
+            :title="$t('search.results.firstPage')">
+            <fa icon="angle-double-left" />
+          </router-link>
+          <router-link
+            :to="previousPageLinkParameters()"
+            :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
+            class="search-results-header__paging__previous-page search-results-header__paging__angle px-2 mr-2"
+            v-b-tooltip.hover
+            :title="$t('search.results.previousPage')">
+            <fa icon="angle-left" />
+          </router-link>
+          <router-link
+            :to="nextPageLinkParameters()"
+            :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
+            class="search-results-header__paging__next-page search-results-header__paging__angle px-2"
+            v-b-tooltip.hover
+            :title="$t('search.results.nextPage')">
+            <fa icon="angle-right" />
+          </router-link>
+          <router-link
+            :to="lastPageLinkParameters()"
+            :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
+            class="search-results-header__paging__last-page search-results-header__paging__angle px-2"
+            v-b-tooltip.hover
+            :title="$t('search.results.lastPage')">
+            <fa icon="angle-double-right" />
+          </router-link>
+        </div>
       </div>
       <search-results-applied-filters v-if="position === 'top'" />
     </div>
@@ -77,13 +75,16 @@ export default {
     }
   },
   computed: {
+    ...mapState('search', ['response']),
     lastDocument () {
       return min([this.response.total, this.$store.state.search.from + this.$store.state.search.size])
     },
     searchWindowTooLarge () {
       return (this.response.total + this.$store.state.search.size) >= this.$config.get('search.maxWindowSize', 1e4)
     },
-    ...mapState('search', ['response'])
+    total () {
+      return this.response.total
+    }
   },
   mounted () {
     // Force page to scroll top at each load
@@ -91,33 +92,38 @@ export default {
     document.body.scrollTop = document.documentElement.scrollTop = 0
   },
   methods: {
+    getToTemplate () {
+      return { name: 'search', query: cloneDeep(this.$store.getters['search/toRouteQuery']) }
+    },
     firstPageLinkParameters () {
-      let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
-      query.from = 0
-      return { name: 'search', query }
+      let to = this.getToTemplate()
+      to.query.from = 0
+      return to
     },
     previousPageLinkParameters () {
-      let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
-      query.from = max([0, query.from - query.size])
-      return { name: 'search', query }
+      let to = this.getToTemplate()
+      to.query.from = max([0, to.query.from - to.query.size])
+      return to
     },
     nextPageLinkParameters () {
-      let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
-      const nextFrom = query.from + query.size
-      query.from = nextFrom < this.response.total ? nextFrom : query.from
-      return { name: 'search', query }
+      let to = this.getToTemplate()
+      const nextFrom = to.query.from + to.query.size
+      to.query.from = nextFrom < this.total ? nextFrom : to.query.from
+      return to
     },
     lastPageLinkParameters () {
-      let query = cloneDeep(this.$store.getters['search/toRouteQuery'])
-      const gap = (this.response.total % query.size === 0) ? 1 : 0
-      query.from = query.size * (floor(this.response.total / query.size) - gap)
-      return { name: 'search', query }
+      let to = this.getToTemplate()
+      const gap = (this.total % to.query.size === 0) ? 1 : 0
+      to.query.from = to.query.size * (floor(this.total / to.query.size) - gap)
+      return to
     },
     isFirstOrPreviousPageAvailable () {
-      return this.$store.state.search.from !== 0
+      const to = this.getToTemplate()
+      return to.query.from !== 0
     },
     isNextOrLastPageAvailable () {
-      return this.$store.state.search.from + this.$store.state.search.size < this.$store.state.search.response.total
+      const to = this.getToTemplate()
+      return to.query.from + to.query.size < this.total
     }
   }
 }
