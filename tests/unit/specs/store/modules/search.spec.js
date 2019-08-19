@@ -488,6 +488,12 @@ describe('Search store', () => {
 
       expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: true }, { field: '', label: 'term_03', negation: true }])
     })
+
+    it('should remove escaped slash', () => {
+      store.commit('search/query', 'term\\:other')
+
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term:other', negation: false }])
+    })
   })
 
   describe('deleteQueryTerm', () => {

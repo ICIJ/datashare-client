@@ -133,7 +133,7 @@ export const getters = {
       const prefix = get(object, join([path, 'prefix'], '.'), '')
       const negation = ['-', '!'].includes(prefix) || start === 'NOT' || endsWith(operator, 'NOT')
       if (term !== '*' && term !== '' && !includes(map(terms, 'label'), term)) {
-        terms = concat(terms, { field: field === '<implicit>' ? '' : field, label: term, negation })
+        terms = concat(terms, { field: field === '<implicit>' ? '' : field, label: term.replace('\\', ''), negation })
       }
     }
     function retTerms (query, operator) {
