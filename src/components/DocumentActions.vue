@@ -45,6 +45,7 @@ export default {
         // Does... nothing yet!
         console.log(_)
       }
+      this.$root.$emit('bv::hide::tooltip')
       this.$root.$emit('facet::starred:refresh')
     }
   }

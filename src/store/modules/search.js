@@ -307,26 +307,11 @@ export const actions = {
     commit('reset', excludedKeys)
     return dispatch('query')
   },
-  async query ({ state, commit, getters }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort, field: state.field }) {
-    const queryHasntValue = (key) => typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams[key] === 'undefined'
-    commit('index', queryHasntValue('index') ? state.index : queryOrParams.index)
-    commit('query', queryHasntValue('query') ? queryOrParams : queryOrParams.query)
-    commit('from', queryHasntValue('from') ? state.from : queryOrParams.from)
-    commit('size', queryHasntValue('size') ? state.size : queryOrParams.size)
-    commit('sort', queryHasntValue('sort') ? state.sort : queryOrParams.sort)
-    commit('field', queryHasntValue('field') ? state.field : queryOrParams.field)
-    commit('isReady', false)
+  async refresh ({ state, commit, getters }, updateIsReady = true) {
+    commit('isReady', !updateIsReady)
     commit('error', null)
     try {
-      const raw = await esClient.searchDocs(
-        state.index,
-        state.query,
-        state.facets,
-        state.from,
-        state.size,
-        state.sort,
-        getters.getFields()
-      )
+      const raw = await esClient.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort, getters.getFields())
       commit('buildResponse', raw)
       return raw
     } catch (error) {
@@ -334,6 +319,16 @@ export const actions = {
       commit('error', error)
       throw error
     }
+  },
+  async query ({ state, commit, getters, dispatch }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort, field: state.field }) {
+    const queryHasntValue = (key) => typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams[key] === 'undefined'
+    commit('index', queryHasntValue('index') ? state.index : queryOrParams.index)
+    commit('query', queryHasntValue('query') ? queryOrParams : queryOrParams.query)
+    commit('from', queryHasntValue('from') ? state.from : queryOrParams.from)
+    commit('size', queryHasntValue('size') ? state.size : queryOrParams.size)
+    commit('sort', queryHasntValue('sort') ? state.sort : queryOrParams.sort)
+    commit('field', queryHasntValue('field') ? state.field : queryOrParams.field)
+    return dispatch('refresh', true)
   },
   queryFacet ({ state, getters }, params) {
     return esClient.searchFacet(

@@ -109,7 +109,7 @@ export default {
   },
   mounted () {
     this.$root.$on('index::delete::all', this.search)
-    this.$root.$on('facet::starred:refresh', this.search)
+    this.$root.$on('facet::starred:refresh', this.refresh)
   },
   watch: {
     isReady (isReady) {
@@ -121,6 +121,13 @@ export default {
     async search (queryOrParams) {
       try {
         return this.$store.dispatch('search/query', queryOrParams)
+      } catch (_) {
+        this.wrongQuery()
+      }
+    },
+    async refresh () {
+      try {
+        return this.$store.dispatch('search/refresh', false)
       } catch (_) {
         this.wrongQuery()
       }

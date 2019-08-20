@@ -24,6 +24,7 @@ export default {
         return this.$store.state.search.layout
       },
       set (layout) {
+        this.$root.$emit('bv::hide::tooltip')
         return this.$store.commit('search/layout', layout)
       }
     }
