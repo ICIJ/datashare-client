@@ -224,6 +224,7 @@ export default {
 
       &.slide-enter-active, &.slide-leave-active {
         transition: .3s max-height;
+        overflow: hidden;
       }
 
       &.slide-enter, &.slide-leave-to {
