@@ -170,6 +170,10 @@ export default {
       }
     }
 
+    .btn &__show-filters__counter.badge {
+      position: absolute;
+    }
+
     &--grid, &--table {
 
       &.search .search__body__backdrop {
