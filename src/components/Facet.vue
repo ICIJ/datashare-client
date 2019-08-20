@@ -19,6 +19,7 @@
         <fa v-else icon="circle-notch" spin class="float-right" />
       </div>
     </slot>
+    <slot name="top"></slot>
     <transition name="slide">
       <div class="list-group list-group-flush facet__items" v-show="isReady && !collapseItems">
         <slot name="search" v-if="!hideSearch">
