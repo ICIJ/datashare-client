@@ -2,7 +2,7 @@
   <div v-if="isDisplayedComputed" class="pagination">
     <router-link
       :to="firstPageLinkParameters()"
-      :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
+      :class="{ 'disabled' : isFirstOrPreviousPageUnavailable() }"
       class="pagination__link pagination__first-page px-2"
       v-b-tooltip.hover
       v-show="!noFirstPageLink"
@@ -11,7 +11,7 @@
     </router-link>
     <router-link
       :to="previousPageLinkParameters()"
-      :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
+      :class="{ 'disabled' : isFirstOrPreviousPageUnavailable() }"
       class="pagination__link pagination__previous-page px-2"
       v-b-tooltip.hover
       :title="$t('pagination.previousPage')">
@@ -19,7 +19,7 @@
     </router-link>
     <router-link
       :to="nextPageLinkParameters()"
-      :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
+      :class="{ 'disabled' : isNextOrLastPageUnavailable() }"
       class="pagination__link pagination__next-page px-2"
       v-b-tooltip.hover
       :title="$t('pagination.nextPage')">
@@ -27,7 +27,7 @@
     </router-link>
     <router-link
       :to="lastPageLinkParameters()"
-      :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
+      :class="{ 'disabled' : isNextOrLastPageUnavailable() }"
       class="pagination__link pagination__last-page px-2"
       v-b-tooltip.hover
       v-show="!noLastPageLink"
@@ -115,11 +115,11 @@ export default {
         [this.fromAttr]: this.size * (floor(this.total / this.size) - this.gap)
       })
     },
-    isFirstOrPreviousPageAvailable () {
-      return this.from !== 0
+    isFirstOrPreviousPageUnavailable () {
+      return this.from === 0
     },
-    isNextOrLastPageAvailable () {
-      return this.from + this.size < this.total
+    isNextOrLastPageUnavailable () {
+      return this.from + this.size >= this.total
     }
   }
 }
