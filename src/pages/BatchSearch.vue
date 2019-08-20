@@ -104,8 +104,10 @@ export default {
     }
   },
   async created () {
+    this.$Progress.start()
     await this.$store.dispatch('batchSearch/getBatchSearches')
     this.isReady = true
+    this.$Progress.finish()
   },
   methods: {
     moment,

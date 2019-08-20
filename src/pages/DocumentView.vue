@@ -62,6 +62,7 @@ export default {
   methods: {
     async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
       this.isReady = false
+      this.$Progress.start()
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
       await this.$store.dispatch('document/getNamedEntities')
@@ -71,6 +72,7 @@ export default {
         const $container = this.$el.closest('.ps-container')
         this.$root.$emit('scroll-tracker:request', this.$el, 0, $container)
       }
+      this.$Progress.finish()
     },
     isTabActive (name) {
       return this.activeTab === name

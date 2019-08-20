@@ -173,9 +173,11 @@ export default {
   },
   methods: {
     async fetch () {
+      this.$Progress.start()
       await this.fetchBatchSearches()
       await this.fetchBatchSearchResults()
       this.isReady = true
+      this.$Progress.finish()
     },
     fetchBatchSearches () {
       return store.dispatch('batchSearch/getBatchSearches')
