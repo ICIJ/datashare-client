@@ -64,7 +64,7 @@ export default {
           break
       }
       this.$root.$emit('facet::add-facet-values', this.facet, this.selected)
-      this.refreshRoute()
+      this.refreshRouteAndSearch()
     }
   }
 }
