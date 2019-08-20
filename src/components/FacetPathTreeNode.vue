@@ -41,7 +41,7 @@ export default {
   name: 'FacetPathTreeNode',
   props: ['node', 'facet'],
   mixins: [facets],
-  data: function () {
+  data () {
     return {
       loading: false,
       isLoaded: false,
