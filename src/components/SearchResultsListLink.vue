@@ -77,8 +77,13 @@ export default {
       color: mix(#609, white, 50%);
     }
 
-    &.router-link-active {
+    &.router-link-active,
+    &.router-link-active:active,
+    &.router-link-active:focus,
+    &:active,
+    &:focus {
       position: relative;
+      outline: 0;
 
       &:before {
         content: "";
@@ -89,6 +94,11 @@ export default {
         bottom: 0;
         box-shadow: 0 0 10px 0 $secondary;
       }
+    }
+
+    &:active:before, &:focus:before {
+      border-left: 2px solid $text-muted;
+      box-shadow: 0 0 10px 0 $gray-500;
     }
 
     &__thumbnail {

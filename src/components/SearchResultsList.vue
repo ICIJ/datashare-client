@@ -1,7 +1,7 @@
 <template>
   <div class="search-results-list">
     <div v-if="hasResults">
-      <search-results-header position="top" bordered />
+      <search-results-header position="top" bordered class="px-2" />
       <div class="search-results-list__items">
         <div v-for="document in response.hits" :key="document.id" class="search-results-list__items__item mw-100">
           <search-results-list-link class="search-results-list__items__item__link" :document="document" />

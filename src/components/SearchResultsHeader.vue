@@ -12,7 +12,7 @@
         </div>
         <pagination :total="response.total" :get-to-template="getToTemplate" :is-displayed="isDisplayed"></pagination>
       </div>
-      <search-results-applied-filters class="pb-1 px-2" v-if="position === 'top'" />
+      <search-results-applied-filters v-if="position === 'top'" />
     </div>
   </div>
 </template>
@@ -68,6 +68,7 @@ export default {
 
 <style lang="scss">
   .search-results-header {
+    padding: 0.5 * $spacer 0;
 
     &--bordered {
       &.search-results-header--top {
@@ -79,7 +80,6 @@ export default {
     }
 
     &__paging {
-      padding: $spacer * 0.5 $spacer;
       font-size: 0.95em;
       color: $text-muted;
       display: inline-flex;
