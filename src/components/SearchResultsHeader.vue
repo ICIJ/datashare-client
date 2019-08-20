@@ -12,7 +12,7 @@
         </div>
         <pagination :total="response.total" :get-to-template="getToTemplate" :is-displayed="isDisplayed"></pagination>
       </div>
-      <search-results-applied-filters v-if="position === 'top'" />
+      <search-results-applied-filters class="pb-1 px-2" v-if="position === 'top'" />
     </div>
   </div>
 </template>

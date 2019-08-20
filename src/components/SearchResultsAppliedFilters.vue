@@ -1,5 +1,5 @@
 <template>
-  <div class="search-results-header__applied-filters py-1" v-if="filters.length">
+  <div class="search-results-header__applied-filters" v-if="filters.length">
     <search-results-applied-filter v-for="(filter, index) in filters" :key="index" :filter="filter" />
   </div>
 </template>
