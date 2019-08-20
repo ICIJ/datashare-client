@@ -31,7 +31,8 @@ describe('Search.vue', () => {
           mutations,
           namespaced: true,
           actions: Object.assign(actions, {
-            query: jest.fn()
+            query: jest.fn(),
+            refresh: jest.fn()
           })
         }
       }
@@ -45,8 +46,9 @@ describe('Search.vue', () => {
   })
 
   it('should execute a new search on event "facet::starred:refresh"', () => {
+    expect(actions.query).toHaveBeenCalledTimes(1)
     wrapper.vm.$root.$emit('facet::starred:refresh')
-    expect(actions.query).toHaveBeenCalledTimes(2)
+    expect(actions.refresh).toHaveBeenCalledTimes(1)
   })
 
   it('should redirect to the complete query', async () => {

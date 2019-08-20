@@ -111,6 +111,11 @@ export default {
             border-color: transparent;
             box-shadow: none;
             visibility: visible;
+
+            path {
+              stroke: white;
+              stroke-width: 3em;
+            }
           }
         }
 
