@@ -11,10 +11,10 @@
       </vue-perfect-scrollbar>
       <div class="flex-grow-1">
         <scroll-tracker />
-        <vue-progress-bar />
         <router-view />
       </div>
     </div>
+    <vue-progress-bar />
   </div>
 </template>
 
