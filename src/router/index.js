@@ -66,15 +66,6 @@ const router = new VueRouter({
             default: Search,
             sidebar: AggregationsPanel
           },
-          beforeEnter: (to, from, next) => {
-            // This allow to restore the search's state from localStorage
-            // even if we are loading this route from a children (where no
-            // query parameters are given).
-            if (to.name === 'search') {
-              store.dispatch('search/updateFromRouteQuery', to.query)
-            }
-            next()
-          },
           children: [
             {
               name: 'document',

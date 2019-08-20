@@ -1,13 +1,16 @@
+import Vuex from 'vuex'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import App from '@/pages/App'
 import facets from '@/mixins/facets'
 import VueProgressBar from 'vue-progressbar'
 import router from '@/router'
+import store from '@/store'
 
 const localVue = createLocalVue()
 localVue.use(VueProgressBar, { color: '#852308' })
 localVue.use(Murmur)
+localVue.use(Vuex)
 
 describe('facets mixin', () => {
   let wrapper
@@ -28,5 +31,14 @@ describe('facets mixin', () => {
     wrapper.vm.resetFacetValues()
 
     expect(wrapper.emitted('reset-facet-values')).toHaveLength(1)
+  })
+
+  it('should refresh the route', () => {
+    const wrapper = shallowMount(App, { localVue, mixins: [facets], router, store })
+    jest.spyOn(router, 'push')
+
+    wrapper.vm.refreshRoute()
+
+    expect(router.push).toHaveBeenCalled()
   })
 })

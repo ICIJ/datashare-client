@@ -1,6 +1,6 @@
 <template>
   <span class="search-settings">
-    <button type="button" class="btn btn-link text-dark" :class="{ ['btn-' + size]: true }" id="toggleSettings" :title="$t('search.settings.title')" v-b-tooltip.hover.bottomleft>
+    <button type="button" class="btn btn-link text-dark" :class="{ ['btn-' + size]: true }" id="toggleSettings" :title="$t('search.settings.title')" v-b-tooltip.hover.bottomleft>
       <fa icon="cog" />
       <span class="sr-only">
         {{ $t('search.settings.title') }}
@@ -78,19 +78,31 @@ export default {
     }
   },
   methods: {
+    refreshRouteAndSearch () {
+      this.refreshRoute()
+      this.refreshSearch()
+    },
+    refreshRoute () {
+      const name = 'search'
+      const query = this.$store.getters['search/toRouteQuery']
+      this.$router.push({ name, query })
+    },
+    refreshSearch () {
+      this.$store.dispatch('search/query')
+    },
     changeSize () {
       // Store new search size into store
       this.$store.commit('search/size', this.selectedSize)
       this.$root.$emit('bv::hide::popover')
       // Change the route
-      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
+      this.refreshRouteAndSearch()
     },
     changeSort () {
       // Store new search size into store
       this.$store.commit('search/sort', this.selectedSort)
       this.$root.$emit('bv::hide::popover')
       // Change the route
-      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
+      this.refreshRouteAndSearch()
     }
   }
 }

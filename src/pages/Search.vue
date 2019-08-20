@@ -34,6 +34,7 @@
 </template>
 
 <script>
+import isEqual from 'lodash/isEqual'
 import get from 'lodash/get'
 import AppNav from '@/components/AppNav'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
@@ -92,7 +93,7 @@ export default {
     }
   },
   beforeRouteUpdate (to, from, next) {
-    if (to.name === 'search') {
+    if (to.name === 'search' && this.isDifferentFromQuery(to.query)) {
       this.$store.dispatch('search/updateFromRouteQuery', to.query)
         .catch(this.wrongQuery)
         .then(this.search)
@@ -102,7 +103,9 @@ export default {
     }
   },
   created () {
-    this.search()
+    this.$store.dispatch('search/updateFromRouteQuery', this.$route.query)
+      .catch(this.wrongQuery)
+      .then(this.search)
   },
   mounted () {
     this.$root.$on('index::delete::all', this.search)
@@ -117,8 +120,7 @@ export default {
   methods: {
     async search (queryOrParams) {
       try {
-        const result = await this.$store.dispatch('search/query', queryOrParams)
-        return result
+        return this.$store.dispatch('search/query', queryOrParams)
       } catch (_) {
         this.wrongQuery()
       }
@@ -128,6 +130,9 @@ export default {
     },
     clickOnShowFilters () {
       this.showFilters = !this.showFilters
+    },
+    isDifferentFromQuery (query) {
+      return !isEqual(query, this.$store.getters['search/toRouteQuery'])
     }
   }
 }

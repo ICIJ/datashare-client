@@ -15,12 +15,6 @@ const utils = {
     }
   },
   methods: {
-    refreshRoute () {
-      this.$router.push({
-        name: 'search',
-        query: this.$store.getters['search/toRouteQuery']
-      })
-    },
     getTermIndexColor (index) {
       return this.termIndexColors[index % this.termIndexColors.length]
     },

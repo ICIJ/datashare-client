@@ -95,6 +95,18 @@ export const mixin = {
     }
   },
   methods: {
+    refreshRouteAndSearch () {
+      this.refreshRoute()
+      this.refreshSearch()
+    },
+    refreshRoute () {
+      const name = 'search'
+      const query = this.$store.getters['search/toRouteQuery']
+      this.$router.push({ name, query })
+    },
+    refreshSearch () {
+      this.$store.dispatch('search/query')
+    },
     // Returns all props without the givens keys
     propsWithout (...keys) {
       keys = flatten(keys).map(camelCase)
@@ -110,11 +122,11 @@ export const mixin = {
     },
     removeValue (item) {
       this.$store.commit('search/removeFacetValue', this.facet.itemParam(item))
-      this.refreshRoute()
+      this.refreshRouteAndSearch()
     },
     addValue (item) {
       this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
-      this.refreshRoute()
+      this.refreshRouteAndSearch()
     },
     toggleValue (item) {
       this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
@@ -123,7 +135,7 @@ export const mixin = {
     },
     invert () {
       this.$store.commit('search/toggleFacet', this.facet.name)
-      this.refreshRoute()
+      this.refreshRouteAndSearch()
     },
     hasValues () {
       return this.$store.getters['search/hasFacetValues'](this.facet.name)
@@ -179,7 +191,7 @@ export const mixin = {
       this.$root.$emit('facet::add-facet-values', this.facet, this.selected)
       this.$store.commit('search/from', 0)
       this.$emit('add-facet-values', this.facet, this.selected)
-      this.refreshRoute()
+      this.refreshRouteAndSearch()
     }
   }
 }
