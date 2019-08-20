@@ -5,10 +5,11 @@ import Vuex from 'vuex'
 import messages from '@/lang/en'
 import store from '@/store'
 import BootstrapVue from 'bootstrap-vue'
+import VueProgressBar from 'vue-progressbar'
 import Murmur from '@icij/murmur'
+import VueRouter from 'vue-router'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import VueRouter from 'vue-router'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -66,6 +67,7 @@ localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
 localVue.use(VueRouter)
+localVue.use(VueProgressBar)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 const router = new VueRouter({ routes: [
   {

@@ -6,6 +6,7 @@ import messages from '@/lang/en'
 import store from '@/store'
 import router from '@/router'
 import BootstrapVue from 'bootstrap-vue'
+import VueProgressBar from 'vue-progressbar'
 import Murmur from '@icij/murmur'
 
 jest.mock('@/api/DatashareClient', () => {
@@ -37,6 +38,7 @@ localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
+localVue.use(VueProgressBar)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('BatchSearch.vue', () => {
