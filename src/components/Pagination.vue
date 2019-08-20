@@ -2,15 +2,16 @@
   <div v-if="isDisplayedComputed" class="pagination">
     <router-link
       :to="firstPageLinkParameters()"
-      :class="[isFirstOrPreviousPageAvailable('first') ? '' : 'disabled']"
+      :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
       class="pagination__link pagination__first-page px-2"
       v-b-tooltip.hover
+      v-show="!noFirstPageLink"
       :title="$t('pagination.firstPage')">
       <fa icon="angle-double-left" />
     </router-link>
     <router-link
       :to="previousPageLinkParameters()"
-      :class="[isFirstOrPreviousPageAvailable('previous') ? '' : 'disabled']"
+      :class="[isFirstOrPreviousPageAvailable() ? '' : 'disabled']"
       class="pagination__link pagination__previous-page px-2"
       v-b-tooltip.hover
       :title="$t('pagination.previousPage')">
@@ -29,6 +30,7 @@
       :class="[isNextOrLastPageAvailable() ? '' : 'disabled']"
       class="pagination__link pagination__last-page px-2"
       v-b-tooltip.hover
+      v-show="!noLastPageLink"
       :title="$t('pagination.lastPage')">
       <fa icon="angle-double-right" />
     </router-link>
@@ -37,6 +39,7 @@
 
 <script>
 import floor from 'lodash/floor'
+import get from 'lodash/get'
 import max from 'lodash/max'
 import noop from 'lodash/noop'
 
@@ -53,43 +56,70 @@ export default {
     isDisplayed: {
       type: Function,
       default: noop
+    },
+    sizeAttr: {
+      type: String,
+      default: 'size'
+    },
+    fromAttr: {
+      type: String,
+      default: 'from'
+    },
+    noFirstPageLink: {
+      type: Boolean
+    },
+    noLastPageLink: {
+      type: Boolean
     }
   },
   computed: {
     isDisplayedComputed () {
-      return this.isDisplayed === noop ? this.total > this.getToTemplate().query.size : this.isDisplayed()
+      return this.isDisplayed === noop ? this.total > this.size : this.isDisplayed()
+    },
+    size () {
+      return get(this.getToTemplate(), ['query', this.sizeAttr], 0)
+    },
+    from () {
+      return get(this.getToTemplate(), ['query', this.fromAttr], 0)
+    },
+    nextFrom () {
+      return this.from + this.size
+    },
+    gap () {
+      return Number(this.total % this.size === 0)
     }
   },
   methods: {
-    firstPageLinkParameters () {
-      let to = this.getToTemplate()
-      to.query.from = 0
+    mergeWithQuery (query) {
+      const to = this.getToTemplate()
+      to.query = Object.assign(to.query, query)
       return to
+    },
+    firstPageLinkParameters () {
+      return this.mergeWithQuery({
+        [this.fromAttr]: 0
+      })
     },
     previousPageLinkParameters () {
-      let to = this.getToTemplate()
-      to.query.from = max([0, to.query.from - to.query.size])
-      return to
+      return this.mergeWithQuery({
+        [this.fromAttr]: max([0, this.from - this.size])
+      })
     },
     nextPageLinkParameters () {
-      let to = this.getToTemplate()
-      const nextFrom = to.query.from + to.query.size
-      to.query.from = nextFrom < this.total ? nextFrom : to.query.from
-      return to
+      return this.mergeWithQuery({
+        [this.fromAttr]: this.nextFrom < this.total ? this.nextFrom : this.from
+      })
     },
     lastPageLinkParameters () {
-      let to = this.getToTemplate()
-      const gap = (this.total % to.query.size === 0) ? 1 : 0
-      to.query.from = to.query.size * (floor(this.total / to.query.size) - gap)
-      return to
+      return this.mergeWithQuery({
+        [this.fromAttr]: this.size * (floor(this.total / this.size) - this.gap)
+      })
     },
-    isFirstOrPreviousPageAvailable (arg) {
-      const to = this.getToTemplate()
-      return to.query.from !== 0
+    isFirstOrPreviousPageAvailable () {
+      return this.from !== 0
     },
     isNextOrLastPageAvailable () {
-      const to = this.getToTemplate()
-      return to.query.from + to.query.size < this.total
+      return this.from + this.size < this.total
     }
   }
 }

@@ -1,19 +1,17 @@
 <template>
-  <div>
-    <div class="search-results-header" :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
-      <div class="search-results-header__paging">
-        <div class="search-results-header__paging__progress text-truncate">
-          <span class="search-results-header__paging__progress__pagination">
-            {{ $store.state.search.from + 1 }} – {{ lastDocument }}
-          </span>
-          <span class="search-results-header__paging__progress_number-of-results">
-            {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
-          </span>
-        </div>
-        <pagination :total="response.total" :get-to-template="getToTemplate" :is-displayed="isDisplayed"></pagination>
+  <div class="search-results-header" :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
+    <div class="search-results-header__paging">
+      <div class="search-results-header__paging__progress text-truncate">
+        <span class="search-results-header__paging__progress__pagination">
+          {{ $store.state.search.from + 1 }} – {{ lastDocument }}
+        </span>
+        <span class="search-results-header__paging__progress_number-of-results">
+          {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
+        </span>
       </div>
-      <search-results-applied-filters v-if="position === 'top'" />
+      <pagination :total="response.total" :get-to-template="getToTemplate" :is-displayed="isDisplayed" :no-last-page-link="searchWindowTooLarge"></pagination>
     </div>
+    <search-results-applied-filters v-if="position === 'top'" />
   </div>
 </template>
 
