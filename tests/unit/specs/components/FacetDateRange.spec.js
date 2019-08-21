@@ -6,6 +6,7 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
 import store from '@/store'
+import router from '@/router'
 import find from 'lodash/find'
 
 jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
@@ -23,7 +24,7 @@ describe('FacetDateRange.vue', () => {
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-    wrapper = mount(FacetDateRange, { localVue, i18n, store, propsData: { facet: find(store.state.search.facets, { name: 'creation-date' }) } })
+    wrapper = mount(FacetDateRange, { localVue, i18n, store, router, propsData: { facet: find(store.state.search.facets, { name: 'creation-date' }) } })
   })
 
   afterEach(() => store.commit('search/reset'))
@@ -36,5 +37,16 @@ describe('FacetDateRange.vue', () => {
 
     expect(wrapper.find('.facet__items .popover-container input').exists()).toBeTruthy()
     expect(wrapper.find('.facet__items .popover-container input').attributes('placeholder')).toBe('MM/DD/YYYY - MM/DD/YYYY')
+  })
+
+  it('should add selected value to dedicated facet', () => {
+    const start = new Date('2019-08-19')
+    const end = new Date('2019-08-20')
+    wrapper.vm.selectedDate = { start, end }
+
+    wrapper.vm.onInput()
+
+    const existingFacet = find(store.state.search.facets, { name: 'creation-date' })
+    expect(existingFacet.values).toEqual([{ start: start.getTime(), end: end.getTime() }])
   })
 })

@@ -1,7 +1,7 @@
 <template>
   <facet v-bind="$props" hide-show-more ref="facet">
     <template #items>
-      <v-date-picker mode="range" v-model='selectedDate' show-caps></v-date-picker>
+      <v-date-picker mode="range" v-model='selectedDate' show-caps @input="onInput"></v-date-picker>
     </template>
   </facet>
 </template>
@@ -35,6 +35,11 @@ export default {
     this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: { size: 1000 } }).then(r => {
       this.totalCount = sumBy(get(r, this.resultPath, []), 'doc_count')
     })
+  },
+  methods: {
+    onInput () {
+      this.addValue({ start: new Date(this.selectedDate.start).getTime(), end: new Date(this.selectedDate.end).getTime() })
+    }
   }
 }
 </script>

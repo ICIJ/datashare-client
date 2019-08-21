@@ -142,6 +142,7 @@ class FacetDate extends FacetDocument {
           const gte = new Date(parseInt(date))
           const tmp = new Date(parseInt(date))
           const lte = new Date(tmp.setMonth(tmp.getMonth() + 1) - 1)
+          console.log(lte)
           sub[func]('range', this.key, { gte, lte })
         }
       })
@@ -166,6 +167,22 @@ class FacetDateRange extends FacetDate {
   constructor (name, key, isSearchable, labelFun) {
     super(name, key, isSearchable, labelFun)
     this.component = 'FacetDateRange'
+  }
+
+  itemParam (item) {
+    return { name: this.name, value: item }
+  }
+
+  queryBuilder (body, param, func) {
+    return body.query('bool', sub => {
+      param.values.forEach(date => {
+        const gte = new Date(parseInt(date.start))
+        const tmp = new Date(parseInt(date.end))
+        const lte = new Date(tmp.setHours(23, 59, 59))
+        sub[func]('range', this.key, { gte, lte })
+      })
+      return sub
+    })
   }
 }
 
