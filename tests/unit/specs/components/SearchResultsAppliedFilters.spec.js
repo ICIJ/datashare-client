@@ -50,7 +50,7 @@ describe('SearchResultsAppliedFilters.vue', () => {
     })
 
     it('should translate the label of a facet date', () => {
-      store.commit('search/addFacetValue', { name: 'creation-date', value: 1556668800000 })
+      store.commit('search/addFacetValue', { name: 'indexing-date', value: 1556668800000 })
 
       expect(wrapper.vm.filters[0].label).toEqual('2019-05')
     })

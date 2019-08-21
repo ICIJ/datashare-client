@@ -162,6 +162,13 @@ class FacetDate extends FacetDocument {
   }
 }
 
+class FacetDateRange extends FacetDate {
+  constructor (name, key, isSearchable, labelFun) {
+    super(name, key, isSearchable, labelFun)
+    this.component = 'FacetDateRange'
+  }
+}
+
 class FacetPath extends FacetDocument {
   constructor (name, key, isSearchable) {
     super(name, key, isSearchable, null)
@@ -253,4 +260,4 @@ class FacetNamedEntity extends FacetType {
   }
 }
 
-export { FacetText, FacetYesNo, FacetDate, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation, starredLabel }
+export { FacetText, FacetYesNo, FacetDate, FacetDateRange, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation, starredLabel }

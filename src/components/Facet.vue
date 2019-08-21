@@ -21,7 +21,6 @@
     </slot>
     <transition name="slide">
       <div class="list-group list-group-flush facet__items" v-show="isReady && !collapseItems">
-        <slot name="top"></slot>
         <slot name="search" v-if="!hideSearch">
           <form @submit.prevent="asyncFacetSearch" v-if="facet.isSearchable">
             <label class="list-group facet__items__search py-2 px-2">

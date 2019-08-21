@@ -259,10 +259,12 @@ describe('Search facets', () => {
     const name = 'creation-date'
 
     it('should merge all missing data', async () => {
-      await letData(es).have(new IndexedDocument('doc_01.txt').withCreationDate('2018-04-01T00:00:00.001Z')).commit()
-      await letData(es).have(new IndexedDocument('doc_02.txt').withCreationDate('2018-05-01T00:00:00.001Z')).commit()
-      await letData(es).have(new IndexedDocument('doc_03.txt')).commit()
-      await letData(es).have(new IndexedDocument('doc_04.txt')).commit()
+      await letData(es).have(new IndexedDocument('doc_01')
+        .withCreationDate('2018-04-01T00:00:00.001Z')).commit()
+      await letData(es).have(new IndexedDocument('doc_02')
+        .withCreationDate('2018-05-01T00:00:00.001Z')).commit()
+      await letData(es).have(new IndexedDocument('doc_03')).commit()
+      await letData(es).have(new IndexedDocument('doc_04')).commit()
 
       const response = await store.dispatch('search/queryFacet', { name, options: { size: 8 } })
 
@@ -276,7 +278,8 @@ describe('Search facets', () => {
     })
 
     it('should count only Document types and not the NamedEntities', async () => {
-      await letData(es).have(new IndexedDocument('doc_01.txt').withCreationDate('2018-04-01T00:00:00.001Z').withNer('term_01')).commit()
+      await letData(es).have(new IndexedDocument('doc_01')
+        .withCreationDate('2018-04-01T00:00:00.001Z').withNer('term_01')).commit()
 
       const response = await store.dispatch('search/queryFacet', { name, options: { size: 8 } })
 

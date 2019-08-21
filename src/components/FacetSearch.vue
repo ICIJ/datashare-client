@@ -35,6 +35,7 @@ import InfiniteLoading from 'vue-infinite-loading'
 import FacetText from '@/components/FacetText'
 import FacetYesNo from '@/components/FacetYesNo'
 import FacetDate from '@/components/FacetDate'
+import FacetDateRange from '@/components/FacetDateRange'
 import FacetPath from '@/components/FacetPath'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import facets from '@/mixins/facets'
@@ -74,6 +75,7 @@ export default {
     FacetText,
     FacetYesNo,
     FacetDate,
+    FacetDateRange,
     FacetPath,
     FacetNamedEntity,
     InfiniteLoading
