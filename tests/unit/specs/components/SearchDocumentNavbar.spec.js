@@ -8,6 +8,8 @@ import store from '@/store'
 import { getOS } from '@/utils/utils'
 import VueShortkey from 'vue-shortkey'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 jest.mock('@/utils/utils', () => {
   return {
     getOS: jest.fn(),

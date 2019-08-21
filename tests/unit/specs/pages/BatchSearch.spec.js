@@ -9,6 +9,8 @@ import BootstrapVue from 'bootstrap-vue'
 import VueProgressBar from 'vue-progressbar'
 import Murmur from '@icij/murmur'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
     return {

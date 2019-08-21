@@ -8,6 +8,8 @@ import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
 import find from 'lodash/find'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const { fetch } = fetchPonyfill()
 window.fetch = fetch
 

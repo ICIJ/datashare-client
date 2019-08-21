@@ -3,6 +3,8 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import router from '@/router'
 import { setCookie, removeCookie } from 'tiny-cookie'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const localVue = createLocalVue()
 localVue.use(Vuex)
 

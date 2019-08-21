@@ -8,6 +8,8 @@ import router from '@/router'
 import SearchSettings from '@/components/SearchSettings'
 import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)

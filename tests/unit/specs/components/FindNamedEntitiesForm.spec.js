@@ -11,6 +11,8 @@ import DatashareClient from '@/api/DatashareClient'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import { jsonOk } from 'tests/unit/tests_utils'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)

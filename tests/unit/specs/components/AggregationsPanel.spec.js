@@ -7,6 +7,8 @@ import messages from '@/lang/en'
 import { createApp } from '@/main'
 import { jsonOk } from 'tests/unit/tests_utils'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 describe('AggregationsPanel.vue', () => {
   let wrapper, appVue, i18n
 

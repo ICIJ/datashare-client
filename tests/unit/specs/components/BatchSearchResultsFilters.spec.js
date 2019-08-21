@@ -10,6 +10,8 @@ import Murmur from '@icij/murmur'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
     return {

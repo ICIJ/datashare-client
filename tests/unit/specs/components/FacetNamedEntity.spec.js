@@ -13,6 +13,8 @@ import mixin from '@/mixins/facets'
 import find from 'lodash/find'
 import noop from 'lodash/noop'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 jest.mock('@/api/DatashareClient', () => {
   const { jsonOk } = require('tests/unit/tests_utils')
   return jest.fn(() => {

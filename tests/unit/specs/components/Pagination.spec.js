@@ -7,6 +7,8 @@ import router from '@/router'
 import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 import cloneDeep from 'lodash/cloneDeep'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)

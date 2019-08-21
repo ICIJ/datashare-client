@@ -8,6 +8,8 @@ import Document from '@/api/Document'
 import router from '@/router'
 import store from '@/store'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)

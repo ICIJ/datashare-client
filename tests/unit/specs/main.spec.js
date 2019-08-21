@@ -4,6 +4,8 @@ import { createApp } from '@/main'
 import fetchPonyfill from 'fetch-ponyfill'
 import { jsonOk } from 'tests/unit/tests_utils'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const { fetch } = fetchPonyfill()
 window.fetch = fetch
 

@@ -11,6 +11,8 @@ import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 import DatashareClient from '@/api/DatashareClient'
 import { jsonOk } from 'tests/unit/tests_utils'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)

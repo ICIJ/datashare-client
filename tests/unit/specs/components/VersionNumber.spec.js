@@ -9,6 +9,8 @@ import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const localVue = createLocalVue()
 localVue.use(Murmur)
 localVue.use(VueI18n)

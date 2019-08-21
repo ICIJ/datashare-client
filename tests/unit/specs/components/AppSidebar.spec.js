@@ -9,6 +9,8 @@ import { getOS } from '@/utils/utils'
 import { createApp } from '@/main'
 import { jsonOk } from 'tests/unit/tests_utils'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 jest.mock('@/utils/utils', () => {
   return {
     getOS: jest.fn(),

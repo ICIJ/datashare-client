@@ -11,7 +11,8 @@ import router from '@/router'
 import '@/utils/font-awesome'
 import { datashare } from '@/store/modules/document'
 import { jsonOk } from 'tests/unit/tests_utils'
-import esClient from '@/api/esClient'
+
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -21,7 +22,7 @@ const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 describe('DocumentTabDetails.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
-  let httpServer, spy
+  let httpServer
 
   beforeAll(() => {
     httpServer = createServer({ root: 'tests/unit/resources' })
@@ -31,7 +32,6 @@ describe('DocumentTabDetails.vue', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    spy = jest.spyOn(esClient, 'getEsDoc')
     datashare.fetch.mockReturnValue(jsonOk())
   })
 

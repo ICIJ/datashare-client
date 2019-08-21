@@ -7,6 +7,8 @@ import VueProgressBar from 'vue-progressbar'
 import router from '@/router'
 import store from '@/store'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const localVue = createLocalVue()
 localVue.use(VueProgressBar, { color: '#852308' })
 localVue.use(Murmur)

@@ -10,6 +10,8 @@ import router from '@/router'
 import { actions, getters, state, mutations } from '@/store/modules/search'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const localVue = createLocalVue()
 localVue.use(BootstrapVue)
 localVue.use(Murmur)

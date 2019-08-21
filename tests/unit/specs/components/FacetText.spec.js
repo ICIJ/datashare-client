@@ -13,6 +13,8 @@ import router from '@/router'
 import store from '@/store'
 import find from 'lodash/find'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)

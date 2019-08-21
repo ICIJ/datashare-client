@@ -9,6 +9,8 @@ import DatashareClient from '@/api/DatashareClient'
 import { createApp } from '@/main'
 import { jsonOk } from 'tests/unit/tests_utils'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 describe('ExtractingForm.vue', () => {
   let wrapper, appVue, i18n
 

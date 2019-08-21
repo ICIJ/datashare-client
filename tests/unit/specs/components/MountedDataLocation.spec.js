@@ -9,6 +9,8 @@ import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 
+jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+
 jest.mock('@/api/DatashareClient', () => {
   const { jsonOk } = require('tests/unit/tests_utils')
   return jest.fn(() => {
