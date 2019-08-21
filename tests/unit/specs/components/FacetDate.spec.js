@@ -35,7 +35,7 @@ describe('FacetDate.vue', () => {
 
   afterEach(() => store.commit('search/reset'))
 
-  it('should display an indexing date facet with 2 months', async () => {
+  it('should display an creation date facet with 2 months', async () => {
     await letData(es).have(new IndexedDocument('doc_01')
       .withCreationDate('2018-04-01T00:00:00.000Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02')

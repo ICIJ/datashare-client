@@ -184,8 +184,10 @@ describe('Search facets', () => {
   })
 
   describe('Indexing date facet', () => {
+    const name = 'indexing-date'
+
     it('should define an `indexing date` facet correctly (name, key and type)', () => {
-      const facet = find(store.state.search.facets, { name: 'indexing-date' })
+      const facet = find(store.state.search.facets, { name })
 
       expect(typeof facet).toBe('object')
       expect(facet.key).toEqual('extractionDate')
@@ -197,7 +199,7 @@ describe('Search facets', () => {
       await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-04-06T20:20:20.001Z')).commit()
       await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-05-04T20:20:20.001Z')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'indexing-date', options: { size: 8 } })
+      const response = await store.dispatch('search/queryFacet', { name, options: { size: 8 } })
 
       expect(response.aggregations.extractionDate.buckets).toHaveLength(2)
       expect(response.aggregations.extractionDate.buckets[0].key).toEqual(1525132800000)
@@ -254,13 +256,15 @@ describe('Search facets', () => {
   })
 
   describe('Creation date facet', () => {
+    const name = 'creation-date'
+
     it('should merge all missing data', async () => {
       await letData(es).have(new IndexedDocument('doc_01.txt').withCreationDate('2018-04-01T00:00:00.001Z')).commit()
       await letData(es).have(new IndexedDocument('doc_02.txt').withCreationDate('2018-05-01T00:00:00.001Z')).commit()
       await letData(es).have(new IndexedDocument('doc_03.txt')).commit()
       await letData(es).have(new IndexedDocument('doc_04.txt')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'creation-date', options: { size: 8 } })
+      const response = await store.dispatch('search/queryFacet', { name, options: { size: 8 } })
 
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets).toHaveLength(3)
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[0].key).toEqual(1525132800000)
@@ -274,7 +278,7 @@ describe('Search facets', () => {
     it('should count only Document types and not the NamedEntities', async () => {
       await letData(es).have(new IndexedDocument('doc_01.txt').withCreationDate('2018-04-01T00:00:00.001Z').withNer('term_01')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'creation-date', options: { size: 8 } })
+      const response = await store.dispatch('search/queryFacet', { name, options: { size: 8 } })
 
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets).toHaveLength(1)
     })
