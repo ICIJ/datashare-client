@@ -104,8 +104,8 @@ export const getters = {
       field: state.field,
       ...reduce(state.facets, (memo, facetValue) => {
         // We need to look for the facet's definition in order to us its `id`
-        // as key for tge URL params. This was we track configured facet instead
-        // of arbitrary values provided by the user. This allow to retreive special
+        // as key for the URL params. This was we track configured facet instead
+        // of arbitrary values provided by the user. This allow to retrieve special
         // behaviors depending on the facet definition.
         const facet = find(state.facets, { name: facetValue.name })
         // We don't add facetValue that match with any existing facets
@@ -330,7 +330,7 @@ export const actions = {
     }
   },
   async query ({ state, commit, getters, dispatch }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort, field: state.field }) {
-    const queryHasntValue = (key) => typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams[key] === 'undefined'
+    const queryHasntValue = key => typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams[key] === 'undefined'
     commit('index', queryHasntValue('index') ? state.index : queryOrParams.index)
     commit('query', queryHasntValue('query') ? queryOrParams : queryOrParams.query)
     commit('from', queryHasntValue('from') ? state.from : queryOrParams.from)

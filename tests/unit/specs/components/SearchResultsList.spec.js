@@ -78,18 +78,6 @@ describe('SearchResultsListList.vue', () => {
       expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)
     })
 
-    it('should display all the documents without creation date', async () => {
-      await letData(es).have(new IndexedDocument('doc_01')
-        .withCreationDate('2018-05-01T00:00:00.000Z')).commit()
-      await letData(es).have(new IndexedDocument('doc_02')).commit()
-      await letData(es).have(new IndexedDocument('doc_03')).commit()
-
-      store.commit('search/addFacetValue', { name: 'creation-date', value: -62167219200000 })
-      wrapper = await createView()
-
-      expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)
-    })
-
     it('should display all the documents between the creation dates', async () => {
       await letData(es).have(new IndexedDocument('doc_01')
         .withCreationDate('2019-08-19T00:00:00.000Z')).commit()
@@ -98,7 +86,7 @@ describe('SearchResultsListList.vue', () => {
       await letData(es).have(new IndexedDocument('doc_03')
         .withCreationDate('2019-08-21T00:00:00.000Z')).commit()
 
-      store.commit('search/addFacetValue', { name: 'creation-date', value: { start: new Date('2019-08-20').getTime(), end: new Date('2019-08-21').getTime() } })
+      store.commit('search/setFacetValue', { name: 'creation-date', value: [new Date('2019-08-20').getTime(), new Date('2019-08-21').getTime()] })
       wrapper = await createView()
 
       expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)
