@@ -64,4 +64,14 @@ describe('FacetDateRange.vue', () => {
     const existingFacet = find(store.state.search.facets, { name: 'creation-date' })
     expect(existingFacet.values).toEqual([start2.getTime(), end2.getTime()])
   })
+
+  it('should reset selectedDate on event "reset-facet-values"', () => {
+    const start = new Date('2018-08-19')
+    const end = new Date('2018-08-20')
+    wrapper.vm.selectedDate = { start, end }
+
+    wrapper.vm.root.$emit('reset-facet-values')
+
+    expect(wrapper.vm.selectedDate).toBeNull()
+  })
 })

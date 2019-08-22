@@ -186,8 +186,8 @@ export const mixin = {
       }
     },
     resetFacetValues () {
-      this.isAllSelected = true
-      this.selected = []
+      this.$set(this, 'isAllSelected', true)
+      this.$set(this, 'selected', [])
       this.$emit('reset-facet-values', this.facet)
     },
     changeSelectedValues () {
