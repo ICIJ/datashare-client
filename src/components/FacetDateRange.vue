@@ -8,7 +8,6 @@
 
 <script>
 import facets from '@/mixins/facets'
-import features from '@/mixins/features'
 import Facet from '@/components/Facet'
 import get from 'lodash/get'
 import sumBy from 'lodash/sumBy'
@@ -24,7 +23,7 @@ export default {
     'v-date-picker': DatePicker,
     Facet
   },
-  mixins: [facets, features],
+  mixins: [facets],
   data () {
     return {
       totalCount: 0,
@@ -38,7 +37,7 @@ export default {
   },
   methods: {
     onInput () {
-      this.addValue({ start: new Date(this.selectedDate.start).getTime(), end: new Date(this.selectedDate.end).getTime() })
+      this.setValue({ start: new Date(this.selectedDate.start).getTime(), end: new Date(this.selectedDate.end).getTime() })
     }
   }
 }

@@ -43,4 +43,24 @@ describe('facets mixin', () => {
 
     expect(router.push).toHaveBeenCalled()
   })
+
+  it('should commit a setFacetValue and then refresh the route and the search', () => {
+    const state = { facets: store.state.search.facets }
+    const mutations = { setFacetValue: jest.fn() }
+    const actions = { query: jest.fn() }
+    const localStore = new Vuex.Store({ modules: { search: { namespaced: true, state, mutations, actions } } })
+    const facet = {
+      name: 'creation-date',
+      itemParam: item => {
+        return { name: 'creation-date', value: item }
+      }
+    }
+    wrapper = shallowMount(App, { localVue, router, store: localStore, mixins: [facets], propsData: { facet } })
+    jest.spyOn(wrapper.vm, 'refreshRouteAndSearch')
+
+    wrapper.vm.setValue('42')
+
+    expect(mutations.setFacetValue).toBeCalled()
+    expect(wrapper.vm.refreshRouteAndSearch).toBeCalled()
+  })
 })

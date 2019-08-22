@@ -252,6 +252,15 @@ export const mutations = {
       throw new Error(`cannot find facet named ${facet.name}`)
     }
   },
+  setFacetValue (state, facet) {
+    // Look for existing facet for this name
+    const existingFacet = find(state.facets, { name: facet.name })
+    if (existingFacet) {
+      existingFacet.values = castArray(facet.value)
+    } else {
+      throw new Error(`cannot find facet named ${facet.name}`)
+    }
+  },
   addFacetValues (state, { facet, values }) {
     const existingFacet = find(state.facets, { name: facet.name })
     if (existingFacet) {

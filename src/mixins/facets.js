@@ -128,6 +128,10 @@ export const mixin = {
       this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
       this.refreshRouteAndSearch()
     },
+    setValue (item) {
+      this.$store.commit('search/setFacetValue', this.facet.itemParam(item))
+      this.refreshRouteAndSearch()
+    },
     toggleValue (item) {
       this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
       this.isAllSelected = !this.$store.getters['search/hasFacetValues'](this.facet.name)

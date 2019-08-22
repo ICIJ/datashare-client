@@ -49,4 +49,19 @@ describe('FacetDateRange.vue', () => {
     const existingFacet = find(store.state.search.facets, { name: 'creation-date' })
     expect(existingFacet.values).toEqual([{ start: start.getTime(), end: end.getTime() }])
   })
+
+  it('should set selected value to dedicated facet, as the only one value', () => {
+    const start = new Date('2018-08-19')
+    const end = new Date('2018-08-20')
+    wrapper.vm.selectedDate = { start, end }
+    wrapper.vm.onInput()
+
+    const start2 = new Date('2019-08-19')
+    const end2 = new Date('2019-08-20')
+    wrapper.vm.selectedDate = { start: start2, end: end2 }
+    wrapper.vm.onInput()
+
+    const existingFacet = find(store.state.search.facets, { name: 'creation-date' })
+    expect(existingFacet.values).toEqual([{ start: start2.getTime(), end: end2.getTime() }])
+  })
 })

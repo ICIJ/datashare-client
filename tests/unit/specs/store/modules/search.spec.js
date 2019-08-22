@@ -619,4 +619,12 @@ describe('Search store', () => {
     expect(store.state.search.response.hits[0].basename).toEqual('doc_01')
     expect(store.state.search.response.hits[1].basename).toEqual('doc_03')
   })
+
+  it('should set this value to the facet', () => {
+    const name = 'creation-date'
+    store.commit('search/setFacetValue', { name, value: '12' })
+    store.commit('search/setFacetValue', { name, value: '42' })
+
+    expect(find(store.state.search.facets, { name }).values).toEqual(['42'])
+  })
 })
