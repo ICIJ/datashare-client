@@ -96,5 +96,20 @@ export default {
   font-size: 0.8rem;
   color: inherit;
   padding: 0;
+
+  .shift-right,
+  .shift-left,
+  .shift-left-right {
+    .c-day-background {
+      background-color: $tertiary !important
+    }
+  }
+
+  .c-day-slide-right-translate-enter,
+  .c-day-slide-left-translate-enter {
+    .c-day-background {
+      border-color: $tertiary !important
+    }
+  }
 }
 </style>
