@@ -4,6 +4,7 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { BFormInput } from 'bootstrap-vue'
 import messages from '@/lang/en'
 import store from '@/store'
 import router from '@/router'
@@ -14,6 +15,7 @@ jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
+localVue.component('b-form-input', BFormInput)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('FacetDateRange.vue', () => {
@@ -37,7 +39,7 @@ describe('FacetDateRange.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.find('.facet__items .popover-container input').exists()).toBeTruthy()
-    expect(wrapper.find('.facet__items .popover-container input').attributes('placeholder')).toBe('MM/DD/YYYY - MM/DD/YYYY')
+    expect(wrapper.find('.facet__items .popover-container input').attributes('placeholder')).toBe('Select a date range')
   })
 
   it('should add selected value to dedicated facet', () => {
