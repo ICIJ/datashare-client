@@ -320,7 +320,8 @@
       "level_09": "9th",
       "level_10": "10th"
     },
-    "tags": "Tags"
+    "tags": "Tags",
+    "selectDateRange": "Select a date range"
   },
   "document": {
     "name": "File name",

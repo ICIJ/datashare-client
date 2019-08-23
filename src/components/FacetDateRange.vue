@@ -13,7 +13,7 @@
         <b-form-input
           slot-scope="{ inputValue, updateValue }"
           v-model="inputValue"
-          placeholder="Select a date range"
+          :placeholder="$t('facet.selectDateRange')"
           @input="updateValue($event, { formatInput: true, hidePopover: false })"
           @change="updateValue($event, { formatInput: true, hidePopover: false })"
           @keyup.esc="updateValue(selectedDate, { formatInput: true, hidePopover: true })"></b-form-input>
