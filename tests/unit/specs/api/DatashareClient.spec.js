@@ -12,51 +12,53 @@ describe('Datashare backend client', () => {
     datashare.fetch.mockReturnValue(jsonOk())
   })
 
-  it('should return backend response to index', async () => {
+  it('should return backend response to index', () => {
     datashare.index({}).then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to findNames', async () => {
+  it('should return backend response to findNames', () => {
     datashare.findNames('pipeline', {}).then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to stopPendingTasks', async () => {
+  it('should return backend response to stopPendingTasks', () => {
     datashare.stopPendingTasks().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to stopTask', async () => {
+  it('should return backend response to stopTask', () => {
     datashare.stopTask().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to deleteDoneTasks', async () => {
+  it('should return backend response to deleteDoneTasks', () => {
     datashare.deleteDoneTasks().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to getTasks', async () => {
+  it('should return backend response to getTasks', () => {
     datashare.getTasks().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to createIndex', async () => {
+  it('should return backend response to createIndex', () => {
     datashare.createIndex().then(json => expect(json).toEqual({}))
   })
 
   it('should return backend response to deleteAll', async () => {
-    datashare.deleteAll().then(json => expect(json).toEqual({}))
+    const resp = await datashare.deleteAll()
+    const json = await resp.json()
+    expect(json).toEqual({})
   })
 
-  it('should return backend response to getVersion', async () => {
+  it('should return backend response to getVersion', () => {
     datashare.getVersion().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to getConfig', async () => {
+  it('should return backend response to getConfig', () => {
     datashare.getConfig().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to deleteNamedEntitiesByMentionNorm', async () => {
+  it('should return backend response to deleteNamedEntitiesByMentionNorm', () => {
     datashare.deleteNamedEntitiesByMentionNorm('mentionNorm').then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to getSource', async () => {
+  it('should return backend response to getSource', () => {
     datashare.getSource('relativeUrl').then(
       resp => resp.json().then(
         json => expect(json).toEqual({})
@@ -64,40 +66,56 @@ describe('Datashare backend client', () => {
     )
   })
 
-  it('should return backend response to getStarredDocuments', async () => {
+  it('should return backend response to getStarredDocuments', () => {
     datashare.getStarredDocuments('project').then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to starDocument', async () => {
+  it('should return backend response to starDocument', () => {
     datashare.getStarredDocuments('project', 'documentId').then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to unstarDocument', async () => {
+  it('should return backend response to unstarDocument', () => {
     datashare.getStarredDocuments('project', 'documentId').then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to tagDocument', async () => {
-    datashare.tagDocument('project', 'documentId', 'routingId', ['tag_01']).then(json => expect(json).toEqual({}))
+  it('should return backend response to tagDocument', () => {
+    datashare.tagDocument('project', 'documentId', 'routingId', ['tag_01']).then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
   })
 
-  it('should return backend response to untagDocument', async () => {
-    datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01']).then(json => expect(json).toEqual({}))
+  it('should return backend response to untagDocument', () => {
+    datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01']).then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
   })
 
-  it('should return backend response to batchSearch', async () => {
-    datashare.batchSearch('project', 'name', 'description', 'csvFile').then(json => expect(json).toEqual({}))
+  it('should return backend response to batchSearch', () => {
+    datashare.batchSearch('project', 'name', 'description', 'csvFile').then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
   })
 
-  it('should return backend response to getBatchSearches', async () => {
+  it('should return backend response to getBatchSearches', () => {
     datashare.getBatchSearches().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to getBatchSearchResults', async () => {
+  it('should return backend response to getBatchSearchResults', () => {
     datashare.getBatchSearchResults().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to deleteBatchSearches', async () => {
-    datashare.deleteBatchSearches().then(json => expect(json).toEqual({}))
+  it('should return backend response to deleteBatchSearches', () => {
+    datashare.deleteBatchSearches().then(
+      resp => resp.json().then(
+        json => expect(json).toEqual({})
+      )
+    )
   })
 
   it('should emit an error if the backend response has a bad status', async () => {
