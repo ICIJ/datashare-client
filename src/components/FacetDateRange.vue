@@ -1,7 +1,9 @@
 <template>
   <facet v-bind="$props" hide-show-more ref="facet">
     <template #items>
-      <v-date-picker mode="range" v-model='selectedDate' show-caps @input="onInput"></v-date-picker>
+      <v-date-picker class="p-2 date-picker" mode="range" v-model='selectedDate' show-caps @input="onInput">
+        <b-form-input v-model="selectedText" placeholder="Select a date range"></b-form-input>
+      </v-date-picker>
     </template>
   </facet>
 </template>
@@ -9,6 +11,7 @@
 <script>
 import facets from '@/mixins/facets'
 import Facet from '@/components/Facet'
+import moment from 'moment'
 import get from 'lodash/get'
 import max from 'lodash/max'
 import min from 'lodash/min'
@@ -30,6 +33,15 @@ export default {
     return {
       totalCount: 0,
       selectedDate: null
+    }
+  },
+  computed: {
+    selectedText () {
+      if (this.selectedDate === null) {
+        return null
+      } else {
+        return moment(this.selectedDate.start).format('L') + ' - ' + moment(this.selectedDate.end).format('L')
+      }
     }
   },
   mounted () {
@@ -61,3 +73,11 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+.date-picker {
+  font-size: 0.8rem;
+  color: inherit;
+  padding: 0;
+}
+</style>
