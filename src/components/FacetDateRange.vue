@@ -1,7 +1,15 @@
 <template>
   <facet v-bind="$props" hide-show-more ref="facet">
     <template #items>
-      <v-date-picker class="p-2 date-picker" mode="range" v-model='selectedDate' show-caps @input="onInput">
+      <v-date-picker
+        class="p-2 date-picker"
+        mode="range"
+        v-model="selectedDate"
+        show-caps
+        @input="onInput"
+        :attributes="attributes"
+        :drag-attribute="noPopover"
+        :select-attribute="noPopover">
         <b-form-input v-model="selectedText" placeholder="Select a date range"></b-form-input>
       </v-date-picker>
     </template>
@@ -32,7 +40,12 @@ export default {
   data () {
     return {
       totalCount: 0,
-      selectedDate: null
+      selectedDate: null,
+      noPopover: {
+        popover: {
+          component: null
+        }
+      }
     }
   },
   computed: {
@@ -42,6 +55,18 @@ export default {
       } else {
         return moment(this.selectedDate.start).format('L') + ' - ' + moment(this.selectedDate.end).format('L')
       }
+    },
+    attributes () {
+      return [
+        {
+          key: 'today',
+          contentStyle: {
+            fontWeight: '700',
+            fontSize: '.9 rem'
+          },
+          dates: new Date()
+        }
+      ]
     }
   },
   mounted () {
