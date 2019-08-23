@@ -57,6 +57,7 @@ export const mixin = {
         this.selectedValuesFromStore()
       }
     })
+    this.$root.$on('new-search', this.selectedValuesFromStore)
   },
   computed: {
     root () {
@@ -181,8 +182,9 @@ export const mixin = {
     },
     selectedValuesFromStore () {
       if (this.facet) {
-        this.selected = find(this.$store.state.search.facets, { name: this.facet.name }).values
+        this.$set(this, 'selected', find(this.$store.state.search.facets, { name: this.facet.name }).values)
         this.isAllSelected = this.selected.length === 0
+        this.$emit('selected-values-from-store')
       }
     },
     resetFacetValues () {

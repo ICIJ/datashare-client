@@ -10,6 +10,8 @@
 import facets from '@/mixins/facets'
 import Facet from '@/components/Facet'
 import get from 'lodash/get'
+import max from 'lodash/max'
+import min from 'lodash/min'
 import sumBy from 'lodash/sumBy'
 
 import { setupCalendar, DatePicker } from 'v-calendar'
@@ -35,6 +37,7 @@ export default {
       this.totalCount = sumBy(get(r, this.resultPath, []), 'doc_count')
     })
     this.root.$on('reset-facet-values', this.reset)
+    this.$on('selected-values-from-store', this.updateFromStore)
   },
   methods: {
     onInput () {
@@ -47,6 +50,13 @@ export default {
     },
     reset () {
       this.$set(this, 'selectedDate', null)
+    },
+    updateFromStore () {
+      if (this.selected.length === 0) {
+        this.$set(this, 'selectedDate', null)
+      } else {
+        this.$set(this, 'selectedDate', { start: new Date(min(this.selected)), end: new Date(max(this.selected)) })
+      }
     }
   }
 }

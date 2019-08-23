@@ -8,7 +8,7 @@ import Search from '@/pages/Search'
 import messages from '@/lang/en'
 import router from '@/router'
 import { actions, getters, state, mutations } from '@/store/modules/search'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, createWrapper, shallowMount } from '@vue/test-utils'
 
 jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
 
@@ -57,5 +57,14 @@ describe('Search.vue', () => {
     localStore.commit('search/query', 'this is a query')
     await wrapper.vm.$nextTick()
     expect(wrapper.find('.search__body__backdrop').props('to')).toMatchObject({ name: 'search', query: { q: 'this is a query' } })
+  })
+
+  it('should emit a "new-search" event on beforeRouteUpdate"', async () => {
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+    const beforeRouteUpdate = wrapper.vm.$options.beforeRouteUpdate[0]
+    await beforeRouteUpdate.call({ isDifferentFromQuery: () => true, $store: { dispatch: () => Promise.resolve() }, $root: { $emit: event => rootWrapper.vm.$emit(event) } }, { name: 'search', query: { q: '*' } })
+    await wrapper.vm.$nextTick()
+
+    expect(rootWrapper.emitted('new-search')).toHaveLength(1)
   })
 })

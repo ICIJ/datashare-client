@@ -141,7 +141,12 @@ export default {
         const alternativeSearch = this.facetQuery !== '' && this.facet.alternativeSearch ? compact(this.facet.alternativeSearch(toLower(this.facetQuery))) : []
         const options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${concat(alternativeSearch, this.queryTokens).join('|')}).*` } : { size: this.size }
         return this.queue.add(async () => {
-          const res = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
+          let res
+          try {
+            res = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
+          } catch (_) {
+            res = {}
+          }
           const sumOtherDocCount = get(res, ['aggregations', this.facet.key, 'sum_other_doc_count'], 0)
           const sumDocCount = sumBy(get(res, this.resultPath, []), 'doc_count')
           this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)
