@@ -10,7 +10,13 @@
         :attributes="attributes"
         :drag-attribute="noPopover"
         :select-attribute="noPopover">
-        <b-form-input v-model="selectedText" placeholder="Select a date range"></b-form-input>
+        <b-form-input
+          slot-scope="{ inputValue, updateValue }"
+          v-model="inputValue"
+          placeholder="Select a date range"
+          @input="updateValue($event, { formatInput: true, hidePopover: false })"
+          @change="updateValue($event, { formatInput: true, hidePopover: false })"
+          @keyup.esc="updateValue(selectedDate, { formatInput: true, hidePopover: true })"></b-form-input>
       </v-date-picker>
     </template>
   </facet>
@@ -19,7 +25,6 @@
 <script>
 import facets from '@/mixins/facets'
 import Facet from '@/components/Facet'
-import moment from 'moment'
 import get from 'lodash/get'
 import max from 'lodash/max'
 import min from 'lodash/min'
@@ -49,13 +54,6 @@ export default {
     }
   },
   computed: {
-    selectedText () {
-      if (this.selectedDate === null) {
-        return null
-      } else {
-        return moment(this.selectedDate.start).format('L') + ' - ' + moment(this.selectedDate.end).format('L')
-      }
-    },
     attributes () {
       return [
         {
