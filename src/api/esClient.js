@@ -1,8 +1,11 @@
 import bodybuilder from 'bodybuilder'
 import es from 'elasticsearch-browser'
-import { EventBus } from '@/utils/event-bus'
 import each from 'lodash/each'
+import find from 'lodash/find'
 import replace from 'lodash/replace'
+
+import { EventBus } from '@/utils/event-bus'
+import settings from '@/utils/settings'
 
 // Custom API for datashare
 // @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/extending_core_components.html
@@ -76,47 +79,9 @@ export function datasharePlugin (Client, config, components) {
       )
   }
 
-  Client.prototype.addSortToBody = function (sort, body) {
-    let sortField
-    let sortOrder
-    switch (sort) {
-      case 'creationDateNewest' :
-        sortField = 'metadata.tika_metadata_creation_date'
-        sortOrder = 'desc'
-        break
-      case 'creationDateOldest' :
-        sortField = 'metadata.tika_metadata_creation_date'
-        sortOrder = 'asc'
-        break
-      case 'dateNewest' :
-        sortField = 'extractionDate'
-        sortOrder = 'desc'
-        break
-      case 'dateOldest' :
-        sortField = 'extractionDate'
-        sortOrder = 'asc'
-        break
-      case 'sizeLargest' :
-        sortField = 'contentLength'
-        sortOrder = 'desc'
-        break
-      case 'sizeSmallest' :
-        sortField = 'contentLength'
-        sortOrder = 'asc'
-        break
-      case 'path' :
-        sortField = 'path'
-        sortOrder = 'asc'
-        break
-      case 'pathReverse' :
-        sortField = 'path'
-        sortOrder = 'desc'
-        break
-      default:
-        sortField = '_score'
-        sortOrder = 'desc'
-    }
-    body.sort(sortField, sortOrder)
+  Client.prototype.addSortToBody = function (name = 'relevance', body) {
+    const { field, desc } = find(settings.searchSortFields, { name }) || settings.searchSortFields[0]
+    body.sort(field, desc ? 'desc' : 'asc')
   }
 
   Client.prototype.searchDocs = function (index, query = '*', facets = [], from = 0, size = 25, sort = 'relevance', fields = []) {

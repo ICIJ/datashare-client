@@ -104,6 +104,53 @@ export default {
       fields: ['metadata.tika_metadata_message_raw_header_thread_index']
     }
   ],
+  searchSortFields: [
+    {
+      name: 'relevance',
+      field: '_score',
+      desc: true
+    },
+    {
+      name: 'creationDateNewest',
+      field: 'metadata.tika_metadata_creation_date',
+      desc: true
+    },
+    {
+      name: 'creationDateOldest',
+      field: 'metadata.tika_metadata_creation_date',
+      desc: false
+    },
+    {
+      name: 'dateNewest',
+      field: 'extractionDate',
+      desc: true
+    },
+    {
+      name: 'dateOldest',
+      field: 'extractionDate',
+      desc: false
+    },
+    {
+      name: 'sizeLargest',
+      field: 'contentLength',
+      desc: true
+    },
+    {
+      name: 'sizeSmallest',
+      field: 'contentLength',
+      desc: false
+    },
+    {
+      name: 'path',
+      field: 'path',
+      desc: false
+    },
+    {
+      name: 'pathReverse',
+      field: 'path',
+      desc: true
+    }
+  ],
   suggestedFields: ['<implicit>', 'tags', 'contentType', 'path', 'mentionNorm'],
   suggestedImplicitField: 'mentionNorm',
   batchSearchResultsSize: 100

@@ -14,22 +14,29 @@
         hover
         :selectable="hasFeature('BATCH_STARRED')"
         @row-selected="onRowSelected"
-        :items="response.hits"
+        :items="itemsProvider"
         :fields="fields"
         :busy="isBusy"
         class="bg-white border-bottom m-0 small search-results-table__items"
         tbody-tr-class="search-results-table__items__row">
-        <template #name="{ item }">
+        <template #relevance="{ item }">
+          <router-link :to="{ name: 'document', params: item.routerParams }">
+            <fa :icon="item.contentTypeIcon" />
+          </router-link>
+        </template>
+        <template #path="{ item }">
           <router-link :to="{ name: 'document', params: item.routerParams }" class="text-truncate">
-            <fa :icon="item.contentTypeIcon" class="mr-2" />
             <document-sliced-name :document="item" />
           </router-link>
         </template>
-        <template #highlight="data">
-          <span v-html="data.value" class="text-truncate text-muted"></span>
+        <template #highlight="{ value }">
+          <span v-html="value" class="text-truncate text-muted"></span>
         </template>
         <template #actions="{ item }">
           <document-actions :document="item" class="float-right btn-group-sm" />
+        </template>
+        <template #contentLength="{ value }">
+          {{ value | humanSize }}
         </template>
       </b-table>
       <search-results-header position="bottom" />
@@ -50,6 +57,7 @@
 
 <script>
 import { mapState } from 'vuex'
+import find from 'lodash/find'
 
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentActions from '@/components/DocumentActions'
@@ -58,10 +66,12 @@ import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import settings from '@/utils/settings'
 import features from '@/mixins/features'
+import humanSize from '@/filters/humanSize'
 
 export default {
   name: 'SearchResults',
   mixins: [features],
+  filters: { humanSize },
   components: {
     DocumentActions,
     DocumentSlicedName,
@@ -90,8 +100,16 @@ export default {
       default () {
         return [
           {
-            key: 'name',
-            label: 'Name'
+            key: 'relevance',
+            label: '#',
+            class: 'pr-0'
+          },
+          {
+            key: 'path',
+            sortBy: 'path',
+            sortable: true,
+            label: 'Document',
+            class: 'pl-0'
           },
           {
             key: 'highlight',
@@ -101,12 +119,19 @@ export default {
             }
           },
           {
-            key: 'contentTypeLabel',
-            label: 'Type'
+            key: 'creationDateHuman',
+            sortBy: 'metadata.tika_metadata_creation_date',
+            sortable: true,
+            label: 'Creation date'
           },
           {
-            key: 'humanSize',
-            label: 'Size'
+            key: 'contentLength',
+            sortBy: 'contentLength',
+            sortable: true,
+            label: 'Size',
+            formatter (value, name, item) {
+              return item.source.contentLength
+            }
           },
           {
             key: 'actions',
@@ -123,6 +148,27 @@ export default {
     },
     hasFilters () {
       return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
+    },
+    defaultSortField () {
+      return this.fields[0]
+    },
+    sortBy: {
+      get () {
+        const { field } = this.$store.getters['search/sortBy']
+        const { key } = find(this.fields, { sortBy: field }) || this.defaultSortField
+        return key
+      },
+      set () {
+        return null
+      }
+    },
+    sortDesc: {
+      get () {
+        return this.$store.getters['search/sortBy'].desc
+      },
+      set () {
+        return null
+      }
     },
     ...mapState('search', ['query', 'response'])
   },
@@ -143,6 +189,20 @@ export default {
           break
       }
       this.isBusy = false
+    },
+    async itemsProvider ({ sortBy, sortDesc }) {
+      // Refresh response only if sortBy or sortDesc are different from the state
+      if (sortBy !== this.sortBy || sortDesc !== this.sortDesc) {
+        // Find the table field for the sorting key (or use the first by default)
+        const tableField = find(this.fields, { key: sortBy }) || this.defaultSortField
+        // Find the corresponding sort field in the settings
+        const sortField = find(settings.searchSortFields, { field: tableField.sortBy, desc: sortDesc })
+        // Update the sort value in the store
+        this.$store.commit('search/sort', sortField ? sortField.name : 'relevance')
+        // Refresh the store without changing the "isReady"
+        await this.$store.dispatch('search/refresh', false)
+      }
+      return this.response.hits
     }
   }
 }

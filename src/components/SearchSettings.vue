@@ -17,7 +17,7 @@
             {{ $t('search.settings.results_per_page') }}
           </label>
           <div class="col-4 text-right">
-            <select v-model="selectedSize" @change="changeSize" class="custom-select custom-select-sm" id="input-page-size">
+            <select v-model="selectedSize" class="custom-select custom-select-sm" id="input-page-size">
               <option v-for="size in sizes" :key="size">
                 {{ size }}
               </option>
@@ -29,7 +29,7 @@
             {{ $t('search.settings.sort_by') }}
           </label>
           <div class="col-4 text-right">
-            <select v-model="selectedSort" @change="changeSort" class="custom-select custom-select-sm" id="input-sort">
+            <select v-model="selectedSort" class="custom-select custom-select-sm" id="input-sort">
               <option v-for="sort in sorts" :key="sort" :value="sort">
                 {{ $t('search.results.sort.' + sort) }}
               </option>
@@ -50,7 +50,6 @@ export default {
   data () {
     return {
       sizes: [10, 25, 50, 100],
-      selectedSize: this.$store.state.search.size,
       sorts: [
         'relevance',
         'dateNewest',
@@ -62,7 +61,6 @@ export default {
         'path',
         'pathReverse'
       ],
-      selectedSort: this.$store.state.search.sort,
       // https://vuejs.org/v2/guide/reactivity.html#Declaring-Reactive-Properties
       container: ''
     }
@@ -77,6 +75,32 @@ export default {
       default: 'lg'
     }
   },
+  computed: {
+    selectedSize: {
+      get () {
+        return this.$store.state.search.size
+      },
+      set (size) {
+        // Store new search size into store
+        this.$store.commit('search/size', size)
+        this.$root.$emit('bv::hide::popover')
+        // Change the route
+        this.refreshRouteAndSearch()
+      }
+    },
+    selectedSort: {
+      get () {
+        return this.$store.state.search.sort
+      },
+      set (sort) {
+        // Store new search sort into store
+        this.$store.commit('search/sort', sort)
+        this.$root.$emit('bv::hide::popover')
+        // Change the route
+        this.refreshRouteAndSearch()
+      }
+    }
+  },
   methods: {
     refreshRouteAndSearch () {
       this.refreshRoute()
@@ -89,20 +113,6 @@ export default {
     },
     refreshSearch () {
       this.$store.dispatch('search/query')
-    },
-    changeSize () {
-      // Store new search size into store
-      this.$store.commit('search/size', this.selectedSize)
-      this.$root.$emit('bv::hide::popover')
-      // Change the route
-      this.refreshRouteAndSearch()
-    },
-    changeSort () {
-      // Store new search size into store
-      this.$store.commit('search/sort', this.selectedSort)
-      this.$root.$emit('bv::hide::popover')
-      // Change the route
-      this.refreshRouteAndSearch()
     }
   }
 }

@@ -170,6 +170,9 @@ export const getters = {
       term[field] = (content.match(new RegExp(escapeRegExp(term.label), 'gi')) || []).length
       return term
     })
+  },
+  sortBy (state) {
+    return find(settings.searchSortFields, { name: state.sort })
   }
 }
 
@@ -192,19 +195,15 @@ export const mutations = {
   },
   query (state, query) {
     state.query = query
-    state.response = Response.none()
   },
   from (state, from) {
     state.from = Number(from)
-    state.response = Response.none()
   },
   size (state, size) {
     state.size = Number(size)
-    state.response = Response.none()
   },
   sort (state, sort) {
     state.sort = sort
-    state.response = Response.none()
   },
   isReady (state, isReady = !state.isReady) {
     state.isReady = isReady
@@ -214,7 +213,6 @@ export const mutations = {
   },
   index (state, index) {
     state.index = index
-    state.response = Response.none()
   },
   layout (state, layout) {
     state.layout = layout

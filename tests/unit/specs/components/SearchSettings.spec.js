@@ -43,7 +43,7 @@ describe('SearchSettings.vue', () => {
 
   it('should display the dropdown to choose the number of results per page', async () => {
     expect(wrapper.findAll('#input-page-size')).toHaveLength(1)
-    expect(wrapper.vm.selectedSize).toEqual(25)
+    expect(wrapper.vm.selectedSize).toBe(store.state.search.size)
   })
 
   it('should change the selectedSize via the dropdown', async () => {
@@ -51,8 +51,8 @@ describe('SearchSettings.vue', () => {
     wrapper = shallowMount(SearchSettings, { localVue, i18n, store, router })
     const rootWrapper = createWrapper(wrapper.vm.$root)
     wrapper.findAll('#input-page-size option').at(3).setSelected()
-
-    expect(wrapper.vm.selectedSize).toEqual('100')
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.selectedSize).toEqual(100)
     expect(router.push).toHaveBeenCalled()
     expect(router.push).toHaveBeenCalledWith({ name: 'search', query: { index: '', q: '', size: 100, sort: 'relevance', from: 0, field: 'all' } })
     expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
@@ -60,7 +60,7 @@ describe('SearchSettings.vue', () => {
 
   it('should display the dropdown to choose the order', async () => {
     expect(wrapper.findAll('#input-sort')).toHaveLength(1)
-    expect(wrapper.vm.selectedSort).toEqual('relevance')
+    expect(wrapper.vm.selectedSort).toBe(store.state.search.sort)
   })
 
   it('should change the selectedSort via the dropdown', async () => {
@@ -68,7 +68,7 @@ describe('SearchSettings.vue', () => {
     wrapper = shallowMount(SearchSettings, { localVue, i18n, store, router })
     const rootWrapper = createWrapper(wrapper.vm.$root)
     wrapper.findAll('#input-sort option').at(5).setSelected()
-
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.selectedSort).toEqual('sizeLargest')
     expect(router.push).toHaveBeenCalled()
     expect(router.push).toHaveBeenCalledWith({ name: 'search', query: { index: '', q: '', size: 25, sort: 'sizeLargest', from: 0, field: 'all' } })
