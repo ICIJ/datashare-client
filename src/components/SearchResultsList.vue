@@ -10,7 +10,7 @@
           </div>
         </div>
       </div>
-      <search-results-header position="bottom" />
+      <search-results-header position="bottom" bordered class="px-3" />
     </div>
     <div v-else>
       <div class="search-results-list__header border-0 py-5 d-flex flex-column text-center">
@@ -90,7 +90,6 @@ export default {
         display: flex;
         flex-wrap: nowrap;
         direction: row;
-        border-bottom: 1px solid $gray-200;
 
         &:hover, &:hover &__link {
           text-decoration: none;
