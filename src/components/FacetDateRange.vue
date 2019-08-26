@@ -8,7 +8,8 @@
         show-caps
         @input="onInput"
         :attributes="attributes"
-        show-popover="false">
+        :select-attribute='noPopover'
+        :drag-attribute='noPopover'>
         <b-form-input
           slot-scope="{ inputValue, updateValue }"
           v-model="inputValue"
@@ -44,7 +45,12 @@ export default {
   data () {
     return {
       totalCount: 0,
-      selectedDate: null
+      selectedDate: null,
+      noPopover: {
+        popover: {
+          component: null
+        }
+      }
     }
   },
   computed: {
