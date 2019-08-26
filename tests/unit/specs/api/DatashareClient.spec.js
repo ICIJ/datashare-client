@@ -58,12 +58,10 @@ describe('Datashare backend client', () => {
     datashare.deleteNamedEntitiesByMentionNorm('mentionNorm').then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to getSource', () => {
-    datashare.getSource('relativeUrl').then(
-      resp => resp.json().then(
-        json => expect(json).toEqual({})
-      )
-    )
+  it('should return backend response to getSource', async () => {
+    const resp = await datashare.getSource('relativeUrl')
+    const json = await resp.json()
+    expect(json).toEqual({})
   })
 
   it('should return backend response to getStarredDocuments', () => {
@@ -78,28 +76,22 @@ describe('Datashare backend client', () => {
     datashare.getStarredDocuments('project', 'documentId').then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to tagDocument', () => {
-    datashare.tagDocument('project', 'documentId', 'routingId', ['tag_01']).then(
-      resp => resp.json().then(
-        json => expect(json).toEqual({})
-      )
-    )
+  it('should return backend response to tagDocument', async () => {
+    const resp = await datashare.tagDocument('project', 'documentId', 'routingId', ['tag_01'])
+    const json = await resp.json()
+    expect(json).toEqual({})
   })
 
-  it('should return backend response to untagDocument', () => {
-    datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01']).then(
-      resp => resp.json().then(
-        json => expect(json).toEqual({})
-      )
-    )
+  it('should return backend response to untagDocument', async () => {
+    const resp = await datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01'])
+    const json = await resp.json()
+    expect(json).toEqual({})
   })
 
-  it('should return backend response to batchSearch', () => {
-    datashare.batchSearch('project', 'name', 'description', 'csvFile').then(
-      resp => resp.json().then(
-        json => expect(json).toEqual({})
-      )
-    )
+  it('should return backend response to batchSearch', async () => {
+    const resp = await datashare.batchSearch('project', 'name', 'description', 'csvFile')
+    const json = await resp.json()
+    expect(json).toEqual({})
   })
 
   it('should return backend response to getBatchSearches', () => {
@@ -110,12 +102,10 @@ describe('Datashare backend client', () => {
     datashare.getBatchSearchResults().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to deleteBatchSearches', () => {
-    datashare.deleteBatchSearches().then(
-      resp => resp.json().then(
-        json => expect(json).toEqual({})
-      )
-    )
+  it('should return backend response to deleteBatchSearches', async () => {
+    const resp = await datashare.deleteBatchSearches()
+    const json = await resp.json()
+    expect(json).toEqual({})
   })
 
   it('should emit an error if the backend response has a bad status', async () => {
