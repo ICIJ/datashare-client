@@ -66,6 +66,7 @@ export default {
   mounted () {
     this.root.$on('reset-facet-values', this.reset)
     this.$on('selected-values-from-store', this.updateFromStore)
+    this.updateFromStore()
   },
   methods: {
     onInput () {
@@ -80,10 +81,10 @@ export default {
       this.$set(this, 'selectedDate', null)
     },
     updateFromStore () {
-      if (this.selected.length === 0) {
-        this.$set(this, 'selectedDate', null)
+      if (this.selected.length === 2) {
+        this.$set(this, 'selectedDate', { start: new Date(parseInt(min(this.selected))), end: new Date(parseInt(max(this.selected))) })
       } else {
-        this.$set(this, 'selectedDate', { start: new Date(min(this.selected)), end: new Date(max(this.selected)) })
+        this.$set(this, 'selectedDate', null)
       }
     }
   }
