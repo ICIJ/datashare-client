@@ -7,16 +7,13 @@
         v-model="selectedDate"
         show-caps
         @input="onInput"
-        :attributes="attributes"
-        :select-attribute='noPopover'
-        :drag-attribute='noPopover'>
-        <b-form-input
-          slot-scope="{ inputValue, updateValue }"
-          v-model="inputValue"
+        :attributes="attributes">
+        <input
+          class="form-control"
+          slot-scope="{ inputProps, inputEvents, isDragging }"
           :placeholder="$t('facet.selectDateRange')"
-          @input="updateValue($event, { formatInput: true, hidePopover: false })"
-          @change="updateValue($event, { formatInput: true, hidePopover: false })"
-          @keyup.esc="updateValue(selectedDate, { formatInput: true, hidePopover: true })"></b-form-input>
+          v-bind="inputProps"
+          v-on="inputEvents">
       </v-date-picker>
     </template>
   </facet>
@@ -25,15 +22,15 @@
 <script>
 import facets from '@/mixins/facets'
 import Facet from '@/components/Facet'
-import get from 'lodash/get'
 import max from 'lodash/max'
 import min from 'lodash/min'
-import sumBy from 'lodash/sumBy'
 
+import Vue from 'vue'
 import { setupCalendar, DatePicker } from 'v-calendar'
-import 'v-calendar/lib/v-calendar.min.css'
 
-setupCalendar({ firstDayOfWeek: 2 })
+setupCalendar(Vue, {
+  componentPrefix: 'vc'
+})
 
 export default {
   name: 'FacetDateRange',
@@ -45,12 +42,7 @@ export default {
   data () {
     return {
       totalCount: 0,
-      selectedDate: null,
-      noPopover: {
-        popover: {
-          component: null
-        }
-      }
+      selectedDate: null
     }
   },
   computed: {
@@ -68,9 +60,6 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: { size: 1000 } }).then(r => {
-      this.totalCount = sumBy(get(r, this.resultPath, []), 'doc_count')
-    })
     this.root.$on('reset-facet-values', this.reset)
     this.$on('selected-values-from-store', this.updateFromStore)
   },
@@ -103,18 +92,24 @@ export default {
   color: inherit;
   padding: 0;
 
-  .shift-right,
-  .shift-left,
-  .shift-left-right {
-    .c-day-background {
-      background-color: $tertiary !important
-    }
-  }
+  .vc-grid-cell {
+    .vc-highlights {
+      .vc-day-layer {
+        .vc-highlight-base-start,
+        .vc-highlight-base-middle,
+        .vc-highlight-base-end {
+          background-color: rgba($tertiary, .4);
+        }
 
-  .c-day-slide-right-translate-enter,
-  .c-day-slide-left-translate-enter {
-    .c-day-background {
-      border-color: $tertiary !important
+        .vc-rounded-full {
+          background-color: $tertiary;
+          border-color: $tertiary;
+        }
+      }
+    }
+
+    .vc-day-content:hover {
+      background-color: rgba($tertiary, .1);
     }
   }
 }
