@@ -10,7 +10,15 @@ import router from '@/router'
 import { actions, getters, state, mutations } from '@/store/modules/search'
 import { createLocalVue, createWrapper, shallowMount } from '@vue/test-utils'
 
-jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  }
+})
 
 const localVue = createLocalVue()
 localVue.use(BootstrapVue)

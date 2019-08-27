@@ -9,7 +9,15 @@ import { getOS } from '@/utils/utils'
 import { createApp } from '@/main'
 import { jsonOk } from 'tests/unit/tests_utils'
 
-jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  }
+})
 
 jest.mock('@/utils/utils', () => {
   return {

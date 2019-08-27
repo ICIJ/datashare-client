@@ -8,7 +8,15 @@ import store from '@/store'
 import { getOS } from '@/utils/utils'
 import VueShortkey from 'vue-shortkey'
 
-jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  }
+})
 
 jest.mock('@/utils/utils', () => {
   return {

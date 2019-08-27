@@ -7,7 +7,15 @@ import router from '@/router'
 import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 import cloneDeep from 'lodash/cloneDeep'
 
-jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  }
+})
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -15,7 +23,7 @@ localVue.use(Murmur)
 localVue.directive('b-tooltip', vBTooltip)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
-describe('SearchResultsHeader.vue', () => {
+describe('Pagination.vue', () => {
   let wrapper
   const template = { name: 'router-name', query: { from: 0, size: 10 } }
 

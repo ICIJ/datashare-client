@@ -10,7 +10,15 @@ import store from '@/store'
 import router from '@/router'
 import find from 'lodash/find'
 
-jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  }
+})
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -38,8 +46,8 @@ describe('FacetDateRange.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.find('.facet__items .popover-container input').exists()).toBeTruthy()
-    expect(wrapper.find('.facet__items .popover-container input').attributes('placeholder')).toBe('Select a date range')
+    expect(wrapper.find('.facet__items .date-picker input').exists()).toBeTruthy()
+    expect(wrapper.find('.facet__items .date-picker input').attributes('placeholder')).toBe('Select a date range')
   })
 
   it('should add selected value to dedicated facet', () => {
