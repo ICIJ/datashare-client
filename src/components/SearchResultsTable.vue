@@ -2,7 +2,15 @@
   <div class="search-results-table">
     <div v-if="hasResults">
       <search-results-header position="top" />
-      <b-table striped hover :items="response.hits" :fields="fields" class="bg-white border-bottom m-0 small search-results-table__items" tbody-tr-class="search-results-table__items__row">
+      <b-table
+        striped
+        hover
+        selectable
+        @row-selected="onRowSelected"
+        :items="response.hits"
+        :fields="fields"
+        class="bg-white border-bottom m-0 small search-results-table__items"
+        tbody-tr-class="search-results-table__items__row">
         <template #name="{ item }">
           <router-link :to="{ name: 'document', params: item.routerParams }" class="text-truncate">
             <fa :icon="item.contentTypeIcon" class="mr-2" />
@@ -51,6 +59,11 @@ export default {
     ResetFiltersButton,
     SearchResultsHeader
   },
+  data () {
+    return {
+      selected: []
+    }
+  },
   props: {
     fields: {
       type: Array,
@@ -92,6 +105,11 @@ export default {
       return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
     },
     ...mapState('search', ['query', 'response'])
+  },
+  methods: {
+    onRowSelected (items) {
+      this.selected = items
+    }
   }
 }
 </script>
