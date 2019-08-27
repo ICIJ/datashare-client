@@ -25,7 +25,7 @@ async function createView (query = '*', from = 0, size = 25) {
   })
 }
 
-describe('SearchResultsListList.vue', () => {
+describe('SearchResultsList.vue', () => {
   let wrapper
   esConnectionHelper()
   const es = esConnectionHelper.es
