@@ -7,7 +7,8 @@
         v-model="selectedDate"
         show-caps
         @input="onInput"
-        :attributes="attributes">
+        :attributes="attributes"
+        :locale="locale">
         <input
           class="form-control"
           slot-scope="{ inputProps, inputEvents, isDragging }"
@@ -57,6 +58,9 @@ export default {
           dates: new Date()
         }
       ]
+    },
+    locale () {
+      return this.$i18n.locale
     }
   },
   mounted () {
