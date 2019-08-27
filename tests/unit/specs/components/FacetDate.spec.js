@@ -12,7 +12,15 @@ import router from '@/router'
 import store from '@/store'
 import find from 'lodash/find'
 
-jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  }
+})
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -30,18 +38,18 @@ describe('FacetDate.vue', () => {
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-    wrapper = mount(FacetDate, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'creation-date' }) } })
+    wrapper = mount(FacetDate, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'indexing-date' }) } })
   })
 
   afterEach(() => store.commit('search/reset'))
 
   it('should display an creation date facet with 2 months', async () => {
     await letData(es).have(new IndexedDocument('doc_01')
-      .withCreationDate('2018-04-01T00:00:00.000Z')).commit()
+      .withIndexingDate('2018-04-01T00:00:00.000Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02')
-      .withCreationDate('2018-05-01T00:00:00.000Z')).commit()
+      .withIndexingDate('2018-05-01T00:00:00.000Z')).commit()
     await letData(es).have(new IndexedDocument('doc_03')
-      .withCreationDate('2018-05-01T00:00:00.000Z')).commit()
+      .withIndexingDate('2018-05-01T00:00:00.000Z')).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -55,16 +63,5 @@ describe('FacetDate.vue', () => {
     expect(getItemChildText(1, '.facet__items__item__label')).toEqual('2018-04')
     expect(getItemChildText(1, '.facet__items__item__count')).toEqual('1')
     expect(wrapper.vm.root.totalCount).toEqual(3)
-  })
-
-  it('should display missing dates as "Missing" item', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')).commit()
-
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.vm.root.items).toHaveLength(1)
-    expect(wrapper.find('.facet__items__item .facet__items__item__label').text()).toEqual('Missing date')
-    expect(wrapper.find('.facet__items__item .facet__items__item__count').text()).toEqual('2')
   })
 })

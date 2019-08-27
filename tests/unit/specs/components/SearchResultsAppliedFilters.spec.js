@@ -9,7 +9,15 @@ import Murmur from '@icij/murmur'
 import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
 
-jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  }
+})
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -59,12 +67,6 @@ describe('SearchResultsAppliedFilters.vue', () => {
       store.commit('search/addFacetValue', { name: 'starred', value: true })
 
       expect(wrapper.vm.filters[0].label).toEqual('Starred')
-    })
-
-    it('should say that a date is missing if so', () => {
-      store.commit('search/addFacetValue', { name: 'creation-date', value: -62167219200000 })
-
-      expect(wrapper.vm.filters[0].label).toEqual('Missing date')
     })
 
     it('should set facet as positive applied facet', () => {

@@ -7,7 +7,15 @@ import messages from '@/lang/en'
 import { createApp } from '@/main'
 import { jsonOk } from 'tests/unit/tests_utils'
 
-jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  }
+})
 
 describe('AggregationsPanel.vue', () => {
   let wrapper, appVue, i18n

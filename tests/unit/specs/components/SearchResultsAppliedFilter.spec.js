@@ -8,10 +8,18 @@ import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
 import find from 'lodash/find'
 
-jest.mock('v-calendar/lib/v-calendar.min.css', () => {})
-
 const { fetch } = fetchPonyfill()
 window.fetch = fetch
+
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  }
+})
 
 describe('SearchResultsAppliedFilter.vue', () => {
   let wrapper, appVue
