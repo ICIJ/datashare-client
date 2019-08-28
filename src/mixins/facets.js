@@ -57,7 +57,6 @@ export const mixin = {
         this.selectedValuesFromStore()
       }
     })
-    this.$root.$on('new-search', this.selectedValuesFromStore)
   },
   computed: {
     root () {

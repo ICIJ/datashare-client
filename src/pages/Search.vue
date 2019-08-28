@@ -96,10 +96,7 @@ export default {
     if (to.name === 'search' && this.isDifferentFromQuery(to.query)) {
       this.$store.dispatch('search/updateFromRouteQuery', to.query)
         .catch(this.wrongQuery)
-        .then(() => {
-          this.$root.$emit('new-search')
-          return this.search
-        })
+        .then(this.search)
         .then(next)
     } else {
       next()

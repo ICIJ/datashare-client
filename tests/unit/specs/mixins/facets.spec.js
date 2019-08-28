@@ -71,12 +71,6 @@ describe('facets mixin', () => {
       expect(router.push).toHaveBeenCalled()
     })
 
-    it('should execute selectedValuesFromStore on event "new-search"', () => {
-      wrapper.vm.$root.$emit('new-search')
-
-      expect(selectedValuesFromStore.mock.calls).toHaveLength(1)
-    })
-
     it('should emit an event "selected-values-from-store" on selectedValuesFromStore', () => {
       wrapper = shallowMount(Facet, { localVue, router, store, mixins: [facets], propsData: { facet } })
       wrapper.vm.selectedValuesFromStore()
