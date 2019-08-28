@@ -5,7 +5,7 @@
       <b-table
         striped
         hover
-        selectable
+        :selectable="hasFeature('BATCH_STARRED')"
         @row-selected="onRowSelected"
         :items="response.hits"
         :fields="fields"
@@ -49,9 +49,11 @@ import DocumentThumbnail from '@/components/DocumentThumbnail'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import settings from '@/utils/settings'
+import features from '@/mixins/features'
 
 export default {
   name: 'SearchResults',
+  mixins: [features],
   components: {
     DocumentActions,
     DocumentSlicedName,
