@@ -28,7 +28,7 @@ localVue.use(BootstrapVue)
 localVue.use(Murmur)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
-describe('SearchResultsList.vue', () => {
+describe('SearchResultsTable.vue', () => {
   let wrapper
   esConnectionHelper()
   const es = esConnectionHelper.es
