@@ -627,4 +627,25 @@ describe('Search store', () => {
 
     expect(find(store.state.search.facets, { name }).values).toEqual(['42'])
   })
+
+  it('should star a batch of documents', async () => {
+    await letData(es).have(new IndexedDocument('doc_01').withContent('test').withNer('ner_01')).commit()
+    await letData(es).have(new IndexedDocument('doc_02').withNer('ner_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_03').withNer('test')).commit()
+
+    await store.dispatch('search/starDocuments', [{ id: 'doc_01' }, { id: 'doc_03' }])
+
+    expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_03'])
+  })
+
+  it('should unstar a batch of documents', async () => {
+    await letData(es).have(new IndexedDocument('doc_01').withContent('test').withNer('ner_01')).commit()
+    await letData(es).have(new IndexedDocument('doc_02').withNer('ner_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_03').withNer('test')).commit()
+
+    await store.dispatch('search/starDocuments', [{ id: 'doc_01' }, { id: 'doc_03' }])
+    await store.dispatch('search/unstarDocuments', [{ id: 'doc_01' }])
+
+    expect(store.state.search.starredDocuments).toEqual(['doc_03'])
+  })
 })

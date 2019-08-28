@@ -1,5 +1,12 @@
 <template>
   <div class="search-results-table">
+    <div v-if="selected.length > 0 && hasFeature('BATCH_STARRED')">
+      <b-list-group horizontal>
+        <b-list-group-item href="#" v-for="action in actions" :key="action.id" @click="onClick(action.id)">
+          <fa :icon="action.icon" />{{ action.label }}
+        </b-list-group-item>
+      </b-list-group>
+    </div>
     <div v-if="hasResults">
       <search-results-header position="top" />
       <b-table
@@ -9,6 +16,7 @@
         @row-selected="onRowSelected"
         :items="response.hits"
         :fields="fields"
+        :busy="isBusy"
         class="bg-white border-bottom m-0 small search-results-table__items"
         tbody-tr-class="search-results-table__items__row">
         <template #name="{ item }">
@@ -63,7 +71,17 @@ export default {
   },
   data () {
     return {
-      selected: []
+      selected: [],
+      isBusy: false,
+      actions: [{
+        id: 'star',
+        label: 'Star',
+        icon: 'star'
+      }, {
+        id: 'unstar',
+        label: 'Unstar',
+        icon: 'star'
+      }]
     }
   },
   props: {
@@ -111,6 +129,20 @@ export default {
   methods: {
     onRowSelected (items) {
       this.selected = items
+    },
+    async onClick (actionId) {
+      this.isBusy = true
+      switch (actionId) {
+        case 'star':
+          await this.$store.dispatch('search/starDocuments', this.selected)
+          break
+        case 'unstar':
+          await this.$store.dispatch('search/unstarDocuments', this.selected)
+          break
+        default:
+          break
+      }
+      this.isBusy = false
     }
   }
 }
