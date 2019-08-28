@@ -39,7 +39,7 @@ class IndexedDocuments {
   }
   count (numberOfDocuments) {
     this.numberOfDocuments = numberOfDocuments
-    for (var i = 0; i < this.numberOfDocuments; i++) {
+    for (let i = 0; i < this.numberOfDocuments; i++) {
       let doc = new IndexedDocument(this.baseName + '_' + (i + 1) + '.txt').withContent(this.content)
       if (this.extractionDate) {
         doc.withIndexingDate(this.extractionDate[i])
