@@ -1,8 +1,8 @@
 <template>
   <div class="search-results-table">
     <div v-if="selected.length > 0 && hasFeature('BATCH_STARRED')">
-      <b-list-group horizontal>
-        <b-list-group-item href="#" v-for="action in actions" :key="action.id" @click="onClick(action.id)">
+      <b-list-group class="search-results-table__actions" horizontal>
+        <b-list-group-item class="search-results-table__actions__action" href="#" v-for="action in actions" :key="action.id" @click="onClick(action.id)">
           <fa :icon="action.icon" />{{ action.label }}
         </b-list-group-item>
       </b-list-group>
@@ -168,6 +168,18 @@ export default {
           .document-sliced-name {
             display: inline;
           }
+        }
+      }
+    }
+
+    &__actions {
+
+      &__action.list-group-item-action {
+        color: $primary;
+        width: auto;
+
+        svg {
+          margin-right: .5em;
         }
       }
     }
