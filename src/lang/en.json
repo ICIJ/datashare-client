@@ -362,7 +362,7 @@
     "researched_terms": "In this document:",
     "fetching": "Fetching preview...",
     "tags": "Tags",
-    "tags_visibility": "These tags are visible for all users.",
+    "tags_visibility": "These tags are visible for all users. Tags should be space-delimited.",
     "details": "Details",
     "details_info": "These information are extracted from the document's metadata.",
     "showMoreDetails": "Show more details",
