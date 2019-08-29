@@ -33,16 +33,14 @@ export default {
       // Skip empty tag
       if (this.updatingTags || !this.tag || !this.tag.length) return
       this.updatingTags = true
-      await this.$store.dispatch('document/tag', { documentId: this.document.id, routingId: this.document.routing, tags: [this.tag] })
-      await this.$store.dispatch('document/refresh')
+      await this.$store.dispatch('document/tag', { documentId: this.document.id, routingId: this.document.routing, tag: this.tag })
       this.tag = ''
       this.tags = []
       this.updatingTags = false
     },
     async deleteTag (tag) {
       this.updatingTags = true
-      await this.$store.dispatch('document/untag', { documentId: this.document.id, routingId: this.document.routing, tags: [tag] })
-      await this.$store.dispatch('document/refresh')
+      await this.$store.dispatch('document/untag', { documentId: this.document.id, routingId: this.document.routing, tag })
       this.updatingTags = false
     }
   }

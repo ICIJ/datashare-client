@@ -1,6 +1,7 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import DatashareClient from '@/api/DatashareClient'
+import compact from 'lodash/compact'
 
 export const datashare = new DatashareClient()
 
@@ -65,7 +66,7 @@ export const actions = {
     }
     return state.doc
   },
-  async refresh ({ commit, rootState, state, dispatch }) {
+  async refresh ({ commit, rootState, state }) {
     try {
       const doc = await esClient.getEsDoc(rootState.search.index, state.idAndRouting.id, state.idAndRouting.routing)
       commit('doc', doc)
@@ -95,11 +96,13 @@ export const actions = {
     }
     return state.namedEntities
   },
-  tag ({ commit, rootState, state }, { documentId, routingId, tags }) {
-    return datashare.tagDocument(rootState.search.index, documentId, routingId, tags)
+  async tag ({ commit, rootState, state, dispatch }, { documentId, routingId, tag }) {
+    await datashare.tagDocument(rootState.search.index, documentId, routingId, compact(tag.split(' ')))
+    return dispatch('refresh')
   },
-  untag ({ commit, rootState, state }, { documentId, routingId, tags }) {
-    return datashare.untagDocument(rootState.search.index, documentId, routingId, tags)
+  async untag ({ commit, rootState, state, dispatch }, { documentId, routingId, tag }) {
+    await datashare.untagDocument(rootState.search.index, documentId, routingId, [tag])
+    return dispatch('refresh')
   }
 }
 

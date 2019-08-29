@@ -7,6 +7,7 @@ import { jsonOk } from 'tests/unit/tests_utils'
 describe('Document store', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
+  const id = 'document'
 
   beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
@@ -32,9 +33,8 @@ describe('Document store', () => {
   })
 
   it('should get the document', async () => {
-    const id = 'document'
     await letData(es).have(new IndexedDocument(id).withContent('This is the document.')).commit()
-    await store.dispatch('document/get', { id: id })
+    await store.dispatch('document/get', { id })
 
     expect(store.state.document.doc.id).toEqual(id)
   })
@@ -53,9 +53,8 @@ describe('Document store', () => {
   })
 
   it('should get the document\'s named entities', async () => {
-    const id = 'document'
     await letData(es).have(new IndexedDocument(id).withContent('This is the document.').withNer('naz')).commit()
-    await store.dispatch('document/get', { id: id })
+    await store.dispatch('document/get', { id })
     await store.dispatch('document/getNamedEntities')
 
     expect(store.state.document.namedEntities[0].raw._source.mention).toEqual('naz')
@@ -63,12 +62,12 @@ describe('Document store', () => {
   })
 
   it('should get only the not hidden document\'s named entities', async () => {
-    const id = 'document'
     await letData(es).have(new IndexedDocument(id).withContent('This is the document.')
       .withNer('entity_01', 42, 'ORGANIZATION', false)
       .withNer('entity_02', 43, 'ORGANIZATION', true)
       .withNer('entity_03', 44, 'ORGANIZATION', false)).commit()
-    await store.dispatch('document/get', { id: id })
+    await store.dispatch('document/get', { id })
+
     await store.dispatch('document/getNamedEntities')
 
     expect(store.state.document.namedEntities.length).toEqual(2)
