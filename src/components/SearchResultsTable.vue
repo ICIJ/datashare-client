@@ -18,11 +18,11 @@
         :fields="fields"
         :busy="isBusy"
         class="bg-white border-bottom m-0 small search-results-table__items"
+        selected-variant="tertiary"
         tbody-tr-class="search-results-table__items__row">
-        <template #relevance="{ item }">
-          <router-link :to="{ name: 'document', params: item.routerParams }">
-            <fa :icon="item.contentTypeIcon" />
-          </router-link>
+        <template #relevance="{ item, rowSelected }" >
+          <fa :icon="item.contentTypeIcon" fixed-width  class="search-results-table__items__row__icon" />
+          <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" />
         </template>
         <template #path="{ item }">
           <router-link :to="{ name: 'document', params: item.routerParams }" class="text-truncate">
@@ -102,7 +102,7 @@ export default {
           {
             key: 'relevance',
             label: '#',
-            class: 'pr-0'
+            class: 'pr-1'
           },
           {
             key: 'path',
@@ -215,6 +215,17 @@ export default {
     &__items {
 
       &__row {
+
+        table tbody tr:not(.b-table-row-selected):not(:hover) &__checkbox,
+        table tbody tr.b-table-row-selected &__icon,
+        table tbody tr:hover &__icon {
+          display: none;
+        }
+
+        table tbody tr &__checkbox,
+        table tbody tr &__icon {
+          color: $link-color;
+        }
 
         table tbody tr &__actions {
           padding: 0;

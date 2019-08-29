@@ -19,6 +19,7 @@ import { faCircleNotch } from '@fortawesome/free-solid-svg-icons/faCircleNotch'
 import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons/faChevronCircleLeft'
 import { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft'
 import { faCheckSquare } from '@fortawesome/free-solid-svg-icons/faCheckSquare'
+import { faCheckSquare as farCheckSquare } from '@fortawesome/free-regular-svg-icons/faCheckSquare'
 import { faClock } from '@fortawesome/free-solid-svg-icons/faClock'
 import { faCog } from '@fortawesome/free-solid-svg-icons/faCog'
 import { faDatabase } from '@fortawesome/free-solid-svg-icons/faDatabase'
@@ -49,6 +50,7 @@ import { faRocket } from '@fortawesome/free-solid-svg-icons/faRocket'
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch'
 import { faServer } from '@fortawesome/free-solid-svg-icons/faServer'
 import { faSquare } from '@fortawesome/free-solid-svg-icons/faSquare'
+import { faSquare as farSquare } from '@fortawesome/free-regular-svg-icons/faSquare'
 import { faSignOutAlt } from '@fortawesome/free-solid-svg-icons/faSignOutAlt'
 import { faStar } from '@fortawesome/free-solid-svg-icons/faStar'
 import { faSync } from '@fortawesome/free-solid-svg-icons/faSync'
@@ -88,6 +90,7 @@ library.add(
   faCaretRight,
   faCircleNotch,
   faCheckSquare,
+  farCheckSquare,
   faChevronCircleLeft,
   faChevronLeft,
   faClock,
@@ -121,6 +124,7 @@ library.add(
   faSearch,
   faSignOutAlt,
   faSquare,
+  farSquare,
   faStar,
   faSync,
   faTable,
