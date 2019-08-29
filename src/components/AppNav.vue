@@ -3,7 +3,7 @@
     <div class="app__nav__container">
       <div class="app__nav__container__main py-3 d-flex align-items-center">
         <div class="app__nav__container__main__search-bar px-3 py-0 flex-grow-1">
-          <search-bar class="p-0" settings />
+          <search-bar class="p-0" settings animated />
         </div>
         <search-layout-selector class="ml-auto px-3" />
       </div>

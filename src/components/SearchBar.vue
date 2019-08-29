@@ -1,14 +1,14 @@
 <template>
-  <form class="search-bar container-fluid" :id="uniqueId" @submit.prevent="submit">
+  <form class="search-bar container-fluid" :id="uniqueId" @submit.prevent="submit" :class="{ 'search-bar--focused': focused, 'search-bar--animated': animated }">
     <div class="d-flex align-items-center">
       <div class="input-group" :class="{ ['input-group-' + size]: true }">
         <input
           v-model="query"
           :placeholder="$t('search.placeholder')"
           class="form-control search-bar__input"
-          @blur="hideSuggestionsAfterDelay"
-          @input="searchTerms"
-          @focus="searchTerms" />
+          @blur="focused = false && hideSuggestionsAfterDelay()"
+          @input="searchTerms()"
+          @focus="focused = true && searchTerms()" />
         <div class="input-group-append">
           <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }" v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" title="Tips to improve searching" v-b-tooltip.bottomleft>
             <fa icon="question-circle" />
@@ -87,6 +87,9 @@ export default {
     tips: {
       type: Boolean
     },
+    animated: {
+      type: Boolean
+    },
     settings: {
       type: Boolean
     },
@@ -110,7 +113,8 @@ export default {
       query: this.$store.state.search.query,
       field: this.$store.state.search.field,
       operatorLinks: settings.documentationLinks.operators.default,
-      suggestions: []
+      suggestions: [],
+      focused: false
     }
   },
   mounted () {
@@ -231,10 +235,22 @@ export default {
 
 <style lang="scss">
   .search-bar {
+    transition: transform 0.2s;
 
     .input-group {
       white-space: nowrap;
       flex-wrap: nowrap;
+      filter: drop-shadow(0 0.3em .6em rgba(black, 0));
+      transition: transform 0.2s;
+    }
+
+    &--focused.search-bar--animated {
+      opacity: 1;
+      transform: translateY(-0.25em);
+
+      .input-group {
+        filter: drop-shadow(0 0.3em .6em rgba(black, .2));
+      }
     }
 
     .input-group-md &__input.form-control,
