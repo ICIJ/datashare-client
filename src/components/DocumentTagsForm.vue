@@ -53,7 +53,12 @@ export default {
   <div class="document-tags-form row mb-3">
     <div class="col-md-4 mb-3">
       <b-form @submit.prevent="addTag" class="document-tags-form__add">
-        <b-form-input id="new-tag" size="sm" v-model="tag" @input="searchTags" autofocus required placeholder="Add a new tag" :disabled="updatingTags" />
+        <b-input-group size="sm">
+          <b-input-group-text slot="prepend">
+            <fa icon="tag" class="fa-flip-horizontal" />
+          </b-input-group-text>
+          <b-form-input id="new-tag" v-model="tag" @input="searchTags" autofocus required placeholder="Add a new tag" :disabled="updatingTags" />
+        </b-input-group>
         <selectable-dropdown :items="tags" @input="tag = $event" @click.native="addTag" :hide="!tags.length"></selectable-dropdown>
       </b-form>
     </div>
