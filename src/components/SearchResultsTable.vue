@@ -75,11 +75,11 @@ export default {
       isBusy: false,
       actions: [{
         id: 'star',
-        label: 'Star',
+        label: this.$t('document.star_button'),
         icon: ['fa', 'star']
       }, {
         id: 'unstar',
-        label: 'Unstar',
+        label: this.$t('document.unstar_button'),
         icon: ['far', 'star']
       }]
     }

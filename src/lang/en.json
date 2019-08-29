@@ -342,6 +342,7 @@
     "external_window": "Open in a new window",
     "download_file": "Download source file",
     "star_button": "Star",
+    "unstar_button": "Unstar",
     "star_file": "Star document",
     "not_found": "Document not found",
     "not_available": "Preview is available only for some formats: pdf, csv, xlsx, tiff and rtf.",
