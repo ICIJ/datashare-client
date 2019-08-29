@@ -1,6 +1,6 @@
 <template>
-  <div v-if="isActivated" class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop, [`document-thumbnail--${size}`]: true }">
-    <img :src="thumbnailSrc" :alt="thumbnailAlt" class="document-thumbnail__image" />
+  <div class="document-thumbnail" :class="{ 'document-thumbnail--loaded': loaded, 'document-thumbnail--erroed': erroed, 'document-thumbnail--crop': crop, [`document-thumbnail--${size}`]: true }">
+    <img v-if="isActivated" :src="thumbnailSrc" :alt="thumbnailAlt" class="document-thumbnail__image" />
     <span class="document-thumbnail__placeholder" v-if="!loaded">
       <fa :icon="document.contentTypeIcon" />
     </span>
