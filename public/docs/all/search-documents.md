@@ -6,6 +6,8 @@ description: >-
 
 # Search documents
 
+### Search in documents
+
 1. To see all your documents \(you need to have [added documents](https://icij.gitbook.io/datashare/mac/add-documents-to-datashare-on-mac) to Datashare and[ have analyzed](https://icij.gitbook.io/datashare/all/analyze-documents) them before\), click '**Search in documents'**:
 
 ![](../.gitbook/assets/search-in-documents.png)
@@ -38,7 +40,25 @@ If you run [email extraction](https://icij.gitbook.io/datashare/all/analyze-docu
 
 ![](../.gitbook/assets/email-suggested.png)
 
-5. Once a document is opened, you can **search for terms in this document:**
+### Choose between views \(list, grid, table\)
+
+Select the view on the top right. 
+
+View in list:
+
+![](../.gitbook/assets/list.png)
+
+View in grid:
+
+![](../.gitbook/assets/grid.png)
+
+View in table:
+
+![](../.gitbook/assets/table.png)
+
+### Search within a document 
+
+Once a document is opened, you can **search for terms in this document:**
 
 * Press **Command \(⌘\) + F** \(on Mac\) or **Control + F** \(on Windows and Linux\) or click on the search bar above your Extracted Text
 * Type what you search for
