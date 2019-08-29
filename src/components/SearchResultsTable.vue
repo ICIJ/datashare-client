@@ -76,11 +76,11 @@ export default {
       actions: [{
         id: 'star',
         label: 'Star',
-        icon: 'star'
+        icon: ['fa', 'star']
       }, {
         id: 'unstar',
         label: 'Unstar',
-        icon: 'star'
+        icon: ['far', 'star']
       }]
     }
   },
