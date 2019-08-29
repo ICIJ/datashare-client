@@ -252,6 +252,10 @@ export default {
         svg {
           margin-right: .5em;
         }
+
+        &:hover {
+          color: theme-color('dark');
+        }
       }
     }
   }
