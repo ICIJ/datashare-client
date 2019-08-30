@@ -24,6 +24,7 @@ import orderBy from 'lodash/orderBy'
 import range from 'lodash/range'
 import random from 'lodash/random'
 import reduce from 'lodash/reduce'
+import remove from 'lodash/remove'
 import toLower from 'lodash/toLower'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
@@ -297,7 +298,7 @@ export const mutations = {
     state.showFilters = !state.showFilters
   },
   removeFromStarredDocuments (state, documentId) {
-    state.starredDocuments.splice(state.starredDocuments.indexOf(documentId), 1)
+    state.starredDocuments = remove(state.starredDocuments, item => item === documentId)
   },
   pushFromStarredDocuments (state, documentId) {
     state.starredDocuments.push(documentId)
