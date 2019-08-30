@@ -3,16 +3,20 @@ import { datashare, initialState } from '@/store/modules/document'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { jsonOk } from 'tests/unit/tests_utils'
+import esClient from '@/api/esClient'
+import DatashareClient from '@/api/DatashareClient'
 
 describe('Document store', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   const id = 'document'
+  let spy
 
   beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
+    spy = jest.spyOn(esClient, 'getEsDoc')
     datashare.fetch.mockReturnValue(jsonOk())
   })
 
@@ -86,5 +90,39 @@ describe('Document store', () => {
     expect(store.state.document.showNamedEntities).toBeFalsy()
     store.commit('document/toggleShowNamedEntities')
     expect(store.state.document.showNamedEntities).toBeTruthy()
+  })
+
+  it('should tag a document', async () => {
+    await letData(es).have(new IndexedDocument('doc_01').withContent('This is the document.')).commit()
+    await letData(es).have(new IndexedDocument('doc_02').withContent('This is the document.')).commit()
+    await store.dispatch('document/get', { id: 'doc_01' })
+
+    spy.mockClear()
+    datashare.fetch.mockClear()
+
+    await store.dispatch('document/tag', { documents: [{ id: 'doc_01', routing: 'doc_01' }, { id: 'doc_02', routing: 'doc_02' }], tag: 'tag_01 tag_02 tag_03' })
+
+    expect(datashare.fetch).toHaveBeenCalledTimes(2)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/tag/${process.env.VUE_APP_ES_INDEX}/doc_01?routing=doc_01`),
+      { method: 'PUT', body: JSON.stringify(['tag_01', 'tag_02', 'tag_03']) })
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/tag/${process.env.VUE_APP_ES_INDEX}/doc_02?routing=doc_02`),
+      { method: 'PUT', body: JSON.stringify(['tag_01', 'tag_02', 'tag_03']) })
+    expect(esClient.getEsDoc).toHaveBeenCalledTimes(2)
+  })
+
+  it('should untag a document', async () => {
+    await letData(es).have(new IndexedDocument('doc_01').withContent('This is the document.')).commit()
+    await letData(es).have(new IndexedDocument('doc_02').withContent('This is the document.')).commit()
+    await store.dispatch('document/get', { id: 'doc_01' })
+
+    spy.mockClear()
+    datashare.fetch.mockClear()
+
+    await store.dispatch('document/untag', { documents: [{ id: 'doc_01', routing: 'doc_01' }], tag: 'tag_01' })
+
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/untag/${process.env.VUE_APP_ES_INDEX}/doc_01?routing=doc_01`),
+      { method: 'PUT', body: JSON.stringify(['tag_01']) })
+    expect(esClient.getEsDoc).toHaveBeenCalledTimes(1)
   })
 })

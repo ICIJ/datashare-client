@@ -66,7 +66,7 @@ import filter from 'lodash/filter'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import startCase from 'lodash/startCase'
-import DocumentTagsForm from '@/components/DocumentTagsForm.vue'
+import DocumentTagsForm from '@/components/DocumentTagsForm'
 
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 

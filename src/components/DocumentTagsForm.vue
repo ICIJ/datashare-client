@@ -1,23 +1,25 @@
 <script>
-import bodybuilder from 'bodybuilder'
+import castArray from 'lodash/castArray'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import throttle from 'lodash/throttle'
+import bodybuilder from 'bodybuilder'
 import esClient from '@/api/esClient'
 
 export default {
   name: 'DocumentTagsForm',
-  props: {
-    document: {
-      type: Object
-    }
-  },
+  props: ['document'],
   data () {
     return {
       a: null,
       tag: '',
       tags: [],
       updatingTags: false
+    }
+  },
+  computed: {
+    documents () {
+      return castArray(this.document)
     }
   },
   methods: {
@@ -30,17 +32,15 @@ export default {
       this.tags = map(buckets, 'key')
     }, 200),
     async addTag () {
-      // Skip empty tag
-      if (this.updatingTags || !this.tag || !this.tag.length) return
       this.updatingTags = true
-      await this.$store.dispatch('document/tag', { documentId: this.document.id, routingId: this.document.routing, tag: this.tag })
+      await this.$store.dispatch('document/tag', { documents: this.documents, tag: this.tag })
       this.tag = ''
       this.tags = []
       this.updatingTags = false
     },
     async deleteTag (tag) {
       this.updatingTags = true
-      await this.$store.dispatch('document/untag', { documentId: this.document.id, routingId: this.document.routing, tag })
+      await this.$store.dispatch('document/untag', { documents: this.documents, tag })
       this.updatingTags = false
     }
   }
@@ -55,7 +55,7 @@ export default {
           <b-input-group-text slot="prepend">
             <fa icon="tag" class="fa-flip-horizontal" />
           </b-input-group-text>
-          <b-form-input id="new-tag" v-model="tag" @input="searchTags" autofocus required placeholder="Add a new tag" :disabled="updatingTags" />
+          <b-form-input id="new-tag" v-model="tag" @input="searchTags" autofocus required :placeholder="$t('document.tags_new')" :disabled="updatingTags" />
         </b-input-group>
         <selectable-dropdown :items="tags" @input="tag = $event" @click.native="addTag" :hide="!tags.length"></selectable-dropdown>
       </b-form>
