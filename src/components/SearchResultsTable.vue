@@ -96,7 +96,7 @@ export default {
         icon: ['far', 'star']
       }, {
         id: 'tag',
-        label: 'Tag',
+        label: this.$t('document.tag'),
         icon: ['fa', 'tag'],
         iconClass: 'fa-flip-horizontal'
       }],
