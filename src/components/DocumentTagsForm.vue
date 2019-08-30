@@ -8,7 +8,10 @@ import esClient from '@/api/esClient'
 
 export default {
   name: 'DocumentTagsForm',
-  props: ['document'],
+  props: {
+    'document': [Object, Array],
+    'displayTags': Boolean
+  },
   data () {
     return {
       a: null,
@@ -49,7 +52,7 @@ export default {
 
 <template>
   <div class="document-tags-form row mb-3">
-    <div class="col-md-4 mb-3">
+    <div :class="{ 'col-md-4 mb-3': displayTags }">
       <b-form @submit.prevent="addTag" class="document-tags-form__add">
         <b-input-group size="sm">
           <b-input-group-text slot="prepend">
@@ -60,7 +63,7 @@ export default {
         <selectable-dropdown :items="tags" @input="tag = $event" @click.native="addTag" :hide="!tags.length"></selectable-dropdown>
       </b-form>
     </div>
-    <div class="col-md-8">
+    <div class="col-md-8" v-if="displayTags">
       <ul class="document-tags-form list-unstyled mb-0 mt-1">
         <li class="document-tags-form__tag badge badge-light border badge-pill mr-2 mb-1" v-for="tag in document.tags" :key="tag">
           {{ tag }}

@@ -7,7 +7,7 @@
       <p class="text-muted">
         {{ $t('document.tags_visibility') }}
       </p>
-      <document-tags-form :document="document" />
+      <document-tags-form :document="document" :displayTags="true"/>
     </div>
     <div class="document__content__details">
       <h5>

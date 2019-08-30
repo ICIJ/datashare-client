@@ -1,11 +1,12 @@
 <template>
   <div class="search-results-table">
-    <div v-if="selected.length > 0 && hasFeature('BATCH_STARRED')">
+    <div v-if="selected.length > 0 && hasFeature('BATCH_STARRED')" class="d-inline-flex">
       <b-list-group class="search-results-table__actions" horizontal>
         <b-list-group-item class="search-results-table__actions__action" href="#" v-for="action in actions" :key="action.id" @click="onClick(action.id)">
-          <fa :icon="action.icon" />{{ action.label }}
+          <fa :icon="action.icon" :class="action.iconClass"/>{{ action.label }}
         </b-list-group-item>
       </b-list-group>
+      <document-tags-form :document="selected" :displayTags="false" v-if="isTagDisplayed" class="ml-3"/>
     </div>
     <div v-if="hasResults">
       <search-results-header position="top" />
@@ -64,6 +65,7 @@ import DocumentActions from '@/components/DocumentActions'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
+import DocumentTagsForm from '@/components/DocumentTagsForm'
 import settings from '@/utils/settings'
 import features from '@/mixins/features'
 import humanSize from '@/filters/humanSize'
@@ -77,7 +79,8 @@ export default {
     DocumentSlicedName,
     DocumentThumbnail,
     ResetFiltersButton,
-    SearchResultsHeader
+    SearchResultsHeader,
+    DocumentTagsForm
   },
   data () {
     return {
@@ -91,7 +94,13 @@ export default {
         id: 'unstar',
         label: this.$t('document.unstar_button'),
         icon: ['far', 'star']
-      }]
+      }, {
+        id: 'tag',
+        label: 'Tag',
+        icon: ['fa', 'tag'],
+        iconClass: 'fa-flip-horizontal'
+      }],
+      isTagDisplayed: false
     }
   },
   props: {
@@ -184,6 +193,9 @@ export default {
           break
         case 'unstar':
           await this.$store.dispatch('search/unstarDocuments', this.selected)
+          break
+        case 'tag':
+          this.isTagDisplayed = !this.isTagDisplayed
           break
         default:
           break
