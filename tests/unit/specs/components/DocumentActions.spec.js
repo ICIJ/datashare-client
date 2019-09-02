@@ -75,7 +75,6 @@ describe('DocumentActions.vue', () => {
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')
 
     await wrapper.vm.toggleStarDocument(wrapper.vm.document.id)
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.starredDocuments).toEqual([])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('far,star')

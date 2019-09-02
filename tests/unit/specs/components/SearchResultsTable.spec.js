@@ -51,10 +51,10 @@ describe('SearchResultsTable.vue', () => {
     expect(wrapper.find('.search-results-table__items').attributes('selectmode')).toEqual('multi')
   })
 
-  it('should display 2 action buttons', () => {
+  it('should display 3 action buttons', () => {
     wrapper.vm.selected = [{ id: 'doc_1' }, { id: 'doc_2' }]
 
-    expect(wrapper.findAll('b-list-group-stub > b-list-group-item-stub')).toHaveLength(2)
+    expect(wrapper.findAll('b-list-group-stub > b-list-group-item-stub')).toHaveLength(3)
   })
 
   it('should set each selected document as starred', async () => {

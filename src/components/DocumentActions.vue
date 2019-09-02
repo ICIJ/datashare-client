@@ -41,10 +41,7 @@ export default {
     async toggleStarDocument (documentId) {
       try {
         await this.$store.dispatch('search/toggleStarDocument', documentId)
-      } catch (_) {
-        // Does... nothing yet!
-        console.log(_)
-      }
+      } catch (_) {}
       this.$root.$emit('bv::hide::tooltip')
       this.$root.$emit('facet::starred:refresh')
     }

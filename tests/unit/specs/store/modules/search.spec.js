@@ -577,6 +577,15 @@ describe('Search store', () => {
       expect(store.state.search.starredDocuments).toEqual([12, 42])
     })
 
+    it('should push a documentId from the list of the starredDocuments only if it does not exist', () => {
+      store.commit('search/pushFromStarredDocuments', 12)
+      store.commit('search/pushFromStarredDocuments', 42)
+      store.commit('search/pushFromStarredDocuments', 42)
+      store.commit('search/pushFromStarredDocuments', 42)
+
+      expect(store.state.search.starredDocuments).toEqual([12, 42])
+    })
+
     it('should toggle a starred documentId, push it if it is not starred', async () => {
       store.state.search.starredDocuments = []
       await store.dispatch('search/toggleStarDocument', 45)

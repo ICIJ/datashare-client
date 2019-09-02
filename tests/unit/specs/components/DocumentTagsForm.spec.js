@@ -26,7 +26,7 @@ const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 async function createView (es, tags = [], documentId = 'document') {
   await letData(es).have(new IndexedDocument(documentId).withTags(tags)).commit()
   await store.dispatch('document/get', { id: documentId })
-  return shallowMount(DocumentTagsForm, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
+  return shallowMount(DocumentTagsForm, { localVue, i18n, store, propsData: { document: store.state.document.doc, displayTags: true } })
 }
 
 describe('DocumentTagsForm.vue', () => {
