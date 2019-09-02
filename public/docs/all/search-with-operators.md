@@ -6,7 +6,7 @@ description: >-
 
 # Search with operators
 
-**Exact phrase**
+### **Exact phrase**
 
 To have all documents mentioning an exact phrase, you can use double quotes.
 
@@ -14,7 +14,7 @@ To have all documents mentioning an exact phrase, you can use double quotes.
 
 
 
-**OR or space**
+### **OR or space**
 
 To have all documents mentioning all or one of the queried terms, you can use a simple space between your queries or 'OR'. You need to write 'OR' with **all letters uppercase**.
 
@@ -24,7 +24,7 @@ To have all documents mentioning all or one of the queried terms, you can use a 
 
 
 
-**AND**
+### **AND**
 
 To have all documents mentioning all the queried terms, you can use 'AND' between your queried words. You need to write 'AND' with **all letters uppercase**.
 
@@ -32,7 +32,7 @@ To have all documents mentioning all the queried terms, you can use 'AND' betwee
 
 
 
-**NOT**
+### **NOT**
 
 To have all documents NOT mentioning some queried terms, you can use 'NOT' before each word you don't want. You need to write 'NOT' with **all letters uppercase**.
 
@@ -40,7 +40,7 @@ To have all documents NOT mentioning some queried terms, you can use 'NOT' befor
 
 
 
-**Please note that you can combine operators**
+### **Please note that you can combine operators**
 
 Parentheses should be used whenever multiple operators are used together. 
 
@@ -48,7 +48,7 @@ Parentheses should be used whenever multiple operators are used together.
 
 
 
-**Wildcards**
+### **Wildcards**
 
 If you search faithf?l, the search engine will look for all words with all possible single character between the second f and the l in this word. It also works with \* to replace multiple characters.
 
@@ -58,7 +58,7 @@ If you search faithf?l, the search engine will look for all words with all possi
 
 
 
-**Fuzziness**
+### **Fuzziness**
 
 If you search for similar terms \(to catch typos for example\), you can use the [tilde symbol](https://en.wikipedia.org/wiki/Tilde). "_The default edit distance is 2, but an edit distance of 1 should be sufficient to catch 80% of all human misspellings. It can be specified as: quikc~1_" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
@@ -68,7 +68,7 @@ If you search for similar terms \(to catch typos for example\), you can use the 
 
 
 
-**Proximity searches**
+### **Proximity searches**
 
 "_While a phrase query \(eg "john smith"\) expects all of the terms in exactly the same order, a proximity query allows the specified words to be further apart or in a different order. In the same way that fuzzy queries can specify a maximum edit distance for characters in a word, a proximity search allows us to specify a maximum edit distance of words in a phrase._" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
@@ -76,7 +76,7 @@ If you search for similar terms \(to catch typos for example\), you can use the 
 
 
 
-**Boosting operators**
+### **Boosting operators**
 
 "_While a phrase query \(eg "john smith"\) expects all of the terms in exactly the same order, a proximity query allows the specified words to be further apart or in a different order. In the same way that fuzzy queries can specify a maximum edit distance for characters in a word, a proximity search allows us to specify a maximum edit distance of words in a phrase._" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
@@ -84,7 +84,7 @@ If you search for similar terms \(to catch typos for example\), you can use the 
 
 
 
-**Date range and searches using metadata fields**
+### **\(Advanced\) Searches using metadata fields**
 
 If you are looking for documents that:
 
