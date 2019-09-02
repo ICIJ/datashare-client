@@ -426,15 +426,13 @@ export const actions = {
     return dispatch('query')
   },
   async starDocuments ({ state, commit }, documents) {
-    const documentIds = []
-    map(documents, document => documentIds.push(document.id))
+    const documentIds = map(documents, 'id')
     await datashare.starDocuments(state.index, documentIds)
     commit('pushFromStarredDocuments', documentIds)
     commit('setStarredDocuments')
   },
   async unstarDocuments ({ state, commit }, documents) {
-    const documentIds = []
-    map(documents, document => documentIds.push(document.id))
+    const documentIds = map(documents, 'id')
     await datashare.unstarDocuments(state.index, documentIds)
     commit('removeFromStarredDocuments', documentIds)
     commit('setStarredDocuments')
