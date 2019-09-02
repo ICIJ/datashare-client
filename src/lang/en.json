@@ -363,7 +363,7 @@
     "fetching": "Fetching preview...",
     "tags": "Tags",
     "tag": "Tag",
-    "tags_visibility": "These tags are visible for all users. Tags should be space-delimited.",
+    "tags_visibility": "These tags are visible for all users. Tags should be separated by space.",
     "tags_new": "Add a new tag",
     "details": "Details",
     "details_info": "These information are extracted from the document's metadata.",
