@@ -41,17 +41,14 @@
         </div>
       </div>
       <div v-else class="batch-search-results__queries">
-        <p class="text-center text-muted">
-          {{ $t('batchSearchResults.sample') }}
-        </p>
         <div class="card">
           <b-table striped hover :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query" :filter="selectedQueries" :filter-function="filter">
             <template #documentNumber="row">
               {{ row.item.documentNumber + 1 }}
             </template>
-            <template #documentPath="row">
+            <template #documentName="row">
               <router-link :to="{ name: 'document', params: { index: $route.params.index, id: row.item.documentId, routing: row.item.rootId } }" target="_blank" class="batch-search-results__queries__query__link">
-                {{ getFileName(row.item.documentPath) }}
+                {{ row.item.documentName }}
               </router-link>
             </template>
             <template #creationDate="row">
@@ -78,7 +75,6 @@ import { mapState } from 'vuex'
 import capitalize from 'lodash/capitalize'
 import find from 'lodash/find'
 import includes from 'lodash/includes'
-import last from 'lodash/last'
 
 import DatashareClient from '@/api/DatashareClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
@@ -115,7 +111,7 @@ export default {
           sortable: true
         },
         {
-          key: 'documentPath',
+          key: 'documentName',
           label: this.$t('batchSearchResults.documentName'),
           sortable: true
         },
@@ -184,9 +180,6 @@ export default {
     },
     fetchBatchSearchResults () {
       return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from: this.from, size: this.size })
-    },
-    getFileName (documentPath) {
-      return last(documentPath.split('/'))
     },
     filter (item, filter) {
       return includes(filter, item.query)

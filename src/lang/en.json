@@ -468,7 +468,6 @@
     "contentType": "Content Type",
     "size": "Size",
     "downloadResults": "Download results",
-    "sample": "Sample of the first 100 result(s).",
     "all": "All"
   },
   "batchSearchResultsFilters": {
