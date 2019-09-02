@@ -427,18 +427,22 @@ export const actions = {
     return dispatch('query')
   },
   async starDocuments ({ state, commit }, documents) {
-    await Promise.all(map(documents, async document => {
-      await datashare.starDocument(state.index, document.id)
+    const documentIds = []
+    map(documents, document => documentIds.push(document.id))
+    await datashare.starDocuments(state.index, documentIds)
+    map(documents, async document => {
       commit('pushFromStarredDocuments', document.id)
       commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
-    }))
+    })
   },
   async unstarDocuments ({ state, commit }, documents) {
-    await Promise.all(map(documents, async document => {
-      await datashare.unstarDocument(state.index, document.id)
+    const documentIds = []
+    map(documents, document => documentIds.push(document.id))
+    await datashare.unstarDocuments(state.index, documentIds)
+    map(documents, async document => {
       commit('removeFromStarredDocuments', document.id)
       commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
-    }))
+    })
   },
   toggleStarDocument ({ state, commit, dispatch }, documentId) {
     const documents = [{ id: documentId }]

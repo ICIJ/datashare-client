@@ -65,8 +65,8 @@ describe('SearchResultsTable.vue', () => {
 
     wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(2)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/star/${encodeURIComponent(process.env.VUE_APP_ES_INDEX)}/${encodeURIComponent('doc_1')}`),
-      { method: 'PUT' })
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${encodeURIComponent(process.env.VUE_APP_ES_INDEX)}/group/star`),
+      { method: 'POST', body: JSON.stringify(['doc_1', 'doc_2']) })
   })
 })

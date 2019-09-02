@@ -49,11 +49,11 @@ export class DatashareClient {
   getStarredDocuments (project) {
     return this.sendAction(`/api/document/project/starred/${encodeURIComponent(project)}`)
   }
-  starDocument (project, documentId) {
-    return this.sendAction(`/api/document/project/star/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT' }, false)
+  starDocuments (project, documents) {
+    return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/star`, { method: 'POST', body: JSON.stringify(documents) })
   }
-  unstarDocument (project, documentId) {
-    return this.sendAction(`/api/document/project/unstar/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}`, { method: 'PUT' }, false)
+  unstarDocuments (project, documents) {
+    return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/unstar`, { method: 'POST', body: JSON.stringify(documents) })
   }
   tagDocument (project, documentId, routingId, tags) {
     return this.sendAction(`/api/document/project/tag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
