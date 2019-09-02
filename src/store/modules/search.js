@@ -447,11 +447,10 @@ export const actions = {
       return dispatch('starDocuments', documents)
     }
   },
-  getStarredDocuments ({ state, commit }) {
-    return datashare.getStarredDocuments(state.index).then(starredDocuments => {
-      commit('starredDocuments', starredDocuments)
-      commit('setStarredDocuments')
-    })
+  async getStarredDocuments ({ state, commit }) {
+    const starredDocuments = await datashare.getStarredDocuments(state.index)
+    commit('starredDocuments', starredDocuments)
+    commit('setStarredDocuments')
   }
 }
 
