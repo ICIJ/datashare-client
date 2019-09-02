@@ -10,6 +10,7 @@ import { escapeRegExp } from '@/utils/strings'
 import moment from 'moment'
 import castArray from 'lodash/castArray'
 import concat from 'lodash/concat'
+import difference from 'lodash/difference'
 import each from 'lodash/each'
 import endsWith from 'lodash/endsWith'
 import filter from 'lodash/filter'
@@ -296,13 +297,11 @@ export const mutations = {
   toggleFilters (state) {
     state.showFilters = !state.showFilters
   },
-  removeFromStarredDocuments (state, documentId) {
-    state.starredDocuments.splice(state.starredDocuments.indexOf(documentId), 1)
+  pushFromStarredDocuments (state, documentIds) {
+    state.starredDocuments = uniq(concat(state.starredDocuments, documentIds))
   },
-  pushFromStarredDocuments (state, documentId) {
-    if (state.starredDocuments.indexOf(documentId) === -1) {
-      state.starredDocuments.push(documentId)
-    }
+  removeFromStarredDocuments (state, documentIds) {
+    state.starredDocuments = difference(state.starredDocuments, documentIds)
   },
   setStarredDocuments (state, { facet, starredDocuments }) {
     const existingFacet = find(state.facets, { name: facet.name })
@@ -430,19 +429,15 @@ export const actions = {
     const documentIds = []
     map(documents, document => documentIds.push(document.id))
     await datashare.starDocuments(state.index, documentIds)
-    map(documents, async document => {
-      commit('pushFromStarredDocuments', document.id)
-      commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
-    })
+    commit('pushFromStarredDocuments', documentIds)
+    commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
   },
   async unstarDocuments ({ state, commit }, documents) {
     const documentIds = []
     map(documents, document => documentIds.push(document.id))
     await datashare.unstarDocuments(state.index, documentIds)
-    map(documents, async document => {
-      commit('removeFromStarredDocuments', document.id)
-      commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
-    })
+    commit('removeFromStarredDocuments', documentIds)
+    commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
   },
   toggleStarDocument ({ state, commit, dispatch }, documentId) {
     const documents = [{ id: documentId }]

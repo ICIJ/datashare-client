@@ -565,7 +565,7 @@ describe('Search store', () => {
 
     it('should remove a documentId from the list of the starredDocuments', () => {
       store.state.search.starredDocuments = [12, 42]
-      store.commit('search/removeFromStarredDocuments', 42)
+      store.commit('search/removeFromStarredDocuments', [42])
 
       expect(store.state.search.starredDocuments).toEqual([12])
     })
