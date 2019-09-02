@@ -303,10 +303,10 @@ export const mutations = {
   removeFromStarredDocuments (state, documentIds) {
     state.starredDocuments = difference(state.starredDocuments, documentIds)
   },
-  setStarredDocuments (state, { facet, starredDocuments }) {
-    const existingFacet = find(state.facets, { name: facet.name })
+  setStarredDocuments (state) {
+    const existingFacet = find(state.facets, { name: 'starred' })
     if (existingFacet) {
-      existingFacet.starredDocuments = starredDocuments
+      existingFacet.starredDocuments = state.starredDocuments
     }
   }
 }
@@ -430,14 +430,14 @@ export const actions = {
     map(documents, document => documentIds.push(document.id))
     await datashare.starDocuments(state.index, documentIds)
     commit('pushFromStarredDocuments', documentIds)
-    commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
+    commit('setStarredDocuments')
   },
   async unstarDocuments ({ state, commit }, documents) {
     const documentIds = []
     map(documents, document => documentIds.push(document.id))
     await datashare.unstarDocuments(state.index, documentIds)
     commit('removeFromStarredDocuments', documentIds)
-    commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments: state.starredDocuments })
+    commit('setStarredDocuments')
   },
   toggleStarDocument ({ state, commit, dispatch }, documentId) {
     const documents = [{ id: documentId }]
@@ -450,7 +450,7 @@ export const actions = {
   getStarredDocuments ({ state, commit }) {
     return datashare.getStarredDocuments(state.index).then(starredDocuments => {
       commit('starredDocuments', starredDocuments)
-      commit('setStarredDocuments', { facet: { name: 'starred' }, starredDocuments })
+      commit('setStarredDocuments')
     })
   }
 }
