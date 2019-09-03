@@ -70,6 +70,14 @@ describe('SearchResultsAppliedFilters.vue', () => {
       expect(wrapper.vm.filters[1].label).toEqual('08/27/2019')
     })
 
+    it('should translate in French the label of a facet date range', () => {
+      localStorage.setItem('locale', 'fr')
+      store.commit('search/addFacetValue', { name: 'creation-date', value: [1556668800000, 1566908357980] })
+
+      expect(wrapper.vm.filters[0].label).toEqual('01/05/2019')
+      expect(wrapper.vm.filters[1].label).toEqual('27/08/2019')
+    })
+
     it('should translate the label of a facet yes no', () => {
       store.commit('search/addFacetValue', { name: 'starred', value: true })
 

@@ -18,6 +18,7 @@ import find from 'lodash/find'
 import get from 'lodash/get'
 import has from 'lodash/has'
 import includes from 'lodash/includes'
+import isInteger from 'lodash/isInteger'
 import join from 'lodash/join'
 import map from 'lodash/map'
 import omit from 'lodash/omit'
@@ -48,7 +49,7 @@ export function initialState () {
       new FacetPath('path', 'byDirname', false),
       new FacetDate('indexing-date', 'extractionDate', false, item => item.key_as_string),
       new FacetText('extraction-level', 'extractionLevel', false, item => getExtractionLevelTranslationKey(item.key)),
-      new FacetDateRange('creation-date', 'metadata.tika_metadata_creation_date', false, item => moment(new Date(item.key)).format('L'))
+      new FacetDateRange('creation-date', 'metadata.tika_metadata_creation_date', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key)
     ],
     sort: settings.defaultSearchSort,
     field: settings.defaultSearchField,
