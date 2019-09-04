@@ -62,11 +62,11 @@ export class DatashareClient {
     return this.sendAction(`/api/document/project/untag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
   }
   batchSearch (project, name, description, csvFile) {
-    const form = new FormData()
-    form.append('name', name)
-    form.append('description', description)
-    form.append('csvFile', csvFile)
-    return this.sendAction(`/api/batch/search/${encodeURIComponent(project)}`, { method: 'POST', body: form }, false)
+    const body = new FormData()
+    body.append('name', name)
+    body.append('description', description)
+    body.append('csvFile', csvFile)
+    return this.sendAction(`/api/batch/search/${encodeURIComponent(project)}`, { method: 'POST', body }, false)
   }
   getBatchSearches () {
     return this.sendAction('/api/batch/search')
