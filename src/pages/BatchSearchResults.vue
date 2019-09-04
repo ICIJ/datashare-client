@@ -74,6 +74,7 @@ import moment from 'moment'
 import { mapState } from 'vuex'
 import capitalize from 'lodash/capitalize'
 import find from 'lodash/find'
+import get from 'lodash/get'
 import includes from 'lodash/includes'
 
 import DatashareClient from '@/api/DatashareClient'
@@ -144,14 +145,14 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
-      vm.from = parseInt(to.query.from)
-      vm.size = parseInt(to.query.size)
+      vm.from = parseInt(get(to.query, 'from', vm.from))
+      vm.size = parseInt(get(to.query, 'size', vm.size))
       vm.fetch()
     })
   },
   async beforeRouteUpdate (to, from, next) {
-    this.from = parseInt(to.query.from)
-    this.size = parseInt(to.query.size)
+    this.from = parseInt(get(to.query, 'from', this.from))
+    this.size = parseInt(get(to.query, 'size', this.size))
     await this.fetch()
     next()
   },
