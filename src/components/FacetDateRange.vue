@@ -8,7 +8,8 @@
         show-caps
         @input="onInput"
         :attributes="attributes"
-        :locale="locale">
+        :locale="locale"
+        :key="locale">
         <input
           class="form-control"
           slot-scope="{ inputProps, inputEvents, isDragging }"
