@@ -71,8 +71,8 @@ export class DatashareClient {
   getBatchSearches () {
     return this.sendAction('/api/batch/search')
   }
-  getBatchSearchResults (batchId, from = 0, size = 100) {
-    return this.sendAction(`/api/batch/search/result/${encodeURIComponent(batchId)}`, { method: 'POST', body: JSON.stringify({ from, size }) })
+  getBatchSearchResults (batchId, from = 0, size = 100, queries = [], sort = 'doc_nb', order = 'desc') {
+    return this.sendAction(`/api/batch/search/result/${encodeURIComponent(batchId)}`, { method: 'POST', body: JSON.stringify({ from, size, queries, sort, order }) })
   }
   deleteBatchSearches () {
     return this.sendAction('/api/batch/search', { method: 'DELETE' }, false)

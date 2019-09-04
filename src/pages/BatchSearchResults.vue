@@ -140,19 +140,28 @@ export default {
         }
       ],
       from: 0,
-      size: 100
+      size: 100,
+      queries: [],
+      sort: 'doc_nb',
+      order: 'desc'
     }
   },
   beforeRouteEnter (to, from, next) {
     next(vm => {
       vm.from = parseInt(get(to.query, 'from', vm.from))
       vm.size = parseInt(get(to.query, 'size', vm.size))
+      vm.queries = get(to.query, 'queries', vm.queries)
+      vm.sort = get(to.query, 'sort', vm.sort)
+      vm.order = get(to.query, 'order', vm.order)
       vm.fetch()
     })
   },
   async beforeRouteUpdate (to, from, next) {
     this.from = parseInt(get(to.query, 'from', this.from))
     this.size = parseInt(get(to.query, 'size', this.size))
+    this.queries = get(to.query, 'queries', this.queries)
+    this.sort = get(to.query, 'sort', this.sort)
+    this.order = get(to.query, 'order', this.order)
     await this.fetch()
     next()
   },
@@ -180,7 +189,7 @@ export default {
       return store.dispatch('batchSearch/getBatchSearches')
     },
     fetchBatchSearchResults () {
-      return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from: this.from, size: this.size })
+      return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from: this.from, size: this.size, queries: this.queries, sort: this.sort, order: this.order })
     },
     filter (item, filter) {
       return includes(filter, item.query)

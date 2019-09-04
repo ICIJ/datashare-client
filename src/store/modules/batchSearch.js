@@ -63,8 +63,8 @@ export const actions = {
       return dispatch('getBatchSearches')
     } catch (_) {}
   },
-  async getBatchSearchResults ({ state, commit }, { batchId, from = 0, size = 100 }) {
-    const results = await datashare.getBatchSearchResults(batchId, from, size)
+  async getBatchSearchResults ({ state, commit }, { batchId, from, size, queries, sort, order }) {
+    const results = await datashare.getBatchSearchResults(batchId, from, size, queries, sort, order)
     return commit('results', results)
   },
   deleteBatchSearches ({ commit }) {
