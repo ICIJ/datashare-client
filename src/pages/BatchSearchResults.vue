@@ -42,7 +42,7 @@
       </div>
       <div v-else class="batch-search-results__queries">
         <div class="card">
-          <b-table striped hover :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query" :filter="selectedQueries" :filter-function="filter">
+          <b-table striped hover :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query">
             <template #documentNumber="row">
               {{ row.item.documentNumber + 1 }}
             </template>
@@ -75,7 +75,6 @@ import { mapState } from 'vuex'
 import capitalize from 'lodash/capitalize'
 import find from 'lodash/find'
 import get from 'lodash/get'
-import includes from 'lodash/includes'
 
 import DatashareClient from '@/api/DatashareClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
@@ -147,21 +146,23 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next(vm => {
-      vm.from = parseInt(get(to.query, 'from', vm.from))
-      vm.size = parseInt(get(to.query, 'size', vm.size))
-      vm.queries = get(to.query, 'queries', vm.queries)
-      vm.sort = get(to.query, 'sort', vm.sort)
-      vm.order = get(to.query, 'order', vm.order)
-      vm.fetch()
+    next(async vm => {
+      vm.$set(vm, 'from', parseInt(get(to.query, 'from', vm.from)))
+      vm.$set(vm, 'size', parseInt(get(to.query, 'size', vm.size)))
+      vm.$set(vm, 'queries', get(to.query, 'queries', vm.queries))
+      vm.$set(vm, 'sort', get(to.query, 'sort', vm.sort))
+      vm.$set(vm, 'order', get(to.query, 'order', vm.order))
+      await vm.fetchBatchSearches()
+      await vm.fetch()
     })
   },
   async beforeRouteUpdate (to, from, next) {
-    this.from = parseInt(get(to.query, 'from', this.from))
-    this.size = parseInt(get(to.query, 'size', this.size))
-    this.queries = get(to.query, 'queries', this.queries)
-    this.sort = get(to.query, 'sort', this.sort)
-    this.order = get(to.query, 'order', this.order)
+    this.$set(this, 'from', parseInt(get(to.query, 'from', this.from)))
+    this.$set(this, 'size', parseInt(get(to.query, 'size', this.size)))
+    this.$set(this, 'queries', get(to.query, 'queries', this.queries))
+    this.$set(this, 'sort', get(to.query, 'sort', this.sort))
+    this.$set(this, 'order', get(to.query, 'order', this.order))
+    await this.fetchBatchSearches()
     await this.fetch()
     next()
   },
@@ -177,13 +178,19 @@ export default {
       return this.$store.state.batchSearch.selectedQueries
     }
   },
+  watch: {
+    selectedQueries: async function () {
+      this.$set(this, 'queries', this.selectedQueries)
+      await this.fetch()
+    }
+  },
   methods: {
     async fetch () {
+      this.$set(this, 'isReady', false)
       this.$Progress.start()
-      await this.fetchBatchSearches()
       await this.fetchBatchSearchResults()
-      this.isReady = true
       this.$Progress.finish()
+      this.$set(this, 'isReady', true)
     },
     fetchBatchSearches () {
       return store.dispatch('batchSearch/getBatchSearches')
@@ -191,11 +198,8 @@ export default {
     fetchBatchSearchResults () {
       return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from: this.from, size: this.size, queries: this.queries, sort: this.sort, order: this.order })
     },
-    filter (item, filter) {
-      return includes(filter, item.query)
-    },
     getToTemplate () {
-      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from: this.from, size: this.size } }
+      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from: this.from, size: this.size, queries: this.queries, sort: this.sort, order: this.order } }
     },
     capitalize,
     moment,
