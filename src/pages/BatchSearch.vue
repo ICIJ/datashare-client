@@ -18,21 +18,21 @@
           <content-placeholder :rows="rows" class="p-0 my-3" />
         </div>
         <b-table v-else striped hover responsive :fields="fields" :items="items" thead-tr-class="text-nowrap" tbody-tr-class="batch-search__items__item">
-          <template #name="row">
-            <router-link :to="{ name: 'batch-search.results', params: { index: row.item.project.id, uuid: row.item.uuid }, query: { from: 0, size, sort, order } }" class="batch-search__items__item__link">
-              {{ row.item.name }}
+          <template #name="{ item }">
+            <router-link :to="{ name: 'batch-search.results', params: { index: item.project.id, uuid: item.uuid }, query: { from: 0, size, sort, order } }" class="batch-search__items__item__link">
+              {{ item.name }}
             </router-link>
           </template>
-          <template #queries="row">
-            {{ $tc('batchSearch.query', row.item.queries.length) }}
+          <template #queries="{ item }">
+            {{ $tc('batchSearch.query', item.queries.length) }}
           </template>
-          <template #state="row">
+          <template #state="{ item }">
             <span class="badge badge-darker">
-              {{ capitalize(row.item.state) }}
+              {{ capitalize(item.state) }}
             </span>
           </template>
-          <template #date="row">
-            {{ moment(row.item.date).format('LLL') }}
+          <template #date="{ item }">
+            {{ moment(item.date).format('LLL') }}
           </template>
         </b-table>
       </div>

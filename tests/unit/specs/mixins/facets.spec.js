@@ -68,7 +68,7 @@ describe('facets mixin', () => {
 
       wrapper.vm.refreshRoute()
 
-      expect(router.push).toHaveBeenCalled()
+      expect(router.push).toBeCalled()
     })
 
     it('should emit an event "selected-values-from-store" on selectedValuesFromStore', () => {

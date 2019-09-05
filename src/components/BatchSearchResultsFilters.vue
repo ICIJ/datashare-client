@@ -11,7 +11,8 @@
           :items="metaQueriesKeys"
           multiple
           v-if="meta.queries && metaQueriesKeys.length > 1"
-          v-model="selectedQueries">
+          v-model="selectedQueries"
+          @input="onInput">
           <template #item-label="{ item }">
             {{ item }}
             <b-badge class="float-right my-1 px-2" variant="tertiary" pill>{{ meta.queries[item] }}</b-badge>
@@ -56,6 +57,11 @@ export default {
       get () {
         return this.$store.state.batchSearch.selectedQueries
       }
+    }
+  },
+  methods: {
+    onInput () {
+      this.$root.$emit('batch-search-results::filter')
     }
   }
 }

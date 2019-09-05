@@ -1,5 +1,5 @@
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
-import { createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
 import messages from '@/lang/en'
@@ -150,5 +150,18 @@ describe('BatchSearchResultsFilters.vue', () => {
 
     expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown > span span.badge')).toHaveLength(3)
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown > span span.badge').text()).toEqual('3')
+  })
+
+  it('should emit a "batch-search-results::filter" event on click on dropdown entry', async () => {
+    await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
+    await store.dispatch('batchSearch/getBatchSearches')
+    wrapper = mount(BatchSearchResultsFilters, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX } })
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+    rootWrapper._emitted['batch-search-results::filter'] = []
+
+    wrapper.find('.batch-search-results-filters__queries__dropdown > span').trigger('click')
+    await wrapper.vm.$nextTick()
+
+    expect(rootWrapper.emitted('batch-search-results::filter')).toHaveLength(1)
   })
 })

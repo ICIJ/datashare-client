@@ -38,21 +38,24 @@ jest.mock('@/api/DatashareClient', () => {
           creationDate: '2011-10-11T04:12:49.000+0000',
           documentId: 42,
           documentNumber: 0,
-          documentPath: 'this/is/a/path/42',
+          documentName: '42.pdf',
+          contentType: 'type_03',
           query: 'query_01',
           rootId: 42
         }, {
           creationDate: '2011-10-11T04:12:49.000+0000',
           documentId: 43,
           documentNumber: 1,
-          documentPath: 'this/is/a/path/43',
+          documentName: '43.pdf',
+          contentType: 'type_02',
           query: 'query_01',
           rootId: 43
         }, {
           creationDate: '2011-10-11T04:12:49.000+0000',
           documentId: 44,
           documentNumber: 2,
-          documentPath: 'this/is/a/path/44',
+          documentName: '44.pdf',
+          contentType: 'type_01',
           query: 'query_02',
           rootId: 44
         }
@@ -135,5 +138,22 @@ describe('BatchSearchResultsList.vue', () => {
   it('should display info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
     expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(4)
+  })
+
+  it('should refresh route on "batch-search-results::filter" event emitted', () => {
+    jest.spyOn(router, 'push')
+
+    wrapper.vm.$root.$emit('batch-search-results::filter')
+
+    expect(router.push).toBeCalled()
+  })
+
+  it('should re-route on sort changed', async () => {
+    jest.spyOn(router, 'push')
+
+    await wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
+
+    expect(router.push).toBeCalled()
+    expect(router.push).toBeCalledWith({ name: 'batch-search.results', params: { index: `${process.env.VUE_APP_ES_INDEX}`, uuid: '12' }, query: { from: 0, order: 'desc', queries: [], size: 100, sort: 'content_type' } })
   })
 })

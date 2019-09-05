@@ -43,22 +43,22 @@
       <div v-else class="batch-search-results__queries">
         <div class="card">
           <b-table striped hover no-local-sorting :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query">
-            <template #documentNumber="row">
-              {{ row.item.documentNumber + 1 }}
+            <template #documentNumber="{ item }">
+              {{ item.documentNumber + 1 }}
             </template>
-            <template #documentName="row">
-              <router-link :to="{ name: 'document', params: { index: $route.params.index, id: row.item.documentId, routing: row.item.rootId } }" target="_blank" class="batch-search-results__queries__query__link">
-                {{ row.item.documentName }}
+            <template #documentName="{ item }">
+              <router-link :to="{ name: 'document', params: { index: $route.params.index, id: item.documentId, routing: item.rootId } }" target="_blank" class="batch-search-results__queries__query__link">
+                {{ item.documentName }}
               </router-link>
             </template>
-            <template #creationDate="row">
-              {{ moment(row.item.creationDate).isValid() ? moment(row.item.creationDate).format('LLL') : '' }}
+            <template #creationDate="{ item }">
+              {{ moment(item.creationDate).isValid() ? moment(item.creationDate).format('LLL') : '' }}
             </template>
-            <template #contentType="row">
-              {{ getDocumentTypeLabel(row.item.contentType) }}
+            <template #contentType="{ item }">
+              {{ getDocumentTypeLabel(item.contentType) }}
             </template>
-            <template #contentLength="row">
-              {{ row.item.contentLength | humanSize }}
+            <template #contentLength="{ item }">
+              {{ item.contentLength | humanSize }}
             </template>
           </b-table>
         </div>
@@ -73,6 +73,7 @@ import store from '@/store'
 import moment from 'moment'
 import { mapState } from 'vuex'
 import capitalize from 'lodash/capitalize'
+import castArray from 'lodash/castArray'
 import find from 'lodash/find'
 import get from 'lodash/get'
 
@@ -154,9 +155,10 @@ export default {
     next(async vm => {
       vm.$set(vm, 'from', parseInt(get(to.query, 'from', vm.from)))
       vm.$set(vm, 'size', parseInt(get(to.query, 'size', vm.size)))
-      vm.$set(vm, 'queries', get(to.query, 'queries', vm.queries))
+      vm.$set(vm, 'queries', castArray(get(to.query, 'queries', vm.queries)))
       vm.$set(vm, 'sort', get(to.query, 'sort', vm.sort))
       vm.$set(vm, 'order', get(to.query, 'order', vm.order))
+      store.commit('batchSearch/selectedQueries', vm.queries)
       await vm.fetchBatchSearches()
       await vm.fetch()
     })
@@ -167,6 +169,7 @@ export default {
     this.$set(this, 'queries', get(to.query, 'queries', this.queries))
     this.$set(this, 'sort', get(to.query, 'sort', this.sort))
     this.$set(this, 'order', get(to.query, 'order', this.order))
+    store.commit('batchSearch/selectedQueries', this.queries)
     await this.fetchBatchSearches()
     await this.fetch()
     next()
@@ -186,11 +189,8 @@ export default {
       return this.order === 'desc'
     }
   },
-  watch: {
-    selectedQueries: async function () {
-      this.$set(this, 'queries', this.selectedQueries)
-      await this.fetch()
-    }
+  mounted () {
+    this.$root.$on('batch-search-results::filter', this.filter)
   },
   methods: {
     async fetch () {
@@ -213,6 +213,9 @@ export default {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
       const order = ctx.sortDesc ? 'desc' : 'asc'
       this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from: this.from, size: this.size, queries: this.queries, sort, order } })
+    },
+    filter () {
+      this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from: this.from, size: this.size, queries: this.selectedQueries, sort: this.sort, order: this.order } })
     },
     capitalize,
     moment,
