@@ -58,7 +58,7 @@
               {{ getDocumentTypeLabel(row.item.contentType) }}
             </template>
             <template #contentLength="row">
-              {{  row.item.contentLength | humanSize }}
+              {{ row.item.contentLength | humanSize }}
             </template>
           </b-table>
         </div>
@@ -150,6 +150,7 @@ export default {
       vm.$set(vm, 'from', parseInt(get(to.query, 'from', vm.from)))
       vm.$set(vm, 'size', parseInt(get(to.query, 'size', vm.size)))
       vm.$set(vm, 'queries', get(to.query, 'queries', vm.queries))
+      store.commit('batchSearch/selectedQueries', get(to.query, 'queries', vm.queries))
       vm.$set(vm, 'sort', get(to.query, 'sort', vm.sort))
       vm.$set(vm, 'order', get(to.query, 'order', vm.order))
       await vm.fetchBatchSearches()
@@ -160,6 +161,7 @@ export default {
     this.$set(this, 'from', parseInt(get(to.query, 'from', this.from)))
     this.$set(this, 'size', parseInt(get(to.query, 'size', this.size)))
     this.$set(this, 'queries', get(to.query, 'queries', this.queries))
+    store.commit('batchSearch/selectedQueries', get(to.query, 'queries', this.queries))
     this.$set(this, 'sort', get(to.query, 'sort', this.sort))
     this.$set(this, 'order', get(to.query, 'order', this.order))
     await this.fetchBatchSearches()
@@ -167,15 +169,12 @@ export default {
     next()
   },
   computed: {
-    ...mapState('batchSearch', ['results']),
+    ...mapState('batchSearch', ['results', 'selectedQueries']),
     meta () {
       return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || { }
     },
     downloadLink () {
       return DatashareClient.getFullUrl(`/api/batch/search/result/csv/${this.uuid}`)
-    },
-    selectedQueries () {
-      return this.$store.state.batchSearch.selectedQueries
     }
   },
   watch: {
