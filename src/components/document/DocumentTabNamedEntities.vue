@@ -13,14 +13,14 @@
           {{ $t('facet.named-entity-' + results[0].source.category.toLowerCase()) }} <i>({{ results.length }})</i>
         </div>
         <span v-for="(result, index) in groupByMentionNorm(results)" :key="index" class="d-inline mr-2">
-          <span class="badge badge-pill p-0 badge-light text-uppercase text-black border" :class="getCategoryClass(result[0].source.category, 'border-')">
+          <b-badge pill variant="light" class="p-0 text-uppercase text-black border" :class="getCategoryClass(result[0].source.category, 'border-')">
             <span class="p-1 d-inline-block" :title="capitalize(result[0].source.mentionNorm)"  v-b-tooltip.hover>
               {{ result[0].source.mentionNorm }}
             </span>
             <span class="bg-darkest text-light p-1 px-2 d-inline-block" :title="$tc('aggregations.mentions.occurrence', result.length, { count: result.length })" :class="getCategoryClass(result[0].source.category, 'bg-')" v-b-tooltip.hover>
               {{ result.length }}
             </span>
-          </span>
+          </b-badge>
         </span>
       </div>
     </div>

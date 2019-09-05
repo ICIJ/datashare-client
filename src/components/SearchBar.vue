@@ -36,7 +36,7 @@
                 <span v-html="injectTermInQuery(item.key)"></span>
               </div>
               <div>
-                <span class="badge badge-pill badge-light">{{ item.doc_count }}</span>
+                <b-badge pill variant="light">{{ item.doc_count }}</b-badge>
               </div>
             </div>
           </template>

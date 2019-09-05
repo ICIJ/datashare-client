@@ -26,7 +26,7 @@
           <dt class="col-sm-4 text-right">{{ $t('batchSearch.projectName') }}</dt>
           <dd class="col-sm-8">{{ meta.project.name }}</dd>
           <dt class="col-sm-4 text-right">{{ $t('batchSearch.state') }}</dt>
-          <dd class="col-sm-8"><span class="badge badge-darker">{{ capitalize(meta.state) }}</span></dd>
+          <dd class="col-sm-8"><b-badge variant="darker">{{ capitalize(meta.state) }}</b-badge></dd>
           <dt class="col-sm-4 text-right">{{ $t('batchSearch.date') }}</dt>
           <dd class="col-sm-8">{{ moment(meta.date).format('LLL') }}</dd>
           <dt class="col-sm-4 text-right">{{ $t('batchSearch.nbResults') }}</dt>

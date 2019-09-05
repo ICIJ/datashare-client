@@ -27,9 +27,9 @@
             {{ $tc('batchSearch.query', item.queries.length) }}
           </template>
           <template #state="{ item }">
-            <span class="badge badge-darker">
+            <b-badge variant="darker">
               {{ capitalize(item.state) }}
-            </span>
+            </b-badge>
           </template>
           <template #date="{ item }">
             {{ moment(item.date).format('LLL') }}

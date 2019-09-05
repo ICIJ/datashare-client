@@ -4,7 +4,7 @@
       <button class="search__show-filters align-self-center ml-3 btn btn-link px-0" @click="clickOnShowFilters()" v-if="!showFilters" :title="$t('search.showFilters')" v-b-tooltip.right>
         <fa icon="arrow-right" />
         <span class="sr-only">{{ $t('search.showFilters') }}</span>
-        <span class="search__show-filters__counter badge badge-warning badge-pill" v-if="activeFilters">{{ activeFilters }}</span>
+        <b-badge pill variant="warning" class="search__show-filters__counter" v-if="activeFilters">{{ activeFilters }}</b-badge>
       </button>
       <app-nav class="flex-grow-1" />
     </div>

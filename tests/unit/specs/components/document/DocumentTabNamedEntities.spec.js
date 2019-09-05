@@ -17,66 +17,65 @@ const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages }, silentTra
 describe('DocumentTabNamedEntities.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
+  const id = 'document'
 
   beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
   afterEach(() => store.commit('document/reset'))
 
   it('should display named entities in the dedicated tab', async () => {
-    const document = 'doc_01.txt'
-    await letData(es).have(new IndexedDocument(document)
+    await letData(es).have(new IndexedDocument(id)
       .withPipeline('CORENLP')
       .withNer('mention_01', 0, 'CATEGORY_01')
       .withNer('mention_02', 0, 'CATEGORY_02')
       .withNer('mention_03', 0, 'CATEGORY_03'))
       .commit()
-    await store.dispatch('document/get', { id: document }).then(() => store.dispatch('document/getNamedEntities'))
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
     const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
 
-    const pills = wrapper.findAll('.badge-pill')
+    const pills = wrapper.findAll('b-badge-stub')
     expect(pills).toHaveLength(3)
-    expect(pills.at(0).find('.badge-pill > span').text()).toEqual('mention_01')
+    expect(pills.at(0).find('b-badge-stub > span').text()).toEqual('mention_01')
     expect(pills.at(0).classes()).toContain('border-category-category_01')
-    expect(pills.at(1).find('.badge-pill > span').text()).toEqual('mention_02')
+    expect(pills.at(1).find('b-badge-stub > span').text()).toEqual('mention_02')
     expect(pills.at(1).classes()).toContain('border-category-category_02')
-    expect(pills.at(2).find('.badge-pill > span').text()).toEqual('mention_03')
+    expect(pills.at(2).find('b-badge-stub > span').text()).toEqual('mention_03')
     expect(pills.at(2).classes()).toContain('border-category-category_03')
   })
 
   it('should display a specific error message if no names finding task has been run on that document', async () => {
-    const document = 'doc_01.txt'
-    await letData(es).have(new IndexedDocument(document)).commit()
-    await store.dispatch('document/get', { id: document }).then(() => store.dispatch('document/getNamedEntities'))
+    await letData(es).have(new IndexedDocument(id)).commit()
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
     const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
 
     expect(wrapper.findAll('.document__named-entities--not--searched')).toHaveLength(1)
   })
 
   it('should display a specific error message if no named entities found after names finding task', async () => {
-    const document = 'doc_01.txt'
-    await letData(es).have(new IndexedDocument(document).withPipeline('CORENLP')).commit()
-    await store.dispatch('document/get', { id: document }).then(() => store.dispatch('document/getNamedEntities'))
+    await letData(es).have(new IndexedDocument(id).withPipeline('CORENLP')).commit()
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
     const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
 
     expect(wrapper.findAll('.document__named-entities--not--found')).toHaveLength(1)
   })
 
   it('should refresh the named entities search on custom event emitted', async () => {
-    const document = 'doc_01.txt'
-    let indexBuilder = await letData(es).have(new IndexedDocument(document)
+    const id = 'doc_01.txt'
+    let indexBuilder = await letData(es).have(new IndexedDocument(id)
       .withPipeline('CORENLP')
       .withNer('mention_01', 1, 'CATEGORY_01')
       .withNer('mention_02', 1, 'CATEGORY_02'))
       .commit()
-    await store.dispatch('document/get', { id: document }).then(() => store.dispatch('document/getNamedEntities'))
+    await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
     const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
 
-    expect(wrapper.findAll('.badge-pill')).toHaveLength(2)
+    expect(wrapper.findAll('b-badge-stub')).toHaveLength(2)
 
     await indexBuilder.hideNer('mention_02')
     wrapper.vm.$root.$emit('facet::hide::named-entities')
     await delay(100)
-    expect(wrapper.findAll('.badge-pill')).toHaveLength(1)
+
+    expect(wrapper.findAll('b-badge-stub')).toHaveLength(1)
   })
 })
 
