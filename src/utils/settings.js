@@ -156,6 +156,6 @@ export default {
   batchSearchResults: {
     size: 100,
     sort: 'doc_nb',
-    order: 'desc'
+    order: 'asc'
   }
 }
