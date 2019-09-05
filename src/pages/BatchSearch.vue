@@ -19,7 +19,7 @@
         </div>
         <b-table v-else striped hover responsive :fields="fields" :items="items" thead-tr-class="text-nowrap" tbody-tr-class="batch-search__items__item">
           <template #name="row">
-            <router-link :to="{ name: 'batch-search.results', params: { index: row.item.project.id, uuid: row.item.uuid }, query: { from: 0, size } }" class="batch-search__items__item__link">
+            <router-link :to="{ name: 'batch-search.results', params: { index: row.item.project.id, uuid: row.item.uuid }, query: { from: 0, size, sort, order } }" class="batch-search__items__item__link">
               {{ row.item.name }}
             </router-link>
           </template>
@@ -100,14 +100,21 @@ export default {
   computed: {
     ...mapState('batchSearch', { items: 'batchSearches' }),
     size () {
-      return settings.batchSearchResultsSize
+      return settings.batchSearchResults.size
+    },
+    sort () {
+      return settings.batchSearchResults.sort
+    },
+    order () {
+      return settings.batchSearchResults.order
     }
   },
   async created () {
+    this.$set(this, 'isReady', false)
     this.$Progress.start()
     await this.$store.dispatch('batchSearch/getBatchSearches')
-    this.isReady = true
     this.$Progress.finish()
+    this.$set(this, 'isReady', true)
   },
   methods: {
     moment,

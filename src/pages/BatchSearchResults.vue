@@ -42,7 +42,7 @@
       </div>
       <div v-else class="batch-search-results__queries">
         <div class="card">
-          <b-table striped hover :fields="fields" :items="results" tbody-tr-class="batch-search-results__queries__query">
+          <b-table striped hover no-local-sorting :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query">
             <template #documentNumber="row">
               {{ row.item.documentNumber + 1 }}
             </template>
@@ -80,6 +80,7 @@ import DatashareClient from '@/api/DatashareClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
 import Pagination from '@/components/Pagination'
+import settings from '@/utils/settings'
 
 export default {
   name: 'BatchSearchResults',
@@ -103,32 +104,36 @@ export default {
         {
           key: 'documentNumber',
           label: this.$t('batchSearchResults.index'),
-          sortable: true
+          sortable: true,
+          name: 'doc_nb'
         },
         {
           key: 'query',
-          label: this.$t('batchSearchResults.query'),
-          sortable: true
+          label: this.$t('batchSearchResults.query')
         },
         {
           key: 'documentName',
           label: this.$t('batchSearchResults.documentName'),
-          sortable: true
+          sortable: true,
+          name: 'doc_name'
         },
         {
           key: 'creationDate',
           label: this.$t('batchSearchResults.creationDate'),
-          sortable: true
+          sortable: true,
+          name: 'creation_date'
         },
         {
           key: 'contentType',
           label: this.$t('batchSearchResults.contentType'),
-          sortable: true
+          sortable: true,
+          name: 'content_type'
         },
         {
           key: 'contentLength',
           label: this.$t('batchSearchResults.size'),
-          sortable: true
+          sortable: true,
+          name: 'content_length'
         }
       ],
       isReady: false,
@@ -139,10 +144,10 @@ export default {
         }
       ],
       from: 0,
-      size: 100,
+      size: settings.batchSearchResults.size,
       queries: [],
-      sort: 'doc_nb',
-      order: 'desc'
+      sort: settings.batchSearchResults.sort,
+      order: settings.batchSearchResults.order
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -150,7 +155,6 @@ export default {
       vm.$set(vm, 'from', parseInt(get(to.query, 'from', vm.from)))
       vm.$set(vm, 'size', parseInt(get(to.query, 'size', vm.size)))
       vm.$set(vm, 'queries', get(to.query, 'queries', vm.queries))
-      store.commit('batchSearch/selectedQueries', get(to.query, 'queries', vm.queries))
       vm.$set(vm, 'sort', get(to.query, 'sort', vm.sort))
       vm.$set(vm, 'order', get(to.query, 'order', vm.order))
       await vm.fetchBatchSearches()
@@ -161,7 +165,6 @@ export default {
     this.$set(this, 'from', parseInt(get(to.query, 'from', this.from)))
     this.$set(this, 'size', parseInt(get(to.query, 'size', this.size)))
     this.$set(this, 'queries', get(to.query, 'queries', this.queries))
-    store.commit('batchSearch/selectedQueries', get(to.query, 'queries', this.queries))
     this.$set(this, 'sort', get(to.query, 'sort', this.sort))
     this.$set(this, 'order', get(to.query, 'order', this.order))
     await this.fetchBatchSearches()
@@ -175,6 +178,12 @@ export default {
     },
     downloadLink () {
       return DatashareClient.getFullUrl(`/api/batch/search/result/csv/${this.uuid}`)
+    },
+    sortBy () {
+      return find(this.fields, item => item.name === this.sort).key
+    },
+    orderBy () {
+      return this.order === 'desc'
     }
   },
   watch: {
@@ -199,6 +208,11 @@ export default {
     },
     getToTemplate () {
       return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from: this.from, size: this.size, queries: this.queries, sort: this.sort, order: this.order } }
+    },
+    async sortChanged (ctx) {
+      const sort = find(this.fields, item => item.key === ctx.sortBy).name
+      const order = ctx.sortDesc ? 'desc' : 'asc'
+      this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from: this.from, size: this.size, queries: this.queries, sort, order } })
     },
     capitalize,
     moment,
