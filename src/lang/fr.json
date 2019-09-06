@@ -462,17 +462,17 @@
   },
   "batchSearchResults": {
     "index": "Index",
-    "query": "Query",
-    "documentName": "Document Name",
-    "creationDate": "Creation Date",
-    "contentType": "Content Type",
-    "size": "Size",
-    "downloadResults": "Download results",
-    "all": "All"
+    "query": "Recherche",
+    "documentName": "Nom du document",
+    "creationDate": "Date de création",
+    "contentType": "Type de contenu",
+    "size": "Taille",
+    "downloadResults": "Télécharger les résultats",
+    "all": "Tout"
   },
   "batchSearchResultsFilters": {
     "queries": {
-      "heading": "Filter by queries"
+      "heading": "Filtrer par recherches"
     }
   }
 }
