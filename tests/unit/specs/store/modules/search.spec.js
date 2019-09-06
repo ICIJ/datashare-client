@@ -359,12 +359,20 @@ describe('Search store', () => {
     expect(store.getters['search/findFacet']('content-type').values[0]).toEqual('new_type')
   })
 
-  it('should not change the starredDocuments', async () => {
+  it('should not change the starredDocuments on updateFromRouteQuery', async () => {
     store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
 
     await store.dispatch('search/updateFromRouteQuery', {})
 
     expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
+  })
+
+  it('should not change the field on updateFromRouteQuery', async () => {
+    store.commit('search/field', 'author')
+
+    await store.dispatch('search/updateFromRouteQuery', {})
+
+    expect(store.state.search.field).toEqual('author')
   })
 
   it('should not delete the term from the query if it doesn\'t exist', async () => {
