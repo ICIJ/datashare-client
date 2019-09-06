@@ -22,12 +22,12 @@
     "field": {
       "all": "Tous les champs",
       "tags": "Tags",
-      "title": "Title",
-      "author": "Author",
-      "recipients": "Recipients",
-      "content": "Content",
-      "path": "Path",
-      "thread": "Thread ID"
+      "title": "Titre",
+      "author": "Auteur·trice",
+      "recipients": "Destinataires·trices",
+      "content": "Contenu",
+      "path": "Chemin",
+      "thread": "ID de fil de discussion"
     },
     "placeholder": "Rechercher dans les documents...",
     "buttonlabel": "Rechercher",
@@ -78,7 +78,7 @@
         "tooltipOthers": "Document suivant (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
       },
       "document": {
-        "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>%{extension}</code> before you can open it."
+        "extensionWarning": "Ce document a une extension de fichier qui ne correspond pas à son type. Vous aurez peut-être à ajouter l'extension <code>%{extension}</code> avant de l'ouvrir."
       }
     }
   },
