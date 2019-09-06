@@ -385,10 +385,10 @@
     "no": "Non",
     "go": "Exécuter",
     "tasks": "Tâches",
-    "empty": "Vous n'avez pas encore démarré de tâches",
+    "empty": "Vous n'avez pas encore démarré de tâches.",
     "extract_text": "Extraire le texte",
-    "extracting_header": "Pendant l'indexation, voulez-vous aussi extraire le texte des images et des PDFs ?",
-    "extracting_subheader": "Si oui, Datashare appliquera l'OCR (Optical Character Recognition). Cela peut prendre jusqu'à 10 fois plus de temps.",
+    "extracting_header": "Voulez-vous aussi extraire le texte des images et des PDFs ?",
+    "extracting_subheader": "Si oui, Datashare exécutera l'OCR (la reconnaissance de caractères optiques - Optical Character Recognition). Cela peut prendre jusqu'à 10 fois plus de temps.",
     "find_named_entities": "Trouver les personnes, organisations et lieux",
     "find_named_entities_header": "Quelle technologie voulez-vous utiliser pour trouver les entités nommées ?",
     "find_named_entities_subheader": "Datashare applique des modèles de Traitement de Language Naturel. Veuillez choisir l'un d'eux:",
@@ -400,15 +400,15 @@
     "ixapipe": "Ixa Pipe",
     "email": "Extraction d'adresses emails",
     "default": "Par défaut - Meilleure probablilité de fonctionner pour tous les documents",
-    "sync_models": "Hors ligne",
+    "sync_models": "Veuillez cocher cette case si vous travaillez actuellement hors ligne.",
     "stop_task": "Arrêter cette tâche",
     "stop_pending_tasks": "Arrêter toutes les tâches en cours",
     "delete_done_tasks": "Supprimer les tâches terminées",
     "delete_index_label": "Effacer tous les documents de Datashare",
-    "delete_index_description": "Pour être en sécurité, effacez tous les documents dans le fichier Datashare de votre ordinateur - n'oubliez pas de vider tous les documents Datashare de votre corbeille également ! Assurez-vous d'avoir gardé une copie de vos documents dans un endroit sûr."
+    "delete_index_description": "Pour 100% sûr·e, effacez tous les documents dans le fichier Datashare de votre ordinateur - n'oubliez pas de vider tous les documents Datashare de votre corbeille également ! Assurez-vous d'avoir gardé une copie de vos documents dans un endroit sûr."
   },
   "menu": {
-    "help": "Aide",
+    "help": "Demander de l'aide",
     "analyse": "Analyser mes documents",
     "batch": "Recherches en lot",
     "search": "Rechercher dans les documents",
@@ -423,17 +423,17 @@
     "serverVersion": "Serveur"
   },
   "login": {
-    "welcome": "Bienvenue sur Datashare",
+    "welcome": "Bienvenue dans Datashare",
     "sum_up": "La plateforme de recherche et de découverte de l'<a href=\"https://icij.org\">ICIJ</a>.",
     "authentication_platform": "Pour vous connecter, utilisez la plateforme d'authentification sécurisée de l'ICIJ :",
     "xemx": "Se connecter avec Xemx",
-    "support_desk": "Si vous avez besoin d'aide, veuillez visiter notre bureau support :",
+    "support_desk": "Si vous avez besoin d'aide, veuillez contacter notre bureau support :",
     "ask_help": "Aide"
   },
   "userHistory": {
-    "heading": "Votre historique de navigation",
+    "heading": "Votre historique",
     "description": "Les 500 derniers documents ouverts avec Datashare sur cet ordinateur.",
-    "empty": "Votre historique est vide.",
+    "empty": "Votre historique est vide",
     "clear": "Vider l'historique"
   },
   "batchSearch": {
