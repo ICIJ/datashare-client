@@ -19,6 +19,16 @@
       "service-unavailable": "El servidor no puede responder a la búsqueda",
       "something-wrong": "Error"
     },
+    "field": {
+      "all": "All fields",
+      "tags": "Tags",
+      "title": "Title",
+      "author": "Author",
+      "recipients": "Recipients",
+      "content": "Content",
+      "path": "Path",
+      "thread": "Thread ID"
+    },
     "placeholder": "Buscar en documentos...",
     "buttonlabel": "Buscar",
     "search-in": "Buscar en",
@@ -95,6 +105,7 @@
     "named-entity-person": "Personas",
     "named-entity-location": "Ubicaciones",
     "named-entity-organization": "Organizaciones",
+    "named-entity-email": "Emails",
     "path": "Ruta",
     "indexing-date": "Fecha de indexación\n ",
     "extraction-level": "Nivel de extracción",
@@ -308,7 +319,9 @@
       "level_08": "8°",
       "level_09": "9°",
       "level_10": "10°"
-    }
+    },
+    "tags": "Tags",
+    "selectDateRange": "Select a date range"
   },
   "document": {
     "name": "Nombre del archivo",
@@ -320,7 +333,7 @@
     "content_type": "Tipo de contenido",
     "content_encoding": "Codificación de contenido",
     "parent_document": "Documento Principal",
-    "details": "Etiqueta & Detalles",
+    "tab_details": "Tags & Details",
     "named_entities": "Entidades identificadas",
     "extracted_text": "Texto extraído",
     "translations": "Translations",
@@ -329,6 +342,7 @@
     "external_window": "Abrir en una nueva ventana",
     "download_file": "Descargar el archivo fuente",
     "star_button": "Marcar como favorito",
+    "unstar_button": "Unstar",
     "star_file": "Marcar como favorito",
     "not_found": "Documento no encontrado",
     "not_available": "La vista previa está disponible solo para algunos formatos: pdf, csv, xlsx, tiff y rtf.",
@@ -348,17 +362,25 @@
     "researched_terms": "En este archivo:",
     "fetching": "Cargando vista previa...",
     "tags": "Etiquetas",
+    "tag": "Tag",
+    "tags_visibility": "These tags are visible for all users. Tags should be separated by space.",
+    "tags_new": "Add a new tag",
+    "details": "Etiqueta & Detalles",
+    "details_info": "These information are extracted from the document's metadata.",
     "showMoreDetails": "Más detalles",
     "showLessDetails": "Menos detalles",
     "author": "Autor",
     "extraction_date": "Fecha de índice",
-    "parent": "Archivo de base"
+    "parent": "Archivo de base",
+    "in_metadata": "in metadata"
   },
   "email": {
     "detail": "Más detalles",
     "to": "Para"
   },
   "indexing": {
+    "title": "Analyze your documents",
+    "description": "Please <a href=\"%{howToLink}\" target=\"_blank\">read the documentation</a> about adding documents.",
     "yes": "Sí",
     "no": "No",
     "go": "Ir",
@@ -376,6 +398,7 @@
     "opennlp": "Open NLP",
     "mitie": "Mitie",
     "ixapipe": "Ixa Pipe",
+    "email": "Email extraction",
     "default": "Por defecto - Ofrece la mayor probabilidad de trabajar en la mayoría de los documentos",
     "sync_models": "Por favor marque esta casilla si actualmente está trabajando sin conexión a Internet.",
     "stop_task": "Detener esta tarea",
@@ -387,6 +410,9 @@
   "menu": {
     "help": "Pedir ayuda",
     "analyse": "Analizar mis documentos",
+    "batch": "Batch searches",
+    "search": "Search in documents",
+    "history": "Your history",
     "logout": "Cerrar sesión",
     "addDocuments": "Cómo agregar documentos",
     "faq": "Preguntas frecuentes (FAQ)"
@@ -394,8 +420,7 @@
   "footer": {
     "homedir": "Mueve archivos a este directorio para analizarlos",
     "clientVersion": "Cliente",
-    "serverVersion": "Servidor",
-    "userHistory": "Tu historia"
+    "serverVersion": "Servidor"
   },
   "login": {
     "welcome": "Beinvenido a Datashare",
@@ -410,5 +435,44 @@
     "description": "Los últimos 500 documentos que abriste con Datashare desde esta computadora",
     "empty": "Tu historia está vacía",
     "clear": "Borrar historia"
+  },
+  "batchSearch": {
+    "lead": "Search multiple terms and documents at once.",
+    "title": "Batch searches",
+    "form": {
+      "heading": "New batch search",
+      "nameLabel": "Name of your new batch search:",
+      "namePlaceholder": "",
+      "descriptionLabel": "Description:",
+      "descriptionPlaceholder": "",
+      "projectLabel": "Project",
+      "fileLabel": "CSV file:",
+      "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
+      "filePlaceholder": "Choose a file...",
+      "submit": "Add"
+    },
+    "projectName": "Project Name",
+    "searchName": "Search Name",
+    "description": "Description",
+    "queries": "Queries",
+    "state": "State",
+    "date": "Date",
+    "nbResults": "Number of results",
+    "query": "no queries | 1 query | {count} queries"
+  },
+  "batchSearchResults": {
+    "index": "Index",
+    "query": "Query",
+    "documentName": "Document Name",
+    "creationDate": "Creation Date",
+    "contentType": "Content Type",
+    "size": "Size",
+    "downloadResults": "Download results",
+    "all": "All"
+  },
+  "batchSearchResultsFilters": {
+    "queries": {
+      "heading": "Filter by queries"
+    }
   }
 }
