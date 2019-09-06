@@ -20,7 +20,7 @@
       "something-wrong": "Erreur"
     },
     "field": {
-      "all": "All fields",
+      "all": "Tous les champs",
       "tags": "Tags",
       "title": "Title",
       "author": "Author",
@@ -363,7 +363,7 @@
     "fetching": "Chargement de la prévisualisation...",
     "tags": "Tags",
     "tag": "Tag",
-    "tags_visibility": "These tags are visible for all users. Tags should be separated by space.",
+    "tags_visibility": "Ces tags sont visibles par tous les utilisateurs. Les tags sont séparés par des espaces.",
     "tags_new": "Add a new tag",
     "details": "Tags & Détails",
     "details_info": "These information are extracted from the document's metadata.",
