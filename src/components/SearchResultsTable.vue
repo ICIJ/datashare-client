@@ -22,8 +22,8 @@
         selected-variant="tertiary"
         tbody-tr-class="search-results-table__items__row">
         <template #relevance="{ item, rowSelected }" >
-          <fa :icon="item.contentTypeIcon" fixed-width  class="search-results-table__items__row__icon" />
-          <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" />
+          <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon" :class="{ 'feature_batch_starred' : hasFeature('BATCH_STARRED') }" />
+          <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" v-if="hasFeature('BATCH_STARRED')" />
         </template>
         <template #path="{ item }">
           <router-link :to="{ name: 'document', params: item.routerParams }" class="text-truncate">
@@ -229,8 +229,8 @@ export default {
       &__row {
 
         table tbody tr:not(.b-table-row-selected):not(:hover) &__checkbox,
-        table tbody tr.b-table-row-selected &__icon,
-        table tbody tr:hover &__icon {
+        table tbody tr.b-table-row-selected &__icon.feature_batch_starred,
+        table tbody tr:hover &__icon.feature_batch_starred {
           display: none;
         }
 
