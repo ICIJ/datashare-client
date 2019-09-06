@@ -329,50 +329,52 @@ describe('Search store', () => {
     expect(store.state.search.showFilters).toEqual(!showFilters)
   })
 
-  it('should set the index of the store according to the url', async () => {
-    await store.dispatch('search/updateFromRouteQuery', { index: process.env.VUE_APP_ES_ANOTHER_INDEX })
-    expect(store.state.search.index).toEqual(process.env.VUE_APP_ES_ANOTHER_INDEX)
-  })
+  describe('test the restored search state from url', () => {
+    it('should set the index of the store according to the url', async () => {
+      await store.dispatch('search/updateFromRouteQuery', { index: process.env.VUE_APP_ES_ANOTHER_INDEX })
+      expect(store.state.search.index).toEqual(process.env.VUE_APP_ES_ANOTHER_INDEX)
+    })
 
-  it('should set the query of the store according to the url', async () => {
-    await store.dispatch('search/updateFromRouteQuery', { q: 'new_query' })
-    expect(store.state.search.query).toEqual('new_query')
-  })
+    it('should set the query of the store according to the url', async () => {
+      await store.dispatch('search/updateFromRouteQuery', { q: 'new_query' })
+      expect(store.state.search.query).toEqual('new_query')
+    })
 
-  it('should set the from of the store according to the url', async () => {
-    await store.dispatch('search/updateFromRouteQuery', { from: 42 })
-    expect(store.state.search.from).toEqual(42)
-  })
+    it('should set the from of the store according to the url', async () => {
+      await store.dispatch('search/updateFromRouteQuery', { from: 42 })
+      expect(store.state.search.from).toEqual(42)
+    })
 
-  it('should set the size of the store according to the url', async () => {
-    await store.dispatch('search/updateFromRouteQuery', { size: 24 })
-    expect(store.state.search.size).toEqual(24)
-  })
+    it('should set the size of the store according to the url', async () => {
+      await store.dispatch('search/updateFromRouteQuery', { size: 24 })
+      expect(store.state.search.size).toEqual(24)
+    })
 
-  it('should set the sort of the store according to the url', async () => {
-    await store.dispatch('search/updateFromRouteQuery', { sort: 'new_sort' })
-    expect(store.state.search.sort).toEqual('new_sort')
-  })
+    it('should set the sort of the store according to the url', async () => {
+      await store.dispatch('search/updateFromRouteQuery', { sort: 'new_sort' })
+      expect(store.state.search.sort).toEqual('new_sort')
+    })
 
-  it('should set the facet of the store according to the url', async () => {
-    await store.dispatch('search/updateFromRouteQuery', { 'f[content-type]': ['new_type'] })
-    expect(store.getters['search/findFacet']('content-type').values[0]).toEqual('new_type')
-  })
+    it('should set the facet of the store according to the url', async () => {
+      await store.dispatch('search/updateFromRouteQuery', { 'f[content-type]': ['new_type'] })
+      expect(store.getters['search/findFacet']('content-type').values[0]).toEqual('new_type')
+    })
 
-  it('should not change the starredDocuments on updateFromRouteQuery', async () => {
-    store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
+    it('should not change the starredDocuments on updateFromRouteQuery', async () => {
+      store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
 
-    await store.dispatch('search/updateFromRouteQuery', {})
+      await store.dispatch('search/updateFromRouteQuery', {})
 
-    expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
-  })
+      expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
+    })
 
-  it('should not change the field on updateFromRouteQuery', async () => {
-    store.commit('search/field', 'author')
+    it('should not change the field on updateFromRouteQuery', async () => {
+      store.commit('search/field', 'author')
 
-    await store.dispatch('search/updateFromRouteQuery', {})
+      await store.dispatch('search/updateFromRouteQuery', {})
 
-    expect(store.state.search.field).toEqual('author')
+      expect(store.state.search.field).toEqual('author')
+    })
   })
 
   it('should not delete the term from the query if it doesn\'t exist', async () => {
