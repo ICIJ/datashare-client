@@ -1,8 +1,8 @@
 <template>
   <div class="search-results-table">
-    <div v-if="selected.length > 0 && hasFeature('BATCH_STARRED')" class="d-inline-flex">
+    <div v-if="selected.length > 0" class="d-inline-flex">
       <b-list-group class="search-results-table__actions" horizontal>
-        <b-list-group-item class="search-results-table__actions__action" href="#" v-for="action in actions" :key="action.id" @click="onClick(action.id)">
+        <b-list-group-item class="search-results-table__actions__action" href="#" v-for="action in actions" :key="action.id" @click="onClick(action.id)" v-if="action.isDisplayed">
           <fa :icon="action.icon" :class="action.iconClass"/>{{ action.label }}
         </b-list-group-item>
       </b-list-group>
@@ -13,7 +13,7 @@
       <b-table
         striped
         hover
-        :selectable="hasFeature('BATCH_STARRED')"
+        selectable
         @row-selected="onRowSelected"
         :items="itemsProvider"
         :fields="fields"
@@ -22,8 +22,8 @@
         selected-variant="tertiary"
         tbody-tr-class="search-results-table__items__row">
         <template #relevance="{ item, rowSelected }" >
-          <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon" :class="{ 'feature_batch_starred' : hasFeature('BATCH_STARRED') }" />
-          <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" v-if="hasFeature('BATCH_STARRED')" />
+          <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon" />
+          <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" />
         </template>
         <template #path="{ item }">
           <router-link :to="{ name: 'document', params: item.routerParams }" class="text-truncate">
@@ -86,20 +86,6 @@ export default {
     return {
       selected: [],
       isBusy: false,
-      actions: [{
-        id: 'star',
-        label: this.$t('document.star_button'),
-        icon: ['fa', 'star']
-      }, {
-        id: 'unstar',
-        label: this.$t('document.unstar_button'),
-        icon: ['far', 'star']
-      }, {
-        id: 'tag',
-        label: this.$t('document.tag'),
-        icon: ['fa', 'tag'],
-        iconClass: 'fa-flip-horizontal'
-      }],
       isTagDisplayed: false
     }
   },
@@ -152,6 +138,25 @@ export default {
     }
   },
   computed: {
+    actions () {
+      return [{
+        id: 'star',
+        label: this.$t('document.star_button'),
+        icon: ['fa', 'star'],
+        isDisplayed: true
+      }, {
+        id: 'unstar',
+        label: this.$t('document.unstar_button'),
+        icon: ['far', 'star'],
+        isDisplayed: true
+      }, {
+        id: 'tag',
+        label: this.$t('document.tag'),
+        icon: ['fa', 'tag'],
+        iconClass: 'fa-flip-horizontal',
+        isDisplayed: this.hasFeature('BATCH_TAGS')
+      }]
+    },
     hasResults () {
       return this.response.hits.length > 0
     },
@@ -229,8 +234,8 @@ export default {
       &__row {
 
         table tbody tr:not(.b-table-row-selected):not(:hover) &__checkbox,
-        table tbody tr.b-table-row-selected &__icon.feature_batch_starred,
-        table tbody tr:hover &__icon.feature_batch_starred {
+        table tbody tr.b-table-row-selected &__icon,
+        table tbody tr:hover &__icon {
           display: none;
         }
 
