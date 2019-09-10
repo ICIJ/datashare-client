@@ -1,7 +1,7 @@
 {
   "aggregations": {
     "mentions": {
-      "item": "%{occurrences} in %{documents}",
+      "item": "%{occurrences} en %{documents}",
       "occurrence": "sin ocurrencias | una ocurrencia | {count} occurencias",
       "document": "sin docs | un doc | {count} docs"
     },
@@ -20,14 +20,14 @@
       "something-wrong": "Error"
     },
     "field": {
-      "all": "All fields",
-      "tags": "Tags",
-      "title": "Title",
-      "author": "Author",
-      "recipients": "Recipients",
-      "content": "Content",
-      "path": "Path",
-      "thread": "Thread ID"
+      "all": "Todos los campos",
+      "tags": "Etiquetas",
+      "title": "Título",
+      "author": "Autor",
+      "recipients": "Destinatarios",
+      "content": "Contenido",
+      "path": "Ruta",
+      "thread": "ID del hilo"
     },
     "placeholder": "Buscar en documentos...",
     "buttonlabel": "Buscar",
@@ -55,12 +55,12 @@
         "relevance": "Relevancia",
         "dateNewest": "Fecha (más reciente)",
         "dateOldest": "Fecha (más antiguo)",
-        "creationDateNewest": "Creation date (newest)",
-        "creationDateOldest": "Creation date (oldest)",
+        "creationDateNewest": "Fecha de creación (más reciente)",
+        "creationDateOldest": "Fecha de creación (más antigua)",
         "sizeLargest": "Tamaño (disminuyendo)",
         "sizeSmallest": "Tamaño (aumentado)",
-        "path": "File path (A to Z)",
-        "pathReverse": "File path (Z to A)"
+        "path": "Ruta del archivo (de A a Z)",
+        "pathReverse": "Ruta del archivo (de A a Z)"
       }
     },
     "reset_filters": "Resetear filtros",
@@ -78,7 +78,7 @@
         "tooltipOthers": "Documento siguiente (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
       },
       "document": {
-        "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>%{extension}</code> before you can open it."
+        "extensionWarning": "Este documento tiene una extensión incorrecta para su tipo. Puede que necesite añadir la extensión <code>%{extension}</code> antes de poder abrirlo."
       }
     }
   },
@@ -89,9 +89,9 @@
     "lastPage": "Ir a última página"
   },
   "documentTranslatedContent": {
-    "detected": "Detected language",
-    "viewOriginal": "View original text",
-    "viewTranslated": "View translated text"
+    "detected": "Idioma detectado",
+    "viewOriginal": "Mostrar el texto original",
+    "viewTranslated": "Mostrar el texto traducido"
   },
   "facet": {
     "none": "No hay valores",
@@ -105,7 +105,7 @@
     "named-entity-person": "Personas",
     "named-entity-location": "Ubicaciones",
     "named-entity-organization": "Organizaciones",
-    "named-entity-email": "Emails",
+    "named-entity-email": "Correos electrónicos",
     "path": "Ruta",
     "indexing-date": "Fecha de indexación\n ",
     "extraction-level": "Nivel de extracción",
@@ -179,7 +179,7 @@
       "HAUSA": "Hausa",
       "HEBREW": "Hebreo",
       "HERERO": "Herero",
-      "HINDI": "Hindi",
+      "HINDI": "Hindú",
       "HIRIMOTU": "Hirimotu",
       "HUNGARIAN": "Húngaro",
       "INTERLINGUA": "Interlingua",
@@ -320,8 +320,8 @@
       "level_09": "9°",
       "level_10": "10°"
     },
-    "tags": "Tags",
-    "selectDateRange": "Select a date range"
+    "tags": "Etiquetas",
+    "selectDateRange": "Selecciona un intervalo de fechas"
   },
   "document": {
     "name": "Nombre del archivo",
@@ -333,16 +333,16 @@
     "content_type": "Tipo de contenido",
     "content_encoding": "Codificación de contenido",
     "parent_document": "Documento Principal",
-    "tab_details": "Tags & Details",
+    "tab_details": "Etiquetas y detalles",
     "named_entities": "Entidades identificadas",
     "extracted_text": "Texto extraído",
-    "translations": "Translations",
+    "translations": "Traducciones",
     "preview": "Vista previa",
     "download_button": "Descargar",
     "external_window": "Abrir en una nueva ventana",
     "download_file": "Descargar el archivo fuente",
     "star_button": "Marcar como favorito",
-    "unstar_button": "Unstar",
+    "unstar_button": "Eliminar de destacados",
     "star_file": "Marcar como favorito",
     "not_found": "Documento no encontrado",
     "not_available": "La vista previa está disponible solo para algunos formatos: pdf, csv, xlsx, tiff y rtf.",
@@ -362,25 +362,25 @@
     "researched_terms": "En este archivo:",
     "fetching": "Cargando vista previa...",
     "tags": "Etiquetas",
-    "tag": "Tag",
-    "tags_visibility": "These tags are visible for all users. Tags should be separated by space.",
-    "tags_new": "Add a new tag",
+    "tag": "Etiqueta",
+    "tags_visibility": "Estas etiquetas son visibles para todos los usuarios. Las etiquetas deben estar separadas por espacios.",
+    "tags_new": "Añadir una nueva etiqueta",
     "details": "Etiqueta & Detalles",
-    "details_info": "These information are extracted from the document's metadata.",
+    "details_info": "Esta información se extrae de los metadatos del documento.",
     "showMoreDetails": "Más detalles",
     "showLessDetails": "Menos detalles",
     "author": "Autor",
     "extraction_date": "Fecha de índice",
     "parent": "Archivo de base",
-    "in_metadata": "in metadata"
+    "in_metadata": "en los metadatos"
   },
   "email": {
     "detail": "Más detalles",
     "to": "Para"
   },
   "indexing": {
-    "title": "Analyze your documents",
-    "description": "Please <a href=\"%{howToLink}\" target=\"_blank\">read the documentation</a> about adding documents.",
+    "title": "Analiza tus documentos",
+    "description": "Por favor, <a href=\"%{howToLink}\" target=\"_blank\">lea la documentación</a> sobre cómo añadir documentos.",
     "yes": "Sí",
     "no": "No",
     "go": "Ir",
@@ -398,7 +398,7 @@
     "opennlp": "Open NLP",
     "mitie": "Mitie",
     "ixapipe": "Ixa Pipe",
-    "email": "Email extraction",
+    "email": "Extracción de correos electrónicos",
     "default": "Por defecto - Ofrece la mayor probabilidad de trabajar en la mayoría de los documentos",
     "sync_models": "Por favor marque esta casilla si actualmente está trabajando sin conexión a Internet.",
     "stop_task": "Detener esta tarea",
@@ -410,9 +410,9 @@
   "menu": {
     "help": "Pedir ayuda",
     "analyse": "Analizar mis documentos",
-    "batch": "Batch searches",
-    "search": "Search in documents",
-    "history": "Your history",
+    "batch": "Búsquedas masivas",
+    "search": "Buscar en documentos",
+    "history": "Tu historial",
     "logout": "Cerrar sesión",
     "addDocuments": "Cómo agregar documentos",
     "faq": "Preguntas frecuentes (FAQ)"
@@ -437,42 +437,42 @@
     "clear": "Borrar historia"
   },
   "batchSearch": {
-    "lead": "Search multiple terms and documents at once.",
-    "title": "Batch searches",
+    "lead": "Buscar múltiples términos y documentos a la vez.",
+    "title": "Búsquedas masivas",
     "form": {
-      "heading": "New batch search",
-      "nameLabel": "Name of your new batch search:",
+      "heading": "Nueva búsqueda masiva",
+      "nameLabel": "Nombre de tu nueva búsqueda masiva:",
       "namePlaceholder": "",
-      "descriptionLabel": "Description:",
+      "descriptionLabel": "Descripción:",
       "descriptionPlaceholder": "",
-      "projectLabel": "Project",
-      "fileLabel": "CSV file:",
-      "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
-      "filePlaceholder": "Choose a file...",
-      "submit": "Add"
+      "projectLabel": "Proyecto",
+      "fileLabel": "Archivo CSV:",
+      "fileDescription": "Sólo se acepta el formato CSV. La primera columna debe contener los términos a buscar.",
+      "filePlaceholder": "Escoge un archivo...",
+      "submit": "Agregar"
     },
-    "projectName": "Project Name",
-    "searchName": "Search Name",
-    "description": "Description",
-    "queries": "Queries",
-    "state": "State",
-    "date": "Date",
-    "nbResults": "Number of results",
-    "query": "no queries | 1 query | {count} queries"
+    "projectName": "Nombre del proyecto",
+    "searchName": "Buscar nombre",
+    "description": "Descripción",
+    "queries": "Consultas",
+    "state": "Estado",
+    "date": "Fecha",
+    "nbResults": "Número de resultados",
+    "query": "no hay consultas | 1 consulta | {count} consultas"
   },
   "batchSearchResults": {
-    "index": "Index",
-    "query": "Query",
-    "documentName": "Document Name",
-    "creationDate": "Creation Date",
-    "contentType": "Content Type",
-    "size": "Size",
-    "downloadResults": "Download results",
-    "all": "All"
+    "index": "Índice",
+    "query": "Consulta",
+    "documentName": "Nombre del documento",
+    "creationDate": "Fecha de Creación",
+    "contentType": "Tipo de contenido",
+    "size": "Tamaño",
+    "downloadResults": "Descargar los resultados",
+    "all": "Todas"
   },
   "batchSearchResultsFilters": {
     "queries": {
-      "heading": "Filter by queries"
+      "heading": "Filtrar por consultas"
     }
   }
 }
