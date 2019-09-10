@@ -1,3 +1,4 @@
+import escapeRegExp from 'lodash/escapeRegExp'
 import identity from 'lodash/identity'
 import map from 'lodash/map'
 import takeRight from 'lodash/takeRight'
@@ -10,10 +11,6 @@ export function slugger (value) {
     .trim()
     .replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '')
     .replace(/\s/g, '-')
-}
-
-export function escapeRegExp (str) {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
 export function replaceInChildNodes (element, needle, replacement) {

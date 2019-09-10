@@ -65,6 +65,7 @@
 <script>
 import uniqueId from 'lodash/uniqueId'
 import bodybuilder from 'bodybuilder'
+import escapeRegExp from 'lodash/escapeRegExp'
 import get from 'lodash/get'
 import last from 'lodash/last'
 import some from 'lodash/some'
@@ -74,7 +75,6 @@ import lucene from 'lucene'
 import SearchSettings from './SearchSettings'
 import esClient from '@/api/esClient'
 import settings from '@/utils/settings'
-import { escapeRegExp } from '@/utils/strings'
 
 function escapeLuceneChars (str) {
   const escapable = [' ', '+', '-', '&&', '||', '!', '(', ')', '{', '}', '[', ']', '^', '~', '?', ':', '\\', '/']

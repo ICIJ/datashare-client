@@ -1,6 +1,6 @@
 import utils from '@/mixins/utils'
-import { escapeRegExp } from '@/utils/strings'
 import camelCase from 'lodash/camelCase'
+import escapeRegExp from 'lodash/escapeRegExp'
 import find from 'lodash/find'
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
