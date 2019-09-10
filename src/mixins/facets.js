@@ -9,7 +9,7 @@ import map from 'lodash/map'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
 
-export const mixin = {
+export default {
   mixins: [utils],
   props: {
     facet: {
@@ -200,5 +200,3 @@ export const mixin = {
     }
   }
 }
-
-export default mixin

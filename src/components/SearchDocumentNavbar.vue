@@ -13,13 +13,13 @@
         <document-type-card :document="currentDocument" />
       </b-popover>
       <span class="search-document-navbar__nav" v-if="currentDocumentIndex > -1">
-        <button @click="goToPreviousDocument" v-shortkey="[getShortkey, 'arrowleft']" @shortkey="goToPreviousDocument" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" :title="previousTooltip" v-b-tooltip.html.bottomleft>
+        <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" :title="previousTooltip" v-b-tooltip.html.bottomleft>
           <fa icon="angle-left" />
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.previous.label') }}
           </span>
         </button>
-        <button @click="goToNextDocument" v-shortkey="[getShortkey, 'arrowright']" @shortkey="goToNextDocument" :disabled="!hasNextDocument" class="btn btn-sm btn-link text-white py-0" :title="nextTooltip" v-b-tooltip.html.bottomleft>
+        <button @click="goToNextDocument" v-shortkey="getKeys('goToNextDocument')" @shortkey="getAction('goToNextDocument')" :disabled="!hasNextDocument" class="btn btn-sm btn-link text-white py-0" :title="nextTooltip" v-b-tooltip.html.bottomleft>
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.next.label') }}
           </span>
@@ -39,12 +39,14 @@ import findIndex from 'lodash/findIndex'
 import first from 'lodash/first'
 import last from 'lodash/last'
 import { getOS } from '@/utils/utils'
+import shortkeys from '@/mixins/shortkeys'
 
 import DocumentTypeCard from '@/components/DocumentTypeCard'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
 
 export default {
   name: 'SearchDocumentNavbar',
+  mixins: [shortkeys],
   components: {
     DocumentTypeCard,
     RouterLinkPopup

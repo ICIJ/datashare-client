@@ -1,0 +1,18 @@
+{
+  "SearchDocumentNavbar": {
+    "goToPreviousDocument": {
+      "action": "goToPreviousDocument",
+      "keys": {
+        "mac": ["meta", "arrowleft"],
+        "default": ["ctrl", "arrowleft"]
+      }
+    },
+    "goToNextDocument": {
+      "action": "goToNextDocument",
+      "keys": {
+        "mac": ["meta", "arrowright"],
+        "default": ["ctrl", "arrowright"]
+      }
+    }
+  }
+}
