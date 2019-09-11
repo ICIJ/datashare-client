@@ -13,6 +13,28 @@
         "mac": ["meta", "arrowright"],
         "default": ["ctrl", "arrowright"]
       }
+    },
+    "backToSearchResults": {
+      "action": "back",
+      "keys": {
+        "mac": ["esc"],
+        "default": ["esc"]
+      }
+    }
+  },
+  "DocumentView": {
+    "tabNavigation": {
+      "action": "shortKeyAction",
+      "keys": {
+        "mac": {
+          "goToPreviousTab": ["meta", "alt", "arrowdown"],
+          "goToNextTab": ["meta", "alt", "arrowup"]
+        },
+        "default": {
+          "goToPreviousTab": ["ctrl", "alt", "pagedown"],
+          "goToNextTab": ["ctrl", "alt", "pageup"]
+        }
+      }
     }
   }
 }

@@ -1,6 +1,6 @@
 <template>
   <div class="search-document-navbar px-3 py-2 bg-dark text-white text-nowrap">
-    <router-link :to="{ name: 'search', query }" class="search-document-navbar__back flex-grow-1 text-truncate pr-1" v-shortkey="[ 'esc' ]"  @shortkey.native="back()">
+    <router-link :to="{ name: 'search', query }" class="search-document-navbar__back flex-grow-1 text-truncate pr-1" v-shortkey="getKeys('backToSearchResults')" @shortkey.native="getAction('backToSearchResults')">
       <fa icon="chevron-circle-left" />
       {{ $t('search.back') }}
     </router-link>

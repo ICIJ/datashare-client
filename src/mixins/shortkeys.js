@@ -1,5 +1,6 @@
 import shortkeys from '@/utils/shortkeys.json'
 import { getOS } from '@/utils/utils'
+import isFunction from 'lodash/isFunction'
 
 export default {
   methods: {
@@ -8,7 +9,12 @@ export default {
       return shortkeys[this.$options.name][name].keys[os]
     },
     getAction (name) {
-      this[shortkeys[this.$options.name][name]['action']]()
+      const functionName = shortkeys[this.$options.name][name].action
+      if (isFunction(this[functionName])) {
+        this[functionName](event)
+      } else {
+        throw new Error(`This function name "${functionName}" does not exist.`)
+      }
     }
   }
 }

@@ -3,7 +3,7 @@
     <content-placeholder class="document py-2 px-3" />
   </div>
   <div v-else>
-    <div class="d-flex flex-column document" v-if="document" v-shortkey="{ goToPreviousTab: goToPreviousTabShortkey, goToNextTab: goToNextTabShortkey}" @shortkey="shortKeyAction">
+    <div class="d-flex flex-column document" v-if="document" v-shortkey="getKeys('tabNavigation')" @shortkey="getAction('tabNavigation')">
       <div class="document__header">
         <h3 class="document__header__name">
           <document-sliced-name interactive-root :document="document" />
@@ -36,7 +36,6 @@
 import filter from 'lodash/filter'
 import findIndex from 'lodash/findIndex'
 import { mapState } from 'vuex'
-import { getOS } from '@/utils/utils'
 
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
@@ -45,10 +44,11 @@ import DocumentTabExtractedText from '@/components/document/DocumentTabExtracted
 import DocumentTabPreview from '@/components/document/DocumentTabPreview'
 import DocumentTabTranslations from '@/components/document/DocumentTabTranslations'
 import utils from '@/mixins/utils'
+import shortkeys from '@/mixins/shortkeys'
 
 export default {
   name: 'DocumentView',
-  mixins: [utils],
+  mixins: [shortkeys, utils],
   components: {
     DocumentSlicedName
   },
@@ -169,12 +169,6 @@ export default {
           }
         }
       ]
-    },
-    goToPreviousTabShortkey () {
-      return getOS() === 'mac' ? ['meta', 'alt', 'arrowdown'] : ['ctrl', 'alt', 'pagedown']
-    },
-    goToNextTabShortkey () {
-      return getOS() === 'mac' ? ['meta', 'alt', 'arrowup'] : ['ctrl', 'alt', 'pageup']
     }
   },
   beforeRouteEnter (to, _from, next) {
