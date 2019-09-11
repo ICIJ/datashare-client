@@ -48,7 +48,6 @@ import FacetPath from '@/components/FacetPath'
 import FacetNamedEntity from '@/components/FacetNamedEntity'
 import FacetSearch from '@/components/FacetSearch'
 import IndexSelector from '@/components/IndexSelector'
-import bModal from 'bootstrap-vue/es/components/modal/modal'
 import forEach from 'lodash/forEach'
 import isArray from 'lodash/isArray'
 
@@ -62,8 +61,7 @@ export default {
     FacetPath,
     FacetNamedEntity,
     FacetSearch,
-    IndexSelector,
-    bModal
+    IndexSelector
   },
   mounted () {
     this.$root.$on('facet::async-search', this.asyncFacetSearch)
