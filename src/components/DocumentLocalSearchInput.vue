@@ -1,10 +1,10 @@
 <script>
-import { getOS } from '@/utils/utils'
 import utils from '@/mixins/utils'
+import shortkeys from '@/mixins/shortkeys'
 
 export default {
   name: 'DocumentLocalSearchInput',
-  mixins: [ utils ],
+  mixins: [shortkeys, utils],
   model: {
     prop: 'searchTerm',
     event: 'input'
@@ -70,26 +70,6 @@ export default {
     }
   },
   computed: {
-    shortkeysByOs () {
-      return {
-        mac: {
-          activateSearchBar: ['meta', 'f'],
-          deactivateSearchBar: this.isActive ? ['esc'] : [],
-          findPreviousOccurrence: ['shift', 'enter'],
-          findPreviousOccurrenceAlt: ['shift', 'f3'],
-          findNextOccurrence: this.isActive ? ['enter'] : [],
-          findNextOccurrenceAlt: ['f3']
-        },
-        default: {
-          activateSearchBar: ['ctrl', 'f'],
-          deactivateSearchBar: this.isActive ? ['esc'] : [],
-          findPreviousOccurrence: ['shift', 'enter'],
-          findPreviousOccurrenceAlt: ['shift', 'f3'],
-          findNextOccurrence: this.isActive ? ['enter'] : [],
-          findNextOccurrenceAlt: ['f3']
-        }
-      }
-    },
     shortkeysActions () {
       return {
         activateSearchBar: this.activateSearchBar,
@@ -99,9 +79,6 @@ export default {
         findNextOccurrence: this.next,
         findNextOccurrenceAlt: this.next
       }
-    },
-    shortkeys () {
-      return this.shortkeysByOs[getOS()] || this.shortkeysByOs.default
     }
   }
 }
@@ -112,7 +89,7 @@ export default {
     <div class="form-group py-2 mr-2">
       <label class="sr-only">{{ $t('document.search') }}</label>
       <div class="input-group">
-        <input type="search" :value="searchTerm" @input="$emit('input', $event.target.value)" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="shortkeys" @shortkey="shortkeyAction" />
+        <input type="search" :value="searchTerm" @input="$emit('input', $event.target.value)" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="getKeys('findInDocument')" @shortkey="getAction('findInDocument')" />
         <div class="document-local-search-input__count input-group-append" v-if="searchTerm.length > 0">
           <span v-if="searchWorkerInProgress" class="input-group-text">
             <fa icon="circle-notch" spin />
