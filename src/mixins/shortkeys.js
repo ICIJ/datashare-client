@@ -11,7 +11,7 @@ export default {
     getAction (name) {
       const functionName = shortkeys[this.$options.name][name].action
       if (isFunction(this[functionName])) {
-        this[functionName](event)
+        this[functionName](typeof event !== 'undefined' ? event : null)
       } else {
         throw new Error(`This function name "${functionName}" does not exist.`)
       }
