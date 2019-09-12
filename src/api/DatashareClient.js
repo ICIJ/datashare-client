@@ -61,6 +61,12 @@ export class DatashareClient {
   untagDocument (project, documentId, routingId, tags) {
     return this.sendAction(`/api/document/project/untag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
   }
+  tagDocuments (project, docIds, tags) {
+    return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/tag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
+  }
+  untagDocuments (project, docIds, tags) {
+    return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/untag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
+  }
   batchSearch (project, name, description, csvFile) {
     const body = new FormData()
     body.append('name', name)

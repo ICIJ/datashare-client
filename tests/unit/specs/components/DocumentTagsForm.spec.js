@@ -82,8 +82,8 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.addTag()
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/tag/${process.env.VUE_APP_ES_INDEX}/${id}?routing=${id}`),
-      { method: 'PUT', body: JSON.stringify(['tag_02']) })
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/tag`),
+      { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_02'] }) })
     expect(esClient.getEsDoc).toHaveBeenCalledTimes(1)
   })
 
@@ -95,9 +95,8 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.addTag()
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/tag/${process.env.VUE_APP_ES_INDEX}/${id}?routing=${id}`),
-      { method: 'PUT', body: JSON.stringify(['tag_01', 'tag_02', 'tag_03']) })
-    expect(esClient.getEsDoc).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/tag`),
+      { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
   })
 
   it('should compact tags to remove empty tags', async () => {
@@ -108,8 +107,8 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.addTag()
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/tag/${process.env.VUE_APP_ES_INDEX}/${id}?routing=${id}`),
-      { method: 'PUT', body: JSON.stringify(['tag_01', 'tag_02']) })
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/tag`),
+      { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02'] }) })
     expect(esClient.getEsDoc).toHaveBeenCalledTimes(1)
   })
 
@@ -120,8 +119,8 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.deleteTag('tag_01')
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/untag/${process.env.VUE_APP_ES_INDEX}/${id}?routing=${id}`),
-      { method: 'PUT', body: JSON.stringify(['tag_01']) })
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/untag`),
+      { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01'] }) })
     expect(esClient.getEsDoc).toHaveBeenCalledTimes(1)
   })
 })

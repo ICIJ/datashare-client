@@ -98,16 +98,16 @@ export const actions = {
     return state.namedEntities
   },
   async tag ({ commit, rootState, state, dispatch }, { documents, tag }) {
-    await Promise.all(map(documents, async document => {
-      await datashare.tagDocument(rootState.search.index, document.id, document.routing, compact(tag.split(' ')))
+    await datashare.tagDocuments(rootState.search.index, map(documents, 'id'), compact(tag.split(' ')))
+    if (documents.length === 1) {
       await dispatch('refresh')
-    }))
+    }
   },
   async untag ({ commit, rootState, state, dispatch }, { documents, tag }) {
-    await Promise.all(map(documents, async document => {
-      await datashare.untagDocument(rootState.search.index, document.id, document.routing, [tag])
+    await datashare.untagDocuments(rootState.search.index, map(documents, 'id'), compact(tag.split(' ')))
+    if (documents.length === 1) {
       await dispatch('refresh')
-    }))
+    }
   }
 }
 
