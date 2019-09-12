@@ -58,7 +58,7 @@ export default {
           <b-input-group-text slot="prepend">
             <fa icon="tag" class="fa-flip-horizontal" />
           </b-input-group-text>
-          <b-form-input id="new-tag" v-model="tag" @input="searchTags" autofocus required :placeholder="$t('document.tags_new')" :disabled="updatingTags" />
+          <b-form-input id="new-tag" v-model="tag" @input="searchTags" autofocus required :placeholder="$t('document.tags_new')" :disabled="updatingTags" autocomplete="off" />
         </b-input-group>
         <selectable-dropdown :items="tags" @input="tag = $event" @click.native="addTag" :hide="!tags.length"></selectable-dropdown>
       </b-form>

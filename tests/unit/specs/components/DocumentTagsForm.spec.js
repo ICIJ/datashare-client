@@ -60,6 +60,13 @@ describe('DocumentTagsForm.vue', () => {
     expect(wrapper.findAll('.document-tags-form__add')).toHaveLength(1)
   })
 
+  it('should display a text input without autocomplete', async () => {
+    const wrapper = await createView(es)
+
+    expect(wrapper.findAll('.document-tags-form__add b-form-input-stub')).toHaveLength(1)
+    expect(wrapper.find('.document-tags-form__add b-form-input-stub').attributes('autocomplete')).toEqual('off')
+  })
+
   it('should display tags, with delete button', async () => {
     const wrapper = await createView(es, ['tag_01', 'tag_02'])
 
