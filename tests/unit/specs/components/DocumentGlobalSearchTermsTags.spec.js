@@ -35,7 +35,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
       const id = 'doc'
       await letData(es).have(new IndexedDocument(id).withContent('document result test document test test')).commit()
       await store.dispatch('document/get', { id })
-      store.commit('search/query', 'result test document lalilou')
+      store.commit('search/query', 'result test document other')
       const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
         localVue,
         store,
@@ -52,7 +52,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
       expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(1).text()).toEqual('2')
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(2).text()).toEqual('result')
       expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(2).text()).toEqual('1')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(3).text()).toEqual('lalilou')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(3).text()).toEqual('other')
       expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(3).text()).toEqual('0')
     })
 
@@ -60,7 +60,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
       const id = 'doc'
       await letData(es).have(new IndexedDocument(id).withContent('message').withMetadata('bruno message')).commit()
       await store.dispatch('document/get', { id })
-      store.commit('search/query', 'bruno lalilou message')
+      store.commit('search/query', 'bruno and message')
       const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
         localVue,
         store,
@@ -73,7 +73,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
       expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(3)
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toEqual('message')
       expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toEqual('1')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(1).text()).toEqual('lalilou')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(1).text()).toEqual('and')
       expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(1).text()).toEqual('0')
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(2).text()).toEqual('bruno')
       expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(2).text()).toEqual('in metadata')
