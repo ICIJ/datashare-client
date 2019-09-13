@@ -7,16 +7,18 @@
       </span>
     </b-button>
     <b-modal id="shortkeys" title="Keyboard Shortcuts" hide-footer>
-      <div v-for="(shortkey, index) in shortkeys" :key="index" class="row mb-2 border-bottom">
-        <div class="col-sm-1">
-          <fa :icon="shortkey.icon" v-if="shortkey.icon"/>
-        </div>
-        <div class="col-sm-7">
-          {{ getLabel(shortkey) }}
-        </div>
-        <div class="col-sm-4">
-          {{ shortkey.keys[getShortkeyOS] | shortkey }}
-        </div>
+      <div v-for="(shortkey, index) in shortkeys" :key="index" class="shortkeys-modal__shortkey mb-1">
+        <b-link :href="shortkey.link" target="_blank" class="shortkeys-modal__shortkey__link row mb-1">
+          <div class="col-sm-1">
+            <fa :icon="shortkey.icon" v-if="shortkey.icon"/>
+          </div>
+          <div class="col-sm-7">
+            {{ getLabel(shortkey) }}
+          </div>
+          <div class="col-sm-4">
+            {{ shortkey.keys[getShortkeyOS] | shortkey }}
+          </div>
+        </b-link>
       </div>
     </b-modal>
   </span>
@@ -56,7 +58,7 @@ export default {
           this.shortkeys.push(shortkey)
         } else {
           map(shortkey.keys.default, (tmp, action) => {
-            const newShortkey = { action, keys: { default: shortkey.keys.default[action], mac: shortkey.keys.mac[action] } }
+            const newShortkey = { action, keys: { default: shortkey.keys.default[action], mac: shortkey.keys.mac[action] }, link: shortkey.link }
             const label = get(shortkey, ['label', action], false)
             if (label) newShortkey.label = label
             this.shortkeys.push(newShortkey)
@@ -73,3 +75,23 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .shortkeys-modal__shortkey {
+    border-bottom: 1px solid lighten($text-muted, 40);
+
+    &:last-child {
+      border-bottom: none;
+    }
+
+    &__link {
+      color: inherit;
+      display: inline-flex;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+</style>

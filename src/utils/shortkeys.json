@@ -7,7 +7,8 @@
       },
       "action": "goToPreviousDocument",
       "icon": "backward",
-      "label": "shortkeys.goToPreviousDocument"
+      "label": "shortkeys.goToPreviousDocument",
+      "link": "https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts#go-to-the-next-previous-document"
     },
     "goToNextDocument": {
       "keys": {
@@ -16,7 +17,8 @@
       },
       "action": "goToNextDocument",
       "icon": "forward",
-      "label": "shortkeys.goToNextDocument"
+      "label": "shortkeys.goToNextDocument",
+      "link": "https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts#go-to-the-next-previous-document"
     },
     "backToSearchResults": {
       "keys": {
@@ -24,7 +26,8 @@
         "default": ["esc"]
       },
       "action": "back",
-      "label": "shortkeys.backToSearchResults"
+      "label": "shortkeys.backToSearchResults",
+      "link": "https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts#go-back-to-search-results"
     }
   },
   "DocumentView": {
@@ -43,7 +46,8 @@
       "label": {
         "goToPreviousTab": "shortkeys.goToPreviousTab",
         "goToNextTab": "shortkeys.goToNextTab"
-      }
+      },
+      "link": "https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts#navigate-a-documents-tabs"
     }
   },
   "DocumentLocalSearchInput": {
@@ -74,7 +78,8 @@
         "findPreviousOccurrenceAlt": "shortkeys.findPreviousOccurrenceAlt",
         "findNextOccurrence": "shortkeys.findNextOccurrence",
         "findNextOccurrenceAlt": "shortkeys.findNextOccurrenceAlt"
-      }
+      },
+      "link": "https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts#find-in-document"
     }
   }
 }
