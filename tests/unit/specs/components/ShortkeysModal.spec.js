@@ -25,10 +25,19 @@ jest.mock('@/utils/shortkeys.json', () => {
     Component2: {
       actionToExecute3: {
         keys: {
-          mac: ['meta', 'key3'],
-          default: ['ctrl', 'key3']
+          mac: {
+            action_03: ['meta', 'key_03'],
+            action_04: ['meta', 'key_04']
+          },
+          default: {
+            action_03: ['ctrl', 'key_03'],
+            action_04: ['ctrl', 'key_04']
+          }
         },
-        action: 'action3'
+        action: 'action3',
+        label: {
+          action_03: 'This is a translation'
+        }
       }
     }
   }
@@ -50,11 +59,12 @@ describe('ShortkeysModal.vue', () => {
   })
 
   it('should extract shortkeys keys and action on component creation', () => {
-    expect(wrapper.vm.shortkeys).toHaveLength(3)
+    expect(wrapper.vm.shortkeys).toHaveLength(4)
     expect(wrapper.vm.shortkeys).toEqual([
       { keys: { mac: ['meta', 'key1'], default: ['ctrl', 'key1'] }, action: 'action1', icon: 'icon1' },
       { keys: { mac: ['meta', 'key2'], default: ['ctrl', 'key2'] }, action: 'action2' },
-      { keys: { mac: ['meta', 'key3'], default: ['ctrl', 'key3'] }, action: 'action3' }
+      { keys: { mac: ['meta', 'key_03'], default: ['ctrl', 'key_03'] }, action: 'action_03', label: 'This is a translation' },
+      { keys: { mac: ['meta', 'key_04'], default: ['ctrl', 'key_04'] }, action: 'action_04' }
     ])
   })
 

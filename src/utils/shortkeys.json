@@ -16,14 +16,15 @@
       },
       "action": "goToNextDocument",
       "icon": "forward",
-      "label": "Go to the next document"
+      "label": "shortkeys.goToNextDocument"
     },
     "backToSearchResults": {
       "keys": {
         "mac": ["esc"],
         "default": ["esc"]
       },
-      "action": "back"
+      "action": "back",
+      "label": "shortkeys.backToSearchResults"
     }
   },
   "DocumentView": {
@@ -38,7 +39,11 @@
           "goToNextTab": ["ctrl", "alt", "pageup"]
         }
       },
-      "action": "shortKeyAction"
+      "action": "shortKeyAction",
+      "label": {
+        "goToPreviousTab": "shortkeys.goToPreviousTab",
+        "goToNextTab": "shortkeys.goToNextTab"
+      }
     }
   },
   "DocumentLocalSearchInput": {
@@ -61,7 +66,15 @@
           "findNextOccurrenceAlt": ["f3"]
         }
       },
-      "action": "shortkeyAction"
+      "action": "shortkeyAction",
+      "label": {
+        "activateSearchBar": "shortkeys.activateSearchBar",
+        "deactivateSearchBar": "shortkeys.deactivateSearchBar",
+        "findPreviousOccurrence": "shortkeys.findPreviousOccurrence",
+        "findPreviousOccurrenceAlt": "shortkeys.findPreviousOccurrenceAlt",
+        "findNextOccurrence": "shortkeys.findNextOccurrence",
+        "findNextOccurrenceAlt": "shortkeys.findNextOccurrenceAlt"
+      }
     }
   }
 }
