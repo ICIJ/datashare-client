@@ -474,5 +474,8 @@
     "queries": {
       "heading": "Filter by queries"
     }
+  },
+  "shortkeys": {
+    "goToPreviousDocument": "Go to the previous document"
   }
 }

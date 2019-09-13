@@ -5,14 +5,18 @@
         "mac": ["meta", "arrowleft"],
         "default": ["ctrl", "arrowleft"]
       },
-      "action": "goToPreviousDocument"
+      "action": "goToPreviousDocument",
+      "icon": "backward",
+      "label": "shortkeys.goToPreviousDocument"
     },
     "goToNextDocument": {
       "keys": {
         "mac": ["meta", "arrowright"],
         "default": ["ctrl", "arrowright"]
       },
-      "action": "goToNextDocument"
+      "action": "goToNextDocument",
+      "icon": "forward",
+      "label": "Go to the next document"
     },
     "backToSearchResults": {
       "keys": {

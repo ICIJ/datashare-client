@@ -12,7 +12,7 @@
           <fa :icon="shortkey.icon" v-if="shortkey.icon"/>
         </div>
         <div class="col-sm-6">
-          {{ shortkey.label }}
+          {{ getLabel(shortkey) }}
         </div>
         <div class="col-sm-4">
           {{ shortkey.keys[getShortkeyOS] | shortkey }}
@@ -25,17 +25,18 @@
 <script>
 import shortkeys from '@/utils/shortkeys.json'
 import { getShortkeyOS } from '@/utils/utils'
+import features from '@/mixins/features'
 import capitalize from 'lodash/capitalize'
+import get from 'lodash/get'
 import join from 'lodash/join'
 import map from 'lodash/map'
-import features from '@/mixins/features'
 
 export default {
   name: 'ShortkeysModal',
   mixins: [features],
   data () {
     return {
-      shortkeys: shortkeys.shortkeys
+      shortkeys: []
     }
   },
   filters: {
@@ -44,8 +45,19 @@ export default {
     }
   },
   computed: {
-    getShortkeyOS () {
-      return getShortkeyOS()
+    getShortkeyOS
+  },
+  created () {
+    map(shortkeys, action => {
+      map(action, shortkey => {
+        this.shortkeys.push(shortkey)
+      })
+    })
+  },
+  methods: {
+    getLabel (shortkey) {
+      const label = get(shortkey, 'label', get(shortkey, 'action', ''))
+      return this.$te(label) ? this.$t(label) : label
     }
   }
 }
