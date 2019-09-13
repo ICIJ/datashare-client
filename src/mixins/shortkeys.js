@@ -1,15 +1,19 @@
 import shortkeys from '@/utils/shortkeys.json'
-import { getOS } from '@/utils/utils'
+import { getShortkeyOS } from '@/utils/utils'
 import isFunction from 'lodash/isFunction'
 
 export default {
   methods: {
+    getShortkey (name) {
+      return shortkeys[this.$options.name][name]
+    },
     getKeys (name) {
-      const os = getOS() === 'mac' ? 'mac' : 'default'
-      return shortkeys[this.$options.name][name].keys[os]
+      const shortkey = this.getShortkey(name)
+      return shortkey === undefined ? undefined : shortkey.keys[getShortkeyOS()]
     },
     getAction (name) {
-      const functionName = shortkeys[this.$options.name][name].action
+      const shortkey = this.getShortkey(name)
+      const functionName = shortkey.action
       if (isFunction(this[functionName])) {
         this[functionName](typeof event !== 'undefined' ? event : null)
       } else {

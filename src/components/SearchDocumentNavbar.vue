@@ -99,9 +99,6 @@ export default {
     nextDocument () {
       return this.searchResponse.hits[this.currentDocumentIndex + 1]
     },
-    getShortkey () {
-      return getOS() === 'mac' ? 'meta' : 'ctrl'
-    },
     previousTooltip () {
       return getOS() === 'mac' ? this.$t('search.nav.previous.tooltipMac') : this.$t('search.nav.previous.tooltipOthers')
     },

@@ -1,4 +1,4 @@
-import { getOS, isAuthenticated, getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
+import { getOS, getShortkeyOS, isAuthenticated, getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import { setCookie } from 'tiny-cookie'
 
 describe('utils', () => {
@@ -26,6 +26,16 @@ describe('utils', () => {
   it('should retrieve no OS', () => {
     languageGetter.mockReturnValue('FreeBSD i386')
     expect(getOS()).toEqual('other')
+  })
+
+  it('should return "mac" if mac OS', () => {
+    languageGetter.mockReturnValue('MacIntel')
+    expect(getShortkeyOS()).toEqual('mac')
+  })
+
+  it('should return "default" if other than mac OS', () => {
+    languageGetter.mockReturnValue('Other OS')
+    expect(getShortkeyOS()).toEqual('default')
   })
 
   it('should not be authenticated in test mode', () => {

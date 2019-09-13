@@ -11,6 +11,10 @@ function getOS () {
   return OSName
 }
 
+function getShortkeyOS () {
+  return getOS() === 'mac' ? 'mac' : 'default'
+}
+
 function isAuthenticated () {
   // Skip authentication in development
   if (process.env.NODE_ENV === 'development') return true
@@ -42,4 +46,4 @@ function getExtractionLevelTranslationKey (key) {
   return `facet.level.${get(levels, key, key)}`
 }
 
-export { getOS, isAuthenticated, getDocumentTypeLabel, getExtractionLevelTranslationKey }
+export { getOS, getShortkeyOS, isAuthenticated, getDocumentTypeLabel, getExtractionLevelTranslationKey }

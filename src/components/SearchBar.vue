@@ -44,6 +44,7 @@
       </div>
       <div class="px-0" v-if="settings">
         <search-settings placement="bottomleft" :size="size" :container="uniqueId" />
+        <shortkeys-modal></shortkeys-modal>
       </div>
     </div>
     <slide-up-down :active="showTips" v-if="tips">
@@ -72,7 +73,8 @@ import some from 'lodash/some'
 import throttle from 'lodash/throttle'
 import lucene from 'lucene'
 
-import SearchSettings from './SearchSettings'
+import SearchSettings from '@/components/SearchSettings'
+import ShortkeysModal from '@/components/ShortkeysModal'
 import esClient from '@/api/esClient'
 import settings from '@/utils/settings'
 
@@ -105,7 +107,8 @@ export default {
     }
   },
   components: {
-    SearchSettings
+    SearchSettings,
+    ShortkeysModal
   },
   data () {
     return {

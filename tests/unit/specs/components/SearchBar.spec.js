@@ -40,8 +40,16 @@ describe('SearchBar.vue', function () {
     expect(wrapper.contains('.search-bar')).toBeTruthy()
   })
 
-  it('should display a search settings button', () => {
-    expect(wrapper.find('.search-bar .btn').text()).toEqual('Search')
+  it('should display the search-settings component', () => {
+    wrapper.setProps({ settings: true })
+
+    expect(wrapper.find('.search-bar search-settings-stub').exists()).toBeTruthy()
+  })
+
+  it('should display the shortkeys-modal component', () => {
+    wrapper.setProps({ settings: true })
+
+    expect(wrapper.find('.search-bar shortkeys-modal-stub').exists()).toBeTruthy()
   })
 
   it('should display a search bar button in French', () => {
