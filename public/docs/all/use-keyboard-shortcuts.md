@@ -37,10 +37,18 @@ description: Shortcuts help do some actions faster.
 * Go to next occurrence
 
 > Enter
+>
+> or
+>
+> F3
 
 * Go to previous occurrence
 
 > Shift + Enter
+>
+> or
+>
+> Shift + F3
 
 ![](../.gitbook/assets/previous-next-occurrence.png)
 
