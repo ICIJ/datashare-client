@@ -6,9 +6,23 @@ import store from '@/store'
 
 const localVue = createLocalVue()
 
+async function createView (es, content = '', query = '', metadata = '', tags = []) {
+  const id = 'document'
+  await letData(es).have(new IndexedDocument(id).withContent(content).withMetadata(metadata).withTags(tags)).commit()
+  await store.dispatch('document/get', { id })
+  store.commit('search/query', query)
+  return shallowMount(DocumentGlobalSearchTermsTags, {
+    localVue,
+    store,
+    propsData: { document: store.state.document.doc },
+    mocks: { $t: msg => msg }
+  })
+}
+
 describe('DocumentGlobalSearchTermsTags', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
+  let wrapper
 
   beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
@@ -19,16 +33,7 @@ describe('DocumentGlobalSearchTermsTags', () => {
 
   describe('lists the query terms but the ones about specific field other than "content"', () => {
     it('should display query terms with occurrences in decreasing order', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id).withContent('document result test document test test')).commit()
-      await store.dispatch('document/get', { id })
-      store.commit('search/query', 'result test document other')
-      const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
-        localVue,
-        store,
-        propsData: { document: store.state.document.doc },
-        mocks: { $t: msg => msg }
-      })
+      wrapper = await createView(es, 'document result test document test test', 'result test document other')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(4)
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toEqual('test')
@@ -42,16 +47,7 @@ describe('DocumentGlobalSearchTermsTags', () => {
     })
 
     it('should display query terms in metadata with specific message and in last position', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id).withContent('message').withMetadata('bruno message')).commit()
-      await store.dispatch('document/get', { id })
-      store.commit('search/query', 'bruno and message')
-      const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
-        localVue,
-        store,
-        propsData: { document: store.state.document.doc },
-        mocks: { $t: msg => msg }
-      })
+      wrapper = await createView(es, 'message', 'bruno and message', 'bruno message')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(3)
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toEqual('message')
@@ -63,16 +59,7 @@ describe('DocumentGlobalSearchTermsTags', () => {
     })
 
     it('should display query terms in tags with specific message and in last position', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id).withContent('message').withTags(['tag_01', 'tag_02'])).commit()
-      await store.dispatch('document/get', { id })
-      store.dispatch('search/query', 'message tag_01')
-      const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
-        localVue,
-        store,
-        propsData: { document: store.state.document.doc },
-        mocks: { $t: msg => msg }
-      })
+      wrapper = await createView(es, 'message', 'message tag_01', '', ['tag_01', 'tag_02'])
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(2)
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toEqual('message')
@@ -82,48 +69,20 @@ describe('DocumentGlobalSearchTermsTags', () => {
     })
 
     it('should not display the query terms on a specific field but content', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id).withContent('term_01')).commit()
-      await store.dispatch('document/get', { id })
-      store.commit('search/query', 'content:term_01 field_name:term_02')
-      const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
-        localVue,
-        store,
-        propsData: { document: store.state.document.doc },
-        mocks: { $t: msg => msg }
-      })
+      wrapper = await createView(es, 'term_01', 'content:term_01 field_name:term_02')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toEqual('term_01')
       expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toEqual('1')
     })
 
     it('should stroke the negative query terms', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id).withContent('term_01')).commit()
-      await store.dispatch('document/get', { id })
-      store.commit('search/query', '-term_02')
-      const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
-        localVue,
-        store,
-        propsData: { document: store.state.document.doc },
-        mocks: { $t: msg => msg }
-      })
+      wrapper = await createView(es, 'term_01', '-term_02')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item--negation')).toHaveLength(1)
     })
 
     it('should highlight the query terms with the same color than in the list', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id).withContent('this is a full full content')).commit()
-      await store.dispatch('document/get', { id })
-      store.commit('search/query', 'full content')
-
-      const wrapper = shallowMount(DocumentGlobalSearchTermsTags, {
-        localVue,
-        store,
-        propsData: { document: store.state.document.doc },
-        mocks: { $t: msg => msg }
-      })
+      wrapper = await createView(es, 'this is a full full content', 'full content')
 
       expect(wrapper.findAll('.document-global-search-terms-tags__item--index-0')).toHaveLength(1)
       expect(wrapper.find('.document-global-search-terms-tags__item--index-0 .document-global-search-terms-tags__item__label').text()).toBe('full')

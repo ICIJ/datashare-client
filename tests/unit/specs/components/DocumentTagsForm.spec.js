@@ -10,18 +10,16 @@ import store from '@/store'
 import '@/utils/font-awesome'
 import { datashare } from '@/store/modules/document'
 import { jsonOk } from 'tests/unit/tests_utils'
-import { BForm, BFormInput, BInputGroup, BInputGroupText } from 'bootstrap-vue'
 import DatashareClient from '@/api/DatashareClient'
 import esClient from '@/api/esClient'
 import settings from '@/utils/settings'
+import BootstrapVue from 'bootstrap-vue'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
-localVue.component('b-form', BForm)
-localVue.component('b-form-input', BFormInput)
-localVue.component('b-input-group', BInputGroup)
-localVue.component('b-input-group-text', BInputGroupText)
+localVue.use(BootstrapVue)
+
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 async function createView (es, tags = [], documentId = 'document') {
@@ -30,7 +28,7 @@ async function createView (es, tags = [], documentId = 'document') {
   return shallowMount(DocumentTagsForm, { localVue, i18n, store, propsData: { document: store.state.document.doc, displayTags: true } })
 }
 
-describe('DocumentTagsForm.vue', () => {
+describe('DocumentTagsForm', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let httpServer, spy
