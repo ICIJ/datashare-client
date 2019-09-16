@@ -474,5 +474,18 @@
     "queries": {
       "heading": "Filtrer par recherches"
     }
+  },
+  "shortkeys": {
+    "goToPreviousDocument": "Go to the previous document",
+    "goToNextDocument": "Go to the next document",
+    "backToSearchResults": "Go back to the search results",
+    "goToPreviousTab": "Go to previous document tab",
+    "goToNextTab": "Go to next document tab",
+    "activateSearchBar": "Activate the search bar",
+    "deactivateSearchBar": "Deactivate the search bar",
+    "findPreviousOccurrence": "Find the previous occurrence in the document",
+    "findPreviousOccurrenceAlt": "Find the previous occurrence in the document",
+    "findNextOccurrence": "Find the next occurrence in the document",
+    "findNextOccurrenceAlt": "Find the next occurrence in the document"
   }
 }
