@@ -157,5 +157,6 @@ export default {
     size: 100,
     sort: 'doc_nb',
     order: 'asc'
-  }
+  },
+  waitForEsAnswer: 700
 }

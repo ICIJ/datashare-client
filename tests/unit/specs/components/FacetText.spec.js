@@ -432,4 +432,11 @@ describe('FacetText.vue', () => {
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
     expect(wrapper.findAll('.facet__items__item .facet__items__item__label').at(0).text()).toEqual('1er')
   })
+
+  it('should reload the facet on event "facet::refresh"', () => {
+    const spyRefreshFacet = jest.spyOn(wrapper.vm.root, 'aggregateWithLoading')
+    wrapper.vm.$root.$emit('facet::refresh', 'content-type')
+
+    expect(spyRefreshFacet).toBeCalled()
+  })
 })

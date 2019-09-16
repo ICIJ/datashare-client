@@ -102,6 +102,9 @@ export default {
       // Watch change on the facet store the restart aggregation
       this.$store.watch(this.watchedForUpdate, this.aggregateWithLoading, { deep: true })
     }
+    this.$root.$on('facet::refresh', facetName => {
+      if (this.facet.name === facetName) this.aggregateWithLoading()
+    })
   },
   computed: {
     items () {

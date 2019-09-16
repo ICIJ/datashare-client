@@ -1,16 +1,18 @@
 <script>
 import castArray from 'lodash/castArray'
+import delay from 'lodash/delay'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import throttle from 'lodash/throttle'
 import bodybuilder from 'bodybuilder'
 import esClient from '@/api/esClient'
+import settings from '@/utils/settings'
 
 export default {
   name: 'DocumentTagsForm',
   props: {
-    'document': [Object, Array],
-    'displayTags': Boolean
+    document: [Object, Array],
+    displayTags: Boolean
   },
   data () {
     return {
@@ -40,11 +42,13 @@ export default {
       this.tag = ''
       this.tags = []
       this.updatingTags = false
+      delay(facetName => this.$root.$emit('facet::refresh', facetName), settings.waitForEsAnswer, 'tags')
     },
     async deleteTag (tag) {
       this.updatingTags = true
       await this.$store.dispatch('document/untag', { documents: this.documents, tag })
       this.updatingTags = false
+      delay(facetName => this.$root.$emit('facet::refresh', facetName), settings.waitForEsAnswer, 'tags')
     }
   }
 }

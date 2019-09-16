@@ -13,6 +13,7 @@ import { jsonOk } from 'tests/unit/tests_utils'
 import { BForm, BFormInput, BInputGroup, BInputGroupText } from 'bootstrap-vue'
 import DatashareClient from '@/api/DatashareClient'
 import esClient from '@/api/esClient'
+import settings from '@/utils/settings'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -123,4 +124,33 @@ describe('DocumentTagsForm.vue', () => {
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01'] }) })
     expect(esClient.getEsDoc).toHaveBeenCalledTimes(1)
   })
+
+  it('should emit a facet::refresh event on adding a tag', async () => {
+    const wrapper = await createView(es)
+    const mockCallback = jest.fn()
+    wrapper.vm.$root.$on('facet::refresh', mockCallback)
+
+    wrapper.vm.tag = 'tag'
+    await wrapper.vm.addTag()
+    await delay(settings.waitForEsAnswer)
+
+    expect(mockCallback.mock.calls).toHaveLength(1)
+  })
+
+  it('should emit a facet::refresh event on deleting a tag', async () => {
+    const wrapper = await createView(es)
+    const mockCallback = jest.fn()
+    wrapper.vm.$root.$on('facet::refresh', mockCallback)
+
+    await wrapper.vm.deleteTag('tag')
+    await delay(settings.waitForEsAnswer)
+
+    expect(mockCallback.mock.calls).toHaveLength(1)
+  })
 })
+
+function delay (t, v) {
+  return new Promise(function (resolve) {
+    setTimeout(resolve.bind(null, v), t)
+  })
+}
