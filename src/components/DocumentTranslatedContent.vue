@@ -26,11 +26,17 @@
 </template>
 
 <script>
-import DocumentContent from './DocumentContent.vue'
+import DocumentContent from '@/components/DocumentContent'
 
 export default {
   name: 'DocumentTranslatedContent',
-  props: ['document', 'namedEntities'],
+  props: {
+    document: Object,
+    namedEntities: {
+      type: Array,
+      default: () => ([])
+    }
+  },
   components: { DocumentContent },
   data () {
     return {

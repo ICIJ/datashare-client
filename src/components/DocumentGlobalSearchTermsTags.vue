@@ -43,6 +43,9 @@ export default {
           <span v-if="term.length === 0 && term.metadata > 0" class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0" :style="getTermIndexBackgroundColor(index)">
             {{ $t('document.in_metadata') }}
           </span>
+          <span v-if="term.length === 0 && term.tags > 0" class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0" :style="getTermIndexBackgroundColor(index)">
+            {{ $t('document.in_tags') }}
+          </span>
           <span v-else class="document-global-search-terms-tags__item__count py-0" :style="getTermIndexBackgroundColor(index)">
             {{ term.length }}
           </span>

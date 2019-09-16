@@ -14,9 +14,9 @@ import utils from '@/mixins/utils'
 import { highlight } from '@/utils/strings'
 import LocalSearchWorker from '@/utils/local-search.webworker.js'
 
-import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
-import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags.vue'
-import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput.vue'
+import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
+import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
+import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 
 export default {
   name: 'DocumentContent',
@@ -27,9 +27,7 @@ export default {
   },
   mixins: [ner, utils],
   props: {
-    document: {
-      type: Object
-    },
+    document: Object,
     namedEntities: {
       type: Array,
       default: () => ([])

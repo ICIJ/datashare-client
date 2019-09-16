@@ -372,7 +372,8 @@
     "author": "Author",
     "extraction_date": "Indexing date",
     "parent": "Parent",
-    "in_metadata": "in metadata"
+    "in_metadata": "in metadata",
+    "in_tags": "in tags"
   },
   "email": {
     "detail": "See detail",

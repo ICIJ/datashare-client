@@ -160,6 +160,8 @@ export const getters = {
   },
   retrieveContentQueryTermsInDocument (state, getters) {
     return document => {
+      const tags = join(values(get(document, 'source.tags', '')), ' ')
+      getters.retrieveContentQueryTermsInContent(tags, 'tags')
       const metadata = join(values(get(document, 'source.metadata', '')), ' ')
       getters.retrieveContentQueryTermsInContent(metadata, 'metadata')
       const content = get(document, 'source.content', '')

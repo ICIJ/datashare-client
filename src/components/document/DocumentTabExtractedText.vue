@@ -10,12 +10,18 @@
 </template>
 
 <script>
-import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
-import DocumentThread from '@/components/DocumentThread.vue'
+import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
+import DocumentThread from '@/components/DocumentThread'
 
 export default {
   name: 'DocumentTabExtractedText',
-  props: ['document', 'namedEntities'],
+  props: {
+    document: Object,
+    namedEntities: {
+      type: Array,
+      default: () => ([])
+    }
+  },
   components: {
     DocumentTranslatedContent,
     DocumentThread
