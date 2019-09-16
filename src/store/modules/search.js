@@ -8,6 +8,7 @@ import types from '@/utils/types.json'
 import lucene from 'lucene'
 import moment from 'moment'
 import castArray from 'lodash/castArray'
+import compact from 'lodash/compact'
 import concat from 'lodash/concat'
 import difference from 'lodash/difference'
 import each from 'lodash/each'
@@ -19,6 +20,7 @@ import get from 'lodash/get'
 import has from 'lodash/has'
 import includes from 'lodash/includes'
 import isInteger from 'lodash/isInteger'
+import isString from 'lodash/isString'
 import join from 'lodash/join'
 import map from 'lodash/map'
 import omit from 'lodash/omit'
@@ -160,18 +162,18 @@ export const getters = {
   },
   retrieveContentQueryTermsInDocument (state, getters) {
     return document => {
-      const tags = join(values(get(document, 'source.tags', '')), ' ')
-      getters.retrieveContentQueryTermsInContent(tags, 'tags')
-      const metadata = join(values(get(document, 'source.metadata', '')), ' ')
-      getters.retrieveContentQueryTermsInContent(metadata, 'metadata')
-      const content = get(document, 'source.content', '')
-      getters.retrieveContentQueryTermsInContent(content, 'length')
-      return orderBy(getters.retrieveContentQueryTerms, ['length'], ['desc']).sort(a => a.length === 0 && a.metadata > 0)
+      map(['content', 'metadata', 'tags'], field => {
+        let extractedField = get(document, ['source', field], '')
+        if (isString(extractedField)) extractedField = castArray(extractedField)
+        const text = join(compact(values(extractedField)), ' ')
+        getters.retrieveContentQueryTermsInContent(text, field)
+      })
+      return orderBy(getters.retrieveContentQueryTerms, ['content'], ['desc']).sort(a => a.content === 0 && a.metadata > 0)
     }
   },
   retrieveContentQueryTermsInContent (state, getters) {
-    return (content, field) => getters.retrieveContentQueryTerms.map(term => {
-      term[field] = (content.match(new RegExp(escapeRegExp(term.label), 'gi')) || []).length
+    return (text, field) => getters.retrieveContentQueryTerms.map(term => {
+      term[field] = (text.match(new RegExp(escapeRegExp(term.label), 'gi')) || []).length
       return term
     })
   },
@@ -182,7 +184,6 @@ export const getters = {
 
 export const mutations = {
   reset (state, excludedKeys = ['index', 'showFilters', 'layout']) {
-    // acquire initial state
     const s = initialState()
     Object.keys(s).forEach(key => {
       if (excludedKeys.indexOf(key) === -1) {
