@@ -6,9 +6,9 @@
           v-model="query"
           :placeholder="$t('search.placeholder')"
           class="form-control search-bar__input"
-          @blur="focused = false && hideSuggestionsAfterDelay()"
+          @blur="focused = false ; hideSuggestionsAfterDelay()"
           @input="searchTerms()"
-          @focus="focused = true && searchTerms()" />
+          @focus="focused = true ; searchTerms()" />
         <div class="input-group-append">
           <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }" v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" title="Tips to improve searching" v-b-tooltip.bottomleft>
             <fa icon="question-circle" />
