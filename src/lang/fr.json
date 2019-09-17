@@ -372,7 +372,8 @@
     "author": "Auteur·trice",
     "extraction_date": "Date d'indexation",
     "parent": "Parent",
-    "in_metadata": "dans les métadonnées"
+    "in_metadata": "dans les métadonnées",
+    "in_tags": "in tags"
   },
   "email": {
     "detail": "Voir les détails",
