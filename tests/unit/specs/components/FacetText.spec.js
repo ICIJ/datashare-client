@@ -53,7 +53,7 @@ describe('FacetText.vue', () => {
   it('should display no items for the content-type facet', async () => {
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(0)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(0)
     expect(wrapper.vm.root.totalCount).toEqual(0)
   })
 
@@ -66,7 +66,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(5)
   })
 
@@ -81,7 +81,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(3)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
     expect(wrapper.vm.root.totalCount).toEqual(7)
   })
 
@@ -95,16 +95,16 @@ describe('FacetText.vue', () => {
 
     store.commit('search/query', 'SHOW')
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(3)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
     expect(wrapper.vm.root.totalCount).toEqual(6)
 
     store.commit('search/setGlobalSearch', false)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
 
     store.commit('search/query', 'INDEX')
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
   })
 
   it('should apply relative facet and get back to global facet', async () => {
@@ -114,16 +114,16 @@ describe('FacetText.vue', () => {
     store.commit('search/query', 'Lorem')
     store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(2)
 
     store.commit('search/setGlobalSearch', false)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
 
     store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
   })
 
   it('should display an item for inverted facet', async () => {
@@ -136,7 +136,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet--reversed .facet__items__item .custom-checkbox .facet__items__item__count').at(0).text()).toEqual('2')
+    expect(wrapper.findAll('.facet--reversed .facet__items__item .facet__items__item__count').at(0).text()).toEqual('2')
     expect(wrapper.vm.root.totalCount).toEqual(3)
   })
 
@@ -149,7 +149,7 @@ describe('FacetText.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(5)
     expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(0)
     expect(wrapper.vm.root.totalCount).toEqual(5)
   })
@@ -301,7 +301,7 @@ describe('FacetText.vue', () => {
     const spyRefreshRoute = jest.spyOn(wrapper.vm.root, 'refreshRoute')
     await letData(es).have(new IndexedDocument('doc_01').withContentType('type_01')).commit()
     await wrapper.vm.root.aggregate()
-    wrapper.find('.facet__items__item .custom-checkbox:nth-child(1) input').trigger('click')
+    wrapper.find('.facet__items__item:nth-child(1) input').trigger('click')
 
     expect(wrapper.emitted('add-facet-values')).toHaveLength(1)
     expect(rootWrapper.emitted('facet::add-facet-values')).toHaveLength(1)
@@ -312,7 +312,7 @@ describe('FacetText.vue', () => {
     store.commit('search/from', 25)
     await letData(es).have(new IndexedDocument('doc_01').withContentType('type_01')).commit()
     await wrapper.vm.root.aggregate()
-    wrapper.find('.facet__items__item .custom-checkbox:nth-child(1) input').trigger('click')
+    wrapper.find('.facet__items__item:nth-child(1) input').trigger('click')
 
     expect(store.state.search.from).toBe(0)
   })
@@ -323,13 +323,13 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('docs/bar.js').toIndex(process.env.VUE_APP_ES_ANOTHER_INDEX).withContentType('text/javascript')).commit()
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
     expect(wrapper.vm.root.totalCount).toEqual(2)
 
     store.commit('search/index', process.env.VUE_APP_ES_ANOTHER_INDEX)
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
     expect(wrapper.vm.root.totalCount).toEqual(1)
   })
 
@@ -358,7 +358,7 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('index_06.txt').withContentType('text/type_03')).commit()
 
     await wrapper.vm.root.aggregate()
-    wrapper.find('.facet__items__item .custom-checkbox:nth-child(2) input').trigger('click')
+    wrapper.find('.facet__items__item:nth-child(2) input').trigger('click')
     wrapper.find('.facet__items__all input').trigger('click')
 
     expect(wrapper.emitted('add-facet-values')).toHaveLength(2)

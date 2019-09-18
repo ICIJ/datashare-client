@@ -60,7 +60,7 @@ describe('FacetSearch.vue', () => {
 
       await wrapper.vm.startOver()
 
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
     })
 
     it('should paginate 4 items on 2 pages', async () => {
@@ -75,10 +75,10 @@ describe('FacetSearch.vue', () => {
         .withContentType('type_04')).commit()
 
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
 
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(4)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
     })
 
     it('should paginate 10 items on 10 pages', async () => {
@@ -105,25 +105,25 @@ describe('FacetSearch.vue', () => {
         .withContentType('type_10')).commit()
 
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(2)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(3)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(4)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(5)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(6)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(6)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(7)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(7)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(8)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(8)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(9)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(9)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(10)
     })
 
     it('should paginate 10 items on 2 pages, and start over', async () => {
@@ -150,14 +150,14 @@ describe('FacetSearch.vue', () => {
         .withContentType('type_10')).commit()
 
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(5)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(10)
 
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(5)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(5)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(10)
     })
   })
 
@@ -193,11 +193,11 @@ describe('FacetSearch.vue', () => {
 
       wrapper.setData({ facetQuery: '' })
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(8)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(8)
 
       wrapper.setData({ facetQuery: 'type_1' })
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(1)
+      expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
     })
 
     it('should trigger a search when value of facetQuery changes', () => {
@@ -206,33 +206,6 @@ describe('FacetSearch.vue', () => {
 
       wrapper.setData({ facetQuery: 'pdf' })
       expect(wrapper.vm.search).toHaveBeenCalled()
-    })
-
-    it('should emit a facet::hide::named-entities event on click to delete named entity', async () => {
-      wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
-      await letData(es).have(new IndexedDocument('doc_01').withNer('ner')).commit()
-      await wrapper.vm.startOver()
-
-      const mockCallback = jest.fn()
-      wrapper.vm.$root.$on('facet::hide::named-entities', mockCallback)
-
-      await wrapper.find('.facet__items__item__menu .dropdown-item:first-child').trigger('click')
-
-      expect(mockCallback.mock.calls).toHaveLength(1)
-    })
-
-    it('should call the search function after a named entity deletion', async () => {
-      wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
-      await letData(es).have(new IndexedDocument('doc_01').withNer('ner')).commit()
-      await wrapper.vm.startOver()
-
-      const spySearch = jest.spyOn(wrapper.vm, 'search')
-      expect(spySearch).not.toBeCalled()
-
-      await wrapper.find('.facet__items__item__menu .dropdown-item:first-child').trigger('click')
-
-      expect(spySearch).toBeCalled()
-      expect(spySearch).toBeCalledTimes(1)
     })
   })
 
@@ -268,7 +241,7 @@ describe('FacetSearch.vue', () => {
     await wrapper.vm.startOver()
     await wrapper.vm.next()
 
-    expect(wrapper.findAll('.facet__items__item .custom-checkbox')).toHaveLength(10)
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(10)
   })
 
   it('should display the total count of content type', async () => {

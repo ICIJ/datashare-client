@@ -75,8 +75,8 @@ describe('FacetYesNo.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item .custom-control-label .facet__items__item__label')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item .custom-control-label .facet__items__item__label').at(0).text()).toEqual('Starred')
-    expect(wrapper.findAll('.facet__items__item .custom-control-label .facet__items__item__label').at(1).text()).toEqual('Not starred')
+    expect(wrapper.findAll('.facet__items__item').at(0).find('.custom-control-label .facet__items__item__label').text()).toEqual('Starred')
+    expect(wrapper.findAll('.facet__items__item').at(1).find('.custom-control-label .facet__items__item__label').text()).toEqual('Not starred')
   })
 
   it('should change the selected value', async () => {
@@ -87,15 +87,15 @@ describe('FacetYesNo.vue', () => {
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
 
-    wrapper.findAll('.facet__items__item .custom-control-input').at(0).trigger('click')
+    wrapper.findAll('.facet__items__item .custom-control-label').at(0).trigger('click')
     expect(wrapper.vm.selected).toEqual([true])
     expect(wrapper.vm.root.isAllSelected).toBeFalsy()
 
-    wrapper.findAll('.facet__items__item .custom-control-input').at(1).trigger('click')
+    wrapper.findAll('.facet__items__item .custom-control-label').at(1).trigger('click')
     expect(wrapper.vm.selected).toEqual([false])
     expect(wrapper.vm.root.isAllSelected).toBeFalsy()
 
-    wrapper.findAll('.facet__items__item .custom-control-input').at(1).trigger('click')
+    wrapper.findAll('.facet__items__item .custom-control-label').at(1).trigger('click')
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
   })
@@ -124,15 +124,15 @@ describe('FacetYesNo.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item .facet__items__item__count')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__count').at(0).text()).toEqual('2')
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__count').at(1).text()).toEqual('1')
+    expect(wrapper.findAll('.facet__items__item').at(0).find('.facet__items__item__count').text()).toEqual('2')
+    expect(wrapper.findAll('.facet__items__item').at(1).find('.facet__items__item__count').text()).toEqual('1')
   })
 
   it('should not display the exclude button', async () => {
     await letData(es).have(new IndexedDocument('doc_08')).commit()
 
     await wrapper.vm.root.aggregate()
-    await wrapper.findAll('.facet__items__item .custom-control-input').at(0).trigger('click')
+    await wrapper.findAll('.facet__items__item').at(0).find('.custom-control-input').trigger('click')
     store.commit('search/addFacetValue', { name: 'starred', value: true })
     wrapper.vm.root.collapseItems = false
 

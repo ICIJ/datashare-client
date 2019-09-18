@@ -53,7 +53,7 @@ export default {
       this.root.$on('add-facet-values', value => this.$emit('add-facet-values', value))
     }
     this.$root.$on('facet::search::update', facetName => {
-      if (this.facet.name === facetName) {
+      if (this.facet && this.facet.name === facetName) {
         this.selectedValuesFromStore()
       }
     })
@@ -68,14 +68,6 @@ export default {
     facetFilter () {
       return this.$store.getters['search/findFacet'](this.facet.name)
     },
-    placeholderRows () {
-      return [
-        {
-          height: '1em',
-          boxes: [[0, '70%'], ['20%', '10%']]
-        }
-      ]
-    },
     size () {
       return this.offset + this.pageSize
     },
@@ -88,8 +80,9 @@ export default {
     options () {
       return map(this.items, item => {
         return {
+          item,
           value: item.key,
-          html: this.getItemLabel(item)
+          label: this.labelToHuman(this.facet.itemLabel ? this.facet.itemLabel(item) : item.key)
         }
       })
     }
@@ -155,17 +148,6 @@ export default {
       } else {
         return pick(state.search, ['index'])
       }
-    },
-    getItemLabel (item) {
-      const label = this.facet.itemLabel ? this.facet.itemLabel(item) : item.key
-      return `
-        <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
-          ${this.labelToHuman(label)}
-        </span>
-        <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
-          ${this.$n(item.doc_count)}
-        </span>
-      `
     },
     labelToHuman (label) {
       if (this.$te(label)) {

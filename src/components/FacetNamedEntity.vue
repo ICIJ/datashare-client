@@ -6,36 +6,21 @@
       </span>
       {{ $t('facet.' + facet.name) }}
     </template>
-    <template #items="{ items }">
-      <b-form-checkbox v-model="isAllSelected" @click.native="resetNamedEntityValues" class="facet__items__all">
-        <div class="py-1 facet__items__item__body">
-           <div class="facet__items__item__body__key facet__items__item__body__key--all text-uppercase d-inline badge">
-             {{ $t('facet.all') }}
-           </div>
-         </div>
-      </b-form-checkbox>
-      <div v-for="item in items" :key="item.key" class="facet__items__item d-flex">
-        <b-form-checkbox v-model="selected" @change="toggleValue(item)" class="facet__items__item__checkbox w-100 mt-0 mr-0" :value="item.key">
-          <div class="py-1 facet__items__item__body">
-            <div class="text-uppercase d-inline facet__items__item__body__key text-truncate badge" :class="getCategoryClass(facet.category, 'border-')">
-              {{ facet.itemLabel ? facet.itemLabel(item) : item.key }}
-            </div>
-            <div class="facet__items__item__body__count badge text-light ml-0" :class="getCategoryClass(facet.category, 'bg-')" v-b-tooltip :title="itemTitle(item)">
-              {{ $n(item.doc_count || 0) }} | {{ item.byDocs ? $n(item.byDocs.value || 0) : 0 }}
-            </div>
-          </div>
+    <template #item="{ item, value, label }">
+      <div class="d-flex facet__items__item">
+        <b-form-checkbox :value="value" class="flex-grow-1">
+          <span class="d-flex">
+            <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
+              {{ label }}
+            </span>
+            <span class="facet__items__item__count badge badge-pill badge-light float-right mt-1">
+              {{ $n(item.byDocs.value) }}
+            </span>
+          </span>
         </b-form-checkbox>
-        <div class="facet__items__item__menu" v-if="!isServer">
-          <b-dropdown class="h-100" no-caret dropright offset="25">
-            <template #button-content class="px-1">
-              <fa icon="ellipsis-v" />
-            </template>
-            <b-dropdown-item @click="deleteNamedEntitiesByMentionNorm(item.key)">
-              <fa icon="trash-alt" />
-              {{ $t('facet.deleteNamedEntity') }}
-            </b-dropdown-item>
-          </b-dropdown>
-        </div>
+        <confirm-button v-if="!isServer" :confirmed="() => deleteNamedEntitiesByMentionNorm(value)" class="align-self-center btn btn-link btn-sm text-white p-0 mr-2 mt-2 facet__items__item__delete" v-b-tooltip :title="$t('facet.deleteNamedEntity')">
+          <fa icon="trash-alt" />
+        </confirm-button>
       </div>
     </template>
   </facet>
@@ -47,7 +32,6 @@ import facets from '@/mixins/facets'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import DatashareClient from '@/api/DatashareClient'
-import get from 'lodash/get'
 
 const datashare = new DatashareClient()
 
@@ -61,32 +45,13 @@ export default {
     }
   },
   methods: {
-    resetNamedEntityValues (evt) {
-      if (evt && this.isAllSelected) {
-        evt.preventDefault()
-      } else {
-        this.$store.commit('search/resetFacetValues', this.facet.name)
-        this.selected = {}
-        this.isAllSelected = true
-        this.refreshRoute()
+    async deleteNamedEntitiesByMentionNorm (mentionNorm) {
+      await datashare.deleteNamedEntitiesByMentionNorm(mentionNorm)
+      this.$root.$emit('facet::hide::named-entities')
+      if (this.$refs.facet) {
+        this.$refs.facet.aggregate()
       }
-    },
-    deleteNamedEntitiesByMentionNorm (mentionNorm) {
-      return datashare.deleteNamedEntitiesByMentionNorm(mentionNorm).then(() => {
-        this.$root.$emit('facet::hide::named-entities')
-      })
-    },
-    itemTitle (item) {
-      const occurrencesCount = item.doc_count || 0
-      const documentsCount = get(item, 'byDocs.value', 0)
-      return this.$t('aggregations.mentions.item', {
-        occurrences: this.$tc('aggregations.mentions.occurrence', occurrencesCount, { count: occurrencesCount }),
-        documents: this.$tc('aggregations.mentions.document', documentsCount, { count: documentsCount })
-      })
     }
-  },
-  mounted () {
-    this.$root.$on('facet::hide::named-entities', () => this.$refs.facet ? this.$refs.facet.aggregate() : null)
   }
 }
 </script>
@@ -94,100 +59,18 @@ export default {
 <style lang="scss">
   .facet--named-entity {
 
-    label.custom-control-label::before, label.custom-control-label::after {
-      top: 50%;
-      transform: translateY(-50%);
-    }
-
     .facet__items__item {
 
-      &:hover .facet__items__item__menu {
-        visibility: visible;
+      &__delete:not([aria-describedby]) {
+        display: none;
       }
 
-      &__checkbox {
-        max-width: calc(100% - 3rem)
+      &:hover .facet__items__item__delete {
+        display: block;
       }
 
-      &__body {
-        flex-grow: 1;
-        min-width: 0;
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-        justify-content: flex-start;
-
-        &__key {
-          display: inline-block;
-          overflow: hidden;
-          max-width: 100%;
-          min-width: 0;
-          margin-right: 0;
-          float: left;
-          border-radius: 0.5em 0 0 0.5em;
-          border: 1px solid transparent;
-
-          &--all {
-            border-radius: 0.5em;
-            border: 1px solid transparent;
-          }
-        }
-
-        &__count {
-          border: 1px solid transparent;
-          border-radius: 0 0.5em 0.5em 0;
-        }
-      }
-
-      &__menu {
-        flex-basis: 2.5em;
-        flex-grow: 0;
-        visibility: hidden;
-        position: relative;
-
-        .btn-group {
-          position: absolute;
-          right: 0;
-          top: 0;
-        }
-
-        .btn-group > .btn {
-          background-color: transparent;
-          border: none;
-          color: grey;
-          padding: 0.2rem;
-          border-radius: 50% !important;
-          text-align: center;
-          font-size: 0.8rem;
-          width: 1.5rem;
-          height: 1.5rem;
-          line-height: 1;
-
-          &:focus, &:focus:active, &:active {
-            background-color: theme-color('light');
-            border: none;
-            color: grey;
-            padding: 0.3em;
-          }
-        }
-
-        .dropdown-menu {
-          margin-top: -2em;
-        }
-      }
-
-      input:checked + label {
-        .facet__items__item__body__key, .facet__items__item__description {
-          font-weight: bold;
-        }
-      }
-    }
-
-    &.facet--reversed {
-      input:checked + label {
-        .facet__items__item__body__key, .facet__items__item__description {
-          text-decoration: line-through;
-        }
+      &:hover .facet__items__item__count {
+        display: none;
       }
     }
   }

@@ -53,7 +53,7 @@ describe('FacetDate.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    const getItem = (idx) => wrapper.findAll('.facet__items__item .custom-checkbox').at(idx)
+    const getItem = (idx) => wrapper.findAll('.facet__items__item').at(idx).find('.custom-checkbox')
     const getItemChild = (idx, selector) => getItem(idx).find(selector)
     const getItemChildText = (idx, selector) => getItemChild(idx, selector).text()
 

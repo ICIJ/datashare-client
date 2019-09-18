@@ -1,14 +1,16 @@
-import FacetDateRange from '@/components/FacetDateRange'
-import VueI18n from 'vue-i18n'
+import find from 'lodash/find'
 import Murmur from '@icij/murmur'
+import VCalendar from 'v-calendar/lib/v-calendar.umd.js'
+import VueI18n from 'vue-i18n'
+import { BFormInput } from 'bootstrap-vue'
 import { createLocalVue, mount } from '@vue/test-utils'
+
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { BFormInput } from 'bootstrap-vue'
+import FacetDateRange from '@/components/FacetDateRange'
 import messages from '@/lang/en'
 import store from '@/store'
 import router from '@/router'
-import find from 'lodash/find'
 
 window.matchMedia = jest.fn().mockImplementation(query => {
   return {
@@ -23,6 +25,7 @@ window.matchMedia = jest.fn().mockImplementation(query => {
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
+localVue.use(VCalendar, { componentPrefix: 'vc' })
 localVue.component('b-form-input', BFormInput)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 

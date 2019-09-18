@@ -1,22 +1,24 @@
 <template>
   <facet v-bind="$props" hide-show-more ref="facet">
     <template #items>
-      <v-date-picker
-        class="p-2 date-picker"
-        mode="range"
-        v-model="selectedDate"
-        show-caps
-        @input="onInput"
-        :attributes="attributes"
-        :locale="locale"
-        :key="locale">
-        <input
-          class="form-control"
-          slot-scope="{ inputProps, inputEvents, isDragging }"
-          :placeholder="$t('facet.selectDateRange')"
-          v-bind="inputProps"
-          v-on="inputEvents">
-      </v-date-picker>
+      <div class="m-2">
+        <vc-date-picker
+          class="date-picker"
+          mode="range"
+          v-model="selectedDate"
+          show-caps
+          @input="onInput"
+          :attributes="attributes"
+          :locale="locale"
+          :key="locale">
+          <input
+            class="form-control"
+            slot-scope="{ inputProps, inputEvents, isDragging }"
+            :placeholder="$t('facet.selectDateRange')"
+            v-bind="inputProps"
+            v-on="inputEvents">
+        </vc-date-picker>
+      </div>
     </template>
   </facet>
 </template>
@@ -27,17 +29,9 @@ import Facet from '@/components/Facet'
 import max from 'lodash/max'
 import min from 'lodash/min'
 
-import Vue from 'vue'
-import { setupCalendar, DatePicker } from 'v-calendar'
-
-setupCalendar(Vue, {
-  componentPrefix: 'vc'
-})
-
 export default {
   name: 'FacetDateRange',
   components: {
-    'v-date-picker': DatePicker,
     Facet
   },
   mixins: [facets],
@@ -83,7 +77,10 @@ export default {
     },
     updateFromStore () {
       if (this.selected.length === 2) {
-        this.$set(this, 'selectedDate', { start: new Date(parseInt(min(this.selected))), end: new Date(parseInt(max(this.selected))) })
+        this.$set(this, 'selectedDate', {
+          start: new Date(parseInt(min(this.selected))),
+          end: new Date(parseInt(max(this.selected)))
+        })
       } else {
         this.$set(this, 'selectedDate', null)
       }

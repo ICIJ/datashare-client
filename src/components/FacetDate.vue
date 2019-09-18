@@ -1,7 +1,14 @@
 <template>
   <facet v-bind="$props" ref="facet">
     <template #all>
-      <span v-html="getItemLabel({ key: 'all', key_as_string: 'all', doc_count: totalCount })"></span>
+      <span class="d-flex">
+        <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
+          {{ labelToHuman('all') }}
+        </span>
+        <span class="facet__items__item__count badge badge-pill badge-light float-right mt-1">
+          {{ $n(totalCount) }}
+        </span>
+      </span>
     </template>
   </facet>
 </template>

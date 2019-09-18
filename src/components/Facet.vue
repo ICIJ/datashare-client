@@ -29,16 +29,40 @@
             </label>
           </form>
         </slot>
-        <slot v-if="items.length > 0" name="items" :items="items" :total-count="totalCount" :facetQuery="facetQuery">
-          <b-form-checkbox v-model="isAllSelected" @change.native="resetFacetValues" class="facet__items__all mb-0">
-            <slot name="all">
-              <span v-html="getItemLabel({ key: 'all', key_as_string: 'all', doc_count: calculatedCount })"></span>
+        <div class="mb-2">
+          <slot v-if="items.length > 0" name="items" :items="items" :options="options" :selected="selected" :total-count="totalCount" :facetQuery="facetQuery">
+            <b-form-checkbox v-model="isAllSelected" @change.native="resetFacetValues" class="facet__items__all mb-0">
+              <slot name="all">
+                <span class="d-flex">
+                  <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
+                    {{ labelToHuman('all') }}
+                  </span>
+                  <span class="facet__items__item__count badge badge-pill badge-light float-right mt-1">
+                    {{ $n(calculatedCount) }}
+                  </span>
+                </span>
+              </slot>
+            </b-form-checkbox>
+            <slot name="items-group" :items="items" :options="options" :selected="selected">
+              <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @input="changeSelectedValues">
+                <template v-for="{ value, item, label } of options">
+                  <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
+                    <b-form-checkbox :value="value" class="facet__items__item">
+                      <span class="d-flex">
+                        <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
+                          {{label }}
+                        </span>
+                        <span class="facet__items__item__count badge badge-pill badge-light float-right mt-1">
+                          {{  $n(item.doc_count) }}
+                        </span>
+                      </span>
+                    </b-form-checkbox>
+                  </slot>
+                </template>
+              </b-form-checkbox-group>
             </slot>
-          </b-form-checkbox>
-          <slot name="item">
-            <b-form-checkbox-group stacked v-model="selected" :options="options" class="list-group-item facet__items__item p-0 border-0" @input="changeSelectedValues" />
           </slot>
-        </slot>
+        </div>
         <div class="list-group-item facet__items__display border-top-0" @click="asyncFacetSearch" v-if="shouldDisplayShowMoreAction()">
           <span>{{ $t('facet.showMore') }}</span>
         </div>
@@ -103,7 +127,9 @@ export default {
       this.$store.watch(this.watchedForUpdate, this.aggregateWithLoading, { deep: true })
     }
     this.$root.$on('facet::refresh', facetName => {
-      if (this.facet.name === facetName) this.aggregateWithLoading()
+      if (this.facet.name === facetName) {
+        this.aggregateWithLoading()
+      }
     })
   },
   computed: {
@@ -237,6 +263,10 @@ export default {
 
       &.slide-enter, &.slide-leave-to {
         max-height: 0;
+      }
+
+      &__item .custom-checkbox {
+        margin-bottom: 0;
       }
 
       & &__search {

@@ -17,10 +17,10 @@ export class DatashareClient {
     return this.sendAction(`/api/task/findNames/${pipeline}`, { method: 'POST', body: JSON.stringify({ options }) })
   }
   stopPendingTasks () {
-    return this.sendAction('/api/task/stopAll', { method: 'PUT' })
+    return this.sendAction('/api/task/stopAll', { method: 'PUT' }, false)
   }
   stopTask (name) {
-    return this.sendAction((`/api/task/stop/${encodeURIComponent(name)}`), { method: 'PUT' })
+    return this.sendAction((`/api/task/stop/${encodeURIComponent(name)}`), { method: 'PUT' }, false)
   }
   deleteDoneTasks () {
     return this.sendAction('/api/task/clean', { method: 'POST', body: '{}' })
@@ -29,7 +29,7 @@ export class DatashareClient {
     return this.sendAction('/api/task/all')
   }
   createIndex () {
-    return this.sendAction('/api/index/create', { method: 'PUT' })
+    return this.sendAction('/api/index/create', { method: 'PUT' }, false)
   }
   deleteAll (projectId) {
     return this.sendAction(`/api/project/id/${encodeURIComponent(projectId)}`, { method: 'DELETE' }, false)
@@ -41,7 +41,7 @@ export class DatashareClient {
     return this.sendAction('/api/config')
   }
   deleteNamedEntitiesByMentionNorm (mentionNorm) {
-    return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT' })
+    return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT' }, false)
   }
   getSource (document) {
     return this.sendAction(document.url, {}, false)

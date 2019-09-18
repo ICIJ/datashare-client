@@ -5,6 +5,8 @@ import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import VueShortkey from 'vue-shortkey'
 import VueScrollTo from 'vue-scrollto'
+import VCalendar from 'v-calendar/lib/v-calendar.umd.js'
+
 import router from '@/router'
 import messages from '@/lang/en'
 import store from '@/store'
@@ -23,6 +25,10 @@ async function createApp (LocalVue = Vue) {
   LocalVue.use(VueProgressBar, { color: settings.progressBar.color })
   LocalVue.use(VueShortkey, { prevent: settings.hotKeyPrevented })
   LocalVue.use(VueScrollTo)
+  // Setup VCalendar manually since Webpack is not compatible with
+  // dynamic chunk import with third party modules.
+  // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
+  LocalVue.use(VCalendar, { componentPrefix: 'vc' })
 
   const i18n = new VueI18n({
     locale: settings.defaultLocale,
