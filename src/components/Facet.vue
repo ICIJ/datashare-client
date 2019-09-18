@@ -166,9 +166,12 @@ export default {
     },
     aggregate () {
       if (this.facet) {
+        const size = this.size
         const prefix = this.facet.prefix ? this.$config.get('dataDir') + '/' : ''
         const alternativeSearch = this.facetQuery !== '' && this.facet.alternativeSearch ? compact(this.facet.alternativeSearch(toLower(this.facetQuery))) : []
-        const options = this.facet.isSearchable ? { size: this.size, include: prefix + `.*(${concat(alternativeSearch, this.queryTokens).join('|')}).*` } : { size: this.size }
+        const queryTokens = compact(concat(alternativeSearch, this.queryTokens))
+        const include = prefix + `.*(${queryTokens.join('|')}).*`
+        const options = this.facet.isSearchable && queryTokens.length ? { size, include } : { size }
         return this.queue.add(async () => {
           let res
           try {
