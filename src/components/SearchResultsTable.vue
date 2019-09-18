@@ -2,11 +2,11 @@
   <div class="search-results-table">
     <div v-if="selected.length > 0" class="d-inline-flex">
       <b-list-group class="search-results-table__actions" horizontal>
-        <b-list-group-item class="search-results-table__actions__action" href="#" v-for="action in actions" :key="action.id" @click="onClick(action.id)" v-if="action.isDisplayed">
+        <b-list-group-item class="search-results-table__actions__action" href="#" v-for="action in actions" :key="action.id" @click="onClick(action.id)">
           <fa :icon="action.icon" :class="action.iconClass"/>{{ action.label }}
         </b-list-group-item>
       </b-list-group>
-      <document-tags-form :document="selected" :displayTags="false" v-if="isTagDisplayed" class="ml-3"/>
+      <document-tags-form :document="selected" :displayTags="false" class="ml-3" v-if="hasFeature('BATCH_TAGS')" />
     </div>
     <div v-if="hasResults">
       <search-results-header position="top" />
@@ -85,8 +85,7 @@ export default {
   data () {
     return {
       selected: [],
-      isBusy: false,
-      isTagDisplayed: false
+      isBusy: false
     }
   },
   props: {
@@ -142,19 +141,11 @@ export default {
       return [{
         id: 'star',
         label: this.$t('document.star_button'),
-        icon: ['fa', 'star'],
-        isDisplayed: true
+        icon: ['fa', 'star']
       }, {
         id: 'unstar',
         label: this.$t('document.unstar_button'),
-        icon: ['far', 'star'],
-        isDisplayed: true
-      }, {
-        id: 'tag',
-        label: this.$t('document.tag'),
-        icon: ['fa', 'tag'],
-        iconClass: 'fa-flip-horizontal',
-        isDisplayed: this.hasFeature('BATCH_TAGS')
+        icon: ['far', 'star']
       }]
     },
     hasResults () {
@@ -198,9 +189,6 @@ export default {
           break
         case 'unstar':
           await this.$store.dispatch('search/unstarDocuments', this.selected)
-          break
-        case 'tag':
-          this.isTagDisplayed = !this.isTagDisplayed
           break
         default:
           break
