@@ -1,8 +1,5 @@
 import BatchSearch from '@/pages/BatchSearch'
 import { createLocalVue, mount } from '@vue/test-utils'
-import VueI18n from 'vue-i18n'
-import Vuex from 'vuex'
-import messages from '@/lang/en'
 import store from '@/store'
 import router from '@/router'
 import BootstrapVue from 'bootstrap-vue'
@@ -44,12 +41,9 @@ jest.mock('@/api/DatashareClient', () => {
 })
 
 const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
 localVue.use(VueProgressBar)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('BatchSearch.vue', () => {
   let wrapper
@@ -57,7 +51,7 @@ describe('BatchSearch.vue', () => {
   beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
-    wrapper = mount(BatchSearch, { localVue, i18n, store, router })
+    wrapper = mount(BatchSearch, { localVue, store, router, mocks: { $t: msg => msg, $tc: msg => msg } })
     await wrapper.vm.$nextTick()
   })
 
@@ -69,8 +63,8 @@ describe('BatchSearch.vue', () => {
 
   it('should display a link to batch search page with from and size as URL query string', () => {
     expect(wrapper.findAll('.batch-search__items__item__link')).toHaveLength(2)
-    expect(wrapper.findAll('.batch-search__items__item__link').at(0).attributes('href')).toBe('#/batch-search/project_01/1?from=0&size=100&sort=doc_nb&order=asc')
-    expect(wrapper.findAll('.batch-search__items__item__link').at(1).attributes('href')).toBe('#/batch-search/project_02/2?from=0&size=100&sort=doc_nb&order=asc')
+    expect(wrapper.findAll('.batch-search__items__item__link').at(0).attributes('href')).toBe('#/batch-search/project_01/1?page=1&sort=doc_nb&order=asc')
+    expect(wrapper.findAll('.batch-search__items__item__link').at(1).attributes('href')).toBe('#/batch-search/project_02/2?page=1&sort=doc_nb&order=asc')
   })
 
   it('should display 7 columns of info per row', () => {

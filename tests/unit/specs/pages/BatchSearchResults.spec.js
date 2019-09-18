@@ -1,8 +1,5 @@
 import BatchSearchResults from '@/pages/BatchSearchResults'
 import { createLocalVue, mount } from '@vue/test-utils'
-import VueI18n from 'vue-i18n'
-import Vuex from 'vuex'
-import messages from '@/lang/en'
 import store from '@/store'
 import BootstrapVue from 'bootstrap-vue'
 import VueProgressBar from 'vue-progressbar'
@@ -65,13 +62,10 @@ jest.mock('@/api/DatashareClient', () => {
 })
 
 const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
 localVue.use(VueRouter)
 localVue.use(VueProgressBar)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 const router = new VueRouter({ routes: [
   {
     path: 'batch-search/:index/:uuid',
@@ -82,7 +76,7 @@ const router = new VueRouter({ routes: [
   }
 ] })
 
-describe('BatchSearchResultsList.vue', () => {
+describe('BatchSearchResults.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
@@ -112,7 +106,7 @@ describe('BatchSearchResultsList.vue', () => {
       nbResults: 15
     }])
     const propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
-    wrapper = mount(BatchSearchResults, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData })
+    wrapper = mount(BatchSearchResults, { localVue, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData, mocks: { $t: msg => msg } })
     await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { from: 50, size: 25 } })
     await wrapper.vm.fetch()
   })
@@ -154,6 +148,6 @@ describe('BatchSearchResultsList.vue', () => {
     await wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
 
     expect(router.push).toBeCalled()
-    expect(router.push).toBeCalledWith({ name: 'batch-search.results', params: { index: `${process.env.VUE_APP_ES_INDEX}`, uuid: '12' }, query: { from: 0, order: 'desc', queries: [], size: 100, sort: 'content_type' } })
+    expect(router.push).toBeCalledWith({ name: 'batch-search.results', params: { index: `${process.env.VUE_APP_ES_INDEX}`, uuid: '12' }, query: { page: 1, queries: [], sort: 'content_type', order: 'desc' } })
   })
 })

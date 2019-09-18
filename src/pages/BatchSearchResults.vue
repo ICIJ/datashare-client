@@ -42,7 +42,7 @@
       </div>
       <div v-else class="batch-search-results__queries">
         <div class="card">
-          <b-table striped hover no-local-sorting :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query">
+          <b-table striped hover no-local-sorting :per-page="perPage" :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query">
             <template #documentNumber="{ item }">
               {{ item.documentNumber + 1 }}
             </template>
@@ -63,7 +63,7 @@
           </b-table>
         </div>
       </div>
-      <pagination :total="meta.nbResults" :get-to-template="getToTemplate"></pagination>
+      <b-pagination-nav :link-gen="linkGen" :number-of-pages="Math.ceil(meta.nbResults / perPage)" use-router></b-pagination-nav>
     </div>
   </div>
 </template>
@@ -89,12 +89,8 @@ export default {
     Pagination
   },
   props: {
-    uuid: {
-      type: String
-    },
-    index: {
-      type: String
-    }
+    uuid: String,
+    index: String
   },
   filters: {
     humanSize
@@ -144,8 +140,7 @@ export default {
           boxes: [['10%', '80%']]
         }
       ],
-      from: 0,
-      size: settings.batchSearchResults.size,
+      page: 1,
       queries: [],
       sort: settings.batchSearchResults.sort,
       order: settings.batchSearchResults.order
@@ -153,8 +148,7 @@ export default {
   },
   beforeRouteEnter (to, from, next) {
     next(async vm => {
-      vm.$set(vm, 'from', parseInt(get(to.query, 'from', vm.from)))
-      vm.$set(vm, 'size', parseInt(get(to.query, 'size', vm.size)))
+      vm.$set(vm, 'page', parseInt(get(to.query, 'page', vm.page)))
       vm.$set(vm, 'queries', castArray(get(to.query, 'queries', vm.queries)))
       vm.$set(vm, 'sort', get(to.query, 'sort', vm.sort))
       vm.$set(vm, 'order', get(to.query, 'order', vm.order))
@@ -164,8 +158,7 @@ export default {
     })
   },
   async beforeRouteUpdate (to, from, next) {
-    this.$set(this, 'from', parseInt(get(to.query, 'from', this.from)))
-    this.$set(this, 'size', parseInt(get(to.query, 'size', this.size)))
+    this.$set(this, 'page', parseInt(get(to.query, 'page', this.page)))
     this.$set(this, 'queries', get(to.query, 'queries', this.queries))
     this.$set(this, 'sort', get(to.query, 'sort', this.sort))
     this.$set(this, 'order', get(to.query, 'order', this.order))
@@ -176,6 +169,9 @@ export default {
   },
   computed: {
     ...mapState('batchSearch', ['results', 'selectedQueries']),
+    perPage () {
+      return settings.batchSearchResults.size
+    },
     meta () {
       return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || { }
     },
@@ -204,18 +200,20 @@ export default {
       return store.dispatch('batchSearch/getBatchSearches')
     },
     fetchBatchSearchResults () {
-      return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from: this.from, size: this.size, queries: this.queries, sort: this.sort, order: this.order })
-    },
-    getToTemplate () {
-      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from: this.from, size: this.size, queries: this.queries, sort: this.sort, order: this.order } }
+      const from = (this.page - 1) * this.perPage
+      const size = this.perPage
+      return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from, size, queries: this.queries, sort: this.sort, order: this.order })
     },
     async sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
       const order = ctx.sortDesc ? 'desc' : 'asc'
-      this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from: this.from, size: this.size, queries: this.queries, sort, order } })
+      this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page: this.page, queries: this.queries, sort, order } })
     },
     filter () {
-      this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { from: this.from, size: this.size, queries: this.selectedQueries, sort: this.sort, order: this.order } })
+      this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page: this.page, queries: this.selectedQueries, sort: this.sort, order: this.order } })
+    },
+    linkGen (page) {
+      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page, queries: this.selectedQueries, sort: this.sort, order: this.order } }
     },
     capitalize,
     moment,
