@@ -63,15 +63,22 @@
             </span>
           </a>
         </li>
-        <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" v-bind:key="meta.resourcePath" v-if="!reduced">
-          <router-link :to="{ name: 'docs', params: meta }" class="app-sidebar__container__menu__item__link">
-            <fa icon="book" fixed-width />
-            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ meta.title }}
-            </span>
-          </router-link>
-        </li>
       </ul>
+      <div v-if="!reduced && currentRouteDocs.length">
+        <h5 class="app-sidebar__container__heading">
+          <fa icon="book" fixed-width />
+          <span>User guides</span>
+        </h5>
+        <ul class="app-sidebar__container__menu app-sidebar__container__menu--borderless list-unstyled">
+          <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" v-bind:key="meta.resourcePath">
+            <router-link :to="{ name: 'docs', params: meta }" class="app-sidebar__container__menu__item__link app-sidebar__container__menu__item__link--tree">
+              <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+                {{ meta.title }}
+              </span>
+            </router-link>
+          </li>
+        </ul>
+      </div>
       <ul class="app-sidebar__container__menu list-unstyled mb-0">
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--locale">
           <locales-dropdown class="app-sidebar__container__menu__item__link text-left text-wrap" v-slot="{ currentLocale }">
@@ -158,6 +165,9 @@ export default {
 </script>
 
 <style lang="scss">
+  $item-tree-width: 2px;
+  $item-tree-color: rgba(white, .5);
+
   .app-sidebar {
     height: 100vh;
     color: white;
@@ -230,12 +240,15 @@ export default {
         }
       }
 
-      &__menu {
+      &__heading {
+        margin: $spacer * 0.5 0;
+        padding: $spacer * 1.5 ($spacer * 1.75) 0;
         position: relative;
-        padding-top: $spacer;
-        margin-bottom: $spacer;
+        display: flex;
+        font-size: 1rem;
+        font-weight: bold;
 
-        &:before {
+        &:not(&--borderless):before {
           content:"";
           border-top: rgba(white, 0.1) 1px solid;
           position: absolute;
@@ -244,11 +257,40 @@ export default {
           right: $spacer;
         }
 
-        &.border-0:before {
-          display: none;
+        & > .svg-inline--fa {
+          font-size: 1.2rem;
+
+          .app-sidebar:not(.app-sidebar--reduced) & {
+            margin-right: $spacer;
+          }
+        }
+      }
+
+      &__menu {
+        position: relative;
+        padding-top: $spacer;
+        margin-bottom: $spacer;
+
+        &:not(&--borderless):before {
+          content:"";
+          border-top: rgba(white, 0.1) 1px solid;
+          position: absolute;
+          top: 0;
+          left: $spacer;
+          right: $spacer;
+        }
+
+        &--borderless {
+          padding-top: 0;
         }
 
         &__item {
+
+          &:last-of-type &__link--tree:before {
+            transform: none;
+            height: calc(50% + #{$item-tree-width / 2});
+            top: 0;
+          }
 
           &__link, &__link.btn {
             margin: $spacer * 0.5 $spacer;
@@ -264,12 +306,45 @@ export default {
               background: rgba(white, .05);
             }
 
+            &--tree {
+              font-weight: normal;
+              position: relative;
+              padding: $spacer * 0.5 $spacer * 0.75;
+              margin-top: 0;
+              margin-bottom: 0;
+              margin-left: $spacer * 3.25;
+
+              &:before {
+                content: "";
+                position: absolute;
+                right: calc(100% + #{$spacer / 2});
+                top: 50%;
+                transform: translateY(-50%);
+                width: $item-tree-width;
+                background: $item-tree-color;
+                height: 100%;
+              }
+
+              &:after {
+                content: "";
+                position: absolute;
+                right: 100%;
+                top: 50%;
+                transform: translateY(-50%);
+                height: $item-tree-width;
+                background: $item-tree-color;
+                width: $spacer / 2;
+              }
+            }
+
             & > .svg-inline--fa {
               font-size: 1.2rem;
+              .app-sidebar:not(.app-sidebar--reduced) & {
+                margin-right: $spacer;
+              }
             }
 
             &__label {
-              margin-left: $spacer;
 
               .app-sidebar--reduced & {
                 display: none;
