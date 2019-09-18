@@ -6,7 +6,7 @@
         "default": ["ctrl", "arrowleft"]
       },
       "action": "goToPreviousDocument",
-      "icon": "backward",
+      "icon": "caret-left",
       "label": "shortkeys.goToPreviousDocument",
       "link": "https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts#go-to-the-next-previous-document"
     },
@@ -16,7 +16,7 @@
         "default": ["ctrl", "arrowright"]
       },
       "action": "goToNextDocument",
-      "icon": "forward",
+      "icon": "caret-right",
       "label": "shortkeys.goToNextDocument",
       "link": "https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts#go-to-the-next-previous-document"
     },
@@ -26,6 +26,7 @@
         "default": ["esc"]
       },
       "action": "back",
+      "icon": "chevron-circle-left",
       "label": "shortkeys.backToSearchResults",
       "link": "https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts#go-back-to-search-results"
     }
@@ -43,6 +44,10 @@
         }
       },
       "action": "shortKeyAction",
+      "icon": {
+        "goToPreviousTab": "long-arrow-alt-left",
+        "goToNextTab": "long-arrow-alt-right"
+      },
       "label": {
         "goToPreviousTab": "shortkeys.goToPreviousTab",
         "goToNextTab": "shortkeys.goToNextTab"
@@ -71,6 +76,13 @@
         }
       },
       "action": "shortkeyAction",
+      "icon": {
+        "activateSearchBar": "search",
+        "findPreviousOccurrence": "angle-up",
+        "findPreviousOccurrenceAlt": "angle-up",
+        "findNextOccurrence": "angle-down",
+        "findNextOccurrenceAlt": "angle-down"
+      },
       "label": {
         "activateSearchBar": "shortkeys.activateSearchBar",
         "deactivateSearchBar": "shortkeys.deactivateSearchBar",

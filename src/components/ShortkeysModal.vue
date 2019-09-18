@@ -9,7 +9,7 @@
     <b-modal id="shortkeys" title="Keyboard Shortcuts" hide-footer>
       <div v-for="(shortkey, index) in shortkeys" :key="index" class="shortkeys-modal__shortkey mb-1">
         <b-link :href="shortkey.link" target="_blank" class="shortkeys-modal__shortkey__link row mb-1">
-          <div class="col-sm-1">
+          <div class="col-sm-1 m-auto">
             <fa :icon="shortkey.icon" v-if="shortkey.icon"/>
           </div>
           <div class="col-sm-7">
@@ -61,6 +61,8 @@ export default {
             const newShortkey = { action, keys: { default: shortkey.keys.default[action], mac: shortkey.keys.mac[action] }, link: shortkey.link }
             const label = get(shortkey, ['label', action], false)
             if (label) newShortkey.label = label
+            const icon = get(shortkey, ['icon', action], false)
+            if (icon) newShortkey.icon = icon
             this.shortkeys.push(newShortkey)
           })
         }

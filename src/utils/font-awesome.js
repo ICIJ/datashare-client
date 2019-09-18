@@ -8,13 +8,13 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons/faAngleRight'
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons/faAngleUp'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight'
-import { faBackward } from '@fortawesome/free-solid-svg-icons/faBackward'
 import { faBan } from '@fortawesome/free-solid-svg-icons/faBan'
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
 import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt'
 import { faBook } from '@fortawesome/free-solid-svg-icons/faBook'
 import { faBuilding } from '@fortawesome/free-solid-svg-icons/faBuilding'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown'
+import { faCaretLeft } from '@fortawesome/free-solid-svg-icons/faCaretLeft'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons/faCaretRight'
 import { faCircleNotch } from '@fortawesome/free-solid-svg-icons/faCircleNotch'
 import { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons/faChevronCircleLeft'
@@ -36,13 +36,14 @@ import { faFile } from '@fortawesome/free-solid-svg-icons/faFile'
 import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter'
 import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder'
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen'
-import { faForward } from '@fortawesome/free-solid-svg-icons/faForward'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons/faIdBadge'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons/faInfoCircle'
 import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard'
 import { faLanguage } from '@fortawesome/free-solid-svg-icons/faLanguage'
 import { faLayerGroup } from '@fortawesome/free-solid-svg-icons/faLayerGroup'
+import { faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons/faLongArrowAltLeft'
+import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons/faLongArrowAltRight'
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons/faMapMarkerAlt'
 import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus'
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
@@ -84,13 +85,13 @@ library.add(
   faAngleUp,
   faArrowLeft,
   faArrowRight,
-  faBackward,
   faBan,
   faBars,
   faBolt,
   faBook,
   faBuilding,
   faCaretDown,
+  faCaretLeft,
   faCaretRight,
   faCircleNotch,
   faCheckSquare,
@@ -112,13 +113,14 @@ library.add(
   faFilter,
   faFolder,
   faFolderOpen,
-  faForward,
   faGlobe,
   faIdBadge,
   faInfoCircle,
   faKeyboard,
   faLanguage,
   faLayerGroup,
+  faLongArrowAltLeft,
+  faLongArrowAltRight,
   faMapMarkerAlt,
   faMinus,
   faPlus,
