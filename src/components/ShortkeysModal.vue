@@ -1,5 +1,5 @@
 <template>
-  <span class="shortkeys-modal" v-if="hasFeature('SHORTKEYS')">
+  <span class="shortkeys-modal">
     <b-button class="text-dark" variant="transparent" href="#" size="lg" v-b-modal.shortkeys :title="$t('search.settings.title')" v-b-tooltip.hover.bottomleft>
       <fa icon="keyboard" />
       <span class="sr-only">
