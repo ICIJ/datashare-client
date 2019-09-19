@@ -89,7 +89,7 @@
           </locales-dropdown>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
-          <a href="" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a :href="logoutLink" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="sign-out-alt" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.logout') }}
@@ -112,6 +112,7 @@ import { getOS } from '@/utils/utils'
 import utils from '@/mixins/utils'
 import features from '@/mixins/features'
 import docs from '@/mixins/docs'
+import DatashareClient from '@/api/DatashareClient'
 import settings from '@/utils/settings'
 import LocalesDropdown from './LocalesDropdown.vue'
 import MountedDataLocation from './MountedDataLocation.vue'
@@ -159,6 +160,9 @@ export default {
     },
     helpLink () {
       return this.isServer ? 'https://jira.icij.org/servicedesk/customer/portal/4/create/108' : 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
+    },
+    logoutLink () {
+      return DatashareClient.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     }
   }
 }
