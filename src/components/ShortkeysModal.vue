@@ -9,14 +9,14 @@
     <b-modal id="shortkeys" title="Keyboard Shortcuts" hide-footer>
       <div v-for="(shortkey, index) in shortkeys" :key="index" class="shortkeys-modal__shortkey mb-1">
         <b-link :href="shortkey.link" target="_blank" class="shortkeys-modal__shortkey__link row mb-1">
-          <div class="col-sm-1 m-auto">
-            <fa :icon="shortkey.icon" v-if="shortkey.icon"/>
+          <div class="col-sm-1">
+            <fa :icon="shortkey.icon" v-if="shortkey.icon" fixed-width />
           </div>
           <div class="col-sm-7">
             {{ getLabel(shortkey) }}
           </div>
-          <div class="col-sm-4">
-            {{ shortkey.keys[getShortkeyOS] | shortkey }}
+          <div class="col-sm-4 small">
+            <kbd>{{ shortkey.keys[getShortkeyOS] | shortkey }}</kbd>
           </div>
         </b-link>
       </div>
