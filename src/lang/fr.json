@@ -469,7 +469,8 @@
     "contentType": "Type de contenu",
     "size": "Taille",
     "downloadResults": "Télécharger les résultats",
-    "all": "Tout"
+    "all": "Tout",
+    "empty": "No results"
   },
   "batchSearchResultsFilters": {
     "queries": {
