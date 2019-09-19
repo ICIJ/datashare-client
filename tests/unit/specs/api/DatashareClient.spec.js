@@ -24,8 +24,10 @@ describe('Datashare backend client', () => {
     datashare.stopPendingTasks().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to stopTask', () => {
-    datashare.stopTask().then(json => expect(json).toEqual({}))
+  it('should return backend response to stopTask', async () => {
+    const resp = await datashare.stopTask()
+    const json = await resp.json()
+    expect(json).toEqual({})
   })
 
   it('should return backend response to deleteDoneTasks', () => {
@@ -36,8 +38,10 @@ describe('Datashare backend client', () => {
     datashare.getTasks().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to createIndex', () => {
-    datashare.createIndex().then(json => expect(json).toEqual({}))
+  it('should return backend response to createIndex', async () => {
+    const resp = await datashare.createIndex()
+    const json = await resp.json()
+    expect(json).toEqual({})
   })
 
   it('should return backend response to deleteAll', async () => {
@@ -54,8 +58,10 @@ describe('Datashare backend client', () => {
     datashare.getConfig().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to deleteNamedEntitiesByMentionNorm', () => {
-    datashare.deleteNamedEntitiesByMentionNorm('mentionNorm').then(json => expect(json).toEqual({}))
+  it('should return backend response to deleteNamedEntitiesByMentionNorm', async () => {
+    const resp = await datashare.deleteNamedEntitiesByMentionNorm('mentionNorm')
+    const json = await resp.json()
+    expect(json).toEqual({})
   })
 
   it('should return backend response to getSource', async () => {

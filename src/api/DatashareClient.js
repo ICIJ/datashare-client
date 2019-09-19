@@ -17,7 +17,7 @@ export class DatashareClient {
     return this.sendAction(`/api/task/findNames/${pipeline}`, { method: 'POST', body: JSON.stringify({ options }) })
   }
   stopPendingTasks () {
-    return this.sendAction('/api/task/stopAll', { method: 'PUT' }, false)
+    return this.sendAction('/api/task/stopAll', { method: 'PUT' })
   }
   stopTask (name) {
     return this.sendAction((`/api/task/stop/${encodeURIComponent(name)}`), { method: 'PUT' }, false)
