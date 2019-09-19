@@ -23,22 +23,22 @@
         class="bg-white border-bottom m-0 small search-results-table__items"
         selected-variant="tertiary"
         tbody-tr-class="search-results-table__items__row">
-        <template #relevance="{ item, rowSelected }" >
+        <template #cell(relevance)="{ item, rowSelected }" >
           <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon" />
           <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" />
         </template>
-        <template #path="{ item }">
+        <template #cell(path)="{ item }">
           <router-link :to="{ name: 'document', params: item.routerParams }" class="text-truncate">
             <document-sliced-name :document="item" />
           </router-link>
         </template>
-        <template #highlight="{ value }">
+        <template #cell(highlight)="{ value }">
           <span v-html="value" class="text-truncate text-muted"></span>
         </template>
-        <template #actions="{ item }">
+        <template #cell(actions)="{ item }">
           <document-actions :document="item" class="float-right btn-group-sm" />
         </template>
-        <template #contentLength="{ value }">
+        <template #cell(contentLength)="{ value }">
           {{ value | humanSize }}
         </template>
       </b-table>

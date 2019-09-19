@@ -68,8 +68,8 @@ localVue.use(VueRouter)
 localVue.use(VueProgressBar)
 const router = new VueRouter({ routes: [
   {
-    path: 'batch-search/:index/:uuid',
-    name: 'batch-search.results'
+    name: 'batch-search.results',
+    path: 'batch-search/:index/:uuid'
   }, {
     name: 'document',
     path: '/d/:index/:id/:routing?'
@@ -107,7 +107,7 @@ describe('BatchSearchResults.vue', () => {
     }])
     const propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
     wrapper = mount(BatchSearchResults, { localVue, store, router, computed: { downloadLink () { return 'mocked-download-link' }, numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
-    await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { from: 50, size: 25 } })
+    await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { page: 1 } })
     await wrapper.vm.fetch()
   })
 
@@ -116,13 +116,6 @@ describe('BatchSearchResults.vue', () => {
   it('should display the list of the queries of this batch search', () => {
     expect(wrapper.find('.batch-search-results').exists()).toBeTruthy()
     expect(wrapper.findAll('.batch-search-results__queries__query')).toHaveLength(3)
-  })
-
-  it('should display a link to document page', () => {
-    expect(wrapper.findAll('.batch-search-results__queries__query__link')).toHaveLength(3)
-    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(0).attributes('href')).toBe(`#/d/${process.env.VUE_APP_ES_INDEX}/42/42`)
-    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(1).attributes('href')).toBe(`#/d/${process.env.VUE_APP_ES_INDEX}/43/43`)
-    expect(wrapper.findAll('.batch-search-results__queries__query__link').at(2).attributes('href')).toBe(`#/d/${process.env.VUE_APP_ES_INDEX}/44/44`)
   })
 
   it('should display a button to download the results as a CSV file', () => {
