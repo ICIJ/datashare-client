@@ -63,7 +63,6 @@
 <script>
 import { createHelpers } from 'vuex-map-fields'
 import utils from '@/mixins/utils'
-import vFormCheckbox from 'bootstrap-vue/es/components/form-checkbox/form-checkbox'
 import noop from 'lodash/noop'
 
 const { mapFields } = createHelpers({
@@ -74,9 +73,6 @@ const { mapFields } = createHelpers({
 export default {
   name: 'FindNamedEntitiesForm',
   mixins: [utils],
-  components: {
-    'b-form-checkbox': vFormCheckbox
-  },
   props: {
     finally: {
       type: Function,

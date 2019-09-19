@@ -89,7 +89,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import bModal from 'bootstrap-vue/es/components/modal/modal'
 import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import settings from '@/utils/settings'
@@ -100,7 +99,7 @@ import last from 'lodash/last'
 
 export default {
   name: 'indexing',
-  components: { ExtractingForm, FindNamedEntitiesForm, bModal },
+  components: { ExtractingForm, FindNamedEntitiesForm },
   computed: {
     ...mapState('indexing', ['tasks']),
     isPendingTasks () {

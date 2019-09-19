@@ -42,11 +42,8 @@
 </template>
 
 <script>
-import bPopover from 'bootstrap-vue/es/components/popover/popover'
-
 export default {
   name: 'SearchSettings',
-  components: { bPopover },
   data () {
     return {
       sizes: [10, 25, 50, 100],
