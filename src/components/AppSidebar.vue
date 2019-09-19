@@ -257,7 +257,7 @@ export default {
           right: $spacer;
         }
 
-        & > .svg-inline--fa {
+        & .svg-inline--fa {
           font-size: 1.2rem;
 
           .app-sidebar:not(.app-sidebar--reduced) & {
@@ -337,7 +337,7 @@ export default {
               }
             }
 
-            & > .svg-inline--fa {
+            & .svg-inline--fa {
               font-size: 1.2rem;
               .app-sidebar:not(.app-sidebar--reduced) & {
                 margin-right: $spacer;
