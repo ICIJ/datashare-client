@@ -372,7 +372,8 @@
     "author": "Autor",
     "extraction_date": "Fecha de índice",
     "parent": "Archivo de base",
-    "in_metadata": "en los metadatos"
+    "in_metadata": "en los metadatos",
+    "in_tags": "in tags"
   },
   "email": {
     "detail": "Más detalles",
