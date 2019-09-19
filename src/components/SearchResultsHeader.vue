@@ -1,7 +1,7 @@
 <template>
   <div class="search-results-header" :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
     <div class="search-results-header__paging">
-      <div class="search-results-header__paging__progress text-truncate">
+      <div class="search-results-header__paging__progress text-truncate" v-if="!noProgress">
         <span class="search-results-header__paging__progress__pagination">
           {{ $store.state.search.from + 1 }} – {{ lastDocument }}
         </span>
@@ -9,9 +9,9 @@
           {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
         </span>
       </div>
-      <pagination :total="response.total" :get-to-template="getToTemplate" :is-displayed="isDisplayed" :no-last-page-link="searchWindowTooLarge"></pagination>
+      <pagination class="flex-grow-1 justify-content-end text-right" :total="response.total" :get-to-template="getToTemplate" :is-displayed="isDisplayed" :no-last-page-link="searchWindowTooLarge"></pagination>
     </div>
-    <search-results-applied-filters v-if="position === 'top'" />
+    <search-results-applied-filters v-if="position === 'top' && !noFilters" />
   </div>
 </template>
 
@@ -36,6 +36,12 @@ export default {
       validator: value => ['top', 'bottom'].indexOf(value) >= -1
     },
     bordered: {
+      type: Boolean
+    },
+    noProgress: {
+      type: Boolean
+    },
+    noFilters: {
       type: Boolean
     }
   },
@@ -84,7 +90,6 @@ export default {
       width: 100%;
 
       &__progress {
-        flex: 1 auto;
 
         > div {
           display: inline-block;

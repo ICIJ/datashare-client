@@ -1,15 +1,17 @@
 <template>
   <div class="search-results-table">
-    <div v-if="selected.length > 0" class="d-inline-flex">
-      <b-list-group class="search-results-table__actions" horizontal>
-        <b-list-group-item class="search-results-table__actions__action" href="#" v-for="action in actions" :key="action.id" @click="onClick(action.id)">
-          <fa :icon="action.icon" :class="action.iconClass"/>{{ action.label }}
-        </b-list-group-item>
-      </b-list-group>
-      <document-tags-form :document="selected" :displayTags="false" class="ml-3" v-if="hasFeature('BATCH_TAGS')" />
-    </div>
     <div v-if="hasResults">
-      <search-results-header position="top" />
+      <div class="d-flex mb-2">
+        <div v-if="selected.length" class="d-inline-flex search-results-table__actions mr-2 align-self-start align-items-center">
+          <b-list-group horizontal>
+            <b-list-group-item class="search-results-table__actions__action py-2" button v-for="action in actions" :key="action.id" @click="onClick(action.id)">
+              <fa :icon="action.icon" :class="action.iconClass"/>{{ action.label }}
+            </b-list-group-item>
+          </b-list-group>
+          <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" :displayTags="false" />
+        </div>
+        <search-results-header position="top" class="flex-grow-1 align-self-center" :no-progress="selected.length" :no-filters="selected.length" />
+      </div>
       <b-table
         striped
         hover
@@ -249,6 +251,18 @@ export default {
     }
 
     &__actions {
+      background: $body-bg;
+      font-size: 0.8rem;
+
+      &__action.document-tags-form {
+        align-self: stretch;
+        display: inline-flex;
+
+        & > div, input.form-control {
+          align-self: stretch;
+          height: 100%;
+        }
+      }
 
       &__action.list-group-item-action {
         color: $primary;

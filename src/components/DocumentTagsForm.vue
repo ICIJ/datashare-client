@@ -55,9 +55,9 @@ export default {
 </script>
 
 <template>
-  <div class="document-tags-form row mb-3">
-    <div :class="{ 'col-md-4 mb-3': displayTags }">
-      <b-form @submit.prevent="addTag" class="document-tags-form__add">
+  <div class="document-tags-form row">
+    <div :class="{ 'col-md-4 mb-3': displayTags }" class="d-flex">
+      <b-form @submit.prevent="addTag" class="document-tags-form__add d-flex">
         <b-input-group size="sm">
           <b-input-group-text slot="prepend">
             <fa icon="tag" class="fa-flip-horizontal" />
