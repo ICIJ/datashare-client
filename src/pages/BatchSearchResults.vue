@@ -63,7 +63,7 @@
           </b-table>
         </div>
       </div>
-      <b-pagination-nav :link-gen="linkGen" :number-of-pages="Math.ceil(meta.nbResults / perPage)" use-router></b-pagination-nav>
+      <b-pagination-nav :link-gen="linkGen" :number-of-pages="numberOfPages" use-router></b-pagination-nav>
     </div>
   </div>
 </template>
@@ -183,6 +183,9 @@ export default {
     },
     orderBy () {
       return this.order === 'desc'
+    },
+    numberOfPages () {
+      return Math.ceil(this.meta.nbResults / this.perPage)
     }
   },
   mounted () {

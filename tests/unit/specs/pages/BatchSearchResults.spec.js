@@ -106,7 +106,7 @@ describe('BatchSearchResults.vue', () => {
       nbResults: 15
     }])
     const propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
-    wrapper = mount(BatchSearchResults, { localVue, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData, mocks: { $t: msg => msg } })
+    wrapper = mount(BatchSearchResults, { localVue, store, router, computed: { downloadLink () { return 'mocked-download-link' }, numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
     await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { from: 50, size: 25 } })
     await wrapper.vm.fetch()
   })
