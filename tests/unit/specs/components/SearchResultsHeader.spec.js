@@ -1,13 +1,13 @@
+import VueI18n from 'vue-i18n'
+import Murmur from '@icij/murmur'
+import BootstrapVue from 'bootstrap-vue'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import VueI18n from 'vue-i18n'
-import Murmur from '@icij/murmur'
 import messages from '@/lang/en'
 import store from '@/store'
 import router from '@/router'
-import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
 
@@ -24,7 +24,7 @@ window.matchMedia = jest.fn().mockImplementation(query => {
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
-localVue.directive('b-tooltip', vBTooltip)
+localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchResultsHeader.vue', () => {

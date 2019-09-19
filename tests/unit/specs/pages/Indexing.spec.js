@@ -1,13 +1,13 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
+import BootstrapVue from 'bootstrap-vue'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Indexing from '@/pages/Indexing'
 import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
-import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 import DatashareClient from '@/api/DatashareClient'
 import { jsonOk } from 'tests/unit/tests_utils'
 
@@ -25,7 +25,7 @@ const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
-localVue.directive('b-tooltip', vBTooltip)
+localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('Indexing.vue', () => {

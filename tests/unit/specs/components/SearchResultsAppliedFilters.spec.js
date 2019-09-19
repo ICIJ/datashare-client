@@ -1,11 +1,11 @@
-import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 import VueI18n from 'vue-i18n'
+import Murmur from '@icij/murmur'
+import BootstrapVue from 'bootstrap-vue'
+import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import BBadge from 'bootstrap-vue/es/components/badge/badge'
 import store from '@/store'
 import router from '@/router'
 import messages from '@/lang/en'
-import Murmur from '@icij/murmur'
 import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
 
@@ -22,7 +22,7 @@ window.matchMedia = jest.fn().mockImplementation(query => {
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
-localVue.component('b-badge', BBadge)
+localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchResultsAppliedFilters.vue', () => {

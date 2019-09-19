@@ -1,10 +1,10 @@
-import Pagination from '@/components/Pagination'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
+import BootstrapVue from 'bootstrap-vue'
+import Pagination from '@/components/Pagination'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import messages from '@/lang/en'
 import router from '@/router'
-import vBTooltip from 'bootstrap-vue/es/directives/tooltip/tooltip'
 import cloneDeep from 'lodash/cloneDeep'
 
 window.matchMedia = jest.fn().mockImplementation(query => {
@@ -20,7 +20,7 @@ window.matchMedia = jest.fn().mockImplementation(query => {
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
-localVue.directive('b-tooltip', vBTooltip)
+localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('Pagination.vue', () => {
@@ -28,7 +28,7 @@ describe('Pagination.vue', () => {
   const template = { name: 'router-name', query: { from: 0, size: 10 } }
 
   beforeEach(() => {
-    wrapper = shallowMount(Pagination, { localVue, i18n, router, propsData: { total: 22, getToTemplate: () => cloneDeep(template) } })
+    wrapper = shallowMount(Pagination, { localVue, i18n, router, propsData: { total: 22, getToTemplate: () => cloneDeep(template) }, mock: { $t: msg => msg } })
   })
 
   describe('should display the pagination, or not', () => {

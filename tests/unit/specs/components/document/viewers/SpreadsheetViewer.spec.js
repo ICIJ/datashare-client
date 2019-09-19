@@ -1,18 +1,12 @@
-import Vuex from 'vuex'
-import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
+import BootstrapVue from 'bootstrap-vue'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { createServer } from 'http-server'
-import bFormSelect from 'bootstrap-vue/es/components/form-select/form-select'
 import SpreadsheetViewer from '@/components/document/viewers/SpreadsheetViewer'
-import messages from '@/lang/en'
 
 const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
 localVue.use(Murmur)
-localVue.component('b-form-select', bFormSelect)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+localVue.use(BootstrapVue)
 
 describe('SpreadsheetViewer.vue', () => {
   let httpServer, wrapper
@@ -23,25 +17,25 @@ describe('SpreadsheetViewer.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(SpreadsheetViewer, { localVue, i18n, propsData: { document: { url: 'spreadsheet.xlsx' } } })
+    wrapper = shallowMount(SpreadsheetViewer, { localVue, propsData: { document: { url: 'spreadsheet.xlsx' } }, mocks: { $t: msg => msg } })
   })
 
   afterAll(() => httpServer.close())
 
   it('should display a message while generating the preview', () => {
-    expect(wrapper.find('.spreadsheet-viewer .alert').text()).toEqual('Generating preview...')
+    expect(wrapper.find('.spreadsheet-viewer .alert').text()).toEqual('document.generating_preview')
   })
 
   it('should display an error message if the document does not exist', async () => {
-    const wrapper = shallowMount(SpreadsheetViewer, { localVue, i18n, propsData: { document: { url: 'nodoc.xlsx' } } })
+    const wrapper = shallowMount(SpreadsheetViewer, { localVue, propsData: { document: { url: 'nodoc.xlsx' } }, mocks: { $t: msg => msg } })
 
     await wrapper.vm.getWorkbook()
 
-    expect(wrapper.find('.spreadsheet-viewer .alert').text()).toContain('Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.')
+    expect(wrapper.find('.spreadsheet-viewer .alert').text()).toContain('document.error_not_found')
   })
 
   it('should load a csv content file', async () => {
-    wrapper = shallowMount(SpreadsheetViewer, { localVue, i18n, propsData: { document: { url: 'spreadsheet.csv' } } })
+    wrapper = shallowMount(SpreadsheetViewer, { localVue, propsData: { document: { url: 'spreadsheet.csv' } }, mocks: { $t: msg => msg } })
 
     await wrapper.vm.getWorkbook()
 
@@ -65,7 +59,7 @@ describe('SpreadsheetViewer.vue', () => {
   })
 
   it('should change the displayed sheet', async () => {
-    wrapper = mount(SpreadsheetViewer, { localVue, i18n, propsData: { document: { url: 'spreadsheet.xlsx' } } })
+    wrapper = mount(SpreadsheetViewer, { localVue, propsData: { document: { url: 'spreadsheet.xlsx' } }, mocks: { $t: msg => msg } })
 
     await wrapper.vm.getWorkbook()
     wrapper.findAll('.spreadsheet-viewer .spreadsheet-viewer__preview__header option').at(1).setSelected()

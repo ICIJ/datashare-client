@@ -1,11 +1,10 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
+import BootstrapVue from 'bootstrap-vue'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import vBFormCheckbox from 'bootstrap-vue/es/components/form-checkbox/form-checkbox'
-import vBFormCheckboxGroup from 'bootstrap-vue/es/components/form-checkbox/form-checkbox-group'
 import FacetYesNo from '@/components/FacetYesNo'
 import messages from '@/lang/en'
 import router from '@/router'
@@ -32,11 +31,10 @@ jest.mock('@/api/DatashareClient', () => {
 })
 
 const localVue = createLocalVue()
+localVue.use(Vuex)
 localVue.use(VueI18n)
 localVue.use(Murmur)
-localVue.use(Vuex)
-localVue.component('b-form-checkbox', vBFormCheckbox)
-localVue.component('b-form-checkbox-group', vBFormCheckboxGroup)
+localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('FacetYesNo.vue', () => {
