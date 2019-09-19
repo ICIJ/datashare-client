@@ -41,8 +41,8 @@
         </div>
       </div>
       <div v-else class="batch-search-results__queries">
-        <div class="card">
-          <b-table striped hover no-local-sorting :per-page="perPage" :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query">
+        <div class="card small">
+          <b-table striped hover no-local-sorting :per-page="perPage" :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query" show-empty>
             <template #documentNumber="{ item }">
               {{ item.documentNumber + 1 }}
             </template>
@@ -60,10 +60,15 @@
             <template #contentLength="{ item }">
               {{ item.contentLength | humanSize }}
             </template>
+            <template #empty>
+              <div class="text-center">
+                {{ $t('batchSearchResults.empty') }}
+              </div>
+            </template>
           </b-table>
         </div>
       </div>
-      <b-pagination-nav :link-gen="linkGen" :number-of-pages="numberOfPages" use-router></b-pagination-nav>
+      <b-pagination-nav :link-gen="linkGen" :number-of-pages="numberOfPages" use-router class="mt-2"></b-pagination-nav>
     </div>
   </div>
 </template>
