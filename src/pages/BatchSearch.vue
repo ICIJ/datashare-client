@@ -18,20 +18,20 @@
           <content-placeholder :rows="rows" class="p-0 my-3" />
         </div>
         <b-table v-else striped hover responsive :fields="fields" :items="items" thead-tr-class="text-nowrap" tbody-tr-class="batch-search__items__item small">
-          <template #cell(name)="{ item }">
+          <template #name="{ item }">
             <router-link :to="{ name: 'batch-search.results', params: { index: item.project.id, uuid: item.uuid }, query: { page: 1, sort, order } }" class="batch-search__items__item__link">
               {{ item.name }}
             </router-link>
           </template>
-          <template #cell(queries)="{ item }">
+          <template #queries="{ item }">
             {{ $tc('batchSearch.query', item.queries.length) }}
           </template>
-          <template #cell(state)="{ item }">
+          <template #state="{ item }">
             <b-badge variant="darker">
               {{ capitalize(item.state) }}
             </b-badge>
           </template>
-          <template #cell(date)="{ item }">
+          <template #date="{ item }">
             {{ moment(item.date).format('LLL') }}
           </template>
         </b-table>
