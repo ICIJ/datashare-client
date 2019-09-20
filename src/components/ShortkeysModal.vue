@@ -1,9 +1,9 @@
 <template>
   <span class="shortkeys-modal">
-    <b-button class="text-dark" variant="transparent" size="md" v-b-modal.shortkeys :title="$t('search.settings.title')" v-b-tooltip.hover.bottomleft>
+    <b-button class="text-dark" variant="transparent" size="md" v-b-modal.shortkeys :title="$t('shortkeys.title')" v-b-tooltip.hover.bottomleft>
       <fa icon="keyboard" />
       <span class="sr-only">
-        {{ $t('search.settings.title') }}
+        {{ $t('shortkeys.title') }}
       </span>
     </b-button>
     <b-modal id="shortkeys" title="Keyboard Shortcuts" hide-footer>
