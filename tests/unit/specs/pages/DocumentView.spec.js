@@ -133,9 +133,9 @@ describe('DocumentView.vue', () => {
     expect(wrapper.contains('.tiff-viewer')).toBeTruthy()
   })
 
-  it('should display the named entities tab in LOCAL mode', async () => {
+  it('should display the named entities tab', async () => {
     const id = 'doc.txt'
-    Murmur.config.merge({ dataDir: null, mountedDataDir: null })
+    Murmur.config.merge({ dataDir: null, mountedDataDir: null, manageDocuments: true })
     const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)
@@ -147,9 +147,9 @@ describe('DocumentView.vue', () => {
     expect(wrapper.findAll('.document .document__header__nav__item').at(2).text()).toContain('Named Entities')
   })
 
-  it('should NOT display the named entities tab in SERVER mode', async () => {
+  it('should NOT display the named entities tab', async () => {
     const id = 'doc.txt'
-    Murmur.config.merge({ mode: 'SERVER' })
+    Murmur.config.merge({ manageDocuments: false })
     const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
     await letData(es).have(new IndexedDocument(id)

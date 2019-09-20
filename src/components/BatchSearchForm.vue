@@ -47,7 +47,7 @@
             id="group-project"
             :label="$t('batchSearch.form.projectLabel')"
             label-for="project"
-            v-if="isServer">
+            v-if="$config.isnt('multipleProjects')">
             <b-form-select
               v-model="selectedIndex"
               :options="indices"
@@ -63,12 +63,10 @@
 </template>
 
 <script>
-import utils from '@/mixins/utils'
 import map from 'lodash/map'
 
 export default {
   name: 'BatchSearchForm',
-  mixins: [utils],
   data () {
     return {
       indices: []

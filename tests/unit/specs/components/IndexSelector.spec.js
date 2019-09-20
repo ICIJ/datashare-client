@@ -34,13 +34,13 @@ describe('IndexSelector.vue', () => {
     Murmur.config.merge({ userIndices: ['first-index'] })
     store.commit('search/index', 'first-index')
     wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
-    wrapper.vm.$config.set('mode', 'SERVER')
+    wrapper.vm.$config.set('multipleProjects', true)
   })
 
   it('should not display a dropdown if we aren\'t in server mode', () => {
-    wrapper.vm.$config.set('mode', 'LOCAL')
+    wrapper.vm.$config.set('multipleProjects', false)
     expect(wrapper.findAll('option')).toHaveLength(0)
-    wrapper.vm.$config.set('mode', 'SERVER')
+    wrapper.vm.$config.set('multipleProjects', true)
   })
 
   it('should select the local index as default selected index', () => {

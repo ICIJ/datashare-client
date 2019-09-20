@@ -7,6 +7,7 @@ import router from '@/router'
 import store from '@/store'
 import { getOS } from '@/utils/utils'
 import { createApp } from '@/main'
+import mode from '@/modes'
 import { jsonOk } from 'tests/unit/tests_utils'
 
 window.matchMedia = jest.fn().mockImplementation(query => {
@@ -42,77 +43,43 @@ describe('AppSidebar.vue', () => {
   beforeEach(() => getOS.mockReset())
 
   it('should display the link to analyze my documents', () => {
-    Murmur.config.merge({ mode: 'LOCAL' })
+    Murmur.config.set('analyzeDocuments', true)
     const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
     expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').length).toEqual(1)
   })
 
-  it('should NOT display the link to analyze my documents in SERVER mode', () => {
-    Murmur.config.merge({ mode: 'SERVER' })
+  it('should NOT display the link to analyze my documents according to config', () => {
+    Murmur.config.set('analyzeDocuments', false)
     const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
     expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').length).toEqual(0)
   })
 
-  it('should display the default link to the doc', () => {
-    Murmur.config.merge({ mode: 'LOCAL' })
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').length).toEqual(1)
-    expect(wrapper.vm.addDocumentsLink).toEqual('https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare')
-  })
-
-  it('should display the Mac link to the doc', () => {
-    Murmur.config.merge({ mode: 'LOCAL' })
-    getOS.mockImplementation(() => 'mac')
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.vm.addDocumentsLink).toEqual('https://icij.gitbook.io/datashare/mac/how-to-add-documents-to-datashare')
-  })
-
-  it('should display the Windows link to the doc', () => {
-    Murmur.config.merge({ mode: 'LOCAL' })
-    getOS.mockImplementation(() => 'windows')
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.vm.addDocumentsLink).toEqual('https://icij.gitbook.io/datashare/windows/how-to-add-documents-to-datashare')
-  })
-
-  it('should display the Linux link to the doc', () => {
-    Murmur.config.merge({ mode: 'LOCAL' })
-    getOS.mockImplementation(() => 'linux')
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.vm.addDocumentsLink).toEqual('https://icij.gitbook.io/datashare/linux/how-to-add-documents-to-datashare')
-  })
-
-  it('should not display the link to the doc in SERVER mode', () => {
-    Murmur.config.merge({ mode: 'SERVER' })
+  it('should not display the link to the analyse page in SERVER mode', () => {
+    Murmur.config.merge(mode('SERVER'))
     const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
     expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').length).toEqual(0)
   })
 
   it('should display the github help link', () => {
-    Murmur.config.merge({ mode: 'LOCAL' })
+    Murmur.config.merge(mode('LOCAL'))
     const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
     expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes().href).toEqual(expect.stringContaining('github.com'))
   })
 
   it('should display the jira help link in SERVER mode', () => {
-    Murmur.config.merge({ mode: 'SERVER' })
+    Murmur.config.merge(mode('SERVER'))
     const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
     expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes().href).toEqual(expect.stringContaining('jira.icij.org'))
   })
 
   it('should NOT display a logout link', () => {
-    Murmur.config.merge({ mode: 'LOCAL' })
+    Murmur.config.set('multiTenant', false)
     const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
     expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').length).toEqual(0)
   })
 
-  it('should NOT display a logout link in LOCAL mode', () => {
-    Murmur.config.merge({ mode: 'LOCAL' })
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').length).toEqual(0)
-  })
-
-  it('should display a logout link in SERVER mode', () => {
-    Murmur.config.merge({ mode: 'SERVER' })
+  it('should display a logout link in multiTenant mode', () => {
+    Murmur.config.set('multiTenant', true)
     const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
     expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').length).toEqual(1)
   })

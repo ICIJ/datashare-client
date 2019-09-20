@@ -43,7 +43,7 @@ export default {
   },
   computed: {
     thumbnailUrl () {
-      return `${this.$config.get('document-thumbnail.host')}/api/v1/thumbnail/${this.document.index}/${this.document.id}?routing=${this.document.routing}&page=${this.page}&size=${this.size}`
+      return `${this.$config.previewHost}/api/v1/thumbnail/${this.document.index}/${this.document.id}?routing=${this.document.routing}&page=${this.page}&size=${this.size}`
     },
     thumbnailAlt () {
       return `${this.document.basename} preview`
@@ -52,7 +52,7 @@ export default {
       return escape(this.document.path)
     },
     isActivated () {
-      return this.$config.get('document-thumbnail.activated')
+      return !!this.$config.previewHost
     },
     lazyLoadable () {
       return window && 'IntersectionObserver' in window

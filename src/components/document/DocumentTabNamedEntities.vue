@@ -1,6 +1,6 @@
 <template>
   <div class="p-3">
-    <div v-if="!isServer && !document.hasNerTags" class="document__named-entities--not--searched">
+    <div v-if="$config.is('manageDocuments') && !document.hasNerTags" class="document__named-entities--not--searched">
       <div v-html="$t('document.named_entities_not_searched', { indexing_link: '#/indexing' })"></div>
     </div>
     <div v-else-if="groupByCategories(namedEntities).length === 0" class="document__named-entities--not--found">

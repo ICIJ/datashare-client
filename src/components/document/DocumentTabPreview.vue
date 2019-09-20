@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     isPaginatedViewerActivated () {
-      return this.$config.get('document-thumbnail.activated')
+      return !!this.$config.previewHost
     },
     isPaginated () {
       return this.paginatedTypes.indexOf(this.document.contentType) > -1
@@ -70,7 +70,7 @@ export default {
       return ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'].indexOf(this.document.contentType) > -1
     },
     documentThumbnailAtivated () {
-      return this.$config.get('document-thumbnail.activated')
+      return !!this.$config.previewHost
     },
     isImage () {
       return this.document.contentType.indexOf('image/') === 0

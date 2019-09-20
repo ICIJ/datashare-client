@@ -12,6 +12,7 @@ import messages from '@/lang/en'
 import store from '@/store'
 import DatashareClient from '@/api/DatashareClient'
 import settings from '@/utils/settings'
+import mode from '@/modes'
 
 import '@/utils/font-awesome'
 import '@/main.scss'
@@ -40,9 +41,11 @@ async function createApp (LocalVue = Vue) {
   const config = await ds.getConfig()
   // Murmur exposes a config attribute which share a Config object
   // with the current vue instance.
+  Murmur.config.merge(mode(config.mode))
+  console.log(Murmur.config.get('lorem'))
+  // The backend can yet override some configuration
   Murmur.config.merge(config)
-  Murmur.config.set('document-thumbnail.activated', !!config.previewHost)
-  Murmur.config.set('document-thumbnail.host', config.previewHost)
+  // Override Murmur default value for content-placeholder
   Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
   // Select the first user's index as default index
   store.commit('search/index', config.userIndices[0])

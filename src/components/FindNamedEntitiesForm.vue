@@ -45,7 +45,7 @@
         </label>
       </div>
     </div>
-    <div class="find-named-entities-form__offline form-group pl-4" v-if="!isServer">
+    <div class="find-named-entities-form__offline form-group pl-4" v-if="$config.is('manageDocuments')">
       <b-form-checkbox id="syncModels" v-model="offline">
         {{ $t('indexing.sync_models') }}
       </b-form-checkbox>

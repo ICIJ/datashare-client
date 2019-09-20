@@ -46,6 +46,7 @@ describe('FacetNamedEntity.vue', () => {
   let wrapper
 
   beforeAll(() => {
+    Murmur.config.set('manageDocuments', true)
     mixin.methods.watchedForUpdate = noop
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })

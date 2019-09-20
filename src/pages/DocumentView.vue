@@ -43,12 +43,11 @@ import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEnti
 import DocumentTabExtractedText from '@/components/document/DocumentTabExtractedText'
 import DocumentTabPreview from '@/components/document/DocumentTabPreview'
 import DocumentTabTranslations from '@/components/document/DocumentTabTranslations'
-import utils from '@/mixins/utils'
 import shortkeys from '@/mixins/shortkeys'
 
 export default {
   name: 'DocumentView',
-  mixins: [shortkeys, utils],
+  mixins: [shortkeys],
   components: {
     DocumentSlicedName
   },
@@ -152,7 +151,7 @@ export default {
         {
           name: 'named-entities',
           label: 'document.named_entities',
-          hidden: this.isServer && !this.document.hasNerTags,
+          hidden: this.$config.isnt('manageDocuments') && !this.document.hasNerTags,
           component: DocumentTabNamedEntities,
           icon: 'database',
           props: {

@@ -753,9 +753,9 @@
   dependencies:
     "@hapi/hoek" "6.x.x"
 
-"@icij/murmur@1.15.0":
-  version "1.15.0"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-1.15.0.tgz#5623396f2d2de19b9ddaf128937de6d9b51f806f"
+"@icij/murmur@1.16.1":
+  version "1.16.1"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-1.16.1.tgz#edd70303ea24367179b631e4ed67f9791f0ad003"
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
     "@fortawesome/fontawesome-svg-core" "^1.2.19"

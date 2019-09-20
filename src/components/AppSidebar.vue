@@ -29,7 +29,7 @@
             </span>
           </router-link>
         </li>
-        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="!isServer">
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="$config.is('analyzeDocuments')">
           <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" title="Analyze my documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="rocket" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -56,7 +56,7 @@
           </a>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--help">
-          <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" title="Ask for help" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a :href="$config.get('helpLink')" target="_blank" class="app-sidebar__container__menu__item__link" title="Ask for help" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="ambulance" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.help') }}
@@ -88,7 +88,7 @@
             </span>
           </locales-dropdown>
         </li>
-        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="$config.is('multiTenant')">
           <a :href="logoutLink" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="sign-out-alt" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -101,19 +101,16 @@
     <div class="app-sidebar__version text-left">
       <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" class="d-inline-block" :no-icon="reduced" />
     </div>
-    <div class="app-sidebar__data-location" v-if="!reduced && !isServer">
+    <div class="app-sidebar__data-location" v-if="!reduced && $config.is('analyseDocuments')">
       <mounted-data-location />
     </div>
   </div>
 </template>
 
 <script>
-import { getOS } from '@/utils/utils'
-import utils from '@/mixins/utils'
 import features from '@/mixins/features'
 import docs from '@/mixins/docs'
 import DatashareClient from '@/api/DatashareClient'
-import settings from '@/utils/settings'
 import LocalesDropdown from './LocalesDropdown.vue'
 import MountedDataLocation from './MountedDataLocation.vue'
 import VersionNumber from './VersionNumber.vue'
@@ -121,7 +118,7 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'AppSidebar',
-  mixins: [docs, features, utils],
+  mixins: [docs, features],
   components: {
     LocalesDropdown,
     MountedDataLocation,
@@ -153,13 +150,6 @@ export default {
     },
     tooltipsClass () {
       return this.reduced ? '' : 'd-none'
-    },
-    addDocumentsLink () {
-      const os = getOS()
-      return settings.documentationLinks.indexing[os] || settings.documentationLinks.indexing.default
-    },
-    helpLink () {
-      return this.isServer ? 'https://jira.icij.org/servicedesk/customer/portal/4/create/108' : 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
     },
     logoutLink () {
       return DatashareClient.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)

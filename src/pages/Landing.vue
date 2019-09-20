@@ -14,17 +14,15 @@
 </template>
 
 <script>
-import utils from '@/mixins/utils'
 import ProjectCards from '@/components/ProjectCards'
 import SearchBar from '@/components/SearchBar'
 
 export default {
   name: 'Landing',
   components: { ProjectCards, SearchBar },
-  mixins: [utils],
   computed: {
     showProjectsCards () {
-      return this.isServer
+      return this.$config.is('multipleProjects')
     }
   }
 }

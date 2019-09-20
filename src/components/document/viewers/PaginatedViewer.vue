@@ -70,7 +70,7 @@ export default {
       return range(this.meta.pages)
     },
     metaUrl () {
-      return `${this.$config.get('document-thumbnail.host')}/api/v1/thumbnail/${this.document.index}/${this.document.id}.json?routing=${this.document.routing}`
+      return `${this.$config.previewHost}/api/v1/thumbnail/${this.document.index}/${this.document.id}.json?routing=${this.document.routing}`
     },
     metaOptions () {
       return {

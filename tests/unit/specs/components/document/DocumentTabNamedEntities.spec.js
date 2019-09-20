@@ -19,7 +19,10 @@ describe('DocumentTabNamedEntities.vue', () => {
   const es = esConnectionHelper.es
   const id = 'document'
 
-  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
+  beforeAll(() => {
+    Murmur.config.set('manageDocuments', true)
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+  })
 
   afterEach(() => store.commit('document/reset'))
 

@@ -47,11 +47,8 @@ import capitalize from 'lodash/capitalize'
 import compact from 'lodash/compact'
 
 import settings from '@/utils/settings'
-import utils from '@/mixins/utils'
-
 export default {
   name: 'BatchSearches',
-  mixins: [ utils ],
   data () {
     return {
       isReady: false,
@@ -73,7 +70,7 @@ export default {
     },
     projectNameField () {
       // Disable the project name field on server mode
-      return this.isServer ? {
+      return this.$config.is('multipleProjects') ? {
         key: 'project.name',
         label: this.$t('batchSearch.projectName'),
         sortable: true
