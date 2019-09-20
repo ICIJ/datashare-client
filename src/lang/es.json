@@ -478,6 +478,7 @@
     }
   },
   "shortkeys": {
+    "title": "Search shortcuts",
     "goToPreviousDocument": "Go to the previous document",
     "goToNextDocument": "Go to the next document",
     "backToSearchResults": "Go back to the search results",
