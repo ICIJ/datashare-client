@@ -42,7 +42,6 @@ async function createApp (LocalVue = Vue) {
   // Murmur exposes a config attribute which share a Config object
   // with the current vue instance.
   Murmur.config.merge(mode(config.mode))
-  console.log(Murmur.config.get('lorem'))
   // The backend can yet override some configuration
   Murmur.config.merge(config)
   // Override Murmur default value for content-placeholder
