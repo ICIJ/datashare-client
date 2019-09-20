@@ -138,6 +138,10 @@ export default {
       background: white;
       overflow: hidden;
 
+      .table-responsive {
+        margin: 0;
+      }
+
       table {
         margin: 0;
 

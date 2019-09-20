@@ -42,7 +42,7 @@
       </div>
       <div v-else class="batch-search-results__queries">
         <div class="card small">
-          <b-table striped hover no-local-sorting :per-page="perPage" :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query" show-empty>
+          <b-table striped hover responsive no-local-sorting :per-page="perPage" :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query" show-empty>
             <template #documentNumber="{ item }">
               {{ item.documentNumber + 1 }}
             </template>
@@ -230,6 +230,11 @@ export default {
 .batch-search-results {
 
   &__queries {
+
+    .table-responsive {
+      margin: 0;
+    }
+
     table {
       margin: 0;
 
