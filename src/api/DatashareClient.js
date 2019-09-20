@@ -38,7 +38,13 @@ export class DatashareClient {
     return this.sendAction('/version')
   }
   getConfig () {
-    return this.sendAction('/api/config')
+    return this.sendAction('/api/config').catch(err => {
+      if (err && err.response.status === 401) {
+        return this.sendAction('/config')
+      } else {
+        throw err
+      }
+    })
   }
   deleteNamedEntitiesByMentionNorm (mentionNorm) {
     return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT' }, false)

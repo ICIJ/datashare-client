@@ -47,8 +47,10 @@ async function createApp (LocalVue = Vue) {
   // Override Murmur default value for content-placeholder
   Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
   // Select the first user's index as default index
-  store.commit('search/index', config.userIndices[0])
-  store.commit('batchSearch/index', config.userIndices[0])
+  if (config.userIndices !== undefined) {
+    store.commit('search/index', config.userIndices[0])
+    store.commit('batchSearch/index', config.userIndices[0])
+  }
   // Render function returns a router-view component by default
   const render = h => h('router-view')
   // Return an instance of the Vue constructor we receive.
