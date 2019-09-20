@@ -1,7 +1,5 @@
-import Vue from 'vue'
-import Vuex from 'vuex'
 import Response from '@/api/Response'
-import { actions, getters, mutations, state, datashare } from '@/store/modules/search'
+import { datashare } from '@/store/modules/search'
 import Document from '@/api/Document'
 import NamedEntity from '@/api/NamedEntity'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -10,19 +8,15 @@ import { jsonOk } from 'tests/unit/tests_utils'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import omit from 'lodash/omit'
-
-Vue.use(Vuex)
+import store from '@/store'
 
 describe('Search store', () => {
-  let store
   esConnectionHelper()
   let es = esConnectionHelper.es
   // High timeout because multiple searches can be heavy for the Elasticsearch
   jest.setTimeout(1e4)
 
-  beforeAll(() => {
-    store = new Vuex.Store({ modules: { search: { namespaced: true, actions, getters, mutations, state } } })
-  })
+  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
@@ -49,7 +43,7 @@ describe('Search store', () => {
     store.commit('search/toggleFilters')
     store.dispatch('search/reset')
 
-    expect(omit(store.state.search, ['index', 'isReady', 'facets', 'showFilters'])).toEqual(omit(initialState, ['index', 'isReady', 'facets', 'showFilters']))
+    expect(omit(store.state.search, ['index', 'isReady', 'facets', 'showFilters', 'response'])).toEqual(omit(initialState, ['index', 'isReady', 'facets', 'showFilters', 'response']))
     expect(store.state.search.index).toEqual('another-index')
     expect(store.state.search.isReady).toEqual(false)
     expect(find(store.state.search.facets, { name: 'content-type' }).values).toEqual([])
@@ -506,6 +500,59 @@ describe('Search store', () => {
     })
   })
 
+  describe('retrieveContentQueryTermsInContent', () => {
+    it('should return an empty array', () => {
+      expect(store.getters['search/retrieveContentQueryTermsInContent']()).toEqual([])
+    })
+  })
+
+  describe('retrieveContentQueryTermsInDocument', () => {
+    it('should return an empty array if no query term', async () => {
+      const id = 'document'
+      await letData(es).have(new IndexedDocument(id)).commit()
+      await store.dispatch('document/get', { id })
+      await store.dispatch('search/query', '*')
+
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([])
+    })
+
+    it('should return an empty result if no match between the query and the document', async () => {
+      const id = 'document'
+      await letData(es).have(new IndexedDocument(id)).commit()
+      await store.dispatch('document/get', { id })
+      await store.dispatch('search/query', 'test')
+
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'test', metadata: 0, negation: false, tags: 0 }])
+    })
+
+    it('should return a content of 1 if there is a match between the query and the document content', async () => {
+      const id = 'document'
+      await letData(es).have(new IndexedDocument(id).withContent('specific term specific')).commit()
+      await store.dispatch('document/get', { id })
+      await store.dispatch('search/query', 'specific')
+
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 2, field: '', label: 'specific', metadata: 0, negation: false, tags: 0 }])
+    })
+
+    it('should return a metadata of 1 if there is a match between the query and the document metadata', async () => {
+      const id = 'document'
+      await letData(es).have(new IndexedDocument(id).withMetadata('metadata metadata metadata')).commit()
+      await store.dispatch('document/get', { id })
+      await store.dispatch('search/query', 'metadata')
+
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'metadata', metadata: 3, negation: false, tags: 0 }])
+    })
+
+    it('should return a tags of 1 if there is a match between the query and the document tags', async () => {
+      const id = 'document'
+      await letData(es).have(new IndexedDocument(id).withTags(['tags'])).commit()
+      await store.dispatch('document/get', { id })
+      await store.dispatch('search/query', 'tags')
+
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'tags', metadata: 0, negation: false, tags: 1 }])
+    })
+  })
+
   describe('deleteQueryTerm', () => {
     it('should delete 1 simple query term', async () => {
       store.commit('search/query', 'term_01')
@@ -574,14 +621,14 @@ describe('Search store', () => {
     })
 
     it('should remove a documentId from the list of the starredDocuments', () => {
-      store.state.search.starredDocuments = [12, 42]
+      store.commit('search/starredDocuments', [12, 42])
       store.commit('search/removeFromStarredDocuments', [42])
 
       expect(store.state.search.starredDocuments).toEqual([12])
     })
 
     it('should push a documentId from the list of the starredDocuments', () => {
-      store.state.search.starredDocuments = [12]
+      store.commit('search/starredDocuments', [12])
       store.commit('search/pushFromStarredDocuments', 42)
 
       expect(store.state.search.starredDocuments).toEqual([12, 42])
@@ -597,7 +644,7 @@ describe('Search store', () => {
     })
 
     it('should toggle a starred documentId, push it if it is not starred', async () => {
-      store.state.search.starredDocuments = []
+      store.commit('search/starredDocuments', [])
       await store.dispatch('search/toggleStarDocument', 45)
 
       expect(store.state.search.starredDocuments).toEqual([45])
@@ -605,7 +652,7 @@ describe('Search store', () => {
     })
 
     it('should toggle a starred documentId, remove it if it is starred', async () => {
-      store.state.search.starredDocuments = [48]
+      store.commit('search/starredDocuments', [48])
       await store.dispatch('search/toggleStarDocument', 48)
 
       expect(store.state.search.starredDocuments).toEqual([])
@@ -613,7 +660,7 @@ describe('Search store', () => {
     })
 
     it('should setStarredDocuments for facet', () => {
-      store.state.search.starredDocuments = ['doc_01', 'doc_02']
+      store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
       store.commit('search/setStarredDocuments')
       expect(store.getters['search/findFacet']('starred').starredDocuments).toEqual(['doc_01', 'doc_02'])
     })

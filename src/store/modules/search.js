@@ -160,6 +160,12 @@ export const getters = {
     const fields = ['', 'content']
     return filter(getters.retrieveQueryTerms, item => fields.includes(item.field))
   },
+  retrieveContentQueryTermsInContent (state, getters) {
+    return (text, field) => getters.retrieveContentQueryTerms.map(term => {
+      term[field] = (text.match(new RegExp(escapeRegExp(term.label), 'gi')) || []).length
+      return term
+    })
+  },
   retrieveContentQueryTermsInDocument (state, getters) {
     return document => {
       map(['content', 'metadata', 'tags'], field => {
@@ -170,12 +176,6 @@ export const getters = {
       })
       return orderBy(getters.retrieveContentQueryTerms, ['content'], ['desc']).sort(a => a.content === 0 && a.metadata > 0)
     }
-  },
-  retrieveContentQueryTermsInContent (state, getters) {
-    return (text, field) => getters.retrieveContentQueryTerms.map(term => {
-      term[field] = (text.match(new RegExp(escapeRegExp(term.label), 'gi')) || []).length
-      return term
-    })
   },
   sortBy (state) {
     return find(settings.searchSortFields, { name: state.sort })
