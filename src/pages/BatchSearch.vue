@@ -44,6 +44,8 @@
 import { mapState } from 'vuex'
 import moment from 'moment'
 import capitalize from 'lodash/capitalize'
+import compact from 'lodash/compact'
+
 import settings from '@/utils/settings'
 import utils from '@/mixins/utils'
 
@@ -52,12 +54,34 @@ export default {
   mixins: [ utils ],
   data () {
     return {
-      fields: [
+      isReady: false,
+      rows: [
         {
-          key: 'project.name',
-          label: this.$t('batchSearch.projectName'),
-          sortable: true
-        },
+          height: '1em',
+          boxes: [['10%', '80%']]
+        }
+      ]
+    }
+  },
+  computed: {
+    ...mapState('batchSearch', { items: 'batchSearches' }),
+    sort () {
+      return settings.batchSearchResults.sort
+    },
+    order () {
+      return settings.batchSearchResults.order
+    },
+    projectNameField () {
+      // Disable the project name field on server mode
+      return this.isServer ? {
+        key: 'project.name',
+        label: this.$t('batchSearch.projectName'),
+        sortable: true
+      } : null
+    },
+    fields () {
+      return compact([
+        this.projectNameField,
         {
           key: 'name',
           label: this.$t('batchSearch.searchName')
@@ -87,23 +111,7 @@ export default {
           label: this.$t('batchSearch.nbResults'),
           sortable: true
         }
-      ],
-      isReady: false,
-      rows: [
-        {
-          height: '1em',
-          boxes: [['10%', '80%']]
-        }
-      ]
-    }
-  },
-  computed: {
-    ...mapState('batchSearch', { items: 'batchSearches' }),
-    sort () {
-      return settings.batchSearchResults.sort
-    },
-    order () {
-      return settings.batchSearchResults.order
+      ])
     }
   },
   async created () {
@@ -147,6 +155,7 @@ export default {
 
         thead th {
           border-top: 0;
+          white-space: nowrap;
         }
       }
 

@@ -240,6 +240,7 @@ export default {
 
       thead th {
         border-top: 0;
+        white-space: nowrap;
       }
     }
   }
