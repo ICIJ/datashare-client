@@ -21,7 +21,7 @@
             </span>
           </router-link>
         </li>
-        <li class="app-sidebar__container__menu__item" v-if="hasFeature('BATCH_SEARCHES')">
+        <li class="app-sidebar__container__menu__item">
           <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" title="Batch searches" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="layer-group" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
