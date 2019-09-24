@@ -1,7 +1,5 @@
-import VueI18n from 'vue-i18n'
 import Murmur from '@icij/murmur'
 import { shallowMount } from '@vue/test-utils'
-import messages from '@/lang/en'
 import AppSidebar from '@/components/AppSidebar'
 import router from '@/router'
 import store from '@/store'
@@ -28,7 +26,7 @@ jest.mock('@/utils/utils', () => {
 })
 
 describe('AppSidebar.vue', () => {
-  let appVue, i18n
+  let appVue
 
   beforeAll(async () => {
     const app = document.createElement('div')
@@ -37,50 +35,61 @@ describe('AppSidebar.vue', () => {
     window.fetch = jest.fn()
     window.fetch.mockReturnValue(jsonOk({ userIndices: [] }))
     appVue = await createApp()
-    i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
   })
 
   beforeEach(() => getOS.mockReset())
 
   it('should display the link to analyze my documents', () => {
     Murmur.config.set('analyzeDocuments', true)
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').length).toEqual(1)
+    const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
+    expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').exists()).toBeTruthy()
   })
 
   it('should NOT display the link to analyze my documents according to config', () => {
     Murmur.config.set('analyzeDocuments', false)
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').length).toEqual(0)
+    const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
+    expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').exists()).toBeFalsy()
   })
 
-  it('should not display the link to the analyse page in SERVER mode', () => {
+  it('should NOT display the link to the analyse page in SERVER mode', () => {
     Murmur.config.merge(mode('SERVER'))
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').length).toEqual(0)
+    const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
+    expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').exists()).toBeFalsy()
   })
 
   it('should display the github help link', () => {
     Murmur.config.merge(mode('LOCAL'))
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes().href).toEqual(expect.stringContaining('github.com'))
+    const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
+    expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toEqual(expect.stringContaining('github.com'))
   })
 
   it('should display the jira help link in SERVER mode', () => {
     Murmur.config.merge(mode('SERVER'))
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes().href).toEqual(expect.stringContaining('jira.icij.org'))
+    const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
+    expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toEqual(expect.stringContaining('jira.icij.org'))
   })
 
   it('should NOT display a logout link', () => {
     Murmur.config.set('multiTenant', false)
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').length).toEqual(0)
+    const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
+    expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').exists()).toBeFalsy()
   })
 
   it('should display a logout link in multiTenant mode', () => {
     Murmur.config.set('multiTenant', true)
-    const wrapper = shallowMount(AppSidebar, { appVue, i18n, router, store })
-    expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').length).toEqual(1)
+    const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
+    expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').exists()).toBeTruthy()
+  })
+
+  it('should NOT display the Mounted location component if not in analyzeDocuments mode', () => {
+    Murmur.config.set('analyzeDocuments', false)
+    const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
+    expect(wrapper.findAll('.app-sidebar__data-location').exists()).toBeFalsy()
+  })
+
+  it('should display the Mounted location component if in analyzeDocuments mode', () => {
+    Murmur.config.set('analyzeDocuments', true)
+    const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
+    expect(wrapper.findAll('.app-sidebar__data-location').exists()).toBeTruthy()
   })
 })

@@ -101,7 +101,7 @@
     <div class="app-sidebar__version text-left">
       <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" class="d-inline-block" :no-icon="reduced" />
     </div>
-    <div class="app-sidebar__data-location" v-if="!reduced && $config.is('analyseDocuments')">
+    <div class="app-sidebar__data-location" v-if="!reduced && $config.is('analyzeDocuments')">
       <mounted-data-location />
     </div>
   </div>
@@ -111,9 +111,9 @@
 import features from '@/mixins/features'
 import docs from '@/mixins/docs'
 import DatashareClient from '@/api/DatashareClient'
-import LocalesDropdown from './LocalesDropdown.vue'
-import MountedDataLocation from './MountedDataLocation.vue'
-import VersionNumber from './VersionNumber.vue'
+import LocalesDropdown from '@/components/LocalesDropdown'
+import MountedDataLocation from '@/components/MountedDataLocation'
+import VersionNumber from '@/components/VersionNumber'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
