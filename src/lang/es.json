@@ -38,6 +38,7 @@
     "contextualizeFiltersDescription": "Las facetas en el panel izquierdo se actualizarán de acuerdo con los resultados de la búsqueda.",
     "resetFiltersLabel": "Restablecer",
     "resetFiltersDescription": "Eliminar faceta seleccionada de la búsqueda.",
+    "tips": "Tips to improve searching",
     "settings": {
       "title": "Configuración de búsqueda",
       "results_per_page": "Número de resultados por página",
@@ -410,7 +411,7 @@
   },
   "menu": {
     "help": "Pedir ayuda",
-    "analyse": "Analizar mis documentos",
+    "analyse": "Analyze your documents",
     "batch": "Búsquedas masivas",
     "search": "Buscar en documentos",
     "history": "Tu historial",
