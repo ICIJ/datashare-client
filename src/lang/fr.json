@@ -38,6 +38,7 @@
     "contextualizeFiltersDescription": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche",
     "resetFiltersLabel": "Réinitialiser",
     "resetFiltersDescription": "Supprime les filtres sélectionnés de la recherche.",
+    "tips": "Tips to improve searching",
     "settings": {
       "title": "Paramètres de recherche",
       "results_per_page": "Nombre de résultats par page",
@@ -410,7 +411,7 @@
   },
   "menu": {
     "help": "Demander de l'aide",
-    "analyse": "Analyser mes documents",
+    "analyse": "Analyze your documents",
     "batch": "Recherches en lot",
     "search": "Rechercher dans les documents",
     "history": "Votre historique",
