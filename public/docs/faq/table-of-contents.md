@@ -26,6 +26,20 @@
 
 ['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](https://icij.gitbook.io/datashare/faq/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do)
 
+\*\*\*\*
+
+**User guide:**
+
+* [Analyze documents](https://icij.gitbook.io/datashare/all/analyze-documents)
+* [Search documents](https://icij.gitbook.io/datashare/all/search-documents)
+* [Search with operators](https://icij.gitbook.io/datashare/all/search-with-operators)
+* [Batch search documents](https://icij.gitbook.io/datashare/all/batch-search-documents)
+* [Explore a document](https://icij.gitbook.io/datashare/all/explore-a-document)
+* [Filter documents](https://icij.gitbook.io/datashare/all/filter-documents)
+* [Star documents](https://icij.gitbook.io/datashare/all/star-documents)
+* [Tag documents](https://icij.gitbook.io/datashare/all/tag-documents)
+* [Use keyboard shortcuts](https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts)
+
 
 
 
