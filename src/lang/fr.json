@@ -374,7 +374,8 @@
     "extraction_date": "Date d'indexation",
     "parent": "Parent",
     "in_metadata": "dans les métadonnées",
-    "in_tags": "in tags"
+    "in_tags": "in tags",
+    "search_children_document": "See children documents"
   },
   "email": {
     "detail": "Voir les détails",
