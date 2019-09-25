@@ -94,6 +94,6 @@ describe('DocumentTabDetails.vue', () => {
     await store.dispatch('document/get', { id })
     const wrapper = shallowMount(DocumentTabDetails, { localVue, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
-    expect(wrapper.find('.document__content__creation-date').exists()).toBeFalsy()
+    expect(wrapper.find('.document__content__details__children').exists()).toBeTruthy()
   })
 })
