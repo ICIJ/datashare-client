@@ -43,6 +43,10 @@ export default {
       this.tags = []
       this.updatingTags = false
       delay(facetName => this.$root.$emit('facet::refresh', facetName), settings.waitForEsAnswer, 'tags')
+      // Feedback only when we are not display tags
+      if (!this.displayTags) {
+        this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
+      }
     },
     async deleteTag (tag) {
       this.updatingTags = true
