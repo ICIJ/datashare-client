@@ -47,7 +47,7 @@
             id="group-project"
             :label="$t('batchSearch.form.projectLabel')"
             label-for="project"
-            v-if="$config.isnt('multipleProjects')">
+            v-if="$config.is('multipleProjects')">
             <b-form-select
               v-model="selectedIndex"
               :options="indices"
