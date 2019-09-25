@@ -16,6 +16,9 @@
       <p class="text-muted">
         {{ $t('document.details_info') }}
       </p>
+      <div class="row document__content__details__children">
+        <router-link :to="{ name: 'search', query: { q: `_routing:${document.id}` } }">See children documents</router-link>
+      </div>
       <div class="row document__content__details__item" v-for="field in canonicalFields" :key="field.name" v-if="field.value && field.value !== 'unknown'">
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
           <div class="text-truncate mr-1 w-100" :title="field.name">
