@@ -38,6 +38,7 @@
     "contextualizeFiltersDescription": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche",
     "resetFiltersLabel": "Réinitialiser",
     "resetFiltersDescription": "Supprime les filtres sélectionnés de la recherche.",
+    "tips": "Tips to improve searching",
     "settings": {
       "title": "Paramètres de recherche",
       "results_per_page": "Nombre de résultats par page",
@@ -373,7 +374,8 @@
     "extraction_date": "Date d'indexation",
     "parent": "Parent",
     "in_metadata": "dans les métadonnées",
-    "in_tags": "in tags"
+    "in_tags": "in tags",
+    "search_children_document": "See children documents"
   },
   "email": {
     "detail": "Voir les détails",
@@ -410,7 +412,7 @@
   },
   "menu": {
     "help": "Demander de l'aide",
-    "analyse": "Analyser mes documents",
+    "analyse": "Analyze your documents",
     "batch": "Recherches en lot",
     "search": "Rechercher dans les documents",
     "history": "Votre historique",
@@ -469,7 +471,8 @@
     "contentType": "Type de contenu",
     "size": "Taille",
     "downloadResults": "Télécharger les résultats",
-    "all": "Tout"
+    "all": "Tout",
+    "empty": "No results"
   },
   "batchSearchResultsFilters": {
     "queries": {
@@ -477,6 +480,7 @@
     }
   },
   "shortkeys": {
+    "title": "Search shortcuts",
     "goToPreviousDocument": "Go to the previous document",
     "goToNextDocument": "Go to the next document",
     "backToSearchResults": "Go back to the search results",
