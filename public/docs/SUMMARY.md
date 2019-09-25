@@ -25,6 +25,7 @@
 * [Analyze documents](all/analyze-documents.md)
 * [Search documents](all/search-documents.md)
 * [Search with operators](all/search-with-operators.md)
+* [Batch search documents](all/batch-search-documents.md)
 * [Explore a document](all/explore-a-document.md)
 * [Filter documents](all/filter-documents.md)
 * [Star documents](all/star-documents.md)
@@ -33,6 +34,7 @@
 
 ## FAQ
 
+* [Table of contents](faq/table-of-contents.md)
 * [What do I do if Datashare opens a blank screen in my browser?](faq/datashare-opens-a-blank-screen-in-my-browser..md)
 * [What if Datashare says 'No documents found'?](faq/it-says-no-documents-found.md)
 * [Can I use Datashare with no internet connection?](faq/can-i-use-datashare-with-no-internet-connection.md)
