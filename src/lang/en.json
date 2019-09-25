@@ -375,7 +375,8 @@
     "parent": "Parent",
     "in_metadata": "in metadata",
     "in_tags": "in tags",
-    "search_children_document": "See children documents"
+    "search_children_document": "See children documents",
+    "tag_confirmation": "Are you sure you want to delete this tag?"
   },
   "email": {
     "detail": "See detail",

@@ -71,7 +71,9 @@ export default {
       <ul class="document-tags-form list-unstyled mb-0 mt-1">
         <li class="document-tags-form__tag badge badge-light border badge-pill mr-2 mb-1" v-for="tag in document.tags" :key="tag">
           {{ tag }}
-          <fa icon="times" class="document-tags-form__tag__delete fa-fw" @click="deleteTag(tag)" />
+          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tag_confirmation')" class="document-tags-form__tag__delete btn btn-sm">
+            <fa icon="times" class="fa-fw" />
+          </confirm-button>
         </li>
       </ul>
     </div>
@@ -94,10 +96,13 @@ export default {
 
     &__tag {
 
-      &__delete {
+      &__delete.btn {
+        line-height: 1;
+        border: 0;
         font-size: 0.9rem;
         color: $text-muted;
         cursor: pointer;
+        padding: 0;
 
         &:hover {
           color: $danger;
