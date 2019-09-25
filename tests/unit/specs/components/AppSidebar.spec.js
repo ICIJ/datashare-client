@@ -40,13 +40,13 @@ describe('AppSidebar.vue', () => {
   beforeEach(() => getOS.mockReset())
 
   it('should display the link to analyze my documents', () => {
-    Murmur.config.set('analyzeDocuments', true)
+    Murmur.config.set('manageDocuments', true)
     const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
     expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').exists()).toBeTruthy()
   })
 
   it('should NOT display the link to analyze my documents according to config', () => {
-    Murmur.config.set('analyzeDocuments', false)
+    Murmur.config.set('manageDocuments', false)
     const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
     expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').exists()).toBeFalsy()
   })
@@ -81,14 +81,14 @@ describe('AppSidebar.vue', () => {
     expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').exists()).toBeTruthy()
   })
 
-  it('should NOT display the Mounted location component if not in analyzeDocuments mode', () => {
-    Murmur.config.set('analyzeDocuments', false)
+  it('should NOT display the Mounted location component if not in manageDocuments mode', () => {
+    Murmur.config.set('manageDocuments', false)
     const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
     expect(wrapper.findAll('.app-sidebar__data-location').exists()).toBeFalsy()
   })
 
-  it('should display the Mounted location component if in analyzeDocuments mode', () => {
-    Murmur.config.set('analyzeDocuments', true)
+  it('should display the Mounted location component if in manageDocuments mode', () => {
+    Murmur.config.set('manageDocuments', true)
     const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
     expect(wrapper.findAll('.app-sidebar__data-location').exists()).toBeTruthy()
   })

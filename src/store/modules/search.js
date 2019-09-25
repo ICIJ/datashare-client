@@ -61,7 +61,8 @@ export function initialState () {
     index: '',
     showFilters: true,
     starredDocuments: [],
-    layout: 'list'
+    // Different default layout for narrow screen
+    layout: (window.innerWidth || 0) < 1200 ? 'table' : 'list'
   }
 }
 

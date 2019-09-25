@@ -4,7 +4,7 @@
       <app-sidebar />
     </div>
     <div class="app__main flex-grow-1 d-flex">
-      <vue-perfect-scrollbar class="app__main__context-sidebar">
+      <vue-perfect-scrollbar class="app__main__context-sidebar" :class="{ 'app__main__context-sidebar--reduced': isContextSidebarReduced }">
         <transition name="slide-left">
           <router-view name="sidebar" />
         </transition>
@@ -19,6 +19,9 @@
 </template>
 
 <script>
+import compact from 'lodash/compact'
+import some from 'lodash/some'
+
 import AggregationsPanel from '@/components/AggregationsPanel'
 import DatashareClient from '@/api/DatashareClient'
 import AppSidebar from '@/components/AppSidebar'
@@ -36,6 +39,25 @@ export default {
   created () {
     if (process.env.NODE_ENV === 'production') {
       new DatashareClient().createIndex()
+    }
+  },
+  computed: {
+    matchedRouteNames () {
+      return compact(this.$route.matched.map(r => r.name))
+    },
+    isSearchRoute () {
+      return this.matchedRouteNames.indexOf('search') > -1
+    },
+    isHiddingAggregationsPanel () {
+      return this.isSearchRoute && !this.$store.state.search.showFilters
+    },
+    doesRouteHaveSidebar () {
+      return some(this.$route.matched, ({ components }) => {
+        return !!components.sidebar
+      })
+    },
+    isContextSidebarReduced () {
+      return this.isHiddingAggregationsPanel || !this.doesRouteHaveSidebar
     }
   }
 }
@@ -64,6 +86,13 @@ export default {
         top: 0;
         height: 100vh;
         background: $aggregations-panel-bg;
+        width: $app-context-sidebar-width;
+        max-width: $app-context-sidebar-width;
+        min-width: $app-context-sidebar-width;
+
+        &--reduced {
+          display: none;
+        }
 
         /**
          * Disabled

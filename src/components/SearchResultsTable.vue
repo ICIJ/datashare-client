@@ -16,13 +16,15 @@
         striped
         hover
         selectable
+        responsive
         @row-selected="onRowSelected"
         :items="itemsProvider"
         :fields="fields"
         :busy="isBusy"
         class="bg-white border-bottom m-0 small search-results-table__items"
         selected-variant="tertiary"
-        tbody-tr-class="search-results-table__items__row">
+        tbody-tr-class="search-results-table__items__row"
+        thead-tr-class="text-nowrap">
         <template #relevance="{ item, rowSelected }" >
           <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon" />
           <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" />

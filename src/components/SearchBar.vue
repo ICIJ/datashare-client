@@ -44,7 +44,7 @@
       </div>
       <div class="px-0" v-if="settings">
         <search-settings placement="bottomleft" :size="size" :container="uniqueId" />
-        <shortkeys-modal></shortkeys-modal>
+        <shortkeys-modal class="d-none d-md-inline"></shortkeys-modal>
       </div>
     </div>
     <slide-up-down :active="showTips" v-if="tips">

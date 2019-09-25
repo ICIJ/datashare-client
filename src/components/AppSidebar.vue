@@ -21,7 +21,7 @@
             </span>
           </router-link>
         </li>
-        <li class="app-sidebar__container__menu__item">
+        <li class="app-sidebar__container__menu__item" v-if="hasFeature('BATCH_SEARCHES')">
           <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" title="Batch searches" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="layer-group" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -29,7 +29,7 @@
             </span>
           </router-link>
         </li>
-        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="$config.is('analyzeDocuments')">
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="$config.is('manageDocuments')">
           <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" title="Analyze my documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="rocket" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -101,7 +101,7 @@
     <div class="app-sidebar__version text-left">
       <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" class="d-inline-block" :no-icon="reduced" />
     </div>
-    <div class="app-sidebar__data-location" v-if="!reduced && $config.is('analyzeDocuments')">
+    <div class="app-sidebar__data-location" v-if="!reduced && $config.is('manageDocuments')">
       <mounted-data-location />
     </div>
   </div>
@@ -111,9 +111,9 @@
 import features from '@/mixins/features'
 import docs from '@/mixins/docs'
 import DatashareClient from '@/api/DatashareClient'
-import LocalesDropdown from '@/components/LocalesDropdown'
-import MountedDataLocation from '@/components/MountedDataLocation'
-import VersionNumber from '@/components/VersionNumber'
+import LocalesDropdown from './LocalesDropdown.vue'
+import MountedDataLocation from './MountedDataLocation.vue'
+import VersionNumber from './VersionNumber.vue'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
@@ -127,7 +127,8 @@ export default {
   },
   data () {
     return {
-      reduced: false
+      // Quick and dirty responsive default value
+      reduced: (window.innerWidth || 0) < 120
     }
   },
   mounted () {

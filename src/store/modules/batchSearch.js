@@ -18,8 +18,7 @@ export const state = initialState
 
 export const mutations = {
   reset (state) {
-    const s = initialState()
-    Object.keys(s).forEach(key => { state[key] = s[key] })
+    Object.assign(state, initialState())
   },
   resetForm (state) {
     state.name = ''
