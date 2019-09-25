@@ -115,9 +115,9 @@ export default {
       if (this.$config.is('manageDocuments')) {
         try {
           await this.$store.dispatch('indexing/runBatchSearch')
-          this.$bvToast.toast('The batch search is not running', { noCloseButton: true, variant: 'danger' })
+          this.$bvToast.toast(this.$t('batchSearch.form.success'), { noCloseButton: true, variant: 'success' })
         } catch (_) {
-          this.$bvToast.toast('Now running pending batch searches', { noCloseButton: true, variant: 'success' })
+          this.$bvToast.toast(this.$t('batchSearch.form.failure'), { noCloseButton: true, variant: 'danger' })
         }
       }
     }

@@ -454,7 +454,9 @@
       "fileLabel": "CSV file:",
       "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
       "filePlaceholder": "Choose a file...",
-      "submit": "Add"
+      "submit": "Add",
+      "success": "Your batch search is now running.",
+      "failure": "Something went wrong, unable to start your batch search."
     },
     "projectName": "Project Name",
     "searchName": "Search Name",
