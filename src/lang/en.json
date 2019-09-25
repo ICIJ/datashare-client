@@ -374,7 +374,8 @@
     "extraction_date": "Indexing date",
     "parent": "Parent",
     "in_metadata": "in metadata",
-    "in_tags": "in tags"
+    "in_tags": "in tags",
+    "search_children_document": "See children documents"
   },
   "email": {
     "detail": "See detail",
