@@ -15,9 +15,7 @@ import startCase from 'lodash/startCase'
 export default {
   name: 'DocumentThumbnail',
   props: {
-    document: {
-      type: Object
-    },
+    document: Object,
     page: {
       type: Number,
       default: 0
@@ -26,12 +24,8 @@ export default {
       type: [Number, String],
       default: 'sm'
     },
-    crop: {
-      type: Boolean
-    },
-    lazy: {
-      type: Boolean
-    }
+    crop: Boolean,
+    lazy: Boolean
   },
   data () {
     return {
@@ -43,7 +37,7 @@ export default {
   },
   computed: {
     thumbnailUrl () {
-      return `${this.$config.previewHost}/api/v1/thumbnail/${this.document.index}/${this.document.id}?routing=${this.document.routing}&page=${this.page}&size=${this.size}`
+      return `${this.$config.get('previewHost')}/api/v1/thumbnail/${this.document.index}/${this.document.id}?routing=${this.document.routing}&page=${this.page}&size=${this.size}`
     },
     thumbnailAlt () {
       return `${this.document.basename} preview`
@@ -52,7 +46,7 @@ export default {
       return escape(this.document.path)
     },
     isActivated () {
-      return !!this.$config.previewHost
+      return !!this.$config.get('previewHost')
     },
     lazyLoadable () {
       return window && 'IntersectionObserver' in window
