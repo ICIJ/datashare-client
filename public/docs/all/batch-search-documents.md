@@ -36,3 +36,11 @@ description: It allows to search multiple words at once.
 
 ### Get your results
 
+* Open your batch search by clicking on its name:
+
+![](../.gitbook/assets/screenshot-2019-09-25-at-16.38.23.png)
+
+* You see your results, you can filter your results by query and download your results in a CSV format.
+
+![](../.gitbook/assets/screenshot-2019-09-25-at-16.37.06.png)
+
