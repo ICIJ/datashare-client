@@ -2,7 +2,8 @@
 @import './utils/animations.scss';
 @import './assets/fonts/Medel/stylesheet.css';
 @import '~node_modules/bootstrap/scss/bootstrap';
-@import '~node_modules/bootstrap-vue/dist/bootstrap-vue.css';
+// BootstrapVue and its default variables
+@import '~node_modules/bootstrap-vue/src/index';
 // @TODO bundle Murmur so the import is easier
 @import '~node_modules/@icij/murmur/dist/lib/@icij/murmur.css';
 

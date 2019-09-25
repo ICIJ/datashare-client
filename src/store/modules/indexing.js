@@ -61,6 +61,9 @@ export const actions = {
   submitExtract ({ state }) {
     datashare.index({ ocr: state.form.ocr })
   },
+  runBatchSearch () {
+    datashare.runBatchSearch()
+  },
   submitFindNamedEntities ({ state }) {
     switch (state.form.pipeline) {
       case 'corenlp':

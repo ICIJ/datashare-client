@@ -392,6 +392,7 @@
     "empty": "You started no tasks yet.",
     "extract_text": "Extract text",
     "extracting_header": "Do you want to extract text also from images and PDFs?",
+    "run_batch_search": "Run Batch Searches",
     "extracting_subheader": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
     "find_named_entities": "Find people, organizations and locations",
     "find_named_entities_header": "Which technology do you want to apply in order to find people, organizations and locations?",

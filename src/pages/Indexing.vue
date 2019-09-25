@@ -9,7 +9,7 @@
               {{ $t('indexing.extract_text') }}
             </button>
             <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
-              <button class="btn btn-primary btn-find-named-entites" type="button"
+              <button class="btn btn-primary btn-find-named-entites mr-2" type="button"
                       :disabled="isPendingTasks" @click="openFindNamedEntitiesForm">
                 <fa icon="user-tag" class="mr-2" />
                 {{ $t('indexing.find_named_entities') }}

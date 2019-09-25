@@ -110,8 +110,16 @@ export default {
     this.indices = map(this.$config.get('userIndices', []), value => { return { value, text: value } })
   },
   methods: {
-    onSubmit () {
-      return this.$store.dispatch('batchSearch/onSubmit')
+    async onSubmit () {
+      await this.$store.dispatch('batchSearch/onSubmit')
+      if (this.$config.is('manageDocuments')) {
+        try {
+          await this.$store.dispatch('indexing/runBatchSearch')
+          this.$bvToast.toast('The batch search is not running', { noCloseButton: true, variant: 'danger' })
+        } catch (_) {
+          this.$bvToast.toast('Now running pending batch searches', { noCloseButton: true, variant: 'success' })
+        }
+      }
     }
   }
 }

@@ -72,6 +72,7 @@ $tooltip-max-width: 260px !default;
 $tooltip-opacity: 1 !default;
 
 $input-box-shadow: none;
+$b-toast-background-opacity: $tooltip-opacity;
 
 // Bootstrap variables and mixins must be available everywhere
 @import '~node_modules/bootstrap/scss/_functions.scss';
