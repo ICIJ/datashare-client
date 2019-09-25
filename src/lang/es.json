@@ -374,7 +374,8 @@
     "extraction_date": "Fecha de índice",
     "parent": "Archivo de base",
     "in_metadata": "en los metadatos",
-    "in_tags": "in tags"
+    "in_tags": "in tags",
+    "search_children_document": "See children documents"
   },
   "email": {
     "detail": "Más detalles",
