@@ -14,9 +14,11 @@ description: 'You can tag documents, search for tagged documents and delete your
 * **Type** your tag
 * Press '**Enter**'
 
+**Tags can contain any character but cannot contain space.**
+
 Your new tag is now displayed on this page. 
 
-You can add several tags.
+You can add several tags. 
 
 ## Search tags with tag filter
 
