@@ -103,7 +103,7 @@ const router = new VueRouter({
           },
           meta: {
             docs: [
-              'all/batch-search-documents'
+              'all/batch-search-documents.md'
             ]
           }
         },

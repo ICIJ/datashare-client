@@ -34,8 +34,8 @@ export default {
   name: 'RouteDocsLinks',
   mixins: [ docs ],
   methods: {
-    isActive (meta) {
-      return get(this, '$route.params.slug', null) === meta.slug
+    isActive (meta = null) {
+      return meta && get(this, '$route.params.slug', null) === meta.slug
     }
   }
 }
