@@ -23,14 +23,32 @@
     <div class="container py-4">
       <div class="batch-search-results__info d-flex my-2 mx-3">
         <dl class="row" v-if="Object.keys(meta).length !== 0">
-          <dt class="col-sm-4 text-right">{{ $t('batchSearch.projectName') }}</dt>
-          <dd class="col-sm-8">{{ meta.project.name }}</dd>
-          <dt class="col-sm-4 text-right">{{ $t('batchSearch.state') }}</dt>
-          <dd class="col-sm-8"><b-badge variant="darker">{{ capitalize(meta.state) }}</b-badge></dd>
-          <dt class="col-sm-4 text-right">{{ $t('batchSearch.date') }}</dt>
-          <dd class="col-sm-8">{{ moment(meta.date).format('LLL') }}</dd>
-          <dt class="col-sm-4 text-right">{{ $t('batchSearch.nbResults') }}</dt>
-          <dd class="col-sm-8">{{ meta.nbResults }}</dd>
+          <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.projectName') }}
+          </dt>
+          <dd class="col-sm-8">
+            {{ meta.project.name }}
+          </dd>
+          <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.state') }}
+          </dt>
+          <dd class="col-sm-8">
+            <b-badge :variant="meta.state | toVariant">
+              {{ capitalize(meta.state) }}
+            </b-badge>
+          </dd>
+          <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.date') }}
+          </dt>
+          <dd class="col-sm-8">
+            {{ moment(meta.date).format('LLL') }}
+          </dd>
+          <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.nbResults') }}
+          </dt>
+          <dd class="col-sm-8">
+            {{ meta.nbResults }}
+          </dd>
         </dl>
       </div>
       <div class="batch-search-results__delete text-center my-2 mx-3" v-if="hasFeature('DELETE_BATCHSEARCH')">
@@ -92,6 +110,7 @@ import get from 'lodash/get'
 import DatashareClient from '@/api/DatashareClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
+import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
 import features from '@/mixins/features'
 
@@ -103,7 +122,8 @@ export default {
     index: String
   },
   filters: {
-    humanSize
+    humanSize,
+    toVariant
   },
   data () {
     return {

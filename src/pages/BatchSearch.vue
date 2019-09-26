@@ -27,7 +27,7 @@
             {{ $tc('batchSearch.query', item.queries.length) }}
           </template>
           <template #state="{ item }">
-            <b-badge variant="darker">
+            <b-badge :variant="item.state | toVariant">
               {{ capitalize(item.state) }}
             </b-badge>
           </template>
@@ -46,9 +46,14 @@ import moment from 'moment'
 import capitalize from 'lodash/capitalize'
 import compact from 'lodash/compact'
 
+import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
+
 export default {
   name: 'BatchSearches',
+  filters: {
+    toVariant
+  },
   data () {
     return {
       isReady: false,

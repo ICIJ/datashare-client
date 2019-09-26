@@ -93,6 +93,7 @@ import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import settings from '@/utils/settings'
 import { getOS } from '@/utils/utils'
+import toVariant from '@/filters/toVariant'
 import store from '@/store'
 import filter from 'lodash/filter'
 import last from 'lodash/last'
@@ -162,10 +163,8 @@ export default {
     },
     taskStateToClass (state) {
       switch (state) {
-        case 'DONE': return 'bg-success'
-        case 'ERROR': return 'bg-danger'
-        case 'CANCELLED': return 'bg-warning'
         case 'RUNNING': return 'bg-info progress-bar-striped progress-bar-animated'
+        default: return `bg-${toVariant(state)}`
       }
     },
     getProgress (value, state) {

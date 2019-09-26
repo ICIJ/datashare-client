@@ -5,7 +5,7 @@ import takeRight from 'lodash/takeRight'
 import zip from 'lodash/zip'
 import cheerio from 'cheerio'
 
-export function slugger (value) {
+export function slugger (value = '') {
   return value
     .toLowerCase()
     .trim()
