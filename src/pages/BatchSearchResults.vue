@@ -23,10 +23,10 @@
     <div class="container py-4">
       <div class="batch-search-results__info d-flex my-2 mx-3">
         <dl class="row" v-if="Object.keys(meta).length !== 0">
-          <dt class="col-sm-4 text-right">
+          <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.projectName') }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
             {{ meta.project.name }}
           </dd>
           <dt class="col-sm-4 text-right">

@@ -126,7 +126,7 @@ describe('BatchSearchResults.vue', () => {
 
   it('should display info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(4)
+    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(3)
   })
 
   it('should refresh route on "batch-search-results::filter" event emitted', () => {
