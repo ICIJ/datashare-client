@@ -58,7 +58,8 @@ jest.mock('@/api/DatashareClient', () => {
           query: 'query_02',
           rootId: 44
         }
-      ]))
+      ])),
+      deleteBatchSearch: jest.fn()
     }
   })
 })
@@ -140,12 +141,25 @@ describe('BatchSearchResults.vue', () => {
     expect(router.push).toBeCalled()
   })
 
-  it('should re-route on sort changed', async () => {
+  it('should redirect on sort changed', async () => {
     jest.spyOn(router, 'push')
 
     await wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
 
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({ name: 'batch-search.results', params: { index: `${process.env.VUE_APP_ES_INDEX}`, uuid: '12' }, query: { page: 1, queries: [], sort: 'content_type', order: 'desc' } })
+  })
+
+  it('should display a "Delete batch search" button', () => {
+    expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
+  })
+
+  it('should redirect on batchSearch deletion', async () => {
+    jest.spyOn(router, 'push')
+
+    await wrapper.vm.deleteBatchSearch()
+
+    expect(router.push).toBeCalled()
+    expect(router.push).toBeCalledWith({ name: 'batch-search' })
   })
 })

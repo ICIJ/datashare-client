@@ -33,6 +33,13 @@
           <dd class="col-sm-8">{{ meta.nbResults }}</dd>
         </dl>
       </div>
+      <div class="batch-search-results__delete text-center my-2 mx-3" v-if="hasFeature('DELETE_BATCHSEARCH')">
+        <confirm-button class="btn text-secondary" :confirmed="deleteBatchSearch">
+          <b-button>
+            <fa icon="trash-alt" class="mr-2" />{{ $t('batchSearch.delete') }}
+          </b-button>
+        </confirm-button>
+      </div>
       <div v-if="!isReady" class="card">
         <div>
           <content-placeholder :rows="rows" class="p-0 my-3" />
@@ -86,9 +93,11 @@ import DatashareClient from '@/api/DatashareClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
 import settings from '@/utils/settings'
+import features from '@/mixins/features'
 
 export default {
   name: 'BatchSearchResults',
+  mixins: [features],
   props: {
     uuid: String,
     index: String
@@ -218,6 +227,10 @@ export default {
     },
     linkGen (page) {
       return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page, queries: this.selectedQueries, sort: this.sort, order: this.order } }
+    },
+    async deleteBatchSearch () {
+      await store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
+      this.$router.push({ name: 'batch-search' })
     },
     capitalize,
     moment,

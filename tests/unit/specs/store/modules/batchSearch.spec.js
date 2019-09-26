@@ -106,6 +106,16 @@ describe('BatchSearch store', () => {
       expect(store.state.batchSearch.results[0].document).not.toBeNull()
     })
 
+    it('should delete a specific batchSearch', async () => {
+      store.state.batchSearch.batchSearches = ['batchSearch_01', 'batchSearch_02', 'batchSearch_03']
+
+      await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
+
+      expect(datashare.fetch).toHaveBeenCalledTimes(1)
+      expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search/batchSearch_01'), { method: 'DELETE' })
+      expect(store.state.batchSearch.batchSearches).toEqual(['batchSearch_02', 'batchSearch_03'])
+    })
+
     it('should delete all batch searches', async () => {
       store.state.batchSearch.batchSearches = ['batchSearch_01', 'batchSearch_02', 'batchSearch_03']
 
