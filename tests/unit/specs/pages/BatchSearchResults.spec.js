@@ -129,12 +129,14 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(3)
   })
 
-  it('should refresh route on "batch-search-results::filter" event emitted', () => {
+  it('should refresh route on "batch-search-results::filter" event emitted, on reset to the first page', () => {
+    wrapper.vm.$set(wrapper.vm, 'page', 2)
     jest.spyOn(router, 'push')
 
     wrapper.vm.$root.$emit('batch-search-results::filter')
 
     expect(router.push).toBeCalled()
+    expect(router.push).toBeCalledWith({ name: 'batch-search.results', params: { index: `${process.env.VUE_APP_ES_INDEX}`, uuid: '12' }, query: { page: 1, queries: [], sort: 'doc_nb', order: 'asc' } })
   })
 
   it('should redirect on sort changed', async () => {

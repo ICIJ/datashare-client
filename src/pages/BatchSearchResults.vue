@@ -242,7 +242,7 @@ export default {
       this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page: this.page, queries: this.queries, sort, order } })
     },
     filter () {
-      this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page: this.page, queries: this.selectedQueries, sort: this.sort, order: this.order } })
+      this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page: 1, queries: this.selectedQueries, sort: this.sort, order: this.order } })
     },
     linkGen (page) {
       return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page, queries: this.selectedQueries, sort: this.sort, order: this.order } }
