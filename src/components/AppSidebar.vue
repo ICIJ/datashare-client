@@ -88,7 +88,7 @@
             </span>
           </locales-dropdown>
         </li>
-        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="$config.is('multiTenant')">
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
           <a :href="logoutLink" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="sign-out-alt" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
@@ -108,8 +108,9 @@
 </template>
 
 <script>
-import features from '@/mixins/features'
 import docs from '@/mixins/docs'
+import features from '@/mixins/features'
+import utils from '@/mixins/utils'
 import DatashareClient from '@/api/DatashareClient'
 import LocalesDropdown from './LocalesDropdown.vue'
 import MountedDataLocation from './MountedDataLocation.vue'
@@ -118,7 +119,7 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'AppSidebar',
-  mixins: [docs, features],
+  mixins: [docs, features, utils],
   components: {
     LocalesDropdown,
     MountedDataLocation,

@@ -100,6 +100,11 @@ const router = new VueRouter({
           components: {
             default: BatchSearch,
             sidebar: BatchSearchForm
+          },
+          meta: {
+            docs: [
+              'all/batch-search-documents'
+            ]
           }
         },
         {

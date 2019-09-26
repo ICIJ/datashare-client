@@ -70,13 +70,13 @@ describe('AppSidebar.vue', () => {
   })
 
   it('should NOT display a logout link', () => {
-    Murmur.config.set('multiTenant', false)
+    Murmur.config.set('mode', 'LOCAL')
     const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
     expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').exists()).toBeFalsy()
   })
 
-  it('should display a logout link in multiTenant mode', () => {
-    Murmur.config.set('multiTenant', true)
+  it('should display a logout link in server mode', () => {
+    Murmur.config.set('mode', 'SERVER')
     const wrapper = shallowMount(AppSidebar, { appVue, router, store, mocks: { $t: msg => msg } })
     expect(wrapper.findAll('.app-sidebar__container__menu__item--logout').exists()).toBeTruthy()
   })

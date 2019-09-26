@@ -9,6 +9,11 @@ const utils = {
       ]
     }
   },
+  computed: {
+    isServer () {
+      return this.$config && this.$config.get('mode') === 'SERVER'
+    }
+  },
   methods: {
     getTermIndexColor (index) {
       return this.termIndexColors[index % this.termIndexColors.length]
