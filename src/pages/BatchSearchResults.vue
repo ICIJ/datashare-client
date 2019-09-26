@@ -2,11 +2,19 @@
   <div class="batch-search-results">
     <div class="batch-search-results__explanation bg-white py-5">
       <div class="container">
-        <div class="batch-search-results__download float-right">
-          <a :href="downloadLink" class="btn btn-primary">
-            <fa icon="download" />
-            {{ $t('batchSearchResults.downloadResults') }} (CSV)
-          </a>
+        <div class="float-right d-flex my-2 mx-3">
+          <div class="batch-search-results__download float-right">
+            <a :href="downloadLink" class="btn btn-primary">
+              <fa icon="download" />
+              {{ $t('batchSearchResults.downloadResults') }} (CSV)
+            </a>
+          </div>
+          <div class="batch-search-results__delete">
+            <confirm-button class="btn btn-primary ml-2" :confirmed="deleteBatchSearch">
+                <fa icon="trash-alt" />
+                {{ $t('batchSearch.delete') }}
+            </confirm-button>
+          </div>
         </div>
         <h3>
           <router-link :to="{ name: 'batch-search' }">
@@ -50,13 +58,6 @@
             {{ meta.nbResults }}
           </dd>
         </dl>
-      </div>
-      <div class="batch-search-results__delete text-center my-2 mx-3">
-        <confirm-button class="btn text-secondary" :confirmed="deleteBatchSearch">
-          <b-button>
-            <fa icon="trash-alt" class="mr-2" />{{ $t('batchSearch.delete') }}
-          </b-button>
-        </confirm-button>
       </div>
       <div v-if="!isReady" class="card">
         <div>
