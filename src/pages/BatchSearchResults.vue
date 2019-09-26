@@ -51,7 +51,7 @@
           </dd>
         </dl>
       </div>
-      <div class="batch-search-results__delete text-center my-2 mx-3" v-if="hasFeature('DELETE_BATCHSEARCH')">
+      <div class="batch-search-results__delete text-center my-2 mx-3">
         <confirm-button class="btn text-secondary" :confirmed="deleteBatchSearch">
           <b-button>
             <fa icon="trash-alt" class="mr-2" />{{ $t('batchSearch.delete') }}
@@ -93,7 +93,7 @@
           </b-table>
         </div>
       </div>
-      <b-pagination-nav :link-gen="linkGen" :number-of-pages="numberOfPages" use-router class="mt-2"></b-pagination-nav>
+      <b-pagination-nav v-if="numberOfPages > 1" :link-gen="linkGen" :number-of-pages="numberOfPages" use-router class="mt-2"></b-pagination-nav>
     </div>
   </div>
 </template>
@@ -112,11 +112,9 @@ import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
-import features from '@/mixins/features'
 
 export default {
   name: 'BatchSearchResults',
-  mixins: [features],
   props: {
     uuid: String,
     index: String
