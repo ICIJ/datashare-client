@@ -1,14 +1,12 @@
 import BatchSearchResults from '@/pages/BatchSearchResults'
-import { createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import store from '@/store'
-import VueI18n from 'vue-i18n'
 import BootstrapVue from 'bootstrap-vue'
 import VueProgressBar from 'vue-progressbar'
 import Murmur from '@icij/murmur'
 import VueRouter from 'vue-router'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import messages from '@/lang/en'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -65,12 +63,10 @@ jest.mock('@/api/DatashareClient', () => {
 })
 
 const localVue = createLocalVue()
-localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
 localVue.use(VueRouter)
 localVue.use(VueProgressBar)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 const router = new VueRouter({ routes: [
   {
@@ -112,7 +108,7 @@ describe('BatchSearchResults.vue', () => {
       nbResults: 15
     }])
     const propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
-    wrapper = mount(BatchSearchResults, { localVue, store, router, i18n, computed: { downloadLink () { return 'mocked-download-link' }, numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(BatchSearchResults, { localVue, store, router, computed: { downloadLink () { return 'mocked-download-link' }, numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
     await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { page: 1 } })
     await wrapper.vm.fetch()
   })
@@ -121,7 +117,7 @@ describe('BatchSearchResults.vue', () => {
 
   it('should display the list of the queries of this batch search', () => {
     expect(wrapper.find('.batch-search-results').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__queries__query')).toHaveLength(3)
+    expect(wrapper.find('b-table-stub').attributes('items').split(',')).toHaveLength(3)
   })
 
   it('should display a button to download the results as a CSV file', () => {

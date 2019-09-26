@@ -71,12 +71,10 @@ import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import settings from '@/utils/settings'
-import features from '@/mixins/features'
 import humanSize from '@/filters/humanSize'
 
 export default {
   name: 'SearchResults',
-  mixins: [features],
   filters: { humanSize },
   components: {
     DocumentActions,
