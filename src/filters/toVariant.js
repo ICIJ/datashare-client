@@ -9,6 +9,7 @@ export default function (string = '', defaultVariant = 'darker') {
     case 'error': return 'danger'
     case 'fail': return 'danger'
     case 'failed': return 'danger'
+    case 'failure': return 'danger'
     case 'info': return 'info'
     case 'pending': return 'info'
     case 'queued': return 'info'
