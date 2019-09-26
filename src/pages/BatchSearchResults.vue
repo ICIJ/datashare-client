@@ -11,8 +11,8 @@
           </div>
           <div class="batch-search-results__delete">
             <confirm-button class="btn btn-primary ml-2" :confirmed="deleteBatchSearch">
-                <fa icon="trash-alt" />
-                {{ $t('batchSearch.delete') }}
+              <fa icon="trash-alt" />
+              {{ $t('batchSearch.delete') }}
             </confirm-button>
           </div>
         </div>
@@ -250,6 +250,7 @@ export default {
     async deleteBatchSearch () {
       await store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
       this.$router.push({ name: 'batch-search' })
+      this.$root.$bvToast.toast(this.$t('batchSearch.deleted'), { noCloseButton: true, variant: 'success' })
     },
     capitalize,
     moment,

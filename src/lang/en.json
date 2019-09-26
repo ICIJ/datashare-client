@@ -469,7 +469,8 @@
     "date": "Date",
     "nbResults": "Number of results",
     "query": "no queries | 1 query | {count} queries",
-    "delete": "Delete batch search"
+    "delete": "Delete batch search",
+    "deleted": "The batch search have been deleted."
   },
   "batchSearchResults": {
     "index": "Index",
