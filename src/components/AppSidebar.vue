@@ -1,5 +1,6 @@
 <template>
   <div class="app-sidebar d-flex flex-column" :class="{ 'app-sidebar--reduced': reduced }">
+    <div class="app-sidebar__backdrop" @click="hideSidebar()"></div>
     <vue-perfect-scrollbar class="app-sidebar__container flex-grow-1 d-flex flex-column">
       <div class="d-flex align-items-center justify-content-center">
         <router-link class="app-sidebar__container__brand align-items-center flex-grow-1" :to="{ name: 'landing' }">
@@ -101,7 +102,7 @@
     <div class="app-sidebar__version text-left">
       <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" class="d-inline-block" :no-icon="reduced" />
     </div>
-    <div class="app-sidebar__data-location" v-if="!reduced && $config.is('manageDocuments')">
+    <div class="app-sidebar__data-location" v-if="$config.is('manageDocuments')" v-show="!reduced">
       <mounted-data-location />
     </div>
   </div>
@@ -111,6 +112,7 @@
 import docs from '@/mixins/docs'
 import features from '@/mixins/features'
 import utils from '@/mixins/utils'
+import { isNarrowScreen } from '@/utils/screen'
 import DatashareClient from '@/api/DatashareClient'
 import LocalesDropdown from './LocalesDropdown.vue'
 import MountedDataLocation from './MountedDataLocation.vue'
@@ -129,11 +131,16 @@ export default {
   data () {
     return {
       // Quick and dirty responsive default value
-      reduced: (window.innerWidth || 0) < 120
+      reduced: isNarrowScreen()
     }
   },
   mounted () {
     this.$nextTick(this.saveComponentWidth)
+  },
+  watch: {
+    $route () {
+      this.reduced = isNarrowScreen() || this.reduced
+    }
   },
   methods: {
     hideSidebar () {
@@ -173,9 +180,32 @@ export default {
     width: $app-sidebar-width;
     position: sticky;
     top: 0;
+    z-index: $zindex-sticky;
 
     &--reduced {
-      width: auto;
+      width: $app-sidebar-reduced-width;
+    }
+
+    @media (max-width: $app-sidebar-float-breakpoint-width) {
+      position: fixed;
+      left: 0;
+      bottom: 0;
+    }
+
+    @media (max-width: $app-sidebar-float-breakpoint-width) {
+      &:not(&--reduced) {
+        box-shadow: 0 0 2rem 1rem darken($app-bg, 10);
+
+        .app-sidebar__backdrop {
+          z-index: -1;
+          position: fixed;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          background: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
+        }
+      }
     }
 
     &__container {
@@ -354,7 +384,6 @@ export default {
     &__version {
       z-index: 100;
       position: relative;
-      box-shadow: 0 -0.5 * $spacer 0.5 * $spacer 0 $app-bg;
     }
 
     &__version, &__data-location {

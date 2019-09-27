@@ -2,10 +2,6 @@ import { getCookie } from 'tiny-cookie'
 import types from '@/utils/types.json'
 import get from 'lodash/get'
 
-function isNarrowScreen () {
-  return (window.innerWidth || 0) < 1200
-}
-
 function getOS () {
   let OSName
   if (window.navigator.platform.includes('Mac')) OSName = 'mac'
@@ -51,7 +47,6 @@ function getExtractionLevelTranslationKey (key) {
 }
 
 export {
-  isNarrowScreen,
   getOS,
   getShortkeyOS,
   isAuthenticated,

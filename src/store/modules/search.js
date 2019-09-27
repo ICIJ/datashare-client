@@ -2,6 +2,7 @@ import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import settings from '@/utils/settings'
+import { isNarrowScreen } from '@/utils/screen'
 import { FacetText, FacetYesNo, FacetDate, FacetDateRange, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation, starredLabel } from '@/store/facetsStore'
 import DatashareClient from '@/api/DatashareClient'
 import types from '@/utils/types.json'
@@ -62,7 +63,7 @@ export function initialState () {
     showFilters: true,
     starredDocuments: [],
     // Different default layout for narrow screen
-    layout: (window.innerWidth || 0) < 1200 ? 'table' : 'list'
+    layout: isNarrowScreen() ? 'table' : 'list'
   }
 }
 

@@ -72,6 +72,12 @@ export default {
     background: $app-bg;
     min-height: 100vh;
 
+    @media (max-width: $app-sidebar-float-breakpoint-width) {
+      &__main {
+        margin-left: $app-sidebar-reduced-width;
+      }
+    }
+
     &__main {
       box-shadow: $box-shadow-lg;
       background: $body-bg;
