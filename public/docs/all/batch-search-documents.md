@@ -1,5 +1,5 @@
 ---
-description: It allows to search multiple words at once.
+description: It allows to search multiple queries (list of words) at once.
 ---
 
 # Batch search documents
