@@ -10,6 +10,8 @@ description: It allows to search multiple words at once.
 
 ![](../.gitbook/assets/screenshot-2019-09-25-at-16.06.40.png)
 
+**Search operators do NOT work in batch searches**: any space in your query is considered as a 'OR'. It means that if you write 'Hello world', the search engine of batch searches will look for documents which contain either 'hello' or 'world' or the two words. If you write 'Hello AND world NOT car', it will look for documents which contain either 'hello' or 'and' or 'world' or 'not' or 'car'.
+
 * Export your spreadsheet in a CSV format:
 
 ![](../.gitbook/assets/screenshot-2019-09-25-at-16.10.06.png)
