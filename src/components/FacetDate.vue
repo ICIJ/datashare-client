@@ -31,8 +31,8 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: { size: 1000 } }).then(r => {
-      this.totalCount = sumBy(get(r, this.resultPath, []), 'doc_count')
+    this.$store.dispatch('search/queryFacet', { name: this.facet.name, options: { size: 1000 } }).then(response => {
+      this.$set(this, 'totalCount', sumBy(get(response, this.resultPath, []), 'doc_count'))
     })
   }
 }

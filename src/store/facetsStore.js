@@ -49,7 +49,7 @@ class FacetText {
   }
 
   body (body, options) {
-    return body.agg('terms', this.key, this.key, options)
+    return body.query('match', 'type', 'Document').agg('terms', this.key, this.key, options)
   }
 
   addFilter (body) {
@@ -96,10 +96,6 @@ class FacetYesNo extends FacetText {
     } else {
       return body.notFilter('terms', this.key, this.starredDocuments)
     }
-  }
-
-  body (body, options) {
-    return body.query('match', 'type', 'Document').agg('terms', this.key, this.key, options)
   }
 }
 

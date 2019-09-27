@@ -50,10 +50,10 @@
                     <b-form-checkbox :value="value" class="facet__items__item">
                       <span class="d-flex">
                         <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
-                          {{label }}
+                          {{ label }}
                         </span>
                         <span class="facet__items__item__count badge badge-pill badge-light float-right mt-1">
-                          {{  $n(item.doc_count) }}
+                          {{ $n(item.doc_count) }}
                         </span>
                       </span>
                     </b-form-checkbox>
@@ -179,6 +179,7 @@ export default {
           } catch (_) {
             res = {}
           }
+          this.$set(this, 'total', res.total)
           const sumOtherDocCount = get(res, ['aggregations', this.facet.key, 'sum_other_doc_count'], 0)
           const sumDocCount = sumBy(get(res, this.resultPath, []), 'doc_count')
           this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)

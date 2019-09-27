@@ -12,6 +12,7 @@
       <component class="border-0"
                  :is="facet.component"
                  :async-items="items"
+                 :async-total="total"
                  :async-total-count="totalCount"
                  @add-facet-values="onAddedFacetValues"
                  hide-search
@@ -85,6 +86,7 @@ export default {
       facetQuery: this.query || '',
       items: [],
       infiniteId: uniqueId(),
+      total: 0,
       totalCount: 0,
       isReady: false
     }
@@ -110,11 +112,12 @@ export default {
       const data = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
       const all = get(data, this.resultPath, [])
       this.$set(this, 'items', all)
+      this.$set(this, 'total', data.total)
       this.$set(this, 'totalCount', sumBy(all, 'doc_count'))
       // Did we reach the end?
       if ($state && all.length < this.size) {
         $state.complete()
-        this.isReady = true
+        this.$set(this, 'isReady', true)
       }
       // Mark this page as loaded
       if ($state) $state.loaded()

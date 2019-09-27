@@ -39,11 +39,6 @@ export default {
   name: 'FacetNamedEntity',
   components: { Facet },
   mixins: [facets, ner, utils],
-  computed: {
-    total () {
-      return this.$store.state.search.response.total
-    }
-  },
   methods: {
     async deleteNamedEntitiesByMentionNorm (mentionNorm) {
       await datashare.deleteNamedEntitiesByMentionNorm(mentionNorm)

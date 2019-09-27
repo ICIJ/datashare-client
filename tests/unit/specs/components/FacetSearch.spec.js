@@ -271,7 +271,7 @@ describe('FacetSearch.vue', () => {
 
     expect(wrapper.vm.items).toHaveLength(1)
     expect(wrapper.vm.items[0].doc_count).toEqual(2)
-    expect(wrapper.vm.totalCount).toEqual(2)
+    expect(wrapper.vm.total).toEqual(3)
   })
 
   it('should filter facet values on facet label in capital letters', async () => {
@@ -287,6 +287,6 @@ describe('FacetSearch.vue', () => {
 
     expect(wrapper.vm.items).toHaveLength(1)
     expect(wrapper.vm.items[0].doc_count).toEqual(2)
-    expect(wrapper.vm.totalCount).toEqual(2)
+    expect(wrapper.vm.total).toEqual(3)
   })
 })

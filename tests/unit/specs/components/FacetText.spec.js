@@ -42,7 +42,7 @@ describe('FacetText.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(0)
-    expect(wrapper.vm.root.totalCount).toEqual(0)
+    expect(wrapper.vm.root.total).toEqual(0)
   })
 
   it('should display 3 items for the content-type facet', async () => {
@@ -55,7 +55,7 @@ describe('FacetText.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.vm.root.totalCount).toEqual(5)
+    expect(wrapper.vm.root.total).toEqual(5)
   })
 
   it('should display 4 items for the content-type facet', async () => {
@@ -70,7 +70,7 @@ describe('FacetText.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
-    expect(wrapper.vm.root.totalCount).toEqual(7)
+    expect(wrapper.vm.root.total).toEqual(7)
   })
 
   it('should display X facet items after applying the relative search', async () => {
@@ -84,7 +84,7 @@ describe('FacetText.vue', () => {
     store.commit('search/query', 'SHOW')
     await wrapper.vm.root.aggregate()
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
-    expect(wrapper.vm.root.totalCount).toEqual(6)
+    expect(wrapper.vm.root.total).toEqual(6)
 
     store.commit('search/setGlobalSearch', false)
     await wrapper.vm.root.aggregate()
@@ -103,7 +103,7 @@ describe('FacetText.vue', () => {
     store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate()
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.vm.root.totalCount).toEqual(2)
+    expect(wrapper.vm.root.total).toEqual(2)
 
     store.commit('search/setGlobalSearch', false)
     await wrapper.vm.root.aggregate()
@@ -125,7 +125,7 @@ describe('FacetText.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet--reversed .facet__items__item .facet__items__item__count').at(0).text()).toEqual('2')
-    expect(wrapper.vm.root.totalCount).toEqual(3)
+    expect(wrapper.vm.root.total).toEqual(3)
   })
 
   it('should not display the more button', async () => {
@@ -139,7 +139,7 @@ describe('FacetText.vue', () => {
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(5)
     expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(0)
-    expect(wrapper.vm.root.totalCount).toEqual(5)
+    expect(wrapper.vm.root.total).toEqual(5)
   })
 
   it('should display the more button and its font awesome icon', async () => {
@@ -154,7 +154,7 @@ describe('FacetText.vue', () => {
 
     expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
     expect(wrapper.find('.facet__items__display > span').text()).toEqual('Show more')
-    expect(wrapper.vm.root.totalCount).toEqual(6)
+    expect(wrapper.vm.root.total).toEqual(6)
   })
 
   it('should display all the facet values and the more button', async () => {
@@ -170,10 +170,10 @@ describe('FacetText.vue', () => {
     expect(wrapper.vm.root.items).toHaveLength(6)
     expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
     expect(wrapper.find('.facet__items__display > span').text()).toEqual('Show more')
-    expect(wrapper.vm.root.totalCount).toEqual(6)
+    expect(wrapper.vm.root.total).toEqual(6)
   })
 
-  it('should filter facet values 1/3 and display the more button', async () => {
+  it('should filter facet values and display the more button', async () => {
     await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/type_01')).commit()
     await letData(es).have(new IndexedDocument('index_02.txt').withContentType('text/type_02')).commit()
     await letData(es).have(new IndexedDocument('index_03.txt').withContentType('text/type_03')).commit()
@@ -188,10 +188,10 @@ describe('FacetText.vue', () => {
     expect(wrapper.vm.root.items).toHaveLength(6)
     expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
     expect(wrapper.find('.facet__items__display > span').text()).toEqual('Show more')
-    expect(wrapper.vm.root.totalCount).toEqual(6)
+    expect(wrapper.vm.root.total).toEqual(6)
   })
 
-  it('should filter facet values 2/3 but no more button', async () => {
+  it('should filter facet values but no more button', async () => {
     await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/type_01')).commit()
     await letData(es).have(new IndexedDocument('index_02.txt').withContentType('text/type_02')).commit()
     await letData(es).have(new IndexedDocument('index_03.txt').withContentType('text/type_02')).commit()
@@ -205,10 +205,10 @@ describe('FacetText.vue', () => {
 
     expect(wrapper.vm.root.items).toHaveLength(1)
     expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(0)
-    expect(wrapper.vm.root.totalCount).toEqual(3)
+    expect(wrapper.vm.root.total).toEqual(6)
   })
 
-  it('should filter facet values 3/3', async () => {
+  it('should filter facet values', async () => {
     await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/type_01')).commit()
     await letData(es).have(new IndexedDocument('index_02.txt').withContentType('text/type_02')).commit()
     await letData(es).have(new IndexedDocument('index_03.txt').withContentType('text/type_02')).commit()
@@ -221,7 +221,7 @@ describe('FacetText.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.vm.root.items).toHaveLength(0)
-    expect(wrapper.vm.root.totalCount).toEqual(0)
+    expect(wrapper.vm.root.total).toEqual(6)
   })
 
   it('should filter facet values - Uppercase situation 2/2', async () => {
@@ -233,7 +233,7 @@ describe('FacetText.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.vm.root.items).toHaveLength(2)
-    expect(wrapper.vm.root.totalCount).toEqual(2)
+    expect(wrapper.vm.root.total).toEqual(2)
   })
 
   it('should filter facet values on facet item', async () => {
@@ -247,7 +247,7 @@ describe('FacetText.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.vm.root.items).toHaveLength(2)
-    expect(wrapper.vm.root.totalCount).toEqual(2)
+    expect(wrapper.vm.root.total).toEqual(4)
   })
 
   it('should filter facet values on facet label', async () => {
@@ -264,7 +264,7 @@ describe('FacetText.vue', () => {
 
     expect(wrapper.vm.root.items).toHaveLength(1)
     expect(wrapper.vm.root.items[0].doc_count).toEqual(2)
-    expect(wrapper.vm.root.totalCount).toEqual(2)
+    expect(wrapper.vm.root.total).toEqual(3)
   })
 
   it('should filter facet values on facet label in capital letters', async () => {
@@ -281,7 +281,7 @@ describe('FacetText.vue', () => {
 
     expect(wrapper.vm.root.items).toHaveLength(1)
     expect(wrapper.vm.root.items[0].doc_count).toEqual(2)
-    expect(wrapper.vm.root.totalCount).toEqual(2)
+    expect(wrapper.vm.root.total).toEqual(3)
   })
 
   it('should fire 2 events on click on facet item', async () => {
@@ -312,13 +312,13 @@ describe('FacetText.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
-    expect(wrapper.vm.root.totalCount).toEqual(2)
+    expect(wrapper.vm.root.total).toEqual(2)
 
     store.commit('search/index', process.env.VUE_APP_ES_ANOTHER_INDEX)
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
-    expect(wrapper.vm.root.totalCount).toEqual(1)
+    expect(wrapper.vm.root.total).toEqual(1)
   })
 
   it('should display an "All" item on top of others items, and this item should be active by default', async () => {
@@ -331,7 +331,7 @@ describe('FacetText.vue', () => {
     expect(wrapper.find('.facet__items__all .facet__items__item__label').text()).toEqual('All')
     expect(wrapper.findAll('.facet__items__all .facet__items__item__count').at(0).text()).toEqual('2')
     expect(wrapper.find('.facet__items__all .custom-control-input').element.checked).toBeTruthy()
-    expect(wrapper.vm.root.totalCount).toEqual(2)
+    expect(wrapper.vm.root.total).toEqual(2)
   })
 
   it('should trigger a click on "All" item, fire 2 events, unselect others items and refresh the route', async () => {

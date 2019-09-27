@@ -35,6 +35,7 @@ export default {
       type: Array,
       default: null
     },
+    asyncTotal: 0,
     asyncTotalCount: 0
   },
   data () {
@@ -42,6 +43,7 @@ export default {
       isReady: false,
       offset: 0,
       pageSize: 8,
+      total: 0,
       totalCount: 0,
       selected: [],
       isAllSelected: true
