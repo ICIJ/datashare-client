@@ -345,11 +345,12 @@
     "star_button": "Mettre en favoris",
     "unstar_button": "Enlever des favoris",
     "starred": "Documents have been starred.",
+    "starring_error": "Unable to star the document.",
     "unstarred": "Documents have been unstarred.",
     "tagged": "Documents have been tagged.",
     "star_file": "Mettre en favoris le document",
     "not_found": "Document non trouvé",
-    "not_available": "La prévisualisation n'est disponible que pour certains formats.",
+    "not_available": "Preview is available for some formats only.",
     "named_entities_not_found": "Pas d'entités nommées trouvées",
     "named_entities_not_searched": "<p>Document non analysé.</p><p class=\"text-muted small\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> et lancez une nouvelle tâche \"@:indexing.find_named_entities\".</p>",
     "generating_preview": "Génération d'une prévisualisation...",
@@ -469,7 +470,8 @@
     "date": "Date",
     "nbResults": "Nombre de résultats",
     "query": "pas de recherches | 1 recherche | {count} recherches",
-    "delete": "Delete batch search"
+    "delete": "Delete batch search",
+    "deleted": "The batch search have been deleted."
   },
   "batchSearchResults": {
     "index": "Index",
