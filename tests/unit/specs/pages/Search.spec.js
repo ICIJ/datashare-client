@@ -1,14 +1,10 @@
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
-import VueProgressBar from 'vue-progressbar'
-import VueI18n from 'vue-i18n'
 import Vuex from 'vuex'
-
+import { App } from '@/main'
 import Search from '@/pages/Search'
-import messages from '@/lang/en'
-import router from '@/router'
 import { actions, getters, state, mutations } from '@/store/modules/search'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
+const { i18n, localVue, router } = App.init(createLocalVue()).useAll()
 
 window.matchMedia = jest.fn().mockImplementation(query => {
   return {
@@ -19,15 +15,6 @@ window.matchMedia = jest.fn().mockImplementation(query => {
     removeListener: jest.fn()
   }
 })
-
-const localVue = createLocalVue()
-localVue.use(BootstrapVue)
-localVue.use(Murmur)
-localVue.use(VueI18n)
-localVue.use(VueProgressBar)
-localVue.use(Vuex)
-
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('Search.vue', () => {
   let wrapper, localStore

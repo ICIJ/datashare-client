@@ -1,12 +1,13 @@
 import BatchSearchResults from '@/pages/BatchSearchResults'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import store from '@/store'
-import BootstrapVue from 'bootstrap-vue'
-import VueProgressBar from 'vue-progressbar'
-import Murmur from '@icij/murmur'
 import VueRouter from 'vue-router'
+import Murmur from '@icij/murmur'
+
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { App } from '@/main'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -61,12 +62,6 @@ jest.mock('@/api/DatashareClient', () => {
     }
   })
 })
-
-const localVue = createLocalVue()
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-localVue.use(VueRouter)
-localVue.use(VueProgressBar)
 
 const router = new VueRouter({ routes: [
   {

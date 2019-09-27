@@ -1,10 +1,6 @@
+import { App } from '@/main'
 import SearchResultsTable from '@/components/SearchResultsTable'
-import store from '@/store'
-import router from '@/router'
-import VueI18n from 'vue-i18n'
-import messages from '@/lang/en'
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
+
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
@@ -22,11 +18,7 @@ window.matchMedia = jest.fn().mockImplementation(query => {
   }
 })
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(BootstrapVue)
-localVue.use(Murmur)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { i18n, localVue, store, router } = App.init(createLocalVue()).useAll()
 
 describe('SearchResultsTable.vue', () => {
   let wrapper
@@ -60,13 +52,13 @@ describe('SearchResultsTable.vue', () => {
   it('should set each selected document as starred', async () => {
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk())
-    wrapper = mount(SearchResultsTable, { localVue, store, i18n, router })
+    wrapper = mount(SearchResultsTable, { localVue, store, i18n, router, mocks: { $t: msg => msg } })
     wrapper.vm.selected = [{ id: 'doc_1' }, { id: 'doc_2' }]
 
     wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 
+    const calledUrl = DatashareClient.getFullUrl(`/api/document/project/${encodeURIComponent(process.env.VUE_APP_ES_INDEX)}/group/star`)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${encodeURIComponent(process.env.VUE_APP_ES_INDEX)}/group/star`),
-      { method: 'POST', body: JSON.stringify(['doc_1', 'doc_2']) })
+    expect(datashare.fetch).toBeCalledWith(calledUrl, { method: 'POST', body: JSON.stringify(['doc_1', 'doc_2']) })
   })
 })

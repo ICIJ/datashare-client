@@ -345,6 +345,7 @@
     "star_button": "Star",
     "unstar_button": "Unstar",
     "starred": "Documents have been starred.",
+    "starring_error": "Unable to star the document.",
     "unstarred": "Documents have been unstarred.",
     "tagged": "Documents have been tagged.",
     "star_file": "Star document",

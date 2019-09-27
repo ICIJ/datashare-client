@@ -1,15 +1,11 @@
-import Vuex from 'vuex'
-import VueI18n from 'vue-i18n'
-import Murmur from '@icij/murmur'
-import BootstrapVue from 'bootstrap-vue'
+import { App } from '@/main'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Indexing from '@/pages/Indexing'
-import messages from '@/lang/en'
-import router from '@/router'
-import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
 import { jsonOk } from 'tests/unit/tests_utils'
+
+const { i18n, localVue, store, router } = App.init(createLocalVue()).useAll()
 
 window.matchMedia = jest.fn().mockImplementation(query => {
   return {
@@ -20,13 +16,6 @@ window.matchMedia = jest.fn().mockImplementation(query => {
     removeListener: jest.fn()
   }
 })
-
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('Indexing.vue', () => {
   let wrapper

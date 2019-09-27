@@ -17,50 +17,110 @@ import mode from '@/modes'
 import '@/utils/font-awesome'
 import '@/main.scss'
 
-/* eslint-disable no-new */
-async function createApp (LocalVue = Vue) {
-  LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
-  LocalVue.use(BootstrapVue)
-  LocalVue.use(Murmur)
-  LocalVue.use(VueI18n)
-  LocalVue.use(VueProgressBar, { color: settings.progressBar.color })
-  LocalVue.use(VueShortkey, { prevent: settings.hotKeyPrevented })
-  LocalVue.use(VueScrollTo)
-  // Setup VCalendar manually since Webpack is not compatible with
-  // dynamic chunk import with third party modules.
-  // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
-  LocalVue.use(VCalendar, { componentPrefix: 'vc' })
-
-  const i18n = new VueI18n({
-    locale: settings.defaultLocale,
-    fallbackLocale: settings.defaultLocale,
-    messages: { [settings.defaultLocale]: messages }
-  })
-  const ds = new DatashareClient()
-  // Get the config object
-  const config = await ds.getConfig()
-  // Murmur exposes a config attribute which share a Config object
-  // with the current vue instance.
-  Murmur.config.merge(mode(config.mode))
-  // The backend can yet override some configuration
-  Murmur.config.merge(config)
-  // Override Murmur default value for content-placeholder
-  Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
-  // Select the first user's index as default index
-  if (config.userIndices !== undefined) {
-    store.commit('search/index', config.userIndices[0])
-    store.commit('batchSearch/index', config.userIndices[0])
+export class App {
+  constructor (LocalVue = Vue) {
+    this.LocalVue = LocalVue
+    // Disable production tip when not in production
+    this.LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
+    // Instanciate a single datashare client
+    this.datashareClient = new DatashareClient()
+    return this
   }
-  // Render function returns a router-view component by default
-  const render = h => h('router-view')
-  // Return an instance of the Vue constructor we receive.
-  // We do not necessarily use the default Vue so we can use this function
-  // from our unit tests
-  return new LocalVue({ i18n, router, store, render }).$mount('#app')
+  use (Plugin, options) {
+    this.LocalVue.use(Plugin, options)
+    return this
+  }
+  useAll () {
+    this.useI18n()
+    this.useBootstrapVue()
+    this.useCommons()
+    return this
+  }
+  useI18n () {
+    this.use(VueI18n)
+    return this
+  }
+  useBootstrapVue () {
+    this.use(BootstrapVue)
+    return this
+  }
+  useCommons () {
+    // Common plugins
+    this.use(Murmur)
+    this.use(VueProgressBar, { color: settings.progressBar.color })
+    this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
+    this.use(VueScrollTo)
+    // Setup VCalendar manually since Webpack is not compatible with
+    // dynamic chunk import with third party modules.
+    // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
+    this.use(VCalendar, { componentPrefix: 'vc' })
+  }
+  async configure () {
+    // Get the config object
+    const config = await this.datashareClient.getConfig()
+    // Murmur exposes a config attribute which share a Config object
+    // with the current vue instance.
+    Murmur.config.merge(mode(config.mode))
+    // The backend can yet override some configuration
+    Murmur.config.merge(config)
+    // Override Murmur default value for content-placeholder
+    Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
+    // Select the first user's index as default index
+    if (config.userIndices !== undefined) {
+      store.commit('search/index', config.userIndices[0])
+      store.commit('batchSearch/index', config.userIndices[0])
+    }
+    return this
+  }
+  mount (selector) {
+    // Render function returns a router-view component by default
+    const render = h => h('router-view')
+    // Return an instance of the Vue constructor we receive.
+    // We do not necessarily use the default Vue so we can use this function
+    // from our unit tests
+    return new this.LocalVue({
+      render,
+      i18n: this.i18n,
+      router: this.router,
+      store: this.store
+    }).$mount(selector)
+  }
+  get i18n () {
+    // Configure Languages
+    return new VueI18n({
+      locale: settings.defaultLocale,
+      fallbackLocale: settings.defaultLocale,
+      messages: {
+        [settings.defaultLocale]: messages
+      }
+    })
+  }
+  get app () {
+    return this
+  }
+  get localVue () {
+    return this.LocalVue
+  }
+  get router () {
+    return router
+  }
+  get store () {
+    return store
+  }
+  static init (...options) {
+    return new App(...options)
+  }
+}
+
+/* eslint-disable no-new */
+export async function createApp (LocalVue) {
+  const app = new App(LocalVue)
+  // Configure the app with server conf
+  await app.configure()
+  // Create the app with all available plugins
+  return app.useAll().mount('#app')
 }
 
 if (process.env.NODE_ENV !== 'test') {
   createApp()
 }
-
-export { createApp }
