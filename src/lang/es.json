@@ -344,9 +344,13 @@
     "download_file": "Descargar el archivo fuente",
     "star_button": "Marcar como favorito",
     "unstar_button": "Eliminar de favoritos",
+    "starred": "Documents have been starred.",
+    "starring_error": "Unable to star the document.",
+    "unstarred": "Documents have been unstarred.",
+    "tagged": "Documents have been tagged.",
     "star_file": "Marcar como favorito",
     "not_found": "Documento no encontrado",
-    "not_available": "La vista previa está disponible solo para algunos formatos.",
+    "not_available": "Preview is available for some formats only.",
     "named_entities_not_found": "No se han encontrado entidades identificadas",
     "named_entities_not_searched": "<p>Documento no analizado.</p><p class=\"text-muted small\">Para buscar entidades identificadas, vaya a <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> y comience una nueva tarea \"@:indexing.find_named_entities\".</p>",
     "generating_preview": "Generando visualización previa...",
@@ -375,7 +379,8 @@
     "parent": "Archivo de base",
     "in_metadata": "en los metadatos",
     "in_tags": "in tags",
-    "search_children_document": "See children documents"
+    "search_children_document": "See children documents",
+    "tag_confirmation": "Are you sure you want to delete this tag?"
   },
   "email": {
     "detail": "Más detalles",
@@ -391,6 +396,7 @@
     "empty": "Aún no has iniciado tareas.",
     "extract_text": "Extraer texto",
     "extracting_header": "¿Deseas extraer también el texto de imágenes y archivos PDF?",
+    "run_batch_search": "Run Batch Searches",
     "extracting_subheader": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
     "find_named_entities": "Encuentra personas, organizaciones y lugares",
     "find_named_entities_header": "¿Qué tecnología deseas aplicar para encontrar personas, organizaciones y lugares?",
@@ -452,7 +458,9 @@
       "fileLabel": "Archivo CSV:",
       "fileDescription": "Sólo se acepta el formato CSV. La primera columna debe contener los términos a buscar.",
       "filePlaceholder": "Escoge un archivo...",
-      "submit": "Agregar"
+      "submit": "Agregar",
+      "success": "Your batch search is now running.",
+      "failure": "Something went wrong, unable to start your batch search."
     },
     "projectName": "Nombre del proyecto",
     "searchName": "Buscar nombre",
@@ -461,7 +469,9 @@
     "state": "Estado",
     "date": "Fecha",
     "nbResults": "Número de resultados",
-    "query": "no hay consultas | 1 consulta | {count} consultas"
+    "query": "no hay consultas | 1 consulta | {count} consultas",
+    "delete": "Delete batch search",
+    "deleted": "The batch search have been deleted."
   },
   "batchSearchResults": {
     "index": "Índice",

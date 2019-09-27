@@ -344,9 +344,13 @@
     "download_file": "Télécharger le fichier source",
     "star_button": "Mettre en favoris",
     "unstar_button": "Enlever des favoris",
+    "starred": "Documents have been starred.",
+    "starring_error": "Unable to star the document.",
+    "unstarred": "Documents have been unstarred.",
+    "tagged": "Documents have been tagged.",
     "star_file": "Mettre en favoris le document",
     "not_found": "Document non trouvé",
-    "not_available": "La prévisualisation n'est disponible que pour certains formats.",
+    "not_available": "Preview is available for some formats only.",
     "named_entities_not_found": "Pas d'entités nommées trouvées",
     "named_entities_not_searched": "<p>Document non analysé.</p><p class=\"text-muted small\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> et lancez une nouvelle tâche \"@:indexing.find_named_entities\".</p>",
     "generating_preview": "Génération d'une prévisualisation...",
@@ -375,7 +379,8 @@
     "parent": "Parent",
     "in_metadata": "dans les métadonnées",
     "in_tags": "in tags",
-    "search_children_document": "See children documents"
+    "search_children_document": "See children documents",
+    "tag_confirmation": "Are you sure you want to delete this tag?"
   },
   "email": {
     "detail": "Voir les détails",
@@ -391,6 +396,7 @@
     "empty": "Vous n'avez pas encore démarré de tâches.",
     "extract_text": "Extraire le texte",
     "extracting_header": "Voulez-vous aussi extraire le texte des images et des PDFs ?",
+    "run_batch_search": "Run Batch Searches",
     "extracting_subheader": "Si oui, Datashare exécutera l'OCR (la reconnaissance de caractères optiques - Optical Character Recognition). Cela peut prendre jusqu'à 10 fois plus de temps.",
     "find_named_entities": "Trouver les personnes, organisations et lieux",
     "find_named_entities_header": "Quelle technologie voulez-vous utiliser pour trouver les entités nommées ?",
@@ -452,7 +458,9 @@
       "fileLabel": "Fichier CSV :",
       "fileDescription": "Seuls les formats CSV sont acceptés. La première colonne doit contenir les termes à chercher.",
       "filePlaceholder": "Choisissez un fichier...",
-      "submit": "Ajouter"
+      "submit": "Ajouter",
+      "success": "Your batch search is now running.",
+      "failure": "Something went wrong, unable to start your batch search."
     },
     "projectName": "Nom du projet",
     "searchName": "Nom de la recherche",
@@ -461,7 +469,9 @@
     "state": "Status",
     "date": "Date",
     "nbResults": "Nombre de résultats",
-    "query": "pas de recherches | 1 recherche | {count} recherches"
+    "query": "pas de recherches | 1 recherche | {count} recherches",
+    "delete": "Delete batch search",
+    "deleted": "The batch search have been deleted."
   },
   "batchSearchResults": {
     "index": "Index",
