@@ -51,10 +51,11 @@ export const mutations = {
 }
 
 export const actions = {
-  getBatchSearches ({ commit }) {
-    return datashare.getBatchSearches().then(batchSearches => {
+  async getBatchSearches ({ commit }) {
+    try {
+      const batchSearches = await datashare.getBatchSearches()
       return commit('batchSearches', batchSearches)
-    })
+    } catch (_) {}
   },
   async onSubmit ({ state, commit, dispatch }) {
     try {
@@ -64,8 +65,10 @@ export const actions = {
     } catch (_) {}
   },
   async getBatchSearchResults ({ state, commit }, { batchId, from, size, queries, sort, order }) {
-    const results = await datashare.getBatchSearchResults(batchId, from, size, queries, sort, order)
-    return commit('results', results)
+    try {
+      const results = await datashare.getBatchSearchResults(batchId, from, size, queries, sort, order)
+      return commit('results', results)
+    } catch (_) {}
   },
   async deleteBatchSearch ({ state, dispatch }, { batchId }) {
     try {
@@ -73,8 +76,11 @@ export const actions = {
       remove(state.batchSearches, batchSearch => batchSearch === batchId)
     } catch (_) {}
   },
-  deleteBatchSearches ({ commit }) {
-    return datashare.deleteBatchSearches().then(commit('batchSearches', []))
+  async deleteBatchSearches ({ commit }) {
+    try {
+      await datashare.deleteBatchSearches()
+      return commit('batchSearches', [])
+    } catch (_) {}
   }
 }
 
