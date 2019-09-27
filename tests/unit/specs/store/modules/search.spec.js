@@ -498,6 +498,12 @@ describe('Search store', () => {
 
       expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term:other', negation: false }])
     })
+
+    it('should grab terms between brackets', () => {
+      store.commit('search/query', 'term_01 (term_02 AND -term_03) term_04')
+
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: false }, { field: '', label: 'term_03', negation: true }, { field: '', label: 'term_04', negation: false }])
+    })
   })
 
   describe('retrieveContentQueryTermsInContent', () => {

@@ -133,13 +133,16 @@ export const getters = {
   },
   retrieveQueryTerms (state) {
     let terms = []
-    function getTerm (object, path, start, operator) {
-      const term = get(object, join([path, 'term'], '.'), '')
-      const field = get(object, join([path, 'field'], '.'), '')
-      const prefix = get(object, join([path, 'prefix'], '.'), '')
+    function getTerm (query, path, start, operator) {
+      const term = get(query, join([path, 'term'], '.'), '')
+      const field = get(query, join([path, 'field'], '.'), '')
+      const prefix = get(query, join([path, 'prefix'], '.'), '')
       const negation = ['-', '!'].includes(prefix) || start === 'NOT' || endsWith(operator, 'NOT')
       if (term !== '*' && term !== '' && !includes(map(terms, 'label'), term)) {
         terms = concat(terms, { field: field === '<implicit>' ? '' : field, label: term.replace('\\', ''), negation })
+      }
+      if (term === '' && has(query, join([path, 'left'], '.'))) {
+        retTerms(get(query, 'left'), get(query, 'operator', null))
       }
     }
     function retTerms (query, operator) {
