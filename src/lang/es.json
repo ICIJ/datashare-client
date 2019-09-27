@@ -345,11 +345,12 @@
     "star_button": "Marcar como favorito",
     "unstar_button": "Eliminar de favoritos",
     "starred": "Documents have been starred.",
+    "starring_error": "Unable to star the document.",
     "unstarred": "Documents have been unstarred.",
     "tagged": "Documents have been tagged.",
     "star_file": "Marcar como favorito",
     "not_found": "Documento no encontrado",
-    "not_available": "La vista previa está disponible solo para algunos formatos.",
+    "not_available": "Preview is available for some formats only.",
     "named_entities_not_found": "No se han encontrado entidades identificadas",
     "named_entities_not_searched": "<p>Documento no analizado.</p><p class=\"text-muted small\">Para buscar entidades identificadas, vaya a <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> y comience una nueva tarea \"@:indexing.find_named_entities\".</p>",
     "generating_preview": "Generando visualización previa...",
@@ -469,7 +470,8 @@
     "date": "Fecha",
     "nbResults": "Número de resultados",
     "query": "no hay consultas | 1 consulta | {count} consultas",
-    "delete": "Delete batch search"
+    "delete": "Delete batch search",
+    "deleted": "The batch search have been deleted."
   },
   "batchSearchResults": {
     "index": "Índice",
