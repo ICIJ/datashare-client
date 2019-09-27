@@ -11,16 +11,6 @@ import find from 'lodash/find'
 const { fetch } = fetchPonyfill()
 window.fetch = fetch
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 describe('SearchResultsAppliedFilter.vue', () => {
   let wrapper, appVue
 

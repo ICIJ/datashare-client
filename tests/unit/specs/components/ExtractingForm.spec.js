@@ -9,16 +9,6 @@ import DatashareClient from '@/api/DatashareClient'
 import { createApp } from '@/main'
 import { jsonOk } from 'tests/unit/tests_utils'
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 describe('ExtractingForm.vue', () => {
   let wrapper, appVue, i18n
 

@@ -8,16 +8,6 @@ import store from '@/store'
 import { getOS, getShortkeyOS } from '@/utils/utils'
 import VueShortkey from 'vue-shortkey'
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 jest.mock('@/utils/utils', () => {
   return {
     getOS: jest.fn(),

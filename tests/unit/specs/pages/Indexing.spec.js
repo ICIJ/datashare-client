@@ -7,16 +7,6 @@ import { jsonOk } from 'tests/unit/tests_utils'
 
 const { i18n, localVue, store, router } = App.init(createLocalVue()).useAll()
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 describe('Indexing.vue', () => {
   let wrapper
 

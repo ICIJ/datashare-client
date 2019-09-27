@@ -9,16 +9,6 @@ import messages from '@/lang/en'
 import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)

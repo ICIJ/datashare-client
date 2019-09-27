@@ -6,16 +6,6 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 const { i18n, localVue, router } = App.init(createLocalVue()).useAll()
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 describe('Search.vue', () => {
   let wrapper, localStore
 

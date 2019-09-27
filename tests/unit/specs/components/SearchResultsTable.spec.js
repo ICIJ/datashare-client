@@ -8,16 +8,6 @@ import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
 import DatashareClient from '@/api/DatashareClient'
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 const { i18n, localVue, store, router } = App.init(createLocalVue()).useAll()
 
 describe('SearchResultsTable.vue', () => {

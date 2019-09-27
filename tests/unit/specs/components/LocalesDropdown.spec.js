@@ -9,16 +9,6 @@ import messages from '@/lang/en'
 import router from '@/router'
 import store from '@/store'
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 const localVue = createLocalVue()
 localVue.use(BootstrapVue)
 localVue.use(Murmur)

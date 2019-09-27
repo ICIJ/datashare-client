@@ -6,16 +6,6 @@ import router from '@/router'
 import VueI18n from 'vue-i18n'
 import messages from '@/lang/en'
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)

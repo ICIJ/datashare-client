@@ -3,16 +3,6 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import router from '@/router'
 import { setCookie, removeCookie } from 'tiny-cookie'
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 const localVue = createLocalVue()
 localVue.use(Vuex)
 

@@ -4,16 +4,6 @@ import { createApp } from '@/main'
 import fetchPonyfill from 'fetch-ponyfill'
 import { jsonOk } from 'tests/unit/tests_utils'
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 const { fetch } = fetchPonyfill()
 window.fetch = fetch
 

@@ -33,16 +33,6 @@ jest.mock('@/utils/shortkeys.json', () => {
   }
 })
 
-window.matchMedia = jest.fn().mockImplementation(query => {
-  return {
-    matches: false,
-    media: query,
-    onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn()
-  }
-})
-
 const localVue = createLocalVue()
 localVue.use(Murmur)
 localVue.use(VueShortkey)
