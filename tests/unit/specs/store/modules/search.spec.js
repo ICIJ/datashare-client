@@ -615,6 +615,13 @@ describe('Search store', () => {
 
       expect(store.state.search.query).toEqual('term_02')
     })
+
+    it('should delete term from a query with parenthesis', async () => {
+      store.commit('search/query', 'term_01 (term_02 AND term_03) term_04')
+      await store.dispatch('search/deleteQueryTerm', 'term_02')
+
+      expect(store.state.search.query).toEqual('term_01 term_03 term_04')
+    })
   })
 
   describe('starredDocuments', () => {

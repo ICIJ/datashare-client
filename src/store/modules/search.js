@@ -423,10 +423,12 @@ export const actions = {
     function deleteQueryTermFromSimpleQuery (query) {
       if (get(query, 'left.term', '') === term) query = omit(query, 'left')
       if (get(query, 'right.term', '') === term) query = omit(query, 'right')
+      if (has(query, 'left.left')) query.left = deleteQueryTermFromSimpleQuery(get(query, 'left', null))
       if (has(query, 'right.left')) query.right = deleteQueryTermFromSimpleQuery(get(query, 'right', null))
       if (has(query, 'right.right') && !has(query, 'right.left') && get(query, 'operator', '').includes('NOT')) query.operator = '<implicit>'
       if (has(query, 'start') && !has(query, 'left')) query = omit(query, 'start')
       if (has(query, 'operator') && (!has(query, 'left') || !has(query, 'right'))) query = omit(query, 'operator')
+      if (has(query, 'parenthesized') && (!has(query, 'left') || !has(query, 'right'))) query = omit(query, 'parenthesized')
       return query
     }
     const query = deleteQueryTermFromSimpleQuery(lucene.parse(state.query))
