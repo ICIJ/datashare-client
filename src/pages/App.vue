@@ -91,6 +91,7 @@ export default {
         position: sticky;
         top: 0;
         height: 100vh;
+        max-height: 100vh;
         background: $aggregations-panel-bg;
         width: $app-context-sidebar-width;
         max-width: $app-context-sidebar-width;
