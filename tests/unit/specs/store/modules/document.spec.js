@@ -128,11 +128,10 @@ describe('Document store', () => {
     spy.mockClear()
     datashare.fetch.mockClear()
 
-    await store.dispatch('document/untag', { documents: [{ id: 'doc_01' }], tag: 'tag_01' })
+    await store.dispatch('document/untag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
 
     expect(datashare.fetch).toHaveBeenCalledTimes(2)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/untag`),
       { method: 'POST', body: JSON.stringify({ docIds: ['doc_01'], tags: ['tag_01'] }) })
-    expect(esClient.getEsDoc).toHaveBeenCalledTimes(1)
   })
 })
