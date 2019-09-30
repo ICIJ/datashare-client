@@ -45,7 +45,7 @@ const router = new VueRouter({
             // This allow to restore the search's state from localStorage
             // even if we are loading this route from a children (where no
             // query parameters are given).
-            if (to.query.q) {
+            if (to.query.index) {
               next({ name: 'search', query: to.query })
             }
             next()
