@@ -14,7 +14,7 @@ localVue.use(Murmur)
 localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages }, silentTranslationWarn: true })
 
-describe('DocumentTabNamedEntities.vue', () => {
+describe('DocumentTabNamedEntities', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   const id = 'document'
@@ -63,7 +63,6 @@ describe('DocumentTabNamedEntities.vue', () => {
   })
 
   it('should refresh the named entities search on custom event emitted', async () => {
-    const id = 'doc_01.txt'
     let indexBuilder = await letData(es).have(new IndexedDocument(id)
       .withPipeline('CORENLP')
       .withNer('mention_01', 1, 'CATEGORY_01')

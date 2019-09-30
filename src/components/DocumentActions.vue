@@ -1,9 +1,9 @@
 <template>
   <div class="document-actions" :class="{ 'btn-group-vertical': vertical, 'btn-group': !vertical }">
-    <a class="document-actions__star btn btn-link btn-sm" :class="{ starred: isStarred(document.id) }" href :title="$t('document.star_file')" @click="toggleStarDocument(document.id)" v-b-tooltip>
+    <button class="document-actions__star btn btn-link btn-sm" :class="{ starred: isStarred(document.id) }" href :title="$t('document.star_file')" @click="toggleStarDocument(document.id)" v-b-tooltip>
       <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fa-fw />
       <span class="sr-only">{{ $t('document.star_button') }}</span>
-    </a>
+    </button>
     <a class="document-actions__download btn btn-link btn-sm" :href="document.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip>
       <fa icon="download" fa-fw />
       <span class="sr-only">{{ $t('document.download_button') }}</span>
@@ -21,12 +21,8 @@ export default {
     RouterLinkPopup
   },
   props: {
-    vertical: {
-      type: Boolean
-    },
-    document: {
-      type: Object
-    }
+    vertical: Boolean,
+    document: Object
   },
   computed: {
     ...mapState('search', ['starredDocuments'])
