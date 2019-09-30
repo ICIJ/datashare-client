@@ -64,6 +64,9 @@ export class DatashareClient {
   unstarDocuments (project, documents) {
     return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/unstar`, { method: 'POST', body: JSON.stringify(documents) })
   }
+  getTags (project, documentId) {
+    return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/tag/${documentId}`)
+  }
   tagDocument (project, documentId, routingId, tags) {
     return this.sendAction(`/api/document/project/tag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
   }

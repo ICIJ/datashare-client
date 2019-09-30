@@ -1,24 +1,24 @@
 <script>
+import bodybuilder from 'bodybuilder'
+import esClient from '@/api/esClient'
+import settings from '@/utils/settings'
 import castArray from 'lodash/castArray'
 import delay from 'lodash/delay'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import throttle from 'lodash/throttle'
-import bodybuilder from 'bodybuilder'
-import esClient from '@/api/esClient'
-import settings from '@/utils/settings'
 
 export default {
   name: 'DocumentTagsForm',
   props: {
     document: [Object, Array],
+    tags: Array,
     displayTags: Boolean
   },
   data () {
     return {
-      a: null,
       tag: '',
-      tags: [],
+      existingTags: [],
       updatingTags: false
     }
   },
@@ -34,24 +34,22 @@ export default {
       const body = bodybuilder().size(0).aggregation('terms', 'tags', { include }).build()
       const response = await esClient.search({ index: this.document.index, body })
       const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
-      this.tags = map(buckets, 'key')
+      this.$set(this, 'existingTags', map(buckets, 'key'))
     }, 200),
     async addTag () {
-      this.updatingTags = true
+      this.$set(this, 'updatingTags', true)
       await this.$store.dispatch('document/tag', { documents: this.documents, tag: this.tag })
-      this.tag = ''
-      this.tags = []
-      this.updatingTags = false
+      this.$set(this, 'tag', '')
+      this.$set(this, 'existingTags', [])
+      this.$set(this, 'updatingTags', false)
       delay(facetName => this.$root.$emit('facet::refresh', facetName), settings.waitForEsAnswer, 'tags')
       // Feedback only when we are not display tags
-      if (!this.displayTags) {
-        this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
-      }
+      if (!this.displayTags) this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
     },
     async deleteTag (tag) {
-      this.updatingTags = true
+      this.$set(this, 'updatingTags', true)
       await this.$store.dispatch('document/untag', { documents: this.documents, tag })
-      this.updatingTags = false
+      this.$set(this, 'updatingTags', false)
       delay(facetName => this.$root.$emit('facet::refresh', facetName), settings.waitForEsAnswer, 'tags')
     }
   }
@@ -68,14 +66,14 @@ export default {
           </b-input-group-text>
           <b-form-input id="new-tag" v-model="tag" @input="searchTags" autofocus required :placeholder="$t('document.tags_new')" :disabled="updatingTags" autocomplete="off" />
         </b-input-group>
-        <selectable-dropdown :items="tags" @input="tag = $event" @click.native="addTag" :hide="!tags.length"></selectable-dropdown>
+        <selectable-dropdown :items="existingTags" @input="tag = $event" @click.native="addTag" :hide="!existingTags.length"></selectable-dropdown>
       </b-form>
     </div>
     <div class="col-md-8" v-if="displayTags">
-      <ul class="document-tags-form list-unstyled mb-0 mt-1">
-        <li class="document-tags-form__tag badge badge-light border badge-pill mr-2 mb-1" v-for="tag in document.tags" :key="tag">
-          {{ tag }}
-          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tag_confirmation')" class="document-tags-form__tag__delete btn btn-sm">
+      <ul class="document-tags-form__tags list-unstyled mb-0 mt-1">
+        <li class="document-tags-form__tags__tag badge badge-light border badge-pill mr-2 mb-1" v-for="tag in tags" :key="tag.label">
+          {{ tag.label }}
+          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tag_confirmation')" class="document-tags-form__tags__tag__delete btn btn-sm">
             <fa icon="times" class="fa-fw" />
           </confirm-button>
         </li>
@@ -85,7 +83,7 @@ export default {
 </template>
 
 <style lang="scss">
-  .document-tags-form  {
+  .document-tags-form__tags  {
     font-size: 1rem;
 
     &__add {

@@ -81,6 +81,18 @@ describe('Document store', () => {
     expect(store.state.document.namedEntities[1].raw._routing).toEqual(id)
   })
 
+  it('should get the document\'s tags', async () => {
+    const tags = ['tag_01', 'tag_02']
+    datashare.fetch.mockReturnValue(jsonOk(tags))
+    await letData(es).have(new IndexedDocument(id).withContent('content').withTags(tags))
+    store.commit('document/idAndRouting', { id })
+
+    await store.dispatch('document/getTags')
+
+    expect(store.state.document.tags).toEqual(tags)
+    datashare.fetch.mockClear()
+  })
+
   it('should get the "showNamedEntities" status', () => {
     expect(store.state.document.showNamedEntities).toBeTruthy()
   })

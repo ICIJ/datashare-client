@@ -22,7 +22,7 @@ export class App {
     this.LocalVue = LocalVue
     // Disable production tip when not in production
     this.LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
-    // Instanciate a single datashare client
+    // Instantiate a single datashare client
     this.datashareClient = new DatashareClient()
     return this
   }

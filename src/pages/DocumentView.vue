@@ -65,6 +65,7 @@ export default {
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
       await this.$store.dispatch('document/getNamedEntities')
+      await this.$store.dispatch('document/getTags')
       this.isReady = true
       if (this.document) {
         await this.$store.commit('userHistory/addDocument', this.document)
@@ -111,7 +112,8 @@ export default {
     ...mapState('document', {
       document: 'doc',
       namedEntities: 'namedEntities',
-      parentDocument: 'parentDocument'
+      parentDocument: 'parentDocument',
+      tags: 'tags'
     }),
     visibleTabs () {
       return filter(this.tabs, t => !t.hidden)
@@ -135,7 +137,8 @@ export default {
           icon: 'info-circle',
           props: {
             document: this.document,
-            parentDocument: this.parentDocument
+            parentDocument: this.parentDocument,
+            tags: this.tags
           }
         },
         {

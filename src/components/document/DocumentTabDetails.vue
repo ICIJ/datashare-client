@@ -7,7 +7,7 @@
       <p class="text-muted">
         {{ $t('document.tags_visibility') }}
       </p>
-      <document-tags-form :document="document" :displayTags="true" />
+      <document-tags-form :document="document" :tags="tags" :displayTags="true" />
     </div>
     <div class="document__content__details">
       <h5>
@@ -77,7 +77,11 @@ import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/
 
 export default {
   name: 'DocumentTabDetails',
-  props: ['document', 'parentDocument'],
+  props: {
+    document: [Object, Array],
+    parentDocument: Object,
+    tags: Array
+  },
   components: {
     DocumentTagsForm
   },

@@ -12,7 +12,8 @@ export function initialState () {
     doc: null,
     namedEntities: [],
     parentDocument: null,
-    showNamedEntities: true
+    showNamedEntities: true,
+    tags: []
   }
 }
 
@@ -27,17 +28,17 @@ export const mutations = {
     state.idAndRouting = idAndRouting
     state.doc = null
     state.parentDocument = null
+    state.tags = []
   },
   doc (state, raw) {
     if (raw !== null) {
       state.doc = Response.instantiate(raw)
-      state.doc.tags.sort()
     } else {
       state.doc = null
     }
   },
   tags (state, tags) {
-    state.doc.tags = tags
+    state.tags = tags
   },
   namedEntities (state, raw) {
     state.namedEntities = new Response(raw).hits
@@ -97,17 +98,22 @@ export const actions = {
     }
     return state.namedEntities
   },
+  async getTags ({ state, rootState, commit }) {
+    try {
+      const tags = await datashare.getTags(rootState.search.index, state.idAndRouting.id)
+      commit('tags', tags)
+    } catch (_) {
+      commit('tags')
+    }
+    return state.tags
+  },
   async tag ({ commit, rootState, state, dispatch }, { documents, tag }) {
     await datashare.tagDocuments(rootState.search.index, map(documents, 'id'), compact(tag.split(' ')))
-    if (documents.length === 1) {
-      await dispatch('refresh')
-    }
+    if (documents.length === 1) await dispatch('getTags')
   },
   async untag ({ commit, rootState, state, dispatch }, { documents, tag }) {
-    await datashare.untagDocuments(rootState.search.index, map(documents, 'id'), compact(tag.split(' ')))
-    if (documents.length === 1) {
-      await dispatch('refresh')
-    }
+    await datashare.untagDocuments(rootState.search.index, map(documents, 'id'), [tag.label])
+    if (documents.length === 1) await dispatch('getTags')
   }
 }
 
