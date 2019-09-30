@@ -6,7 +6,7 @@
           {{ labelToHuman('all') }}
         </span>
         <span class="facet__items__item__count badge badge-pill badge-light float-right mt-1">
-          {{ countAll }}
+          {{ $n(countAll) }}
         </span>
       </span>
     </template>
