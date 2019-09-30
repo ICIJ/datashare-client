@@ -4,7 +4,7 @@
       <app-sidebar />
     </div>
     <div class="app__main flex-grow-1 d-flex">
-      <vue-perfect-scrollbar class="app__main__context-sidebar" :class="{ 'app__main__context-sidebar--reduced': isContextSidebarReduced }">
+      <vue-perfect-scrollbar class="app__main__context-sidebar" v-if="!isContextSidebarReduced">
         <transition name="slide-left">
           <router-view name="sidebar" />
         </transition>
@@ -69,10 +69,11 @@ export default {
     --app-nav-height: #{$app-nav-height};
     --app-sidebar-width: #{$app-sidebar-width};
 
-    background: $app-bg;
     min-height: 100vh;
+    background: $app-bg;
 
     @media (max-width: $app-sidebar-float-breakpoint-width) {
+
       &__main {
         margin-left: $app-sidebar-reduced-width;
       }
@@ -90,16 +91,13 @@ export default {
       & &__context-sidebar {
         position: sticky;
         top: 0;
+        left: 0;
         height: 100vh;
         max-height: 100vh;
         background: $aggregations-panel-bg;
         width: $app-context-sidebar-width;
         max-width: $app-context-sidebar-width;
         min-width: $app-context-sidebar-width;
-
-        &--reduced {
-          display: none;
-        }
 
         /**
          * Disabled
