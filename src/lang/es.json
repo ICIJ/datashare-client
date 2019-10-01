@@ -380,7 +380,9 @@
     "in_metadata": "en los metadatos",
     "in_tags": "in tags",
     "search_children_document": "See children documents",
-    "tag_confirmation": "Are you sure you want to delete this tag?"
+    "tag_confirmation": "Are you sure you want to delete this tag?",
+    "created_by": "Created by",
+    "on": "on"
   },
   "email": {
     "detail": "Más detalles",
