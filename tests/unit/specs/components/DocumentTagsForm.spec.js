@@ -17,7 +17,7 @@ localVue.use(Murmur)
 localVue.use(BootstrapVue)
 
 async function createView (es, tags = [], documentId = 'document') {
-  datashare.fetch.mockReturnValue(jsonOk(map(tags, item => { return { label: item } })))
+  datashare.fetch.mockReturnValue(jsonOk(map(tags, item => { return { label: item, user: { id: 'test-user' } } })))
   await letData(es).have(new IndexedDocument(documentId).withTags(tags)).commit()
   await store.dispatch('document/get', { id: documentId })
   await store.dispatch('document/getTags')
@@ -63,7 +63,13 @@ describe('DocumentTagsForm', () => {
     expect(wrapper.findAll('.document-tags-form__tags__tag__delete')).toHaveLength(2)
   })
 
-  it('should call API endpoint to add a tag and then reload the document from ES', async () => {
+  it('should display a tooltip to a tag', async () => {
+    const wrapper = await createView(es, ['tag_01'])
+
+    expect(wrapper.find('.document-tags-form__tags__tag span').attributes('data-original-title')).toContain('document.created_by test-user document.on')
+  })
+
+  it('should call API endpoint to add a tag and then call another endpoint to reload the tags', async () => {
     const wrapper = await createView(es, ['tag_01'])
 
     datashare.fetch.mockClear()
@@ -100,7 +106,7 @@ describe('DocumentTagsForm', () => {
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02'] }) })
   })
 
-  it('should call API endpoint to remove a tag and then reload the document from ES', async () => {
+  it('should call API endpoint to remove a tag and then call another endpoint to reload the tags', async () => {
     const wrapper = await createView(es, ['tag_01', 'tag_02'])
 
     datashare.fetch.mockClear()

@@ -2,6 +2,7 @@
 import bodybuilder from 'bodybuilder'
 import esClient from '@/api/esClient'
 import settings from '@/utils/settings'
+import moment from 'moment'
 import castArray from 'lodash/castArray'
 import delay from 'lodash/delay'
 import get from 'lodash/get'
@@ -51,6 +52,9 @@ export default {
       await this.$store.dispatch('document/untag', { documents: this.documents, tag })
       this.$set(this, 'updatingTags', false)
       delay(facetName => this.$root.$emit('facet::refresh', facetName), settings.waitForEsAnswer, 'tags')
+    },
+    generateTagTooltip (tag) {
+      return `${this.$t('document.created_by')} ${tag.user.id} ${this.$t('document.on')} ${moment(tag.creationDate).format('LLL')}`
     }
   }
 }
@@ -72,7 +76,7 @@ export default {
     <div class="col-md-8" v-if="displayTags">
       <ul class="document-tags-form__tags list-unstyled mb-0 mt-1">
         <li class="document-tags-form__tags__tag badge badge-light border badge-pill mr-2 mb-1" v-for="tag in tags" :key="tag.label">
-          {{ tag.label }}
+          <span :title="generateTagTooltip(tag)" v-b-tooltip>{{ tag.label }}</span>
           <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tag_confirmation')" class="document-tags-form__tags__tag__delete btn btn-sm">
             <fa icon="times" class="fa-fw" />
           </confirm-button>
