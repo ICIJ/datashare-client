@@ -20,6 +20,7 @@ A reminder of the currently applied filters, as well as your queried terms, are 
 The currently available filters are:
 
 * **Starred**: If you have starred documents, you can easily find them again.
+* **Tags**: If you wrote some tags, you will be able to select and search for them.
 * **File type**: This is the 'Content type' of the file \(Word, PDF, JEPG image, etc.\) as you can read it in a document's 'Tags & Details'.
 * **Languages**: Datashare detects the main language of each document.
 * **People / organizations / locations**: you can selected these named entities and search them.
