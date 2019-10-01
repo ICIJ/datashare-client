@@ -4,6 +4,14 @@ description: Shortcuts help do some actions faster.
 
 # Use keyboard shortcuts
 
+### F**ind these shortcuts in Datashare here:**
+
+![](../.gitbook/assets/screenshot-2019-10-01-at-10.17.49.png)
+
+It will open a window which recalls the shortcuts:
+
+![](../.gitbook/assets/screenshot-2019-10-01-at-10.18.03.png)
+
 ### **Go to the next / previous document**
 
 * Windows / Linux
