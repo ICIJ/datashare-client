@@ -473,7 +473,8 @@
     "nbResults": "Number of results",
     "query": "no queries | 1 query | {count} queries",
     "delete": "Delete batch search",
-    "deleted": "The batch search have been deleted."
+    "deleted": "The batch search have been deleted.",
+    "public": "Public"
   },
   "batchSearchResults": {
     "index": "Index",

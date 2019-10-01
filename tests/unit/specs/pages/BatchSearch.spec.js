@@ -35,7 +35,7 @@ localVue.use(Murmur)
 localVue.use(BootstrapVue)
 localVue.use(VueProgressBar)
 
-describe('BatchSearch.vue', () => {
+describe('BatchSearch', () => {
   let wrapper
 
   beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
@@ -51,7 +51,7 @@ describe('BatchSearch.vue', () => {
     expect(wrapper.findAll('.batch-search__items__item')).toHaveLength(2)
   })
 
-  it('should display 6 columns of info per row', () => {
-    expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(6)
+  it('should display 7 columns of info per row', () => {
+    expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(7)
   })
 })

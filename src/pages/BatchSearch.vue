@@ -34,6 +34,9 @@
           <template #date="{ item }">
             {{ moment(item.date).format('LLL') }}
           </template>
+          <template #public="{ item }">
+            {{ capitalize(item.published) }}
+          </template>
         </b-table>
       </div>
     </div>
@@ -111,6 +114,11 @@ export default {
         {
           key: 'nbResults',
           label: this.$t('batchSearch.nbResults'),
+          sortable: true
+        },
+        {
+          key: 'public',
+          label: this.$t('batchSearch.public'),
           sortable: true
         }
       ])
