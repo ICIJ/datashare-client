@@ -17,10 +17,8 @@
           </div>
         </div>
         <h3>
-          <router-link :to="{ name: 'batch-search' }">
-            {{ $t('batchSearch.title') }}
-          </router-link>
-          <fa icon="angle-right" class="small" />
+          <router-link :to="{ name: 'batch-search' }">{{ $t('batchSearch.title') }}</router-link>
+          <fa icon="angle-right" class="small ml-2" />
           {{ meta.name }}
         </h3>
         <p class="m-0">
