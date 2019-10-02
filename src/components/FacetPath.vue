@@ -1,7 +1,9 @@
 <template>
   <facet v-bind="propsWithout('hide-show-more')" hide-show-more ref="facet">
     <template #items="{ items }">
-      <facet-path-tree :tree-data="displayFirstLevel(items)" :facet="facet"></facet-path-tree>
+      <vue-perfect-scrollbar class="facet__path__scrollbar">
+        <facet-path-tree :tree-data="displayFirstLevel(items)" :facet="facet"></facet-path-tree>
+      </vue-perfect-scrollbar>
     </template>
   </facet>
 </template>
@@ -9,6 +11,7 @@
 <script>
 import Facet from '@/components/Facet'
 import FacetPathTree from '@/components/FacetPathTree'
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 import facets from '@/mixins/facets'
 import map from 'lodash/map'
 import replace from 'lodash/replace'
@@ -18,7 +21,8 @@ export default {
   mixins: [facets],
   components: {
     Facet,
-    FacetPathTree
+    FacetPathTree,
+    VuePerfectScrollbar
   },
   methods: {
     displayFirstLevel (items) {
@@ -37,3 +41,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss">
+  .facet__path__scrollbar {
+    max-height: 250px;
+  }
+</style>
