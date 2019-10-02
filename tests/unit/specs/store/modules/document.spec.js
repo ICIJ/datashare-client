@@ -4,6 +4,7 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { jsonOk } from 'tests/unit/tests_utils'
 import DatashareClient from '@/api/DatashareClient'
+import orderBy from 'lodash/orderBy'
 
 describe('Document store', () => {
   esConnectionHelper()
@@ -127,5 +128,13 @@ describe('Document store', () => {
     expect(datashare.fetch).toHaveBeenCalledTimes(2)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/untag`),
       { method: 'POST', body: JSON.stringify({ docIds: ['doc_01'], tags: ['tag_01'] }) })
+  })
+
+  it('should add tags to the store', () => {
+    store.commit('document/addTag', 'tag_01      tag_01 tag_02')
+
+    expect(store.state.document.tags).toHaveLength(2)
+    expect(orderBy(store.state.document.tags, ['label'])[0].label).toEqual('tag_01')
+    expect(orderBy(store.state.document.tags, ['label'])[1].label).toEqual('tag_02')
   })
 })

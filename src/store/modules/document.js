@@ -1,8 +1,11 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import DatashareClient from '@/api/DatashareClient'
+import { getAuthenticatedUser } from '@/utils/utils'
 import compact from 'lodash/compact'
+import concat from 'lodash/concat'
 import map from 'lodash/map'
+import uniqBy from 'lodash/uniqBy'
 
 export const datashare = new DatashareClient()
 
@@ -54,6 +57,12 @@ export const mutations = {
   },
   toggleShowNamedEntities (state, toggler = null) {
     state.showNamedEntities = (toggler !== null ? toggler : !state.showNamedEntities)
+  },
+  addTag (state, tag) {
+    const tags = map(compact(tag.split(' ')), tag => {
+      return { label: tag, user: { id: getAuthenticatedUser() }, creationDate: Date.now() }
+    })
+    state.tags = uniqBy(concat(state.tags, tags), 'label')
   }
 }
 
@@ -109,7 +118,7 @@ export const actions = {
   },
   async tag ({ commit, rootState, state, dispatch }, { documents, tag }) {
     await datashare.tagDocuments(rootState.search.index, map(documents, 'id'), compact(tag.split(' ')))
-    if (documents.length === 1) await dispatch('getTags')
+    if (documents.length === 1) commit('addTag', tag)
   },
   async untag ({ commit, rootState, state, dispatch }, { documents, tag }) {
     await datashare.untagDocuments(rootState.search.index, map(documents, 'id'), [tag.label])

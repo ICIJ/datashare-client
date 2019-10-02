@@ -11,6 +11,7 @@ import DatashareClient from '@/api/DatashareClient'
 import settings from '@/utils/settings'
 import BootstrapVue from 'bootstrap-vue'
 import map from 'lodash/map'
+import sortBy from 'lodash/sortBy'
 
 const localVue = createLocalVue()
 localVue.use(Murmur)
@@ -69,17 +70,19 @@ describe('DocumentTagsForm', () => {
     expect(wrapper.find('.document-tags-form__tags__tag span').attributes('data-original-title')).toContain('document.created_by test-user document.on')
   })
 
-  it('should call API endpoint to add a tag and then call another endpoint to reload the tags', async () => {
+  it('should call API endpoint to add a tag', async () => {
     const wrapper = await createView(es, ['tag_01'])
 
     datashare.fetch.mockClear()
     wrapper.vm.tag = 'tag_02'
     await wrapper.vm.addTag()
 
-    expect(datashare.fetch).toBeCalledTimes(2)
+    expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/tag`),
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_02'] }) })
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/tag/${id}`), {})
+    expect(store.state.document.tags).toHaveLength(2)
+    expect(sortBy(store.state.document.tags, ['label'])[0].label).toEqual('tag_01')
+    expect(sortBy(store.state.document.tags, ['label'])[1].label).toEqual('tag_02')
   })
 
   it('should split tags by space', async () => {
@@ -89,7 +92,7 @@ describe('DocumentTagsForm', () => {
     wrapper.vm.tag = 'tag_01 tag_02 tag_03'
     await wrapper.vm.addTag()
 
-    expect(datashare.fetch).toBeCalledTimes(2)
+    expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/tag`),
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
   })
@@ -101,7 +104,7 @@ describe('DocumentTagsForm', () => {
     wrapper.vm.tag = 'tag_01        tag_02'
     await wrapper.vm.addTag()
 
-    expect(datashare.fetch).toBeCalledTimes(2)
+    expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/tag`),
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02'] }) })
   })
