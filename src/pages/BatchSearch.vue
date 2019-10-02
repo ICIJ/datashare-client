@@ -24,7 +24,7 @@
             </router-link>
           </template>
           <template #queries="{ item }">
-            {{ $tc('batchSearch.query', item.queries.length) }}
+            {{ $tc('batchSearch.query', keys(item.queries).length) }}
           </template>
           <template #state="{ item }">
             <b-badge :variant="item.state | toVariant">
@@ -48,6 +48,7 @@ import { mapState } from 'vuex'
 import moment from 'moment'
 import capitalize from 'lodash/capitalize'
 import compact from 'lodash/compact'
+import keys from 'lodash/keys'
 
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
@@ -133,7 +134,8 @@ export default {
   },
   methods: {
     moment,
-    capitalize
+    capitalize,
+    keys
   }
 }
 </script>
