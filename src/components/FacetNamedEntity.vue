@@ -8,17 +8,17 @@
     </template>
     <template #item="{ item, value, label }">
       <div class="d-flex facet__items__item">
-        <b-form-checkbox :value="value" class="flex-grow-1">
+        <b-form-checkbox :value="value" class="flex-grow-1 w-100">
           <span class="d-flex">
-            <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
+            <span class="facet__items__item__label px-1 flex-grow-1">
               {{ label }}
             </span>
-            <span class="facet__items__item__count badge badge-pill badge-light float-right mt-1">
+            <span class="facet__items__item__count badge badge-pill badge-light align-self-start">
               {{ $n(item.byDocs.value) }}
             </span>
           </span>
         </b-form-checkbox>
-        <confirm-button v-if="$config.is('manageDocuments')" :confirmed="() => deleteNamedEntitiesByMentionNorm(value)" class="align-self-center btn btn-link btn-sm text-white p-0 mr-2 mt-2 facet__items__item__delete" v-b-tooltip :title="$t('facet.deleteNamedEntity')">
+        <confirm-button v-if="$config.is('manageDocuments')" :confirmed="() => deleteNamedEntitiesByMentionNorm(value)" class="align-self-start btn btn-link btn-sm p-0 mr-2 mt-2 facet__items__item__delete" v-b-tooltip :title="$t('facet.deleteNamedEntity')">
           <fa icon="trash-alt" />
         </confirm-button>
       </div>
@@ -62,6 +62,7 @@ export default {
 
       &:hover .facet__items__item__delete {
         display: block;
+        color: inherit;
       }
 
       &:hover .facet__items__item__count {
