@@ -238,7 +238,6 @@ export default {
 
 <style lang="scss">
   .search-bar {
-    transition: transform 0.2s;
 
     .input-group {
       white-space: nowrap;
@@ -248,10 +247,9 @@ export default {
     }
 
     &--focused.search-bar--animated {
-      opacity: 1;
-      transform: translateY(-0.25em);
 
       .input-group {
+        transform: translateY(-0.25em);
         filter: drop-shadow(0 0.3em .6em rgba(black, .2));
       }
     }
