@@ -5,6 +5,7 @@ import { getAuthenticatedUser } from '@/utils/utils'
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
 import map from 'lodash/map'
+import remove from 'lodash/remove'
 import uniqBy from 'lodash/uniqBy'
 
 export const datashare = new DatashareClient()
@@ -63,6 +64,9 @@ export const mutations = {
       return { label: tag, user: { id: getAuthenticatedUser() }, creationDate: Date.now() }
     })
     state.tags = uniqBy(concat(state.tags, tags), 'label')
+  },
+  deleteTag (state, tagToDelete) {
+    remove(state.tags, tag => tag.label === tagToDelete.label)
   }
 }
 
@@ -120,9 +124,9 @@ export const actions = {
     await datashare.tagDocuments(rootState.search.index, map(documents, 'id'), compact(tag.split(' ')))
     if (documents.length === 1) commit('addTag', tag)
   },
-  async untag ({ commit, rootState, state, dispatch }, { documents, tag }) {
+  async deleteTag ({ commit, rootState, state, dispatch }, { documents, tag }) {
     await datashare.untagDocuments(rootState.search.index, map(documents, 'id'), [tag.label])
-    if (documents.length === 1) await dispatch('getTags')
+    if (documents.length === 1) commit('deleteTag', tag)
   }
 }
 

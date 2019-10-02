@@ -109,13 +109,13 @@ describe('DocumentTagsForm', () => {
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02'] }) })
   })
 
-  it('should call API endpoint to remove a tag and then call another endpoint to reload the tags', async () => {
+  it('should call API endpoint to remove a tag', async () => {
     const wrapper = await createView(es, ['tag_01', 'tag_02'])
 
     datashare.fetch.mockClear()
     await wrapper.vm.deleteTag({ label: 'tag_01' })
 
-    expect(datashare.fetch).toBeCalledTimes(2)
+    expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/untag`),
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01'] }) })
   })

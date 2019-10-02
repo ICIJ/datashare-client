@@ -49,7 +49,7 @@ export default {
     },
     async deleteTag (tag) {
       this.$set(this, 'updatingTags', true)
-      await this.$store.dispatch('document/untag', { documents: this.documents, tag })
+      await this.$store.dispatch('document/deleteTag', { documents: this.documents, tag })
       this.$set(this, 'updatingTags', false)
       delay(facetName => this.$root.$emit('facet::refresh', facetName), settings.waitForEsAnswer, 'tags')
     },

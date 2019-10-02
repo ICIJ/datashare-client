@@ -116,16 +116,16 @@ describe('Document store', () => {
       { method: 'POST', body: JSON.stringify({ docIds: ['doc_01', 'doc_02'], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
   })
 
-  it('should untag 1 document and refresh', async () => {
+  it('should deleteTag from 1 document', async () => {
     await letData(es).have(new IndexedDocument('doc_01')).commit()
     await letData(es).have(new IndexedDocument('doc_02')).commit()
     await store.dispatch('document/get', { id: 'doc_01' })
 
     datashare.fetch.mockClear()
 
-    await store.dispatch('document/untag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
+    await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(2)
+    expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/untag`),
       { method: 'POST', body: JSON.stringify({ docIds: ['doc_01'], tags: ['tag_01'] }) })
   })
