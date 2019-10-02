@@ -20,7 +20,7 @@
         </selectable-dropdown>
         <div v-else v-for="(count, query) in meta.queries" :key="query" class="batch-search-results-filters__queries__list px-3 py-1">
           {{ query }}
-          <b-badge class="float-right my-1 px-2" variant="tertiary" pill>{{ count }}</b-badge>
+          <b-badge class="float-right my-1 px-2" variant="tertiary" pill>{{ $n(count) }}</b-badge>
         </div>
       </div>
     </div>
