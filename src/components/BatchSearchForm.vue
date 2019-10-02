@@ -20,11 +20,21 @@
                 :placeholder="$t('batchSearch.form.namePlaceholder')"></b-form-input>
             </b-form-group>
             <b-form-group
+              :label="$t('batchSearch.published')"
+              class="col-12">
+              <b-form-radio v-model="published" name="published" value="true">
+                {{ $t('indexing.yes') }}
+              </b-form-radio>
+              <b-form-radio v-model="published" name="published" value="false">
+                {{ $t('indexing.no') }}
+              </b-form-radio>
+            </b-form-group>
+            <b-form-group
               id="group-file"
               :label="$t('batchSearch.form.fileLabel')"
               label-for="file"
               :description="$t('batchSearch.form.fileDescription')"
-              class="col">
+              class="col-12">
               <b-form-file
                 v-model="csvFile"
                 :placeholder="$t('batchSearch.form.filePlaceholder')"
@@ -81,6 +91,22 @@ export default {
         this.$store.commit('batchSearch/name', name)
       }
     },
+    published: {
+      get () {
+        return this.$store.state.batchSearch.published
+      },
+      set (published) {
+        this.$store.commit('batchSearch/published', published)
+      }
+    },
+    csvFile: {
+      get () {
+        return this.$store.state.batchSearch.csvFile
+      },
+      set (csvFile) {
+        this.$store.commit('batchSearch/csvFile', csvFile)
+      }
+    },
     description: {
       get () {
         return this.$store.state.batchSearch.description
@@ -95,14 +121,6 @@ export default {
       },
       set: function (index) {
         this.$store.commit('batchSearch/index', index)
-      }
-    },
-    csvFile: {
-      get () {
-        return this.$store.state.batchSearch.csvFile
-      },
-      set (csvFile) {
-        this.$store.commit('batchSearch/csvFile', csvFile)
       }
     }
   },

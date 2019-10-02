@@ -6,9 +6,10 @@ export const datashare = new DatashareClient()
 export function initialState () {
   return {
     name: '',
+    published: true,
+    csvFile: null,
     description: '',
     index: 'local-datashare',
-    csvFile: null,
     batchSearches: [],
     selectedQueries: [],
     results: []
@@ -23,12 +24,19 @@ export const mutations = {
   },
   resetForm (state) {
     state.name = ''
+    state.published = true
+    state.csvFile = null
     state.description = ''
     state.index = 'local-datashare'
-    state.csvFile = null
   },
   name (state, name) {
     state.name = name
+  },
+  published (state, published) {
+    state.published = published
+  },
+  csvFile (state, csvFile) {
+    state.csvFile = csvFile
   },
   description (state, description) {
     state.description = description
@@ -36,17 +44,14 @@ export const mutations = {
   index (state, index) {
     state.index = index
   },
-  csvFile (state, csvFile) {
-    state.csvFile = csvFile
-  },
   batchSearches (state, batchSearches) {
     state.batchSearches = batchSearches
   },
-  results (state, results) {
-    state.results = results
-  },
   selectedQueries (state, selectedQueries) {
     state.selectedQueries = selectedQueries
+  },
+  results (state, results) {
+    state.results = results
   }
 }
 
@@ -59,7 +64,7 @@ export const actions = {
   },
   async onSubmit ({ state, commit, dispatch }) {
     try {
-      await datashare.batchSearch(state.index, state.name, state.description, state.csvFile)
+      await datashare.batchSearch(state.name, state.published, state.csvFile, state.description, state.index)
       commit('resetForm')
       return dispatch('getBatchSearches')
     } catch (_) {}

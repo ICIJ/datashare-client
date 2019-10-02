@@ -34,8 +34,8 @@
           <template #date="{ item }">
             {{ moment(item.date).format('LLL') }}
           </template>
-          <template #public="{ item }">
-            {{ capitalize(item.published) }}
+          <template #published="{ item }">
+            {{ capitalize(item.published) ? $t('indexing.yes') : $t('indexing.no') }}
           </template>
         </b-table>
       </div>
@@ -117,8 +117,8 @@ export default {
           sortable: true
         },
         {
-          key: 'public',
-          label: this.$t('batchSearch.public'),
+          key: 'published',
+          label: this.$t('batchSearch.published'),
           sortable: true
         }
       ])
