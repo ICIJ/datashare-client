@@ -8,6 +8,9 @@
       <fa icon="download" fa-fw />
       <span class="sr-only">{{ $t('document.download_button') }}</span>
     </a>
+    <router-link-popup :to="{ name: 'document-simplified', params: document.routerParams }" class="btn btn-sm btn-link" :title="$t('document.external_window')" v-b-tooltip>
+      <fa icon="external-link-alt" fa-fw />
+    </router-link-popup>
   </div>
 </template>
 
