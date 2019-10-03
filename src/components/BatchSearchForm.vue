@@ -1,10 +1,10 @@
 <template>
-  <div class="batch-search-form">
+  <div class="batch-search-form m-3">
     <b-form @submit.prevent="onSubmit">
-      <div class="card m-3">
-        <h6 class="card-header">
-          {{ $t('batchSearch.form.heading') }}
-        </h6>
+      <h4 class="text-light py-1">
+        {{ $t('batchSearch.form.heading') }}
+      </h4>
+      <div class="card w-100">
         <div class="card-body pb-1 small">
           <div class="row">
             <b-form-group
@@ -113,9 +113,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  .batch-search-form {
-    width: 100%;
-  }
-</style>
