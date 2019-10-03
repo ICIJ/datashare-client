@@ -20,41 +20,15 @@ describe('BatchSearch store', () => {
   })
 
   beforeEach(() => {
-    store.commit('batchSearch/index', process.env.VUE_APP_ES_INDEX)
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk())
   })
 
   afterEach(() => datashare.fetch.mockClear())
 
-  describe('mutations', () => {
-    it('should reset the form', () => {
-      store.state.batchSearch.name = 'name'
-      store.state.batchSearch.published = false
-      store.state.batchSearch.csvFile = 'csvFile'
-      store.state.batchSearch.description = 'description'
-      store.state.batchSearch.index = 'new_index'
-
-      store.commit('batchSearch/resetForm')
-
-      expect(store.state.batchSearch.name).toBe('')
-      expect(store.state.batchSearch.published).toBeTruthy()
-      expect(store.state.batchSearch.csvFile).toBeNull()
-      expect(store.state.batchSearch.description).toBe('')
-      expect(store.state.batchSearch.index).toBe('local-datashare')
-    })
-  })
-
   describe('actions', () => {
     it('should submit the new batch search form with complete information', async () => {
-      store.state.batchSearch.name = 'name'
-      store.state.batchSearch.published = false
-      store.state.batchSearch.csvFile = 'csvFile'
-      store.state.batchSearch.description = 'description'
-      store.state.batchSearch.index = 'index'
-      datashare.fetch.mockClear()
-
-      await store.dispatch('batchSearch/onSubmit')
+      await store.dispatch('batchSearch/onSubmit', { name: 'name', published: false, csvFile: 'csvFile', description: 'description', index: 'index' })
 
       const body = new FormData()
       body.append('name', 'name')
@@ -64,41 +38,6 @@ describe('BatchSearch store', () => {
       expect(datashare.fetch).toBeCalledTimes(2)
       expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/index'), { method: 'POST', body })
       expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})
-    })
-
-    it('should reset the form after submission success', async () => {
-      store.state.batchSearch.name = 'name'
-      store.state.batchSearch.published = false
-      store.state.batchSearch.csvFile = 'csvFile'
-      store.state.batchSearch.description = 'description'
-      store.state.batchSearch.index = 'index'
-
-      await store.dispatch('batchSearch/onSubmit')
-
-      expect(store.state.batchSearch.name).toBe('')
-      expect(store.state.batchSearch.published).toBeTruthy()
-      expect(store.state.batchSearch.csvFile).toBeNull()
-      expect(store.state.batchSearch.description).toBe('')
-      expect(store.state.batchSearch.index).toBe('local-datashare')
-    })
-
-    it('should NOT reset the form after submission fail', async () => {
-      datashare.fetch.mockReturnValue(jsonOk({}, 500))
-      store.state.batchSearch.name = 'name'
-      store.state.batchSearch.published = false
-      store.state.batchSearch.csvFile = 'csvFile'
-      store.state.batchSearch.description = 'description'
-      store.state.batchSearch.index = 'index'
-
-      try {
-        await store.dispatch('batchSearch/onSubmit')
-      } catch (_) {
-        expect(store.state.batchSearch.name).toBe('name')
-        expect(store.state.batchSearch.published).toBeFalsy()
-        expect(store.state.batchSearch.csvFile).not.toBeNull()
-        expect(store.state.batchSearch.description).toBe('description')
-        expect(store.state.batchSearch.index).toBe('index')
-      }
     })
 
     it('should retrieve a batch search according to its id', async () => {

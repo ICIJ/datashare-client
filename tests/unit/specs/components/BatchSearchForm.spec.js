@@ -26,10 +26,13 @@ describe('BatchSearchForm', () => {
     wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
   })
 
-  it('should call the store', () => {
-    wrapper.vm.onSubmit()
+  it('should call the store action on form submit and reset the form', async () => {
+    jest.spyOn(wrapper.vm, 'resetForm')
+
+    await wrapper.vm.onSubmit()
 
     expect(actions.onSubmit).toBeCalled()
+    expect(wrapper.vm.resetForm).toBeCalled()
   })
 
   it('should display a form with 4 fields: name, published, file and description', () => {
@@ -37,5 +40,21 @@ describe('BatchSearchForm', () => {
     expect(wrapper.find('b-form-group-stub[label="batchSearch.published"] b-form-radio-stub').exists()).toBeTruthy()
     expect(wrapper.find('b-form-group-stub[labelfor=file] b-form-file-stub').exists()).toBeTruthy()
     expect(wrapper.find('b-form-group-stub[labelfor=description] b-form-textarea-stub').exists()).toBeTruthy()
+  })
+
+  it('should reset the form', () => {
+    wrapper.vm.$set(wrapper.vm, 'name', 'Example')
+    wrapper.vm.$set(wrapper.vm, 'published', false)
+    wrapper.vm.$set(wrapper.vm, 'csvFile', 'This is a file')
+    wrapper.vm.$set(wrapper.vm, 'description', 'This is a description')
+    wrapper.vm.$set(wrapper.vm, 'index', 'index-example')
+
+    wrapper.vm.resetForm()
+
+    expect(wrapper.vm.name).toEqual('')
+    expect(wrapper.vm.published).toBeTruthy()
+    expect(wrapper.vm.csvFile).toBeNull()
+    expect(wrapper.vm.description).toEqual('')
+    expect(wrapper.vm.index).toEqual('local-datashare')
   })
 })

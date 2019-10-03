@@ -71,15 +71,12 @@ localVue.use(Murmur)
 localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
-describe('BatchSearchResultsFilters.vue', () => {
+describe('BatchSearchResultsFilters', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
 
-  beforeAll(() => {
-    Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] })
-    store.commit('batchSearch/index', process.env.VUE_APP_ES_INDEX)
-  })
+  beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocument('42').withContentType('type_01')).commit()

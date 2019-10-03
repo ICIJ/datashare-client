@@ -68,7 +68,6 @@ export class App {
     // Select the first user's index as default index
     if (config.userIndices !== undefined) {
       store.commit('search/index', config.userIndices[0])
-      store.commit('batchSearch/index', config.userIndices[0])
     }
     return this
   }

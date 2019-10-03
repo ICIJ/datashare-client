@@ -73,7 +73,7 @@ const router = new VueRouter({ routes: [
   }
 ] })
 
-describe('BatchSearchResults.vue', () => {
+describe('BatchSearchResults', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
@@ -81,7 +81,6 @@ describe('BatchSearchResults.vue', () => {
   beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
-    store.commit('batchSearch/index', process.env.VUE_APP_ES_INDEX)
     await letData(es).have(new IndexedDocument('42').withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43').withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44').withContentType('type_01')).commit()

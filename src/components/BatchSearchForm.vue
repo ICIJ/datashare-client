@@ -59,7 +59,7 @@
             label-for="project"
             v-if="$config.is('multipleProjects')">
             <b-form-select
-              v-model="selectedIndex"
+              v-model="index"
               :options="indices"
               required></b-form-select>
           </b-form-group>
@@ -79,57 +79,28 @@ export default {
   name: 'BatchSearchForm',
   data () {
     return {
+      name: '',
+      published: true,
+      csvFile: null,
+      description: '',
+      index: 'local-datashare',
       indices: []
-    }
-  },
-  computed: {
-    name: {
-      get () {
-        return this.$store.state.batchSearch.name
-      },
-      set (name) {
-        this.$store.commit('batchSearch/name', name)
-      }
-    },
-    published: {
-      get () {
-        return this.$store.state.batchSearch.published
-      },
-      set (published) {
-        this.$store.commit('batchSearch/published', published)
-      }
-    },
-    csvFile: {
-      get () {
-        return this.$store.state.batchSearch.csvFile
-      },
-      set (csvFile) {
-        this.$store.commit('batchSearch/csvFile', csvFile)
-      }
-    },
-    description: {
-      get () {
-        return this.$store.state.batchSearch.description
-      },
-      set (description) {
-        this.$store.commit('batchSearch/description', description)
-      }
-    },
-    selectedIndex: {
-      get: function () {
-        return this.$store.state.batchSearch.index
-      },
-      set: function (index) {
-        this.$store.commit('batchSearch/index', index)
-      }
     }
   },
   created () {
     this.indices = map(this.$config.get('userIndices', []), value => { return { value, text: value } })
   },
   methods: {
+    resetForm () {
+      this.$set(this, 'name', '')
+      this.$set(this, 'published', true)
+      this.$set(this, 'csvFile', null)
+      this.$set(this, 'description', '')
+      this.$set(this, 'index', 'local-datashare')
+    },
     async onSubmit () {
-      await this.$store.dispatch('batchSearch/onSubmit')
+      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, index: this.index })
+      this.resetForm()
       if (this.$config.is('manageDocuments')) {
         try {
           await this.$store.dispatch('indexing/runBatchSearch')
