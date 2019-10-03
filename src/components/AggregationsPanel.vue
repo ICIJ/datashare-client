@@ -146,8 +146,6 @@ export default {
         font-size: 0.85rem;
         line-height: $line-height-base * (1 - (85 - 95) / 95);
         margin: $spacer 0 0 $spacer;
-        border-bottom: rgba(white, 0.1) 1px solid;
-        padding: 0 0 $spacer;
 
         .custom-control-input:checked ~ .custom-control-label::before {
           background-color: $tertiary;
