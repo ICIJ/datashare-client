@@ -6,7 +6,7 @@
           <h4 class="flex-grow-1 m-0">
             {{ $t('search.filtersTitle') }}
           </h4>
-          <button class="aggregations-panel__sticky__toolbar__toggler btn btn-link" @click="hideFilters">
+          <button class="aggregations-panel__sticky__toolbar__toggler btn btn-link" @click="hideFilters" :title="$t('search.hideFilters')" v-b-tooltip>
             <fa icon="arrow-left" class="text-light" />
             <span class="sr-only">
               {{ $t('search.hideFilters') }}
