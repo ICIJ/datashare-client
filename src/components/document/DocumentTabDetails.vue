@@ -17,7 +17,7 @@
         {{ $t('document.details_info') }}
       </p>
       <div class="row document__content__details__children m-2">
-        <router-link :to="{ name: 'search', query: { q: `_routing:${document.id}` } }">
+        <router-link :to="{ name: 'search', query: { q: `_routing:${document.id}`, index } }">
           {{ $t('document.search_children_document') }}
         </router-link>
       </div>
@@ -27,7 +27,7 @@
             {{ field.label }}
           </div>
           <div class="mr-auto document__content__details__item__search">
-            <router-link :to="{ name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value) } }">
+            <router-link :to="{ name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value), index } }">
               <fa icon="search" />
             </router-link>
           </div>
@@ -46,7 +46,7 @@
             <var>{{ document.shortMetaName(name) | startCase }}</var>
           </div>
           <div class="mr-auto document__content__details__item__search">
-            <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name) } }">
+            <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name), index } }">
               <fa icon="search" />
             </router-link>
           </div>
@@ -90,7 +90,8 @@ export default {
   },
   data () {
     return {
-      metadataVisible: false
+      metadataVisible: false,
+      index: this.$store.state.search.index
     }
   },
   computed: {

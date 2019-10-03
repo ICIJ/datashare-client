@@ -1,4 +1,3 @@
-import { createServer } from 'http-server'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -13,14 +12,11 @@ import { jsonOk } from 'tests/unit/tests_utils'
 const localVue = createLocalVue()
 localVue.use(Murmur)
 
-describe('DocumentTabDetails.vue', () => {
+describe('DocumentTabDetails', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
-  let httpServer
 
   beforeAll(() => {
-    httpServer = createServer({ root: 'tests/unit/resources' })
-    httpServer.listen(9876)
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })
 
@@ -35,14 +31,12 @@ describe('DocumentTabDetails.vue', () => {
     datashare.fetch.mockRestore()
   })
 
-  afterAll(() => httpServer.close())
-
   it('should display document path with config.mountedDataDir', async () => {
     Murmur.config.merge({ dataDir: '/home/datashare/data', mountedDataDir: 'C:/Users/ds/docs' })
     const id = '/home/datashare/data/foo.txt'
     await letData(es).have(new IndexedDocument(id)).commit()
     await store.dispatch('document/get', { id })
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__path').text()).toEqual('C:/Users/ds/docs/foo.txt')
   })
@@ -51,7 +45,7 @@ describe('DocumentTabDetails.vue', () => {
     const id = 'document'
     await letData(es).have(new IndexedDocument(id).withContentType('application/pdf')).commit()
     await store.dispatch('document/get', { id })
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__content-type').text()).toEqual('Portable Document Format (PDF)')
   })
@@ -62,7 +56,7 @@ describe('DocumentTabDetails.vue', () => {
     await letData(es).have(new IndexedDocument(parentDocument)).commit()
     await letData(es).have(new IndexedDocument(document).withParent(parentDocument)).commit()
     await store.dispatch('document/get', { id: document, routing: parentDocument }).then(() => store.dispatch('document/getParent'))
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, router, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, store, router, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__basename').text()).toEqual(document)
     expect(wrapper.find('.document__content__tree-level').text()).toEqual('facet.level.level_01')
@@ -73,7 +67,7 @@ describe('DocumentTabDetails.vue', () => {
     const id = 'document'
     await letData(es).have(new IndexedDocument(id)).commit()
     await store.dispatch('document/get', { id })
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__creation-date').exists()).toBeFalsy()
   })
@@ -82,7 +76,7 @@ describe('DocumentTabDetails.vue', () => {
     const id = 'document'
     await letData(es).have(new IndexedDocument(id)).commit()
     await store.dispatch('document/get', { id })
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    const wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__details__children').exists()).toBeTruthy()
   })
