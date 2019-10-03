@@ -73,6 +73,7 @@ export default {
     ...mapState('search', ['facets', 'showFilters']),
     contextualizeModel: {
       set (toggler) {
+        this.$root.$emit('bv::hide::tooltip')
         this.$store.commit('search/setGlobalSearch', !toggler)
       },
       get () {
