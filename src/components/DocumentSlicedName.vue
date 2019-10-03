@@ -89,7 +89,6 @@ export default {
       }
 
       &__root, &__root:hover {
-        color: inherit;
 
         .document-sliced-name--sliced &:not(a) {
           font-weight: normal;
