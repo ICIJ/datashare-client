@@ -20,16 +20,6 @@
                 :placeholder="$t('batchSearch.form.namePlaceholder')"></b-form-input>
             </b-form-group>
             <b-form-group
-              :label="$t('batchSearch.published')"
-              class="col-12">
-              <b-form-radio v-model="published" name="published" value="true">
-                {{ $t('indexing.yes') }}
-              </b-form-radio>
-              <b-form-radio v-model="published" name="published" value="false">
-                {{ $t('indexing.no') }}
-              </b-form-radio>
-            </b-form-group>
-            <b-form-group
               id="group-file"
               :label="$t('batchSearch.form.fileLabel')"
               label-for="file"
@@ -64,8 +54,17 @@
               required></b-form-select>
           </b-form-group>
         </div>
-        <div class="card-body text-right pt-0">
-          <b-button type="submit" variant="primary">{{ $t('batchSearch.form.submit') }}</b-button>
+        <div class="card-footer">
+          <div class="d-flex align-items-center">
+            <div class="flex-grow-1">
+              <b-form-checkbox v-model="published" raw>
+                {{ $t('batchSearch.published') }}
+              </b-form-checkbox>
+            </div>
+            <b-button type="submit" variant="primary">
+              {{ $t('batchSearch.form.submit') }}
+            </b-button>
+          </div>
         </div>
       </div>
     </b-form>

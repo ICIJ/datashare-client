@@ -35,9 +35,8 @@ describe('BatchSearchForm', () => {
     expect(wrapper.vm.resetForm).toBeCalled()
   })
 
-  it('should display a form with 4 fields: name, published, file and description', () => {
+  it('should display a form with 3 fields: name file and description', () => {
     expect(wrapper.find('b-form-group-stub[labelfor=name] b-form-input-stub').exists()).toBeTruthy()
-    expect(wrapper.find('b-form-group-stub[label="batchSearch.published"] b-form-radio-stub').exists()).toBeTruthy()
     expect(wrapper.find('b-form-group-stub[labelfor=file] b-form-file-stub').exists()).toBeTruthy()
     expect(wrapper.find('b-form-group-stub[labelfor=description] b-form-textarea-stub').exists()).toBeTruthy()
   })

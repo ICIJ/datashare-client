@@ -62,6 +62,7 @@
         "pathReverse": "File path (Z to A)"
       }
     },
+    "filtersTitle": "Filters",
     "clearFilters": "Clear all filters",
     "clearFiltersDescription": "Remove selected filters from the search.",
     "back": "Back to search results",

@@ -4,7 +4,7 @@
       <div class="aggregations-panel__sticky__toolbar">
         <div class="d-flex align-items-center">
           <h4 class="flex-grow-1 m-0">
-            Filters
+            {{ $t('search.filtersTitle') }}
           </h4>
           <button class="aggregations-panel__sticky__toolbar__toggler btn btn-link" @click="hideFilters">
             <fa icon="arrow-left" class="text-light" />
