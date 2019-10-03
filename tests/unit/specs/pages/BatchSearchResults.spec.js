@@ -1,7 +1,5 @@
 import BatchSearchResults from '@/pages/BatchSearchResults'
 import VueRouter from 'vue-router'
-import Murmur from '@icij/murmur'
-
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { App } from '@/main'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -77,8 +75,6 @@ describe('BatchSearchResults', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
-
-  beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocument('42').withContentType('type_01')).commit()

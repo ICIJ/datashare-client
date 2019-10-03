@@ -5,7 +5,6 @@ import Vuex from 'vuex'
 import Vue from 'vue'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import Murmur from '@icij/murmur'
 
 Vue.use(Vuex)
 
@@ -15,7 +14,6 @@ describe('BatchSearch store', () => {
   let store
 
   beforeAll(() => {
-    Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] })
     store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, actions, getters, mutations, state } } })
   })
 

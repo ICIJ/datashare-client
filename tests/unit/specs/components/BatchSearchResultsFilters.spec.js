@@ -1,14 +1,8 @@
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
-import VueI18n from 'vue-i18n'
-import Vuex from 'vuex'
-import messages from '@/lang/en'
-import store from '@/store'
-import router from '@/router'
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { App } from '@/main'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -64,19 +58,12 @@ jest.mock('@/api/DatashareClient', () => {
   })
 })
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('BatchSearchResultsFilters', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
-
-  beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocument('42').withContentType('type_01')).commit()
@@ -100,10 +87,12 @@ describe('BatchSearchResultsFilters', () => {
     }])
   })
 
+  afterAll(() => jest.unmock('@/api/DatashareClient'))
+
   it('should display simple list if there is only one query', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
-    wrapper = mount(BatchSearchResultsFilters, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: process.env.VUE_APP_ES_INDEX } })
+    wrapper = mount(BatchSearchResultsFilters, { localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: process.env.VUE_APP_ES_INDEX }, mocks: { $t: msg => msg, $n: msg => msg } })
 
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
     expect(wrapper.find('.batch-search-results-filters__queries__list').exists()).toBeTruthy()
@@ -114,7 +103,7 @@ describe('BatchSearchResultsFilters', () => {
   it('should display a selectable dropdown if there are more than one query', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
-    wrapper = mount(BatchSearchResultsFilters, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX } })
+    wrapper = mount(BatchSearchResultsFilters, { localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, mocks: { $t: msg => msg, $n: msg => msg } })
 
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown').exists()).toBeTruthy()
@@ -124,7 +113,7 @@ describe('BatchSearchResultsFilters', () => {
   it('should add badge with query number of results on list', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
-    wrapper = mount(BatchSearchResultsFilters, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: process.env.VUE_APP_ES_INDEX } })
+    wrapper = mount(BatchSearchResultsFilters, { localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: process.env.VUE_APP_ES_INDEX }, mocks: { $t: msg => msg, $n: msg => msg } })
 
     expect(wrapper.findAll('.batch-search-results-filters__queries__list span.badge')).toHaveLength(1)
     expect(wrapper.find('.batch-search-results-filters__queries__list span.badge').text()).toBe('12')
@@ -133,7 +122,7 @@ describe('BatchSearchResultsFilters', () => {
   it('should add badge with query number of results on selectable dropdown', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
-    wrapper = mount(BatchSearchResultsFilters, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX } })
+    wrapper = mount(BatchSearchResultsFilters, { localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, mocks: { $t: msg => msg, $n: msg => msg } })
 
     expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown > span span.badge')).toHaveLength(3)
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown > span span.badge').text()).toEqual('3')
@@ -142,7 +131,7 @@ describe('BatchSearchResultsFilters', () => {
   it('should emit a "batch-search-results::filter" event on click on dropdown entry', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
-    wrapper = mount(BatchSearchResultsFilters, { localVue, i18n, store, router, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX } })
+    wrapper = mount(BatchSearchResultsFilters, { localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, mocks: { $t: msg => msg, $n: msg => msg } })
     const rootWrapper = createWrapper(wrapper.vm.$root)
     rootWrapper._emitted['batch-search-results::filter'] = []
 
