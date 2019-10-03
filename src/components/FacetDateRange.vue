@@ -95,6 +95,10 @@ export default {
   color: inherit;
   padding: 0;
 
+  .vc-popover-content-wrapper {
+    z-index: $zindex-tooltip;
+  }
+
   .vc-grid-cell {
     .vc-highlights {
       .vc-day-layer {

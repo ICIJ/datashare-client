@@ -3,6 +3,9 @@
     <slot name="header" v-if="!hideHeader">
       <div class="card-header px-2 d-flex facet__header">
         <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate pt-0">
+          <span class="facet__items__item__icon pl-0 pr-1" v-if="facet.icon">
+            <fa :icon="facet.icon" fixed-width />
+          </span>
           <template>
             <slot name="title">
               {{ $t('facet.' + facet.name) }}

@@ -4,7 +4,7 @@
       <div class="col-4 mb-4"  v-for="(index, i) in indices" :key="i">
         <router-link :to="{ name: 'search', query: { index, q: '*' } }" class="project-cards__item d-flex justify-content-start text-nowrap">
           <div class="project-cards__item__header py-2 px-3 bg-white text-secondary">
-            <fa icon="database" />
+            <fa icon="book" />
           </div>
           <div class="project-cards__item__body py-2 px-3 font-weight-bold">
             {{ index.split('-').map(capitalize).join(' ') }}

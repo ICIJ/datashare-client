@@ -2,6 +2,9 @@
   <div class="facet card facet--hide-show-more facet--hide-search" v-if="$config.is('multipleProjects')">
     <div class="card-header px-2">
       <h6 @click="toggleItems" class="pt-0">
+        <span class="facet__items__item__icon pl-0 pr-1">
+          <fa icon="book" fixed-width />
+        </span>
         <fa :icon="headerIcon" class="float-right"/>
         {{ $t('facet.projects') }}
       </h6>

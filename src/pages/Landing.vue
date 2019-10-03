@@ -5,8 +5,10 @@
         <img src="~images/logo-white.svg" alt="Datashare" />
       </h1>
       <search-bar class="landing__form__search-bar py-3" size="md" />
-      <div class="mt-5 text-white" v-if="showProjectsCards">
-        <h2 class="text-uppercase h5">Projects</h2>
+      <div class="mt-5 text-white" v-if="$config.is('multipleProjects')">
+        <h2 class="text-uppercase h5">
+          Projects
+        </h2>
         <project-cards class="mt-3" />
       </div>
     </div>
@@ -19,12 +21,7 @@ import SearchBar from '@/components/SearchBar'
 
 export default {
   name: 'Landing',
-  components: { ProjectCards, SearchBar },
-  computed: {
-    showProjectsCards () {
-      return this.$config.is('multipleProjects')
-    }
-  }
+  components: { ProjectCards, SearchBar }
 }
 </script>
 
