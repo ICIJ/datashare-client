@@ -36,8 +36,6 @@
     "showFilters": "Mostrar los filtros",
     "contextualizeFiltersLabel": "Contextualizar",
     "contextualizeFiltersDescription": "Las facetas en el panel izquierdo se actualizarán de acuerdo con los resultados de la búsqueda.",
-    "resetFiltersLabel": "Restablecer",
-    "resetFiltersDescription": "Eliminar faceta seleccionada de la búsqueda.",
     "tips": "Tips to improve searching",
     "settings": {
       "title": "Configuración de búsqueda",
@@ -64,7 +62,8 @@
         "pathReverse": "Ruta del archivo (de A a Z)"
       }
     },
-    "reset_filters": "Resetear filtros",
+    "clearFilters": "Resetear filtros",
+    "clearFiltersDescription": "Eliminar faceta seleccionada de la búsqueda.",
     "back": "Regresar a resultados de búsqueda",
     "try": "Usted puede intentar a",
     "nav": {

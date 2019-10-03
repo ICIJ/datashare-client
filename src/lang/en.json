@@ -34,10 +34,8 @@
     "search-in": "Search in",
     "hideFilters": "Hide filters",
     "showFilters": "Show filters",
-    "contextualizeFiltersLabel": "Contextualize",
+    "contextualizeFiltersLabel": "Contextualize filters",
     "contextualizeFiltersDescription": "Filters on the left panel will be updated according to the search results.",
-    "resetFiltersLabel": "Reset",
-    "resetFiltersDescription": "Remove selected filters from the search.",
     "tips": "Tips to improve searching",
     "settings": {
       "title": "Search settings",
@@ -64,7 +62,8 @@
         "pathReverse": "File path (Z to A)"
       }
     },
-    "reset_filters": "Reset filters",
+    "clearFilters": "Clear all filters",
+    "clearFiltersDescription": "Remove selected filters from the search.",
     "back": "Back to search results",
     "try": "You may try to",
     "nav": {

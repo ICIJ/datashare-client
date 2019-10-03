@@ -31,7 +31,7 @@ describe('AggregationsPanel.vue', () => {
   })
 
   it('should hide the aggregation panel on click on `Hide filters`', () => {
-    wrapper.find('.aggregations-panel__sticky__toolbar__item--hide-filters').trigger('click')
+    wrapper.find('.aggregations-panel__sticky__toolbar__toggler').trigger('click')
 
     expect(wrapper.find('.aggregations-panel').isVisible()).toBeFalsy()
   })
@@ -66,7 +66,7 @@ describe('AggregationsPanel.vue', () => {
     const mockCallback = jest.fn()
     wrapper.vm.$root.$on('facet::search::reset-filters', mockCallback)
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.$root.$emit('facet::search::reset-filters')
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
@@ -74,16 +74,8 @@ describe('AggregationsPanel.vue', () => {
   it('should not reset the starredDocuments on filters reset', () => {
     store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.$root.$emit('facet::search::reset-filters')
 
     expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
-  })
-
-  it('should reset the query on filters reset', () => {
-    store.commit('search/query', 'another query')
-
-    wrapper.vm.resetFilters()
-
-    expect(store.state.search.query).toBe('')
   })
 })

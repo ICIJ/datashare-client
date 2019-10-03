@@ -36,8 +36,6 @@
     "showFilters": "Afficher les filtres",
     "contextualizeFiltersLabel": "Contextualiser",
     "contextualizeFiltersDescription": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche",
-    "resetFiltersLabel": "Réinitialiser",
-    "resetFiltersDescription": "Supprime les filtres sélectionnés de la recherche.",
     "tips": "Tips to improve searching",
     "settings": {
       "title": "Paramètres de recherche",
@@ -64,7 +62,8 @@
         "pathReverse": "Chemin du fichier (Z à A)"
       }
     },
-    "reset_filters": "Réinitialiser les filtres",
+    "clearFilters": "Réinitialiser les filtres",
+    "clearFiltersDescription": "Supprime les filtres sélectionnés de la recherche.",
     "back": "Retour aux résultats de recherche",
     "try": "Vous devriez essayer de",
     "nav": {

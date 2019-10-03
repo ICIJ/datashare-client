@@ -2,30 +2,23 @@
   <div class="aggregations-panel" v-show="showFilters">
     <div class="aggregations-panel__sticky w-100">
       <div class="aggregations-panel__sticky__toolbar">
-        <ul class="nav flex-nowrap">
-          <li class="nav-item">
-            <div class="custom-control custom-switch aggregations-panel__sticky__toolbar__item">
-              <input type="checkbox" :checked="filtersContextualized" class="custom-control-input" id="input-contextualize-filters" @change="toggleContextualizeFilters($event.target.checked)">
-              <label class="custom-control-label text-white font-weight-bold btn btn-sm pl-0 pr-2 pb-2 pt-0 mt-2" for="input-contextualize-filters" id="label-contextualize-filters">
-                {{ $t('search.contextualizeFiltersLabel') }}
-              </label>
-              <b-tooltip placement="bottom" target="label-contextualize-filters" :title="$t('search.contextualizeFiltersDescription')" />
-            </div>
-          </li>
-          <li class="nav-item border-left">
-            <button class="nav-link text-white font-weight-bold btn btn-sm px-2 aggregations-panel__sticky__toolbar__item" id="btn-reset-filters" @click="resetFilters()" :disabled="!hasFilters">
-              {{ $t('search.resetFiltersLabel') }}
-            </button>
-            <b-tooltip placement="bottom" target="btn-reset-filters" :title="$t('search.resetFiltersDescription')" />
-          </li>
-          <li class="nav-item ml-auto">
-            <button class="nav-link text-white font-weight-bold p-2 btn btn-sm aggregations-panel__sticky__toolbar__item aggregations-panel__sticky__toolbar__item--hide-filters" @click="hideFilters()" id="btn-hide-filters">
-              <fa icon="arrow-left" class="mx-1" />
-              <span class="sr-only">
-                {{ $t('search.hideFilters') }}
-              </span>
-            </button>
-            <b-tooltip placement="bottom" target="btn-hide-filters" :title="$t('search.hideFilters')" />
+        <div class="d-flex align-items-center">
+          <h4 class="flex-grow-1 m-0">
+            Filters
+          </h4>
+          <button class="aggregations-panel__sticky__toolbar__toggler btn btn-link" @click="hideFilters">
+            <fa icon="arrow-left" class="text-light" />
+            <span class="sr-only">
+              {{ $t('search.hideFilters') }}
+            </span>
+          </button>
+        </div>
+        <ul class="nav flex-column">
+          <li class="nav-item pt-1">
+            <b-form-checkbox class="aggregations-panel__sticky__toolbar__item" switch id="input-contextualize-filters" v-model="contextualizeModel">
+              {{ $t('search.contextualizeFiltersLabel') }}
+            </b-form-checkbox>
+            <b-tooltip placement="bottom" target="input-contextualize-filters" :title="$t('search.contextualizeFiltersDescription')" />
           </li>
         </ul>
       </div>
@@ -72,19 +65,19 @@ export default {
   },
   data () {
     return {
-      relativeSearch: !this.$store.state.search.globalSearch,
       selectedFacet: null,
       facetQuery: null
     }
   },
   computed: {
     ...mapState('search', ['facets', 'showFilters']),
-    // Shortcut for the checkbox state
-    filtersContextualized () {
-      return !this.$store.state.search.globalSearch
-    },
-    hasFilters () {
-      return this.$store.getters['search/activeFacets'].length > 0
+    contextualizeModel: {
+      set (toggler) {
+        this.$store.commit('search/setGlobalSearch', !toggler)
+      },
+      get () {
+        return !this.$store.state.search.globalSearch
+      }
     }
   },
   methods: {
@@ -117,17 +110,8 @@ export default {
         }
       })
     },
-    resetFilters () {
-      this.$store.dispatch('search/reset', ['index', 'globalSearch', 'starredDocuments'])
-      this.$root.$emit('bv::hide::popover')
-      this.$root.$emit('facet::search::reset-filters')
-      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] })
-    },
     hideFilters () {
       this.$store.commit('search/toggleFilters')
-    },
-    toggleContextualizeFilters (toggler) {
-      this.$store.commit('search/setGlobalSearch', !toggler)
     },
     refreshEachFacet () {
       forEach(this.$refs, component => {
@@ -163,14 +147,6 @@ export default {
         margin: $spacer 0 0 $spacer;
         border-bottom: rgba(white, 0.1) 1px solid;
         padding: 0 0 $spacer;
-
-        .nav {
-          height: $app-nav-brand-height;
-        }
-
-        .border-left {
-          border-color: rgba(white, 0.1) !important;
-        }
 
         .custom-control-input:checked ~ .custom-control-label::before {
           background-color: $tertiary;

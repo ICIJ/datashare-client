@@ -19,7 +19,7 @@
         </div>
         <div class="mt-3" v-if="hasFilters">
           {{ $t('search.try') }}
-          <reset-filters-button />
+          <reset-filters-button variant="outline-secondary" no-icon />
         </div>
       </div>
     </div>

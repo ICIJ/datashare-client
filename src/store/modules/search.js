@@ -303,8 +303,8 @@ export const mutations = {
       existingFacet.values = []
     }
   },
-  toggleFilters (state) {
-    state.showFilters = !state.showFilters
+  toggleFilters (state, toggler = !state.showFilters) {
+    state.showFilters = toggler
   },
   pushFromStarredDocuments (state, documentIds) {
     state.starredDocuments = uniq(concat(state.starredDocuments, documentIds))

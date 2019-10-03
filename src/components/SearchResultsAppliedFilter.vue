@@ -1,7 +1,7 @@
 <template>
-  <b-badge variant="dark" class="mr-2 search-results-header__applied-filters__filter" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()">
+  <b-badge variant="warning" pill class="mr-2 pl-1 search-results-header__applied-filters__filter" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()">
+    <fa icon="times-circle" />
     {{ filter.label }}
-    <fa icon="times" />
   </b-badge>
 </template>
 
