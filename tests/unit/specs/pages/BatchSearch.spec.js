@@ -41,7 +41,7 @@ describe('BatchSearch', () => {
   beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
-    wrapper = mount(BatchSearch, { localVue, store, router, mocks: { $t: msg => msg, $tc: (msg, count) => count } })
+    wrapper = mount(BatchSearch, { localVue, store, router, mocks: { $t: msg => msg, $tc: (msg, count) => count, $n: msg => msg } })
     await wrapper.vm.$nextTick()
   })
 

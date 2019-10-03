@@ -34,6 +34,9 @@
           <template #date="{ item }">
             {{ moment(item.date).format('LLL') }}
           </template>
+          <template #nbResults="{ item }">
+            {{ $n(item.nbResults) }}
+          </template>
           <template #published="{ item }">
             {{ capitalize(item.published) ? $t('indexing.yes') : $t('indexing.no') }}
           </template>
