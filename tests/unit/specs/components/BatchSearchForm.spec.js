@@ -44,11 +44,30 @@ describe('BatchSearchForm', () => {
 
     wrapper.vm.resetForm()
 
-    expect(wrapper.vm.name).toEqual('')
+    expect(wrapper.vm.name).toBe('')
     expect(wrapper.vm.published).toBeTruthy()
     expect(wrapper.vm.csvFile).toBeNull()
-    expect(wrapper.vm.description).toEqual('')
-    expect(wrapper.vm.project).toEqual('local-datashare')
-    expect(wrapper.vm.fileTypes).toEqual('')
+    expect(wrapper.vm.description).toBe('')
+    expect(wrapper.vm.project).toBe('local-datashare')
+    expect(wrapper.vm.fileTypes).toBe('')
+  })
+
+  it('should display suggestions', () => {
+    expect(wrapper.contains('selectable-dropdown-stub')).toBeTruthy()
+  })
+
+  it('should filter fileTypes according to the fileTypes input', () => {
+    wrapper.vm.$set(wrapper.vm, 'fileTypes', 'visio')
+
+    wrapper.vm.searchTerms()
+
+    expect(wrapper.vm.suggestions).toEqual(['application/vnd.visio', 'application/vnd.stardivision.writer'])
+  })
+
+  it('should set the clicked item in the fileTypes input', () => {
+    wrapper.vm.$set(wrapper.vm, 'fileTypes', 'selected/type visio')
+    wrapper.vm.selectTerm('application/vnd.stardivision.writer')
+
+    expect(wrapper.vm.fileTypes).toBe('selected/type application/vnd.stardivision.writer')
   })
 })

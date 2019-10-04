@@ -6,26 +6,22 @@
       </h5>
       <div class="card w-100">
         <div class="card-body pb-1 small">
-          <div class="row">
-            <b-form-group
-              :label="`${$t('batchSearch.name')}:`"
-              class="col-12">
-              <b-form-input
-                v-model="name"
-                type="text"
-                required></b-form-input>
-            </b-form-group>
-            <b-form-group
-              :label="$t('batchSearch.form.fileLabel')"
-              :description="$t('batchSearch.form.fileDescription')"
-              class="col-12">
-              <b-form-file
-                v-model="csvFile"
-                :placeholder="$t('batchSearch.form.filePlaceholder')"
-                accept=".csv"
-                required></b-form-file>
-            </b-form-group>
-          </div>
+          <b-form-group
+            :label="`${$t('batchSearch.name')}:`">
+            <b-form-input
+              v-model="name"
+              type="text"
+              required></b-form-input>
+          </b-form-group>
+          <b-form-group
+            :label="$t('batchSearch.form.fileLabel')"
+            :description="$t('batchSearch.form.fileDescription')">
+            <b-form-file
+              v-model="csvFile"
+              :placeholder="$t('batchSearch.form.filePlaceholder')"
+              accept=".csv"
+              required></b-form-file>
+          </b-form-group>
           <b-form-group
             :label="`${$t('batchSearch.fuzziness')}:`">
             <b-form-input
@@ -37,7 +33,14 @@
             :label="`${$t('batchSearch.fileTypes')}:`">
             <b-form-input
               v-model="fileTypes"
-              required></b-form-input>
+              @input="searchTerms">
+            </b-form-input>
+            <selectable-dropdown
+              ref="suggestions"
+              @input="selectTerm"
+              :hide="!suggestions.length"
+              :items="suggestions">
+            </selectable-dropdown>
           </b-form-group>
           <b-form-group
             :label="`${$t('batchSearch.description')}:`">
@@ -73,7 +76,11 @@
 </template>
 
 <script>
+import types from '@/utils/types.json'
+import filter from 'lodash/filter'
+import keys from 'lodash/keys'
 import map from 'lodash/map'
+import throttle from 'lodash/throttle'
 
 export default {
   name: 'BatchSearchForm',
@@ -86,13 +93,34 @@ export default {
       project: 'local-datashare',
       fuzziness: 0,
       fileTypes: '',
-      indices: []
+      indices: [],
+      suggestions: []
+    }
+  },
+  computed: {
+    allTypes () {
+      return keys(types)
     }
   },
   created () {
-    this.indices = map(this.$config.get('userIndices', []), value => { return { value, text: value } })
+    this.$set(this, 'indices', map(this.$config.get('userIndices', []), value => { return { value, text: value } }))
   },
   methods: {
+    searchTerms: throttle(async function () {
+      const searchedTerm = this.fileTypes.split(' ').pop()
+      this.$set(this, 'suggestions', filter(this.allTypes, item => item.indexOf(searchedTerm) > -1))
+    }, 200),
+    selectTerm (term) {
+      if (term) {
+        const fileTypesArray = this.fileTypes.split(' ')
+        // Remove last item
+        fileTypesArray.pop()
+        // Append the clicked term
+        fileTypesArray.push(term)
+        this.fileTypes = fileTypesArray.join(' ')
+        this.$set(this, 'suggestions', [])
+      }
+    },
     resetForm () {
       this.$set(this, 'name', '')
       this.$set(this, 'published', true)

@@ -23,7 +23,8 @@
           </button>
         </div>
 
-        <selectable-dropdown class="search-bar__suggestions dropdown-menu"
+        <selectable-dropdown
+          class="search-bar__suggestions dropdown-menu"
           ref="suggestions"
           @input="selectTerm"
           @click.native="submit"
