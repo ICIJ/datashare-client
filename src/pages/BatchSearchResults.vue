@@ -56,6 +56,12 @@
             {{ meta.nbResults }}
           </dd>
           <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.fuzziness') }}
+          </dt>
+          <dd class="col-sm-8">
+            {{ meta.fuzziness }}
+          </dd>
+          <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.published') }}
           </dt>
           <dd class="col-sm-8">

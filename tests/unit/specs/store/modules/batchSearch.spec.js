@@ -26,15 +26,16 @@ describe('BatchSearch store', () => {
 
   describe('actions', () => {
     it('should submit the new batch search form with complete information', async () => {
-      await store.dispatch('batchSearch/onSubmit', { name: 'name', published: false, csvFile: 'csvFile', description: 'description', index: 'index' })
+      await store.dispatch('batchSearch/onSubmit', { name: 'name', published: false, csvFile: 'csvFile', description: 'description', project: 'project', fuzziness: 2 })
 
       const body = new FormData()
       body.append('name', 'name')
       body.append('description', 'description')
       body.append('csvFile', 'csvFile')
       body.append('published', false)
+      body.append('fuzziness', 2)
       expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/index'), { method: 'POST', body })
+      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
       expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})
     })
 

@@ -467,6 +467,7 @@
     "projectName": "Project Name",
     "searchName": "Search Name",
     "description": "Description",
+    "fuzziness": "Fuzziness",
     "queries": "Queries",
     "state": "State",
     "date": "Date",

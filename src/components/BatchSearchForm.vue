@@ -33,6 +33,15 @@
             </b-form-group>
           </div>
           <b-form-group
+            :label="`${$t('batchSearch.fuzziness')}:`"
+            label-for="fuzziness">
+            <b-form-input
+              id="type-number"
+              type="number"
+              v-model="fuzziness"
+              required></b-form-input>
+          </b-form-group>
+          <b-form-group
             id="group-description"
             :label="$t('batchSearch.form.descriptionLabel')"
             label-for="description">
@@ -49,7 +58,7 @@
             label-for="project"
             v-if="$config.is('multipleProjects')">
             <b-form-select
-              v-model="index"
+              v-model="project"
               :options="indices"
               required></b-form-select>
           </b-form-group>
@@ -57,7 +66,7 @@
         <div class="card-footer">
           <div class="d-flex align-items-center">
             <div class="flex-grow-1">
-              <b-form-checkbox v-model="published" raw>
+              <b-form-checkbox v-model="published" switch>
                 {{ $t('batchSearch.published') }}
               </b-form-checkbox>
             </div>
@@ -82,7 +91,8 @@ export default {
       published: true,
       csvFile: null,
       description: '',
-      index: 'local-datashare',
+      project: 'local-datashare',
+      fuzziness: 0,
       indices: []
     }
   },
@@ -95,10 +105,11 @@ export default {
       this.$set(this, 'published', true)
       this.$set(this, 'csvFile', null)
       this.$set(this, 'description', '')
-      this.$set(this, 'index', 'local-datashare')
+      this.$set(this, 'project', 'local-datashare')
+      this.$set(this, 'fuzziness', 0)
     },
     async onSubmit () {
-      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, index: this.index })
+      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, project: this.project, fuzziness: this.fuzziness })
       this.resetForm()
       if (this.$config.is('manageDocuments')) {
         try {

@@ -35,9 +35,11 @@ describe('BatchSearchForm', () => {
     expect(wrapper.vm.resetForm).toBeCalled()
   })
 
-  it('should display a form with 3 fields: name file and description', () => {
+  it('should display a form with 5 fields: name, file, fuzziness and description', () => {
+    expect(wrapper.findAll('b-form-group-stub')).toHaveLength(4)
     expect(wrapper.find('b-form-group-stub[labelfor=name] b-form-input-stub').exists()).toBeTruthy()
     expect(wrapper.find('b-form-group-stub[labelfor=file] b-form-file-stub').exists()).toBeTruthy()
+    expect(wrapper.find('b-form-group-stub[labelfor=fuzziness] b-form-input-stub').exists()).toBeTruthy()
     expect(wrapper.find('b-form-group-stub[labelfor=description] b-form-textarea-stub').exists()).toBeTruthy()
   })
 
@@ -46,7 +48,7 @@ describe('BatchSearchForm', () => {
     wrapper.vm.$set(wrapper.vm, 'published', false)
     wrapper.vm.$set(wrapper.vm, 'csvFile', 'This is a file')
     wrapper.vm.$set(wrapper.vm, 'description', 'This is a description')
-    wrapper.vm.$set(wrapper.vm, 'index', 'index-example')
+    wrapper.vm.$set(wrapper.vm, 'project', 'project-example')
 
     wrapper.vm.resetForm()
 
@@ -54,6 +56,6 @@ describe('BatchSearchForm', () => {
     expect(wrapper.vm.published).toBeTruthy()
     expect(wrapper.vm.csvFile).toBeNull()
     expect(wrapper.vm.description).toEqual('')
-    expect(wrapper.vm.index).toEqual('local-datashare')
+    expect(wrapper.vm.project).toEqual('local-datashare')
   })
 })

@@ -114,9 +114,13 @@ describe('BatchSearchResults', () => {
     expect(wrapper.find('.batch-search-results__download').exists()).toBeTruthy()
   })
 
+  it('should display a button to delete the batchSearch', () => {
+    expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
+  })
+
   it('should display info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(4)
+    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(5)
   })
 
   it('should refresh route on "batch-search-results::filter" event emitted, on reset to the first page', () => {
@@ -136,10 +140,6 @@ describe('BatchSearchResults', () => {
 
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({ name: 'batch-search.results', params: { index: `${process.env.VUE_APP_ES_INDEX}`, uuid: '12' }, query: { page: 1, queries: [], sort: 'content_type', order: 'desc' } })
-  })
-
-  it('should display a "Delete batch search" button', () => {
-    expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
   })
 
   it('should redirect on batchSearch deletion', async () => {
