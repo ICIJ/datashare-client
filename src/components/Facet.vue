@@ -226,7 +226,7 @@ export default {
   .facet {
 
     .content-placeholder .content-placeholder__wrapper__row__box {
-      background: darken($aggregations-panel-bg, 5%);
+      background: darken($app-context-sidebar-bg, 5%);
     }
 
     &__header {

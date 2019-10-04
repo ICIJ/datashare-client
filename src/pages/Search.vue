@@ -161,11 +161,11 @@ export default {
       border-radius: 1.5rem;
       padding: 0;
       border-radius: 20px;
-      background: $aggregations-panel-bg;
+      background: $app-context-sidebar-bg;
       color: white;
 
       &:hover {
-        background: lighten($aggregations-panel-bg, 10%);
+        background: lighten($app-context-sidebar-bg, 10%);
         color: white;
       }
     }
