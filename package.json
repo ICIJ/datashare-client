@@ -22,7 +22,7 @@
     "@icij/murmur": "1.16.1",
     "bodybuilder": "^2.2.17",
     "bootstrap": ">=4.3.1",
-    "bootstrap-vue": "2.0.0",
+    "bootstrap-vue": "2.0.2",
     "cheerio": "^1.0.0-rc.3",
     "elasticsearch-browser": "^16.1.1",
     "es6-promise": "^4.2.8",
