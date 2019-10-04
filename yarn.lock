@@ -684,11 +684,21 @@
   version "0.2.19"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.19.tgz#754a0f85e1290858152e1c05700ab502b11197f1"
 
+"@fortawesome/fontawesome-common-types@^0.2.25":
+  version "0.2.25"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.25.tgz#6df015905081f2762e5cfddeb7a20d2e9b16c786"
+
 "@fortawesome/fontawesome-svg-core@^1.2.19":
   version "1.2.19"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.19.tgz#0eca1ce9285c3d99e6e340633ee8f615f9d1a2e0"
   dependencies:
     "@fortawesome/fontawesome-common-types" "^0.2.19"
+
+"@fortawesome/fontawesome-svg-core@^1.2.25":
+  version "1.2.25"
+  resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.25.tgz#24b03391d14f0c6171e8cad7057c687b74049790"
+  dependencies:
+    "@fortawesome/fontawesome-common-types" "^0.2.25"
 
 "@fortawesome/fontawesome@^1.1.4":
   version "1.1.8"
@@ -753,9 +763,9 @@
   dependencies:
     "@hapi/hoek" "6.x.x"
 
-"@icij/murmur@1.16.1":
-  version "1.16.1"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-1.16.1.tgz#edd70303ea24367179b631e4ed67f9791f0ad003"
+"@icij/murmur@1.16.2":
+  version "1.16.2"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-1.16.2.tgz#857ada72d7592b12201febc9af06913805f2df53"
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
     "@fortawesome/fontawesome-svg-core" "^1.2.19"
@@ -4862,9 +4872,9 @@ getpass@^0.1.1:
   dependencies:
     assert-plus "^1.0.0"
 
-git-revision-webpack-plugin@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/git-revision-webpack-plugin/-/git-revision-webpack-plugin-3.0.3.tgz#f909949d7851d1039ed530518f73f5d46594e66f"
+git-revision-webpack-plugin@^3.0.4:
+  version "3.0.4"
+  resolved "https://registry.yarnpkg.com/git-revision-webpack-plugin/-/git-revision-webpack-plugin-3.0.4.tgz#ed1eaad094d6956d3299381050a5a50f662550bd"
 
 glob-base@^0.3.0:
   version "0.3.0"
@@ -5983,9 +5993,9 @@ javascript-stringify@^1.6.0:
   version "1.6.0"
   resolved "https://registry.yarnpkg.com/javascript-stringify/-/javascript-stringify-1.6.0.tgz#142d111f3a6e3dae8f4a9afd77d45855b5a9cce3"
 
-jest-canvas-mock@^2.1.0:
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/jest-canvas-mock/-/jest-canvas-mock-2.1.0.tgz#6aa129f200d448056515d43d4b34027e6bb2fb36"
+jest-canvas-mock@^2.1.1:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/jest-canvas-mock/-/jest-canvas-mock-2.1.1.tgz#fc59b16b093620345c7865f34ef1a16940eec784"
   dependencies:
     cssfontparser "^1.2.1"
     parse-color "^1.0.0"
@@ -8022,9 +8032,9 @@ p-map@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/p-map/-/p-map-2.0.0.tgz#be18c5a5adeb8e156460651421aceca56c213a50"
 
-p-queue@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/p-queue/-/p-queue-6.1.0.tgz#3f546275073b41e4af460e41459524b15c2753f3"
+p-queue@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/p-queue/-/p-queue-6.1.1.tgz#eedbaf7335b4931ef857e2e58063fed461b97e80"
   dependencies:
     eventemitter3 "^4.0.0"
     p-timeout "^3.1.0"
@@ -10845,9 +10855,9 @@ vue@^2.5.x, vue@^2.6.10:
   version "2.6.10"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.10.tgz#a72b1a42a4d82a721ea438d1b6bf55e66195c637"
 
-vuex-map-fields@^1.3.4:
-  version "1.3.4"
-  resolved "https://registry.yarnpkg.com/vuex-map-fields/-/vuex-map-fields-1.3.4.tgz#63cb41117477c8d5dade2e697239428f936cf77c"
+vuex-map-fields@^1.3.5:
+  version "1.3.5"
+  resolved "https://registry.yarnpkg.com/vuex-map-fields/-/vuex-map-fields-1.3.5.tgz#af4c389e6a843758d99915c17daee49d6af6644d"
 
 vuex-persistedstate@^2.5.4:
   version "2.5.4"
