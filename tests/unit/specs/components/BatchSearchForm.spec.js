@@ -1,13 +1,10 @@
 import BatchSearchForm from '@/components/BatchSearchForm'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
-import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
+import { App } from '@/main'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
+const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('BatchSearchForm', () => {
   let actions, wrapper
@@ -15,13 +12,8 @@ describe('BatchSearchForm', () => {
   beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(() => {
-    const state = {
-      batchSearches: []
-    }
-    actions = {
-      onSubmit: jest.fn(),
-      getBatchSearches: jest.fn()
-    }
+    const state = { batchSearches: [] }
+    actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
     const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
     wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
   })
