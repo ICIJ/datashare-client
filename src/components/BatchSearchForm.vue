@@ -34,6 +34,12 @@
               required></b-form-input>
           </b-form-group>
           <b-form-group
+            :label="`${$t('batchSearch.fileTypes')}:`">
+            <b-form-input
+              v-model="fileTypes"
+              required></b-form-input>
+          </b-form-group>
+          <b-form-group
             :label="`${$t('batchSearch.description')}:`">
             <b-form-textarea
               v-model="description"
@@ -79,6 +85,7 @@ export default {
       description: '',
       project: 'local-datashare',
       fuzziness: 0,
+      fileTypes: '',
       indices: []
     }
   },
@@ -93,9 +100,10 @@ export default {
       this.$set(this, 'description', '')
       this.$set(this, 'project', 'local-datashare')
       this.$set(this, 'fuzziness', 0)
+      this.$set(this, 'fileTypes', '')
     },
     async onSubmit () {
-      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, project: this.project, fuzziness: this.fuzziness })
+      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, project: this.project, fuzziness: this.fuzziness, fileTypes: this.fileTypes })
       this.resetForm()
       if (this.$config.is('manageDocuments')) {
         try {

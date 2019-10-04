@@ -27,9 +27,9 @@ describe('BatchSearchForm', () => {
     expect(wrapper.vm.resetForm).toBeCalled()
   })
 
-  it('should display a form with 4 fields: name, file, fuzziness and description', () => {
-    expect(wrapper.findAll('b-form-group-stub')).toHaveLength(4)
-    expect(wrapper.findAll('b-form-input-stub')).toHaveLength(2)
+  it('should display a form with 5 fields: name, file, fuzziness, file type and description', () => {
+    expect(wrapper.findAll('b-form-group-stub')).toHaveLength(5)
+    expect(wrapper.findAll('b-form-input-stub')).toHaveLength(3)
     expect(wrapper.findAll('b-form-file-stub')).toHaveLength(1)
     expect(wrapper.findAll('b-form-textarea-stub')).toHaveLength(1)
   })
@@ -40,6 +40,7 @@ describe('BatchSearchForm', () => {
     wrapper.vm.$set(wrapper.vm, 'csvFile', 'This is a file')
     wrapper.vm.$set(wrapper.vm, 'description', 'This is a description')
     wrapper.vm.$set(wrapper.vm, 'project', 'project-example')
+    wrapper.vm.$set(wrapper.vm, 'fileTypes', '')
 
     wrapper.vm.resetForm()
 
@@ -48,5 +49,6 @@ describe('BatchSearchForm', () => {
     expect(wrapper.vm.csvFile).toBeNull()
     expect(wrapper.vm.description).toEqual('')
     expect(wrapper.vm.project).toEqual('local-datashare')
+    expect(wrapper.vm.fileTypes).toEqual('')
   })
 })

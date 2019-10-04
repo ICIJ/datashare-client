@@ -462,6 +462,7 @@
     "name": "Name",
     "description": "Description",
     "fuzziness": "Fuzziness",
+    "fileTypes": "File Types",
     "queries": "Queries",
     "state": "State",
     "date": "Date",
