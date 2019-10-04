@@ -34,10 +34,8 @@
     "search-in": "Rechercher dans",
     "hideFilters": "Cacher les filtres",
     "showFilters": "Afficher les filtres",
-    "contextualizeFiltersLabel": "Contextualiser",
+    "contextualizeFiltersLabel": "Contextualize filters",
     "contextualizeFiltersDescription": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche",
-    "resetFiltersLabel": "Réinitialiser",
-    "resetFiltersDescription": "Supprime les filtres sélectionnés de la recherche.",
     "tips": "Tips to improve searching",
     "settings": {
       "title": "Paramètres de recherche",
@@ -64,7 +62,9 @@
         "pathReverse": "Chemin du fichier (Z à A)"
       }
     },
-    "reset_filters": "Réinitialiser les filtres",
+    "filtersTitle": "Filters",
+    "clearFilters": "Clear all filters",
+    "clearFiltersDescription": "Remove selected filters from the search.",
     "back": "Retour aux résultats de recherche",
     "try": "Vous devriez essayer de",
     "nav": {
@@ -467,6 +467,7 @@
     "projectName": "Nom du projet",
     "searchName": "Nom de la recherche",
     "description": "Description",
+    "fuzziness": "Fuzziness",
     "queries": "Recherches",
     "state": "Status",
     "date": "Date",
