@@ -30,7 +30,7 @@
       "thread": "ID de fil de discussion"
     },
     "placeholder": "Rechercher dans les documents...",
-    "buttonlabel": "Rechercher",
+    "buttonLabel": "Rechercher",
     "search-in": "Rechercher dans",
     "hideFilters": "Cacher les filtres",
     "showFilters": "Afficher les filtres",

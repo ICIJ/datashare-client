@@ -27,7 +27,7 @@
         <slot name="search" v-if="!hideSearch">
           <form @submit.prevent="asyncFacetSearch" v-if="facet.isSearchable">
             <label class="list-group facet__items__search py-2 px-2">
-              <input v-model="facetQuery" type="search" :placeholder="$t('search.search-in') + ' ' + $t('facet.' + facet.name) + '...'" />
+              <input v-model="facetQuery" type="search" :placeholder="$t('search.searchIn') + ' ' + $t('facet.' + facet.name) + '...'" />
               <fa icon="search" class="float-right" />
             </label>
           </form>

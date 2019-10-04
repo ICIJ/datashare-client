@@ -1,23 +1,13 @@
-import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
-import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import messages from '@/lang/en'
 import messagesFr from '@/lang/fr'
-import router from '@/router'
-import store from '@/store'
 import SearchBar from '@/components/SearchBar'
-import BootstrapVue from 'bootstrap-vue'
 import flushPromises from 'flush-promises'
+import { App } from '@/main'
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(Vuex)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue, store, router, i18n } = App.init(createLocalVue()).useAll()
 
-describe('SearchBar.vue', function () {
+describe('SearchBar', function () {
   let wrapper
 
   beforeEach(() => {
@@ -35,34 +25,32 @@ describe('SearchBar.vue', function () {
     wrapper.setProps({ settings: true })
     await flushPromises()
 
-    expect(wrapper.find('.search-bar search-settings-stub').exists()).toBeTruthy()
+    expect(wrapper.contains('.search-bar search-settings-stub')).toBeTruthy()
   })
 
   it('should display the shortkeys-modal component', async () => {
     wrapper.setProps({ settings: true })
     await flushPromises()
 
-    expect(wrapper.find('.search-bar shortkeys-modal-stub').exists()).toBeTruthy()
+    expect(wrapper.contains('.search-bar shortkeys-modal-stub')).toBeTruthy()
   })
 
-  it('should display a search bar button in French', async () => {
+  it('should display a search bar button in French', () => {
     const i18n = new VueI18n({ locale: 'fr', messages: { 'fr': messagesFr } })
-    wrapper = shallowMount(SearchBar, { localVue, i18n, router, store, sync: false })
+    wrapper = shallowMount(SearchBar, { localVue, i18n, store, sync: false })
 
     expect(wrapper.contains('.search-bar .btn')).toBeTruthy()
-    expect(wrapper.find('.search-bar .btn').text()).toEqual('Rechercher')
+    expect(wrapper.find('.search-bar .btn').text()).toBe('Rechercher')
   })
 
-  it('should submit search', async () => {
-    // wrapper.vm.query = 'foo'
+  it('should submit search', () => {
     wrapper.vm.$set(wrapper.vm, 'query', 'foo')
     wrapper.vm.submit()
-    expect(wrapper.vm.$store.state.search.query).toEqual('foo')
+    expect(wrapper.vm.$store.state.search.query).toBe('foo')
 
-    // wrapper.vm.query = 'bar'
     wrapper.vm.$set(wrapper.vm, 'query', 'bar')
     wrapper.vm.submit()
-    expect(wrapper.vm.$store.state.search.query).toEqual('bar')
+    expect(wrapper.vm.$store.state.search.query).toBe('bar')
   })
 
   it('should reset the from search parameter to 0', () => {

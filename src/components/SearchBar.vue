@@ -19,7 +19,7 @@
             </b-dropdown-item>
           </b-dropdown>
           <button type="submit" class="btn btn-dark search-bar__submit">
-            {{ $t('search.buttonlabel') }}
+            {{ $t('search.buttonLabel') }}
           </button>
         </div>
 

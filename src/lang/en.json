@@ -7,7 +7,6 @@
     },
     "more": "Explore more",
     "placeholder": "Search for people, organizations, locations...",
-    "inthedocs": "In the documents",
     "relative": "Relative to the search"
   },
   "search": {
@@ -30,8 +29,8 @@
       "thread": "Thread ID"
     },
     "placeholder": "Search in documents...",
-    "buttonlabel": "Search",
-    "search-in": "Search in",
+    "buttonLabel": "Search",
+    "searchIn": "Search in",
     "hideFilters": "Hide filters",
     "showFilters": "Show filters",
     "contextualizeFiltersLabel": "Contextualize filters",
@@ -39,14 +38,14 @@
     "tips": "Tips to improve searching",
     "settings": {
       "title": "Search settings",
-      "results_per_page": "Number of results by page",
-      "sort_by": "Sort results by"
+      "resultsPerPage": "Number of results by page",
+      "sortBy": "Sort results by"
     },
     "results": {
       "match": "match in doc",
       "entities": "nb entities",
       "results": "1 document | %{total} documents",
-      "no-result": "No documents found",
+      "noResults": "No documents found",
       "on": "on",
       "perPage": "per page",
       "sort": {

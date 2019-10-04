@@ -14,7 +14,7 @@
       <div class="search-settings__popover">
         <div class="row py-2">
           <label class="col-8" for="input-page-size">
-            {{ $t('search.settings.results_per_page') }}
+            {{ $t('search.settings.resultsPerPage') }}
           </label>
           <div class="col-4 text-right">
             <select v-model="selectedSize" class="custom-select custom-select-sm" id="input-page-size">
@@ -26,7 +26,7 @@
         </div>
         <div class="row py-2">
           <label class="col-8" for="input-sort">
-            {{ $t('search.settings.sort_by') }}
+            {{ $t('search.settings.sortBy') }}
           </label>
           <div class="col-4 text-right">
             <select v-model="selectedSort" class="custom-select custom-select-sm" id="input-sort">
