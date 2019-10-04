@@ -11,6 +11,7 @@ import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import store from '@/store'
 import { datashare } from '@/store/modules/search'
+import flushPromises from 'flush-promises'
 
 const localVue = createLocalVue()
 localVue.use(Murmur)
@@ -31,12 +32,13 @@ describe('DocumentActions', () => {
     // Create a dummy document with id "doc_01"
     await letData(es).have(new IndexedDocument('doc_01')).commit()
     const document = Response.instantiate(await esClient.getEsDoc(process.env.VUE_APP_ES_INDEX, 'doc_01'))
-    wrapper = shallowMount(DocumentActions, { localVue, store, propsData: { document }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentActions, { localVue, store, propsData: { document }, mocks: { $t: msg => msg }, sync: false })
   })
 
   it('should display a filled star if document is starred, an empty one otherwise', async () => {
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('far,star')
     store.commit('search/starredDocuments', ['doc_01'])
+    await flushPromises()
 
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')
   })
@@ -53,6 +55,7 @@ describe('DocumentActions', () => {
 
   it('should replace a filled star by an empty one on click on it', async () => {
     store.commit('search/pushFromStarredDocuments', 'doc_01')
+    await flushPromises()
 
     expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')
@@ -68,7 +71,6 @@ describe('DocumentActions', () => {
     wrapper.vm.$root.$on('facet::starred:refresh', mockCallback)
 
     await wrapper.vm.toggleStarDocument(wrapper.vm.document)
-    await wrapper.vm.$nextTick()
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })

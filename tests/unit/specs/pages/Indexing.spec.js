@@ -4,6 +4,7 @@ import Indexing from '@/pages/Indexing'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
 import { jsonOk } from 'tests/unit/tests_utils'
+import flushPromises from 'flush-promises'
 
 const { i18n, localVue, store, router } = App.init(createLocalVue()).useAll()
 
@@ -11,7 +12,7 @@ describe('Indexing.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = mount(Indexing, { localVue, i18n, router, store })
+    wrapper = mount(Indexing, { localVue, i18n, router, store, sync: false })
     jest.spyOn(datashare, 'fetch')
   })
 
@@ -32,9 +33,10 @@ describe('Indexing.vue', () => {
     expect(store.state.indexing.pollHandle).toBeNull()
   })
 
-  it('should update tasks with polling request', () => {
+  it('should update tasks with polling request', async () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' },
       { name: 'foo.baz@456', progress: 0.2, state: 'RUNNING' }])
+    await flushPromises()
 
     expect(wrapper.findAll('li.indexing__tasks').length).toEqual(2)
     expect(wrapper.findAll('li.indexing__tasks').at(0).text()).toContain('bar 123')
@@ -51,8 +53,9 @@ describe('Indexing.vue', () => {
     expect(wrapper.find('.span-find-named-entities').attributes().title).toEqual('')
   })
 
-  it('should disable the find named entities button if a task is running and display a tooltip', () => {
+  it('should disable the find named entities button if a task is running and display a tooltip', async () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+    await flushPromises()
 
     expect(wrapper.find('.btn-find-named-entites').attributes().disabled).toEqual('disabled')
     expect(wrapper.find('.span-find-named-entities').attributes().title).not.toEqual('')
@@ -63,30 +66,34 @@ describe('Indexing.vue', () => {
     expect(wrapper.contains('.btn-delete-done-tasks')).toBeFalsy()
   })
 
-  it('should display the "Stop pending tasks" and "Delete done tasks" buttons, if a task is running', () => {
+  it('should display the "Stop pending tasks" and "Delete done tasks" buttons, if a task is running', async () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+    await flushPromises()
 
     expect(wrapper.contains('.btn-stop-pending-tasks')).toBeTruthy()
     expect(wrapper.contains('.btn-delete-done-tasks')).toBeTruthy()
   })
 
-  it('should enable the "Stop pending tasks" if a task is running', () => {
+  it('should enable the "Stop pending tasks" if a task is running', async () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+    await flushPromises()
 
     expect(wrapper.find('.btn-stop-pending-tasks').attributes().disabled).toBeUndefined()
     expect(wrapper.find('.btn-delete-done-tasks').attributes().disabled).toEqual('disabled')
   })
 
-  it('should enable the "Delete done tasks" if a task is done', () => {
+  it('should enable the "Delete done tasks" if a task is done', async () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    await flushPromises()
 
     expect(wrapper.find('.btn-stop-pending-tasks').attributes().disabled).toEqual('disabled')
     expect(wrapper.find('.btn-delete-done-tasks').attributes().disabled).toBeUndefined()
   })
 
-  it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', () => {
+  it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', async () => {
     datashare.fetch.mockReturnValue(jsonOk())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+    await flushPromises()
     expect(wrapper.vm.tasks.length).toEqual(1)
 
     wrapper.find('.btn-stop-pending-tasks').trigger('click')
@@ -97,9 +104,10 @@ describe('Indexing.vue', () => {
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
-  it('should call a backend endpoint on click on the "Delete done tasks" button', () => {
+  it('should call a backend endpoint on click on the "Delete done tasks" button', async () => {
     datashare.fetch.mockReturnValue(jsonOk())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    await flushPromises()
     expect(wrapper.vm.tasks.length).toEqual(1)
 
     wrapper.find('.btn-delete-done-tasks').trigger('click')
@@ -110,18 +118,20 @@ describe('Indexing.vue', () => {
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
-  it('should display 2 available "Stop task" buttons if 2 tasks are running', () => {
+  it('should display 2 available "Stop task" buttons if 2 tasks are running', async () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' },
       { name: 'foo.bar@456', progress: 0.7, state: 'RUNNING' }])
+    await flushPromises()
 
     expect(wrapper.findAll('.btn-stop-task').length).toEqual(2)
     expect(wrapper.findAll('.btn-stop-task').at(0).attributes.disabled).toBeUndefined()
     expect(wrapper.findAll('.btn-stop-task').at(1).attributes.disabled).toBeUndefined()
   })
 
-  it('should call a backend endpoint on click on a "Stop task" icon', () => {
+  it('should call a backend endpoint on click on a "Stop task" icon', async () => {
     datashare.fetch.mockReturnValue(jsonOk())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
+    await flushPromises()
 
     expect(wrapper.findAll('.btn-stop-task').length).toEqual(1)
 
@@ -133,8 +143,9 @@ describe('Indexing.vue', () => {
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
-  it('should display 1 disabled "Stop task" button if 1 task is done', () => {
+  it('should display 1 disabled "Stop task" button if 1 task is done', async () => {
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
+    await flushPromises()
 
     expect(wrapper.findAll('.btn-stop-task').length).toEqual(1)
     expect(wrapper.find('.btn-stop-task').attributes().disabled).toEqual('disabled')

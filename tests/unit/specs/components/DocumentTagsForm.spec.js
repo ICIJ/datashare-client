@@ -22,7 +22,7 @@ async function createView (es, tags = [], documentId = 'document') {
   await letData(es).have(new IndexedDocument(documentId).withTags(tags)).commit()
   await store.dispatch('document/get', { id: documentId })
   await store.dispatch('document/getTags')
-  return shallowMount(DocumentTagsForm, { localVue, store, propsData: { document: store.state.document.doc, tags: store.state.document.tags, displayTags: true }, mocks: { $t: msg => msg } })
+  return shallowMount(DocumentTagsForm, { localVue, store, propsData: { document: store.state.document.doc, tags: store.state.document.tags, displayTags: true }, mocks: { $t: msg => msg }, sync: false })
 }
 
 describe('DocumentTagsForm', () => {
@@ -67,7 +67,7 @@ describe('DocumentTagsForm', () => {
   it('should display a tooltip to a tag', async () => {
     const wrapper = await createView(es, ['tag_01'])
 
-    expect(wrapper.find('.document-tags-form__tags__tag span').attributes('data-original-title')).toContain('document.created_by test-user document.on')
+    expect(wrapper.find('.document-tags-form__tags__tag span').attributes('title')).toContain('document.created_by test-user document.on')
   })
 
   it('should call API endpoint to add a tag', async () => {

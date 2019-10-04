@@ -18,26 +18,26 @@
           <content-placeholder :rows="rows" class="p-0 my-3" />
         </div>
         <b-table v-else striped hover responsive :fields="fields" :items="items" thead-tr-class="text-nowrap" tbody-tr-class="batch-search__items__item small">
-          <template #name="{ item }">
+          <template v-slot:cell(name)="{ item }">
             <router-link :to="{ name: 'batch-search.results', params: { index: item.project.id, uuid: item.uuid }, query: { page: 1, sort, order } }" class="batch-search__items__item__link">
               {{ item.name }}
             </router-link>
           </template>
-          <template #queries="{ item }">
+          <template v-slot:cell(queries)="{ item }">
             {{ $tc('batchSearch.query', keys(item.queries).length) }}
           </template>
-          <template #state="{ item }">
+          <template v-slot:cell(state)="{ item }">
             <b-badge :variant="item.state | toVariant">
               {{ capitalize(item.state) }}
             </b-badge>
           </template>
-          <template #date="{ item }">
+          <template v-slot:cell(date)="{ item }">
             {{ moment(item.date).format('LLL') }}
           </template>
-          <template #nbResults="{ item }">
+          <template v-slot:cell(nbResults)="{ item }">
             {{ $n(item.nbResults) }}
           </template>
-          <template #published="{ item }">
+          <template v-slot:cell(published)="{ item }">
             {{ item.published ? $t('indexing.yes') : $t('indexing.no') }}
           </template>
         </b-table>

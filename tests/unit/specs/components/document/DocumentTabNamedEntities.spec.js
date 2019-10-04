@@ -34,7 +34,7 @@ describe('DocumentTabNamedEntities', () => {
       .withNer('mention_03', 0, 'CATEGORY_03'))
       .commit()
     await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
+    const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc }, sync: false })
 
     const pills = wrapper.findAll('b-badge-stub')
     expect(pills).toHaveLength(3)
@@ -49,7 +49,7 @@ describe('DocumentTabNamedEntities', () => {
   it('should display a specific error message if no names finding task has been run on that document', async () => {
     await letData(es).have(new IndexedDocument(id)).commit()
     await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
+    const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc }, sync: false })
 
     expect(wrapper.findAll('.document__named-entities--not--searched')).toHaveLength(1)
   })
@@ -57,7 +57,7 @@ describe('DocumentTabNamedEntities', () => {
   it('should display a specific error message if no named entities found after names finding task', async () => {
     await letData(es).have(new IndexedDocument(id).withPipeline('CORENLP')).commit()
     await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
+    const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc }, sync: false })
 
     expect(wrapper.findAll('.document__named-entities--not--found')).toHaveLength(1)
   })
@@ -69,7 +69,7 @@ describe('DocumentTabNamedEntities', () => {
       .withNer('mention_02', 1, 'CATEGORY_02'))
       .commit()
     await store.dispatch('document/get', { id }).then(() => store.dispatch('document/getNamedEntities'))
-    const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc } })
+    const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document: store.state.document.doc }, sync: false })
 
     expect(wrapper.findAll('b-badge-stub')).toHaveLength(2)
 
