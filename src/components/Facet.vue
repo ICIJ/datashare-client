@@ -1,8 +1,11 @@
 <template>
-  <div v-if="!isGloballyEmpty" class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet--hide-header': hideHeader, 'facet--has-values': hasValues() }">
+  <div class="facet card" :class="{ 'facet--reversed': isReversed(), 'facet--hide-show-more': hideShowMore, 'facet--hide-search': hideSearch, 'facet--hide-header': hideHeader, 'facet--has-values': hasValues() }">
     <slot name="header" v-if="!hideHeader">
       <div class="card-header px-2 d-flex facet__header">
         <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate pt-0">
+          <span class="facet__items__item__icon pl-0 pr-1" v-if="facet.icon">
+            <fa :icon="facet.icon" fixed-width />
+          </span>
           <template>
             <slot name="title">
               {{ $t('facet.' + facet.name) }}
@@ -68,7 +71,7 @@
         </div>
         <div v-if="noResults" class="p-2 text-center text-muted">
           {{ $t('facet.none') }}<br />
-          <a @click="asyncFacetSearch" href="#" class="text-white text-underline">
+          <a @click.prevent="asyncFacetSearch" href="#" class="text-white text-underline">
             {{ $t('facet.seeAll') }}
           </a>
         </div>
@@ -104,8 +107,8 @@ export default {
         size: initialNumberOfFilesDisplayed
       },
       collapseItems: !this.asyncItems,
-      isReady: !!this.asyncItems,
-      isGloballyEmpty: this.$store.state.search.globalSearch && !this.asyncItems,
+      isReady: true,
+      isInitialized: !!this.asyncItems,
       queue: new PQueue({ concurrency: 1 }),
       results: []
     }
@@ -113,24 +116,24 @@ export default {
   watch: {
     facetQuery () {
       this.searchWithThrottle()
+    },
+    collapseItems () {
+      if (!this.collapseItems) {
+        this.initialize()
+      }
     }
   },
   mounted () {
     // Default collapse state depends of the selected values
     this.collapseItems = !this.asyncItems && !this.hasValues()
-  },
-  created () {
-    // Are we using an "offline" components?
-    if (!this.asyncItems) {
-      this.aggregateWithLoading()
-      // Watch change on the facet store the restart aggregation
-      this.$store.watch(this.watchedForUpdate, this.aggregateWithLoading, { deep: true })
-    }
+    // Listen for event to refresh the facet
     this.$root.$on('facet::refresh', facetName => {
-      if (this.facet.name === facetName) {
+      if (this.isInitialized && this.facet.name === facetName) {
         this.aggregateWithLoading()
       }
     })
+    // Initialize the component
+    this.initialize()
   },
   computed: {
     items () {
@@ -156,6 +159,17 @@ export default {
     }
   },
   methods: {
+    initialize () {
+      if (!this.isInitialized && !this.collapseItems) {
+        // Are we using an "offline" components?
+        if (!this.asyncItems) {
+          this.aggregateWithLoading()
+          // Watch change on the facet store the restart aggregation
+          this.$store.watch(this.watchedForUpdate, this.aggregateWithLoading, { deep: true })
+        }
+        this.isInitialized = true
+      }
+    },
     asyncFacetSearch () {
       this.$root.$emit('facet::async-search', this.facet, this.facetQuery)
       this.$emit('async-search', this.facet, this.facetQuery)
@@ -185,9 +199,6 @@ export default {
           this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)
           this.$set(this, 'results', this.addInvertedFacets(res))
           this.$set(this, 'isReady', this.queue.pending === 1)
-          // If this search is global, it means the no values for this query
-          // means no values at all for this facet
-          this.$set(this, 'isGloballyEmpty', this.$store.state.search.globalSearch && this.totalCount === 0 && this.facetQuery === '')
           return this.results
         })
       }
@@ -202,9 +213,7 @@ export default {
       return response
     },
     toggleItems () {
-      if (this.isReady) {
-        this.collapseItems = !this.collapseItems
-      }
+      this.collapseItems = !this.collapseItems
     },
     shouldDisplayShowMoreAction () {
       return !this.hideShowMore && this.items.length > initialNumberOfFilesDisplayed

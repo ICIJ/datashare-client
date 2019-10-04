@@ -25,22 +25,22 @@
         selected-variant="tertiary"
         tbody-tr-class="search-results-table__items__row"
         thead-tr-class="text-nowrap">
-        <template #relevance="{ item, rowSelected }" >
+        <template v-slot:cell(relevance)="{ item, rowSelected }" >
           <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon" />
           <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" />
         </template>
-        <template #path="{ item }">
+        <template v-slot:cell(path)="{ item }">
           <router-link :to="{ name: 'document', params: item.routerParams }" class="text-truncate">
             <document-sliced-name :document="item" />
           </router-link>
         </template>
-        <template #highlight="{ value }">
+        <template v-slot:cell(highlight)="{ value }">
           <span v-html="value" class="text-truncate text-muted"></span>
         </template>
-        <template #actions="{ item }">
+        <template v-slot:cell(actions)="{ item }">
           <document-actions :document="item" class="float-right btn-group-sm" />
         </template>
-        <template #contentLength="{ value }">
+        <template v-slot:cell(contentLength)="{ value }">
           {{ value | humanSize }}
         </template>
       </b-table>
@@ -53,7 +53,7 @@
         </div>
         <div class="mt-3" v-if="hasFilters">
           {{ $t('search.try') }}
-          <reset-filters-button />
+          <reset-filters-button variant="outline-secondary" no-icon />
         </div>
       </div>
     </div>

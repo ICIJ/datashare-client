@@ -1,27 +1,22 @@
 import VueI18n from 'vue-i18n'
-import { shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import AggregationsPanel from '@/components/AggregationsPanel'
 import store from '@/store'
 import router from '@/router'
 import messages from '@/lang/en'
-import { createApp } from '@/main'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { App } from '@/main'
+
+const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('AggregationsPanel.vue', () => {
-  let wrapper, appVue, i18n
+  let wrapper, i18n
 
   beforeAll(async () => {
-    const app = document.createElement('div')
-    app.setAttribute('id', 'app')
-    document.body.appendChild(app)
-    window.fetch = jest.fn()
-    window.fetch.mockReturnValue(jsonOk({ userIndices: [] }))
-    appVue = await createApp()
     i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
   })
 
-  beforeEach(() => {
-    wrapper = shallowMount(AggregationsPanel, { appVue, i18n, router, store })
+  beforeEach(async () => {
+    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, router, store, sync: false })
   })
 
   afterAll(() => window.fetch.mockRestore())
@@ -30,15 +25,15 @@ describe('AggregationsPanel.vue', () => {
     expect(wrapper.find('.aggregations-panel').isVisible()).toBeTruthy()
   })
 
-  it('should hide the aggregation panel on click on `Hide filters`', () => {
-    wrapper.find('.aggregations-panel__sticky__toolbar__item--hide-filters').trigger('click')
+  it('should hide the aggregation panel on click on `Hide filters`', async () => {
+    await wrapper.find('.aggregations-panel__sticky__toolbar__toggler').trigger('click')
 
     expect(wrapper.find('.aggregations-panel').isVisible()).toBeFalsy()
   })
 
   it('should call function resetFacetValues on event facet::search::reset-filters emitted', async () => {
     const resetFacetValuesStub = jest.fn()
-    wrapper = shallowMount(AggregationsPanel, { appVue, i18n, store, methods: { resetFacetValues: resetFacetValuesStub } })
+    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { resetFacetValues: resetFacetValuesStub }, sync: false })
     wrapper.vm.$root.$emit('facet::search::reset-filters')
 
     expect(resetFacetValuesStub).toHaveBeenCalled()
@@ -46,7 +41,7 @@ describe('AggregationsPanel.vue', () => {
 
   it('should call function refreshEachFacet on event index::delete::all emitted', async () => {
     const refreshEachFacetMock = jest.fn()
-    wrapper = shallowMount(AggregationsPanel, { appVue, i18n, store, methods: { refreshEachFacet: refreshEachFacetMock } })
+    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { refreshEachFacet: refreshEachFacetMock }, sync: false })
 
     wrapper.vm.$root.$emit('index::delete::all')
 
@@ -55,7 +50,7 @@ describe('AggregationsPanel.vue', () => {
 
   it('should call function updateFacetSelectedValues on event facet::search::add-facet-values emitted', async () => {
     const updateFacetSelectedValuesMock = jest.fn()
-    wrapper = shallowMount(AggregationsPanel, { appVue, i18n, store, methods: { updateFacetSelectedValues: updateFacetSelectedValuesMock } })
+    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { updateFacetSelectedValues: updateFacetSelectedValuesMock }, sync: false })
 
     wrapper.vm.$root.$emit('facet::search::add-facet-values')
 
@@ -66,7 +61,7 @@ describe('AggregationsPanel.vue', () => {
     const mockCallback = jest.fn()
     wrapper.vm.$root.$on('facet::search::reset-filters', mockCallback)
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.$root.$emit('facet::search::reset-filters')
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
@@ -74,16 +69,8 @@ describe('AggregationsPanel.vue', () => {
   it('should not reset the starredDocuments on filters reset', () => {
     store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.$root.$emit('facet::search::reset-filters')
 
     expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
-  })
-
-  it('should reset the query on filters reset', () => {
-    store.commit('search/query', 'another query')
-
-    wrapper.vm.resetFilters()
-
-    expect(store.state.search.query).toBe('')
   })
 })

@@ -17,9 +17,10 @@ const namedEntityCategoryTranslation = {
 }
 
 class FacetText {
-  constructor (name, key, isSearchable, labelFun, alternativeSearch) {
+  constructor (name, key, icon, isSearchable, labelFun, alternativeSearch) {
     this.name = name
     this.key = key
+    this.icon = icon
     this.isSearchable = isSearchable
     this.itemLabel = labelFun
     this.reverse = false
@@ -84,8 +85,8 @@ class FacetText {
 }
 
 class FacetYesNo extends FacetText {
-  constructor (name, key, isSearchable, labelFun) {
-    super(name, key, isSearchable, labelFun)
+  constructor (name, key, icon, isSearchable, labelFun) {
+    super(name, key, icon, isSearchable, labelFun)
     this.component = 'FacetYesNo'
     this.starredDocuments = []
   }
@@ -100,8 +101,8 @@ class FacetYesNo extends FacetText {
 }
 
 class FacetType extends FacetText {
-  constructor (name, key, isSearchable, labelFun) {
-    super(name, key, isSearchable, labelFun)
+  constructor (name, key, icon, isSearchable, labelFun) {
+    super(name, key, icon, isSearchable, labelFun)
     this.component = 'FacetType'
   }
 
@@ -115,8 +116,8 @@ class FacetType extends FacetText {
 }
 
 class FacetDocument extends FacetType {
-  constructor (name, key, isSearchable, labelFun) {
-    super(name, key, isSearchable, labelFun)
+  constructor (name, key, icon, isSearchable, labelFun) {
+    super(name, key, icon, isSearchable, labelFun)
     this.component = 'FacetDocument'
   }
 
@@ -126,8 +127,8 @@ class FacetDocument extends FacetType {
 }
 
 class FacetDate extends FacetDocument {
-  constructor (name, key, isSearchable, labelFun) {
-    super(name, key, isSearchable, labelFun)
+  constructor (name, key, icon, isSearchable, labelFun) {
+    super(name, key, icon, isSearchable, labelFun)
     this.component = 'FacetDate'
   }
 
@@ -161,8 +162,8 @@ class FacetDate extends FacetDocument {
 }
 
 class FacetDateRange extends FacetDate {
-  constructor (name, key, isSearchable, labelFun) {
-    super(name, key, isSearchable, labelFun)
+  constructor (name, key, icon, isSearchable, labelFun) {
+    super(name, key, icon, isSearchable, labelFun)
     this.component = 'FacetDateRange'
   }
   queryBuilder (body, param, func) {
@@ -174,8 +175,8 @@ class FacetDateRange extends FacetDate {
 }
 
 class FacetPath extends FacetDocument {
-  constructor (name, key, isSearchable) {
-    super(name, key, isSearchable, null)
+  constructor (name, key, icon, isSearchable) {
+    super(name, key, icon, isSearchable, null)
     this.prefix = true
     this.component = 'FacetPath'
   }
@@ -199,8 +200,8 @@ class FacetPath extends FacetDocument {
 }
 
 class FacetNamedEntity extends FacetType {
-  constructor (name, key, isSearchable, category = 'PERSON') {
-    super(name, key, isSearchable, null)
+  constructor (name, key, icon, isSearchable, category = 'PERSON') {
+    super(name, key, icon, isSearchable, null)
     this.category = category
     this.component = 'FacetNamedEntity'
   }

@@ -1,17 +1,12 @@
 import Vuex from 'vuex'
-import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { App as MainApp } from '@/main'
+
 import App from '@/pages/App'
 import Facet from '@/components/Facet'
 import facets from '@/mixins/facets'
-import VueProgressBar from 'vue-progressbar'
-import router from '@/router'
-import store from '@/store'
 
-const localVue = createLocalVue()
-localVue.use(VueProgressBar, { color: '#852308' })
-localVue.use(Murmur)
-localVue.use(Vuex)
+const { i18n, localVue, router, store } = MainApp.init(createLocalVue()).useAll()
 
 describe('facets mixin', () => {
   let wrapper, selectedValuesFromStore, facet
@@ -25,7 +20,7 @@ describe('facets mixin', () => {
     const mutations = { setFacetValue: jest.fn() }
     const actions = { query: jest.fn() }
     const localStore = new Vuex.Store({ modules: { search: { namespaced: true, state, mutations, actions } } })
-    wrapper = shallowMount(App, { localVue, router, store: localStore, mixins: [facets], propsData: { facet } })
+    wrapper = shallowMount(App, { localVue, i18n, router, store: localStore, mixins: [facets], propsData: { facet } })
     jest.spyOn(wrapper.vm, 'refreshRouteAndSearch')
 
     wrapper.vm.setValue('42')
@@ -37,7 +32,7 @@ describe('facets mixin', () => {
   describe('tests run on specific wrapper', () => {
     beforeEach(() => {
       selectedValuesFromStore = jest.fn()
-      wrapper = shallowMount(Facet, { localVue, router, store, mixins: [facets], methods: { selectedValuesFromStore }, propsData: { facet } })
+      wrapper = shallowMount(Facet, { localVue, i18n, router, store, mixins: [facets], methods: { selectedValuesFromStore }, propsData: { facet } })
       selectedValuesFromStore.mockClear()
     })
 
@@ -62,7 +57,7 @@ describe('facets mixin', () => {
     })
 
     it('should emit an event "selected-values-from-store" on selectedValuesFromStore', () => {
-      wrapper = shallowMount(Facet, { localVue, router, store, mixins: [facets], propsData: { facet } })
+      wrapper = shallowMount(Facet, { localVue, i18n, router, store, mixins: [facets], propsData: { facet } })
       wrapper.vm.selectedValuesFromStore()
 
       expect(wrapper.emitted('selected-values-from-store')).toHaveLength(2)

@@ -1,13 +1,7 @@
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
-import VueI18n from 'vue-i18n'
-import Vuex from 'vuex'
-import { shallowMount, createLocalVue } from '@vue/test-utils'
-
 import MountedDataLocation from '@/components/MountedDataLocation'
-import messages from '@/lang/en'
-import router from '@/router'
-import store from '@/store'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import Murmur from '@icij/murmur'
+import { App } from '@/main'
 
 jest.mock('@/api/DatashareClient', () => {
   const { jsonOk } = require('tests/unit/tests_utils')
@@ -19,20 +13,14 @@ jest.mock('@/api/DatashareClient', () => {
   })
 })
 
-const localVue = createLocalVue()
-localVue.use(Murmur)
-localVue.use(VueI18n)
-localVue.use(BootstrapVue)
-localVue.use(Vuex)
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
-
-describe('MountedDataLocation.vue', () => {
+describe('MountedDataLocation', () => {
   let wrapper
 
   beforeEach(async () => {
     Murmur.config.set('mountedDataDir', '/foo/bar')
-    wrapper = shallowMount(MountedDataLocation, { localVue, i18n, router, store })
+    wrapper = shallowMount(MountedDataLocation, { localVue, store, mocks: { $t: msg => msg }, sync: false })
   })
 
   afterAll(() => jest.unmock('@/api/DatashareClient'))

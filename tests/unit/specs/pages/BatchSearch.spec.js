@@ -1,10 +1,6 @@
 import BatchSearch from '@/pages/BatchSearch'
 import { createLocalVue, mount } from '@vue/test-utils'
-import store from '@/store'
-import router from '@/router'
-import BootstrapVue from 'bootstrap-vue'
-import VueProgressBar from 'vue-progressbar'
-import Murmur from '@icij/murmur'
+import { App } from '@/main'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -30,18 +26,13 @@ jest.mock('@/api/DatashareClient', () => {
   })
 })
 
-const localVue = createLocalVue()
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-localVue.use(VueProgressBar)
+const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
 describe('BatchSearch', () => {
   let wrapper
 
-  beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
-
   beforeEach(async () => {
-    wrapper = mount(BatchSearch, { localVue, store, router, mocks: { $t: msg => msg, $tc: (msg, count) => count } })
+    wrapper = mount(BatchSearch, { localVue, store, router, mocks: { $t: msg => msg, $tc: (msg, count) => count, $n: msg => msg } })
     await wrapper.vm.$nextTick()
   })
 

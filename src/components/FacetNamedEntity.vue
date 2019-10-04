@@ -2,7 +2,7 @@
   <facet v-bind="$props" class="facet--named-entity" ref="facet">
     <template #title>
       <span class="col-2 facet__items__item__icon pl-0 pr-1" :class="getCategoryClass(facet.category, 'text-')">
-        <fa :icon="getCategoryIcon(facet.category)" />
+        <fa :icon="getCategoryIcon(facet.category)" fixed-width />
       </span>
       {{ $t('facet.' + facet.name) }}
     </template>

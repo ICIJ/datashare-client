@@ -1,22 +1,16 @@
-import Murmur from '@icij/murmur'
+import { App } from '@/main'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import store from '@/store'
-import router from '@/router'
-import VueI18n from 'vue-i18n'
-import messages from '@/lang/en'
+import flushPromises from 'flush-promises'
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(Murmur)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { i18n, localVue, router, store } = App.init(createLocalVue()).useAll()
 
 describe('ResetFiltersButton.vue', function () {
   let wrapper
 
   beforeEach(() => {
     store.commit('search/reset')
-    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store })
+    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store, sync: false })
   })
 
   it('should display a disabled button, by default', () => {
@@ -24,8 +18,9 @@ describe('ResetFiltersButton.vue', function () {
     expect(wrapper.find('.btn').attributes().disabled).toEqual('disabled')
   })
 
-  it('should display an active button if a facet is valuated', () => {
+  it('should display an active button if a facet is valuated', async () => {
     store.commit('search/addFacetValue', { name: 'language', value: 'en' })
+    await flushPromises()
 
     expect(wrapper.find('.btn').exists()).toBeTruthy()
     expect(wrapper.find('.btn[disabled]').exists()).toBeFalsy()
@@ -100,7 +95,7 @@ describe('ResetFiltersButton.vue', function () {
 
   it('should call router push on facets reset', () => {
     jest.spyOn(router, 'push')
-    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store })
+    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store, sync: false })
 
     wrapper.vm.resetFacets()
 

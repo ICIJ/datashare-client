@@ -423,6 +423,7 @@ describe('FacetText.vue', () => {
 
   it('should reload the facet on event "facet::refresh"', () => {
     const spyRefreshFacet = jest.spyOn(wrapper.vm.root, 'aggregateWithLoading')
+    wrapper.vm.root.collapseItems = false
     wrapper.vm.$root.$emit('facet::refresh', 'content-type')
 
     expect(spyRefreshFacet).toBeCalled()

@@ -13,6 +13,8 @@ import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
 import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt'
 import { faBook } from '@fortawesome/free-solid-svg-icons/faBook'
 import { faBuilding } from '@fortawesome/free-solid-svg-icons/faBuilding'
+import { faCalendarAlt } from '@fortawesome/free-solid-svg-icons/faCalendarAlt'
+import { faCalendarPlus } from '@fortawesome/free-solid-svg-icons/faCalendarPlus'
 import { faCaretDown } from '@fortawesome/free-solid-svg-icons/faCaretDown'
 import { faCaretLeft } from '@fortawesome/free-solid-svg-icons/faCaretLeft'
 import { faCaretRight } from '@fortawesome/free-solid-svg-icons/faCaretRight'
@@ -37,6 +39,7 @@ import { faFilter } from '@fortawesome/free-solid-svg-icons/faFilter'
 import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder'
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
+import { faHdd } from '@fortawesome/free-solid-svg-icons/faHdd'
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons/faIdBadge'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons/faInfoCircle'
 import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard'
@@ -46,6 +49,7 @@ import { faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons/faLongArro
 import { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons/faLongArrowAltRight'
 import { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons/faMapMarkerAlt'
 import { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus'
+import { faPaperclip } from '@fortawesome/free-solid-svg-icons/faPaperclip'
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 import { faQuestion } from '@fortawesome/free-solid-svg-icons/faQuestion'
 import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle'
@@ -60,6 +64,7 @@ import { faStar } from '@fortawesome/free-solid-svg-icons/faStar'
 import { faSync } from '@fortawesome/free-solid-svg-icons/faSync'
 import { faTable } from '@fortawesome/free-solid-svg-icons/faTable'
 import { faTag } from '@fortawesome/free-solid-svg-icons/faTag'
+import { faTags } from '@fortawesome/free-solid-svg-icons/faTags'
 import { faTh } from '@fortawesome/free-solid-svg-icons/faTh'
 import { faThList } from '@fortawesome/free-solid-svg-icons/faThList'
 import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
@@ -90,6 +95,8 @@ library.add(
   faBolt,
   faBook,
   faBuilding,
+  faCalendarAlt,
+  faCalendarPlus,
   faCaretDown,
   faCaretLeft,
   faCaretRight,
@@ -114,6 +121,7 @@ library.add(
   faFolder,
   faFolderOpen,
   faGlobe,
+  faHdd,
   faIdBadge,
   faInfoCircle,
   faKeyboard,
@@ -123,6 +131,7 @@ library.add(
   faLongArrowAltRight,
   faMapMarkerAlt,
   faMinus,
+  faPaperclip,
   faPlus,
   faQuestion,
   faQuestionCircle,
@@ -137,6 +146,7 @@ library.add(
   faSync,
   faTable,
   faTag,
+  faTags,
   faTh,
   faThList,
   faTimes,

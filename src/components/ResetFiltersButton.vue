@@ -1,6 +1,9 @@
 <template>
-  <button class="btn btn-outline-secondary btn-sm" id="input-reset" @click="resetFacets" :disabled="!hasFilters">
-    {{ $t('search.reset_filters') }}
+  <button class="btn" :class="componentClasses" @click="resetFacets" v-show="!autoHidding || hasFilters" :title="$t('search.clearFiltersDescription')" v-b-tooltip :disabled="!hasFilters">
+    <fa :icon="icon" v-if="!noIcon" />
+    <slot>
+      {{ $t('search.clearFilters') }}
+    </slot>
   </button>
 </template>
 
@@ -9,9 +12,35 @@ import settings from '@/utils/settings'
 
 export default {
   name: 'ResetFiltersButton',
+  props: {
+    variant: {
+      default: 'btn-outline-secondary',
+      type: String
+    },
+    size: {
+      default: 'sm',
+      type: String
+    },
+    noIcon: {
+      type: Boolean
+    },
+    autoHidding: {
+      type: Boolean
+    },
+    icon: {
+      type: String,
+      default: 'times-circle'
+    }
+  },
   computed: {
     hasFilters () {
       return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
+    },
+    componentClasses () {
+      return {
+        ['btn-' + this.size]: true,
+        ['btn-' + this.variant]: true
+      }
     }
   },
   methods: {

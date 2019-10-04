@@ -1,10 +1,10 @@
 <template>
-  <div class="batch-search-form">
+  <div class="batch-search-form m-3">
     <b-form @submit.prevent="onSubmit">
-      <div class="card m-3">
-        <h6 class="card-header">
-          {{ $t('batchSearch.form.heading') }}
-        </h6>
+      <h4 class="text-light py-1">
+        {{ $t('batchSearch.form.heading') }}
+      </h4>
+      <div class="card w-100">
         <div class="card-body pb-1 small">
           <div class="row">
             <b-form-group
@@ -20,16 +20,6 @@
                 :placeholder="$t('batchSearch.form.namePlaceholder')"></b-form-input>
             </b-form-group>
             <b-form-group
-              :label="$t('batchSearch.published')"
-              class="col-12">
-              <b-form-radio v-model="published" name="published" value="true">
-                {{ $t('indexing.yes') }}
-              </b-form-radio>
-              <b-form-radio v-model="published" name="published" value="false">
-                {{ $t('indexing.no') }}
-              </b-form-radio>
-            </b-form-group>
-            <b-form-group
               id="group-file"
               :label="$t('batchSearch.form.fileLabel')"
               label-for="file"
@@ -42,6 +32,15 @@
                 required></b-form-file>
             </b-form-group>
           </div>
+          <b-form-group
+            :label="`${$t('batchSearch.fuzziness')}:`"
+            label-for="fuzziness">
+            <b-form-input
+              id="type-number"
+              type="number"
+              v-model="fuzziness"
+              required></b-form-input>
+          </b-form-group>
           <b-form-group
             id="group-description"
             :label="$t('batchSearch.form.descriptionLabel')"
@@ -59,13 +58,22 @@
             label-for="project"
             v-if="$config.is('multipleProjects')">
             <b-form-select
-              v-model="selectedIndex"
+              v-model="project"
               :options="indices"
               required></b-form-select>
           </b-form-group>
         </div>
-        <div class="card-body text-right pt-0">
-          <b-button type="submit" variant="primary">{{ $t('batchSearch.form.submit') }}</b-button>
+        <div class="card-footer">
+          <div class="d-flex align-items-center">
+            <div class="flex-grow-1">
+              <b-form-checkbox v-model="published" switch>
+                {{ $t('batchSearch.published') }}
+              </b-form-checkbox>
+            </div>
+            <b-button type="submit" variant="primary">
+              {{ $t('batchSearch.form.submit') }}
+            </b-button>
+          </div>
         </div>
       </div>
     </b-form>
@@ -79,57 +87,30 @@ export default {
   name: 'BatchSearchForm',
   data () {
     return {
+      name: '',
+      published: true,
+      csvFile: null,
+      description: '',
+      project: 'local-datashare',
+      fuzziness: 0,
       indices: []
-    }
-  },
-  computed: {
-    name: {
-      get () {
-        return this.$store.state.batchSearch.name
-      },
-      set (name) {
-        this.$store.commit('batchSearch/name', name)
-      }
-    },
-    published: {
-      get () {
-        return this.$store.state.batchSearch.published
-      },
-      set (published) {
-        this.$store.commit('batchSearch/published', published)
-      }
-    },
-    csvFile: {
-      get () {
-        return this.$store.state.batchSearch.csvFile
-      },
-      set (csvFile) {
-        this.$store.commit('batchSearch/csvFile', csvFile)
-      }
-    },
-    description: {
-      get () {
-        return this.$store.state.batchSearch.description
-      },
-      set (description) {
-        this.$store.commit('batchSearch/description', description)
-      }
-    },
-    selectedIndex: {
-      get: function () {
-        return this.$store.state.batchSearch.index
-      },
-      set: function (index) {
-        this.$store.commit('batchSearch/index', index)
-      }
     }
   },
   created () {
     this.indices = map(this.$config.get('userIndices', []), value => { return { value, text: value } })
   },
   methods: {
+    resetForm () {
+      this.$set(this, 'name', '')
+      this.$set(this, 'published', true)
+      this.$set(this, 'csvFile', null)
+      this.$set(this, 'description', '')
+      this.$set(this, 'project', 'local-datashare')
+      this.$set(this, 'fuzziness', 0)
+    },
     async onSubmit () {
-      await this.$store.dispatch('batchSearch/onSubmit')
+      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, project: this.project, fuzziness: this.fuzziness })
+      this.resetForm()
       if (this.$config.is('manageDocuments')) {
         try {
           await this.$store.dispatch('indexing/runBatchSearch')
@@ -142,9 +123,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  .batch-search-form {
-    width: 100%;
-  }
-</style>

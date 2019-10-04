@@ -21,7 +21,7 @@ describe('SearchSettings.vue', () => {
   jest.setTimeout(1e4)
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchSettings, { localVue, i18n, store })
+    wrapper = shallowMount(SearchSettings, { localVue, i18n, store, sync: false })
     store.commit('search/reset')
   })
 
@@ -31,14 +31,14 @@ describe('SearchSettings.vue', () => {
     expect(wrapper.vm.relativeSearch).toBeFalsy()
   })
 
-  it('should display the dropdown to choose the number of results per page', async () => {
+  it('should display the dropdown to choose the number of results per page', () => {
     expect(wrapper.findAll('#input-page-size')).toHaveLength(1)
     expect(wrapper.vm.selectedSize).toBe(store.state.search.size)
   })
 
   it('should change the selectedSize via the dropdown', async () => {
     jest.spyOn(router, 'push')
-    wrapper = shallowMount(SearchSettings, { localVue, i18n, store, router })
+    wrapper = shallowMount(SearchSettings, { localVue, i18n, store, router, sync: false })
     const rootWrapper = createWrapper(wrapper.vm.$root)
     wrapper.findAll('#input-page-size option').at(3).setSelected()
     await wrapper.vm.$nextTick()
@@ -48,14 +48,14 @@ describe('SearchSettings.vue', () => {
     expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
   })
 
-  it('should display the dropdown to choose the order', async () => {
+  it('should display the dropdown to choose the order', () => {
     expect(wrapper.findAll('#input-sort')).toHaveLength(1)
     expect(wrapper.vm.selectedSort).toBe(store.state.search.sort)
   })
 
   it('should change the selectedSort via the dropdown', async () => {
     jest.spyOn(router, 'push')
-    wrapper = shallowMount(SearchSettings, { localVue, i18n, store, router })
+    wrapper = shallowMount(SearchSettings, { localVue, i18n, store, router, async: false })
     const rootWrapper = createWrapper(wrapper.vm.$root)
     wrapper.findAll('#input-sort option').at(5).setSelected()
     await wrapper.vm.$nextTick()

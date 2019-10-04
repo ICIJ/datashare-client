@@ -62,9 +62,9 @@
         "pathReverse": "Chemin du fichier (Z à A)"
       }
     },
-    "filtersTitle": "Filters",
-    "clearFilters": "Clear all filters",
-    "clearFiltersDescription": "Remove selected filters from the search.",
+    "filtersTitle": "Filtres",
+    "clearFilters": "Supprimer tous les filtres",
+    "clearFiltersDescription": "Supprime les filtres sélectionnés de la recherche.",
     "back": "Retour aux résultats de recherche",
     "try": "Vous devriez essayer de",
     "nav": {

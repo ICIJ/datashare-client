@@ -56,6 +56,12 @@
             {{ meta.nbResults }}
           </dd>
           <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.fuzziness') }}
+          </dt>
+          <dd class="col-sm-8">
+            {{ meta.fuzziness }}
+          </dd>
+          <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.published') }}
           </dt>
           <dd class="col-sm-8">
@@ -73,24 +79,24 @@
       <div v-else class="batch-search-results__queries">
         <div class="card small">
           <b-table striped hover responsive no-local-sorting :per-page="perPage" :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query" show-empty>
-            <template #documentNumber="{ item }">
+            <template v-slot:cell(documentNumber)="{ item }">
               {{ item.documentNumber + 1 }}
             </template>
-            <template #documentName="{ item }">
+            <template v-slot:cell(documentName)="{ item }">
               <router-link :to="{ name: 'document', params: { index: $route.params.index, id: item.documentId, routing: item.rootId } }" target="_blank" class="batch-search-results__queries__query__link">
                 {{ item.documentName }}
               </router-link>
             </template>
-            <template #creationDate="{ item }">
+            <template v-slot:cell(creationDate)="{ item }">
               {{ moment(item.creationDate).isValid() ? moment(item.creationDate).format('LLL') : '' }}
             </template>
-            <template #contentType="{ item }">
+            <template v-slot:cell(contentType)="{ item }">
               {{ getDocumentTypeLabel(item.contentType) }}
             </template>
-            <template #contentLength="{ item }">
+            <template v-slot:cell(contentLength)="{ item }">
               {{ item.contentLength | humanSize }}
             </template>
-            <template #empty>
+            <template v-slot:cell(empty)>
               <div class="text-center">
                 {{ $t('batchSearchResults.empty') }}
               </div>

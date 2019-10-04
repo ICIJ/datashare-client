@@ -1,7 +1,5 @@
 import BatchSearchResults from '@/pages/BatchSearchResults'
 import VueRouter from 'vue-router'
-import Murmur from '@icij/murmur'
-
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { App } from '@/main'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -73,15 +71,12 @@ const router = new VueRouter({ routes: [
   }
 ] })
 
-describe('BatchSearchResults.vue', () => {
+describe('BatchSearchResults', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
 
-  beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
-
   beforeEach(async () => {
-    store.commit('batchSearch/index', process.env.VUE_APP_ES_INDEX)
     await letData(es).have(new IndexedDocument('42').withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43').withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44').withContentType('type_01')).commit()
@@ -119,9 +114,13 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__download').exists()).toBeTruthy()
   })
 
+  it('should display a button to delete the batchSearch', () => {
+    expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
+  })
+
   it('should display info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(4)
+    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(5)
   })
 
   it('should refresh route on "batch-search-results::filter" event emitted, on reset to the first page', () => {
@@ -141,10 +140,6 @@ describe('BatchSearchResults.vue', () => {
 
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({ name: 'batch-search.results', params: { index: `${process.env.VUE_APP_ES_INDEX}`, uuid: '12' }, query: { page: 1, queries: [], sort: 'content_type', order: 'desc' } })
-  })
-
-  it('should display a "Delete batch search" button', () => {
-    expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
   })
 
   it('should redirect on batchSearch deletion', async () => {

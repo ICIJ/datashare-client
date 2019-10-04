@@ -62,9 +62,9 @@
         "pathReverse": "Ruta del archivo (de A a Z)"
       }
     },
-    "filtersTitle": "Filters",
-    "clearFilters": "Clear all filters",
-    "clearFiltersDescription": "Remove selected filters from the search.",
+    "filtersTitle": "Filtros",
+    "clearFilters": "Resetear filtros",
+    "clearFiltersDescription": "Eliminar faceta seleccionada de la búsqueda.",
     "back": "Regresar a resultados de búsqueda",
     "try": "Usted puede intentar a",
     "nav": {

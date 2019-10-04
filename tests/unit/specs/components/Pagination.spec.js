@@ -6,6 +6,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import messages from '@/lang/en'
 import router from '@/router'
 import cloneDeep from 'lodash/cloneDeep'
+import flushPromises from 'flush-promises'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -18,7 +19,7 @@ describe('Pagination.vue', () => {
   const template = { name: 'router-name', query: { from: 0, size: 10 } }
 
   beforeEach(() => {
-    wrapper = shallowMount(Pagination, { localVue, i18n, router, propsData: { total: 22, getToTemplate: () => cloneDeep(template) }, mock: { $t: msg => msg } })
+    wrapper = shallowMount(Pagination, { localVue, i18n, router, propsData: { total: 22, getToTemplate: () => cloneDeep(template) }, mock: { $t: msg => msg }, sync: false })
   })
 
   describe('should display the pagination, or not', () => {
@@ -28,8 +29,9 @@ describe('Pagination.vue', () => {
       expect(wrapper.find('.pagination').exists()).toBeTruthy()
     })
 
-    it('should not display the pagination', () => {
+    it('should not display the pagination', async () => {
       wrapper.setProps({ total: 22, isDisplayed: () => false, getToTemplate: () => template })
+      await flushPromises()
 
       expect(wrapper.find('.pagination').exists()).toBeFalsy()
     })
@@ -38,17 +40,19 @@ describe('Pagination.vue', () => {
       expect(wrapper.find('.pagination').exists()).toBeTruthy()
     })
 
-    it('should not display the pagination by default if not enough results', () => {
+    it('should not display the pagination by default if not enough results', async () => {
       wrapper.setProps({ total: 5, getToTemplate: () => template })
+      await flushPromises()
 
       expect(wrapper.find('.pagination').exists()).toBeFalsy()
     })
   })
 
   describe('should set some links as unavailable', () => {
-    it('should display the first and the previous page as unavailable', () => {
+    it('should display the first and the previous page as unavailable', async () => {
       const template = { name: 'router-name', query: { from: 0, size: 10 } }
       wrapper.setProps({ total: 22, getToTemplate: () => cloneDeep(template) })
+      await flushPromises()
 
       expect(wrapper.findAll('.pagination__first-page.disabled')).toHaveLength(1)
       expect(wrapper.findAll('.pagination__previous-page.disabled')).toHaveLength(1)
