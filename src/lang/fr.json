@@ -34,7 +34,7 @@
     "search-in": "Rechercher dans",
     "hideFilters": "Cacher les filtres",
     "showFilters": "Afficher les filtres",
-    "contextualizeFiltersLabel": "Contextualiser",
+    "contextualizeFiltersLabel": "Contextualize filters",
     "contextualizeFiltersDescription": "Les filtres dans la colonne de gauche seront mis à jour en fonction des résultats de recherche",
     "tips": "Tips to improve searching",
     "settings": {
@@ -63,7 +63,7 @@
       }
     },
     "filtersTitle": "Filtres",
-    "clearFilters": "Réinitialiser les filtres",
+    "clearFilters": "Supprimer tous les filtres",
     "clearFiltersDescription": "Supprime les filtres sélectionnés de la recherche.",
     "back": "Retour aux résultats de recherche",
     "try": "Vous devriez essayer de",
@@ -467,6 +467,7 @@
     "projectName": "Nom du projet",
     "searchName": "Nom de la recherche",
     "description": "Description",
+    "fuzziness": "Fuzziness",
     "queries": "Recherches",
     "state": "Status",
     "date": "Date",

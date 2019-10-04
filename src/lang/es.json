@@ -34,7 +34,7 @@
     "search-in": "Buscar en",
     "hideFilters": "Ocultar los filtros",
     "showFilters": "Mostrar los filtros",
-    "contextualizeFiltersLabel": "Contextualizar",
+    "contextualizeFiltersLabel": "Contextualize filters",
     "contextualizeFiltersDescription": "Las facetas en el panel izquierdo se actualizarán de acuerdo con los resultados de la búsqueda.",
     "tips": "Tips to improve searching",
     "settings": {
@@ -467,6 +467,7 @@
     "projectName": "Nombre del proyecto",
     "searchName": "Buscar nombre",
     "description": "Descripción",
+    "fuzziness": "Fuzziness",
     "queries": "Consultas",
     "state": "Estado",
     "date": "Fecha",
