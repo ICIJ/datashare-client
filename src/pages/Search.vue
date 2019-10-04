@@ -54,11 +54,11 @@ export default {
   data () {
     return {
       errorMessages: {
-        'BadRequest': 'search.errors.bad-request',
-        'InternalServerError': 'search.errors.internal-error',
-        'NoConnections': 'search.errors.no-connections',
-        'NotFound': 'search.errors.not-found',
-        'ServiceUnavailable': 'search.errors.service-unavailable'
+        'BadRequest': 'search.errors.badRequest',
+        'InternalServerError': 'search.errors.internalError',
+        'NoConnections': 'search.errors.noConnections',
+        'NotFound': 'search.errors.notFound',
+        'ServiceUnavailable': 'search.errors.serviceUnavailable'
       }
     }
   },
@@ -71,7 +71,7 @@ export default {
       return ['document'].indexOf(this.$route.name) > -1
     },
     errorMessage () {
-      const defaultMessage = this.$t('search.errors.something-wrong')
+      const defaultMessage = this.$t('search.errors.somethingWrong')
       for (const type in this.errorMessages) {
         // The error is an instance of the key and it exist as a translation key
         if (this.error instanceof esErrors[type] && this.$te(this.errorMessages[type])) {
