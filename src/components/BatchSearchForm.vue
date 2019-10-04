@@ -8,21 +8,16 @@
         <div class="card-body pb-1 small">
           <div class="row">
             <b-form-group
-              id="group-name"
               :label="$t('batchSearch.form.nameLabel')"
-              label-for="name"
               class="col-12">
               <b-form-input
-                id="name"
                 v-model="name"
                 type="text"
                 required
                 :placeholder="$t('batchSearch.form.namePlaceholder')"></b-form-input>
             </b-form-group>
             <b-form-group
-              id="group-file"
               :label="$t('batchSearch.form.fileLabel')"
-              label-for="file"
               :description="$t('batchSearch.form.fileDescription')"
               class="col-12">
               <b-form-file
@@ -33,29 +28,22 @@
             </b-form-group>
           </div>
           <b-form-group
-            :label="`${$t('batchSearch.fuzziness')}:`"
-            label-for="fuzziness">
+            :label="`${$t('batchSearch.fuzziness')}:`">
             <b-form-input
-              id="type-number"
               type="number"
               v-model="fuzziness"
               required></b-form-input>
           </b-form-group>
           <b-form-group
-            id="group-description"
-            :label="$t('batchSearch.form.descriptionLabel')"
-            label-for="description">
+            :label="$t('batchSearch.form.descriptionLabel')">
             <b-form-textarea
-              id="description"
               v-model="description"
               :placeholder="$t('batchSearch.form.descriptionPlaceholder')"
               rows="2"
               max-rows="6"></b-form-textarea>
           </b-form-group>
           <b-form-group
-            id="group-project"
             :label="$t('batchSearch.form.projectLabel')"
-            label-for="project"
             v-if="$config.is('multipleProjects')">
             <b-form-select
               v-model="project"

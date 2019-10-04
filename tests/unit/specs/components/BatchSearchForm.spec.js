@@ -27,12 +27,11 @@ describe('BatchSearchForm', () => {
     expect(wrapper.vm.resetForm).toBeCalled()
   })
 
-  it('should display a form with 5 fields: name, file, fuzziness and description', () => {
+  it('should display a form with 4 fields: name, file, fuzziness and description', () => {
     expect(wrapper.findAll('b-form-group-stub')).toHaveLength(4)
-    expect(wrapper.find('b-form-group-stub[labelfor=name] b-form-input-stub').exists()).toBeTruthy()
-    expect(wrapper.find('b-form-group-stub[labelfor=file] b-form-file-stub').exists()).toBeTruthy()
-    expect(wrapper.find('b-form-group-stub[labelfor=fuzziness] b-form-input-stub').exists()).toBeTruthy()
-    expect(wrapper.find('b-form-group-stub[labelfor=description] b-form-textarea-stub').exists()).toBeTruthy()
+    expect(wrapper.findAll('b-form-input-stub')).toHaveLength(2)
+    expect(wrapper.findAll('b-form-file-stub')).toHaveLength(1)
+    expect(wrapper.findAll('b-form-textarea-stub')).toHaveLength(1)
   })
 
   it('should reset the form', () => {
