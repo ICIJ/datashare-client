@@ -30,7 +30,7 @@
       <div class="batch-search-results__info d-flex">
         <dl class="row w-100 mx-0" v-if="Object.keys(meta).length !== 0">
           <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
-            {{ $t('batchSearch.projectName') }}
+            {{ $t('batchSearch.project') }}
           </dt>
           <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
             {{ meta.project.name }}

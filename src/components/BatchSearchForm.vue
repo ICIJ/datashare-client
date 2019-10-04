@@ -8,13 +8,12 @@
         <div class="card-body pb-1 small">
           <div class="row">
             <b-form-group
-              :label="$t('batchSearch.form.nameLabel')"
+              :label="`${$t('batchSearch.name')}:`"
               class="col-12">
               <b-form-input
                 v-model="name"
                 type="text"
-                required
-                :placeholder="$t('batchSearch.form.namePlaceholder')"></b-form-input>
+                required></b-form-input>
             </b-form-group>
             <b-form-group
               :label="$t('batchSearch.form.fileLabel')"
@@ -35,15 +34,14 @@
               required></b-form-input>
           </b-form-group>
           <b-form-group
-            :label="$t('batchSearch.form.descriptionLabel')">
+            :label="`${$t('batchSearch.description')}:`">
             <b-form-textarea
               v-model="description"
-              :placeholder="$t('batchSearch.form.descriptionPlaceholder')"
               rows="2"
               max-rows="6"></b-form-textarea>
           </b-form-group>
           <b-form-group
-            :label="$t('batchSearch.form.projectLabel')"
+            :label="`${$t('batchSearch.project')}:`"
             v-if="$config.is('multipleProjects')">
             <b-form-select
               v-model="project"

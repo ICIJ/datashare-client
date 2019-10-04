@@ -452,11 +452,6 @@
     "title": "Batch searches",
     "form": {
       "heading": "New batch search",
-      "nameLabel": "Name of your new batch search:",
-      "namePlaceholder": "",
-      "descriptionLabel": "Description:",
-      "descriptionPlaceholder": "",
-      "projectLabel": "Project",
       "fileLabel": "CSV file:",
       "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
       "filePlaceholder": "Choose a file...",
@@ -464,8 +459,8 @@
       "success": "Your batch search is now running.",
       "failure": "Something went wrong, unable to start your batch search."
     },
-    "projectName": "Project Name",
-    "searchName": "Search Name",
+    "project": "Project",
+    "name": "Name",
     "description": "Description",
     "fuzziness": "Fuzziness",
     "queries": "Queries",
