@@ -3,9 +3,9 @@
     <div class="aggregations-panel__sticky w-100">
       <div class="aggregations-panel__sticky__toolbar">
         <div class="d-flex align-items-center">
-          <h4 class="flex-grow-1 m-0">
+          <h5 class="flex-grow-1 my-0">
             {{ $t('search.filtersTitle') }}
-          </h4>
+          </h5>
           <button class="aggregations-panel__sticky__toolbar__toggler btn btn-link" @click="hideFilters" :title="$t('search.hideFilters')" v-b-tooltip>
             <fa icon="arrow-left" class="text-light" />
             <span class="sr-only">
@@ -128,10 +128,10 @@ export default {
 
 <style lang="scss">
   .aggregations-panel {
-    $card-bg: darken($aggregations-panel-bg, 5%);
+    $card-bg: darken($app-context-sidebar-bg, 5%);
     $panel-color: white;
 
-    background: $aggregations-panel-bg;
+    background: $app-context-sidebar-bg;
     color: $panel-color;
     display: flex;
     align-items: flex-start;
@@ -145,7 +145,7 @@ export default {
       &__toolbar {
         font-size: 0.85rem;
         line-height: $line-height-base * (1 - (85 - 95) / 95);
-        margin: $spacer 0 0 $spacer;
+        padding: $spacer 0 0 $spacer;
 
         .custom-control-input:checked ~ .custom-control-label::before {
           background-color: $tertiary;

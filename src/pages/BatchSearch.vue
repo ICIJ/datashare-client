@@ -84,7 +84,7 @@ export default {
       // Disable the project name field on server mode
       return this.$config.is('multipleProjects') ? {
         key: 'project.name',
-        label: this.$t('batchSearch.projectName'),
+        label: this.$t('batchSearch.project'),
         sortable: true
       } : null
     },
@@ -93,7 +93,7 @@ export default {
         this.projectNameField,
         {
           key: 'name',
-          label: this.$t('batchSearch.searchName')
+          label: this.$t('batchSearch.name')
         },
         {
           key: 'description',

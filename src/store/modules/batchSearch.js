@@ -35,9 +35,9 @@ export const actions = {
       return commit('batchSearches', batchSearches)
     } catch (_) {}
   },
-  async onSubmit ({ state, commit, dispatch }, { name, published, csvFile, description, project, fuzziness }) {
+  async onSubmit ({ state, commit, dispatch }, { name, published, csvFile, description, project, fuzziness, fileTypes }) {
     try {
-      await datashare.batchSearch(name, published, csvFile, description, project, fuzziness)
+      await datashare.batchSearch(name, published, csvFile, description, project, fuzziness, fileTypes)
       return dispatch('getBatchSearches')
     } catch (_) {}
   },

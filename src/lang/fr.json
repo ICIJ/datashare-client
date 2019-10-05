@@ -29,8 +29,8 @@
       "thread": "ID de fil de discussion"
     },
     "placeholder": "Rechercher dans les documents...",
-    "buttonLabel": "Search",
-    "searchIn": "Search in",
+    "buttonLabel": "Rechercher",
+    "searchIn": "Rechercher dans",
     "hideFilters": "Cacher les filtres",
     "showFilters": "Afficher les filtres",
     "contextualizeFiltersLabel": "Contextualize filters",

@@ -49,7 +49,7 @@
     <div v-else>
       <div class="search-results-table__header border-0 py-5 d-flex flex-column text-center">
         <div class="search-results-table__header__number-of-results">
-          {{ $t('search.results.no-result') }}
+          {{ $t('search.results.noResults') }}
         </div>
         <div class="mt-3" v-if="hasFilters">
           {{ $t('search.try') }}

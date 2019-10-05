@@ -1,8 +1,8 @@
 <template>
   <div class="route-docs-links p-3">
-    <h4 class="text-light py-1">
+    <h5 class="text-light py-1">
       User guides
-    </h4>
+    </h5>
     <div class="card">
       <div class="list-group list-group-flush small">
         <div v-for="meta in validRouteDocsMeta" v-bind:key="meta.resourcePath" class="route-docs-links__item" :class="{ 'route-docs-links__item--active': isActive(meta) }">

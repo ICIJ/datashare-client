@@ -89,15 +89,30 @@ describe('Datashare backend client', () => {
   })
 
   it('should return backend response to untagDocument', async () => {
-    const resp = await datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01'])
-    const json = await resp.json()
+    const json = await (await datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01'])).json()
     expect(json).toEqual({})
   })
 
   it('should return backend response to batchSearch', async () => {
-    const resp = await datashare.batchSearch('project', 'name', 'description', 'csvFile')
-    const json = await resp.json()
+    const name = 'name'
+    const published = true
+    const csvFile = 'csvFile'
+    const description = 'description'
+    const project = 'project'
+    const fuzziness = 2
+    const fileTypes = 'application/pdf text/plain'
+    const json = await (await datashare.batchSearch(name, published, csvFile, description, project, fuzziness, fileTypes)).json()
+
+    const body = new FormData()
+    body.append('name', name)
+    body.append('description', description)
+    body.append('csvFile', csvFile)
+    body.append('published', published)
+    body.append('fuzziness', fuzziness)
+    body.append('fileTypes', 'application/pdf')
+    body.append('fileTypes', 'text/plain')
     expect(json).toEqual({})
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
   })
 
   it('should return backend response to getBatchSearches', () => {

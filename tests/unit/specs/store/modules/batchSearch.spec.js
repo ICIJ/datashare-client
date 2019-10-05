@@ -26,7 +26,7 @@ describe('BatchSearch store', () => {
 
   describe('actions', () => {
     it('should submit the new batch search form with complete information', async () => {
-      await store.dispatch('batchSearch/onSubmit', { name: 'name', published: false, csvFile: 'csvFile', description: 'description', project: 'project', fuzziness: 2 })
+      await store.dispatch('batchSearch/onSubmit', { name: 'name', published: false, csvFile: 'csvFile', description: 'description', project: 'project', fuzziness: 2, fileTypes: 'pdf' })
 
       const body = new FormData()
       body.append('name', 'name')
@@ -34,6 +34,7 @@ describe('BatchSearch store', () => {
       body.append('csvFile', 'csvFile')
       body.append('published', false)
       body.append('fuzziness', 2)
+      body.append('fileTypes', 'pdf')
       expect(datashare.fetch).toBeCalledTimes(2)
       expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
       expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})
@@ -41,14 +42,14 @@ describe('BatchSearch store', () => {
 
     it('should retrieve a batch search according to its id', async () => {
       await letData(es).have(new IndexedDocument('12').withContentType('type_01')).commit()
-      const batchSearch = [{ contentType: 'type_01', documentId: 12, rootId: 12 }]
+      const batchSearch = [{ contentType: 'type_01', documentId: 12, rootId: 42 }]
       datashare.fetch.mockReturnValue(jsonOk(batchSearch))
 
       await store.dispatch('batchSearch/getBatchSearchResults', { batchId: 12 })
 
       expect(store.state.batchSearch.results).toHaveLength(1)
       expect(store.state.batchSearch.results[0].documentId).toBe(12)
-      expect(store.state.batchSearch.results[0].rootId).toBe(12)
+      expect(store.state.batchSearch.results[0].rootId).toBe(42)
       expect(store.state.batchSearch.results[0].document).not.toBeNull()
     })
 
@@ -57,8 +58,8 @@ describe('BatchSearch store', () => {
 
       await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
 
-      expect(datashare.fetch).toHaveBeenCalledTimes(1)
-      expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search/batchSearch_01'), { method: 'DELETE' })
+      expect(datashare.fetch).toBeCalledTimes(1)
+      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/batchSearch_01'), { method: 'DELETE' })
       expect(store.state.batchSearch.batchSearches).toEqual(['batchSearch_02', 'batchSearch_03'])
     })
 
@@ -67,8 +68,8 @@ describe('BatchSearch store', () => {
 
       await store.dispatch('batchSearch/deleteBatchSearches')
 
-      expect(datashare.fetch).toHaveBeenCalledTimes(1)
-      expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/batch/search'), { method: 'DELETE' })
+      expect(datashare.fetch).toBeCalledTimes(1)
+      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search'), { method: 'DELETE' })
       expect(store.state.batchSearch.batchSearches).toEqual([])
     })
   })

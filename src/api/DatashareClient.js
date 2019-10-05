@@ -1,5 +1,6 @@
 import { EventBus } from '@/utils/event-bus'
 import fetchPonyfill from 'fetch-ponyfill'
+import map from 'lodash/map'
 
 export class DatashareClient {
   constructor () {
@@ -79,13 +80,14 @@ export class DatashareClient {
   untagDocuments (project, docIds, tags) {
     return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/untag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
   }
-  batchSearch (name, published, csvFile, description, project, fuzziness) {
+  batchSearch (name, published, csvFile, description, project, fuzziness, fileTypes) {
     const body = new FormData()
     body.append('name', name)
     body.append('description', description)
     body.append('csvFile', csvFile)
     body.append('published', published)
     body.append('fuzziness', fuzziness)
+    map(fileTypes.split(' '), fileType => body.append('fileTypes', fileType))
     return this.sendAction(`/api/batch/search/${encodeURIComponent(project)}`, { method: 'POST', body }, false)
   }
   getBatchSearches () {

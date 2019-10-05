@@ -60,7 +60,7 @@ $popover-header-bg: white;
 $modal-content-border-width: 0;
 $modal-content-box-shadow-xs: 0 10px 30px 0 rgba(black, .1);
 $modal-content-box-shadow-sm-up: 0 20px 60px 0 rgba(black, .2);
-$modal-backdrop-bg: #2d2e33;
+$modal-backdrop-bg: #292930;
 $modal-backdrop-opacity: .85;
 $modal-inner-padding: 1.5rem;
 
@@ -82,17 +82,19 @@ $b-toast-background-opacity: $tooltip-opacity;
 @import './functions.scss';
 @import './mixins.scss';
 
-$app-bg: #2d2e33;
+$app-bg: #292930;
 $app-border-radius: 1rem;
 
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
+
 $app-sidebar-width: 290px;
 $app-sidebar-reduced-width: 82px;
 $app-sidebar-float-breakpoint-width:  1200px;
-$app-context-sidebar-width: 320px;
 
-$aggregations-panel-bg: lighten($app-bg, 10%);
+$app-context-sidebar-width: 340px;
+$app-context-sidebar-bg: #31313a;
+
 $search-results-list-width: 420px;
 
 $document-min-width: 850px;

@@ -94,7 +94,7 @@ export default {
         left: 0;
         height: 100vh;
         max-height: 100vh;
-        background: $aggregations-panel-bg;
+        background: $app-context-sidebar-bg;
         width: $app-context-sidebar-width;
         max-width: $app-context-sidebar-width;
         min-width: $app-context-sidebar-width;

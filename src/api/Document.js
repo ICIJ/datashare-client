@@ -113,7 +113,7 @@ export default class Document extends EsDoc {
     return this.raw.highlight
   }
   get url () {
-    return '/api/index/src/' + this.index + '/' + this.id + '?routing=' + this.routing
+    return '/api/document/src/' + this.index + '/' + this.id + '?routing=' + this.routing
   }
   get fullUrl () {
     return DatashareClient.getFullUrl(this.url)

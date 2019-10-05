@@ -19,11 +19,12 @@
             </b-dropdown-item>
           </b-dropdown>
           <button type="submit" class="btn btn-dark search-bar__submit">
-            {{ $t('search.buttonlabel') }}
+            {{ $t('search.buttonLabel') }}
           </button>
         </div>
 
-        <selectable-dropdown class="search-bar__suggestions dropdown-menu"
+        <selectable-dropdown
+          class="search-bar__suggestions dropdown-menu"
           ref="suggestions"
           @input="selectTerm"
           @click.native="submit"

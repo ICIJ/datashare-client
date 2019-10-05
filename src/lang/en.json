@@ -7,17 +7,16 @@
     },
     "more": "Explore more",
     "placeholder": "Search for people, organizations, locations...",
-    "inthedocs": "In the documents",
     "relative": "Relative to the search"
   },
   "search": {
     "errors": {
-      "bad-request": "Your search query is wrong",
-      "internal-error": "The server encountered a problem",
-      "no-connections": "The server is not connected",
-      "not-found": "Nothing was found",
-      "service-unavailable": "The server is unable to satisfy your request",
-      "something-wrong": "Something went wrong."
+      "badRequest": "Your search query is wrong",
+      "internalError": "The server encountered a problem",
+      "noConnections": "The server is not connected",
+      "notFound": "Nothing was found",
+      "serviceUnavailable": "The server is unable to satisfy your request",
+      "somethingWrong": "Something went wrong."
     },
     "field": {
       "all": "All fields",
@@ -30,8 +29,8 @@
       "thread": "Thread ID"
     },
     "placeholder": "Search in documents...",
-    "buttonlabel": "Search",
-    "search-in": "Search in",
+    "buttonLabel": "Search",
+    "searchIn": "Search in",
     "hideFilters": "Hide filters",
     "showFilters": "Show filters",
     "contextualizeFiltersLabel": "Contextualize filters",
@@ -39,14 +38,14 @@
     "tips": "Tips to improve searching",
     "settings": {
       "title": "Search settings",
-      "results_per_page": "Number of results by page",
-      "sort_by": "Sort results by"
+      "resultsPerPage": "Number of results by page",
+      "sortBy": "Sort results by"
     },
     "results": {
       "match": "match in doc",
       "entities": "nb entities",
       "results": "1 document | %{total} documents",
-      "no-result": "No documents found",
+      "noResults": "No documents found",
       "on": "on",
       "perPage": "per page",
       "sort": {
@@ -452,11 +451,6 @@
     "title": "Batch searches",
     "form": {
       "heading": "New batch search",
-      "nameLabel": "Name of your new batch search:",
-      "namePlaceholder": "",
-      "descriptionLabel": "Description:",
-      "descriptionPlaceholder": "",
-      "projectLabel": "Project",
       "fileLabel": "CSV file:",
       "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
       "filePlaceholder": "Choose a file...",
@@ -464,10 +458,11 @@
       "success": "Your batch search is now running.",
       "failure": "Something went wrong, unable to start your batch search."
     },
-    "projectName": "Project Name",
-    "searchName": "Search Name",
+    "project": "Project",
+    "name": "Name",
     "description": "Description",
     "fuzziness": "Fuzziness",
+    "fileTypes": "File Types",
     "queries": "Queries",
     "state": "State",
     "date": "Date",
