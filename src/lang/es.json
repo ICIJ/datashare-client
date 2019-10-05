@@ -7,17 +7,16 @@
     },
     "more": "Explora más",
     "placeholder": "Búsqueda de personas, organizaciones, localizaciones...",
-    "inthedocs": "En los documentos",
     "relative": "Relacionado a la búsqueda"
   },
   "search": {
     "errors": {
-      "bad-request": "Su búsqueda es incorrecta",
-      "internal-error": "Se ha producido un error con el servidor de búsqueda",
-      "no-connections": "El servidor no responde",
-      "not-found": "No hay resultados",
-      "service-unavailable": "El servidor no puede responder a la búsqueda",
-      "something-wrong": "Error"
+      "badRequest": "Your search query is wrong",
+      "internalError": "The server encountered a problem",
+      "noConnections": "The server is not connected",
+      "notFound": "Nothing was found",
+      "serviceUnavailable": "The server is unable to satisfy your request",
+      "somethingWrong": "Something went wrong."
     },
     "field": {
       "all": "Todos los campos",
@@ -30,8 +29,8 @@
       "thread": "ID del hilo"
     },
     "placeholder": "Buscar en documentos...",
-    "buttonlabel": "Buscar",
-    "search-in": "Buscar en",
+    "buttonLabel": "Search",
+    "searchIn": "Search in",
     "hideFilters": "Ocultar los filtros",
     "showFilters": "Mostrar los filtros",
     "contextualizeFiltersLabel": "Contextualize filters",
@@ -39,14 +38,14 @@
     "tips": "Tips to improve searching",
     "settings": {
       "title": "Configuración de búsqueda",
-      "results_per_page": "Número de resultados por página",
-      "sort_by": "Ordenar resultados por"
+      "resultsPerPage": "Number of results by page",
+      "sortBy": "Sort results by"
     },
     "results": {
       "match": "coincidir en doc",
       "entities": "nb entidades",
       "results": "1 documento encontrado | %{total} documentos encontrados",
-      "no-result": "No se han encontrado documentos",
+      "noResults": "No documents found",
       "on": "en",
       "perPage": "por página",
       "sort": {
@@ -62,9 +61,9 @@
         "pathReverse": "Ruta del archivo (de A a Z)"
       }
     },
-    "filtersTitle": "Filtros",
-    "clearFilters": "Resetear filtros",
-    "clearFiltersDescription": "Eliminar faceta seleccionada de la búsqueda.",
+    "filtersTitle": "Filters",
+    "clearFilters": "Clear all filters",
+    "clearFiltersDescription": "Remove selected filters from the search.",
     "back": "Regresar a resultados de búsqueda",
     "try": "Usted puede intentar a",
     "nav": {
@@ -452,11 +451,6 @@
     "title": "Búsquedas masivas",
     "form": {
       "heading": "Nueva búsqueda masiva",
-      "nameLabel": "Nombre de tu nueva búsqueda masiva:",
-      "namePlaceholder": "",
-      "descriptionLabel": "Descripción:",
-      "descriptionPlaceholder": "",
-      "projectLabel": "Proyecto",
       "fileLabel": "Archivo CSV:",
       "fileDescription": "Sólo se acepta el formato CSV. La primera columna debe contener los términos a buscar.",
       "filePlaceholder": "Escoge un archivo...",
@@ -464,10 +458,11 @@
       "success": "Your batch search is now running.",
       "failure": "Something went wrong, unable to start your batch search."
     },
-    "projectName": "Nombre del proyecto",
-    "searchName": "Buscar nombre",
+    "project": "Project",
+    "name": "Name",
     "description": "Descripción",
     "fuzziness": "Fuzziness",
+    "fileTypes": "File Types",
     "queries": "Consultas",
     "state": "Estado",
     "date": "Fecha",
