@@ -63,7 +63,7 @@ export default {
 <template>
   <div class="document-tags-form row">
     <div :class="{ 'col-md-4 mb-3': displayTags }" class="d-flex">
-      <b-form @submit.prevent="addTag" class="document-tags-form__add d-flex">
+      <b-form @submit.prevent="addTag" class="document-tags-form__add">
         <b-input-group size="sm">
           <b-input-group-text slot="prepend">
             <fa icon="tag" class="fa-flip-horizontal" />
