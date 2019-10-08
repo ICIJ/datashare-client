@@ -33,13 +33,17 @@
             :label="`${$t('batchSearch.fileTypes')}:`">
             <b-form-input
               v-model="fileTypes"
-              @input="searchTerms">
+              @input="searchTerms"
+              autocomplete="off">
             </b-form-input>
             <selectable-dropdown
               ref="suggestions"
               @input="selectTerm"
               :hide="!suggestions.length"
               :items="suggestions">
+              <template v-slot:item-label="{ item }">
+                <div>{{ item.label }}</div>
+              </template>
             </selectable-dropdown>
           </b-form-group>
           <b-form-group
@@ -78,9 +82,9 @@
 <script>
 import types from '@/utils/types.json'
 import filter from 'lodash/filter'
-import keys from 'lodash/keys'
 import map from 'lodash/map'
 import throttle from 'lodash/throttle'
+import each from 'lodash/each'
 
 export default {
   name: 'BatchSearchForm',
@@ -99,7 +103,12 @@ export default {
   },
   computed: {
     allTypes () {
-      return keys(types)
+      const allTypes = []
+      each(types, (type, mime) => {
+        type.mime = mime
+        allTypes.push(type)
+      })
+      return allTypes
     }
   },
   created () {
@@ -108,7 +117,7 @@ export default {
   methods: {
     searchTerms: throttle(async function () {
       const searchedTerm = this.fileTypes.split(' ').pop()
-      this.$set(this, 'suggestions', filter(this.allTypes, item => item.indexOf(searchedTerm) > -1))
+      this.$set(this, 'suggestions', filter(this.allTypes, item => (item.label.indexOf(searchedTerm) > -1) || item.mime.indexOf(searchedTerm) > -1))
     }, 200),
     selectTerm (term) {
       if (term) {
@@ -116,8 +125,8 @@ export default {
         // Remove last item
         fileTypesArray.pop()
         // Append the clicked term
-        fileTypesArray.push(term)
-        this.fileTypes = fileTypesArray.join(' ')
+        fileTypesArray.push(term.label)
+        this.$set(this, 'fileTypes', fileTypesArray.join(' '))
         this.$set(this, 'suggestions', [])
       }
     },

@@ -6,6 +6,8 @@ import { App } from '@/main'
 
 const { localVue } = App.init(createLocalVue()).useAll()
 
+jest.mock('lodash/throttle', () => jest.fn(fn => fn))
+
 describe('BatchSearchForm', () => {
   let actions, wrapper
 
@@ -17,6 +19,8 @@ describe('BatchSearchForm', () => {
     const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
     wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
   })
+
+  afterAll(() => jest.unmock('lodash/throttle'))
 
   it('should call the store action on form submit and reset the form', async () => {
     jest.spyOn(wrapper.vm, 'resetForm')
@@ -52,22 +56,35 @@ describe('BatchSearchForm', () => {
     expect(wrapper.vm.fileTypes).toBe('')
   })
 
-  it('should display suggestions', () => {
-    expect(wrapper.contains('selectable-dropdown-stub')).toBeTruthy()
-  })
+  describe('FileTypes suggestions', () => {
+    it('should display suggestions', () => {
+      expect(wrapper.contains('selectable-dropdown-stub')).toBeTruthy()
+    })
 
-  it('should filter fileTypes according to the fileTypes input', () => {
-    wrapper.vm.$set(wrapper.vm, 'fileTypes', 'visio')
+    it('should filter fileTypes according to the fileTypes input', () => {
+      wrapper.vm.$set(wrapper.vm, 'fileTypes', 'visi')
 
-    wrapper.vm.searchTerms()
+      wrapper.vm.searchTerms()
 
-    expect(wrapper.vm.suggestions).toEqual(['application/vnd.visio', 'application/vnd.stardivision.writer'])
-  })
+      expect(wrapper.vm.suggestions).toHaveLength(2)
+      expect(wrapper.vm.suggestions[0].label).toBe('Visio document')
+      expect(wrapper.vm.suggestions[1].label).toBe('StarWriter 5 document')
+    })
 
-  it('should set the clicked item in the fileTypes input', () => {
-    wrapper.vm.$set(wrapper.vm, 'fileTypes', 'selected/type visio')
-    wrapper.vm.selectTerm('application/vnd.stardivision.writer')
+    it('should filter in types label', async () => {
+      wrapper.vm.$set(wrapper.vm, 'fileTypes', 'PDF')
 
-    expect(wrapper.vm.fileTypes).toBe('selected/type application/vnd.stardivision.writer')
+      wrapper.vm.searchTerms()
+
+      expect(wrapper.vm.suggestions).toHaveLength(1)
+      expect(wrapper.vm.suggestions[0].label).toBe('Portable Document Format (PDF)')
+    })
+
+    it('should set the clicked item in the fileTypes input', () => {
+      wrapper.vm.$set(wrapper.vm, 'fileTypes', 'Excel 2003 XML spreadsheet visio')
+      wrapper.vm.selectTerm({ label: 'StarWriter 5 document' })
+
+      expect(wrapper.vm.fileTypes).toBe('Excel 2003 XML spreadsheet StarWriter 5 document')
+    })
   })
 })
