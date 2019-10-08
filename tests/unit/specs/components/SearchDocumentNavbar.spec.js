@@ -1,12 +1,9 @@
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
-import VueI18n from 'vue-i18n'
-import Murmur from '@icij/murmur'
-import { createLocalVue, mount } from '@vue/test-utils'
-import messages from '@/lang/en'
-import router from '@/router'
-import store from '@/store'
-import { getOS, getShortkeyOS } from '@/utils/utils'
-import VueShortkey from 'vue-shortkey'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { getOS } from '@/utils/utils'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { App } from '@/main'
 
 jest.mock('@/utils/utils', () => {
   return {
@@ -16,39 +13,55 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(VueShortkey)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
-describe('SearchDocumentNavbar.vue', () => {
+describe('SearchDocumentNavbar', () => {
+  let wrapper
+
+  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
+
   beforeEach(() => {
+    wrapper = shallowMount(SearchDocumentNavbar, { localVue, router, store, mocks: { $t: msg => msg } })
     getOS.mockReset()
-    getShortkeyOS.mockReset()
   })
 
-  it('should display a "Back to the search results" link', () => {
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-    const wrapper = mount(SearchDocumentNavbar, { localVue, i18n, router, store })
+  afterAll(() => jest.unmock('@/utils/utils'))
 
-    expect(wrapper.findAll('.search-document-navbar')).toHaveLength(1)
-    expect(wrapper.find('.search-document-navbar .search-document-navbar__back').attributes('href')).toEqual(`#/?q=&from=0&size=25&sort=relevance&index=${process.env.VUE_APP_ES_INDEX}&field=all`)
+  it('should display a "Back to the search results" link', () => {
+    expect(wrapper.find('.search-document-navbar__back').exists()).toBeTruthy()
   })
 
   it('should return the tooltip for mac', () => {
     getOS.mockImplementation(() => 'mac')
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-    const wrapper = mount(SearchDocumentNavbar, { localVue, i18n, router, store })
 
-    expect(wrapper.vm.previousTooltip).toEqual('Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)')
+    expect(wrapper.vm.previousTooltip).toBe('search.nav.previous.tooltipMac')
   })
 
   it('should return the tooltip for NOT mac', () => {
     getOS.mockImplementation(() => 'default')
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-    const wrapper = mount(SearchDocumentNavbar, { localVue, i18n, router, store })
 
-    expect(wrapper.vm.previousTooltip).toEqual('Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)')
+    expect(wrapper.vm.previousTooltip).toBe('search.nav.previous.tooltipOthers')
+  })
+
+  describe('Download button', () => {
+    esConnectionHelper()
+    const es = esConnectionHelper.es
+    const id = 'document'
+
+    beforeEach(async () => {
+      await letData(es).have(new IndexedDocument(id)).commit()
+      await store.dispatch('document/get', { id })
+    })
+
+    it('should not be displayed', () => {
+      expect(wrapper.find('.search-document-navbar__download').exists()).toBeFalsy()
+    })
+
+    it('should be displayed', () => {
+      store.commit('search/isAllowed', true)
+      wrapper = shallowMount(SearchDocumentNavbar, { localVue, router, store, mocks: { $t: msg => msg } })
+
+      expect(wrapper.find('.search-document-navbar__download').exists()).toBeTruthy()
+    })
   })
 })

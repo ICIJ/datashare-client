@@ -63,7 +63,8 @@ export function initialState () {
     showFilters: true,
     starredDocuments: [],
     // Different default layout for narrow screen
-    layout: isNarrowScreen() ? 'table' : 'list'
+    layout: isNarrowScreen() ? 'table' : 'list',
+    isAllowed: false
   }
 }
 
@@ -231,6 +232,9 @@ export const mutations = {
     const fields = settings.searchFields.map(field => field.key)
     state.field = fields.indexOf(field) > -1 ? field : settings.defaultSearchField
   },
+  isAllowed (state, isAllowed) {
+    state.isAllowed = isAllowed
+  },
   starredDocuments (state, starredDocuments) {
     state.starredDocuments = starredDocuments
   },
@@ -394,7 +398,7 @@ export const actions = {
     commit('from', state.from + state.size)
     return dispatch('query')
   },
-  updateFromRouteQuery ({ state, commit }, query) {
+  async updateFromRouteQuery ({ state, commit }, query) {
     commit('reset', ['index', 'globalSearch', 'starredDocuments', 'showFilters', 'layout', 'field'])
     // Add the query to the state with a mutation to not triggering a search
     if (query.q) commit('query', query.q)
@@ -419,6 +423,8 @@ export const actions = {
         }
       })
     })
+    const response = await datashare.isAllowed(state.index)
+    if (response.status === 200) commit('isAllowed', true)
   },
   deleteQueryTerm ({ state, commit, dispatch }, term) {
     function deleteQueryTermFromSimpleQuery (query) {

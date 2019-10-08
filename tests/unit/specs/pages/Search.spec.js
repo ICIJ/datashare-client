@@ -4,9 +4,9 @@ import Search from '@/pages/Search'
 import { actions, getters, state, mutations } from '@/store/modules/search'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-const { i18n, localVue, router } = App.init(createLocalVue()).useAll()
+const { localVue, router } = App.init(createLocalVue()).useAll()
 
-describe('Search.vue', () => {
+describe('Search', () => {
   let wrapper, localStore
 
   beforeEach(() => {
@@ -24,23 +24,25 @@ describe('Search.vue', () => {
         }
       }
     })
-    wrapper = shallowMount(Search, { localVue, router, i18n, store: localStore })
+    wrapper = shallowMount(Search, { localVue, router, store: localStore })
   })
 
   it('should refresh the view on custom event', () => {
     wrapper.vm.$root.$emit('index::delete::all')
-    expect(actions.query).toHaveBeenCalledTimes(2)
+
+    expect(actions.query).toBeCalledTimes(1)
   })
 
   it('should execute a new search on event "facet::starred:refresh"', () => {
-    expect(actions.query).toHaveBeenCalledTimes(1)
     wrapper.vm.$root.$emit('facet::starred:refresh')
-    expect(actions.refresh).toHaveBeenCalledTimes(1)
+
+    expect(actions.refresh).toBeCalledTimes(1)
   })
 
-  it('should redirect to the complete query', async () => {
-    localStore.commit('search/query', 'this is a query')
-    await wrapper.vm.$nextTick()
-    expect(wrapper.find('.search__body__backdrop').props('to')).toMatchObject({ name: 'search', query: { q: 'this is a query' } })
+  it('should redirect to the complete query', () => {
+    const query = 'this is a query'
+    localStore.commit('search/query', query)
+
+    expect(wrapper.find('.search__body__backdrop').props('to')).toMatchObject({ name: 'search', query: { q: query } })
   })
 })

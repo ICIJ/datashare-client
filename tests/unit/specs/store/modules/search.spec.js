@@ -41,6 +41,8 @@ describe('Search store', () => {
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
     store.commit('search/toggleFilters')
+    store.commit('search/isAllowed', true)
+
     store.dispatch('search/reset')
 
     expect(omit(store.state.search, ['index', 'isReady', 'facets', 'showFilters', 'response'])).toEqual(omit(initialState, ['index', 'isReady', 'facets', 'showFilters', 'response']))
@@ -323,7 +325,7 @@ describe('Search store', () => {
     expect(store.state.search.showFilters).toEqual(!showFilters)
   })
 
-  describe('test the restored search state from url', () => {
+  describe('updateFromRouteQuery should restore search state from url', () => {
     it('should set the index of the store according to the url', async () => {
       await store.dispatch('search/updateFromRouteQuery', { index: process.env.VUE_APP_ES_ANOTHER_INDEX })
       expect(store.state.search.index).toEqual(process.env.VUE_APP_ES_ANOTHER_INDEX)
@@ -368,6 +370,13 @@ describe('Search store', () => {
       await store.dispatch('search/updateFromRouteQuery', {})
 
       expect(store.state.search.field).toEqual('author')
+    })
+
+    it('should ask for the isAllowed status', async () => {
+      await store.dispatch('search/updateFromRouteQuery', {})
+
+      expect(datashare.fetch).toBeCalledTimes(1)
+      expect(store.state.search.isAllowed).toBeTruthy()
     })
   })
 

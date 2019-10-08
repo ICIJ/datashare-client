@@ -5,7 +5,7 @@
       {{ $t('search.back') }}
     </router-link>
     <div v-if="currentDocument" class="ml-auto">
-      <a class="btn btn-sm py-0 mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument" id="search-document-navbar-download">
+      <a class="btn btn-sm py-0 mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument && isAllowed" id="search-document-navbar-download">
         <fa icon="download" />
         {{ $t('document.download_button') }}
       </a>
@@ -52,14 +52,14 @@ export default {
     RouterLinkPopup
   },
   computed: {
-    ...mapState('search', { searchResponse: 'response' }),
+    ...mapState('search', ['response', 'isAllowed']),
     ...mapState('document', { currentDocument: 'doc' }),
     query () {
       return this.$store.getters['search/toRouteQuery']
     },
     currentDocumentIndex () {
       if (this.currentDocument) {
-        return findIndex(this.searchResponse.hits, { id: this.currentDocument.id })
+        return findIndex(this.response.hits, { id: this.currentDocument.id })
       }
       return -1
     },
@@ -73,13 +73,13 @@ export default {
       return this.currentDocumentIndex === 0
     },
     isLastDocument () {
-      return this.currentDocumentIndex === this.searchResponse.hits.length - 1
+      return this.currentDocumentIndex === this.response.hits.length - 1
     },
     firstDocument () {
-      return first(this.searchResponse.hits)
+      return first(this.response.hits)
     },
     lastDocument () {
-      return last(this.searchResponse.hits)
+      return last(this.response.hits)
     },
     isFirstPage () {
       return this.$store.state.search.from === 0
@@ -94,10 +94,10 @@ export default {
       return !this.isLastDocument || !this.isLastPage
     },
     previousDocument () {
-      return this.searchResponse.hits[this.currentDocumentIndex - 1]
+      return this.response.hits[this.currentDocumentIndex - 1]
     },
     nextDocument () {
-      return this.searchResponse.hits[this.currentDocumentIndex + 1]
+      return this.response.hits[this.currentDocumentIndex + 1]
     },
     previousTooltip () {
       return getOS() === 'mac' ? this.$t('search.nav.previous.tooltipMac') : this.$t('search.nav.previous.tooltipOthers')
@@ -121,7 +121,7 @@ export default {
       // Save component height in a CSS variable after it's been update
       this.$root.$el.style.setProperty('--search-document-navbar-height', height)
     },
-    async goToDocument (document) {
+    goToDocument (document) {
       return this.$router.push({ name: 'document', params: document.routerParams })
     },
     async goToPreviousDocument () {
