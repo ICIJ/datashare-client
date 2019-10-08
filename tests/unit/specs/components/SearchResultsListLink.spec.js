@@ -1,24 +1,15 @@
-import VueI18n from 'vue-i18n'
-import Vuex from 'vuex'
-import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import SearchResultsListLink from '@/components/SearchResultsListLink'
 import Document from '@/api/Document'
-import router from '@/router'
-import store from '@/store'
+import { App } from '@/main'
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-localVue.use(Vuex)
+const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
-describe('SearchResultsListLink.vue', () => {
+describe('SearchResultsListLink', () => {
   it('should display the correct location', () => {
     const wrapper = shallowMount(SearchResultsListLink, {
       localVue,
-      store,
       propsData: {
         document: new Document({
           _id: 1,
@@ -29,7 +20,7 @@ describe('SearchResultsListLink.vue', () => {
       }
     })
 
-    expect(wrapper.vm.location).toEqual('.folder_01/folder_02/')
+    expect(wrapper.vm.location).toBe('.folder_01/folder_02/')
   })
 
   it('should make a link without routing for a document', () => {
@@ -66,6 +57,7 @@ describe('SearchResultsListLink.vue', () => {
   })
 
   it('should display the document sliced name', () => {
+    const documentName = 'document'
     Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] })
     const wrapper = mount(SearchResultsListLink, {
       localVue,
@@ -73,7 +65,7 @@ describe('SearchResultsListLink.vue', () => {
       router,
       propsData: {
         document: new Document({
-          _id: 'doc.txt',
+          _id: documentName,
           _index: process.env.VUE_APP_ES_INDEX,
           inner_hits: {
             NamedEntity: {
@@ -92,6 +84,6 @@ describe('SearchResultsListLink.vue', () => {
         })
       }
     })
-    expect(wrapper.findAll('.search-results-list-link .search-results-list-link__basename .document-sliced-name__item__root').at(0).text()).toEqual('doc.txt')
+    expect(wrapper.find('.search-results-list-link .search-results-list-link__basename .document-sliced-name__item__single').text()).toBe(documentName)
   })
 })

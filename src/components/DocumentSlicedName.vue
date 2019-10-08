@@ -15,7 +15,7 @@
       <router-link v-else-if="hasInteractiveRoot()" :to="{ name: 'document', params: rootParams }" class="document-sliced-name__item__root">
         {{ slice }}
       </router-link>
-      <span v-else class="document-sliced-name__item__root">
+      <span v-else class="document-sliced-name__item__single">
         {{ slice }}
       </span>
     </span>
@@ -89,6 +89,7 @@ export default {
       }
 
       &__root, &__root:hover {
+        color: inherit;
 
         .document-sliced-name--sliced &:not(a) {
           font-weight: normal;
