@@ -5,7 +5,7 @@
       <b-popover :target="$el" triggers="hover focus" v-if="mounted" custom-class="email-string__popover">
         <template #title>
           <div>{{ nameWithoutEmail }}</div>
-          <div class="text-muted font-weight-normal">{{ emailWithoutName || this.email }}</div>
+          <div class="text-muted font-weight-normal">{{ emailWithoutName || email }}</div>
         </template>
         <div class="text-right email-string__popover__content">
           <b-button-group size="sm">
