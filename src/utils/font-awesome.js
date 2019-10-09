@@ -42,6 +42,7 @@ import { faFolder } from '@fortawesome/free-solid-svg-icons/faFolder'
 import { faFolderOpen } from '@fortawesome/free-solid-svg-icons/faFolderOpen'
 import { faGlobe } from '@fortawesome/free-solid-svg-icons/faGlobe'
 import { faHdd } from '@fortawesome/free-solid-svg-icons/faHdd'
+import { faInbox } from '@fortawesome/free-solid-svg-icons/faInbox'
 import { faIdBadge } from '@fortawesome/free-solid-svg-icons/faIdBadge'
 import { faInfoCircle } from '@fortawesome/free-solid-svg-icons/faInfoCircle'
 import { faKeyboard } from '@fortawesome/free-solid-svg-icons/faKeyboard'
@@ -127,6 +128,7 @@ library.add(
   faGlobe,
   faHdd,
   faIdBadge,
+  faInbox,
   faInfoCircle,
   faKeyboard,
   faLanguage,
