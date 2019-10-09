@@ -2,7 +2,7 @@
   <div class="document-thread p-0" v-if="document && isReady">
     <ul class="list-unstyled document-thread__list m-0">
       <li v-for="email in thread.hits" :key="email.id" class="document-thread__list__email" :class="{ 'document-thread__list__email--active': isActive(email) }">
-        <router-link :to="{ name: 'document', params: routeParams(email) }" class="px-3 py-2 d-block" v-once>
+        <router-link :to="{ name: 'document', params: email.routerParams }" class="px-3 py-2 d-block" v-once>
           <div class="d-flex text-nowrap">
             <div class="w-100">
               <strong class="document-thread__list__email__from mr-3">
@@ -14,7 +14,7 @@
             </abbr>
           </div>
           <div class="d-flex">
-            <span class="document-thread__list__email__to text-muted text-nowrap mr-3" v-if="isActive(email)">
+            <span class="document-thread__list__email__to text-muted mr-3" v-if="isActive(email)">
               {{ $t('email.to') }} {{ email.messageTo }}
             </span>
             <span class="document-thread__list__email__excerpt text-muted w-100" v-else>
@@ -24,6 +24,7 @@
         </router-link>
         <div v-if="isActive(email)">
           <document-translated-content class="document-thread__list__email__content" :document="email" :named-entities="namedEntities" />
+          <document-attachments :document="email" class="mx-3 mb-3" />
         </div>
       </li>
     </ul>
@@ -78,6 +79,7 @@ import bodybuilder from 'bodybuilder'
 
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
+import DocumentAttachments from '@/components/DocumentAttachments.vue'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
 
 export default {
@@ -92,6 +94,7 @@ export default {
     }
   },
   components: {
+    DocumentAttachments,
     DocumentTranslatedContent
   },
   data () {
@@ -127,9 +130,6 @@ export default {
   methods: {
     isActive (email) {
       return email.id === this.document.id
-    },
-    routeParams (email) {
-      return { id: email.id, index: email.index, routing: email.routing }
     },
     async scrollToActive () {
       // Element must be mounted

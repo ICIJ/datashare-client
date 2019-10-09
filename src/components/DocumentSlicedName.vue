@@ -8,7 +8,7 @@
         <span class="document-sliced-name__item__short-id">
           {{ slice }}
         </span>
-        <span class="document-sliced-name__item__content-type">
+        <span class="document-sliced-name__item__content-type" v-if="slice === document.shortId">
           {{ contentType }}
         </span>
       </span>

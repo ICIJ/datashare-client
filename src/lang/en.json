@@ -385,6 +385,10 @@
     "spreadsheet": {
       "fieldsInFirstItem": "Headers in the first row",
       "findInSpreadsheet": "Find in spreadsheet"
+    },
+    "attachments": {
+      "heading": "No attachments | One attachment | {total} attachments",
+      "more": "More attachments..."
     }
   },
   "email": {

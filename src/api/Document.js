@@ -105,9 +105,10 @@ export default class Document extends EsDoc {
     // Sliced name for extracted doc is composed of:
     // - root title (if available)
     // - distance with the top parent
-    // - shorter version of the document id
+    // - the resource name or shorter version of the document id
     const root = this.parent ? truncate(this.parent.title, { length: 30 }) : this.basename
-    return [ root ].concat([ distance ].slice(0, distance)).concat([ this.shortId ])
+    const resourceName = trim(this.get('_source.metadata.tika_metadata_resourcename', this.shortId))
+    return [ root ].concat([ distance ].slice(0, distance)).concat(resourceName)
   }
   get highlight () {
     return this.raw.highlight
