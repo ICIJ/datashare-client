@@ -188,7 +188,6 @@ export default {
 <style lang="scss">
 .document {
   background: white;
-  min-height: 90vh;
   margin: 0;
 
   .badge-pill {
