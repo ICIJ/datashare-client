@@ -5,8 +5,10 @@ import EsDoc from './EsDoc'
 import moment from 'moment'
 import { extname } from 'path'
 import Murmur from '@icij/murmur'
+
 import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
+import endsWith from 'lodash/endsWith'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
 import keys from 'lodash/keys'
@@ -14,6 +16,7 @@ import get from 'lodash/get'
 import last from 'lodash/last'
 import pick from 'lodash/pick'
 import some from 'lodash/some'
+import startsWith from 'lodash/startsWith'
 import trim from 'lodash/trim'
 import truncate from 'lodash/truncate'
 
@@ -86,11 +89,19 @@ export default class Document extends EsDoc {
   get extension () {
     return extname(this.basename).toLowerCase()
   }
+  get resourceName () {
+    const resourceName = trim(this.get('_source.metadata.tika_metadata_resourcename', this.shortId))
+    // Use the shortId if the resourceName is not human readable
+    return startsWith(resourceName, '=?') && endsWith(resourceName, '?=') ? this.shortId : resourceName
+  }
   get title () {
     const titles = [ this.shortId, this.basename ]
     if (this.isEmail) {
       titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
       titles.push(trim(this.get('_source.metadata.tika_metadata_subject', '')))
+    }
+    if (this.extractionLevel > 0) {
+      titles.push(this.resourceName)
     }
     return last(compact(titles))
   }
@@ -98,17 +109,16 @@ export default class Document extends EsDoc {
     return this.title.replace(/((.{1,4})\s?:\s?)*(.+)/i, '$3')
   }
   get slicedName () {
-    if (this.get('_source.extractionLevel', 0) === 0) {
+    if (this.extractionLevel === 0) {
       return [ this.title ]
     }
     const distance = this.get('_source.extractionLevel') - 1
     // Sliced name for extracted doc is composed of:
     // - root title (if available)
     // - distance with the top parent
-    // - the resource name or shorter version of the document id
+    // - the document title
     const root = this.parent ? truncate(this.parent.title, { length: 30 }) : this.basename
-    const resourceName = trim(this.get('_source.metadata.tika_metadata_resourcename', this.shortId))
-    return [ root ].concat([ distance ].slice(0, distance)).concat(resourceName)
+    return [ root ].concat([ distance ].slice(0, distance)).concat(this.title)
   }
   get highlight () {
     return this.raw.highlight

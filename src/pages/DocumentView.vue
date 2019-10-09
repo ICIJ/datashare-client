@@ -204,6 +204,10 @@ export default {
 
     &__name {
       padding: 0 $spacer;
+
+      a, a:hover {
+        color: white;
+      }
     }
 
     &__nav {
