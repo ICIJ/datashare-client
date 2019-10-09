@@ -8,9 +8,7 @@
 <script>
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
-
 import { FacetDate } from '@/store/facetsStore'
-import concat from 'lodash/concat'
 import map from 'lodash/map'
 
 export default {
@@ -24,7 +22,7 @@ export default {
       let filters = []
       map(this.$store.getters['search/retrieveQueryTerms'], term => {
         term.value = term.label
-        filters = concat(filters, term)
+        filters.push(term)
       })
       map(this.$store.state.search.facets, facet => {
         map(facet.values, value => {
@@ -34,7 +32,7 @@ export default {
             const date = new Date(parseInt(label))
             label = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
           }
-          filters = concat(filters, { name: facet.name, label, value, negation: facet.reverse })
+          filters.push({ name: facet.name, label, value, negation: facet.reverse })
         })
       })
       return filters
