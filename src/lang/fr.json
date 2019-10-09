@@ -29,8 +29,8 @@
       "thread": "ID de fil de discussion"
     },
     "placeholder": "Rechercher dans les documents...",
-    "buttonLabel": "Rechercher",
-    "searchIn": "Rechercher dans",
+    "buttonLabel": "Search",
+    "searchIn": "Search in",
     "hideFilters": "Cacher les filtres",
     "showFilters": "Afficher les filtres",
     "contextualizeFiltersLabel": "Contextualize filters",
@@ -381,7 +381,15 @@
     "search_children_document": "See children documents",
     "tag_confirmation": "Are you sure you want to delete this tag?",
     "created_by": "Created by",
-    "on": "on"
+    "on": "on",
+    "spreadsheet": {
+      "fieldsInFirstItem": "Headers in the first row",
+      "findInSpreadsheet": "Find in spreadsheet"
+    },
+    "attachments": {
+      "heading": "No attachments | One attachment | {total} attachments",
+      "more": "More attachments..."
+    }
   },
   "email": {
     "detail": "Voir les détails",
