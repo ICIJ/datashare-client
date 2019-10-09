@@ -63,7 +63,7 @@ describe('DocumentView.vue', () => {
     expect(wrapper.contains('.document__header')).toBeTruthy()
   })
 
-  it('should call the SpreadsheetViewer component for XLSX document', async () => {
+  it('should call the LegacySpreadsheetViewer component for XLSX document', async () => {
     const id = 'spreadsheet.xlsx'
     const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
@@ -75,10 +75,10 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
     wrapper.vm.activateTab('preview')
 
-    expect(wrapper.contains('.spreadsheet-viewer')).toBeTruthy()
+    expect(wrapper.contains('.legacy-spreadsheet-viewer')).toBeTruthy()
   })
 
-  it('should call the SpreadsheetViewer component for CSV document', async () => {
+  it('should call the LegacySpreadsheetViewer component for CSV document', async () => {
     const id = 'spreadsheet.csv'
     const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id } })
 
@@ -90,7 +90,7 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
     wrapper.vm.activateTab('preview')
 
-    expect(wrapper.contains('.spreadsheet-viewer')).toBeTruthy()
+    expect(wrapper.contains('.legacy-spreadsheet-viewer')).toBeTruthy()
   })
 
   it('should call the PdfViewer component for PDF document', async () => {

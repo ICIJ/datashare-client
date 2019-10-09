@@ -10,7 +10,7 @@
       <tiff-viewer :document="document" />
     </template>
     <template v-else-if="isSpreadsheet">
-      <spreadsheet-viewer :document="document" />
+      <legacy-spreadsheet-viewer :document="document" />
     </template>
     <template v-else-if="isImage">
       <image-viewer :document="document" />
@@ -25,7 +25,7 @@
 import ImageViewer from '@/components/document/viewers/ImageViewer'
 import PdfViewer from '@/components/document/viewers/PdfViewer'
 import PaginatedViewer from '@/components/document/viewers/PaginatedViewer'
-import SpreadsheetViewer from '@/components/document/viewers/SpreadsheetViewer'
+import LegacySpreadsheetViewer from '@/components/document/viewers/LegacySpreadsheetViewer'
 import TiffViewer from '@/components/document/viewers/TiffViewer'
 
 export default {
@@ -34,7 +34,7 @@ export default {
     ImageViewer,
     PaginatedViewer,
     PdfViewer,
-    SpreadsheetViewer,
+    LegacySpreadsheetViewer,
     TiffViewer
   },
   props: {
