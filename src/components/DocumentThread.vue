@@ -24,7 +24,6 @@
         </router-link>
         <div v-if="isActive(email)">
           <document-translated-content class="document-thread__list__email__content" :document="email" :named-entities="namedEntities" />
-          <document-attachments :document="email" class="mx-3 mb-3" />
         </div>
       </li>
     </ul>
@@ -79,7 +78,6 @@ import bodybuilder from 'bodybuilder'
 
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
-import DocumentAttachments from '@/components/DocumentAttachments.vue'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
 
 export default {
@@ -94,7 +92,6 @@ export default {
     }
   },
   components: {
-    DocumentAttachments,
     DocumentTranslatedContent
   },
   data () {

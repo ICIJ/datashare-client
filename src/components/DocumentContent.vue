@@ -14,6 +14,7 @@ import utils from '@/mixins/utils'
 import { highlight } from '@/utils/strings'
 import LocalSearchWorker from '@/utils/local-search.webworker.js'
 
+import DocumentAttachments from '@/components/DocumentAttachments.vue'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
@@ -21,6 +22,7 @@ import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 export default {
   name: 'DocumentContent',
   components: {
+    DocumentAttachments,
     DocumentTranslatedContent,
     DocumentGlobalSearchTermsTags,
     DocumentLocalSearchInput
@@ -216,6 +218,7 @@ export default {
       <b-tooltip placement="bottom" target="label-ner-toggler" :title="$t('document.highlights_caution')" />
     </div>
     <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
+    <document-attachments :document="document" class="mx-3 mb-3" />
   </div>
 </template>
 

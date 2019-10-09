@@ -1,7 +1,7 @@
 <template>
-  <div class="document-attachments">
+  <div class="document-attachments" v-if="total !== null && total > 0">
     <h6>{{ $tc('document.attachments.heading', total, { total }) }}</h6>
-    <ul class="document-attachments__list list-unstyled d-flex-inline" v-if="isReady">
+    <ul class="document-attachments__list list-unstyled d-flex-inline">
       <li v-for="attachment in attachments" class="document-attachments__list__item" :key="attachment.id">
         <router-link :to="{ name: 'document', params: attachment.routerParams }" class="document-attachments__list__item__link d-flex-inline">
           <fa :icon="attachment.contentTypeIcon" fixed-width class="mr-1 mt-1" />
