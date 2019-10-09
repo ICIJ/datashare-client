@@ -44,7 +44,7 @@ import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
 const { fetch } = fetchPonyfill()
 
 export default {
-  name: 'paginated-viewer',
+  name: 'PaginatedViewer',
   props: ['document'],
   components: {
     DocumentThumbnail

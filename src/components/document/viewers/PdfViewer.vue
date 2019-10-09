@@ -43,7 +43,7 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 PDFJS.GlobalWorkerOptions.workerSrc = 'static/js/pdf.worker.js'
 
 export default {
-  name: 'pdf-viewer',
+  name: 'PdfViewer',
   props: ['document'],
   mixins: [datashareSourceMixin],
   data () {

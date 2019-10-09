@@ -45,7 +45,7 @@ import Tiff from 'tiff.js'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 export default {
-  name: 'tiff-viewer',
+  name: 'TiffViewer',
   props: ['document'],
   mixins: [datashareSourceMixin],
   data () {
