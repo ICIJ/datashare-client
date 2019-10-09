@@ -5,17 +5,18 @@
         <router-link :to="{ name: 'document', params: email.routerParams }" class="px-3 py-2 d-block" v-once>
           <div class="d-flex text-nowrap">
             <div class="w-100">
-              <strong class="document-thread__list__email__from mr-3">
-                {{ email.messageFrom }}
-              </strong>
+              <email-string class="document-thread__list__email__from mr-3" :email="email.messageFrom" tag="strong" />
             </div>
             <abbr class="document-thread__list__email__date align-self-end small" :title="email.creationDateHuman" v-if="email.creationDate" v-b-tooltip>
               {{ $d(email.creationDate) }}
             </abbr>
           </div>
           <div class="d-flex">
-            <span class="document-thread__list__email__to text-muted mr-3" v-if="isActive(email)">
-              {{ $t('email.to') }} {{ email.messageTo }}
+            <span class="document-thread__list__email__to text-muted mr-3" v-if="isActive(email) && email.messageTo">
+              {{ $t('email.to') }}
+              <ul class="list-inline d-inline">
+                <email-string v-for="to in email.messageTo.split(',')" :email="to" :key="to" tag="li" class="list-inline-item" />
+              </ul>
             </span>
             <span class="document-thread__list__email__excerpt text-muted w-100" v-else>
               {{ email.excerpt }}
@@ -66,6 +67,14 @@
             box-shadow: 0 0 10px 0 $secondary;
           }
         }
+
+        &__to {
+          .list-inline-item:not(:last-of-type):after {
+            content:",";
+            float: right;
+            clear: right;
+          }
+        }
       }
     }
   }
@@ -79,6 +88,7 @@ import bodybuilder from 'bodybuilder'
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
+import EmailString from '@/components/EmailString.vue'
 
 export default {
   name: 'DocumentThread',
@@ -92,7 +102,8 @@ export default {
     }
   },
   components: {
-    DocumentTranslatedContent
+    DocumentTranslatedContent,
+    EmailString
   },
   data () {
     return {

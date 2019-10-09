@@ -8,6 +8,8 @@ import { faAngleRight } from '@fortawesome/free-solid-svg-icons/faAngleRight'
 import { faAngleUp } from '@fortawesome/free-solid-svg-icons/faAngleUp'
 import { faArrowLeft } from '@fortawesome/free-solid-svg-icons/faArrowLeft'
 import { faArrowRight } from '@fortawesome/free-solid-svg-icons/faArrowRight'
+import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown'
+import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp'
 import { faBan } from '@fortawesome/free-solid-svg-icons/faBan'
 import { faBars } from '@fortawesome/free-solid-svg-icons/faBars'
 import { faBolt } from '@fortawesome/free-solid-svg-icons/faBolt'
@@ -90,6 +92,8 @@ library.add(
   faAngleUp,
   faArrowLeft,
   faArrowRight,
+  faArrowDown,
+  faArrowUp,
   faBan,
   faBars,
   faBolt,
