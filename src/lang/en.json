@@ -393,7 +393,9 @@
   },
   "email": {
     "detail": "See detail",
-    "to": "To"
+    "to": "To",
+    "receivedLink": "Emails received",
+    "sentLink": "Emails sent"
   },
   "indexing": {
     "title": "Analyze your documents",

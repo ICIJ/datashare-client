@@ -11,11 +11,11 @@
           <b-button-group size="sm">
             <router-link :to="{ name: 'search', query: { q: qReceived, index } }" class="btn btn-primary">
               <fa mask="square" icon="arrow-down" transform="shrink-3 up-2" class="email-string__popover__content__icon" />
-              Emails received
+              {{ $t('email.receivedLink') }}
             </router-link>
             <router-link :to="{ name: 'search', query: { q: qSent, index } }" class="btn btn-primary">
               <fa mask="square" icon="arrow-up" transform="shrink-3 down-2" class="email-string__popover__content__icon" />
-              Emails sent
+              {{ $t('email.sentLink') }}
             </router-link>
           </b-button-group>
         </div>
