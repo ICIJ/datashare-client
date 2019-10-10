@@ -24,7 +24,9 @@
         class="bg-white border-bottom m-0 small search-results-table__items"
         selected-variant="tertiary"
         tbody-tr-class="search-results-table__items__row"
-        thead-tr-class="text-nowrap">
+        thead-tr-class="text-nowrap"
+        :sort-by="defaultSortField.key"
+        :sort-desc="true">
         <template v-slot:cell(relevance)="{ item, rowSelected }" >
           <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon" />
           <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" />
