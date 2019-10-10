@@ -41,7 +41,7 @@ export default {
       isReady: false,
       active: null,
       meta: null,
-      fieldsInFirstItem: true,
+      fieldsInFirstItem: false,
       filter: null
     }
   },

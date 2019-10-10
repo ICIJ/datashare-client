@@ -239,7 +239,6 @@ export default {
         }
 
         .document {
-          min-height: 100vh;
           box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
         }
 
