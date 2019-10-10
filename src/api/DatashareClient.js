@@ -80,14 +80,15 @@ export class DatashareClient {
   untagDocuments (project, docIds, tags) {
     return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/untag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
   }
-  batchSearch (name, published, csvFile, description, project, fuzziness, fileTypes) {
+  batchSearch (name, published, csvFile, description, project, fuzziness, fileTypes, phraseMatch) {
     const body = new FormData()
     body.append('name', name)
     body.append('description', description)
     body.append('csvFile', csvFile)
     body.append('published', published)
-    body.append('fuzziness', fuzziness)
     map(fileTypes.split(' '), fileType => body.append('fileTypes', fileType))
+    body.append('fuzziness', fuzziness)
+    body.append('phrase_matches', phraseMatch)
     return this.sendAction(`/api/batch/search/${encodeURIComponent(project)}`, { method: 'POST', body }, false)
   }
   getBatchSearches () {

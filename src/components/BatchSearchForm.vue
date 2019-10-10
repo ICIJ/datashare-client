@@ -26,8 +26,7 @@
             :label="`${$t('batchSearch.fuzziness')}:`">
             <b-form-input
               type="number"
-              v-model="fuzziness"
-              required></b-form-input>
+              v-model="fuzziness"></b-form-input>
           </b-form-group>
           <b-form-group
             :label="`${$t('batchSearch.fileTypes')}:`">
@@ -61,6 +60,13 @@
               :options="indices"
               required></b-form-select>
           </b-form-group>
+          <b-form-group
+            :description="$t('batchSearch.phraseMatchDescription')"
+            v-if="hasFeature('PHRASE_MATCH')">
+            <b-form-checkbox v-model="phraseMatch" switch>
+              {{ $t('batchSearch.phraseMatch') }}
+            </b-form-checkbox>
+          </b-form-group>
         </div>
         <div class="card-footer">
           <div class="d-flex align-items-center">
@@ -85,9 +91,11 @@ import filter from 'lodash/filter'
 import map from 'lodash/map'
 import throttle from 'lodash/throttle'
 import each from 'lodash/each'
+import features from '@/mixins/features'
 
 export default {
   name: 'BatchSearchForm',
+  mixins: [features],
   data () {
     return {
       name: '',
@@ -98,7 +106,8 @@ export default {
       fuzziness: 0,
       fileTypes: '',
       indices: [],
-      suggestions: []
+      suggestions: [],
+      phraseMatch: true
     }
   },
   computed: {
@@ -138,9 +147,10 @@ export default {
       this.$set(this, 'project', 'local-datashare')
       this.$set(this, 'fuzziness', 0)
       this.$set(this, 'fileTypes', '')
+      this.$set(this, 'phraseMatch', true)
     },
     async onSubmit () {
-      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, project: this.project, fuzziness: this.fuzziness, fileTypes: this.fileTypes })
+      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, project: this.project, fuzziness: this.fuzziness, fileTypes: this.fileTypes, phraseMatch: this.phraseMatch })
       this.resetForm()
       if (this.$config.is('manageDocuments')) {
         try {

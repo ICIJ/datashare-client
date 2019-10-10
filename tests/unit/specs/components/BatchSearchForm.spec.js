@@ -31,11 +31,12 @@ describe('BatchSearchForm', () => {
     expect(wrapper.vm.resetForm).toBeCalled()
   })
 
-  it('should display a form with 5 fields: name, file, fuzziness, file type and description', () => {
-    expect(wrapper.findAll('b-form-group-stub')).toHaveLength(5)
-    expect(wrapper.findAll('b-form-input-stub')).toHaveLength(3)
-    expect(wrapper.findAll('b-form-file-stub')).toHaveLength(1)
-    expect(wrapper.findAll('b-form-textarea-stub')).toHaveLength(1)
+  it('should display a form with 6 fields: name, file, fuzziness, file type, description and phraseMatch', () => {
+    expect(wrapper.findAll('.card-body b-form-group-stub')).toHaveLength(6)
+    expect(wrapper.findAll('.card-body b-form-input-stub')).toHaveLength(3)
+    expect(wrapper.findAll('.card-body b-form-file-stub')).toHaveLength(1)
+    expect(wrapper.findAll('.card-body b-form-textarea-stub')).toHaveLength(1)
+    expect(wrapper.findAll('.card-body b-form-checkbox-stub')).toHaveLength(1)
   })
 
   it('should reset the form', () => {
@@ -45,6 +46,7 @@ describe('BatchSearchForm', () => {
     wrapper.vm.$set(wrapper.vm, 'description', 'This is a description')
     wrapper.vm.$set(wrapper.vm, 'project', 'project-example')
     wrapper.vm.$set(wrapper.vm, 'fileTypes', '')
+    wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
 
     wrapper.vm.resetForm()
 
@@ -54,6 +56,7 @@ describe('BatchSearchForm', () => {
     expect(wrapper.vm.description).toBe('')
     expect(wrapper.vm.project).toBe('local-datashare')
     expect(wrapper.vm.fileTypes).toBe('')
+    expect(wrapper.vm.phraseMatch).toBeTruthy()
   })
 
   describe('FileTypes suggestions', () => {

@@ -478,7 +478,9 @@
     "query": "no queries | 1 query | {count} queries",
     "delete": "Delete batch search",
     "deleted": "The batch search have been deleted.",
-    "published": "Published"
+    "published": "Published",
+    "phraseMatch": "Do phrase matches",
+    "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order."
   },
   "batchSearchResults": {
     "index": "Index",

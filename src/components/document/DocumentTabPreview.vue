@@ -35,9 +35,7 @@ import features from '@/mixins/features'
 
 export default {
   name: 'DocumentTabPreview',
-  mixins: [
-    features
-  ],
+  mixins: [features],
   components: {
     ImageViewer,
     LegacySpreadsheetViewer,
