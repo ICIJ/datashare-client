@@ -102,10 +102,10 @@
     "invert": "Excluir",
     "content-type": "Tipo de archivo",
     "language": "Idiomas",
-    "named-entity-person": "Personas",
-    "named-entity-location": "Ubicaciones",
-    "named-entity-organization": "Organizaciones",
-    "named-entity-email": "Correos electrónicos",
+    "namedEntityPerson": "People",
+    "namedEntityLocation": "Locations",
+    "namedEntityOrganization": "Organizations",
+    "namedEntityEmail": "Emails",
     "path": "Ruta",
     "indexing-date": "Fecha de indexación\n ",
     "extraction-level": "Nivel de extracción",
@@ -393,7 +393,9 @@
   },
   "email": {
     "detail": "Más detalles",
-    "to": "Para"
+    "to": "Para",
+    "receivedLink": "Emails received",
+    "sentLink": "Emails sent"
   },
   "indexing": {
     "title": "Analiza tus documentos",
@@ -433,7 +435,8 @@
     "history": "Tu historial",
     "logout": "Cerrar sesión",
     "addDocuments": "Cómo agregar documentos",
-    "faq": "Preguntas frecuentes (FAQ)"
+    "faq": "Preguntas frecuentes (FAQ)",
+    "userGuides": "User guides"
   },
   "footer": {
     "homedir": "Mueve archivos a este directorio para analizarlos",
@@ -471,6 +474,7 @@
     "description": "Descripción",
     "fuzziness": "Fuzziness",
     "fileTypes": "File Types",
+    "path": "Path",
     "queries": "Consultas",
     "state": "Estado",
     "date": "Fecha",
@@ -478,7 +482,9 @@
     "query": "no hay consultas | 1 consulta | {count} consultas",
     "delete": "Delete batch search",
     "deleted": "The batch search have been deleted.",
-    "published": "Published"
+    "published": "Published",
+    "phraseMatch": "Do phrase matches",
+    "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order."
   },
   "batchSearchResults": {
     "index": "Índice",
