@@ -66,6 +66,7 @@ export default {
   },
   computed: {
     ...mapState('search', ['isReady', 'showFilters', 'error', 'layout']),
+    ...mapState('document', { currentDocument: 'doc' }),
     toRouteQuery () {
       return this.$store.getters['search/toRouteQuery']
     },
@@ -117,6 +118,12 @@ export default {
     isReady (isReady) {
       const method = isReady ? 'finish' : 'start'
       this.$Progress[method]()
+      this.updateScrollBars()
+    },
+    $route () {
+      this.updateScrollBars()
+    },
+    currentDocument () {
       this.updateScrollBars()
     }
   },
