@@ -11,7 +11,8 @@ describe('EmailString.vue', () => {
       store,
       propsData: {
         email: 'ICIJ <contact@icij.org>'
-      }
+      },
+      mocks: { $t: msg => msg }
     })
 
     expect(wrapper.isVueInstance()).toBeTruthy()
@@ -23,7 +24,8 @@ describe('EmailString.vue', () => {
       store,
       propsData: {
         email: 'contact@icij.org'
-      }
+      },
+      mocks: { $t: msg => msg }
     })
 
     expect(wrapper.text()).toBe('contact@icij.org')
@@ -35,7 +37,8 @@ describe('EmailString.vue', () => {
       store,
       propsData: {
         email: 'ICIJ <contact@icij.org>'
-      }
+      },
+      mocks: { $t: msg => msg }
     })
 
     expect(wrapper.text()).toBe('ICIJ')
@@ -47,7 +50,8 @@ describe('EmailString.vue', () => {
       store,
       propsData: {
         email: 'Pierre Romera <contact@icij.org>'
-      }
+      },
+      mocks: { $t: msg => msg }
     })
 
     expect(wrapper.text()).toBe('Pierre Romera')
