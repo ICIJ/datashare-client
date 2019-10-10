@@ -363,17 +363,6 @@ export const actions = {
       getters.getFields()
     ).then(raw => new Response(raw))
   },
-  queryFacetGlobally ({ state, getters }, params) {
-    return esClient.searchFacet(
-      state.index,
-      getters.getFacet({ name: params.name }),
-      '*',
-      state.facets,
-      true,
-      params.options,
-      getters.getFields()
-    ).then(raw => new Response(raw))
-  },
   addFacetValue ({ commit, dispatch }, facet) {
     commit('addFacetValue', facet)
     return dispatch('query')
