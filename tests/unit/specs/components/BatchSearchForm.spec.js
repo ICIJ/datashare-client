@@ -16,7 +16,7 @@ describe('BatchSearchForm', () => {
   beforeEach(() => {
     const state = { batchSearches: [] }
     actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
-    const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions } } })
+    const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFacet: jest.fn() } } } })
     wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
   })
 
@@ -32,8 +32,8 @@ describe('BatchSearchForm', () => {
   })
 
   it('should display a form with 6 fields: name, file, fuzziness, file type, description and phraseMatch', () => {
-    expect(wrapper.findAll('.card-body b-form-group-stub')).toHaveLength(6)
-    expect(wrapper.findAll('.card-body b-form-input-stub')).toHaveLength(3)
+    expect(wrapper.findAll('.card-body b-form-group-stub')).toHaveLength(7)
+    expect(wrapper.findAll('.card-body b-form-input-stub')).toHaveLength(4)
     expect(wrapper.findAll('.card-body b-form-file-stub')).toHaveLength(1)
     expect(wrapper.findAll('.card-body b-form-textarea-stub')).toHaveLength(1)
     expect(wrapper.findAll('.card-body b-form-checkbox-stub')).toHaveLength(1)
@@ -46,6 +46,7 @@ describe('BatchSearchForm', () => {
     wrapper.vm.$set(wrapper.vm, 'description', 'This is a description')
     wrapper.vm.$set(wrapper.vm, 'project', 'project-example')
     wrapper.vm.$set(wrapper.vm, 'fileTypes', '')
+    wrapper.vm.$set(wrapper.vm, 'paths', 'This a multiple paths')
     wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
 
     wrapper.vm.resetForm()
@@ -56,6 +57,7 @@ describe('BatchSearchForm', () => {
     expect(wrapper.vm.description).toBe('')
     expect(wrapper.vm.project).toBe('local-datashare')
     expect(wrapper.vm.fileTypes).toBe('')
+    expect(wrapper.vm.paths).toBe('')
     expect(wrapper.vm.phraseMatch).toBeTruthy()
   })
 
@@ -67,25 +69,25 @@ describe('BatchSearchForm', () => {
     it('should filter fileTypes according to the fileTypes input', () => {
       wrapper.vm.$set(wrapper.vm, 'fileTypes', 'visi')
 
-      wrapper.vm.searchTerms()
+      wrapper.vm.searchFileTypes()
 
-      expect(wrapper.vm.suggestions).toHaveLength(2)
-      expect(wrapper.vm.suggestions[0].label).toBe('Visio document')
-      expect(wrapper.vm.suggestions[1].label).toBe('StarWriter 5 document')
+      expect(wrapper.vm.suggestionFileTypes).toHaveLength(2)
+      expect(wrapper.vm.suggestionFileTypes[0].label).toBe('Visio document')
+      expect(wrapper.vm.suggestionFileTypes[1].label).toBe('StarWriter 5 document')
     })
 
     it('should filter in types label', async () => {
       wrapper.vm.$set(wrapper.vm, 'fileTypes', 'PDF')
 
-      wrapper.vm.searchTerms()
+      wrapper.vm.searchFileTypes()
 
-      expect(wrapper.vm.suggestions).toHaveLength(1)
-      expect(wrapper.vm.suggestions[0].label).toBe('Portable Document Format (PDF)')
+      expect(wrapper.vm.suggestionFileTypes).toHaveLength(1)
+      expect(wrapper.vm.suggestionFileTypes[0].label).toBe('Portable Document Format (PDF)')
     })
 
     it('should set the clicked item in the fileTypes input', () => {
       wrapper.vm.$set(wrapper.vm, 'fileTypes', 'Excel 2003 XML spreadsheet visio')
-      wrapper.vm.selectTerm({ label: 'StarWriter 5 document' })
+      wrapper.vm.searchFileType({ label: 'StarWriter 5 document' })
 
       expect(wrapper.vm.fileTypes).toBe('Excel 2003 XML spreadsheet StarWriter 5 document')
     })

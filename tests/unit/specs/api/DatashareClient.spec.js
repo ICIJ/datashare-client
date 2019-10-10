@@ -101,8 +101,9 @@ describe('Datashare backend client', () => {
     const project = 'project'
     const fuzziness = 2
     const fileTypes = 'application/pdf text/plain'
+    const paths = 'one or two paths'
     const phraseMatch = false
-    const json = await (await datashare.batchSearch(name, published, csvFile, description, project, fuzziness, fileTypes, phraseMatch)).json()
+    const json = await (await datashare.batchSearch(name, published, csvFile, description, project, fuzziness, fileTypes, paths, phraseMatch)).json()
 
     const body = new FormData()
     body.append('name', name)
@@ -112,6 +113,10 @@ describe('Datashare backend client', () => {
     body.append('fileTypes', 'application/pdf')
     body.append('fileTypes', 'text/plain')
     body.append('fuzziness', fuzziness)
+    body.append('paths', 'one')
+    body.append('paths', 'or')
+    body.append('paths', 'two')
+    body.append('paths', 'paths')
     body.append('phrase_matches', phraseMatch)
     expect(json).toEqual({})
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/project'), { method: 'POST', body })

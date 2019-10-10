@@ -26,7 +26,7 @@ describe('BatchSearch store', () => {
 
   describe('actions', () => {
     it('should submit the new batch search form with complete information', async () => {
-      await store.dispatch('batchSearch/onSubmit', { name: 'name', published: false, csvFile: 'csvFile', description: 'description', project: 'project', fuzziness: 2, fileTypes: 'pdf', phraseMatch: false })
+      await store.dispatch('batchSearch/onSubmit', { name: 'name', published: false, csvFile: 'csvFile', description: 'description', project: 'project', fuzziness: 2, fileTypes: 'pdf', paths: '/a/path/to/home', phraseMatch: false })
 
       const body = new FormData()
       body.append('name', 'name')
@@ -35,6 +35,7 @@ describe('BatchSearch store', () => {
       body.append('published', false)
       body.append('fileTypes', 'pdf')
       body.append('fuzziness', 2)
+      body.append('paths', '/a/path/to/home')
       body.append('phrase_matches', false)
       expect(datashare.fetch).toBeCalledTimes(2)
       expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/project'), { method: 'POST', body })

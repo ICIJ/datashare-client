@@ -474,6 +474,7 @@
     "description": "Description",
     "fuzziness": "Fuzziness",
     "fileTypes": "File Types",
+    "path": "Path",
     "queries": "Queries",
     "state": "State",
     "date": "Date",

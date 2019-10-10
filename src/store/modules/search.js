@@ -75,9 +75,7 @@ export const getters = {
     return predicate => find(state.facets, predicate)
   },
   getFields (state) {
-    return () => {
-      return find(settings.searchFields, { key: state.field }).fields
-    }
+    return () => find(settings.searchFields, { key: state.field }).fields
   },
   hasFacetValue (state) {
     return item => !!find(state.facets, facet => {

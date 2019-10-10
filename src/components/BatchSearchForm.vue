@@ -29,23 +29,6 @@
               v-model="fuzziness"></b-form-input>
           </b-form-group>
           <b-form-group
-            :label="`${$t('batchSearch.fileTypes')}:`">
-            <b-form-input
-              v-model="fileTypes"
-              @input="searchTerms"
-              autocomplete="off">
-            </b-form-input>
-            <selectable-dropdown
-              ref="suggestions"
-              @input="selectTerm"
-              :hide="!suggestions.length"
-              :items="suggestions">
-              <template v-slot:item-label="{ item }">
-                <div>{{ item.label }}</div>
-              </template>
-            </selectable-dropdown>
-          </b-form-group>
-          <b-form-group
             :label="`${$t('batchSearch.description')}:`">
             <b-form-textarea
               v-model="description"
@@ -59,6 +42,38 @@
               v-model="project"
               :options="indices"
               required></b-form-select>
+          </b-form-group>
+          <b-form-group
+            :label="`${$t('batchSearch.fileTypes')}:`">
+            <b-form-input
+              v-model="fileTypes"
+              @input="searchFileTypes"
+              autocomplete="off">
+            </b-form-input>
+            <selectable-dropdown
+              ref="suggestionFileTypes"
+              @input="searchFileType"
+              :hide="!suggestionFileTypes.length"
+              :items="suggestionFileTypes">
+              <template v-slot:item-label="{ item }">
+                <div>{{ item.label }}</div>
+              </template>
+            </selectable-dropdown>
+          </b-form-group>
+          <b-form-group
+            :label="`${$t('batchSearch.path')}:`"
+            v-if="hasFeature('PATH')">
+            <b-form-input
+              v-model="paths"
+              @input="searchPaths"
+              autocomplete="off">
+            </b-form-input>
+            <selectable-dropdown
+              ref="suggestionPaths"
+              @input="searchPath"
+              :hide="!suggestionPaths.length"
+              :items="suggestionPaths">
+            </selectable-dropdown>
           </b-form-group>
           <b-form-group
             :description="$t('batchSearch.phraseMatchDescription')"
@@ -87,10 +102,11 @@
 
 <script>
 import types from '@/utils/types.json'
+import each from 'lodash/each'
 import filter from 'lodash/filter'
+import get from 'lodash/get'
 import map from 'lodash/map'
 import throttle from 'lodash/throttle'
-import each from 'lodash/each'
 import features from '@/mixins/features'
 
 export default {
@@ -105,9 +121,12 @@ export default {
       project: 'local-datashare',
       fuzziness: 0,
       fileTypes: '',
+      suggestionFileTypes: [],
+      paths: '',
+      suggestionPaths: [],
       indices: [],
-      suggestions: [],
-      phraseMatch: true
+      phraseMatch: true,
+      allPaths: []
     }
   },
   computed: {
@@ -120,23 +139,40 @@ export default {
       return allTypes
     }
   },
-  created () {
+  async created () {
     this.$set(this, 'indices', map(this.$config.get('userIndices', []), value => { return { value, text: value } }))
+    const response = await this.$store.dispatch('search/queryFacet', { name: 'path', options: { size: 1000, exclude: '', include: '.*' } })
+    map(get(response, ['aggregations', 'byDirname', 'buckets'], []), item => this.allPaths.push(item.key))
   },
   methods: {
-    searchTerms: throttle(async function () {
-      const searchedTerm = this.fileTypes.split(' ').pop()
-      this.$set(this, 'suggestions', filter(this.allTypes, item => (item.label.indexOf(searchedTerm) > -1) || item.mime.indexOf(searchedTerm) > -1))
+    searchFileTypes: throttle(async function () {
+      const searchedFileTypes = this.fileTypes.split(' ').pop()
+      this.$set(this, 'suggestionFileTypes', filter(this.allTypes, item => (item.label.indexOf(searchedFileTypes) > -1) || item.mime.indexOf(searchedFileTypes) > -1))
     }, 200),
-    selectTerm (term) {
-      if (term) {
+    searchFileType (fileType) {
+      if (fileType) {
         const fileTypesArray = this.fileTypes.split(' ')
-        // Remove last item
+        // Remove last fileType
         fileTypesArray.pop()
-        // Append the clicked term
-        fileTypesArray.push(term.label)
+        // Append the clicked fileType
+        fileTypesArray.push(fileType.label)
         this.$set(this, 'fileTypes', fileTypesArray.join(' '))
-        this.$set(this, 'suggestions', [])
+        this.$set(this, 'suggestionFileTypes', [])
+      }
+    },
+    searchPaths: throttle(async function () {
+      const searchedPaths = this.paths.split(' ').pop()
+      this.$set(this, 'suggestionPaths', filter(this.allPaths, item => item.indexOf(searchedPaths) > -1))
+    }, 200),
+    searchPath (path) {
+      if (path) {
+        const PathsArray = this.paths.split(' ')
+        // Remove last path
+        PathsArray.pop()
+        // Append the clicked path
+        PathsArray.push(path)
+        this.$set(this, 'paths', PathsArray.join(' '))
+        this.$set(this, 'suggestionPaths', [])
       }
     },
     resetForm () {
@@ -147,10 +183,11 @@ export default {
       this.$set(this, 'project', 'local-datashare')
       this.$set(this, 'fuzziness', 0)
       this.$set(this, 'fileTypes', '')
+      this.$set(this, 'paths', '')
       this.$set(this, 'phraseMatch', true)
     },
     async onSubmit () {
-      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, project: this.project, fuzziness: this.fuzziness, fileTypes: this.fileTypes, phraseMatch: this.phraseMatch })
+      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, project: this.project, fuzziness: this.fuzziness, fileTypes: this.fileTypes, paths: this.paths, phraseMatch: this.phraseMatch })
       this.resetForm()
       if (this.$config.is('manageDocuments')) {
         try {
