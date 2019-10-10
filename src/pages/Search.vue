@@ -9,7 +9,7 @@
       <app-nav class="flex-grow-1" />
     </div>
     <div class="px-0 search__body">
-      <vue-perfect-scrollbar class="search__body__search-results search__body__results">
+      <vue-perfect-scrollbar class="search__body__search-results search__body__results" ref="searchBodyScrollbar">
         <div v-if="!!error" class="py-5 text-center">
           {{ errorMessage }}
         </div>
@@ -23,7 +23,7 @@
       <transition name="slide-right">
         <div class="search__body__document d-flex flex-column" v-if="showDocument">
           <search-document-navbar />
-          <vue-perfect-scrollbar class="flex-grow-1">
+          <vue-perfect-scrollbar class="flex-grow-1" ref="searchBodyDocumentScrollbar">
             <router-view class="search__body__document__view" />
           </vue-perfect-scrollbar>
         </div>
@@ -34,14 +34,16 @@
 </template>
 
 <script>
-import isEqual from 'lodash/isEqual'
+import compact from 'lodash/compact'
 import get from 'lodash/get'
+import isEqual from 'lodash/isEqual'
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+import { errors as esErrors } from 'elasticsearch-browser'
+import { mapState } from 'vuex'
+
 import AppNav from '@/components/AppNav'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import SearchResults from '@/components/SearchResults'
-import { mapState } from 'vuex'
-import { errors as esErrors } from 'elasticsearch-browser'
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'Search',
@@ -115,6 +117,7 @@ export default {
     isReady (isReady) {
       const method = isReady ? 'finish' : 'start'
       this.$Progress[method]()
+      this.updateScrollBars()
     }
   },
   methods: {
@@ -140,6 +143,10 @@ export default {
     },
     isDifferentFromQuery (query) {
       return !isEqual(query, this.$store.getters['search/toRouteQuery'])
+    },
+    updateScrollBars () {
+      const refs = [this.$refs.searchBodyScrollbar, this.$refs.searchBodyDocumentScrollbar]
+      compact(refs).map(ref => ref.ps.update())
     }
   }
 }
