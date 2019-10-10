@@ -1,7 +1,7 @@
 <template>
   <div class="route-docs-links p-3">
     <h5 class="text-light py-1">
-      User guides
+      {{ $t('menu.userGuides') }}
     </h5>
     <div class="card">
       <div class="list-group list-group-flush small">

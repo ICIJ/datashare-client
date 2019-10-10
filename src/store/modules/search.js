@@ -47,9 +47,9 @@ export function initialState () {
       new FacetText('content-type', 'contentType', 'file', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })),
       new FacetDateRange('creation-date', 'metadata.tika_metadata_creation_date', 'calendar-alt', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key),
       new FacetText('language', 'language', 'language', false, item => `facet.lang.${item.key}`),
-      new FacetNamedEntity('named-entity-person', 'byMentions', null, true, namedEntityCategoryTranslation['named-entity-person']),
-      new FacetNamedEntity('named-entity-organization', 'byMentions', null, true, namedEntityCategoryTranslation['named-entity-organization']),
-      new FacetNamedEntity('named-entity-location', 'byMentions', null, true, namedEntityCategoryTranslation['named-entity-location']),
+      new FacetNamedEntity('namedEntityPerson', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityPerson']),
+      new FacetNamedEntity('namedEntityOrganization', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityOrganization']),
+      new FacetNamedEntity('namedEntityLocation', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityLocation']),
       new FacetPath('path', 'byDirname', 'hdd', false),
       new FacetText('extraction-level', 'extractionLevel', 'paperclip', false, item => getExtractionLevelTranslationKey(item.key)),
       new FacetDate('indexing-date', 'extractionDate', 'calendar-plus', false, item => item.key_as_string)

@@ -211,7 +211,7 @@ describe('Search facets', () => {
 
   describe('Named entities facet', () => {
     it('should define a `named-entity` facet correctly (name, key, type and PERSON category)', () => {
-      const facet = find(store.state.search.facets, { name: 'named-entity-person' })
+      const facet = find(store.state.search.facets, { name: 'namedEntityPerson' })
 
       expect(typeof facet).toBe('object')
       expect(facet.key).toEqual('byMentions')
@@ -225,7 +225,7 @@ describe('Search facets', () => {
       await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_02', 44, 'PERSON', true)).commit()
       await letData(es).have(new IndexedDocument('doc_04.csv').withNer('entity_03', 45, 'PERSON', false)).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'named-entity-person' })
+      const response = await store.dispatch('search/queryFacet', { name: 'namedEntityPerson' })
 
       expect(response.aggregations.byMentions.buckets).toHaveLength(2)
       expect(response.aggregations.byMentions.buckets[0].key).toEqual('entity_01')
@@ -239,7 +239,7 @@ describe('Search facets', () => {
       await letData(es).have(new IndexedDocument('doc_02.csv').withNer('entity_02', 43, 'LOCATION', false)).commit()
       await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_03', 44, 'ORGANIZATION', true)).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'named-entity-location', category: 'LOCATION' })
+      const response = await store.dispatch('search/queryFacet', { name: 'namedEntityLocation', category: 'LOCATION' })
 
       expect(response.aggregations.byMentions.buckets).toHaveLength(2)
     })
@@ -249,7 +249,7 @@ describe('Search facets', () => {
       await letData(es).have(new IndexedDocument('doc_02.csv').withNer('entity_02', 43, 'ORGANIZATION', false)).commit()
       await letData(es).have(new IndexedDocument('doc_03.csv').withNer('entity_03', 44, 'PERSON', true)).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'named-entity-organization', category: 'ORGANIZATION' })
+      const response = await store.dispatch('search/queryFacet', { name: 'namedEntityOrganization', category: 'ORGANIZATION' })
 
       expect(response.aggregations.byMentions.buckets).toHaveLength(2)
     })

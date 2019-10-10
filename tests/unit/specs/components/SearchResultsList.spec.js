@@ -72,7 +72,7 @@ describe('SearchResultsList.vue', () => {
       await letData(es).have(new IndexedDocument('doc_03')
         .withNer('paris')).commit()
 
-      store.commit('search/addFacetValue', { name: 'named-entity-person', value: 'paris' })
+      store.commit('search/addFacetValue', { name: 'namedEntityPerson', value: 'paris' })
       wrapper = await createView()
 
       expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)

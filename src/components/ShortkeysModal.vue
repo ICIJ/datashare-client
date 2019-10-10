@@ -27,7 +27,6 @@
 <script>
 import shortkeys from '@/utils/shortkeys.json'
 import { getShortkeyOS } from '@/utils/utils'
-import features from '@/mixins/features'
 import capitalize from 'lodash/capitalize'
 import get from 'lodash/get'
 import isArray from 'lodash/isArray'
@@ -36,7 +35,6 @@ import map from 'lodash/map'
 
 export default {
   name: 'ShortkeysModal',
-  mixins: [features],
   data () {
     return {
       shortkeys: []

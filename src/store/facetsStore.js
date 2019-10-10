@@ -11,9 +11,9 @@ const starredLabel = {
 }
 
 const namedEntityCategoryTranslation = {
-  'named-entity-person': 'PERSON',
-  'named-entity-organization': 'ORGANIZATION',
-  'named-entity-location': 'LOCATION'
+  'namedEntityPerson': 'PERSON',
+  'namedEntityOrganization': 'ORGANIZATION',
+  'namedEntityLocation': 'LOCATION'
 }
 
 class FacetText {

@@ -102,10 +102,10 @@
     "invert": "Exclude",
     "content-type": "File Types",
     "language": "Languages",
-    "named-entity-person": "People",
-    "named-entity-location": "Locations",
-    "named-entity-organization": "Organizations",
-    "named-entity-email": "Emails",
+    "namedEntityPerson": "People",
+    "namedEntityLocation": "Locations",
+    "namedEntityOrganization": "Organizations",
+    "namedEntityEmail": "Emails",
     "path": "Paths",
     "indexing-date": "Indexing dates",
     "extraction-level": "Extraction levels",
@@ -433,7 +433,8 @@
     "history": "Your history",
     "logout": "Logout",
     "addDocuments": "How to add documents",
-    "faq": "FAQ"
+    "faq": "FAQ",
+    "userGuides": "User guides"
   },
   "footer": {
     "homedir": "Move files to this directory in order to analyze them",

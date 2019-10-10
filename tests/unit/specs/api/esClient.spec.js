@@ -147,7 +147,7 @@ describe('esClient', () => {
       .withContent('nothing to write')
       .withNer('another')
     ).commit()
-    const facet = new FacetNamedEntity('named-entity-person', 'byMentions', true, 'PERSON')
+    const facet = new FacetNamedEntity('namedEntityPerson', 'byMentions', true, 'PERSON')
 
     const response = await esClient.searchFacet(index, facet, 'document')
 

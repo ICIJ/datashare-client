@@ -42,7 +42,7 @@ describe('FacetNamedEntity.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = mount(FacetNamedEntity, { localVue, i18n, store, propsData: { facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
+    wrapper = mount(FacetNamedEntity, { localVue, i18n, store, propsData: { facet: find(store.state.search.facets, { name: 'namedEntityPerson' }) } })
     store.commit('search/setGlobalSearch', false)
   })
 
@@ -311,7 +311,7 @@ describe('FacetNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('doc_03')
       .withNer('person_03')).commit()
 
-    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityPerson' })
     namedEntityFacet.value = ['person_01']
     store.commit('search/addFacetValue', namedEntityFacet)
     await wrapper.vm.root.aggregate()
@@ -320,7 +320,7 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.list-group-item .facet__items__item').at(0).text()).toContain('person_01')
   })
 
-  it('should display the only named-entity-person selected', async () => {
+  it('should display the only namedEntityPerson selected', async () => {
     await letData(es).have(new IndexedDocument('doc_01')
       .withNer('person_01')
       .withNer('person_02')
@@ -340,7 +340,7 @@ describe('FacetNamedEntity.vue', () => {
       .withNer('organization_04', 1, 'ORGANIZATION')
     ).commit()
 
-    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityPerson' })
     namedEntityFacet.value = ['person_02']
     store.commit('search/addFacetValue', namedEntityFacet)
     await wrapper.vm.root.aggregate()
@@ -349,7 +349,7 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.list-group-item .facet__items__item').at(0).text()).toContain('person_02')
   })
 
-  it('should filter items of named-entity-person according to the named-entity-organization selected', async () => {
+  it('should filter items of namedEntityPerson according to the namedEntityOrganization selected', async () => {
     await letData(es).have(new IndexedDocument('doc_01')
       .withNer('person_01')
       .withNer('person_02')
@@ -369,7 +369,7 @@ describe('FacetNamedEntity.vue', () => {
       .withNer('organization_04', 1, 'ORGANIZATION')
     ).commit()
 
-    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-organization' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityOrganization' })
     namedEntityFacet.value = ['organization_03']
     store.commit('search/addFacetValue', namedEntityFacet)
     await wrapper.vm.root.aggregate()
@@ -384,10 +384,10 @@ describe('FacetNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('doc_01').withNer('anne')).commit()
     await letData(es).have(new IndexedDocument('doc_02').withNer('bruno')).commit()
 
-    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityPerson' })
     namedEntityFacet.value = ['anne']
     store.commit('search/addFacetValue', namedEntityFacet)
-    store.commit('search/toggleFacet', 'named-entity-person')
+    store.commit('search/toggleFacet', 'namedEntityPerson')
     store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate()
 
@@ -406,10 +406,10 @@ describe('FacetNamedEntity.vue', () => {
       .withNer('location_02', 1, 'LOCATION')
     ).commit()
 
-    let namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    let namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityPerson' })
     namedEntityFacet.value = ['person_01']
     store.commit('search/addFacetValue', namedEntityFacet)
-    namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-organization' })
+    namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityOrganization' })
     namedEntityFacet.value = ['organization_01']
     store.commit('search/addFacetValue', namedEntityFacet)
     await wrapper.vm.root.aggregate()
@@ -427,10 +427,10 @@ describe('FacetNamedEntity.vue', () => {
       .withNer('organization_02', 1, 'ORGANIZATION')
     ).commit()
 
-    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-organization' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityOrganization' })
     namedEntityFacet.value = ['organization_01']
     store.commit('search/addFacetValue', namedEntityFacet)
-    store.commit('search/toggleFacet', 'named-entity-organization')
+    store.commit('search/toggleFacet', 'namedEntityOrganization')
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.list-group-item .facet__items__item')).toHaveLength(1)
@@ -454,10 +454,10 @@ describe('FacetNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('doc_01')
       .withNer('person_01')).commit()
 
-    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityPerson' })
     namedEntityFacet.value = ['person_01']
     store.commit('search/addFacetValue', namedEntityFacet)
-    wrapper = mount(FacetNamedEntity, { localVue, i18n, store, propsData: { facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
+    wrapper = mount(FacetNamedEntity, { localVue, i18n, store, propsData: { facet: find(store.state.search.facets, { name: 'namedEntityPerson' }) } })
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.list-group-item .facet__items__item')).toHaveLength(1)
@@ -469,10 +469,10 @@ describe('FacetNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('doc_01')
       .withNer('person_01')).commit()
 
-    const namedEntityFacet = find(store.state.search.facets, { name: 'named-entity-person' })
+    const namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityPerson' })
     namedEntityFacet.value = ['person_01']
     store.commit('search/addFacetValue', namedEntityFacet)
-    wrapper = mount(FacetNamedEntity, { localVue, i18n, store, router, propsData: { facet: find(store.state.search.facets, { name: 'named-entity-person' }) } })
+    wrapper = mount(FacetNamedEntity, { localVue, i18n, store, router, propsData: { facet: find(store.state.search.facets, { name: 'namedEntityPerson' }) } })
     await wrapper.vm.root.aggregate()
     wrapper.findAll('.list-group-item .facet__items__item input').at(0).trigger('click')
 

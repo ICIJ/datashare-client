@@ -188,7 +188,7 @@ describe('Search store', () => {
     await letData(es).have(new IndexedDocument('bar.csv').withContent('bar').withNer('name_02')).commit()
     await letData(es).have(new IndexedDocument('bar.ico').withContent('bar').withNer('name_02')).commit()
 
-    await store.dispatch('search/addFacetValue', { name: 'named-entity-person', value: 'name_02' })
+    await store.dispatch('search/addFacetValue', { name: 'namedEntityPerson', value: 'name_02' })
     expect(store.state.search.response.hits).toHaveLength(2)
   })
 

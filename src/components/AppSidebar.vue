@@ -110,7 +110,6 @@
 
 <script>
 import docs from '@/mixins/docs'
-import features from '@/mixins/features'
 import utils from '@/mixins/utils'
 import { isNarrowScreen } from '@/utils/screen'
 import DatashareClient from '@/api/DatashareClient'
@@ -121,7 +120,7 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'AppSidebar',
-  mixins: [docs, features, utils],
+  mixins: [docs, utils],
   components: {
     LocalesDropdown,
     MountedDataLocation,

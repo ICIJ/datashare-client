@@ -48,19 +48,6 @@
         <shortkeys-modal class="d-none d-md-inline"></shortkeys-modal>
       </div>
     </div>
-    <slide-up-down :active="showTips" v-if="tips">
-      <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }" class="search-bar__tips">
-        <span>
-          <span class="mr-1">
-            <fa icon="book" class="mr-1" />
-            Tips to improve searching
-          </span>
-          <span class="text-muted text-truncate">
-            (AND, OR, ...)
-          </span>
-        </span>
-      </router-link>
-    </slide-up-down>
   </form>
 </template>
 
