@@ -18,7 +18,19 @@ Please beware that Datashare show named entities by default. **This can overwrit
 * Check the ‘**Preview’** of original document if available
 * Check the original document at its original location or by clicking the pink button ‘**Download**’
 
+\*\*\*\*
 
+**Search for attachments:**
+
+If the documents has attachments \(technically called 'children documents'\), find them at the end of the document. Click their pink button to open them:
+
+![](../.gitbook/assets/screenshot-2019-10-11-at-16.03.06.png)
+
+To open all the attachments in Datashare, click 'See children documents' in Tags and Details: 
+
+![](../.gitbook/assets/screenshot-2019-10-11-at-16.07.13.png)
+
+\*\*\*\*
 
 **Search for terms within this document:**
 
