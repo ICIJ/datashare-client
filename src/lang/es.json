@@ -11,12 +11,12 @@
   },
   "search": {
     "errors": {
-      "badRequest": "Your search query is wrong",
-      "internalError": "The server encountered a problem",
-      "noConnections": "The server is not connected",
-      "notFound": "Nothing was found",
-      "serviceUnavailable": "The server is unable to satisfy your request",
-      "somethingWrong": "Something went wrong."
+      "badRequest": "Tu término de búsqueda es incorrecto",
+      "internalError": "El servidor ha encontrado un problema",
+      "noConnections": "El servidor no está conectado",
+      "notFound": "No se han encontrado resultados",
+      "serviceUnavailable": "El servidor no puede realizar tu búsqueda",
+      "somethingWrong": "Algo ha ocurrido."
     },
     "field": {
       "all": "Todos los campos",
@@ -29,23 +29,23 @@
       "thread": "ID del hilo"
     },
     "placeholder": "Buscar en documentos...",
-    "buttonLabel": "Search",
-    "searchIn": "Search in",
+    "buttonLabel": "Buscar",
+    "searchIn": "Buscar en",
     "hideFilters": "Ocultar los filtros",
     "showFilters": "Mostrar los filtros",
-    "contextualizeFiltersLabel": "Contextualize filters",
+    "contextualizeFiltersLabel": "Contextualizar filtros",
     "contextualizeFiltersDescription": "Las facetas en el panel izquierdo se actualizarán de acuerdo con los resultados de la búsqueda.",
-    "tips": "Tips to improve searching",
+    "tips": "Consejos para mejorar la búsqueda",
     "settings": {
       "title": "Configuración de búsqueda",
-      "resultsPerPage": "Number of results by page",
-      "sortBy": "Sort results by"
+      "resultsPerPage": "Números de resultados por página",
+      "sortBy": "Ordenar resultados por"
     },
     "results": {
       "match": "coincidir en doc",
       "entities": "nb entidades",
       "results": "1 documento encontrado | %{total} documentos encontrados",
-      "noResults": "No documents found",
+      "noResults": "No se han encontrado documentos",
       "on": "en",
       "perPage": "por página",
       "sort": {
@@ -61,9 +61,9 @@
         "pathReverse": "Ruta del archivo (de A a Z)"
       }
     },
-    "filtersTitle": "Filters",
-    "clearFilters": "Clear all filters",
-    "clearFiltersDescription": "Remove selected filters from the search.",
+    "filtersTitle": "Filtros",
+    "clearFilters": "Limpiar todos los filtros",
+    "clearFiltersDescription": "Remover los filtros seleccionados de la búsqueda.",
     "back": "Regresar a resultados de búsqueda",
     "try": "Usted puede intentar a",
     "nav": {
@@ -102,10 +102,10 @@
     "invert": "Excluir",
     "content-type": "Tipo de archivo",
     "language": "Idiomas",
-    "namedEntityPerson": "People",
-    "namedEntityLocation": "Locations",
-    "namedEntityOrganization": "Organizations",
-    "namedEntityEmail": "Emails",
+    "namedEntityPerson": "Persona",
+    "namedEntityLocation": "Ubicaciones",
+    "namedEntityOrganization": "Organizaciones",
+    "namedEntityEmail": "Correos electrónicos",
     "path": "Ruta",
     "indexing-date": "Fecha de indexación\n ",
     "extraction-level": "Nivel de extracción",
@@ -343,13 +343,13 @@
     "download_file": "Descargar el archivo fuente",
     "star_button": "Marcar como favorito",
     "unstar_button": "Eliminar de favoritos",
-    "starred": "Documents have been starred.",
-    "starring_error": "Unable to star the document.",
-    "unstarred": "Documents have been unstarred.",
-    "tagged": "Documents have been tagged.",
+    "starred": "Documentos han sido agregados como favoritos.",
+    "starring_error": "No se puede iniciar el documento.",
+    "unstarred": "Documentos han sido removidos de favoritos.",
+    "tagged": "Documentos han sido etiquetados.",
     "star_file": "Marcar como favorito",
     "not_found": "Documento no encontrado",
-    "not_available": "Preview is available for some formats only.",
+    "not_available": "La previsualización está disponible para algunos formatos solamente.",
     "named_entities_not_found": "No se han encontrado entidades identificadas",
     "named_entities_not_searched": "<p>Documento no analizado.</p><p class=\"text-muted small\">Para buscar entidades identificadas, vaya a <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> y comience una nueva tarea \"@:indexing.find_named_entities\".</p>",
     "generating_preview": "Generando visualización previa...",
@@ -377,25 +377,25 @@
     "extraction_date": "Fecha de índice",
     "parent": "Archivo de base",
     "in_metadata": "en los metadatos",
-    "in_tags": "in tags",
-    "search_children_document": "See children documents",
-    "tag_confirmation": "Are you sure you want to delete this tag?",
-    "created_by": "Created by",
-    "on": "on",
+    "in_tags": "en etiquetas",
+    "search_children_document": "Mostrar documentos relacionados",
+    "tag_confirmation": "Estás seguro de borrar estas etiquetas?",
+    "created_by": "Creado por",
+    "on": "en",
     "spreadsheet": {
-      "fieldsInFirstItem": "Headers in the first row",
-      "findInSpreadsheet": "Find in spreadsheet"
+      "fieldsInFirstItem": "Cabeceras en la primera línea",
+      "findInSpreadsheet": "Buscar en hoja de cálculos"
     },
     "attachments": {
-      "heading": "No attachments | One attachment | {total} attachments",
-      "more": "More attachments..."
+      "heading": "No hay adjuntos | Un adjunto | {total} adjuntos",
+      "more": "Más adjuntos..."
     }
   },
   "email": {
     "detail": "Más detalles",
     "to": "Para",
-    "receivedLink": "Emails received",
-    "sentLink": "Emails sent"
+    "receivedLink": "Correos electrónicos recibidos",
+    "sentLink": "Correos electrónicos enviados"
   },
   "indexing": {
     "title": "Analiza tus documentos",
@@ -407,7 +407,7 @@
     "empty": "Aún no has iniciado tareas.",
     "extract_text": "Extraer texto",
     "extracting_header": "¿Deseas extraer también el texto de imágenes y archivos PDF?",
-    "run_batch_search": "Run Batch Searches",
+    "run_batch_search": "Ejecutar búsquedas por lotes",
     "extracting_subheader": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
     "find_named_entities": "Encuentra personas, organizaciones y lugares",
     "find_named_entities_header": "¿Qué tecnología deseas aplicar para encontrar personas, organizaciones y lugares?",
@@ -429,14 +429,14 @@
   },
   "menu": {
     "help": "Pedir ayuda",
-    "analyse": "Analyze your documents",
+    "analyse": "Analiza tus documentos",
     "batch": "Búsquedas masivas",
     "search": "Buscar en documentos",
     "history": "Tu historial",
     "logout": "Cerrar sesión",
     "addDocuments": "Cómo agregar documentos",
     "faq": "Preguntas frecuentes (FAQ)",
-    "userGuides": "User guides"
+    "userGuides": "Guía del Usuario"
   },
   "footer": {
     "homedir": "Mueve archivos a este directorio para analizarlos",
@@ -466,25 +466,25 @@
       "fileDescription": "Sólo se acepta el formato CSV. La primera columna debe contener los términos a buscar.",
       "filePlaceholder": "Escoge un archivo...",
       "submit": "Agregar",
-      "success": "Your batch search is now running.",
-      "failure": "Something went wrong, unable to start your batch search."
+      "success": "Tu búsqueda por lotes está ejecutándose.",
+      "failure": "Algo ha salido mal, no se puede iniciar la búsqueda por lotes."
     },
-    "project": "Project",
-    "name": "Name",
+    "project": "Proyecto",
+    "name": "Nombre",
     "description": "Descripción",
-    "fuzziness": "Fuzziness",
-    "fileTypes": "File Types",
-    "path": "Path",
+    "fuzziness": "Ocurrencias",
+    "fileTypes": "Tipos de archivos",
+    "path": "Ruta",
     "queries": "Consultas",
     "state": "Estado",
     "date": "Fecha",
     "nbResults": "Número de resultados",
     "query": "no hay consultas | 1 consulta | {count} consultas",
-    "delete": "Delete batch search",
-    "deleted": "The batch search have been deleted.",
-    "published": "Published",
-    "phraseMatch": "Do phrase matches",
-    "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order."
+    "delete": "Eliminar búsqueda por lote",
+    "deleted": "El lote de búsqueda ha sido eliminado.",
+    "published": "Publicado",
+    "phraseMatch": "Realizar búsquedas similares",
+    "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria."
   },
   "batchSearchResults": {
     "index": "Índice",
@@ -495,7 +495,7 @@
     "size": "Tamaño",
     "downloadResults": "Descargar los resultados",
     "all": "Todas",
-    "empty": "No results"
+    "empty": "Sin resultados"
   },
   "batchSearchResultsFilters": {
     "queries": {
@@ -503,17 +503,17 @@
     }
   },
   "shortkeys": {
-    "title": "Search shortcuts",
-    "goToPreviousDocument": "Go to the previous document",
-    "goToNextDocument": "Go to the next document",
-    "backToSearchResults": "Go back to the search results",
-    "goToPreviousTab": "Go to previous document tab",
-    "goToNextTab": "Go to next document tab",
-    "activateSearchBar": "Activate the search bar",
-    "deactivateSearchBar": "Deactivate the search bar",
-    "findPreviousOccurrence": "Find the previous occurrence in the document",
-    "findPreviousOccurrenceAlt": "Find the previous occurrence in the document",
-    "findNextOccurrence": "Find the next occurrence in the document",
-    "findNextOccurrenceAlt": "Find the next occurrence in the document"
+    "title": "Atajos de búsqueda",
+    "goToPreviousDocument": "Ir al documento previo",
+    "goToNextDocument": "Ir al siguiente documento",
+    "backToSearchResults": "Volver a la búsqueda de resultados",
+    "goToPreviousTab": "Volver a la vista del documento anterior",
+    "goToNextTab": "Ir a la siguiente vista del documento",
+    "activateSearchBar": "Find in document",
+    "deactivateSearchBar": "Close search in document",
+    "findPreviousOccurrence": "Encontrar la ocurrencia previa en el documento",
+    "findPreviousOccurrenceAlt": "Encontrar la ocurrencia previa en el documento",
+    "findNextOccurrence": "Encontrar la próxima ocurrencia en el documento",
+    "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento"
   }
 }
