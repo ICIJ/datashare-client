@@ -142,10 +142,10 @@ export const getters = {
         terms = concat(terms, { field: field === '<implicit>' ? '' : field, label: term.replace('\\', ''), negation })
       }
       if (term === '' && has(query, join([path, 'left'], '.'))) {
-        retTerms(get(query, 'left'), get(query, 'operator', null))
+        retTerms(get(query, 'left'))
       }
     }
-    function retTerms (query, operator) {
+    function retTerms (query, operator = null) {
       getTerm(query, 'left', get(query, 'start', null), operator)
       if (get(query, 'right.left', null) === null) {
         getTerm(query, 'right', null, get(query, 'operator', null))
@@ -154,7 +154,7 @@ export const getters = {
       }
     }
     try {
-      retTerms(lucene.parse(state.query), null)
+      retTerms(lucene.parse(state.query))
       return terms
     } catch (_) {
       return []

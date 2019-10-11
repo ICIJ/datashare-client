@@ -513,6 +513,12 @@ describe('Search store', () => {
 
       expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: false }, { field: '', label: 'term_03', negation: true }, { field: '', label: 'term_04', negation: false }])
     })
+
+    it('Should apply the negation only to the second group', () => {
+      store.commit('search/query', '(term_01 term_02) NOT term_03')
+
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: false }, { field: '', label: 'term_03', negation: true }])
+    })
   })
 
   describe('retrieveContentQueryTermsInContent', () => {

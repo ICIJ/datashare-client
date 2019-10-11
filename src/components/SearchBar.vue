@@ -138,7 +138,7 @@ export default {
       const body = bodybuilder().size(0).aggregation('terms', field, { include }).build()
       const response = await esClient.search({ index, body })
       const suggestions = get(response, `aggregations.agg_terms_${field}.buckets`, [])
-      // Return an object to check later if the promise result is still appliable
+      // Return an object to check later if the promise result is still applicable
       return { query, suggestions }
     },
     termCandidates (ast = null) {
