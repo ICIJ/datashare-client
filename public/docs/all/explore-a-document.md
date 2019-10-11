@@ -20,7 +20,7 @@ Please beware that Datashare show named entities by default. **This can overwrit
 
 \*\*\*\*
 
-### **Search for attachments:**
+### **Search for attachments**
 
 If the documents has attachments \(technically called 'children documents'\), find them at the end of the document. Click their pink button to open them:
 
@@ -32,7 +32,7 @@ To open all the attachments in Datashare, click 'See children documents' in Tags
 
 \*\*\*\*
 
-### **Search for terms within this document:**
+### **Search for terms within this document**
 
 * Press **Command\(⌘\) + F** \(on Mac\) or **Control + F** \(on Windows and Linux\) or click on the search bar above your Extracted Text
 * Type what you search for
