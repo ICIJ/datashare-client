@@ -8,7 +8,7 @@ const { localVue } = App.init(createLocalVue()).useAll()
 
 jest.mock('lodash/throttle', () => jest.fn(fn => fn))
 
-describe('BatchSearchForm', () => {
+describe('BatchSearchForm.vue', () => {
   let actions, wrapper
 
   beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
@@ -42,7 +42,7 @@ describe('BatchSearchForm', () => {
   it('should reset the form', () => {
     wrapper.vm.$set(wrapper.vm, 'name', 'Example')
     wrapper.vm.$set(wrapper.vm, 'published', false)
-    wrapper.vm.$set(wrapper.vm, 'csvFile', 'This is a file')
+    wrapper.vm.$set(wrapper.vm, 'csvFile', new File(['File content'], 'test_file.csv', { type: 'text/csv' }))
     wrapper.vm.$set(wrapper.vm, 'description', 'This is a description')
     wrapper.vm.$set(wrapper.vm, 'project', 'project-example')
     wrapper.vm.$set(wrapper.vm, 'fileTypes', '')

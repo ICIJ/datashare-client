@@ -6,7 +6,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 const { localVue, router } = App.init(createLocalVue()).useAll()
 
-describe('Search', () => {
+describe('Search.vue', () => {
   let wrapper, localStore
 
   beforeEach(() => {
@@ -21,6 +21,9 @@ describe('Search', () => {
             query: jest.fn(),
             refresh: jest.fn()
           })
+        },
+        document: {
+          namespaced: true
         }
       }
     })
