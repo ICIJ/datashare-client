@@ -1,47 +1,60 @@
 import { App } from '@/main'
-import { createLocalVue, mount } from '@vue/test-utils'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import IndexSelector from '@/components/IndexSelector'
 import Murmur from '@icij/murmur'
 import { datashare } from '@/store/modules/search'
 import DatashareClient from '@/api/DatashareClient'
 import find from 'lodash/find'
+import { jsonOk } from 'tests/unit/tests_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
+localVue.mixin({ created () {} })
+const mergeCreatedStrategy = localVue.config.optionMergeStrategies.created
+localVue.config.optionMergeStrategies.created = (parent, child) => mergeCreatedStrategy(parent)
+
 describe('IndexSelector.vue', () => {
   let wrapper
+  esConnectionHelper()
+
+  beforeAll(() => {
+    Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX, process.env.VUE_APP_ES_ANOTHER_INDEX] })
+    Murmur.config.merge({ multipleProjects: true })
+    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+  })
 
   beforeEach(() => {
-    Murmur.config.merge({ userIndices: ['first-index', 'second-index'] })
-    store.commit('search/index', 'first-index')
-    wrapper = mount(IndexSelector, { localVue, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) }, mocks: { $t: msg => msg } })
-    wrapper.vm.$config.set('multipleProjects', true)
+    wrapper = shallowMount(IndexSelector, { localVue, router, store, propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
   })
 
   it('should not display a dropdown if we aren\'t in server mode', () => {
-    wrapper.vm.$config.set('multipleProjects', false)
+    Murmur.config.merge({ multipleProjects: false })
+    wrapper = shallowMount(IndexSelector, { localVue, router, store, propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
+
     expect(wrapper.findAll('option')).toHaveLength(0)
-    wrapper.vm.$config.set('multipleProjects', true)
   })
 
   it('should select the local index as default selected index', () => {
-    expect(wrapper.vm.selectedIndex).toBe('first-index')
-  })
-
-  it('should display a dropdown containing 2 indices', async () => {
-    expect(wrapper.findAll('option')).toHaveLength(2)
-    expect(wrapper.findAll('option').at(0).text()).toBe('first-index')
-    expect(wrapper.findAll('option').at(1).text()).toBe('second-index')
+    expect(wrapper.vm.selectedIndex).toBe(process.env.VUE_APP_ES_INDEX)
   })
 
   describe('on index change', () => {
+    beforeEach(() => {
+      wrapper = shallowMount(IndexSelector, { localVue, router, store, propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
+      jest.spyOn(datashare, 'fetch')
+      datashare.fetch.mockReturnValue(jsonOk())
+    })
+
+    afterEach(() => datashare.fetch.mockClear())
+
     it('should reset search state on index change', async () => {
       store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
       expect(store.getters['search/toRouteQuery']['f[content-type]']).not.toBeUndefined()
 
-      await wrapper.findAll('option').at(1).setSelected()
+      await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
 
-      expect(store.getters['search/toRouteQuery'].index).toEqual('second-index')
+      expect(store.getters['search/toRouteQuery'].index).toEqual(process.env.VUE_APP_ES_ANOTHER_INDEX)
       expect(store.getters['search/toRouteQuery']['f[content-type]']).toBeUndefined()
     })
 
@@ -49,30 +62,36 @@ describe('IndexSelector.vue', () => {
       const mockCallback = jest.fn()
       wrapper.vm.$root.$on('facet::search::reset-filters', mockCallback)
 
-      await wrapper.findAll('option').at(1).setSelected()
+      mockCallback.mockClear()
+
+      await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
 
       expect(mockCallback.mock.calls).toHaveLength(1)
     })
 
     it('should refresh the starred documents on index change', async () => {
-      jest.spyOn(datashare, 'fetch')
+      await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
 
-      await wrapper.findAll('option').at(1).setSelected()
+      expect(datashare.fetch).toBeCalledTimes(2)
+      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/starred/${process.env.VUE_APP_ES_ANOTHER_INDEX}`), {})
+    })
 
-      expect(datashare.fetch).toBeCalledTimes(1)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/document/project/starred/second-index'), {})
-      datashare.fetch.mockClear()
+    it('should refresh the isAllowed on index change', async () => {
+      await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
+
+      expect(datashare.fetch).toBeCalledTimes(2)
+      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/project/isAllowed/${process.env.VUE_APP_ES_ANOTHER_INDEX}`), {})
     })
 
     it('should refresh the route on index change', async () => {
       const spyRefreshRoute = jest.spyOn(wrapper.vm, 'refreshRoute')
       expect(spyRefreshRoute).not.toBeCalled()
 
-      await wrapper.findAll('option').at(1).setSelected()
+      await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
 
       expect(spyRefreshRoute).toBeCalled()
       expect(spyRefreshRoute).toBeCalledTimes(1)
-      expect(store.getters['search/toRouteQuery'].index).toEqual('second-index')
+      expect(store.getters['search/toRouteQuery'].index).toEqual(process.env.VUE_APP_ES_ANOTHER_INDEX)
     })
   })
 })

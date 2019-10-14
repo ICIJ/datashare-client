@@ -371,13 +371,6 @@ describe('Search store', () => {
 
       expect(store.state.search.field).toEqual('author')
     })
-
-    it('should ask for the isAllowed status', async () => {
-      await store.dispatch('search/updateFromRouteQuery', {})
-
-      expect(datashare.fetch).toBeCalledTimes(1)
-      expect(store.state.search.isAllowed).toBeTruthy()
-    })
   })
 
   it('should not delete the term from the query if it doesn\'t exist', async () => {

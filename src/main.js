@@ -65,10 +65,6 @@ export class App {
     Murmur.config.merge(config)
     // Override Murmur default value for content-placeholder
     Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
-    // Select the first user's index as default index
-    if (config.userIndices !== undefined) {
-      store.commit('search/index', config.userIndices[0])
-    }
     return this
   }
   mount (selector) {

@@ -43,15 +43,19 @@ export default {
       return this.collapseItems ? 'plus' : 'minus'
     }
   },
-  created () {
+  async created () {
     this.$set(this, 'indices', map(this.$config.get('userIndices', []), value => { return { value, text: value } }))
+    this.$store.commit('search/index', this.indices[0].value)
+    await this.$store.dispatch('search/getStarredDocuments')
+    await this.$store.dispatch('search/getIsAllowed')
   },
   methods: {
-    select (value) {
+    async select (value) {
       this.$store.commit('search/index', value)
-      this.$store.dispatch('search/reset')
+      await this.$store.dispatch('search/reset')
       this.$root.$emit('facet::search::reset-filters')
-      this.$store.dispatch('search/getStarredDocuments')
+      await this.$store.dispatch('search/getStarredDocuments')
+      await this.$store.dispatch('search/getIsAllowed')
       this.refreshRoute()
     },
     toggleItems () {

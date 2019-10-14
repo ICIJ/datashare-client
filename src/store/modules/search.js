@@ -340,7 +340,7 @@ export const actions = {
       throw error
     }
   },
-  async query ({ state, commit, getters, dispatch }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort, field: state.field }) {
+  query ({ state, commit, getters, dispatch }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort, field: state.field }) {
     const queryHasntValue = key => typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams[key] === 'undefined'
     commit('index', queryHasntValue('index') ? state.index : queryOrParams.index)
     commit('query', queryHasntValue('query') ? queryOrParams : queryOrParams.query)
@@ -410,8 +410,6 @@ export const actions = {
         }
       })
     })
-    const response = await datashare.isAllowed(state.index)
-    if (response.status === 200) commit('isAllowed', true)
   },
   deleteQueryTerm ({ state, commit, dispatch }, term) {
     function deleteQueryTermFromSimpleQuery (query) {
@@ -453,6 +451,10 @@ export const actions = {
     const starredDocuments = await datashare.getStarredDocuments(state.index)
     commit('starredDocuments', starredDocuments)
     commit('setStarredDocuments')
+  },
+  async getIsAllowed ({ state, commit }) {
+    const response = await datashare.isAllowed(state.index)
+    commit('isAllowed', response.status === 200)
   }
 }
 

@@ -33,7 +33,7 @@ describe('Search.vue', () => {
   it('should refresh the view on custom event', () => {
     wrapper.vm.$root.$emit('index::delete::all')
 
-    expect(actions.query).toBeCalledTimes(1)
+    expect(actions.query).toBeCalledTimes(2)
   })
 
   it('should execute a new search on event "facet::starred:refresh"', () => {
