@@ -8,7 +8,7 @@
     </div>
     <div v-else class="spreadsheet-viewer__content d-flex flex-column h-100">
       <div class="spreadsheet-viewer__content__toolbox d-flex align-items-center p-2">
-        <b-form-select class="w-auto" v-model="active" :options="sheets" />
+        <b-form-select class="w-auto" v-model="active" :options="nonEmptySheets" />
         <b-form-checkbox v-model="fieldsInFirstItem" switch class="ml-3">
           {{ $t('document.spreadsheet.fieldsInFirstItem') }}
         </b-form-checkbox>
@@ -27,8 +27,10 @@
 import { getCookie } from 'tiny-cookie'
 import first from 'lodash/first'
 import get from 'lodash/get'
+import filter from 'lodash/filter'
 import kebabCase from 'lodash/kebabCase'
 import startCase from 'lodash/startCase'
+import sortBy from 'lodash/sortBy'
 import fetchPonyfill from 'fetch-ponyfill'
 
 const { fetch } = fetchPonyfill()
@@ -49,7 +51,7 @@ export default {
     this.$Progress.start()
     const response = await fetch(this.contentUrl, this.contentOptions)
     this.meta = await response.json()
-    this.active = this.sheets[0]
+    this.active = this.nonEmptySheets[0]
     this.isReady = true
     this.$Progress.finish()
   },
@@ -78,12 +80,18 @@ export default {
       return this.meta && this.meta.previewable && this.meta.content
     },
     sheets () {
-      return Object.keys(get(this, 'meta.content', {}))
+      return sortBy(Object.keys(get(this, 'meta.content', {})))
+    },
+    nonEmptySheets () {
+      return filter(this.sheets, sheet => {
+        const rows = get(this, `meta.content.${sheet}`, [])
+        return filter(rows, row => row.length).length
+      })
     },
     items () {
       const items = get(this, `meta.content.${this.active}`, [])
       // Skip first item
-      return this.fieldsInFirstItem ? items.slice(1) : items
+      return (this.fieldsInFirstItem ? items.slice(1) : items).slice(0, 10)
     },
     firstItem () {
       return first(get(this, `meta.content.${this.active}`, [])) || []
@@ -94,7 +102,8 @@ export default {
           return {
             key,
             formatter: (value, key, item) => item[index],
-            sortable: true
+            sortable: true,
+            sortByFormatted: true
           }
         })
       }
