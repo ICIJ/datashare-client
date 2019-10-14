@@ -51,6 +51,7 @@ export default {
       this.$store.commit('search/index', value)
       this.$store.dispatch('search/reset')
       this.$root.$emit('facet::search::reset-filters')
+      this.$store.dispatch('search/getStarredDocuments')
       this.refreshRoute()
     },
     toggleItems () {

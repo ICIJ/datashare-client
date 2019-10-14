@@ -8,6 +8,8 @@ import router from '@/router'
 import store from '@/store'
 import messages from '@/lang/en'
 import find from 'lodash/find'
+import { datashare } from '@/store/modules/search'
+import DatashareClient from '@/api/DatashareClient'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
@@ -52,8 +54,7 @@ describe('IndexSelector.vue', () => {
     const spyRefreshRoute = jest.spyOn(wrapper.vm, 'refreshRoute')
     expect(spyRefreshRoute).not.toBeCalled()
 
-    wrapper.findAll('option').at(1).setSelected()
-    await wrapper.vm.$nextTick()
+    await wrapper.findAll('option').at(1).setSelected()
 
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(1)
@@ -75,5 +76,17 @@ describe('IndexSelector.vue', () => {
     expect(store.getters['search/toRouteQuery'].index).toEqual('second-index')
     expect(store.getters['search/toRouteQuery']['f[content-type]']).toBeUndefined()
     expect(mockCallback.mock.calls).toHaveLength(1)
+  })
+
+  it('should refresh the starred documents on index change', async () => {
+    Murmur.config.merge({ userIndices: ['first-index', 'second-index'] })
+    wrapper = mount(IndexSelector, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'leaks' }) } })
+    jest.spyOn(datashare, 'fetch')
+
+    await wrapper.findAll('option').at(1).setSelected()
+
+    expect(datashare.fetch).toBeCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/document/project/starred/second-index'), {})
+    datashare.fetch.mockClear()
   })
 })
