@@ -42,7 +42,7 @@ To have all documents NOT mentioning some queried terms, you can use 'NOT' befor
 
 ### **Please note that you can combine operators**
 
-Parentheses should be used whenever multiple operators are used together. 
+Parentheses should be used whenever multiple operators are used together and you want to give priority to some. 
 
 > Example: \(\(Alicia AND Martinez\) OR \(Delaware AND Pekin\) OR Grey\) AND NOT parking lot
 
@@ -78,9 +78,13 @@ If you search for similar terms \(to catch typos for example\), you can use the 
 
 ### **Boosting operators**
 
-"_While a phrase query \(eg "john smith"\) expects all of the terms in exactly the same order, a proximity query allows the specified words to be further apart or in a different order. In the same way that fuzzy queries can specify a maximum edit distance for characters in a word, a proximity search allows us to specify a maximum edit distance of words in a phrase._" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
+"Use the _boost_ operator `^` to make one term more relevant than another. For instance, if we want to find all documents about foxes, but we are especially interested in quick foxes:
 
-> Example: "fox quick"~5
+> Example: quick^2 fox
+
+The default boost value is 1, but can be any positive floating point number. Boosts between 0 and 1 reduce relevance. Boosts can also be applied to phrases or to groups:
+
+> Example: "john smith"^2   \(foo bar\)^4
 
 
 
@@ -91,7 +95,7 @@ If you are looking for documents that:
 *  contains term1, term2 and term3
 *  and were created after 2010
 
-you can type in the search bar:
+you can use the 'Date' filter or type in the search bar:
 
 > term1 AND term2 AND term3 AND metadata.tika\_metadata\_creation\_date:&gt;=2010-01-01
 
