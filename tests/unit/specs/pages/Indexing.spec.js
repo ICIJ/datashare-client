@@ -6,13 +6,13 @@ import DatashareClient from '@/api/DatashareClient'
 import { jsonOk } from 'tests/unit/tests_utils'
 import flushPromises from 'flush-promises'
 
-const { i18n, localVue, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
 describe('Indexing.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = mount(Indexing, { localVue, i18n, router, store, sync: false })
+    wrapper = mount(Indexing, { localVue, router, store, sync: false, mocks: { $t: msg => msg } })
     jest.spyOn(datashare, 'fetch')
   })
 
@@ -25,8 +25,8 @@ describe('Indexing.vue', () => {
     datashare.fetch.mockReturnValue(jsonOk())
     await Indexing.beforeRouteEnter(undefined, undefined, jest.fn())
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/all'), {})
+    expect(datashare.fetch).toBeCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/all'), {})
     expect(store.state.indexing.pollHandle).not.toBeNull()
 
     Indexing.beforeRouteLeave(undefined, undefined, jest.fn())
@@ -98,9 +98,8 @@ describe('Indexing.vue', () => {
 
     wrapper.find('.btn-stop-pending-tasks').trigger('click')
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stopAll'),
-      { method: 'PUT' })
+    expect(datashare.fetch).toBeCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/stopAll'), { method: 'PUT' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
@@ -112,8 +111,8 @@ describe('Indexing.vue', () => {
 
     wrapper.find('.btn-delete-done-tasks').trigger('click')
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/clean'),
+    expect(datashare.fetch).toBeCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/clean'),
       { method: 'POST', body: '{}' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
@@ -137,8 +136,8 @@ describe('Indexing.vue', () => {
 
     wrapper.find('.btn-stop-task').trigger('click')
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
+    expect(datashare.fetch).toBeCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
       { method: 'PUT' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })

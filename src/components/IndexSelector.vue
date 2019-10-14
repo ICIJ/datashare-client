@@ -44,7 +44,7 @@ export default {
     }
   },
   created () {
-    this.indices = map(this.$config.get('userIndices', []), value => { return { value, text: value } })
+    this.$set(this, 'indices', map(this.$config.get('userIndices', []), value => { return { value, text: value } }))
   },
   methods: {
     select (value) {
