@@ -26,7 +26,9 @@
             :label="`${$t('batchSearch.fuzziness')}:`">
             <b-form-input
               type="number"
-              v-model="fuzziness"></b-form-input>
+              v-model="fuzziness"
+              min="0"
+              :max="maxFuzziness"></b-form-input>
           </b-form-group>
           <b-form-group
             :label="`${$t('batchSearch.description')}:`">
@@ -78,7 +80,9 @@
           <b-form-group
             :description="$t('batchSearch.phraseMatchDescription')"
             v-if="hasFeature('PHRASE_MATCH')">
-            <b-form-checkbox v-model="phraseMatch" switch>
+            <b-form-checkbox
+              v-model="phraseMatch"
+              switch>
               {{ $t('batchSearch.phraseMatch') }}
             </b-form-checkbox>
           </b-form-group>
@@ -101,13 +105,14 @@
 </template>
 
 <script>
-import types from '@/utils/types.json'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import throttle from 'lodash/throttle'
+
 import features from '@/mixins/features'
+import types from '@/utils/types.json'
 
 export default {
   name: 'BatchSearchForm',
@@ -137,6 +142,14 @@ export default {
         allTypes.push(type)
       })
       return allTypes
+    },
+    maxFuzziness () {
+      return this.phraseMatch ? 100 : 2
+    }
+  },
+  watch: {
+    phraseMatch () {
+      this.$set(this, 'fuzziness', 0)
     }
   },
   async created () {

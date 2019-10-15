@@ -61,6 +61,13 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.phraseMatch).toBeTruthy()
   })
 
+  it('should reset the fuzziness to 0 on phraseMatch change', () => {
+    wrapper.vm.$set(wrapper.vm, 'fuzziness', 12)
+    wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
+
+    expect(wrapper.vm.fuzziness).toBe(0)
+  })
+
   describe('FileTypes suggestions', () => {
     it('should display suggestions', () => {
       expect(wrapper.contains('selectable-dropdown-stub')).toBeTruthy()
@@ -76,7 +83,7 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.suggestionFileTypes[1].label).toBe('StarWriter 5 document')
     })
 
-    it('should filter in types label', async () => {
+    it('should filter in types label', () => {
       wrapper.vm.$set(wrapper.vm, 'fileTypes', 'PDF')
 
       wrapper.vm.searchFileTypes()
