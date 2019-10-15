@@ -70,7 +70,7 @@ If you search for similar terms \(to catch typos for example\), you can use the 
 
 ### **Proximity searches**
 
-"_While a phrase query \(eg "john smith"\) expects all of the terms in exactly the same order, a proximity query allows the specified words to be further apart or in a different order. In the same way that fuzzy queries can specify a maximum edit distance for characters in a word, a proximity search allows us to specify a maximum edit distance of words in a phrase._" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
+"_While a phrase query \(eg "john smith"\) expects all of the terms in exactly the same order, a proximity query allows the specified words to be further apart or in a different order. A proximity search allows us to specify a maximum edit distance of words in a phrase._" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
 > Example: "fox quick"~5
 
@@ -78,7 +78,7 @@ If you search for similar terms \(to catch typos for example\), you can use the 
 
 ### **Boosting operators**
 
-"Use the _boost_ operator `^` to make one term more relevant than another. For instance, if we want to find all documents about foxes, but we are especially interested in quick foxes:
+Use the _boost_ operator `^` to make one term more relevant than another. For instance, if we want to find all documents about foxes, but we are especially interested in quick foxes:
 
 > Example: quick^2 fox
 
@@ -86,7 +86,9 @@ The default boost value is 1, but can be any positive floating point number. Boo
 
 > Example: "john smith"^2   \(foo bar\)^4
 
+\(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\)
 
+### \*\*\*\*
 
 ### **\(Advanced\) Searches using metadata fields**
 
