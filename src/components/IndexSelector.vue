@@ -45,7 +45,6 @@ export default {
   },
   async created () {
     this.$set(this, 'indices', map(this.$config.get('userIndices', []), value => { return { value, text: value } }))
-    this.$store.commit('search/index', this.indices[0].value)
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsAllowed')
   },
