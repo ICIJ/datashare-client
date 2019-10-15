@@ -48,4 +48,5 @@
 * [What does 'Windows named pipe error' mean?](faq/i-read-windows-named-pipe-error-....md)
 * [How can I install Datashare on a Windows prior to Windows 10 Pro?](faq/how-can-i-install-datashare-on-a-windows-prior-to-windows-10-pro.md)
 * ['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](faq/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do.md)
+* [What is fuzziness?](faq/what-is-fuzziness.md)
 
