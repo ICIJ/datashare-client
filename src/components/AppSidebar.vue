@@ -270,7 +270,7 @@ export default {
         padding: $spacer * 1.5 ($spacer * 1.75) 0;
         position: relative;
         display: flex;
-        font-size: 1rem;
+        font-size: 1em;
         font-weight: bold;
 
         &:not(&--borderless):before {

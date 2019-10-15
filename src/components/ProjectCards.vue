@@ -2,7 +2,7 @@
   <div class="project-cards container-fluid p-0">
     <div class="row">
       <div class="col-4 mb-4"  v-for="(index, i) in indices" :key="i">
-        <router-link :to="{ name: 'search', query: { index, q: '*' } }" class="project-cards__item d-flex justify-content-start text-nowrap">
+        <router-link :to="{ name: 'search', query: { index, q: '*' } }" class="project-cards__item d-flex justify-content-start text-nowrap" :class="{ 'project-cards__item--active': isActive(index) }">
           <div class="project-cards__item__header py-2 px-3 bg-white text-secondary">
             <fa icon="book" />
           </div>
@@ -22,11 +22,16 @@
       display: block;
       color: white;
       background: $primary;
+      border-radius: $border-radius-sm;
       border: darken($primary, 10%) 1px solid;
 
       &:hover {
         background: darken($primary, 5);
         color: white;
+      }
+
+      &--active {
+        box-shadow: 0 0 0 2px $warning;
       }
     }
   }
@@ -41,7 +46,12 @@ export default {
       indices: []
     }
   },
-  methods: { capitalize },
+  methods: {
+    capitalize,
+    isActive (index) {
+      return index === this.$store.state.search.index
+    }
+  },
   created () {
     this.indices = this.$config.get('userIndices', [])
   }
