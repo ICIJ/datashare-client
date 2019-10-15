@@ -7,14 +7,14 @@
       <div class="card w-100">
         <div class="card-body pb-1 small">
           <b-form-group
-            :label="`${$t('batchSearch.name')}:`">
+            :label="`${$t('batchSearch.name')} *`">
             <b-form-input
               v-model="name"
               type="text"
               required></b-form-input>
           </b-form-group>
           <b-form-group
-            :label="$t('batchSearch.form.fileLabel')"
+            :label="`${$t('batchSearch.form.fileLabel')} *`"
             :description="$t('batchSearch.form.fileDescription')">
             <b-form-file
               v-model="csvFile"
@@ -23,22 +23,14 @@
               required></b-form-file>
           </b-form-group>
           <b-form-group
-            :label="`${$t('batchSearch.fuzziness')}:`">
-            <b-form-input
-              type="number"
-              v-model="fuzziness"
-              min="0"
-              :max="maxFuzziness"></b-form-input>
-          </b-form-group>
-          <b-form-group
-            :label="`${$t('batchSearch.description')}:`">
+            :label="$t('batchSearch.description')">
             <b-form-textarea
               v-model="description"
               rows="2"
               max-rows="6"></b-form-textarea>
           </b-form-group>
           <b-form-group
-            :label="`${$t('batchSearch.project')}:`"
+            :label="`${$t('batchSearch.project')} *`"
             v-if="$config.is('multipleProjects')">
             <b-form-select
               v-model="project"
@@ -46,7 +38,24 @@
               required></b-form-select>
           </b-form-group>
           <b-form-group
-            :label="`${$t('batchSearch.fileTypes')}:`">
+            :description="$t('batchSearch.phraseMatchDescription')">
+            <b-form-checkbox
+              v-model="phraseMatch"
+              switch>
+              {{ $t('batchSearch.phraseMatch') }}
+            </b-form-checkbox>
+          </b-form-group>
+          <b-form-group
+            :label="$t('batchSearch.fuzziness')"
+            :description="fuzzinessDescription">
+            <b-form-input
+              type="number"
+              v-model="fuzziness"
+              min="0"
+              :max="maxFuzziness"></b-form-input>
+          </b-form-group>
+          <b-form-group
+            :label="$t('batchSearch.fileTypes')">
             <b-form-input
               v-model="fileTypes"
               @input="searchFileTypes"
@@ -63,8 +72,7 @@
             </selectable-dropdown>
           </b-form-group>
           <b-form-group
-            :label="`${$t('batchSearch.path')}:`"
-            v-if="hasFeature('PATH')">
+            :label="$t('batchSearch.path')">
             <b-form-input
               v-model="paths"
               @input="searchPaths"
@@ -78,25 +86,18 @@
             </selectable-dropdown>
           </b-form-group>
           <b-form-group
-            :description="$t('batchSearch.phraseMatchDescription')"
-            v-if="hasFeature('PHRASE_MATCH')">
+            :description="$t('batchSearch.publishedDescription')"
+            v-if="$config.is('multipleProjects')"
+            class="published">
             <b-form-checkbox
-              v-model="phraseMatch"
+              v-model="published"
               switch>
-              {{ $t('batchSearch.phraseMatch') }}
+              {{ $t('batchSearch.published') }}
             </b-form-checkbox>
           </b-form-group>
         </div>
         <div class="card-footer">
           <div class="d-flex align-items-center">
-            <div class="flex-grow-1">
-              <b-form-checkbox
-                v-model="published"
-                switch
-                v-if="$config.is('multipleProjects')">
-                {{ $t('batchSearch.published') }}
-              </b-form-checkbox>
-            </div>
             <b-button type="submit" variant="primary">
               {{ $t('batchSearch.form.submit') }}
             </b-button>
@@ -114,30 +115,34 @@ import get from 'lodash/get'
 import map from 'lodash/map'
 import throttle from 'lodash/throttle'
 
-import features from '@/mixins/features'
 import types from '@/utils/types.json'
 
 export default {
   name: 'BatchSearchForm',
-  mixins: [features],
   data () {
     return {
       name: '',
-      published: true,
       csvFile: null,
       description: '',
       project: 'local-datashare',
+      indices: [],
+      phraseMatch: true,
       fuzziness: 0,
       fileTypes: '',
       suggestionFileTypes: [],
       paths: '',
       suggestionPaths: [],
-      indices: [],
-      phraseMatch: true,
-      allPaths: []
+      allPaths: [],
+      published: true
     }
   },
   computed: {
+    maxFuzziness () {
+      return this.phraseMatch ? 100 : 2
+    },
+    fuzzinessDescription () {
+      return this.phraseMatch ? this.$t('batchSearch.fuzzinessDescriptionPhrase') : this.$t('batchSearch.fuzzinessDescriptionTerm')
+    },
     allTypes () {
       const allTypes = []
       each(types, (type, mime) => {
@@ -145,9 +150,6 @@ export default {
         allTypes.push(type)
       })
       return allTypes
-    },
-    maxFuzziness () {
-      return this.phraseMatch ? 100 : 2
     }
   },
   watch: {
@@ -193,17 +195,17 @@ export default {
     },
     resetForm () {
       this.$set(this, 'name', '')
-      this.$set(this, 'published', true)
       this.$set(this, 'csvFile', null)
       this.$set(this, 'description', '')
       this.$set(this, 'project', 'local-datashare')
+      this.$set(this, 'phraseMatch', true)
       this.$set(this, 'fuzziness', 0)
       this.$set(this, 'fileTypes', '')
       this.$set(this, 'paths', '')
-      this.$set(this, 'phraseMatch', true)
+      this.$set(this, 'published', true)
     },
     async onSubmit () {
-      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, published: this.published, csvFile: this.csvFile, description: this.description, project: this.project, fuzziness: this.fuzziness, fileTypes: this.fileTypes, paths: this.paths, phraseMatch: this.phraseMatch })
+      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, csvFile: this.csvFile, description: this.description, project: this.project, phraseMatch: this.phraseMatch, fuzziness: this.fuzziness, fileTypes: this.fileTypes, paths: this.paths, published: this.published })
       this.resetForm()
       if (this.$config.is('manageDocuments')) {
         try {
@@ -217,3 +219,9 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+  .form-group small {
+    line-height: 1.2;
+  }
+</style>

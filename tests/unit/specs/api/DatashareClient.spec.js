@@ -103,7 +103,7 @@ describe('Datashare backend client', () => {
     const fileTypes = 'application/pdf text/plain'
     const paths = 'one or two paths'
     const phraseMatch = false
-    const json = await (await datashare.batchSearch(name, published, csvFile, description, project, fuzziness, fileTypes, paths, phraseMatch)).json()
+    const json = await (await datashare.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)).json()
 
     const body = new FormData()
     body.append('name', name)

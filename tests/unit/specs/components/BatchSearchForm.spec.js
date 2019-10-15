@@ -76,7 +76,7 @@ describe('BatchSearchForm.vue', () => {
     Murmur.config.merge({ multipleProjects: true })
     wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
 
-    expect(wrapper.find('.card-footer b-form-checkbox-stub').exists()).toBeTruthy()
+    expect(wrapper.find('.card .published').exists()).toBeTruthy()
   })
 
   describe('FileTypes suggestions', () => {
