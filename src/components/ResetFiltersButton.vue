@@ -1,5 +1,5 @@
 <template>
-  <button class="btn" :class="componentClasses" @click="resetFacets" v-show="!autoHidding || hasFilters" :title="$t('search.clearFiltersDescription')" v-b-tooltip :disabled="!hasFilters">
+  <button class="btn" :class="componentClasses" @click="resetFacets" v-show="!autoHiding || hasFilters" :title="$t('search.clearFiltersDescription')" v-b-tooltip :disabled="!hasFilters">
     <fa :icon="icon" v-if="!noIcon" />
     <slot>
       {{ $t('search.clearFilters') }}
@@ -24,7 +24,7 @@ export default {
     noIcon: {
       type: Boolean
     },
-    autoHidding: {
+    autoHiding: {
       type: Boolean
     },
     icon: {
@@ -34,7 +34,7 @@ export default {
   },
   computed: {
     hasFilters () {
-      return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
+      return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField || this.$store.state.search.query !== ''
     },
     componentClasses () {
       return {

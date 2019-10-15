@@ -1,7 +1,7 @@
 <template>
   <div class="search-results-header__applied-filters" v-if="filters.length">
     <search-results-applied-filter v-for="(filter, index) in filters" :key="index" :filter="filter" />
-    <reset-filters-button variant="link" class="text-muted badge font-weight-normal" auto-hidding />
+    <reset-filters-button variant="link" class="text-muted badge font-weight-normal" auto-hiding />
   </div>
 </template>
 
