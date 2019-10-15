@@ -90,7 +90,10 @@
         <div class="card-footer">
           <div class="d-flex align-items-center">
             <div class="flex-grow-1">
-              <b-form-checkbox v-model="published" switch>
+              <b-form-checkbox
+                v-model="published"
+                switch
+                v-if="$config.is('multipleProjects')">
                 {{ $t('batchSearch.published') }}
               </b-form-checkbox>
             </div>

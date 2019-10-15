@@ -9,14 +9,14 @@ const { localVue } = App.init(createLocalVue()).useAll()
 jest.mock('lodash/throttle', () => jest.fn(fn => fn))
 
 describe('BatchSearchForm.vue', () => {
-  let actions, wrapper
+  let wrapper
+  const state = { batchSearches: [] }
+  const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
+  const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFacet: jest.fn() } } } })
 
   beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(() => {
-    const state = { batchSearches: [] }
-    actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
-    const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFacet: jest.fn() } } } })
     wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
   })
 
@@ -66,6 +66,17 @@ describe('BatchSearchForm.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
 
     expect(wrapper.vm.fuzziness).toBe(0)
+  })
+
+  it('should not display "Published" button on local', () => {
+    expect(wrapper.find('.card-footer b-form-checkbox-stub').exists()).toBeFalsy()
+  })
+
+  it('should display "Published" button on server', () => {
+    Murmur.config.merge({ multipleProjects: true })
+    wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
+
+    expect(wrapper.find('.card-footer b-form-checkbox-stub').exists()).toBeTruthy()
   })
 
   describe('FileTypes suggestions', () => {
