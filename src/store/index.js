@@ -1,3 +1,4 @@
+import some from 'lodash/some'
 import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
@@ -15,7 +16,11 @@ export default new Vuex.Store({
   strict: process.env.NODE_ENV !== 'production',
   plugins: [
     createPersistedState({
-      paths: ['userHistory']
+      paths: ['userHistory', 'search'],
+      filter (mutation) {
+        // Only for some mutations
+        return some(['userHistory/', 'search/'], k => mutation.type.indexOf(k) === 0)
+      }
     })
   ]
 })
