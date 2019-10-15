@@ -96,7 +96,7 @@ export default {
   padding: 0;
 
   .vc-popover-content-wrapper {
-    z-index: $zindex-tooltip;
+    z-index: $zindex-tooltip !important;
   }
 
   .vc-grid-cell {
