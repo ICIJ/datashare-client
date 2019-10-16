@@ -386,7 +386,7 @@ export const actions = {
     return dispatch('query')
   },
   async updateFromRouteQuery ({ state, commit }, query) {
-    commit('reset', ['index', 'globalSearch', 'starredDocuments', 'showFilters', 'layout', 'field'])
+    commit('reset', ['index', 'globalSearch', 'starredDocuments', 'showFilters', 'layout', 'field', 'isAllowed'])
     // Add the query to the state with a mutation to not triggering a search
     if (query.q) commit('query', query.q)
     if (query.index) commit('index', query.index)
