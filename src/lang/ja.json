@@ -462,7 +462,7 @@
     "title": "Batch searches",
     "form": {
       "heading": "New batch search",
-      "fileLabel": "CSV file:",
+      "fileLabel": "CSV file",
       "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
       "filePlaceholder": "Choose a file...",
       "submit": "Add",
@@ -473,7 +473,9 @@
     "name": "Name",
     "description": "Description",
     "fuzziness": "Fuzziness",
-    "fileTypes": "File Types",
+    "fuzzinessDescriptionPhrase": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other.",
+    "fuzzinessDescriptionTerm": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on characters needed to make one term match the other.",
+    "fileTypes": "File types",
     "path": "Path",
     "queries": "Queries",
     "state": "State",
@@ -483,8 +485,10 @@
     "delete": "Delete batch search",
     "deleted": "The batch search have been deleted.",
     "published": "Published",
+    "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
     "phraseMatch": "Do phrase matches",
-    "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order."
+    "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order.",
+    "learnMore": "Learn more"
   },
   "batchSearchResults": {
     "index": "Index",
