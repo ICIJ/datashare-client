@@ -21,11 +21,13 @@
         </div>
       </vue-perfect-scrollbar>
       <transition name="slide-right">
-        <div class="search__body__document d-flex flex-column" v-if="showDocument">
-          <search-document-navbar />
-          <vue-perfect-scrollbar class="flex-grow-1" ref="searchBodyDocumentScrollbar">
-            <router-view class="search__body__document__view" />
-          </vue-perfect-scrollbar>
+        <div class="search__body__document" v-if="showDocument">
+          <search-document-navbar class="search__body__document__navbar"  />
+          <div class="search__body__document__wrapper">
+            <div class="overflow-auto">
+              <router-view class="search__body__document__wrapper__view" />
+            </div>
+          </div>
         </div>
       </transition>
       <router-link v-show="showDocument" class="search__body__backdrop" :to="{ name: 'search', query: toRouteQuery }"></router-link>
@@ -112,7 +114,8 @@ export default {
   },
   mounted () {
     this.$root.$on('index::delete::all', this.search)
-    this.$root.$on('facet::starred:refresh', this.refresh)
+    this.$root.$on('facet::starred::refresh', this.refresh)
+    this.$root.$on('document::content::changed', this.updateScrollBars)
   },
   watch: {
     isReady (isReady) {
@@ -152,7 +155,7 @@ export default {
       return !isEqual(query, this.$store.getters['search/toRouteQuery'])
     },
     updateScrollBars () {
-      const refs = [this.$refs.searchBodyScrollbar, this.$refs.searchBodyDocumentScrollbar]
+      const refs = [this.$refs.searchBodyScrollbar]
       compact(refs).map(ref => ref.ps.update())
     }
   }
@@ -214,6 +217,13 @@ export default {
         right: auto;
         width: calc(#{$search-results-list-width}  - #{$spacer * 2});
       }
+
+      &.search .search__body__document,
+      &.search .search__body__results .search-results-list {
+        box-shadow: 0 2px 10px 0 rgba(black, .05), 0 2px 30px 0 rgba(black, .02);
+        border-radius: $card-border-radius;
+        overflow: hidden;
+      }
     }
 
     &__body {
@@ -238,10 +248,12 @@ export default {
         right: $spacer;
         padding: 0;
         margin: 0;
+        flex: 1 0 auto;
+        display: flex;
+        flex-direction: column;
 
         width: 100%;
         max-width: calc(100% - #{$search-results-list-width} - #{$spacer});
-        border-radius: $card-border-radius;
 
         &.slide-right-enter-active, &.slide-right-leave-active {
           transition: .3s;
@@ -252,8 +264,28 @@ export default {
           opacity: 0;
         }
 
-        .document {
-          box-shadow: 0 2px 10px 0 rgba(black,.05), 0 2px 30px 0 rgba(black,.02);
+        &__wrapper {
+          position: relative;
+          flex-grow: 1;
+
+          & > * {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+          }
+
+          &__view {
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+
+            .document {
+              flex-grow: 1;
+              min-height: 100%;
+            }
+          }
         }
 
         @media (max-width: $document-float-breakpoint-width) {

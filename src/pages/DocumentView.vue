@@ -71,6 +71,7 @@ export default {
         await this.$store.commit('userHistory/addDocument', this.document)
         const $container = this.$el.closest('.ps-container')
         this.$root.$emit('scroll-tracker:request', this.$el, 0, $container)
+        this.$root.$emit('document::content::changed')
       }
       this.$Progress.finish()
     },
@@ -79,6 +80,7 @@ export default {
     },
     activateTab (name) {
       this.activeTab = name
+      this.$root.$emit('document::content::changed')
       return name
     },
     tabClass (name) {
