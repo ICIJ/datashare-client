@@ -17,21 +17,20 @@ const localVue = createLocalVue()
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
 
-describe('DocumentActions', () => {
+describe('DocumentActions.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
-  let wrapper
+  let document, wrapper
 
   beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk())
-    // Remove all stared docs
     store.commit('search/starredDocuments', [])
     // Create a dummy document with id "doc_01"
     await letData(es).have(new IndexedDocument('doc_01')).commit()
-    const document = Response.instantiate(await esClient.getEsDoc(process.env.VUE_APP_ES_INDEX, 'doc_01'))
+    document = Response.instantiate(await esClient.getEsDoc(process.env.VUE_APP_ES_INDEX, 'doc_01'))
     wrapper = shallowMount(DocumentActions, { localVue, store, propsData: { document }, mocks: { $t: msg => msg }, sync: false })
   })
 
@@ -73,5 +72,14 @@ describe('DocumentActions', () => {
     await wrapper.vm.toggleStarDocument(wrapper.vm.document)
 
     expect(mockCallback.mock.calls).toHaveLength(1)
+  })
+
+  it('should not display "Download" button if download is not allowed', () => {
+    expect(wrapper.find('.document-actions__download').exists()).toBeFalsy()
+  })
+
+  it('should display "Download" button if download is allowed', () => {
+    wrapper = shallowMount(DocumentActions, { localVue, store, propsData: { document, isDownloadAllowed: true }, mocks: { $t: msg => msg }, sync: false })
+    expect(wrapper.find('.document-actions__download').exists()).toBeTruthy()
   })
 })

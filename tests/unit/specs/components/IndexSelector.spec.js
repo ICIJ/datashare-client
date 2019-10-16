@@ -76,7 +76,7 @@ describe('IndexSelector.vue', () => {
       expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/starred/${process.env.VUE_APP_ES_ANOTHER_INDEX}`), {})
     })
 
-    it('should refresh the isAllowed on index change', async () => {
+    it('should refresh the isDownloadAllowed on index change', async () => {
       await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
 
       expect(datashare.fetch).toBeCalledTimes(2)

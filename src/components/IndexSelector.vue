@@ -46,7 +46,7 @@ export default {
   async created () {
     this.$set(this, 'indices', map(this.$config.get('userIndices', []), value => { return { value, text: value } }))
     await this.$store.dispatch('search/getStarredDocuments')
-    await this.$store.dispatch('search/getIsAllowed')
+    await this.$store.dispatch('search/getIsDownloadAllowed')
   },
   methods: {
     async select (value) {
@@ -54,7 +54,7 @@ export default {
       await this.$store.dispatch('search/reset')
       this.$root.$emit('facet::search::reset-filters')
       await this.$store.dispatch('search/getStarredDocuments')
-      await this.$store.dispatch('search/getIsAllowed')
+      await this.$store.dispatch('search/getIsDownloadAllowed')
       this.refreshRoute()
     },
     toggleItems () {

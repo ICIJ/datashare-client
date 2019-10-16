@@ -58,7 +58,7 @@ describe('SearchDocumentNavbar', () => {
     })
 
     it('should be displayed', () => {
-      store.commit('search/isAllowed', true)
+      store.commit('search/isDownloadAllowed', true)
       wrapper = shallowMount(SearchDocumentNavbar, { localVue, router, store, mocks: { $t: msg => msg } })
 
       expect(wrapper.find('.search-document-navbar__download').exists()).toBeTruthy()

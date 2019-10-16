@@ -4,7 +4,7 @@
       <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fa-fw />
       <span class="sr-only">{{ $t('document.star_button') }}</span>
     </a>
-    <a class="document-actions__download btn btn-link btn-sm" :href="document.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip>
+    <a class="document-actions__download btn btn-link btn-sm" :href="document.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip v-if="isDownloadAllowed">
       <fa icon="download" fa-fw />
       <span class="sr-only">{{ $t('document.download_button') }}</span>
       <span v-if="displayDownload" class="ml-1">{{ $t('document.download_button') }}</span>
@@ -27,7 +27,11 @@ export default {
   props: {
     vertical: Boolean,
     document: Object,
-    displayDownload: Boolean
+    displayDownload: Boolean,
+    isDownloadAllowed: {
+      type: Boolean,
+      default: false
+    }
   },
   computed: {
     ...mapState('search', ['starredDocuments'])

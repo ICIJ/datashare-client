@@ -5,7 +5,7 @@
       {{ $t('search.back') }}
     </router-link>
     <div v-if="currentDocument" class="ml-auto">
-      <a class="btn btn-sm py-0 mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument && isAllowed && !hasFeature('DOCUMENT_ACTIONS')" id="search-document-navbar-download">
+      <a class="btn btn-sm py-0 mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument && isDownloadAllowed && !hasFeature('DOCUMENT_ACTIONS')" id="search-document-navbar-download">
         <fa icon="download" />
         {{ $t('document.download_button') }}
       </a>
@@ -29,7 +29,7 @@
       <router-link-popup v-if="!hasFeature('DOCUMENT_ACTIONS')" :to="{ name: 'document-simplified', params: currentDocument.routerParams }" class="btn btn-sm btn-link text-white py-0" :title="$t('document.external_window')" v-b-tooltip.bottomleft>
         <fa icon="external-link-alt" />
       </router-link-popup>
-      <document-actions v-if="hasFeature('DOCUMENT_ACTIONS')" :document="currentDocument" class="search-document-navbar__actions" displayDownload />
+      <document-actions v-if="hasFeature('DOCUMENT_ACTIONS')" :document="currentDocument" class="search-document-navbar__actions" displayDownload isDownloadAllowed />
     </div>
   </div>
 </template>
@@ -56,7 +56,7 @@ export default {
     DocumentActions
   },
   computed: {
-    ...mapState('search', ['response', 'isAllowed']),
+    ...mapState('search', ['response', 'isDownloadAllowed']),
     ...mapState('document', { currentDocument: 'doc' }),
     query () {
       return this.$store.getters['search/toRouteQuery']

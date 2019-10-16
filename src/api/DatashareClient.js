@@ -109,7 +109,7 @@ export class DatashareClient {
     const url = new URL(path, base)
     return url.href
   }
-  isAllowed (project) {
+  isDownloadAllowed (project) {
     return this.sendAction(`/api/project/isAllowed/${encodeURIComponent(project)}`, {}, false)
   }
   async sendAction (url, params = {}, json = true) {
