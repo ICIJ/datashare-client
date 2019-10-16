@@ -55,7 +55,7 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.published).toBeTruthy()
     expect(wrapper.vm.csvFile).toBeNull()
     expect(wrapper.vm.description).toBe('')
-    expect(wrapper.vm.project).toBe('local-datashare')
+    expect(wrapper.vm.project).toBe(process.env.VUE_APP_ES_INDEX)
     expect(wrapper.vm.fileTypes).toBe('')
     expect(wrapper.vm.paths).toBe('')
     expect(wrapper.vm.phraseMatch).toBeTruthy()
@@ -108,6 +108,14 @@ describe('BatchSearchForm.vue', () => {
       wrapper.vm.searchFileType({ label: 'StarWriter 5 document' })
 
       expect(wrapper.vm.fileTypes).toBe('Excel 2003 XML spreadsheet StarWriter 5 document')
+    })
+
+    it('should hide suggestions', () => {
+      wrapper.vm.$set(wrapper.vm, 'suggestionFileTypes', ['suggestion_01', 'suggestion_02', 'suggestion_03'])
+
+      wrapper.vm.hideSuggestionsFileTypes()
+
+      expect(wrapper.vm.suggestionFileTypes).toEqual([])
     })
   })
 })

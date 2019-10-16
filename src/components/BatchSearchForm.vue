@@ -54,6 +54,11 @@
               min="0"
               :max="maxFuzziness"></b-form-input>
           </b-form-group>
+          <div class="help">
+            <a href="https://icij.gitbook.io/datashare/faq/what-is-fuzziness" target="_blank" class="text-muted">
+              {{ $t('batchSearch.learnMore') }}
+            </a>
+          </div>
           <b-form-group
             :label="$t('batchSearch.fileTypes')">
             <b-form-input
@@ -64,6 +69,7 @@
             <selectable-dropdown
               ref="suggestionFileTypes"
               @input="searchFileType"
+              @deactivate="hideSuggestionsFileTypes"
               :hide="!suggestionFileTypes.length"
               :items="suggestionFileTypes">
               <template v-slot:item-label="{ item }">
@@ -81,6 +87,7 @@
             <selectable-dropdown
               ref="suggestionPaths"
               @input="searchPath"
+              @deactivate="hideSuggestionsPaths"
               :hide="!suggestionPaths.length"
               :items="suggestionPaths">
             </selectable-dropdown>
@@ -97,7 +104,7 @@
           </b-form-group>
         </div>
         <div class="card-footer">
-          <div class="d-flex align-items-center">
+          <div class="d-flex justify-content-end align-items-center">
             <b-button type="submit" variant="primary">
               {{ $t('batchSearch.form.submit') }}
             </b-button>
@@ -124,7 +131,7 @@ export default {
       name: '',
       csvFile: null,
       description: '',
-      project: 'local-datashare',
+      project: '',
       indices: [],
       phraseMatch: true,
       fuzziness: 0,
@@ -159,6 +166,7 @@ export default {
   },
   async created () {
     this.$set(this, 'indices', map(this.$config.get('userIndices', []), value => { return { value, text: value } }))
+    this.$set(this, 'project', get(this.indices, ['0', 'value'], ''))
     const response = await this.$store.dispatch('search/queryFacet', { name: 'path', options: { size: 1000, exclude: '', include: '.*' } })
     map(get(response, ['aggregations', 'byDirname', 'buckets'], []), item => this.allPaths.push(item.key))
   },
@@ -178,6 +186,9 @@ export default {
         this.$set(this, 'suggestionFileTypes', [])
       }
     },
+    hideSuggestionsFileTypes () {
+      this.$set(this, 'suggestionFileTypes', [])
+    },
     searchPaths: throttle(async function () {
       const searchedPaths = this.paths.split(' ').pop()
       this.$set(this, 'suggestionPaths', filter(this.allPaths, item => item.indexOf(searchedPaths) > -1))
@@ -193,11 +204,14 @@ export default {
         this.$set(this, 'suggestionPaths', [])
       }
     },
+    hideSuggestionsPaths () {
+      this.$set(this, 'suggestionPaths', [])
+    },
     resetForm () {
       this.$set(this, 'name', '')
       this.$set(this, 'csvFile', null)
       this.$set(this, 'description', '')
-      this.$set(this, 'project', 'local-datashare')
+      this.$set(this, 'project', get(this.indices, ['0', 'value'], ''))
       this.$set(this, 'phraseMatch', true)
       this.$set(this, 'fuzziness', 0)
       this.$set(this, 'fileTypes', '')
@@ -221,7 +235,15 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .form-group small {
-    line-height: 1.2;
+  .batch-search-form {
+    .form-group small {
+      line-height: 1.2;
+    }
+
+    .help {
+      font-size: 10px;
+      margin-top: -16px;
+      margin-bottom: 16px;
+    }
   }
 </style>
