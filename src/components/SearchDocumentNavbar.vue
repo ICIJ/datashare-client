@@ -5,7 +5,7 @@
       {{ $t('search.back') }}
     </router-link>
     <div v-if="currentDocument" class="ml-auto">
-      <a class="btn btn-sm py-0 mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument && isAllowed" id="search-document-navbar-download">
+      <a class="btn btn-sm py-0 mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument && isAllowed && !hasFeature('DOCUMENT_ACTIONS')" id="search-document-navbar-download">
         <fa icon="download" />
         {{ $t('document.download_button') }}
       </a>
@@ -26,9 +26,10 @@
           <fa icon="angle-right" />
         </button>
       </span>
-      <router-link-popup :to="{ name: 'document-simplified', params: currentDocument.routerParams }" class="btn btn-sm btn-link text-white py-0" :title="$t('document.external_window')" v-b-tooltip.bottomleft>
+      <router-link-popup v-if="!hasFeature('DOCUMENT_ACTIONS')" :to="{ name: 'document-simplified', params: currentDocument.routerParams }" class="btn btn-sm btn-link text-white py-0" :title="$t('document.external_window')" v-b-tooltip.bottomleft>
         <fa icon="external-link-alt" />
       </router-link-popup>
+      <document-actions v-if="hasFeature('DOCUMENT_ACTIONS')" :document="currentDocument" class="search-document-navbar__actions" displayDownload />
     </div>
   </div>
 </template>
@@ -43,13 +44,16 @@ import shortkeys from '@/mixins/shortkeys'
 
 import DocumentTypeCard from '@/components/DocumentTypeCard'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
+import DocumentActions from '@/components/DocumentActions'
+import features from '@/mixins/features'
 
 export default {
   name: 'SearchDocumentNavbar',
-  mixins: [shortkeys],
+  mixins: [features, shortkeys],
   components: {
     DocumentTypeCard,
-    RouterLinkPopup
+    RouterLinkPopup,
+    DocumentActions
   },
   computed: {
     ...mapState('search', ['response', 'isAllowed']),
@@ -142,7 +146,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .search-document-navbar {
     display: flex;
     align-items: center;
@@ -162,6 +166,15 @@ export default {
 
     &__nav .btn {
       cursor: pointer;
+    }
+
+    &__actions {
+      .btn-link {
+        color: white;
+      }
+      .document-actions__download {
+        background: $secondary;
+      }
     }
   }
 </style>

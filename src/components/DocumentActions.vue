@@ -7,6 +7,7 @@
     <a class="document-actions__download btn btn-link btn-sm" :href="document.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip>
       <fa icon="download" fa-fw />
       <span class="sr-only">{{ $t('document.download_button') }}</span>
+      <span v-if="displayDownload" class="ml-1">{{ $t('document.download_button') }}</span>
     </a>
     <router-link-popup :to="{ name: 'document-simplified', params: document.routerParams }" class="btn btn-sm btn-link" :title="$t('document.external_window')" v-b-tooltip>
       <fa icon="external-link-alt" fa-fw />
@@ -25,7 +26,8 @@ export default {
   },
   props: {
     vertical: Boolean,
-    document: Object
+    document: Object,
+    displayDownload: Boolean
   },
   computed: {
     ...mapState('search', ['starredDocuments'])
