@@ -43,7 +43,7 @@ export default {
         this.$bvToast.toast(this.$t('document.starring_error'), { noCloseButton: true, variant: 'danger' })
       }
       this.$root.$emit('bv::hide::tooltip')
-      this.$root.$emit('facet::starred:refresh')
+      this.$root.$emit('facet::starred::refresh')
     }
   }
 }

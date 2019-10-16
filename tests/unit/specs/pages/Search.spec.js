@@ -36,8 +36,8 @@ describe('Search.vue', () => {
     expect(actions.query).toBeCalledTimes(2)
   })
 
-  it('should execute a new search on event "facet::starred:refresh"', () => {
-    wrapper.vm.$root.$emit('facet::starred:refresh')
+  it('should execute a new search on event "facet::starred::refresh"', () => {
+    wrapper.vm.$root.$emit('facet::starred::refresh')
 
     expect(actions.refresh).toBeCalledTimes(1)
   })

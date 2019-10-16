@@ -175,7 +175,6 @@ export default {
       min-width: 1;
       text-align: center;
       line-height: 40px;
-      border-radius: 1.5rem;
       padding: 0;
       border-radius: 20px;
       background: $app-context-sidebar-bg;
@@ -215,11 +214,12 @@ export default {
 
       &.search .search__body__results {
         right: auto;
+        background: white;
         width: calc(#{$search-results-list-width}  - #{$spacer * 2});
       }
 
       &.search .search__body__document,
-      &.search .search__body__results .search-results-list {
+      &.search .search__body__results {
         box-shadow: 0 2px 10px 0 rgba(black, .05), 0 2px 30px 0 rgba(black, .02);
         border-radius: $card-border-radius;
         overflow: hidden;
