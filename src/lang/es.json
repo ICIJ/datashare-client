@@ -462,7 +462,7 @@
     "title": "Búsquedas masivas",
     "form": {
       "heading": "Nueva búsqueda masiva",
-      "fileLabel": "Archivo CSV:",
+      "fileLabel": "CSV file",
       "fileDescription": "Sólo se acepta el formato CSV. La primera columna debe contener los términos a buscar.",
       "filePlaceholder": "Escoge un archivo...",
       "submit": "Agregar",
@@ -473,7 +473,9 @@
     "name": "Nombre",
     "description": "Descripción",
     "fuzziness": "Ocurrencias",
-    "fileTypes": "Tipos de archivos",
+    "fuzzinessDescriptionPhrase": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other.",
+    "fuzzinessDescriptionTerm": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on characters needed to make one term match the other.",
+    "fileTypes": "File types",
     "path": "Ruta",
     "queries": "Consultas",
     "state": "Estado",
@@ -483,8 +485,10 @@
     "delete": "Eliminar búsqueda por lote",
     "deleted": "El lote de búsqueda ha sido eliminado.",
     "published": "Publicado",
+    "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
     "phraseMatch": "Realizar búsquedas similares",
-    "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria."
+    "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria.",
+    "learnMore": "Learn more"
   },
   "batchSearchResults": {
     "index": "Índice",

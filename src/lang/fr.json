@@ -462,7 +462,7 @@
     "title": "Recherches en lot",
     "form": {
       "heading": "Nouvelle recherche en lot",
-      "fileLabel": "Fichier CSV :",
+      "fileLabel": "CSV file",
       "fileDescription": "Seuls les formats CSV sont acceptés. La première colonne doit contenir les termes à chercher.",
       "filePlaceholder": "Choisissez un fichier...",
       "submit": "Ajouter",
@@ -473,7 +473,9 @@
     "name": "Nom",
     "description": "Description",
     "fuzziness": "Recherche approximative",
-    "fileTypes": "Types de fichiers",
+    "fuzzinessDescriptionPhrase": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other.",
+    "fuzzinessDescriptionTerm": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on characters needed to make one term match the other.",
+    "fileTypes": "File types",
     "path": "Chemin",
     "queries": "Recherches",
     "state": "Status",
@@ -483,8 +485,10 @@
     "delete": "Supprimer la recherche en lot",
     "deleted": "La recherche en lot a été supprimée.",
     "published": "Publiée",
+    "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
     "phraseMatch": "Rechercher les termes exacts",
-    "phraseMatchDescription": "Cela vous permet de rechercher des documents qui contiennent l'expression exacte et non les termes dans un autre ordre."
+    "phraseMatchDescription": "Cela vous permet de rechercher des documents qui contiennent l'expression exacte et non les termes dans un autre ordre.",
+    "learnMore": "Learn more"
   },
   "batchSearchResults": {
     "index": "Index",
