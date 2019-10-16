@@ -1,21 +1,19 @@
-import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import flushPromises from 'flush-promises'
 
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { jsonOk } from 'tests/unit/tests_utils'
 
+import { App } from '@/main'
 import DocumentActions from '@/components/DocumentActions'
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import store from '@/store'
 import { datashare } from '@/store/modules/search'
-import flushPromises from 'flush-promises'
 
-const localVue = createLocalVue()
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
+const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('DocumentActions.vue', () => {
   esConnectionHelper()
