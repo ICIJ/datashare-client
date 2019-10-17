@@ -175,5 +175,9 @@ export default {
     &__nav .btn {
       cursor: pointer;
     }
+
+    &__actions {
+      float: right
+    }
   }
 </style>
