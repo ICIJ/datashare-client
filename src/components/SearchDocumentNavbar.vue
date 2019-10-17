@@ -1,7 +1,7 @@
 <template>
   <div class="search-document-navbar px-3 py-2 bg-dark text-white text-nowrap">
     <router-link :to="{ name: 'search', query }" class="search-document-navbar__back flex-grow-1 text-truncate pr-1" v-shortkey="getKeys('backToSearchResults')" @shortkey.native="getAction('backToSearchResults')">
-      <fa icon="chevron-circle-left" />
+      <fa icon="chevron-circle-left" class="mr-1" />
       {{ $t('search.back') }}
     </router-link>
     <div v-if="currentDocument" class="ml-auto">
@@ -14,7 +14,7 @@
       </b-popover>
       <span class="search-document-navbar__nav" v-if="currentDocumentIndex > -1">
         <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
-          <fa icon="angle-left" />
+          <fa icon="angle-left" class="mr-1" />
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.previous.label') }}
           </span>
@@ -26,7 +26,7 @@
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.next.label') }}
           </span>
-          <fa icon="angle-right" />
+          <fa icon="angle-right" class="ml-1" />
         </button>
         <b-tooltip target="next-document-button" triggers="hover">
           <span v-html="nextTooltip"></span>
@@ -172,7 +172,7 @@ export default {
       border-radius: 0;
     }
 
-    &__back {
+    &__back, &__back:hover {
       font-size: 0.875rem;
       color: inherit;
       display: inline;
