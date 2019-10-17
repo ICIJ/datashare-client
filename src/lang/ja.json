@@ -488,6 +488,7 @@
     "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
     "phraseMatch": "Do phrase matches",
     "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order.",
+    "phraseMatchDescriptionOperators": "Do not insert operators in your queries",
     "learnMore": "Learn more"
   },
   "batchSearchResults": {
