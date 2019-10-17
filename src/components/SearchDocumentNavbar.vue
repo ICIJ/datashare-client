@@ -35,7 +35,8 @@
         star-btn-class="btn btn-link text-white py-0"
         popup-btn-class="btn btn-link text-white py-0"
         download-btn-class="btn btn-secondary btn-sm py-0"
-        downalod-btn-label
+        download-btn-label
+        no-btn-group
         is-download-allowed />
     </div>
   </div>
