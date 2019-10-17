@@ -1,6 +1,6 @@
 <script>
-import utils from '@/mixins/utils'
 import shortkeys from '@/mixins/shortkeys'
+import utils from '@/mixins/utils'
 
 export default {
   name: 'DocumentLocalSearchInput',
@@ -10,9 +10,7 @@ export default {
     event: 'input'
   },
   props: {
-    document: {
-      type: Object
-    },
+    document: Object,
     searchTerm: {
       type: String,
       default: ''
@@ -25,9 +23,7 @@ export default {
       type: Number,
       default: 0
     },
-    searchWorkerInProgress: {
-      type: Boolean
-    }
+    searchWorkerInProgress: Boolean
   },
   data () {
     return {

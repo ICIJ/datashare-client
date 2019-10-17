@@ -64,7 +64,8 @@
             <b-form-input
               v-model="fileType"
               @input="searchFileTypes"
-              autocomplete="off">
+              autocomplete="off"
+              ref="fileType">
             </b-form-input>
             <selectable-dropdown
               ref="suggestionFileTypes"
@@ -90,7 +91,8 @@
             <b-form-input
               v-model="path"
               @input="searchPaths"
-              autocomplete="off">
+              autocomplete="off"
+              ref="path">
             </b-form-input>
             <selectable-dropdown
               ref="suggestionPaths"
@@ -201,6 +203,7 @@ export default {
         this.fileTypes.push(fileType)
         this.hideSuggestionsFileTypes()
         this.$set(this, 'fileType', '')
+        this.$refs.fileType.focus()
       }
     },
     hideSuggestionsFileTypes () {
@@ -217,6 +220,7 @@ export default {
         this.paths.push(path)
         this.hideSuggestionsPaths()
         this.$set(this, 'path', '')
+        this.$refs.path.focus()
       }
     },
     hideSuggestionsPaths () {
