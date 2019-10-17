@@ -41,7 +41,7 @@ export default {
   mixins: [facets, ner, utils],
   methods: {
     async deleteNamedEntitiesByMentionNorm (mentionNorm) {
-      await datashare.deleteNamedEntitiesByMentionNorm(mentionNorm)
+      await datashare.deleteNamedEntitiesByMentionNorm(this.$store.state.search.index, mentionNorm)
       this.$root.$emit('facet::hide::named-entities')
       if (this.$refs.facet) {
         this.$refs.facet.aggregate()

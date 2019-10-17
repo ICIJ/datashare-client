@@ -50,8 +50,8 @@ export class DatashareClient {
       }
     })
   }
-  deleteNamedEntitiesByMentionNorm (mentionNorm) {
-    return this.sendAction(`/api/namedEntity/hide/${mentionNorm}`, { method: 'PUT' }, false)
+  deleteNamedEntitiesByMentionNorm (project, mentionNorm) {
+    return this.sendAction(`/api/${project}/namedEntity/hide/${mentionNorm}`, { method: 'PUT' }, false)
   }
   getSource (document) {
     return this.sendAction(document.url, {}, false)
