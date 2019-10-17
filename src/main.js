@@ -66,7 +66,9 @@ export class App {
     // Override Murmur default value for content-placeholder
     Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
     this.datashareClient.createIndex(config['projectName'])
-
+    if (this.store.state.search.index === '') {
+      this.store.commit('search/index', config['projectName'])
+    }
     return this
   }
   mount (selector) {
