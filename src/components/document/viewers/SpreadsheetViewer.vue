@@ -127,6 +127,7 @@ export default {
       })
     },
     filteredItems () {
+      if (this.filter === '') return this.items
       const keys = range(this.firstItem.length).map(String)
       const options = { keys }
       const fuse = new Fuse(this.items, options)
