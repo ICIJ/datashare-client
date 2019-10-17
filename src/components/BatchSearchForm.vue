@@ -135,6 +135,7 @@
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import get from 'lodash/get'
+import includes from 'lodash/includes'
 import map from 'lodash/map'
 import throttle from 'lodash/throttle'
 
@@ -193,7 +194,7 @@ export default {
   },
   methods: {
     searchFileTypes: throttle(async function () {
-      this.$set(this, 'suggestionFileTypes', filter(this.allTypes, item => (item.label.indexOf(this.fileType) > -1) || item.mime.indexOf(this.fileType) > -1))
+      this.$set(this, 'suggestionFileTypes', filter(this.allTypes, item => ((item.label.indexOf(this.fileType) > -1) || item.mime.indexOf(this.fileType) > -1) && !includes(map(this.fileTypes, 'mime'), item.mime)))
     }, 200),
     searchFileType (fileType) {
       if (fileType) {

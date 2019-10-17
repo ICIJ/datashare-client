@@ -90,7 +90,7 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.contains('selectable-dropdown-stub')).toBeTruthy()
     })
 
-    it('should filter fileTypes according to the fileTypes input', () => {
+    it('should filter fileTypes according to the fileTypes input on mime file', () => {
       wrapper.vm.$set(wrapper.vm, 'fileType', 'visi')
 
       wrapper.vm.searchFileTypes()
@@ -100,13 +100,22 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.suggestionFileTypes[1].label).toBe('StarWriter 5 document')
     })
 
-    it('should filter in types label', () => {
+    it('should filter according to the fileTypes input on label file', () => {
       wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
 
       wrapper.vm.searchFileTypes()
 
       expect(wrapper.vm.suggestionFileTypes).toHaveLength(1)
       expect(wrapper.vm.suggestionFileTypes[0].label).toBe('Portable Document Format (PDF)')
+    })
+
+    it('should hide already selected file type from suggestions', () => {
+      wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ mime: 'application/pdf', label: 'Portable Document Format (PDF)' }])
+      wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
+
+      wrapper.vm.searchFileTypes()
+
+      expect(wrapper.vm.suggestionFileTypes).toHaveLength(0)
     })
 
     it('should set the clicked item in the fileTypes input', () => {
