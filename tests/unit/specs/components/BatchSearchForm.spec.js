@@ -31,7 +31,7 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.resetForm).toBeCalled()
   })
 
-  it('should display a form with 6 fields: name, file, fuzziness, file type, description and phraseMatch', () => {
+  it('should display a form with 7 fields: name, csvFile, description, phraseMatch, fuzziness, fileTypes, paths and published', () => {
     expect(wrapper.findAll('.card-body b-form-group-stub')).toHaveLength(7)
     expect(wrapper.findAll('.card-body b-form-input-stub')).toHaveLength(4)
     expect(wrapper.findAll('.card-body b-form-file-stub')).toHaveLength(1)
@@ -41,24 +41,30 @@ describe('BatchSearchForm.vue', () => {
 
   it('should reset the form', () => {
     wrapper.vm.$set(wrapper.vm, 'name', 'Example')
-    wrapper.vm.$set(wrapper.vm, 'published', false)
     wrapper.vm.$set(wrapper.vm, 'csvFile', new File(['File content'], 'test_file.csv', { type: 'text/csv' }))
     wrapper.vm.$set(wrapper.vm, 'description', 'This is a description')
     wrapper.vm.$set(wrapper.vm, 'project', 'project-example')
-    wrapper.vm.$set(wrapper.vm, 'fileTypes', '')
-    wrapper.vm.$set(wrapper.vm, 'paths', 'This a multiple paths')
     wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
+    wrapper.vm.$set(wrapper.vm, 'fuzziness', 2)
+    wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
+    wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'PDF' }])
+    wrapper.vm.$set(wrapper.vm, 'path', 'path test')
+    wrapper.vm.$set(wrapper.vm, 'paths', ['This', 'is', 'a', 'multiple', 'paths'])
+    wrapper.vm.$set(wrapper.vm, 'published', false)
 
     wrapper.vm.resetForm()
 
     expect(wrapper.vm.name).toBe('')
-    expect(wrapper.vm.published).toBeTruthy()
     expect(wrapper.vm.csvFile).toBeNull()
     expect(wrapper.vm.description).toBe('')
     expect(wrapper.vm.project).toBe(process.env.VUE_APP_ES_INDEX)
-    expect(wrapper.vm.fileTypes).toBe('')
-    expect(wrapper.vm.paths).toBe('')
     expect(wrapper.vm.phraseMatch).toBeTruthy()
+    expect(wrapper.vm.fuzziness).toBe(0)
+    expect(wrapper.vm.fileType).toBe('')
+    expect(wrapper.vm.fileTypes).toEqual([])
+    expect(wrapper.vm.path).toBe('')
+    expect(wrapper.vm.paths).toEqual([])
+    expect(wrapper.vm.published).toBeTruthy()
   })
 
   it('should reset the fuzziness to 0 on phraseMatch change', () => {
@@ -85,7 +91,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should filter fileTypes according to the fileTypes input', () => {
-      wrapper.vm.$set(wrapper.vm, 'fileTypes', 'visi')
+      wrapper.vm.$set(wrapper.vm, 'fileType', 'visi')
 
       wrapper.vm.searchFileTypes()
 
@@ -95,7 +101,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should filter in types label', () => {
-      wrapper.vm.$set(wrapper.vm, 'fileTypes', 'PDF')
+      wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
 
       wrapper.vm.searchFileTypes()
 
@@ -104,10 +110,10 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should set the clicked item in the fileTypes input', () => {
-      wrapper.vm.$set(wrapper.vm, 'fileTypes', 'Excel 2003 XML spreadsheet visio')
+      wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'Excel 2003 XML spreadsheet visio' }])
       wrapper.vm.searchFileType({ label: 'StarWriter 5 document' })
 
-      expect(wrapper.vm.fileTypes).toBe('Excel 2003 XML spreadsheet StarWriter 5 document')
+      expect(wrapper.vm.fileTypes).toEqual([{ label: 'Excel 2003 XML spreadsheet visio' }, { label: 'StarWriter 5 document' }])
     })
 
     it('should hide suggestions', () => {

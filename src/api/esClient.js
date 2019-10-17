@@ -20,7 +20,7 @@ export function datasharePlugin (Client, config, components) {
       data => data,
       error => {
         EventBus.$emit('http::error', error)
-        return null
+        throw error
       }
     )
   }

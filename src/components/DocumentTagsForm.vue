@@ -66,7 +66,7 @@ export default {
       <b-form @submit.prevent="addTag" class="document-tags-form__add">
         <b-input-group size="sm">
           <b-input-group-text slot="prepend">
-            <fa icon="tag" class="fa-flip-horizontal" />
+            <fa icon="tag" />
           </b-input-group-text>
           <b-form-input id="new-tag" v-model="tag" @input="searchTags" autofocus required :placeholder="$t('document.tags_new')" :disabled="updatingTags" autocomplete="off" />
         </b-input-group>

@@ -62,7 +62,7 @@
           <b-form-group
             :label="$t('batchSearch.fileTypes')">
             <b-form-input
-              v-model="fileTypes"
+              v-model="fileType"
               @input="searchFileTypes"
               autocomplete="off">
             </b-form-input>
@@ -76,11 +76,19 @@
                 <div>{{ item.label }}</div>
               </template>
             </selectable-dropdown>
+            <ul class="list-unstyled">
+              <li v-for="(fileType, index) in fileTypes" :key="fileType.mime" class="badge badge-light border badge-pill mr-1 mt-1">
+                <span>{{ fileType.label }}</span>
+                <span class="btn btn-sm p-0" @click.prevent="deleteFileType(index)">
+                  <fa icon="times" class="fa-fw p-0" />
+                </span>
+              </li>
+            </ul>
           </b-form-group>
           <b-form-group
             :label="$t('batchSearch.path')">
             <b-form-input
-              v-model="paths"
+              v-model="path"
               @input="searchPaths"
               autocomplete="off">
             </b-form-input>
@@ -91,6 +99,14 @@
               :hide="!suggestionPaths.length"
               :items="suggestionPaths">
             </selectable-dropdown>
+            <ul class="list-unstyled">
+              <li v-for="(path, index) in paths" :key="path" class="badge badge-light border badge-pill mr-1 mt-1">
+                <span>{{ path }}</span>
+                <span class="btn btn-sm p-0" @click.prevent="deletePath(index)">
+                  <fa icon="times" class="fa-fw p-0" />
+                </span>
+              </li>
+            </ul>
           </b-form-group>
           <b-form-group
             :description="$t('batchSearch.publishedDescription')"
@@ -135,9 +151,11 @@ export default {
       indices: [],
       phraseMatch: true,
       fuzziness: 0,
-      fileTypes: '',
+      fileType: '',
+      fileTypes: [],
       suggestionFileTypes: [],
-      paths: '',
+      path: '',
+      paths: [],
       suggestionPaths: [],
       allPaths: [],
       published: true
@@ -172,40 +190,36 @@ export default {
   },
   methods: {
     searchFileTypes: throttle(async function () {
-      const searchedFileTypes = this.fileTypes.split(' ').pop()
-      this.$set(this, 'suggestionFileTypes', filter(this.allTypes, item => (item.label.indexOf(searchedFileTypes) > -1) || item.mime.indexOf(searchedFileTypes) > -1))
+      this.$set(this, 'suggestionFileTypes', filter(this.allTypes, item => (item.label.indexOf(this.fileType) > -1) || item.mime.indexOf(this.fileType) > -1))
     }, 200),
     searchFileType (fileType) {
       if (fileType) {
-        const fileTypesArray = this.fileTypes.split(' ')
-        // Remove last fileType
-        fileTypesArray.pop()
-        // Append the clicked fileType
-        fileTypesArray.push(fileType.label)
-        this.$set(this, 'fileTypes', fileTypesArray.join(' '))
-        this.$set(this, 'suggestionFileTypes', [])
+        this.fileTypes.push(fileType)
+        this.hideSuggestionsFileTypes()
+        this.$set(this, 'fileType', '')
       }
     },
     hideSuggestionsFileTypes () {
       this.$set(this, 'suggestionFileTypes', [])
     },
+    deleteFileType (index) {
+      this.fileTypes.splice(index, 1)
+    },
     searchPaths: throttle(async function () {
-      const searchedPaths = this.paths.split(' ').pop()
-      this.$set(this, 'suggestionPaths', filter(this.allPaths, item => item.indexOf(searchedPaths) > -1))
+      this.$set(this, 'suggestionPaths', filter(this.allPaths, item => item.indexOf(this.path) > -1))
     }, 200),
     searchPath (path) {
       if (path) {
-        const PathsArray = this.paths.split(' ')
-        // Remove last path
-        PathsArray.pop()
-        // Append the clicked path
-        PathsArray.push(path)
-        this.$set(this, 'paths', PathsArray.join(' '))
-        this.$set(this, 'suggestionPaths', [])
+        this.paths.push(path)
+        this.hideSuggestionsPaths()
+        this.$set(this, 'path', '')
       }
     },
     hideSuggestionsPaths () {
       this.$set(this, 'suggestionPaths', [])
+    },
+    deletePath (index) {
+      this.paths.splice(index, 1)
     },
     resetForm () {
       this.$set(this, 'name', '')
@@ -214,8 +228,10 @@ export default {
       this.$set(this, 'project', get(this.indices, ['0', 'value'], ''))
       this.$set(this, 'phraseMatch', true)
       this.$set(this, 'fuzziness', 0)
-      this.$set(this, 'fileTypes', '')
-      this.$set(this, 'paths', '')
+      this.$set(this, 'fileType', '')
+      this.$set(this, 'fileTypes', [])
+      this.$set(this, 'path', '')
+      this.$set(this, 'paths', [])
       this.$set(this, 'published', true)
     },
     async onSubmit () {

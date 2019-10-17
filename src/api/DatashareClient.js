@@ -83,13 +83,13 @@ export class DatashareClient {
   batchSearch (name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published) {
     const body = new FormData()
     body.append('name', name)
-    body.append('description', description)
     body.append('csvFile', csvFile)
-    body.append('published', published)
-    map(fileTypes.split(' '), fileType => body.append('fileTypes', fileType))
-    body.append('fuzziness', fuzziness)
-    map(paths.split(' '), path => body.append('paths', path))
+    body.append('description', description)
     body.append('phrase_matches', phraseMatch)
+    body.append('fuzziness', fuzziness)
+    map(fileTypes, fileType => body.append('fileTypes', fileType.mime))
+    map(paths, path => body.append('paths', path))
+    body.append('published', published)
     return this.sendAction(`/api/batch/search/${encodeURIComponent(project)}`, { method: 'POST', body }, false)
   }
   getBatchSearches () {
