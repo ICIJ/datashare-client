@@ -183,7 +183,6 @@ describe('DocumentContent.vue', () => {
         .withNer('tent', 3, 'PERSON'))
         .commit()
       await store.dispatch('document/get', { id })
-      console.log('okj')
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       store.commit('document/toggleShowNamedEntities', false)
       const wrapper = shallowMount(DocumentContent, {
