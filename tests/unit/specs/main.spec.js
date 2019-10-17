@@ -13,7 +13,7 @@ describe('main', () => {
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
     window.fetch = jest.fn()
-    window.fetch.mockReturnValue(jsonOk({ userIndices: ['first-index'] }))
+    window.fetch.mockReturnValue(jsonOk({ userProjects: ['first-index'] }))
   })
 
   afterEach(() => window.fetch.mockRestore())
@@ -26,10 +26,10 @@ describe('main', () => {
   })
 
   it('should set the config', async () => {
-    window.fetch.mockReturnValue(jsonOk({ userIndices: ['first-index'], key: 'value' }))
+    window.fetch.mockReturnValue(jsonOk({ userProjects: ['first-index'], key: 'value' }))
     const vm = await createApp(createLocalVue())
     expect(vm.$config).toBeDefined()
-    expect(vm.$config.get('userIndices')).toEqual(['first-index'])
+    expect(vm.$config.get('userProjects')).toEqual(['first-index'])
     expect(vm.$config.get('key')).toEqual('value')
   })
 })

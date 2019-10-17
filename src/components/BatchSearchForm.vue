@@ -186,7 +186,7 @@ export default {
     }
   },
   async created () {
-    this.$set(this, 'indices', map(this.$config.get('userIndices', []), value => { return { value, text: value } }))
+    this.$set(this, 'indices', map(this.$config.get('userProjects', []), value => { return { value, text: value } }))
     this.$set(this, 'project', get(this.indices, ['0', 'value'], ''))
     const response = await this.$store.dispatch('search/queryFacet', { name: 'path', options: { size: 1000, exclude: '', include: '.*' } })
     map(get(response, ['aggregations', 'byDirname', 'buckets'], []), item => this.allPaths.push(item.key))

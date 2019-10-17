@@ -19,7 +19,7 @@ describe('IndexSelector.vue', () => {
   esConnectionHelper()
 
   beforeAll(() => {
-    Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX, process.env.VUE_APP_ES_ANOTHER_INDEX] })
+    Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX, process.env.VUE_APP_ES_ANOTHER_INDEX] })
     Murmur.config.merge({ multipleProjects: true })
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })

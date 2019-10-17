@@ -44,7 +44,7 @@ export default {
     }
   },
   async created () {
-    this.$set(this, 'indices', map(this.$config.get('userIndices', []), value => { return { value, text: value } }))
+    this.$set(this, 'indices', map(this.$config.get('userProjects', []), value => { return { value, text: value } }))
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')
   },

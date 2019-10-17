@@ -20,7 +20,7 @@ describe('DocumentActions.vue', () => {
   const es = esConnectionHelper.es
   let document, wrapper
 
-  beforeAll(() => Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] }))
+  beforeAll(() => Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
     jest.spyOn(datashare, 'fetch')

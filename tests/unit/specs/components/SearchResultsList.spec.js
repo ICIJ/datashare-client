@@ -33,7 +33,7 @@ describe('SearchResultsList.vue', () => {
   jest.setTimeout(1e4)
 
   beforeAll(() => {
-    Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] })
+    Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] })
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })
 
