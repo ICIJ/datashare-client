@@ -56,10 +56,46 @@
             {{ meta.nbResults }}
           </dd>
           <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.phraseMatch') }}
+          </dt>
+          <dd class="col-sm-8">
+            {{ meta.phraseMatch ? $t('indexing.yes') : $t('indexing.no') }}
+          </dd>
+          <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.fuzziness') }}
           </dt>
           <dd class="col-sm-8">
             {{ meta.fuzziness }}
+          </dd>
+          <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.fileTypes') }}
+          </dt>
+          <dd class="col-sm-8">
+            <ul v-if="meta.fileTypes.length" class="list-unstyled list-group list-group-horizontal">
+              <li v-for="fileType in meta.fileTypes" :key="fileType" class="mr-2">
+                <b-badge variant="dark">
+                  {{ fileType }}
+                </b-badge>
+              </li>
+            </ul>
+            <span v-else>
+              {{ $t('indexing.no') }}
+            </span>
+          </dd>
+          <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.path') }}
+          </dt>
+          <dd class="col-sm-8">
+            <ul v-if="meta.paths.length" class="list-unstyled list-group list-group-horizontal">
+              <li v-for="path in meta.paths" :key="path" class="mr-2">
+                <b-badge variant="dark">
+                  {{ path }}
+                </b-badge>
+              </li>
+            </ul>
+            <span v-else>
+              {{ $t('indexing.no') }}
+            </span>
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.published') }}

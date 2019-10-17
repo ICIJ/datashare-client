@@ -72,7 +72,7 @@ const router = new VueRouter({ routes: [
   }
 ] })
 
-describe('BatchSearchResults', () => {
+describe('BatchSearchResults.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
@@ -85,18 +85,28 @@ describe('BatchSearchResults', () => {
       uuid: '12',
       project: { name: 'ProjectName' },
       description: 'This is the description of the batch search',
-      queries: ['query_01', 'query_02', 'query_03'],
       state: 'SUCCESS',
       date: '2019-07-18T14:45:34.869+0000',
-      nbResults: 172
+      nbResults: 172,
+      phraseMatch: 1,
+      fuzziness: 1,
+      fileTypes: [],
+      paths: [],
+      published: 0,
+      queries: ['query_01', 'query_02', 'query_03']
     }, {
       uuid: '13',
       project: { name: 'ProjectName2' },
       description: 'Another description',
-      queries: ['query_04'],
       state: 'SUCCESS',
       date: '2019-07-28T14:45:34.869+0000',
-      nbResults: 15
+      nbResults: 15,
+      phraseMatch: 1,
+      fuzziness: 1,
+      fileTypes: [],
+      paths: [],
+      published: 0,
+      queries: ['query_04']
     }])
     const propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
     wrapper = shallowMount(BatchSearchResults, { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link', numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
@@ -123,7 +133,7 @@ describe('BatchSearchResults', () => {
 
   it('should display info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(5)
+    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(8)
   })
 
   it('should refresh route on "batch-search-results::filter" event emitted, on reset to the first page', () => {
