@@ -32,8 +32,8 @@ export class DatashareClient {
   getTasks () {
     return this.sendAction('/api/task/all')
   }
-  createIndex () {
-    return this.sendAction('/api/index/create', { method: 'PUT' }, false)
+  createIndex (project) {
+    return this.sendAction(`/api/index/${project}`, { method: 'PUT' }, false)
   }
   deleteAll (projectId) {
     return this.sendAction(`/api/project/id/${encodeURIComponent(projectId)}`, { method: 'DELETE' }, false)

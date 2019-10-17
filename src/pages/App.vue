@@ -23,7 +23,6 @@ import compact from 'lodash/compact'
 import some from 'lodash/some'
 
 import AggregationsPanel from '@/components/AggregationsPanel'
-import DatashareClient from '@/api/DatashareClient'
 import AppSidebar from '@/components/AppSidebar'
 import ScrollTracker from '@/components/ScrollTracker'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
@@ -35,11 +34,6 @@ export default {
     AppSidebar,
     ScrollTracker,
     VuePerfectScrollbar
-  },
-  created () {
-    if (process.env.NODE_ENV === 'production') {
-      new DatashareClient().createIndex()
-    }
   },
   computed: {
     matchedRouteNames () {

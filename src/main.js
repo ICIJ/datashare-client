@@ -65,6 +65,8 @@ export class App {
     Murmur.config.merge(config)
     // Override Murmur default value for content-placeholder
     Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
+    this.datashareClient.createIndex(config['projectName'])
+
     return this
   }
   mount (selector) {
