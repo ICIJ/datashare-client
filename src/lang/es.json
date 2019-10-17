@@ -357,7 +357,7 @@
     "search_directory": "Buscar dentro de este directorio",
     "tiff_limitations": "La vista previa del navegador de este archivo TIFF puede no mostrar todas las imágenes. Le sugerimos que lo descargue en su computadora para ver todos los contenidos.",
     "thread_index": "Índice de hilo",
-    "see_highlights": "Mostrar entidades identificadas",
+    "showNamedEntities": "Mostrar entidades identificadas",
     "highlights_caution": "¡Advertencia! Las entidades identificadas se resaltarán y pueden reemplazar el texto debajo. Esto no afecta los resultados de su búsqueda.",
     "error_not_found": "Su archivo se ha indexado en Datashare, pero el archivo ya no está presente en su archivo Datashare en su computadora. La vista previa no está disponible.",
     "search": "Buscar",

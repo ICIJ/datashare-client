@@ -4,9 +4,14 @@ import DatashareClient from '@/api/DatashareClient'
 import { getAuthenticatedUser } from '@/utils/utils'
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
+import flattenDeep from 'lodash/flattenDeep'
+import get from 'lodash/get'
+import keys from 'lodash/keys'
 import map from 'lodash/map'
 import remove from 'lodash/remove'
+import sumBy from 'lodash/sumBy'
 import uniqBy from 'lodash/uniqBy'
+import values from 'lodash/values'
 
 export const datashare = new DatashareClient()
 
@@ -14,14 +19,40 @@ export function initialState () {
   return {
     idAndRouting: null,
     doc: null,
-    namedEntities: [],
+    isLoadingNamedEntities: false,
+    namedEntitiesPaginatedByCategories: {
+      'PERSON': [],
+      'ORGANIZATION': [],
+      'LOCATION': [],
+      'EMAIL': []
+    },
     parentDocument: null,
-    showNamedEntities: true,
+    showNamedEntities: false,
     tags: []
   }
 }
 
 export const state = initialState
+
+export const getters = {
+  countNamedEntitiesInCategory (state) {
+    return category => {
+      const pages = get(state, ['namedEntitiesPaginatedByCategories', category], [])
+      // Sum up all page size
+      return sumBy(pages, page => {
+        return get(page, 'hits.length', 0)
+      })
+    }
+  },
+  namedEntities (state) {
+    const categoriesPages = values(state.namedEntitiesPaginatedByCategories)
+    const hits = categoriesPages.map(pages => pages.map(page => page.hits))
+    return flattenDeep(hits)
+  },
+  categories (state) {
+    return keys(state.namedEntitiesPaginatedByCategories)
+  }
+}
 
 export const mutations = {
   reset (state) {
@@ -29,10 +60,8 @@ export const mutations = {
     Object.keys(s).forEach(key => { state[key] = s[key] })
   },
   idAndRouting (state, idAndRouting) {
+    mutations.reset(state)
     state.idAndRouting = idAndRouting
-    state.doc = null
-    state.parentDocument = null
-    state.tags = []
   },
   doc (state, raw) {
     if (raw !== null) {
@@ -47,6 +76,11 @@ export const mutations = {
   namedEntities (state, raw) {
     state.namedEntities = new Response(raw).hits
   },
+  namedEntitiesPageInCategory (state, { category, page }) {
+    if (state.namedEntitiesPaginatedByCategories[category]) {
+      state.namedEntitiesPaginatedByCategories[category].push(page)
+    }
+  },
   parentDocument (state, raw) {
     if (raw !== null) {
       state.parentDocument = Response.instantiate(raw)
@@ -58,6 +92,9 @@ export const mutations = {
   },
   toggleShowNamedEntities (state, toggler = null) {
     state.showNamedEntities = (toggler !== null ? toggler : !state.showNamedEntities)
+  },
+  toggleIsLoadingNamedEntities (state, toggler = null) {
+    state.isLoadingNamedEntities = (toggler !== null ? toggler : !state.isLoadingNamedEntities)
   },
   addTag (state, tag) {
     const tags = map(compact(tag.split(' ')), tag => {
@@ -102,14 +139,44 @@ export const actions = {
     }
     return state.parentDocument
   },
-  async getNamedEntities ({ commit, rootState, state }) {
-    try {
-      const raw = await esClient.getNamedEntities(rootState.search.index, state.idAndRouting.id, state.idAndRouting.routing)
-      commit('namedEntities', raw)
-    } catch (_) {
-      commit('namedEntities', { hits: { hits: [] } })
+  async getNamedEntitiesTotal ({ state }) {
+    const index = state.index
+    const { id, routing } = state.idAndRouting
+    const raw = await esClient.getDocumentNamedEntities(index, id, routing, 0, 0)
+    return (new Response(raw)).total
+  },
+  async getFirstPageForNamedEntityInCategory ({ state, dispatch }, category) {
+    // Count the number of loaded pages
+    const namedEntitiesPagesCount = get(state, ['namedEntitiesPaginatedByCategories', category, 'length'], 0)
+    // Zero named entities load for this category
+    if (namedEntitiesPagesCount === 0) {
+      await dispatch('getNextPageForNamedEntityInCategory', category)
     }
-    return state.namedEntities
+  },
+  async getFirstPageForNamedEntityInAllCategories ({ dispatch, getters }) {
+    for (const category of getters['categories']) {
+      await dispatch('getFirstPageForNamedEntityInCategory', category)
+    }
+  },
+  async getNextPageForNamedEntityInCategory ({ state, getters, commit, dispatch }, category) {
+    try {
+      const from = getters.countNamedEntitiesInCategory(category)
+      const index = state.index
+      const { id, routing } = state.idAndRouting
+      const raw = await dispatch('loadingNamedEntities', () => {
+        return esClient.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
+      })
+      const page = new Response(raw)
+      return commit('namedEntitiesPageInCategory', { category, page })
+    } catch (_) {
+      return null
+    }
+  },
+  async loadingNamedEntities ({ commit }, callbackWithPromise) {
+    commit('toggleIsLoadingNamedEntities', true)
+    const result = await callbackWithPromise()
+    commit('toggleIsLoadingNamedEntities', false)
+    return result
   },
   async getTags ({ state, rootState, commit }) {
     try {
@@ -132,6 +199,7 @@ export const actions = {
 
 export default {
   namespaced: true,
+  getters,
   state,
   mutations,
   actions

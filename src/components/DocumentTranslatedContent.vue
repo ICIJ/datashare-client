@@ -16,11 +16,11 @@
             {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
           </button>
         </div>
-        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :named-entities="namedEntities" :translated-content="translatedContent" />
+        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :translated-content="translatedContent" />
       </div>
     </template>
     <template v-else>
-      <document-content ref="content" class="document-translated-content__original" :document="document" :named-entities="namedEntities" />
+      <document-content ref="content" class="document-translated-content__original" :document="document" />
     </template>
   </div>
 </template>
@@ -31,11 +31,7 @@ import DocumentContent from '@/components/DocumentContent'
 export default {
   name: 'DocumentTranslatedContent',
   props: {
-    document: Object,
-    namedEntities: {
-      type: Array,
-      default: () => ([])
-    }
+    document: Object
   },
   components: { DocumentContent },
   data () {

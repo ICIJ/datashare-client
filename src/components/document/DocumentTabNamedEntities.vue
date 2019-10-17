@@ -1,27 +1,32 @@
 <template>
   <div class="p-3">
-    <div v-if="$config.is('manageDocuments') && !document.hasNerTags" class="document__named-entities--not--searched">
+    <div v-if="$config.is('manageDocuments') && !document.hasNerTags" class="document__named-entities document__named-entities--not--searched">
       <div v-html="$t('document.named_entities_not_searched', { indexing_link: '#/indexing' })"></div>
     </div>
-    <div v-else-if="groupByCategories(namedEntities).length === 0" class="document__named-entities--not--found">
+    <div v-else-if="!hasNamedEntities" class="document__named-entities document__named-entities--not--found">
       {{ $t('document.named_entities_not_found') }}
     </div>
-    <div v-else>
-      <div v-for="(results, index) in groupByCategories(namedEntities)" :key="index" class="mb-4">
-        <div class="mb-2" :class="getCategoryClass(results[0].source.category, 'text-')">
-          <fa :icon="getCategoryIcon(results[0].source.category)" />
-          {{ $t('facet.namedEntity' + capitalize(results[0].source.category)) }} <i>({{ results.length }})</i>
+    <div v-else class="document__named-entities">
+      <div v-for="(pages, category) in namedEntitiesPaginatedByCategories" :key="category" class="mb-4" v-if="categoryIsntEmpty(category)">
+        <div class="mb-2" :class="getCategoryClass(category, 'text-')">
+          <fa :icon="getCategoryIcon(category)" />
+          {{ $t('facet.namedEntity' + capitalize(category)) }}
+          <i>({{ getCategoryTotal(category) }})</i>
         </div>
-        <span v-for="(result, index) in groupByMentionNorm(results)" :key="index" class="d-inline mr-2">
-          <b-badge pill variant="light" class="p-0 text-uppercase text-black border" :class="getCategoryClass(result[0].source.category, 'border-')">
-            <span class="p-1 d-inline-block" :title="capitalize(result[0].source.mentionNorm)"  v-b-tooltip.hover>
-              {{ result[0].source.mentionNorm }}
-            </span>
-            <span class="bg-darkest text-light p-1 px-2 d-inline-block" :title="$tc('aggregations.mentions.occurrence', result.length, { count: result.length })" :class="getCategoryClass(result[0].source.category, 'bg-')" v-b-tooltip.hover>
-              {{ result.length }}
-            </span>
-          </b-badge>
+        <span v-for="(page, index) in pages" :key="index">
+          <span v-for="(ne, index) in page.hits" :key="index" class="d-inline mr-2">
+            <b-badge pill variant="light" class="p-0 text-uppercase text-black border" :class="getCategoryClass(category, 'border-')">
+              <span class="p-1 d-inline-block" :title="capitalize(ne.source.mentionNorm)"  v-b-tooltip.hover>
+                {{ ne.source.mentionNorm }}
+              </span>
+            </b-badge>
+          </span>
         </span>
+        <div v-if="categoryHasNextPage(category)">
+          <a class="document__named-entities__more small" href="#" @click.prevent="getNextPageInCategory(category)">
+            {{ $t('document.namedEntities.showMore' + capitalize(category)) }}
+          </a>
+        </div>
       </div>
     </div>
   </div>
@@ -32,27 +37,62 @@ import { mapState } from 'vuex'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import capitalize from 'lodash/capitalize'
-import groupBy from 'lodash/groupBy'
-import orderBy from 'lodash/orderBy'
+import get from 'lodash/get'
+import keys from 'lodash/keys'
+import sumBy from 'lodash/sumBy'
 
 export default {
   name: 'DocumentTabNamedEntities',
   props: ['document'],
   mixins: [ner, utils],
   computed: {
-    ...mapState('document', ['namedEntities'])
+    ...mapState('document', ['namedEntitiesPaginatedByCategories', 'isLoadingNamedEntities']),
+    hasNamedEntities () {
+      return sumBy(this.categories, category => this.getCategoryTotal(category))
+    },
+    categories () {
+      return keys(this.namedEntitiesPaginatedByCategories)
+    },
+    namedEntities () {
+      return this.$store.getters['document/namedEntities']
+    }
   },
-  mounted () {
-    this.$root.$on('facet::hide::named-entities', () => this.$store.dispatch('document/getNamedEntities'))
+  async mounted () {
+    await this.$store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
   },
   methods: {
-    groupByCategories (array) {
-      return orderBy(groupBy(array, m => m.source.category), ['length', m => m[0].source.category], ['desc', 'asc'])
+    capitalize,
+    getCategoryTotal (category) {
+      return get(this, ['namedEntitiesPaginatedByCategories', category, 0, 'total'], 0)
     },
-    groupByMentionNorm (array) {
-      return orderBy(groupBy(array, m => m.source.mentionNorm), ['length', m => m[0].source.mentionNorm], ['desc', 'asc'])
+    categoryIsntEmpty (category) {
+      return !!this.getCategoryTotal(category)
     },
-    capitalize
+    categoryHasNextPage (category) {
+      return this.getCategoryTotal(category) > this.$store.getters['document/countNamedEntitiesInCategory'](category)
+    },
+    getNextPageInCategory (category) {
+      // Don't load named entities if they are already loading
+      if (!this.isLoadingNamedEntities) {
+        return this.$store.dispatch('document/getNextPageForNamedEntityInCategory', category)
+      }
+    }
   }
 }
 </script>
+
+<style lang="scss">
+  .document__named-entities {
+    &__more {
+      display: inline-block;
+      padding: $spacer * 0.25 $spacer * 0.5;
+      margin-bottom: $spacer * 0.25;
+      background: $light;
+
+      &:hover {
+        text-decoration: white;
+        background: white;
+      }
+    }
+  }
+</style>

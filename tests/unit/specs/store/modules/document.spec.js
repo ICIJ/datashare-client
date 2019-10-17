@@ -57,10 +57,10 @@ describe('Document store', () => {
   it('should get the document\'s named entities', async () => {
     await letData(es).have(new IndexedDocument(id).withNer('naz')).commit()
     await store.dispatch('document/get', { id })
-    await store.dispatch('document/getNamedEntities')
+    await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
 
-    expect(store.state.document.namedEntities[0].raw._source.mention).toEqual('naz')
-    expect(store.state.document.namedEntities[0].raw._routing).toEqual(id)
+    expect(store.getters['document/namedEntities'][0].raw._source.mention).toEqual('naz')
+    expect(store.getters['document/namedEntities'][0].raw._routing).toEqual(id)
   })
 
   it('should get only the not hidden document\'s named entities', async () => {
@@ -70,13 +70,13 @@ describe('Document store', () => {
       .withNer('entity_03', 44, 'ORGANIZATION', false)).commit()
     await store.dispatch('document/get', { id })
 
-    await store.dispatch('document/getNamedEntities')
+    await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
 
-    expect(store.state.document.namedEntities.length).toEqual(2)
-    expect(store.state.document.namedEntities[0].raw._source.mention).toEqual('entity_01')
-    expect(store.state.document.namedEntities[0].raw._routing).toEqual(id)
-    expect(store.state.document.namedEntities[1].raw._source.mention).toEqual('entity_03')
-    expect(store.state.document.namedEntities[1].raw._routing).toEqual(id)
+    expect(store.getters['document/namedEntities'].length).toEqual(2)
+    expect(store.getters['document/namedEntities'][0].raw._source.mention).toEqual('entity_01')
+    expect(store.getters['document/namedEntities'][0].raw._routing).toEqual(id)
+    expect(store.getters['document/namedEntities'][1].raw._source.mention).toEqual('entity_03')
+    expect(store.getters['document/namedEntities'][1].raw._routing).toEqual(id)
   })
 
   it('should get the document\'s tags', async () => {
@@ -91,15 +91,15 @@ describe('Document store', () => {
     datashare.fetch.mockClear()
   })
 
-  it('should get the "showNamedEntities" status', () => {
-    expect(store.state.document.showNamedEntities).toBeTruthy()
+  it('should get the "showNamedEntities" status falsy by default', () => {
+    expect(store.state.document.showNamedEntities).toBeFalsy()
   })
 
   it('should toggle the "showNamedEntities" status', () => {
     store.commit('document/toggleShowNamedEntities')
-    expect(store.state.document.showNamedEntities).toBeFalsy()
-    store.commit('document/toggleShowNamedEntities')
     expect(store.state.document.showNamedEntities).toBeTruthy()
+    store.commit('document/toggleShowNamedEntities')
+    expect(store.state.document.showNamedEntities).toBeFalsy()
   })
 
   it('should tag multiple documents and not refresh', async () => {

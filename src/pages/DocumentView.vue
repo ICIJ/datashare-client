@@ -64,7 +64,6 @@ export default {
       this.$Progress.start()
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
-      await this.$store.dispatch('document/getNamedEntities')
       await this.$store.dispatch('document/getTags')
       this.isReady = true
       if (this.document) {
@@ -113,7 +112,6 @@ export default {
   computed: {
     ...mapState('document', {
       document: 'doc',
-      namedEntities: 'namedEntities',
       parentDocument: 'parentDocument',
       tags: 'tags'
     }),
@@ -128,8 +126,7 @@ export default {
           component: DocumentTabExtractedText,
           icon: 'align-left',
           props: {
-            document: this.document,
-            namedEntities: this.namedEntities
+            document: this.document
           }
         },
         {
