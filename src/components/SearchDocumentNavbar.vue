@@ -13,18 +13,24 @@
         <document-type-card :document="currentDocument" />
       </b-popover>
       <span class="search-document-navbar__nav" v-if="currentDocumentIndex > -1">
-        <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" :title="previousTooltip" v-b-tooltip.html.bottomleft>
+        <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
           <fa icon="angle-left" />
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.previous.label') }}
           </span>
         </button>
-        <button @click="goToNextDocument" v-shortkey="getKeys('goToNextDocument')" @shortkey="getAction('goToNextDocument')" :disabled="!hasNextDocument" class="btn btn-sm btn-link text-white py-0" :title="nextTooltip" v-b-tooltip.html.bottomleft>
+        <b-tooltip target="previous-document-button" triggers="hover">
+          <span v-html="previousTooltip"></span>
+        </b-tooltip>
+        <button @click="goToNextDocument" v-shortkey="getKeys('goToNextDocument')" @shortkey="getAction('goToNextDocument')" :disabled="!hasNextDocument" class="btn btn-sm btn-link text-white py-0" id="next-document-button">
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.next.label') }}
           </span>
           <fa icon="angle-right" />
         </button>
+        <b-tooltip target="next-document-button" triggers="hover">
+          <span v-html="nextTooltip"></span>
+        </b-tooltip>
       </span>
       <router-link-popup v-if="!hasFeature('DOCUMENT_ACTIONS')" :to="{ name: 'document-simplified', params: currentDocument.routerParams }" class="btn btn-sm btn-link text-white py-0" :title="$t('document.external_window')" v-b-tooltip.bottomleft>
         <fa icon="external-link-alt" />
