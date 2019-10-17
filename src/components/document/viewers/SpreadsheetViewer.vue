@@ -52,8 +52,10 @@ import first from 'lodash/first'
 import get from 'lodash/get'
 import filter from 'lodash/filter'
 import kebabCase from 'lodash/kebabCase'
+import range from 'lodash/range'
 import startCase from 'lodash/startCase'
 import sortBy from 'lodash/sortBy'
+import Fuse from 'fuse.js'
 import fetchPonyfill from 'fetch-ponyfill'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
 
@@ -72,7 +74,7 @@ export default {
       activeSheetIndex: 0,
       meta: null,
       fieldsInFirstItem: false,
-      filter: null
+      filter: ''
     }
   },
   async mounted () {
@@ -124,6 +126,12 @@ export default {
         return filter(rows, row => row.length).length
       })
     },
+    filteredItems () {
+      const keys = range(this.firstItem.length).map(String)
+      const options = { keys }
+      const fuse = new Fuse(this.items, options)
+      return fuse.search(this.filter)
+    },
     items () {
       const items = get(this, `meta.content.${this.activeSheet}`, [])
       // Skip first item
@@ -133,7 +141,7 @@ export default {
       return first(get(this, `meta.content.${this.activeSheet}`, [])) || []
     },
     scrollerItems () {
-      return this.items.map((cols, id) => ({ id, cols }))
+      return this.filteredItems.map((cols, id) => ({ id, cols }))
     },
     fields () {
       if (this.fieldsInFirstItem) {

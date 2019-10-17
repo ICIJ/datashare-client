@@ -27,6 +27,7 @@
     "elasticsearch-browser": "^16.1.1",
     "es6-promise": "^4.2.8",
     "fetch-ponyfill": "^6.1.0",
+    "fuse.js": "^3.4.5",
     "lodash": "^4.17.15",
     "lucene": "^2.1.0",
     "moment": "^2.21.0",
