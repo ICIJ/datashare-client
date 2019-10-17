@@ -60,10 +60,10 @@ export class DatashareClient {
     return this.sendAction(`/api/document/project/starred/${encodeURIComponent(project)}`)
   }
   starDocuments (project, documents) {
-    return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/star`, { method: 'POST', body: JSON.stringify(documents) })
+    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/batchUpdate/star`, { method: 'POST', body: JSON.stringify(documents) })
   }
   unstarDocuments (project, documents) {
-    return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/unstar`, { method: 'POST', body: JSON.stringify(documents) })
+    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/batchUpdate/unstar`, { method: 'POST', body: JSON.stringify(documents) })
   }
   getTags (project, documentId) {
     return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/tag/${documentId}`)
