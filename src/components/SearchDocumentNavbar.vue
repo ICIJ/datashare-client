@@ -31,10 +31,10 @@
       </router-link-popup>
       <document-actions v-if="hasFeature('DOCUMENT_ACTIONS')"
         :document="currentDocument"
-        class="search-document-navbar__actions"
-        star-btn-class="btn btn-link text-white py-0"
-        popup-btn-class="btn btn-link text-white py-0"
-        download-btn-class="btn btn-secondary btn-sm py-0"
+        class="search-document-navbar__actions d-flex"
+        star-btn-class="btn btn-link text-white py-0 px-2 order-1"
+        popup-btn-class="btn btn-link text-white py-0 px-2 order-1"
+        download-btn-class="btn btn-secondary order-2 btn-sm py-0 ml-1"
         download-btn-label
         no-btn-group
         is-download-allowed />
@@ -177,7 +177,7 @@ export default {
     }
 
     &__actions {
-      float: right
+      float: right;
     }
   }
 </style>
