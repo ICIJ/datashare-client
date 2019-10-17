@@ -17,7 +17,9 @@ const i18n = new VueI18n({ locale: 'en', messages: { en } })
 
 describe('DocumentTranslatedContent.vue', () => {
   it('should show an English translation from French', async () => {
+    const id = 'document-u'
     const document = new Document({
+      _id: id,
       _source: {
         content: 'Premier',
         content_translated: [
@@ -27,6 +29,7 @@ describe('DocumentTranslatedContent.vue', () => {
       }
     })
 
+    store.commit('document/idAndRouting', { id })
     const wrapper = mount(DocumentTranslatedContent, { localVue, i18n, store, propsData: { document } })
     expect(wrapper.vm.translatedContent).toEqual('First')
   })
