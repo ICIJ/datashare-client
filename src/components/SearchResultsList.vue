@@ -6,7 +6,7 @@
         <div v-for="document in response.hits" :key="document.id" class="search-results-list__items__item mw-100">
           <search-results-list-link class="search-results-list__items__item__link" :document="document" />
           <div>
-            <document-actions :document="document" vertical class="search-results-list__items__item__actions" />
+            <document-actions :document="document" vertical class="search-results-list__items__item__actions" :isDownloadAllowed="isDownloadAllowed" />
           </div>
         </div>
       </div>
@@ -44,13 +44,14 @@ export default {
     SearchResultsListLink
   },
   computed: {
+    ...mapState('search', ['query', 'response']),
+    ...mapState('search', ['isDownloadAllowed']),
     hasResults () {
       return this.response.hits.length > 0
     },
     hasFilters () {
       return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
-    },
-    ...mapState('search', ['query', 'response'])
+    }
   }
 }
 </script>

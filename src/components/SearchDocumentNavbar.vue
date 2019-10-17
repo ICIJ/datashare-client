@@ -29,7 +29,7 @@
       <router-link-popup v-if="!hasFeature('DOCUMENT_ACTIONS')" :to="{ name: 'document-simplified', params: currentDocument.routerParams }" class="btn btn-sm btn-link text-white py-0" :title="$t('document.external_window')" v-b-tooltip.bottomleft>
         <fa icon="external-link-alt" />
       </router-link-popup>
-      <document-actions v-if="hasFeature('DOCUMENT_ACTIONS')" :document="currentDocument" class="search-document-navbar__actions" displayDownload isDownloadAllowed />
+      <document-actions v-if="hasFeature('DOCUMENT_ACTIONS')" :document="currentDocument" class="search-document-navbar__actions" displayDownload :isDownloadAllowed="isDownloadAllowed" />
     </div>
   </div>
 </template>
