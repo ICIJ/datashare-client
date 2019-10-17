@@ -397,6 +397,10 @@
       "showMoreEmail": "Show more emails"
     }
   },
+  "namedEntityInContext": {
+    "title": "Extracted using <code>%{extractor}</code> in <code>%{extractorLanguage}</code>",
+    "meta": "This was extracted from metadata."
+  },
   "email": {
     "detail": "See detail",
     "to": "To",

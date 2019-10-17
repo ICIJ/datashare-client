@@ -150,7 +150,7 @@ export const actions = {
     const namedEntitiesPagesCount = get(state, ['namedEntitiesPaginatedByCategories', category, 'length'], 0)
     // Zero named entities load for this category
     if (namedEntitiesPagesCount === 0) {
-      await dispatch('getNextPageForNamedEntityInCategory', category)
+      return dispatch('getNextPageForNamedEntityInCategory', category)
     }
   },
   async getFirstPageForNamedEntityInAllCategories ({ dispatch, getters }) {
@@ -167,7 +167,8 @@ export const actions = {
         return esClient.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
       })
       const page = new Response(raw)
-      return commit('namedEntitiesPageInCategory', { category, page })
+      commit('namedEntitiesPageInCategory', { category, page })
+      return page
     } catch (_) {
       return null
     }

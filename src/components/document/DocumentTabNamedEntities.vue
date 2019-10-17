@@ -15,11 +15,17 @@
         </div>
         <span v-for="(page, index) in pages" :key="index">
           <span v-for="(ne, index) in page.hits" :key="index" class="d-inline mr-2">
-            <b-badge pill variant="light" class="p-0 text-uppercase text-black border" :class="getCategoryClass(category, 'border-')">
-              <span class="p-1 d-inline-block" :title="capitalize(ne.source.mentionNorm)"  v-b-tooltip.hover>
+            <b-badge pill variant="light" class="p-0 text-uppercase text-black border" :class="getCategoryClass(category, 'border-')" :id="`named-entity-${ne.id}`">
+              <span class="p-1 d-inline-block">
                 {{ ne.source.mentionNorm }}
               </span>
             </b-badge>
+            <b-popover :target="`named-entity-${ne.id}`" triggers="hover" placement="top">
+              <named-entity-in-context :document="document" :named-entity="ne" />
+              <template #title>
+                <div class="text-muted" v-html="$t('namedEntityInContext.title', ne.source)"></div>
+              </template>
+            </b-popover>
           </span>
         </span>
         <div v-if="categoryHasNextPage(category)">
@@ -33,18 +39,23 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import ner from '@/mixins/ner'
-import utils from '@/mixins/utils'
 import capitalize from 'lodash/capitalize'
 import get from 'lodash/get'
 import keys from 'lodash/keys'
 import sumBy from 'lodash/sumBy'
+import { mapState } from 'vuex'
+
+import ner from '@/mixins/ner'
+import utils from '@/mixins/utils'
+import NamedEntityInContext from '@/components/NamedEntityInContext'
 
 export default {
   name: 'DocumentTabNamedEntities',
   props: ['document'],
   mixins: [ner, utils],
+  components: {
+    NamedEntityInContext
+  },
   computed: {
     ...mapState('document', ['namedEntitiesPaginatedByCategories', 'isLoadingNamedEntities']),
     hasNamedEntities () {
