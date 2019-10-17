@@ -38,7 +38,7 @@
               required></b-form-select>
           </b-form-group>
           <b-form-group
-            :description="$t('batchSearch.phraseMatchDescription')">
+            :description="phraseMatchDescription">
             <b-form-checkbox
               v-model="phraseMatch"
               switch>
@@ -164,6 +164,9 @@ export default {
   computed: {
     maxFuzziness () {
       return this.phraseMatch ? 100 : 2
+    },
+    phraseMatchDescription () {
+      return this.$t('batchSearch.phraseMatchDescription') + (this.phraseMatch ? '' : ' ' + this.$t('batchSearch.phraseMatchDescriptionOperators'))
     },
     fuzzinessDescription () {
       return this.phraseMatch ? this.$t('batchSearch.fuzzinessDescriptionPhrase') : this.$t('batchSearch.fuzzinessDescriptionTerm')
