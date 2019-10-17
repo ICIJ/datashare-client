@@ -41,6 +41,10 @@ export default {
       type: String,
       default: 'btn-link btn-sm'
     },
+    starredBtnClass: {
+      type: String,
+      default: 'starred'
+    },
     downloadBtnClass: {
       type: String,
       default: 'btn-link btn-sm'
@@ -66,7 +70,7 @@ export default {
     ...mapState('search', ['starredDocuments']),
     starBtnClassDefinition () {
       const starred = this.isStarred(document.id)
-      return { starred, ...this.classAttributeToObject(this.starBtnClass) }
+      return { [this.starredBtnClass]: starred, ...this.classAttributeToObject(this.starBtnClass) }
     },
     downloadBtnClassDefinition () {
       return this.classAttributeToObject(this.downloadBtnClass)

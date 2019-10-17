@@ -16,10 +16,10 @@
         </div>
       </div>
       <div class="spreadsheet-viewer__content__table mx-3 small flex-grow-1" :style="tableVars">
-        <dynamic-scroller :items="scrollerItems" :min-item-size="54" class="spreadsheet-viewer__content__table__scroller border-left border-top border-bottom mb-3">
+        <dynamic-scroller :items="scrollerItems" :min-item-size="54" class="spreadsheet-viewer__content__table__scroller border-left border mb-3">
           <template #before v-if="fieldsInFirstItem">
-            <div class="row no-gutters border-bottom">
-              <div v-for="field in fields" class="col border-right overflow-hidden" :key="field">
+            <div class="spreadsheet-viewer__content__table__item row no-gutters border-bottom">
+              <div v-for="field in fields" class="spreadsheet-viewer__content__table__item__col col border-right overflow-hidden" :key="field">
                 <div class="p-2">
                   {{ field }}
                 </div>
@@ -28,8 +28,8 @@
           </template>
           <template v-slot="{ item, index, active }">
             <dynamic-scroller-item :item="item" :active="active" :data-index="index" :size-dependencies="item.cols">
-              <div class="row no-gutters border-bottom">
-                <div v-for="(col, i) in item.cols" class="col border-right overflow-hidden" :key="i">
+              <div class="spreadsheet-viewer__content__table__item row no-gutters border-bottom">
+                <div v-for="(col, i) in item.cols" class="spreadsheet-viewer__content__table__item__col col border-right overflow-hidden" :key="i">
                   <div class="p-2">
                     {{ col }}
                   </div>
@@ -170,6 +170,13 @@ export default {
 
         position: relative;
 
+        &__item {
+
+          &__col.border-right:last-child {
+            border-right: 0 !important;
+          }
+        }
+
         &__scroller {
           position: absolute;
           top: 0;
@@ -188,6 +195,7 @@ export default {
             z-index: 10;
             background: $light;
             font-weight: bold;
+            border-bottom: 1px solid $border-color;
           }
         }
       }
