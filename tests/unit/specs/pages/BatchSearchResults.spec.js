@@ -1,9 +1,10 @@
-import BatchSearchResults from '@/pages/BatchSearchResults'
 import VueRouter from 'vue-router'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
+import BatchSearchResults from '@/pages/BatchSearchResults'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { App } from '@/main'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -151,5 +152,13 @@ describe('BatchSearchResults', () => {
 
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({ name: 'batch-search' })
+  })
+
+  it('should return empty string if the document size is 0', () => {
+    expect(wrapper.vm.getDocumentSize(0)).toBe('')
+  })
+
+  it('should return the document size as human readable', () => {
+    expect(wrapper.vm.getDocumentSize(42)).toBe('42 B')
   })
 })

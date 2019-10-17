@@ -94,7 +94,7 @@
               {{ getDocumentTypeLabel(item.contentType) }}
             </template>
             <template v-slot:cell(contentLength)="{ item }">
-              {{ item.contentLength | humanSize }}
+              {{ getDocumentSize(item.contentLength) }}
             </template>
             <template v-slot:cell(empty)>
               <div class="text-center">
@@ -110,7 +110,6 @@
 </template>
 
 <script>
-import store from '@/store'
 import moment from 'moment'
 import { mapState } from 'vuex'
 import capitalize from 'lodash/capitalize'
@@ -123,6 +122,7 @@ import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
+import store from '@/store'
 
 export default {
   name: 'BatchSearchResults',
@@ -261,6 +261,13 @@ export default {
       await store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
       this.$router.push({ name: 'batch-search' })
       this.$root.$bvToast.toast(this.$t('batchSearch.deleted'), { noCloseButton: true, variant: 'success' })
+    },
+    getDocumentSize (size) {
+      if (size === 0) {
+        return ''
+      } else {
+        return this.$options.filters.humanSize(size)
+      }
     },
     capitalize,
     moment,
