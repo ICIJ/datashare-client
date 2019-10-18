@@ -73,7 +73,7 @@ describe('IndexSelector.vue', () => {
       await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
 
       expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/starred/${process.env.VUE_APP_ES_ANOTHER_INDEX}`), {})
+      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${process.env.VUE_APP_ES_ANOTHER_INDEX}/documents/starred`), {})
     })
 
     it('should refresh the isDownloadAllowed on index change', async () => {
