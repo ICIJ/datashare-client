@@ -484,6 +484,7 @@
     "query": "no hay consultas | 1 consulta | {count} consultas",
     "delete": "Eliminar búsqueda por lote",
     "deleted": "El lote de búsqueda ha sido eliminado.",
+    "notDeleted": "El lote de búsqueda no ha sido eliminado.",
     "published": "Publicado",
     "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
     "phraseMatch": "Realizar búsquedas similares",

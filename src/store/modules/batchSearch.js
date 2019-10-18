@@ -51,7 +51,11 @@ export const actions = {
     try {
       await datashare.deleteBatchSearch(batchId)
       remove(state.batchSearches, batchSearch => batchSearch === batchId)
-    } catch (_) {}
+      return true
+    } catch (ex) {
+      console.log(ex)
+      return false
+    }
   },
   async deleteBatchSearches ({ commit }) {
     try {

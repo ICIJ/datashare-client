@@ -484,6 +484,7 @@
     "query": "no queries | 1 query | {count} queries",
     "delete": "Delete batch search",
     "deleted": "The batch search have been deleted.",
+    "notDeleted": "The batch search have not been deleted.",
     "published": "Published",
     "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
     "phraseMatch": "Do phrase matches",

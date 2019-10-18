@@ -294,9 +294,10 @@ export default {
       return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page, queries: this.selectedQueries, sort: this.sort, order: this.order } }
     },
     async deleteBatchSearch () {
-      await store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
+      let isDeleted = await store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
       this.$router.push({ name: 'batch-search' })
-      this.$root.$bvToast.toast(this.$t('batchSearch.deleted'), { noCloseButton: true, variant: 'success' })
+      this.$root.$bvToast.toast(isDeleted ? this.$t('batchSearch.deleted') : this.$t('batchSearch.notDeleted'),
+        { noCloseButton: true, variant: isDeleted ? 'success' : 'warning' })
     },
     getDocumentSize (size) {
       if (size === 0) {
