@@ -57,7 +57,7 @@ export class DatashareClient {
     return this.sendAction(document.url, {}, false)
   }
   getStarredDocuments (project) {
-    return this.sendAction(`/api/document/project/starred/${encodeURIComponent(project)}`)
+    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/starred/`)
   }
   starDocuments (project, documents) {
     return this.sendAction(`/api/${encodeURIComponent(project)}/documents/batchUpdate/star`, { method: 'POST', body: JSON.stringify(documents) })
