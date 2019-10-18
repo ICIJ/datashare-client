@@ -112,7 +112,7 @@ describe('Document store', () => {
     await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }], tag: 'tag_01 tag_02 tag_03' })
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/tag`),
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${process.env.VUE_APP_ES_INDEX}/documents/batchUpdate/tag`),
       { method: 'POST', body: JSON.stringify({ docIds: ['doc_01', 'doc_02'], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
   })
 
@@ -126,7 +126,7 @@ describe('Document store', () => {
     await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/${process.env.VUE_APP_ES_INDEX}/group/untag`),
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${process.env.VUE_APP_ES_INDEX}/documents/batchUpdate/untag`),
       { method: 'POST', body: JSON.stringify({ docIds: ['doc_01'], tags: ['tag_01'] }) })
   })
 

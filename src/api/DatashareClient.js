@@ -75,10 +75,10 @@ export class DatashareClient {
     return this.sendAction(`/api/document/project/untag/${encodeURIComponent(project)}/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
   }
   tagDocuments (project, docIds, tags) {
-    return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/tag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
+    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/batchUpdate/tag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
   }
   untagDocuments (project, docIds, tags) {
-    return this.sendAction(`/api/document/project/${encodeURIComponent(project)}/group/untag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
+    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/batchUpdate/untag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
   }
   batchSearch (name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published) {
     const body = new FormData()
