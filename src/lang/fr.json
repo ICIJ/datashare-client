@@ -494,6 +494,7 @@
     "query": "pas de recherches | 1 recherche | {count} recherches",
     "delete": "Supprimer la recherche en lot",
     "deleted": "La recherche en lot a été supprimée.",
+    "notDeleted": "The batch search have not been deleted.",
     "published": "Publiée",
     "publishedDescription": "Donner accès aux autres membres du projet à cette rechercher en lot. Vous pourrez changer ceci plus tard.",
     "phraseMatch": "Rechercher les termes exacts",
