@@ -46,7 +46,7 @@
             </b-form-checkbox>
           </b-form-group>
           <b-form-group
-            :label="$t('batchSearch.fuzziness')"
+            :label="fuzzinessLabel"
             :description="fuzzinessDescription">
             <b-form-input
               type="number"
@@ -55,7 +55,7 @@
               :max="maxFuzziness"></b-form-input>
           </b-form-group>
           <div class="help">
-            <a href="https://icij.gitbook.io/datashare/faq/what-is-fuzziness" target="_blank" class="text-muted">
+            <a :href="fuzzinessLearnMore" target="_blank" class="text-muted">
               {{ $t('batchSearch.learnMore') }}
             </a>
           </div>
@@ -171,8 +171,14 @@ export default {
     phraseMatchDescription () {
       return this.$t('batchSearch.phraseMatchDescription') + (this.phraseMatch ? '' : ' ' + this.$t('batchSearch.phraseMatchDescriptionOperators'))
     },
+    fuzzinessLabel () {
+      return this.phraseMatch ? this.$t('batchSearch.proximitySearches') : this.$t('batchSearch.fuzziness')
+    },
     fuzzinessDescription () {
-      return this.phraseMatch ? this.$t('batchSearch.fuzzinessDescriptionPhrase') : this.$t('batchSearch.fuzzinessDescriptionTerm')
+      return this.phraseMatch ? this.$t('batchSearch.proximitySearchesDescription') : this.$t('batchSearch.fuzzinessDescription')
+    },
+    fuzzinessLearnMore () {
+      return this.phraseMatch ? 'https://icij.gitbook.io/datashare/faq/what-is-proximity-search' : 'https://icij.gitbook.io/datashare/faq/what-is-fuzziness'
     },
     allTypes () {
       const allTypes = []
