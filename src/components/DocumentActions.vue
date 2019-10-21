@@ -85,7 +85,7 @@ export default {
   computed: {
     ...mapState('search', ['starredDocuments']),
     starBtnClassDefinition () {
-      const starred = this.isStarred(document.id)
+      const starred = this.isStarred(this.document.id)
       return { [this.starredBtnClass]: starred, ...this.classAttributeToObject(this.starBtnClass) }
     },
     downloadBtnClassDefinition () {
