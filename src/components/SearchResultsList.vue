@@ -6,7 +6,7 @@
         <div v-for="document in response.hits" :key="document.id" class="search-results-list__items__item mw-100">
           <search-results-list-link class="search-results-list__items__item__link" :document="document" />
           <div>
-            <document-actions :document="document" vertical class="search-results-list__items__item__actions" :isDownloadAllowed="isDownloadAllowed" />
+            <document-actions :document="document" vertical class="search-results-list__items__item__actions" :is-download-allowed="isDownloadAllowed" tooltips-placement="right" />
           </div>
         </div>
       </div>

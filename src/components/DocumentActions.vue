@@ -1,27 +1,39 @@
 <template>
   <div class="document-actions" :class="{ 'btn-group-vertical': !noBtnGroup && vertical, 'btn-group': !noBtnGroup && !vertical }">
-    <a class="document-actions__star btn" :class="starBtnClassDefinition" href :title="$t('document.star_file')" @click.prevent="toggleStarDocument(document.id)" v-b-tooltip>
+    <a class="document-actions__star btn" :class="starBtnClassDefinition" href @click.prevent="toggleStarDocument(document.id)" :id="starBtnId">
       <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fixed-width />
       <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">{{ $t('document.star_button') }}</span>
     </a>
-    <a class="document-actions__download btn" :class="downloadBtnClassDefinition" :href="document.fullUrl" target="_blank" :title="$t('document.download_file')" v-b-tooltip v-if="isDownloadAllowed">
+    <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
+      {{ $t('document.star_file') }}
+    </b-tooltip>
+    <a class="document-actions__download btn" :class="downloadBtnClassDefinition" :href="document.fullUrl" target="_blank" v-if="isDownloadAllowed" :id="downloadBtnId">
       <fa icon="download" fixed-width />
       <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">{{ $t('document.download_button') }}</span>
     </a>
-    <router-link-popup class="document-actions__popup btn" :class="popupBtnClassDefinition" :to="{ name: 'document-simplified', params: document.routerParams }" :title="$t('document.external_window')" v-b-tooltip>
+    <b-popover :target="downloadBtnId" triggers="hover focus" :placement="tooltipsPlacement" :title="document.contentTypeLabel" v-if="isDownloadAllowed">
+      <document-type-card :document="document" />
+    </b-popover>
+    <router-link-popup class="document-actions__popup btn" :class="popupBtnClassDefinition" :to="{ name: 'document-simplified', params: document.routerParams }" :id="popupBtnId">
       <fa icon="external-link-alt" fixed-width />
       <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">{{ $t('document.external_window') }}</span>
     </router-link-popup>
+    <b-tooltip :target="popupBtnId" :placement="tooltipsPlacement">
+      {{ $t('document.external_window') }}
+    </b-tooltip>
   </div>
 </template>
 
 <script>
+import uniqueId from 'lodash/uniqueId'
 import { mapState } from 'vuex'
+import DocumentTypeCard from '@/components/DocumentTypeCard'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
 
 export default {
   name: 'DocumentActions',
   components: {
+    DocumentTypeCard,
     RouterLinkPopup
   },
   props: {
@@ -30,6 +42,10 @@ export default {
     },
     vertical: {
       type: Boolean
+    },
+    tooltipsPlacement: {
+      type: String,
+      default: 'top'
     },
     displayDownload: {
       type: Boolean
@@ -77,6 +93,15 @@ export default {
     },
     popupBtnClassDefinition () {
       return this.classAttributeToObject(this.popupBtnClass)
+    },
+    starBtnId () {
+      return uniqueId('document-actions-star-button-')
+    },
+    downloadBtnId () {
+      return uniqueId('document-actions-download-button-')
+    },
+    popupBtnId () {
+      return uniqueId('document-actions-popup-button-')
     }
   },
   methods: {
