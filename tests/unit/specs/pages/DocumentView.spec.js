@@ -63,66 +63,6 @@ describe('DocumentView.vue', () => {
     expect(wrapper.contains('.document__header')).toBeTruthy()
   })
 
-  it('should call the LegacySpreadsheetViewer component for XLSX document', async () => {
-    const id = 'spreadsheet.xlsx'
-    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id, index } })
-
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('')
-      .withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
-      .commit()
-
-    await wrapper.vm.getDoc()
-    wrapper.vm.activateTab('preview')
-
-    expect(wrapper.contains('.legacy-spreadsheet-viewer')).toBeTruthy()
-  })
-
-  it('should call the LegacySpreadsheetViewer component for CSV document', async () => {
-    const id = 'spreadsheet.csv'
-    const wrapper = mount(DocumentView, { localVue, i18n, store, router, propsData: { id, index } })
-
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('')
-      .withContentType('text/csv'))
-      .commit()
-
-    await wrapper.vm.getDoc()
-    wrapper.vm.activateTab('preview')
-
-    expect(wrapper.contains('.legacy-spreadsheet-viewer')).toBeTruthy()
-  })
-
-  it('should call the PdfViewer component for PDF document', async () => {
-    const id = 'document.pdf'
-    const wrapper = mount(DocumentView, { localVue, i18n, router, store, propsData: { id, index } })
-
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('')
-      .withContentType('application/pdf'))
-      .commit()
-
-    wrapper.vm.activateTab('preview')
-    await wrapper.vm.getDoc()
-
-    expect(wrapper.contains('.pdf-viewer')).toBeTruthy()
-  })
-
-  it('should call the TiffViewer component for TIFF document', async () => {
-    const id = 'image.tiff'
-    const wrapper = mount(DocumentView, { localVue, i18n, router, store, propsData: { id, index } })
-
-    await letData(es).have(new IndexedDocument(id)
-      .withContent('')
-      .withContentType('image/tiff'))
-      .commit()
-
-    await wrapper.vm.getDoc()
-    wrapper.vm.activateTab('preview')
-
-    expect(wrapper.contains('.tiff-viewer')).toBeTruthy()
-  })
-
   it('should display the named entities tab', async () => {
     const id = 'doc.txt'
     Murmur.config.merge({ dataDir: null, mountedDataDir: null, manageDocuments: true })
