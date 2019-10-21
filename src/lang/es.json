@@ -503,7 +503,7 @@
     "learnMore": "Leer más"
   },
   "batchSearchResults": {
-    "index": "Índice",
+    "rank": "Rank",
     "query": "Consulta",
     "documentName": "Nombre del documento",
     "creationDate": "Fecha de creación",
