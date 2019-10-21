@@ -60,21 +60,37 @@ If you search faithf?l, the search engine will look for all words with all possi
 
 ### **Fuzziness**
 
-If you search for similar terms \(to catch typos for example\), you can use the [tilde symbol](https://en.wikipedia.org/wiki/Tilde). "_The default edit distance is 2, but an edit distance of 1 should be sufficient to catch 80% of all human misspellings. It can be specified as: quikc~1_" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
+You can set fuzziness to 1 or 2. It corresponds to the maximum number of operations \(insertions, deletions, substitutions and transpositions\) on **characters** needed to make one **term** match the other.
 
-> Example: quikc~ brwn~ foks~
+> kitten -&gt; sitten \(1 substitution \(k turned into s\) = fuzziness is 1\)
+
+> kitten -&gt; sittin \(2 substitutions \(k turned into s and e turned into i\) = fuzziness is 2\)
+
+If you search for similar terms \(**to catch typos for example**\), you can use fuzziness. Use the [tilde symbol](https://en.wikipedia.org/wiki/Tilde) at the end of the word to set the fuzziness to 1 or 2. 
+
+"_The default edit distance is 2, but an edit distance of 1 should be sufficient to catch 80% of all human misspellings. It can be specified as: quikc~1_" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
+
+> Example: quikc~ brwn~ foks~ \(as the default edit distance is 2, this query will catch all quick, quack, quock, uqikc, etc. as well as brown, folks, etc.\)
 >
-> Example: Datashare~1
+> Example: Datashare~1 \(this query will catch Datasahre, Dqtashare, etc.\)
 
 
 
 ### **Proximity searches**
 
+When you type an exact phrase \(in double quotes\) and use fuzziness, then the meaning of the fuzziness changes. Now, the fuzziness means the maximum number of operations \(insertions, deletions, substitutions and transpositions\) on **terms** needed to make one **phrase** match the other.
+
+Examples:
+
+> “the cat is blue” -&gt; “the small cat is blue” \(1 insertion = fuzziness is 1\)
+
+> “the cat is blue” -&gt; “the small is cat blue” \(1 insertion + 2 transpositions = fuzziness is 3\)
+
 "_While a phrase query \(eg "john smith"\) expects all of the terms in exactly the same order, a proximity query allows the specified words to be further apart or in a different order. A proximity search allows us to specify a maximum edit distance of words in a phrase._" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
-> Example: "fox quick"~5
+> Example: "fox quick"~5 \(this query will catch "quick brown fox", "quick brown car thin fox" or even "quick brown car thin blue tree fox"
 
-
+The closer the text in a field is to the original order specified in the query string, the more relevant that document is considered to be. When compared to the above example query, the phrase `"quick fox"` would be considered more relevant than `"quick brown fox"`\(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
 ### **Boosting operators**
 

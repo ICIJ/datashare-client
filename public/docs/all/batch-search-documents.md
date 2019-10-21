@@ -6,17 +6,17 @@ description: It allows to search multiple queries (list of words) at once.
 
 ### Prepare your batch search
 
-* Write your queries, one per line and per cell, in the first column of a spreadsheet \(Excel, Google Sheets, Numbers, Framacalc etc.\). In the example below, there are 4 queries:
+* Write your queries, one per line and per cell, in the first column of a spreadsheet \(Excel, Google Sheets, Numbers, Framacalc, etc.\). In the example below, there are 4 queries:
 
 ![](../.gitbook/assets/screenshot-2019-09-25-at-16.06.40.png)
 
 **Note:** [**Search operators**](https://icij.gitbook.io/datashare/all/search-with-operators) **do NOT work in batch searches**. Any space in your query is considered as a 'OR'. It means that if you write 'Hello world' in one cell, the search engine of batch searches will look for documents which contain either 'hello' or 'world' or the two words. If you write 'Hello AND world NOT car', it will look for documents which contain either 'hello' or 'and' or 'world' or 'not' or 'car'.
 
-**Note:** Beware that, with some spreadsheet software, if you have **blank cells in your spreadsheet**, the CSV \(which stand for 'Comma-separated values'\) will keep them and separate them with commas. You will thus have commas in your batch search results \(see screenshot below\). To avoid that, you need to remove blank cells before exporting your queries as a CSV.
+**Note:** Beware that, with some spreadsheet software, if you have **blank cells in your spreadsheet**, the CSV \(which stand for 'Comma-separated values'\) will keep these blank cells. It will separate them with commas. You will thus have commas in your batch search results \(see screenshot below\). To avoid that, you need to r**emove blank cells before exporting your queries as a CSV**.
 
 ![Remove blank cells in your spreadsheet in order to avoid this.](../.gitbook/assets/screenshot-2019-09-27-at-10.51.29.png)
 
-**Note:** If there is a comma in one cell \(like in "1,8 million" in our example\), the CSV will put the content of the cell in brackets. Datashare will not treat it as double quotes though: it won't search for the exact phrase but for the regular query without double quotes.
+**Note:** If there is a comma in one cell \(like in "1,8 million" in our example\), the CSV will put the content of the cell in double quotes. Datashare will not treat it as double quotes though: it won't search for the exact phrase but for the regular query without double quotes.
 
 * Export your spreadsheet in a CSV format:
 
@@ -28,11 +28,11 @@ description: It allows to search multiple queries (list of words) at once.
 
 * Open Datashare and click '**Batch searches**' in the left menu:
 
-![](../.gitbook/assets/screenshot-2019-09-25-at-15.59.44-copy.png)
+![](../.gitbook/assets/batch-searches.png)
 
 * Type a name for your batch search:
 
-![](../.gitbook/assets/screenshot-2019-09-25-at-15.59.44-copy-2.png)
+![](../.gitbook/assets/screenshot-2019-10-21-at-10.55.21.png)
 
 * Upload your CSV:
 
