@@ -38,11 +38,6 @@ import findIndex from 'lodash/findIndex'
 import { mapState } from 'vuex'
 
 import DocumentSlicedName from '@/components/DocumentSlicedName'
-import DocumentTabDetails from '@/components/document/DocumentTabDetails'
-import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
-import DocumentTabExtractedText from '@/components/document/DocumentTabExtractedText'
-import DocumentTabPreview from '@/components/document/DocumentTabPreview'
-import DocumentTabTranslations from '@/components/document/DocumentTabTranslations'
 import shortkeys from '@/mixins/shortkeys'
 
 export default {
@@ -123,7 +118,7 @@ export default {
         {
           name: 'extracted-text',
           label: 'document.extracted_text',
-          component: DocumentTabExtractedText,
+          component: () => import('@/components/document/DocumentTabExtractedText.vue'),
           icon: 'align-left',
           props: {
             document: this.document
@@ -132,7 +127,7 @@ export default {
         {
           name: 'details',
           label: 'document.tab_details',
-          component: DocumentTabDetails,
+          component: () => import('@/components/document/DocumentTabDetails.vue'),
           icon: 'info-circle',
           props: {
             document: this.document,
@@ -143,7 +138,7 @@ export default {
         {
           name: 'translations',
           label: 'document.translations',
-          component: DocumentTabTranslations,
+          component: () => import('@/components/document/DocumentTabTranslations.vue'),
           hidden: !this.document.hasTranslations,
           icon: 'globe',
           props: {
@@ -154,7 +149,7 @@ export default {
           name: 'named-entities',
           label: 'document.named_entities',
           hidden: this.$config.isnt('manageDocuments') && !this.document.hasNerTags,
-          component: DocumentTabNamedEntities,
+          component: () => import('@/components/document/DocumentTabNamedEntities.vue'),
           icon: 'database',
           props: {
             document: this.document
@@ -163,7 +158,7 @@ export default {
         {
           name: 'preview',
           label: 'document.preview',
-          component: DocumentTabPreview,
+          component: () => import('@/components/document/DocumentTabPreview.vue'),
           icon: 'eye',
           props: {
             document: this.document

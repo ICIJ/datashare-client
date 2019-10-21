@@ -1,22 +1,7 @@
 <template>
   <div class="d-flex h-100">
-    <template v-if="isPaginatedViewerActivated && isPaginated">
-      <paginated-viewer :document="document" />
-    </template>
-    <template v-else-if="isPdf">
-      <pdf-viewer :document="document" />
-    </template>
-    <template v-else-if="isTiff">
-      <tiff-viewer :document="document" />
-    </template>
-    <template v-else-if="isSpreadsheet && hasFeature('SERVER_RENDERING_SPREADSHEET')">
-      <spreadsheet-viewer :document="document" />
-    </template>
-    <template v-else-if="isSpreadsheet">
-      <legacy-spreadsheet-viewer :document="document" />
-    </template>
-    <template v-else-if="isImage">
-      <image-viewer :document="document" />
+    <template v-if="previewComponent">
+      <component :is="previewComponent" :document="document" />
     </template>
     <template v-else>
       <div class="p-3">{{ $t('document.not_available') }}</div>
@@ -25,25 +10,11 @@
 </template>
 
 <script>
-import ImageViewer from '@/components/document/viewers/ImageViewer'
-import LegacySpreadsheetViewer from '@/components/document/viewers/LegacySpreadsheetViewer'
-import PdfViewer from '@/components/document/viewers/PdfViewer'
-import PaginatedViewer from '@/components/document/viewers/PaginatedViewer'
-import SpreadsheetViewer from '@/components/document/viewers/SpreadsheetViewer'
-import TiffViewer from '@/components/document/viewers/TiffViewer'
 import features from '@/mixins/features'
 
 export default {
   name: 'DocumentTabPreview',
   mixins: [features],
-  components: {
-    ImageViewer,
-    LegacySpreadsheetViewer,
-    PaginatedViewer,
-    PdfViewer,
-    SpreadsheetViewer,
-    TiffViewer
-  },
   props: {
     document: {
       type: Object
@@ -68,6 +39,26 @@ export default {
       ]
     }
   },
+  methods: {
+    previewComponent () {
+      switch (true) {
+        case this.isPaginatedViewerActivated && this.isPaginated:
+          return import('@/components/document/viewers/PaginatedViewer')
+        case this.isPdf:
+          return import('@/components/document/viewers/PdfViewer')
+        case this.isTiff:
+          return import('@/components/document/viewers/TiffViewer')
+        case this.isSpreadsheet && this.hasFeature('SERVER_RENDERING_SPREADSHEET'):
+          return import('@/components/document/viewers/SpreadsheetViewer')
+        case this.isSpreadsheet:
+          return import('@/components/document/viewers/LegacySpreadsheetViewer')
+        case this.isImage:
+          return import('@/components/document/viewers/ImageViewer')
+        default:
+          return null
+      }
+    }
+  },
   computed: {
     isPaginatedViewerActivated () {
       return !!this.$config.get('previewHost')
@@ -90,6 +81,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-</style>
