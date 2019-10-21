@@ -19,7 +19,7 @@ describe('IndexSelector.vue', () => {
   esConnectionHelper()
 
   beforeAll(() => {
-    Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX, process.env.VUE_APP_ES_ANOTHER_INDEX] })
+    Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX, process.env.VUE_APP_ES_ANOTHER_INDEX] })
     Murmur.config.merge({ multipleProjects: true })
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })
@@ -73,10 +73,10 @@ describe('IndexSelector.vue', () => {
       await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
 
       expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/document/project/starred/${process.env.VUE_APP_ES_ANOTHER_INDEX}`), {})
+      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${process.env.VUE_APP_ES_ANOTHER_INDEX}/documents/starred`), {})
     })
 
-    it('should refresh the isAllowed on index change', async () => {
+    it('should refresh the isDownloadAllowed on index change', async () => {
       await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
 
       expect(datashare.fetch).toBeCalledTimes(2)

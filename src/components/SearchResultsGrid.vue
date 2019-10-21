@@ -4,7 +4,7 @@
       <search-results-header position="top" class="border-bottom mb-3" />
       <div class="search-results-grid__items">
         <div v-for="document in response.hits" :key="document.id" class="search-results-grid__items__item d-flex flex-column border rounded">
-          <document-actions :document="document" class="search-results-grid__items__item__actions m-2" />
+          <document-actions :document="document" class="search-results-grid__items__item__actions m-2" :isDownloadAllowed="isDownloadAllowed" />
           <router-link class="flex-grow-1 search-results-grid__items__item__thumbnail" :to="{ name: 'document', params: document.routerParams }">
             <document-thumbnail :document="document" size="md" />
           </router-link>
@@ -49,13 +49,14 @@ export default {
     SearchResultsHeader
   },
   computed: {
+    ...mapState('search', ['query', 'response']),
+    ...mapState('search', ['isDownloadAllowed']),
     hasResults () {
       return this.response.hits.length > 0
     },
     hasFilters () {
       return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
-    },
-    ...mapState('search', ['query', 'response'])
+    }
   }
 }
 </script>

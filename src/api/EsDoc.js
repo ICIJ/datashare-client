@@ -30,7 +30,7 @@ export default class EsDoc {
   }
   static match (hit) {
     const raw = hit.raw || hit
-    return get(raw, '_source.type', 'EsDoc') === (this.esName || this.name)
+    return get(raw, '_source.type', 'Document') === (this.esName || this.name)
   }
   static create (raw, parent) {
     return new EsDoc(raw, parent)

@@ -41,7 +41,7 @@ describe('Search store', () => {
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
     store.commit('search/toggleFilters')
-    store.commit('search/isAllowed', true)
+    store.commit('search/isDownloadAllowed', true)
 
     store.dispatch('search/reset')
 

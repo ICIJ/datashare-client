@@ -40,7 +40,7 @@
           <span v-html="value" class="text-truncate text-muted"></span>
         </template>
         <template v-slot:cell(actions)="{ item }">
-          <document-actions :document="item" class="float-right btn-group-sm" />
+          <document-actions :document="item" class="float-right btn-group-sm" :isDownloadAllowed="isDownloadAllowed" />
         </template>
         <template v-slot:cell(contentLength)="{ value }">
           {{ value | humanSize }}
@@ -141,6 +141,8 @@ export default {
     }
   },
   computed: {
+    ...mapState('search', ['query', 'response']),
+    ...mapState('search', ['isDownloadAllowed']),
     actions () {
       return [{
         id: 'star',
@@ -178,8 +180,7 @@ export default {
       set () {
         return null
       }
-    },
-    ...mapState('search', ['query', 'response'])
+    }
   },
   methods: {
     onRowSelected (items) {

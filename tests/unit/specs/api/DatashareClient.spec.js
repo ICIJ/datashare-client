@@ -1,6 +1,7 @@
+import fetchPonyfill from 'fetch-ponyfill'
+
 import DatashareClient from '@/api/DatashareClient'
 import { EventBus } from '@/utils/event-bus'
-import fetchPonyfill from 'fetch-ponyfill'
 import { jsonOk } from 'tests/unit/tests_utils'
 
 const { Response } = fetchPonyfill()
@@ -95,29 +96,29 @@ describe('Datashare backend client', () => {
 
   it('should return backend response to batchSearch', async () => {
     const name = 'name'
-    const published = true
     const csvFile = 'csvFile'
     const description = 'description'
     const project = 'project'
-    const fuzziness = 2
-    const fileTypes = 'application/pdf text/plain'
-    const paths = 'one or two paths'
     const phraseMatch = false
+    const fuzziness = 2
+    const fileTypes = [{ mime: 'application/pdf' }, { mime: 'text/plain' }]
+    const paths = ['one', 'or', 'two', 'paths']
+    const published = true
     const json = await (await datashare.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)).json()
 
     const body = new FormData()
     body.append('name', name)
-    body.append('description', description)
     body.append('csvFile', csvFile)
-    body.append('published', published)
+    body.append('description', description)
+    body.append('phrase_matches', phraseMatch)
+    body.append('fuzziness', fuzziness)
     body.append('fileTypes', 'application/pdf')
     body.append('fileTypes', 'text/plain')
-    body.append('fuzziness', fuzziness)
     body.append('paths', 'one')
     body.append('paths', 'or')
     body.append('paths', 'two')
     body.append('paths', 'paths')
-    body.append('phrase_matches', phraseMatch)
+    body.append('published', published)
     expect(json).toEqual({})
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
   })

@@ -53,7 +53,7 @@ export default {
     }
   },
   created () {
-    this.indices = this.$config.get('userIndices', [])
+    this.indices = this.$config.get('userProjects', [])
   }
 }
 </script>

@@ -17,7 +17,7 @@ describe('ExtractingForm.vue', () => {
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
     window.fetch = jest.fn()
-    window.fetch.mockReturnValue(jsonOk({ userIndices: [] }))
+    window.fetch.mockReturnValue(jsonOk({ userProjects: [] }))
     appVue = await createApp()
     i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
   })

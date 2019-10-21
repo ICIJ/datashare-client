@@ -7,7 +7,7 @@ import sortedUniqBy from 'lodash/sortedUniqBy'
 import template from 'lodash/template'
 import throttle from 'lodash/throttle'
 import trim from 'lodash/trim'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
@@ -30,10 +30,6 @@ export default {
   mixins: [ner, utils],
   props: {
     document: Object,
-    namedEntities: {
-      type: Array,
-      default: () => ([])
-    },
     translatedContent: {
       type: String
     }
@@ -41,6 +37,7 @@ export default {
   data () {
     return {
       hasStickyToolbox: false,
+      hasNamedEntities: false,
       localSearchIndex: 0,
       localSearchOccurrences: 0,
       localSearchTerm: '',
@@ -50,6 +47,9 @@ export default {
     }
   },
   async mounted () {
+    // Use already loaded named entities (if any) or count them with a promise
+    this.hasNamedEntities = !!this.namedEntities.length || !!await this.getNamedEntitiesTotal()
+    // Apply the transformation pipeline once
     await this.transformContent()
   },
   watch: {
@@ -57,7 +57,10 @@ export default {
       await this.transformContent()
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     }, 300),
-    async showNamedEntities () {
+    async showNamedEntities (value) {
+      if (value && this.hasNamedEntities) {
+        await this.$store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+      }
       await this.transformContent()
     },
     async translatedContent () {
@@ -149,6 +152,9 @@ export default {
         activeSearchTerm.classList.add('local-search-term--active')
         activeSearchTerm.scrollIntoView({ block: 'center', inline: 'nearest' })
       }
+    },
+    getNamedEntitiesTotal () {
+      return this.$store.dispatch('document/getNamedEntitiesTotal')
     }
   },
   computed: {
@@ -172,7 +178,7 @@ export default {
       ])
     },
     showNamedEntitiesToggler () {
-      return !this.translatedContent && !!this.namedEntities.length
+      return !this.translatedContent && this.hasNamedEntities
     },
     shouldApplyNamedEntitiesMarks () {
       return !this.translatedContent && this.showNamedEntities
@@ -183,6 +189,12 @@ export default {
     ...mapGetters('search', {
       globalSearchTerms: 'retrieveContentQueryTerms',
       globalSearchTermsInContent: 'retrieveContentQueryTermsInContent'
+    }),
+    ...mapGetters('document', {
+      namedEntities: 'namedEntities'
+    }),
+    ...mapState('document', {
+      isLoadingNamedEntities: 'isLoadingNamedEntities'
     }),
     content () {
       return this.translatedContent || this.document.source.content
@@ -210,9 +222,9 @@ export default {
     </div>
     <div class="document-content__ner-toggler" v-if="showNamedEntitiesToggler">
       <div class="custom-control custom-switch">
-        <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler">
+        <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler" :disabled="isLoadingNamedEntities">
         <label class="custom-control-label font-weight-bold" for="input-ner-toggler" id="label-ner-toggler">
-          {{ $t('document.see_highlights') }}
+          {{ $t('document.showNamedEntities') }}
         </label>
       </div>
       <b-tooltip placement="bottom" target="label-ner-toggler" :title="$t('document.highlights_caution')" />

@@ -113,7 +113,7 @@ describe('esClient', () => {
     })
   })
 
-  it('should return all the named entities after scrolling', async () => {
+  it('should return the first 12 named entities', async () => {
     const docId = 'doc'
     await letData(es).have(new IndexedDocument(docId)
       .withNer('ne_01')
@@ -130,7 +130,7 @@ describe('esClient', () => {
       .withNer('ne_12')
     ).commit()
 
-    const response = await esClient.getNamedEntities(index, docId, docId, 5)
+    const response = await esClient.getDocumentNamedEntities(index, docId, docId, 0, 20)
 
     expect(response.hits.hits).toHaveLength(12)
   })

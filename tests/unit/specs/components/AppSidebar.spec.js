@@ -23,7 +23,7 @@ describe('AppSidebar.vue', () => {
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
     window.fetch = jest.fn()
-    window.fetch.mockReturnValue(jsonOk({ userIndices: [] }))
+    window.fetch.mockReturnValue(jsonOk({ userProjects: [] }))
     appVue = await createApp()
   })
 

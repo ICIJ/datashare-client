@@ -46,18 +46,18 @@ describe('DocumentContent.vue', () => {
       const id = 'doc'
       await letData(es).have(new IndexedDocument(id)
         .withContent('content')
-        .withNer('ner_01', 2, 'person')
-        .withNer('ner_02', 17, 'location'))
+        .withNer('ner_01', 2, 'PERSON')
+        .withNer('ner_02', 17, 'LOCATION'))
         .commit()
       await store.dispatch('document/get', { id })
-      await store.dispatch('document/getNamedEntities')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+      await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 
@@ -76,14 +76,14 @@ describe('DocumentContent.vue', () => {
         .withContent('this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'))
         .commit()
       await store.dispatch('document/get', { id })
-      await store.dispatch('document/getNamedEntities')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+      await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 
@@ -97,14 +97,14 @@ describe('DocumentContent.vue', () => {
         .withContent('this is a <mark>document</mark>'))
         .commit()
       await store.dispatch('document/get', { id })
-      await store.dispatch('document/getNamedEntities')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+      await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 
@@ -115,24 +115,23 @@ describe('DocumentContent.vue', () => {
 
   describe('the "Show named entities" toggle', () => {
     it('should contain a "Show named entities" toggle', async () => {
-      const id = 'doc'
+      const id = 'document-yy'
       await letData(es).have(new IndexedDocument(id)
         .withContent('content')
-        .withNer('ner', 2))
+        .withNer('ner', 2, 'PERSON'))
         .commit()
       await store.dispatch('document/get', { id })
-      await store.dispatch('document/getNamedEntities')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 
-      expect(wrapper.findAll('.document-content__ner-toggler')).toHaveLength(1)
+      expect(wrapper.exists('.document-content__ner-toggler')).toBeTruthy()
     })
 
     it('should not contain a "Show named entities" toggle if there is no named entities', async () => {
@@ -146,83 +145,80 @@ describe('DocumentContent.vue', () => {
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 
       await wrapper.vm.transformContent()
-      expect(wrapper.findAll('.document-content__ner-toggler')).toHaveLength(0)
+      expect(wrapper.exists('.document-content__ner-toggler')).toBeTruthy()
     })
 
     it('should change the document state of showNamedEntities', async () => {
-      const id = 'doc'
+      const id = 'document-zu'
       await letData(es).have(new IndexedDocument(id)
         .withContent('content')
-        .withNer('ner', 2))
+        .withNer('ner', 2, 'PERSON'))
         .commit()
       await store.dispatch('document/get', { id })
-      await store.dispatch('document/getNamedEntities')
+      await store.dispatch('document/getFirstPageForNamedEntityInCategory', 'PERSON')
+      store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 
-      expect(wrapper.vm.showNamedEntities).toBeTruthy()
-      wrapper.findAll('.document-content__ner-toggler label').at(0).trigger('click')
-      expect(wrapper.vm.showNamedEntities).toBeFalsy()
+      expect(store.state.document.showNamedEntities).toBeTruthy()
+      wrapper.find('.document-content__ner-toggler label').trigger('click')
+      expect(store.state.document.showNamedEntities).toBeFalsy()
     })
 
     it('should display a document without named entities', async () => {
-      const id = 'doc'
+      const id = 'document-ry'
       await letData(es).have(new IndexedDocument(id)
         .withContent('content')
-        .withNer('ner', 2))
+        .withNer('tent', 3, 'PERSON'))
         .commit()
       await store.dispatch('document/get', { id })
-      await store.dispatch('document/getNamedEntities')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       store.commit('document/toggleShowNamedEntities', false)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 
-      await wrapper.vm.transformContent()
+      await wrapper.vm.$nextTick()
       expect(wrapper.findAll('mark')).toHaveLength(0)
     })
   })
 
   describe('search term', () => {
     it('should not sticky the toolbox by default', async () => {
-      const id = 'doc'
+      const id = 'document-z'
       await letData(es).have(new IndexedDocument(id)
         .withContent('this is a full full content')
         .withNer('ner', 0))
         .commit()
       await store.dispatch('document/get', { id })
-      await store.dispatch('document/getNamedEntities')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+      await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 
-      await wrapper.vm.transformContent()
-
+      await wrapper.vm.$nextTick()
       expect(wrapper.find('.document-content__toolbox--sticky').exists()).toBeFalsy()
     })
 
@@ -237,8 +233,7 @@ describe('DocumentContent.vue', () => {
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 
@@ -259,8 +254,7 @@ describe('DocumentContent.vue', () => {
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 
@@ -281,8 +275,7 @@ describe('DocumentContent.vue', () => {
         store,
         i18n,
         propsData: {
-          document: store.state.document.doc,
-          namedEntities: store.state.document.namedEntities
+          document: store.state.document.doc
         }
       })
 

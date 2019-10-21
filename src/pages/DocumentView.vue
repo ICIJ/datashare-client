@@ -64,13 +64,13 @@ export default {
       this.$Progress.start()
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
-      await this.$store.dispatch('document/getNamedEntities')
       await this.$store.dispatch('document/getTags')
       this.isReady = true
       if (this.document) {
         await this.$store.commit('userHistory/addDocument', this.document)
         const $container = this.$el.closest('.ps-container')
         this.$root.$emit('scroll-tracker:request', this.$el, 0, $container)
+        this.$root.$emit('document::content::changed')
       }
       this.$Progress.finish()
     },
@@ -79,6 +79,7 @@ export default {
     },
     activateTab (name) {
       this.activeTab = name
+      this.$root.$emit('document::content::changed')
       return name
     },
     tabClass (name) {
@@ -111,7 +112,6 @@ export default {
   computed: {
     ...mapState('document', {
       document: 'doc',
-      namedEntities: 'namedEntities',
       parentDocument: 'parentDocument',
       tags: 'tags'
     }),
@@ -126,8 +126,7 @@ export default {
           component: DocumentTabExtractedText,
           icon: 'align-left',
           props: {
-            document: this.document,
-            namedEntities: this.namedEntities
+            document: this.document
           }
         },
         {

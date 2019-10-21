@@ -58,7 +58,7 @@ describe('SearchResultsListLink', () => {
 
   it('should display the document sliced name', () => {
     const documentName = 'document'
-    Murmur.config.merge({ userIndices: [process.env.VUE_APP_ES_INDEX] })
+    Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] })
     const wrapper = mount(SearchResultsListLink, {
       localVue,
       store,

@@ -5,7 +5,7 @@
       {{ $t('search.back') }}
     </router-link>
     <div v-if="currentDocument" class="ml-auto">
-      <a class="btn btn-sm py-0 mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument && isAllowed && !hasFeature('DOCUMENT_ACTIONS')" id="search-document-navbar-download">
+      <a class="btn btn-sm py-0 mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument && isDownloadAllowed && !hasFeature('DOCUMENT_ACTIONS')" id="search-document-navbar-download">
         <fa icon="download" />
         {{ $t('document.download_button') }}
       </a>
@@ -13,23 +13,37 @@
         <document-type-card :document="currentDocument" />
       </b-popover>
       <span class="search-document-navbar__nav" v-if="currentDocumentIndex > -1">
-        <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" :title="previousTooltip" v-b-tooltip.html.bottomleft>
+        <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
           <fa icon="angle-left" />
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.previous.label') }}
           </span>
         </button>
-        <button @click="goToNextDocument" v-shortkey="getKeys('goToNextDocument')" @shortkey="getAction('goToNextDocument')" :disabled="!hasNextDocument" class="btn btn-sm btn-link text-white py-0" :title="nextTooltip" v-b-tooltip.html.bottomleft>
+        <b-tooltip target="previous-document-button" triggers="hover">
+          <span v-html="previousTooltip"></span>
+        </b-tooltip>
+        <button @click="goToNextDocument" v-shortkey="getKeys('goToNextDocument')" @shortkey="getAction('goToNextDocument')" :disabled="!hasNextDocument" class="btn btn-sm btn-link text-white py-0" id="next-document-button">
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.next.label') }}
           </span>
           <fa icon="angle-right" />
         </button>
+        <b-tooltip target="next-document-button" triggers="hover">
+          <span v-html="nextTooltip"></span>
+        </b-tooltip>
       </span>
       <router-link-popup v-if="!hasFeature('DOCUMENT_ACTIONS')" :to="{ name: 'document-simplified', params: currentDocument.routerParams }" class="btn btn-sm btn-link text-white py-0" :title="$t('document.external_window')" v-b-tooltip.bottomleft>
         <fa icon="external-link-alt" />
       </router-link-popup>
-      <document-actions v-if="hasFeature('DOCUMENT_ACTIONS')" :document="currentDocument" class="search-document-navbar__actions" displayDownload />
+      <document-actions v-if="hasFeature('DOCUMENT_ACTIONS')"
+        :document="currentDocument"
+        class="search-document-navbar__actions d-flex"
+        star-btn-class="btn btn-link text-white py-0 px-2 order-1"
+        popup-btn-class="btn btn-link text-white py-0 px-2 order-1"
+        download-btn-class="btn btn-secondary order-2 btn-sm py-0 ml-1"
+        download-btn-label
+        no-btn-group
+        is-download-allowed />
     </div>
   </div>
 </template>
@@ -56,7 +70,7 @@ export default {
     DocumentActions
   },
   computed: {
-    ...mapState('search', ['response', 'isAllowed']),
+    ...mapState('search', ['response', 'isDownloadAllowed']),
     ...mapState('document', { currentDocument: 'doc' }),
     query () {
       return this.$store.getters['search/toRouteQuery']
@@ -169,12 +183,7 @@ export default {
     }
 
     &__actions {
-      .btn-link {
-        color: white;
-      }
-      .document-actions__download {
-        background: $secondary;
-      }
+      float: right;
     }
   }
 </style>

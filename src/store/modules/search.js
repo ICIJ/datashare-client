@@ -64,7 +64,7 @@ export function initialState () {
     starredDocuments: [],
     // Different default layout for narrow screen
     layout: isNarrowScreen() ? 'table' : 'list',
-    isAllowed: false
+    isDownloadAllowed: false
   }
 }
 
@@ -230,8 +230,8 @@ export const mutations = {
     const fields = settings.searchFields.map(field => field.key)
     state.field = fields.indexOf(field) > -1 ? field : settings.defaultSearchField
   },
-  isAllowed (state, isAllowed) {
-    state.isAllowed = isAllowed
+  isDownloadAllowed (state, isDownloadAllowed) {
+    state.isDownloadAllowed = isDownloadAllowed
   },
   starredDocuments (state, starredDocuments) {
     state.starredDocuments = starredDocuments
@@ -386,7 +386,7 @@ export const actions = {
     return dispatch('query')
   },
   async updateFromRouteQuery ({ state, commit }, query) {
-    commit('reset', ['index', 'globalSearch', 'starredDocuments', 'showFilters', 'layout', 'field'])
+    commit('reset', ['index', 'globalSearch', 'starredDocuments', 'showFilters', 'layout', 'field', 'isDownloadAllowed'])
     // Add the query to the state with a mutation to not triggering a search
     if (query.q) commit('query', query.q)
     if (query.index) commit('index', query.index)
@@ -452,9 +452,9 @@ export const actions = {
     commit('starredDocuments', starredDocuments)
     commit('setStarredDocuments')
   },
-  async getIsAllowed ({ state, commit }) {
-    const response = await datashare.isAllowed(state.index)
-    commit('isAllowed', response.status === 200)
+  async getIsDownloadAllowed ({ state, commit }) {
+    const response = await datashare.isDownloadAllowed(state.index)
+    commit('isDownloadAllowed', response.status === 200)
   }
 }
 

@@ -20,30 +20,36 @@ export function datasharePlugin (Client, config, components) {
       data => data,
       error => {
         EventBus.$emit('http::error', error)
-        return null
+        throw error
       }
     )
   }
 
-  Client.prototype.getNamedEntities = async function (index, docId, routing = null, size = 200) {
-    let response
-    let namedEntities = []
-    response = await this.search({
-      index: index,
-      type: 'doc',
-      size: size,
-      routing: routing,
-      body: bodybuilder().query('parent_id', { type: 'NamedEntity', id: docId }).filter('term', 'isHidden', 'false').build(),
-      scroll: '30s'
-    })
-    while (response.hits && response.hits.hits.length) {
-      namedEntities.push(...response.hits.hits)
-      response = await this.scroll({
-        scrollId: response._scroll_id,
-        scroll: '30s'
+  Client.prototype.getDocumentNamedEntities = async function (index, docId, routing = null, from = 0, size = 200) {
+    const body = bodybuilder()
+      .size(size)
+      .from(from)
+      .query('parent_id', {
+        type: 'NamedEntity',
+        id: docId
       })
-    }
-    return { hits: { hits: namedEntities } }
+      .filter('term', 'isHidden', 'false')
+      .build()
+    return this.search({ type: 'doc', index, routing, body })
+  }
+
+  Client.prototype.getDocumentNamedEntitiesInCategory = async function (index, docId, routing = null, from = 0, size = 200, category = null) {
+    const body = bodybuilder()
+      .size(size)
+      .from(from)
+      .query('parent_id', {
+        type: 'NamedEntity',
+        id: docId
+      })
+      .filter('term', 'isHidden', 'false')
+      .filter('term', 'category', category)
+      .build()
+    return this.search({ type: 'doc', index, routing, body })
   }
 
   Client.prototype.addQueryToBody = function (query, body, fields = []) {

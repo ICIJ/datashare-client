@@ -56,10 +56,46 @@
             {{ meta.nbResults }}
           </dd>
           <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.phraseMatch') }}
+          </dt>
+          <dd class="col-sm-8">
+            {{ meta.phraseMatch ? $t('indexing.yes') : $t('indexing.no') }}
+          </dd>
+          <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.fuzziness') }}
           </dt>
           <dd class="col-sm-8">
             {{ meta.fuzziness }}
+          </dd>
+          <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.fileTypes') }}
+          </dt>
+          <dd class="col-sm-8">
+            <ul v-if="meta.fileTypes.length" class="list-unstyled list-group list-group-horizontal">
+              <li v-for="fileType in meta.fileTypes" :key="fileType" class="mr-2">
+                <b-badge variant="dark">
+                  {{ fileType }}
+                </b-badge>
+              </li>
+            </ul>
+            <span v-else>
+              {{ $t('indexing.no') }}
+            </span>
+          </dd>
+          <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.path') }}
+          </dt>
+          <dd class="col-sm-8">
+            <ul v-if="meta.paths.length" class="list-unstyled list-group list-group-horizontal">
+              <li v-for="path in meta.paths" :key="path" class="mr-2">
+                <b-badge variant="dark">
+                  {{ path }}
+                </b-badge>
+              </li>
+            </ul>
+            <span v-else>
+              {{ $t('indexing.no') }}
+            </span>
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.published') }}
@@ -94,7 +130,7 @@
               {{ getDocumentTypeLabel(item.contentType) }}
             </template>
             <template v-slot:cell(contentLength)="{ item }">
-              {{ item.contentLength | humanSize }}
+              {{ getDocumentSize(item.contentLength) }}
             </template>
             <template v-slot:cell(empty)>
               <div class="text-center">
@@ -110,7 +146,6 @@
 </template>
 
 <script>
-import store from '@/store'
 import moment from 'moment'
 import { mapState } from 'vuex'
 import capitalize from 'lodash/capitalize'
@@ -123,6 +158,7 @@ import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
+import store from '@/store'
 
 export default {
   name: 'BatchSearchResults',
@@ -258,9 +294,17 @@ export default {
       return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page, queries: this.selectedQueries, sort: this.sort, order: this.order } }
     },
     async deleteBatchSearch () {
-      await store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
+      let isDeleted = await store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
       this.$router.push({ name: 'batch-search' })
-      this.$root.$bvToast.toast(this.$t('batchSearch.deleted'), { noCloseButton: true, variant: 'success' })
+      this.$root.$bvToast.toast(isDeleted ? this.$t('batchSearch.deleted') : this.$t('batchSearch.notDeleted'),
+        { noCloseButton: true, variant: isDeleted ? 'success' : 'warning' })
+    },
+    getDocumentSize (size) {
+      if (size === 0) {
+        return ''
+      } else {
+        return this.$options.filters.humanSize(size)
+      }
     },
     capitalize,
     moment,

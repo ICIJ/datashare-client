@@ -357,7 +357,7 @@
     "search_directory": "Search within this directory",
     "tiff_limitations": "The browser preview of this TIFF file may not show all the images. We suggest you download it in your computer to view all the contents.",
     "thread_index": "Thread ID",
-    "see_highlights": "Show named entities",
+    "showNamedEntities": "Show named entities",
     "highlights_caution": "Warning! the named entities will be highlighted and may replace text underneath. This does not impact your search results.",
     "error_not_found": "Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.",
     "search": "Search",
@@ -389,7 +389,17 @@
     "attachments": {
       "heading": "No attachments | One attachment | {total} attachments",
       "more": "More attachments..."
+    },
+    "namedEntities": {
+      "showMorePerson": "Show more people",
+      "showMoreOrganization": "Show more organizations",
+      "showMoreLocation": "Show more locations",
+      "showMoreEmail": "Show more emails"
     }
+  },
+  "namedEntityInContext": {
+    "title": "Extracted using <code>%{extractor}</code> in <code>%{extractorLanguage}</code>",
+    "meta": "This was extracted from metadata."
   },
   "email": {
     "detail": "See detail",
@@ -484,10 +494,12 @@
     "query": "no queries | 1 query | {count} queries",
     "delete": "Delete batch search",
     "deleted": "The batch search have been deleted.",
+    "notDeleted": "The batch search have not been deleted.",
     "published": "Published",
     "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
     "phraseMatch": "Do phrase matches",
     "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order.",
+    "phraseMatchDescriptionOperators" : "Do not insert operators in your queries",
     "learnMore": "Learn more"
   },
   "batchSearchResults": {

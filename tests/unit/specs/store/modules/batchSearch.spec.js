@@ -1,10 +1,11 @@
-import DatashareClient from '@/api/DatashareClient'
-import { actions, getters, mutations, state, datashare } from '@/store/modules/batchSearch'
-import { jsonOk } from 'tests/unit/tests_utils'
-import Vuex from 'vuex'
 import Vue from 'vue'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import Vuex from 'vuex'
+
+import DatashareClient from '@/api/DatashareClient'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { actions, getters, mutations, state, datashare } from '@/store/modules/batchSearch'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import { jsonOk } from 'tests/unit/tests_utils'
 
 Vue.use(Vuex)
 
@@ -26,17 +27,18 @@ describe('BatchSearch store', () => {
 
   describe('actions', () => {
     it('should submit the new batch search form with complete information', async () => {
-      await store.dispatch('batchSearch/onSubmit', { name: 'name', published: false, csvFile: 'csvFile', description: 'description', project: 'project', fuzziness: 2, fileTypes: 'pdf', paths: '/a/path/to/home', phraseMatch: false })
-
+      await store.dispatch('batchSearch/onSubmit', { name: 'name', csvFile: 'csvFile', description: 'description', project: 'project', phraseMatch: false, fuzziness: 2, fileTypes: [{ mime: 'pdf' }, { mime: 'csv' }], paths: ['/a/path/to/home', '/another/path'], published: false })
       const body = new FormData()
       body.append('name', 'name')
-      body.append('description', 'description')
       body.append('csvFile', 'csvFile')
-      body.append('published', false)
-      body.append('fileTypes', 'pdf')
-      body.append('fuzziness', 2)
-      body.append('paths', '/a/path/to/home')
+      body.append('description', 'description')
       body.append('phrase_matches', false)
+      body.append('fuzziness', 2)
+      body.append('fileTypes', 'pdf')
+      body.append('fileTypes', 'csv')
+      body.append('paths', '/a/path/to/home')
+      body.append('paths', '/another/path')
+      body.append('published', false)
       expect(datashare.fetch).toBeCalledTimes(2)
       expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
       expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})

@@ -47,7 +47,7 @@ describe('SearchResultsTable.vue', () => {
 
     wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 
-    const calledUrl = DatashareClient.getFullUrl(`/api/document/project/${encodeURIComponent(process.env.VUE_APP_ES_INDEX)}/group/star`)
+    const calledUrl = DatashareClient.getFullUrl(`/api/${encodeURIComponent(process.env.VUE_APP_ES_INDEX)}/documents/batchUpdate/star`)
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(calledUrl, { method: 'POST', body: JSON.stringify(['doc_1', 'doc_2']) })
   })
