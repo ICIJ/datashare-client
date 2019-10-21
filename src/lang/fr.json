@@ -389,7 +389,17 @@
     "attachments": {
       "heading": "Pas de pièces jointes | Une pièce jointe | {total} pièces jointes",
       "more": "Plus de pièces jointes..."
+    },
+    "namedEntities": {
+      "showMorePerson": "Afficher plus de personnes",
+      "showMoreOrganization": "Afficher plus d'organisations",
+      "showMoreLocation": "Afficher plus de localités",
+      "showMoreEmail": "Afficher plus d'emails"
     }
+  },
+  "namedEntityInContext": {
+    "title": "Extracted using <code>%{extractor}</code> in <code>%{extractorLanguage}</code>",
+    "meta": "This was extracted from metadata."
   },
   "email": {
     "detail": "Voir les détails",
@@ -462,7 +472,7 @@
     "title": "Recherches en lot",
     "form": {
       "heading": "Nouvelle recherche en lot",
-      "fileLabel": "CSV file",
+      "fileLabel": "Fichier CSV",
       "fileDescription": "Seuls les formats CSV sont acceptés. La première colonne doit contenir les termes à chercher.",
       "filePlaceholder": "Choisissez un fichier...",
       "submit": "Ajouter",
@@ -473,9 +483,9 @@
     "name": "Nom",
     "description": "Description",
     "fuzziness": "Recherche approximative",
-    "fuzzinessDescriptionPhrase": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other.",
-    "fuzzinessDescriptionTerm": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on characters needed to make one term match the other.",
-    "fileTypes": "File types",
+    "fuzzinessDescriptionPhrase": "Nombre maximum d'opérations sur les mots (insertions, suppressions, substitutions ou transpositions) pour que les phrases correspondent à la phrase recherchée.",
+    "fuzzinessDescriptionTerm": "Nombre maximum d'opérations sur les caractères (insertions, suppressions, substitutions ou transpositions) pour que le(s) mot(s) corresponde(nt) aux mot(s) recherché(s).",
+    "fileTypes": "Types de fichiers",
     "path": "Chemin",
     "queries": "Recherches",
     "state": "Status",
@@ -486,10 +496,11 @@
     "deleted": "La recherche en lot a été supprimée.",
     "notDeleted": "La recherche en lot n'a pas été supprimée.",
     "published": "Publiée",
-    "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
+    "publishedDescription": "Donner accès aux autres membres du projet à cette rechercher en lot. Vous pourrez changer ceci plus tard.",
     "phraseMatch": "Rechercher les termes exacts",
     "phraseMatchDescription": "Cela vous permet de rechercher des documents qui contiennent l'expression exacte et non les termes dans un autre ordre.",
-    "learnMore": "Learn more"
+    "phraseMatchDescriptionOperators": "Ne pas insérer d'opérateurs dans vos recherches",
+    "learnMore": "En savoir plus"
   },
   "batchSearchResults": {
     "index": "Index",
@@ -514,8 +525,8 @@
     "backToSearchResults": "Retourner aux résultats de recherche",
     "goToPreviousTab": "Aller à l'onglet précédent",
     "goToNextTab": "Aller à l'onglet suivant",
-    "activateSearchBar": "Find in document",
-    "deactivateSearchBar": "Close search in document",
+    "activateSearchBar": "Chercher dans le document",
+    "deactivateSearchBar": "Quitter la recherche dans le document",
     "findPreviousOccurrence": "Aller à l'occurrence précédente dans le document",
     "findPreviousOccurrenceAlt": "Aller à l'occurrence précédente dans le document",
     "findNextOccurrence": "Aller à l'occurrence suivante dans le document",

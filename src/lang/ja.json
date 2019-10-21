@@ -5,7 +5,7 @@
       "occurrence": "no occurrences | one occurrence | {count} occurrences",
       "document": "no docs | one doc | {count} docs"
     },
-    "more": "Explore more",
+    "more": "さらに調べる",
     "placeholder": "Search for people, organizations, locations...",
     "relative": "Relative to the search"
   },
@@ -14,7 +14,7 @@
       "badRequest": "Your search query is wrong",
       "internalError": "The server encountered a problem",
       "noConnections": "The server is not connected",
-      "notFound": "Nothing was found",
+      "notFound": "何も見つかりませんでした",
       "serviceUnavailable": "The server is unable to satisfy your request",
       "somethingWrong": "Something went wrong."
     },
@@ -389,7 +389,17 @@
     "attachments": {
       "heading": "No attachments | One attachment | {total} attachments",
       "more": "More attachments..."
+    },
+    "namedEntities": {
+      "showMorePerson": "Show more people",
+      "showMoreOrganization": "Show more organizations",
+      "showMoreLocation": "Show more locations",
+      "showMoreEmail": "Show more emails"
     }
+  },
+  "namedEntityInContext": {
+    "title": "Extracted using <code>%{extractor}</code> in <code>%{extractorLanguage}</code>",
+    "meta": "This was extracted from metadata."
   },
   "email": {
     "detail": "See detail",
@@ -489,6 +499,7 @@
     "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
     "phraseMatch": "Do phrase matches",
     "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order.",
+    "phraseMatchDescriptionOperators": "Do not insert operators in your queries",
     "learnMore": "Learn more"
   },
   "batchSearchResults": {

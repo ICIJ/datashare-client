@@ -344,7 +344,7 @@
     "star_button": "Marcar como favorito",
     "unstar_button": "Eliminar de favoritos",
     "starred": "Documentos han sido agregados como favoritos.",
-    "starring_error": "No se puede iniciar el documento.",
+    "starring_error": "No se puede marcar el documento como favorito.",
     "unstarred": "Documentos han sido removidos de favoritos.",
     "tagged": "Documentos han sido etiquetados.",
     "star_file": "Marcar como favorito",
@@ -389,7 +389,17 @@
     "attachments": {
       "heading": "No hay adjuntos | Un adjunto | {total} adjuntos",
       "more": "Más adjuntos..."
+    },
+    "namedEntities": {
+      "showMorePerson": "Mostrar más personas",
+      "showMoreOrganization": "Mostrar más organizaciones",
+      "showMoreLocation": "Mostrar más ubicaciones",
+      "showMoreEmail": "Mostrar más correos electrónicos"
     }
+  },
+  "namedEntityInContext": {
+    "title": "Extracted using <code>%{extractor}</code> in <code>%{extractorLanguage}</code>",
+    "meta": "This was extracted from metadata."
   },
   "email": {
     "detail": "Más detalles",
@@ -407,7 +417,7 @@
     "empty": "Aún no has iniciado tareas.",
     "extract_text": "Extraer texto",
     "extracting_header": "¿Deseas extraer también el texto de imágenes y archivos PDF?",
-    "run_batch_search": "Ejecutar búsquedas por lotes",
+    "run_batch_search": "Ejecutar búsquedas masivas",
     "extracting_subheader": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
     "find_named_entities": "Encuentra personas, organizaciones y lugares",
     "find_named_entities_header": "¿Qué tecnología deseas aplicar para encontrar personas, organizaciones y lugares?",
@@ -462,20 +472,20 @@
     "title": "Búsquedas masivas",
     "form": {
       "heading": "Nueva búsqueda masiva",
-      "fileLabel": "CSV file",
+      "fileLabel": "Archivo CSV",
       "fileDescription": "Sólo se acepta el formato CSV. La primera columna debe contener los términos a buscar.",
       "filePlaceholder": "Escoge un archivo...",
       "submit": "Agregar",
-      "success": "Tu búsqueda por lotes está ejecutándose.",
-      "failure": "Algo ha salido mal, no se puede iniciar la búsqueda por lotes."
+      "success": "Tu búsqueda masiva está ejecutándose.",
+      "failure": "Algo ha salido mal, no se puede iniciar la búsqueda masiva."
     },
     "project": "Proyecto",
     "name": "Nombre",
     "description": "Descripción",
-    "fuzziness": "Ocurrencias",
-    "fuzzinessDescriptionPhrase": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other.",
-    "fuzzinessDescriptionTerm": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on characters needed to make one term match the other.",
-    "fileTypes": "File types",
+    "fuzziness": "Fuzziness",
+    "fuzzinessDescriptionPhrase": "Número máximo de operaciones (inserciones, eliminaciones, sustitución y transposición) en términos necesarios para hacer que una frase coincida con la otra.",
+    "fuzzinessDescriptionTerm": "Número máximo de operaciones (inserciones, eliminaciones, sustitución y transposición) en caracteres necesarios para hacer que un término coincida con la otra.",
+    "fileTypes": "Tipos de archivo",
     "path": "Ruta",
     "queries": "Consultas",
     "state": "Estado",
@@ -486,10 +496,11 @@
     "deleted": "El lote de búsqueda ha sido eliminado.",
     "notDeleted": "El lote de búsqueda no ha sido eliminado.",
     "published": "Publicado",
-    "publishedDescription": "Give other members of the project access to this batch search. You can change this later.",
+    "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda por lotes. Puedes cambiar esto más tarde.",
     "phraseMatch": "Realizar búsquedas similares",
     "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria.",
-    "learnMore": "Learn more"
+    "phraseMatchDescriptionOperators": "No inserte operadores en sus consultas",
+    "learnMore": "Leer más"
   },
   "batchSearchResults": {
     "index": "Índice",
@@ -514,8 +525,8 @@
     "backToSearchResults": "Volver a la búsqueda de resultados",
     "goToPreviousTab": "Volver a la vista del documento anterior",
     "goToNextTab": "Ir a la siguiente vista del documento",
-    "activateSearchBar": "Find in document",
-    "deactivateSearchBar": "Close search in document",
+    "activateSearchBar": "Buscar dentro de este documento",
+    "deactivateSearchBar": "Terminar la búsqueda en el documento",
     "findPreviousOccurrence": "Encontrar la ocurrencia previa en el documento",
     "findPreviousOccurrenceAlt": "Encontrar la ocurrencia previa en el documento",
     "findNextOccurrence": "Encontrar la próxima ocurrencia en el documento",
