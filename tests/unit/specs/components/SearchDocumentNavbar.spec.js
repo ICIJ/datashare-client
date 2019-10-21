@@ -1,8 +1,6 @@
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { getOS } from '@/utils/utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { App } from '@/main'
 
 jest.mock('@/utils/utils', () => {
@@ -41,27 +39,5 @@ describe('SearchDocumentNavbar', () => {
     getOS.mockImplementation(() => 'default')
 
     expect(wrapper.vm.previousTooltip).toBe('search.nav.previous.tooltipOthers')
-  })
-
-  describe('Download button', () => {
-    esConnectionHelper()
-    const es = esConnectionHelper.es
-    const id = 'document'
-
-    beforeEach(async () => {
-      await letData(es).have(new IndexedDocument(id)).commit()
-      await store.dispatch('document/get', { id })
-    })
-
-    it('should not be displayed', () => {
-      expect(wrapper.find('.search-document-navbar__download').exists()).toBeFalsy()
-    })
-
-    it('should be displayed', () => {
-      store.commit('search/isDownloadAllowed', true)
-      wrapper = shallowMount(SearchDocumentNavbar, { localVue, router, store, mocks: { $t: msg => msg } })
-
-      expect(wrapper.find('.search-document-navbar__download').exists()).toBeTruthy()
-    })
   })
 })
