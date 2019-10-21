@@ -16,7 +16,7 @@ description: It allows to search multiple queries (list of words) at once.
 
 ![Remove blank cells in your spreadsheet in order to avoid this.](../.gitbook/assets/screenshot-2019-09-27-at-10.51.29.png)
 
-**Note:** If there is a comma in one cell \(like in "1,8 million" in our example\), the CSV will put the content of the cell in double quotes. Datashare will not treat it as double quotes though: it won't search for the exact phrase but for the regular query without double quotes.
+**Note:** If there is a comma in one cell \(like in "1,8 million" in our example\), the CSV will formally put the content of the cell in double quotes. But Datashare will not treat it as double quotes though: it won't search for the exact phrase but for the regular query without double quotes.
 
 * Export your spreadsheet in a CSV format:
 
@@ -36,13 +36,21 @@ description: It allows to search multiple queries (list of words) at once.
 
 * Upload your CSV:
 
-![](../.gitbook/assets/screenshot-2019-09-25-at-16.01.05.png)
+![](../.gitbook/assets/screenshot-2019-10-21-at-10.56.51.png)
 
-* Add a description \(optionnal\):
+![](../.gitbook/assets/screenshot-2019-10-21-at-15.11.33.png)
 
-![](../.gitbook/assets/screenshot-2019-09-25-at-16.01.23.png)
+* Add a description \(optional\):
+
+![](../.gitbook/assets/screenshot-2019-10-21-at-10.56.51%20%281%29.png)
+
+* Set the advanced filters \('Do phrase matches', 'Fuzziness' or 'Proximity searches', 'File types' and 'Path'\) according to your preferences:
+
+![](../.gitbook/assets/screenshot-2019-10-21-at-10.59.08.png)
 
 * Click '**Add**'. Your batch search will appear in the table of batch searches.
+
+![](../.gitbook/assets/screenshot-2019-10-21-at-10.57.56.png)
 
 ### 
 
