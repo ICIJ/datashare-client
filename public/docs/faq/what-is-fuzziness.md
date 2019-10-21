@@ -1,26 +1,36 @@
 # What is fuzziness?
 
-When you run a [batch search](https://icij.gitbook.io/datashare/all/batch-search-documents), you can set the fuzziness to 0 or another number.
+### As a search operator
 
-* If you did NOT tick 'Do phrase matches', then fuzziness means:
+In the main search bar, you can write a query with the search operator tilde \(~\) with a number, at the end of each word of your query. You can set fuzziness to 1 or 2. It corresponds to the maximum number of operations \(insertions, deletions, substitutions and transpositions\) on **characters** needed to make one **term** match the other.
 
-The maximum number of operations \(insertions, deletions, substitutions and transpositions\) on **characters** needed to make one **term** match the other.
+> kitten -&gt; sitten \(1 substitution \(k turned into s\) = fuzziness is 1\)
 
-Examples:
+> kitten -&gt; sittin \(2 substitutions \(k turned into s and e turned into i\) = fuzziness is 2\)
 
-> kitten -&gt; sitten \(1 substitution = fuzziness is 1\)
+If you search for similar terms \(**to catch typos for example**\), use fuzziness. Use the [tilde symbol](https://en.wikipedia.org/wiki/Tilde) at the end of the word to set the fuzziness to 1 or 2. 
 
-> kitten -&gt; sitting \(1 insertion + 2 substitutions = fuzziness is 3\)
+"_The default edit distance is 2, but an edit distance of 1 should be sufficient to catch 80% of all human misspellings. It can be specified as: quikc~1_" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
-* If you did tick 'Do phrase matches', then fuzziness means:
+> Example: quikc~ brwn~ foks~ \(as the default edit distance is 2, this query will catch all quick, quack, quock, uqikc, etc. as well as brown, folks, etc.\)
+>
+> Example: Datashare~1 \(this query will catch Datasahre, Dqtashare, etc.\)
 
-The maximum number of operations \(insertions, deletions, substitutions and transpositions\) on **terms** needed to make one **phrase** match the other.
+### In Batch searches
 
-Examples:
+When you run a [batch search](https://icij.gitbook.io/datashare/all/batch-search-documents), you can set the fuzziness to 0, 1 or 2. It is the same as explained above, it will apply to each word in a query and corresponds to the maximum number of operations \(insertions, deletions, substitutions and transpositions\) on **characters** needed to make one **term** match the other.
 
-> “the cat is blue” -&gt; “the small cat is blue” \(1 insertion = fuzziness is 1\)
+> kitten -&gt; sitten \(1 substitution \(k turned into s\) = fuzziness is 1\)
 
-> “the cat is blue” -&gt; “the small is cat blue” \(1 insertion + 2 transpositions = fuzziness is 3\)
+> kitten -&gt; sittin \(2 substitutions \(k turned into s and e turned into i\) = fuzziness is 2\)
+
+If you search for similar terms \(**to catch typos for example**\), use fuzziness. Use the [tilde symbol](https://en.wikipedia.org/wiki/Tilde) at the end of the word to set the fuzziness to 1 or 2. 
+
+"_The default edit distance is 2, but an edit distance of 1 should be sufficient to catch 80% of all human misspellings. It can be specified as: quikc~1_" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
+
+> Example: quikc~ brwn~ foks~ \(as the default edit distance is 2, this query will catch all quick, quack, quock, uqikc, etc. as well as brown, folks, etc.\)
+>
+> Example: Datashare~1 \(this query will catch Datasahre, Dqtashare, etc.\)
 
 
 
