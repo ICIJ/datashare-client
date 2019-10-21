@@ -59,7 +59,7 @@
             {{ $t('batchSearch.phraseMatch') }}
           </dt>
           <dd class="col-sm-8">
-            {{ meta.phraseMatch ? $t('indexing.yes') : $t('indexing.no') }}
+            {{ meta.phraseMatches ? $t('indexing.yes') : $t('indexing.no') }}
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.fuzziness') }}
