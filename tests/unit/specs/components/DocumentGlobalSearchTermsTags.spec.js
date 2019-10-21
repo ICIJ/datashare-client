@@ -8,8 +8,9 @@ const localVue = createLocalVue()
 
 async function createView (es, content = '', query = '', metadata = '', tags = []) {
   const id = 'document'
+  const index = process.env.VUE_APP_ES_INDEX
   await letData(es).have(new IndexedDocument(id).withContent(content).withMetadata(metadata).withTags(tags)).commit()
-  await store.dispatch('document/get', { id })
+  await store.dispatch('document/get', { id, index })
   store.commit('search/query', query)
   return shallowMount(DocumentGlobalSearchTermsTags, {
     localVue,
@@ -23,8 +24,6 @@ describe('DocumentGlobalSearchTermsTags', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
-
-  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
   afterEach(() => {
     store.commit('document/reset')

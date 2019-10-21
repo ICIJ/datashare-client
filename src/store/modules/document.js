@@ -108,30 +108,30 @@ export const mutations = {
 }
 
 export const actions = {
-  async get ({ commit, rootState, state, dispatch }, idAndRouting) {
+  async get ({ commit, state, dispatch }, idAndRouting) {
     commit('idAndRouting', idAndRouting)
     try {
-      const doc = await esClient.getEsDoc(rootState.search.index, idAndRouting.id, idAndRouting.routing)
+      const doc = await esClient.getEsDoc(idAndRouting.index, idAndRouting.id, idAndRouting.routing)
       commit('doc', doc)
     } catch (_) {
       commit('doc', null)
     }
     return state.doc
   },
-  async refresh ({ commit, rootState, state }) {
+  async refresh ({ commit, state }) {
     try {
-      const doc = await esClient.getEsDoc(rootState.search.index, state.idAndRouting.id, state.idAndRouting.routing)
+      const doc = await esClient.getEsDoc(state.doc.index, state.idAndRouting.id, state.idAndRouting.routing)
       commit('doc', doc)
     } catch (_) {
       commit('doc', null)
     }
     return state.doc
   },
-  async getParent ({ commit, rootState, state }) {
+  async getParent ({ commit, state }) {
     if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
       const currentDoc = state.doc.raw._source
       try {
-        const doc = await esClient.getEsDoc(rootState.search.index, currentDoc.parentDocument, currentDoc.rootDocument)
+        const doc = await esClient.getEsDoc(state.doc.index, currentDoc.parentDocument, currentDoc.rootDocument)
         commit('parentDocument', doc)
       } catch (_) {
         commit('parentDocument', null)
@@ -140,7 +140,7 @@ export const actions = {
     return state.parentDocument
   },
   async getNamedEntitiesTotal ({ state }) {
-    const index = state.index
+    const index = state.doc.index
     const { id, routing } = state.idAndRouting
     const raw = await esClient.getDocumentNamedEntities(index, id, routing, 0, 0)
     return (new Response(raw)).total
@@ -161,7 +161,7 @@ export const actions = {
   async getNextPageForNamedEntityInCategory ({ state, getters, commit, dispatch }, category) {
     try {
       const from = getters.countNamedEntitiesInCategory(category)
-      const index = state.index
+      const index = state.doc.index
       const { id, routing } = state.idAndRouting
       const raw = await dispatch('loadingNamedEntities', () => {
         return esClient.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
@@ -179,21 +179,21 @@ export const actions = {
     commit('toggleIsLoadingNamedEntities', false)
     return result
   },
-  async getTags ({ state, rootState, commit }) {
+  async getTags ({ state, commit }) {
     try {
-      const tags = await datashare.getTags(rootState.search.index, state.idAndRouting.id)
+      const tags = await datashare.getTags(state.doc.index, state.doc.id)
       commit('tags', tags)
     } catch (_) {
       commit('tags')
     }
     return state.tags
   },
-  async tag ({ commit, rootState, state, dispatch }, { documents, tag }) {
-    await datashare.tagDocuments(rootState.search.index, map(documents, 'id'), compact(tag.split(' ')))
+  async tag ({ commit, state, dispatch }, { documents, tag }) {
+    await datashare.tagDocuments(state.doc.index, map(documents, 'id'), compact(tag.split(' ')))
     if (documents.length === 1) commit('addTag', tag)
   },
-  async deleteTag ({ commit, rootState, state, dispatch }, { documents, tag }) {
-    await datashare.untagDocuments(rootState.search.index, map(documents, 'id'), [tag.label])
+  async deleteTag ({ commit, state, dispatch }, { documents, tag }) {
+    await datashare.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
     if (documents.length === 1) commit('deleteTag', tag)
   }
 }

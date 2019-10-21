@@ -12,11 +12,12 @@ import store from '@/store'
 
 describe('Search store', () => {
   esConnectionHelper()
-  let es = esConnectionHelper.es
+  const es = esConnectionHelper.es
+  const index = process.env.VUE_APP_ES_INDEX
   // High timeout because multiple searches can be heavy for the Elasticsearch
   jest.setTimeout(1e4)
 
-  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
+  beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
@@ -524,7 +525,7 @@ describe('Search store', () => {
     it('should return an empty array if no query term', async () => {
       const id = 'document'
       await letData(es).have(new IndexedDocument(id)).commit()
-      await store.dispatch('document/get', { id })
+      await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', '*')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([])
@@ -533,7 +534,7 @@ describe('Search store', () => {
     it('should return an empty result if no match between the query and the document', async () => {
       const id = 'document'
       await letData(es).have(new IndexedDocument(id)).commit()
-      await store.dispatch('document/get', { id })
+      await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'test')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'test', metadata: 0, negation: false, tags: 0 }])
@@ -542,7 +543,7 @@ describe('Search store', () => {
     it('should return a content of 1 if there is a match between the query and the document content', async () => {
       const id = 'document'
       await letData(es).have(new IndexedDocument(id).withContent('specific term specific')).commit()
-      await store.dispatch('document/get', { id })
+      await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'specific')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 2, field: '', label: 'specific', metadata: 0, negation: false, tags: 0 }])
@@ -551,7 +552,7 @@ describe('Search store', () => {
     it('should return a metadata of 1 if there is a match between the query and the document metadata', async () => {
       const id = 'document'
       await letData(es).have(new IndexedDocument(id).withMetadata('metadata metadata metadata')).commit()
-      await store.dispatch('document/get', { id })
+      await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'metadata')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'metadata', metadata: 3, negation: false, tags: 0 }])
@@ -560,7 +561,7 @@ describe('Search store', () => {
     it('should return a tags of 1 if there is a match between the query and the document tags', async () => {
       const id = 'document'
       await letData(es).have(new IndexedDocument(id).withTags(['tags'])).commit()
-      await store.dispatch('document/get', { id })
+      await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'tags')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'tags', metadata: 0, negation: false, tags: 1 }])
