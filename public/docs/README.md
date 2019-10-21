@@ -40,4 +40,6 @@ Frequently Asked Questions:
 * [What does 'Windows named pipe error' mean?](https://icij.gitbook.io/datashare/faq/i-read-windows-named-pipe-error-...)
 * [How can I install Datashare on a Windows prior to Windows 10 Pro?](https://icij.gitbook.io/datashare/faq/how-can-i-install-datashare-on-a-windows-prior-to-windows-10-pro)
 * ['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](https://icij.gitbook.io/datashare/faq/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do)
+* [What is fuzziness?](https://icij.gitbook.io/datashare/faq/what-is-fuzziness)
+* [What are proximity searches?](https://icij.gitbook.io/datashare/faq/what-is-proximity-search)
 
