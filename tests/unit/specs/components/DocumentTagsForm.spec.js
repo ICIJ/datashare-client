@@ -20,7 +20,7 @@ localVue.use(BootstrapVue)
 async function createView (es, tags = [], documentId = 'document') {
   datashare.fetch.mockReturnValue(jsonOk(map(tags, item => { return { label: item, user: { id: 'test-user' } } })))
   await letData(es).have(new IndexedDocument(documentId).withTags(tags)).commit()
-  await store.dispatch('document/get', { id: documentId })
+  await store.dispatch('document/get', { id: documentId, index: process.env.VUE_APP_ES_INDEX })
   await store.dispatch('document/getTags')
   return shallowMount(DocumentTagsForm, { localVue, store, propsData: { document: store.state.document.doc, tags: store.state.document.tags, displayTags: true }, mocks: { $t: msg => msg }, sync: false })
 }

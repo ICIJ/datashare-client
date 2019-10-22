@@ -453,8 +453,12 @@ export const actions = {
     commit('setStarredDocuments')
   },
   async getIsDownloadAllowed ({ state, commit }) {
-    const response = await datashare.isDownloadAllowed(state.index)
-    commit('isDownloadAllowed', response.status === 200)
+    try {
+      await datashare.isDownloadAllowed(state.index)
+      commit('isDownloadAllowed', true)
+    } catch (e) {
+      commit('isDownloadAllowed', false)
+    }
   }
 }
 

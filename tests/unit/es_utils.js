@@ -1,6 +1,9 @@
 import isArray from 'lodash/isArray'
 import find from 'lodash/find'
+import uniqueId from 'lodash/uniqueId'
 import { dirname } from 'path'
+
+import Response from '@/api/Response'
 
 function letData (index) {
   return new IndexBuilder(index)
@@ -51,7 +54,7 @@ class IndexedDocuments {
 }
 
 class IndexedDocument {
-  constructor (path) {
+  constructor (path = uniqueId('/path/to/document/')) {
     this.path = path
     this.dirname = dirname(path)
     this.join = { name: 'Document' }
@@ -127,6 +130,7 @@ class IndexedDocument {
 class IndexBuilder {
   constructor (index) {
     this.index = index
+    this.committedDocumentIds = []
   }
   have (document) {
     this.document = document
@@ -170,7 +174,8 @@ class IndexBuilder {
       if (this.document.hasParent()) {
         createRequest.routing = this.document.parentDocument
       }
-      await this.index.create(createRequest)
+      const { _id } = await this.index.create(createRequest)
+      this.committedDocumentIds.push(_id)
       for (let i = 0; i < this.document.nerList.length; i++) {
         let ner = this.document.nerList[i]
         await this.index.create({
@@ -192,6 +197,24 @@ class IndexBuilder {
       }
     }
     return this
+  }
+  async commitAndGetLastDocument () {
+    await this.commit()
+    return this.lastCommittedDocument
+  }
+  get committedDocuments () {
+    const promises = this.committedDocumentIds.map(async id => {
+      const raw = await this.index.get({ index: this.document.index, type: 'doc', id })
+      return Response.instantiate(raw)
+    })
+    return Promise.all(promises)
+  }
+  get lastCommittedDocument () {
+    return Promise.resolve().then(async () => {
+      const id = this.committedDocumentIds.slice(-1).pop()
+      const raw = await this.index.get({ index: this.document.index, type: 'doc', id })
+      return Response.instantiate(raw)
+    })
   }
 }
 

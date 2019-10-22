@@ -1,22 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 
-import AggregationsPanel from '@/components/AggregationsPanel'
-import BatchSearchForm from '@/components/BatchSearchForm'
-import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
-import RouteDocsLinks from '@/components/RouteDocsLinks'
-
-import App from '@/pages/App'
-import BatchSearch from '@/pages/BatchSearch'
-import BatchSearchResults from '@/pages/BatchSearchResults'
-import DocumentView from '@/pages/DocumentView'
-import Indexing from '@/pages/Indexing'
-import Landing from '@/pages/Landing'
-import Login from '@/pages/Login'
-import RouteDoc from '@/pages/RouteDoc'
-import Search from '@/pages/Search'
-import UserHistory from '@/pages/UserHistory'
-
 import store from '@/store'
 import { isAuthenticated } from '@/utils/utils'
 import get from 'lodash/get'
@@ -29,12 +13,12 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      component: App,
+      component: () => import(`@/pages/App.vue`),
       children: [
         {
           name: 'landing',
           path: '',
-          component: Landing,
+          component: () => import(`@/pages/Landing.vue`),
           meta: {
             docs: [
               '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
@@ -60,15 +44,15 @@ const router = new VueRouter({
             ]
           },
           components: {
-            default: Search,
-            sidebar: AggregationsPanel
+            default: () => import('@/pages/Search.vue'),
+            sidebar: () => import('@/components/AggregationsPanel.vue')
           },
           children: [
             {
               name: 'document',
               path: 'd/:index/:id/:routing?',
               alias: 'e/:index/:id/:routing?',
-              component: DocumentView,
+              component: () => import(`@/pages/DocumentView.vue`),
               props: true,
               meta: {
                 docs: [
@@ -83,7 +67,7 @@ const router = new VueRouter({
         {
           name: 'indexing',
           path: 'indexing',
-          component: Indexing,
+          component: () => import(`@/pages/Indexing.vue`),
           meta: {
             docs: [
               '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
@@ -95,8 +79,8 @@ const router = new VueRouter({
           name: 'batch-search',
           path: 'batch-search',
           components: {
-            default: BatchSearch,
-            sidebar: BatchSearchForm
+            default: () => import('@/pages/BatchSearch.vue'),
+            sidebar: () => import('@/components/BatchSearchForm.vue')
           },
           meta: {
             docs: [
@@ -108,8 +92,8 @@ const router = new VueRouter({
           name: 'batch-search.results',
           path: 'batch-search/:index/:uuid',
           components: {
-            default: BatchSearchResults,
-            sidebar: BatchSearchResultsFilters
+            default: () => import('@/pages/BatchSearchResults.vue'),
+            sidebar: () => import('@/components/BatchSearchResultsFilters')
           },
           props: {
             default: true,
@@ -119,14 +103,14 @@ const router = new VueRouter({
         {
           name: 'user-history',
           path: 'user-history',
-          component: UserHistory
+          component: () => import(`@/pages/UserHistory.vue`)
         },
         {
           name: 'docs',
           path: 'docs/:slug',
           components: {
-            default: RouteDoc,
-            sidebar: RouteDocsLinks
+            default: () => import(`@/pages/RouteDoc.vue`),
+            sidebar: () => import(`@/components/RouteDocsLinks.vue`)
           },
           props: {
             default: true,
@@ -138,11 +122,11 @@ const router = new VueRouter({
     {
       name: 'document-simplified',
       path: '/ds/:index/:id/:routing?',
-      component: DocumentView
+      component: () => import(`@/pages/DocumentView.vue`)
     },
     {
       path: '/login',
-      component: Login,
+      component: () => import(`@/pages/Login.vue`),
       meta: {
         skipsAuth: true
       }

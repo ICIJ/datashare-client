@@ -29,7 +29,7 @@ import XLSX from 'xlsx'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 export default {
-  name: 'legacy-spreadsheet-viewer',
+  name: 'LegacySpreadsheetViewer',
   props: ['document'],
   mixins: [datashareSourceMixin],
   data () {

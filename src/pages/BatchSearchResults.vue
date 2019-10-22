@@ -59,7 +59,7 @@
             {{ $t('batchSearch.phraseMatch') }}
           </dt>
           <dd class="col-sm-8">
-            {{ meta.phraseMatch ? $t('indexing.yes') : $t('indexing.no') }}
+            {{ meta.phraseMatches ? $t('indexing.yes') : $t('indexing.no') }}
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.fuzziness') }}
@@ -149,7 +149,6 @@
 import moment from 'moment'
 import { mapState } from 'vuex'
 import capitalize from 'lodash/capitalize'
-import castArray from 'lodash/castArray'
 import find from 'lodash/find'
 import get from 'lodash/get'
 
@@ -175,7 +174,7 @@ export default {
       fields: [
         {
           key: 'documentNumber',
-          label: this.$t('batchSearchResults.index'),
+          label: this.$t('batchSearchResults.rank'),
           sortable: true,
           name: 'doc_nb'
         },
@@ -222,15 +221,7 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next(async vm => {
-      vm.$set(vm, 'page', parseInt(get(to.query, 'page', vm.page)))
-      vm.$set(vm, 'queries', castArray(get(to.query, 'queries', vm.queries)))
-      vm.$set(vm, 'sort', get(to.query, 'sort', vm.sort))
-      vm.$set(vm, 'order', get(to.query, 'order', vm.order))
-      store.commit('batchSearch/selectedQueries', vm.queries)
-      await vm.fetchBatchSearches()
-      await vm.fetch()
-    })
+    next(async vm => vm.fetchBatchSearches())
   },
   async beforeRouteUpdate (to, from, next) {
     this.$set(this, 'page', parseInt(get(to.query, 'page', this.page)))
@@ -238,7 +229,6 @@ export default {
     this.$set(this, 'sort', get(to.query, 'sort', this.sort))
     this.$set(this, 'order', get(to.query, 'order', this.order))
     store.commit('batchSearch/selectedQueries', this.queries)
-    await this.fetchBatchSearches()
     await this.fetch()
     next()
   },

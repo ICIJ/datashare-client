@@ -1,20 +1,13 @@
 <template>
   <div class="search-document-navbar px-3 py-2 bg-dark text-white text-nowrap">
     <router-link :to="{ name: 'search', query }" class="search-document-navbar__back flex-grow-1 text-truncate pr-1" v-shortkey="getKeys('backToSearchResults')" @shortkey.native="getAction('backToSearchResults')">
-      <fa icon="chevron-circle-left" />
+      <fa icon="chevron-circle-left" class="mr-1" />
       {{ $t('search.back') }}
     </router-link>
     <div v-if="currentDocument" class="ml-auto">
-      <a class="btn btn-sm py-0 mr-2 search-document-navbar__download btn-secondary" :href="currentDocument.fullUrl" target="_blank" :title="$t('document.download_file')" v-if="currentDocument && isDownloadAllowed && !hasFeature('DOCUMENT_ACTIONS')" id="search-document-navbar-download">
-        <fa icon="download" />
-        {{ $t('document.download_button') }}
-      </a>
-      <b-popover target="search-document-navbar-download" triggers="hover focus" placement="bottomleft" :title="currentDocument.contentTypeLabel">
-        <document-type-card :document="currentDocument" />
-      </b-popover>
       <span class="search-document-navbar__nav" v-if="currentDocumentIndex > -1">
         <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
-          <fa icon="angle-left" />
+          <fa icon="angle-left" class="mr-1" />
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.previous.label') }}
           </span>
@@ -26,16 +19,13 @@
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.next.label') }}
           </span>
-          <fa icon="angle-right" />
+          <fa icon="angle-right" class="ml-1" />
         </button>
         <b-tooltip target="next-document-button" triggers="hover">
           <span v-html="nextTooltip"></span>
         </b-tooltip>
       </span>
-      <router-link-popup v-if="!hasFeature('DOCUMENT_ACTIONS')" :to="{ name: 'document-simplified', params: currentDocument.routerParams }" class="btn btn-sm btn-link text-white py-0" :title="$t('document.external_window')" v-b-tooltip.bottomleft>
-        <fa icon="external-link-alt" />
-      </router-link-popup>
-      <document-actions v-if="hasFeature('DOCUMENT_ACTIONS')"
+      <document-actions
         :document="currentDocument"
         class="search-document-navbar__actions d-flex"
         star-btn-class="btn btn-link text-white py-0 px-2 order-1"
@@ -43,7 +33,7 @@
         download-btn-class="btn btn-secondary order-2 btn-sm py-0 ml-1"
         download-btn-label
         no-btn-group
-        is-download-allowed />
+        :is-download-allowed="isDownloadAllowed" />
     </div>
   </div>
 </template>
@@ -56,7 +46,6 @@ import last from 'lodash/last'
 import { getOS } from '@/utils/utils'
 import shortkeys from '@/mixins/shortkeys'
 
-import DocumentTypeCard from '@/components/DocumentTypeCard'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
 import DocumentActions from '@/components/DocumentActions'
 import features from '@/mixins/features'
@@ -65,7 +54,6 @@ export default {
   name: 'SearchDocumentNavbar',
   mixins: [features, shortkeys],
   components: {
-    DocumentTypeCard,
     RouterLinkPopup,
     DocumentActions
   },
@@ -140,7 +128,9 @@ export default {
       this.$root.$el.style.setProperty('--search-document-navbar-height', height)
     },
     goToDocument (document) {
-      return this.$router.push({ name: 'document', params: document.routerParams })
+      if (document) {
+        return this.$router.push({ name: 'document', params: document.routerParams })
+      }
     },
     async goToPreviousDocument () {
       if (this.navRequiresPreviousPage) {
@@ -172,7 +162,7 @@ export default {
       border-radius: 0;
     }
 
-    &__back {
+    &__back, &__back:hover {
       font-size: 0.875rem;
       color: inherit;
       display: inline;

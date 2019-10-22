@@ -35,8 +35,8 @@ export class DatashareClient {
   createIndex (project) {
     return this.sendAction(`/api/index/${project}`, { method: 'PUT' }, false)
   }
-  deleteAll (projectId) {
-    return this.sendAction(`/api/project/id/${encodeURIComponent(projectId)}`, { method: 'DELETE' }, false)
+  deleteAll (project) {
+    return this.sendAction(`/api/project/id/${project}`, { method: 'DELETE' }, false)
   }
   getVersion () {
     return this.sendAction('/version')
@@ -57,28 +57,28 @@ export class DatashareClient {
     return this.sendAction(document.url, {}, false)
   }
   getStarredDocuments (project) {
-    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/starred`)
+    return this.sendAction(`/api/${project}/documents/starred`)
   }
   starDocuments (project, documents) {
-    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/batchUpdate/star`, { method: 'POST', body: JSON.stringify(documents) })
+    return this.sendAction(`/api/${project}/documents/batchUpdate/star`, { method: 'POST', body: JSON.stringify(documents) })
   }
   unstarDocuments (project, documents) {
-    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/batchUpdate/unstar`, { method: 'POST', body: JSON.stringify(documents) })
+    return this.sendAction(`/api/${project}/documents/batchUpdate/unstar`, { method: 'POST', body: JSON.stringify(documents) })
   }
   getTags (project, documentId) {
-    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/tags/${documentId}`)
+    return this.sendAction(`/api/${project}/documents/tags/${documentId}`)
   }
   tagDocument (project, documentId, routingId, tags) {
-    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/tag/${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
+    return this.sendAction(`/api/${project}/documents/tag/${documentId}?routing=${routingId}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
   }
   untagDocument (project, documentId, routingId, tags) {
-    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/untag//${encodeURIComponent(documentId)}?routing=${encodeURIComponent(routingId)}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
+    return this.sendAction(`/api/${project}/documents/untag//${documentId}?routing=${routingId}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
   }
   tagDocuments (project, docIds, tags) {
-    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/batchUpdate/tag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
+    return this.sendAction(`/api/${project}/documents/batchUpdate/tag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
   }
   untagDocuments (project, docIds, tags) {
-    return this.sendAction(`/api/${encodeURIComponent(project)}/documents/batchUpdate/untag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
+    return this.sendAction(`/api/${project}/documents/batchUpdate/untag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
   }
   batchSearch (name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published) {
     const body = new FormData()
@@ -90,16 +90,16 @@ export class DatashareClient {
     map(fileTypes, fileType => body.append('fileTypes', fileType.mime))
     map(paths, path => body.append('paths', path))
     body.append('published', published)
-    return this.sendAction(`/api/batch/search/${encodeURIComponent(project)}`, { method: 'POST', body }, false)
+    return this.sendAction(`/api/batch/search/${project}`, { method: 'POST', body }, false)
   }
   getBatchSearches () {
     return this.sendAction('/api/batch/search')
   }
   getBatchSearchResults (batchId, from = 0, size = 100, queries = [], sort = 'doc_nb', order = 'desc') {
-    return this.sendAction(`/api/batch/search/result/${encodeURIComponent(batchId)}`, { method: 'POST', body: JSON.stringify({ from, size, queries, sort, order }) })
+    return this.sendAction(`/api/batch/search/result/${batchId}`, { method: 'POST', body: JSON.stringify({ from, size, queries, sort, order }) })
   }
   deleteBatchSearch (batchId) {
-    return this.sendAction(`/api/batch/search/${encodeURIComponent(batchId)}`, { method: 'DELETE' }, false)
+    return this.sendAction(`/api/batch/search/${batchId}`, { method: 'DELETE' }, false)
   }
   deleteBatchSearches () {
     return this.sendAction('/api/batch/search', { method: 'DELETE' }, false)
@@ -110,7 +110,7 @@ export class DatashareClient {
     return url.href
   }
   isDownloadAllowed (project) {
-    return this.sendAction(`/api/project/isAllowed/${encodeURIComponent(project)}`, {}, false)
+    return this.sendAction(`/api/project/isDownloadAllowed/${project}`, {}, false)
   }
   async sendAction (url, params = {}, json = true) {
     const r = await this.fetch(DatashareClient.getFullUrl(url), params)

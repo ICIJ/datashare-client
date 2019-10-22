@@ -4,7 +4,7 @@
       <search-results-header position="top" class="border-bottom mb-3" />
       <div class="search-results-grid__items">
         <div v-for="document in response.hits" :key="document.id" class="search-results-grid__items__item d-flex flex-column border rounded">
-          <document-actions :document="document" class="search-results-grid__items__item__actions m-2" :isDownloadAllowed="isDownloadAllowed" />
+          <document-actions :document="document" class="search-results-grid__items__item__actions m-2" :is-download-allowed="isDownloadAllowed" />
           <router-link class="flex-grow-1 search-results-grid__items__item__thumbnail" :to="{ name: 'document', params: document.routerParams }">
             <document-thumbnail :document="document" size="md" />
           </router-link>

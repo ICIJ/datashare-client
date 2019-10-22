@@ -10,10 +10,10 @@ const { localVue, store, i18n } = App.init(createLocalVue()).useAll()
 describe('DocumentTabNamedEntities', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
+  const index = process.env.VUE_APP_ES_INDEX
 
   beforeAll(() => {
     Murmur.config.set('manageDocuments', true)
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
   })
 
   beforeEach(() => store.commit('document/reset'))
@@ -26,7 +26,7 @@ describe('DocumentTabNamedEntities', () => {
       .withNer('mention_02', 0, 'ORGANIZATION')
       .withNer('mention_03', 0, 'LOCATION'))
       .commit()
-    const document = await store.dispatch('document/get', { id })
+    const document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
     const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document }, sync: false })
 
@@ -43,7 +43,7 @@ describe('DocumentTabNamedEntities', () => {
   it('should display a specific error message if no names finding task has been run on that document', async () => {
     const id = 'document-ner-b'
     await letData(es).have(new IndexedDocument(id)).commit()
-    const document = await store.dispatch('document/get', { id })
+    const document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
     const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document }, sync: false })
 
@@ -53,7 +53,7 @@ describe('DocumentTabNamedEntities', () => {
   it('should display a specific error message if no named entities found after names finding task', async () => {
     const id = 'document-ner-c'
     await letData(es).have(new IndexedDocument(id).withPipeline('CORENLP')).commit()
-    const document = await store.dispatch('document/get', { id })
+    const document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
     const wrapper = shallowMount(DocumentTabNamedEntities, { localVue, i18n, store, propsData: { document }, sync: false })
 

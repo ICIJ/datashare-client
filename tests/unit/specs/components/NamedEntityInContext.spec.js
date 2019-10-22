@@ -21,7 +21,7 @@ describe('NamedEntityInContext', () => {
       .withNer('Yassine', 22, 'PERSON')
       .withNer('contact@icij.org', -1, 'PERSON'))
       .commit()
-    const document = await store.dispatch('document/get', { id })
+    const document = await store.dispatch('document/get', { id, index: process.env.VUE_APP_ES_INDEX })
     const namedEntities = await store.dispatch('document/getFirstPageForNamedEntityInCategory', 'PERSON')
     const namedEntity = namedEntities.hits[namedEntityIndex]
     return { document, namedEntity, extractLength }

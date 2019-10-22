@@ -8,8 +8,6 @@ import { jsonOk } from 'tests/unit/tests_utils'
 
 import { App } from '@/main'
 import DocumentActions from '@/components/DocumentActions'
-import esClient from '@/api/esClient'
-import Response from '@/api/Response'
 import store from '@/store'
 import { datashare } from '@/store/modules/search'
 
@@ -26,17 +24,14 @@ describe('DocumentActions.vue', () => {
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk())
     store.commit('search/starredDocuments', [])
-    // Create a dummy document with id "doc_01"
-    await letData(es).have(new IndexedDocument('doc_01')).commit()
-    document = Response.instantiate(await esClient.getEsDoc(process.env.VUE_APP_ES_INDEX, 'doc_01'))
+    document = await letData(es).have(new IndexedDocument()).commit()
     wrapper = shallowMount(DocumentActions, { localVue, store, propsData: { document }, mocks: { $t: msg => msg }, sync: false })
   })
 
   it('should display a filled star if document is starred, an empty one otherwise', async () => {
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('far,star')
-    store.commit('search/starredDocuments', ['doc_01'])
+    store.commit('search/starredDocuments', [document.id])
     await flushPromises()
-
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')
   })
 
@@ -46,15 +41,15 @@ describe('DocumentActions.vue', () => {
 
     await wrapper.vm.toggleStarDocument(wrapper.vm.document.id)
 
-    expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
+    expect(wrapper.vm.starredDocuments).toEqual([document.id])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')
   })
 
   it('should replace a filled star by an empty one on click on it', async () => {
-    store.commit('search/pushFromStarredDocuments', 'doc_01')
+    store.commit('search/pushFromStarredDocuments', document.id)
     await flushPromises()
 
-    expect(wrapper.vm.starredDocuments).toEqual(['doc_01'])
+    expect(wrapper.vm.starredDocuments).toEqual([document.id])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')
 
     await wrapper.vm.toggleStarDocument(wrapper.vm.document.id)

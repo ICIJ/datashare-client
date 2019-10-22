@@ -1,4 +1,5 @@
 import store from '@/store'
+import uniqueId from 'lodash/uniqueId'
 import { datashare, initialState } from '@/store/modules/document'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -9,9 +10,8 @@ import orderBy from 'lodash/orderBy'
 describe('Document store', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
-  const id = 'document'
-
-  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
+  const id = 'document-a'
+  const index = process.env.VUE_APP_ES_INDEX
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
@@ -36,27 +36,25 @@ describe('Document store', () => {
 
   it('should get the document', async () => {
     await letData(es).have(new IndexedDocument(id)).commit()
-    await store.dispatch('document/get', { id })
+    await store.dispatch('document/get', { id, index })
 
     expect(store.state.document.doc.id).toEqual(id)
   })
 
   it('should get the parent document', async () => {
-    await letData(es).have(new IndexedDocument('parent').withContent('parent')).commit()
-    await store.dispatch('search/query', 'parent')
-    const parentNode = store.state.search.response.hits
-    await letData(es).have(new IndexedDocument('child').withContent('child').withParent(parentNode[0].id)).commit()
-    await store.dispatch('search/query', 'child')
-    const childNode = store.state.search.response.hits
-    await store.dispatch('document/get', { id: childNode[0].id, routing: childNode[0].routing })
+    const parentId = uniqueId('parent-')
+    const childId = uniqueId('child-')
+    await letData(es).have(new IndexedDocument(parentId).withContent('parent')).commit()
+    await letData(es).have(new IndexedDocument(childId).withContent('child').withParent(parentId)).commit()
+    await store.dispatch('document/get', { id: childId, routing: parentId, index })
     await store.dispatch('document/getParent')
 
-    expect(store.state.document.parentDocument.id).toEqual(parentNode[0].id)
+    expect(store.state.document.parentDocument.id).toEqual(parentId)
   })
 
   it('should get the document\'s named entities', async () => {
     await letData(es).have(new IndexedDocument(id).withNer('naz')).commit()
-    await store.dispatch('document/get', { id })
+    await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
 
     expect(store.getters['document/namedEntities'][0].raw._source.mention).toEqual('naz')
@@ -68,7 +66,7 @@ describe('Document store', () => {
       .withNer('entity_01', 42, 'ORGANIZATION', false)
       .withNer('entity_02', 43, 'ORGANIZATION', true)
       .withNer('entity_03', 44, 'ORGANIZATION', false)).commit()
-    await store.dispatch('document/get', { id })
+    await store.dispatch('document/get', { id, index })
 
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
 
@@ -82,11 +80,9 @@ describe('Document store', () => {
   it('should get the document\'s tags', async () => {
     const tags = ['tag_01', 'tag_02']
     datashare.fetch.mockReturnValue(jsonOk(tags))
-    await letData(es).have(new IndexedDocument(id).withTags(tags))
-    store.commit('document/idAndRouting', { id })
-
+    await letData(es).have(new IndexedDocument(id).withTags(tags)).commit()
+    await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getTags')
-
     expect(store.state.document.tags).toEqual(tags)
     datashare.fetch.mockClear()
   })
@@ -105,7 +101,7 @@ describe('Document store', () => {
   it('should tag multiple documents and not refresh', async () => {
     await letData(es).have(new IndexedDocument('doc_01')).commit()
     await letData(es).have(new IndexedDocument('doc_02')).commit()
-    await store.dispatch('document/get', { id: 'doc_01' })
+    await store.dispatch('document/get', { id: 'doc_01', index })
 
     datashare.fetch.mockClear()
 
@@ -119,7 +115,7 @@ describe('Document store', () => {
   it('should deleteTag from 1 document', async () => {
     await letData(es).have(new IndexedDocument('doc_01')).commit()
     await letData(es).have(new IndexedDocument('doc_02')).commit()
-    await store.dispatch('document/get', { id: 'doc_01' })
+    await store.dispatch('document/get', { id: 'doc_01', index })
 
     datashare.fetch.mockClear()
 

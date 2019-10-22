@@ -4,7 +4,7 @@ run:
 clean:
 		rm -Rf ./dist
 
-dist:
+dist: clean
 		yarn build
 
 install:

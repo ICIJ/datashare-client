@@ -18,7 +18,7 @@
             {{ $t('facet.invert') }}
           </button>
         </span>
-        <fa v-if="isReady" :icon="headerIcon"  @click="toggleItems" class="float-right" />
+        <fa v-if="isReady" :icon="headerIcon" @click="toggleItems" class="float-right" />
         <fa v-else icon="circle-notch" spin class="float-right" />
       </div>
     </slot>
