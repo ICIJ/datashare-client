@@ -33,7 +33,7 @@
         download-btn-class="btn btn-secondary order-2 btn-sm py-0 ml-1"
         download-btn-label
         no-btn-group
-        is-download-allowed />
+        :is-download-allowed="isDownloadAllowed" />
     </div>
   </div>
 </template>

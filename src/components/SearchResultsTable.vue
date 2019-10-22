@@ -40,7 +40,7 @@
           <span v-html="value" class="text-truncate text-muted"></span>
         </template>
         <template v-slot:cell(actions)="{ item }">
-          <document-actions :document="item" class="float-right btn-group-sm" :isDownloadAllowed="isDownloadAllowed" />
+          <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" />
         </template>
         <template v-slot:cell(contentLength)="{ value }">
           {{ value | humanSize }}
