@@ -103,6 +103,12 @@
           <dd class="col-sm-8">
             {{ meta.published ? $t('indexing.yes') : $t('indexing.no') }}
           </dd>
+          <dt class="col-sm-4 text-right">
+            {{ $t('batchSearch.author') }}
+          </dt>
+          <dd class="col-sm-8">
+            {{ meta.user.id }}
+          </dd>
         </dl>
       </div>
       <div v-if="!isReady" class="card">

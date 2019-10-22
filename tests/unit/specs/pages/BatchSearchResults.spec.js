@@ -93,7 +93,8 @@ describe('BatchSearchResults.vue', () => {
       fileTypes: [],
       paths: [],
       published: 0,
-      queries: ['query_01', 'query_02', 'query_03']
+      queries: ['query_01', 'query_02', 'query_03'],
+      user: { id: 'test' }
     }, {
       uuid: '13',
       project: { name: 'ProjectName2' },
@@ -106,7 +107,8 @@ describe('BatchSearchResults.vue', () => {
       fileTypes: [],
       paths: [],
       published: 0,
-      queries: ['query_04']
+      queries: ['query_04'],
+      user: { id: 'test' }
     }])
     const propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
     wrapper = shallowMount(BatchSearchResults, { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link', numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
@@ -133,7 +135,8 @@ describe('BatchSearchResults.vue', () => {
 
   it('should display info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(8)
+    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(9)
+    expect(wrapper.findAll('.batch-search-results__info dd').at(8).text()).toEqual('test')
   })
 
   it('should refresh route on "batch-search-results::filter" event emitted, on reset to the first page', () => {
