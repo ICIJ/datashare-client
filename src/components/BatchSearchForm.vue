@@ -209,11 +209,7 @@ export default {
         this.fileTypes.push(fileType)
         this.hideSuggestionsFileTypes()
         this.$set(this, 'fileType', '')
-        this.$nextTick(() => {
-          if (this.$refs.fileType) {
-            this.$refs.fileType.focus()
-          }
-        })
+        if (this.$refs && this.$refs.fileType) this.$refs.fileType.focus()
       }
     },
     hideSuggestionsFileTypes () {
@@ -230,11 +226,7 @@ export default {
         this.paths.push(path)
         this.hideSuggestionsPaths()
         this.$set(this, 'path', '')
-        this.$nextTick(() => {
-          if (this.$refs.path) {
-            this.$refs.path.focus()
-          }
-        })
+        if (this.$refs && this.$refs.fileType) this.$refs.fileType.focus()
       }
     },
     hideSuggestionsPaths () {

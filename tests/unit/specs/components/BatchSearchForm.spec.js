@@ -1,5 +1,5 @@
 import BatchSearchForm from '@/components/BatchSearchForm'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 import Murmur from '@icij/murmur'
 import { App } from '@/main'
@@ -119,6 +119,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should set the clicked item in the fileTypes input', () => {
+      wrapper = mount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
       wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'Excel 2003 XML spreadsheet visio' }])
       wrapper.vm.searchFileType({ label: 'StarWriter 5 document' })
 
