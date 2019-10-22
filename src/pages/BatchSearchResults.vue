@@ -174,7 +174,7 @@ export default {
       fields: [
         {
           key: 'documentNumber',
-          label: this.$t('batchSearchResults.index'),
+          label: this.$t('batchSearchResults.rank'),
           sortable: true,
           name: 'doc_nb'
         },
