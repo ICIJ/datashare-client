@@ -1,5 +1,6 @@
 import isArray from 'lodash/isArray'
 import find from 'lodash/find'
+import uniqueId from 'lodash/uniqueId'
 import { dirname } from 'path'
 
 import Response from '@/api/Response'
@@ -53,7 +54,7 @@ class IndexedDocuments {
 }
 
 class IndexedDocument {
-  constructor (path) {
+  constructor (path = uniqueId('/path/to/document/')) {
     this.path = path
     this.dirname = dirname(path)
     this.join = { name: 'Document' }

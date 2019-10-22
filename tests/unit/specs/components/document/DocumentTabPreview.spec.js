@@ -13,7 +13,7 @@ describe('DocumentTabPreview', () => {
   const es = esConnectionHelper.es
 
   it('should call the LegacySpreadsheetViewer component for XLSX document', async () => {
-    const document = await letData(es).have(new IndexedDocument('spreadsheet.xlsx')
+    const document = await letData(es).have(new IndexedDocument()
       .withContent('')
       .withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'))
       .commitAndGetLastDocument()
@@ -24,7 +24,7 @@ describe('DocumentTabPreview', () => {
   })
 
   it('should call the LegacySpreadsheetViewer component for CSV document', async () => {
-    const document = await letData(es).have(new IndexedDocument('spreadsheet.csv')
+    const document = await letData(es).have(new IndexedDocument()
       .withContent('')
       .withContentType('text/csv'))
       .commitAndGetLastDocument()
@@ -35,7 +35,7 @@ describe('DocumentTabPreview', () => {
   })
 
   it('should call the PdfViewer component for PDF document', async () => {
-    const document = await letData(es).have(new IndexedDocument('document.pdf')
+    const document = await letData(es).have(new IndexedDocument()
       .withContent('')
       .withContentType('application/pdf'))
       .commitAndGetLastDocument()
@@ -46,7 +46,7 @@ describe('DocumentTabPreview', () => {
   })
 
   it('should call the TiffViewer component for TIFF document', async () => {
-    const document = await letData(es).have(new IndexedDocument('image.tiff')
+    const document = await letData(es).have(new IndexedDocument()
       .withContent('')
       .withContentType('image/tiff'))
       .commitAndGetLastDocument()
