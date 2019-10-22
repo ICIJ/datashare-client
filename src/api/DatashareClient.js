@@ -110,7 +110,7 @@ export class DatashareClient {
     return url.href
   }
   isDownloadAllowed (project) {
-    return this.sendAction(`/api/project/isAllowed/${encodeURIComponent(project)}`, {}, false)
+    return this.sendAction(`/api/project/isDownloadAllowed/${encodeURIComponent(project)}`, {}, false)
   }
   async sendAction (url, params = {}, json = true) {
     const r = await this.fetch(DatashareClient.getFullUrl(url), params)

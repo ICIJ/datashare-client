@@ -80,7 +80,7 @@ describe('IndexSelector.vue', () => {
       await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
 
       expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/project/isAllowed/${process.env.VUE_APP_ES_ANOTHER_INDEX}`), {})
+      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/project/isDownloadAllowed/${process.env.VUE_APP_ES_ANOTHER_INDEX}`), {})
     })
 
     it('should refresh the route on index change', async () => {
