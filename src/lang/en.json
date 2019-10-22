@@ -470,15 +470,13 @@
   "batchSearch": {
     "lead": "Search multiple terms and documents at once.",
     "title": "Batch searches",
-    "form": {
-      "heading": "New batch search",
-      "fileLabel": "CSV file",
-      "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
-      "filePlaceholder": "Choose a file...",
-      "submit": "Add",
-      "success": "Your batch search is now running.",
-      "failure": "Something went wrong, unable to start your batch search."
-    },
+    "heading": "New batch search",
+    "fileLabel": "CSV file",
+    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
+    "filePlaceholder": "Choose a file...",
+    "submit": "Add",
+    "success": "Your batch search is now running.",
+    "failure": "Something went wrong, unable to start your batch search.",
     "project": "Project",
     "name": "Name",
     "description": "Description",

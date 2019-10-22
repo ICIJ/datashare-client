@@ -2,7 +2,7 @@
   <div class="batch-search-form m-3">
     <b-form @submit.prevent="onSubmit">
       <h5 class="text-light py-1">
-        {{ $t('batchSearch.form.heading') }}
+        {{ $t('batchSearch.heading') }}
       </h5>
       <div class="card w-100">
         <div class="card-body pb-1 small">
@@ -14,11 +14,11 @@
               required></b-form-input>
           </b-form-group>
           <b-form-group
-            :label="`${$t('batchSearch.form.fileLabel')} *`"
-            :description="$t('batchSearch.form.fileDescription')">
+            :label="`${$t('batchSearch.fileLabel')} *`"
+            :description="$t('batchSearch.fileDescription')">
             <b-form-file
               v-model="csvFile"
-              :placeholder="$t('batchSearch.form.filePlaceholder')"
+              :placeholder="$t('batchSearch.filePlaceholder')"
               accept=".csv"
               required></b-form-file>
           </b-form-group>
@@ -124,7 +124,7 @@
         <div class="card-footer">
           <div class="d-flex justify-content-end align-items-center">
             <b-button type="submit" variant="primary">
-              {{ $t('batchSearch.form.submit') }}
+              {{ $t('batchSearch.submit') }}
             </b-button>
           </div>
         </div>
@@ -254,9 +254,9 @@ export default {
       if (this.$config.is('manageDocuments')) {
         try {
           await this.$store.dispatch('indexing/runBatchSearch')
-          this.$bvToast.toast(this.$t('batchSearch.form.success'), { noCloseButton: true, variant: 'success' })
+          this.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
         } catch (_) {
-          this.$bvToast.toast(this.$t('batchSearch.form.failure'), { noCloseButton: true, variant: 'danger' })
+          this.$bvToast.toast(this.$t('batchSearch.failure'), { noCloseButton: true, variant: 'danger' })
         }
       }
     }
