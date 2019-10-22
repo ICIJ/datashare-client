@@ -3,7 +3,7 @@
     <content-placeholder class="document py-2 px-3" />
   </div>
   <div v-else>
-    <div class="d-flex flex-column document" v-if="document" v-shortkey="getKeys('tabNavigation')" @shortkey="getAction('tabNavigation')">
+    <div class="d-flex flex-column document" v-if="document" v-shortkey="getKeys('tabNavigation')" @shortkey="getAction('tabNavigation')" :class="{ 'document--simplified': $route.name === 'document-simplified' }">
       <div class="document__header">
         <h3 class="document__header__name">
           <document-sliced-name interactive-root :document="document" />
@@ -183,6 +183,10 @@ export default {
 .document {
   background: white;
   margin: 0;
+
+  &--simplified {
+    min-height: 100vh;
+  }
 
   .badge-pill {
     overflow: hidden;
