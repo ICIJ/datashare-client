@@ -285,24 +285,19 @@ export default {
     async sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
       const order = ctx.sortDesc ? 'desc' : 'asc'
-      this.$router.push({
-        name: 'batch-search.results',
-        params: { index: this.$route.params.index, uuid: this.$route.params.uuid },
-        query: { page: this.page, queries: this.queries, sort, order }
-      })
+      this.$router.push(this.generateLinkToBatchSearchResults(this.page, this.queries, sort, order))
     },
     filter () {
-      this.$router.push({
-        name: 'batch-search.results',
-        params: { index: this.$route.params.index, uuid: this.$route.params.uuid },
-        query: { page: 1, queries: this.selectedQueries, sort: this.sort, order: this.order }
-      })
+      this.$router.push(this.generateLinkToBatchSearchResults(1, this.selectedQueries))
     },
     linkGen (page) {
+      return this.generateLinkToBatchSearchResults(page, this.selectedQueries)
+    },
+    generateLinkToBatchSearchResults (page = this.page, queries = this.queries, sort = this.sort, order = this.order) {
       return {
         name: 'batch-search.results',
         params: { index: this.$route.params.index, uuid: this.$route.params.uuid },
-        query: { page, queries: this.selectedQueries, sort: this.sort, order: this.order }
+        query: { page, queries, sort, order }
       }
     },
     async deleteBatchSearch () {
