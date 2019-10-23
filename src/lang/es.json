@@ -469,15 +469,13 @@
   "batchSearch": {
     "lead": "Buscar múltiples términos y documentos a la vez.",
     "title": "Búsquedas masivas",
-    "form": {
-      "heading": "Nueva búsqueda masiva",
-      "fileLabel": "Archivo CSV",
-      "fileDescription": "Sólo se acepta el formato CSV. La primera columna debe contener los términos a buscar.",
-      "filePlaceholder": "Escoge un archivo...",
-      "submit": "Agregar",
-      "success": "Tu búsqueda masiva está ejecutándose.",
-      "failure": "Algo ha salido mal, no se puede iniciar la búsqueda masiva."
-    },
+    "heading": "New batch search",
+    "fileLabel": "CSV file",
+    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
+    "filePlaceholder": "Choose a file...",
+    "submit": "Add",
+    "success": "Your batch search is now running.",
+    "failure": "Something went wrong, unable to start your batch search.",
     "project": "Proyecto",
     "name": "Nombre",
     "description": "Descripción",
@@ -500,7 +498,9 @@
     "phraseMatch": "Realizar búsquedas similares",
     "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria.",
     "phraseMatchDescriptionOperators": "No inserte operadores en sus consultas",
-    "learnMore": "Leer más"
+    "learnMore": "Leer más",
+    "author": "Author",
+    "advancedFilters": "Advanced filters"
   },
   "batchSearchResults": {
     "rank": "Rank",
