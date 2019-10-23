@@ -1,17 +1,13 @@
-import Vuex from 'vuex'
-import VueI18n from 'vue-i18n'
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
-import { createLocalVue, mount } from '@vue/test-utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import FacetNamedEntity from '@/components/FacetNamedEntity'
-import messages from '@/lang/en'
-import router from '@/router'
-import store from '@/store'
-import mixin from '@/mixins/facets'
 import find from 'lodash/find'
 import noop from 'lodash/noop'
+import { createLocalVue, mount } from '@vue/test-utils'
+import Murmur from '@icij/murmur'
+
+import { App } from '@/main'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import FacetNamedEntity from '@/components/FacetNamedEntity'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import mixin from '@/mixins/facets'
 
 jest.mock('@/api/DatashareClient', () => {
   const { jsonOk } = require('tests/unit/tests_utils')
@@ -23,12 +19,7 @@ jest.mock('@/api/DatashareClient', () => {
   })
 })
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(BootstrapVue)
-localVue.use(VueI18n)
-localVue.use(Murmur)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue, i18n, router, store } = App.init(createLocalVue()).useAll()
 
 describe('FacetNamedEntity.vue', () => {
   esConnectionHelper()
@@ -474,7 +465,7 @@ describe('FacetNamedEntity.vue', () => {
     const namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityPerson' })
     namedEntityFacet.value = ['person_01']
     store.commit('search/addFacetValue', namedEntityFacet)
-    wrapper = mount(FacetNamedEntity, { localVue, i18n, store, router, propsData: { facet: find(store.state.search.facets, { name: 'namedEntityPerson' }) } })
+    wrapper = mount(FacetNamedEntity, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'namedEntityPerson' }) } })
     await wrapper.vm.root.aggregate()
     wrapper.findAll('.list-group-item .facet__items__item input').at(0).trigger('click')
 

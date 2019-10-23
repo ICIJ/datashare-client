@@ -1,15 +1,10 @@
-import DocumentContent from '@/components/DocumentContent'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+
+import { App } from '@/main'
+import DocumentContent from '@/components/DocumentContent'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import Murmur from '@icij/murmur'
-import store from '@/store'
-import VueI18n from 'vue-i18n'
-import Vuex from 'vuex'
-import BootstrapVue from 'bootstrap-vue'
-import messages from '@/lang/en'
-import VueShortkey from 'vue-shortkey'
 import { getOS } from '@/utils/utils'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 jest.mock('@/utils/utils', () => {
   return {
@@ -17,14 +12,7 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const localVue = createLocalVue()
-localVue.use(Murmur)
-localVue.use(VueI18n)
-localVue.use(BootstrapVue)
-localVue.use(Vuex)
-localVue.use(VueShortkey)
-
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
@@ -55,8 +43,8 @@ describe('DocumentContent.vue', () => {
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }
@@ -81,8 +69,8 @@ describe('DocumentContent.vue', () => {
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }
@@ -102,8 +90,8 @@ describe('DocumentContent.vue', () => {
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }
@@ -125,8 +113,8 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }
@@ -143,8 +131,8 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }
@@ -165,8 +153,8 @@ describe('DocumentContent.vue', () => {
       store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }
@@ -188,8 +176,8 @@ describe('DocumentContent.vue', () => {
       store.commit('document/toggleShowNamedEntities', false)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }
@@ -212,8 +200,8 @@ describe('DocumentContent.vue', () => {
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }
@@ -231,8 +219,8 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }
@@ -252,8 +240,8 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }
@@ -273,8 +261,8 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        store,
         i18n,
+        store,
         propsData: {
           document: store.state.document.doc
         }

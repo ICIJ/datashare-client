@@ -1,19 +1,11 @@
-import VueI18n from 'vue-i18n'
-import Murmur from '@icij/murmur'
-import BootstrapVue from 'bootstrap-vue'
-import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import store from '@/store'
-import router from '@/router'
-import messages from '@/lang/en'
+
+import { App } from '@/main'
 import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
+import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue, i18n, store, router } = App.init(createLocalVue()).useAll()
 
 describe('SearchResultsAppliedFilters.vue', () => {
   let wrapper
@@ -90,7 +82,7 @@ describe('SearchResultsAppliedFilters.vue', () => {
 
   describe('deletes applied filters', () => {
     beforeEach(() => {
-      wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, store, router })
+      wrapper = mount(SearchResultsAppliedFilters, { localVue, i18n, router, store })
     })
 
     it('should remove the "AND" on last applied filter deletion', async () => {

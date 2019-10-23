@@ -1,22 +1,12 @@
-import Vuex from 'vuex'
-import VueI18n from 'vue-i18n'
-import Murmur from '@icij/murmur'
-import BootstrapVue from 'bootstrap-vue'
+import find from 'lodash/find'
 import { createLocalVue, mount } from '@vue/test-utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+
+import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FacetDate from '@/components/FacetDate'
-import messages from '@/lang/en'
-import router from '@/router'
-import store from '@/store'
-import find from 'lodash/find'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue, i18n, router, store } = App.init(createLocalVue()).useAll()
 
 describe('FacetDate.vue', () => {
   esConnectionHelper()

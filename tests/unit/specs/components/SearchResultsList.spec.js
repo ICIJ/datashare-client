@@ -1,20 +1,14 @@
-import SearchResultsList from '@/components/SearchResultsList'
-import VueI18n from 'vue-i18n'
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import Murmur from '@icij/murmur'
+
+import { App } from '@/main'
+import { datashare } from '@/store/modules/search'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
-import messages from '@/lang/en'
-import store from '@/store'
-import { datashare } from '@/store/modules/search'
 import { jsonOk } from 'tests/unit/tests_utils'
+import SearchResultsList from '@/components/SearchResultsList'
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 
 async function createView (query = '*', from = 0, size = 25) {
   await store.dispatch('search/query', { query, from, size })
@@ -29,8 +23,6 @@ describe('SearchResultsList.vue', () => {
   let wrapper
   esConnectionHelper()
   const es = esConnectionHelper.es
-  // High timeout because multiple searches can be heavy for the Elasticsearch
-  jest.setTimeout(1e4)
 
   beforeAll(() => {
     Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] })

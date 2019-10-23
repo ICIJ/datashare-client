@@ -13,12 +13,12 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      component: () => import(`@/pages/App.vue`),
+      component: () => import(`@/pages/App`),
       children: [
         {
           name: 'landing',
           path: '',
-          component: () => import(`@/pages/Landing.vue`),
+          component: () => import(`@/pages/Landing`),
           meta: {
             docs: [
               '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
@@ -44,15 +44,15 @@ const router = new VueRouter({
             ]
           },
           components: {
-            default: () => import('@/pages/Search.vue'),
-            sidebar: () => import('@/components/AggregationsPanel.vue')
+            default: () => import('@/pages/Search'),
+            sidebar: () => import('@/components/AggregationsPanel')
           },
           children: [
             {
               name: 'document',
               path: 'd/:index/:id/:routing?',
               alias: 'e/:index/:id/:routing?',
-              component: () => import(`@/pages/DocumentView.vue`),
+              component: () => import(`@/pages/DocumentView`),
               props: true,
               meta: {
                 docs: [
@@ -67,7 +67,7 @@ const router = new VueRouter({
         {
           name: 'indexing',
           path: 'indexing',
-          component: () => import(`@/pages/Indexing.vue`),
+          component: () => import(`@/pages/Indexing`),
           meta: {
             docs: [
               '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
@@ -79,8 +79,8 @@ const router = new VueRouter({
           name: 'batch-search',
           path: 'batch-search',
           components: {
-            default: () => import('@/pages/BatchSearch.vue'),
-            sidebar: () => import('@/components/BatchSearchForm.vue')
+            default: () => import('@/pages/BatchSearch'),
+            sidebar: () => import('@/components/BatchSearchForm')
           },
           meta: {
             docs: [
@@ -92,7 +92,7 @@ const router = new VueRouter({
           name: 'batch-search.results',
           path: 'batch-search/:index/:uuid',
           components: {
-            default: () => import('@/pages/BatchSearchResults.vue'),
+            default: () => import('@/pages/BatchSearchResults'),
             sidebar: () => import('@/components/BatchSearchResultsFilters')
           },
           props: {
@@ -103,14 +103,14 @@ const router = new VueRouter({
         {
           name: 'user-history',
           path: 'user-history',
-          component: () => import(`@/pages/UserHistory.vue`)
+          component: () => import(`@/pages/UserHistory`)
         },
         {
           name: 'docs',
           path: 'docs/:slug',
           components: {
-            default: () => import(`@/pages/RouteDoc.vue`),
-            sidebar: () => import(`@/components/RouteDocsLinks.vue`)
+            default: () => import(`@/pages/RouteDoc`),
+            sidebar: () => import(`@/components/RouteDocsLinks`)
           },
           props: {
             default: true,
@@ -122,11 +122,11 @@ const router = new VueRouter({
     {
       name: 'document-simplified',
       path: '/ds/:index/:id/:routing?',
-      component: () => import(`@/pages/DocumentView.vue`)
+      component: () => import(`@/pages/DocumentView`)
     },
     {
       path: '/login',
-      component: () => import(`@/pages/Login.vue`),
+      component: () => import(`@/pages/Login`),
       meta: {
         skipsAuth: true
       }
