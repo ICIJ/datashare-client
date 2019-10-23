@@ -29,14 +29,14 @@ describe('FacetText.vue', () => {
 
   afterEach(() => store.commit('search/reset'))
 
-  it('should display no items for the content-type facet', async () => {
+  it('should display no items for the contentType facet', async () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(0)
     expect(wrapper.vm.root.total).toEqual(0)
   })
 
-  it('should display 3 items for the content-type facet', async () => {
+  it('should display 3 items for the contentType facet', async () => {
     await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('list.js').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('show.js').withContentType('text/javascript')).commit()
@@ -49,7 +49,7 @@ describe('FacetText.vue', () => {
     expect(wrapper.vm.root.total).toEqual(5)
   })
 
-  it('should display 4 items for the content-type facet', async () => {
+  it('should display 4 items for the contentType facet', async () => {
     await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('list.js').withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('show.js').withContentType('text/javascript')).commit()
@@ -415,7 +415,7 @@ describe('FacetText.vue', () => {
   it('should reload the facet on event "facet::refresh"', () => {
     const spyRefreshFacet = jest.spyOn(wrapper.vm.root, 'aggregateWithLoading')
     wrapper.vm.root.collapseItems = false
-    wrapper.vm.$root.$emit('facet::refresh', 'content-type')
+    wrapper.vm.$root.$emit('facet::refresh', 'contentType')
 
     expect(spyRefreshFacet).toBeCalled()
   })
