@@ -5,6 +5,7 @@ import BatchSearchResults from '@/pages/BatchSearchResults'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { App } from '@/main'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import { getAuthenticatedUser } from '@/utils/utils'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -60,6 +61,13 @@ jest.mock('@/api/DatashareClient', () => {
   })
 })
 
+jest.mock('@/utils/utils', () => {
+  return {
+    getAuthenticatedUser: jest.fn().mockReturnValue('test'),
+    getDocumentTypeLabel: jest.fn()
+  }
+})
+
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
 const router = new VueRouter({ routes: [
@@ -75,7 +83,7 @@ const router = new VueRouter({ routes: [
 describe('BatchSearchResults.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
-  let wrapper
+  let propsData, wrapper
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocument('42').withContentType('type_01')).commit()
@@ -110,15 +118,19 @@ describe('BatchSearchResults.vue', () => {
       queries: ['query_04'],
       user: { id: 'test' }
     }])
-    const propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
-    wrapper = shallowMount(BatchSearchResults, { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link', numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
+    propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
+    wrapper = shallowMount(BatchSearchResults,
+      { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link', numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
     await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { page: 1 } })
     await wrapper.vm.fetch()
   })
 
   afterEach(() => store.commit('batchSearch/reset'))
 
-  afterAll(() => jest.unmock('@/api/DatashareClient'))
+  afterAll(() => {
+    jest.unmock('@/api/DatashareClient')
+    jest.unmock('@/utils/utils')
+  })
 
   it('should display the list of the queries of this batch search', () => {
     expect(wrapper.find('.batch-search-results').exists()).toBeTruthy()
@@ -131,6 +143,14 @@ describe('BatchSearchResults.vue', () => {
 
   it('should display a button to delete the batchSearch', () => {
     expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
+  })
+
+  it('should NOT display a button to delete the batchSearch', () => {
+    getAuthenticatedUser.mockReturnValue('other')
+    wrapper = shallowMount(BatchSearchResults,
+      { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link', numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
+
+    expect(wrapper.find('.batch-search-results__delete').exists()).toBeFalsy()
   })
 
   it('should display info about the BatchSearch', () => {

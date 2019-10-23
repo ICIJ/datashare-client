@@ -40,6 +40,8 @@ describe('DocumentContent.vue', () => {
     store.commit('search/reset')
   })
 
+  afterAll(() => jest.unmock('@/utils/utils'))
+
   describe('the extracted text content', () => {
     it('should mark named entities in the extracted text tab', async () => {
       const id = 'doc'

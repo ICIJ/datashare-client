@@ -9,7 +9,7 @@
               {{ $t('batchSearchResults.downloadResults') }} (CSV)
             </a>
           </div>
-          <div class="batch-search-results__delete">
+          <div class="batch-search-results__delete" v-if="canIDelete">
             <confirm-button class="btn btn-primary ml-2" :confirmed="deleteBatchSearch">
               <fa icon="trash-alt" />
               {{ $t('batchSearch.delete') }}
@@ -159,7 +159,7 @@ import find from 'lodash/find'
 import get from 'lodash/get'
 
 import DatashareClient from '@/api/DatashareClient'
-import { getDocumentTypeLabel } from '@/utils/utils'
+import { getAuthenticatedUser, getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
@@ -257,6 +257,9 @@ export default {
     },
     numberOfPages () {
       return Math.ceil(this.meta.nbResults / this.perPage)
+    },
+    canIDelete () {
+      return getAuthenticatedUser() === get(this, 'meta.user.id', '')
     }
   },
   mounted () {
@@ -276,21 +279,34 @@ export default {
     fetchBatchSearchResults () {
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
-      return store.dispatch('batchSearch/getBatchSearchResults', { batchId: this.uuid, from, size, queries: this.queries, sort: this.sort, order: this.order })
+      return store.dispatch('batchSearch/getBatchSearchResults',
+        { batchId: this.uuid, from, size, queries: this.queries, sort: this.sort, order: this.order })
     },
     async sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
       const order = ctx.sortDesc ? 'desc' : 'asc'
-      this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page: this.page, queries: this.queries, sort, order } })
+      this.$router.push({
+        name: 'batch-search.results',
+        params: { index: this.$route.params.index, uuid: this.$route.params.uuid },
+        query: { page: this.page, queries: this.queries, sort, order }
+      })
     },
     filter () {
-      this.$router.push({ name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page: 1, queries: this.selectedQueries, sort: this.sort, order: this.order } })
+      this.$router.push({
+        name: 'batch-search.results',
+        params: { index: this.$route.params.index, uuid: this.$route.params.uuid },
+        query: { page: 1, queries: this.selectedQueries, sort: this.sort, order: this.order }
+      })
     },
     linkGen (page) {
-      return { name: 'batch-search.results', params: { index: this.$route.params.index, uuid: this.$route.params.uuid }, query: { page, queries: this.selectedQueries, sort: this.sort, order: this.order } }
+      return {
+        name: 'batch-search.results',
+        params: { index: this.$route.params.index, uuid: this.$route.params.uuid },
+        query: { page, queries: this.selectedQueries, sort: this.sort, order: this.order }
+      }
     },
     async deleteBatchSearch () {
-      let isDeleted = await store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
+      const isDeleted = await store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
       this.$router.push({ name: 'batch-search' })
       this.$root.$bvToast.toast(isDeleted ? this.$t('batchSearch.deleted') : this.$t('batchSearch.notDeleted'),
         { noCloseButton: true, variant: isDeleted ? 'success' : 'warning' })
