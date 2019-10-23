@@ -30,7 +30,7 @@ describe('FacetText.vue', () => {
       i18n,
       router,
       store,
-      propsData: { facet: find(store.state.search.facets, { name: 'content-type' }) }
+      propsData: { facet: find(store.state.search.facets, { name: 'contentType' }) }
     })
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
@@ -119,8 +119,8 @@ describe('FacetText.vue', () => {
     await letData(es).have(new IndexedDocument('doc_02.txt').withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withContentType('text/javascript')).commit()
 
-    store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
-    store.commit('search/excludeFacet', 'content-type')
+    store.commit('search/addFacetValue', { name: 'contentType', value: 'text/javascript' })
+    store.commit('search/excludeFacet', 'contentType')
 
     await wrapper.vm.root.aggregate()
 
@@ -394,7 +394,7 @@ describe('FacetText.vue', () => {
       i18n,
       router,
       store,
-      propsData: { facet: find(store.state.search.facets, { name: 'extraction-level' }) }
+      propsData: { facet: find(store.state.search.facets, { name: 'extractionLevel' }) }
     })
     await letData(es).have(new IndexedDocument('parent.txt')).commit()
     await letData(es).have(new IndexedDocument('child.txt').withParent('parent.txt')).commit()
@@ -411,7 +411,7 @@ describe('FacetText.vue', () => {
       i18n,
       router,
       store,
-      propsData: { facet: find(store.state.search.facets, { name: 'extraction-level' }) }
+      propsData: { facet: find(store.state.search.facets, { name: 'extractionLevel' }) }
     })
     await letData(es).have(new IndexedDocument('parent.txt')).commit()
     await letData(es).have(new IndexedDocument('child.txt').withParent('parent.txt')).commit()

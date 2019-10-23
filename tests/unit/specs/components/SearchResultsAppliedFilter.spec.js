@@ -61,12 +61,12 @@ describe('SearchResultsAppliedFilter.vue', () => {
     })
 
     it('should delete a facet term', async () => {
-      store.commit('search/addFacetValue', { name: 'content-type', value: 'term_01' })
-      wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { name: 'content-type', label: 'term_01', value: 'term_01', field: '', negation: false } } })
+      store.commit('search/addFacetValue', { name: 'contentType', value: 'term_01' })
+      wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { name: 'contentType', label: 'term_01', value: 'term_01', field: '', negation: false } } })
 
       wrapper.find('.search-results-header__applied-filters__filter').trigger('click')
 
-      expect(find(store.state.search.facets, { name: 'content-type' }).values).toHaveLength(0)
+      expect(find(store.state.search.facets, { name: 'contentType' }).values).toHaveLength(0)
     })
 
     it('should emit an event facet::search::update once the applied filter is deleted from the store', async () => {

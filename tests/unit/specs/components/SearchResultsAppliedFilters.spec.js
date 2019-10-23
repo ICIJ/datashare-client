@@ -36,25 +36,25 @@ describe('SearchResultsAppliedFilters.vue', () => {
     })
 
     it('should display 1 applied filter', () => {
-      store.commit('search/addFacetValue', { name: 'content-type', value: 'term_01' })
+      store.commit('search/addFacetValue', { name: 'contentType', value: 'term_01' })
 
       expect(wrapper.findAll('.search-results-header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
     })
 
     it('should translate the label of a facet', () => {
-      store.commit('search/addFacetValue', { name: 'content-type', value: 'text/plain' })
+      store.commit('search/addFacetValue', { name: 'contentType', value: 'text/plain' })
 
       expect(wrapper.vm.filters[0].label).toEqual('Plain text document')
     })
 
     it('should translate the label of a facet date', () => {
-      store.commit('search/addFacetValue', { name: 'indexing-date', value: 1556668800000 })
+      store.commit('search/addFacetValue', { name: 'indexingDate', value: 1556668800000 })
 
       expect(wrapper.vm.filters[0].label).toEqual('2019-05')
     })
 
     it('should translate the label of a facet date range', () => {
-      store.commit('search/addFacetValue', { name: 'creation-date', value: [1556668800000, 1566908357980] })
+      store.commit('search/addFacetValue', { name: 'creationDate', value: [1556668800000, 1566908357980] })
 
       expect(wrapper.vm.filters[0].label).toEqual('05/01/2019')
       expect(wrapper.vm.filters[1].label).toEqual('08/27/2019')
@@ -62,7 +62,7 @@ describe('SearchResultsAppliedFilters.vue', () => {
 
     it('should translate in French the label of a facet date range', () => {
       localStorage.setItem('locale', 'fr')
-      store.commit('search/addFacetValue', { name: 'creation-date', value: [1556668800000, 1566908357980] })
+      store.commit('search/addFacetValue', { name: 'creationDate', value: [1556668800000, 1566908357980] })
 
       expect(wrapper.vm.filters[0].label).toEqual('01/05/2019')
       expect(wrapper.vm.filters[1].label).toEqual('27/08/2019')
@@ -75,14 +75,14 @@ describe('SearchResultsAppliedFilters.vue', () => {
     })
 
     it('should set facet as positive applied facet', () => {
-      store.commit('search/addFacetValue', { name: 'content-type', value: 'term_01' })
+      store.commit('search/addFacetValue', { name: 'contentType', value: 'term_01' })
 
       expect(wrapper.vm.filters[0].negation).toBeFalsy()
     })
 
     it('should set excluded facet as negative applied facet', () => {
-      store.commit('search/addFacetValue', { name: 'content-type', value: 'term_01' })
-      store.commit('search/toggleFacet', 'content-type')
+      store.commit('search/addFacetValue', { name: 'contentType', value: 'term_01' })
+      store.commit('search/toggleFacet', 'contentType')
 
       expect(wrapper.vm.filters[0].negation).toBeTruthy()
     })

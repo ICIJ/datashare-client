@@ -96,7 +96,7 @@ describe('utils', () => {
 
   describe('getExtractionLevelTranslationKey', () => {
     it('should retrieve the correct extraction level translation key', () => {
-      expect(getExtractionLevelTranslationKey(5)).toEqual('facet.level.level_05')
+      expect(getExtractionLevelTranslationKey(5)).toEqual('facet.level.level05')
     })
 
     it('should retrieve the extraction level if no level (1/2)', () => {

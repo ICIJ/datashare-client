@@ -23,7 +23,7 @@ describe('FacetDateRange.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
-  const name = 'creation-date'
+  const name = 'creationDate'
 
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)

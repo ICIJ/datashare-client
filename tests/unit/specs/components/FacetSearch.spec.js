@@ -35,7 +35,7 @@ describe('FacetSearch.vue', () => {
   beforeEach(() => {
     store.commit('search/reset')
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-    const facet = find(store.state.search.facets, { name: 'content-type' })
+    const facet = find(store.state.search.facets, { name: 'contentType' })
     wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet } })
   })
 
@@ -217,7 +217,7 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should display all the indexing dates', async () => {
-    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'indexing-date' }) } })
+    wrapper = mount(FacetSearch, { localVue, i18n, store, router, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'indexingDate' }) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-01-01T00:00:00.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-02-01T00:00:00.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-03-01T00:00:00.001Z')).commit()

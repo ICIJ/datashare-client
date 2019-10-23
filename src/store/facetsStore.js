@@ -7,7 +7,7 @@ import some from 'lodash/some'
 const starredLabel = {
   all: 'facet.all',
   true: 'facet.starred',
-  false: 'facet.not_starred'
+  false: 'facet.notStarred'
 }
 
 const namedEntityCategoryTranslation = {

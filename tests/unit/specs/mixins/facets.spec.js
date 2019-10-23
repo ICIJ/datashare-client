@@ -12,7 +12,7 @@ describe('facets mixin', () => {
   let wrapper, selectedValuesFromStore, facet
 
   beforeAll(() => {
-    facet = { name: 'creation-date', itemParam: item => { return { name: 'creation-date', value: item } } }
+    facet = { name: 'creationDate', itemParam: item => { return { name: 'creationDate', value: item } } }
   })
 
   it('should commit a setFacetValue and then refresh the route and the search', () => {
@@ -37,7 +37,7 @@ describe('facets mixin', () => {
     })
 
     it('should refresh the facet on "facet::search::update" event emitted', () => {
-      wrapper.vm.$root.$emit('facet::search::update', 'creation-date')
+      wrapper.vm.$root.$emit('facet::search::update', 'creationDate')
 
       expect(selectedValuesFromStore.mock.calls).toHaveLength(1)
     })

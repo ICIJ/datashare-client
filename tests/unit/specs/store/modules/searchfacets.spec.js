@@ -58,27 +58,27 @@ describe('Search facets', () => {
   })
 
   describe('Content type facet', () => {
-    it('should define a `content-type` facet correctly (name, key and type)', () => {
-      const facet = find(store.state.search.facets, { name: 'content-type' })
+    it('should define a `contentType` facet correctly (name, key and type)', () => {
+      const facet = find(store.state.search.facets, { name: 'contentType' })
 
       expect(typeof facet).toBe('object')
       expect(facet.key).toEqual('contentType')
       expect(facet.constructor.name).toEqual('FacetText')
     })
 
-    it('should find a `content-type` facet using object', () => {
-      expect(store.getters['search/getFacet']({ name: 'content-type' })).not.toBeUndefined()
+    it('should find a `contentType` facet using object', () => {
+      expect(store.getters['search/getFacet']({ name: 'contentType' })).not.toBeUndefined()
     })
 
-    it('should find a `content-type` facet using function', () => {
-      expect(store.getters['search/getFacet'](f => f.name === 'content-type')).not.toBeUndefined()
+    it('should find a `contentType` facet using function', () => {
+      expect(store.getters['search/getFacet'](f => f.name === 'contentType')).not.toBeUndefined()
     })
 
     it('should count 2 pdf documents', async () => {
       await letData(es).have(new IndexedDocument('bar.pdf').withContentType('application/pdf')).commit()
       await letData(es).have(new IndexedDocument('foo.pdf').withContentType('application/pdf')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(1)
       expect(response.aggregations.contentType.buckets[0].doc_count).toEqual(2)
@@ -87,7 +87,7 @@ describe('Search facets', () => {
     it('should use contentType (without charset)', async () => {
       await letData(es).have(new IndexedDocument('bar.txt').withContentType('text/plain; charset=UTF-8')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets[0].key).toEqual('text/plain')
     })
@@ -97,7 +97,7 @@ describe('Search facets', () => {
       await letData(es).have(new IndexedDocument('foo.pdf').withContentType('application/pdf')).commit()
       await letData(es).have(new IndexedDocument('foo.js').withContentType('text/javascript')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(2)
       expect(response.aggregations.contentType.buckets[0].doc_count).toEqual(2)
@@ -108,7 +108,7 @@ describe('Search facets', () => {
       await letData(es).have(new IndexedDocument('bar.pdf').withContentType('application/pdf')).commit()
       await letData(es).have(new IndexedDocument('foo.pdf').withContentType('application/pdf')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets[0].doc_count).toEqual(2)
       expect(response.hits).toHaveLength(0)
@@ -119,7 +119,7 @@ describe('Search facets', () => {
       await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
       await letData(es).have(new IndexedDocument('index.css').withContentType('text/css')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(3)
     })
@@ -133,7 +133,7 @@ describe('Search facets', () => {
       await letData(es).have(new IndexedDocument('index.css').withContentType('text/css')).commit()
       await letData(es).have(new IndexedDocument('list.css').withContentType('text/css')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'content-type' })
+      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(3)
     })
@@ -184,7 +184,7 @@ describe('Search facets', () => {
   })
 
   describe('Indexing date facet', () => {
-    const name = 'indexing-date'
+    const name = 'indexingDate'
 
     it('should define an `indexing date` facet correctly (name, key and type)', () => {
       const facet = find(store.state.search.facets, { name })
@@ -256,7 +256,7 @@ describe('Search facets', () => {
   })
 
   describe('Creation date facet', () => {
-    const name = 'creation-date'
+    const name = 'creationDate'
 
     it('should merge all missing data', async () => {
       await letData(es).have(new IndexedDocument('doc_01')

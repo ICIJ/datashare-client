@@ -49,13 +49,13 @@ describe('IndexSelector.vue', () => {
     afterEach(() => datashare.fetch.mockClear())
 
     it('should reset search state on index change', async () => {
-      store.commit('search/addFacetValue', { name: 'content-type', value: 'text/javascript' })
-      expect(store.getters['search/toRouteQuery']['f[content-type]']).not.toBeUndefined()
+      store.commit('search/addFacetValue', { name: 'contentType', value: 'text/javascript' })
+      expect(store.getters['search/toRouteQuery']['f[contentType]']).not.toBeUndefined()
 
       await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
 
       expect(store.getters['search/toRouteQuery'].index).toEqual(process.env.VUE_APP_ES_ANOTHER_INDEX)
-      expect(store.getters['search/toRouteQuery']['f[content-type]']).toBeUndefined()
+      expect(store.getters['search/toRouteQuery']['f[contentType]']).toBeUndefined()
     })
 
     it('should emit an event "facet::search::reset-filters" on index change', async () => {

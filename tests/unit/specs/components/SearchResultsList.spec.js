@@ -86,7 +86,7 @@ describe('SearchResultsList.vue', () => {
       await letData(es).have(new IndexedDocument('doc_03')
         .withCreationDate('2019-08-21T00:00:00.000Z')).commit()
 
-      store.commit('search/setFacetValue', { name: 'creation-date', value: [new Date('2019-08-20').getTime(), new Date('2019-08-21').getTime()] })
+      store.commit('search/setFacetValue', { name: 'creationDate', value: [new Date('2019-08-20').getTime(), new Date('2019-08-21').getTime()] })
       wrapper = await createView()
 
       expect(wrapper.findAll('.search-results-list__items__item__link')).toHaveLength(2)

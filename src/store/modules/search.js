@@ -44,15 +44,15 @@ export function initialState () {
     facets: [
       new FacetYesNo('starred', '_id', 'star', false, item => get(starredLabel, item.key, '')),
       new FacetText('tags', 'tags', 'tags', true),
-      new FacetText('content-type', 'contentType', 'file', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })),
-      new FacetDateRange('creation-date', 'metadata.tika_metadata_creation_date', 'calendar-alt', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key),
+      new FacetText('contentType', 'contentType', 'file', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })),
+      new FacetDateRange('creationDate', 'metadata.tika_metadata_creation_date', 'calendar-alt', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key),
       new FacetText('language', 'language', 'language', false, item => `facet.lang.${item.key}`),
       new FacetNamedEntity('namedEntityPerson', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityPerson']),
       new FacetNamedEntity('namedEntityOrganization', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityOrganization']),
       new FacetNamedEntity('namedEntityLocation', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityLocation']),
       new FacetPath('path', 'byDirname', 'hdd', false),
-      new FacetText('extraction-level', 'extractionLevel', 'paperclip', false, item => getExtractionLevelTranslationKey(item.key)),
-      new FacetDate('indexing-date', 'extractionDate', 'calendar-plus', false, item => item.key_as_string)
+      new FacetText('extractionLevel', 'extractionLevel', 'paperclip', false, item => getExtractionLevelTranslationKey(item.key)),
+      new FacetDate('indexingDate', 'extractionDate', 'calendar-plus', false, item => item.key_as_string)
     ],
     sort: settings.defaultSearchSort,
     field: settings.defaultSearchField,

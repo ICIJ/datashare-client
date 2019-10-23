@@ -56,7 +56,7 @@ describe('DocumentTabDetails', () => {
     const wrapper = shallowMount(DocumentTabDetails, { localVue, store, router, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__basename').text()).toEqual(document)
-    expect(wrapper.find('.document__content__tree-level').text()).toEqual('facet.level.level_01')
+    expect(wrapper.find('.document__content__tree-level').text()).toEqual('facet.level.level01')
     expect(wrapper.find('.document__content__parent').text()).toEqual(parentDocument)
   })
 

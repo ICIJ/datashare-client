@@ -40,7 +40,7 @@ describe('Search store', () => {
     store.commit('search/query', 'datashare')
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
-    store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
+    store.commit('search/addFacetValue', { name: 'contentType', value: 'TXT' })
     store.commit('search/toggleFilters')
     store.commit('search/isDownloadAllowed', true)
 
@@ -49,7 +49,7 @@ describe('Search store', () => {
     expect(omit(store.state.search, ['index', 'isReady', 'facets', 'showFilters', 'response'])).toEqual(omit(initialState, ['index', 'isReady', 'facets', 'showFilters', 'response']))
     expect(store.state.search.index).toEqual('another-index')
     expect(store.state.search.isReady).toEqual(false)
-    expect(find(store.state.search.facets, { name: 'content-type' }).values).toEqual([])
+    expect(find(store.state.search.facets, { name: 'contentType' }).values).toEqual([])
   })
 
   it('should not reset the starredDocuments from the facet', () => {
@@ -120,7 +120,7 @@ describe('Search store', () => {
     expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
   })
 
-  it('should find 2 documents filtered by one content-type', async () => {
+  it('should find 2 documents filtered by one contentType', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('foo.txt').withContentType('txt').withContent('foo')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
@@ -128,61 +128,61 @@ describe('Search store', () => {
 
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.hits).toHaveLength(4)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'pdf' })
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'pdf' })
     expect(store.state.search.response.hits).toHaveLength(2)
   })
 
-  it('should find 3 documents filtered by two content-type', async () => {
+  it('should find 3 documents filtered by two contentType', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.hits).toHaveLength(3)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'pdf' })
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'pdf' })
     expect(store.state.search.response.hits).toHaveLength(1)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'csv' })
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'csv' })
     expect(store.state.search.response.hits).toHaveLength(2)
   })
 
-  it('should not find documents after filtering by content-type', async () => {
+  it('should not find documents after filtering by contentType', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.hits).toHaveLength(3)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'ico' })
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'ico' })
     expect(store.state.search.response.hits).toHaveLength(0)
   })
 
-  it('should find documents after removing filter by content-type', async () => {
+  it('should find documents after removing filter by contentType', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.hits).toHaveLength(3)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'ico' })
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'ico' })
     expect(store.state.search.response.hits).toHaveLength(0)
-    await store.dispatch('search/removeFacetValue', { name: 'content-type', value: 'ico' })
+    await store.dispatch('search/removeFacetValue', { name: 'contentType', value: 'ico' })
     expect(store.state.search.response.hits).toHaveLength(3)
   })
 
-  it('should exclude documents with a specific content-type', async () => {
+  it('should exclude documents with a specific contentType', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
     await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.hits).toHaveLength(3)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
     expect(store.state.search.response.hits).toHaveLength(1)
-    await store.dispatch('search/toggleFacet', 'content-type')
+    await store.dispatch('search/toggleFacet', 'contentType')
     expect(store.state.search.response.hits).toHaveLength(2)
   })
 
-  it('should exclude documents with a specific content-type and include them again', async () => {
+  it('should exclude documents with a specific contentType and include them again', async () => {
     await letData(es).have(new IndexedDocument('bar.txt').withContent('bar').withNer('name_01')).commit()
     await letData(es).have(new IndexedDocument('foo.txt').withContent('foo').withNer('name_01')).commit()
     await letData(es).have(new IndexedDocument('bar.pdf').withContent('bar').withNer('name_01')).commit()
@@ -201,69 +201,69 @@ describe('Search store', () => {
     await letData(es).have(new IndexedDocument('bar.ico').withContentType('ico').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
-    await store.dispatch('search/toggleFacet', 'content-type')
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
+    await store.dispatch('search/toggleFacet', 'contentType')
     expect(store.state.search.response.hits).toHaveLength(3)
-    await store.dispatch('search/toggleFacet', 'content-type')
+    await store.dispatch('search/toggleFacet', 'contentType')
     expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should take into account the given facet', async () => {
-    expect(store.getters['search/hasFacetValues']('content-type')).toBeFalsy()
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
-    expect(store.getters['search/hasFacetValues']('content-type')).toBeTruthy()
+    expect(store.getters['search/hasFacetValues']('contentType')).toBeFalsy()
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
+    expect(store.getters['search/hasFacetValues']('contentType')).toBeTruthy()
   })
 
   it('should take into account the given facet but not an arbitrary one', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
-    expect(store.getters['search/hasFacetValues']('content-type')).toBeTruthy()
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
+    expect(store.getters['search/hasFacetValues']('contentType')).toBeTruthy()
     expect(store.getters['search/hasFacetValues']('bar')).toBeFalsy()
   })
 
   it('should take into account the given facet and its invert', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
-    expect(store.getters['search/hasFacetValues']('content-type')).toBeTruthy()
-    expect(store.getters['search/isFacetReversed']('content-type')).toBeFalsy()
-    await store.dispatch('search/toggleFacet', 'content-type')
-    expect(store.getters['search/isFacetReversed']('content-type')).toBeTruthy()
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
+    expect(store.getters['search/hasFacetValues']('contentType')).toBeTruthy()
+    expect(store.getters['search/isFacetReversed']('contentType')).toBeFalsy()
+    await store.dispatch('search/toggleFacet', 'contentType')
+    expect(store.getters['search/isFacetReversed']('contentType')).toBeTruthy()
   })
 
   it('should take into reverse a facet and not the others', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
     await store.dispatch('search/addFacetValue', { name: 'language', value: 'fr' })
-    await store.dispatch('search/toggleFacet', 'content-type')
-    expect(store.getters['search/isFacetReversed']('content-type')).toBeTruthy()
+    await store.dispatch('search/toggleFacet', 'contentType')
+    expect(store.getters['search/isFacetReversed']('contentType')).toBeTruthy()
     expect(store.getters['search/isFacetReversed']('language')).toBeFalsy()
   })
 
   it('should add facet with several values', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: ['txt', 'pdf'] })
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(2)
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: ['txt', 'pdf'] })
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(2)
   })
 
   it('should merge facet values with several other values', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(1)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: ['csv', 'pdf'] })
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(3)
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(1)
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: ['csv', 'pdf'] })
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(3)
   })
 
   it('should add a facet value only once (1/2)', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(1)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(1)
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(1)
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(1)
   })
 
   it('should add facet values only once (2/2)', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: ['txt', 'csv'] })
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(2)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: 'txt' })
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(2)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: ['csv'] })
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(2)
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: ['csv', 'pdf'] })
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(3)
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: ['txt', 'csv'] })
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(2)
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(2)
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: ['csv'] })
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(2)
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: ['csv', 'pdf'] })
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(3)
   })
 
   it('should return 2 documents', async () => {
@@ -308,16 +308,16 @@ describe('Search store', () => {
     store.commit('search/query', 'datashare')
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
-    store.commit('search/addFacetValue', { name: 'content-type', value: 'TXT' })
-    expect(store.getters['search/toRouteQuery']).toMatchObject({ index: 'another-index', q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[content-type]': ['TXT'] })
+    store.commit('search/addFacetValue', { name: 'contentType', value: 'TXT' })
+    expect(store.getters['search/toRouteQuery']).toMatchObject({ index: 'another-index', q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[contentType]': ['TXT'] })
   })
 
   it('should reset the values of a facet', async () => {
-    await store.dispatch('search/addFacetValue', { name: 'content-type', value: ['txt', 'csv'] })
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(2)
+    await store.dispatch('search/addFacetValue', { name: 'contentType', value: ['txt', 'csv'] })
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(2)
 
-    await store.dispatch('search/resetFacetValues', 'content-type')
-    expect(store.getters['search/findFacet']('content-type').values).toHaveLength(0)
+    await store.dispatch('search/resetFacetValues', 'contentType')
+    expect(store.getters['search/findFacet']('contentType').values).toHaveLength(0)
   })
 
   it('should change the state after `toggleFilters` mutation', () => {
@@ -353,8 +353,8 @@ describe('Search store', () => {
     })
 
     it('should set the facet of the store according to the url', async () => {
-      await store.dispatch('search/updateFromRouteQuery', { 'f[content-type]': ['new_type'] })
-      expect(store.getters['search/findFacet']('content-type').values[0]).toEqual('new_type')
+      await store.dispatch('search/updateFromRouteQuery', { 'f[contentType]': ['new_type'] })
+      expect(store.getters['search/findFacet']('contentType').values[0]).toEqual('new_type')
     })
 
     it('should not change the starredDocuments on updateFromRouteQuery', async () => {
@@ -710,7 +710,7 @@ describe('Search store', () => {
   })
 
   it('should set this value to the facet', () => {
-    const name = 'creation-date'
+    const name = 'creationDate'
     store.commit('search/setFacetValue', { name, value: '12' })
     store.commit('search/setFacetValue', { name, value: '42' })
 

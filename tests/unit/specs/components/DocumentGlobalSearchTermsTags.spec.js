@@ -20,7 +20,7 @@ async function createView (es, content = '', query = '', metadata = '', tags = [
   })
 }
 
-describe('DocumentGlobalSearchTermsTags', () => {
+describe('DocumentGlobalSearchTermsTags.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper

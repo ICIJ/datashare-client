@@ -37,7 +37,7 @@ export default {
         value: false,
         html: `
           <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
-            ${this.labelToHuman('facet.not_starred')}
+            ${this.labelToHuman('facet.notStarred')}
           </span>
           <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
             ${this.$n(this.root.calculatedCount - this.starredDocuments.length)}

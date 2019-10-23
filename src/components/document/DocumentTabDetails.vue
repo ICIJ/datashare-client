@@ -174,7 +174,7 @@ export default {
         },
         {
           name: 'extractionLevel',
-          label: this.$t('facet.extraction-level'),
+          label: this.$t('facet.extractionLevel'),
           class: 'document__content__tree-level',
           value: this.$t(this.getExtractionLevelTranslationKey(this.document.source.extractionLevel)),
           rawValue: this.document.source.extractionLevel

@@ -26,7 +26,7 @@ describe('FacetDate.vue', () => {
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-    wrapper = mount(FacetDate, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'indexing-date' }) } })
+    wrapper = mount(FacetDate, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'indexingDate' }) } })
   })
 
   afterEach(() => store.commit('search/reset'))
