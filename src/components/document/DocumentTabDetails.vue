@@ -71,16 +71,16 @@ import filter from 'lodash/filter'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import startCase from 'lodash/startCase'
-import DocumentTagsForm from '@/components/DocumentTagsForm'
+import { mapState } from 'vuex'
 
+import DocumentTagsForm from '@/components/DocumentTagsForm'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 
 export default {
   name: 'DocumentTabDetails',
   props: {
     document: [Object, Array],
-    parentDocument: Object,
-    tags: Array
+    parentDocument: Object
   },
   components: {
     DocumentTagsForm
@@ -95,11 +95,13 @@ export default {
     }
   },
   computed: {
+    ...mapState('document', ['tags']),
     documentPath () {
       if (this.$config.get('mountedDataDir')) {
         return this.document.source.path.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
+      } else {
+        return this.document.source.path
       }
-      return this.document.source.path
     },
     metaFieldsNames () {
       return filter(this.document.metas, name => {
@@ -193,6 +195,9 @@ export default {
         }
       ]
     }
+  },
+  async created () {
+    await this.$store.dispatch('document/getTags')
   },
   methods: {
     getDocumentTypeLabel,

@@ -1,8 +1,9 @@
-import BatchSearchForm from '@/components/BatchSearchForm'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import Vuex from 'vuex'
 import Murmur from '@icij/murmur'
+import Vuex from 'vuex'
+
 import { App } from '@/main'
+import BatchSearchForm from '@/components/BatchSearchForm'
 
 const { localVue } = App.init(createLocalVue()).useAll()
 

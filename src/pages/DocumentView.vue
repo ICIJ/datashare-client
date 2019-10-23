@@ -46,7 +46,11 @@ export default {
   components: {
     DocumentSlicedName
   },
-  props: ['id', 'routing', 'index'],
+  props: {
+    id: String,
+    routing: String,
+    index: String
+  },
   data () {
     return {
       activeTab: 'extracted-text',
@@ -55,25 +59,24 @@ export default {
   },
   methods: {
     async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
-      this.isReady = false
+      this.$set(this, 'isReady', false)
       this.$Progress.start()
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
-      await this.$store.dispatch('document/getTags')
-      this.isReady = true
       if (this.document) {
         await this.$store.commit('userHistory/addDocument', this.document)
-        const $container = this.$el.closest('.ps-container')
-        this.$root.$emit('scroll-tracker:request', this.$el, 0, $container)
+        const container = this.$el.closest('.ps-container')
+        this.$root.$emit('scroll-tracker:request', this.$el, 0, container)
         this.$root.$emit('document::content::changed')
       }
+      this.$set(this, 'isReady', true)
       this.$Progress.finish()
     },
     isTabActive (name) {
       return this.activeTab === name
     },
     activateTab (name) {
-      this.activeTab = name
+      this.$set(this, 'activeTab', name)
       this.$root.$emit('document::content::changed')
       return name
     },
@@ -96,19 +99,18 @@ export default {
     goToPreviousTab () {
       const indexActiveTab = findIndex(this.visibleTabs, tab => tab.name === this.activeTab)
       const indexPreviousActiveTab = indexActiveTab === 0 ? this.visibleTabs.length - 1 : indexActiveTab - 1
-      this.activeTab = this.visibleTabs[indexPreviousActiveTab].name
+      this.$set(this, 'activeTab', this.visibleTabs[indexPreviousActiveTab].name)
     },
     goToNextTab () {
       const indexActiveTab = findIndex(this.visibleTabs, tab => tab.name === this.activeTab)
       const indexNextActiveTab = indexActiveTab === this.visibleTabs.length - 1 ? 0 : indexActiveTab + 1
-      this.activeTab = this.visibleTabs[indexNextActiveTab].name
+      this.$set(this, 'activeTab', this.visibleTabs[indexNextActiveTab].name)
     }
   },
   computed: {
     ...mapState('document', {
       document: 'doc',
-      parentDocument: 'parentDocument',
-      tags: 'tags'
+      parentDocument: 'parentDocument'
     }),
     visibleTabs () {
       return filter(this.tabs, t => !t.hidden)
@@ -118,7 +120,7 @@ export default {
         {
           name: 'extracted-text',
           label: 'document.extracted_text',
-          component: () => import('@/components/document/DocumentTabExtractedText.vue'),
+          component: () => import('@/components/document/DocumentTabExtractedText'),
           icon: 'align-left',
           props: {
             document: this.document
@@ -127,18 +129,17 @@ export default {
         {
           name: 'details',
           label: 'document.tab_details',
-          component: () => import('@/components/document/DocumentTabDetails.vue'),
+          component: () => import('@/components/document/DocumentTabDetails'),
           icon: 'info-circle',
           props: {
             document: this.document,
-            parentDocument: this.parentDocument,
-            tags: this.tags
+            parentDocument: this.parentDocument
           }
         },
         {
           name: 'translations',
           label: 'document.translations',
-          component: () => import('@/components/document/DocumentTabTranslations.vue'),
+          component: () => import('@/components/document/DocumentTabTranslations'),
           hidden: !this.document.hasTranslations,
           icon: 'globe',
           props: {
@@ -149,7 +150,7 @@ export default {
           name: 'named-entities',
           label: 'document.named_entities',
           hidden: this.$config.isnt('manageDocuments') && !this.document.hasNerTags,
-          component: () => import('@/components/document/DocumentTabNamedEntities.vue'),
+          component: () => import('@/components/document/DocumentTabNamedEntities'),
           icon: 'database',
           props: {
             document: this.document
@@ -158,7 +159,7 @@ export default {
         {
           name: 'preview',
           label: 'document.preview',
-          component: () => import('@/components/document/DocumentTabPreview.vue'),
+          component: () => import('@/components/document/DocumentTabPreview'),
           icon: 'eye',
           props: {
             document: this.document
