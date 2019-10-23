@@ -37,79 +37,85 @@
               :options="indices"
               required></b-form-select>
           </b-form-group>
-          <b-form-group
-            :description="phraseMatchDescription">
-            <b-form-checkbox
-              v-model="phraseMatch"
-              switch>
-              {{ $t('batchSearch.phraseMatch') }}
-            </b-form-checkbox>
-          </b-form-group>
-          <b-form-group
-            :label="fuzzinessLabel"
-            :description="fuzzinessDescription">
-            <b-form-input
-              type="number"
-              v-model="fuzziness"
-              min="0"
-              :max="maxFuzziness"></b-form-input>
-          </b-form-group>
-          <div class="help">
-            <a :href="fuzzinessLearnMore" target="_blank" class="text-muted">
-              {{ $t('batchSearch.learnMore') }}
-            </a>
+          <div v-b-toggle.advanced-filters class="batch-search-form__advanced-filters my-2">
+            <fa :icon="advancedFiltersIcon" class="fa-fw" />
+            <span>{{ $t('batchSearch.advancedFilters') }}</span>
           </div>
-          <b-form-group
-            :label="$t('batchSearch.fileTypes')">
-            <b-form-input
-              v-model="fileType"
-              @input="searchFileTypes"
-              autocomplete="off"
-              ref="fileType">
-            </b-form-input>
-            <selectable-dropdown
-              ref="suggestionFileTypes"
-              @input="searchFileType"
-              @deactivate="hideSuggestionsFileTypes"
-              :hide="!suggestionFileTypes.length"
-              :items="suggestionFileTypes">
-              <template v-slot:item-label="{ item }">
-                <div>{{ item.label }}</div>
-              </template>
-            </selectable-dropdown>
-            <ul class="list-unstyled">
-              <li v-for="(fileType, index) in fileTypes" :key="fileType.mime" class="badge badge-light border badge-pill mr-1 mt-1">
-                <span>{{ fileType.label }}</span>
-                <span class="btn btn-sm p-0" @click.prevent="deleteFileType(index)">
-                  <fa icon="times" class="fa-fw p-0" />
-                </span>
-              </li>
-            </ul>
-          </b-form-group>
-          <b-form-group
-            :label="$t('batchSearch.path')">
-            <b-form-input
-              v-model="path"
-              @input="searchPaths"
-              autocomplete="off"
-              ref="path">
-            </b-form-input>
-            <selectable-dropdown
-              ref="suggestionPaths"
-              @input="searchPath"
-              @deactivate="hideSuggestionsPaths"
-              :hide="!suggestionPaths.length"
-              :items="suggestionPaths">
-            </selectable-dropdown>
-            <ul class="list-unstyled">
-              <li v-for="(path, index) in paths" :key="path" class="badge badge-light border badge-pill mr-1 mt-1">
-                <span>{{ path }}</span>
-                <span class="btn btn-sm p-0" @click.prevent="deletePath(index)">
-                  <fa icon="times" class="fa-fw p-0" />
-                </span>
-              </li>
-            </ul>
-          </b-form-group>
+          <b-collapse id="advanced-filters" v-model="showCollapse">
+            <b-form-group
+              :description="phraseMatchDescription">
+              <b-form-checkbox
+                v-model="phraseMatch"
+                switch>
+                {{ $t('batchSearch.phraseMatch') }}
+              </b-form-checkbox>
+            </b-form-group>
+            <b-form-group
+              :label="fuzzinessLabel"
+              :description="fuzzinessDescription">
+              <b-form-input
+                type="number"
+                v-model="fuzziness"
+                min="0"
+                :max="maxFuzziness"></b-form-input>
+            </b-form-group>
+            <div class="help">
+              <a :href="fuzzinessLearnMore" target="_blank" class="text-muted">
+                {{ $t('batchSearch.learnMore') }}
+              </a>
+            </div>
+            <b-form-group
+              :label="$t('batchSearch.fileTypes')">
+              <b-form-input
+                v-model="fileType"
+                @input="searchFileTypes"
+                autocomplete="off"
+                ref="fileType">
+              </b-form-input>
+              <selectable-dropdown
+                ref="suggestionFileTypes"
+                @input="searchFileType"
+                @deactivate="hideSuggestionsFileTypes"
+                :hide="!suggestionFileTypes.length"
+                :items="suggestionFileTypes">
+                <template v-slot:item-label="{ item }">
+                  <div>{{ item.label }}</div>
+                </template>
+              </selectable-dropdown>
+              <ul class="list-unstyled">
+                <li v-for="(fileType, index) in fileTypes" :key="fileType.mime" class="badge badge-light border badge-pill mr-1 mt-1">
+                  <span>{{ fileType.label }}</span>
+                  <span class="btn btn-sm p-0" @click.prevent="deleteFileType(index)">
+                    <fa icon="times" class="fa-fw p-0" />
+                  </span>
+                </li>
+              </ul>
+            </b-form-group>
+            <b-form-group
+              :label="$t('batchSearch.path')">
+              <b-form-input
+                v-model="path"
+                @input="searchPaths"
+                autocomplete="off"
+                ref="path">
+              </b-form-input>
+              <selectable-dropdown
+                ref="suggestionPaths"
+                @input="searchPath"
+                @deactivate="hideSuggestionsPaths"
+                :hide="!suggestionPaths.length"
+                :items="suggestionPaths">
+              </selectable-dropdown>
+              <ul class="list-unstyled">
+                <li v-for="(path, index) in paths" :key="path" class="badge badge-light border badge-pill mr-1 mt-1">
+                  <span>{{ path }}</span>
+                  <span class="btn btn-sm p-0" @click.prevent="deletePath(index)">
+                    <fa icon="times" class="fa-fw p-0" />
+                  </span>
+                </li>
+              </ul>
+            </b-form-group>
+          </b-collapse>
           <b-form-group
             :description="$t('batchSearch.publishedDescription')"
             v-if="$config.is('multipleProjects')"
@@ -161,7 +167,8 @@ export default {
       paths: [],
       suggestionPaths: [],
       allPaths: [],
-      published: true
+      published: true,
+      showCollapse: false
     }
   },
   computed: {
@@ -187,6 +194,9 @@ export default {
         allTypes.push(type)
       })
       return allTypes
+    },
+    advancedFiltersIcon () {
+      return this.showCollapse ? 'angle-down' : 'angle-right'
     }
   },
   watch: {
@@ -272,8 +282,12 @@ export default {
 
     .help {
       font-size: 10px;
-      margin-top: -16px;
       margin-bottom: 16px;
+      margin-top: -16px;
+    }
+
+    &__advanced-filters {
+      cursor: pointer;
     }
   }
 </style>

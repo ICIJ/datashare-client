@@ -500,7 +500,8 @@
     "phraseMatchDescription": "Allows you to search for documents containing an exact sentence or phrase rather than comparing a set of keywords in random order.",
     "phraseMatchDescriptionOperators" : "Do not insert operators in your queries",
     "learnMore": "Learn more",
-    "author": "Author"
+    "author": "Author",
+    "advancedFilters": "Advanced filters"
   },
   "batchSearchResults": {
     "rank": "Rank",
