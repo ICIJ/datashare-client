@@ -85,7 +85,6 @@
 
 <script>
 import facets from '@/mixins/facets'
-import PQueue from 'p-queue'
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
 import each from 'lodash/each'
@@ -109,7 +108,6 @@ export default {
       collapseItems: !this.asyncItems,
       isReady: true,
       isInitialized: !!this.asyncItems,
-      queue: new PQueue({ concurrency: 1 }),
       results: []
     }
   },
@@ -178,7 +176,7 @@ export default {
       this.isReady = false
       return this.aggregate()
     },
-    aggregate () {
+    async aggregate () {
       if (this.facet) {
         const size = this.size
         const prefix = this.facet.prefix ? this.$config.get('dataDir') + '/' : ''
@@ -186,23 +184,22 @@ export default {
         const queryTokens = compact(concat(alternativeSearch, this.queryTokens))
         const include = prefix + `.*(${queryTokens.join('|')}).*`
         const options = this.facet.isSearchable && queryTokens.length ? { size, include } : { size }
-        return this.queue.add(async () => {
-          let res
-          try {
-            res = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
-          } catch (_) {
-            res = {}
-          }
-          this.$set(this, 'total', res.total)
-          const sumOtherDocCount = get(res, ['aggregations', this.facet.key, 'sum_other_doc_count'], 0)
-          const sumDocCount = sumBy(get(res, this.resultPath, []), 'doc_count')
-          this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)
-          this.$set(this, 'results', this.addInvertedFacets(res))
-          this.$set(this, 'isReady', this.queue.pending === 1)
-          return this.results
-        })
+        let res
+        try {
+          res = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
+        } catch (_) {
+          res = {}
+        }
+        this.$set(this, 'total', res.total)
+        const sumOtherDocCount = get(res, ['aggregations', this.facet.key, 'sum_other_doc_count'], 0)
+        const sumDocCount = sumBy(get(res, this.resultPath, []), 'doc_count')
+        this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)
+        this.$set(this, 'results', this.addInvertedFacets(res))
+        this.$set(this, 'isReady', true)
+        return this.results
+      } else {
+        return false
       }
-      return this.queue.onEmpty()
     },
     addInvertedFacets (response) {
       if (!this.isGlobal && this.facetFilter && this.facetFilter.reverse) {
