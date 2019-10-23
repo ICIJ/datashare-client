@@ -470,15 +470,13 @@
   "batchSearch": {
     "lead": "Rechercher plusieurs termes dans plusieurs documents en même temps.",
     "title": "Recherches en lot",
-    "form": {
-      "heading": "Nouvelle recherche en lot",
-      "fileLabel": "Fichier CSV",
-      "fileDescription": "Seuls les formats CSV sont acceptés. La première colonne doit contenir les termes à chercher.",
-      "filePlaceholder": "Choisissez un fichier...",
-      "submit": "Ajouter",
-      "success": "Votre recherche en lot est en train d'être effectuée.",
-      "failure": "Il y a eu une erreur, votre recherche en lot n'a pas pu être effectuée."
-    },
+    "heading": "New batch search",
+    "fileLabel": "CSV file",
+    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
+    "filePlaceholder": "Choose a file...",
+    "submit": "Add",
+    "success": "Your batch search is now running.",
+    "failure": "Something went wrong, unable to start your batch search.",
     "project": "Projet",
     "name": "Nom",
     "description": "Description",
@@ -501,10 +499,12 @@
     "phraseMatch": "Rechercher les termes exacts",
     "phraseMatchDescription": "Cela vous permet de rechercher des documents qui contiennent l'expression exacte et non les termes dans un autre ordre.",
     "phraseMatchDescriptionOperators": "Ne pas insérer d'opérateurs dans vos recherches",
-    "learnMore": "En savoir plus"
+    "learnMore": "En savoir plus",
+    "author": "Author",
+    "advancedFilters": "Advanced filters"
   },
   "batchSearchResults": {
-    "rank": "Rang",
+    "rank": "Rank",
     "query": "Recherche",
     "documentName": "Nom du document",
     "creationDate": "Date de création",
