@@ -1,0 +1,92 @@
+[
+  {
+    "_id": "5db1a72306558f902932810b",
+    "index": 0,
+    "guid": "4c962872-078e-42bd-9df0-262b7f3a89e6",
+    "isActive": false,
+    "balance": "$2,569.74",
+    "picture": "http://placehold.it/32x32",
+    "age": 22,
+    "eyeColor": "brown",
+    "name": "Norman Jensen",
+    "gender": "male",
+    "company": "DRAGBOT",
+    "email": "normanjensen@dragbot.com",
+    "phone": "+1 (844) 414-2433",
+    "address": "798 Meserole Street, Onton, Idaho, 8769",
+    "about": "Ullamco veniam amet laborum aliquip. Aute duis ut pariatur commodo voluptate esse sunt commodo veniam irure sint sunt labore. Est mollit ullamco ut pariatur in.\r\n",
+    "registered": "2018-06-18T10:54:16 -02:00",
+    "latitude": 71.671529,
+    "longitude": 171.317356,
+    "tags": [
+      "non",
+      "incididunt",
+      "magna",
+      "voluptate",
+      "do",
+      "quis",
+      "eiusmod"
+    ],
+    "friends": [
+      {
+        "id": 0,
+        "name": "Hogan Holmes"
+      },
+      {
+        "id": 1,
+        "name": "Hampton Zimmerman"
+      },
+      {
+        "id": 2,
+        "name": "Mcneil Norris"
+      }
+    ],
+    "greeting": "Hello, Norman Jensen! You have 10 unread messages.",
+    "favoriteFruit": "banana"
+  },
+  {
+    "_id": "5db1a7235db5d1942926b244",
+    "index": 1,
+    "guid": "a3aea530-7a52-4102-a698-cd106c791d44",
+    "isActive": true,
+    "balance": "$2,382.44",
+    "picture": "http://placehold.it/32x32",
+    "age": 22,
+    "eyeColor": "brown",
+    "name": "Collier Key",
+    "gender": "male",
+    "company": "XYQAG",
+    "email": "collierkey@xyqag.com",
+    "phone": "+1 (858) 593-2261",
+    "address": "318 Flatbush Avenue, Cascades, Texas, 7024",
+    "about": "Cillum proident officia anim nisi sunt voluptate nostrud tempor est deserunt anim esse aliquip. Excepteur ut id duis culpa ex dolore nisi ullamco pariatur. Id ut cillum irure elit occaecat enim.\r\n",
+    "registered": "2015-06-05T02:59:56 -02:00",
+    "latitude": -84.579192,
+    "longitude": -88.028076,
+    "tags": [
+      "deserunt",
+      "sint",
+      "ut",
+      "anim",
+      "officia",
+      "duis",
+      "minim"
+    ],
+    "friends": [
+      {
+        "id": 0,
+        "name": "Guadalupe Richards"
+      },
+      {
+        "id": 1,
+        "name": "Mullen Snyder"
+      },
+      {
+        "id": 2,
+        "name": "Parrish Ellis"
+      }
+    ],
+    "greeting": "Hello, Collier Key! You have 3 unread messages.",
+    "favoriteFruit": "strawberry"
+  }
+]

@@ -54,6 +54,8 @@ export default {
           return import('@/components/document/viewers/LegacySpreadsheetViewer')
         case this.isImage:
           return import('@/components/document/viewers/ImageViewer')
+        case this.isJson:
+          return import('@/components/document/viewers/JsonViewer')
         default:
           return null
       }
@@ -77,6 +79,9 @@ export default {
     },
     isImage () {
       return this.document.contentType.indexOf('image/') === 0
+    },
+    isJson () {
+      return this.document.contentType.indexOf('application/json') === 0
     }
   }
 }
