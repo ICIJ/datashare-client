@@ -388,7 +388,7 @@ export default {
     &__version, &__data-location {
       color: rgba(white, 0.6);
       padding: 0 $spacer * 1.5 $spacer;
-      font-size: 0.8rem;
+      font-size: $font-size-sm;
     }
   }
 </style>
