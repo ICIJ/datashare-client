@@ -270,7 +270,7 @@ export default {
         padding: $spacer * 1.5 ($spacer * 1.75) 0;
         position: relative;
         display: flex;
-        font-size: 1em;
+        font-size: $font-size-sm;
         font-weight: bold;
 
         &:not(&--borderless):before {
@@ -323,7 +323,7 @@ export default {
             color: rgba(white, 0.6);
             display: flex;
             border-radius: 0;
-            font-size: 0.9rem;
+            font-size: $font-size-sm;
             font-weight: bold;
 
             &.router-link-active, &:hover, &:active {

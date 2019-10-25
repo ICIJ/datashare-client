@@ -1,11 +1,16 @@
 @import './utils/settings.scss';
 @import './utils/animations.scss';
+@import './assets/fonts/Lato/stylesheet.css';
 @import './assets/fonts/Medel/stylesheet.css';
 @import '~node_modules/bootstrap/scss/bootstrap';
 // BootstrapVue and its default variables
 @import '~node_modules/bootstrap-vue/src/index';
 // @TODO bundle Murmur so the import is easier
 @import '~node_modules/@icij/murmur/dist/lib/@icij/murmur.css';
+
+html {
+  font-size: 14px;
+}
 
 .text-special {
   font-family: $special-font-family;

@@ -3,10 +3,10 @@
     <div v-if="$config.is('manageDocuments') && !document.hasNerTags" class="document__named-entities document__named-entities--not--searched">
       <div v-html="$t('document.named_entities_not_searched', { indexing_link: '#/indexing' })"></div>
     </div>
-    <div v-else-if="!hasNamedEntities" class="document__named-entities document__named-entities--not--found">
+    <div v-else-if="!hasNamedEntities && !isLoadingNamedEntities" class="document__named-entities document__named-entities--not--found">
       {{ $t('document.named_entities_not_found') }}
     </div>
-    <div v-else class="document__named-entities">
+    <div v-else-if="!isLoadingNamedEntities" class="document__named-entities">
       <div v-for="(pages, category) in namedEntitiesPaginatedByCategories" :key="category" class="mb-4" v-if="categoryIsntEmpty(category)">
         <div class="mb-2" :class="getCategoryClass(category, 'text-')">
           <fa :icon="getCategoryIcon(category)" />

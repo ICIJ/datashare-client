@@ -2,14 +2,14 @@
   <router-link :to="{ name: 'document', params }" class="search-results-list-link d-flex align-self-stretch flex-nowrap">
     <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy />
     <div class="search-results-list-link__wrapper">
-      <h5 class="search-results-list-link__basename">
+      <span class="search-results-list-link__basename">
         <document-sliced-name :document="document" />
-      </h5>
-      <span class="search-results-list-link__location small">
+      </span>
+      <span class="search-results-list-link__location">
         <fa icon="folder" class="mr-1" />
         {{ location }}
       </span>
-      <div class="search-results-list-link__fragments small" v-if="document.highlight" v-html="document.highlight.content.join(' [...] ')"></div>
+      <div class="search-results-list-link__fragments" v-if="document.highlight" v-html="document.highlight.content.join(' [...] ')"></div>
     </div>
   </router-link>
 </template>
@@ -113,7 +113,7 @@ export default {
     }
 
     &__basename {
-      font-size: 1rem;
+      font-size: $font-size-base;
       margin: 0;
       word-break: break-all;
     }
@@ -124,12 +124,14 @@ export default {
       width: 100%;
       overflow: hidden;
       text-overflow: ellipsis;
-      color: $gray-500;
+      color: $text-muted;
+      font-size: $font-size-sm;
     }
 
     &__fragments {
-      font-size: 0.9em;
-      color: $text-muted;
+      margin-top: $spacer * 0.5;
+      font-size: $font-size-sm;
+      color: $body-color;
     }
 
   }

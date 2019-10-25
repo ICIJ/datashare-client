@@ -1,0 +1,26 @@
+@font-face {
+    font-family: 'Lato';
+    src: url('hinted-Lato-Regular.eot');
+    src: local('Lato Regular'), local('Lato-Regular'),
+        url('hinted-Lato-Regular.eot?#iefix') format('embedded-opentype'),
+        url('hinted-Lato-Regular.woff2') format('woff2'),
+        url('hinted-Lato-Regular.woff') format('woff'),
+        url('hinted-Lato-Regular.ttf') format('truetype'),
+        url('hinted-Lato-Regular.svg#Lato-Regular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'Lato';
+    src: url('hinted-Lato-Bold.eot');
+    src: local('Lato Bold'), local('Lato-Bold'),
+        url('hinted-Lato-Bold.eot?#iefix') format('embedded-opentype'),
+        url('hinted-Lato-Bold.woff2') format('woff2'),
+        url('hinted-Lato-Bold.woff') format('woff'),
+        url('hinted-Lato-Bold.ttf') format('truetype'),
+        url('hinted-Lato-Bold.svg#Lato-Bold') format('svg');
+    font-weight: bold;
+    font-style: normal;
+}
+

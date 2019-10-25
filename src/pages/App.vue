@@ -3,7 +3,7 @@
     <div class="app__sidebar">
       <app-sidebar />
     </div>
-    <div class="app__main flex-grow-1 d-flex">
+    <div class="app__main flex-grow-1 d-flex ">
       <vue-perfect-scrollbar class="app__main__context-sidebar" v-if="!isContextSidebarReduced">
         <transition name="slide-left">
           <router-view name="sidebar" />

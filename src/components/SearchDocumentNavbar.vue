@@ -163,7 +163,7 @@ export default {
     }
 
     &__back, &__back:hover {
-      font-size: 0.875rem;
+      font-size: $font-size-sm;
       color: inherit;
       display: inline;
     }

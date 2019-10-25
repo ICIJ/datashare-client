@@ -143,7 +143,7 @@ export default {
       width: 100%;
 
       &__toolbar {
-        font-size: 0.85rem;
+        font-size: $font-size-sm;
         line-height: $line-height-base * (1 - (85 - 95) / 95);
         padding: $spacer 0 0 $spacer;
 
