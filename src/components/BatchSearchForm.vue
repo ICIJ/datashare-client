@@ -82,14 +82,10 @@
                   <div>{{ item.label }}</div>
                 </template>
               </selectable-dropdown>
-              <ul class="list-unstyled">
-                <li v-for="(fileType, index) in fileTypes" :key="fileType.mime" class="badge badge-light border badge-pill mr-1 mt-1">
-                  <span>{{ fileType.label }}</span>
-                  <span class="btn btn-sm p-0" @click.prevent="deleteFileType(index)">
-                    <fa icon="times" class="fa-fw p-0" />
-                  </span>
-                </li>
-              </ul>
+              <b-badge v-for="(fileType, index) in fileTypes" :key="fileType.mime" class="mr-2 pl-1 batch-search-form__advanced-filters" variant="warning" pill @click.prevent="deleteFileType(index)">
+                <fa icon="times-circle" />
+                {{ fileType.label }}
+              </b-badge>
             </b-form-group>
             <b-form-group
               :label="$t('batchSearch.path')">
@@ -106,14 +102,10 @@
                 :hide="!suggestionPaths.length"
                 :items="suggestionPaths">
               </selectable-dropdown>
-              <ul class="list-unstyled">
-                <li v-for="(path, index) in paths" :key="path" class="badge badge-light border badge-pill mr-1 mt-1">
-                  <span>{{ path }}</span>
-                  <span class="btn btn-sm p-0" @click.prevent="deletePath(index)">
-                    <fa icon="times" class="fa-fw p-0" />
-                  </span>
-                </li>
-              </ul>
+              <b-badge v-for="(path, index) in paths" :key="path" class="mr-2 pl-1 batch-search-form__advanced-filters" variant="warning" pill @click.prevent="deleteFileType(index)">
+                <fa icon="times-circle" />
+                {{ path }}
+              </b-badge>
             </b-form-group>
           </b-collapse>
           <b-form-group
