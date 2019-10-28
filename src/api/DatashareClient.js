@@ -12,7 +12,7 @@ export class DatashareClient {
     }
   }
   index (options) {
-    return this.sendAction(`/api/task/index/file`, { method: 'POST', body: JSON.stringify({ options }) })
+    return this.sendAction(`/api/task/batchUpdate/index/file`, { method: 'POST', body: JSON.stringify({ options }) })
   }
   runBatchSearch () {
     return this.sendAction(`/api/task/batchSearch`, { method: 'POST' })

@@ -40,7 +40,7 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.submitExtract()
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/batchUpdate/index/file'),
       { method: 'POST', body: JSON.stringify({ options: { ocr: false } }) })
   })
 
@@ -49,7 +49,7 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.submitExtract()
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/batchUpdate/index/file'),
       { method: 'POST', body: JSON.stringify({ options: { ocr: true } }) })
   })
 
