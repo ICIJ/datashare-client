@@ -36,7 +36,7 @@ export class DatashareClient {
     return this.sendAction(`/api/index/${project}`, { method: 'PUT' }, false)
   }
   deleteAll (project) {
-    return this.sendAction(`/api/project/id/${project}`, { method: 'DELETE' }, false)
+    return this.sendAction(`/api/project/${project}`, { method: 'DELETE' }, false)
   }
   getVersion () {
     return this.sendAction('/version')
