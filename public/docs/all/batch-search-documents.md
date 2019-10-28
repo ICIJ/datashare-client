@@ -4,7 +4,7 @@ description: It allows to search multiple queries (list of words) at once.
 
 # Batch search documents
 
-### Prepare your batch search
+## Prepare your batch search
 
 * Write your queries, one per line and per cell, in the first column of a spreadsheet \(Excel, Google Sheets, Numbers, Framacalc, etc.\). In the example below, there are 4 queries:
 
@@ -24,7 +24,7 @@ description: It allows to search multiple queries (list of words) at once.
 
 ### 
 
-### Launch your batch search
+## Launch your batch search
 
 * Open Datashare and click '**Batch searches**' in the left menu:
 
@@ -48,7 +48,7 @@ description: It allows to search multiple queries (list of words) at once.
 
 ![](../.gitbook/assets/screenshot-2019-10-21-at-10.59.08.png)
 
-#### What is fuzziness?
+### What is fuzziness?
 
 When you run a [batch search](https://icij.gitbook.io/datashare/all/batch-search-documents), you can set the fuzziness to 0, 1 or 2. It is the same as explained above, it will apply to each word in a query and corresponds to the maximum number of operations \(insertions, deletions, substitutions and transpositions\) on **characters** needed to make one **term** match the other.
 
@@ -66,7 +66,7 @@ If you search for similar terms \(**to catch typos for example**\), use fuzzines
 
 #### 
 
-#### What are proximity searches?
+### What are proximity searches?
 
 When you turn on 'Do phrase matches', you can set, in 'Proximity searches', the maximum number of operations \(insertions, deletions, substitutions and transpositions\) on **terms** needed to make one **phrase** match the other.
 
@@ -82,7 +82,7 @@ When you turn on 'Do phrase matches', you can set, in 'Proximity searches', the 
 
 ### 
 
-### Get your results
+## Get your results
 
 * Open your batch search by clicking its name:
 
@@ -106,7 +106,7 @@ You can click on a document's name and it will open it in a new tab:
 
 
 
-### Delete your batch search
+## Delete your batch search
 
 Open your batch search and click 'Delete batch search'. 
 
