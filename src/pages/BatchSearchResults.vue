@@ -62,7 +62,7 @@
             {{ meta.phraseMatches ? $t('indexing.yes') : $t('indexing.no') }}
           </dd>
           <dt class="col-sm-4 text-right">
-            {{ $t('batchSearch.fuzziness') }}
+            {{ fuzzinessLabel }}
           </dt>
           <dd class="col-sm-8">
             {{ meta.fuzziness }}
@@ -240,6 +240,9 @@ export default {
   },
   computed: {
     ...mapState('batchSearch', ['results', 'selectedQueries']),
+    fuzzinessLabel () {
+      return this.meta.phraseMatches ? this.$t('batchSearch.proximitySearches') : this.$t('batchSearch.fuzziness')
+    },
     perPage () {
       return settings.batchSearchResults.size
     },
