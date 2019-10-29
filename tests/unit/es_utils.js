@@ -169,7 +169,7 @@ class IndexBuilder {
         type: 'doc',
         refresh: true,
         id: docId,
-        body: this.document
+        body: this._omit(this.document, ['nerList'])
       }
       if (this.document.hasParent()) {
         createRequest.routing = this.document.parentDocument
@@ -201,6 +201,14 @@ class IndexBuilder {
   async commitAndGetLastDocument () {
     await this.commit()
     return this.lastCommittedDocument
+  }
+  _omit (obj, fields) {
+    return Object.keys(obj).reduce((newObj, key) => {
+      if (!fields.includes(key)) {
+        newObj[key] = obj[key]
+      }
+      return newObj
+    }, {})
   }
   get committedDocuments () {
     const promises = this.committedDocumentIds.map(async id => {
