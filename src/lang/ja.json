@@ -11,17 +11,17 @@
   },
   "search": {
     "errors": {
-      "badRequest": "Your search query is wrong",
-      "internalError": "The server encountered a problem",
-      "noConnections": "The server is not connected",
+      "badRequest": "検索ワードが正しくありません",
+      "internalError": "サーバーに問題が発生しました",
+      "noConnections": "サーバーが接続されていません",
       "notFound": "何も見つかりませんでした",
-      "serviceUnavailable": "The server is unable to satisfy your request",
-      "somethingWrong": "Something went wrong."
+      "serviceUnavailable": "サーバーはあなたの要求に応じることができません",
+      "somethingWrong": "何かの問題が発生しました"
     },
     "field": {
-      "all": "All fields",
-      "tags": "Tags",
-      "title": "Title",
+      "all": "すべてのフィールド",
+      "tags": "タグ",
+      "title": "タイトル",
       "author": "Author",
       "recipients": "Recipients",
       "content": "Content",
