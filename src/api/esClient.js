@@ -53,10 +53,6 @@ export function datasharePlugin (Client, config, components) {
   }
 
   Client.prototype.addQueryToBody = function (query, body, fields = []) {
-    // Create a top-level "MUST query" which contain a "SHOULD query" including
-    // a query_string and NamedEntity. If we don't add a `match_all` query,
-    // Bodybuilder ignores the query context, a MUST, and replace it by the none
-    // mentioned in the nested query.
     // Escape slash by adding a backslash before it
     query = replace(query, /\//g, '\\/')
     body.query('match_all')
@@ -88,6 +84,7 @@ export function datasharePlugin (Client, config, components) {
   Client.prototype.addSortToBody = function (name = 'relevance', body) {
     const { field, desc } = find(settings.searchSortFields, { name }) || settings.searchSortFields[0]
     body.sort(field, desc ? 'desc' : 'asc')
+    body.sort('path', 'asc')
   }
 
   Client.prototype.searchDocs = function (index, query = '*', facets = [], from = 0, size = 25, sort = 'relevance', fields = []) {

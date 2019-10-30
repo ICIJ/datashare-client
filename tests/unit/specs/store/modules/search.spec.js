@@ -737,4 +737,17 @@ describe('Search store', () => {
 
     expect(store.state.search.starredDocuments).toEqual(['doc_03'])
   })
+
+  it('should order documents by path', async () => {
+    await letData(es).have(new IndexedDocument('c')).commit()
+    await letData(es).have(new IndexedDocument('b')).commit()
+    await letData(es).have(new IndexedDocument('a')).commit()
+
+    await store.dispatch('search/query', '*')
+
+    expect(store.state.search.response.hits).toHaveLength(3)
+    expect(store.state.search.response.hits[0].shortId).toBe('a')
+    expect(store.state.search.response.hits[1].shortId).toBe('b')
+    expect(store.state.search.response.hits[2].shortId).toBe('c')
+  })
 })

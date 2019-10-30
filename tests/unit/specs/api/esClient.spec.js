@@ -109,6 +109,10 @@ describe('esClient', () => {
         extractionDate: {
           order: 'asc'
         }
+      }, {
+        path: {
+          order: 'asc'
+        }
       }]
     })
   })
