@@ -1,5 +1,5 @@
-import isArray from 'lodash/isArray'
 import find from 'lodash/find'
+import isArray from 'lodash/isArray'
 import uniqueId from 'lodash/uniqueId'
 import { dirname } from 'path'
 
