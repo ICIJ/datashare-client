@@ -56,11 +56,19 @@ export function datasharePlugin (Client, config, components) {
     // Escape slash by adding a backslash before it
     query = replace(query, /\//g, '\\/')
     body.query('match_all')
-      .addQuery('query_string', {
-        query,
-        fields: fields.length ? fields : undefined,
-        default_field: fields.length ? undefined : '*'
-      })
+      .addQuery('bool', b => b
+        .orQuery('query_string', {
+          query,
+          fields: fields.length ? fields : undefined,
+          default_field: fields.length ? undefined : '*'
+        })
+        .orQuery('has_child', 'type', 'NamedEntity',
+          sub => sub.query('query_string', {
+            query: query,
+            default_field: 'mentionNorm'
+          })
+        )
+      )
   }
 
   Client.prototype.addQueryToFacet = function (query, body, fields = []) {

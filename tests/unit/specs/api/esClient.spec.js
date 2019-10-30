@@ -64,9 +64,24 @@ describe('esClient', () => {
           must: [{
             match_all: {}
           }, {
-            query_string: {
-              query: '*',
-              default_field: '*'
+            bool: {
+              should: [{
+                query_string: {
+                  query: '*',
+                  fields: undefined,
+                  default_field: '*'
+                }
+              }, {
+                has_child: {
+                  type: 'NamedEntity',
+                  query: {
+                    query_string: {
+                      query: '*',
+                      default_field: 'mentionNorm'
+                    }
+                  }
+                }
+              }]
             }
           }]
         }
@@ -87,9 +102,23 @@ describe('esClient', () => {
           must: [{
             match_all: {}
           }, {
-            query_string: {
-              query: 'path:\\/home\\/datashare\\/path\\/*',
-              default_field: '*'
+            bool: {
+              should: [{
+                query_string: {
+                  query: 'path:\\/home\\/datashare\\/path\\/*',
+                  default_field: '*'
+                }
+              }, {
+                has_child: {
+                  type: 'NamedEntity',
+                  query: {
+                    query_string: {
+                      query: 'path:\\/home\\/datashare\\/path\\/*',
+                      default_field: 'mentionNorm'
+                    }
+                  }
+                }
+              }]
             }
           }]
         }
