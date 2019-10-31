@@ -106,7 +106,7 @@ You can click on a document's name and it will open it in a new tab:
 
 ## I get a "failure". What does that mean?
 
-Failures in batch searches can be due to some syntax error\(s\) in the way you wrote your queries or one of your queries in the CSV. 
+Failures in batch searches can be due to some syntax error\(s\) in the way you wrote your queries or one of your queries in the CSV. You should correct the error\(s\) in your CSV, re-export your CSV and [launch your batch search](https://icij.gitbook.io/datashare/all/batch-search-documents#launch-your-batch-search) again.
 
 They often happen **when 'do phrase matches' toggle button is turned off:**
 
