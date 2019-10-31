@@ -104,6 +104,44 @@ You can click on a document's name and it will open it in a new tab:
 
 ![](../.gitbook/assets/screenshot-2019-09-27-at-12.17.46-copy.png)
 
+## I get a "failure". What does that mean?
+
+Failures in batch searches can be due to some syntax error\(s\) in the way you wrote your queries or one of your queries in the CSV. 
+
+Here are **the most common errors:**
+
+* **Some of your queries start with AND** \(all uppercase\)
+
+You cannot start a query neither in Datashare's main search bar nor in your CSV with AND all uppercase. [AND is reserved as a search operator](https://icij.gitbook.io/datashare/all/search-with-operators#and).
+
+![](../.gitbook/assets/screenshot-2019-10-31-at-14.53.32.png)
+
+* **Some of your queries start with OR** \(all uppercase\)
+
+You cannot start a query neither in Datashare's main search bar nor in your CSV with OR all uppercase. [OR is reserved as a search operator](https://icij.gitbook.io/datashare/all/search-with-operators#or-or-space).
+
+![](../.gitbook/assets/screenshot-2019-10-31-at-14.58.08.png)
+
+* **Some of your queries start with or contain tilde** \(~\)
+
+You cannot start a query neither in Datashare's main search bar nor in your CSV with tilde \(~\) or which contains tilde. Tilde is reserved as a search operator for [fuzziness](https://icij.gitbook.io/datashare/faq/what-is-fuzziness) or [proximity searches](https://icij.gitbook.io/datashare/faq/what-is-proximity-search).
+
+![](../.gitbook/assets/screenshot-2019-10-31-at-15.03.59.png)
+
+![](../.gitbook/assets/screenshot-2019-10-31-at-14.59.36.png)
+
+![](../.gitbook/assets/screenshot-2019-10-31-at-15.02.40.png)
+
+
+
+* **Some of your queries start with or contain circumflex** \(^\)
+
+You cannot start a query neither in Datashare's main search bar nor in your CSV with circumflex \(^\) or which contains circumflex. Circumflex is reserved as a boosting operator.
+
+![](../.gitbook/assets/screenshot-2019-10-31-at-15.05.05.png)
+
+![](../.gitbook/assets/screenshot-2019-10-31-at-15.06.28.png)
+
 
 
 ## Delete your batch search
