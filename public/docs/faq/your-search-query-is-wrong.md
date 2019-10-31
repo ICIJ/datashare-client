@@ -22,7 +22,7 @@ You cannot start a query with OR all uppercase. [OR is reserved as a search oper
 
 
 
-### **The query contains only one double-quote** <a id="querie-s-contain-s-only-one-double-quote-or-a-double-quote-in-a-word"></a>
+### **The query contains only one double-quote \("\)** <a id="querie-s-contain-s-only-one-double-quote-or-a-double-quote-in-a-word"></a>
 
 ‌You cannot start or type a query with only one double quote. [Double quotes are reserved as a search operator](https://icij.gitbook.io/datashare/all/search-with-operators#exact-phrase) for exact phrase.
 
