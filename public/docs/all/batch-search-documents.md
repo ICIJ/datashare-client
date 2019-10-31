@@ -126,6 +126,8 @@ You cannot start a query neither in Datashare's main search bar nor in your CSV 
 
 You cannot start a query neither in Datashare's main search bar nor in your CSV with OR all uppercase. [OR is reserved as a search operator](https://icij.gitbook.io/datashare/all/search-with-operators#or-or-space).
 
+![](../.gitbook/assets/screenshot-2019-10-31-at-14.58.08.png)
+
 ### **Querie\(s\) contain\(s\) only one double quote or a double quote in a word**
 
 You cannot type a query neither in Datashare's main search bar nor in your CSV with only one double quote. [Double quotes are reserved as a search operator](https://icij.gitbook.io/datashare/all/search-with-operators#exact-phrase).
