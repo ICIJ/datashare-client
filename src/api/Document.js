@@ -100,6 +100,9 @@ export default class Document extends EsDoc {
       titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
       titles.push(trim(this.get('_source.metadata.tika_metadata_subject', '')))
     }
+    if (this.isTweet) {
+      titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
+    }
     if (this.extractionLevel > 0) {
       titles.push(this.resourceName)
     }
@@ -227,6 +230,9 @@ export default class Document extends EsDoc {
   }
   get isEmail () {
     return this.contentType.indexOf('message/') === 0 || this.contentType === 'application/vnd.ms-outlook'
+  }
+  get isTweet () {
+    return this.contentType === 'application/json; twint'
   }
   get isPdf () {
     return this.contentType === 'application/pdf'
