@@ -152,7 +152,7 @@ You cannot start a query neither in Datashare's main search bar nor in your CSV 
 
 ### **Querie\(s\) start\(s\) with or contain circumflex** \(^\)
 
-You cannot start a query neither in Datashare's main search bar nor in your CSV with circumflex \(^\) or which contains circumflex. Circumflex is reserved as a boosting operator.
+You cannot start a query neither in Datashare's main search bar nor in your CSV with circumflex \(^\) or which contains circumflex. [Circumflex is reserved as a boosting operator](https://icij.gitbook.io/datashare/all/search-with-operators#boosting-operators).
 
 ![](../.gitbook/assets/screenshot-2019-10-31-at-15.05.05.png)
 
