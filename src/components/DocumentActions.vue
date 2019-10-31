@@ -7,11 +7,11 @@
     <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
       {{ $t('document.star_file') }}
     </b-tooltip>
-    <a class="document-actions__download btn" :class="downloadBtnClassDefinition" :href="document.fullUrl" target="_blank" v-if="isDownloadAllowed" :id="downloadBtnId">
+    <a class="document-actions__download btn" :class="downloadBtnClassDefinition" :href="document.fullUrl" target="_blank" v-if="canIDownload" :id="downloadBtnId">
       <fa icon="download" fixed-width />
       <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">{{ $t('document.download_button') }}</span>
     </a>
-    <b-popover :target="downloadBtnId" triggers="hover focus" :placement="tooltipsPlacement" :title="document.contentTypeLabel" v-if="isDownloadAllowed">
+    <b-popover :target="downloadBtnId" triggers="hover focus" :placement="tooltipsPlacement" :title="document.contentTypeLabel">
       <document-type-card :document="document" />
     </b-popover>
     <router-link-popup class="document-actions__popup btn" :class="popupBtnClassDefinition" :to="{ name: 'document-simplified', params: document.routerParams }" :id="popupBtnId">
@@ -27,8 +27,10 @@
 <script>
 import uniqueId from 'lodash/uniqueId'
 import { mapState } from 'vuex'
+
 import DocumentTypeCard from '@/components/DocumentTypeCard'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
+import features from '@/mixins/features'
 
 export default {
   name: 'DocumentActions',
@@ -36,6 +38,7 @@ export default {
     DocumentTypeCard,
     RouterLinkPopup
   },
+  mixins: [features],
   props: {
     document: {
       type: Object
@@ -102,6 +105,9 @@ export default {
     },
     popupBtnId () {
       return uniqueId('document-actions-popup-button-')
+    },
+    canIDownload () {
+      return this.hasFeature('DOWNLOAD_ALLOWED') ? this.isDownloadAllowed : true
     }
   },
   methods: {
