@@ -32,11 +32,13 @@ To have all documents mentioning all the queried terms, you can use 'AND' betwee
 
 
 
-### **NOT**
+### **NOT or !**
 
 To have all documents NOT mentioning some queried terms, you can use 'NOT' before each word you don't want. You need to write 'NOT' with **all letters uppercase**.
 
 > Example: NOT Martinez
+>
+> Same search: !Martinez
 
 
 

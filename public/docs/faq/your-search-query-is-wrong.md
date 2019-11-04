@@ -38,6 +38,12 @@ You cannot start a query with OR all uppercase. [OR is reserved as a search oper
 
 ​‌
 
+### **The query ends with exclamation point \(!\)** <a id="querie-s-start-s-with-or-contain-circumflex"></a>
+
+You cannot end a query with exclamation point \(!\). Exclamation point is reserved as a search operator for excluding a term.
+
+![](../.gitbook/assets/screenshot-2019-11-04-at-18.02.39.png)
+
 ### **The query starts with or contains caret** \(^\) <a id="querie-s-start-s-with-or-contain-circumflex"></a>
 
 ‌You cannot start a query with caret \(^\) or write one which contains caret. [Caret is reserved as a boosting operator](https://icij.gitbook.io/datashare/all/search-with-operators#boosting-operators).
