@@ -38,9 +38,9 @@ You cannot start a query with OR all uppercase. [OR is reserved as a search oper
 
 ​‌
 
-### **The query starts with or contains circumflex** \(^\) <a id="querie-s-start-s-with-or-contain-circumflex"></a>
+### **The query starts with or contains caret** \(^\) <a id="querie-s-start-s-with-or-contain-circumflex"></a>
 
-‌You cannot start a query with circumflex \(^\) or write one which contains circumflex. [Circumflex is reserved as a boosting operator](https://icij.gitbook.io/datashare/all/search-with-operators#boosting-operators).
+‌You cannot start a query with caret \(^\) or write one which contains caret. [Caret is reserved as a boosting operator](https://icij.gitbook.io/datashare/all/search-with-operators#boosting-operators).
 
 ![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsX4JZonoD94VtqwHu3%2F-LsX7wmdHRn3gT9-9xeL%2FScreenshot%202019-10-31%20at%2015.05.05.png?alt=media&token=6ac31c7a-dcd1-4b09-bf2c-02ec6e89f2a6)![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsX4JZonoD94VtqwHu3%2F-LsX8-0rSV6D_O2FzzWO%2FScreenshot%202019-10-31%20at%2015.06.28.png?alt=media&token=8a5b573b-e68f-4bdf-a991-ab4f40e4325c)T
 
