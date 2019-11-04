@@ -9,12 +9,13 @@
 </template>
 
 <script>
-import Facet from '@/components/Facet'
-import FacetPathTree from '@/components/FacetPathTree'
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-import facets from '@/mixins/facets'
 import map from 'lodash/map'
 import replace from 'lodash/replace'
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+
+import Facet from '@/components/Facet'
+import FacetPathTree from '@/components/FacetPathTree'
+import facets from '@/mixins/facets'
 
 export default {
   name: 'FacetPath',

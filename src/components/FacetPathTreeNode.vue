@@ -22,7 +22,7 @@
       </div>
     </div>
     <ul v-show="hasChildren() && open" class="list-unstyled pl-3">
-      <facet-path-tree-node v-for="(child, i) in node.children" :facet="facet" :node="child" :key="i" ref="treeNodes"></facet-path-tree-node>
+      <facet-path-tree-node v-for="(child, index) in node.children" :facet="facet" :node="child" :key="index" ref="treeNodes"></facet-path-tree-node>
     </ul>
     <div v-show="hasNoChildren() && open" class="text-muted pl-3">
       └ <span class="small">{{ $t('facet.noSubdirectories') }}</span>
@@ -31,15 +31,19 @@
 </template>
 
 <script>
-import PQueue from 'p-queue'
-import facets from '@/mixins/facets'
 import get from 'lodash/get'
 import repeat from 'lodash/repeat'
 import replace from 'lodash/replace'
+import PQueue from 'p-queue'
+
+import facets from '@/mixins/facets'
 
 export default {
   name: 'FacetPathTreeNode',
-  props: ['node', 'facet'],
+  props: {
+    node: Object,
+    facet: Object
+  },
   mixins: [facets],
   data () {
     return {
@@ -95,7 +99,7 @@ export default {
           exclude: repeat('/.*', this.node.path.split('/').length + 1),
           include: `${this.node.path}/.*`
         }
-        return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options }).then(async r => {
+        return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options }).then(r => {
           this.loading = false
           this.isLoaded = true
           this.node.children = []
