@@ -24,10 +24,11 @@
 
 * [Analyze documents](all/analyze-documents.md)
 * [Search documents](all/search-documents.md)
+* [Filter documents](all/filter-documents.md)
+* [Sort documents by dates, relevance, etc.](all/sort-documents-by-dates-relevance-etc..md)
 * [Search with operators](all/search-with-operators.md)
 * [Batch search documents](all/batch-search-documents.md)
 * [Explore a document](all/explore-a-document.md)
-* [Filter documents](all/filter-documents.md)
 * [Star documents](all/star-documents.md)
 * [Tag documents](all/tag-documents.md)
 * [Use keyboard shortcuts](all/use-keyboard-shortcuts.md)
