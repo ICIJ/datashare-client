@@ -36,7 +36,7 @@ description: It allows to search multiple queries (list of words) at once.
 
 ![](../.gitbook/assets/screenshot-2019-11-04-at-16.12.23.png)
 
-...the CSV \(which stand for 'Comma-separated values'\) will keep these blank cells. It will separate them with semicolons. You will thus have semicolons in your batch search results \(_see screenshot below_\). To avoid that, **you need to remove blank cells before exporting your queries as a CSV**.
+...the CSV \(which stand for 'Comma-separated values'\) will keep these blank cells. It will separate them with semicolons. You will thus have semicolons in your batch search results \(_see screenshot below_\). To avoid that, **you need to remove blank cells in your spreadsheet before exporting it as a CSV**.
 
 ![Remove blank cells in your spreadsheet in order to avoid this.](../.gitbook/assets/screenshot-2019-09-27-at-10.51.29.png)
 
