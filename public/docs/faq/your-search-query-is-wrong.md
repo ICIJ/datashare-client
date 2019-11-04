@@ -40,7 +40,7 @@ You cannot start a query with OR all uppercase. [OR is reserved as a search oper
 
 ### **The query ends with exclamation point \(!\)** <a id="querie-s-start-s-with-or-contain-circumflex"></a>
 
-You cannot end a query with exclamation point \(!\). Exclamation point is reserved as a search operator for excluding a term.
+You cannot end a query with exclamation point \(!\). [Exclamation point is reserved as a search operator for excluding a term](https://icij.gitbook.io/datashare/all/search-with-operators#not-or).
 
 ![](../.gitbook/assets/screenshot-2019-11-04-at-18.02.39.png)
 
