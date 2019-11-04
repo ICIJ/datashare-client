@@ -26,7 +26,15 @@
 
 ['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](https://icij.gitbook.io/datashare/faq/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do)
 
-\*\*\*\*
+[What is fuzziness?](https://icij.gitbook.io/datashare/faq/what-is-fuzziness)
+
+[What are proximity searches?](https://icij.gitbook.io/datashare/faq/what-is-proximity-search)
+
+['Your search query is wrong'. What should I do?](https://icij.gitbook.io/datashare/faq/your-search-query-is-wrong)
+
+[How can I contact ICIJ for help, bug reporting or suggestions?](https://icij.gitbook.io/datashare/faq/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions)
+
+
 
 **User guide:**
 
