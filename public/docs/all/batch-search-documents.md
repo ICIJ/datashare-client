@@ -12,7 +12,7 @@ description: It allows to search multiple queries (list of words) at once.
 
 ![](../.gitbook/assets/screenshot-2019-09-25-at-16.06.40.png)
 
-* [**Search operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****\(AND, NOT, OR, double quotes "..." or carets ^\) **WORK in batch searches:** 
+* [**Search operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****\(AND, NOT, OR, asterisk \*, interrogation point ? double quotes "..." or carets ^\) **WORK in batch searches:** 
 
   \*\*\*\*
 
