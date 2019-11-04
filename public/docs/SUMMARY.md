@@ -51,4 +51,5 @@
 * [What is fuzziness?](faq/what-is-fuzziness.md)
 * [What are proximity searches?](faq/what-is-proximity-search.md)
 * ['Your search query is wrong'. What should I do?](faq/your-search-query-is-wrong.md)
+* [How can I contact ICIJ for help, bug reporting or suggestions?](faq/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions.md)
 
