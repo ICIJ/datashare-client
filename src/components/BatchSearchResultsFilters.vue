@@ -14,13 +14,17 @@
           v-model="selectedQueries"
           @input="onInput">
           <template #item-label="{ item }">
-            {{ item }}
-            <b-badge class="float-right my-1 px-2" variant="tertiary" pill>{{ meta.queries[item] }}</b-badge>
+            <div class="d-flex">
+              <span class="flex-grow-1 text-truncate">{{ item }}</span>
+              <b-badge class="my-1 px-2" variant="tertiary" pill>{{ meta.queries[item] }}</b-badge>
+            </div>
           </template>
         </selectable-dropdown>
         <div v-else v-for="(count, query) in meta.queries" :key="query" class="batch-search-results-filters__queries__list px-3 py-1">
-          {{ query }}
-          <b-badge class="float-right my-1 px-2" variant="tertiary" pill>{{ $n(count) }}</b-badge>
+          <div class="d-flex">
+            <span class="flex-grow-1 text-truncate">{{ query }}</span>
+            <b-badge class="my-1 px-2" variant="tertiary" pill>{{ $n(count) }}</b-badge>
+          </div>
         </div>
       </div>
     </div>
