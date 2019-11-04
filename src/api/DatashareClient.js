@@ -12,7 +12,7 @@ export class DatashareClient {
     }
   }
   index (options) {
-    return this.sendAction(`/api/task/index/file`, { method: 'POST', body: JSON.stringify({ options }) })
+    return this.sendAction(`/api/task/batchUpdate/index/file`, { method: 'POST', body: JSON.stringify({ options }) })
   }
   runBatchSearch () {
     return this.sendAction(`/api/task/batchSearch`, { method: 'POST' })
@@ -36,7 +36,7 @@ export class DatashareClient {
     return this.sendAction(`/api/index/${project}`, { method: 'PUT' }, false)
   }
   deleteAll (project) {
-    return this.sendAction(`/api/project/id/${project}`, { method: 'DELETE' }, false)
+    return this.sendAction(`/api/project/${project}`, { method: 'DELETE' }, false)
   }
   getVersion () {
     return this.sendAction('/version')
@@ -51,7 +51,7 @@ export class DatashareClient {
     })
   }
   deleteNamedEntitiesByMentionNorm (project, mentionNorm) {
-    return this.sendAction(`/api/${project}/namedEntity/hide/${mentionNorm}`, { method: 'PUT' }, false)
+    return this.sendAction(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: 'PUT' }, false)
   }
   getSource (document) {
     return this.sendAction(document.url, {}, false)

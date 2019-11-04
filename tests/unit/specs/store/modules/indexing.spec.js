@@ -36,7 +36,7 @@ describe('Indexing store', () => {
     await store.dispatch('indexing/submitExtract')
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/index/file'),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/batchUpdate/index/file'),
       { method: 'POST', body: JSON.stringify({ options: { ocr: false } }) })
   })
 
@@ -114,7 +114,7 @@ describe('Indexing store', () => {
     await store.dispatch('indexing/deleteAll')
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl(`/api/project/id/${encodeURIComponent(process.env.VUE_APP_ES_INDEX)}`),
+    expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl(`/api/project/${encodeURIComponent(process.env.VUE_APP_ES_INDEX)}`),
       { method: 'DELETE' })
   })
 })
