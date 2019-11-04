@@ -1,7 +1,9 @@
 import castArray from 'lodash/castArray'
-import without from 'lodash/without'
+import isEqual from 'lodash/isEqual'
+import slice from 'lodash/slice'
+import split from 'lodash/split'
 import some from 'lodash/some'
-import startsWith from 'lodash/startsWith'
+import without from 'lodash/without'
 import xor from 'lodash/xor'
 
 export const state = {
@@ -10,7 +12,14 @@ export const state = {
 
 export const getters = {
   isOpen (state) {
-    return path => some(state.openPaths, p => startsWith(p, path))
+    return path => {
+      return some(state.openPaths, openPath => {
+        const splitPath = split(path, '/')
+        const splitOpenPath = split(openPath, '/')
+        const slicedOpenPath = slice(splitOpenPath, 0, splitPath.length)
+        return isEqual(splitPath, slicedOpenPath)
+      })
+    }
   }
 }
 
