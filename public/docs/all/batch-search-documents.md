@@ -78,13 +78,13 @@ Export your spreadsheet in a CSV format:
 
 ### What is fuzziness?
 
-When you run a [batch search](https://icij.gitbook.io/datashare/all/batch-search-documents), you can set the fuzziness to 0, 1 or 2. It is the same as explained above, it will apply to each word in a query and corresponds to the maximum number of operations \(insertions, deletions, substitutions and transpositions\) on **characters** needed to make one **term** match the other.
+When you run a [batch search](https://icij.gitbook.io/datashare/all/batch-search-documents), you can set the fuzziness to 0, 1 or 2. It will apply to each term in a query. It corresponds to **the maximum number of operations \(insertions, deletions, substitutions and transpositions\)** on _**characters**_ needed to make one _**term**_ match the other.
 
 > kitten -&gt; sitten \(1 substitution \(k turned into s\) = fuzziness is 1\)
 
 > kitten -&gt; sittin \(2 substitutions \(k turned into s and e turned into i\) = fuzziness is 2\)
 
-If you search for similar terms \(**to catch typos for example**\), use fuzziness. Use the [tilde symbol](https://en.wikipedia.org/wiki/Tilde) at the end of the word to set the fuzziness to 1 or 2. 
+If you search for similar terms \(**to catch typos for example**\), use fuzziness. 
 
 "_The default edit distance is 2, but an edit distance of 1 should be sufficient to catch 80% of all human misspellings. It can be specified as: quikc~1_" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
@@ -96,13 +96,15 @@ If you search for similar terms \(**to catch typos for example**\), use fuzzines
 
 ### What are proximity searches?
 
-When you turn on 'Do phrase matches', you can set, in 'Proximity searches', the maximum number of operations \(insertions, deletions, substitutions and transpositions\) on **terms** needed to make one **phrase** match the other.
+When you turn on 'Do phrase matches', you can set, in 'Proximity searches', the **maximum number of operations \(insertions, deletions, substitutions and transpositions\)** on _**terms**_ needed to make one _**phrase**_ match the other.
 
 > “the cat is blue” -&gt; “the small cat is blue” \(1 insertion = fuzziness is 1\)
 
 > “the cat is blue” -&gt; “the small is cat blue” \(1 insertion + 2 transpositions = fuzziness is 3\)
 
 > Example: "fox quick"~5 \(this query will catch "quick brown fox", "quick brown car thin fox" or even "quick brown car thin blue tree fox"
+
+
 
 * Click '**Add**'. Your batch search will appear in the table of batch searches.
 
@@ -116,21 +118,21 @@ When you turn on 'Do phrase matches', you can set, in 'Proximity searches', the 
 
 ![](../.gitbook/assets/screenshot-2019-09-27-at-12.17.28.png)
 
-* You see your results and you can sort them by clicking the column's name. 'Index' means the order by which each queries would be sorted out if run in Datashare's main search bar. They are thus sorted by relevance score.
+* You see your results and you can sort them by clicking the column's name. 'Rank' means the order by which each queries would be sorted out if run in Datashare's main search bar. They are thus sorted by relevance score.
 
-![](../.gitbook/assets/screenshot-2019-09-27-at-12.17.36%20%281%29.png)
+![](../.gitbook/assets/screenshot-2019-11-04-at-16.37.03.png)
 
 You can click on a document's name and it will open it in a new tab:
 
-![](../.gitbook/assets/screenshot-2019-09-27-at-12.17.36.png)
+![](../.gitbook/assets/screenshot-2019-11-04-at-16.37.42.png)
 
 * You can filter your results by query in the left panel and read how many documents there are for each query: 
 
-![](../.gitbook/assets/screenshot-2019-09-27-at-12.17.46.png)
+![](../.gitbook/assets/screenshot-2019-11-04-at-16.38.43.png)
 
 * You can also download your results in a CSV format:
 
-![](../.gitbook/assets/screenshot-2019-09-27-at-12.17.46-copy.png)
+![](../.gitbook/assets/screenshot-2019-11-04-at-16.39.25.png)
 
 ## I get a "failure". What does that mean?
 
@@ -170,9 +172,9 @@ You cannot type a query with only one double quote, neither in Datashare's main 
 
 ![](../.gitbook/assets/screenshot-2019-10-31-at-15.23.01.png)
 
-### **Querie\(s\) start\(s\) with or contain tilde** \(~\)
+### **Querie\(s\) start\(s\) with or contain tilde** \(~\) inside a term
 
-You cannot start a query with tilde \(~\) or which contains tilde, neither in Datashare's main search bar nor in your CSV. Tilde is reserved as a search operator for [fuzziness](https://icij.gitbook.io/datashare/faq/what-is-fuzziness) or [proximity searches](https://icij.gitbook.io/datashare/faq/what-is-proximity-search).
+You cannot start a query with tilde \(~\) or make one contain a tilde, neither in Datashare's main search bar nor in your CSV. Tilde is reserved as a search operator for [fuzziness](https://icij.gitbook.io/datashare/faq/what-is-fuzziness) or [proximity searches](https://icij.gitbook.io/datashare/faq/what-is-proximity-search).
 
 ![](../.gitbook/assets/screenshot-2019-10-31-at-15.03.59.png)
 
@@ -182,9 +184,9 @@ You cannot start a query with tilde \(~\) or which contains tilde, neither in Da
 
 
 
-### **Querie\(s\) start\(s\) with or contain circumflex** \(^\)
+### **Querie\(s\) start\(s\) with or contain caret** \(^\)
 
-You cannot start a query with circumflex \(^\) or which contains circumflex, neither in Datashare's main search bar nor in your CSV. [Circumflex is reserved as a boosting operator](https://icij.gitbook.io/datashare/all/search-with-operators#boosting-operators).
+You cannot start a query with caret \(^\) or make it contain a caret, neither in Datashare's main search bar nor in your CSV. [Caret is reserved as a boosting operator](https://icij.gitbook.io/datashare/all/search-with-operators#boosting-operators).
 
 ![](../.gitbook/assets/screenshot-2019-10-31-at-15.05.05.png)
 
