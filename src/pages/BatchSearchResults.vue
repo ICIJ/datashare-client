@@ -295,7 +295,7 @@ export default {
       this.$router.push(this.generateLinkToBatchSearchResults(this.page, this.queries, sort, order))
     },
     filter () {
-      this.$router.push(this.generateLinkToBatchSearchResults(1, this.selectedQueries))
+      this.$router.push(this.generateLinkToBatchSearchResults(1, this.$store.state.batchSearch.selectedQueries))
     },
     linkGen (page) {
       return this.generateLinkToBatchSearchResults(page, this.selectedQueries)
