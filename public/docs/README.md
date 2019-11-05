@@ -17,10 +17,11 @@ Next steps:
 
 * [Analyze documents](https://icij.gitbook.io/datashare/all/analyze-documents)
 * [Search documents](https://icij.gitbook.io/datashare/all/search-documents)
+* [Filter documents](https://icij.gitbook.io/datashare/all/filter-documents)
+* [Sort documents by dates, relevance, etc.](https://icij.gitbook.io/datashare/all/sort-documents-by-dates-relevance-etc.)
 * [Search with operators](https://icij.gitbook.io/datashare/all/search-with-operators)
 * [Batch search documents](https://icij.gitbook.io/datashare/all/batch-search-documents)
 * [Explore a document](https://icij.gitbook.io/datashare/all/explore-a-document)
-* [Filter documents](https://icij.gitbook.io/datashare/all/filter-documents)
 * [Star documents](https://icij.gitbook.io/datashare/all/star-documents)
 * [Tag documents](https://icij.gitbook.io/datashare/all/tag-documents)
 * [Use keyboard shortcuts](https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts)
