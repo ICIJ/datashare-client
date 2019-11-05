@@ -227,7 +227,7 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next(async vm => vm.fetchBatchSearches())
+    next(vm => vm.fetchBatchSearches())
   },
   async beforeRouteUpdate (to, from, next) {
     this.$set(this, 'page', parseInt(get(to.query, 'page', this.page)))
@@ -236,6 +236,10 @@ export default {
     this.$set(this, 'order', get(to.query, 'order', this.order))
     store.commit('batchSearch/selectedQueries', this.queries)
     await this.fetch()
+    next()
+  },
+  beforeRouteLeave (to, from, next) {
+    store.commit('batchSearch/selectedQueries', [])
     next()
   },
   computed: {
