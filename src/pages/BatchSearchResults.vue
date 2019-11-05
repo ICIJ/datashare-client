@@ -101,7 +101,7 @@
             {{ $t('batchSearch.published') }}
           </dt>
           <dd class="col-sm-8">
-            {{ meta.published ? $t('indexing.yes') : $t('indexing.no') }}
+            <b-form-checkbox v-model="meta.published" switch disabled />
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.author') }}
