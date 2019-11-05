@@ -22,6 +22,11 @@
               accept=".csv"
               required></b-form-file>
           </b-form-group>
+          <div class="help">
+            <a href="https://icij.gitbook.io/datashare/all/batch-search-documents#write-your-queries-in-a-spreadsheet" target="_blank" class="text-muted">
+              {{ $t('batchSearch.learnMore') }}
+            </a>
+          </div>
           <b-form-group
             :label="$t('batchSearch.description')">
             <b-form-textarea
