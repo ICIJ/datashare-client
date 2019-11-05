@@ -18,7 +18,8 @@ jest.mock('@/api/DatashareClient', () => {
           queries: ['query_01', 'query_02', 'query_03'],
           state: 'SUCCESS',
           date: '2019-07-18T14:45:34.869+0000',
-          nbResults: 172
+          nbResults: 172,
+          published: true
         }, {
           uuid: '13',
           project: { name: 'ProjectName2' },
@@ -26,7 +27,8 @@ jest.mock('@/api/DatashareClient', () => {
           queries: ['query_04'],
           state: 'SUCCESS',
           date: '2019-07-28T14:45:34.869+0000',
-          nbResults: 15
+          nbResults: 15,
+          published: true
         }
       ])),
       getBatchSearchResults: jest.fn().mockReturnValue(Promise.resolve([
@@ -193,5 +195,14 @@ describe('BatchSearchResults.vue', () => {
 
   it('should return the document size as human readable', () => {
     expect(wrapper.vm.getDocumentSize(42)).toBe('42 B')
+  })
+
+  it('should change the batchSearch published state', () => {
+    jest.spyOn(store, 'dispatch')
+
+    wrapper.vm.changePublished(false)
+
+    expect(store.dispatch).toBeCalled()
+    expect(store.dispatch).toBeCalledWith('batchSearch/updateBatchSearch', { batchId: '12', published: false })
   })
 })

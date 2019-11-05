@@ -1,5 +1,6 @@
-import DatashareClient from '@/api/DatashareClient'
 import remove from 'lodash/remove'
+
+import DatashareClient from '@/api/DatashareClient'
 
 export const datashare = new DatashareClient()
 
@@ -47,7 +48,7 @@ export const actions = {
       return commit('results', results)
     } catch (_) {}
   },
-  async deleteBatchSearch ({ state, dispatch }, { batchId }) {
+  async deleteBatchSearch ({ state }, { batchId }) {
     try {
       await datashare.deleteBatchSearch(batchId)
       remove(state.batchSearches, batchSearch => batchSearch === batchId)
@@ -55,6 +56,11 @@ export const actions = {
     } catch (_) {
       return false
     }
+  },
+  async updateBatchSearch ({ state }, { batchId, published }) {
+    try {
+      await datashare.updateBatchSearch(batchId, published)
+    } catch (_) {}
   },
   async deleteBatchSearches ({ commit }) {
     try {

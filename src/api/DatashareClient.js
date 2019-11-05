@@ -104,6 +104,9 @@ export class DatashareClient {
   deleteBatchSearches () {
     return this.sendAction('/api/batch/search', { method: 'DELETE' }, false)
   }
+  updateBatchSearch (batchId, published) {
+    return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', body: JSON.stringify({ data: { published: published } }) })
+  }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
     const url = new URL(path, base)

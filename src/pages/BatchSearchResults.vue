@@ -101,7 +101,7 @@
             {{ $t('batchSearch.published') }}
           </dt>
           <dd class="col-sm-8">
-            <b-form-checkbox v-model="meta.published" switch disabled />
+            <b-form-checkbox v-model="published" switch @change="changePublished" />
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.author') }}
@@ -234,24 +234,9 @@ export default {
       queries: [],
       sort: settings.batchSearchResults.sort,
       order: settings.batchSearchResults.order,
-      showErrorMessage: false
+      showErrorMessage: false,
+      published: false
     }
-  },
-  beforeRouteEnter (to, from, next) {
-    next(vm => vm.fetchBatchSearches())
-  },
-  async beforeRouteUpdate (to, from, next) {
-    this.$set(this, 'page', parseInt(get(to.query, 'page', this.page)))
-    this.$set(this, 'queries', get(to.query, 'queries', this.queries))
-    this.$set(this, 'sort', get(to.query, 'sort', this.sort))
-    this.$set(this, 'order', get(to.query, 'order', this.order))
-    store.commit('batchSearch/selectedQueries', this.queries)
-    await this.fetch()
-    next()
-  },
-  beforeRouteLeave (to, from, next) {
-    store.commit('batchSearch/selectedQueries', [])
-    next()
   },
   computed: {
     ...mapState('batchSearch', ['results']),
@@ -279,6 +264,25 @@ export default {
     canIDelete () {
       return getAuthenticatedUser() === get(this, 'meta.user.id', '')
     }
+  },
+  beforeRouteEnter (to, from, next) {
+    next(async vm => {
+      await vm.fetchBatchSearches()
+      vm.published = vm.meta.published
+    })
+  },
+  async beforeRouteUpdate (to, from, next) {
+    this.$set(this, 'page', parseInt(get(to.query, 'page', this.page)))
+    this.$set(this, 'queries', get(to.query, 'queries', this.queries))
+    this.$set(this, 'sort', get(to.query, 'sort', this.sort))
+    this.$set(this, 'order', get(to.query, 'order', this.order))
+    store.commit('batchSearch/selectedQueries', this.queries)
+    await this.fetch()
+    next()
+  },
+  beforeRouteLeave (to, from, next) {
+    store.commit('batchSearch/selectedQueries', [])
+    next()
   },
   mounted () {
     this.$root.$on('batch-search-results::filter', this.filter)
@@ -330,6 +334,9 @@ export default {
       } else {
         return this.$options.filters.humanSize(size)
       }
+    },
+    changePublished (published) {
+      store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
     },
     capitalize,
     moment,

@@ -28,7 +28,7 @@ jest.mock('@/api/DatashareClient', () => {
 
 const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
-describe('BatchSearch', () => {
+describe('BatchSearch.vue', () => {
   let wrapper
 
   beforeEach(async () => {
@@ -38,7 +38,7 @@ describe('BatchSearch', () => {
 
   afterAll(() => jest.unmock('@/api/DatashareClient'))
 
-  it('should list the searches', () => {
+  it('should list the batchSearches', () => {
     expect(wrapper.findAll('.batch-search__items__item')).toHaveLength(2)
   })
 
@@ -46,7 +46,7 @@ describe('BatchSearch', () => {
     expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(7)
   })
 
-  it('should display the number of queries per BatchSearch', () => {
+  it('should display the number of queries per batchSearch', () => {
     expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="3"]').text()).toEqual('1')
     expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="3"]').text()).toEqual('2')
   })

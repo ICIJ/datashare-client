@@ -26,7 +26,7 @@ describe('BatchSearch store', () => {
   afterEach(() => datashare.fetch.mockClear())
 
   describe('actions', () => {
-    it('should submit the new batch search form with complete information', async () => {
+    it('should submit the new batchSearch form with complete information', async () => {
       await store.dispatch('batchSearch/onSubmit', { name: 'name', csvFile: 'csvFile', description: 'description', project: 'project', phraseMatch: false, fuzziness: 2, fileTypes: [{ mime: 'pdf' }, { mime: 'csv' }], paths: ['/a/path/to/home', '/another/path'], published: false })
       const body = new FormData()
       body.append('name', 'name')
@@ -44,7 +44,7 @@ describe('BatchSearch store', () => {
       expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})
     })
 
-    it('should retrieve a batch search according to its id', async () => {
+    it('should retrieve a batchSearch according to its id', async () => {
       await letData(es).have(new IndexedDocument('12').withContentType('type_01')).commit()
       const batchSearch = [{ contentType: 'type_01', documentId: 12, rootId: 42 }]
       datashare.fetch.mockReturnValue(jsonOk(batchSearch))
@@ -67,7 +67,7 @@ describe('BatchSearch store', () => {
       expect(store.state.batchSearch.batchSearches).toEqual(['batchSearch_02', 'batchSearch_03'])
     })
 
-    it('should delete all batch searches', async () => {
+    it('should delete all the batchSearches', async () => {
       store.state.batchSearch.batchSearches = ['batchSearch_01', 'batchSearch_02', 'batchSearch_03']
 
       await store.dispatch('batchSearch/deleteBatchSearches')
