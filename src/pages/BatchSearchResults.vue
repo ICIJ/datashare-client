@@ -39,7 +39,7 @@
             {{ $t('batchSearch.state') }}
           </dt>
           <dd class="col-sm-8">
-            <b-badge :variant="meta.state | toVariant">
+            <b-badge :variant="meta.state | toVariant" @click.prevent="$bvModal.show('error-modal')" class="cursor-pointer">
               {{ capitalize(meta.state) }}
             </b-badge>
           </dd>
@@ -148,6 +148,16 @@
       </div>
       <b-pagination-nav v-if="numberOfPages > 1" :link-gen="linkGen" :number-of-pages="numberOfPages" use-router class="mt-2"></b-pagination-nav>
     </div>
+    <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
+      <div>{{ $t('batchSearchResults.errorMessage') }}</div>
+      <div v-b-toggle.error-message class="my-2 cursor-pointer" @click="showErrorMessage = !showErrorMessage">
+        <fa :icon="showErrorMessage ? 'angle-down' : 'angle-right'" class="mr-2" />
+        <span>{{ $t('batchSearchResults.seeErrorMessage') }}</span>
+      </div>
+      <b-collapse id="error-message" class="code px-3 py-1 text-monospace text-break">
+        {{ this.meta.errorMessage }}
+      </b-collapse>
+    </b-modal>
   </div>
 </template>
 
@@ -161,9 +171,9 @@ import get from 'lodash/get'
 import DatashareClient from '@/api/DatashareClient'
 import { getAuthenticatedUser, getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
-import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
 import store from '@/store'
+import toVariant from '@/filters/toVariant'
 
 export default {
   name: 'BatchSearchResults',
@@ -223,7 +233,8 @@ export default {
       page: 1,
       queries: [],
       sort: settings.batchSearchResults.sort,
-      order: settings.batchSearchResults.order
+      order: settings.batchSearchResults.order,
+      showErrorMessage: false
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -329,7 +340,6 @@ export default {
 
 <style lang="scss">
 .batch-search-results {
-
   &__queries {
 
     .table-responsive {
@@ -345,5 +355,14 @@ export default {
       }
     }
   }
+}
+
+.code {
+  background: black;
+  color: white;
+}
+
+.cursor-pointer {
+  cursor: pointer;
 }
 </style>

@@ -511,7 +511,10 @@
     "size": "Size",
     "downloadResults": "Download results",
     "all": "All",
-    "empty": "No results"
+    "empty": "No results",
+    "errorTitle": "Error",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to this Help page where most common errors are described.",
+    "seeErrorMessage": "See error message"
   },
   "batchSearchResultsFilters": {
     "queries": {
