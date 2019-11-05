@@ -243,7 +243,7 @@ export default {
     next()
   },
   computed: {
-    ...mapState('batchSearch', ['results', 'selectedQueries']),
+    ...mapState('batchSearch', ['results']),
     fuzzinessLabel () {
       return this.meta.phraseMatches ? this.$t('batchSearch.proximitySearches') : this.$t('batchSearch.fuzziness')
     },
@@ -298,7 +298,7 @@ export default {
       this.$router.push(this.generateLinkToBatchSearchResults(1, this.$store.state.batchSearch.selectedQueries))
     },
     linkGen (page) {
-      return this.generateLinkToBatchSearchResults(page, this.selectedQueries)
+      return this.generateLinkToBatchSearchResults(page, this.$store.state.batchSearch.selectedQueries)
     },
     generateLinkToBatchSearchResults (page = this.page, queries = this.queries, sort = this.sort, order = this.order) {
       return {
