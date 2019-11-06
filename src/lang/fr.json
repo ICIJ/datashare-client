@@ -471,7 +471,7 @@
     "title": "Recherches en lot",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
-    "fileDescription": "Seuls les fichiers CSVs sont acceptés. La première colonne doit contenir les termes recherchés.",
+    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search. You can use operators (AND, NOT, etc.).",
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
@@ -511,7 +511,10 @@
     "size": "Taille",
     "downloadResults": "Télécharger les résultats",
     "all": "Tout",
-    "empty": "Pas de résultat"
+    "empty": "Pas de résultat",
+    "errorTitle": "Error",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to this Help page where most common errors are described.",
+    "seeErrorMessage": "See error message"
   },
   "batchSearchResultsFilters": {
     "queries": {
