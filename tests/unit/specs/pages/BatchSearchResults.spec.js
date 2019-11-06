@@ -15,16 +15,22 @@ jest.mock('@/api/DatashareClient', () => {
           uuid: '12',
           project: { name: 'ProjectName' },
           description: 'This is the description of the batch search',
-          queries: ['query_01', 'query_02', 'query_03'],
+          queries: {
+            query_01: 6,
+            query_02: 6,
+            query_03: 6
+          },
           state: 'SUCCESS',
           date: '2019-07-18T14:45:34.869+0000',
-          nbResults: 172,
+          nbResults: 333,
           published: true
         }, {
           uuid: '13',
           project: { name: 'ProjectName2' },
           description: 'Another description',
-          queries: ['query_04'],
+          queries: {
+            query_04: 6
+          },
           state: 'SUCCESS',
           date: '2019-07-28T14:45:34.869+0000',
           nbResults: 15,
@@ -97,13 +103,17 @@ describe('BatchSearchResults.vue', () => {
       description: 'This is the description of the batch search',
       state: 'SUCCESS',
       date: '2019-07-18T14:45:34.869+0000',
-      nbResults: 172,
+      nbResults: 333,
       phraseMatch: 1,
       fuzziness: 1,
       fileTypes: [],
       paths: [],
       published: 0,
-      queries: ['query_01', 'query_02', 'query_03'],
+      queries: {
+        query_01: 6,
+        query_02: 6,
+        query_03: 6
+      },
       user: { id: 'test' }
     }, {
       uuid: '13',
@@ -117,12 +127,14 @@ describe('BatchSearchResults.vue', () => {
       fileTypes: [],
       paths: [],
       published: 0,
-      queries: ['query_04'],
+      queries: {
+        query_04: 6
+      },
       user: { id: 'test' }
     }])
     propsData = { uuid: '12', index: process.env.VUE_APP_ES_INDEX }
     wrapper = shallowMount(BatchSearchResults,
-      { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link', numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
+      { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link' }, propsData, mocks: { $t: msg => msg } })
     await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: process.env.VUE_APP_ES_INDEX, uuid: '12' }, query: { page: 1 } })
     await wrapper.vm.fetch()
   })
@@ -150,7 +162,7 @@ describe('BatchSearchResults.vue', () => {
   it('should NOT display a button to delete the batchSearch', () => {
     getAuthenticatedUser.mockReturnValue('other')
     wrapper = shallowMount(BatchSearchResults,
-      { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link', numberOfPages: () => 2 }, propsData, mocks: { $t: msg => msg } })
+      { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link' }, propsData, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.batch-search-results__delete').exists()).toBeFalsy()
   })
@@ -204,5 +216,17 @@ describe('BatchSearchResults.vue', () => {
 
     expect(store.dispatch).toBeCalled()
     expect(store.dispatch).toBeCalledWith('batchSearch/updateBatchSearch', { batchId: '12', published: false })
+  })
+
+  describe('count the number of pages', () => {
+    it('should display all results', () => {
+      expect(wrapper.vm.numberOfPages).toBe(4)
+    })
+
+    it('should filter results and adapt number of pages', () => {
+      store.commit('batchSearch/selectedQueries', ['query_01'])
+
+      expect(wrapper.vm.numberOfPages).toBe(1)
+    })
   })
 })

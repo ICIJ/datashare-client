@@ -168,6 +168,9 @@ import { mapState } from 'vuex'
 import capitalize from 'lodash/capitalize'
 import find from 'lodash/find'
 import get from 'lodash/get'
+import indexOf from 'lodash/indexOf'
+import keys from 'lodash/keys'
+import sumBy from 'lodash/sumBy'
 
 import DatashareClient from '@/api/DatashareClient'
 import { getAuthenticatedUser, getDocumentTypeLabel } from '@/utils/utils'
@@ -260,7 +263,17 @@ export default {
       return this.order === 'desc'
     },
     numberOfPages () {
-      return Math.ceil(this.meta.nbResults / this.perPage)
+      let total
+      if (this.$store.state.batchSearch.selectedQueries.length === 0) {
+        total = this.meta.nbResults
+      } else {
+        total = sumBy(keys(this.meta.queries), query => {
+          if (indexOf(this.$store.state.batchSearch.selectedQueries, query) > -1) {
+            return this.meta.queries[query]
+          }
+        })
+      }
+      return Math.ceil(total / this.perPage)
     },
     isMyBatchSearch () {
       return getAuthenticatedUser() === get(this, 'meta.user.id', '')
