@@ -471,7 +471,7 @@
     "title": "Búsquedas masivas",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
-    "fileDescription": "Sólo se acepta el formato CSV. La primera columna debe contener los términos a buscar.",
+    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search. You can use operators (AND, NOT, etc.).",
     "filePlaceholder": "Selecciona un archivo...",
     "submit": "Añadir",
     "success": "Tu búsqueda masiva está ejecutándose.",
@@ -511,7 +511,10 @@
     "size": "Tamaño",
     "downloadResults": "Descargar los resultados",
     "all": "Todas",
-    "empty": "Sin resultados"
+    "empty": "Sin resultados",
+    "errorTitle": "Error",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to this Help page where most common errors are described.",
+    "seeErrorMessage": "See error message"
   },
   "batchSearchResultsFilters": {
     "queries": {
