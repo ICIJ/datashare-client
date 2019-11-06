@@ -9,7 +9,7 @@
               {{ $t('batchSearchResults.downloadResults') }} (CSV)
             </a>
           </div>
-          <div class="batch-search-results__delete" v-if="canIDelete">
+          <div class="batch-search-results__delete" v-if="isMyBatchSearch">
             <confirm-button class="btn btn-primary ml-2" :confirmed="deleteBatchSearch">
               <fa icon="trash-alt" />
               {{ $t('batchSearch.delete') }}
@@ -101,7 +101,8 @@
             {{ $t('batchSearch.published') }}
           </dt>
           <dd class="col-sm-8">
-            <b-form-checkbox v-model="published" switch @change="changePublished" />
+            <b-form-checkbox v-model="published" switch @change="changePublished" v-if="isMyBatchSearch" />
+            <span v-else>{{ meta.published ? $t('indexing.yes') : $t('indexing.no') }}</span>
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.author') }}
@@ -261,7 +262,7 @@ export default {
     numberOfPages () {
       return Math.ceil(this.meta.nbResults / this.perPage)
     },
-    canIDelete () {
+    isMyBatchSearch () {
       return getAuthenticatedUser() === get(this, 'meta.user.id', '')
     }
   },
