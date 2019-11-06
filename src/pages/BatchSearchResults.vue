@@ -39,7 +39,7 @@
             {{ $t('batchSearch.state') }}
           </dt>
           <dd class="col-sm-8">
-            <b-badge :variant="meta.state | toVariant" @click.prevent="$bvModal.show('error-modal')" class="cursor-pointer">
+            <b-badge :variant="meta.state | toVariant" @click.prevent="openErrorMessage" :class="{ 'cursor-pointer': isFailed }">
               {{ capitalize(meta.state) }}
             </b-badge>
           </dd>
@@ -264,6 +264,9 @@ export default {
     },
     isMyBatchSearch () {
       return getAuthenticatedUser() === get(this, 'meta.user.id', '')
+    },
+    isFailed () {
+      return this.meta.state === 'FAILURE'
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -338,6 +341,11 @@ export default {
     },
     changePublished (published) {
       store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
+    },
+    openErrorMessage () {
+      if (this.isFailed) {
+        this.$bvModal.show('error-modal')
+      }
     },
     capitalize,
     moment,
