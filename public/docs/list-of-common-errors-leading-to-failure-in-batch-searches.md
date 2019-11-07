@@ -4,7 +4,9 @@
 
 **One or several of your queries contains syntax errors**. 
 
-It means that you wrote one or more of your queries the wrong way with some characters that are reserved as operators: [**read the list of syntax errors by clicking here**](https://icij.gitbook.io/datashare/all/batch-search-documents#i-get-a-failure-what-does-that-mean).
+It means that you wrote one or more of your queries the wrong way with some characters that are reserved as operators: [**read the list of syntax errors by clicking here**](https://icij.gitbook.io/datashare/all/batch-search-documents#i-get-a-failure-what-does-that-mean). 
+
+**You need to correct the error\(s\) in your CSV** and re-launch your new batch search with a CSV that does not contain errors. [Click here to learn how to launch a batch search](https://icij.gitbook.io/datashare/all/batch-search-documents).
 
 Datashare **stops at the first syntax error**. It reports only the first ​error. You might need to **check all your queries** as some errors can remain after correcting the first one.
 
