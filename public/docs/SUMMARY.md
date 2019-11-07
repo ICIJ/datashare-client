@@ -54,4 +54,5 @@
 * ['Your search query is wrong'. What should I do?](faq/your-search-query-is-wrong.md)
 * [I see people, organizations and locations in the filters but not in the documents.](faq/i-see-people-organizations-and-locations-in-the-filters-but-not-in-the-documents..md)
 * [How can I contact ICIJ for help, bug reporting or suggestions?](faq/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions.md)
+* [List of common errors leading to "failure" in Batch Searches](list-of-common-errors-leading-to-failure-in-batch-searches.md)
 
