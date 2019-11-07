@@ -1,6 +1,7 @@
 import escapeRegExp from 'lodash/escapeRegExp'
 import identity from 'lodash/identity'
 import map from 'lodash/map'
+import sortBy from 'lodash/sortBy'
 import takeRight from 'lodash/takeRight'
 import zip from 'lodash/zip'
 import cheerio from 'cheerio'
@@ -67,8 +68,9 @@ export function sliceIndexes (str, indexes) {
 }
 
 export function highlight (str = '', marks = [], markFun = (m => `<mark>${m.content}</mark>`), restFun = identity, contentFun = (m => m.content)) {
-  let docContentSlices = sliceIndexes(str, map(marks, m => m.index))
-  let docContentMarked = map(zip(takeRight(docContentSlices, marks.length), marks), ([slice = '', mark]) => {
+  const sortedMarks = sortBy(marks, m => m.index)
+  let docContentSlices = sliceIndexes(str, map(sortedMarks, m => m.index))
+  let docContentMarked = map(zip(takeRight(docContentSlices, sortedMarks.length), sortedMarks), ([slice = '', mark]) => {
     return markFun(mark) + restFun(slice.substring(contentFun(mark).length))
   })
   return docContentSlices[0] + docContentMarked.join('')
