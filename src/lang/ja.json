@@ -455,7 +455,7 @@
   "login": {
     "welcome": "Welcome to Datashare",
     "sum_up": "<a href=\"https://icij.org\">ICIJ</a> search and discovery platform.",
-    "authentication_platform": "To log in, use ICIJ secure authentication plateform:",
+    "authentication_platform": "To log in, use ICIJ secure authentication platform:",
     "xemx": "Login with Xemx",
     "support_desk": "If you need any help, please visit our support desk:",
     "ask_help": "Ask for help"
@@ -471,7 +471,7 @@
     "title": "Batch searches",
     "heading": "New batch search",
     "fileLabel": "CSV file",
-    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
+    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search. You can use operators (AND, NOT, etc.).",
     "filePlaceholder": "Choose a file...",
     "submit": "Add",
     "success": "Your batch search is now running.",
@@ -511,7 +511,10 @@
     "size": "Size",
     "downloadResults": "Download results",
     "all": "All",
-    "empty": "No results"
+    "empty": "No results",
+    "errorTitle": "Error",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to this Help page where most common errors are described.",
+    "seeErrorMessage": "See error message"
   },
   "batchSearchResultsFilters": {
     "queries": {

@@ -397,8 +397,8 @@
     }
   },
   "namedEntityInContext": {
-    "title": "Extracted using <code>%{extractor}</code> in <code>%{extractorLanguage}</code>",
-    "meta": "This was extracted from metadata."
+    "title": "Extrait en utilisant <code>%{extractor}</code> en <code>%{extractorLanguage}</code>",
+    "meta": "Extrait des métadonnées."
   },
   "email": {
     "detail": "Voir les détails",
@@ -455,7 +455,7 @@
   "login": {
     "welcome": "Bienvenue dans Datashare",
     "sum_up": "La plateforme de recherche et de découverte de l'<a href=\"https://icij.org\">ICIJ</a>.",
-    "authentication_platform": "Pour vous connecter, utilisez la plateforme d'authentification sécurisée de l'ICIJ :",
+    "authentication_platform": "To log in, use ICIJ secure authentication platform:",
     "xemx": "Se connecter avec Xemx",
     "support_desk": "Si vous avez besoin d'aide, veuillez contacter notre bureau support :",
     "ask_help": "Aide"
@@ -469,20 +469,20 @@
   "batchSearch": {
     "lead": "Rechercher plusieurs termes dans plusieurs documents en même temps.",
     "title": "Recherches en lot",
-    "heading": "New batch search",
-    "fileLabel": "CSV file",
-    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
-    "filePlaceholder": "Choose a file...",
-    "submit": "Add",
-    "success": "Your batch search is now running.",
-    "failure": "Something went wrong, unable to start your batch search.",
+    "heading": "Nouvelle recherche en lot",
+    "fileLabel": "Fichier CSV",
+    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search. You can use operators (AND, NOT, etc.).",
+    "filePlaceholder": "Choisir un fichier...",
+    "submit": "Ajouter",
+    "success": "Votre recherche en lot est en cours d'exécution.",
+    "failure": "Il y a eu une erreur, votre recherche en lot n'a pas démarré.",
     "project": "Projet",
     "name": "Nom",
     "description": "Description",
     "fuzziness": "Recherche approximative",
-    "fuzzinessDescription": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on characters needed to make one term match the other.",
-    "proximitySearches": "Proximity searches",
-    "proximitySearchesDescription": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other.",
+    "fuzzinessDescription": "Nombre maximum d'opérations sur les caractères (insertions, suppressions, substitutions ou transpositions) nécessaire pour qu'un terme recherché corresponde à un terme trouvé.",
+    "proximitySearches": "Recherches approximatives",
+    "proximitySearchesDescription": "Nombre maximum d'opérations sur les termes (insertions, suppressions, substitutions ou transpositions) nécessaire pour qu'une expression recherchée corresponde à une expression trouvée.",
     "fileTypes": "Types de fichiers",
     "path": "Chemin",
     "queries": "Recherches",
@@ -492,18 +492,18 @@
     "query": "pas de recherches | 1 recherche | {count} recherches",
     "delete": "Supprimer la recherche en lot",
     "deleted": "La recherche en lot a été supprimée.",
-    "notDeleted": "The batch search have not been deleted.",
+    "notDeleted": "La recherche en lot n'a pas été supprimée.",
     "published": "Publiée",
     "publishedDescription": "Donner accès aux autres membres du projet à cette rechercher en lot. Vous pourrez changer ceci plus tard.",
     "phraseMatch": "Rechercher les termes exacts",
     "phraseMatchDescription": "Cela vous permet de rechercher des documents qui contiennent l'expression exacte et non les termes dans un autre ordre.",
     "phraseMatchDescriptionOperators": "Ne pas insérer d'opérateurs dans vos recherches",
     "learnMore": "En savoir plus",
-    "author": "Author",
-    "advancedFilters": "Advanced filters"
+    "author": "Auteur·e",
+    "advancedFilters": "Filtres avancés"
   },
   "batchSearchResults": {
-    "rank": "Rank",
+    "rank": "Rang",
     "query": "Recherche",
     "documentName": "Nom du document",
     "creationDate": "Date de création",
@@ -511,7 +511,10 @@
     "size": "Taille",
     "downloadResults": "Télécharger les résultats",
     "all": "Tout",
-    "empty": "Pas de résultat"
+    "empty": "Pas de résultat",
+    "errorTitle": "Error",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to this Help page where most common errors are described.",
+    "seeErrorMessage": "See error message"
   },
   "batchSearchResultsFilters": {
     "queries": {

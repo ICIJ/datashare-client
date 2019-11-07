@@ -397,8 +397,8 @@
     }
   },
   "namedEntityInContext": {
-    "title": "Extracted using <code>%{extractor}</code> in <code>%{extractorLanguage}</code>",
-    "meta": "This was extracted from metadata."
+    "title": "Extraído usando <code>%{extractor}</code> en <code>%{extractorLanguage}</code>",
+    "meta": "Esto fue extraído de los metadatos."
   },
   "email": {
     "detail": "Más detalles",
@@ -443,7 +443,7 @@
     "search": "Buscar en documentos",
     "history": "Tu historial",
     "logout": "Cerrar sesión",
-    "addDocuments": "Cómo agregar documentos",
+    "addDocuments": "Cómo añadir documentos",
     "faq": "Preguntas frecuentes (FAQ)",
     "userGuides": "Guía del Usuario"
   },
@@ -455,7 +455,7 @@
   "login": {
     "welcome": "Bienvenido a Datashare",
     "sum_up": "<a href=\"https://icij.org\">ICIJ</a> plataforma de búsqueda y descubrimiento.",
-    "authentication_platform": "Para iniciar sesión, utilice la plataforma de autenticación segura de ICIJ:",
+    "authentication_platform": "To log in, use ICIJ secure authentication platform:",
     "xemx": "Iniciar sesión con Xemx",
     "support_desk": "Si necesita ayuda, por favor visite nuestro servicio de asistencia:",
     "ask_help": "Pedir ayuda"
@@ -469,20 +469,20 @@
   "batchSearch": {
     "lead": "Buscar múltiples términos y documentos a la vez.",
     "title": "Búsquedas masivas",
-    "heading": "New batch search",
-    "fileLabel": "CSV file",
-    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search.",
-    "filePlaceholder": "Choose a file...",
-    "submit": "Add",
-    "success": "Your batch search is now running.",
-    "failure": "Something went wrong, unable to start your batch search.",
+    "heading": "Nueva búsqueda masiva",
+    "fileLabel": "Archivo CSV",
+    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search. You can use operators (AND, NOT, etc.).",
+    "filePlaceholder": "Selecciona un archivo...",
+    "submit": "Añadir",
+    "success": "Tu búsqueda masiva está ejecutándose.",
+    "failure": "Error, no se puede iniciar la búsqueda masiva.",
     "project": "Proyecto",
     "name": "Nombre",
     "description": "Descripción",
     "fuzziness": "Fuzziness",
-    "fuzzinessDescription": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on characters needed to make one term match the other.",
-    "proximitySearches": "Proximity searches",
-    "proximitySearchesDescription": "Maximum number of operations (insertions, deletions, substitutions and transpositions) on terms needed to make one phrase match the other.",
+    "fuzzinessDescription": "Número máximo de operaciones sobre los caracteres (inserciones, eliminaciones, sustitución y transposición) necesario para hacer que un término coincida con el otro.",
+    "proximitySearches": "Búsquedas aproximadas",
+    "proximitySearchesDescription": "Número máximo de operaciones sobre los términos (inserciones, eliminaciones, sustitución y transposición) necesario para hacer que una frase coincida con la otra.",
     "fileTypes": "Tipos de archivo",
     "path": "Ruta",
     "queries": "Consultas",
@@ -490,20 +490,20 @@
     "date": "Fecha",
     "nbResults": "Número de resultados",
     "query": "no hay consultas | 1 consulta | {count} consultas",
-    "delete": "Eliminar búsqueda por lote",
-    "deleted": "El lote de búsqueda ha sido eliminado.",
-    "notDeleted": "The batch search have not been deleted.",
+    "delete": "Eliminar búsqueda masiva",
+    "deleted": "La búsqueda masiva ha sido eliminado.",
+    "notDeleted": "La búsqueda masiva no ha sido eliminada.",
     "published": "Publicado",
-    "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda por lotes. Puedes cambiar esto más tarde.",
+    "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda masiva. Puedes cambiar esto más tarde.",
     "phraseMatch": "Realizar búsquedas similares",
     "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria.",
     "phraseMatchDescriptionOperators": "No inserte operadores en sus consultas",
     "learnMore": "Leer más",
-    "author": "Author",
-    "advancedFilters": "Advanced filters"
+    "author": "Autor·a",
+    "advancedFilters": "Filtros avanzados"
   },
   "batchSearchResults": {
-    "rank": "Rank",
+    "rank": "Rango",
     "query": "Consulta",
     "documentName": "Nombre del documento",
     "creationDate": "Fecha de creación",
@@ -511,7 +511,10 @@
     "size": "Tamaño",
     "downloadResults": "Descargar los resultados",
     "all": "Todas",
-    "empty": "Sin resultados"
+    "empty": "Sin resultados",
+    "errorTitle": "Error",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to this Help page where most common errors are described.",
+    "seeErrorMessage": "See error message"
   },
   "batchSearchResultsFilters": {
     "queries": {
