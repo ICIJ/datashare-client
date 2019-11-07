@@ -67,7 +67,7 @@ This 'Exclude' functionality can be used in multiple filters at the same time.
 
 ## Contextualize filters
 
- You can also turn on the '**Contextualize'** functionality in order to **update the number of documents indicated in the filters according to your selection**. 
+You can turn on the '**Contextualize'** functionality in order to **update the number of documents indicated in the filters according to your selection**. 
 
 In the example below, the 'Contextualize' toggle button is turned **off**. 
 
@@ -79,7 +79,7 @@ Click it to turn it on:
 
 There are 5 documents in total. In File Types, we see that there are **3 PNG images**. In Languages, the total is 5 documents: 4 documents in English and 1 in French.
 
-Now, if one tick PNG image, as the Contextualize button is on, the Languages filters is updated according to the search results and counts only PNG images. The total is thus 3, with 2 PNG images in English and 1 in French:
+Now, if one ticks 'PNG image', as the Contextualize button is on, the Languages filters is updated according to the search results and counts only PNG images. The total is thus **3**, with 2 PNG images in English and 1 in French:
 
 ![](../.gitbook/assets/languages-contextualized.png)
 
