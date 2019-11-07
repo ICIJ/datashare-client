@@ -22,7 +22,6 @@
             {{ $t('search.buttonLabel') }}
           </button>
         </div>
-
         <selectable-dropdown
           class="search-bar__suggestions dropdown-menu"
           ref="suggestions"
@@ -52,19 +51,23 @@
 </template>
 
 <script>
-import uniqueId from 'lodash/uniqueId'
-import bodybuilder from 'bodybuilder'
+import castArray from 'lodash/castArray'
+import concat from 'lodash/concat'
 import escapeRegExp from 'lodash/escapeRegExp'
+import each from 'lodash/each'
 import get from 'lodash/get'
 import last from 'lodash/last'
+import orderBy from 'lodash/orderBy'
 import some from 'lodash/some'
 import throttle from 'lodash/throttle'
+import uniqueId from 'lodash/uniqueId'
+import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 
-import SearchSettings from '@/components/SearchSettings'
-import ShortkeysModal from '@/components/ShortkeysModal'
 import esClient from '@/api/esClient'
+import SearchSettings from '@/components/SearchSettings'
 import settings from '@/utils/settings'
+import ShortkeysModal from '@/components/ShortkeysModal'
 
 function escapeLuceneChars (str) {
   const escapable = [' ', '+', '-', '&&', '||', '!', '(', ')', '{', '}', '[', ']', '^', '~', '?', ':', '\\', '/']
@@ -74,15 +77,9 @@ function escapeLuceneChars (str) {
 export default {
   name: 'SearchBar',
   props: {
-    tips: {
-      type: Boolean
-    },
-    animated: {
-      type: Boolean
-    },
-    settings: {
-      type: Boolean
-    },
+    tips: Boolean,
+    animated: Boolean,
+    settings: Boolean,
     fieldOptions: {
       type: Array,
       default () {
@@ -109,7 +106,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.subscribe((mutation) => {
+    this.$store.subscribe(mutation => {
       if (mutation.type === 'search/query') {
         this.query = mutation.payload
       }
@@ -133,11 +130,18 @@ export default {
       const query = this.query
       const index = this.$store.state.search.index
       const candidate = last(candidates)
-      const field = candidate.field === '<implicit>' ? settings.suggestedImplicitField : candidate.field
+      const fields = castArray(candidate.field === '<implicit>' ? settings.suggestedImplicitFields : candidate.field)
       const include = `.*${escapeRegExp(candidate.term).toLowerCase()}.*`
-      const body = bodybuilder().size(0).aggregation('terms', field, { include }).build()
-      const response = await esClient.search({ index, body })
-      const suggestions = get(response, `aggregations.agg_terms_${field}.buckets`, [])
+      let body = bodybuilder().size(0)
+      each(fields, field => {
+        body.aggregation('terms', field, { include }, field)
+      })
+      const response = await esClient.search({ index, body: body.build() })
+      let suggestions = []
+      each(fields, field => {
+        suggestions = concat(suggestions, get(response, `aggregations.${field}.buckets`, []))
+      })
+      suggestions = orderBy(suggestions, ['doc_count'], ['desc'])
       // Return an object to check later if the promise result is still applicable
       return { query, suggestions }
     },
@@ -213,7 +217,7 @@ export default {
     suggestionsAllowed () {
       const terms = this.termCandidates().map(t => t.term)
       const lastTerm = last(terms) || ''
-      return ['all', settings.suggestedImplicitField].indexOf(this.field) > -1 && lastTerm.length > 1
+      return ['all', settings.suggestedImplicitFields].indexOf(this.field) > -1 && lastTerm.length > 1
     }
   },
   watch: {

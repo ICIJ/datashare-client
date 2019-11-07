@@ -152,7 +152,7 @@ export default {
     }
   ],
   suggestedFields: ['<implicit>', 'tags', 'contentType', 'path', 'mentionNorm'],
-  suggestedImplicitField: 'mentionNorm',
+  suggestedImplicitFields: ['mentionNorm', 'tags'],
   batchSearchResults: {
     size: 100,
     sort: 'doc_nb',
