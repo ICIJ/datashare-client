@@ -513,7 +513,7 @@
     "all": "Tout",
     "empty": "Pas de résultat",
     "errorTitle": "Error",
-    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to this Help page where most common errors are described.",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Please refer to this Help page where most common errors are described.</a>",
     "seeErrorMessage": "See error message"
   },
   "batchSearchResultsFilters": {
