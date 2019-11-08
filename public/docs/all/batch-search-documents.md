@@ -136,7 +136,29 @@ You can click on a document's name and it will open it in a new tab:
 
 ## I get a "failure". What does that mean?
 
-Failures in batch searches can be due to some syntax error\(s\) in the way you wrote your queries or one of your queries in the CSV. You should correct the error\(s\) in your CSV, re-export your CSV and [launch your batch search](https://icij.gitbook.io/datashare/all/batch-search-documents#launch-your-batch-search) again.
+Failures in batch searches can be due to several causes. Click the 'Failure' label and you will see an error window. 
+
+![](../.gitbook/assets/screenshot-2019-11-08-at-14.42.36.png)
+
+### elasticsearch: Name does not resolve
+
+If you have a message which contain '_elasticsearch: Name does not resolve_', it means that Datashare can't make Elastic Search, its search engine, work. 
+
+In that case, you need to **re-open Datashare**: ****here are the instructions for [Mac](https://icij.gitbook.io/datashare/mac/open-datashare-on-mac), [Windows](https://icij.gitbook.io/datashare/windows/open-datashare-on-windows) or [Linux](https://icij.gitbook.io/datashare/linux/open-datashare-on-linux). 
+
+Example of a message regarding a problem with ElasticSearch:
+
+_SearchException: query='lovelace' message='org.icij.datashare.batch.SearchException: java.io.IOException: elasticsearch: Name does not resolve'_
+
+### SearchException: query='AND ada' 
+
+**One or several of your queries contains syntax errors**. 
+
+It means that you wrote one or more of your queries the wrong way with some characters that are reserved as operators \(see below\).
+
+**You need to correct the error\(s\) in your CSV** and re-launch your new batch search with a CSV that does not contain errors. [Click here to learn how to launch a batch search](https://icij.gitbook.io/datashare/all/batch-search-documents).
+
+Datashare **stops at the first syntax error**. It reports only the first ​error. You might need to **check all your queries** as some errors can remain after correcting the first one.
 
 They are more likely to happen **when 'do phrase matches' toggle button is turned off:**
 
