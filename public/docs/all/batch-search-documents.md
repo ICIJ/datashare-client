@@ -172,19 +172,19 @@ When 'Do phrase matches' is on, syntax error can still happen though:
 
 Here are **the most common errors:**
 
-### **Querie\(s\) start\(s\) with AND** \(all uppercase\)
+### **- Querie\(s\) start\(s\) with AND** \(all uppercase\)
 
 You cannot start a query with AND all uppercase, neither in Datashare's main search bar nor in your CSV. [AND is reserved as a search operator](https://icij.gitbook.io/datashare/all/search-with-operators#and).
 
 ![](../.gitbook/assets/screenshot-2019-10-31-at-14.53.32.png)
 
-### **Querie\(s\) start\(s\) with OR** \(all uppercase\)
+### **- Querie\(s\) start\(s\) with OR** \(all uppercase\)
 
 You cannot start a query with OR all uppercase, neither in Datashare's main search bar nor in your CSV. [OR is reserved as a search operator](https://icij.gitbook.io/datashare/all/search-with-operators#or-or-space).
 
 ![](../.gitbook/assets/screenshot-2019-10-31-at-14.58.08.png)
 
-### **Querie\(s\) contain\(s\) only one double quote or a double quote in a word**
+### **- Querie\(s\) contain\(s\) only one double quote or a double quote in a word**
 
 You cannot type a query with only one double quote, neither in Datashare's main search bar nor in your CSV. [Double quotes are reserved as a search operator](https://icij.gitbook.io/datashare/all/search-with-operators#exact-phrase).
 
@@ -194,7 +194,7 @@ You cannot type a query with only one double quote, neither in Datashare's main 
 
 ![](../.gitbook/assets/screenshot-2019-10-31-at-15.23.01.png)
 
-### **Querie\(s\) start\(s\) with or contain tilde** \(~\) inside a term
+### **- Querie\(s\) start\(s\) with or contain tilde** \(~\) inside a term
 
 You cannot start a query with tilde \(~\) or make one contain a tilde, neither in Datashare's main search bar nor in your CSV. Tilde is reserved as a search operator for [fuzziness](https://icij.gitbook.io/datashare/faq/what-is-fuzziness) or [proximity searches](https://icij.gitbook.io/datashare/faq/what-is-proximity-search).
 
@@ -206,7 +206,7 @@ You cannot start a query with tilde \(~\) or make one contain a tilde, neither i
 
 
 
-### **Querie\(s\) start\(s\) with or contain caret** \(^\)
+### **- Querie\(s\) start\(s\) with or contain caret** \(^\)
 
 You cannot start a query with caret \(^\) or make it contain a caret, neither in Datashare's main search bar nor in your CSV. [Caret is reserved as a boosting operator](https://icij.gitbook.io/datashare/all/search-with-operators#boosting-operators).
 
