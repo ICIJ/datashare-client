@@ -1,4 +1,4 @@
-# I see people, organizations and locations in the filters but not in the documents.
+# I see people, organizations and locations in the filters but not in the documents
 
 Datashare's filters keep the named entities \(people, organizations and locations\) previously recognized.
 

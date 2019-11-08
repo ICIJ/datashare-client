@@ -2,7 +2,7 @@
 description: This can be due to some syntax error(s) in the way you wrote your query.‌
 ---
 
-# 'Your search query is wrong'. What should I do?
+# 'Your search query is wrong.' What should I do?
 
 Here are **the most common errors that you should correct:** ‌
 

@@ -32,6 +32,10 @@
 
 ['Your search query is wrong'. What should I do?](https://icij.gitbook.io/datashare/faq/your-search-query-is-wrong)
 
+[List of common errors leading to "failure" in Batch Searches](list-of-common-errors-leading-to-failure-in-batch-searches.md)
+
+[I see people, organizations and locations in the filters but not in the documents](i-see-people-organizations-and-locations-in-the-filters-but-not-in-the-documents.md)
+
 [How can I contact ICIJ for help, bug reporting or suggestions?](https://icij.gitbook.io/datashare/faq/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions)
 
 
