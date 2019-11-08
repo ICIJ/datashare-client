@@ -186,10 +186,7 @@ export default {
     },
     allTypes () {
       const allTypes = []
-      each(types, (type, mime) => {
-        type.mime = mime
-        allTypes.push(type)
-      })
+      each(types, (type, mime) => allTypes.push({ label: type.label, mime }))
       return allTypes
     },
     advancedFiltersIcon () {
