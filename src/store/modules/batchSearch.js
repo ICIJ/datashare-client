@@ -12,7 +12,7 @@ export function initialState () {
   }
 }
 
-export const state = initialState
+export const state = initialState()
 
 export const mutations = {
   reset (state) {

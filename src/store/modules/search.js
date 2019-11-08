@@ -68,7 +68,7 @@ export function initialState () {
   }
 }
 
-export const state = initialState
+export const state = initialState()
 
 export const getters = {
   getFacet (state) {
