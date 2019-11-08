@@ -147,10 +147,10 @@
           </b-table>
         </div>
       </div>
-      <b-pagination-nav v-if="numberOfPages > 1" :link-gen="linkGen" :number-of-pages="numberOfPages" use-router class="mt-2"></b-pagination-nav>
+      <b-pagination-nav v-if="numberOfPages > 1" :link-gen="linkGen" :number-of-pages="numberOfPages" use-router class="mt-2" />
     </div>
     <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
-      <div>{{ $t('batchSearchResults.errorMessage') }}</div>
+      <div v-html="$t('batchSearchResults.errorMessage')" />
       <div v-b-toggle.error-message class="my-2 cursor-pointer" @click="showErrorMessage = !showErrorMessage">
         <fa :icon="showErrorMessage ? 'angle-down' : 'angle-right'" class="mr-2" />
         <span>{{ $t('batchSearchResults.seeErrorMessage') }}</span>
