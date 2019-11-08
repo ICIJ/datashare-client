@@ -90,9 +90,12 @@ export default class Document extends EsDoc {
     return extname(this.basename).toLowerCase()
   }
   get resourceName () {
-    const resourceName = trim(this.get('_source.metadata.tika_metadata_resourcename', this.shortId))
-    // Use the shortId if the resourceName is not human readable
-    return startsWith(resourceName, '=?') && endsWith(resourceName, '?=') ? this.shortId : resourceName
+    let resourceName = trim(this.get('_source.metadata.tika_metadata_resourcename', this.shortId))
+    if (startsWith(resourceName, '=?') && endsWith(resourceName, '?=')) {
+      const resourceNameArray = resourceName.split('?')
+      resourceName = unescape(resourceNameArray[resourceNameArray.length - 2].replace(/=/g, '%'))
+    }
+    return resourceName
   }
   get title () {
     const titles = [ this.shortId, this.basename ]

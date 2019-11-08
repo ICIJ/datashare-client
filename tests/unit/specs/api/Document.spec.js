@@ -1,29 +1,31 @@
 import Document from '@/api/Document'
 
 describe('Document', () => {
-  it('should display human readable size for -1', () => {
-    const doc = new Document({ _source: { contentLength: -1 } })
-    expect(doc.humanSize).toEqual('unknown')
-  })
+  describe('display human readable size', () => {
+    it('should display human readable size for -1', () => {
+      const doc = new Document({ _source: { contentLength: -1 } })
+      expect(doc.humanSize).toEqual('unknown')
+    })
 
-  it('should display human readable size for 0', () => {
-    const doc = new Document({ _source: { contentLength: 0 } })
-    expect(doc.humanSize).toEqual('0 B')
-  })
+    it('should display human readable size for 0', () => {
+      const doc = new Document({ _source: { contentLength: 0 } })
+      expect(doc.humanSize).toEqual('0 B')
+    })
 
-  it('should display human readable size for Bytes', () => {
-    const doc = new Document({ _source: { contentLength: 12 } })
-    expect(doc.humanSize).toEqual('12 B')
-  })
+    it('should display human readable size for Bytes', () => {
+      const doc = new Document({ _source: { contentLength: 12 } })
+      expect(doc.humanSize).toEqual('12 B')
+    })
 
-  it('should display human readable size for Kilobytes', () => {
-    const doc = new Document({ _source: { contentLength: 10342 } })
-    expect(doc.humanSize).toEqual('10.10 kB (10342 B)')
-  })
+    it('should display human readable size for Kilobytes', () => {
+      const doc = new Document({ _source: { contentLength: 10342 } })
+      expect(doc.humanSize).toEqual('10.10 kB (10342 B)')
+    })
 
-  it('should display human readable size for Megabytes', () => {
-    const doc = new Document({ _source: { contentLength: 12345678 } })
-    expect(doc.humanSize).toEqual('11.77 MB (12345678 B)')
+    it('should display human readable size for Megabytes', () => {
+      const doc = new Document({ _source: { contentLength: 12345678 } })
+      expect(doc.humanSize).toEqual('11.77 MB (12345678 B)')
+    })
   })
 
   it('should display tags', () => {
@@ -111,6 +113,22 @@ describe('Document', () => {
         }
       })
       expect(doc.title).toBe('simply a resourceName')
+    })
+
+    it('should return "extracted" resourceName if extractionLevel > 0 and resourceName starts with "=?" and ends with "?="', () => {
+      const doc = new Document({
+        _id: '01234567890123456789',
+        _source: {
+          path: '/this/is/a/specific.file',
+          contentType: 'application/json; twint',
+          metadata: {
+            tika_metadata_dc_title: 'This is a nice tweet title',
+            tika_metadata_resourcename: '=?and?somethig?else?but a resourceName?='
+          },
+          extractionLevel: 1
+        }
+      })
+      expect(doc.title).toBe('but a resourceName')
     })
   })
 })
