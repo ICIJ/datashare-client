@@ -60,7 +60,7 @@ jest.mock('@/api/DatashareClient', () => {
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
-describe('BatchSearchResultsFilters', () => {
+describe('BatchSearchResultsFilters.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
@@ -74,14 +74,20 @@ describe('BatchSearchResultsFilters', () => {
       uuid: '12',
       project: { name: 'ProjectName' },
       description: 'This is the description of the batch search',
-      queries: ['query_01', 'query_02', 'query_03'],
+      queries: {
+        query_01: 3,
+        query_02: 2,
+        query_03: 1
+      },
       state: 'SUCCESS',
       date: '2019-07-18T14:45:34.869+0000'
     }, {
       uuid: '13',
       project: { name: 'ProjectName2' },
       description: 'Another description',
-      queries: ['query_04'],
+      queries: {
+        query_04: 12
+      },
       state: 'SUCCESS',
       date: '2019-07-28T14:45:34.869+0000'
     }])

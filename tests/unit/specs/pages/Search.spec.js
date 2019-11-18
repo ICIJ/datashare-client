@@ -19,7 +19,8 @@ describe('Search.vue', () => {
           namespaced: true,
           actions: Object.assign(actions, {
             query: jest.fn(),
-            refresh: jest.fn()
+            refresh: jest.fn(),
+            updateFromRouteQuery: jest.fn()
           })
         },
         document: {
