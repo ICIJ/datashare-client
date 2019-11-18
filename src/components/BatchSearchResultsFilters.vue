@@ -14,17 +14,27 @@
           v-model="selectedQueries"
           @input="onInput">
           <template #item-label="{ item }">
-            <div class="d-flex">
-              <span class="flex-grow-1 text-truncate">{{ item }}</span>
-              <b-badge class="my-1 px-2" variant="tertiary" pill>{{ meta.queries[item] }}</b-badge>
+            <div class="d-flex" :id="item">
+              <span class="flex-grow-1 text-truncate">
+                {{ item }}
+              </span>
+              <b-badge class="my-1 px-2" variant="tertiary" pill>
+                {{ meta.queries[item] }}
+              </b-badge>
             </div>
+            <b-tooltip placement="bottom" :target="item" :title="item" />
           </template>
         </selectable-dropdown>
-        <div v-else v-for="(count, query) in meta.queries" :key="query" class="batch-search-results-filters__queries__list px-3 py-1">
-          <div class="d-flex">
-            <span class="flex-grow-1 text-truncate">{{ query }}</span>
-            <b-badge class="my-1 px-2" variant="tertiary" pill>{{ $n(count) }}</b-badge>
+        <div v-else v-for="(count, query) in meta.queries" :key="query" class="flex-grow-1 batch-search-results-filters__queries__list px-3 py-1">
+          <div class="d-flex" :id="query">
+            <span class="flex-grow-1 text-truncate">
+              {{ query }}
+            </span>
+            <b-badge class="my-1 px-2" variant="tertiary" pill>
+              {{ $n(count) }}
+            </b-badge>
           </div>
+          <b-tooltip placement="bottom" :target="query" :title="query" />
         </div>
       </div>
     </div>
@@ -38,12 +48,8 @@ import keys from 'lodash/keys'
 export default {
   name: 'BatchSearchResultsFilters',
   props: {
-    uuid: {
-      type: String
-    },
-    index: {
-      type: String
-    }
+    uuid: String,
+    index: String
   },
   computed: {
     meta () {
