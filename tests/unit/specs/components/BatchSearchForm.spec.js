@@ -160,5 +160,12 @@ describe('BatchSearchForm.vue', () => {
 
       expect(tree).toEqual(['folder_01'])
     })
+
+    it('should call retrievePaths on project change', () => {
+      jest.spyOn(wrapper.vm, 'retrievePaths')
+      wrapper.vm.$set(wrapper.vm, 'project', 'another_project')
+
+      expect(wrapper.vm.retrievePaths).toBeCalled()
+    })
   })
 })

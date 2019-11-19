@@ -202,6 +202,9 @@ export default {
   watch: {
     phraseMatch () {
       this.$set(this, 'fuzziness', 0)
+    },
+    project () {
+      this.retrievePaths()
     }
   },
   created () {
