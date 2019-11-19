@@ -107,7 +107,7 @@
                 :hide="!suggestionPaths.length"
                 :items="suggestionPaths">
               </selectable-dropdown>
-              <b-badge v-for="(path, index) in paths" :key="path" class="mr-2 pl-1 batch-search-form__advanced-filters" variant="warning" pill @click.prevent="deleteFileType(index)">
+              <b-badge v-for="(path, index) in paths" :key="path" class="mr-2 pl-1 batch-search-form__advanced-filters" variant="warning" pill @click.prevent="deletePath(index)">
                 <fa icon="times-circle" />
                 {{ path }}
               </b-badge>
@@ -137,13 +137,19 @@
 </template>
 
 <script>
+import compact from 'lodash/compact'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
+import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import includes from 'lodash/includes'
 import map from 'lodash/map'
+import range from 'lodash/range'
 import throttle from 'lodash/throttle'
+import uniq from 'lodash/uniq'
+import bodybuilder from 'bodybuilder'
 
+import esClient from '@/api/esClient'
 import types from '@/utils/types.json'
 
 export default {
@@ -198,11 +204,10 @@ export default {
       this.$set(this, 'fuzziness', 0)
     }
   },
-  async created () {
+  created () {
     this.$set(this, 'indices', map(this.$config.get('userProjects', []), value => { return { value, text: value } }))
     this.$set(this, 'project', get(this.indices, ['0', 'value'], ''))
-    const response = await this.$store.dispatch('search/queryFacet', { name: 'path', options: { size: 1000, exclude: '', include: '.*' } })
-    map(get(response, ['aggregations', 'byDirname', 'buckets'], []), item => this.allPaths.push(item.key))
+    this.retrievePaths()
   },
   methods: {
     searchFileTypes: throttle(async function () {
@@ -230,7 +235,7 @@ export default {
         this.paths.push(path)
         this.hideSuggestionsPaths()
         this.$set(this, 'path', '')
-        if (this.$refs && this.$refs.fileType) this.$refs.fileType.focus()
+        if (this.$refs && this.$refs.path) this.$refs.path.focus()
       }
     },
     hideSuggestionsPaths () {
@@ -263,6 +268,24 @@ export default {
           this.$bvToast.toast(this.$t('batchSearch.failure'), { noCloseButton: true, variant: 'danger' })
         }
       }
+    },
+    buildTreeFromPaths (paths) {
+      const tree = map(paths, path => {
+        const subpath = path.replace(this.$config.get('dataDir', ''), '')
+        const split = compact(subpath.substr(0, subpath.lastIndexOf('/')).split('/'))
+        const arr = []
+        for (const i in range(0, split.length)) {
+          arr.push(split.slice(0, parseInt(i) + 1).join('/'))
+        }
+        return arr
+      })
+      return uniq(flatten(tree))
+    },
+    async retrievePaths () {
+      const body = bodybuilder().size(0).aggregation('terms', 'path', {}, 'byDirname').build()
+      const response = await esClient.search({ index: this.project, body })
+      const paths = map(get(response, ['aggregations', 'byDirname', 'buckets'], []), 'key')
+      this.allPaths = this.buildTreeFromPaths(paths)
     }
   }
 }

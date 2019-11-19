@@ -15,7 +15,7 @@ describe('BatchSearchForm.vue', () => {
   const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
   const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFacet: jest.fn() } } } })
 
-  beforeAll(() => Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] }))
+  beforeAll(() => Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX], dataDir: '/root/project' }))
 
   beforeEach(() => {
     wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
@@ -133,6 +133,32 @@ describe('BatchSearchForm.vue', () => {
       wrapper.vm.hideSuggestionsFileTypes()
 
       expect(wrapper.vm.suggestionFileTypes).toEqual([])
+    })
+  })
+
+  describe('buildTreeFromPaths', () => {
+    it('should extract all the first level paths', () => {
+      const tree = wrapper.vm.buildTreeFromPaths(['/folder_01/doc_01.txt', '/folder_02/doc_02.txt', '/folder_03/doc_03.txt'])
+
+      expect(tree).toEqual(['folder_01', 'folder_02', 'folder_03'])
+    })
+
+    it('should extract all the levels of the path', () => {
+      const tree = wrapper.vm.buildTreeFromPaths(['/folder_01/folder_02/folder_03/document.txt'])
+
+      expect(tree).toEqual(['folder_01', 'folder_01/folder_02', 'folder_01/folder_02/folder_03'])
+    })
+
+    it('should filter by uniq paths', () => {
+      const tree = wrapper.vm.buildTreeFromPaths(['/folder_01/folder_02/document_01.txt', '/folder_01/folder_03/document_02.txt'])
+
+      expect(tree).toEqual(['folder_01', 'folder_01/folder_02', 'folder_01/folder_03'])
+    })
+
+    it('should filter off the dataDir', () => {
+      const tree = wrapper.vm.buildTreeFromPaths(['/root/project/folder_01/document_01.txt'])
+
+      expect(tree).toEqual(['folder_01'])
     })
   })
 })
