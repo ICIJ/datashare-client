@@ -92,6 +92,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should filter fileTypes according to the fileTypes input on mime file', () => {
+      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [{ label: 'Visio document', mime: 'visio' }, { label: 'StarWriter 5 document', mime: 'vision' }, { label: 'Something else', mime: 'else' }])
       wrapper.vm.$set(wrapper.vm, 'fileType', 'visi')
 
       wrapper.vm.searchFileTypes()
@@ -102,12 +103,13 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should filter according to the fileTypes input on label file', () => {
+      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [{ label: 'Label PDF', mime: 'PDF' }, { label: 'another type', mime: 'other' }])
       wrapper.vm.$set(wrapper.vm, 'fileType', 'PDF')
 
       wrapper.vm.searchFileTypes()
 
       expect(wrapper.vm.suggestionFileTypes).toHaveLength(1)
-      expect(wrapper.vm.suggestionFileTypes[0].label).toBe('Portable Document Format (PDF)')
+      expect(wrapper.vm.suggestionFileTypes[0].label).toBe('Label PDF')
     })
 
     it('should hide already selected file type from suggestions', () => {
@@ -160,12 +162,15 @@ describe('BatchSearchForm.vue', () => {
 
       expect(tree).toEqual(['folder_01'])
     })
+  })
 
-    it('should call retrievePaths on project change', () => {
-      jest.spyOn(wrapper.vm, 'retrievePaths')
-      wrapper.vm.$set(wrapper.vm, 'project', 'another_project')
+  it('should call retrieveFileTypes and retrievePaths on project change', () => {
+    jest.spyOn(wrapper.vm, 'retrieveFileTypes')
+    jest.spyOn(wrapper.vm, 'retrievePaths')
 
-      expect(wrapper.vm.retrievePaths).toBeCalled()
-    })
+    wrapper.vm.$set(wrapper.vm, 'project', 'another_project')
+
+    expect(wrapper.vm.retrieveFileTypes).toBeCalled()
+    expect(wrapper.vm.retrievePaths).toBeCalled()
   })
 })

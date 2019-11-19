@@ -170,6 +170,7 @@ export default {
       paths: [],
       suggestionPaths: [],
       allPaths: [],
+      allFileTypes: [],
       published: true,
       showCollapse: false
     }
@@ -190,11 +191,6 @@ export default {
     fuzzinessLearnMore () {
       return this.phraseMatch ? 'https://icij.gitbook.io/datashare/faq/what-is-proximity-search' : 'https://icij.gitbook.io/datashare/faq/what-is-fuzziness'
     },
-    allTypes () {
-      const allTypes = []
-      each(types, (type, mime) => allTypes.push({ label: type.label, mime }))
-      return allTypes
-    },
     advancedFiltersIcon () {
       return this.showCollapse ? 'angle-down' : 'angle-right'
     }
@@ -204,17 +200,19 @@ export default {
       this.$set(this, 'fuzziness', 0)
     },
     project () {
+      this.retrieveFileTypes()
       this.retrievePaths()
     }
   },
   created () {
     this.$set(this, 'indices', map(this.$config.get('userProjects', []), value => { return { value, text: value } }))
     this.$set(this, 'project', get(this.indices, ['0', 'value'], ''))
+    this.retrieveFileTypes()
     this.retrievePaths()
   },
   methods: {
     searchFileTypes: throttle(async function () {
-      this.$set(this, 'suggestionFileTypes', filter(this.allTypes, item => ((item.label.indexOf(this.fileType) > -1) || item.mime.indexOf(this.fileType) > -1) && !includes(map(this.fileTypes, 'mime'), item.mime)))
+      this.$set(this, 'suggestionFileTypes', filter(this.allFileTypes, item => ((item.label.indexOf(this.fileType) > -1) || item.mime.indexOf(this.fileType) > -1) && !includes(map(this.fileTypes, 'mime'), item.mime)))
     }, 200),
     searchFileType (fileType) {
       if (fileType) {
@@ -272,6 +270,11 @@ export default {
         }
       }
     },
+    async aggregate (field, name) {
+      const body = bodybuilder().size(0).aggregation('terms', field, {}, name).build()
+      const response = await esClient.search({ index: this.project, body })
+      return map(get(response, ['aggregations', name, 'buckets'], []), 'key')
+    },
     buildTreeFromPaths (paths) {
       const tree = map(paths, path => {
         const subpath = path.replace(this.$config.get('dataDir', ''), '')
@@ -285,10 +288,12 @@ export default {
       return uniq(flatten(tree))
     },
     async retrievePaths () {
-      const body = bodybuilder().size(0).aggregation('terms', 'path', {}, 'byDirname').build()
-      const response = await esClient.search({ index: this.project, body })
-      const paths = map(get(response, ['aggregations', 'byDirname', 'buckets'], []), 'key')
-      this.allPaths = this.buildTreeFromPaths(paths)
+      const aggPaths = await this.aggregate('path', 'byDirname')
+      this.$set(this, 'allPaths', this.buildTreeFromPaths(aggPaths))
+    },
+    async retrieveFileTypes () {
+      const aggTypes = await this.aggregate('contentType', 'contentType')
+      each(aggTypes, aggType => this.allFileTypes.push({ label: types[aggType].label, mime: aggType }))
     }
   }
 }
