@@ -1,10 +1,5 @@
 {
   "aggregations": {
-    "mentions": {
-      "item": "%{occurrences} en %{documents}",
-      "occurrence": "no hay ocurrencias | una ocurrencia | {count} ocurrencias",
-      "document": "sin docs | un doc | {count} docs"
-    },
     "more": "Explora más",
     "placeholder": "Búsqueda de personas, organizaciones, localizaciones...",
     "relative": "Relacionado a la búsqueda"
