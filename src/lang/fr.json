@@ -1,10 +1,5 @@
 {
   "aggregations": {
-    "mentions": {
-      "item": "%{occurrences} dans %{documents}",
-      "occurrence": "aucune occurrence | une occurrence | {count} occurrences",
-      "document": "aucun document | un document | {count} documents"
-    },
     "more": "Explorer plus",
     "placeholder": "Rechercher des personnes, organisations, lieux",
     "relative": "Relatifs à la recherche"
@@ -455,7 +450,7 @@
   "login": {
     "welcome": "Bienvenue dans Datashare",
     "sum_up": "La plateforme de recherche et de découverte de l'<a href=\"https://icij.org\">ICIJ</a>.",
-    "authentication_platform": "To log in, use ICIJ secure authentication platform:",
+    "authentication_platform": "Pour se connecter, utiliser la plateforme sécurisée d'authentification de l'ICIJ:",
     "xemx": "Se connecter avec Xemx",
     "support_desk": "Si vous avez besoin d'aide, veuillez contacter notre bureau support :",
     "ask_help": "Aide"
@@ -471,7 +466,7 @@
     "title": "Recherches en lot",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
-    "fileDescription": "Only CSV format accepted. The first column should contain the terms to search. You can use operators (AND, NOT, etc.).",
+    "fileDescription": "Seul le format CSV est accepté. La première colonne doit contenir les termes recherchés. Vous pouvez utiliser les opérateurs de recherche (AND, NOT, etc.).",
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
@@ -512,9 +507,9 @@
     "downloadResults": "Télécharger les résultats",
     "all": "Tout",
     "empty": "Pas de résultat",
-    "errorTitle": "Error",
-    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Please refer to this Help page where most common errors are described.</a>",
-    "seeErrorMessage": "See error message"
+    "errorTitle": "Erreur",
+    "errorMessage": "Le système a rencontré un problème. Il peut s'agir d'une erreur de syntaxe que vous avez commise dans votre CSV ou d'une autre erreur. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Veuillez vous référer à cette page d'aide où les erreurs les plus courantes sont expliquées.</a>",
+    "seeErrorMessage": "Voir le message d'erreur"
   },
   "batchSearchResultsFilters": {
     "queries": {
