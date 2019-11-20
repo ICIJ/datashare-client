@@ -1,19 +1,12 @@
-import VueI18n from 'vue-i18n'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
 import AggregationsPanel from '@/components/AggregationsPanel'
-import store from '@/store'
-import router from '@/router'
-import messages from '@/lang/en'
 import { App } from '@/main'
 
-const { localVue } = App.init(createLocalVue()).useAll()
+const { localVue, store, router, i18n } = App.init(createLocalVue()).useAll()
 
 describe('AggregationsPanel.vue', () => {
-  let wrapper, i18n
-
-  beforeAll(async () => {
-    i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
-  })
+  let wrapper
 
   beforeEach(async () => {
     wrapper = shallowMount(AggregationsPanel, { localVue, i18n, router, store, sync: false })

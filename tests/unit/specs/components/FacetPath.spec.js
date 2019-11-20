@@ -1,23 +1,15 @@
-import Vuex from 'vuex'
-import VueI18n from 'vue-i18n'
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
-import { mount, createLocalVue } from '@vue/test-utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import FacetPath from '@/components/FacetPath'
-import messages from '@/lang/en'
-import store from '@/store'
-import { datashare } from '@/store/modules/search'
-import { jsonOk } from 'tests/unit/tests_utils'
 import find from 'lodash/find'
+import { createLocalVue, mount } from '@vue/test-utils'
+import Murmur from '@icij/murmur'
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(Vuex)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+import { App } from '@/main'
+import { datashare } from '@/store/modules/search'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import FacetPath from '@/components/FacetPath'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import { jsonOk } from 'tests/unit/tests_utils'
+
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 
 describe('FacetPath.vue', () => {
   esConnectionHelper()

@@ -1,27 +1,13 @@
-import Vuex from 'vuex'
-import VueI18n from 'vue-i18n'
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
-import VueShortkey from 'vue-shortkey'
-import VueProgressBar from 'vue-progressbar'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { createServer } from 'http-server'
+import Murmur from '@icij/murmur'
 
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import messages from '@/lang/en'
-import router from '@/router'
-import store from '@/store'
+import { App } from '@/main'
 import DocumentView from '@/pages/DocumentView'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-localVue.use(VueProgressBar)
-localVue.directive('shortkey', VueShortkey)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue, i18n, store, router } = App.init(createLocalVue()).useAll()
 
 describe('DocumentView.vue', () => {
   esConnectionHelper()

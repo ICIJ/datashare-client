@@ -1,19 +1,10 @@
-import Murmur from '@icij/murmur'
-import VueI18n from 'vue-i18n'
-import VueShortkey from 'vue-shortkey'
-import Vuex from 'vuex'
 import { createLocalVue, mount } from '@vue/test-utils'
-import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
-import Document from '@/api/Document'
-import en from '@/lang/en'
-import store from '@/store'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(VueShortkey)
-const i18n = new VueI18n({ locale: 'en', messages: { en } })
+import { App } from '@/main'
+import Document from '@/api/Document'
+import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
+
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 
 describe('DocumentTranslatedContent.vue', () => {
   it('should show an English translation from French', async () => {
