@@ -73,5 +73,11 @@ module.exports = {
   },
   devServer: {
     port: 9090
+  },
+  configureWebpack: {
+    optimization: {
+      runtimeChunk: 'single',
+      moduleIds: 'hashed'
+    }
   }
 }
