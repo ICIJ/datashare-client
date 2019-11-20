@@ -183,7 +183,7 @@ class FacetPath extends FacetDocument {
 
   queryBuilder (body, param, func) {
     return body.query('bool', sub => {
-      param.values.forEach(dirname => sub[func]('prefix', { dirname }))
+      param.values.forEach(dirname => sub[func]('prefix', { path: dirname }))
       return sub
     })
   }

@@ -60,7 +60,7 @@ describe('SearchResultsAppliedFilter.vue', () => {
       expect(deleteQueryTermMock).toBeCalledTimes(1)
     })
 
-    it('should delete a facet term', async () => {
+    it('should delete a facet term', () => {
       store.commit('search/addFacetValue', { name: 'contentType', value: 'term_01' })
       wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { name: 'contentType', label: 'term_01', value: 'term_01', field: '', negation: false } } })
 

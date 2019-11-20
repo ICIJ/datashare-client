@@ -225,20 +225,6 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.list-group-item .facet__items__item')).toHaveLength(1)
   })
 
-  it('should filter items according to the path facet search', async () => {
-    await letData(es).have(new IndexedDocument('/a/doc_01')
-      .withNer('person_01')).commit()
-    await letData(es).have(new IndexedDocument('/b/doc_02')
-      .withNer('person_02')).commit()
-
-    const pathFacet = find(store.state.search.facets, { name: 'path' })
-    pathFacet.value = ['/a']
-    store.commit('search/addFacetValue', pathFacet)
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.findAll('.list-group-item .facet__items__item')).toHaveLength(1)
-  })
-
   it('should filter items according to the date facet search', async () => {
     await letData(es).have(new IndexedDocument()
       .withNer('person_01')

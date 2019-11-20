@@ -40,6 +40,7 @@ describe('FacetPath.vue', () => {
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonOk())
+    store.commit('search/setGlobalSearch', false)
   })
 
   afterAll(() => datashare.fetch.mockRestore())
@@ -68,5 +69,32 @@ describe('FacetPath.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.tree-node').length).toEqual(2)
+  })
+
+  describe('filter the facet', () => {
+    it('should filter items according to the path facet search', async () => {
+      await letData(es).have(new IndexedDocument('/data/folder_01/document_01')).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_02/document_02')).commit()
+
+      const pathFacet = find(store.state.search.facets, { name: 'path' })
+      pathFacet.value = ['/data/folder_01/']
+      store.commit('search/addFacetValue', pathFacet)
+      await wrapper.vm.root.aggregate()
+
+      expect(wrapper.findAll('.tree-node')).toHaveLength(1)
+    })
+
+    it('should filter on a specific folder even if another folder starts with the same name', async () => {
+      await letData(es).have(new IndexedDocument('/data/folder_1/document_01')).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_11/document_02')).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_22/document_03')).commit()
+
+      const pathFacet = find(store.state.search.facets, { name: 'path' })
+      pathFacet.value = ['/data/folder_1/']
+      store.commit('search/addFacetValue', pathFacet)
+      await wrapper.vm.root.aggregate()
+
+      expect(wrapper.findAll('.tree-node')).toHaveLength(1)
+    })
   })
 })

@@ -59,7 +59,7 @@ export default {
   },
   computed: {
     nodeParams () {
-      return { key: this.node.path }
+      return { key: this.node.path + '/' }
     },
     icon () {
       if (this.loading) {
