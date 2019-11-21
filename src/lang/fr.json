@@ -466,7 +466,7 @@
     "title": "Recherches en lot",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
-    "fileDescription": "Seul le format CSV est accepté. La première colonne doit contenir les termes recherchés. Vous pouvez utiliser les opérateurs de recherche (AND, NOT, etc.).",
+    "fileDescription": "Export your spreadsheet as a CSV. Only CSV format accepted. The first column should contain the terms to search. You can use operators (AND, NOT, etc.).",
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
