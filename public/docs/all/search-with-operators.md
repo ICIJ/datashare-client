@@ -46,9 +46,9 @@ To have all documents NOT mentioning some queried terms, you can use 'NOT' befor
 
 Parentheses should be used whenever multiple operators are used together and you want to give priority to some. 
 
-> Example: \(\(Alicia AND Martinez\) OR \(Delaware AND Pekin\) OR Grey\) AND NOT parking lot
+> Example: \(\(Alicia AND Martinez\) OR \(Delaware AND Pekin\) OR Grey\) AND NOT "parking lot""
 
-You can also combine these with 'regular expressions' Regex between two slashes \(see below\) .
+You can also combine these with 'regular expressions' Regex between two slashes \([see below](https://icij.gitbook.io/datashare/all/search-with-operators#regular-expressions-regex)\).
 
 
 
@@ -146,12 +146,12 @@ To find the list of existing metadata fields, **go to a document's 'Tags and det
 
 Regular expressions \(Regex\) in Datashare need to be written **between 2 slashes**. 
 
-> Example: paris/\[0-9\]{10}/
+> Example: paris /\[0-9\]{10}/
 
   
 Regex can thus be combined with standard queries in Datashare.
 
-> Example of a query combining standard writing and Regex: \("Ada Lovelace" OR "Ado Lavelace"\) AND paris/\[0-9\]{10}/
+> Example of a query combining standard writing and Regex: \("Ada Lovelace" OR "Ado Lavelace"\) AND paris /\[0-9\]{10}/
 
 Datashare uses Elastic's Regex syntax as explained [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html). 
 
