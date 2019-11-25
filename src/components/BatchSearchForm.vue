@@ -200,6 +200,8 @@ export default {
       this.$set(this, 'fuzziness', 0)
     },
     project () {
+      this.hideSuggestionsFileTypes()
+      this.hideSuggestionsPaths()
       this.retrieveFileTypes()
       this.retrievePaths()
     }
