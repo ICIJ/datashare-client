@@ -419,4 +419,18 @@ describe('FacetText.vue', () => {
 
     expect(spyRefreshFacet).toBeCalled()
   })
+
+  it('should remove "tag_01" from the tags facet on event "facet::delete"', async () => {
+    await letData(es).have(new IndexedDocument('document_01').withTags(['tag_01'])).commit()
+    await letData(es).have(new IndexedDocument('document_02').withTags(['tag_02'])).commit()
+    await letData(es).have(new IndexedDocument('document_03').withTags(['tag_03'])).commit()
+
+    wrapper = mount(FacetText, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'tags' }) } })
+    await wrapper.vm.root.aggregate()
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
+    wrapper.vm.root.collapseItems = false
+
+    wrapper.vm.$root.$emit('facet::delete', 'tags', { label: 'tag_01' })
+    expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+  })
 })

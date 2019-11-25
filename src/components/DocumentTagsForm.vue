@@ -1,13 +1,14 @@
 <script>
-import bodybuilder from 'bodybuilder'
-import esClient from '@/api/esClient'
-import settings from '@/utils/settings'
-import moment from 'moment'
 import castArray from 'lodash/castArray'
 import delay from 'lodash/delay'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import throttle from 'lodash/throttle'
+import bodybuilder from 'bodybuilder'
+import moment from 'moment'
+
+import esClient from '@/api/esClient'
+import settings from '@/utils/settings'
 
 export default {
   name: 'DocumentTagsForm',
@@ -44,14 +45,14 @@ export default {
       this.$set(this, 'existingTags', [])
       this.$set(this, 'updatingTags', false)
       delay(facetName => this.$root.$emit('facet::refresh', facetName), settings.waitForEsAnswer, 'tags')
-      // Feedback only when we are not display tags
+      // Feedback only when we are not displaying tags
       if (!this.displayTags) this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
     },
     async deleteTag (tag) {
       this.$set(this, 'updatingTags', true)
       await this.$store.dispatch('document/deleteTag', { documents: this.documents, tag })
+      this.$root.$emit('facet::delete', 'tags', tag)
       this.$set(this, 'updatingTags', false)
-      delay(facetName => this.$root.$emit('facet::refresh', facetName), settings.waitForEsAnswer, 'tags')
     },
     generateTagTooltip (tag) {
       return `${this.$t('document.created_by')} ${tag.user.id} ${this.$t('document.on')} ${moment(tag.creationDate).format('LLL')}`

@@ -84,15 +84,18 @@
 </template>
 
 <script>
-import facets from '@/mixins/facets'
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
 import each from 'lodash/each'
+import find from 'lodash/find'
+import findIndex from 'lodash/findIndex'
 import get from 'lodash/get'
 import join from 'lodash/join'
-import toLower from 'lodash/toLower'
 import sumBy from 'lodash/sumBy'
 import throttle from 'lodash/throttle'
+import toLower from 'lodash/toLower'
+
+import facets from '@/mixins/facets'
 
 const initialNumberOfFilesDisplayed = 5
 
@@ -128,6 +131,16 @@ export default {
     this.$root.$on('facet::refresh', facetName => {
       if (this.isInitialized && this.facet.name === facetName) {
         this.aggregateWithLoading()
+      }
+    })
+    this.$root.$on('facet::delete', (facetName, tagToDelete) => {
+      if (this.isInitialized && this.facet.name === facetName) {
+        const docCount = find(this.items, { key: tagToDelete.label }).doc_count
+        if (docCount === 1) {
+          this.items.splice(findIndex(this.items, { key: tagToDelete.label }), 1)
+        } else {
+          find(this.items, { key: tagToDelete.label }).doc_count = docCount - 1
+        }
       }
     })
     // Initialize the component

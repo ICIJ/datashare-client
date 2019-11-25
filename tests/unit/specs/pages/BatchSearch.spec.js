@@ -1,6 +1,7 @@
-import BatchSearch from '@/pages/BatchSearch'
 import { createLocalVue, mount } from '@vue/test-utils'
+
 import { App } from '@/main'
+import BatchSearch from '@/pages/BatchSearch'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
