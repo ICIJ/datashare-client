@@ -1,44 +1,32 @@
 # Table of contents
 
-[What do I do if Datashare opens a blank screen in my browser?](https://icij.gitbook.io/datashare/faq/datashare-opens-a-blank-screen-in-my-browser.)
+Frequently Asked Questions - **General**
 
-[What if Datashare says 'No documents found'?](https://icij.gitbook.io/datashare/faq/it-says-no-documents-found)
+* [Can I use Datashare with no internet connection?](https://icij.gitbook.io/datashare/faq/can-i-use-datashare-with-no-internet-connection)
+* [Can I download a document from Datashare?](https://icij.gitbook.io/datashare/faq/can-i-download-a-document)
+* [Can I remove document\(s\) from Datashare?](https://icij.gitbook.io/datashare/faq/can-i-remove-a-document-from-datashare)
+* [How can I install Datashare on a Windows prior to Windows 10 Pro?](https://icij.gitbook.io/datashare/faq/how-can-i-install-datashare-on-a-windows-prior-to-windows-10-pro)
+* [How can I contact ICIJ for help, bug reporting or suggestions?](https://icij.gitbook.io/datashare/faq/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions)
 
-[Can I use Datashare with no internet connection?](https://icij.gitbook.io/datashare/faq/can-i-use-datashare-with-no-internet-connection)
+Frequently Asked Questions - **Errors**
 
-[Nothing works, everything crashes. What can I do?](https://icij.gitbook.io/datashare/faq/nothing-works-everything-crashes.-what-can-i-do)
+* ['Your search query is wrong.' What should I do?](https://icij.gitbook.io/datashare/faq/your-search-query-is-wrong)
+* [What if Datashare says 'No documents found'?](https://icij.gitbook.io/datashare/faq/it-says-no-documents-found)
+* [List of common errors leading to "failure" in Batch Searches](list-of-common-errors-leading-to-failure-in-batch-searches.md)
+* [Nothing works, everything crashes. What can I do?](https://icij.gitbook.io/datashare/faq/nothing-works-everything-crashes.-what-can-i-do)
+* ['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](https://icij.gitbook.io/datashare/faq/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do)
+* [What if tasks are 'running' but not completing?](https://icij.gitbook.io/datashare/faq/tasks-are-running-but-not-completing)
+* [What if a 'Preview' of my documents is 'not available'?](https://icij.gitbook.io/datashare/faq/i-dont-see-any-preview-of-my-document.)
+* [What do I do if Datashare opens a blank screen in my browser?](https://icij.gitbook.io/datashare/faq/datashare-opens-a-blank-screen-in-my-browser.)
+* [I see people, organizations and locations in the filters but not in the documents](https://icij.gitbook.io/datashare/faq/i-see-people-organizations-and-locations-in-the-filters-but-not-in-the-documents)
+* [What does 'Windows named pipe error' mean?](https://icij.gitbook.io/datashare/faq/i-read-windows-named-pipe-error-...)
 
-[What if tasks are 'running' but not completing?](https://icij.gitbook.io/datashare/faq/tasks-are-running-but-not-completing)
+Frequently Asked Questions - **Definitions**
 
-[What if a 'Preview' of my documents is 'not available'?](https://icij.gitbook.io/datashare/faq/i-dont-see-any-preview-of-my-document.)
-
-[What is a named entity?](https://icij.gitbook.io/datashare/faq/what-is-a-named-entity)
-
-[What are NLP pipelines?](https://icij.gitbook.io/datashare/faq/what-are-nlp-pipelines)
-
-[Can I download a document from Datashare?](https://icij.gitbook.io/datashare/faq/can-i-download-a-document)
-
-[Can I remove document\(s\) from Datashare?](https://icij.gitbook.io/datashare/faq/can-i-remove-a-document-from-datashare)
-
-[What does 'Windows named pipe error' mean?](https://icij.gitbook.io/datashare/faq/i-read-windows-named-pipe-error-...)
-
-[How can I install Datashare on a Windows prior to Windows 10 Pro?](https://icij.gitbook.io/datashare/faq/how-can-i-install-datashare-on-a-windows-prior-to-windows-10-pro)
-
-['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](https://icij.gitbook.io/datashare/faq/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do)
-
-[What is fuzziness?](https://icij.gitbook.io/datashare/faq/what-is-fuzziness)
-
-[What are proximity searches?](https://icij.gitbook.io/datashare/faq/what-is-proximity-search)
-
-['Your search query is wrong'. What should I do?](https://icij.gitbook.io/datashare/faq/your-search-query-is-wrong)
-
-[List of common errors leading to "failure" in Batch Searches](list-of-common-errors-leading-to-failure-in-batch-searches.md)
-
-[I see people, organizations and locations in the filters but not in the documents](i-see-people-organizations-and-locations-in-the-filters-but-not-in-the-documents.md)
-
-[How can I contact ICIJ for help, bug reporting or suggestions?](https://icij.gitbook.io/datashare/faq/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions)
-
-
+* [What is a named entity?](https://icij.gitbook.io/datashare/faq/what-is-a-named-entity)
+* [What are NLP pipelines?](https://icij.gitbook.io/datashare/faq/what-are-nlp-pipelines)
+* [What is fuzziness?](https://icij.gitbook.io/datashare/faq/what-is-fuzziness)
+* [What are proximity searches?](https://icij.gitbook.io/datashare/faq/what-is-proximity-search)
 
 **User guide:**
 
