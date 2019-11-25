@@ -84,7 +84,10 @@
                 :hide="!suggestionFileTypes.length"
                 :items="suggestionFileTypes">
                 <template v-slot:item-label="{ item }">
-                  <div>{{ item.label }}</div>
+                  <div :id="item.mime">
+                    {{ item.label }}
+                  </div>
+                  <b-tooltip placement="right" :target="item.mime" :title="item.label" />
                 </template>
               </selectable-dropdown>
               <b-badge v-for="(fileType, index) in fileTypes" :key="fileType.mime" class="mr-2 pl-1 batch-search-form__advanced-filters" variant="warning" pill @click.prevent="deleteFileType(index)">
@@ -106,6 +109,12 @@
                 @deactivate="hideSuggestionsPaths"
                 :hide="!suggestionPaths.length"
                 :items="suggestionPaths">
+                <template v-slot:item-label="{ item }">
+                  <div :id="item">
+                    {{ item }}
+                  </div>
+                  <b-tooltip placement="right" :target="item" :title="item" />
+                </template>
               </selectable-dropdown>
               <b-badge v-for="(path, index) in paths" :key="path" class="mr-2 pl-1 batch-search-form__advanced-filters" variant="warning" pill @click.prevent="deletePath(index)">
                 <fa icon="times-circle" />
