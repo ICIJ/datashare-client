@@ -4,9 +4,9 @@ description: >-
   bar.
 ---
 
-# Search with operators
+# Search with operators and Regex
 
-### **Exact phrase**
+### Double quotes for e**xact phrase**
 
 To have all documents mentioning an exact phrase, you can use double quotes.
 
@@ -14,7 +14,7 @@ To have all documents mentioning an exact phrase, you can use double quotes.
 
 
 
-### **OR or space**
+### **OR \(or space\)**
 
 To have all documents mentioning all or one of the queried terms, you can use a simple space between your queries or 'OR'. You need to write 'OR' with **all letters uppercase**.
 
@@ -24,7 +24,7 @@ To have all documents mentioning all or one of the queried terms, you can use a 
 
 
 
-### **AND**
+### **AND \(or +\)**
 
 To have all documents mentioning all the queried terms, you can use 'AND' between your queried words. You need to write 'AND' with **all letters uppercase**.
 
@@ -32,7 +32,7 @@ To have all documents mentioning all the queried terms, you can use 'AND' betwee
 
 
 
-### **NOT or !**
+### **NOT \(or ! or -\)**
 
 To have all documents NOT mentioning some queried terms, you can use 'NOT' before each word you don't want. You need to write 'NOT' with **all letters uppercase**.
 
@@ -47,6 +47,8 @@ To have all documents NOT mentioning some queried terms, you can use 'NOT' befor
 Parentheses should be used whenever multiple operators are used together and you want to give priority to some. 
 
 > Example: \(\(Alicia AND Martinez\) OR \(Delaware AND Pekin\) OR Grey\) AND NOT parking lot
+
+You can also combine these with 'regular expressions' Regex between two slashes \(see below\) .
 
 
 
@@ -94,6 +96,8 @@ Examples:
 
 The closer the text in a field is to the original order specified in the query string, the more relevant that document is considered to be. When compared to the above example query, the phrase `"quick fox"` would be considered more relevant than `"quick brown fox"`\(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
+### \*\*\*\*
+
 ### **Boosting operators**
 
 Use the _boost_ operator `^` to make one term more relevant than another. For instance, if we want to find all documents about foxes, but we are especially interested in quick foxes:
@@ -108,7 +112,7 @@ The default boost value is 1, but can be any positive floating point number. Boo
 
 ### \*\*\*\*
 
-### **\(Advanced\) Searches using metadata fields**
+### **Searches using metadata fields**
 
 If you are looking for documents that:
 
@@ -135,4 +139,153 @@ You can use **other metadata fields using the following model: metadata.tika\_me
 To find the list of existing metadata fields, **go to a document's 'Tags and details' tab, click 'Show more details' and refer to this list:**
 
 ![](../.gitbook/assets/screenshot-2019-07-05-at-14.52.36.png)
+
+### 
+
+### Regular expressions \(Regex\)
+
+Regular expressions \(Regex\) in Datashare need to be written **between 2 slashes**. 
+
+> Example: paris/\[0-9\]{10}/
+
+  
+Regex can thus be combined with standard queries in Datashare.
+
+> Example of a query combining standard writing and Regex: \("Ada Lovelace" OR "Ado Lavelace"\) AND paris/\[0-9\]{10}/
+
+Datashare uses Elastic's Regex syntax as explained [here](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html). 
+
+Here are Elastic's explanations: 
+
+`.`
+
+Matches any character. For example:
+
+```text
+ab.     # matches 'aba', 'abb', 'abz', etc.
+```
+
+`?`
+
+Repeat the preceding character zero or one times. Often used to make the preceding character optional. For example:
+
+```text
+abc?     # matches 'ab' and 'abc'
+```
+
+`+`
+
+Repeat the preceding character one or more times. For example:
+
+```text
+ab+     # matches 'abb', 'abbb', 'abbbb', etc.
+```
+
+`*`
+
+Repeat the preceding character zero or more times. For example:
+
+```text
+ab*     # matches 'ab', 'abb', 'abbb', 'abbbb', etc.
+```
+
+`{}`
+
+Minimum and maximum number of times the preceding character can repeat. For example:
+
+```text
+a{2}    # matches 'aa'
+a{2,4}  # matches 'aa', 'aaa', and 'aaaa'
+a{2,}   # matches 'a` repeated two or more times
+```
+
+`|`
+
+OR operator. The match will succeed if the longest pattern on either the left side OR the right side matches. For example:
+
+```text
+abc|xyz  # matches 'abc' and 'xyz'
+```
+
+`( … )`
+
+Forms a group. You can use a group to treat part of the expression as a single character. For example:
+
+```text
+abc(def)?  # matches 'abc' and 'abcdef' but not 'abcd'
+```
+
+`[ … ]`
+
+Match one of the characters in the brackets. For example:
+
+```text
+[abc]   # matches 'a', 'b', 'c'
+```
+
+Inside the brackets, `-` indicates a range unless `-` is the first character or escaped. For example:
+
+```text
+[a-c]   # matches 'a', 'b', or 'c'
+[-abc]  # '-' is first character. Matches '-', 'a', 'b', or 'c'
+[abc\-] # Escapes '-'. Matches 'a', 'b', 'c', or '-'
+```
+
+A `^` before a character in the brackets negates the character or range. For example:
+
+```text
+[^abc]      # matches any character except 'a', 'b', or 'c'
+[^a-c]      # matches any character except 'a', 'b', or 'c'
+[^-abc]     # matches any character except '-', 'a', 'b', or 'c'
+[^abc\-]    # matches any character except 'a', 'b', 'c', or '-'
+```
+
+#### Optional operators
+
+You can use the `flags` parameter to enable more optional operators for Lucene’s regular expression engine.
+
+To enable multiple operators, use a `|` separator. For example, a `flags` value of `COMPLEMENT|INTERVAL` enables the `COMPLEMENT` and `INTERVAL` operators.
+
+**Valid values**
+
+`ALL` \(Default\)Enables all optional operators.`COMPLEMENT`
+
+Enables the `~` operator. You can use `~` to negate the shortest following pattern. For example:
+
+```text
+a~bc   # matches 'adc' and 'aec' but not 'abc'
+```
+
+`INTERVAL`
+
+Enables the `<>` operators. You can use `<>` to match a numeric range. For example:
+
+```text
+foo<1-100>      # matches 'foo1', 'foo2' ... 'foo99', 'foo100'
+foo<01-100>     # matches 'foo01', 'foo02' ... 'foo99', 'foo100'
+```
+
+`INTERSECTION`
+
+Enables the `&` operator, which acts as an AND operator. The match will succeed if patterns on both the left side AND the right side matches. For example:
+
+```text
+aaa.+&.+bbb  # matches 'aaabbb'
+```
+
+`ANYSTRING`
+
+Enables the `@` operator. You can use `@` to match any entire string.
+
+You can combine the `@` operator with `&` and `~` operators to create an "everything except" logic. For example:
+
+```text
+@&~(abc.+)  # matches everything except terms beginning with 'abc'
+```
+
+#### Unsupported operators
+
+Lucene’s regular expression engine does not support anchor operators, such as `^` \(beginning of line\) or `$` \(end of line\). To match a term, the regular expression must match the entire string."
+
+
 
