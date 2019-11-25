@@ -207,8 +207,6 @@ export default {
   created () {
     this.$set(this, 'indices', map(this.$config.get('userProjects', []), value => { return { value, text: value } }))
     this.$set(this, 'project', get(this.indices, ['0', 'value'], ''))
-    this.retrieveFileTypes()
-    this.retrievePaths()
   },
   methods: {
     searchFileTypes: throttle(async function () {
