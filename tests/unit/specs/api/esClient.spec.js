@@ -105,7 +105,7 @@ describe('esClient', () => {
             bool: {
               should: [{
                 query_string: {
-                  query: 'path:\\/home\\/datashare\\/path\\/*',
+                  query: 'path:/home/datashare/path/*',
                   default_field: '*'
                 }
               }, {
@@ -113,7 +113,7 @@ describe('esClient', () => {
                   type: 'NamedEntity',
                   query: {
                     query_string: {
-                      query: 'path:\\/home\\/datashare\\/path\\/*',
+                      query: 'path:/home/datashare/path/*',
                       default_field: 'mentionNorm'
                     }
                   }

@@ -1,5 +1,7 @@
 import each from 'lodash/each'
 import find from 'lodash/find'
+import isEqual from 'lodash/isEqual'
+import replace from 'lodash/replace'
 import bodybuilder from 'bodybuilder'
 import es from 'elasticsearch-browser'
 
@@ -52,6 +54,7 @@ export function datasharePlugin (Client, config, components) {
   }
 
   Client.prototype.addQueryToBody = function (query, body, fields = []) {
+    if (isEqual(fields, ['path'])) replace(query, /\//g, '\\/')
     body.query('match_all')
       .addQuery('bool', b => b
         .orQuery('query_string', {
