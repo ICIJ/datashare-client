@@ -28,7 +28,17 @@ You cannot start a query with OR all uppercase. [OR is reserved as a search oper
 
 ![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsXAlZpZqJaQio6ciE-%2F-LsXBx1_h19OJ_qW-HgH%2FScreenshot%202019-10-31%20at%2015.23.41.png?alt=media&token=6ad8fab5-e39c-4b5a-a4fd-9f645142d656)![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsXAlZpZqJaQio6ciE-%2F-LsXC10GQjDB_KDynR-w%2FScreenshot%202019-10-31%20at%2015.23.51.png?alt=media&token=4f04d178-75e8-4240-b80f-7653ec1b625f)![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsXAlZpZqJaQio6ciE-%2F-LsXC51OWC9M_WHdN3Bd%2FScreenshot%202019-10-31%20at%2015.23.01.png?alt=media&token=dda6576b-fd95-4f2d-b1ab-97a9d7cfb225)‌
 
-### **The query contains only one forward slash \(/\)** <a id="querie-s-contain-s-only-one-double-quote-or-a-double-quote-in-a-word"></a>
+### **The query contains only one parenthesis \(\(or \)\)** <a id="querie-s-contain-s-only-one-double-quote-or-a-double-quote-in-a-word"></a>
+
+‌You cannot start or type a query with only one parenthesis. [Parenthesis are reserved for combining operators](https://icij.gitbook.io/datashare/all/search-with-operators#please-note-that-you-can-combine-operators).
+
+![](../.gitbook/assets/screenshot-2019-11-26-at-17.44.42.png)
+
+![](../.gitbook/assets/screenshot-2019-11-26-at-17.45.17.png)
+
+![](../.gitbook/assets/screenshot-2019-11-26-at-17.47.25.png)
+
+### **The query contains only one forward slash \(/\)**
 
 ‌You cannot start or type a query with only one forward slash. Forward slashes are reserved for regular expressions \(Regex\).
 
