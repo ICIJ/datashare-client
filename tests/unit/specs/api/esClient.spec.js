@@ -127,7 +127,7 @@ describe('esClient', () => {
   })
 
   it('should build a simple sorted ES query', async () => {
-    let body = bodybuilder().from(0).size(25)
+    const body = bodybuilder().from(0).size(25)
 
     await esClient.addSortToBody('dateOldest', body)
 
@@ -141,6 +141,22 @@ describe('esClient', () => {
       }, {
         path: {
           order: 'asc'
+        }
+      }]
+    })
+  })
+
+  it('should build a simple sorted ES query with correct path sort', async () => {
+    const body = bodybuilder().from(0).size(25)
+
+    await esClient.addSortToBody('pathReverse', body)
+
+    expect(body.build()).toEqual({
+      from: 0,
+      size: 25,
+      sort: [{
+        path: {
+          order: 'desc'
         }
       }]
     })

@@ -91,7 +91,7 @@ export function datasharePlugin (Client, config, components) {
   Client.prototype.addSortToBody = function (name = 'relevance', body) {
     const { field, desc } = find(settings.searchSortFields, { name }) || settings.searchSortFields[0]
     body.sort(field, desc ? 'desc' : 'asc')
-    body.sort('path', 'asc')
+    if (field !== 'path') body.sort('path', 'asc')
   }
 
   Client.prototype.searchDocs = function (index, query = '*', facets = [], from = 0, size = 25, sort = 'relevance', fields = []) {
