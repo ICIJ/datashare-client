@@ -1,8 +1,7 @@
-import bodybuilder from 'bodybuilder'
-import es from 'elasticsearch-browser'
 import each from 'lodash/each'
 import find from 'lodash/find'
-import replace from 'lodash/replace'
+import bodybuilder from 'bodybuilder'
+import es from 'elasticsearch-browser'
 
 import { EventBus } from '@/utils/event-bus'
 import settings from '@/utils/settings'
@@ -53,8 +52,6 @@ export function datasharePlugin (Client, config, components) {
   }
 
   Client.prototype.addQueryToBody = function (query, body, fields = []) {
-    // Escape slash by adding a backslash before it
-    query = replace(query, /\//g, '\\/')
     body.query('match_all')
       .addQuery('bool', b => b
         .orQuery('query_string', {
@@ -72,7 +69,6 @@ export function datasharePlugin (Client, config, components) {
   }
 
   Client.prototype.addQueryToFacet = function (query, body, fields = []) {
-    query = replace(query, /\//g, '\\/')
     body.query('match_all')
       .addQuery('bool', b => b
         // Add the query string to the body
