@@ -112,9 +112,23 @@ The default boost value is 1, but can be any positive floating point number. Boo
 
 ### \*\*\*\*
 
-### **Searches using metadata fields**
+### **\(Advanced\) Searches using metadata fields**
 
-If you are looking for documents that:
+To find the list of existing metadata fields, **go to a document's 'Tags and details' tab, click 'Show more details'.**
+
+![](../.gitbook/assets/screenshot-2019-07-05-at-14.52.36.png)
+
+**When you hover the lines, you see a magnifying glass on each line. Click on it and Datashare will look for this field.** Here is the one for content language:
+
+![](../.gitbook/assets/screenshot-2019-11-26-at-15.27.50.png)
+
+![](../.gitbook/assets/screenshot-2019-11-26-at-15.29.07.png)
+
+Here is the one for 'indexing date' \(also called extraction date here\) for instance:
+
+![](../.gitbook/assets/screenshot-2019-11-26-at-15.29.40.png)
+
+So for example, if you are looking for documents that:
 
 *  contains term1, term2 and term3
 *  and were created after 2010
@@ -123,24 +137,16 @@ you can use the 'Date' filter or type in the search bar:
 
 > term1 AND term2 AND term3 AND metadata.tika\_metadata\_creation\_date:&gt;=2010-01-01
 
-_Explanations:_
+Explanations:
 
-* _'metadata.tika\_metadata\_creation\_date:' means that we filter with creation date_
-* _'&gt;="'means 'since January 1st included'_
-* _'2010-01-01' stands for January 2010 and the search will include January 2010_
+* 'metadata.tika\_metadata\_creation\_date:' means that we filter with creation date
+* '&gt;="'means 'since January 1st included'
+* '2010-01-01' stands for January 2010 and the search will include January 2010
 
 For other searches:
 
 * '&lt;' will mean 'strictly after \(with January 1st excluded\)'
 * nothing will mean 'at this exact date'
 
-You can use **other metadata fields using the following model: metadata.tika\_metadata\_**_**\[and copying the field's name here\]**_**.** 
-
-To find the list of existing metadata fields, **go to a document's 'Tags and details' tab, click 'Show more details' and refer to this list:**
-
-![](../.gitbook/assets/screenshot-2019-07-05-at-14.52.36.png)
-
-### 
-
-
+\*\*\*\*
 
