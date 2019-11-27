@@ -7,8 +7,8 @@ const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('Config.vue', () => {
   it('should load the config page', () => {
-    const wrapper = shallowMount(Config, { localVue })
+    const wrapper = shallowMount(Config, { localVue, mocks: { $t: msg => msg } })
 
-    expect(wrapper.find('h3').text()).toBe('Configuration')
+    expect(wrapper.find('h3').text()).toBe('config.title')
   })
 })

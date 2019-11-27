@@ -2,13 +2,13 @@
   <div>
     <div class="bg-white">
       <div class="container py-5">
-        <h3>Configuration</h3>
+        <h3>{{ $t('config.title') }}</h3>
       </div>
     </div>
     <div class="container mt-4">
       <b-form>
         <b-form-group
-          :label="field"
+          :label="$t(`config.${field}`)"
           v-for="field in configFields"
           :key="field"
         >
