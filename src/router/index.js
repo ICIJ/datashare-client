@@ -116,6 +116,10 @@ const router = new VueRouter({
             default: true,
             sidebar: true
           }
+        },
+        {
+          path: '/config',
+          component: () => import(`@/pages/Config`)
         }
       ]
     },

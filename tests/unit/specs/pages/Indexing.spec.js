@@ -1,10 +1,11 @@
-import { App } from '@/main'
 import { createLocalVue, mount } from '@vue/test-utils'
-import Indexing from '@/pages/Indexing'
+import flushPromises from 'flush-promises'
+
+import { App } from '@/main'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
+import Indexing from '@/pages/Indexing'
 import { jsonOk } from 'tests/unit/tests_utils'
-import flushPromises from 'flush-promises'
 
 const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
