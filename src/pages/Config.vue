@@ -8,19 +8,12 @@
     <div class="container my-4">
       <b-form @submit.prevent="onSubmit">
         <b-form-group
-          :label="$t(`config.${field.name}`)"
-          v-for="field in configFields"
-          :key="field.name"
+          :label="name"
+          v-for="(value, name) in config"
+          :key="name"
         >
-          <b-form-radio-group
-            v-if="field.type === 'boolean'"
-            v-model="config[field.name]"
-            :options="[{ text: 'Yes', value: true }, { text: 'No', value: false }]"
-          ></b-form-radio-group>
           <b-form-input
-            v-else
-            v-model="config[field.name]"
-            :type="field.type"
+            v-model="config[name]"
           ></b-form-input>
         </b-form-group>
         <b-button type="submit" variant="primary">
@@ -36,38 +29,7 @@ export default {
   name: 'Config',
   data () {
     return {
-      config: {},
-      configFields: [{
-        name: 'oauthAuthorizeUrl',
-        type: 'text'
-      }, {
-        name: 'dataSourceUrl',
-        type: 'text'
-      }, {
-        name: 'oauthTokenUrl',
-        type: 'text'
-      }, {
-        name: 'defaultUserName',
-        type: 'text'
-      }, {
-        name: 'dataDir',
-        type: 'text'
-      }, {
-        name: 'tcpListenPort',
-        type: 'number'
-      }, {
-        name: 'oauthApiUrl',
-        type: 'text'
-      }, {
-        name: 'clusterName',
-        type: 'text'
-      }, {
-        name: 'defaultProject',
-        type: 'text'
-      }, {
-        name: 'ocr',
-        type: 'boolean'
-      }]
+      config: {}
     }
   },
   async created () {

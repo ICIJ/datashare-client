@@ -25,16 +25,10 @@ describe('Config.vue', () => {
     expect(wrapper.find('h3').text()).toBe('config.title')
   })
 
-  it('should display a radio button', () => {
-    wrapper = shallowMount(Config, { localVue, store, mocks: { $t: msg => msg }, data: function () { return { configFields: [{ name: 'testBoolean', type: 'boolean' }] } } })
-
-    expect(wrapper.findAll('b-form-radio-group-stub')).toHaveLength(1)
-  })
-
   it('should display a text input', () => {
-    wrapper = shallowMount(Config, { localVue, store, mocks: { $t: msg => msg }, data: function () { return { configFields: [{ name: 'testText', type: 'text' }] } } })
+    wrapper.vm.config = { property_01: 'value_01', property_02: 'value_02' }
 
-    expect(wrapper.findAll('b-form-input-stub')).toHaveLength(1)
+    expect(wrapper.findAll('b-form-input-stub')).toHaveLength(2)
   })
 
   it('should load the config on component creation', () => {

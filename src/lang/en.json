@@ -532,16 +532,6 @@
   },
   "config": {
     "title": "Configuration",
-    "oauthAuthorizeUrl": "Oauth Authorize URL",
-    "dataSourceUrl": "Data Source URL",
-    "oauthTokenUrl": "Oauth Token URL",
-    "defaultUserName": "Default User Name",
-    "dataDir": "Data Directory",
-    "tcpListenPort": "TCP Listen Port",
-    "oauthApiUrl": "Oauth API URL",
-    "clusterName": "Cluster Name",
-    "defaultProject": "Default Project",
-    "ocr": "OCR",
     "submit": "Submit"
   }
 }
