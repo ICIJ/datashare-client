@@ -541,6 +541,7 @@
     "oauthApiUrl": "Oauth API URL",
     "clusterName": "Cluster Name",
     "defaultProject": "Default Project",
-    "ocr": "OCR"
+    "ocr": "OCR",
+    "submit": "Submit"
   }
 }
