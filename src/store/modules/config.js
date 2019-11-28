@@ -3,8 +3,11 @@ import DatashareClient from '@/api/DatashareClient'
 export const datashare = new DatashareClient()
 
 export const actions = {
-  async getConfig (state) {
+  async getConfig () {
     return datashare.getConfig()
+  },
+  onSubmit (state, config) {
+    return datashare.setConfig(config)
   }
 }
 

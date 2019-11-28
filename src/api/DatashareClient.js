@@ -1,6 +1,7 @@
-import { EventBus } from '@/utils/event-bus'
-import fetchPonyfill from 'fetch-ponyfill'
 import map from 'lodash/map'
+import fetchPonyfill from 'fetch-ponyfill'
+
+import { EventBus } from '@/utils/event-bus'
 
 export class DatashareClient {
   constructor () {
@@ -49,6 +50,9 @@ export class DatashareClient {
         throw err
       }
     })
+  }
+  setConfig (config) {
+    return this.sendAction('/api/config', { method: 'PATCH', body: JSON.stringify({ data: config }), headers: { 'Content-Type': 'application/json' } })
   }
   deleteNamedEntitiesByMentionNorm (project, mentionNorm) {
     return this.sendAction(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: 'PUT' }, false)

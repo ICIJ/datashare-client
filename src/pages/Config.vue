@@ -6,7 +6,7 @@
       </div>
     </div>
     <div class="container my-4">
-      <b-form >
+      <b-form @submit.prevent="onSubmit">
         <b-form-group
           :label="$t(`config.${field.name}`)"
           v-for="field in configFields"
@@ -23,6 +23,9 @@
             :type="field.type"
           ></b-form-input>
         </b-form-group>
+        <b-button type="submit" variant="primary">
+          {{ $t('config.submit') }}
+        </b-button>
       </b-form>
     </div>
   </div>
@@ -69,6 +72,11 @@ export default {
   },
   async created () {
     this.config = await this.$store.dispatch('config/getConfig')
+  },
+  methods: {
+    async onSubmit () {
+      await this.$store.dispatch('config/onSubmit', this.config)
+    }
   }
 }
 </script>

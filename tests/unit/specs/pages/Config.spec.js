@@ -41,4 +41,11 @@ describe('Config.vue', () => {
     expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/config'), {})
   })
+
+  it('should submit the config modifications', () => {
+    wrapper.vm.onSubmit()
+
+    expect(datashare.fetch).toBeCalledTimes(2)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/config'), { method: 'PATCH', body: JSON.stringify({ data: {} }), headers: { 'Content-Type': 'application/json' } })
+  })
 })
