@@ -25,6 +25,8 @@
 </template>
 
 <script>
+import omit from 'lodash/omit'
+
 export default {
   name: 'Config',
   data () {
@@ -33,11 +35,16 @@ export default {
     }
   },
   async created () {
-    this.config = await this.$store.dispatch('config/getConfig')
+    this.config = omit(await this.$store.dispatch('config/getConfig'), 'userProjects')
   },
   methods: {
     async onSubmit () {
-      await this.$store.dispatch('config/onSubmit', this.config)
+      try {
+        await this.$store.dispatch('config/onSubmit', this.config)
+        this.$bvToast.toast(this.$t('config.submitSuccess'), { noCloseButton: true, variant: 'success' })
+      } catch (_) {
+        this.$bvToast.toast(this.$t('config.submitError'), { noCloseButton: true, variant: 'danger' })
+      }
     }
   }
 }

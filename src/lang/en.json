@@ -532,6 +532,8 @@
   },
   "config": {
     "title": "Configuration",
-    "submit": "Submit"
+    "submit": "Submit",
+    "submitSuccess": "Modifications submitted. You should now restart Datashare.",
+    "submitError": "Unable to submit the configuration."
   }
 }

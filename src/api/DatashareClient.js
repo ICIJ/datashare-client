@@ -52,7 +52,7 @@ export class DatashareClient {
     })
   }
   setConfig (config) {
-    return this.sendAction('/api/config', { method: 'PATCH', body: JSON.stringify({ data: config }), headers: { 'Content-Type': 'application/json' } })
+    return this.sendAction('/api/config', { method: 'PATCH', body: JSON.stringify({ data: config }), headers: { 'Content-Type': 'application/json' } }, false)
   }
   deleteNamedEntitiesByMentionNorm (project, mentionNorm) {
     return this.sendAction(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: 'PUT' }, false)

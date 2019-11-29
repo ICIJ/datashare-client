@@ -9,9 +9,7 @@ export const actions = {
     } catch (_) {}
   },
   onSubmit (state, config) {
-    try {
-      return datashare.setConfig(config)
-    } catch (_) {}
+    return datashare.setConfig(config)
   }
 }
 
