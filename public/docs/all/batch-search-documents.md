@@ -14,7 +14,7 @@ If you want to search a list of queries in Datashare, instead of doing each of t
 
 ![](../.gitbook/assets/screenshot-2019-09-25-at-16.06.40.png)
 
-* [**Search operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****\(AND, NOT, OR, asterisk \*, interrogation point ?, exclamation point !, double quotes "..." or carets ^\) **WORK in batch searches:** 
+* [**Search operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****AND NOT \* ? ! + - etc. **work in batch searches. But OR doesn't work when 'do phrase matches' is turned on.** 
 
   \*\*\*\*
 
