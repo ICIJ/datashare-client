@@ -4,7 +4,7 @@ description: 'It allows to get the results of each query of a list, at once.'
 
 # Batch search documents
 
-If you want to search a list of queries in Datashare, instead of doing each of them one by one, you can upload the list directly in Datashare. To do so, you will create a list of terms that you want to search in the first column of a spreadsheet. You will turn export the spreadsheet as a CSV \(a special format available in any spreadsheet software\). You will upload this CSV in the Batch Search form in Datashare. You will see the results for each query in Datashare or in a CSV. 
+If you want to search a list of queries in Datashare, instead of doing each of them one by one, you can upload the list directly in Datashare. To do so, you will create a list of terms that you want to search in the first column of a spreadsheet. You will export the spreadsheet as a CSV \(a special format available in any spreadsheet software\). You will upload this CSV in the Batch Search form in Datashare. You will see the results for each query in Datashare or in a CSV. 
 
 ## Prepare your batch search
 
