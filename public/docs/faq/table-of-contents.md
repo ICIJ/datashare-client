@@ -32,7 +32,7 @@ Frequently Asked Questions - **Definitions**
 
 * [Analyze documents](https://icij.gitbook.io/datashare/all/analyze-documents)
 * [Search documents](https://icij.gitbook.io/datashare/all/search-documents)
-* [Search with operators](https://icij.gitbook.io/datashare/all/search-with-operators)
+* [Search with operators and Regex](https://icij.gitbook.io/datashare/all/search-with-operators)
 * [Batch search documents](https://icij.gitbook.io/datashare/all/batch-search-documents)
 * [Explore a document](https://icij.gitbook.io/datashare/all/explore-a-document)
 * [Filter documents](https://icij.gitbook.io/datashare/all/filter-documents)
