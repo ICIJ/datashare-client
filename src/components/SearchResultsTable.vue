@@ -8,7 +8,7 @@
               <fa :icon="action.icon" :class="action.iconClass"/>{{ action.label }}
             </b-list-group-item>
           </b-list-group>
-          <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" :displayTags="false" />
+          <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" :displayTags="false" :displayForm="true" />
         </div>
         <search-results-header position="top" class="flex-grow-1 align-self-center" :no-progress="!!selected.length" :no-filters="!!selected.length" />
       </div>

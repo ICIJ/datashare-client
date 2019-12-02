@@ -8,7 +8,7 @@
         <h3 class="document__header__name">
           <document-sliced-name interactive-root :document="document" />
         </h3>
-        <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="false" />
+        <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="false" class="ml-0" mode="dark" />
         <nav class="document__header__nav text-nowrap overflow-auto">
           <ul class="list-inline m-0">
             <li class="document__header__nav__item list-inline-item" v-for="tab in visibleTabs" :key="tab.name">

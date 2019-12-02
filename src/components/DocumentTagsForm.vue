@@ -16,7 +16,11 @@ export default {
     document: [Object, Array],
     tags: Array,
     displayTags: Boolean,
-    displayForm: Boolean
+    displayForm: Boolean,
+    mode: {
+      type: String,
+      default: 'light'
+    }
   },
   data () {
     return {
@@ -77,10 +81,10 @@ export default {
     </div>
     <div class="col-md-8" v-if="displayTags">
       <ul class="document-tags-form__tags list-unstyled mb-0 mt-1">
-        <li class="document-tags-form__tags__tag badge badge-light border badge-pill mr-2 mb-1" v-for="tag in tags" :key="tag.label">
+        <li class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1" :class="[mode === 'light' ? 'border badge-light': 'badge-dark']" v-for="tag in tags" :key="tag.label">
           <span :title="generateTagTooltip(tag)" v-b-tooltip>{{ tag.label }}</span>
           <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tag_confirmation')" class="document-tags-form__tags__tag__delete btn btn-sm">
-            <fa icon="times" class="fa-fw" />
+            <fa icon="times" class="fa-fw pl-2" :class="{ 'text-white': mode === 'dark' }" />
           </confirm-button>
         </li>
       </ul>
