@@ -8,6 +8,7 @@
         <h3 class="document__header__name">
           <document-sliced-name interactive-root :document="document" />
         </h3>
+        <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="false" />
         <nav class="document__header__nav text-nowrap overflow-auto">
           <ul class="list-inline m-0">
             <li class="document__header__nav__item list-inline-item" v-for="tab in visibleTabs" :key="tab.name">
@@ -38,13 +39,15 @@ import findIndex from 'lodash/findIndex'
 import { mapState } from 'vuex'
 
 import DocumentSlicedName from '@/components/DocumentSlicedName'
+import DocumentTagsForm from '@/components/DocumentTagsForm'
 import shortkeys from '@/mixins/shortkeys'
 
 export default {
   name: 'DocumentView',
   mixins: [shortkeys],
   components: {
-    DocumentSlicedName
+    DocumentSlicedName,
+    DocumentTagsForm
   },
   props: {
     id: String,
@@ -63,6 +66,7 @@ export default {
       this.$Progress.start()
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
+      await this.$store.dispatch('document/getTags')
       if (this.document) {
         await this.$store.commit('userHistory/addDocument', this.document)
         const container = this.$el.closest('.ps-container')
@@ -110,7 +114,8 @@ export default {
   computed: {
     ...mapState('document', {
       document: 'doc',
-      parentDocument: 'parentDocument'
+      parentDocument: 'parentDocument',
+      tags: 'tags'
     }),
     visibleTabs () {
       return filter(this.tabs, t => !t.hidden)

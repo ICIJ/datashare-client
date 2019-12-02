@@ -15,6 +15,7 @@ describe('DocumentTabDetails.vue', () => {
   const es = esConnectionHelper.es
   const index = process.env.VUE_APP_ES_INDEX
   const id = 'document'
+  let wrapper
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
@@ -32,7 +33,7 @@ describe('DocumentTabDetails.vue', () => {
     const id = '/home/datashare/data/foo.txt'
     await letData(es).have(new IndexedDocument(id)).commit()
     await store.dispatch('document/get', { id, index })
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__path').text()).toEqual('C:/Users/ds/docs/foo.txt')
   })
@@ -40,7 +41,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display the document type', async () => {
     await letData(es).have(new IndexedDocument(id).withContentType('application/pdf')).commit()
     await store.dispatch('document/get', { id, index })
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__content-type').text()).toEqual('Portable Document Format (PDF)')
   })
@@ -50,7 +51,7 @@ describe('DocumentTabDetails.vue', () => {
     await letData(es).have(new IndexedDocument(parentDocument)).commit()
     await letData(es).have(new IndexedDocument(id).withParent(parentDocument)).commit()
     await store.dispatch('document/get', { index, id, routing: parentDocument }).then(() => store.dispatch('document/getParent'))
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, store, router, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { localVue, store, router, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__basename').text()).toEqual(id)
     expect(wrapper.find('.document__content__tree-level').text()).toEqual('facet.level.level01')
@@ -60,7 +61,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should not display the creation date if it is missing', async () => {
     await letData(es).have(new IndexedDocument(id)).commit()
     await store.dispatch('document/get', { id, index })
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__creation-date').exists()).toBeFalsy()
   })
@@ -68,7 +69,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display a link to the list of children documents', async () => {
     await letData(es).have(new IndexedDocument(id)).commit()
     await store.dispatch('document/get', { id, index })
-    const wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__details__children').exists()).toBeTruthy()
   })
