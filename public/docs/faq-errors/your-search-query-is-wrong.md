@@ -6,6 +6,8 @@ description: This can be due to some syntax error(s) in the way you wrote your q
 
 Here are **the most common errors that you should correct:** ‌
 
+### \*\*\*\* <a id="querie-s-start-s-with-and-all-uppercase"></a>
+
 ### **The query starts with AND** \(all uppercase\) <a id="querie-s-start-s-with-and-all-uppercase"></a>
 
 You cannot start a query with AND all uppercase. [AND is reserved as a search operator](https://icij.gitbook.io/datashare/all/search-with-operators#and).
@@ -64,7 +66,7 @@ You cannot end a query with exclamation point \(!\). [Exclamation point is reser
 
 
 
-### The query uses square brackets \(\[  \]\)
+### The query **contains** square brackets \(\[  \]\)
 
 You cannot use square brackets [except for searching for ranges](https://icij.gitbook.io/datashare/all/search-with-operators#advanced-searches-using-metadata-fields).
 

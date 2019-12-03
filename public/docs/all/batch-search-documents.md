@@ -1,10 +1,16 @@
 ---
-description: 'It allows to get the results of each query of a list, at once.'
+description: 'It allows to get the results of each query of a list, but all at once.'
 ---
 
 # Batch search documents
 
-If you want to search a list of queries in Datashare, instead of doing each of them one by one, you can upload the list directly in Datashare. To do so, you will create a list of terms that you want to search in the first column of a spreadsheet. You will export the spreadsheet as a CSV \(a special format available in any spreadsheet software\). You will upload this CSV in the Batch Search form in Datashare. You will see the results for each query in Datashare or in a CSV. 
+If you want to search a list of queries in Datashare, instead of doing each of them one by one, you can upload the list directly in Datashare.   
+To do so, you will:
+
+* create a list of terms that you want to search in the first column of a spreadsheet
+* export the spreadsheet as a CSV \(a special format available in any spreadsheet software\)
+* upload this CSV in the Batch Search form in Datashare
+* see the results for each query in Datashare - or in a CSV. 
 
 ## Prepare your batch search
 
@@ -13,26 +19,6 @@ If you want to search a list of queries in Datashare, instead of doing each of t
 * **Write your queries**, one per line and per cell, in the first column of a spreadsheet \(Excel, Google Sheets, Numbers, Framacalc, etc.\). In the example below, there are 4 queries:
 
 ![](../.gitbook/assets/screenshot-2019-09-25-at-16.06.40.png)
-
-* [**Search operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****AND NOT \* ? ! + - etc. **work in batch searches. But OR doesn't work when 'do phrase matches' is turned on.** 
-
-  \*\*\*\*
-
-  * **When 'do phrase matches' is turned on**:
-    * If you write operators in one of your query , the search engine will not apply neither 'do phrase matches', 'fuzziness' nor 'proximity searches' in this query only. It will apply in other operator-free queries though.
-
-![](../.gitbook/assets/screenshot-2019-11-04-at-16.15.24.png)
-
-* **When 'do phrase matches' is turned off**:
-
-  * By default, **any space in your query is considered as a 'OR'**. If you write 'Hello world' in one cell, the search engine will look for documents which contain either 'hello' or 'world' or the two words.
-  * If you write 'Hello AND world NOT car' in one cell, the search engine will look for documents which contain 'hello' and 'world' but not 'car'.
-
-
-
-* As in the main search bar, searches are not case sensitive: if you search 'HeLlo', it will look for all occurrences of 'Hello', 'hello', 'hEllo', 'heLLo', etc. in the documents.
-
-
 
 * If you have **blank cells in your spreadsheet...**
 
@@ -45,6 +31,26 @@ If you want to search a list of queries in Datashare, instead of doing each of t
 * **If there is a comma in one of your cells** \(like in "1,8 million" in our example above\), the CSV will formally put the content of the cell in double quotes in your results and search for the exact phrase in double quotes. 
 
 ![](../.gitbook/assets/screenshot-2019-11-04-at-16.20.29.png)
+
+### Beware of errors in your CSV
+
+[**Search operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****AND NOT \* ? ! + - etc. **work in batch searches. Please beware that OR doesn't work when 'do phrase matches' is turned on.** 
+
+Reserved characters, when misused, can lead to [**failures**](https://icij.gitbook.io/datashare/all/batch-search-documents#i-get-a-failure-what-does-that-mean) **because of syntax errors.**
+
+* **When 'do phrase matches' is turned on**:
+  * If you write operators in one of your query , the search engine will not apply neither 'do phrase matches', 'fuzziness' nor 'proximity searches' in this query only. It will apply in other operator-free queries though.
+
+
+
+![](../.gitbook/assets/screenshot-2019-11-04-at-16.15.24.png)
+
+* **When 'do phrase matches' is turned off**:
+
+  * By default, **any space in your query is considered as a 'OR'**. If you write 'Hello world' in one cell, the search engine will look for documents which contain either 'hello' or 'world' or the two words.
+  * If you write 'Hello AND world NOT car' in one cell, the search engine will look for documents which contain 'hello' and 'world' but not 'car'.
+
+* Searches are **not case sensitive**: if you search 'HeLlo', it will look for all occurrences of 'Hello', 'hello', 'hEllo', 'heLLo', etc. in the documents.
 
 ### Export your spreadsheet as a CSV
 
@@ -216,7 +222,9 @@ You cannot start a query with caret \(^\) or make it contain a caret, neither in
 
 ![](../.gitbook/assets/screenshot-2019-10-31-at-15.06.28.png)
 
+### - Querie\(s\) uses square brackets \(\[ \]\) <a id="the-query-uses-square-brackets"></a>
 
+You cannot use square brackets [except for searching for ranges](https://icij.gitbook.io/datashare/all/search-with-operators#advanced-searches-using-metadata-fields).![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LvAEiaXbwQuvR2FuRkC%2F-LvAHL6A3cm6S0jBS0Ef%2FScreenshot%202019-12-03%20at%2010.31.31.png?alt=media&token=dcf90492-48ee-4b50-9464-e729a41b56dc)
 
 ## Delete your batch search
 

@@ -48,8 +48,8 @@
 ## FAQ - Errors
 
 * ['Your search query is wrong.' What should I do?](faq-errors/your-search-query-is-wrong.md)
-* [What if Datashare says 'No documents found'?](faq-errors/it-says-no-documents-found.md)
 * [List of common errors leading to "failure" in Batch Searches](faq-errors/list-of-common-errors-leading-to-failure-in-batch-searches.md)
+* [What if Datashare says 'No documents found'?](faq-errors/it-says-no-documents-found.md)
 * [Nothing works, everything crashes. What can I do?](faq-errors/nothing-works-everything-crashes.-what-can-i-do.md)
 * ['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](faq-errors/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do.md)
 * [What if tasks are 'running' but not completing?](faq-errors/tasks-are-running-but-not-completing.md)
