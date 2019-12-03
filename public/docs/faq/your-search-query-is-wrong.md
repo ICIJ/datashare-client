@@ -60,5 +60,13 @@ You cannot end a query with exclamation point \(!\). [Exclamation point is reser
 
 ‌You cannot start a query with caret \(^\) or write one which contains caret. [Caret is reserved as a boosting operator](https://icij.gitbook.io/datashare/all/search-with-operators#boosting-operators).
 
-![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsX4JZonoD94VtqwHu3%2F-LsX7wmdHRn3gT9-9xeL%2FScreenshot%202019-10-31%20at%2015.05.05.png?alt=media&token=6ac31c7a-dcd1-4b09-bf2c-02ec6e89f2a6)![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsX4JZonoD94VtqwHu3%2F-LsX8-0rSV6D_O2FzzWO%2FScreenshot%202019-10-31%20at%2015.06.28.png?alt=media&token=8a5b573b-e68f-4bdf-a991-ab4f40e4325c)T
+![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsX4JZonoD94VtqwHu3%2F-LsX7wmdHRn3gT9-9xeL%2FScreenshot%202019-10-31%20at%2015.05.05.png?alt=media&token=6ac31c7a-dcd1-4b09-bf2c-02ec6e89f2a6)![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsX4JZonoD94VtqwHu3%2F-LsX8-0rSV6D_O2FzzWO%2FScreenshot%202019-10-31%20at%2015.06.28.png?alt=media&token=8a5b573b-e68f-4bdf-a991-ab4f40e4325c)
+
+
+
+### The query uses square brackets \(\[  \]\)
+
+You cannot use square brackets [except for searching for ranges](https://icij.gitbook.io/datashare/all/search-with-operators#advanced-searches-using-metadata-fields).
+
+![](../.gitbook/assets/screenshot-2019-12-03-at-10.31.31.png)
 
