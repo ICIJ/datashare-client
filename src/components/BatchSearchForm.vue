@@ -209,6 +209,12 @@ export default {
       this.$set(this, 'fuzziness', 0)
     },
     project () {
+      this.$set(this, 'fileType', '')
+      this.$set(this, 'path', '')
+      this.$set(this, 'fileTypes', [])
+      this.$set(this, 'paths', [])
+      this.$set(this, 'allFileTypes', [])
+      this.$set(this, 'allPaths', [])
       this.hideSuggestionsFileTypes()
       this.hideSuggestionsPaths()
       this.retrieveFileTypes()
@@ -220,7 +226,8 @@ export default {
     this.$set(this, 'project', get(this.indices, ['0', 'value'], ''))
   },
   methods: {
-    searchFileTypes: throttle(async function () {
+    searchFileTypes: throttle(function () {
+      this.hideSuggestionsPaths()
       this.$set(this, 'suggestionFileTypes', filter(this.allFileTypes, item => ((item.label.indexOf(this.fileType) > -1) || item.mime.indexOf(this.fileType) > -1) && !includes(map(this.fileTypes, 'mime'), item.mime)))
     }, 200),
     searchFileType (fileType) {
@@ -237,7 +244,8 @@ export default {
     deleteFileType (index) {
       this.fileTypes.splice(index, 1)
     },
-    searchPaths: throttle(async function () {
+    searchPaths: throttle(function () {
+      this.hideSuggestionsFileTypes()
       this.$set(this, 'suggestionPaths', filter(this.allPaths, item => item.indexOf(this.path) > -1))
     }, 200),
     searchPath (path) {
