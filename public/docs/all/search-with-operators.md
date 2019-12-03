@@ -29,6 +29,8 @@ To have all documents mentioning all or one of the queried terms, you can use a 
 To have all documents mentioning all the queried terms, you can use 'AND' between your queried words. You need to write 'AND' with **all letters uppercase**.
 
 > Example: Alicia AND Martinez
+>
+> Same search: +Alicia +Martinez
 
 
 
@@ -39,6 +41,8 @@ To have all documents NOT mentioning some queried terms, you can use 'NOT' befor
 > Example: NOT Martinez
 >
 > Same search: !Martinez
+>
+> Same search: -Martinez
 
 
 
@@ -114,21 +118,21 @@ The default boost value is 1, but can be any positive floating point number. Boo
 
 ### **Regular expressions \(Regex\)**
 
-**‌**Regular expressions \(Regex\) in Datashare need to be written between 2 slashes.
+**‌**Regular expressions \(Regex\) in Datashare need to be **written between 2 slashes.**
 
 > Example: /.\*\..\*\@.\*\..\*/
 
-The example above will search for any expression which looks like an email address with a dot between two expressions before the @ and a dot between two expressions after the @.
+The example above will search for any expression which looks like an email address with a dot between two expressions before the @ and a dot between two expressions after the @ like in 'first.lastname@email.com' for instance.
 
-Regex can thus be combined with standard queries in Datashare.
+Regex can be combined with standard queries in Datashare :
 
 > Example: \("Ada Lovelace" OR "Ado Lavelace"\) AND paris AND /.\*\..\*\@.\*\..\*/
 
-**Please note that you need to escape the following characters with a backslash before it:‌ \# @ & &lt; &gt; ~**
+**Please note that you need to escape the following characters by typing a backslash just before them \(without space\):‌ \# @ & &lt; &gt; ~**
 
 > Example: /.\*\..\*\@.\*\..\*/ \(the @ was escaped by a backslash \ just before it\)
 
-Datashare relies on **Elastic's Regex syntax** as explained[ here](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html). Please refer to this page.
+Datashare relies on **Elastic's Regex syntax** as explained[ here](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html). Please refer to this page for more details.
 
 
 
