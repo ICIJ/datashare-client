@@ -78,7 +78,7 @@ If you search for similar terms \(**to catch typos for example**\), you can use 
 >
 > Example: Datashare~1 \(this query will catch Datasahre, Dqtashare, etc.\)
 
-
+### \*\*\*\*
 
 ### **Proximity searches**
 
@@ -126,6 +126,8 @@ Regex can thus be combined with standard queries in Datashare.
 
 **Please note that you need to escape the following characters with a backslash before it:‌ \# @ & &lt; &gt; ~**
 
+> Example: /.\*\..\*\@.\*\..\*/ \(the @ was escaped by a backslash \ just before it\)
+
 Datashare relies on **Elastic's Regex syntax** as explained[ here](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html). Please refer to this page.
 
 
@@ -166,5 +168,7 @@ For other searches:
 * '&lt;' will mean 'strictly after \(with January 1st excluded\)'
 * nothing will mean 'at this exact date'
 
-\*\*\*\*
+You can search for numbers in a range. Ranges can be specified for **date**, **numeric** or **string fields amont the ones** you can find by clicking the magnifying glass when you hover the fields in a document's tab 'Tags and Details'. 
+
+Inclusive ranges are specified with square brackets \[min TO max\] and exclusive ranges with curly brackets {min TO max}. For more details, please refer to [Elastic's page on ranges](https://www.elastic.co/guide/en/elasticsearch/reference/current/query-dsl-query-string-query.html#_ranges).
 

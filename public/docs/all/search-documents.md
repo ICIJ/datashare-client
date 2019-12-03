@@ -24,9 +24,15 @@ You will gain room to better explore your documents:
 
 ![](../.gitbook/assets/marie.png)
 
-**IMPORTANT: to make your searches more precise, search with operators \(AND, OR, ....\). Read more** [**here**](https://icij.gitbook.io/datashare/all/search-with-operators)**.**
+**IMPORTANT:** 
+
+* **To make your searches more precise, you can search with operators \(AND, OR, ....\).** [**Read more here**](https://icij.gitbook.io/datashare/all/search-with-operators)**.**
 
 ![](../.gitbook/assets/operators.png)
+
+* **If you get a message "Your search query is wrong",  it is probably because you are misusing one or some reserved characters \(like ^ " ? \( \[ \* OR AND etc\).** [**Please refer to this page**](https://icij.gitbook.io/datashare/faq/your-search-query-is-wrong)**.**
+
+![](../.gitbook/assets/screenshot-2019-12-03-at-10.31.31.png)
 
 3. You can search **in specific fields** like tags, title, author, recipient, content, path or thread ID. Click **'All fields**' and **select your choice** in the dropdown menu:
 
