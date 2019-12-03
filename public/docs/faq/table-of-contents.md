@@ -12,7 +12,7 @@ Frequently Asked Questions - **Errors**
 
 * ['Your search query is wrong.' What should I do?](https://icij.gitbook.io/datashare/faq/your-search-query-is-wrong)
 * [What if Datashare says 'No documents found'?](https://icij.gitbook.io/datashare/faq/it-says-no-documents-found)
-* [List of common errors leading to "failure" in Batch Searches](list-of-common-errors-leading-to-failure-in-batch-searches.md)
+* [List of common errors leading to "failure" in Batch Searches](../faq-errors/list-of-common-errors-leading-to-failure-in-batch-searches.md)
 * [Nothing works, everything crashes. What can I do?](https://icij.gitbook.io/datashare/faq/nothing-works-everything-crashes.-what-can-i-do)
 * ['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](https://icij.gitbook.io/datashare/faq/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do)
 * [What if tasks are 'running' but not completing?](https://icij.gitbook.io/datashare/faq/tasks-are-running-but-not-completing)
