@@ -6,7 +6,6 @@ import { shallowMount, createLocalVue } from '@vue/test-utils'
 
 import VersionNumber from '@/components/VersionNumber'
 import messages from '@/lang/en'
-import router from '@/router'
 import store from '@/store'
 
 const localVue = createLocalVue()
@@ -27,7 +26,7 @@ describe('VersionNumber.vue', () => {
         'git.commit.id.abbrev': 'sha1_abbrev'
       })
     }
-    wrapper = shallowMount(VersionNumber, { localVue, i18n, router, store, methods })
+    wrapper = shallowMount(VersionNumber, { localVue, i18n, store, methods })
   })
 
   it('should display client git sha1', () => {

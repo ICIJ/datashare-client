@@ -2,10 +2,10 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 
 import store from '@/store'
-import { isAuthenticated } from '@/utils/utils'
 import get from 'lodash/get'
 
 import { EventBus } from '@/utils/event-bus'
+import { Auth } from '@/api/Auth'
 
 Vue.use(VueRouter)
 
@@ -138,17 +138,23 @@ const router = new VueRouter({
   ]
 })
 
-router.beforeEach((to, from, next) => {
+const auth = new Auth()
+
+router.beforeEach(async (to, from, next) => {
   // Read the current index from the params
   if (to.params.index && store.state.search.index !== to.params.index) {
     store.commit('search/index', to.params.index)
   }
   // True if the authentication must be skipped
   const skipsAuth = to.matched.some(r => get(r, 'meta.skipsAuth', false))
-  if (skipsAuth || isAuthenticated()) {
-    next()
-  } else {
-    next('/login')
+  try {
+    if (skipsAuth || await auth.isAuthenticated()) {
+      next()
+    } else {
+      next('/login')
+    }
+  } catch (e) {
+    console.log(e)
   }
 })
 

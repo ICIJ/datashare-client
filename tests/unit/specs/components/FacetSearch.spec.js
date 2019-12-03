@@ -7,15 +7,15 @@ import FacetSearch from '@/components/FacetSearch'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 jest.mock('@/api/DatashareClient', () => {
-  const { jsonOk } = require('tests/unit/tests_utils')
+  const { jsonResp } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      deleteNamedEntitiesByMentionNorm: jest.fn().mockReturnValue(jsonOk())
+      deleteNamedEntitiesByMentionNorm: jest.fn().mockReturnValue(jsonResp())
     }
   })
 })
 
-const { localVue, i18n, router, store } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 
 describe('FacetSearch.vue', () => {
   esConnectionHelper()
@@ -27,7 +27,7 @@ describe('FacetSearch.vue', () => {
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
     const facet = find(store.state.search.facets, { name: 'contentType' })
     wrapper = mount(FacetSearch,
-      { localVue, i18n, router, store, propsData: { infiniteScroll: false, throttle: 0, facet } })
+      { localVue, i18n, store, propsData: { infiniteScroll: false, throttle: 0, facet } })
   })
 
   afterAll(() => jest.unmock('@/api/DatashareClient'))
@@ -209,7 +209,7 @@ describe('FacetSearch.vue', () => {
 
   it('should display all the indexing dates', async () => {
     wrapper = mount(FacetSearch,
-      { localVue, i18n, router, store, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'indexingDate' }) } })
+      { localVue, i18n, store, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'indexingDate' }) } })
     await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-01-01T00:00:00.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-02-01T00:00:00.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-03-01T00:00:00.001Z')).commit()

@@ -4,7 +4,7 @@ import Document from '@/api/Document'
 import NamedEntity from '@/api/NamedEntity'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import omit from 'lodash/omit'
@@ -21,7 +21,7 @@ describe('Search store', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   afterEach(() => {
@@ -635,7 +635,7 @@ describe('Search store', () => {
 
   describe('starredDocuments', () => {
     it('should return the list of the starredDocuments', async () => {
-      datashare.fetch.mockReturnValue(jsonOk([42]))
+      datashare.fetch.mockReturnValue(jsonResp([42]))
       await store.dispatch('search/getStarredDocuments')
 
       expect(store.state.search.starredDocuments).toEqual([42])

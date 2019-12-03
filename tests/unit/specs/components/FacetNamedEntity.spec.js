@@ -1,5 +1,7 @@
 import find from 'lodash/find'
 import noop from 'lodash/noop'
+import VueRouter from 'vue-router'
+
 import { createLocalVue, mount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
@@ -10,16 +12,16 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import mixin from '@/mixins/facets'
 
 jest.mock('@/api/DatashareClient', () => {
-  const { jsonOk } = require('tests/unit/tests_utils')
+  const { jsonResp } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      deleteNamedEntitiesByMentionNorm: jest.fn().mockReturnValue(jsonOk()),
-      getStarredDocuments: jest.fn().mockReturnValue(jsonOk())
+      deleteNamedEntitiesByMentionNorm: jest.fn().mockReturnValue(jsonResp()),
+      getStarredDocuments: jest.fn().mockReturnValue(jsonResp())
     }
   })
 })
 
-const { localVue, i18n, router, store } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 
 describe('FacetNamedEntity.vue', () => {
   esConnectionHelper()
@@ -451,7 +453,8 @@ describe('FacetNamedEntity.vue', () => {
     const namedEntityFacet = find(store.state.search.facets, { name: 'namedEntityPerson' })
     namedEntityFacet.value = ['person_01']
     store.commit('search/addFacetValue', namedEntityFacet)
-    wrapper = mount(FacetNamedEntity, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'namedEntityPerson' }) } })
+    wrapper = mount(FacetNamedEntity, { localVue, i18n, router: new VueRouter(), store, propsData: { facet: find(store.state.search.facets, { name: 'namedEntityPerson' }) } })
+
     await wrapper.vm.root.aggregate()
     wrapper.findAll('.list-group-item .facet__items__item input').at(0).trigger('click')
 

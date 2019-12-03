@@ -1,16 +1,18 @@
 import { App } from '@/main'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
+import VueRouter from 'vue-router'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 
-const { i18n, localVue, router, store } = App.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = App.init(createLocalVue()).useAll()
+const router = new VueRouter()
 
 describe('ResetFiltersButton.vue', function () {
   let wrapper
 
   beforeEach(() => {
     store.commit('search/reset')
-    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store, sync: false })
+    wrapper = shallowMount(ResetFiltersButton, { localVue, router, i18n, store, sync: false })
   })
 
   it('should display a disabled button, by default', () => {

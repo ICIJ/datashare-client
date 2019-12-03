@@ -9,7 +9,7 @@ import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
 const localVue = createLocalVue()
 localVue.use(Vuex)
@@ -24,7 +24,7 @@ describe('FindNamedEntitiesForm.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
     datashare.fetch.mockClear()
   })
 

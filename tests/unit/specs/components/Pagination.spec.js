@@ -4,12 +4,13 @@ import BootstrapVue from 'bootstrap-vue'
 import Pagination from '@/components/Pagination'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import messages from '@/lang/en'
-import router from '@/router'
+import VueRouter from 'vue-router'
 import cloneDeep from 'lodash/cloneDeep'
 import flushPromises from 'flush-promises'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
+localVue.use(VueRouter)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
@@ -19,7 +20,7 @@ describe('Pagination.vue', () => {
   const template = { name: 'router-name', query: { from: 0, size: 10 } }
 
   beforeEach(() => {
-    wrapper = shallowMount(Pagination, { localVue, i18n, router, propsData: { total: 22, getToTemplate: () => cloneDeep(template) }, mock: { $t: msg => msg }, sync: false })
+    wrapper = shallowMount(Pagination, { localVue, i18n, propsData: { total: 22, getToTemplate: () => cloneDeep(template) }, mocks: { $t: msg => msg }, sync: false })
   })
 
   describe('should display the pagination, or not', () => {

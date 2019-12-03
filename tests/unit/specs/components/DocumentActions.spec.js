@@ -7,7 +7,7 @@ import { datashare } from '@/store/modules/search'
 import DocumentActions from '@/components/DocumentActions'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
@@ -20,7 +20,7 @@ describe('DocumentActions.vue', () => {
 
   beforeEach(async () => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
     store.commit('search/starredDocuments', [])
     document = await letData(es).have(new IndexedDocument()).commit()
     wrapper = shallowMount(DocumentActions, { localVue, store, propsData: { document }, mocks: { $t: msg => msg }, sync: false })

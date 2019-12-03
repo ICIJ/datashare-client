@@ -7,7 +7,7 @@ import { datashare } from '@/store/modules/search'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FacetPath from '@/components/FacetPath'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
 const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 
@@ -31,7 +31,7 @@ describe('FacetPath.vue', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
     store.commit('search/setGlobalSearch', false)
   })
 

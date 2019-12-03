@@ -1,5 +1,6 @@
 import Vuex from 'vuex'
 import VueI18n from 'vue-i18n'
+import VueRouter from 'vue-router'
 import Murmur from '@icij/murmur'
 import BootstrapVue from 'bootstrap-vue'
 import { createLocalVue, mount } from '@vue/test-utils'
@@ -7,15 +8,14 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FacetYesNo from '@/components/FacetYesNo'
 import messages from '@/lang/en'
-import router from '@/router'
 import store from '@/store'
 import find from 'lodash/find'
 
 jest.mock('@/api/DatashareClient', () => {
-  const { jsonOk } = require('tests/unit/tests_utils')
+  const { jsonResp } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      getStarredDocuments: jest.fn().mockReturnValue(jsonOk())
+      getStarredDocuments: jest.fn().mockReturnValue(jsonResp())
     }
   })
 })
@@ -23,9 +23,11 @@ jest.mock('@/api/DatashareClient', () => {
 const localVue = createLocalVue()
 localVue.use(Vuex)
 localVue.use(VueI18n)
+localVue.use(VueRouter)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const router = new VueRouter()
 
 describe('FacetYesNo.vue', () => {
   esConnectionHelper()

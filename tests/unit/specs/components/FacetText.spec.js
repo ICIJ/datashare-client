@@ -1,6 +1,7 @@
 import find from 'lodash/find'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
 import VueI18n from 'vue-i18n'
+import VueRouter from 'vue-router'
 
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -8,7 +9,8 @@ import FacetText from '@/components/FacetText'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import messagesFr from '@/lang/fr'
 
-const { localVue, i18n, router, store } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
+const router = new VueRouter()
 
 describe('FacetText.vue', () => {
   esConnectionHelper()

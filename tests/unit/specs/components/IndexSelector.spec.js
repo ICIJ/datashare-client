@@ -4,11 +4,12 @@ import IndexSelector from '@/components/IndexSelector'
 import Murmur from '@icij/murmur'
 import { datashare } from '@/store/modules/search'
 import DatashareClient from '@/api/DatashareClient'
+import VueRouter from 'vue-router'
 import find from 'lodash/find'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-const { localVue, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 localVue.mixin({ created () {} })
 const mergeCreatedStrategy = localVue.config.optionMergeStrategies.created
@@ -25,12 +26,12 @@ describe('IndexSelector.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(IndexSelector, { localVue, router, store, propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(IndexSelector, { localVue, store, propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
   })
 
   it('should not display a dropdown if we aren\'t in server mode', () => {
     Murmur.config.merge({ multipleProjects: false })
-    wrapper = shallowMount(IndexSelector, { localVue, router, store, propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(IndexSelector, { localVue, store, propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
 
     expect(wrapper.findAll('option')).toHaveLength(0)
   })
@@ -41,9 +42,9 @@ describe('IndexSelector.vue', () => {
 
   describe('on index change', () => {
     beforeEach(() => {
-      wrapper = shallowMount(IndexSelector, { localVue, router, store, propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
+      wrapper = shallowMount(IndexSelector, { localVue, store, router: new VueRouter(), propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
       jest.spyOn(datashare, 'fetch')
-      datashare.fetch.mockReturnValue(jsonOk())
+      datashare.fetch.mockReturnValue(jsonResp())
     })
 
     afterEach(() => datashare.fetch.mockClear())

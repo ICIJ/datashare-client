@@ -1,5 +1,4 @@
-import { getOS, getShortkeyOS, getAuthenticatedUser, isAuthenticated, getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
-import { removeCookie, setCookie } from 'tiny-cookie'
+import { getOS, getShortkeyOS, getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 
 describe('utils', () => {
   let languageGetter
@@ -7,8 +6,6 @@ describe('utils', () => {
   beforeEach(() => {
     languageGetter = jest.spyOn(window.navigator, 'platform', 'get')
   })
-
-  afterEach(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
 
   describe('getOS', () => {
     it('should retrieve Mac OS', () => {
@@ -41,38 +38,6 @@ describe('utils', () => {
     it('should return "default" if other than mac OS', () => {
       languageGetter.mockReturnValue('Other OS')
       expect(getShortkeyOS()).toEqual('default')
-    })
-  })
-
-  describe('getAuthenticatedUser', () => {
-    it('should return null if user is not authenticated', () => {
-      expect(getAuthenticatedUser()).toBeNull()
-    })
-
-    it('should return null if cookie has no "login" field', () => {
-      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, 'doe', JSON.stringify)
-      expect(getAuthenticatedUser()).toBeNull()
-    })
-
-    it('should return user login if user is authenticated', () => {
-      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'doe' }, JSON.stringify)
-      expect(getAuthenticatedUser()).toEqual('doe')
-    })
-  })
-
-  describe('isAuthenticated', () => {
-    it('should not be authenticated by default', () => {
-      expect(isAuthenticated()).toBeFalsy()
-    })
-
-    it('should not be authenticated if the cookie has no login field', () => {
-      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, 'doe', JSON.stringify)
-      expect(isAuthenticated()).toBeFalsy()
-    })
-
-    it('should be authenticated if there is a cookie with a login field', () => {
-      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'doe' }, JSON.stringify)
-      expect(isAuthenticated()).toBeTruthy()
     })
   })
 

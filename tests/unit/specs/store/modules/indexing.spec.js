@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import DatashareClient from '@/api/DatashareClient'
 import { datashare } from '@/store/modules/indexing'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 import cloneDeep from 'lodash/cloneDeep'
 import store from '@/store'
 
@@ -13,7 +13,7 @@ describe('Indexing store', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   afterEach(() => {

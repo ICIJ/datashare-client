@@ -1,14 +1,15 @@
 import { App } from '@/main'
 import SearchResultsTable from '@/components/SearchResultsTable'
-
+import VueRouter from 'vue-router'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import { datashare } from '@/store/modules/search'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 import DatashareClient from '@/api/DatashareClient'
 
-const { i18n, localVue, store, router } = App.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = App.init(createLocalVue()).useAll()
+const router = new VueRouter()
 
 describe('SearchResultsTable.vue', () => {
   let wrapper
@@ -41,7 +42,7 @@ describe('SearchResultsTable.vue', () => {
 
   it('should set each selected document as starred', async () => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
     wrapper = mount(SearchResultsTable, { localVue, store, i18n, router, mocks: { $t: msg => msg } })
     wrapper.vm.selected = [{ id: 'doc_1' }, { id: 'doc_2' }]
 

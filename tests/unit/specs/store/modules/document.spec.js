@@ -3,7 +3,7 @@ import uniqueId from 'lodash/uniqueId'
 import { datashare, initialState } from '@/store/modules/document'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 import DatashareClient from '@/api/DatashareClient'
 import orderBy from 'lodash/orderBy'
 
@@ -15,7 +15,7 @@ describe('Document store', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   afterEach(() => {
@@ -79,7 +79,7 @@ describe('Document store', () => {
 
   it('should get the document\'s tags', async () => {
     const tags = ['tag_01', 'tag_02']
-    datashare.fetch.mockReturnValue(jsonOk(tags))
+    datashare.fetch.mockReturnValue(jsonResp(tags))
     await letData(es).have(new IndexedDocument(id).withTags(tags)).commit()
     await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getTags')

@@ -5,15 +5,15 @@ import { App } from '@/main'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
 import Indexing from '@/pages/Indexing'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
-const { localVue, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('Indexing.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = mount(Indexing, { localVue, router, store, sync: false, mocks: { $t: msg => msg } })
+    wrapper = mount(Indexing, { localVue, store, sync: false, mocks: { $t: msg => msg } })
     jest.spyOn(datashare, 'fetch')
   })
 
@@ -23,7 +23,7 @@ describe('Indexing.vue', () => {
   })
 
   it('should start polling tasks on beforeRouteEnter and stop polling tasks on beforeRouteLeave', async () => {
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
     await Indexing.beforeRouteEnter(undefined, undefined, jest.fn())
 
     expect(datashare.fetch).toBeCalledTimes(1)
@@ -92,7 +92,7 @@ describe('Indexing.vue', () => {
   })
 
   it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', async () => {
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     await flushPromises()
     expect(wrapper.vm.tasks.length).toEqual(1)
@@ -105,7 +105,7 @@ describe('Indexing.vue', () => {
   })
 
   it('should call a backend endpoint on click on the "Delete done tasks" button', async () => {
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await flushPromises()
     expect(wrapper.vm.tasks.length).toEqual(1)
@@ -129,7 +129,7 @@ describe('Indexing.vue', () => {
   })
 
   it('should call a backend endpoint on click on a "Stop task" icon', async () => {
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     await flushPromises()
 

@@ -1,12 +1,14 @@
 import find from 'lodash/find'
 import { createLocalVue, mount } from '@vue/test-utils'
+import VueRouter from 'vue-router'
 
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FacetDateRange from '@/components/FacetDateRange'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const { localVue, i18n, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
+const router = new VueRouter()
 
 describe('FacetDateRange.vue', () => {
   esConnectionHelper()

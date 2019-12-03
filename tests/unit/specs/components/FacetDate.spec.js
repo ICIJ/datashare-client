@@ -6,7 +6,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FacetDate from '@/components/FacetDate'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const { localVue, i18n, router, store } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 
 describe('FacetDate.vue', () => {
   esConnectionHelper()
@@ -16,7 +16,7 @@ describe('FacetDate.vue', () => {
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-    wrapper = mount(FacetDate, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'indexingDate' }) } })
+    wrapper = mount(FacetDate, { localVue, i18n, store, propsData: { facet: find(store.state.search.facets, { name: 'indexingDate' }) } })
   })
 
   afterEach(() => store.commit('search/reset'))

@@ -1,7 +1,7 @@
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 import DatashareClient from '@/api/DatashareClient'
-import { getAuthenticatedUser } from '@/utils/utils'
+import Auth from '@/api/Auth'
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
 import flattenDeep from 'lodash/flattenDeep'
@@ -14,6 +14,7 @@ import uniqBy from 'lodash/uniqBy'
 import values from 'lodash/values'
 
 export const datashare = new DatashareClient()
+export const auth = new Auth()
 
 export function initialState () {
   return {
@@ -98,7 +99,7 @@ export const mutations = {
   },
   addTag (state, tag) {
     const tags = map(compact(tag.split(' ')), tag => {
-      return { label: tag, user: { id: getAuthenticatedUser() }, creationDate: Date.now() }
+      return { label: tag, user: { id: auth.getAuthenticatedUserCookie() }, creationDate: Date.now() }
     })
     state.tags = uniqBy(concat(state.tags, tags), 'label')
   },

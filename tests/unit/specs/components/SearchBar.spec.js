@@ -1,13 +1,15 @@
 import VueI18n from 'vue-i18n'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import messagesFr from '@/lang/fr'
+import VueRouter from 'vue-router'
 import SearchBar from '@/components/SearchBar'
 import flushPromises from 'flush-promises'
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const { localVue, store, router, i18n } = App.init(createLocalVue()).useAll()
+const { localVue, store, i18n } = App.init(createLocalVue()).useAll()
+const router = new VueRouter()
 
 describe('SearchBar', function () {
   let wrapper

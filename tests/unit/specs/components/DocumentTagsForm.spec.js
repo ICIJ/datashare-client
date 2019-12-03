@@ -8,13 +8,13 @@ import DatashareClient from '@/api/DatashareClient'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 import settings from '@/utils/settings'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
 async function createView ({ es, tags = [], documentId = 'document', displayTags = true, displayForm = true }) {
-  datashare.fetch.mockReturnValue(jsonOk(map(tags, item => { return { label: item, user: { id: 'test-user' } } })))
+  datashare.fetch.mockReturnValue(jsonResp(map(tags, item => { return { label: item, user: { id: 'test-user' } } })))
   await letData(es).have(new IndexedDocument(documentId).withTags(tags)).commit()
   await store.dispatch('document/get', { id: documentId, index: process.env.VUE_APP_ES_INDEX })
   await store.dispatch('document/getTags')
@@ -31,7 +31,7 @@ describe('DocumentTagsForm.vue', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   afterEach(() => {

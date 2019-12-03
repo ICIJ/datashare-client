@@ -1,11 +1,13 @@
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import VueRouter from 'vue-router'
 
 import { App } from '@/main'
 import { datashare } from '@/store/modules/search'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 
-const { localVue, i18n, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
+const router = new VueRouter()
 
 describe('SearchResultsAppliedFilters.vue', () => {
   let wrapper
@@ -13,7 +15,7 @@ describe('SearchResultsAppliedFilters.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsAppliedFilters, { localVue, i18n, store })
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   afterEach(async () => store.dispatch('search/reset'))

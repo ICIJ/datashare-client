@@ -2,7 +2,7 @@ import Vue from 'vue'
 import { createLocalVue } from '@vue/test-utils'
 import { createApp } from '@/main'
 import fetchPonyfill from 'fetch-ponyfill'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
 const { fetch } = fetchPonyfill()
 window.fetch = fetch
@@ -13,7 +13,7 @@ describe('main', () => {
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
     window.fetch = jest.fn()
-    window.fetch.mockReturnValue(jsonOk({ userProjects: ['first-index'] }))
+    window.fetch.mockReturnValue(jsonResp({ userProjects: ['first-index'] }))
   })
 
   afterEach(() => window.fetch.mockRestore())
@@ -26,7 +26,7 @@ describe('main', () => {
   })
 
   it('should set the config', async () => {
-    window.fetch.mockReturnValue(jsonOk({ userProjects: ['first-index'], key: 'value' }))
+    window.fetch.mockReturnValue(jsonResp({ userProjects: ['first-index'], key: 'value' }))
     const vm = await createApp(createLocalVue())
     expect(vm.$config).toBeDefined()
     expect(vm.$config.get('userProjects')).toEqual(['first-index'])

@@ -1,10 +1,12 @@
 import Vuex from 'vuex'
 import { App } from '@/main'
+import VueRouter from 'vue-router'
 import Search from '@/pages/Search'
 import { actions, getters, state, mutations } from '@/store/modules/search'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-const { localVue, router } = App.init(createLocalVue()).useAll()
+const { localVue } = App.init(createLocalVue()).useAll()
+const router = new VueRouter()
 
 describe('Search.vue', () => {
   let wrapper, localStore

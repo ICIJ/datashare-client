@@ -1,12 +1,12 @@
 import { datashare } from '@/store/modules/config'
 import DatashareClient from '@/api/DatashareClient'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 import store from '@/store'
 
 describe('Config store', () => {
   beforeAll(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   beforeEach(() => datashare.fetch.mockClear())

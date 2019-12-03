@@ -1,10 +1,11 @@
 import documentJson from 'tests/unit/resources/document.json'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-
+import VueRouter from 'vue-router'
 import JsonViewer from '@/components/document/viewers/JsonViewer'
 import { App } from '@/main'
 
 const { localVue } = App.init(createLocalVue()).useAll()
+const router = new VueRouter()
 
 describe('JsonViewer.vue', () => {
   let wrapper
@@ -12,7 +13,7 @@ describe('JsonViewer.vue', () => {
   beforeEach(() => {
     const document = { url: 'document.json' }
     const methods = { getJson: jest.fn().mockResolvedValue(documentJson) }
-    wrapper = shallowMount(JsonViewer, { localVue, propsData: { document }, methods })
+    wrapper = shallowMount(JsonViewer, { localVue, router, propsData: { document }, methods })
     wrapper.vm.$nextTick()
   })
 

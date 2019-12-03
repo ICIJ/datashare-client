@@ -6,7 +6,7 @@ import store from '@/store'
 import { getOS } from '@/utils/utils'
 import { createApp } from '@/main'
 import mode from '@/modes'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
 jest.mock('@/utils/utils', () => {
   return {
@@ -23,7 +23,7 @@ describe('AppSidebar.vue', () => {
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
     window.fetch = jest.fn()
-    window.fetch.mockReturnValue(jsonOk({ userProjects: [] }))
+    window.fetch.mockReturnValue(jsonResp({ userProjects: [] }))
     appVue = await createApp()
   })
 

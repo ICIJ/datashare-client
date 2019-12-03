@@ -1,32 +1,26 @@
 import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
-import { mount, shallowMount } from '@vue/test-utils'
-import store from '@/store'
-import router from '@/router'
-import { createApp } from '@/main'
-import fetchPonyfill from 'fetch-ponyfill'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+import { App } from '@/main'
+import VueRouter from 'vue-router'
 import { datashare } from '@/store/modules/search'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 import find from 'lodash/find'
 
-const { fetch } = fetchPonyfill()
-window.fetch = fetch
+const { localVue, store } = App.init(createLocalVue()).useAll()
+const router = new VueRouter()
 
 describe('SearchResultsAppliedFilter.vue', () => {
-  let wrapper, appVue
+  let wrapper
 
-  beforeAll(async () => {
-    const app = document.createElement('div')
-    app.setAttribute('id', 'app')
-    document.body.appendChild(app)
+  beforeAll(() => {
     window.fetch = jest.fn()
-    window.fetch.mockReturnValue(jsonOk({ userProjects: [] }))
-    appVue = await createApp()
+    window.fetch.mockReturnValue(jsonResp({ userProjects: [] }))
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: false } } })
+    wrapper = shallowMount(SearchResultsAppliedFilter, { localVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: false } } })
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   afterAll(() => {
@@ -37,22 +31,22 @@ describe('SearchResultsAppliedFilter.vue', () => {
   describe('displays applied filter', () => {
     it('should display a filter', () => {
       expect(wrapper.findAll('.search-results-header__applied-filters__filter')).toHaveLength(1)
-      expect(wrapper.find('.search-results-header__applied-filters__filter').text()).toEqual('term_01')
+      expect(wrapper.find('.search-results-header__applied-filters__filter').text()).toBe('term_01')
       expect(wrapper.findAll('.search-results-header__applied-filters__filter.strikethrough')).toHaveLength(0)
     })
 
     it('should display an applied filter as strikethrough if excluded', () => {
-      wrapper = shallowMount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: true } } })
+      wrapper = shallowMount(SearchResultsAppliedFilter, { localVue, router, store, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: true } } })
 
       expect(wrapper.findAll('.search-results-header__applied-filters__filter')).toHaveLength(1)
-      expect(wrapper.find('.search-results-header__applied-filters__filter').text()).toEqual('term_01')
+      expect(wrapper.find('.search-results-header__applied-filters__filter').text()).toBe('term_01')
       expect(wrapper.findAll('.search-results-header__applied-filters__filter.strikethrough')).toHaveLength(1)
     })
   })
 
   describe('deletes applied filter', () => {
     it('should click on a badge to delete an applied filter', () => {
-      wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: false } } })
+      wrapper = mount(SearchResultsAppliedFilter, { localVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: false } } })
       const deleteQueryTermMock = jest.spyOn(wrapper.vm, 'deleteQueryTerm')
 
       wrapper.find('.search-results-header__applied-filters__filter').trigger('click')
@@ -62,7 +56,7 @@ describe('SearchResultsAppliedFilter.vue', () => {
 
     it('should delete a facet term', () => {
       store.commit('search/addFacetValue', { name: 'contentType', value: 'term_01' })
-      wrapper = mount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { name: 'contentType', label: 'term_01', value: 'term_01', field: '', negation: false } } })
+      wrapper = mount(SearchResultsAppliedFilter, { localVue, store, router, propsData: { filter: { name: 'contentType', label: 'term_01', value: 'term_01', field: '', negation: false } } })
 
       wrapper.find('.search-results-header__applied-filters__filter').trigger('click')
 
@@ -70,7 +64,7 @@ describe('SearchResultsAppliedFilter.vue', () => {
     })
 
     it('should emit an event facet::search::update once the applied filter is deleted from the store', async () => {
-      wrapper = shallowMount(SearchResultsAppliedFilter, { appVue, store, router, propsData: { filter: { name: 'facet-name', label: 'term_01', value: 'term_01', field: '', negation: false } } })
+      wrapper = shallowMount(SearchResultsAppliedFilter, { localVue, store, router, propsData: { filter: { name: 'facet-name', label: 'term_01', value: 'term_01', field: '', negation: false } } })
       const mockCallback = jest.fn()
       wrapper.vm.$root.$on('facet::search::update', mockCallback)
 

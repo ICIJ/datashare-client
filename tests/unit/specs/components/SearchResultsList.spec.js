@@ -5,7 +5,7 @@ import { App } from '@/main'
 import { datashare } from '@/store/modules/search'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 import SearchResultsList from '@/components/SearchResultsList'
 
 const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
@@ -32,7 +32,7 @@ describe('SearchResultsList.vue', () => {
   beforeEach(() => {
     store.commit('search/reset')
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk([]))
+    datashare.fetch.mockReturnValue(jsonResp([]))
   })
 
   describe('filter the results', () => {

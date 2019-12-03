@@ -6,9 +6,9 @@ import { datashare } from '@/store/modules/document'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
-const { localVue, router, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('DocumentTabDetails.vue', () => {
   esConnectionHelper()
@@ -19,7 +19,7 @@ describe('DocumentTabDetails.vue', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk([]))
+    datashare.fetch.mockReturnValue(jsonResp([]))
   })
 
   afterEach(() => {
@@ -51,7 +51,7 @@ describe('DocumentTabDetails.vue', () => {
     await letData(es).have(new IndexedDocument(parentDocument)).commit()
     await letData(es).have(new IndexedDocument(id).withParent(parentDocument)).commit()
     await store.dispatch('document/get', { index, id, routing: parentDocument }).then(() => store.dispatch('document/getParent'))
-    wrapper = shallowMount(DocumentTabDetails, { localVue, store, router, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__basename').text()).toEqual(id)
     expect(wrapper.find('.document__content__tree-level').text()).toEqual('facet.level.level01')

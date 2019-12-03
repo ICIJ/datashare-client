@@ -2,7 +2,7 @@ import fetchPonyfill from 'fetch-ponyfill'
 
 import DatashareClient from '@/api/DatashareClient'
 import { EventBus } from '@/utils/event-bus'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
 const { Response } = fetchPonyfill()
 const datashare = new DatashareClient()
@@ -10,7 +10,7 @@ const datashare = new DatashareClient()
 describe('Datashare backend client', () => {
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   it('should return backend response to index', () => {
@@ -142,7 +142,7 @@ describe('Datashare backend client', () => {
   })
 
   it('should emit an error if the backend response has a bad status', async () => {
-    datashare.fetch.mockReturnValue(jsonOk({}, 42))
+    datashare.fetch.mockReturnValue(jsonResp({}, 42))
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
 

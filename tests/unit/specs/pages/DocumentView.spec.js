@@ -3,14 +3,16 @@ import { createServer } from 'http-server'
 import Murmur from '@icij/murmur'
 
 import { App } from '@/main'
+import VueRouter from 'vue-router'
 import { datashare } from '@/store/modules/document'
 import DatashareClient from '@/api/DatashareClient'
 import DocumentView from '@/pages/DocumentView'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
-const { localVue, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, store } = App.init(createLocalVue()).useAll()
+const router = new VueRouter()
 
 describe('DocumentView.vue', () => {
   esConnectionHelper()
@@ -38,7 +40,6 @@ describe('DocumentView.vue', () => {
   it('should display an error message if document is not found', async () => {
     const anotherId = 'notfound'
     wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id: anotherId, index }, mocks: { $t: msg => msg } })
-
     await wrapper.vm.getDoc()
 
     expect(wrapper.find('span').text()).toEqual('document.not_found')
@@ -46,7 +47,7 @@ describe('DocumentView.vue', () => {
 
   it('should call to the API to retrieve tags', async () => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk([{ label: 'tag', user: { id: 'local' }, creationDate: '2019-09-29T21:57:57.565+0000' }]))
+    datashare.fetch.mockReturnValue(jsonResp([{ label: 'tag', user: { id: 'local' }, creationDate: '2019-09-29T21:57:57.565+0000' }]))
     wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
     await wrapper.vm.getDoc()
 

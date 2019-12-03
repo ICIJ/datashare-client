@@ -42,6 +42,7 @@ describe('router', () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'yolo' }, JSON.stringify)
     await wrapper.vm.$router.push('landing')
     await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.$route.path).not.toEqual('/login')
   })
 })

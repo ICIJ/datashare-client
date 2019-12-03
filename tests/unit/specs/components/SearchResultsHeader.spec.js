@@ -6,15 +6,16 @@ import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
+import VueRouter from 'vue-router'
 import store from '@/store'
-import router from '@/router'
 import { datashare } from '@/store/modules/search'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
+localVue.use(VueRouter)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
 
 describe('SearchResultsHeader.vue', () => {
@@ -25,10 +26,10 @@ describe('SearchResultsHeader.vue', () => {
   beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchResultsHeader, { localVue, i18n, store, router })
+    wrapper = shallowMount(SearchResultsHeader, { localVue, i18n, store })
     store.commit('search/reset')
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   afterAll(() => datashare.fetch.mockRestore())

@@ -4,11 +4,11 @@ import Murmur from '@icij/murmur'
 import { App } from '@/main'
 
 jest.mock('@/api/DatashareClient', () => {
-  const { jsonOk } = require('tests/unit/tests_utils')
+  const { jsonResp } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      deleteAll: jest.fn().mockReturnValue(jsonOk()),
-      deleteBatchSearches: jest.fn().mockReturnValue(jsonOk())
+      deleteAll: jest.fn().mockReturnValue(jsonResp()),
+      deleteBatchSearches: jest.fn().mockReturnValue(jsonResp())
     }
   })
 })

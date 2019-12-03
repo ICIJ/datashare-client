@@ -5,7 +5,7 @@ import DatashareClient from '@/api/DatashareClient'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { actions, getters, mutations, state, datashare } from '@/store/modules/batchSearch'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
 Vue.use(Vuex)
 
@@ -20,7 +20,7 @@ describe('BatchSearch store', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   afterEach(() => datashare.fetch.mockClear())
@@ -47,7 +47,7 @@ describe('BatchSearch store', () => {
     it('should retrieve a batchSearch according to its id', async () => {
       await letData(es).have(new IndexedDocument('12').withContentType('type_01')).commit()
       const batchSearch = [{ contentType: 'type_01', documentId: 12, rootId: 42 }]
-      datashare.fetch.mockReturnValue(jsonOk(batchSearch))
+      datashare.fetch.mockReturnValue(jsonResp(batchSearch))
 
       await store.dispatch('batchSearch/getBatchSearchResults', { batchId: 12 })
 

@@ -7,7 +7,7 @@ import store from '@/store'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
 import { createApp } from '@/main'
-import { jsonOk } from 'tests/unit/tests_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
 
 describe('ExtractingForm.vue', () => {
   let wrapper, appVue, i18n
@@ -17,7 +17,7 @@ describe('ExtractingForm.vue', () => {
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
     window.fetch = jest.fn()
-    window.fetch.mockReturnValue(jsonOk({ userProjects: [] }))
+    window.fetch.mockReturnValue(jsonResp({ userProjects: [] }))
     appVue = await createApp()
     i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
   })
@@ -25,7 +25,7 @@ describe('ExtractingForm.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(ExtractingForm, { appVue, i18n, router, store })
     jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonOk())
+    datashare.fetch.mockReturnValue(jsonResp())
     datashare.fetch.mockClear()
   })
 

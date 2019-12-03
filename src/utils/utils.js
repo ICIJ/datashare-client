@@ -1,4 +1,3 @@
-import { getCookie } from 'tiny-cookie'
 import types from '@/utils/types.json'
 import get from 'lodash/get'
 
@@ -13,17 +12,6 @@ function getOS () {
 
 function getShortkeyOS () {
   return getOS() === 'mac' ? 'mac' : 'default'
-}
-
-function getAuthenticatedUser () {
-  const cookie = getCookie(process.env.VUE_APP_DS_COOKIE_NAME, JSON.parse)
-  return get(cookie, 'login', null)
-}
-
-function isAuthenticated () {
-  // Skip authentication in development
-  if (process.env.NODE_ENV === 'development') return true
-  return getAuthenticatedUser() !== null
 }
 
 function getDocumentTypeLabel (key) {
@@ -52,8 +40,6 @@ function getExtractionLevelTranslationKey (key) {
 export {
   getOS,
   getShortkeyOS,
-  getAuthenticatedUser,
-  isAuthenticated,
   getDocumentTypeLabel,
   getExtractionLevelTranslationKey
 }

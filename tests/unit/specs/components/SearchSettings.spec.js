@@ -5,14 +5,16 @@ import { createLocalVue, shallowMount, createWrapper } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import messages from '@/lang/en'
 import store from '@/store'
-import router from '@/router'
+import VueRouter from 'vue-router'
 import SearchSettings from '@/components/SearchSettings'
 
 const localVue = createLocalVue()
 localVue.use(VueI18n)
 localVue.use(Murmur)
 localVue.use(BootstrapVue)
+localVue.use(VueRouter)
 const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const router = new VueRouter()
 
 describe('SearchSettings.vue', () => {
   esConnectionHelper()
