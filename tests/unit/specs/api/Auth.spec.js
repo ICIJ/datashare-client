@@ -15,21 +15,27 @@ describe('auth backend client', () => {
 
   describe('isAuthenticatedWithBasicAuth', () => {
     it('should return true if user is authenticated with basic auth', async () => {
-      auth.fetch.mockReturnValue(jsonResp({}, 200, {}))
-      expect(await auth.isAuthenticatedWithBasicAuth()).toBeTruthy()
-      expect(auth.fetch).toBeCalledWith('http://localhost:9876/api/config', { method: 'HEAD' })
+      auth.fetch.mockReturnValue(jsonResp({ 'uid': 'john' }, 200, {}))
+      expect(await auth.isAuthenticated()).toBeTruthy()
+      expect(auth.fetch).toBeCalledWith('http://localhost:9876/api/user')
     })
 
     it('should return false if user is not authenticated with basic auth', async () => {
       auth.fetch.mockReturnValue(jsonResp({}, 401, {}))
-      expect(await auth.isAuthenticatedWithBasicAuth()).toBeFalsy()
-      expect(auth.fetch).toBeCalledWith('http://localhost:9876/api/config', { method: 'HEAD' })
+      expect(await auth.isAuthenticated()).toBeFalsy()
+      expect(auth.fetch).toBeCalledWith('http://localhost:9876/api/user')
+    })
+
+    it('should return user login if user is basic authenticated', async () => {
+      auth.fetch.mockReturnValue(jsonResp({ 'uid': 'john' }, 200, {}))
+      expect(await auth.getBasicAuthUserName()).toBe('john')
+      expect(auth.fetch).toBeCalledWith('http://localhost:9876/api/user')
     })
 
     it('should throw err when testing basic auth and response is other than 200 or 401', async () => {
       auth.fetch.mockReturnValue(jsonResp({}, 500, {}))
       try {
-        await auth.isAuthenticatedWithBasicAuth()
+        await auth.getBasicAuthUserName()
       } catch (e) {
         expect(e).toEqual(new Error('500 Internal Server Error'))
       }

@@ -24,22 +24,23 @@ export class Auth {
   async checkAuthentication () {
     if (process.env.NODE_ENV === 'development') return true
     if (this.getAuthenticatedUserCookie() !== null) return true
-    return this.isAuthenticatedWithBasicAuth()
+    let basicAuthUserName = await this.getBasicAuthUserName()
+    return basicAuthUserName !== null
   }
 
   reset () {
     this.cachedIsAuthenticatedValue = null
   }
 
-  isAuthenticatedWithBasicAuth () {
-    return this.fetch(DatashareClient.getFullUrl('/api/config'), { method: 'HEAD' }).then((r) => {
+  getBasicAuthUserName () {
+    return this.fetch(DatashareClient.getFullUrl('/api/user')).then((r) => {
       if (r.status === 200) {
         setTimeout(() => this.reset(), 43200)
-        return true
+        return r.json()
       }
-      if (r.status === 401) return false
+      if (r.status === 401) return { 'uid': null }
       throw new Error(`${r.status} ${r.statusText}`)
-    })
+    }).then(data => data.uid)
   }
 
   getAuthenticatedUserCookie () {
