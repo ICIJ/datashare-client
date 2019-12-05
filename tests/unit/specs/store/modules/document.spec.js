@@ -43,18 +43,18 @@ describe('Document store', () => {
     await letData(es).have(new IndexedDocument(id)).commit()
     await store.dispatch('document/get', { id, index })
 
-    expect(store.state.document.doc.id).toEqual(id)
+    expect(store.state.document.doc.id).toBe(id)
   })
 
   it('should get the parent document', async () => {
     const parentId = uniqueId('parent-')
     const childId = uniqueId('child-')
-    await letData(es).have(new IndexedDocument(parentId).withContent('parent')).commit()
-    await letData(es).have(new IndexedDocument(childId).withContent('child').withParent(parentId)).commit()
+    await letData(es).have(new IndexedDocument(parentId)).commit()
+    await letData(es).have(new IndexedDocument(childId).withParent(parentId)).commit()
     await store.dispatch('document/get', { id: childId, routing: parentId, index })
     await store.dispatch('document/getParent')
 
-    expect(store.state.document.parentDocument.id).toEqual(parentId)
+    expect(store.state.document.parentDocument.id).toBe(parentId)
   })
 
   it('should get the document\'s named entities', async () => {
@@ -62,8 +62,8 @@ describe('Document store', () => {
     await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
 
-    expect(store.getters['document/namedEntities'][0].raw._source.mention).toEqual('naz')
-    expect(store.getters['document/namedEntities'][0].raw._routing).toEqual(id)
+    expect(store.getters['document/namedEntities'][0].raw._source.mention).toBe('naz')
+    expect(store.getters['document/namedEntities'][0].raw._routing).toBe(id)
   })
 
   it('should get only the not hidden document\'s named entities', async () => {
@@ -75,11 +75,11 @@ describe('Document store', () => {
 
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
 
-    expect(store.getters['document/namedEntities'].length).toEqual(2)
-    expect(store.getters['document/namedEntities'][0].raw._source.mention).toEqual('entity_01')
-    expect(store.getters['document/namedEntities'][0].raw._routing).toEqual(id)
-    expect(store.getters['document/namedEntities'][1].raw._source.mention).toEqual('entity_03')
-    expect(store.getters['document/namedEntities'][1].raw._routing).toEqual(id)
+    expect(store.getters['document/namedEntities'].length).toBe(2)
+    expect(store.getters['document/namedEntities'][0].raw._source.mention).toBe('entity_01')
+    expect(store.getters['document/namedEntities'][0].raw._routing).toBe(id)
+    expect(store.getters['document/namedEntities'][1].raw._source.mention).toBe('entity_03')
+    expect(store.getters['document/namedEntities'][1].raw._routing).toBe(id)
   })
 
   it('should get the document\'s tags', async () => {
@@ -112,7 +112,7 @@ describe('Document store', () => {
 
     await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }], tag: 'tag_01 tag_02 tag_03' })
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${process.env.VUE_APP_ES_INDEX}/documents/batchUpdate/tag`),
       { method: 'POST', body: JSON.stringify({ docIds: ['doc_01', 'doc_02'], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
   })
@@ -126,7 +126,7 @@ describe('Document store', () => {
 
     await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${process.env.VUE_APP_ES_INDEX}/documents/batchUpdate/untag`),
       { method: 'POST', body: JSON.stringify({ docIds: ['doc_01'], tags: ['tag_01'] }) })
   })
@@ -135,7 +135,7 @@ describe('Document store', () => {
     store.commit('document/addTag', 'tag_01      tag_01 tag_02')
 
     expect(store.state.document.tags).toHaveLength(2)
-    expect(orderBy(store.state.document.tags, ['label'])[0].label).toEqual('tag_01')
-    expect(orderBy(store.state.document.tags, ['label'])[1].label).toEqual('tag_02')
+    expect(orderBy(store.state.document.tags, ['label'])[0].label).toBe('tag_01')
+    expect(orderBy(store.state.document.tags, ['label'])[1].label).toBe('tag_02')
   })
 })
