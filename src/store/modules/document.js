@@ -99,7 +99,7 @@ export const mutations = {
   },
   addTag (state, tag) {
     const tags = map(compact(tag.split(' ')), tag => {
-      return { label: tag, user: { id: auth.getAuthenticatedUserCookie() }, creationDate: Date.now() }
+      return { label: tag, user: { id: auth.getUsername() }, creationDate: Date.now() }
     })
     state.tags = uniqBy(concat(state.tags, tags), 'label')
   },

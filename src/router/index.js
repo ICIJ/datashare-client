@@ -148,7 +148,7 @@ router.beforeEach(async (to, from, next) => {
   // True if the authentication must be skipped
   const skipsAuth = to.matched.some(r => get(r, 'meta.skipsAuth', false))
   try {
-    if (skipsAuth || await auth.isAuthenticated()) {
+    if (skipsAuth || await auth.getUsername() !== null) {
       next()
     } else {
       next('/login')

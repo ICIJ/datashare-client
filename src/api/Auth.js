@@ -11,31 +11,31 @@ export class Auth {
     } else {
       this.fetch = fetchPonyfill().fetch
     }
-    this.cachedIsAuthenticatedValue = null
+    this.cachedUsername = null
   }
 
-  async isAuthenticated () {
-    if (this.cachedIsAuthenticatedValue === null) {
-      this.cachedIsAuthenticatedValue = await this.checkAuthentication()
+  async getUsername () {
+    if (this.cachedUsername === null) {
+      this.cachedUsername = await this._checkAuthentication()
     }
-    return this.cachedIsAuthenticatedValue
-  }
-
-  async checkAuthentication () {
-    if (process.env.NODE_ENV === 'development') return true
-    if (this.getAuthenticatedUserCookie() !== null) return true
-    let basicAuthUserName = await this.getBasicAuthUserName()
-    return basicAuthUserName !== null
+    return this.cachedUsername
   }
 
   reset () {
-    this.cachedIsAuthenticatedValue = null
+    this.cachedUsername = null
   }
 
-  getBasicAuthUserName () {
+  async _checkAuthentication () {
+    if (process.env.NODE_ENV === 'development') return 'development'
+    let userInCookie = this._getCookieUsername()
+    if (userInCookie !== null) return userInCookie
+    return this._getBasicAuthUserName()
+  }
+
+  _getBasicAuthUserName () {
     return this.fetch(DatashareClient.getFullUrl('/api/user')).then((r) => {
       if (r.status === 200) {
-        setTimeout(() => this.reset(), 43200)
+        setTimeout(() => this.reset(), 43200 * 1000)
         return r.json()
       }
       if (r.status === 401) return { 'uid': null }
@@ -43,7 +43,7 @@ export class Auth {
     }).then(data => data.uid)
   }
 
-  getAuthenticatedUserCookie () {
+  _getCookieUsername () {
     const cookie = getCookie(process.env.VUE_APP_DS_COOKIE_NAME, JSON.parse)
     return get(cookie, 'login', null)
   }
