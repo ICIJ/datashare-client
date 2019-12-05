@@ -59,8 +59,10 @@ describe('Datashare backend client', () => {
     datashare.getConfig().then(json => expect(json).toEqual({}))
   })
 
-  it('should return backend response to setConfig', () => {
-    datashare.setConfig().then(json => expect(json).toEqual({}))
+  it('should return backend response to setConfig', async () => {
+    const resp = await datashare.setConfig({})
+    const json = await resp.json()
+    expect(json).toEqual({})
   })
 
   it('should return backend response to deleteNamedEntitiesByMentionNorm', async () => {
