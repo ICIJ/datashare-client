@@ -8,95 +8,100 @@ const { Response } = fetchPonyfill()
 const datashare = new DatashareClient()
 
 describe('Datashare backend client', () => {
+  let json
+
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonResp())
   })
 
-  it('should return backend response to index', () => {
-    datashare.index({}).then(json => expect(json).toEqual({}))
-  })
-
-  it('should return backend response to findNames', () => {
-    datashare.findNames('pipeline', {}).then(json => expect(json).toEqual({}))
-  })
-
-  it('should return backend response to stopPendingTasks', () => {
-    datashare.stopPendingTasks().then(json => expect(json).toEqual({}))
-  })
-
-  it('should return backend response to stopTask', async () => {
-    const resp = await datashare.stopTask()
-    const json = await resp.json()
+  it('should return backend response to index', async () => {
+    json = await datashare.index({})
     expect(json).toEqual({})
   })
 
-  it('should return backend response to deleteDoneTasks', () => {
-    datashare.deleteDoneTasks().then(json => expect(json).toEqual({}))
+  it('should return backend response to findNames', async () => {
+    json = await datashare.findNames('pipeline', {})
+    expect(json).toEqual({})
   })
 
-  it('should return backend response to getTasks', () => {
-    datashare.getTasks().then(json => expect(json).toEqual({}))
+  it('should return backend response to stopPendingTasks', async () => {
+    json = await datashare.stopPendingTasks()
+    expect(json).toEqual({})
+  })
+
+  it('should return backend response to stopTask', async () => {
+    json = await (await datashare.stopTask()).json()
+    expect(json).toEqual({})
+  })
+
+  it('should return backend response to deleteDoneTasks', async () => {
+    json = await datashare.deleteDoneTasks()
+    expect(json).toEqual({})
+  })
+
+  it('should return backend response to getTasks', async () => {
+    json = await datashare.getTasks()
+    expect(json).toEqual({})
   })
 
   it('should return backend response to createIndex', async () => {
-    const resp = await datashare.createIndex()
-    const json = await resp.json()
+    json = await (await datashare.createIndex()).json()
     expect(json).toEqual({})
   })
 
   it('should return backend response to deleteAll', async () => {
-    const resp = await datashare.deleteAll()
-    const json = await resp.json()
+    json = await (await datashare.deleteAll()).json()
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getVersion', () => {
-    datashare.getVersion().then(json => expect(json).toEqual({}))
+  it('should return backend response to getVersion', async () => {
+    json = await datashare.getVersion()
+    expect(json).toEqual({})
   })
 
-  it('should return backend response to getConfig', () => {
-    datashare.getConfig().then(json => expect(json).toEqual({}))
+  it('should return backend response to getConfig', async () => {
+    json = await datashare.getConfig()
+    expect(json).toEqual({})
   })
 
   it('should return backend response to setConfig', async () => {
-    const resp = await datashare.setConfig({})
-    const json = await resp.json()
+    json = await (await datashare.setConfig({})).json()
     expect(json).toEqual({})
   })
 
   it('should return backend response to deleteNamedEntitiesByMentionNorm', async () => {
-    const resp = await datashare.deleteNamedEntitiesByMentionNorm('mentionNorm')
-    const json = await resp.json()
+    json = await (await datashare.deleteNamedEntitiesByMentionNorm('mentionNorm')).json()
     expect(json).toEqual({})
   })
 
   it('should return backend response to getSource', async () => {
-    const resp = await datashare.getSource('relativeUrl')
-    const json = await resp.json()
+    json = await (await datashare.getSource('relativeUrl')).json()
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getStarredDocuments', () => {
-    datashare.getStarredDocuments('project').then(json => expect(json).toEqual({}))
+  it('should return backend response to getStarredDocuments', async () => {
+    json = await datashare.getStarredDocuments('project')
+    expect(json).toEqual({})
   })
 
-  it('should return backend response to starDocument', () => {
-    datashare.getStarredDocuments('project', 'documentId').then(json => expect(json).toEqual({}))
+  it('should return backend response to starDocument', async () => {
+    json = await datashare.getStarredDocuments('project', 'documentId')
+    expect(json).toEqual({})
   })
 
-  it('should return backend response to unstarDocument', () => {
-    datashare.getStarredDocuments('project', 'documentId').then(json => expect(json).toEqual({}))
+  it('should return backend response to unstarDocument', async () => {
+    json = await datashare.getStarredDocuments('project', 'documentId')
+    expect(json).toEqual({})
   })
 
   it('should return backend response to tagDocument', async () => {
-    const resp = await datashare.tagDocument('project', 'documentId', 'routingId', ['tag_01'])
-    const json = await resp.json()
+    json = await (await datashare.tagDocument('project', 'documentId', 'routingId', ['tag_01'])).json()
     expect(json).toEqual({})
   })
 
   it('should return backend response to untagDocument', async () => {
-    const json = await (await datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01'])).json()
+    json = await (await datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01'])).json()
     expect(json).toEqual({})
   })
 
@@ -110,7 +115,7 @@ describe('Datashare backend client', () => {
     const fileTypes = [{ mime: 'application/pdf' }, { mime: 'text/plain' }]
     const paths = ['one', 'or', 'two', 'paths']
     const published = true
-    const json = await (await datashare.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)).json()
+    json = await (await datashare.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)).json()
 
     const body = new FormData()
     body.append('name', name)
@@ -129,17 +134,18 @@ describe('Datashare backend client', () => {
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
   })
 
-  it('should return backend response to getBatchSearches', () => {
-    datashare.getBatchSearches().then(json => expect(json).toEqual({}))
+  it('should return backend response to getBatchSearches', async () => {
+    json = await datashare.getBatchSearches()
+    expect(json).toEqual({})
   })
 
-  it('should return backend response to getBatchSearchResults', () => {
-    datashare.getBatchSearchResults().then(json => expect(json).toEqual({}))
+  it('should return backend response to getBatchSearchResults', async () => {
+    json = await datashare.getBatchSearchResults()
+    expect(json).toEqual({})
   })
 
   it('should return backend response to deleteBatchSearches', async () => {
-    const resp = await datashare.deleteBatchSearches()
-    const json = await resp.json()
+    json = await (await datashare.deleteBatchSearches()).json()
     expect(json).toEqual({})
   })
 
