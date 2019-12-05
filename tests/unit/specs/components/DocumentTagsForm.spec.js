@@ -1,6 +1,8 @@
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { removeCookie, setCookie } from 'tiny-cookie'
+
 import { App } from '@/main'
 import { datashare } from '@/store/modules/document'
 import DatashareClient from '@/api/DatashareClient'
@@ -9,7 +11,6 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { jsonResp } from 'tests/unit/tests_utils'
 import settings from '@/utils/settings'
-import { setCookie } from 'tiny-cookie'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
@@ -31,7 +32,7 @@ describe('DocumentTagsForm.vue', () => {
 
   beforeEach(() => {
     jest.spyOn(datashare, 'fetch')
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'doe' }, JSON.stringify)
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
     datashare.fetch.mockReturnValue(jsonResp())
   })
 
@@ -39,6 +40,8 @@ describe('DocumentTagsForm.vue', () => {
     store.commit('document/reset')
     datashare.fetch.mockRestore()
   })
+
+  afterAll(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
 
   it('should display form to add new tag', async () => {
     wrapper = await createView({ es })

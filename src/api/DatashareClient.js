@@ -3,7 +3,7 @@ import fetchPonyfill from 'fetch-ponyfill'
 
 import { EventBus } from '@/utils/event-bus'
 
-export class DatashareClient {
+export default class DatashareClient {
   constructor () {
     if (window.fetch) {
       // Build-in fetch method must never be called by an object other than Window
@@ -131,5 +131,3 @@ export class DatashareClient {
     }
   }
 }
-
-export default DatashareClient

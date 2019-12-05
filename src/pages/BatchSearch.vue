@@ -47,17 +47,17 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import moment from 'moment'
 import capitalize from 'lodash/capitalize'
 import compact from 'lodash/compact'
 import keys from 'lodash/keys'
+import { mapState } from 'vuex'
+import moment from 'moment'
 
-import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
+import toVariant from '@/filters/toVariant'
 
 export default {
-  name: 'BatchSearches',
+  name: 'BatchSearches.vue',
   filters: {
     toVariant
   },
@@ -81,7 +81,6 @@ export default {
       return settings.batchSearchResults.order
     },
     projectNameField () {
-      // Disable the project name field on server mode
       return this.$config.is('multipleProjects') ? {
         key: 'project.name',
         label: this.$t('batchSearch.project'),
