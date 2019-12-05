@@ -1,7 +1,7 @@
-import { getCookie } from 'tiny-cookie'
 import get from 'lodash/get'
+import DatashareClient from '@/api/DatashareClient'
 import fetchPonyfill from 'fetch-ponyfill'
-import DatashareClient from './DatashareClient'
+import { getCookie } from 'tiny-cookie'
 
 export default class Auth {
   constructor () {
@@ -27,20 +27,20 @@ export default class Auth {
 
   async _checkAuthentication () {
     if (process.env.NODE_ENV === 'development') return 'development'
-    let userInCookie = this._getCookieUsername()
+    const userInCookie = this._getCookieUsername()
     if (userInCookie !== null) return userInCookie
     return this._getBasicAuthUserName()
   }
 
-  _getBasicAuthUserName () {
-    return this.fetch(DatashareClient.getFullUrl('/api/user')).then((r) => {
-      if (r.status === 200) {
-        setTimeout(() => this.reset(), 43200 * 1000)
-        return r.json()
-      }
-      if (r.status === 401) return { 'uid': null }
-      throw new Error(`${r.status} ${r.statusText}`)
-    }).then(data => data.uid)
+  async _getBasicAuthUserName () {
+    const r = await this.fetch(DatashareClient.getFullUrl('/api/user'))
+    if (r.status === 200) {
+      setTimeout(() => this.reset(), 43200 * 1000)
+      const data = await r.json()
+      return data.uid
+    }
+    if (r.status === 401) return null
+    throw new Error(`${r.status} ${r.statusText}`)
   }
 
   _getCookieUsername () {

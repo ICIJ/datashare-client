@@ -1,6 +1,7 @@
+import { removeCookie, setCookie } from 'tiny-cookie'
+
 import Auth from '@/api/Auth'
 import { jsonResp } from 'tests/unit/tests_utils'
-import { removeCookie, setCookie } from 'tiny-cookie'
 
 const auth = new Auth()
 
@@ -9,10 +10,8 @@ describe('auth backend client', () => {
     jest.spyOn(auth, 'fetch')
     auth.fetch.mockReturnValue(jsonResp({}, 401, {}))
   })
-  afterEach(() => {
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    auth.reset()
-  })
+
+  afterEach(() => auth.reset())
 
   describe('getUsername', () => {
     it('should return user name if user is authenticated with basic auth', async () => {
@@ -37,6 +36,8 @@ describe('auth backend client', () => {
   })
 
   describe('getAuthenticatedUser', () => {
+    afterEach(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
+
     it('should return null if user is not authenticated', async () => {
       expect(await auth.getUsername()).toBeNull()
     })
@@ -48,7 +49,7 @@ describe('auth backend client', () => {
 
     it('should return user login if user is authenticated', async () => {
       setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-      expect(await auth.getUsername()).toEqual('doe')
+      expect(await auth.getUsername()).toBe('doe')
     })
   })
 })
