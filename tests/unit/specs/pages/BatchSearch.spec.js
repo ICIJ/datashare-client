@@ -1,4 +1,5 @@
 import { createLocalVue, mount } from '@vue/test-utils'
+import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { App } from '@/main'
 import BatchSearch from '@/pages/BatchSearch'
@@ -32,12 +33,17 @@ const { localVue, store, router } = App.init(createLocalVue()).useAll()
 describe('BatchSearch.vue', () => {
   let wrapper
 
+  beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
+
   beforeEach(async () => {
     wrapper = mount(BatchSearch, { localVue, store, router, mocks: { $t: msg => msg, $tc: (msg, count) => count, $n: msg => msg } })
     await wrapper.vm.$nextTick()
   })
 
-  afterAll(() => jest.unmock('@/api/DatashareClient'))
+  afterAll(() => {
+    jest.unmock('@/api/DatashareClient')
+    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+  })
 
   it('should list the batchSearches', () => {
     expect(wrapper.findAll('.batch-search__items__item')).toHaveLength(2)
