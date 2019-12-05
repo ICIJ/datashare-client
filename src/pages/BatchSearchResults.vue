@@ -173,11 +173,14 @@ import keys from 'lodash/keys'
 import sumBy from 'lodash/sumBy'
 
 import DatashareClient from '@/api/DatashareClient'
-import { getAuthenticatedUser, getDocumentTypeLabel } from '@/utils/utils'
+import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
 import settings from '@/utils/settings'
 import store from '@/store'
 import toVariant from '@/filters/toVariant'
+import Auth from '@/api/Auth'
+
+export const auth = new Auth()
 
 export default {
   name: 'BatchSearchResults',
@@ -239,7 +242,8 @@ export default {
       sort: settings.batchSearchResults.sort,
       order: settings.batchSearchResults.order,
       showErrorMessage: false,
-      published: false
+      published: false,
+      isMyBatchSearch: false
     }
   },
   computed: {
@@ -275,9 +279,6 @@ export default {
       }
       return Math.ceil(total / this.perPage)
     },
-    isMyBatchSearch () {
-      return getAuthenticatedUser() === get(this, 'meta.user.id', '')
-    },
     isFailed () {
       return this.meta.state === 'FAILURE'
     }
@@ -285,6 +286,7 @@ export default {
   beforeRouteEnter (to, from, next) {
     next(async vm => {
       await vm.fetchBatchSearches()
+      await vm.checkIsMyBatchSearch()
       vm.published = vm.meta.published
     })
   },
@@ -295,6 +297,7 @@ export default {
     this.$set(this, 'order', get(to.query, 'order', this.order))
     store.commit('batchSearch/selectedQueries', this.queries)
     await this.fetch()
+    await this.checkIsMyBatchSearch()
     next()
   },
   beforeRouteLeave (to, from, next) {
@@ -359,6 +362,10 @@ export default {
       if (this.isFailed) {
         this.$bvModal.show('error-modal')
       }
+    },
+    async checkIsMyBatchSearch () {
+      const username = await auth.getUsername()
+      this.isMyBatchSearch = username === get(this, 'meta.user.id', '')
     },
     capitalize,
     moment,

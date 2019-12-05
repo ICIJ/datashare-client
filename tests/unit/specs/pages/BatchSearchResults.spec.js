@@ -1,11 +1,11 @@
-import VueRouter from 'vue-router'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { removeCookie, setCookie } from 'tiny-cookie'
+import VueRouter from 'vue-router'
 
-import BatchSearchResults from '@/pages/BatchSearchResults'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { App } from '@/main'
+import BatchSearchResults, { auth } from '@/pages/BatchSearchResults'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { getAuthenticatedUser } from '@/utils/utils'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -71,7 +71,6 @@ jest.mock('@/api/DatashareClient', () => {
 
 jest.mock('@/utils/utils', () => {
   return {
-    getAuthenticatedUser: jest.fn().mockReturnValue('test'),
     getDocumentTypeLabel: jest.fn()
   }
 })
@@ -139,12 +138,13 @@ describe('BatchSearchResults.vue', () => {
     await wrapper.vm.fetch()
   })
 
-  afterEach(() => store.commit('batchSearch/reset'))
-
-  afterAll(() => {
-    jest.unmock('@/api/DatashareClient')
-    jest.unmock('@/utils/utils')
+  afterEach(() => {
+    store.commit('batchSearch/reset')
+    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    auth.reset()
   })
+
+  afterAll(() => jest.restoreAllMocks())
 
   it('should display the list of the queries of this batch search', () => {
     expect(wrapper.find('.batch-search-results').exists()).toBeTruthy()
@@ -155,14 +155,18 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__download').exists()).toBeTruthy()
   })
 
-  it('should display a button to delete the batchSearch', () => {
+  it('should display a button to delete the batchSearch', async () => {
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
+    await wrapper.vm.checkIsMyBatchSearch()
     expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
   })
 
-  it('should NOT display a button to delete the batchSearch', () => {
-    getAuthenticatedUser.mockReturnValue('other')
+  it('should NOT display a button to delete the batchSearch', async () => {
     wrapper = shallowMount(BatchSearchResults,
       { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link' }, propsData, mocks: { $t: msg => msg } })
+
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
+    await wrapper.vm.checkIsMyBatchSearch()
 
     expect(wrapper.find('.batch-search-results__delete').exists()).toBeFalsy()
   })

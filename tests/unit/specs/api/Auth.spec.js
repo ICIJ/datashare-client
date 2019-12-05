@@ -16,7 +16,7 @@ describe('auth backend client', () => {
 
   describe('getUsername', () => {
     it('should return user name if user is authenticated with basic auth', async () => {
-      auth.fetch.mockReturnValue(jsonResp({ 'uid': 'john' }, 200, {}))
+      auth.fetch.mockReturnValue(jsonResp({ uid: 'john' }, 200, {}))
       expect(await auth.getUsername()).toBe('john')
       expect(auth.fetch).toBeCalledWith('http://localhost:9876/api/user')
     })
@@ -47,7 +47,7 @@ describe('auth backend client', () => {
     })
 
     it('should return user login if user is authenticated', async () => {
-      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'doe' }, JSON.stringify)
+      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
       expect(await auth.getUsername()).toEqual('doe')
     })
   })

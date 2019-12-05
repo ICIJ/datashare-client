@@ -3,7 +3,7 @@ import get from 'lodash/get'
 import fetchPonyfill from 'fetch-ponyfill'
 import DatashareClient from './DatashareClient'
 
-export class Auth {
+export default class Auth {
   constructor () {
     if (window.fetch) {
       // Build-in fetch method must never be called by an object other than Window
@@ -48,5 +48,3 @@ export class Auth {
     return get(cookie, 'login', null)
   }
 }
-
-export default Auth

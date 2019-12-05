@@ -5,7 +5,7 @@ import store from '@/store'
 import get from 'lodash/get'
 
 import { EventBus } from '@/utils/event-bus'
-import { Auth } from '@/api/Auth'
+import Auth from '@/api/Auth'
 
 Vue.use(VueRouter)
 
