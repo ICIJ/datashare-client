@@ -1,26 +1,31 @@
-import store from '@/store'
-import uniqueId from 'lodash/uniqueId'
-import { datashare, initialState } from '@/store/modules/document'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { jsonResp } from 'tests/unit/tests_utils'
-import DatashareClient from '@/api/DatashareClient'
 import orderBy from 'lodash/orderBy'
+import uniqueId from 'lodash/uniqueId'
+
+import { auth, datashare, initialState } from '@/store/modules/document'
+import DatashareClient from '@/api/DatashareClient'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
+import store from '@/store'
 
 describe('Document store', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
-  const id = 'document-a'
+  const id = 'document'
   const index = process.env.VUE_APP_ES_INDEX
 
-  beforeEach(() => {
+  beforeAll(() => {
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonResp())
+    jest.spyOn(auth, 'fetch')
+    auth.fetch.mockReturnValue(jsonResp({}, 401, {}))
   })
 
-  afterEach(() => {
-    store.commit('document/reset')
+  afterEach(() => store.commit('document/reset'))
+
+  afterAll(() => {
     datashare.fetch.mockClear()
+    auth.fetch.mockClear()
   })
 
   it('should define a store module', () => {
