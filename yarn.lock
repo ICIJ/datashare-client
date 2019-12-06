@@ -10805,8 +10805,9 @@ vue-i18n@^8.12.0:
   resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.12.0.tgz#25b56e9fab7e78a0ff58b8b4fba336ad328cce11"
 
 vue-i18n@^8.14.1:
-  version "8.14.1"
-  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.14.1.tgz#0ca0a2742c14e0144481655157fffcc7cc313e50"
+  version "8.15.1"
+  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.15.1.tgz#90097a08a1e932f645c6b9c404c780d24f6d6224"
+  integrity sha512-GBbz8qYCu0U2LNu4IcuFLZiuyninG4k26knvhL7GZG5Ncp4RR2VKDEH6g8gQ6I+UUBCvH2MBQVPSdxWe4DBkPw==
 
 vue-infinite-loading@^2.4.4:
   version "2.4.4"
