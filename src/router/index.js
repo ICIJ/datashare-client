@@ -138,7 +138,7 @@ const router = new VueRouter({
   ]
 })
 
-const auth = new Auth()
+export const auth = new Auth()
 
 router.beforeEach(async (to, from, next) => {
   // Read the current index from the params

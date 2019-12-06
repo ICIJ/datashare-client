@@ -1,10 +1,11 @@
-import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
+import find from 'lodash/find'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { App } from '@/main'
 import VueRouter from 'vue-router'
+
+import { App } from '@/main'
 import { datashare } from '@/store/modules/search'
 import { jsonResp } from 'tests/unit/tests_utils'
-import find from 'lodash/find'
+import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 const router = new VueRouter()
