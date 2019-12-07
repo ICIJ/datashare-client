@@ -90,7 +90,7 @@
   },
   "facet": {
     "none": "No values",
-    "seeAll": "Search the entire database",
+    "seeAll": "Show more",
     "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
     "noResults": "No results",
     "noSubdirectories": "No subdirectories",
