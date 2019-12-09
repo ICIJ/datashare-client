@@ -93,6 +93,7 @@
               <b-form-input
                 v-model="fileType"
                 @input="searchFileTypes"
+                @blur="hideSuggestionsFileTypes"
                 autocomplete="off"
                 ref="fileType">
               </b-form-input>
@@ -120,6 +121,7 @@
               <b-form-input
                 v-model="path"
                 @input="searchPaths"
+                @blur="hideSuggestionsPaths"
                 autocomplete="off"
                 ref="path">
               </b-form-input>
