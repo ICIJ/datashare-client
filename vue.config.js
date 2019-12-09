@@ -78,6 +78,10 @@ module.exports = {
     optimization: {
       runtimeChunk: 'single',
       moduleIds: 'hashed'
+    },
+    output: {
+      path: resolve('dist'),
+      chunkFilename: '[id].[name].js?ver=[chunkhash]'
     }
   }
 }
