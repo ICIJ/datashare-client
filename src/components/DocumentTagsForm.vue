@@ -83,8 +83,8 @@ export default {
       <ul class="document-tags-form__tags list-unstyled mb-0 mt-1">
         <li class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1" :class="[mode === 'light' ? 'border badge-light': 'badge-dark']" v-for="tag in tags" :key="tag.label">
           <span :title="generateTagTooltip(tag)" v-b-tooltip>{{ tag.label }}</span>
-          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tag_confirmation')" class="document-tags-form__tags__tag__delete btn btn-sm">
-            <fa icon="times" class="fa-fw pl-2" :class="{ 'text-white': mode === 'dark' }" />
+          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tag_confirmation')" class="document-tags-form__tags__tag__delete btn btn-sm" :class="mode">
+            <fa icon="times" class="fa-fw pl-2" />
           </confirm-button>
         </li>
       </ul>
@@ -107,16 +107,26 @@ export default {
     }
 
     &__tag {
+      span {
+        vertical-align: middle;
+      }
 
       &__delete.btn {
         line-height: 1;
         border: 0;
-        font-size: 0.9rem;
-        color: $text-muted;
+        font-size: 0.8rem;
         cursor: pointer;
         padding: 0;
 
-        &:hover {
+        &.dark {
+          color: white;
+        }
+
+        &.light {
+          color: $text-muted;
+        }
+
+        > svg:hover {
           color: $danger;
         }
       }

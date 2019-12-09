@@ -1,17 +1,18 @@
-import esClient from '@/api/esClient'
-import Response from '@/api/Response'
-import DatashareClient from '@/api/DatashareClient'
-import Auth from '@/api/Auth'
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
+import findIndex from 'lodash/findIndex'
 import flattenDeep from 'lodash/flattenDeep'
 import get from 'lodash/get'
 import keys from 'lodash/keys'
 import map from 'lodash/map'
-import remove from 'lodash/remove'
 import sumBy from 'lodash/sumBy'
 import uniqBy from 'lodash/uniqBy'
 import values from 'lodash/values'
+
+import Auth from '@/api/Auth'
+import DatashareClient from '@/api/DatashareClient'
+import esClient from '@/api/esClient'
+import Response from '@/api/Response'
 
 export const datashare = new DatashareClient()
 export const auth = new Auth()
@@ -104,7 +105,7 @@ export const mutations = {
     state.tags = uniqBy(concat(state.tags, tags), 'label')
   },
   deleteTag (state, tagToDelete) {
-    remove(state.tags, tag => tag.label === tagToDelete.label)
+    state.tags.splice(findIndex(state.tags, { label: tagToDelete.label }), 1)
   }
 }
 
