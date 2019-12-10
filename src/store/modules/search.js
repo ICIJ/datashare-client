@@ -155,7 +155,7 @@ export const getters = {
       }
     }
     try {
-      retTerms(lucene.parse(state.query))
+      retTerms(lucene.parse(state.query.replace('\\@', '@')))
       return terms
     } catch (_) {
       return []

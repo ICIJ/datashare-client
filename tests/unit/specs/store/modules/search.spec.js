@@ -519,6 +519,12 @@ describe('Search store', () => {
 
       expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'test and.*', negation: false, regex: true }])
     })
+
+    it('should replace escaped arobase in regex', () => {
+      store.commit('search/query', '/.*\\@.*/')
+
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: '.*@.*', negation: false, regex: true }])
+    })
   })
 
   describe('retrieveContentQueryTermsInContent', () => {

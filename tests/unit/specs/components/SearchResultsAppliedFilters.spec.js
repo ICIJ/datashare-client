@@ -29,12 +29,6 @@ describe('SearchResultsAppliedFilters.vue', () => {
       expect(wrapper.findAll('.search-results-header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
     })
 
-    it('should display regex as applied filter', async () => {
-      await store.dispatch('search/query', { query: '/.*test.*/', from: 0, size: 3 })
-
-      expect(wrapper.findAll('.search-results-header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
-    })
-
     it('should display 1 applied filter', () => {
       store.commit('search/addFacetValue', { name: 'contentType', value: 'term_01' })
 
@@ -85,6 +79,12 @@ describe('SearchResultsAppliedFilters.vue', () => {
       store.commit('search/toggleFacet', 'contentType')
 
       expect(wrapper.vm.filters[0].negation).toBeTruthy()
+    })
+
+    it('should display regex as applied filter', async () => {
+      await store.dispatch('search/query', { query: '/.*test.*/', from: 0, size: 3 })
+
+      expect(wrapper.findAll('.search-results-header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
     })
   })
 
