@@ -137,9 +137,10 @@ export const getters = {
       const term = get(query, join([path, 'term'], '.'), '')
       const field = get(query, join([path, 'field'], '.'), '')
       const prefix = get(query, join([path, 'prefix'], '.'), '')
+      const regex = get(query, join([path, 'regex'], '.'), false)
       const negation = ['-', '!'].includes(prefix) || start === 'NOT' || endsWith(operator, 'NOT')
       if (term !== '*' && term !== '' && !includes(map(terms, 'label'), term)) {
-        terms = concat(terms, { field: field === '<implicit>' ? '' : field, label: term.replace('\\', ''), negation })
+        terms = concat(terms, { field: field === '<implicit>' ? '' : field, label: term.replace('\\', ''), negation, regex })
       }
       if (term === '' && has(query, join([path, 'left'], '.'))) {
         retTerms(get(query, 'left'))
@@ -166,7 +167,8 @@ export const getters = {
   },
   retrieveContentQueryTermsInContent (state, getters) {
     return (text, field) => getters.retrieveContentQueryTerms.map(term => {
-      term[field] = (text.match(new RegExp(escapeRegExp(term.label), 'gi')) || []).length
+      const regex = new RegExp(term.regex ? term.label : escapeRegExp(term.label), 'gi')
+      term[field] = (text.match(regex) || []).length
       return term
     })
   },

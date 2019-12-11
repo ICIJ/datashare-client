@@ -64,9 +64,7 @@
 
 ![](../.gitbook/assets/22.png)
 
-16. Type '**./datashare.sh'** and press '**Enter'**:
-
-![](../.gitbook/assets/23.png)
+16. Type 'BIND\_HOST=0.0.0.0 ./datashare.sh' and press '**Enter'.**
 
 17. To use Datashare, open your browser and go to URL '**192.168.99.100:8080'**:
 

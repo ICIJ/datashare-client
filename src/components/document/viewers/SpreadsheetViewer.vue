@@ -12,7 +12,7 @@
           {{ $t('document.spreadsheet.fieldsInFirstItem') }}
         </b-form-checkbox>
         <div class="spreadsheet-viewer__content__toolbox__filter flex-grow-1 pl-3">
-          <input type="search" class="form-control float-right" v-model="filter" :placeholder="$t('document.spreadsheet.findInSpreadsheet')" />
+          <input type="search" class="form-control float-right" v-model="filter" :placeholder="$t('document.spreadsheet.findInSpreadsheet')" v-shortkey.focus="['ctrl', 'f']"/>
         </div>
       </div>
       <div class="spreadsheet-viewer__content__table mx-3 small flex-grow-1" :style="tableVars">
@@ -58,12 +58,14 @@ import sortBy from 'lodash/sortBy'
 import Fuse from 'fuse.js'
 import fetchPonyfill from 'fetch-ponyfill'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
+import shortkeys from '@/mixins/shortkeys'
 
 const { fetch } = fetchPonyfill()
 
 export default {
   name: 'SpreadsheetViewer',
   props: ['document'],
+  mixins: [shortkeys],
   components: {
     DynamicScroller,
     DynamicScrollerItem

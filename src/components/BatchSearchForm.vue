@@ -5,8 +5,9 @@
         {{ $t('batchSearch.heading') }}
       </h5>
       <div class="card w-100">
-        <div class="card-body pb-1 small">
+        <div class="card-body pb-1">
           <b-form-group
+            label-size="sm"
             :label="`${$t('batchSearch.name')} *`">
             <b-form-input
               v-model="name"
@@ -14,6 +15,8 @@
               required></b-form-input>
           </b-form-group>
           <b-form-group
+            label-size="sm"
+            class="mb-0"
             :label="`${$t('batchSearch.fileLabel')} *`"
             :description="$t('batchSearch.fileDescription')">
             <b-form-file
@@ -22,12 +25,13 @@
               accept=".csv"
               required></b-form-file>
           </b-form-group>
-          <div class="help">
+          <p class="help small">
             <a href="https://icij.gitbook.io/datashare/all/batch-search-documents#write-your-queries-in-a-spreadsheet" target="_blank" class="text-muted">
               {{ $t('batchSearch.learnMore') }}
             </a>
-          </div>
+          </p>
           <b-form-group
+            label-size="sm"
             :label="$t('batchSearch.description')">
             <b-form-textarea
               v-model="description"
@@ -35,6 +39,7 @@
               max-rows="6"></b-form-textarea>
           </b-form-group>
           <b-form-group
+            label-size="sm"
             :label="`${$t('batchSearch.project')} *`"
             v-if="$config.is('multipleProjects')">
             <b-form-select
@@ -42,12 +47,24 @@
               :options="indices"
               required></b-form-select>
           </b-form-group>
+          <b-form-group
+            label-size="sm"
+            :description="$t('batchSearch.publishedDescription')"
+            v-if="$config.is('multipleProjects')"
+            class="published">
+            <b-form-checkbox
+              v-model="published"
+              switch>
+              {{ $t('batchSearch.published') }}
+            </b-form-checkbox>
+          </b-form-group>
           <div v-b-toggle.advanced-filters class="batch-search-form__advanced-filters my-2">
             <fa :icon="advancedFiltersIcon" class="fa-fw" />
             <span>{{ $t('batchSearch.advancedFilters') }}</span>
           </div>
-          <b-collapse id="advanced-filters" v-model="showCollapse">
+          <b-collapse id="advanced-filters" v-model="showCollapse" class="pt-2">
             <b-form-group
+              label-size="sm"
               :description="phraseMatchDescription">
               <b-form-checkbox
                 v-model="phraseMatch"
@@ -56,6 +73,7 @@
               </b-form-checkbox>
             </b-form-group>
             <b-form-group
+              label-size="sm"
               :label="fuzzinessLabel"
               :description="fuzzinessDescription">
               <b-form-input
@@ -70,10 +88,12 @@
               </a>
             </div>
             <b-form-group
+              label-size="sm"
               :label="$t('batchSearch.fileTypes')">
               <b-form-input
                 v-model="fileType"
                 @input="searchFileTypes"
+                @blur="hideSuggestionsFileTypes"
                 autocomplete="off"
                 ref="fileType">
               </b-form-input>
@@ -96,10 +116,12 @@
               </b-badge>
             </b-form-group>
             <b-form-group
+              label-size="sm"
               :label="$t('batchSearch.path')">
               <b-form-input
                 v-model="path"
                 @input="searchPaths"
+                @blur="hideSuggestionsPaths"
                 autocomplete="off"
                 ref="path">
               </b-form-input>
@@ -122,16 +144,6 @@
               </b-badge>
             </b-form-group>
           </b-collapse>
-          <b-form-group
-            :description="$t('batchSearch.publishedDescription')"
-            v-if="$config.is('multipleProjects')"
-            class="published">
-            <b-form-checkbox
-              v-model="published"
-              switch>
-              {{ $t('batchSearch.published') }}
-            </b-form-checkbox>
-          </b-form-group>
         </div>
         <div class="card-footer">
           <div class="d-flex justify-content-end align-items-center">
@@ -320,12 +332,6 @@ export default {
   .batch-search-form {
     .form-group small {
       line-height: 1.2;
-    }
-
-    .help {
-      font-size: 10px;
-      margin-bottom: 16px;
-      margin-top: -16px;
     }
 
     &__advanced-filters {

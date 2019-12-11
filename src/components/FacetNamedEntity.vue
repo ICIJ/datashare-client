@@ -18,7 +18,7 @@
             </span>
           </span>
         </b-form-checkbox>
-        <confirm-button v-if="$config.is('manageDocuments')" :confirmed="() => deleteNamedEntitiesByMentionNorm(value)" class="align-self-start btn btn-link btn-sm p-0 mr-2 mt-2 facet__items__item__delete" v-b-tooltip :title="$t('facet.deleteNamedEntity')">
+        <confirm-button v-if="$config.is('manageDocuments')" :confirmed="() => deleteNamedEntitiesByMentionNorm(value)" class="align-self-start btn btn-link btn-sm p-0 mr-2 mt-1 facet__items__item__delete" v-b-tooltip :title="$t('facet.deleteNamedEntity')">
           <fa icon="trash-alt" />
         </confirm-button>
       </div>

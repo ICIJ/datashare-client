@@ -439,79 +439,85 @@ describe('Search store', () => {
     it('should retrieve 1 applied filter', () => {
       store.commit('search/query', 'term_01')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false, regex: false }])
     })
 
     it('should retrieve 2 applied filters', () => {
       store.commit('search/query', 'term_01 term_02')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false, regex: false }, { field: '', label: 'term_02', negation: false, regex: false }])
     })
 
     it('should retrieve 3 applied filters', () => {
       store.commit('search/query', 'term_01 term_02 term_03')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: false }, { field: '', label: 'term_03', negation: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false, regex: false }, { field: '', label: 'term_02', negation: false, regex: false }, { field: '', label: 'term_03', negation: false, regex: false }])
     })
 
     it('should merge 2 identical terms', () => {
       store.commit('search/query', 'term_01 term_01')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false, regex: false }])
     })
 
     it('should filter on boolean operators "AND" and "OR"', () => {
       store.commit('search/query', 'term_01 AND term_02 OR term_03')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: false }, { field: '', label: 'term_03', negation: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false, regex: false }, { field: '', label: 'term_02', negation: false, regex: false }, { field: '', label: 'term_03', negation: false, regex: false }])
     })
 
     it('should not split an exact search sentence', () => {
       store.commit('search/query', 'term_01 "and an exact term" term_02')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'and an exact term', negation: false }, { field: '', label: 'term_02', negation: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false, regex: false }, { field: '', label: 'and an exact term', negation: false, regex: false }, { field: '', label: 'term_02', negation: false, regex: false }])
     })
 
     it('should display field name', () => {
       store.commit('search/query', 'field_name:term_01')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: 'field_name', label: 'term_01', negation: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: 'field_name', label: 'term_01', negation: false, regex: false }])
     })
 
     it('should return a negation parameter according to the prefix', () => {
       store.commit('search/query', '-term_01 +term_02 !term_03')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: true }, { field: '', label: 'term_02', negation: false }, { field: '', label: 'term_03', negation: true }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: true, regex: false }, { field: '', label: 'term_02', negation: false, regex: false }, { field: '', label: 'term_03', negation: true, regex: false }])
     })
 
     it('should return a negation parameter if query starts by "NOT"', () => {
       store.commit('search/query', 'NOT term_01')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: true }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: true, regex: false }])
     })
 
     it('should return a negation parameter if query contains "AND NOT" or "OR NOT"', () => {
       store.commit('search/query', 'term_01 AND NOT term_02 NOT term_03')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: true }, { field: '', label: 'term_03', negation: true }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false, regex: false }, { field: '', label: 'term_02', negation: true, regex: false }, { field: '', label: 'term_03', negation: true, regex: false }])
     })
 
     it('should remove escaped slash', () => {
       store.commit('search/query', 'term\\:other')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term:other', negation: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term:other', negation: false, regex: false }])
     })
 
     it('should grab terms between brackets', () => {
       store.commit('search/query', 'term_01 (term_02 AND -term_03) term_04')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: false }, { field: '', label: 'term_03', negation: true }, { field: '', label: 'term_04', negation: false }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false, regex: false }, { field: '', label: 'term_02', negation: false, regex: false }, { field: '', label: 'term_03', negation: true, regex: false }, { field: '', label: 'term_04', negation: false, regex: false }])
     })
 
-    it('Should apply the negation only to the second group', () => {
+    it('should apply the negation only to the second group', () => {
       store.commit('search/query', '(term_01 term_02) NOT term_03')
 
-      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false }, { field: '', label: 'term_02', negation: false }, { field: '', label: 'term_03', negation: true }])
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'term_01', negation: false, regex: false }, { field: '', label: 'term_02', negation: false, regex: false }, { field: '', label: 'term_03', negation: true, regex: false }])
+    })
+
+    it('should detect regex and return it as true', () => {
+      store.commit('search/query', '/test and.*/')
+
+      expect(store.getters['search/retrieveQueryTerms']).toEqual([{ field: '', label: 'test and.*', negation: false, regex: true }])
     })
   })
 
@@ -537,7 +543,7 @@ describe('Search store', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'test')
 
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'test', metadata: 0, negation: false, tags: 0 }])
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'test', metadata: 0, negation: false, tags: 0, regex: false }])
     })
 
     it('should return a content of 1 if there is a match between the query and the document content', async () => {
@@ -546,7 +552,7 @@ describe('Search store', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'specific')
 
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 2, field: '', label: 'specific', metadata: 0, negation: false, tags: 0 }])
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 2, field: '', label: 'specific', metadata: 0, negation: false, tags: 0, regex: false }])
     })
 
     it('should return a metadata of 1 if there is a match between the query and the document metadata', async () => {
@@ -555,7 +561,7 @@ describe('Search store', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'metadata')
 
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'metadata', metadata: 3, negation: false, tags: 0 }])
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'metadata', metadata: 3, negation: false, tags: 0, regex: false }])
     })
 
     it('should return a tags of 1 if there is a match between the query and the document tags', async () => {
@@ -564,7 +570,16 @@ describe('Search store', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'tags')
 
-      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'tags', metadata: 0, negation: false, tags: 1 }])
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'tags', metadata: 0, negation: false, tags: 1, regex: false }])
+    })
+
+    it('should apply regex to count occurrences', async () => {
+      const id = 'document'
+      await letData(es).have(new IndexedDocument(id).withContent('this is a test like another')).commit()
+      await store.dispatch('document/get', { id, index })
+      await store.dispatch('search/query', '/.*test.*/')
+
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 1, field: '', label: '.*test.*', metadata: 0, negation: false, tags: 0, regex: true }])
     })
   })
 

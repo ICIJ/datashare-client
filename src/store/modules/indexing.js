@@ -8,6 +8,7 @@ export function initialState () {
   return {
     form: {
       ocr: false,
+      filter: true,
       pipeline: 'corenlp',
       offline: false
     },
@@ -59,7 +60,7 @@ export const mutations = {
 
 export const actions = {
   submitExtract ({ state }) {
-    datashare.index({ ocr: state.form.ocr })
+    datashare.index({ ocr: state.form.ocr, filter: state.form.filter })
   },
   runBatchSearch () {
     datashare.runBatchSearch()

@@ -37,7 +37,7 @@ describe('Indexing store', () => {
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
     expect(datashare.fetch).toHaveBeenCalledWith(DatashareClient.getFullUrl('/api/task/batchUpdate/index/file'),
-      { method: 'POST', body: JSON.stringify({ options: { ocr: false } }) })
+      { method: 'POST', body: JSON.stringify({ options: { ocr: false, filter: true } }) })
   })
 
   it('should execute a default find named entities action', async () => {
