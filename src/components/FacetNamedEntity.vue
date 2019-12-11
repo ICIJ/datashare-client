@@ -27,11 +27,11 @@
 </template>
 
 <script>
-import Facet from '@/components/Facet'
+import DatashareClient from '@/api/DatashareClient'
 import facets from '@/mixins/facets'
+import Facet from '@/components/Facet'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
-import DatashareClient from '@/api/DatashareClient'
 
 const datashare = new DatashareClient()
 
@@ -70,5 +70,4 @@ export default {
       }
     }
   }
-
 </style>
