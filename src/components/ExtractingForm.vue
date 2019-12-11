@@ -1,29 +1,32 @@
 <template>
   <form class="extracting-form" id="extracting-form" @submit.prevent="submitExtract">
-    <div class="extracting-form__header mb-4">
-      <h4>
-        {{ $t('indexing.extracting_header') }}
-      </h4>
+
+    <div class="extracting-form__group mb-4">
+      <b-form-checkbox v-model="ocr" name="check-button" switch>
+        <div class="font-weight-bold ml-2">
+          {{ $t('indexing.extract_with_ocr_label') }}
+        </div>
+        <div class="extracting-form__group__help ml-2 small">
+          <span>
+            {{ $t('indexing.extract_with_ocr_help') }}
+          </span>
+        </div>
+      </b-form-checkbox>
     </div>
-    <div class="extracting-form__subheader mb-4">
-      <span>
-        {{ $t('indexing.extracting_subheader') }}
-      </span>
+
+    <div class="extracting-form__group">
+      <b-form-checkbox v-model="filter" name="check-button" switch>
+        <div class="font-weight-bold ml-2">
+          {{ $t('indexing.extract_only_new_label') }}
+        </div>
+        <div class="extracting-form__group__help ml-2 small">
+          <span>
+            {{ $t('indexing.extract_only_new_help') }}
+          </span>
+        </div>
+      </b-form-checkbox>
     </div>
-    <div class="extracting-form__body form-group my-0 pl-4">
-      <div class="custom-control custom-radio">
-        <input class="custom-control-input" type="radio" id="yes" value="true" v-model="ocr">
-        <label class="custom-control-label" for="yes">
-          {{ $t('indexing.yes') }}
-        </label>
-      </div>
-      <div class="custom-control custom-radio">
-        <input class="custom-control-input" type="radio" id="no" value="false" v-model="ocr">
-        <label class="custom-control-label" for="no">
-          {{ $t('indexing.no') }}
-        </label>
-      </div>
-    </div>
+
     <div class="extracting-form__footer mt-4 row no-gutters">
       <div class="col text-right">
         <button class="btn btn-primary font-weight-bold" type="submit">
@@ -39,8 +42,8 @@ import { createHelpers } from 'vuex-map-fields'
 import noop from 'lodash/noop'
 
 const { mapFields } = createHelpers({
-  getterType: `indexing/getField`,
-  mutationType: `indexing/updateField`
+  getterType: 'indexing/getField',
+  mutationType: 'indexing/updateField'
 })
 
 export default {
@@ -52,13 +55,13 @@ export default {
     }
   },
   computed: {
-    ...mapFields([
-      'form.ocr'
-    ])
+    ...mapFields(['form.ocr', 'form.filter'])
   },
   methods: {
-    submitExtract () {
-      this.finally(this.$store.dispatch('indexing/submitExtract').then(() => this.$store.dispatch('indexing/resetExtractForm')))
+    async submitExtract () {
+      await this.$store.dispatch('indexing/submitExtract')
+      this.$store.dispatch('indexing/resetExtractForm')
+      this.finally()
     }
   }
 }
@@ -68,14 +71,5 @@ export default {
   .extracting-form {
     background: darken($primary, 20);
     color: white;
-
-    &__header h4 {
-      font-size: 1.2em;
-      font-weight: bolder;
-    }
-
-    &__subheader {
-      font-style: italic;
-    }
   }
 </style>
