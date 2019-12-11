@@ -26,7 +26,7 @@ export default class Auth {
   }
 
   async _checkAuthentication () {
-    if (process.env.NODE_ENV === 'development') return 'development'
+    if (process.env.NODE_ENV === 'development') return 'local'
     const userInCookie = this._getCookieUsername()
     if (userInCookie !== null) return userInCookie
     return this._getBasicAuthUserName()
