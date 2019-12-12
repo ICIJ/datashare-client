@@ -14,13 +14,14 @@
           v-model="selectedQueries"
           @input="onInput">
           <template #item-label="{ item }">
-            <div class="d-flex" :id="item">
+            <div class="d-flex batch-search-results-filters__queries__dropdown__item" :id="item">
               <span class="flex-grow-1 text-truncate">
                 {{ item }}
               </span>
-              <b-badge class="my-1 px-2" variant="tertiary" pill>
+              <b-badge class="my-1 px-2 batch-search-results-filters__queries__dropdown__item__count" variant="tertiary" pill>
                 {{ meta.queries[item] }}
               </b-badge>
+              <fa icon="search" class="text-tertiary batch-search-results-filters__queries__dropdown__item__search" @click.stop.prevent="executeSearch(item)" />
             </div>
             <b-tooltip placement="bottom" :target="item" :title="item" />
           </template>
@@ -72,6 +73,10 @@ export default {
   methods: {
     onInput () {
       this.$root.$emit('batch-search-results::filter')
+    },
+    executeSearch (query) {
+      this.$store.commit('search/reset')
+      this.$router.push({ name: 'search', query: { q: query } })
     }
   }
 }
@@ -88,6 +93,22 @@ export default {
       &__dropdown {
         max-height: calc(40vh + 100px);
         overflow: auto;
+
+        &__item {
+
+          &__search:not([aria-describedby]) {
+            display: none;
+          }
+
+          &:hover .batch-search-results-filters__queries__dropdown__item__search {
+            display: block;
+            color: inherit;
+          }
+
+          &:hover .batch-search-results-filters__queries__dropdown__item__count {
+            display: none;
+          }
+        }
       }
     }
   }

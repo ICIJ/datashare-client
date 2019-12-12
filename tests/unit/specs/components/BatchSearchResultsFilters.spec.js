@@ -1,8 +1,10 @@
-import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { removeCookie, setCookie } from 'tiny-cookie'
+
 import { App } from '@/main'
+import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -58,12 +60,14 @@ jest.mock('@/api/DatashareClient', () => {
   })
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, router, store } = App.init(createLocalVue()).useAll()
 
 describe('BatchSearchResultsFilters.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   let wrapper
+
+  beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocument('42').withContentType('type_01')).commit()
@@ -93,7 +97,10 @@ describe('BatchSearchResultsFilters.vue', () => {
     }])
   })
 
-  afterAll(() => jest.unmock('@/api/DatashareClient'))
+  afterAll(() => {
+    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    jest.unmock('@/api/DatashareClient')
+  })
 
   it('should display simple list if there is only one query', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
@@ -145,5 +152,27 @@ describe('BatchSearchResultsFilters.vue', () => {
     await wrapper.vm.$nextTick()
 
     expect(rootWrapper.emitted('batch-search-results::filter')).toHaveLength(1)
+  })
+
+  describe('search', () => {
+    it('should display the "search" button', async () => {
+      await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
+      await store.dispatch('batchSearch/getBatchSearches')
+      wrapper = mount(BatchSearchResultsFilters, { localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, mocks: { $t: msg => msg, $n: msg => msg } })
+
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__search')).toHaveLength(3)
+    })
+
+    it('should redirect to a search', async () => {
+      await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
+      await store.dispatch('batchSearch/getBatchSearches')
+      wrapper = mount(BatchSearchResultsFilters, { localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: process.env.VUE_APP_ES_INDEX }, mocks: { $t: msg => msg, $n: msg => msg } })
+      jest.spyOn(wrapper.vm.$router, 'push')
+
+      wrapper.find('.batch-search-results-filters__queries__dropdown__item__search').trigger('click')
+
+      expect(wrapper.vm.$router.push).toBeCalled()
+      expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'search', query: { q: 'query_01' } })
+    })
   })
 })
