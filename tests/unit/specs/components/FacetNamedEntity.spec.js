@@ -1,9 +1,8 @@
 import find from 'lodash/find'
 import noop from 'lodash/noop'
-import VueRouter from 'vue-router'
-
 import { createLocalVue, mount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
+import VueRouter from 'vue-router'
 
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -208,6 +207,15 @@ describe('FacetNamedEntity.vue', () => {
       await wrapper.vm.root.aggregate()
 
       expect(wrapper.findAll('.list-group-item .facet__items__item .facet__items__item__delete')).toHaveLength(1)
+    })
+
+    it('should emit an event facet::hide::named-entities on delete named entity', async () => {
+      const mockCallback = jest.fn()
+      wrapper.vm.$root.$on('facet::hide::named-entities', mockCallback)
+
+      await wrapper.vm.deleteNamedEntitiesByMentionNorm('ner_01')
+
+      expect(mockCallback.mock.calls).toHaveLength(1)
     })
   })
 
