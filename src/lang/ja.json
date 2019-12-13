@@ -415,7 +415,7 @@
     "extract_only_new_label": "Do you want to skip already indexed files?",
     "extract_only_new_help": "If yes, Datashare will only extract text from files that are not yet searchable in Datashare.",
     "run_batch_search": "Run Batch Searches",
-    "find_named_entities": "Find people, organizations and locations",
+    "find_named_entities": "Find people, organizations, locations and email addresses",
     "find_named_entities_header": "Which technology do you want to apply in order to find people, organizations and locations?",
     "find_named_entities_subheader": "Datashare uses Natural Language Processing models. Please choose one of them:",
     "find_named_entities_tooltip": "Texts must be extracted before finding named entities",
