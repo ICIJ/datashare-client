@@ -63,5 +63,5 @@
 * [What is a named entity?](faq-definitions/what-is-a-named-entity.md)
 * [What are NLP pipelines?](faq-definitions/what-are-nlp-pipelines.md)
 * [What is fuzziness?](faq-definitions/what-is-fuzziness.md)
-* [What are proximity searches?](faq-definitions/what-is-proximity-search.md)
+* [What are proximity searches?](faq-definitions/what-are-proximity-searches.md)
 
