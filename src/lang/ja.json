@@ -1,8 +1,8 @@
 {
   "aggregations": {
     "more": "さらに調べる",
-    "placeholder": "Search for people, organizations, locations...",
-    "relative": "Relative to the search"
+    "placeholder": "人物、組織、地名を検索",
+    "relative": "検索結果と関連"
   },
   "search": {
     "errors": {
@@ -20,7 +20,7 @@
       "author": "筆者",
       "recipients": "受領者",
       "content": "内容",
-      "path": "Path",
+      "path": "パス",
       "thread": "スレッドID"
     },
     "placeholder": "文書内の検索",
@@ -39,58 +39,58 @@
     "results": {
       "match": "文書内での一致",
       "entities": "nb entities",
-      "results": "1 document | %{total} documents",
-      "noResults": "No documents found",
+      "results": "１文書｜%{total} 文書",
+      "noResults": "文書が見つかりません",
       "on": "on",
-      "perPage": "per page",
+      "perPage": "ページごと",
       "sort": {
-        "sort": "Sort by",
-        "relevance": "Relevance",
-        "dateNewest": "Indexing date (newest)",
-        "dateOldest": "Indexing date (oldest)",
-        "creationDateNewest": "Creation date (newest)",
-        "creationDateOldest": "Creation date (oldest)",
-        "sizeLargest": "Size (decreasing)",
-        "sizeSmallest": "Size (increasing)",
-        "path": "File path (A to Z)",
-        "pathReverse": "File path (Z to A)"
+        "sort": "並べ替え",
+        "relevance": "関連性",
+        "dateNewest": "インデックスの日付(新しい順)",
+        "dateOldest": "インデックスの日付(古い順)",
+        "creationDateNewest": "作成日付(新しい順)",
+        "creationDateOldest": "作成日付(古い順)",
+        "sizeLargest": "サイズ(大きい順)",
+        "sizeSmallest": "サイズ(小さい順)",
+        "path": "ファイルパス(A→Z)",
+        "pathReverse": "ファイルパス(Z→A)"
       }
     },
-    "filtersTitle": "Filters",
-    "clearFilters": "Clear all filters",
-    "clearFiltersDescription": "Remove selected filters from the search.",
-    "back": "Back to search results",
+    "filtersTitle": "フィルター",
+    "clearFilters": "フィルターを全て解除",
+    "clearFiltersDescription": "選択したフィルターを検索から削除",
+    "back": "検索結果に戻る",
     "try": "You may try to",
     "nav": {
       "previous": {
-        "label": "Previous",
-        "tooltipMac": "Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)",
-        "tooltipOthers": "Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
+        "label": "前",
+        "tooltipMac": "前の文書 (<kbd>⌘</kbd> + <kbd>←</kbd>)",
+        "tooltipOthers": "前の文書 (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
       },
       "next": {
-        "label": "Next",
-        "tooltipMac": "Next document (<kbd>⌘</kbd> + <kbd>→</kbd>)",
-        "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
+        "label": "次",
+        "tooltipMac": "次の文書 (<kbd>⌘</kbd> + <kbd>→</kbd>)",
+        "tooltipOthers": "次の文書 (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
       },
       "document": {
-        "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>%{extension}</code> before you can open it."
+        "extensionWarning": "この文書の形式に合わない拡張子がついています。文書を開く前に、拡張子<code>%{extension}</code>を付け加える必要があるかも知れません。"
       }
     }
   },
   "pagination": {
-    "firstPage": "Go to first page",
-    "previousPage": "Go to previous page",
-    "nextPage": "Go to next page",
-    "lastPage": "Go to last page"
+    "firstPage": "最初のページに移動",
+    "previousPage": "前のページに移動",
+    "nextPage": "次のページに移動",
+    "lastPage": "最後のページに移動"
   },
   "documentTranslatedContent": {
-    "detected": "Detected language",
-    "viewOriginal": "View original text",
-    "viewTranslated": "View translated text"
+    "detected": "検出された言語",
+    "viewOriginal": "原文を見る",
+    "viewTranslated": "翻訳された文を見る"
   },
   "facet": {
-    "none": "No values",
-    "seeAll": "Show more",
+    "none": "値なし",
+    "seeAll": "もっと表示",
     "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
     "noResults": "No results",
     "noSubdirectories": "No subdirectories",
