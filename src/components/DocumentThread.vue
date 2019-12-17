@@ -169,7 +169,7 @@ export default {
       try {
         if (this.threadBody) {
           const raw = await esClient.search({
-            index: this.index,
+            index: this.document.index,
             type: 'doc',
             body: this.threadBody.sort('metadata.tika_metadata_meta_creation_date', 'asc').build()
           })
