@@ -44,8 +44,7 @@ export default {
     SearchResultsListLink
   },
   computed: {
-    ...mapState('search', ['query', 'response']),
-    ...mapState('search', ['isDownloadAllowed']),
+    ...mapState('search', ['query', 'response', 'isDownloadAllowed']),
     hasResults () {
       return this.response.hits.length > 0
     },
