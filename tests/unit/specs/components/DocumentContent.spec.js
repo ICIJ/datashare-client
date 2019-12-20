@@ -226,7 +226,7 @@ describe('DocumentContent.vue', () => {
         }
       })
 
-      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'full')
+      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
       await wrapper.vm.transformContent()
 
       expect(wrapper.find('.document-content__body').element.innerHTML).toEqual('<p>this is a <mark class="local-search-term">full</mark> <mark class="local-search-term">full</mark> content</p>')
@@ -247,7 +247,7 @@ describe('DocumentContent.vue', () => {
         }
       })
 
-      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'full')
+      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
       await wrapper.vm.transformContent()
 
       expect(wrapper.vm.localSearchOccurrences).toEqual(3)
@@ -268,7 +268,7 @@ describe('DocumentContent.vue', () => {
         }
       })
 
-      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', 'full')
+      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
       await wrapper.vm.transformContent()
       wrapper.vm.jumpToActiveLocalSearchTerm()
 

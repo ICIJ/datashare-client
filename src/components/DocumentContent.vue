@@ -36,7 +36,7 @@ export default {
       hasNamedEntities: false,
       localSearchIndex: 0,
       localSearchOccurrences: 0,
-      localSearchTerm: '',
+      localSearchTerm: { label: '' },
       localSearchWorker: null,
       localSearchWorkerInProgress: false,
       transformedContent: ''
@@ -93,7 +93,7 @@ export default {
       }, content)
     },
     addLocalSearchMarks (content, localSearchTerm = this.localSearchTerm) {
-      if (localSearchTerm.length === 0) return content
+      if (localSearchTerm.label.length === 0) return content
 
       this.createLocalSearchWorker()
       this.localSearchWorkerInProgress = true
@@ -203,7 +203,7 @@ export default {
     <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
       <document-global-search-terms-tags
         :document="document"
-        @select="localSearchTerm = $event.value"
+        @select="localSearchTerm = $event"
         class="p-3 w-100" />
       <document-local-search-input class="ml-auto"
         v-model="localSearchTerm"
