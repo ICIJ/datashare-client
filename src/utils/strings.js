@@ -26,9 +26,10 @@ export function replaceInChildNodes (element, needle, replacement) {
   }
 }
 
-export function addLocalSearchMarks (content, localSearchTerm = '') {
-  const escapedLocalSearchTerm = escapeRegExp(localSearchTerm.label)
-  const localSearchOccurrences = (content.match(new RegExp('(?![^<]*>)' + escapedLocalSearchTerm, 'gi')) || []).length
+export function addLocalSearchMarks (content, localSearchTerm = { label: '' }) {
+  const escapedLocalSearchTerm = localSearchTerm.regex ? localSearchTerm.label : escapeRegExp(localSearchTerm.label)
+  const regex = new RegExp('(?![^<]*>)' + escapedLocalSearchTerm, 'gi')
+  const localSearchOccurrences = (content.match(regex) || []).length
   const localSearchIndex = Number(!!localSearchOccurrences)
 
   try {

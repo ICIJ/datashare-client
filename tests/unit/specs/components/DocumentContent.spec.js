@@ -293,5 +293,26 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.vm.localSearchIndex).toEqual(2)
       expect(wrapper.find('.document-content__body').element.innerHTML).toEqual('<p>this is a <mark class="local-search-term">full</mark> <mark class="local-search-term local-search-term--active">full</mark> content</p>')
     })
+
+    it('should support regex', async () => {
+      const id = 'doc'
+      await letData(es).have(new IndexedDocument(id)
+        .withContent('this is a test.\nFor testing purpose.'))
+        .commit()
+      await store.dispatch('document/get', { id, index })
+      const wrapper = shallowMount(DocumentContent, {
+        localVue,
+        i18n,
+        store,
+        propsData: {
+          document: store.state.document.doc
+        }
+      })
+
+      wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'test.*', regex: true })
+      await wrapper.vm.transformContent()
+
+      expect(wrapper.vm.localSearchOccurrences).toEqual(2)
+    })
   })
 })
