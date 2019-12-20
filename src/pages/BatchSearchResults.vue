@@ -97,17 +97,17 @@
               {{ $t('indexing.no') }}
             </span>
           </dd>
-          <dt class="col-sm-4 text-right">
+          <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.published') }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
             <b-form-checkbox v-model="published" switch @change="changePublished" v-if="isMyBatchSearch" />
             <span v-else>{{ meta.published ? $t('indexing.yes') : $t('indexing.no') }}</span>
           </dd>
-          <dt class="col-sm-4 text-right">
+          <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.author') }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
             {{ meta.user.id }}
           </dd>
         </dl>

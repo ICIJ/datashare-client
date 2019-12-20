@@ -6,6 +6,7 @@ import { App } from '@/main'
 import BatchSearchResults, { auth } from '@/pages/BatchSearchResults'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import Murmur from '@icij/murmur'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -92,6 +93,8 @@ describe('BatchSearchResults.vue', () => {
   const es = esConnectionHelper.es
   let propsData, wrapper
 
+  beforeAll(() => Murmur.config.merge({ multipleProjects: true }))
+
   beforeEach(async () => {
     await letData(es).have(new IndexedDocument('42').withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43').withContentType('type_01')).commit()
@@ -173,8 +176,8 @@ describe('BatchSearchResults.vue', () => {
 
   it('should display info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(9)
-    expect(wrapper.findAll('.batch-search-results__info dd').at(8).text()).toEqual('test')
+    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(10)
+    expect(wrapper.findAll('.batch-search-results__info dd').at(9).text()).toEqual('test')
   })
 
   it('should refresh route on "batch-search-results::filter" event emitted, on reset to the first page', () => {

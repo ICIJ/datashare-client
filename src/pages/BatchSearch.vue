@@ -87,6 +87,13 @@ export default {
         sortable: true
       } : null
     },
+    publishedField () {
+      return this.$config.is('multipleProjects') ? {
+        key: 'published',
+        label: this.$t('batchSearch.published'),
+        sortable: true
+      } : null
+    },
     fields () {
       return compact([
         this.projectNameField,
@@ -119,11 +126,7 @@ export default {
           label: this.$t('batchSearch.nbResults'),
           sortable: true
         },
-        {
-          key: 'published',
-          label: this.$t('batchSearch.published'),
-          sortable: true
-        }
+        this.publishedField
       ])
     }
   },

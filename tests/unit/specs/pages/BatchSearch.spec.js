@@ -3,6 +3,7 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { App } from '@/main'
 import BatchSearch from '@/pages/BatchSearch'
+import Murmur from '@icij/murmur'
 
 jest.mock('@/api/DatashareClient', () => {
   return jest.fn(() => {
@@ -33,7 +34,10 @@ const { localVue, store, router } = App.init(createLocalVue()).useAll()
 describe('BatchSearch.vue', () => {
   let wrapper
 
-  beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
+  beforeAll(() => {
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+    Murmur.config.merge({ multipleProjects: true })
+  })
 
   beforeEach(async () => {
     wrapper = mount(BatchSearch, { localVue, store, router, mocks: { $t: msg => msg, $tc: (msg, count) => count, $n: msg => msg } })
@@ -49,12 +53,12 @@ describe('BatchSearch.vue', () => {
     expect(wrapper.findAll('.batch-search__items__item')).toHaveLength(2)
   })
 
-  it('should display 7 columns of info per row', () => {
-    expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(7)
+  it('should display 8 columns of info per row', () => {
+    expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(8)
   })
 
   it('should display the number of queries per batchSearch', () => {
-    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="3"]').text()).toEqual('1')
-    expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="3"]').text()).toEqual('2')
+    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="4"]').text()).toEqual('1')
+    expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="4"]').text()).toEqual('2')
   })
 })
