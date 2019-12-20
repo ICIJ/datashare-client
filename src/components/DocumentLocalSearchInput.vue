@@ -91,7 +91,7 @@ export default {
             <fa icon="circle-notch" spin />
           </span>
           <span v-else class="input-group-text">
-            <span>{{ searchIndex  }} {{ $t('document.of') }} {{ searchOccurrences }}</span>
+            <span>{{ searchIndex }} {{ $t('document.of') }} {{ searchOccurrences }}</span>
           </span>
         </div>
       </div>

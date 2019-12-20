@@ -1,4 +1,3 @@
-
 import FakeWorker from './fake-worker.js'
 import { addLocalSearchMarks } from './strings.js'
 

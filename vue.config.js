@@ -55,7 +55,7 @@ module.exports = {
 
     // Use a specific loader for workers
     config.module.rule('worker')
-      .test(/\.webworker\.js$/)
+      .test(/\.worker\.js$/)
       .use('worker-loader')
       .loader('worker-loader')
 
