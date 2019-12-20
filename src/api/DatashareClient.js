@@ -119,6 +119,9 @@ export default class DatashareClient {
   isDownloadAllowed (project) {
     return this.sendAction(`/api/project/isDownloadAllowed/${project}`, {}, false)
   }
+  retrieveAlert (path) {
+    return { message: null, variant: 'danger' }
+  }
   async sendAction (url, params = {}, json = true) {
     const r = await this.fetch(DatashareClient.getFullUrl(url), params)
     if (r.status >= 200 && r.status < 300) {
