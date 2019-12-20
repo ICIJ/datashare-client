@@ -210,7 +210,7 @@ export default {
       return this.phraseMatch ? this.$t('batchSearch.proximitySearchesDescription') : this.$t('batchSearch.fuzzinessDescription')
     },
     fuzzinessLearnMore () {
-      return this.phraseMatch ? 'https://icij.gitbook.io/datashare/faq/what-is-proximity-search' : 'https://icij.gitbook.io/datashare/faq/what-is-fuzziness'
+      return this.phraseMatch ? 'https://icij.gitbook.io/datashare/faq-definitions/what-are-proximity-searches' : 'https://icij.gitbook.io/datashare/faq-definitions/what-is-fuzziness'
     },
     advancedFiltersIcon () {
       return this.showCollapse ? 'angle-down' : 'angle-right'

@@ -13,12 +13,12 @@ const router = new VueRouter({
   routes: [
     {
       path: '/',
-      component: () => import(`@/pages/App`),
+      component: () => import('@/pages/App'),
       children: [
         {
           name: 'landing',
           path: '',
-          component: () => import(`@/pages/Landing`),
+          component: () => import('@/pages/Landing'),
           meta: {
             docs: [
               '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
