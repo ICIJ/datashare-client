@@ -12,7 +12,7 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
@@ -20,6 +20,7 @@ describe('DocumentContent.vue', () => {
   esConnectionHelper()
   const es = esConnectionHelper.es
   const index = process.env.VUE_APP_ES_INDEX
+  const id = 'document'
 
   beforeEach(() => getOS.mockReset())
 
@@ -32,9 +33,7 @@ describe('DocumentContent.vue', () => {
 
   describe('the extracted text content', () => {
     it('should mark named entities in the extracted text tab', async () => {
-      const id = 'doc'
       await letData(es).have(new IndexedDocument(id)
-        .withContent('content')
         .withNer('ner_01', 2, 'PERSON')
         .withNer('ner_02', 17, 'LOCATION'))
         .commit()
@@ -43,11 +42,11 @@ describe('DocumentContent.vue', () => {
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       await wrapper.vm.transformContent()
@@ -60,7 +59,6 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should sanitize the HTML in the extracted text', async () => {
-      const id = 'doc'
       await letData(es).have(new IndexedDocument(id)
         .withContent('this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'))
         .commit()
@@ -69,11 +67,11 @@ describe('DocumentContent.vue', () => {
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       await wrapper.vm.transformContent()
@@ -81,7 +79,6 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should not sanitize the <mark /> tags in the extracted text', async () => {
-      const id = 'doc'
       await letData(es).have(new IndexedDocument(id)
         .withContent('this is a <mark>document</mark>'))
         .commit()
@@ -90,11 +87,11 @@ describe('DocumentContent.vue', () => {
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       await wrapper.vm.transformContent()
@@ -104,7 +101,6 @@ describe('DocumentContent.vue', () => {
 
   describe('the "Show named entities" toggle', () => {
     it('should contain a "Show named entities" toggle', async () => {
-      const id = 'document-yy'
       await letData(es).have(new IndexedDocument(id)
         .withContent('content')
         .withNer('ner', 2, 'PERSON'))
@@ -113,29 +109,28 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       expect(wrapper.exists('.document-content__ner-toggler')).toBeTruthy()
     })
 
     it('should not contain a "Show named entities" toggle if there is no named entities', async () => {
-      const id = 'doc'
       await letData(es).have(new IndexedDocument(id)
         .withContent('content'))
         .commit()
       await store.dispatch('document/get', { id, index })
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       await wrapper.vm.transformContent()
@@ -143,7 +138,6 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should change the document state of showNamedEntities', async () => {
-      const id = 'document-zu'
       await letData(es).have(new IndexedDocument(id)
         .withContent('content')
         .withNer('ner', 2, 'PERSON'))
@@ -153,11 +147,11 @@ describe('DocumentContent.vue', () => {
       store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       expect(store.state.document.showNamedEntities).toBeTruthy()
@@ -166,7 +160,6 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should display a document without named entities', async () => {
-      const id = 'document-ry'
       await letData(es).have(new IndexedDocument(id)
         .withContent('content')
         .withNer('tent', 3, 'PERSON'))
@@ -176,11 +169,11 @@ describe('DocumentContent.vue', () => {
       store.commit('document/toggleShowNamedEntities', false)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       await wrapper.vm.$nextTick()
@@ -190,7 +183,6 @@ describe('DocumentContent.vue', () => {
 
   describe('search term', () => {
     it('should not sticky the toolbox by default', async () => {
-      const id = 'document-z'
       await letData(es).have(new IndexedDocument(id)
         .withContent('this is a full full content')
         .withNer('ner', 0))
@@ -200,11 +192,11 @@ describe('DocumentContent.vue', () => {
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       await wrapper.vm.$nextTick()
@@ -212,18 +204,17 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should highlight the first occurrence of the searched term', async () => {
-      const id = 'doc'
       await letData(es).have(new IndexedDocument(id)
         .withContent('this is a full full content'))
         .commit()
       await store.dispatch('document/get', { id, index })
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
@@ -233,18 +224,17 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should be case insensitive', async () => {
-      const id = 'doc'
       await letData(es).have(new IndexedDocument(id)
         .withContent('this is a full FulL content fuLL'))
         .commit()
       await store.dispatch('document/get', { id, index })
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
@@ -254,18 +244,17 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should find the previous and next occurrence, as a loop', async () => {
-      const id = 'doc'
       await letData(es).have(new IndexedDocument(id)
         .withContent('this is a full full content'))
         .commit()
       await store.dispatch('document/get', { id, index })
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
@@ -295,18 +284,17 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should support regex', async () => {
-      const id = 'doc'
       await letData(es).have(new IndexedDocument(id)
         .withContent('this is a test.\nFor testing purpose.'))
         .commit()
       await store.dispatch('document/get', { id, index })
       const wrapper = shallowMount(DocumentContent, {
         localVue,
-        i18n,
         store,
         propsData: {
           document: store.state.document.doc
-        }
+        },
+        mocks: { $t: msg => msg }
       })
 
       wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'test.*', regex: true })
