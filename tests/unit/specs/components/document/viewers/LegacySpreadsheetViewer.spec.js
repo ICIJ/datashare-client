@@ -1,4 +1,3 @@
-import { createServer } from 'http-server'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 
 import { App } from '@/main'
@@ -7,18 +6,11 @@ import LegacySpreadsheetViewer from '@/components/document/viewers/LegacySpreads
 const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('LegacySpreadsheetViewer.vue', () => {
-  let httpServer, wrapper
-
-  beforeAll(() => {
-    httpServer = createServer({ root: 'tests/unit/resources' })
-    httpServer.listen(9876)
-  })
+  let wrapper
 
   beforeEach(() => {
     wrapper = shallowMount(LegacySpreadsheetViewer, { localVue, propsData: { document: { url: 'spreadsheet.xlsx' } }, mocks: { $t: msg => msg } })
   })
-
-  afterAll(() => httpServer.close())
 
   it('should display a message while generating the preview', () => {
     expect(wrapper.find('.legacy-spreadsheet-viewer .alert').text()).toBe('document.generating_preview')

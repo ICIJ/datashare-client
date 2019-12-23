@@ -1,4 +1,3 @@
-import { createServer } from 'http-server'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { App } from '@/main'
@@ -7,18 +6,11 @@ import TiffViewer from '@/components/document/viewers/TiffViewer'
 const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('TiffViewer.vue', () => {
-  let httpServer, wrapper
-
-  beforeAll(() => {
-    httpServer = createServer({ root: 'tests/unit/resources' })
-    httpServer.listen(9876)
-  })
+  let wrapper
 
   beforeEach(() => {
     wrapper = shallowMount(TiffViewer, { localVue, propsData: { document: { url: 'image.tiff' } }, mocks: { $t: msg => msg } })
   })
-
-  afterAll(() => httpServer.close())
 
   it('should display an error message if the document does not exist', async () => {
     wrapper = shallowMount(TiffViewer, { localVue, propsData: { document: { url: 'nodoc.tiff' } }, mocks: { $t: msg => msg } })
