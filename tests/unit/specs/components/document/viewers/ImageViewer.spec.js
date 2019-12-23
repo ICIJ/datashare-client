@@ -1,31 +1,24 @@
-import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
-import ImageViewer from '@/components/document/viewers/ImageViewer.vue'
-import Document from '@/api/Document'
 
-const localVue = createLocalVue()
-localVue.use(Murmur)
+import { App } from '@/main'
+import Document from '@/api/Document'
+import ImageViewer from '@/components/document/viewers/ImageViewer.vue'
+
+const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('ImageViewer.vue', () => {
-  it('should create an image tag', async () => {
-    const document = new Document({
-      _id: 'a-short-id',
-      _rounting: 'a-short-id',
-      _index: 'an-index-name'
-    })
+  let wrapper
+  const document = new Document({ _id: 'a-short-id', _rounting: 'a-short-id', _index: 'an-index-name' })
 
-    const wrapper = mount(ImageViewer, { localVue, propsData: { document } })
+  beforeEach(() => {
+    wrapper = mount(ImageViewer, { localVue, propsData: { document } })
+  })
+
+  it('should create an image tag', async () => {
     expect(wrapper.find('img').exists()).toBeTruthy()
   })
 
   it('should generate an image href containing `inline`', async () => {
-    const document = new Document({
-      _id: 'a-short-id',
-      _rounting: 'a-short-id',
-      _index: 'an-index-name'
-    })
-
-    const wrapper = mount(ImageViewer, { localVue, propsData: { document } })
     expect(wrapper.vm.href).toContain('&inline')
   })
 })

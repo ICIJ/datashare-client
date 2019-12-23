@@ -1,11 +1,12 @@
+import map from 'lodash/map'
+import noop from 'lodash/noop'
 import elasticsearch from 'elasticsearch-browser'
+
 import esMapping from '@/datashare_index_mappings.json'
 import esSettings from '@/datashare_index_settings.json'
-import noop from 'lodash/noop'
-import map from 'lodash/map'
 
-let es = new elasticsearch.Client({ host: process.env.VUE_APP_ES_HOST })
-let indices = [process.env.VUE_APP_ES_INDEX, process.env.VUE_APP_ES_ANOTHER_INDEX]
+const es = new elasticsearch.Client({ host: process.env.VUE_APP_ES_HOST })
+const indices = [process.env.VUE_APP_ES_INDEX, process.env.VUE_APP_ES_ANOTHER_INDEX]
 
 const esConnectionHelper = function () {
   jest.setTimeout(1e4)

@@ -1,12 +1,10 @@
-import Murmur from '@icij/murmur'
-import BootstrapVue from 'bootstrap-vue'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { createServer } from 'http-server'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
+
+import { App } from '@/main'
 import LegacySpreadsheetViewer from '@/components/document/viewers/LegacySpreadsheetViewer'
 
-const localVue = createLocalVue()
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
+const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('LegacySpreadsheetViewer.vue', () => {
   let httpServer, wrapper
@@ -23,15 +21,15 @@ describe('LegacySpreadsheetViewer.vue', () => {
   afterAll(() => httpServer.close())
 
   it('should display a message while generating the preview', () => {
-    expect(wrapper.find('.legacy-spreadsheet-viewer .alert').text()).toEqual('document.generating_preview')
+    expect(wrapper.find('.legacy-spreadsheet-viewer .alert').text()).toBe('document.generating_preview')
   })
 
   it('should display an error message if the document does not exist', async () => {
-    const wrapper = shallowMount(LegacySpreadsheetViewer, { localVue, propsData: { document: { url: 'nodoc.xlsx' } }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(LegacySpreadsheetViewer, { localVue, propsData: { document: { url: 'nodoc.xlsx' } }, mocks: { $t: msg => msg } })
 
     await wrapper.vm.getWorkbook()
 
-    expect(wrapper.find('.legacy-spreadsheet-viewer .alert').text()).toContain('document.error_not_found')
+    expect(wrapper.find('.legacy-spreadsheet-viewer .alert').text()).toBe('document.error_not_found')
   })
 
   it('should load a csv content file', async () => {

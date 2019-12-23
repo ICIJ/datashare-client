@@ -1,16 +1,10 @@
-import Vuex from 'vuex'
-import VueI18n from 'vue-i18n'
-import Murmur from '@icij/murmur'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { createServer } from 'http-server'
-import PdfViewer from '@/components/document/viewers/PdfViewer'
-import messages from '@/lang/en'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
-localVue.use(Murmur)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+import { App } from '@/main'
+import PdfViewer from '@/components/document/viewers/PdfViewer'
+
+const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('PdfViewer.vue', () => {
   let httpServer, wrapper
@@ -21,28 +15,28 @@ describe('PdfViewer.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(PdfViewer, { localVue, i18n, propsData: { document: { url: 'document.pdf' } } })
+    wrapper = shallowMount(PdfViewer, { localVue, propsData: { document: { url: 'document.pdf' } }, mocks: { $t: msg => msg } })
   })
 
   afterAll(() => httpServer.close())
 
-  it('should display a message while generating the preview', () => {
-    expect(wrapper.find('.pdf-viewer .alert').text()).toEqual('Generating preview...')
-  })
-
   it('should display an error message if the document does not exist', async () => {
-    const wrapper = shallowMount(PdfViewer, { localVue, i18n, propsData: { document: { url: 'nodoc.pdf' } } })
+    wrapper = shallowMount(PdfViewer, { localVue, propsData: { document: { url: 'nodoc.pdf' } }, mocks: { $t: msg => msg } })
 
     await wrapper.vm.loadPage(1)
 
-    expect(wrapper.find('.pdf-viewer .alert').text()).toContain('Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.')
+    expect(wrapper.find('.pdf-viewer .alert').text()).toBe('document.error_not_found')
+  })
+
+  it('should display a message while generating the preview', () => {
+    expect(wrapper.find('.pdf-viewer .alert').text()).toBe('document.generating_preview')
   })
 
   it('should load a pdf content file', async () => {
     await wrapper.vm.loadPage(1)
 
     expect(wrapper.find('.pdf-viewer .pdf-viewer__preview').exists()).toBeTruthy()
-    expect(wrapper.find('.pdf-viewer .pdf-viewer__thumbnails .form-control').element.value).toEqual('1')
+    expect(wrapper.find('.pdf-viewer .pdf-viewer__thumbnails .form-control').element.value).toBe('1')
     expect(wrapper.find('.pdf-viewer .pdf-viewer__preview__canvas').exists()).toBeTruthy()
   })
 

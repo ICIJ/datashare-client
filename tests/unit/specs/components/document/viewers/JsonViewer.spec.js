@@ -1,20 +1,18 @@
-import documentJson from 'tests/unit/resources/document.json'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import VueRouter from 'vue-router'
-import JsonViewer from '@/components/document/viewers/JsonViewer'
+
 import { App } from '@/main'
+import documentJson from 'tests/unit/resources/document.json'
+import JsonViewer from '@/components/document/viewers/JsonViewer'
 
 const { localVue } = App.init(createLocalVue()).useAll()
-const router = new VueRouter()
 
 describe('JsonViewer.vue', () => {
   let wrapper
+  const document = { url: 'document.json' }
+  const methods = { getJson: jest.fn().mockResolvedValue(documentJson) }
 
   beforeEach(() => {
-    const document = { url: 'document.json' }
-    const methods = { getJson: jest.fn().mockResolvedValue(documentJson) }
-    wrapper = shallowMount(JsonViewer, { localVue, router, propsData: { document }, methods })
-    wrapper.vm.$nextTick()
+    wrapper = shallowMount(JsonViewer, { localVue, propsData: { document }, methods })
   })
 
   it('should render an array of 1 element', async () => {
