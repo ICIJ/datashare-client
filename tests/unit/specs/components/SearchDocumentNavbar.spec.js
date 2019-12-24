@@ -1,7 +1,9 @@
-import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
+import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { getOS } from '@/utils/utils'
+
 import { App } from '@/main'
+import { getOS } from '@/utils/utils'
+import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 
 jest.mock('@/utils/utils', () => {
   return {
@@ -11,15 +13,16 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const { localVue, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
-describe('SearchDocumentNavbar', () => {
+describe('SearchDocumentNavbar.vue', () => {
+  const index = toLower('SearchDocumentNavbar')
   let wrapper
 
-  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
+  beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchDocumentNavbar, { localVue, router, store, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(SearchDocumentNavbar, { localVue, store, mocks: { $t: msg => msg } })
     getOS.mockReset()
   })
 

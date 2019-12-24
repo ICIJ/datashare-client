@@ -1,26 +1,17 @@
-import VueI18n from 'vue-i18n'
-import Murmur from '@icij/murmur'
-import BootstrapVue from 'bootstrap-vue'
 import Pagination from '@/components/Pagination'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import messages from '@/lang/en'
-import VueRouter from 'vue-router'
 import cloneDeep from 'lodash/cloneDeep'
 import flushPromises from 'flush-promises'
+import { App } from '@/main'
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(VueRouter)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('Pagination.vue', () => {
   let wrapper
   const template = { name: 'router-name', query: { from: 0, size: 10 } }
 
   beforeEach(() => {
-    wrapper = shallowMount(Pagination, { localVue, i18n, propsData: { total: 22, getToTemplate: () => cloneDeep(template) }, mocks: { $t: msg => msg }, sync: false })
+    wrapper = shallowMount(Pagination, { localVue, propsData: { total: 22, getToTemplate: () => cloneDeep(template) }, mocks: { $t: msg => msg }, sync: false })
   })
 
   describe('should display the pagination, or not', () => {
@@ -73,28 +64,28 @@ describe('Pagination.vue', () => {
   })
 
   describe('should generate links to pages', () => {
-    it('should generate the link to the first page', async () => {
+    it('should generate the link to the first page', () => {
       const template = { name: 'router-name', query: { from: 20, size: 10 } }
       wrapper.setProps({ total: 22, getToTemplate: () => cloneDeep(template) })
 
       expect(wrapper.vm.firstPageLinkParameters()).toMatchObject({ name: 'router-name', query: { from: 0, size: 10 } })
     })
 
-    it('should generate the link to the previous page', async () => {
+    it('should generate the link to the previous page', () => {
       const template = { name: 'router-name', query: { from: 20, size: 10 } }
       wrapper.setProps({ total: 22, getToTemplate: () => cloneDeep(template) })
 
       expect(wrapper.vm.previousPageLinkParameters()).toMatchObject({ name: 'router-name', query: { from: 10, size: 10 } })
     })
 
-    it('should generate the link to the next page', async () => {
+    it('should generate the link to the next page', () => {
       const template = { name: 'router-name', query: { from: 10, size: 10 } }
       wrapper.setProps({ total: 22, getToTemplate: () => cloneDeep(template) })
 
       expect(wrapper.vm.nextPageLinkParameters()).toMatchObject({ name: 'router-name', query: { from: 20, size: 10 } })
     })
 
-    it('should generate the link to the last page', async () => {
+    it('should generate the link to the last page', () => {
       const template = { name: 'router-name', query: { from: 10, size: 10 } }
       wrapper.setProps({ total: 22, getToTemplate: () => cloneDeep(template) })
 

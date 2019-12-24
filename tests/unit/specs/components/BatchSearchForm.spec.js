@@ -1,3 +1,4 @@
+import toLower from 'lodash/toLower'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 import Vuex from 'vuex'
@@ -10,12 +11,13 @@ const { localVue } = App.init(createLocalVue()).useAll()
 jest.mock('lodash/throttle', () => jest.fn(fn => fn))
 
 describe('BatchSearchForm.vue', () => {
+  const index = toLower('BatchSearchForm')
   let wrapper
   const state = { batchSearches: [] }
   const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
   const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFacet: jest.fn() } } } })
 
-  beforeAll(() => Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX], dataDir: '/root/project' }))
+  beforeAll(() => Murmur.config.merge({ userProjects: [index], dataDir: '/root/project' }))
 
   beforeEach(() => {
     wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
@@ -58,7 +60,7 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.name).toBe('')
     expect(wrapper.vm.csvFile).toBeNull()
     expect(wrapper.vm.description).toBe('')
-    expect(wrapper.vm.project).toBe(process.env.VUE_APP_ES_INDEX)
+    expect(wrapper.vm.project).toBe(index)
     expect(wrapper.vm.phraseMatch).toBeTruthy()
     expect(wrapper.vm.fuzziness).toBe(0)
     expect(wrapper.vm.fileType).toBe('')

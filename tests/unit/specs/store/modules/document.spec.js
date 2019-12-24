@@ -1,4 +1,5 @@
 import orderBy from 'lodash/orderBy'
+import toLower from 'lodash/toLower'
 import uniqueId from 'lodash/uniqueId'
 
 import { auth, datashare, initialState } from '@/store/modules/document'
@@ -8,11 +9,11 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { jsonResp } from 'tests/unit/tests_utils'
 import store from '@/store'
 
-describe('Document store', () => {
-  esConnectionHelper()
+describe('DocumentStore', () => {
+  const index = toLower('DocumentStore')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
   const id = 'document'
-  const index = process.env.VUE_APP_ES_INDEX
 
   beforeAll(() => {
     jest.spyOn(datashare, 'fetch')
@@ -40,7 +41,7 @@ describe('Document store', () => {
   })
 
   it('should get the document', async () => {
-    await letData(es).have(new IndexedDocument(id)).commit()
+    await letData(es).have(new IndexedDocument(id, index)).commit()
     await store.dispatch('document/get', { id, index })
 
     expect(store.state.document.doc.id).toBe(id)
@@ -49,8 +50,8 @@ describe('Document store', () => {
   it('should get the parent document', async () => {
     const parentId = uniqueId('parent-')
     const childId = uniqueId('child-')
-    await letData(es).have(new IndexedDocument(parentId)).commit()
-    await letData(es).have(new IndexedDocument(childId).withParent(parentId)).commit()
+    await letData(es).have(new IndexedDocument(parentId, index)).commit()
+    await letData(es).have(new IndexedDocument(childId, index).withParent(parentId)).commit()
     await store.dispatch('document/get', { id: childId, routing: parentId, index })
     await store.dispatch('document/getParent')
 
@@ -58,7 +59,7 @@ describe('Document store', () => {
   })
 
   it('should get the document\'s named entities', async () => {
-    await letData(es).have(new IndexedDocument(id).withNer('naz')).commit()
+    await letData(es).have(new IndexedDocument(id, index).withNer('naz')).commit()
     await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
 
@@ -67,7 +68,7 @@ describe('Document store', () => {
   })
 
   it('should get only the not hidden document\'s named entities', async () => {
-    await letData(es).have(new IndexedDocument(id)
+    await letData(es).have(new IndexedDocument(id, index)
       .withNer('entity_01', 42, 'ORGANIZATION', false)
       .withNer('entity_02', 43, 'ORGANIZATION', true)
       .withNer('entity_03', 44, 'ORGANIZATION', false)).commit()
@@ -85,7 +86,7 @@ describe('Document store', () => {
   it('should get the document\'s tags', async () => {
     const tags = ['tag_01', 'tag_02']
     datashare.fetch.mockReturnValue(jsonResp(tags))
-    await letData(es).have(new IndexedDocument(id).withTags(tags)).commit()
+    await letData(es).have(new IndexedDocument(id, index).withTags(tags)).commit()
     await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getTags')
     expect(store.state.document.tags).toEqual(tags)
@@ -104,8 +105,8 @@ describe('Document store', () => {
   })
 
   it('should tag multiple documents and not refresh', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+    await letData(es).have(new IndexedDocument('doc_02', index)).commit()
     await store.dispatch('document/get', { id: 'doc_01', index })
 
     datashare.fetch.mockClear()
@@ -113,13 +114,13 @@ describe('Document store', () => {
     await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }], tag: 'tag_01 tag_02 tag_03' })
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${process.env.VUE_APP_ES_INDEX}/documents/batchUpdate/tag`),
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
       { method: 'POST', body: JSON.stringify({ docIds: ['doc_01', 'doc_02'], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
   })
 
   it('should deleteTag from 1 document', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+    await letData(es).have(new IndexedDocument('doc_02', index)).commit()
     await store.dispatch('document/get', { id: 'doc_01', index })
 
     datashare.fetch.mockClear()
@@ -127,7 +128,7 @@ describe('Document store', () => {
     await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${process.env.VUE_APP_ES_INDEX}/documents/batchUpdate/untag`),
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
       { method: 'POST', body: JSON.stringify({ docIds: ['doc_01'], tags: ['tag_01'] }) })
   })
 

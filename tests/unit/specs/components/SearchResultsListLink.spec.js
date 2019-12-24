@@ -1,12 +1,16 @@
-import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import SearchResultsListLink from '@/components/SearchResultsListLink'
-import Document from '@/api/Document'
+import Murmur from '@icij/murmur'
+import toLower from 'lodash/toLower'
+
 import { App } from '@/main'
+import Document from '@/api/Document'
+import SearchResultsListLink from '@/components/SearchResultsListLink'
 
 const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
-describe('SearchResultsListLink', () => {
+describe('SearchResultsListLink.vue', () => {
+  const index = toLower('SearchResultsListLink')
+
   it('should display the correct location', () => {
     const wrapper = shallowMount(SearchResultsListLink, {
       localVue,
@@ -31,7 +35,7 @@ describe('SearchResultsListLink', () => {
       propsData: {
         document: new Document({
           _id: 'foo',
-          _index: process.env.VUE_APP_ES_INDEX
+          _index: index
         })
       }
     })
@@ -47,7 +51,7 @@ describe('SearchResultsListLink', () => {
       propsData: {
         document: new Document({
           _id: 'child',
-          _index: process.env.VUE_APP_ES_INDEX,
+          _index: index,
           _routing: 'parent'
         })
       }
@@ -58,7 +62,7 @@ describe('SearchResultsListLink', () => {
 
   it('should display the document sliced name', () => {
     const documentName = 'document'
-    Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] })
+    Murmur.config.merge({ userProjects: [index] })
     const wrapper = mount(SearchResultsListLink, {
       localVue,
       store,
@@ -66,7 +70,7 @@ describe('SearchResultsListLink', () => {
       propsData: {
         document: new Document({
           _id: documentName,
-          _index: process.env.VUE_APP_ES_INDEX,
+          _index: index,
           inner_hits: {
             NamedEntity: {
               hits: {

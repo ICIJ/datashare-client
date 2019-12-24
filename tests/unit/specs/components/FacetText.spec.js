@@ -1,7 +1,8 @@
 import find from 'lodash/find'
+import toLower from 'lodash/toLower'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
+import { removeCookie, setCookie } from 'tiny-cookie'
 import VueI18n from 'vue-i18n'
-import VueRouter from 'vue-router'
 
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -9,13 +10,16 @@ import FacetText from '@/components/FacetText'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import messagesFr from '@/lang/fr'
 
-const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
-const router = new VueRouter()
+const { localVue, i18n, store, router } = App.init(createLocalVue()).useAll()
 
 describe('FacetText.vue', () => {
-  esConnectionHelper()
+  const index = toLower('FacetText')
+  const anotherIndex = toLower('AnotherFacetText')
+  esConnectionHelper([index, anotherIndex])
   const es = esConnectionHelper.es
   let wrapper
+
+  beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
   beforeEach(() => {
     wrapper = mount(FacetText, {
@@ -26,10 +30,12 @@ describe('FacetText.vue', () => {
       propsData: { facet: find(store.state.search.facets, { name: 'contentType' }) }
     })
     store.commit('search/setGlobalSearch', true)
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+    store.commit('search/index', index)
   })
 
   afterEach(() => store.commit('search/reset'))
+
+  afterAll(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
 
   it('should display no items for the contentType facet', async () => {
     await wrapper.vm.root.aggregate()
@@ -39,11 +45,16 @@ describe('FacetText.vue', () => {
   })
 
   it('should display 3 items for the contentType facet', async () => {
-    await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('list.js').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('show.js').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('list.html').withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContentType('text/html')).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -52,13 +63,20 @@ describe('FacetText.vue', () => {
   })
 
   it('should display 4 items for the contentType facet', async () => {
-    await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('list.js').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('show.js').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('list.html').withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('index.css').withContentType('text/stylesheet')).commit()
-    await letData(es).have(new IndexedDocument('list.css').withContentType('text/stylesheet')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index)
+      .withContentType('text/stylesheet')).commit()
+    await letData(es).have(new IndexedDocument('document_07', index)
+      .withContentType('text/stylesheet')).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -67,12 +85,18 @@ describe('FacetText.vue', () => {
   })
 
   it('should display X facet items after applying the relative search', async () => {
-    await letData(es).have(new IndexedDocument('index.js').withContent('INDEX').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('list.js').withContent('LIST').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('show.js').withContent('SHOW').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('index.html').withContent('INDEX').withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('list.html').withContent('LIST').withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('list.css').withContent('LIST').withContentType('text/stylesheet')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContent('INDEX').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContent('LIST').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContent('SHOW').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContent('INDEX').withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContent('LIST').withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index)
+      .withContent('LIST').withContentType('text/stylesheet')).commit()
 
     store.commit('search/query', 'SHOW')
     await wrapper.vm.root.aggregate()
@@ -89,8 +113,10 @@ describe('FacetText.vue', () => {
   })
 
   it('should apply relative facet and get back to global facet', async () => {
-    await letData(es).have(new IndexedDocument('index.js').withContent('Lorem').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('index.html').withContent('Ipsum').withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContent('Lorem').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContent('Ipsum').withContentType('text/html')).commit()
 
     store.commit('search/query', 'Lorem')
     store.commit('search/setGlobalSearch', true)
@@ -108,9 +134,12 @@ describe('FacetText.vue', () => {
   })
 
   it('should display an item for inverted facet', async () => {
-    await letData(es).have(new IndexedDocument('doc_01.txt').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('text/javascript')).commit()
 
     store.commit('search/addFacetValue', { name: 'contentType', value: 'text/javascript' })
     store.commit('search/excludeFacet', 'contentType')
@@ -122,11 +151,16 @@ describe('FacetText.vue', () => {
   })
 
   it('should not display the more button', async () => {
-    await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('index_03.txt').withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('index_04.txt').withContentType('text/type_04')).commit()
-    await letData(es).have(new IndexedDocument('index_05.txt').withContentType('text/type_05')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContentType('text/type_04')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContentType('text/type_05')).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -136,12 +170,18 @@ describe('FacetText.vue', () => {
   })
 
   it('should display the more button and its font awesome icon', async () => {
-    await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('index_03.txt').withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('index_04.txt').withContentType('text/type_04')).commit()
-    await letData(es).have(new IndexedDocument('index_05.txt').withContentType('text/type_05')).commit()
-    await letData(es).have(new IndexedDocument('index_06.txt').withContentType('text/type_06')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContentType('text/type_04')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContentType('text/type_05')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index)
+      .withContentType('text/type_06')).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -151,12 +191,18 @@ describe('FacetText.vue', () => {
   })
 
   it('should display all the facet values and the more button', async () => {
-    await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('index_03.txt').withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('index_04.txt').withContentType('text/type_04')).commit()
-    await letData(es).have(new IndexedDocument('index_05.txt').withContentType('text/type_05')).commit()
-    await letData(es).have(new IndexedDocument('index_06.txt').withContentType('text/type_06')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContentType('text/type_04')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContentType('text/type_05')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index)
+      .withContentType('text/type_06')).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -167,12 +213,18 @@ describe('FacetText.vue', () => {
   })
 
   it('should filter facet values and display the more button', async () => {
-    await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('index_03.txt').withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('index_04.txt').withContentType('text/type_04')).commit()
-    await letData(es).have(new IndexedDocument('index_05.txt').withContentType('text/type_05')).commit()
-    await letData(es).have(new IndexedDocument('index_06.txt').withContentType('text/type_06')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContentType('text/type_04')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContentType('text/type_05')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index)
+      .withContentType('text/type_06')).commit()
 
     wrapper.vm.root.facetQuery = 'text/type_0'
 
@@ -185,12 +237,18 @@ describe('FacetText.vue', () => {
   })
 
   it('should filter facet values but no more button', async () => {
-    await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('index_03.txt').withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('index_04.txt').withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('index_05.txt').withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('index_06.txt').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index)
+      .withContentType('text/type_03')).commit()
 
     wrapper.vm.root.facetQuery = 'text/type_03'
 
@@ -202,12 +260,18 @@ describe('FacetText.vue', () => {
   })
 
   it('should filter facet values', async () => {
-    await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('index_03.txt').withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('index_04.txt').withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('index_05.txt').withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('index_06.txt').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index)
+      .withContentType('text/type_03')).commit()
 
     wrapper.vm.root.facetQuery = 'yolo'
 
@@ -218,8 +282,10 @@ describe('FacetText.vue', () => {
   })
 
   it('should filter facet values - Uppercase situation 2/2', async () => {
-    await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/csv')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContentType('plain/text')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/csv')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('plain/text')).commit()
 
     wrapper.vm.root.facetQuery = 'TEX'
 
@@ -230,10 +296,14 @@ describe('FacetText.vue', () => {
   })
 
   it('should filter facet values on facet item', async () => {
-    await letData(es).have(new IndexedDocument('index_01.txt').withContentType('application/pdf')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')).commit()
-    await letData(es).have(new IndexedDocument('index_03.txt').withContentType('image/wmf')).commit()
-    await letData(es).have(new IndexedDocument('index_04.txt').withContentType('image/emf')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('application/pdf')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('application/vnd.openxmlformats-officedocument.spreadsheetml.sheet')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('image/wmf')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContentType('image/emf')).commit()
 
     wrapper.vm.root.facetQuery = 'image'
 
@@ -244,11 +314,11 @@ describe('FacetText.vue', () => {
   })
 
   it('should filter facet values on facet label', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')
+    await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('message/rfc822')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')
+    await letData(es).have(new IndexedDocument('document_02', index)
       .withContentType('another_type')).commit()
-    await letData(es).have(new IndexedDocument('doc_03')
+    await letData(es).have(new IndexedDocument('document_03', index)
       .withContentType('message/rfc822')).commit()
 
     wrapper.vm.root.facetQuery = 'Internet'
@@ -261,11 +331,11 @@ describe('FacetText.vue', () => {
   })
 
   it('should filter facet values on facet label in capital letters', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')
+    await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('message/rfc822')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')
+    await letData(es).have(new IndexedDocument('document_02', index)
       .withContentType('another_type')).commit()
-    await letData(es).have(new IndexedDocument('doc_03')
+    await letData(es).have(new IndexedDocument('document_03', index)
       .withContentType('message/rfc822')).commit()
 
     wrapper.vm.root.facetQuery = 'EMAIL'
@@ -280,7 +350,8 @@ describe('FacetText.vue', () => {
   it('should fire 2 events on click on facet item', async () => {
     const rootWrapper = createWrapper(wrapper.vm.$root)
     const spyRefreshRoute = jest.spyOn(wrapper.vm.root, 'refreshRoute')
-    await letData(es).have(new IndexedDocument('doc_01').withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('type_01')).commit()
     await wrapper.vm.root.aggregate()
     wrapper.find('.facet__items__item:nth-child(1) input').trigger('click')
 
@@ -291,7 +362,8 @@ describe('FacetText.vue', () => {
 
   it('should reset the from query on click on facet item', async () => {
     store.commit('search/from', 25)
-    await letData(es).have(new IndexedDocument('doc_01').withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('type_01')).commit()
     await wrapper.vm.root.aggregate()
     wrapper.find('.facet__items__item:nth-child(1) input').trigger('click')
 
@@ -299,15 +371,18 @@ describe('FacetText.vue', () => {
   })
 
   it('should return facets from another index', async () => {
-    await letData(es).have(new IndexedDocument('docs/foo.js').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('docs/foo.html').withContentType('text/html')).commit()
-    await letData(es).have(new IndexedDocument('docs/bar.js').toIndex(process.env.VUE_APP_ES_ANOTHER_INDEX).withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_03', anotherIndex)
+      .withContentType('text/javascript')).commit()
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
     expect(wrapper.vm.root.total).toEqual(2)
 
-    store.commit('search/index', process.env.VUE_APP_ES_ANOTHER_INDEX)
+    store.commit('search/index', anotherIndex)
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
@@ -315,8 +390,10 @@ describe('FacetText.vue', () => {
   })
 
   it('should display an "All" item on top of others items, and this item should be active by default', async () => {
-    await letData(es).have(new IndexedDocument('index.js').withContentType('text/javascript')).commit()
-    await letData(es).have(new IndexedDocument('index.html').withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/html')).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -331,12 +408,18 @@ describe('FacetText.vue', () => {
     const rootWrapper = createWrapper(wrapper.vm.$root)
     const spyRefreshRoute = jest.spyOn(wrapper.vm.root, 'refreshRoute')
 
-    await letData(es).have(new IndexedDocument('index_01.txt').withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('index_02.txt').withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('index_03.txt').withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('index_04.txt').withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('index_05.txt').withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('index_06.txt').withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/type_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withContentType('text/type_02')).commit()
+    await letData(es).have(new IndexedDocument('document_04', index)
+      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContentType('text/type_03')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index)
+      .withContentType('text/type_03')).commit()
 
     await wrapper.vm.root.aggregate()
     wrapper.find('.facet__items__item:nth-child(2) input').trigger('click')
@@ -358,7 +441,8 @@ describe('FacetText.vue', () => {
       store,
       propsData: { facet: find(store.state.search.facets, { name: 'language' }) }
     })
-    await letData(es).have(new IndexedDocument('doc_01.txt').withLanguage('ENGLISH')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withLanguage('ENGLISH')).commit()
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
@@ -374,7 +458,8 @@ describe('FacetText.vue', () => {
       store,
       propsData: { facet: find(store.state.search.facets, { name: 'language' }) }
     })
-    await letData(es).have(new IndexedDocument('doc_01.txt').withLanguage('WELSH')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withLanguage('WELSH')).commit()
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
@@ -389,8 +474,9 @@ describe('FacetText.vue', () => {
       store,
       propsData: { facet: find(store.state.search.facets, { name: 'extractionLevel' }) }
     })
-    await letData(es).have(new IndexedDocument('parent.txt')).commit()
-    await letData(es).have(new IndexedDocument('child.txt').withParent('parent.txt')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withParent('document_01')).commit()
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
@@ -406,8 +492,9 @@ describe('FacetText.vue', () => {
       store,
       propsData: { facet: find(store.state.search.facets, { name: 'extractionLevel' }) }
     })
-    await letData(es).have(new IndexedDocument('parent.txt')).commit()
-    await letData(es).have(new IndexedDocument('child.txt').withParent('parent.txt')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withParent('document_01')).commit()
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
@@ -423,9 +510,12 @@ describe('FacetText.vue', () => {
   })
 
   it('should remove "tag_01" from the tags facet on event "facet::delete"', async () => {
-    await letData(es).have(new IndexedDocument('document_01').withTags(['tag_01'])).commit()
-    await letData(es).have(new IndexedDocument('document_02').withTags(['tag_02'])).commit()
-    await letData(es).have(new IndexedDocument('document_03').withTags(['tag_03'])).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withTags(['tag_01'])).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withTags(['tag_02'])).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)
+      .withTags(['tag_03'])).commit()
 
     wrapper = mount(FacetText, { localVue, i18n, router, store, propsData: { facet: find(store.state.search.facets, { name: 'tags' }) } })
     await wrapper.vm.root.aggregate()

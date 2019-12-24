@@ -1,3 +1,4 @@
+import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import Murmur from '@icij/murmur'
@@ -12,7 +13,8 @@ import { jsonResp } from 'tests/unit/tests_utils'
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('DocumentActions.vue', () => {
-  esConnectionHelper()
+  const index = toLower('DocumentActions')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
   let document, wrapper
 
@@ -22,7 +24,7 @@ describe('DocumentActions.vue', () => {
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonResp())
     store.commit('search/starredDocuments', [])
-    document = await letData(es).have(new IndexedDocument()).commit()
+    document = await letData(es).have(new IndexedDocument('document', index)).commit()
     wrapper = shallowMount(DocumentActions, { localVue, store, propsData: { document }, mocks: { $t: msg => msg }, sync: false })
   })
 

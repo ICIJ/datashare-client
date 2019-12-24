@@ -1,9 +1,9 @@
+import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { createServer } from 'http-server'
 import Murmur from '@icij/murmur'
+import VueRouter from 'vue-router'
 
 import { App } from '@/main'
-import VueRouter from 'vue-router'
 import { datashare } from '@/store/modules/document'
 import DatashareClient from '@/api/DatashareClient'
 import DocumentView from '@/pages/DocumentView'
@@ -15,19 +15,14 @@ const { localVue, store } = App.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('DocumentView.vue', () => {
-  esConnectionHelper()
+  const index = toLower('DocumentView')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
   const id = 'document'
-  const index = process.env.VUE_APP_ES_INDEX
-  let httpServer, wrapper
-
-  beforeAll(() => {
-    httpServer = createServer({ root: 'tests/unit/resources' })
-    httpServer.listen(9876)
-  })
+  let wrapper
 
   beforeEach(async () => {
-    await letData(es).have(new IndexedDocument(id)).commit()
+    await letData(es).have(new IndexedDocument(id, index)).commit()
   })
 
   afterEach(() => {
@@ -35,11 +30,8 @@ describe('DocumentView.vue', () => {
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
   })
 
-  afterAll(() => httpServer.close())
-
   it('should display an error message if document is not found', async () => {
-    const anotherId = 'notfound'
-    wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id: anotherId, index }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id: 'notfound', index }, mocks: { $t: msg => msg } })
     await wrapper.vm.getDoc()
 
     expect(wrapper.find('span').text()).toEqual('document.not_found')
@@ -93,38 +85,30 @@ describe('DocumentView.vue', () => {
   })
 
   describe('navigate through tabs as loop', () => {
-    it('should set the previous tab as active', async () => {
+    beforeEach(async () => {
       wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
       await wrapper.vm.getDoc()
-
+    })
+    it('should set the previous tab as active', () => {
       wrapper.vm.activeTab = 'details'
       wrapper.vm.goToPreviousTab()
 
       expect(wrapper.vm.activeTab).toBe('extracted-text')
     })
 
-    it('should set the next tab as active', async () => {
-      wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
-      await wrapper.vm.getDoc()
-
+    it('should set the next tab as active', () => {
       wrapper.vm.goToNextTab()
 
       expect(wrapper.vm.activeTab).toBe('details')
     })
 
-    it('should set the last tab as active', async () => {
-      wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
-      await wrapper.vm.getDoc()
-
+    it('should set the last tab as active', () => {
       wrapper.vm.goToPreviousTab()
 
       expect(wrapper.vm.activeTab).toBe('preview')
     })
 
-    it('should set the first tab as active', async () => {
-      wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
-      await wrapper.vm.getDoc()
-
+    it('should set the first tab as active', () => {
       wrapper.vm.activeTab = 'preview'
       wrapper.vm.goToNextTab()
 

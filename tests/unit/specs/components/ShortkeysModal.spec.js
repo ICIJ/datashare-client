@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+
+import { App } from '@/main'
 import ShortkeysModal from '@/components/ShortkeysModal'
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
 
 jest.mock('@/utils/shortkeys.json', () => {
   return {
@@ -47,15 +47,13 @@ jest.mock('@/utils/shortkeys.json', () => {
   }
 })
 
-const localVue = createLocalVue()
-localVue.use(BootstrapVue)
-localVue.use(Murmur)
+const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('ShortkeysModal', () => {
-  let wrapper
+  let label, wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(ShortkeysModal, { localVue, mocks: { $t: msg => msg === 'key.subkey' ? 'Action label' : msg, $te: () => true } })
+    wrapper = shallowMount(ShortkeysModal, { localVue, mocks: { $t: msg => msg, $te: () => true } })
   })
 
   it('should display the shortkeys modal', () => {
@@ -74,21 +72,21 @@ describe('ShortkeysModal', () => {
 
   describe('Shortkey label', () => {
     it('should return the translation of the label if there is one', () => {
-      const label = wrapper.vm.getLabel({ keys: { mac: ['meta', 'key_01'], default: ['ctrl', 'key_01'] }, action: 'action_01', label: 'key.subkey' })
+      label = wrapper.vm.getLabel({ keys: { mac: ['meta', 'key_01'], default: ['ctrl', 'key_01'] }, action: 'action_01', label: 'key.subkey' })
 
-      expect(label).toEqual('Action label')
+      expect(label).toBe('key.subkey')
     })
 
     it('should return the label if there is one', () => {
-      const label = wrapper.vm.getLabel({ keys: { mac: ['meta', 'key_01'], default: ['ctrl', 'key_01'] }, action: 'action_01', label: 'There is no translation' })
+      label = wrapper.vm.getLabel({ keys: { mac: ['meta', 'key_01'], default: ['ctrl', 'key_01'] }, action: 'action_01', label: 'There is no translation' })
 
-      expect(label).toEqual('There is no translation')
+      expect(label).toBe('There is no translation')
     })
 
     it('should return the action of a key if there is no label', () => {
-      const label = wrapper.vm.getLabel({ keys: { mac: ['meta', 'key_01'], default: ['ctrl', 'key_01'] }, action: 'action_01' })
+      label = wrapper.vm.getLabel({ keys: { mac: ['meta', 'key_01'], default: ['ctrl', 'key_01'] }, action: 'action_01' })
 
-      expect(label).toEqual('action_01')
+      expect(label).toBe('action_01')
     })
   })
 

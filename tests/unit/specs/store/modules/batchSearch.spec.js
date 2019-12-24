@@ -1,3 +1,4 @@
+import toLower from 'lodash/toLower'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
@@ -9,8 +10,9 @@ import { jsonResp } from 'tests/unit/tests_utils'
 
 Vue.use(Vuex)
 
-describe('BatchSearch store', () => {
-  esConnectionHelper()
+describe('BatchSearchStore', () => {
+  const index = toLower('BatchSearchStore')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
   let store
 
@@ -45,7 +47,7 @@ describe('BatchSearch store', () => {
     })
 
     it('should retrieve a batchSearch according to its id', async () => {
-      await letData(es).have(new IndexedDocument('12').withContentType('type_01')).commit()
+      await letData(es).have(new IndexedDocument('document', index).withContentType('type_01')).commit()
       const batchSearch = [{ contentType: 'type_01', documentId: 12, rootId: 42 }]
       datashare.fetch.mockReturnValue(jsonResp(batchSearch))
 

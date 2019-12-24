@@ -1,29 +1,19 @@
-import VueI18n from 'vue-i18n'
-import { shallowMount } from '@vue/test-utils'
-import ExtractingForm from '@/components/ExtractingForm'
-import messages from '@/lang/en'
-import router from '@/router'
-import store from '@/store'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+
+import { App } from '@/main'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
-import { createApp } from '@/main'
+import ExtractingForm from '@/components/ExtractingForm'
 import { jsonResp } from 'tests/unit/tests_utils'
+import router from '@/router'
+
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('ExtractingForm.vue', () => {
-  let wrapper, appVue, i18n
-
-  beforeAll(async () => {
-    const app = document.createElement('div')
-    app.setAttribute('id', 'app')
-    document.body.appendChild(app)
-    window.fetch = jest.fn()
-    window.fetch.mockReturnValue(jsonResp({ userProjects: [] }))
-    appVue = await createApp()
-    i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
-  })
+  let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(ExtractingForm, { appVue, i18n, router, store })
+    wrapper = shallowMount(ExtractingForm, { localVue, router, store, mocks: { $t: msg => msg } })
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonResp())
     datashare.fetch.mockClear()
@@ -32,7 +22,6 @@ describe('ExtractingForm.vue', () => {
   afterEach(() => store.commit('indexing/reset'))
 
   afterAll(() => {
-    window.fetch.mockRestore()
     datashare.fetch.mockRestore()
   })
 

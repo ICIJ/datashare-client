@@ -1,4 +1,5 @@
 import find from 'lodash/find'
+import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import { App } from '@/main'
@@ -9,24 +10,25 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 
 describe('FacetDate.vue', () => {
-  esConnectionHelper()
+  const index = toLower('FacetDate')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
   let wrapper
 
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+    store.commit('search/index', index)
     wrapper = mount(FacetDate, { localVue, i18n, store, propsData: { facet: find(store.state.search.facets, { name: 'indexingDate' }) } })
   })
 
   afterEach(() => store.commit('search/reset'))
 
   it('should display an creation date facet with 2 months', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')
+    await letData(es).have(new IndexedDocument('doc_01', index)
       .withIndexingDate('2018-04-01T00:00:00.000Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')
+    await letData(es).have(new IndexedDocument('doc_02', index)
       .withIndexingDate('2018-05-01T00:00:00.000Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_03')
+    await letData(es).have(new IndexedDocument('doc_03', index)
       .withIndexingDate('2018-05-01T00:00:00.000Z')).commit()
 
     await wrapper.vm.root.aggregate()

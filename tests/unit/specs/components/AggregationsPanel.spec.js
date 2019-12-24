@@ -8,7 +8,7 @@ const { localVue, store, router, i18n } = App.init(createLocalVue()).useAll()
 describe('AggregationsPanel.vue', () => {
   let wrapper
 
-  beforeEach(async () => {
+  beforeEach(() => {
     wrapper = shallowMount(AggregationsPanel, { localVue, i18n, router, store, sync: false })
   })
 

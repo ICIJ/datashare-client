@@ -6,7 +6,7 @@ describe('store', () => {
   })
 
   it('should be in strict mode', () => {
-    expect(store.strict).toEqual(true)
+    expect(store.strict).toBeTruthy()
   })
 
   it('should define a batchSearch module', () => {

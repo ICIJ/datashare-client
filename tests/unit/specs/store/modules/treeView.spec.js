@@ -1,6 +1,6 @@
 import store from '@/store'
 
-describe('TreeView store', () => {
+describe('TreeViewStore', () => {
   describe('should set folder as open, parent folder as open but sibling folder as NOT open', () => {
     beforeAll(() => store.commit('treeView/addPath', '/path/to/folder_11'))
 

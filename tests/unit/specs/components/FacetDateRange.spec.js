@@ -1,4 +1,5 @@
 import find from 'lodash/find'
+import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
@@ -11,21 +12,22 @@ const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('FacetDateRange.vue', () => {
-  esConnectionHelper()
+  const index = toLower('FacetDateRange')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
   let wrapper
   const name = 'creationDate'
 
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+    store.commit('search/index', index)
     wrapper = mount(FacetDateRange, { localVue, i18n, store, router, propsData: { facet: find(store.state.search.facets, { name }) } })
   })
 
   afterEach(() => store.commit('search/reset'))
 
   it('should display a date picker', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')
+    await letData(es).have(new IndexedDocument('doc_01', index)
       .withCreationDate('2018-04-01T00:00:00.000Z')).commit()
 
     await wrapper.vm.root.aggregate()

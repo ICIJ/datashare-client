@@ -1,14 +1,16 @@
+import toLower from 'lodash/toLower'
 import bodybuilder from 'bodybuilder'
-import { EventBus } from '@/utils/event-bus'
+
 import esClient from '@/api/esClient'
-import { FacetText, FacetNamedEntity } from '@/store/facetsStore'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { EventBus } from '@/utils/event-bus'
+import { FacetText, FacetNamedEntity } from '@/store/facetsStore'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 describe('esClient', () => {
-  esConnectionHelper()
+  const index = toLower('esClient')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
-  const index = process.env.VUE_APP_ES_INDEX
 
   it('should return backend response to a POST request for searchDocs', async () => {
     const spy = jest.spyOn(esClient, 'search').mockImplementation(() => Promise.resolve({ 'foo': 'bar' }))
@@ -163,8 +165,8 @@ describe('esClient', () => {
   })
 
   it('should return the first 12 named entities', async () => {
-    const docId = 'doc'
-    await letData(es).have(new IndexedDocument(docId)
+    const id = 'document'
+    await letData(es).have(new IndexedDocument(id, index)
       .withNer('ne_01')
       .withNer('ne_02')
       .withNer('ne_03')
@@ -179,20 +181,20 @@ describe('esClient', () => {
       .withNer('ne_12')
     ).commit()
 
-    const response = await esClient.getDocumentNamedEntities(index, docId, docId, 0, 20)
+    const response = await esClient.getDocumentNamedEntities(index, id, id, 0, 20)
 
     expect(response.hits.hits).toHaveLength(12)
   })
 
   it('should return all the named entities', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')
+    await letData(es).have(new IndexedDocument('document_01', index)
       .withContent('this is a document')
       .withNer('ne_01')
     ).commit()
-    await letData(es).have(new IndexedDocument('doc_02')
+    await letData(es).have(new IndexedDocument('document_02', index)
       .withNer('document')
     ).commit()
-    await letData(es).have(new IndexedDocument('doc_03')
+    await letData(es).have(new IndexedDocument('document_03', index)
       .withContent('nothing to write')
       .withNer('another')
     ).commit()

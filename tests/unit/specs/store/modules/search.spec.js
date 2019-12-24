@@ -1,21 +1,22 @@
-import Response from '@/api/Response'
-import { datashare } from '@/store/modules/search'
-import Document from '@/api/Document'
-import NamedEntity from '@/api/NamedEntity'
-import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { jsonResp } from 'tests/unit/tests_utils'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import omit from 'lodash/omit'
+import toLower from 'lodash/toLower'
+
+import { datashare } from '@/store/modules/search'
+import Document from '@/api/Document'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
+import { jsonResp } from 'tests/unit/tests_utils'
+import NamedEntity from '@/api/NamedEntity'
+import Response from '@/api/Response'
 import store from '@/store'
 
-describe('Search store', () => {
-  esConnectionHelper()
+describe('SearchStore', () => {
+  const index = toLower('SearchStore')
+  const anotherIndex = toLower('AnotherSearchStore')
+  esConnectionHelper([index, anotherIndex])
   const es = esConnectionHelper.es
-  const index = process.env.VUE_APP_ES_INDEX
-  // High timeout because multiple searches can be heavy for the Elasticsearch
-  jest.setTimeout(1e4)
 
   beforeAll(() => store.commit('search/index', index))
 
@@ -25,8 +26,8 @@ describe('Search store', () => {
   })
 
   afterEach(() => {
-    store.dispatch('search/reset')
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+    store.commit('search/index', index)
+    store.commit('search/reset')
     datashare.fetch.mockClear()
   })
 
@@ -34,9 +35,9 @@ describe('Search store', () => {
     expect(store.state.search).not.toBeUndefined()
   })
 
-  it('should reset to initial state', () => {
+  it('should reset to initial state', async () => {
     const initialState = cloneDeep(store.state.search)
-    store.commit('search/index', 'another-index')
+    store.commit('search/index', anotherIndex)
     store.commit('search/query', 'datashare')
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
@@ -44,33 +45,34 @@ describe('Search store', () => {
     store.commit('search/toggleFilters')
     store.commit('search/isDownloadAllowed', true)
 
-    store.dispatch('search/reset')
+    await store.dispatch('search/reset')
 
     expect(omit(store.state.search, ['index', 'isReady', 'facets', 'showFilters', 'response'])).toEqual(omit(initialState, ['index', 'isReady', 'facets', 'showFilters', 'response']))
-    expect(store.state.search.index).toEqual('another-index')
-    expect(store.state.search.isReady).toEqual(false)
+    expect(store.state.search.index).toBe(anotherIndex)
+    expect(store.state.search.isReady).toBeTruthy()
     expect(find(store.state.search.facets, { name: 'contentType' }).values).toEqual([])
   })
 
-  it('should not reset the starredDocuments from the facet', () => {
-    store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
+  it('should not reset the starredDocuments from the facet', async () => {
+    store.commit('search/starredDocuments', ['document_01', 'document_02'])
 
-    store.dispatch('search/reset', ['starredDocuments'])
+    await store.dispatch('search/reset', ['starredDocuments'])
 
-    expect(find(store.state.search.facets, { name: 'starred' }).starredDocuments).toEqual(['doc_01', 'doc_02'])
+    expect(find(store.state.search.facets, { name: 'starred' }).starredDocuments).toEqual(['document_01', 'document_02'])
   })
 
-  it('should not reset the starredDocuments', () => {
-    store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
+  it('should not reset the starredDocuments', async () => {
+    store.commit('search/starredDocuments', ['document_01', 'document_02'])
 
-    store.dispatch('search/reset', ['starredDocuments'])
+    await store.dispatch('search/reset', ['starredDocuments'])
 
-    expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
+    expect(store.state.search.starredDocuments).toEqual(['document_01', 'document_02'])
   })
 
-  it('should change the state after `query` mutation', async () => {
+  it('should change the state after "query" mutation', async () => {
     await store.dispatch('search/query', 'bar')
-    expect(store.state.search.query).toEqual('bar')
+
+    expect(store.state.search.query).toBe('bar')
   })
 
   it('should build a Response object from raw value', () => {
@@ -96,35 +98,30 @@ describe('Search store', () => {
     })
     expect(store.state.search.response.hits[0]).toBeInstanceOf(Document)
     expect(store.state.search.response.hits[1]).toBeInstanceOf(NamedEntity)
-    expect(store.state.search.response.hits[2]).toEqual(undefined)
+    expect(store.state.search.response.hits[2]).toBeUndefined()
   })
 
   it('should return document from local index', async () => {
-    await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
+    await letData(es).have(new IndexedDocument('document', index).withContent('bar')).commit()
     await store.dispatch('search/query', 'bar')
+
     expect(store.state.search.response.hits).toHaveLength(1)
-    expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
+    expect(store.state.search.response.hits[0].basename).toBe('document')
   })
 
   it('should return document from another index', async () => {
-    await letData(es).have(new IndexedDocument('docs/bar.txt').toIndex(process.env.VUE_APP_ES_ANOTHER_INDEX).withContent('this is bar document')).commit()
-    await store.dispatch('search/query', { index: process.env.VUE_APP_ES_ANOTHER_INDEX, query: 'bar', from: 0, size: 25 })
-    expect(store.state.search.response.hits).toHaveLength(1)
-    expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
-  })
+    await letData(es).have(new IndexedDocument('document', anotherIndex).withContent('bar')).commit()
+    await store.dispatch('search/query', { index: anotherIndex, query: 'bar', from: 0, size: 25 })
 
-  it('should get document from ElasticSearch', async () => {
-    await letData(es).have(new IndexedDocument('docs/bar.txt').withContent('this is bar document')).commit()
-    await store.dispatch('search/query', 'bar')
     expect(store.state.search.response.hits).toHaveLength(1)
-    expect(store.state.search.response.hits[0].basename).toEqual('bar.txt')
+    expect(store.state.search.response.hits[0].basename).toBe('document')
   })
 
   it('should find 2 documents filtered by one contentType', async () => {
-    await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('foo.txt').withContentType('txt').withContent('foo')).commit()
-    await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('foo.pdf').withContentType('pdf').withContent('foo')).commit()
+    await letData(es).have(new IndexedDocument('bar.txt', index).withContentType('txt').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('foo.txt', index).withContentType('txt').withContent('foo')).commit()
+    await letData(es).have(new IndexedDocument('bar.pdf', index).withContentType('pdf').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('foo.pdf', index).withContentType('pdf').withContent('foo')).commit()
 
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.hits).toHaveLength(4)
@@ -133,9 +130,9 @@ describe('Search store', () => {
   })
 
   it('should find 3 documents filtered by two contentType', async () => {
-    await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.txt', index).withContentType('txt').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.pdf', index).withContentType('pdf').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.csv', index).withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.hits).toHaveLength(3)
@@ -146,9 +143,9 @@ describe('Search store', () => {
   })
 
   it('should not find documents after filtering by contentType', async () => {
-    await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.txt', index).withContentType('txt').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.pdf', index).withContentType('pdf').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.csv', index).withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.hits).toHaveLength(3)
@@ -157,9 +154,9 @@ describe('Search store', () => {
   })
 
   it('should find documents after removing filter by contentType', async () => {
-    await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.txt', index).withContentType('txt').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.pdf', index).withContentType('pdf').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.csv', index).withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.hits).toHaveLength(3)
@@ -170,9 +167,9 @@ describe('Search store', () => {
   })
 
   it('should exclude documents with a specific contentType', async () => {
-    await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.txt', index).withContentType('txt').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.pdf', index).withContentType('pdf').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.csv', index).withContentType('csv').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
     expect(store.state.search.response.hits).toHaveLength(3)
@@ -183,22 +180,22 @@ describe('Search store', () => {
   })
 
   it('should exclude documents with a specific contentType and include them again', async () => {
-    await letData(es).have(new IndexedDocument('bar.txt').withContent('bar').withNer('name_01')).commit()
-    await letData(es).have(new IndexedDocument('foo.txt').withContent('foo').withNer('name_01')).commit()
-    await letData(es).have(new IndexedDocument('bar.pdf').withContent('bar').withNer('name_01')).commit()
-    await letData(es).have(new IndexedDocument('bar.csv').withContent('bar').withNer('name_02')).commit()
-    await letData(es).have(new IndexedDocument('bar.ico').withContent('bar').withNer('name_02')).commit()
+    await letData(es).have(new IndexedDocument('bar.txt', index).withContent('bar').withNer('name_01')).commit()
+    await letData(es).have(new IndexedDocument('foo.txt', index).withContent('foo').withNer('name_01')).commit()
+    await letData(es).have(new IndexedDocument('bar.pdf', index).withContent('bar').withNer('name_01')).commit()
+    await letData(es).have(new IndexedDocument('bar.csv', index).withContent('bar').withNer('name_02')).commit()
+    await letData(es).have(new IndexedDocument('bar.ico', index).withContent('bar').withNer('name_02')).commit()
 
     await store.dispatch('search/addFacetValue', { name: 'namedEntityPerson', value: 'name_02' })
     expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should filter documents if a named entity is selected', async () => {
-    await letData(es).have(new IndexedDocument('bar.txt').withContentType('txt').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('foo.txt').withContentType('txt').withContent('foo')).commit()
-    await letData(es).have(new IndexedDocument('bar.pdf').withContentType('pdf').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('bar.csv').withContentType('csv').withContent('bar')).commit()
-    await letData(es).have(new IndexedDocument('bar.ico').withContentType('ico').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.txt', index).withContentType('txt').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('foo.txt', index).withContentType('txt').withContent('foo')).commit()
+    await letData(es).have(new IndexedDocument('bar.pdf', index).withContentType('pdf').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.csv', index).withContentType('csv').withContent('bar')).commit()
+    await letData(es).have(new IndexedDocument('bar.ico', index).withContentType('ico').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
     await store.dispatch('search/addFacetValue', { name: 'contentType', value: 'txt' })
@@ -267,21 +264,21 @@ describe('Search store', () => {
   })
 
   it('should return 2 documents', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(index).count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
     expect(store.state.search.response.hits).toHaveLength(2)
   })
 
   it('should return 3 documents', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(index).count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
     expect(store.state.search.response.hits).toHaveLength(3)
   })
 
   it('should return 1 document (1/3)', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(4)).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(index).count(4)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 3, size: 3 })
     expect(store.state.search.response.hits).toHaveLength(1)
@@ -293,14 +290,14 @@ describe('Search store', () => {
   })
 
   it('should return 5 documents in total', async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').count(5)).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(index).count(5)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
     expect(store.state.search.response.total).toEqual(5)
   })
 
   it('should return the default query parameters', () => {
-    expect(store.getters['search/toRouteQuery']).toMatchObject({ index: process.env.VUE_APP_ES_INDEX, q: '', size: 25, sort: 'relevance', from: 0 })
+    expect(store.getters['search/toRouteQuery']).toMatchObject({ index, q: '', size: 25, sort: 'relevance', from: 0 })
   })
 
   it('should return an advanced and faceted query parameters', () => {
@@ -309,6 +306,7 @@ describe('Search store', () => {
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFacetValue', { name: 'contentType', value: 'TXT' })
+
     expect(store.getters['search/toRouteQuery']).toMatchObject({ index: 'another-index', q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[contentType]': ['TXT'] })
   })
 
@@ -329,32 +327,38 @@ describe('Search store', () => {
   describe('updateFromRouteQuery should restore search state from url', () => {
     it('should set the index of the store according to the url', async () => {
       await store.dispatch('search/updateFromRouteQuery', { index: process.env.VUE_APP_ES_ANOTHER_INDEX })
-      expect(store.state.search.index).toEqual(process.env.VUE_APP_ES_ANOTHER_INDEX)
+
+      expect(store.state.search.index).toBe(process.env.VUE_APP_ES_ANOTHER_INDEX)
     })
 
     it('should set the query of the store according to the url', async () => {
       await store.dispatch('search/updateFromRouteQuery', { q: 'new_query' })
-      expect(store.state.search.query).toEqual('new_query')
+
+      expect(store.state.search.query).toBe('new_query')
     })
 
     it('should set the from of the store according to the url', async () => {
       await store.dispatch('search/updateFromRouteQuery', { from: 42 })
-      expect(store.state.search.from).toEqual(42)
+
+      expect(store.state.search.from).toBe(42)
     })
 
     it('should set the size of the store according to the url', async () => {
       await store.dispatch('search/updateFromRouteQuery', { size: 24 })
-      expect(store.state.search.size).toEqual(24)
+
+      expect(store.state.search.size).toBe(24)
     })
 
     it('should set the sort of the store according to the url', async () => {
       await store.dispatch('search/updateFromRouteQuery', { sort: 'new_sort' })
-      expect(store.state.search.sort).toEqual('new_sort')
+
+      expect(store.state.search.sort).toBe('new_sort')
     })
 
     it('should set the facet of the store according to the url', async () => {
       await store.dispatch('search/updateFromRouteQuery', { 'f[contentType]': ['new_type'] })
-      expect(store.getters['search/findFacet']('contentType').values[0]).toEqual('new_type')
+
+      expect(store.getters['search/findFacet']('contentType').values[0]).toBe('new_type')
     })
 
     it('should not change the starredDocuments on updateFromRouteQuery', async () => {
@@ -370,7 +374,7 @@ describe('Search store', () => {
 
       await store.dispatch('search/updateFromRouteQuery', {})
 
-      expect(store.state.search.field).toEqual('author')
+      expect(store.state.search.field).toBe('author')
     })
   })
 
@@ -385,42 +389,42 @@ describe('Search store', () => {
     store.commit('search/query', 'this is a query')
     await store.dispatch('search/deleteQueryTerm', 'is')
 
-    expect(store.state.search.query).toEqual('this a query')
+    expect(store.state.search.query).toBe('this a query')
   })
 
   it('should delete all occurrences of the term from the query', async () => {
     store.commit('search/query', 'this is is is a query')
     await store.dispatch('search/deleteQueryTerm', 'is')
 
-    expect(store.state.search.query).toEqual('this a query')
+    expect(store.state.search.query).toBe('this a query')
   })
 
   it('should delete "AND" boolean operator on first applied filter deletion, if any', async () => {
     store.commit('search/query', 'term_01 AND term_02')
     await store.dispatch('search/deleteQueryTerm', 'term_01')
 
-    expect(store.state.search.query).toEqual('term_02')
+    expect(store.state.search.query).toBe('term_02')
   })
 
   it('should delete "OR" boolean operator on first applied filter deletion, if any', async () => {
     store.commit('search/query', 'term_01 OR term_02')
     await store.dispatch('search/deleteQueryTerm', 'term_01')
 
-    expect(store.state.search.query).toEqual('term_02')
+    expect(store.state.search.query).toBe('term_02')
   })
 
   it('should delete "AND" boolean operator on last applied filter deletion, if any', async () => {
     store.commit('search/query', 'term_01 AND term_02')
     await store.dispatch('search/deleteQueryTerm', 'term_02')
 
-    expect(store.state.search.query).toEqual('term_01')
+    expect(store.state.search.query).toBe('term_01')
   })
 
   it('should delete "OR" boolean operator on last applied filter deletion, if any', async () => {
     store.commit('search/query', 'term_01 OR term_02')
     await store.dispatch('search/deleteQueryTerm', 'term_02')
 
-    expect(store.state.search.query).toEqual('term_01')
+    expect(store.state.search.query).toBe('term_01')
   })
 
   describe('retrieveQueryTerm', () => {
@@ -534,9 +538,10 @@ describe('Search store', () => {
   })
 
   describe('retrieveContentQueryTermsInDocument', () => {
+    const id = 'document'
+
     it('should return an empty array if no query term', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id)).commit()
+      await letData(es).have(new IndexedDocument(id, index)).commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', '*')
 
@@ -544,8 +549,7 @@ describe('Search store', () => {
     })
 
     it('should return an empty result if no match between the query and the document', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id)).commit()
+      await letData(es).have(new IndexedDocument(id, index)).commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'test')
 
@@ -553,8 +557,7 @@ describe('Search store', () => {
     })
 
     it('should return a content of 1 if there is a match between the query and the document content', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id).withContent('specific term specific')).commit()
+      await letData(es).have(new IndexedDocument(id, index).withContent('specific term specific')).commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'specific')
 
@@ -562,8 +565,7 @@ describe('Search store', () => {
     })
 
     it('should return a metadata of 1 if there is a match between the query and the document metadata', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id).withMetadata('metadata metadata metadata')).commit()
+      await letData(es).have(new IndexedDocument(id, index).withMetadata('metadata metadata metadata')).commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'metadata')
 
@@ -571,8 +573,7 @@ describe('Search store', () => {
     })
 
     it('should return a tags of 1 if there is a match between the query and the document tags', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id).withTags(['tags'])).commit()
+      await letData(es).have(new IndexedDocument(id, index).withTags(['tags'])).commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', 'tags')
 
@@ -580,8 +581,7 @@ describe('Search store', () => {
     })
 
     it('should apply regex to count occurrences', async () => {
-      const id = 'document'
-      await letData(es).have(new IndexedDocument(id).withContent('this is a test like another')).commit()
+      await letData(es).have(new IndexedDocument(id, index).withContent('this is a test like another')).commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('search/query', '/.*test.*/')
 
@@ -594,63 +594,63 @@ describe('Search store', () => {
       store.commit('search/query', 'term_01')
       await store.dispatch('search/deleteQueryTerm', 'term_01')
 
-      expect(store.state.search.query).toEqual('')
+      expect(store.state.search.query).toBe('')
     })
 
     it('should delete 1 simple prefixed query term', async () => {
       store.commit('search/query', '-term_01')
       await store.dispatch('search/deleteQueryTerm', 'term_01')
 
-      expect(store.state.search.query).toEqual('')
+      expect(store.state.search.query).toBe('')
     })
 
     it('should delete 1 simple negative query term', async () => {
       store.commit('search/query', 'NOT term_01')
       await store.dispatch('search/deleteQueryTerm', 'term_01')
 
-      expect(store.state.search.query).toEqual('')
+      expect(store.state.search.query).toBe('')
     })
 
     it('should delete a term from a complex query', async () => {
       store.commit('search/query', 'term_01 AND term_02')
       await store.dispatch('search/deleteQueryTerm', 'term_02')
 
-      expect(store.state.search.query).toEqual('term_01')
+      expect(store.state.search.query).toBe('term_01')
     })
 
     it('should delete a negative term from a complex query', async () => {
       store.commit('search/query', 'term_01 AND NOT term_02')
       await store.dispatch('search/deleteQueryTerm', 'term_02')
 
-      expect(store.state.search.query).toEqual('term_01')
+      expect(store.state.search.query).toBe('term_01')
     })
 
     it('should delete a term from a recursive query', async () => {
       store.commit('search/query', 'term_01 term_02 term_03')
       await store.dispatch('search/deleteQueryTerm', 'term_03')
 
-      expect(store.state.search.query).toEqual('term_01 term_02')
+      expect(store.state.search.query).toBe('term_01 term_02')
     })
 
     it('should delete a negative term from a recursive query', async () => {
       store.commit('search/query', 'term_01 AND NOT term_02 term_03')
       await store.dispatch('search/deleteQueryTerm', 'term_02')
 
-      expect(store.state.search.query).toEqual('term_01 term_03')
+      expect(store.state.search.query).toBe('term_01 term_03')
     })
 
     it('should delete duplicated term from a query', async () => {
       store.commit('search/query', 'term_01 term_02 term_01')
       await store.dispatch('search/deleteQueryTerm', 'term_01')
 
-      expect(store.state.search.query).toEqual('term_02')
+      expect(store.state.search.query).toBe('term_02')
     })
 
     it('should delete term from a query with parenthesis', async () => {
       store.commit('search/query', 'term_01 (term_02 AND term_03) term_04')
       await store.dispatch('search/deleteQueryTerm', 'term_02')
 
-      expect(store.state.search.query).toEqual('term_01 term_03 term_04')
+      expect(store.state.search.query).toBe('term_01 term_03 term_04')
     })
   })
 
@@ -710,24 +710,24 @@ describe('Search store', () => {
   })
 
   it('should find document on querying the NamedEntity', async () => {
-    await letData(es).have(new IndexedDocument('doc_01').withNer('test')).commit()
+    await letData(es).have(new IndexedDocument('doc_01', index).withNer('test')).commit()
 
     await store.dispatch('search/query', 'test')
 
     expect(store.state.search.response.hits).toHaveLength(1)
-    expect(store.state.search.response.hits[0].basename).toEqual('doc_01')
+    expect(store.state.search.response.hits[0].basename).toBe('doc_01')
   })
 
   it('should find document on querying the NamedEntity with a complex query', async () => {
-    await letData(es).have(new IndexedDocument('doc_01').withContent('test').withNer('ner_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02').withNer('ner_02')).commit()
-    await letData(es).have(new IndexedDocument('doc_03').withNer('test')).commit()
+    await letData(es).have(new IndexedDocument('doc_01', index).withContent('test').withNer('ner_01')).commit()
+    await letData(es).have(new IndexedDocument('doc_02', index).withNer('ner_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_03', index).withNer('test')).commit()
 
     await store.dispatch('search/query', '(test AND ner_*) OR test')
 
     expect(store.state.search.response.hits).toHaveLength(2)
-    expect(store.state.search.response.hits[0].basename).toEqual('doc_03')
-    expect(store.state.search.response.hits[1].basename).toEqual('doc_01')
+    expect(store.state.search.response.hits[0].basename).toBe('doc_03')
+    expect(store.state.search.response.hits[1].basename).toBe('doc_01')
   })
 
   it('should set this value to the facet', () => {
@@ -739,9 +739,9 @@ describe('Search store', () => {
   })
 
   it('should star a batch of documents', async () => {
-    await letData(es).have(new IndexedDocument('doc_01').withContent('test').withNer('ner_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02').withNer('ner_02')).commit()
-    await letData(es).have(new IndexedDocument('doc_03').withNer('test')).commit()
+    await letData(es).have(new IndexedDocument('doc_01', index).withContent('test').withNer('ner_01')).commit()
+    await letData(es).have(new IndexedDocument('doc_02', index).withNer('ner_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_03', index).withNer('test')).commit()
 
     await store.dispatch('search/starDocuments', [{ id: 'doc_01' }, { id: 'doc_03' }])
 
@@ -749,9 +749,9 @@ describe('Search store', () => {
   })
 
   it('should unstar a batch of documents', async () => {
-    await letData(es).have(new IndexedDocument('doc_01').withContent('test').withNer('ner_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02').withNer('ner_02')).commit()
-    await letData(es).have(new IndexedDocument('doc_03').withNer('test')).commit()
+    await letData(es).have(new IndexedDocument('doc_01', index).withContent('test').withNer('ner_01')).commit()
+    await letData(es).have(new IndexedDocument('doc_02', index).withNer('ner_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_03', index).withNer('test')).commit()
 
     await store.dispatch('search/starDocuments', [{ id: 'doc_01' }, { id: 'doc_03' }])
     await store.dispatch('search/unstarDocuments', [{ id: 'doc_01' }])
@@ -760,9 +760,9 @@ describe('Search store', () => {
   })
 
   it('should order documents by path', async () => {
-    await letData(es).have(new IndexedDocument('c')).commit()
-    await letData(es).have(new IndexedDocument('b')).commit()
-    await letData(es).have(new IndexedDocument('a')).commit()
+    await letData(es).have(new IndexedDocument('c', index)).commit()
+    await letData(es).have(new IndexedDocument('b', index)).commit()
+    await letData(es).have(new IndexedDocument('a', index)).commit()
 
     await store.dispatch('search/query', '*')
 

@@ -1,3 +1,4 @@
+import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
@@ -11,9 +12,9 @@ import { jsonResp } from 'tests/unit/tests_utils'
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('DocumentTabDetails.vue', () => {
-  esConnectionHelper()
+  const index = toLower('DocumentTabDetails')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
-  const index = process.env.VUE_APP_ES_INDEX
   const id = 'document'
   let wrapper
 
@@ -31,7 +32,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display document path with config.mountedDataDir', async () => {
     Murmur.config.merge({ dataDir: '/home/datashare/data', mountedDataDir: 'C:/Users/ds/docs' })
     const id = '/home/datashare/data/foo.txt'
-    await letData(es).have(new IndexedDocument(id)).commit()
+    await letData(es).have(new IndexedDocument(id, index)).commit()
     await store.dispatch('document/get', { id, index })
     wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
@@ -39,7 +40,7 @@ describe('DocumentTabDetails.vue', () => {
   })
 
   it('should display the document type', async () => {
-    await letData(es).have(new IndexedDocument(id).withContentType('application/pdf')).commit()
+    await letData(es).have(new IndexedDocument(id, index).withContentType('application/pdf')).commit()
     await store.dispatch('document/get', { id, index })
     wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
@@ -48,8 +49,8 @@ describe('DocumentTabDetails.vue', () => {
 
   it('should display a child document', async () => {
     const parentDocument = 'parentDocument'
-    await letData(es).have(new IndexedDocument(parentDocument)).commit()
-    await letData(es).have(new IndexedDocument(id).withParent(parentDocument)).commit()
+    await letData(es).have(new IndexedDocument(parentDocument, index)).commit()
+    await letData(es).have(new IndexedDocument(id, index).withParent(parentDocument)).commit()
     await store.dispatch('document/get', { index, id, routing: parentDocument }).then(() => store.dispatch('document/getParent'))
     wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
 
@@ -59,7 +60,7 @@ describe('DocumentTabDetails.vue', () => {
   })
 
   it('should not display the creation date if it is missing', async () => {
-    await letData(es).have(new IndexedDocument(id)).commit()
+    await letData(es).have(new IndexedDocument(id, index)).commit()
     await store.dispatch('document/get', { id, index })
     wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
@@ -67,7 +68,7 @@ describe('DocumentTabDetails.vue', () => {
   })
 
   it('should display a link to the list of children documents', async () => {
-    await letData(es).have(new IndexedDocument(id)).commit()
+    await letData(es).have(new IndexedDocument(id, index)).commit()
     await store.dispatch('document/get', { id, index })
     wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 

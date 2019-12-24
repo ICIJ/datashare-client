@@ -1,24 +1,23 @@
-import VueI18n from 'vue-i18n'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import messagesFr from '@/lang/fr'
-import VueRouter from 'vue-router'
-import SearchBar from '@/components/SearchBar'
 import flushPromises from 'flush-promises'
+import toLower from 'lodash/toLower'
+import VueRouter from 'vue-router'
+
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import SearchBar from '@/components/SearchBar'
 
-const { localVue, store, i18n } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
-describe('SearchBar', function () {
-  let wrapper
-  esConnectionHelper()
+describe('SearchBar.vue', function () {
+  const index = toLower('SearchBar')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
+  let wrapper
 
-  beforeAll(() => {
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
-  })
+  beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
     store.commit('search/reset')
@@ -45,14 +44,6 @@ describe('SearchBar', function () {
     expect(wrapper.contains('.search-bar shortkeys-modal-stub')).toBeTruthy()
   })
 
-  it('should display a search bar button in French', () => {
-    const i18n = new VueI18n({ locale: 'fr', messages: { 'fr': messagesFr } })
-    wrapper = shallowMount(SearchBar, { localVue, i18n, store, sync: false })
-
-    expect(wrapper.contains('.search-bar .btn')).toBeTruthy()
-    expect(wrapper.find('.search-bar .btn').text()).toBe('Rechercher')
-  })
-
   it('should submit search', () => {
     wrapper.vm.$set(wrapper.vm, 'query', 'foo')
     wrapper.vm.submit()
@@ -72,7 +63,7 @@ describe('SearchBar', function () {
 
   describe('search suggestions', () => {
     it('should retrieve suggestions in NamedEntities and tags for default search', async () => {
-      await letData(es).have(new IndexedDocument('doc_01')
+      await letData(es).have(new IndexedDocument('document', index)
         .withNer('ne_01')
         .withTags(['ne_tag'])
       ).commit()
@@ -83,11 +74,11 @@ describe('SearchBar', function () {
     })
 
     it('should order suggestions by doc_count descending', async () => {
-      await letData(es).have(new IndexedDocument('doc_01')
+      await letData(es).have(new IndexedDocument('document_01', index)
         .withNer('ne_01')
         .withNer('ne_02')
       ).commit()
-      await letData(es).have(new IndexedDocument('doc_02')
+      await letData(es).have(new IndexedDocument('document_02', index)
         .withNer('ne_02')
       ).commit()
 

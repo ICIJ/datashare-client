@@ -1,3 +1,4 @@
+import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { App } from '@/main'
@@ -17,9 +18,9 @@ const { localVue, store } = App.init(createLocalVue()).useAll()
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
 describe('DocumentContent.vue', () => {
-  esConnectionHelper()
+  const index = toLower('DocumentContent')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
-  const index = process.env.VUE_APP_ES_INDEX
   const id = 'document'
 
   beforeEach(() => getOS.mockReset())
@@ -33,7 +34,7 @@ describe('DocumentContent.vue', () => {
 
   describe('the extracted text content', () => {
     it('should mark named entities in the extracted text tab', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withNer('ner_01', 2, 'PERSON')
         .withNer('ner_02', 17, 'LOCATION'))
         .commit()
@@ -59,7 +60,7 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should sanitize the HTML in the extracted text', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'))
         .commit()
       await store.dispatch('document/get', { id, index })
@@ -79,7 +80,7 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should not sanitize the <mark /> tags in the extracted text', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('this is a <mark>document</mark>'))
         .commit()
       await store.dispatch('document/get', { id, index })
@@ -101,7 +102,7 @@ describe('DocumentContent.vue', () => {
 
   describe('the "Show named entities" toggle', () => {
     it('should contain a "Show named entities" toggle', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('content')
         .withNer('ner', 2, 'PERSON'))
         .commit()
@@ -120,7 +121,7 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should not contain a "Show named entities" toggle if there is no named entities', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('content'))
         .commit()
       await store.dispatch('document/get', { id, index })
@@ -138,7 +139,7 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should change the document state of showNamedEntities', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('content')
         .withNer('ner', 2, 'PERSON'))
         .commit()
@@ -160,7 +161,7 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should display a document without named entities', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('content')
         .withNer('tent', 3, 'PERSON'))
         .commit()
@@ -183,7 +184,7 @@ describe('DocumentContent.vue', () => {
 
   describe('search term', () => {
     it('should not sticky the toolbox by default', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('this is a full full content')
         .withNer('ner', 0))
         .commit()
@@ -204,7 +205,7 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should highlight the first occurrence of the searched term', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('this is a full full content'))
         .commit()
       await store.dispatch('document/get', { id, index })
@@ -224,7 +225,7 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should be case insensitive', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('this is a full FulL content fuLL'))
         .commit()
       await store.dispatch('document/get', { id, index })
@@ -244,7 +245,7 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should find the previous and next occurrence, as a loop', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('this is a full full content'))
         .commit()
       await store.dispatch('document/get', { id, index })
@@ -284,7 +285,7 @@ describe('DocumentContent.vue', () => {
     })
 
     it('should support regex', async () => {
-      await letData(es).have(new IndexedDocument(id)
+      await letData(es).have(new IndexedDocument(id, index)
         .withContent('this is a test.\nFor testing purpose.'))
         .commit()
       await store.dispatch('document/get', { id, index })

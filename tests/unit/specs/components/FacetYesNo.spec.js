@@ -1,15 +1,14 @@
-import Vuex from 'vuex'
-import VueI18n from 'vue-i18n'
-import VueRouter from 'vue-router'
-import Murmur from '@icij/murmur'
-import BootstrapVue from 'bootstrap-vue'
+import find from 'lodash/find'
+import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import { removeCookie, setCookie } from 'tiny-cookie'
+
+import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FacetYesNo from '@/components/FacetYesNo'
-import messages from '@/lang/en'
-import store from '@/store'
-import find from 'lodash/find'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+
+const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
 jest.mock('@/api/DatashareClient', () => {
   const { jsonResp } = require('tests/unit/tests_utils')
@@ -20,57 +19,54 @@ jest.mock('@/api/DatashareClient', () => {
   })
 })
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
-localVue.use(VueRouter)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
-const router = new VueRouter()
-
 describe('FacetYesNo.vue', () => {
-  esConnectionHelper()
+  const index = toLower('FacetYesNo')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
   let wrapper
   jest.setTimeout(1e4)
 
+  beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
+
   beforeEach(() => {
     wrapper = mount(FacetYesNo, {
       localVue,
-      i18n,
       router,
       store,
-      propsData: { facet: find(store.state.search.facets, { name: 'starred' }) }
+      propsData: { facet: find(store.state.search.facets, { name: 'starred' }) },
+      mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
     })
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+    store.commit('search/index', index)
   })
 
-  afterAll(() => jest.unmock('@/api/DatashareClient'))
+  afterAll(() => {
+    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    jest.unmock('@/api/DatashareClient')
+  })
 
   it('should display "All" as the first item', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')).commit()
+    await letData(es).have(new IndexedDocument('document_01', index)).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)).commit()
 
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__all')).toHaveLength(1)
-    expect(wrapper.find('.facet__items__all .facet__items__item__label').text()).toEqual('All')
-    expect(wrapper.find('.facet__items__all .facet__items__item__count').text()).toEqual('2')
+    expect(wrapper.find('.facet__items__all .facet__items__item__label').text()).toBe('all')
+    expect(wrapper.find('.facet__items__all .facet__items__item__count').text()).toBe('2')
   })
 
   it('should display 2 items for the starred facet', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')).commit()
+    await letData(es).have(new IndexedDocument('document', index)).commit()
 
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item .custom-control-label .facet__items__item__label')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item').at(0).find('.custom-control-label .facet__items__item__label').text()).toEqual('Starred')
-    expect(wrapper.findAll('.facet__items__item').at(1).find('.custom-control-label .facet__items__item__label').text()).toEqual('Not starred')
+    expect(wrapper.findAll('.facet__items__item').at(0).find('.custom-control-label .facet__items__item__label').text()).toBe('facet.starred')
+    expect(wrapper.findAll('.facet__items__item').at(1).find('.custom-control-label .facet__items__item__label').text()).toBe('facet.notStarred')
   })
 
   it('should change the selected value', async () => {
-    await letData(es).have(new IndexedDocument('doc_02')).commit()
+    await letData(es).have(new IndexedDocument('document', index)).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -91,14 +87,14 @@ describe('FacetYesNo.vue', () => {
   })
 
   it('should fetch the starred documents', async () => {
-    store.commit('search/starredDocuments', ['doc_03'])
-    await letData(es).have(new IndexedDocument('doc_03')).commit()
+    store.commit('search/starredDocuments', ['document'])
+    await letData(es).have(new IndexedDocument('document', index)).commit()
 
-    expect(wrapper.vm.starredDocuments).toEqual(['doc_03'])
+    expect(wrapper.vm.starredDocuments).toEqual(['document'])
   })
 
   it('should hide the "Show more" button', async () => {
-    await letData(es).have(new IndexedDocument('doc_04')).commit()
+    await letData(es).have(new IndexedDocument('doc_04', index)).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -106,20 +102,20 @@ describe('FacetYesNo.vue', () => {
   })
 
   it('should display the results count', async () => {
-    store.commit('search/starredDocuments', ['doc_05', 'doc_06'])
-    await letData(es).have(new IndexedDocument('doc_05')).commit()
-    await letData(es).have(new IndexedDocument('doc_06')).commit()
-    await letData(es).have(new IndexedDocument('doc_07')).commit()
+    store.commit('search/starredDocuments', ['document_01', 'document_02'])
+    await letData(es).have(new IndexedDocument('document_01', index)).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)).commit()
+    await letData(es).have(new IndexedDocument('document_03', index)).commit()
 
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.facet__items__item .facet__items__item__count')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item').at(0).find('.facet__items__item__count').text()).toEqual('2')
-    expect(wrapper.findAll('.facet__items__item').at(1).find('.facet__items__item__count').text()).toEqual('1')
+    expect(wrapper.findAll('.facet__items__item').at(0).find('.facet__items__item__count').text()).toBe('2')
+    expect(wrapper.findAll('.facet__items__item').at(1).find('.facet__items__item__count').text()).toBe('1')
   })
 
   it('should not display the exclude button', async () => {
-    await letData(es).have(new IndexedDocument('doc_08')).commit()
+    await letData(es).have(new IndexedDocument('document', index)).commit()
 
     await wrapper.vm.root.aggregate()
     await wrapper.findAll('.facet__items__item').at(0).find('.custom-control-input').trigger('click')

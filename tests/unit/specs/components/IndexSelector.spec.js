@@ -1,13 +1,15 @@
-import { App } from '@/main'
+import find from 'lodash/find'
+import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import IndexSelector from '@/components/IndexSelector'
 import Murmur from '@icij/murmur'
+import VueRouter from 'vue-router'
+
+import { App } from '@/main'
 import { datashare } from '@/store/modules/search'
 import DatashareClient from '@/api/DatashareClient'
-import VueRouter from 'vue-router'
-import find from 'lodash/find'
-import { jsonResp } from 'tests/unit/tests_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import IndexSelector from '@/components/IndexSelector'
+import { jsonResp } from 'tests/unit/tests_utils'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
@@ -16,13 +18,15 @@ const mergeCreatedStrategy = localVue.config.optionMergeStrategies.created
 localVue.config.optionMergeStrategies.created = (parent, child) => mergeCreatedStrategy(parent)
 
 describe('IndexSelector.vue', () => {
+  const index = toLower('IndexSelector')
+  const anotherIndex = toLower('AnotherIndexSelector')
+  esConnectionHelper([index, anotherIndex])
   let wrapper
-  esConnectionHelper()
 
   beforeAll(() => {
-    Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX, process.env.VUE_APP_ES_ANOTHER_INDEX] })
+    Murmur.config.merge({ userProjects: [index, anotherIndex] })
     Murmur.config.merge({ multipleProjects: true })
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+    store.commit('search/index', index)
   })
 
   beforeEach(() => {
@@ -37,7 +41,7 @@ describe('IndexSelector.vue', () => {
   })
 
   it('should select the local index as default selected index', () => {
-    expect(wrapper.vm.selectedIndex).toBe(process.env.VUE_APP_ES_INDEX)
+    expect(wrapper.vm.selectedIndex).toBe(index)
   })
 
   describe('on index change', () => {
@@ -53,9 +57,9 @@ describe('IndexSelector.vue', () => {
       store.commit('search/addFacetValue', { name: 'contentType', value: 'text/javascript' })
       expect(store.getters['search/toRouteQuery']['f[contentType]']).not.toBeUndefined()
 
-      await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
+      await wrapper.vm.select(anotherIndex)
 
-      expect(store.getters['search/toRouteQuery'].index).toEqual(process.env.VUE_APP_ES_ANOTHER_INDEX)
+      expect(store.getters['search/toRouteQuery'].index).toBe(anotherIndex)
       expect(store.getters['search/toRouteQuery']['f[contentType]']).toBeUndefined()
     })
 
@@ -65,34 +69,33 @@ describe('IndexSelector.vue', () => {
 
       mockCallback.mockClear()
 
-      await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
+      await wrapper.vm.select(anotherIndex)
 
       expect(mockCallback.mock.calls).toHaveLength(1)
     })
 
     it('should refresh the starred documents on index change', async () => {
-      await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
+      await wrapper.vm.select(anotherIndex)
 
       expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${process.env.VUE_APP_ES_ANOTHER_INDEX}/documents/starred`), {})
+      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${anotherIndex}/documents/starred`), {})
     })
 
     it('should refresh the isDownloadAllowed on index change', async () => {
-      await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
+      await wrapper.vm.select(anotherIndex)
 
       expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/project/isDownloadAllowed/${process.env.VUE_APP_ES_ANOTHER_INDEX}`), {})
+      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/project/isDownloadAllowed/${anotherIndex}`), {})
     })
 
     it('should refresh the route on index change', async () => {
       const spyRefreshRoute = jest.spyOn(wrapper.vm, 'refreshRoute')
       expect(spyRefreshRoute).not.toBeCalled()
 
-      await wrapper.vm.select(process.env.VUE_APP_ES_ANOTHER_INDEX)
+      await wrapper.vm.select(anotherIndex)
 
-      expect(spyRefreshRoute).toBeCalled()
       expect(spyRefreshRoute).toBeCalledTimes(1)
-      expect(store.getters['search/toRouteQuery'].index).toEqual(process.env.VUE_APP_ES_ANOTHER_INDEX)
+      expect(store.getters['search/toRouteQuery'].index).toBe(anotherIndex)
     })
   })
 })

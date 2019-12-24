@@ -1,4 +1,5 @@
 import { mount, createLocalVue } from '@vue/test-utils'
+
 import { App } from '@/main'
 import EmailString from '@/components/EmailString'
 

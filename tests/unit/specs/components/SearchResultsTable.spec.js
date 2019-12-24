@@ -1,27 +1,30 @@
-import { App } from '@/main'
-import SearchResultsTable from '@/components/SearchResultsTable'
+import toLower from 'lodash/toLower'
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
+
+import { App } from '@/main'
+import { datashare } from '@/store/modules/search'
+import DatashareClient from '@/api/DatashareClient'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
-import { datashare } from '@/store/modules/search'
 import { jsonResp } from 'tests/unit/tests_utils'
-import DatashareClient from '@/api/DatashareClient'
+import SearchResultsTable from '@/components/SearchResultsTable'
 
-const { i18n, localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = App.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('SearchResultsTable.vue', () => {
-  let wrapper
-  esConnectionHelper()
+  const index = toLower('SearchResultsTable')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
+  let wrapper
 
-  beforeAll(() => store.commit('search/index', process.env.VUE_APP_ES_INDEX))
+  beforeAll(() => store.commit('search/index', index))
 
   beforeEach(async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').count(4)).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('document').withIndex(index).count(4)).commit()
     await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
-    wrapper = shallowMount(SearchResultsTable, { localVue, store, i18n })
+    wrapper = shallowMount(SearchResultsTable, { localVue, store, mocks: { $t: msg => msg } })
   })
 
   afterAll(() => datashare.fetch.mockRestore())
@@ -31,25 +34,25 @@ describe('SearchResultsTable.vue', () => {
   })
 
   it('should display a multi selectable b-table', () => {
-    expect(wrapper.find('.search-results-table__items').attributes('selectmode')).toEqual('multi')
+    expect(wrapper.find('.search-results-table__items').attributes('selectmode')).toBe('multi')
   })
 
   it('should display 2 action buttons', () => {
-    wrapper.vm.selected = [{ id: 'doc_1' }, { id: 'doc_2' }]
+    wrapper.vm.selected = [{ id: 'document_01' }, { id: 'document_02' }]
 
     expect(wrapper.findAll('b-list-group-stub > b-list-group-item-stub')).toHaveLength(2)
   })
 
-  it('should set each selected document as starred', async () => {
+  it('should set each selected document as starred', () => {
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonResp())
-    wrapper = mount(SearchResultsTable, { localVue, store, i18n, router, mocks: { $t: msg => msg } })
-    wrapper.vm.selected = [{ id: 'doc_1' }, { id: 'doc_2' }]
+    wrapper = mount(SearchResultsTable, { localVue, store, router, mocks: { $t: msg => msg, $n: msg => msg, $tc: msg => msg } })
+    wrapper.vm.selected = [{ id: 'document_01' }, { id: 'document_02' }]
 
     wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 
-    const calledUrl = DatashareClient.getFullUrl(`/api/${encodeURIComponent(process.env.VUE_APP_ES_INDEX)}/documents/batchUpdate/star`)
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(calledUrl, { method: 'POST', body: JSON.stringify(['doc_1', 'doc_2']) })
+    expect(datashare.fetch).toBeCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${index}/documents/batchUpdate/star`),
+      { method: 'POST', body: JSON.stringify(['document_01', 'document_02']) })
   })
 })

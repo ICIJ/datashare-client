@@ -1,14 +1,10 @@
-import DocumentTypeCard from '@/components/DocumentTypeCard'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import Document from '@/api/Document'
-import VueI18n from 'vue-i18n'
-import messages from '@/lang/en'
-import Murmur from '@icij/murmur'
 
-const localVue = createLocalVue()
-localVue.use(VueI18n)
-localVue.use(Murmur)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+import { App } from '@/main'
+import Document from '@/api/Document'
+import DocumentTypeCard from '@/components/DocumentTypeCard'
+
+const { localVue, i18n } = App.init(createLocalVue()).useAll()
 
 describe('DocumentTypeCard.vue', () => {
   it('should display warning message', () => {

@@ -1,23 +1,22 @@
-import { App } from '@/main'
-import ResetFiltersButton from '@/components/ResetFiltersButton'
-import VueRouter from 'vue-router'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 
-const { i18n, localVue, store } = App.init(createLocalVue()).useAll()
-const router = new VueRouter()
+import { App } from '@/main'
+import ResetFiltersButton from '@/components/ResetFiltersButton'
+
+const { localVue, router, store } = App.init(createLocalVue()).useAll()
 
 describe('ResetFiltersButton.vue', function () {
   let wrapper
 
   beforeEach(() => {
     store.commit('search/reset')
-    wrapper = shallowMount(ResetFiltersButton, { localVue, router, i18n, store, sync: false })
+    wrapper = shallowMount(ResetFiltersButton, { localVue, router, store, sync: false, mocks: { $t: msg => msg } })
   })
 
   it('should display a disabled button, by default', () => {
     expect(wrapper.find('.btn').exists()).toBeTruthy()
-    expect(wrapper.find('.btn').attributes().disabled).toEqual('disabled')
+    expect(wrapper.find('.btn').attributes().disabled).toBe('disabled')
   })
 
   it('should display an active button if a facet is valuated', async () => {
@@ -97,10 +96,9 @@ describe('ResetFiltersButton.vue', function () {
 
   it('should call router push on facets reset', () => {
     jest.spyOn(router, 'push')
-    wrapper = shallowMount(ResetFiltersButton, { localVue, i18n, router, store, sync: false })
 
     wrapper.vm.resetFacets()
 
-    expect(router.push).toHaveBeenCalled()
+    expect(router.push).toBeCalled()
   })
 })

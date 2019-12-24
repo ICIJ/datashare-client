@@ -23,10 +23,11 @@ class IndexedNe {
 
 class IndexedDocuments {
   constructor () {
-    this.baseName = 'doc'
+    this.baseName = 'document'
     this.numberOfDocuments = 0
     this.content = 'default content'
     this.document = []
+    this.index = 'default-index'
   }
   setBaseName (pattern) {
     this.baseName = pattern
@@ -36,6 +37,10 @@ class IndexedDocuments {
     this.content = content
     return this
   }
+  withIndex (index) {
+    this.index = index
+    return this
+  }
   withIndexingDate (indexingDate) {
     this.extractionDate = indexingDate
     return this
@@ -43,7 +48,7 @@ class IndexedDocuments {
   count (numberOfDocuments) {
     this.numberOfDocuments = numberOfDocuments
     for (let i = 0; i < this.numberOfDocuments; i++) {
-      let doc = new IndexedDocument(this.baseName + '_' + (i + 1) + '.txt').withContent(this.content)
+      let doc = new IndexedDocument(this.baseName + '_' + (i + 1), this.index).withContent(this.content)
       if (this.extractionDate) {
         doc.withIndexingDate(this.extractionDate[i])
       }
@@ -54,7 +59,7 @@ class IndexedDocuments {
 }
 
 class IndexedDocument {
-  constructor (path = uniqueId('/path/to/document/')) {
+  constructor (path = uniqueId('/path/to/document/'), index = 'default-index') {
     this.path = path
     this.dirname = dirname(path)
     this.join = { name: 'Document' }
@@ -66,7 +71,7 @@ class IndexedDocument {
     }
     this.nerList = []
     this.nerTags = []
-    this.index = process.env.VUE_APP_ES_INDEX
+    this.index = index
   }
   toIndex (index) {
     this.index = index

@@ -1,4 +1,5 @@
 import find from 'lodash/find'
+import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import { App } from '@/main'
@@ -15,28 +16,29 @@ jest.mock('@/api/DatashareClient', () => {
   })
 })
 
-const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('FacetSearch.vue', () => {
-  esConnectionHelper()
+  const index = toLower('FacetSearch')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
   let wrapper
 
   beforeEach(() => {
     store.commit('search/reset')
-    store.commit('search/index', process.env.VUE_APP_ES_INDEX)
+    store.commit('search/index', index)
     const facet = find(store.state.search.facets, { name: 'contentType' })
     wrapper = mount(FacetSearch,
-      { localVue, i18n, store, propsData: { infiniteScroll: false, throttle: 0, facet } })
+      { localVue, store, propsData: { infiniteScroll: false, throttle: 0, facet }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
   })
 
   afterAll(() => jest.unmock('@/api/DatashareClient'))
 
   describe('pagination', () => {
     it('should display 2 items', async () => {
-      await letData(es).have(new IndexedDocument('doc_01')
+      await letData(es).have(new IndexedDocument('doc_01', index)
         .withContentType('type_01')).commit()
-      await letData(es).have(new IndexedDocument('doc_02')
+      await letData(es).have(new IndexedDocument('doc_02', index)
         .withContentType('type_02')).commit()
 
       await wrapper.vm.startOver()
@@ -46,13 +48,13 @@ describe('FacetSearch.vue', () => {
 
     it('should paginate 4 items on 2 pages', async () => {
       wrapper.vm.pageSize = 2
-      await letData(es).have(new IndexedDocument('doc_01')
+      await letData(es).have(new IndexedDocument('doc_01', index)
         .withContentType('type_01')).commit()
-      await letData(es).have(new IndexedDocument('doc_02')
+      await letData(es).have(new IndexedDocument('doc_02', index)
         .withContentType('type_02')).commit()
-      await letData(es).have(new IndexedDocument('doc_03')
+      await letData(es).have(new IndexedDocument('doc_03', index)
         .withContentType('type_03')).commit()
-      await letData(es).have(new IndexedDocument('doc_04')
+      await letData(es).have(new IndexedDocument('doc_04', index)
         .withContentType('type_04')).commit()
 
       await wrapper.vm.startOver()
@@ -64,25 +66,25 @@ describe('FacetSearch.vue', () => {
 
     it('should paginate 10 items on 10 pages', async () => {
       wrapper.vm.pageSize = 1
-      await letData(es).have(new IndexedDocument('doc_01')
+      await letData(es).have(new IndexedDocument('doc_01', index)
         .withContentType('type_01')).commit()
-      await letData(es).have(new IndexedDocument('doc_02')
+      await letData(es).have(new IndexedDocument('doc_02', index)
         .withContentType('type_02')).commit()
-      await letData(es).have(new IndexedDocument('doc_03')
+      await letData(es).have(new IndexedDocument('doc_03', index)
         .withContentType('type_03')).commit()
-      await letData(es).have(new IndexedDocument('doc_04')
+      await letData(es).have(new IndexedDocument('doc_04', index)
         .withContentType('type_04')).commit()
-      await letData(es).have(new IndexedDocument('doc_05')
+      await letData(es).have(new IndexedDocument('doc_05', index)
         .withContentType('type_05')).commit()
-      await letData(es).have(new IndexedDocument('doc_06')
+      await letData(es).have(new IndexedDocument('doc_06', index)
         .withContentType('type_06')).commit()
-      await letData(es).have(new IndexedDocument('doc_07')
+      await letData(es).have(new IndexedDocument('doc_07', index)
         .withContentType('type_07')).commit()
-      await letData(es).have(new IndexedDocument('doc_08')
+      await letData(es).have(new IndexedDocument('doc_08', index)
         .withContentType('type_08')).commit()
-      await letData(es).have(new IndexedDocument('doc_09')
+      await letData(es).have(new IndexedDocument('doc_09', index)
         .withContentType('type_09')).commit()
-      await letData(es).have(new IndexedDocument('doc_10')
+      await letData(es).have(new IndexedDocument('doc_10', index)
         .withContentType('type_10')).commit()
 
       await wrapper.vm.startOver()
@@ -109,25 +111,25 @@ describe('FacetSearch.vue', () => {
 
     it('should paginate 10 items on 2 pages, and start over', async () => {
       wrapper.vm.pageSize = 5
-      await letData(es).have(new IndexedDocument('doc_01')
+      await letData(es).have(new IndexedDocument('doc_01', index)
         .withContentType('type_01')).commit()
-      await letData(es).have(new IndexedDocument('doc_02')
+      await letData(es).have(new IndexedDocument('doc_02', index)
         .withContentType('type_02')).commit()
-      await letData(es).have(new IndexedDocument('doc_03')
+      await letData(es).have(new IndexedDocument('doc_03', index)
         .withContentType('type_03')).commit()
-      await letData(es).have(new IndexedDocument('doc_04')
+      await letData(es).have(new IndexedDocument('doc_04', index)
         .withContentType('type_04')).commit()
-      await letData(es).have(new IndexedDocument('doc_05')
+      await letData(es).have(new IndexedDocument('doc_05', index)
         .withContentType('type_05')).commit()
-      await letData(es).have(new IndexedDocument('doc_06')
+      await letData(es).have(new IndexedDocument('doc_06', index)
         .withContentType('type_06')).commit()
-      await letData(es).have(new IndexedDocument('doc_07')
+      await letData(es).have(new IndexedDocument('doc_07', index)
         .withContentType('type_07')).commit()
-      await letData(es).have(new IndexedDocument('doc_08')
+      await letData(es).have(new IndexedDocument('doc_08', index)
         .withContentType('type_08')).commit()
-      await letData(es).have(new IndexedDocument('doc_09')
+      await letData(es).have(new IndexedDocument('doc_09', index)
         .withContentType('type_09')).commit()
-      await letData(es).have(new IndexedDocument('doc_10')
+      await letData(es).have(new IndexedDocument('doc_10', index)
         .withContentType('type_10')).commit()
 
       await wrapper.vm.startOver()
@@ -151,25 +153,25 @@ describe('FacetSearch.vue', () => {
     })
 
     it('should filter the list according to facetQuery', async () => {
-      await letData(es).have(new IndexedDocument('doc_01')
+      await letData(es).have(new IndexedDocument('doc_01', index)
         .withContentType('type_01')).commit()
-      await letData(es).have(new IndexedDocument('doc_02')
+      await letData(es).have(new IndexedDocument('doc_02', index)
         .withContentType('type_02')).commit()
-      await letData(es).have(new IndexedDocument('doc_03')
+      await letData(es).have(new IndexedDocument('doc_03', index)
         .withContentType('type_03')).commit()
-      await letData(es).have(new IndexedDocument('doc_04')
+      await letData(es).have(new IndexedDocument('doc_04', index)
         .withContentType('type_04')).commit()
-      await letData(es).have(new IndexedDocument('doc_05')
+      await letData(es).have(new IndexedDocument('doc_05', index)
         .withContentType('type_05')).commit()
-      await letData(es).have(new IndexedDocument('doc_06')
+      await letData(es).have(new IndexedDocument('doc_06', index)
         .withContentType('type_06')).commit()
-      await letData(es).have(new IndexedDocument('doc_07')
+      await letData(es).have(new IndexedDocument('doc_07', index)
         .withContentType('type_07')).commit()
-      await letData(es).have(new IndexedDocument('doc_08')
+      await letData(es).have(new IndexedDocument('doc_08', index)
         .withContentType('type_08')).commit()
-      await letData(es).have(new IndexedDocument('doc_09')
+      await letData(es).have(new IndexedDocument('doc_09', index)
         .withContentType('type_09')).commit()
-      await letData(es).have(new IndexedDocument('doc_10')
+      await letData(es).have(new IndexedDocument('doc_10', index)
         .withContentType('type_10')).commit()
 
       wrapper.setData({ facetQuery: '' })
@@ -192,9 +194,9 @@ describe('FacetSearch.vue', () => {
 
   describe('spinner', () => {
     it('should display a "No results" message if so"', async () => {
-      await letData(es).have(new IndexedDocument('doc_01')
+      await letData(es).have(new IndexedDocument('doc_01', index)
         .withContentType('type_01')).commit()
-      await letData(es).have(new IndexedDocument('doc_02')
+      await letData(es).have(new IndexedDocument('doc_02', index)
         .withContentType('type_02')).commit()
       await wrapper.vm.startOver()
 
@@ -209,17 +211,27 @@ describe('FacetSearch.vue', () => {
 
   it('should display all the indexing dates', async () => {
     wrapper = mount(FacetSearch,
-      { localVue, i18n, store, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'indexingDate' }) } })
-    await letData(es).have(new IndexedDocument('doc_01.txt').withIndexingDate('2018-01-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_02.txt').withIndexingDate('2018-02-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_03.txt').withIndexingDate('2018-03-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_04.txt').withIndexingDate('2018-04-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_05.txt').withIndexingDate('2018-05-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_06.txt').withIndexingDate('2018-06-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_07.txt').withIndexingDate('2018-07-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_08.txt').withIndexingDate('2018-08-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_09.txt').withIndexingDate('2018-09-01T00:00:00.001Z')).commit()
-    await letData(es).have(new IndexedDocument('doc_10.txt').withIndexingDate('2018-10-01T00:00:00.001Z')).commit()
+      { localVue, store, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'indexingDate' }) }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
+    await letData(es).have(new IndexedDocument('doc_01', index)
+      .withIndexingDate('2018-01-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_02', index)
+      .withIndexingDate('2018-02-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_03', index)
+      .withIndexingDate('2018-03-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_04', index)
+      .withIndexingDate('2018-04-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_05', index)
+      .withIndexingDate('2018-05-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_06', index)
+      .withIndexingDate('2018-06-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_07', index)
+      .withIndexingDate('2018-07-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_08', index)
+      .withIndexingDate('2018-08-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_09', index)
+      .withIndexingDate('2018-09-01T00:00:00.001Z')).commit()
+    await letData(es).have(new IndexedDocument('doc_10', index)
+      .withIndexingDate('2018-10-01T00:00:00.001Z')).commit()
     await wrapper.vm.startOver()
     await wrapper.vm.next()
 
@@ -227,17 +239,17 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should display the total count of content type', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')
+    await letData(es).have(new IndexedDocument('doc_01', index)
       .withContentType('type_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')
+    await letData(es).have(new IndexedDocument('doc_02', index)
       .withContentType('type_02')).commit()
-    await letData(es).have(new IndexedDocument('doc_03')
+    await letData(es).have(new IndexedDocument('doc_03', index)
       .withContentType('type_03')).commit()
 
     await wrapper.vm.startOver()
 
     expect(wrapper.findAll('.facet-search .facet__items__all')).toHaveLength(1)
-    expect(wrapper.find('.facet-search .facet__items__all .facet__items__item__label').text()).toBe('All')
+    expect(wrapper.find('.facet-search .facet__items__all .facet__items__item__label').text()).toBe('all')
     expect(wrapper.find('.facet-search .facet__items__all .facet__items__item__count').text()).toBe('3')
   })
 
@@ -251,11 +263,11 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should filter facet values on facet label', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')
+    await letData(es).have(new IndexedDocument('doc_01', index)
       .withContentType('message/rfc822')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')
+    await letData(es).have(new IndexedDocument('doc_02', index)
       .withContentType('another_type')).commit()
-    await letData(es).have(new IndexedDocument('doc_03')
+    await letData(es).have(new IndexedDocument('doc_03', index)
       .withContentType('message/rfc822')).commit()
     wrapper.vm.facetQuery = 'Internet'
 
@@ -267,11 +279,11 @@ describe('FacetSearch.vue', () => {
   })
 
   it('should filter facet values on facet label in capital letters', async () => {
-    await letData(es).have(new IndexedDocument('doc_01')
+    await letData(es).have(new IndexedDocument('doc_01', index)
       .withContentType('message/rfc822')).commit()
-    await letData(es).have(new IndexedDocument('doc_02')
+    await letData(es).have(new IndexedDocument('doc_02', index)
       .withContentType('another_type')).commit()
-    await letData(es).have(new IndexedDocument('doc_03')
+    await letData(es).have(new IndexedDocument('doc_03', index)
       .withContentType('message/rfc822')).commit()
     wrapper.vm.facetQuery = 'EMAIL'
 

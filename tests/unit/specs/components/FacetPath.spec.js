@@ -1,4 +1,5 @@
 import find from 'lodash/find'
+import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
@@ -9,22 +10,21 @@ import FacetPath from '@/components/FacetPath'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { jsonResp } from 'tests/unit/tests_utils'
 
-const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('FacetPath.vue', () => {
-  esConnectionHelper()
+  const index = toLower('FacetPath')
+  esConnectionHelper(index)
   const es = esConnectionHelper.es
   let wrapper
 
-  beforeAll(async () => {
+  beforeAll(() => {
     Murmur.config.set('dataDir', '/data')
     wrapper = mount(FacetPath, {
       localVue,
-      i18n,
       store,
-      propsData: {
-        facet: find(store.state.search.facets, { name: 'path' })
-      }
+      propsData: { facet: find(store.state.search.facets, { name: 'path' }) },
+      mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
     })
     store.commit('search/reset')
   })
@@ -44,9 +44,9 @@ describe('FacetPath.vue', () => {
   })
 
   it('should display a not empty tree', async () => {
-    await letData(es).have(new IndexedDocument('/data/folder_01/doc_01')).commit()
-    await letData(es).have(new IndexedDocument('/data/folder_02/doc_02')).commit()
-    await letData(es).have(new IndexedDocument('/data/folder_03/doc_03')).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_01/doc_01', index)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_02/doc_02', index)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_03/doc_03', index)).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -54,9 +54,9 @@ describe('FacetPath.vue', () => {
   })
 
   it('should display the first level of the tree', async () => {
-    await letData(es).have(new IndexedDocument('/data/folder_01/doc_01')).commit()
-    await letData(es).have(new IndexedDocument('/data/folder_02/doc_02')).commit()
-    await letData(es).have(new IndexedDocument('/data/folder_02/folder_03/doc_03')).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_01/doc_01', index)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_02/doc_02', index)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_02/folder_03/doc_03', index)).commit()
 
     await wrapper.vm.root.aggregate()
 
@@ -65,8 +65,8 @@ describe('FacetPath.vue', () => {
 
   describe('filter the facet', () => {
     it('should filter items according to the path facet search', async () => {
-      await letData(es).have(new IndexedDocument('/data/folder_01/document_01')).commit()
-      await letData(es).have(new IndexedDocument('/data/folder_02/document_02')).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_01/document_01', index)).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_02/document_02', index)).commit()
 
       const pathFacet = find(store.state.search.facets, { name: 'path' })
       pathFacet.value = ['/data/folder_01/']
@@ -77,9 +77,9 @@ describe('FacetPath.vue', () => {
     })
 
     it('should filter on a specific folder even if another folder starts with the same name', async () => {
-      await letData(es).have(new IndexedDocument('/data/folder_1/document_01')).commit()
-      await letData(es).have(new IndexedDocument('/data/folder_11/document_02')).commit()
-      await letData(es).have(new IndexedDocument('/data/folder_22/document_03')).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_1/document_01', index)).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_11/document_02', index)).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_22/document_03', index)).commit()
 
       const pathFacet = find(store.state.search.facets, { name: 'path' })
       pathFacet.value = ['/data/folder_1/']

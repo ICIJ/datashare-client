@@ -1,41 +1,30 @@
-import Vuex from 'vuex'
-import VueI18n from 'vue-i18n'
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import messages from '@/lang/en'
-import router from '@/router'
-import store from '@/store'
+import Murmur from '@icij/murmur'
+
+import { App } from '@/main'
 import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import { jsonResp } from 'tests/unit/tests_utils'
 
-const localVue = createLocalVue()
-localVue.use(Vuex)
-localVue.use(VueI18n)
-localVue.use(Murmur)
-localVue.use(BootstrapVue)
-const i18n = new VueI18n({ locale: 'en', messages: { 'en': messages } })
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('FindNamedEntitiesForm.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
+    wrapper = shallowMount(FindNamedEntitiesForm, { localVue, store, mocks: { $t: msg => msg } })
     jest.spyOn(datashare, 'fetch')
     datashare.fetch.mockReturnValue(jsonResp())
     datashare.fetch.mockClear()
   })
 
-  afterEach(() => {
-    store.commit('indexing/reset')
-  })
+  afterEach(() => store.commit('indexing/reset'))
 
   it('should call findNames action with CoreNLP pipeline, by default', () => {
     wrapper.vm.submitFindNamedEntities()
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
       { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
   })
@@ -44,7 +33,7 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.pipeline = 'opennlp'
     wrapper.vm.submitFindNamedEntities()
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/OPENNLP'),
       { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
   })
@@ -54,7 +43,7 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.offline = true
     wrapper.vm.submitFindNamedEntities()
 
-    expect(datashare.fetch).toHaveBeenCalledTimes(1)
+    expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
       { method: 'POST', body: JSON.stringify({ options: { syncModels: false } }) })
   })
@@ -64,13 +53,13 @@ describe('FindNamedEntitiesForm.vue', () => {
     await wrapper.vm.submitFindNamedEntities()
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.vm.pipeline).toEqual('corenlp')
+    expect(wrapper.vm.pipeline).toBe('corenlp')
   })
 
   it('should NOT show offline checkbox in SERVER mode', () => {
     Murmur.config.merge({ mode: 'SERVER' })
-    const w = shallowMount(FindNamedEntitiesForm, { localVue, i18n, router, store })
+    wrapper = shallowMount(FindNamedEntitiesForm, { localVue, store, mocks: { $t: msg => msg } })
 
-    expect(w.contains('.find-named-entities-form__offline')).toBeFalsy()
+    expect(wrapper.contains('.find-named-entities-form__offline')).toBeFalsy()
   })
 })
