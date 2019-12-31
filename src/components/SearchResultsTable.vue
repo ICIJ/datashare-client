@@ -32,7 +32,7 @@
           <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" />
         </template>
         <template v-slot:cell(path)="{ item }">
-          <router-link :to="{ name: 'document', params: item.routerParams }" class="text-truncate">
+          <router-link :to="{ name: 'document', params: item.routerParams, query: { q: query } }" class="text-truncate">
             <document-sliced-name :document="item" />
           </router-link>
         </template>

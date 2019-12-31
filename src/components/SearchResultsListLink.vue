@@ -1,5 +1,5 @@
 <template>
-  <router-link :to="{ name: 'document', params }" class="search-results-list-link d-flex align-self-stretch flex-nowrap">
+  <router-link :to="{ name: 'document', params, query: { q: query } }" class="search-results-list-link d-flex align-self-stretch flex-nowrap">
     <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy />
     <div class="search-results-list-link__wrapper">
       <span class="search-results-list-link__basename">
@@ -15,29 +15,27 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
 import ner from '@/mixins/ner'
 
 export default {
   name: 'SearchResultsLink',
-  mixins: [ner],
+  mixins: [ ner ],
   props: {
-    document: {
-      type: Object
-    }
+    document: Object
   },
   components: {
     DocumentSlicedName,
     DocumentThumbnail
   },
   computed: {
+    ...mapState('search', ['query']),
     folder () {
-      // Extract location parts
       let parts = this.document.get('_source.path', '').split('/')
-      // Remove the file name
       parts.splice(-1, 1)
-      // And return the new path
       return parts.join('/') + '/'
     },
     location () {

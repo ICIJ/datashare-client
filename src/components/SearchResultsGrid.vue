@@ -5,7 +5,7 @@
       <div class="search-results-grid__items">
         <div v-for="document in response.hits" :key="document.id" class="search-results-grid__items__item d-flex flex-column border rounded">
           <document-actions :document="document" class="search-results-grid__items__item__actions m-2" :is-download-allowed="isDownloadAllowed" />
-          <router-link class="flex-grow-1 search-results-grid__items__item__thumbnail" :to="{ name: 'document', params: document.routerParams }">
+          <router-link class="flex-grow-1 search-results-grid__items__item__thumbnail" :to="{ name: 'document', params: document.routerParams, query: { q: query } }">
             <document-thumbnail :document="document" size="md" />
           </router-link>
           <router-link class="search-results-grid__items__item__title py-2 px-3 small text-truncate" :to="{ name: 'document', params: document.routerParams }">

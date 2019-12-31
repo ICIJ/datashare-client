@@ -14,6 +14,7 @@ describe('SearchResultsListLink.vue', () => {
   it('should display the correct location', () => {
     const wrapper = shallowMount(SearchResultsListLink, {
       localVue,
+      store,
       propsData: {
         document: new Document({
           _id: 1,
@@ -40,7 +41,7 @@ describe('SearchResultsListLink.vue', () => {
       }
     })
 
-    expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/foo\/foo$/)
+    expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/foo\/foo/)
   })
 
   it('should make a link with routing for a child document', () => {
@@ -57,7 +58,25 @@ describe('SearchResultsListLink.vue', () => {
       }
     })
 
-    expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/child\/parent$/)
+    expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/child\/parent/)
+  })
+
+  it('should make a link to document with query', () => {
+    const wrapper = mount(SearchResultsListLink, {
+      localVue,
+      store,
+      router,
+      propsData: {
+        document: new Document({
+          _id: 'foo',
+          _index: index
+        })
+      }
+    })
+
+    store.commit('search/query', 'other')
+
+    expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/foo\/foo\?q=other$/)
   })
 
   it('should display the document sliced name', () => {

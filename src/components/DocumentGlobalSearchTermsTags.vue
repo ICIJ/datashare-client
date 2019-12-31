@@ -69,7 +69,6 @@ export default {
       & &__count {
         position: relative;
         top: -0.1rem;
-        padding: 0;
         display: inline-block;
         height: 1.2rem;
         line-height: 1.2rem;
