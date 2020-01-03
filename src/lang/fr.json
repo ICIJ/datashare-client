@@ -515,7 +515,7 @@
   },
   "batchSearchResultsFilters": {
     "queries": {
-      "heading": "Filtrer par recherches"
+      "heading": "Queries"
     }
   },
   "shortkeys": {
