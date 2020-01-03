@@ -1,4 +1,5 @@
 import map from 'lodash/map'
+import replace from 'lodash/replace'
 import fetchPonyfill from 'fetch-ponyfill'
 
 import { EventBus } from '@/utils/event-bus'
@@ -119,8 +120,8 @@ export default class DatashareClient {
   isDownloadAllowed (project) {
     return this.sendAction(`/api/project/isDownloadAllowed/${project}`, {}, false)
   }
-  retrieveAlert (path) {
-    return { message: null, variant: 'danger' }
+  retrieveNotes (project, path) {
+    return this.sendAction(replace(`/api/${project}/notes/${path}`, '//', '/'))
   }
   async sendAction (url, params = {}, json = true) {
     const r = await this.fetch(DatashareClient.getFullUrl(url), params)
