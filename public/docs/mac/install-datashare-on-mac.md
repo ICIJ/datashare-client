@@ -12,7 +12,7 @@ You need **OS X El Capitan 10.11 or a more recent version.**
 
 ![](../.gitbook/assets/screen-shot-2019-02-01-at-11.29.25-am.png)
 
-3. On your desktop:
+3.  On your desktop:
 
 * Open '**Finder'** by clicking on the blue smiling icon of your Mac's 'Dock.'
 
@@ -23,7 +23,27 @@ You need **OS X El Capitan 10.11 or a more recent version.**
 
 ![](../.gitbook/assets/pkg.png)
 
-4. A window entitled 'Install Datashare' will open. Click twice on '**Continue'** and then '**Install**.'
+4. You might see this window which says '"Datashare.pkg” can’t be opened because it was not downloaded from the App Store.'. Click '**Ok**'.
+
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.50.18.png)
+
+5. To open 'Dartashare.pkg' despite this, go to your Mac's **System Preferences**:
+
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.41.59.png)
+
+6. Open '**Security & Privacy**':
+
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.10.png)
+
+7. Click '**Open Anyway**':
+
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.22.png)
+
+8. Click '**Open**':
+
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.29.png)
+
+9. A window entitled 'Install Datashare' will open. Click twice on '**Continue'** and then '**Install**.'
 
 ![](../.gitbook/assets/inst1.png)
 
@@ -31,23 +51,23 @@ You need **OS X El Capitan 10.11 or a more recent version.**
 
 ![](../.gitbook/assets/group-43.png)
 
-5. At step 3, a window saying 'Installer is trying to install new software' will require your Mac **username** and **password**. Enter both and click '**Install Software.'**
+10. A window saying 'Installer is trying to install new software' will require your Mac **username** and **password**. Enter both and click '**Install Software.'**
 
 ![](../.gitbook/assets/inst31.png)
 
-6. Once the windows says 'The installation was successful. The software was installed,' click on '**Close.'**
+11. Once the windows says 'The installation was successful. The software was installed,' click on '**Close.'**
 
 ![](../.gitbook/assets/inst-212.png)
 
-7. A new windows will ask 'Do you want to move the "Datashare" Installer to the Trash?'. You can safely click '**Move to Trash'**:
+12. A new windows will ask 'Do you want to move the "Datashare" Installer to the Trash?'. You can safely click '**Move to Trash'**:
 
 ![](../.gitbook/assets/inst-2121.png)
 
-8. You see a small window of 'Terminal' automatically opened. It describes ongoing technical operations and **will close automatically.** If it does not close automatically, please wait for process to be completed before manually closing it.
+13. You see a small window of 'Terminal' automatically opened. It describes ongoing technical operations and **will close automatically.** If it does not close automatically, please wait for process to be completed before manually closing it.
 
 ![](../.gitbook/assets/inst-12131.png)
 
-9. Datashare is now installed as well as another tool that makes it work, called **Docker Desktop**. You can find Docker Desktop on your Mac menu bar, on the top right of your computer's screen. Its icon is a little whale! It contains components necessary for Datashare to work. **Docker Desktop will run automatically when you use Datashare**. 
+14. Datashare is now installed as well as another tool that makes it work, called **Docker Desktop**. You can find Docker Desktop on your Mac menu bar, on the top right of your computer's screen. Its icon is a little whale! It contains components necessary for Datashare to work. **Docker Desktop will run automatically when you use Datashare**. 
 
 If you don't see the docker whale, please **continue to open with Datashare**.
 
