@@ -134,6 +134,19 @@ Regex can be combined with standard queries in Datashare :
 
 Datashare relies on **Elastic's Regex syntax** as explained[ here](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html). Please refer to this page for more details.
 
+Here are a few examples of useful Regex:
+
+* You can search for **/Dimitr\[iyu\]/** instead of searching for **Dimitri OR Dimitry OR Dimitru**. It will find all the Dimitri, Dimitry or Dimitru in Datashare.
+
+
+
+* You can search for **/Dimitr\[^yu\]/** if you want to search all the words which begin with Dimitr and **do not end with either y nor u.**
+
+
+
+* You can search for **/Dimitri&lt;1-5&gt;/** if you want to search **Dimitri1, Dimitri2, Dimitri3, Dimitri4 or Dimitri5**.
+* You can search for \[a-z0-9\]
+
 
 
 ### **\(Advanced\) Searches using metadata fields**

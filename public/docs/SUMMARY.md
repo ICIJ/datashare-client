@@ -24,9 +24,9 @@
 
 * [Analyze documents](all/analyze-documents.md)
 * [Search documents](all/search-documents.md)
+* [Search with operators and Regex](all/search-with-operators.md)
 * [Filter documents](all/filter-documents.md)
 * [Sort documents by dates, relevance, etc.](all/sort-documents-by-dates-relevance-etc..md)
-* [Search with operators and Regex](all/search-with-operators.md)
 * [Batch search documents](all/batch-search-documents.md)
 * [Explore a document](all/explore-a-document.md)
 * [Star documents](all/star-documents.md)
