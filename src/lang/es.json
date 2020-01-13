@@ -90,7 +90,7 @@
   },
   "facet": {
     "none": "No hay valores",
-    "seeAll": "Show more",
+    "seeAll": "Ver más",
     "noMatches": "No hay coincidencias. <br /> Presione <kbd> Ingrese </kbd> para buscar en cada de los documentos",
     "noResults": "No hay coincidencias",
     "noSubdirectories": "No hay subdirectorios",
@@ -410,12 +410,12 @@
     "tasks": "Tareas",
     "empty": "Aún no has iniciado tareas.",
     "extract_text": "Extraer texto",
-    "extract_with_ocr_label": "Do you want to extract text also from images and PDFs?",
-    "extract_with_ocr_help": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
-    "extract_only_new_label": "Do you want to skip already indexed files?",
-    "extract_only_new_help": "If yes, Datashare will only extract text from files that are not yet searchable in Datashare.",
+    "extract_with_ocr_label": "¿Deseas extraer también el texto de imágenes y archivos PDF?",
+    "extract_with_ocr_help": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
+    "extract_only_new_label": "¿Desea omitir archivos ya indexados?",
+    "extract_only_new_help": "Si es así, Datashare sólo extraerá texto de archivos que aún no se pueden buscar en Datashare.",
     "run_batch_search": "Ejecutar búsquedas masivas",
-    "find_named_entities": "Find people, organizations, locations and email addresses",
+    "find_named_entities": "Buscar personas, organizaciones, ubicaciones y direcciones de correo electrónico",
     "find_named_entities_header": "¿Qué tecnología deseas aplicar para encontrar personas, organizaciones y lugares?",
     "find_named_entities_subheader": "Datashare utiliza modelos de procesamiento de lenguaje natural. Por favor elige uno de ellos:",
     "find_named_entities_tooltip": "Los textos deben ser extraídos antes de iniciar el proceso para encontrar entidades identificadas",
@@ -452,7 +452,7 @@
   "login": {
     "welcome": "Bienvenido a Datashare",
     "sum_up": "<a href=\"https://icij.org\">ICIJ</a> plataforma de búsqueda y descubrimiento.",
-    "authentication_platform": "To log in, use ICIJ secure authentication platform:",
+    "authentication_platform": "Para iniciar sesión, utilice la plataforma de autenticación segura de ICIJ:",
     "xemx": "Iniciar sesión con Xemx",
     "support_desk": "Si necesita ayuda, por favor visite nuestro servicio de asistencia:",
     "ask_help": "Pedir ayuda"
@@ -468,7 +468,7 @@
     "title": "Búsquedas masivas",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
-    "fileDescription": "Export your spreadsheet as a CSV. Only CSV format accepted. The first and only column should contain the terms to search. You can use operators (AND NOT * ? ! + - etc). Use 'space' instead of OR or | | with 'do phrase matches'. You can use Regex only between 2 slashes.",
+    "fileDescription": "Exportar su hoja de cálculo en formato CSV. Sólo formato CSV aceptado. La primera columna debe contener los términos a buscar. Puedes usar operadores (AND NOT * ? + - etc). Use 'espacio' en lugar de OR o | | con 'Realizar búsquedas similares'. Para usar Regex, escribirle entre 2 barras.",
     "filePlaceholder": "Selecciona un archivo...",
     "submit": "Añadir",
     "success": "Tu búsqueda masiva está ejecutándose.",
@@ -510,12 +510,12 @@
     "all": "Todas",
     "empty": "Sin resultados",
     "errorTitle": "Error",
-    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Please refer to this Help page where most common errors are described.</a>",
-    "seeErrorMessage": "See error message"
+    "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas cometido en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>",
+    "seeErrorMessage": "Mensaje de error"
   },
   "batchSearchResultsFilters": {
     "queries": {
-      "heading": "Filtrar por consultas"
+      "heading": "Consultas"
     }
   },
   "shortkeys": {
@@ -533,9 +533,9 @@
     "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento"
   },
   "config": {
-    "title": "Configuration",
-    "submit": "Submit",
-    "submitSuccess": "Modifications submitted. You should now restart Datashare.",
-    "submitError": "Unable to submit the configuration."
+    "title": "Configuración",
+    "submit": "Guardar",
+    "submitSuccess": "Modificaciones enviadas. Ahora debería reiniciar Datashare.",
+    "submitError": "Error al guardar la configuración."
   }
 }

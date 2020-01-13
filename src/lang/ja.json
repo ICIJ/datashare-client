@@ -397,7 +397,7 @@
   },
   "email": {
     "detail": "詳細を見る",
-    "to": "I need context",
+    "to": "To",
     "receivedLink": "受信メール",
     "sentLink": "送信メール"
   },
@@ -515,7 +515,7 @@
   },
   "batchSearchResultsFilters": {
     "queries": {
-      "heading": "Filter by queries"
+      "heading": "Queries"
     }
   },
   "shortkeys": {

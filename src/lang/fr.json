@@ -90,7 +90,7 @@
   },
   "facet": {
     "none": "Aucune valeur distincte",
-    "seeAll": "Show more",
+    "seeAll": "Voir plus",
     "noMatches": "Pas de résultat.<br />Presser <kbd>Entrée</kbd> pour chercher dans tous les documents",
     "noResults": "Pas de résultat",
     "noSubdirectories": "Pas de sous-dossier",
@@ -410,12 +410,12 @@
     "tasks": "Tâches",
     "empty": "Vous n'avez pas encore démarré de tâches.",
     "extract_text": "Extraire le texte",
-    "extract_with_ocr_label": "Do you want to extract text also from images and PDFs?",
-    "extract_with_ocr_help": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
-    "extract_only_new_label": "Do you want to skip already indexed files?",
-    "extract_only_new_help": "If yes, Datashare will only extract text from files that are not yet searchable in Datashare.",
+    "extract_with_ocr_label": "Voulez-vous aussi extraire le texte des images et des PDFs ?",
+    "extract_with_ocr_help": "Si oui, Datashare exécutera l'OCR (Optical Character Recognition - la reconnaissance de caractère optique). Cela peut prendre jusqu'à 10 fois plus de temps.",
+    "extract_only_new_label": "Voulez-vous ignorer les fichiers déjà indexés ?",
+    "extract_only_new_help": "Si oui, Datashare extraira seulement le texte des fichiers qui ne sont pas déjà dans Datashare.",
     "run_batch_search": "Lancer des recherches en lot",
-    "find_named_entities": "Find people, organizations, locations and email addresses",
+    "find_named_entities": "Trouver des personnes, des organisations, des localités et des adresses e-mail",
     "find_named_entities_header": "Quelle technologie voulez-vous utiliser pour trouver les entités nommées ?",
     "find_named_entities_subheader": "Datashare applique des modèles de Traitement de Language Naturel. Veuillez choisir l'un d'eux:",
     "find_named_entities_tooltip": "Les textes doivent être extraits avant de chercher les entitées nommées",
@@ -468,7 +468,7 @@
     "title": "Recherches en lot",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
-    "fileDescription": "Export your spreadsheet as a CSV. Only CSV format accepted. The first and only column should contain the terms to search. You can use operators (AND NOT * ? ! + - etc). Use 'space' instead of OR or | | with 'do phrase matches'. You can use Regex only between 2 slashes.",
+    "fileDescription": "Exportez votre feuille de calcul en format CSV. Seul le format CSV est accepté. La première colonne doit contenir les termes à rechercher. Vous pouvez utiliser les opérateurs (AND NOT * ? + - etc). Utilisez 'espace' au lieu de OU ou | | quand vous avez coché 'Rechercher les termes exacts'. Pour rechercher avec des Regex, les mettre entre 2 slashes.",
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
@@ -515,7 +515,7 @@
   },
   "batchSearchResultsFilters": {
     "queries": {
-      "heading": "Filtrer par recherches"
+      "heading": "Recherches"
     }
   },
   "shortkeys": {
@@ -534,8 +534,8 @@
   },
   "config": {
     "title": "Configuration",
-    "submit": "Submit",
-    "submitSuccess": "Modifications submitted. You should now restart Datashare.",
-    "submitError": "Unable to submit the configuration."
+    "submit": "Actualiser",
+    "submitSuccess": "Les modifications sont enregistrées mais vous devez redémarrer Datashare pour qu'elles s'appliquent.",
+    "submitError": "Erreur dans la reconfiguration."
   }
 }
