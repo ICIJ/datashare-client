@@ -210,7 +210,6 @@ export default {
         v-bind:activated.sync="hasStickyToolbox"
         @next="findNextLocalSearchTerm"
         @previous="findPreviousLocalSearchTerm"
-        :document="document"
         :search-occurrences="localSearchOccurrences"
         :search-index="localSearchIndex"
         :search-worker-in-progress="localSearchWorkerInProgress" />
