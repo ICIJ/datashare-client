@@ -303,16 +303,16 @@
     "level": {
       "all": "すべて",
       "level00": "ディスク上のファイル",
-      "level01": "1st",
-      "level02": "2nd",
-      "level03": "3rd",
-      "level04": "4th",
-      "level05": "5th",
-      "level06": "6th",
-      "level07": "7th",
-      "level08": "8th",
-      "level09": "9th",
-      "level10": "10th"
+      "level01": "レベル１",
+      "level02": "レベル２",
+      "level03": "レベル３",
+      "level04": "レベル４",
+      "level05": "レベル５",
+      "level06": "レベル６",
+      "level07": "レベル７",
+      "level08": "レベル８",
+      "level09": "レベル９",
+      "level10": "レベル１０"
     },
     "tags": "タグ",
     "selectDateRange": "日付範囲を選択"
