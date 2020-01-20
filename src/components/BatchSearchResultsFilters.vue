@@ -1,41 +1,51 @@
 <template>
   <div class="batch-search-results-filters">
     <div class="card m-3 batch-search-results-filters__queries overflow-hidden">
-      <h6 class="card-header">
-        {{ $t('batchSearchResultsFilters.queries.heading') }}
+      <h6 class="card-header d-flex">
+        <span class="flex-grow-1 my-auto">
+          {{ $t('batchSearchResultsFilters.queries.heading') }}
+        </span>
+        <span class="my-auto mr-2">
+          {{ $t('search.results.sort.sort') }}
+        </span>
+        <b-dropdown :text="sortField" class="batch-search-results-filters__queries__sort" variant="primary" right v-if="isMultipleQueries">
+          <b-dropdown-item v-for="key in sortFields" :key="key" @click="sort(key)">
+            {{ $t('search.results.sort.' + key) }}
+          </b-dropdown-item>
+        </b-dropdown>
       </h6>
       <div class="small">
         <selectable-dropdown
           class="batch-search-results-filters__queries__dropdown border-0 m-0 p-0"
           deactivate-keys
-          :items="metaQueriesKeys"
+          :items="queries"
           multiple
-          v-if="meta.queries && metaQueriesKeys.length > 1"
+          v-if="isMultipleQueries"
           v-model="selectedQueries"
           @input="onInput">
           <template #item-label="{ item }">
-            <div class="d-flex batch-search-results-filters__queries__dropdown__item" :id="item">
+            <div class="d-flex batch-search-results-filters__queries__dropdown__item" :id="item.label">
               <span class="flex-grow-1 text-truncate">
-                {{ item }}
+                {{ item.label }}
               </span>
               <b-badge class="my-1 px-2 batch-search-results-filters__queries__dropdown__item__count" variant="tertiary" pill>
-                {{ meta.queries[item] }}
+                {{ $n(item.count) }}
               </b-badge>
-              <fa icon="search" class="text-tertiary batch-search-results-filters__queries__dropdown__item__search" @click.stop.prevent="executeSearch(item)" />
+              <fa icon="search" class="text-tertiary batch-search-results-filters__queries__dropdown__item__search" @click.stop.prevent="executeSearch(item.label)" />
             </div>
-            <b-tooltip placement="bottom" :target="item" :title="item" />
+            <b-tooltip placement="bottom" :target="item.label" :title="item.label" />
           </template>
         </selectable-dropdown>
-        <div v-else v-for="(count, query) in meta.queries" :key="query" class="flex-grow-1 batch-search-results-filters__queries__list px-3 py-1">
-          <div class="d-flex" :id="query">
+        <div v-else v-for="query in queries" :key="query.label" class="flex-grow-1 batch-search-results-filters__queries__list px-3 py-1">
+          <div class="d-flex" :id="query.label">
             <span class="flex-grow-1 text-truncate">
-              {{ query }}
+              {{ query.label }}
             </span>
             <b-badge class="my-1 px-2" variant="tertiary" pill>
-              {{ $n(count) }}
+              {{ $n(query.count) }}
             </b-badge>
           </div>
-          <b-tooltip placement="bottom" :target="query" :title="query" />
+          <b-tooltip placement="bottom" :target="query.label" :title="query.label" />
         </div>
       </div>
     </div>
@@ -44,7 +54,8 @@
 
 <script>
 import find from 'lodash/find'
-import keys from 'lodash/keys'
+import map from 'lodash/map'
+import orderBy from 'lodash/orderBy'
 
 export default {
   name: 'BatchSearchResultsFilters',
@@ -52,14 +63,30 @@ export default {
     uuid: String,
     index: String
   },
+  data () {
+    return {
+      sortField: 'default',
+      sortFields: ['default', 'count']
+    }
+  },
   computed: {
     meta () {
       if (this.$store.state.batchSearch) {
-        return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || { }
+        return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || {}
       }
     },
     metaQueriesKeys () {
-      return keys(this.meta.queries)
+      return map(this.meta.queries, (a, b) => { return { label: b, count: a } })
+    },
+    queries () {
+      if (this.sortField === 'count') {
+        return orderBy(this.metaQueriesKeys, ['count'], ['desc'])
+      } else {
+        return this.metaQueriesKeys
+      }
+    },
+    isMultipleQueries () {
+      return this.queries && this.queries.length > 1
     },
     selectedQueries: {
       set (queries) {
@@ -77,6 +104,9 @@ export default {
     executeSearch (query) {
       this.$store.commit('search/reset')
       this.$router.push({ name: 'search', query: { q: query } })
+    },
+    sort (sortField) {
+      this.sortField = sortField
     }
   }
 }
@@ -89,6 +119,13 @@ export default {
     width: 100%;
 
     &__queries {
+
+      &__sort {
+
+        & .dropdown-menu {
+          z-index: 1001;
+        }
+      }
 
       &__dropdown {
         max-height: calc(40vh + 100px);

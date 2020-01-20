@@ -16,9 +16,9 @@ jest.mock('@/api/DatashareClient', () => {
           project: { name: 'ProjectName' },
           description: 'This is the description of the batch search',
           queries: {
-            query_01: 3,
-            query_02: 2,
-            query_03: 1
+            query_01: 1,
+            query_02: 3,
+            query_03: 2
           },
           state: 'SUCCESS',
           date: '2019-07-18T14:45:34.869+0000'
@@ -81,9 +81,9 @@ describe('BatchSearchResultsFilters.vue', () => {
       project: { name: 'ProjectName' },
       description: 'This is the description of the batch search',
       queries: {
-        query_01: 3,
-        query_02: 2,
-        query_03: 1
+        query_01: 1,
+        query_02: 3,
+        query_03: 2
       },
       state: 'SUCCESS',
       date: '2019-07-18T14:45:34.869+0000'
@@ -102,6 +102,19 @@ describe('BatchSearchResultsFilters.vue', () => {
   afterAll(() => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
     jest.unmock('@/api/DatashareClient')
+  })
+
+  it('should emit a "batch-search-results::filter" event on click on dropdown entry', async () => {
+    await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
+    await store.dispatch('batchSearch/getBatchSearches')
+    wrapper = mount(BatchSearchResultsFilters, { localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
+    const rootWrapper = createWrapper(wrapper.vm.$root)
+    rootWrapper._emitted['batch-search-results::filter'] = []
+
+    wrapper.find('.batch-search-results-filters__queries__dropdown > span').trigger('click')
+    await wrapper.vm.$nextTick()
+
+    expect(rootWrapper.emitted('batch-search-results::filter')).toHaveLength(1)
   })
 
   it('should display simple list if there is only one query', async () => {
@@ -140,20 +153,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     wrapper = mount(BatchSearchResultsFilters, { localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
 
     expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown > span span.badge')).toHaveLength(3)
-    expect(wrapper.find('.batch-search-results-filters__queries__dropdown > span span.badge').text()).toEqual('3')
-  })
-
-  it('should emit a "batch-search-results::filter" event on click on dropdown entry', async () => {
-    await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
-    await store.dispatch('batchSearch/getBatchSearches')
-    wrapper = mount(BatchSearchResultsFilters, { localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
-    const rootWrapper = createWrapper(wrapper.vm.$root)
-    rootWrapper._emitted['batch-search-results::filter'] = []
-
-    wrapper.find('.batch-search-results-filters__queries__dropdown > span').trigger('click')
-    await wrapper.vm.$nextTick()
-
-    expect(rootWrapper.emitted('batch-search-results::filter')).toHaveLength(1)
+    expect(wrapper.find('.batch-search-results-filters__queries__dropdown > span span.badge').text()).toBe('1')
   })
 
   describe('search', () => {
@@ -175,6 +175,34 @@ describe('BatchSearchResultsFilters.vue', () => {
 
       expect(wrapper.vm.$router.push).toBeCalled()
       expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'search', query: { q: 'query_01' } })
+    })
+  })
+
+  describe('sort dropdown', () => {
+    it('should display a dropdown to sort', () => {
+      wrapper = mount(BatchSearchResultsFilters, { localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
+
+      expect(wrapper.findAll('.batch-search-results-filters__queries__sort .dropdown-menu')).toHaveLength(1)
+    })
+
+    it('should sort queries in default order', () => {
+      wrapper = mount(BatchSearchResultsFilters, { localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
+
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item')).toHaveLength(3)
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(0).text()).toBe('query_01')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(1).text()).toBe('query_02')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(2).text()).toBe('query_03')
+    })
+
+    it('should sort queries by count order', async () => {
+      wrapper = mount(BatchSearchResultsFilters, { localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
+
+      await wrapper.vm.sort('count')
+
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item')).toHaveLength(3)
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(0).text()).toBe('query_02')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(1).text()).toBe('query_03')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(2).text()).toBe('query_01')
     })
   })
 })

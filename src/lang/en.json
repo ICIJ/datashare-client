@@ -53,7 +53,9 @@
         "sizeLargest": "Size (decreasing)",
         "sizeSmallest": "Size (increasing)",
         "path": "File path (A to Z)",
-        "pathReverse": "File path (Z to A)"
+        "pathReverse": "File path (Z to A)",
+        "default": "default",
+        "count": "count"
       }
     },
     "filtersTitle": "Filters",
