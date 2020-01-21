@@ -53,7 +53,9 @@
         "sizeLargest": "Taille (décroissante)",
         "sizeSmallest": "Taille (croissante)",
         "path": "Chemin du fichier (A à Z)",
-        "pathReverse": "Chemin du fichier (Z à A)"
+        "pathReverse": "Chemin du fichier (Z à A)",
+        "default": "default",
+        "count": "count"
       }
     },
     "filtersTitle": "Filtres",
@@ -489,7 +491,7 @@
     "query": "pas de recherches | 1 recherche | {count} recherches",
     "delete": "Supprimer la recherche en lot",
     "deleted": "La recherche en lot a été supprimée.",
-    "notDeleted": "La recherche en lot n'a pas été supprimée.",
+    "notDeleted": "The batch search has not been deleted.",
     "published": "Publiée",
     "publishedDescription": "Donner accès aux autres membres du projet à cette rechercher en lot. Vous pourrez changer ceci plus tard.",
     "phraseMatch": "Rechercher les termes exacts",
