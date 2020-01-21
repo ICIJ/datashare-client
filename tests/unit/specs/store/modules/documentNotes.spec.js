@@ -17,4 +17,12 @@ describe('DocumentNotesStore', () => {
     expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/projectName/notes/path'), {})
   })
+
+  it('should call the API endpoint only once', async () => {
+    await store.dispatch('documentNotes/retrieveNotes', { project: 'projectName', path: 'path' })
+    await store.dispatch('documentNotes/retrieveNotes', { project: 'projectName', path: 'path' })
+
+    expect(datashare.fetch).toBeCalledTimes(1)
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/projectName/notes/path'), {})
+  })
 })
