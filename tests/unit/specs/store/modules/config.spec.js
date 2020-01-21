@@ -15,8 +15,7 @@ describe('ConfigStore', () => {
     store.dispatch('config/getConfig')
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/config'),
-      {})
+    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/config'), {})
   })
 
   it('should send the config modifications', () => {

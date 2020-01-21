@@ -3,13 +3,13 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { App } from '@/main'
 import DocumentNotes from '@/components/document/DocumentNotes'
 
-const { localVue, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('DocumentNotes.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(DocumentNotes, { localVue, router, store, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentNotes, { localVue, store, mocks: { $t: msg => msg } })
   })
   it('should NOT display note on document', () => {
     expect(wrapper.find('b-alert-stub').exists()).toBeFalsy()

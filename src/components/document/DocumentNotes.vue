@@ -8,9 +8,6 @@
 
 <script>
 import { mapState } from 'vuex'
-import DatashareClient from '@/api/DatashareClient'
-
-const datashare = new DatashareClient()
 
 export default {
   name: 'DocumentNote',
@@ -27,7 +24,7 @@ export default {
   },
   methods: {
     async retrieveNotes (project, path) {
-      this.notes = await datashare.retrieveNotes(project, path)
+      this.notes = await this.$store.dispatch('documentNotes/retrieveNotes', { project, path })
     }
   },
   mounted () {
