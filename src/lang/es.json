@@ -53,7 +53,9 @@
         "sizeLargest": "Tamaño (disminuyendo)",
         "sizeSmallest": "Tamaño (aumentado)",
         "path": "Ruta del archivo (de A a Z)",
-        "pathReverse": "Ruta del archivo (de A a Z)"
+        "pathReverse": "Ruta del archivo (de A a Z)",
+        "default": "default",
+        "count": "count"
       }
     },
     "filtersTitle": "Filtros",
@@ -489,7 +491,7 @@
     "query": "no hay consultas | 1 consulta | {count} consultas",
     "delete": "Eliminar búsqueda masiva",
     "deleted": "La búsqueda masiva ha sido eliminado.",
-    "notDeleted": "La búsqueda masiva no ha sido eliminada.",
+    "notDeleted": "The batch search has not been deleted.",
     "published": "Publicado",
     "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda masiva. Puedes cambiar esto más tarde.",
     "phraseMatch": "Realizar búsquedas similares",
