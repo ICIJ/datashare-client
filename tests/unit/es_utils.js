@@ -73,10 +73,6 @@ class IndexedDocument {
     this.nerTags = []
     this.index = index
   }
-  toIndex (index) {
-    this.index = index
-    return this
-  }
   withContent (content) {
     this.content = content
     return this
