@@ -6,11 +6,18 @@ import DatashareClient from '@/api/DatashareClient'
 
 export const datashare = new DatashareClient()
 
-export const state = {
-  notes: {}
+export function initialState () {
+  return {
+    notes: {}
+  }
 }
+export const state = initialState()
 
 export const mutations = {
+  reset (state) {
+    const s = initialState()
+    Object.keys(s).forEach(key => { state[key] = s[key] })
+  },
   setNotes (state, { project, notes }) {
     set(state, ['notes', project], notes)
   }

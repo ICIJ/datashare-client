@@ -11,8 +11,12 @@ describe('DocumentNotesStore', () => {
 
   beforeEach(() => datashare.fetch.mockClear())
 
-  it('should call the retrieveNotes url', () => {
-    store.dispatch('documentNotes/retrieveNotes', { project: 'projectName', path: 'path' })
+  afterEach(() => store.commit('documentNotes/reset'))
+
+  afterAll(() => datashare.fetch.mockClear())
+
+  it('should call the retrieveNotes url', async () => {
+    await store.dispatch('documentNotes/retrieveNotes', { project: 'projectName', path: 'path' })
 
     expect(datashare.fetch).toBeCalledTimes(1)
     expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/projectName/notes/path'), {})
