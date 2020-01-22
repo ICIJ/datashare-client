@@ -12,6 +12,5 @@ describe('DocumentLocalSearchInput.vue', () => {
     expect(wrapper.find('.document-local-search-input').classes('document-local-search-input--pristine')).toBeTruthy()
     expect(wrapper.find('.document-local-search-input__term').exists()).toBeTruthy()
     expect(wrapper.find('.document-local-search-input__count').exists()).toBeTruthy()
-    console.log(wrapper.find('.document-local-search-input__count').html())
   })
 })
