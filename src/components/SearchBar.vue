@@ -123,8 +123,6 @@ export default {
       this.$store.commit('search/query', this.query)
       this.$store.commit('search/from', 0)
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQueryWithStamp'] })
-      // And emit an event for those listening...
-      this.$emit('submit', this.query)
     },
     async suggestTerms (candidates) {
       const query = this.query
