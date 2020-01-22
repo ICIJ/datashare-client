@@ -98,9 +98,9 @@ export const mutations = {
   toggleIsLoadingNamedEntities (state, toggler = null) {
     state.isLoadingNamedEntities = (toggler !== null ? toggler : !state.isLoadingNamedEntities)
   },
-  addTag (state, tag) {
+  addTag (state, { tag, userId }) {
     const tags = map(compact(tag.split(' ')), tag => {
-      return { label: tag, user: { id: auth.getUsername() }, creationDate: Date.now() }
+      return { label: tag, user: { id: userId }, creationDate: Date.now() }
     })
     state.tags = uniqBy(concat(state.tags, tags), 'label')
   },
@@ -190,11 +190,15 @@ export const actions = {
     }
     return state.tags
   },
-  async tag ({ commit, state, dispatch }, { documents, tag }) {
+  async tag ({ state, dispatch }, { documents, tag }) {
     await datashare.tagDocuments(state.doc.index, map(documents, 'id'), compact(tag.split(' ')))
-    if (documents.length === 1) commit('addTag', tag)
+    if (documents.length === 1) await dispatch('addTag', tag)
   },
-  async deleteTag ({ commit, state, dispatch }, { documents, tag }) {
+  async addTag ({ state, commit }, tag) {
+    const userId = await auth.getUsername()
+    commit('addTag', { tag, userId })
+  },
+  async deleteTag ({ state, commit }, { documents, tag }) {
     await datashare.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
     if (documents.length === 1) commit('deleteTag', tag)
   }
