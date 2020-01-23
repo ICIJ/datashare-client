@@ -92,7 +92,6 @@
   },
   "facet": {
     "none": "No hay valores",
-    "seeAll": "Ver más",
     "noMatches": "No hay coincidencias. <br /> Presione <kbd> Ingrese </kbd> para buscar en cada de los documentos",
     "noResults": "No hay coincidencias",
     "noSubdirectories": "No hay subdirectorios",
