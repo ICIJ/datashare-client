@@ -71,9 +71,6 @@
         </div>
         <div v-if="noResults" class="p-2 text-center text-muted">
           {{ $t('facet.none') }}<br />
-          <a @click.prevent="asyncFacetSearch" href="#" class="text-white text-underline">
-            {{ $t('facet.seeAll') }}
-          </a>
         </div>
         <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
           <span v-html="$t('facet.noMatches')"></span>
