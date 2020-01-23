@@ -40,8 +40,8 @@ describe('LocalesDropdown', () => {
       wrapper = shallowMount(LocalesDropdown, { localVue, i18n })
     })
 
-    it('should display a menu with 3 languages', () => {
-      expect(wrapper.findAll('b-popover-stub .dropdown-item').length).toBe(3)
+    it('should display a menu with 4 languages', () => {
+      expect(wrapper.findAll('b-popover-stub .dropdown-item').length).toBe(4)
     })
 
     it('should switch from English to French interface language', async () => {
@@ -62,6 +62,16 @@ describe('LocalesDropdown', () => {
 
       expect(wrapper.find('.locales-dropdown__button').text()).toBe('Español')
       expect(localStorage.getItem('locale')).toBe('es')
+    })
+
+    it('should switch from English to Japan interface language', async () => {
+      expect(wrapper.find('.locales-dropdown__button').text()).toBe('English')
+
+      wrapper.findAll('.dropdown-item').at(3).trigger('click')
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.find('.locales-dropdown__button').text()).toBe('日本語')
+      expect(localStorage.getItem('locale')).toBe('ja')
     })
   })
 })
