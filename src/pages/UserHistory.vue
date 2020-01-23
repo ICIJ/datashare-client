@@ -3,10 +3,10 @@
     <div class="bg-white">
       <div class="container">
         <div class="user-history__header py-5">
-          <button class="btn btn-primary float-right" @click="clear" v-if="documents.length">
+          <confirm-button class="btn btn-primary float-right" :confirmed="clear" v-if="documents.length">
             <fa icon="trash-alt" class="mr-1" />
             {{ $t('userHistory.clear') }}
-          </button>
+          </confirm-button>
           <h3>
             {{ $t('userHistory.heading') }}
           </h3>
