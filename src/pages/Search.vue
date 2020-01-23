@@ -9,7 +9,7 @@
       <app-nav class="flex-grow-1" />
     </div>
     <div class="px-0 search__body">
-      <vue-perfect-scrollbar class="search__body__search-results search__body__results" ref="searchBodyScrollbar">
+      <component :is="bodyWrapper" class="search__body__search-results search__body__results" ref="searchBodyScrollbar">
         <div v-if="!!error" class="py-5 text-center">
           {{ errorMessage }}
         </div>
@@ -19,7 +19,7 @@
           <content-placeholder class="bg-white p-3 mb-3" />
           <content-placeholder class="bg-white p-3 mb-3" />
         </div>
-      </vue-perfect-scrollbar>
+      </component>
       <transition name="slide-right">
         <div class="search__body__document" v-if="showDocument">
           <search-document-navbar class="search__body__document__navbar"  />
@@ -52,8 +52,7 @@ export default {
   components: {
     AppNav,
     SearchDocumentNavbar,
-    SearchResults,
-    VuePerfectScrollbar
+    SearchResults
   },
   data () {
     return {
@@ -95,6 +94,9 @@ export default {
     },
     activeFilters () {
       return this.$store.getters['search/activeFacets'].length
+    },
+    bodyWrapper () {
+      return this.layout === 'list' ? VuePerfectScrollbar : 'div'
     }
   },
   beforeRouteUpdate (to, from, next) {
@@ -226,6 +228,7 @@ export default {
         border-radius: $card-border-radius;
         overflow: hidden;
       }
+
     }
 
     &__body {
@@ -243,6 +246,7 @@ export default {
       & &__results {
         left: $spacer;
         right: $spacer;
+        overflow: auto;
       }
 
       & &__document {
