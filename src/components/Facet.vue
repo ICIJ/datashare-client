@@ -94,17 +94,12 @@ import toLower from 'lodash/toLower'
 
 import facets from '@/mixins/facets'
 
-const initialNumberOfFilesDisplayed = 5
-
 export default {
   name: 'Facet',
   mixins: [facets],
   data () {
     return {
       facetQuery: '',
-      display: {
-        size: initialNumberOfFilesDisplayed
-      },
       collapseItems: !this.asyncItems,
       isReady: true,
       isInitialized: !!this.asyncItems,
@@ -140,7 +135,6 @@ export default {
         }
       }
     })
-    // Initialize the component
     this.initialize()
   },
   computed: {
@@ -223,7 +217,7 @@ export default {
       this.collapseItems = !this.collapseItems
     },
     shouldDisplayShowMoreAction () {
-      return !this.hideShowMore && this.items.length > initialNumberOfFilesDisplayed
+      return !this.hideShowMore && this.totalCount > this.size
     }
   }
 }

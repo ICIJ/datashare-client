@@ -169,27 +169,6 @@ describe('FacetText.vue', () => {
     expect(wrapper.vm.root.total).toBe(5)
   })
 
-  it('should display the more button and its font awesome icon', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('text/type_04')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('text/type_05')).commit()
-    await letData(es).have(new IndexedDocument('document_06', index)
-      .withContentType('text/type_06')).commit()
-
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
-    expect(wrapper.find('.facet__items__display > span').text()).toBe('facet.showMore')
-    expect(wrapper.vm.root.total).toBe(6)
-  })
-
   it('should display all the facet values and the more button', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('text/type_01')).commit()
@@ -203,37 +182,39 @@ describe('FacetText.vue', () => {
       .withContentType('text/type_05')).commit()
     await letData(es).have(new IndexedDocument('document_06', index)
       .withContentType('text/type_06')).commit()
+    await letData(es).have(new IndexedDocument('document_07', index)
+      .withContentType('text/type_07')).commit()
+    await letData(es).have(new IndexedDocument('document_08', index)
+      .withContentType('text/type_08')).commit()
+    await letData(es).have(new IndexedDocument('document_09', index)
+      .withContentType('text/type_09')).commit()
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.vm.root.items).toHaveLength(6)
+    expect(wrapper.vm.root.items).toHaveLength(8)
     expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
     expect(wrapper.find('.facet__items__display > span').text()).toBe('facet.showMore')
-    expect(wrapper.vm.root.total).toBe(6)
+    expect(wrapper.vm.root.total).toBe(9)
   })
 
-  it('should filter facet values and display the more button', async () => {
+  it('should filter facet values', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('text/type_01')).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
       .withContentType('text/type_02')).commit()
     await letData(es).have(new IndexedDocument('document_03', index)
       .withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('text/type_04')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('text/type_05')).commit()
-    await letData(es).have(new IndexedDocument('document_06', index)
-      .withContentType('text/type_06')).commit()
+    await letData(es).have(new IndexedDocument('document_12', index)
+      .withContentType('text/type_12')).commit()
+    await letData(es).have(new IndexedDocument('document_13', index)
+      .withContentType('text/type_13')).commit()
 
     wrapper.vm.root.facetQuery = 'text/type_0'
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.vm.root.items).toHaveLength(6)
-    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
-    expect(wrapper.find('.facet__items__display > span').text()).toBe('facet.showMore')
-    expect(wrapper.vm.root.total).toBe(6)
+    expect(wrapper.vm.root.items).toHaveLength(3)
+    expect(wrapper.vm.root.total).toBe(5)
   })
 
   it('should filter facet values but no more button', async () => {
