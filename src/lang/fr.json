@@ -92,7 +92,6 @@
   },
   "facet": {
     "none": "Aucune valeur distincte",
-    "seeAll": "Voir plus",
     "noMatches": "Pas de résultat.<br />Presser <kbd>Entrée</kbd> pour chercher dans tous les documents",
     "noResults": "Pas de résultat",
     "noSubdirectories": "Pas de sous-dossier",
