@@ -92,7 +92,6 @@
   },
   "facet": {
     "none": "値なし",
-    "seeAll": "もっと表示",
     "noMatches": "一致するものがありません。全ての文書を検索するには<br /><kbd>Enter</kbd>キーを押してください",
     "noResults": "検索結果がありません",
     "noSubdirectories": "サブディレクトリがありません",
