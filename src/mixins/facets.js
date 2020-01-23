@@ -1,4 +1,3 @@
-import utils from '@/mixins/utils'
 import camelCase from 'lodash/camelCase'
 import escapeRegExp from 'lodash/escapeRegExp'
 import find from 'lodash/find'
@@ -9,12 +8,13 @@ import map from 'lodash/map'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
 
+import settings from '@/utils/settings'
+import utils from '@/mixins/utils'
+
 export default {
   mixins: [utils],
   props: {
-    facet: {
-      type: Object
-    },
+    facet: Object,
     hideHeader: {
       type: Boolean,
       default: false
@@ -42,7 +42,7 @@ export default {
     return {
       isReady: false,
       offset: 0,
-      pageSize: 8,
+      pageSize: settings.facetSize,
       total: 0,
       totalCount: 0,
       selected: [],
