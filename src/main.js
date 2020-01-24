@@ -56,20 +56,24 @@ export class App {
     this.use(VCalendar, { componentPrefix: 'vc' })
   }
   async configure () {
-    // Get the config object
-    const config = await this.datashareClient.getConfig()
-    // Murmur exposes a config attribute which share a Config object
-    // with the current vue instance.
-    Murmur.config.merge(mode(config.mode))
-    // The backend can yet override some configuration
-    Murmur.config.merge(config)
-    // Override Murmur default value for content-placeholder
-    Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
-    this.datashareClient.createIndex(config['defaultProject'])
-    if (this.store.state.search.index === '') {
-      this.store.commit('search/index', config['defaultProject'])
-    }
-    return this
+    // Old a promise that is resolved when the app is configured
+    this.ready = this.ready || Promise.resolve().then(async () => {
+      // Get the config object
+      const config = await this.datashareClient.getConfig()
+      // Murmur exposes a config attribute which share a Config object
+      // with the current vue instance.
+      Murmur.config.merge(mode(config.mode))
+      // The backend can yet override some configuration
+      Murmur.config.merge(config)
+      // Override Murmur default value for content-placeholder
+      Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
+      this.datashareClient.createIndex(config['defaultProject'])
+      if (this.store.state.search.index === '') {
+        this.store.commit('search/index', config['defaultProject'])
+      }
+      return this
+    })
+    return this.ready
   }
   mount (selector) {
     // Render function returns a router-view component by default
@@ -112,10 +116,10 @@ export class App {
 }
 
 /* eslint-disable no-new */
-export async function createApp (LocalVue) {
+export function createApp (LocalVue) {
   const app = new App(LocalVue)
   // Configure the app with server conf
-  await app.configure()
+  app.configure()
   // Create the app with all available plugins
   const vm = app.useAll().mount('#app')
   // Returns both the vm and the app
