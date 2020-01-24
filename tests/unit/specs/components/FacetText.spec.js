@@ -150,53 +150,6 @@ describe('FacetText.vue', () => {
     expect(wrapper.vm.root.total).toBe(3)
   })
 
-  it('should not display the more button', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('text/type_04')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('text/type_05')).commit()
-
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(5)
-    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(0)
-    expect(wrapper.vm.root.total).toBe(5)
-  })
-
-  it('should display all the facet values and the more button', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('text/type_04')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('text/type_05')).commit()
-    await letData(es).have(new IndexedDocument('document_06', index)
-      .withContentType('text/type_06')).commit()
-    await letData(es).have(new IndexedDocument('document_07', index)
-      .withContentType('text/type_07')).commit()
-    await letData(es).have(new IndexedDocument('document_08', index)
-      .withContentType('text/type_08')).commit()
-    await letData(es).have(new IndexedDocument('document_09', index)
-      .withContentType('text/type_09')).commit()
-
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.vm.root.items).toHaveLength(8)
-    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
-    expect(wrapper.find('.facet__items__display > span').text()).toBe('facet.showMore')
-    expect(wrapper.vm.root.total).toBe(9)
-  })
-
   it('should filter facet values', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('text/type_01')).commit()
@@ -217,30 +170,7 @@ describe('FacetText.vue', () => {
     expect(wrapper.vm.root.total).toBe(5)
   })
 
-  it('should filter facet values but no more button', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/type_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('text/type_02')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('text/type_03')).commit()
-    await letData(es).have(new IndexedDocument('document_06', index)
-      .withContentType('text/type_03')).commit()
-
-    wrapper.vm.root.facetQuery = 'text/type_03'
-
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.vm.root.items).toHaveLength(1)
-    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(0)
-    expect(wrapper.vm.root.total).toBe(6)
-  })
-
-  it('should filter facet values', async () => {
+  it('should filter facet values with no results', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('text/type_01')).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
@@ -262,7 +192,7 @@ describe('FacetText.vue', () => {
     expect(wrapper.vm.root.total).toBe(6)
   })
 
-  it('should filter facet values - Uppercase situation 2/2', async () => {
+  it('should filter facet values - Uppercase situation', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('text/csv')).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
@@ -502,5 +432,57 @@ describe('FacetText.vue', () => {
 
     wrapper.vm.$root.$emit('facet::delete', 'tags', { label: 'tag_01' })
     expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+  })
+
+  describe('about the show more button', () => {
+    it('should not display the more button if less than 8 items in the facet', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withContentType('text/type_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withContentType('text/type_02')).commit()
+
+      await wrapper.vm.root.aggregate()
+
+      expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(0)
+    })
+
+    it('should display the more button if more than 8 items in the facet', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withContentType('text/type_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withContentType('text/type_02')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index)
+        .withContentType('text/type_03')).commit()
+      await letData(es).have(new IndexedDocument('document_04', index)
+        .withContentType('text/type_04')).commit()
+      await letData(es).have(new IndexedDocument('document_05', index)
+        .withContentType('text/type_05')).commit()
+      await letData(es).have(new IndexedDocument('document_06', index)
+        .withContentType('text/type_06')).commit()
+      await letData(es).have(new IndexedDocument('document_07', index)
+        .withContentType('text/type_07')).commit()
+      await letData(es).have(new IndexedDocument('document_08', index)
+        .withContentType('text/type_08')).commit()
+      await letData(es).have(new IndexedDocument('document_09', index)
+        .withContentType('text/type_09')).commit()
+
+      await wrapper.vm.root.aggregate()
+
+      expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
+    })
+
+    it('should not display the more button if less than 8 items in the facet after filtering', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withContentType('text/type_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withContentType('text/type_02')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index)
+        .withContentType('text/type_03')).commit()
+
+      wrapper.vm.root.facetQuery = 'text/type_03'
+      await wrapper.vm.root.aggregate()
+
+      expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(0)
+    })
   })
 })
