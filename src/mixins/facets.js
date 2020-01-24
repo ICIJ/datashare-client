@@ -173,6 +173,7 @@ export default {
     resetFacetValues () {
       this.$set(this, 'isAllSelected', true)
       this.$set(this, 'selected', [])
+      this.$store.commit('search/includeFacet', this.facet.name)
       this.$emit('reset-facet-values', this.facet)
     },
     changeSelectedValues () {

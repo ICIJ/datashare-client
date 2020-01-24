@@ -33,7 +33,7 @@
           </form>
         </slot>
         <div class="mb-2">
-          <slot v-if="items.length > 0" name="items" :items="items" :options="options" :selected="selected" :total-count="totalCount" :facetQuery="facetQuery">
+          <slot name="items" v-if="items.length > 0" :items="items" :options="options" :selected="selected" :total-count="totalCount" :facetQuery="facetQuery">
             <b-form-checkbox v-model="isAllSelected" @change.native="resetFacetValues" class="facet__items__all mb-0">
               <slot name="all">
                 <span class="d-flex">

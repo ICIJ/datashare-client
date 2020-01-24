@@ -295,6 +295,12 @@ export const mutations = {
       existingFacet.reverse = true
     }
   },
+  includeFacet (state, name) {
+    const existingFacet = find(state.facets, { name })
+    if (existingFacet) {
+      existingFacet.reverse = false
+    }
+  },
   toggleFacet (state, name) {
     const existingFacet = find(state.facets, { name })
     if (existingFacet) {

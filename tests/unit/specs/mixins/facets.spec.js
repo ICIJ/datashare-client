@@ -42,12 +42,6 @@ describe('facets mixin', () => {
       expect(selectedValuesFromStore.mock.calls).toHaveLength(1)
     })
 
-    it('should emit an event "reset-facet-values" on resetFacetValues', () => {
-      wrapper.vm.resetFacetValues()
-
-      expect(wrapper.emitted('reset-facet-values')).toHaveLength(1)
-    })
-
     it('should refresh the route', () => {
       jest.spyOn(router, 'push')
 
@@ -61,6 +55,40 @@ describe('facets mixin', () => {
       wrapper.vm.selectedValuesFromStore()
 
       expect(wrapper.emitted('selected-values-from-store')).toHaveLength(2)
+    })
+  })
+
+  describe('on resetFacetValues', () => {
+    it('should set "isAllSelected" as "true"', () => {
+      wrapper.vm.$set(wrapper.vm, 'isAllSelected', false)
+
+      wrapper.vm.resetFacetValues()
+
+      expect(wrapper.vm.isAllSelected).toBeTruthy()
+    })
+
+    it('should empty "selected" value', () => {
+      wrapper.vm.$set(wrapper.vm, 'selected', ['item'])
+
+      wrapper.vm.resetFacetValues()
+
+      expect(wrapper.vm.selected).toHaveLength(0)
+    })
+
+    it('should reset the exclude value to "false"', () => {
+      wrapper.vm.$store.commit('search/toggleFacet', facet.name)
+
+      wrapper.vm.resetFacetValues()
+
+      expect(wrapper.vm.isReversed()).toBeFalsy()
+    })
+
+    it('should emit an event "reset-facet-values"', () => {
+      wrapper._emitted['reset-facet-values'] = []
+
+      wrapper.vm.resetFacetValues()
+
+      expect(wrapper.emitted('reset-facet-values')).toHaveLength(1)
     })
   })
 })
