@@ -13,6 +13,7 @@
           </a>
         </div>
       </div>
+      <hook name="app-sidebar.menu:before" />
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <router-link :to="{ name: 'search', query }" class="app-sidebar__container__menu__item__link" title="Search in documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
@@ -47,6 +48,8 @@
           </router-link>
         </li>
       </ul>
+      <hook name="app-sidebar.menu:after" />
+      <hook name="app-sidebar.help:before" />
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <a href="https://icij.gitbook.io/datashare/faq/" target="_blank" class="app-sidebar__container__menu__item__link" title="FAQ" v-b-tooltip.right="{ customClass: tooltipsClass }">
@@ -65,6 +68,8 @@
           </a>
         </li>
       </ul>
+      <hook name="app-sidebar.help:after" />
+      <hook name="app-sidebar.guides:before" />
       <div v-if="!reduced && currentRouteDocs.length">
         <h5 class="app-sidebar__container__heading">
           <fa icon="book" fixed-width />
@@ -80,6 +85,8 @@
           </li>
         </ul>
       </div>
+      <hook name="app-sidebar.guides:after" />
+      <hook name="app-sidebar.locales:before" />
       <ul class="app-sidebar__container__menu list-unstyled mb-0">
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--locale">
           <locales-dropdown class="app-sidebar__container__menu__item__link text-left text-wrap" v-slot="{ currentLocale }">
@@ -98,6 +105,7 @@
           </a>
         </li>
       </ul>
+      <hook name="app-sidebar.locales:after" />
     </vue-perfect-scrollbar>
     <div class="app-sidebar__version text-left">
       <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" class="d-inline-block" :no-icon="reduced" />
@@ -116,12 +124,14 @@ import DatashareClient from '@/api/DatashareClient'
 import LocalesDropdown from './LocalesDropdown.vue'
 import MountedDataLocation from './MountedDataLocation.vue'
 import VersionNumber from './VersionNumber.vue'
+import Hook from './Hook.vue'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'AppSidebar',
   mixins: [docs, utils],
   components: {
+    Hook,
     LocalesDropdown,
     MountedDataLocation,
     VersionNumber,
