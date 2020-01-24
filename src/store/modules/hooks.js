@@ -22,6 +22,9 @@ export const mutations = {
   },
   reset (state) {
     state.registered = []
+  },
+  resetTarget (state, target) {
+    state.registered = filter(state.registered, r => r.target !== target)
   }
 }
 

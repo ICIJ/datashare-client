@@ -88,6 +88,15 @@ export class App {
       store: this.store
     }).$mount(selector)
   }
+  registerHook (...args) {
+    this.store.commit('hooks/register', ...args)
+  }
+  resetHook (name) {
+    this.store.commit('hooks/resetTarget', name)
+  }
+  resetHooks () {
+    this.store.commit('hooks/reset', name)
+  }
   get i18n () {
     // Configure Languages
     return new VueI18n({

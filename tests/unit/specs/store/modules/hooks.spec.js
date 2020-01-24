@@ -33,4 +33,15 @@ describe('HooksStore', () => {
     store.commit('hooks/register', { target: 'baz' })
     expect(store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(2)
   })
+
+  it('should unregister all components on a hook', () => {
+    store.commit('hooks/register', { target: 'foo' })
+    store.commit('hooks/register', { target: 'baz' })
+    store.commit('hooks/register', { target: 'baz' })
+    expect(store.getters['hooks/filterHookedComponentsByTarget']('foo')).toHaveLength(1)
+    expect(store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(2)
+    store.commit('hooks/resetTarget', 'baz')
+    expect(store.getters['hooks/filterHookedComponentsByTarget']('foo')).toHaveLength(1)
+    expect(store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(0)
+  })
 })
