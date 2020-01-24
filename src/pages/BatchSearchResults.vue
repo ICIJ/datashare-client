@@ -172,13 +172,13 @@ import indexOf from 'lodash/indexOf'
 import keys from 'lodash/keys'
 import sumBy from 'lodash/sumBy'
 
+import Auth from '@/api/Auth'
 import DatashareClient from '@/api/DatashareClient'
 import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
 import settings from '@/utils/settings'
 import store from '@/store'
 import toVariant from '@/filters/toVariant'
-import Auth from '@/api/Auth'
 
 export const auth = new Auth()
 
@@ -295,7 +295,6 @@ export default {
     this.$set(this, 'queries', get(to.query, 'queries', this.queries))
     this.$set(this, 'sort', get(to.query, 'sort', this.sort))
     this.$set(this, 'order', get(to.query, 'order', this.order))
-    store.commit('batchSearch/selectedQueries', this.queries)
     await this.fetch()
     await this.checkIsMyBatchSearch()
     next()
@@ -339,7 +338,7 @@ export default {
       return {
         name: 'batch-search.results',
         params: { index: this.$route.params.index, uuid: this.$route.params.uuid },
-        query: { page, queries, sort, order }
+        query: { page, queries: queries.map(query => query.label), sort, order }
       }
     },
     async deleteBatchSearch () {
