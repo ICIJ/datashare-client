@@ -23,6 +23,7 @@
               v-model="csvFile"
               :placeholder="$t('batchSearch.filePlaceholder')"
               accept=".csv"
+              class="text-truncate"
               required></b-form-file>
           </b-form-group>
           <p class="help small">
