@@ -54,8 +54,8 @@
         "sizeSmallest": "Tamaño (aumentado)",
         "path": "Ruta del archivo (de A a Z)",
         "pathReverse": "Ruta del archivo (de A a Z)",
-        "default": "default",
-        "count": "count"
+        "default": "por defecto",
+        "count": "por resultados"
       }
     },
     "filtersTitle": "Filtros",
@@ -92,7 +92,6 @@
   },
   "facet": {
     "none": "No hay valores",
-    "seeAll": "Ver más",
     "noMatches": "No hay coincidencias. <br /> Presione <kbd> Ingrese </kbd> para buscar en cada de los documentos",
     "noResults": "No hay coincidencias",
     "noSubdirectories": "No hay subdirectorios",
@@ -491,7 +490,7 @@
     "query": "no hay consultas | 1 consulta | {count} consultas",
     "delete": "Eliminar búsqueda masiva",
     "deleted": "La búsqueda masiva ha sido eliminado.",
-    "notDeleted": "The batch search has not been deleted.",
+    "notDeleted": "La búsqueda masiva no ha sido eliminada.",
     "published": "Publicado",
     "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda masiva. Puedes cambiar esto más tarde.",
     "phraseMatch": "Realizar búsquedas similares",

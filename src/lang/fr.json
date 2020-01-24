@@ -54,8 +54,8 @@
         "sizeSmallest": "Taille (croissante)",
         "path": "Chemin du fichier (A à Z)",
         "pathReverse": "Chemin du fichier (Z à A)",
-        "default": "default",
-        "count": "count"
+        "default": "par défaut",
+        "count": "par résultats"
       }
     },
     "filtersTitle": "Filtres",
@@ -92,7 +92,6 @@
   },
   "facet": {
     "none": "Aucune valeur distincte",
-    "seeAll": "Voir plus",
     "noMatches": "Pas de résultat.<br />Presser <kbd>Entrée</kbd> pour chercher dans tous les documents",
     "noResults": "Pas de résultat",
     "noSubdirectories": "Pas de sous-dossier",
@@ -491,7 +490,7 @@
     "query": "pas de recherches | 1 recherche | {count} recherches",
     "delete": "Supprimer la recherche en lot",
     "deleted": "La recherche en lot a été supprimée.",
-    "notDeleted": "The batch search has not been deleted.",
+    "notDeleted": "La recherche en lot n'a pas été supprimée.",
     "published": "Publiée",
     "publishedDescription": "Donner accès aux autres membres du projet à cette rechercher en lot. Vous pourrez changer ceci plus tard.",
     "phraseMatch": "Rechercher les termes exacts",

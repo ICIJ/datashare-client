@@ -41,7 +41,7 @@
       "entities": "固有表現の数",
       "results": "１文書｜%{total} 文書",
       "noResults": "文書が見つかりません",
-      "on": "on",
+      "on": "を表示。総数は",
       "perPage": "ページごと",
       "sort": {
         "sort": "並べ替え",
@@ -54,8 +54,8 @@
         "sizeSmallest": "サイズ(小さい順)",
         "path": "ファイルパス(A→Z)",
         "pathReverse": "ファイルパス(Z→A)",
-        "default": "default",
-        "count": "count"
+        "default": "デフォルト",
+        "count": "件数"
       }
     },
     "filtersTitle": "フィルター",
@@ -92,7 +92,6 @@
   },
   "facet": {
     "none": "値なし",
-    "seeAll": "もっと表示",
     "noMatches": "一致するものがありません。全ての文書を検索するには<br /><kbd>Enter</kbd>キーを押してください",
     "noResults": "検索結果がありません",
     "noSubdirectories": "サブディレクトリがありません",
@@ -354,11 +353,11 @@
     "tiff_limitations": "このTIFFファイルのプレビューをブラウザで見た場合、全ての画像が表示されない可能性があります。全ての内容を見るには、あなたのコンピューターにダウンロードしてみてください。",
     "thread_index": "スレッドID",
     "showNamedEntities": "固有表現を表示する",
-    "highlights_caution": "Warning! the named entities will be highlighted and may replace text underneath. This does not impact your search results.",
+    "highlights_caution": "ご注意！固有表現がハイライト表示されるとともに、新たな情報も表示され、元のテキストと表示が異なることがあります。これは検索結果を変更するものではありません。",
     "error_not_found": "あなたのファイルはデータシェア内でインデックスされましたが、元のファイルがあなたのコンピューター内のデータシェアフォルダに存在しません。そのためプレビューは使えません。",
     "search": "検索",
     "find": "文書内を探す",
-    "of": "of",
+    "of": "を表示。総数は",
     "researched_terms": "この文書の中に：",
     "fetching": "プレビューを作成中…",
     "tags": "タグ",
@@ -421,7 +420,7 @@
     "find_named_entities_header": "人物、組織、場所を探すために、どの技術を使いますか？",
     "find_named_entities_subheader": "データシェアは自然言語処理モデルを使います。次の中からひとつを選んでください：",
     "find_named_entities_tooltip": "固有表現を探す前に、テキストを抽出しなければなりません",
-    "pipelines": "Pipelines",
+    "pipelines": "パイプライン（固有表現処理プロセス）",
     "corenlp": "Core NLP",
     "opennlp": "Open NLP",
     "mitie": "Mitie",
@@ -447,7 +446,7 @@
     "userGuides": "ユーザーガイド"
   },
   "footer": {
-    "homedir": "Move files to this directory in order to analyze them",
+    "homedir": "解析のため、ファイルをこのディレクトリに移動してください",
     "clientVersion": "クライアント",
     "serverVersion": "サーバー"
   },
@@ -476,68 +475,68 @@
     "success": "あなたのまとめ検索（バッチサーチ）を現在処理中です",
     "failure": "何か問題があり、あなたのまとめ検索を開始できません",
     "project": "プロジェクト",
-    "name": "Name",
+    "name": "名称",
     "description": "詳細",
-    "fuzziness": "Fuzziness",
+    "fuzziness": "あいまい検索",
     "fuzzinessDescription": "用語を他とそろえるための作業（文字の挿入、削除、入れ替え、移動）数の上限",
-    "proximitySearches": "Proximity searches",
+    "proximitySearches": "近似検索",
     "proximitySearchesDescription": "表現を他とそろえるための作業（言葉の挿入、削除、入れ替え、移動）数の上限",
     "fileTypes": "ファイルの種類",
     "path": "パス",
-    "queries": "Queries",
-    "state": "State",
+    "queries": "検索語",
+    "state": "状況",
     "date": "日付",
     "nbResults": "結果の数",
-    "query": "no queries | 1 query | {count} queries",
+    "query": "検索語なし | 検索語１語 | 検索語{count} 語",
     "delete": "まとめ検索（バッチサーチ）を削除",
     "deleted": "まとめ検索（バッチサーチ）は削除されました。",
-    "notDeleted": "The batch search has not been deleted.",
+    "notDeleted": "まとめ検索（バッチサーチ）は削除されていません。",
     "published": "公開済み",
     "publishedDescription": "このまとめ検索（バッチサーチ）へのアクセスを、プロジェクトの他の参加者にも認めます。この設定は後で変えられます。",
-    "phraseMatch": "Do phrase matches",
+    "phraseMatch": "完全一致検索をする",
     "phraseMatchDescription": "文や語句が完全一致するものだけを文書内で検索できるようにします。複数の言葉の組み合わせを、その順序と関係なく照合するものではありません。",
     "phraseMatchDescriptionOperators": "クエリ（検索対象）の中に、演算子を入れないでください",
     "learnMore": "もっと詳しく",
-    "author": "Author",
+    "author": "作成者",
     "advancedFilters": "高度なフィルタ"
   },
   "batchSearchResults": {
     "rank": "ランク",
-    "query": "Query",
+    "query": "検索語",
     "documentName": "文書名",
     "creationDate": "作成日",
     "contentType": "コンテンツの種類",
     "size": "サイズ",
     "downloadResults": "ダウンロード結果",
     "all": "すべて",
-    "empty": "No results",
+    "empty": "検索結果がありません",
     "errorTitle": "エラー",
     "errorMessage": "システムは問題を検出しました。あなたのCSVファイルの中で構文エラーがあるか、またはその他のエラーの可能性があります。 <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">このヘルプページを参照してください。よくあるエラーの説明があります。</a>",
     "seeErrorMessage": "エラーメッセージを見る"
   },
   "batchSearchResultsFilters": {
     "queries": {
-      "heading": "Queries"
+      "heading": "検索語"
     }
   },
   "shortkeys": {
-    "title": "Search shortcuts",
+    "title": "キーボードショートカット",
     "goToPreviousDocument": "前の文書に移動",
     "goToNextDocument": "次の文書に移動",
     "backToSearchResults": "検索結果に戻る",
     "goToPreviousTab": "前の文書タブに移動",
     "goToNextTab": "次の文書タブに移動",
     "activateSearchBar": "文書内を探す",
-    "deactivateSearchBar": "Close search in document",
-    "findPreviousOccurrence": "Find the previous occurrence in the document",
-    "findPreviousOccurrenceAlt": "Find the previous occurrence in the document",
-    "findNextOccurrence": "Find the next occurrence in the document",
-    "findNextOccurrenceAlt": "Find the next occurrence in the document"
+    "deactivateSearchBar": "ドキュメント検索を終了",
+    "findPreviousOccurrence": "検索結果のうち直前の語に移動",
+    "findPreviousOccurrenceAlt": "検索結果のうち直前の語に移動",
+    "findNextOccurrence": "検索結果のうち次の語に移動",
+    "findNextOccurrenceAlt": "検索結果のうち次の語に移動"
   },
   "config": {
     "title": "設定",
     "submit": "送信",
-    "submitSuccess": "Modifications submitted. You should now restart Datashare.",
+    "submitSuccess": "設定が変更されました。Datashareを再起動してください",
     "submitError": "設定を送信できません。"
   }
 }
