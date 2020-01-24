@@ -10,6 +10,7 @@ import VCalendar from 'v-calendar/lib/v-calendar.umd.js'
 import router from '@/router'
 import messages from '@/lang/en'
 import store from '@/store'
+import Auth from '@/api/Auth'
 import DatashareClient from '@/api/DatashareClient'
 import settings from '@/utils/settings'
 import mode from '@/modes'
@@ -118,6 +119,10 @@ export class App {
   }
   get store () {
     return store
+  }
+  get auth () {
+    this._auth = this._auth || new Auth()
+    return this._auth
   }
   static init (...options) {
     return new App(...options)
