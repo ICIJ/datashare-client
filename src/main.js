@@ -117,9 +117,13 @@ export async function createApp (LocalVue) {
   // Configure the app with server conf
   await app.configure()
   // Create the app with all available plugins
-  return app.useAll().mount('#app')
+  const vm = app.useAll().mount('#app')
+  // Returns both the vm and the app
+  return { vm, app }
 }
 
-if (process.env.NODE_ENV !== 'test') {
-  createApp()
+if (process.env.NODE_ENV !== 'test' && window) {
+  const { app } = createApp()
+  // Register the app globally (so plugins car use it)
+  window.app = app
 }
