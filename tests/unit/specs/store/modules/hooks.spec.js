@@ -9,9 +9,9 @@ describe('HooksStore', () => {
   it('should register hooked components', () => {
     store.commit('hooks/register', { target: 'foo' })
     store.commit('hooks/register', { target: 'bar' })
-    expect(store.state.register).toHaveLength(2)
+    expect(store.state.hooks.registered).toHaveLength(2)
     store.commit('hooks/register', { target: 'baz' })
-    expect(store.state.register).toHaveLength(3)
+    expect(store.state.hooks.registered).toHaveLength(3)
   })
 
   it('should register a hooked component', () => {
@@ -23,7 +23,7 @@ describe('HooksStore', () => {
   it('should find a hooked component by its target name', () => {
     store.commit('hooks/register', { target: 'foo' })
     store.commit('hooks/register', { target: 'bar' })
-    expect(store.getters['hooks/filterHookedComponents']('foo')).toHaveLength(1)
+    expect(store.getters['hooks/filterHookedComponentsByTarget']('foo')).toHaveLength(1)
   })
 
   it('should find several hooked components by their target name', () => {
@@ -31,6 +31,6 @@ describe('HooksStore', () => {
     store.commit('hooks/register', { target: 'bar' })
     store.commit('hooks/register', { target: 'baz' })
     store.commit('hooks/register', { target: 'baz' })
-    expect(store.getters['hooks/filterHookedComponents']('baz')).toHaveLength(2)
+    expect(store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(2)
   })
 })
