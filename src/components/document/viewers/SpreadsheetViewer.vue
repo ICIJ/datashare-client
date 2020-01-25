@@ -56,11 +56,8 @@ import range from 'lodash/range'
 import startCase from 'lodash/startCase'
 import sortBy from 'lodash/sortBy'
 import Fuse from 'fuse.js'
-import fetchPonyfill from 'fetch-ponyfill'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
 import shortkeys from '@/mixins/shortkeys'
-
-const { fetch } = fetchPonyfill()
 
 export default {
   name: 'SpreadsheetViewer',

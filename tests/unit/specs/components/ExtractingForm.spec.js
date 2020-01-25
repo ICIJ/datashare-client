@@ -5,9 +5,8 @@ import { datashare } from '@/store/modules/indexing'
 import DatashareClient from '@/api/DatashareClient'
 import ExtractingForm from '@/components/ExtractingForm'
 import { jsonResp } from 'tests/unit/tests_utils'
-import router from '@/router'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
 describe('ExtractingForm.vue', () => {
   let wrapper

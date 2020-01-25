@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex h-100 document__preview">
-    <template v-if="previewComponent">
-      <component :is="previewComponent" :document="document" />
+    <template v-if="!disabled && previewComponent">
+      <component :is="importPreviewComponent" :document="document" />
     </template>
     <template v-else>
       <div class="p-3">{{ $t('document.not_available') }}</div>
@@ -16,6 +16,9 @@ export default {
   name: 'DocumentTabPreview',
   mixins: [features],
   props: {
+    disabled: {
+      type: Boolean
+    },
     document: {
       type: Object
     }
@@ -40,25 +43,8 @@ export default {
     }
   },
   methods: {
-    previewComponent () {
-      switch (true) {
-        case this.isPaginatedViewerActivated && this.isPaginated:
-          return import('@/components/document/viewers/PaginatedViewer')
-        case this.isPdf:
-          return import('@/components/document/viewers/PdfViewer')
-        case this.isTiff:
-          return import('@/components/document/viewers/TiffViewer')
-        case this.isSpreadsheet && this.hasFeature('SERVER_RENDERING_SPREADSHEET'):
-          return import('@/components/document/viewers/SpreadsheetViewer')
-        case this.isSpreadsheet:
-          return import('@/components/document/viewers/LegacySpreadsheetViewer')
-        case this.isImage:
-          return import('@/components/document/viewers/ImageViewer')
-        case this.isJson:
-          return import('@/components/document/viewers/JsonViewer')
-        default:
-          return null
-      }
+    importPreviewComponent () {
+      return import(`@/components/document/viewers/${this.previewComponent}.vue`)
     }
   },
   computed: {
@@ -82,6 +68,26 @@ export default {
     },
     isJson () {
       return this.document.contentType.indexOf('application/json') === 0
+    },
+    previewComponent () {
+      switch (true) {
+        case this.isPaginatedViewerActivated && this.isPaginated:
+          return 'PaginatedViewer'
+        case this.isPdf:
+          return 'PdfViewer'
+        case this.isTiff:
+          return 'TiffViewer'
+        case this.isSpreadsheet && this.hasFeature('SERVER_RENDERING_SPREADSHEET'):
+          return 'SpreadsheetViewer'
+        case this.isSpreadsheet:
+          return 'LegacySpreadsheetViewer'
+        case this.isImage:
+          return 'ImageViewer'
+        case this.isJson:
+          return 'JsonViewer'
+        default:
+          return null
+      }
     }
   }
 }

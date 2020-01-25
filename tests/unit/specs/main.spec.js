@@ -1,11 +1,7 @@
 import Vue from 'vue'
 import { createLocalVue } from '@vue/test-utils'
 import { createApp } from '@/main'
-import fetchPonyfill from 'fetch-ponyfill'
 import { jsonResp } from 'tests/unit/tests_utils'
-
-const { fetch } = fetchPonyfill()
-window.fetch = fetch
 
 describe('main', () => {
   beforeEach(() => {

@@ -1,15 +1,4 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
-
-import store from '@/store'
-import get from 'lodash/get'
-
-import { EventBus } from '@/utils/event-bus'
-import Auth from '@/api/Auth'
-
-Vue.use(VueRouter)
-
-const router = new VueRouter({
+export const router = {
   routes: [
     {
       path: '/',
@@ -136,32 +125,6 @@ const router = new VueRouter({
       }
     }
   ]
-})
-
-export const auth = new Auth()
-
-router.beforeEach(async (to, from, next) => {
-  // Read the current index from the params
-  if (to.params.index && store.state.search.index !== to.params.index) {
-    store.commit('search/index', to.params.index)
-  }
-  // True if the authentication must be skipped
-  const skipsAuth = to.matched.some(r => get(r, 'meta.skipsAuth', false))
-  try {
-    if (skipsAuth || await auth.getUsername() !== null) {
-      next()
-    } else {
-      next('/login')
-    }
-  } catch (e) {
-    console.log(e)
-  }
-})
-
-EventBus.$on('http::error', err => {
-  if (err && err.status === 401) {
-    router.push('/login')
-  }
-})
+}
 
 export default router

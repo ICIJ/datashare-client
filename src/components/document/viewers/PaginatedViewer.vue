@@ -38,10 +38,7 @@ import kebabCase from 'lodash/kebabCase'
 import startCase from 'lodash/startCase'
 import range from 'lodash/range'
 
-import fetchPonyfill from 'fetch-ponyfill'
 import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
-
-const { fetch } = fetchPonyfill()
 
 export default {
   name: 'PaginatedViewer',

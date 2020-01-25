@@ -1,16 +1,11 @@
 import get from 'lodash/get'
 import DatashareClient from '@/api/DatashareClient'
-import fetchPonyfill from 'fetch-ponyfill'
 import { getCookie } from 'tiny-cookie'
 
 export default class Auth {
   constructor () {
-    if (window.fetch) {
-      // Build-in fetch method must never be called by an object other than Window
-      this.fetch = (...args) => window.fetch(...args)
-    } else {
-      this.fetch = fetchPonyfill().fetch
-    }
+    // Build-in fetch method must never be called by an object other than Window
+    this.fetch = (...args) => fetch(...args)
     this.cachedUsername = null
   }
 

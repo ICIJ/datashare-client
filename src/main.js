@@ -5,9 +5,11 @@ import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import VueShortkey from 'vue-shortkey'
 import VueScrollTo from 'vue-scrollto'
+import VueRouter from 'vue-router'
 import VCalendar from 'v-calendar/lib/v-calendar.umd.js'
 
 import router from '@/router'
+import guards from '@/router/guards'
 import messages from '@/lang/en'
 import store from '@/store'
 import Auth from '@/api/Auth'
@@ -23,8 +25,6 @@ export class App {
     this.LocalVue = LocalVue
     // Disable production tip when not in production
     this.LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
-    // Instantiate a single datashare client
-    this.datashareClient = new DatashareClient()
     return this
   }
   use (Plugin, options) {
@@ -35,6 +35,7 @@ export class App {
     this.useI18n()
     this.useBootstrapVue()
     this.useCommons()
+    this.useRouter()
     return this
   }
   useI18n () {
@@ -43,6 +44,12 @@ export class App {
   }
   useBootstrapVue () {
     this.use(BootstrapVue)
+    return this
+  }
+  useRouter () {
+    this.use(VueRouter)
+    this.router = new VueRouter(router)
+    guards(this)
     return this
   }
   useCommons () {
@@ -114,9 +121,6 @@ export class App {
   get localVue () {
     return this.LocalVue
   }
-  get router () {
-    return router
-  }
   get store () {
     return store
   }
@@ -124,18 +128,23 @@ export class App {
     this._auth = this._auth || new Auth()
     return this._auth
   }
+  get datashareClient () {
+    // Instantiate a single datashare client
+    this._datashareClient = this._datashareClient || new DatashareClient()
+    return this._datashareClient
+  }
   static init (...options) {
     return new App(...options)
   }
 }
 
 /* eslint-disable no-new */
-export function createApp (LocalVue) {
+export function createApp (LocalVue = Vue, selector = '#app') {
   const app = new App(LocalVue)
   // Configure the app with server conf
   app.configure()
   // Create the app with all available plugins
-  const vm = app.useAll().mount('#app')
+  const vm = app.useAll().mount(selector)
   // Returns both the vm and the app
   return { vm, app }
 }

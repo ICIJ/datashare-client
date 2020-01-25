@@ -2,10 +2,9 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { setCookie, removeCookie } from 'tiny-cookie'
 
 import { App } from '@/main'
-import { auth } from '@/router'
 import { jsonResp } from 'tests/unit/tests_utils'
 
-const { localVue, router } = App.init(createLocalVue()).useAll()
+const { localVue, router, auth } = App.init(createLocalVue()).useAll()
 
 describe('router', () => {
   let wrapper

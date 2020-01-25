@@ -1,10 +1,7 @@
-import fetchPonyfill from 'fetch-ponyfill'
-
 import DatashareClient from '@/api/DatashareClient'
 import { EventBus } from '@/utils/event-bus'
 import { jsonResp } from 'tests/unit/tests_utils'
 
-const { Response } = fetchPonyfill()
 const datashare = new DatashareClient()
 
 describe('Datashare backend client', () => {
@@ -157,7 +154,7 @@ describe('Datashare backend client', () => {
     try {
       await datashare.createIndex()
     } catch (err) {
-      expect(err).toEqual(new Error('42 undefined'))
+      expect(err).toEqual(new Error('42 OK'))
     }
 
     expect(mockCallback.mock.calls.length).toBe(1)

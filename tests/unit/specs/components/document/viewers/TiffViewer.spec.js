@@ -1,30 +1,31 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
+import { responseWithArrayBuffer } from 'tests/unit/tests_utils'
 import { App } from '@/main'
 import TiffViewer from '@/components/document/viewers/TiffViewer'
 
 const { localVue } = App.init(createLocalVue()).useAll()
 
 describe('TiffViewer.vue', () => {
-  let wrapper
-
-  beforeEach(() => {
-    wrapper = shallowMount(TiffViewer, { localVue, propsData: { document: { url: 'image.tiff' } }, mocks: { $t: msg => msg } })
-  })
+  let wrapper = null
+  let getSource = jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url))
+  let methods = { getSource }
+  let mocks = { $t: msg => msg }
 
   it('should display an error message if the document does not exist', async () => {
-    wrapper = shallowMount(TiffViewer, { localVue, propsData: { document: { url: 'nodoc.tiff' } }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(TiffViewer, { localVue, mocks, methods, propsData: { document: { url: 'nodoc.tiff' } } })
 
     await wrapper.vm.loadPage(1)
-
     expect(wrapper.find('.tiff-viewer .alert').text()).toBe('document.error_not_found')
   })
 
   it('should display a message while generating the preview', () => {
+    wrapper = shallowMount(TiffViewer, { localVue, mocks, methods, propsData: { document: { url: 'image.tiff' } } })
     expect(wrapper.find('.tiff-viewer .alert').text()).toBe('document.generating_preview')
   })
 
   it('should load a tiff content file', async () => {
+    wrapper = shallowMount(TiffViewer, { localVue, mocks, methods, propsData: { document: { url: 'image.tiff' } } })
     await wrapper.vm.loadPage(1)
 
     expect(wrapper.find('.tiff-viewer .tiff-viewer__preview').exists()).toBeTruthy()
@@ -33,6 +34,7 @@ describe('TiffViewer.vue', () => {
   })
 
   it('should display a thumbnail by page', async () => {
+    wrapper = shallowMount(TiffViewer, { localVue, mocks, methods, propsData: { document: { url: 'image.tiff' } } })
     await wrapper.vm.loadPage(1)
 
     expect(wrapper.find('.tiff-viewer .tiff-viewer__header .tiff-viewer__thumbnails').exists()).toBeTruthy()

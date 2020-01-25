@@ -36,7 +36,7 @@ module.exports = {
     'jest-canvas-mock'
   ],
   preset: TEST_MODE === 'integration' ? 'jest-puppeteer' : defaults.preset,
-  globalSetup: TEST_MODE === 'integration' ? './tests/integration/config/setup.js' : './tests/unit/config/setup.js',
-  globalTeardown: TEST_MODE === 'integration' ? './tests/integration/config/teardown.js' : './tests/unit/config/teardown.js',
+  globalSetup: TEST_MODE === 'integration' ? './tests/integration/config/setup.js' : null,
+  globalTeardown: TEST_MODE === 'integration' ? './tests/integration/config/teardown.js' : null,
   testEnvironment: TEST_MODE === 'integration' ? './tests/integration/config/puppeteer_environment.js' : defaults.testEnvironment
 }

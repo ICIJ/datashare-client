@@ -1,17 +1,12 @@
 import map from 'lodash/map'
 import replace from 'lodash/replace'
-import fetchPonyfill from 'fetch-ponyfill'
 
 import { EventBus } from '@/utils/event-bus'
 
 export default class DatashareClient {
   constructor () {
-    if (window.fetch) {
-      // Build-in fetch method must never be called by an object other than Window
-      this.fetch = (...args) => window.fetch(...args)
-    } else {
-      this.fetch = fetchPonyfill().fetch
-    }
+    // Build-in fetch method must never be called by an object other than Window
+    this.fetch = (...args) => window.fetch(...args)
   }
   index (options) {
     return this.sendAction(`/api/task/batchUpdate/index/file`, { method: 'POST', body: JSON.stringify({ options }) })
@@ -45,7 +40,7 @@ export default class DatashareClient {
   }
   getConfig () {
     return this.sendAction('/api/config').catch(err => {
-      if (err && err.response.status === 401) {
+      if (err && err.response && err.response.status === 401) {
         return this.sendAction('/config')
       } else {
         throw err
