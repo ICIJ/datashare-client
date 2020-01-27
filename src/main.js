@@ -128,6 +128,9 @@ export class App {
     this._auth = this._auth || new Auth()
     return this._auth
   }
+  get config () {
+    return Murmur.config
+  }
   get datashareClient () {
     // Instantiate a single datashare client
     this._datashareClient = this._datashareClient || new DatashareClient()
