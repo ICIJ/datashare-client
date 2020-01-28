@@ -3,7 +3,7 @@ import Murmur from '@icij/murmur'
 import toLower from 'lodash/toLower'
 
 import { App } from '@/main'
-import Document from '@/api/Document'
+import Document from '@/api/resources/Document'
 import SearchResultsListLink from '@/components/SearchResultsListLink'
 
 const { localVue, store, router } = App.init(createLocalVue()).useAll()

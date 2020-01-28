@@ -1,5 +1,5 @@
 import uniqBy from 'lodash/uniqBy'
-import Document from '@/api/Document'
+import Document from '@/api/resources/Document'
 
 export const state = {
   rawDocuments: []

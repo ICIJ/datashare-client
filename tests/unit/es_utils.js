@@ -3,7 +3,7 @@ import isArray from 'lodash/isArray'
 import uniqueId from 'lodash/uniqueId'
 import { dirname } from 'path'
 
-import Response from '@/api/Response'
+import Response from '@/api/resources/Response'
 
 function letData (index) {
   return new IndexBuilder(index)

@@ -2,7 +2,7 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import { App } from '@/main'
-import Document from '@/api/Document'
+import Document from '@/api/resources/Document'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()

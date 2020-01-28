@@ -86,7 +86,7 @@ import reduce from 'lodash/reduce'
 import bodybuilder from 'bodybuilder'
 
 import esClient from '@/api/esClient'
-import Response from '@/api/Response'
+import Response from '@/api/resources/Response'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
 import EmailString from '@/components/EmailString.vue'
 

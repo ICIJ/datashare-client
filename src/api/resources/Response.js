@@ -1,5 +1,5 @@
-import Document from '@/api/Document'
-import NamedEntity from '@/api/NamedEntity'
+import Document from '@/api/resources/Document'
+import NamedEntity from '@/api/resources/NamedEntity'
 import isEmpty from 'lodash/isEmpty'
 import find from 'lodash/find'
 import get from 'lodash/get'

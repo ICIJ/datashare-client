@@ -172,7 +172,7 @@ import indexOf from 'lodash/indexOf'
 import keys from 'lodash/keys'
 import sumBy from 'lodash/sumBy'
 
-import Auth from '@/api/Auth'
+import Auth from '@/api/resources/Auth'
 import Api from '@/api'
 import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'

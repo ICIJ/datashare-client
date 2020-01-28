@@ -1,5 +1,5 @@
 import esClient from '@/api/esClient'
-import Response from '@/api/Response'
+import Response from '@/api/resources/Response'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import settings from '@/utils/settings'
 import { isNarrowScreen } from '@/utils/screen'

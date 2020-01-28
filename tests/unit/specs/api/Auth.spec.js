@@ -1,6 +1,6 @@
 import { removeCookie, setCookie } from 'tiny-cookie'
 
-import Auth from '@/api/Auth'
+import Auth from '@/api/resources/Auth'
 import { jsonResp } from 'tests/unit/tests_utils'
 
 const auth = new Auth()

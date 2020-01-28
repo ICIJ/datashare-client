@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { App } from '@/main'
-import Document from '@/api/Document'
+import Document from '@/api/resources/Document'
 import DocumentTypeCard from '@/components/DocumentTypeCard'
 
 const { localVue, i18n } = App.init(createLocalVue()).useAll()

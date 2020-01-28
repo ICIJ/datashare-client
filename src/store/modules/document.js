@@ -9,10 +9,10 @@ import sumBy from 'lodash/sumBy'
 import uniqBy from 'lodash/uniqBy'
 import values from 'lodash/values'
 
-import Auth from '@/api/Auth'
+import Auth from '@/api/resources/Auth'
 import Api from '@/api'
 import esClient from '@/api/esClient'
-import Response from '@/api/Response'
+import Response from '@/api/resources/Response'
 
 export const datashare = new Api()
 export const auth = new Auth()

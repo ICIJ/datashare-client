@@ -1,4 +1,4 @@
-import Document from '@/api/Document'
+import Document from '@/api/resources/Document'
 
 describe('Document', () => {
   describe('display human readable size', () => {

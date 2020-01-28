@@ -1,7 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import { App } from '@/main'
-import Document from '@/api/Document'
+import Document from '@/api/resources/Document'
 import ImageViewer from '@/components/document/viewers/ImageViewer.vue'
 
 const { localVue } = App.init(createLocalVue()).useAll()

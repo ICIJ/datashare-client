@@ -4,12 +4,12 @@ import omit from 'lodash/omit'
 import toLower from 'lodash/toLower'
 
 import { datashare } from '@/store/modules/search'
-import Document from '@/api/Document'
+import Document from '@/api/resources/Document'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { jsonResp } from 'tests/unit/tests_utils'
-import NamedEntity from '@/api/NamedEntity'
-import Response from '@/api/Response'
+import NamedEntity from '@/api/resources/NamedEntity'
+import Response from '@/api/resources/Response'
 import store from '@/store'
 
 describe('SearchStore', () => {
