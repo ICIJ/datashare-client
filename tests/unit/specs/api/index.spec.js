@@ -1,102 +1,103 @@
+import axios from 'axios'
+
 import Api from '@/api'
 import { EventBus } from '@/utils/event-bus'
-import axios from 'axios'
 
 jest.mock('axios')
 
-const datashare = new Api()
+const api = new Api()
 
 describe('Datashare backend client', () => {
   let json
   axios.request.mockResolvedValue({ data: {} })
 
   it('should return backend response to index', async () => {
-    json = await datashare.index({})
+    json = await api.index({})
     expect(json).toEqual({})
   })
 
   it('should return backend response to findNames', async () => {
-    json = await datashare.findNames('pipeline', {})
+    json = await api.findNames('pipeline', {})
     expect(json).toEqual({})
   })
 
   it('should return backend response to stopPendingTasks', async () => {
-    json = await datashare.stopPendingTasks()
+    json = await api.stopPendingTasks()
     expect(json).toEqual({})
   })
 
   it('should return backend response to stopTask', async () => {
-    json = await datashare.stopTask()
+    json = await api.stopTask()
     expect(json).toEqual({})
   })
 
   it('should return backend response to deleteDoneTasks', async () => {
-    json = await datashare.deleteDoneTasks()
+    json = await api.deleteDoneTasks()
     expect(json).toEqual({})
   })
 
   it('should return backend response to getTasks', async () => {
-    json = await datashare.getTasks()
+    json = await api.getTasks()
     expect(json).toEqual({})
   })
 
   it('should return backend response to createIndex', async () => {
-    json = await datashare.createIndex()
+    json = await api.createIndex()
     expect(json).toEqual({})
   })
 
   it('should return backend response to deleteAll', async () => {
-    json = await datashare.deleteAll()
+    json = await api.deleteAll()
     expect(json).toEqual({})
   })
 
   it('should return backend response to getVersion', async () => {
-    json = await datashare.getVersion()
+    json = await api.getVersion()
     expect(json).toEqual({})
   })
 
   it('should return backend response to getConfig', async () => {
-    json = await datashare.getConfig()
+    json = await api.getConfig()
     expect(json).toEqual({})
   })
 
   it('should return backend response to setConfig', async () => {
-    json = await datashare.setConfig({})
+    json = await api.setConfig({})
     expect(json).toEqual({})
   })
 
   it('should return backend response to deleteNamedEntitiesByMentionNorm', async () => {
-    json = await datashare.deleteNamedEntitiesByMentionNorm('mentionNorm')
+    json = await api.deleteNamedEntitiesByMentionNorm('mentionNorm')
     expect(json).toEqual({})
   })
 
   it('should return backend response to getSource', async () => {
-    json = await datashare.getSource('relativeUrl')
+    json = await api.getSource('relativeUrl')
     expect(json).toEqual({})
   })
 
   it('should return backend response to getStarredDocuments', async () => {
-    json = await datashare.getStarredDocuments('project')
+    json = await api.getStarredDocuments('project')
     expect(json).toEqual({})
   })
 
   it('should return backend response to starDocument', async () => {
-    json = await datashare.getStarredDocuments('project', 'documentId')
+    json = await api.getStarredDocuments('project', 'documentId')
     expect(json).toEqual({})
   })
 
   it('should return backend response to unstarDocument', async () => {
-    json = await datashare.getStarredDocuments('project', 'documentId')
+    json = await api.getStarredDocuments('project', 'documentId')
     expect(json).toEqual({})
   })
 
   it('should return backend response to tagDocument', async () => {
-    json = await datashare.tagDocument('project', 'documentId', 'routingId', ['tag_01'])
+    json = await api.tagDocument('project', 'documentId', 'routingId', ['tag_01'])
     expect(json).toEqual({})
   })
 
   it('should return backend response to untagDocument', async () => {
-    json = await datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01'])
+    json = await api.untagDocument('project', 'documentId', 'routingId', ['tag_01'])
     expect(json).toEqual({})
   })
 
@@ -110,7 +111,7 @@ describe('Datashare backend client', () => {
     const fileTypes = [{ mime: 'application/pdf' }, { mime: 'text/plain' }]
     const paths = ['one', 'or', 'two', 'paths']
     const published = true
-    json = await datashare.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
+    json = await api.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
 
     const body = new FormData()
     body.append('name', name)
@@ -126,21 +127,21 @@ describe('Datashare backend client', () => {
     body.append('paths', 'paths')
     body.append('published', published)
     expect(json).toEqual({})
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/batch/search/project'), method: 'POST', body })
   })
 
   it('should return backend response to getBatchSearches', async () => {
-    json = await datashare.getBatchSearches()
+    json = await api.getBatchSearches()
     expect(json).toEqual({})
   })
 
   it('should return backend response to getBatchSearchResults', async () => {
-    json = await datashare.getBatchSearchResults()
+    json = await api.getBatchSearchResults()
     expect(json).toEqual({})
   })
 
   it('should return backend response to deleteBatchSearches', async () => {
-    json = await datashare.deleteBatchSearches()
+    json = await api.deleteBatchSearches()
     expect(json).toEqual({})
   })
 
@@ -151,7 +152,7 @@ describe('Datashare backend client', () => {
     EventBus.$on('http::error', mockCallback)
 
     try {
-      await datashare.createIndex()
+      await api.createIndex()
     } catch (err) {
       expect(err).toEqual(error)
     }
