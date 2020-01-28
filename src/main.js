@@ -67,7 +67,7 @@ export class App {
     // Old a promise that is resolved when the app is configured
     this.ready = this.ready || Promise.resolve().then(async () => {
       // Get the config object
-      const config = await this.Api.getConfig()
+      const config = await this.api.getConfig()
       // Murmur exposes a config attribute which share a Config object
       // with the current vue instance.
       Murmur.config.merge(mode(config.mode))
@@ -75,7 +75,7 @@ export class App {
       Murmur.config.merge(config)
       // Override Murmur default value for content-placeholder
       Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
-      this.Api.createIndex(config['defaultProject'])
+      this.api.createIndex(config['defaultProject'])
       if (this.store.state.search.index === '') {
         this.store.commit('search/index', config['defaultProject'])
       }
@@ -131,10 +131,9 @@ export class App {
   get config () {
     return Murmur.config
   }
-  get Api () {
-    // Instantiate a single datashare client
-    this._Api = this._Api || new Api()
-    return this._Api
+  get api () {
+    this._api = this._api || new Api()
+    return this._api
   }
   static init (...options) {
     return new App(...options)
