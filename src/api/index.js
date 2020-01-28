@@ -125,7 +125,7 @@ export default class Api {
       return r.data
     } catch (error) {
       EventBus.$emit('http::error', error)
-      throw new Error(`${error.response.status} ${error.response.statusText}`)
+      throw error
     }
   }
 }

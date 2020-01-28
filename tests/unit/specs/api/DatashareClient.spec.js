@@ -1,18 +1,14 @@
-import { responseWithJson } from 'tests/unit/tests_utils'
-
 import Api from '@/api'
 import { EventBus } from '@/utils/event-bus'
+import axios from 'axios'
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockReturnValue(responseWithJson())
-  }
-})
+jest.mock('axios')
 
 const datashare = new Api()
 
 describe('Datashare backend client', () => {
   let json
+  axios.request.mockResolvedValue({ data: {} })
 
   it('should return backend response to index', async () => {
     json = await datashare.index({})
@@ -30,7 +26,7 @@ describe('Datashare backend client', () => {
   })
 
   it('should return backend response to stopTask', async () => {
-    json = await (await datashare.stopTask()).json()
+    json = await datashare.stopTask()
     expect(json).toEqual({})
   })
 
@@ -45,12 +41,12 @@ describe('Datashare backend client', () => {
   })
 
   it('should return backend response to createIndex', async () => {
-    json = await (await datashare.createIndex()).json()
+    json = await datashare.createIndex()
     expect(json).toEqual({})
   })
 
   it('should return backend response to deleteAll', async () => {
-    json = await (await datashare.deleteAll()).json()
+    json = await datashare.deleteAll()
     expect(json).toEqual({})
   })
 
@@ -65,17 +61,17 @@ describe('Datashare backend client', () => {
   })
 
   it('should return backend response to setConfig', async () => {
-    json = await (await datashare.setConfig({})).json()
+    json = await datashare.setConfig({})
     expect(json).toEqual({})
   })
 
   it('should return backend response to deleteNamedEntitiesByMentionNorm', async () => {
-    json = await (await datashare.deleteNamedEntitiesByMentionNorm('mentionNorm')).json()
+    json = await datashare.deleteNamedEntitiesByMentionNorm('mentionNorm')
     expect(json).toEqual({})
   })
 
   it('should return backend response to getSource', async () => {
-    json = await (await datashare.getSource('relativeUrl')).json()
+    json = await datashare.getSource('relativeUrl')
     expect(json).toEqual({})
   })
 
@@ -95,12 +91,12 @@ describe('Datashare backend client', () => {
   })
 
   it('should return backend response to tagDocument', async () => {
-    json = await (await datashare.tagDocument('project', 'documentId', 'routingId', ['tag_01'])).json()
+    json = await datashare.tagDocument('project', 'documentId', 'routingId', ['tag_01'])
     expect(json).toEqual({})
   })
 
   it('should return backend response to untagDocument', async () => {
-    json = await (await datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01'])).json()
+    json = await datashare.untagDocument('project', 'documentId', 'routingId', ['tag_01'])
     expect(json).toEqual({})
   })
 
@@ -114,7 +110,7 @@ describe('Datashare backend client', () => {
     const fileTypes = [{ mime: 'application/pdf' }, { mime: 'text/plain' }]
     const paths = ['one', 'or', 'two', 'paths']
     const published = true
-    json = await (await datashare.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)).json()
+    json = await datashare.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
 
     const body = new FormData()
     body.append('name', name)
@@ -144,22 +140,23 @@ describe('Datashare backend client', () => {
   })
 
   it('should return backend response to deleteBatchSearches', async () => {
-    json = await (await datashare.deleteBatchSearches()).json()
+    json = await datashare.deleteBatchSearches()
     expect(json).toEqual({})
   })
 
   it('should emit an error if the backend response has a bad status', async () => {
-    datashare.fetch.mockReturnValue(responseWithJson({}, 42))
+    const error = new Error('Forbidden')
+    axios.request.mockReturnValue(Promise.reject(error))
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
 
     try {
       await datashare.createIndex()
     } catch (err) {
-      expect(err).toEqual(new Error('42 OK'))
+      expect(err).toEqual(error)
     }
 
     expect(mockCallback.mock.calls.length).toBe(1)
-    expect(mockCallback.mock.calls[0][0]).toEqual(new Response(JSON.stringify({}), { status: 42, headers: { 'Content-type': 'application/json' } }))
+    expect(mockCallback.mock.calls[0][0]).toEqual(error)
   })
 })
