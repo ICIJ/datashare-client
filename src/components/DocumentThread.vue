@@ -86,7 +86,7 @@ import reduce from 'lodash/reduce'
 import bodybuilder from 'bodybuilder'
 
 import elasticsearch from '@/api/elasticsearch'
-import Response from '@/api/resources/Response'
+import EsDocList from '@/api/resources/EsDocList'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
 import EmailString from '@/components/EmailString.vue'
 
@@ -173,11 +173,11 @@ export default {
             type: 'doc',
             body: this.threadBody.sort('metadata.tika_metadata_meta_creation_date', 'asc').build()
           })
-          return new Response(raw)
+          return new EsDocList(raw)
         }
-        return Response.none()
+        return EsDocList.none()
       } catch (e) {
-        return Response.none()
+        return EsDocList.none()
       }
     }
   },

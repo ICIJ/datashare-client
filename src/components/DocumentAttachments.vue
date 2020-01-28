@@ -21,7 +21,6 @@ import bodybuilder from 'bodybuilder'
 import flatten from 'lodash/flatten'
 import sum from 'lodash/sum'
 import elasticsearch from '@/api/elasticsearch'
-import Response from '@/api/resources/Response'
 
 export default {
   name: 'DocumentAttachments',

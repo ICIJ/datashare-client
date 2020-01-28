@@ -12,7 +12,7 @@ import values from 'lodash/values'
 import Auth from '@/api/resources/Auth'
 import Api from '@/api'
 import elasticsearch from '@/api/elasticsearch'
-import Response from '@/api/resources/Response'
+import EsDocList from '@/api/resources/EsDocList'
 
 export const datashare = new Api()
 export const auth = new Auth()
@@ -67,7 +67,7 @@ export const mutations = {
   },
   doc (state, raw) {
     if (raw !== null) {
-      state.doc = Response.instantiate(raw)
+      state.doc = EsDocList.instantiate(raw)
     } else {
       state.doc = null
     }
@@ -76,7 +76,7 @@ export const mutations = {
     state.tags = tags
   },
   namedEntities (state, raw) {
-    state.namedEntities = new Response(raw).hits
+    state.namedEntities = new EsDocList(raw).hits
   },
   namedEntitiesPageInCategory (state, { category, page }) {
     if (state.namedEntitiesPaginatedByCategories[category]) {
@@ -85,7 +85,7 @@ export const mutations = {
   },
   parentDocument (state, raw) {
     if (raw !== null) {
-      state.parentDocument = Response.instantiate(raw)
+      state.parentDocument = EsDocList.instantiate(raw)
       state.doc.setParent(raw)
     } else {
       state.parentDocument = null
@@ -145,7 +145,7 @@ export const actions = {
     const index = state.doc.index
     const { id, routing } = state.idAndRouting
     const raw = await elasticsearch.getDocumentNamedEntities(index, id, routing, 0, 0)
-    return (new Response(raw)).total
+    return (new EsDocList(raw)).total
   },
   async getFirstPageForNamedEntityInCategory ({ state, dispatch }, category) {
     // Count the number of loaded pages
@@ -168,7 +168,7 @@ export const actions = {
       const raw = await dispatch('loadingNamedEntities', () => {
         return elasticsearch.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
       })
-      const page = new Response(raw)
+      const page = new EsDocList(raw)
       commit('namedEntitiesPageInCategory', { category, page })
       return page
     } catch (_) {

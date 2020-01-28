@@ -1,5 +1,5 @@
 import elasticsearch from '@/api/elasticsearch'
-import Response from '@/api/resources/Response'
+import EsDocList from '@/api/resources/EsDocList'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import settings from '@/utils/settings'
 import { isNarrowScreen } from '@/utils/screen'
@@ -56,7 +56,7 @@ export function initialState () {
     ],
     sort: settings.defaultSearchSort,
     field: settings.defaultSearchField,
-    response: Response.none(),
+    response: EsDocList.none(),
     isReady: true,
     error: null,
     index: '',
@@ -240,7 +240,7 @@ export const mutations = {
   },
   buildResponse (state, raw) {
     state.isReady = true
-    state.response = new Response(raw)
+    state.response = new EsDocList(raw)
   },
   appendToResponse (state, raw) {
     state.response.append(raw)
@@ -367,7 +367,7 @@ export const actions = {
       state.globalSearch,
       params.options,
       getters.getFields()
-    ).then(raw => new Response(raw))
+    ).then(raw => new EsDocList(raw))
   },
   addFacetValue ({ commit, dispatch }, facet) {
     commit('addFacetValue', facet)

@@ -3,7 +3,7 @@ import isArray from 'lodash/isArray'
 import uniqueId from 'lodash/uniqueId'
 import { dirname } from 'path'
 
-import Response from '@/api/resources/Response'
+import EsDocList from '@/api/resources/EsDocList'
 
 function letData (index) {
   return new IndexBuilder(index)
@@ -214,7 +214,7 @@ class IndexBuilder {
   get committedDocuments () {
     const promises = this.committedDocumentIds.map(async id => {
       const raw = await this.index.get({ index: this.document.index, type: 'doc', id })
-      return Response.instantiate(raw)
+      return EsDocList.instantiate(raw)
     })
     return Promise.all(promises)
   }
@@ -222,7 +222,7 @@ class IndexBuilder {
     return Promise.resolve().then(async () => {
       const id = this.committedDocumentIds.slice(-1).pop()
       const raw = await this.index.get({ index: this.document.index, type: 'doc', id })
-      return Response.instantiate(raw)
+      return EsDocList.instantiate(raw)
     })
   }
 }

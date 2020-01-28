@@ -11,9 +11,9 @@ import uniqBy from 'lodash/uniqBy'
 
 const _raw = '_RAW'
 
-export default class Response {
+export default class EsDocList {
   constructor (raw) {
-    this[_raw] = isEmpty(raw) ? Response.emptyRaw : raw
+    this[_raw] = isEmpty(raw) ? EsDocList.emptyRaw : raw
   }
   get (path, defaultValue) {
     return get(this[_raw], path, defaultValue)
@@ -38,12 +38,12 @@ export default class Response {
     this.set('hits.hits', uniqBy(this.get('hits.hits', []), d => d._id))
   }
   append (raw) {
-    const response = new Response(raw)
+    const response = new EsDocList(raw)
     response.hits.forEach(hit => this.push('hits.hits', hit))
   }
   get hits () {
     return map(this.get('hits.hits', []), hit => {
-      return Response.instantiate(hit)
+      return EsDocList.instantiate(hit)
     })
   }
   get aggregations () {
@@ -53,11 +53,11 @@ export default class Response {
     return this[_raw].hits.total
   }
   static instantiate (hit) {
-    const Type = find(Response.types, Type => Type.match(hit))
+    const Type = find(EsDocList.types, Type => Type.match(hit))
     return new Type(hit)
   }
   static none () {
-    return new Response(Response.emptyRaw)
+    return new EsDocList(EsDocList.emptyRaw)
   }
   static get emptyRaw () {
     return { hits: { hits: [], total: 0 } }

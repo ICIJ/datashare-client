@@ -9,7 +9,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { jsonResp } from 'tests/unit/tests_utils'
 import NamedEntity from '@/api/resources/NamedEntity'
-import Response from '@/api/resources/Response'
+import EsDocList from '@/api/resources/EsDocList'
 import store from '@/store'
 
 describe('SearchStore', () => {
@@ -75,7 +75,7 @@ describe('SearchStore', () => {
     expect(store.state.search.query).toBe('bar')
   })
 
-  it('should build a Response object from raw value', () => {
+  it('should build a EsDocList object from raw value', () => {
     store.commit('search/buildResponse', {
       hits: {
         hits: [
@@ -84,10 +84,10 @@ describe('SearchStore', () => {
         ]
       }
     })
-    expect(store.state.search.response).toBeInstanceOf(Response)
+    expect(store.state.search.response).toBeInstanceOf(EsDocList)
   })
 
-  it('should build a correct Response object from raw value', () => {
+  it('should build a correct EsDocList object from raw value', () => {
     store.commit('search/buildResponse', {
       hits: {
         hits: [
