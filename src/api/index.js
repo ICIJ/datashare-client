@@ -1,3 +1,4 @@
+import axios from 'axios'
 import map from 'lodash/map'
 import replace from 'lodash/replace'
 
@@ -118,15 +119,13 @@ export default class Api {
   retrieveNotes (project, path) {
     return this.sendAction(replace(`/api/${project}/notes/${path}`, '//', '/'))
   }
-  async sendAction (url, params = {}, json = true) {
-    const r = await this.fetch(Api.getFullUrl(url), params)
-    if (r.status >= 200 && r.status < 300) {
-      return json ? r.clone().json() : r
-    } else {
-      EventBus.$emit('http::error', r)
-      const error = new Error(`${r.status} ${r.statusText}`)
-      error.response = r
-      throw error
+  async sendAction (url, config = {}, json = true) {
+    try {
+      const r = await axios.request({ url: Api.getFullUrl(url), ...config })
+      return r.data
+    } catch (error) {
+      EventBus.$emit('http::error', error)
+      throw new Error(`${error.response.status} ${error.response.statusText}`)
     }
   }
 }

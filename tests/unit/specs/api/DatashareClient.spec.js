@@ -1,16 +1,18 @@
+import { responseWithJson } from 'tests/unit/tests_utils'
+
 import Api from '@/api'
 import { EventBus } from '@/utils/event-bus'
-import { jsonResp } from 'tests/unit/tests_utils'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockReturnValue(responseWithJson())
+  }
+})
 
 const datashare = new Api()
 
 describe('Datashare backend client', () => {
   let json
-
-  beforeEach(() => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
-  })
 
   it('should return backend response to index', async () => {
     json = await datashare.index({})
@@ -147,7 +149,7 @@ describe('Datashare backend client', () => {
   })
 
   it('should emit an error if the backend response has a bad status', async () => {
-    datashare.fetch.mockReturnValue(jsonResp({}, 42))
+    datashare.fetch.mockReturnValue(responseWithJson({}, 42))
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
 
