@@ -11,7 +11,7 @@ import values from 'lodash/values'
 
 import Auth from '@/api/resources/Auth'
 import Api from '@/api'
-import esClient from '@/api/esClient'
+import elasticsearch from '@/api/elasticsearch'
 import Response from '@/api/resources/Response'
 
 export const datashare = new Api()
@@ -113,7 +113,7 @@ export const actions = {
   async get ({ commit, state, dispatch }, idAndRouting) {
     commit('idAndRouting', idAndRouting)
     try {
-      const doc = await esClient.getEsDoc(idAndRouting.index, idAndRouting.id, idAndRouting.routing)
+      const doc = await elasticsearch.getEsDoc(idAndRouting.index, idAndRouting.id, idAndRouting.routing)
       commit('doc', doc)
     } catch (_) {
       commit('doc', null)
@@ -122,7 +122,7 @@ export const actions = {
   },
   async refresh ({ commit, state }) {
     try {
-      const doc = await esClient.getEsDoc(state.doc.index, state.idAndRouting.id, state.idAndRouting.routing)
+      const doc = await elasticsearch.getEsDoc(state.doc.index, state.idAndRouting.id, state.idAndRouting.routing)
       commit('doc', doc)
     } catch (_) {
       commit('doc', null)
@@ -133,7 +133,7 @@ export const actions = {
     if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
       const currentDoc = state.doc.raw._source
       try {
-        const doc = await esClient.getEsDoc(state.doc.index, currentDoc.parentDocument, currentDoc.rootDocument)
+        const doc = await elasticsearch.getEsDoc(state.doc.index, currentDoc.parentDocument, currentDoc.rootDocument)
         commit('parentDocument', doc)
       } catch (_) {
         commit('parentDocument', null)
@@ -144,7 +144,7 @@ export const actions = {
   async getNamedEntitiesTotal ({ state }) {
     const index = state.doc.index
     const { id, routing } = state.idAndRouting
-    const raw = await esClient.getDocumentNamedEntities(index, id, routing, 0, 0)
+    const raw = await elasticsearch.getDocumentNamedEntities(index, id, routing, 0, 0)
     return (new Response(raw)).total
   },
   async getFirstPageForNamedEntityInCategory ({ state, dispatch }, category) {
@@ -166,7 +166,7 @@ export const actions = {
       const index = state.doc.index
       const { id, routing } = state.idAndRouting
       const raw = await dispatch('loadingNamedEntities', () => {
-        return esClient.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
+        return elasticsearch.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
       })
       const page = new Response(raw)
       commit('namedEntitiesPageInCategory', { category, page })

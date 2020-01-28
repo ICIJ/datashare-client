@@ -20,7 +20,7 @@
 import bodybuilder from 'bodybuilder'
 import flatten from 'lodash/flatten'
 import sum from 'lodash/sum'
-import esClient from '@/api/esClient'
+import elasticsearch from '@/api/elasticsearch'
 import Response from '@/api/resources/Response'
 
 export default {
@@ -46,7 +46,7 @@ export default {
       this.isReady = false
       const index = this.$store.state.search.index
       const body = this.searchBody().build()
-      const response = await esClient.search({ index, body })
+      const response = await elasticsearch.search({ index, body })
       this.pages.push(new Response(response))
       this.isReady = true
     },

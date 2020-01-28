@@ -171,7 +171,7 @@ import throttle from 'lodash/throttle'
 import uniq from 'lodash/uniq'
 import bodybuilder from 'bodybuilder'
 
-import esClient from '@/api/esClient'
+import elasticsearch from '@/api/elasticsearch'
 import types from '@/utils/types.json'
 
 export default {
@@ -302,7 +302,7 @@ export default {
     },
     async aggregate (field, name) {
       const body = bodybuilder().size(0).aggregation('terms', field, {}, name).build()
-      const response = await esClient.search({ index: this.project, body })
+      const response = await elasticsearch.search({ index: this.project, body })
       return map(get(response, ['aggregations', name, 'buckets'], []), 'key')
     },
     buildTreeFromPaths (paths) {

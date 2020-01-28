@@ -85,7 +85,7 @@ import findIndex from 'lodash/findIndex'
 import reduce from 'lodash/reduce'
 import bodybuilder from 'bodybuilder'
 
-import esClient from '@/api/esClient'
+import elasticsearch from '@/api/elasticsearch'
 import Response from '@/api/resources/Response'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
 import EmailString from '@/components/EmailString.vue'
@@ -168,7 +168,7 @@ export default {
     async getThread () {
       try {
         if (this.threadBody) {
-          const raw = await esClient.search({
+          const raw = await elasticsearch.search({
             index: this.document.index,
             type: 'doc',
             body: this.threadBody.sort('metadata.tika_metadata_meta_creation_date', 'asc').build()

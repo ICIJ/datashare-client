@@ -1,30 +1,30 @@
 import toLower from 'lodash/toLower'
 import bodybuilder from 'bodybuilder'
 
-import esClient from '@/api/esClient'
+import elasticsearch from '@/api/elasticsearch'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { EventBus } from '@/utils/event-bus'
 import { FacetText, FacetNamedEntity } from '@/store/facetsStore'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-describe('esClient', () => {
-  const index = toLower('esClient')
+describe('elasticsearch', () => {
+  const index = toLower('elasticsearch')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
 
   it('should return backend response to a POST request for searchDocs', async () => {
-    const spy = jest.spyOn(esClient, 'search').mockImplementation(() => Promise.resolve({ 'foo': 'bar' }))
-    const response = await esClient.searchDocs(index, '*')
+    const spy = jest.spyOn(elasticsearch, 'search').mockImplementation(() => Promise.resolve({ 'foo': 'bar' }))
+    const response = await elasticsearch.searchDocs(index, '*')
     expect(response).toEqual({ 'foo': 'bar' })
     spy.mockRestore()
   })
 
   it('should emit an error if the backend response is an error', async () => {
-    const spy = jest.spyOn(esClient, 'search').mockImplementation(() => Promise.reject(new Error('this is an error')))
+    const spy = jest.spyOn(elasticsearch, 'search').mockImplementation(() => Promise.reject(new Error('this is an error')))
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
 
-    await expect(esClient.searchDocs(index, '*')).rejects.toThrow('this is an error')
+    await expect(elasticsearch.searchDocs(index, '*')).rejects.toThrow('this is an error')
 
     expect(mockCallback.mock.calls.length).toBe(1)
     expect(mockCallback.mock.calls[0][0].message).toEqual('this is an error')
@@ -36,7 +36,7 @@ describe('esClient', () => {
     facets[0].values = ['value_01', 'value_02', 'value_03']
     const body = bodybuilder().from(0).size(25)
 
-    await esClient._addFacetsToBody(facets, body)
+    await elasticsearch._addFacetsToBody(facets, body)
 
     expect(body.build()).toEqual({
       from: 0,
@@ -56,7 +56,7 @@ describe('esClient', () => {
   it('should build a simple ES query', async () => {
     const body = bodybuilder().from(0).size(25)
 
-    await esClient.addQueryToBody('*', body)
+    await elasticsearch.addQueryToBody('*', body)
 
     expect(body.build()).toEqual({
       from: 0,
@@ -94,7 +94,7 @@ describe('esClient', () => {
   it('should build a simple ES query and escape slash in it', async () => {
     const body = bodybuilder().from(0).size(25)
 
-    await esClient.addQueryToBody('path:/home/datashare/path/*', body)
+    await elasticsearch.addQueryToBody('path:/home/datashare/path/*', body)
 
     expect(body.build()).toEqual({
       from: 0,
@@ -131,7 +131,7 @@ describe('esClient', () => {
   it('should build a simple sorted ES query', async () => {
     const body = bodybuilder().from(0).size(25)
 
-    await esClient.addSortToBody('dateOldest', body)
+    await elasticsearch.addSortToBody('dateOldest', body)
 
     expect(body.build()).toEqual({
       from: 0,
@@ -151,7 +151,7 @@ describe('esClient', () => {
   it('should build a simple sorted ES query with correct path sort', async () => {
     const body = bodybuilder().from(0).size(25)
 
-    await esClient.addSortToBody('pathReverse', body)
+    await elasticsearch.addSortToBody('pathReverse', body)
 
     expect(body.build()).toEqual({
       from: 0,
@@ -181,7 +181,7 @@ describe('esClient', () => {
       .withNer('ne_12')
     ).commit()
 
-    const response = await esClient.getDocumentNamedEntities(index, id, id, 0, 20)
+    const response = await elasticsearch.getDocumentNamedEntities(index, id, id, 0, 20)
 
     expect(response.hits.hits).toHaveLength(12)
   })
@@ -200,7 +200,7 @@ describe('esClient', () => {
     ).commit()
     const facet = new FacetNamedEntity('namedEntityPerson', 'byMentions', true, 'PERSON')
 
-    const response = await esClient.searchFacet(index, facet, 'document')
+    const response = await elasticsearch.searchFacet(index, facet, 'document')
 
     expect(response.aggregations.byMentions.buckets).toHaveLength(2)
   })

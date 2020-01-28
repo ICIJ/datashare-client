@@ -119,7 +119,7 @@ export function datasharePlugin (Client, config, components) {
       each(facets, facet => facet.addFilter(body))
       this.addQueryToFacet(query, body, fields)
     }
-    return esClient.search({
+    return elasticsearch.search({
       index,
       type: 'doc',
       body: body.size(0).build()
@@ -162,9 +162,9 @@ export function datasharePlugin (Client, config, components) {
   }
 }
 
-const esClient = new es.Client({
+const elasticsearch = new es.Client({
   host: process.env.VUE_APP_ES_HOST || window.location.hostname + ':' + window.location.port + '/api/index/search',
   plugins: [ datasharePlugin ]
 })
 
-export default esClient
+export default elasticsearch

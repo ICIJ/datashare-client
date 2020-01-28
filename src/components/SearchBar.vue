@@ -64,7 +64,7 @@ import uniqueId from 'lodash/uniqueId'
 import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 
-import esClient from '@/api/esClient'
+import elasticsearch from '@/api/elasticsearch'
 import SearchSettings from '@/components/SearchSettings'
 import settings from '@/utils/settings'
 import ShortkeysModal from '@/components/ShortkeysModal'
@@ -134,7 +134,7 @@ export default {
       each(fields, field => {
         body.aggregation('terms', field, { include }, field)
       })
-      const response = await esClient.search({ index, body: body.build() })
+      const response = await elasticsearch.search({ index, body: body.build() })
       let suggestions = []
       each(fields, field => {
         suggestions = concat(suggestions, get(response, `aggregations.${field}.buckets`, []))

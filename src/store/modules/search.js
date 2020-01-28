@@ -1,4 +1,4 @@
-import esClient from '@/api/esClient'
+import elasticsearch from '@/api/elasticsearch'
 import Response from '@/api/resources/Response'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import settings from '@/utils/settings'
@@ -339,7 +339,7 @@ export const actions = {
     commit('isReady', !updateIsReady)
     commit('error', null)
     try {
-      const raw = await esClient.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort, getters.getFields())
+      const raw = await elasticsearch.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort, getters.getFields())
       commit('buildResponse', raw)
       return raw
     } catch (error) {
@@ -359,7 +359,7 @@ export const actions = {
     return dispatch('refresh', true)
   },
   queryFacet ({ state, getters }, params) {
-    return esClient.searchFacet(
+    return elasticsearch.searchFacet(
       state.index,
       getters.getFacet({ name: params.name }),
       state.query,
