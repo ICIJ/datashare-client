@@ -116,7 +116,7 @@ describe('SearchFacets', () => {
     })
 
     it('should create 3 buckets from 3 documents', async () => {
-      await letData(es).have(new IndexedDocument('index.js', index).withContentType('text/javascript')).commit()
+      await letData(es).have(new IndexedDocument('Api.js', index).withContentType('text/javascript')).commit()
       await letData(es).have(new IndexedDocument('index.html', index).withContentType('text/html')).commit()
       await letData(es).have(new IndexedDocument('index.css', index).withContentType('text/css')).commit()
 
@@ -126,7 +126,7 @@ describe('SearchFacets', () => {
     })
 
     it('should create 3 buckets from 7 documents', async () => {
-      await letData(es).have(new IndexedDocument('index.js', index).withContentType('text/javascript')).commit()
+      await letData(es).have(new IndexedDocument('Api.js', index).withContentType('text/javascript')).commit()
       await letData(es).have(new IndexedDocument('list.js', index).withContentType('text/javascript')).commit()
       await letData(es).have(new IndexedDocument('show.js', index).withContentType('text/javascript')).commit()
       await letData(es).have(new IndexedDocument('index.html', index).withContentType('text/html')).commit()

@@ -1,5 +1,5 @@
 import get from 'lodash/get'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import { getCookie } from 'tiny-cookie'
 
 export default class Auth {
@@ -28,7 +28,7 @@ export default class Auth {
   }
 
   async _getBasicAuthUserName () {
-    const r = await this.fetch(DatashareClient.getFullUrl('/api/user'))
+    const r = await this.fetch(Api.getFullUrl('/api/user'))
     if (r.status === 200) {
       setTimeout(() => this.reset(), 43200 * 1000)
       const data = await r.json()

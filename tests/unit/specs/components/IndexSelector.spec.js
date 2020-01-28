@@ -6,7 +6,7 @@ import VueRouter from 'vue-router'
 
 import { App } from '@/main'
 import { datashare } from '@/store/modules/search'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import IndexSelector from '@/components/IndexSelector'
 import { jsonResp } from 'tests/unit/tests_utils'
@@ -78,14 +78,14 @@ describe('IndexSelector.vue', () => {
       await wrapper.vm.select(anotherIndex)
 
       expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${anotherIndex}/documents/starred`), {})
+      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${anotherIndex}/documents/starred`), {})
     })
 
     it('should refresh the isDownloadAllowed on index change', async () => {
       await wrapper.vm.select(anotherIndex)
 
       expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/project/isDownloadAllowed/${anotherIndex}`), {})
+      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/project/isDownloadAllowed/${anotherIndex}`), {})
     })
 
     it('should refresh the route on index change', async () => {

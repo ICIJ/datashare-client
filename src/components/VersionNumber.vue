@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 
 export default {
   name: 'VersionNumber',
@@ -58,7 +58,7 @@ export default {
   },
   methods: {
     async fetchVersion () {
-      const datashare = new DatashareClient()
+      const datashare = new Api()
       return datashare.getVersion()
     },
     async setVersion () {

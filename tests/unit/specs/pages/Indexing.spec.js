@@ -3,7 +3,7 @@ import flushPromises from 'flush-promises'
 
 import { App } from '@/main'
 import { datashare } from '@/store/modules/indexing'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import Indexing from '@/pages/Indexing'
 import { jsonResp } from 'tests/unit/tests_utils'
 
@@ -27,7 +27,7 @@ describe('Indexing.vue', () => {
     await Indexing.beforeRouteEnter(undefined, undefined, jest.fn())
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/all'), {})
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/all'), {})
     expect(store.state.indexing.pollHandle).not.toBeNull()
 
     Indexing.beforeRouteLeave(undefined, undefined, jest.fn())
@@ -100,7 +100,7 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-stop-pending-tasks').trigger('click')
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/stopAll'), { method: 'PUT' })
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/stopAll'), { method: 'PUT' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
@@ -113,7 +113,7 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-delete-done-tasks').trigger('click')
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/clean'),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/clean'),
       { method: 'POST', body: '{}' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
@@ -138,7 +138,7 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-stop-task').trigger('click')
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
       { method: 'PUT' })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })

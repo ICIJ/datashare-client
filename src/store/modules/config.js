@@ -1,6 +1,6 @@
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 
-export const datashare = new DatashareClient()
+export const datashare = new Api()
 
 export const actions = {
   getConfig () {

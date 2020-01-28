@@ -3,7 +3,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 import { App } from '@/main'
 
-jest.mock('@/api/DatashareClient', () => {
+jest.mock('@/api', () => {
   const { jsonResp } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
@@ -23,7 +23,7 @@ describe('MountedDataLocation', () => {
     wrapper = shallowMount(MountedDataLocation, { localVue, store, mocks: { $t: msg => msg }, sync: false })
   })
 
-  afterAll(() => jest.unmock('@/api/DatashareClient'))
+  afterAll(() => jest.unmock('@/api'))
 
   it('should display the delete index button', () => {
     expect(wrapper.find('.mounted-data-location__delete-index').exists()).toBeTruthy()

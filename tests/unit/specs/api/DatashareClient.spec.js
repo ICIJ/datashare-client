@@ -1,8 +1,8 @@
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import { EventBus } from '@/utils/event-bus'
 import { jsonResp } from 'tests/unit/tests_utils'
 
-const datashare = new DatashareClient()
+const datashare = new Api()
 
 describe('Datashare backend client', () => {
   let json
@@ -128,7 +128,7 @@ describe('Datashare backend client', () => {
     body.append('paths', 'paths')
     body.append('published', published)
     expect(json).toEqual({})
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
   })
 
   it('should return backend response to getBatchSearches', async () => {

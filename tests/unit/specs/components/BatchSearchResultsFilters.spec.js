@@ -7,7 +7,7 @@ import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-jest.mock('@/api/DatashareClient', () => {
+jest.mock('@/api', () => {
   return jest.fn(() => {
     return {
       getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([
@@ -101,7 +101,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
   afterAll(() => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    jest.unmock('@/api/DatashareClient')
+    jest.unmock('@/api')
   })
 
   it('should emit a "batch-search-results::filter" event on click on dropdown entry', async () => {

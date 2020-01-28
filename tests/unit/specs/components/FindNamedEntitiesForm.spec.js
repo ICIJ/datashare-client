@@ -3,7 +3,7 @@ import Murmur from '@icij/murmur'
 
 import { App } from '@/main'
 import { datashare } from '@/store/modules/indexing'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import { jsonResp } from 'tests/unit/tests_utils'
 
@@ -25,7 +25,7 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.submitFindNamedEntities()
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/findNames/CORENLP'),
       { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
   })
 
@@ -34,7 +34,7 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.submitFindNamedEntities()
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/OPENNLP'),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/findNames/OPENNLP'),
       { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
   })
 
@@ -44,7 +44,7 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.submitFindNamedEntities()
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/findNames/CORENLP'),
       { method: 'POST', body: JSON.stringify({ options: { syncModels: false } }) })
   })
 

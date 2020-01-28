@@ -4,7 +4,7 @@ import VueRouter from 'vue-router'
 
 import { App } from '@/main'
 import { datashare } from '@/store/modules/search'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { jsonResp } from 'tests/unit/tests_utils'
@@ -52,7 +52,7 @@ describe('SearchResultsTable.vue', () => {
     wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${index}/documents/batchUpdate/star`),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/star`),
       { method: 'POST', body: JSON.stringify(['document_01', 'document_02']) })
   })
 })

@@ -173,7 +173,7 @@ import keys from 'lodash/keys'
 import sumBy from 'lodash/sumBy'
 
 import Auth from '@/api/Auth'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import { getDocumentTypeLabel } from '@/utils/utils'
 import humanSize from '@/filters/humanSize'
 import settings from '@/utils/settings'
@@ -258,7 +258,7 @@ export default {
       return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || { }
     },
     downloadLink () {
-      return DatashareClient.getFullUrl(`/api/batch/search/result/csv/${this.uuid}`)
+      return Api.getFullUrl(`/api/batch/search/result/csv/${this.uuid}`)
     },
     sortBy () {
       return find(this.fields, item => item.name === this.sort).key

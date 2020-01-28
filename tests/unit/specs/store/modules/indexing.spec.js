@@ -2,7 +2,7 @@ import cloneDeep from 'lodash/cloneDeep'
 import toLower from 'lodash/toLower'
 
 import { datashare } from '@/store/modules/indexing'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import { jsonResp } from 'tests/unit/tests_utils'
 import store from '@/store'
 
@@ -36,7 +36,7 @@ describe('IndexingStore', () => {
     await store.dispatch('indexing/submitExtract')
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/batchUpdate/index/file'),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/batchUpdate/index/file'),
       { method: 'POST', body: JSON.stringify({ options: { ocr: false, filter: true } }) })
   })
 
@@ -44,7 +44,7 @@ describe('IndexingStore', () => {
     await store.dispatch('indexing/submitFindNamedEntities')
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/findNames/CORENLP'),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/findNames/CORENLP'),
       { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
   })
 
@@ -56,7 +56,7 @@ describe('IndexingStore', () => {
 
     expect(store.state.indexing.tasks).toHaveLength(0)
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/stopAll'),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/stopAll'),
       { method: 'PUT' })
   })
 
@@ -69,7 +69,7 @@ describe('IndexingStore', () => {
 
     expect(store.state.indexing.tasks).toHaveLength(1)
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/task/stop/${encodeURIComponent('foo.bar@123')}`),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/task/stop/${encodeURIComponent('foo.bar@123')}`),
       { method: 'PUT' })
   })
 
@@ -81,7 +81,7 @@ describe('IndexingStore', () => {
 
     expect(store.state.indexing.tasks).toHaveLength(0)
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/clean'),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/clean'),
       { method: 'POST', body: '{}' })
   })
 
@@ -115,7 +115,7 @@ describe('IndexingStore', () => {
     await store.dispatch('indexing/deleteAll')
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/project/${index}`),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/project/${index}`),
       { method: 'DELETE' })
   })
 })

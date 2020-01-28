@@ -4,7 +4,7 @@ import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/
 import settings from '@/utils/settings'
 import { isNarrowScreen } from '@/utils/screen'
 import { FacetText, FacetYesNo, FacetDate, FacetDateRange, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation, starredLabel } from '@/store/facetsStore'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import types from '@/utils/types.json'
 import lucene from 'lucene'
 import moment from 'moment'
@@ -33,7 +33,7 @@ import toLower from 'lodash/toLower'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
 
-export const datashare = new DatashareClient()
+export const datashare = new Api()
 
 export function initialState () {
   return {

@@ -3,7 +3,7 @@ import replace from 'lodash/replace'
 
 import { EventBus } from '@/utils/event-bus'
 
-export default class DatashareClient {
+export default class Api {
   constructor () {
     // Build-in fetch method must never be called by an object other than Window
     this.fetch = (...args) => window.fetch(...args)
@@ -119,7 +119,7 @@ export default class DatashareClient {
     return this.sendAction(replace(`/api/${project}/notes/${path}`, '//', '/'))
   }
   async sendAction (url, params = {}, json = true) {
-    const r = await this.fetch(DatashareClient.getFullUrl(url), params)
+    const r = await this.fetch(Api.getFullUrl(url), params)
     if (r.status >= 200 && r.status < 300) {
       return json ? r.clone().json() : r
     } else {

@@ -13,7 +13,7 @@ import guards from '@/router/guards'
 import messages from '@/lang/en'
 import store from '@/store'
 import Auth from '@/api/Auth'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import settings from '@/utils/settings'
 import mode from '@/modes'
 
@@ -67,7 +67,7 @@ export class App {
     // Old a promise that is resolved when the app is configured
     this.ready = this.ready || Promise.resolve().then(async () => {
       // Get the config object
-      const config = await this.datashareClient.getConfig()
+      const config = await this.Api.getConfig()
       // Murmur exposes a config attribute which share a Config object
       // with the current vue instance.
       Murmur.config.merge(mode(config.mode))
@@ -75,7 +75,7 @@ export class App {
       Murmur.config.merge(config)
       // Override Murmur default value for content-placeholder
       Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
-      this.datashareClient.createIndex(config['defaultProject'])
+      this.Api.createIndex(config['defaultProject'])
       if (this.store.state.search.index === '') {
         this.store.commit('search/index', config['defaultProject'])
       }
@@ -131,10 +131,10 @@ export class App {
   get config () {
     return Murmur.config
   }
-  get datashareClient () {
+  get Api () {
     // Instantiate a single datashare client
-    this._datashareClient = this._datashareClient || new DatashareClient()
-    return this._datashareClient
+    this._Api = this._Api || new Api()
+    return this._Api
   }
   static init (...options) {
     return new App(...options)

@@ -6,7 +6,7 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { App } from '@/main'
 import { datashare } from '@/store/modules/document'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -91,7 +91,7 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.addTag()
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_02'] }) })
     expect(store.state.document.tags).toHaveLength(2)
     expect(sortBy(store.state.document.tags, ['label'])[0].label).toEqual('tag_01')
@@ -106,7 +106,7 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.addTag()
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
   })
 
@@ -118,7 +118,7 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.addTag()
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02'] }) })
   })
 
@@ -129,7 +129,7 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.deleteTag({ label: 'tag_01' })
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
       { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01'] }) })
   })
 

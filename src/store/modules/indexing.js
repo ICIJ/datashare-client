@@ -1,8 +1,8 @@
 import { getField, updateField } from 'vuex-map-fields'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import remove from 'lodash/remove'
 
-export const datashare = new DatashareClient()
+export const datashare = new Api()
 
 export function initialState () {
   return {

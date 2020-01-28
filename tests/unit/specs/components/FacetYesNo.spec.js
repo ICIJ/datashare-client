@@ -10,7 +10,7 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const { localVue, store, router } = App.init(createLocalVue()).useAll()
 
-jest.mock('@/api/DatashareClient', () => {
+jest.mock('@/api', () => {
   const { jsonResp } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
@@ -41,7 +41,7 @@ describe('FacetYesNo.vue', () => {
 
   afterAll(() => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    jest.unmock('@/api/DatashareClient')
+    jest.unmock('@/api')
   })
 
   it('should display "All" as the first item', async () => {

@@ -5,7 +5,7 @@ import { App } from '@/main'
 import BatchSearch from '@/pages/BatchSearch'
 import Murmur from '@icij/murmur'
 
-jest.mock('@/api/DatashareClient', () => {
+jest.mock('@/api', () => {
   return jest.fn(() => {
     return {
       getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([{
@@ -45,7 +45,7 @@ describe('BatchSearch.vue', () => {
   })
 
   afterAll(() => {
-    jest.unmock('@/api/DatashareClient')
+    jest.unmock('@/api')
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
   })
 

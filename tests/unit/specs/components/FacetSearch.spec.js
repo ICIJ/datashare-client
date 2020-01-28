@@ -7,7 +7,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FacetSearch from '@/components/FacetSearch'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-jest.mock('@/api/DatashareClient', () => {
+jest.mock('@/api', () => {
   const { jsonResp } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
@@ -32,7 +32,7 @@ describe('FacetSearch.vue', () => {
       { localVue, store, propsData: { infiniteScroll: false, throttle: 0, facet }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
   })
 
-  afterAll(() => jest.unmock('@/api/DatashareClient'))
+  afterAll(() => jest.unmock('@/api'))
 
   describe('pagination', () => {
     it('should display 2 items', async () => {

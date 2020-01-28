@@ -1,6 +1,6 @@
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 
-const ds = new DatashareClient()
+const ds = new Api()
 export const mixin = {
   methods: {
     getSource (document) {

@@ -27,13 +27,13 @@
 </template>
 
 <script>
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import facets from '@/mixins/facets'
 import Facet from '@/components/Facet'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 
-const datashare = new DatashareClient()
+const datashare = new Api()
 
 export default {
   name: 'FacetNamedEntity',

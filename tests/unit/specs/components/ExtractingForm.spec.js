@@ -2,7 +2,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { App } from '@/main'
 import { datashare } from '@/store/modules/indexing'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import ExtractingForm from '@/components/ExtractingForm'
 import { jsonResp } from 'tests/unit/tests_utils'
 
@@ -28,7 +28,7 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.submitExtract()
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/batchUpdate/index/file'),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/batchUpdate/index/file'),
       { method: 'POST', body: JSON.stringify({ options: { ocr: false, filter: true } }) })
   })
 
@@ -37,7 +37,7 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.submitExtract()
 
     expect(datashare.fetch).toHaveBeenCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/task/batchUpdate/index/file'),
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/batchUpdate/index/file'),
       { method: 'POST', body: JSON.stringify({ options: { ocr: true, filter: true } }) })
   })
 

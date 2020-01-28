@@ -10,11 +10,11 @@ import uniqBy from 'lodash/uniqBy'
 import values from 'lodash/values'
 
 import Auth from '@/api/Auth'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import esClient from '@/api/esClient'
 import Response from '@/api/Response'
 
-export const datashare = new DatashareClient()
+export const datashare = new Api()
 export const auth = new Auth()
 
 export function initialState () {

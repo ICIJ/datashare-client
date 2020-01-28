@@ -9,7 +9,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import Murmur from '@icij/murmur'
 
-jest.mock('@/api/DatashareClient', () => {
+jest.mock('@/api', () => {
   return jest.fn(() => {
     return {
       getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([

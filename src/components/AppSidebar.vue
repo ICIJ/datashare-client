@@ -120,7 +120,7 @@
 import docs from '@/mixins/docs'
 import utils from '@/mixins/utils'
 import { isNarrowScreen } from '@/utils/screen'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import LocalesDropdown from './LocalesDropdown.vue'
 import MountedDataLocation from './MountedDataLocation.vue'
 import VersionNumber from './VersionNumber.vue'
@@ -170,7 +170,7 @@ export default {
       return this.reduced ? '' : 'd-none'
     },
     logoutLink () {
-      return DatashareClient.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
+      return Api.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     }
   }
 }

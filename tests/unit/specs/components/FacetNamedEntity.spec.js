@@ -11,7 +11,7 @@ import FacetNamedEntity from '@/components/FacetNamedEntity'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import mixin from '@/mixins/facets'
 
-jest.mock('@/api/DatashareClient', () => {
+jest.mock('@/api', () => {
   const { jsonResp } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
@@ -43,7 +43,7 @@ describe('FacetNamedEntity.vue', () => {
 
   afterEach(() => store.commit('search/reset'))
 
-  afterAll(() => jest.unmock('@/api/DatashareClient'))
+  afterAll(() => jest.unmock('@/api'))
 
   it('should display empty list', async () => {
     await wrapper.vm.root.aggregate()

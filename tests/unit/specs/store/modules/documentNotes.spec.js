@@ -1,5 +1,5 @@
 import { datashare } from '@/store/modules/documentNotes'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import { jsonResp } from 'tests/unit/tests_utils'
 import store from '@/store'
 
@@ -19,7 +19,7 @@ describe('DocumentNotesStore', () => {
     await store.dispatch('documentNotes/retrieveNotes', { project: 'projectName', path: 'path' })
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/projectName/notes/path'), {})
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/projectName/notes/path'), {})
   })
 
   it('should call the API endpoint only once', async () => {
@@ -27,6 +27,6 @@ describe('DocumentNotesStore', () => {
     await store.dispatch('documentNotes/retrieveNotes', { project: 'projectName', path: 'path' })
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/projectName/notes/path'), {})
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/projectName/notes/path'), {})
   })
 })

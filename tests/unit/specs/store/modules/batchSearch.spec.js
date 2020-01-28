@@ -2,7 +2,7 @@ import toLower from 'lodash/toLower'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { actions, getters, mutations, state, datashare } from '@/store/modules/batchSearch'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -42,8 +42,8 @@ describe('BatchSearchStore', () => {
       body.append('paths', '/another/path')
       body.append('published', false)
       expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search'), {})
+      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
+      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/batch/search'), {})
     })
 
     it('should retrieve a batchSearch according to its id', async () => {
@@ -65,7 +65,7 @@ describe('BatchSearchStore', () => {
       await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
 
       expect(datashare.fetch).toBeCalledTimes(1)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search/batchSearch_01'), { method: 'DELETE' })
+      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/batch/search/batchSearch_01'), { method: 'DELETE' })
       expect(store.state.batchSearch.batchSearches).toEqual(['batchSearch_02', 'batchSearch_03'])
     })
 
@@ -75,7 +75,7 @@ describe('BatchSearchStore', () => {
       await store.dispatch('batchSearch/deleteBatchSearches')
 
       expect(datashare.fetch).toBeCalledTimes(1)
-      expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl('/api/batch/search'), { method: 'DELETE' })
+      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/batch/search'), { method: 'DELETE' })
       expect(store.state.batchSearch.batchSearches).toEqual([])
     })
   })

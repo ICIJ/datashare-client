@@ -1,6 +1,6 @@
 import types from '@/utils/types.json'
 import { findIcon, defaultIcon } from '@/utils/font-awesome-files'
-import DatashareClient from './DatashareClient'
+import Api from './'
 import EsDoc from './EsDoc'
 import moment from 'moment'
 import { extname } from 'path'
@@ -133,7 +133,7 @@ export default class Document extends EsDoc {
     return `/api/${this.index}/documents/src/${this.id}?routing=${this.routing}`
   }
   get fullUrl () {
-    return DatashareClient.getFullUrl(this.url)
+    return Api.getFullUrl(this.url)
   }
   get contentType () {
     return this.source.contentType || 'unknown'

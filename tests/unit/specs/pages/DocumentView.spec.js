@@ -5,7 +5,7 @@ import VueRouter from 'vue-router'
 
 import { App } from '@/main'
 import { datashare } from '@/store/modules/document'
-import DatashareClient from '@/api/DatashareClient'
+import Api from '@/api'
 import DocumentView from '@/pages/DocumentView'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -44,7 +44,7 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(DatashareClient.getFullUrl(`/api/${index}/documents/tags/${id}`), {})
+    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/tags/${id}`), {})
   })
 
   it('should display a document', async () => {
