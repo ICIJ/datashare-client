@@ -1,4 +1,4 @@
-import get from 'lodash/get'
+import filter from 'lodash/filter'
 import hasIn from 'lodash/hasIn'
 import set from 'lodash/set'
 
@@ -24,12 +24,15 @@ export const mutations = {
 }
 
 export const actions = {
-  async retrieveNotes ({ state, commit }, { project, path }) {
+  filterNotesByPath ({ state }, { project, path }) {
+    return filter(state.notes[project], note => path.match(new RegExp(note.path.replace('file://', ''))))
+  },
+  async retrieveNotes ({ state, commit, dispatch }, { project, path }) {
     if (!hasIn(state.notes, project)) {
-      const notes = await datashare.retrieveNotes(project, path)
+      const notes = await datashare.retrieveNotes(project)
       commit('setNotes', { project, notes })
     }
-    return get(state, ['notes', project])
+    return dispatch('filterNotesByPath', { project, path })
   }
 }
 

@@ -116,8 +116,8 @@ export default class Api {
   isDownloadAllowed (project) {
     return this.sendAction(`/api/project/isDownloadAllowed/${project}`, {}, false)
   }
-  retrieveNotes (project, path) {
-    return this.sendAction(replace(`/api/${project}/notes/${path}`, '//', '/'))
+  retrieveNotes (project) {
+    return this.sendAction(replace(`/api/${project}/notes`, '//', '/'))
   }
   async sendAction (url, config = {}, json = true) {
     try {
