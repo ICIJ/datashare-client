@@ -32,7 +32,7 @@
           <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" />
         </template>
         <template v-slot:cell(path)="{ item }">
-          <router-link :to="{ name: 'document', params: item.routerParams, query: { q: query } }" class="text-truncate">
+          <router-link :to="{ name: 'document', params: item.routerParams, query: { q: query } }" class="text-truncate search-results-table__items__row__title">
             <document-sliced-name :document="item" />
           </router-link>
         </template>
@@ -227,6 +227,10 @@ export default {
     &__items {
 
       &__row {
+
+        &__title:visited:not(.router-link-active) {
+          color: mix(#609, white, 50%);
+        }
 
         table tbody tr:not(.b-table-row-selected):not(:hover) &__checkbox,
         table tbody tr.b-table-row-selected &__icon,
