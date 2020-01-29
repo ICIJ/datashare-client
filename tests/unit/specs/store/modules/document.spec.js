@@ -1,13 +1,20 @@
+import axios from 'axios'
 import orderBy from 'lodash/orderBy'
 import toLower from 'lodash/toLower'
 import uniqueId from 'lodash/uniqueId'
 
-import { auth, datashare, initialState } from '@/store/modules/document'
+import { auth, initialState } from '@/store/modules/document'
 import Api from '@/api'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { jsonResp } from 'tests/unit/tests_utils'
 import store from '@/store'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 describe('DocumentStore', () => {
   const index = toLower('DocumentStore')
@@ -16,8 +23,6 @@ describe('DocumentStore', () => {
   const id = 'document'
 
   beforeAll(() => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
     jest.spyOn(auth, 'fetch')
     auth.fetch.mockReturnValue(jsonResp({}, 401, {}))
   })
@@ -25,7 +30,7 @@ describe('DocumentStore', () => {
   afterEach(() => store.commit('document/reset'))
 
   afterAll(() => {
-    datashare.fetch.mockClear()
+    axios.request.mockClear()
     auth.fetch.mockClear()
   })
 
@@ -85,12 +90,12 @@ describe('DocumentStore', () => {
 
   it('should get the document\'s tags', async () => {
     const tags = ['tag_01', 'tag_02']
-    datashare.fetch.mockReturnValue(jsonResp(tags))
+    axios.request.mockReturnValue({ data: tags })
     await letData(es).have(new IndexedDocument(id, index).withTags(tags)).commit()
     await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getTags')
     expect(store.state.document.tags).toEqual(tags)
-    datashare.fetch.mockClear()
+    axios.request.mockClear()
   })
 
   it('should get the "showNamedEntities" status falsy by default', () => {
@@ -109,13 +114,16 @@ describe('DocumentStore', () => {
     await letData(es).have(new IndexedDocument('doc_02', index)).commit()
     await store.dispatch('document/get', { id: 'doc_01', index })
 
-    datashare.fetch.mockClear()
+    axios.request.mockClear()
 
     await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }], tag: 'tag_01 tag_02 tag_03' })
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
-      { method: 'POST', body: JSON.stringify({ docIds: ['doc_01', 'doc_02'], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+      method: 'POST',
+      body: JSON.stringify({ docIds: ['doc_01', 'doc_02'], tags: ['tag_01', 'tag_02', 'tag_03'] })
+    })
   })
 
   it('should deleteTag from 1 document', async () => {
@@ -123,13 +131,16 @@ describe('DocumentStore', () => {
     await letData(es).have(new IndexedDocument('doc_02', index)).commit()
     await store.dispatch('document/get', { id: 'doc_01', index })
 
-    datashare.fetch.mockClear()
+    axios.request.mockClear()
 
     await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
-      { method: 'POST', body: JSON.stringify({ docIds: ['doc_01'], tags: ['tag_01'] }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
+      method: 'POST',
+      body: JSON.stringify({ docIds: ['doc_01'], tags: ['tag_01'] })
+    })
   })
 
   it('should add tags to the store', async () => {

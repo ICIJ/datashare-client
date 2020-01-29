@@ -3,13 +3,16 @@ import axios from 'axios'
 import Api from '@/api'
 import { EventBus } from '@/utils/event-bus'
 
-jest.mock('axios')
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 const api = new Api()
 
 describe('Datashare backend client', () => {
   let json
-  axios.request.mockResolvedValue({ data: {} })
 
   it('should return backend response to index', async () => {
     json = await api.index({})

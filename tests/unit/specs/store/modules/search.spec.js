@@ -1,16 +1,17 @@
+import axios from 'axios'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import omit from 'lodash/omit'
 import toLower from 'lodash/toLower'
 
-import { datashare } from '@/store/modules/search'
 import Document from '@/api/resources/Document'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
-import { jsonResp } from 'tests/unit/tests_utils'
 import NamedEntity from '@/api/resources/NamedEntity'
 import EsDocList from '@/api/resources/EsDocList'
 import store from '@/store'
+
+jest.mock('axios')
 
 describe('SearchStore', () => {
   const index = toLower('SearchStore')
@@ -20,15 +21,9 @@ describe('SearchStore', () => {
 
   beforeAll(() => store.commit('search/index', index))
 
-  beforeEach(() => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
-  })
-
   afterEach(() => {
     store.commit('search/index', index)
     store.commit('search/reset')
-    datashare.fetch.mockClear()
   })
 
   it('should define a store module', () => {
@@ -656,7 +651,7 @@ describe('SearchStore', () => {
 
   describe('starredDocuments', () => {
     it('should return the list of the starredDocuments', async () => {
-      datashare.fetch.mockReturnValue(jsonResp([42]))
+      axios.request.mockResolvedValue({ data: [42] })
       await store.dispatch('search/getStarredDocuments')
 
       expect(store.state.search.starredDocuments).toEqual([42])

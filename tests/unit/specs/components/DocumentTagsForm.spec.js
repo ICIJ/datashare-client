@@ -1,3 +1,4 @@
+import axios from 'axios'
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
 import toLower from 'lodash/toLower'
@@ -5,18 +6,18 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { App } from '@/main'
-import { datashare } from '@/store/modules/document'
 import Api from '@/api'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonResp } from 'tests/unit/tests_utils'
 import settings from '@/utils/settings'
+
+jest.mock('axios')
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
 async function createView ({ es, index, tags = [], documentId = 'document', displayTags = true, displayForm = true }) {
-  datashare.fetch.mockReturnValue(jsonResp(map(tags, item => { return { label: item, user: { id: 'test-user' } } })))
+  axios.request.mockResolvedValue({ data: map(tags, item => { return { label: item, user: { id: 'test-user' } } }) })
   await letData(es).have(new IndexedDocument(documentId, index).withTags(tags)).commit()
   await store.dispatch('document/get', { id: documentId, index })
   await store.dispatch('document/getTags')
@@ -32,16 +33,9 @@ describe('DocumentTagsForm.vue', () => {
 
   beforeAll(() => store.commit('search/index', index))
 
-  beforeEach(() => {
-    jest.spyOn(datashare, 'fetch')
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-    datashare.fetch.mockReturnValue(jsonResp())
-  })
+  beforeEach(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
-  afterEach(() => {
-    store.commit('document/reset')
-    datashare.fetch.mockRestore()
-  })
+  afterEach(() => store.commit('document/reset'))
 
   afterAll(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
 
@@ -86,13 +80,15 @@ describe('DocumentTagsForm.vue', () => {
   it('should call API endpoint to add a tag', async () => {
     wrapper = await createView({ es, index, tags: ['tag_01'] })
 
-    datashare.fetch.mockClear()
+    axios.request.mockClear()
     wrapper.vm.tag = 'tag_02'
     await wrapper.vm.addTag()
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
-      { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_02'] }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+      method: 'POST',
+      body: JSON.stringify({ docIds: [id], tags: ['tag_02'] }) })
     expect(store.state.document.tags).toHaveLength(2)
     expect(sortBy(store.state.document.tags, ['label'])[0].label).toEqual('tag_01')
     expect(sortBy(store.state.document.tags, ['label'])[1].label).toEqual('tag_02')
@@ -101,36 +97,42 @@ describe('DocumentTagsForm.vue', () => {
   it('should split tags by space', async () => {
     wrapper = await createView({ es, index })
 
-    datashare.fetch.mockClear()
+    axios.request.mockClear()
     wrapper.vm.tag = 'tag_01 tag_02 tag_03'
     await wrapper.vm.addTag()
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
-      { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+      method: 'POST',
+      body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
   })
 
   it('should compact tags to remove empty tags', async () => {
     wrapper = await createView({ es, index })
 
-    datashare.fetch.mockClear()
+    axios.request.mockClear()
     wrapper.vm.tag = 'tag_01        tag_02'
     await wrapper.vm.addTag()
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
-      { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02'] }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+      method: 'POST',
+      body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02'] }) })
   })
 
   it('should call API endpoint to remove a tag', async () => {
     wrapper = await createView({ es, index, tags: ['tag_01', 'tag_02'] })
 
-    datashare.fetch.mockClear()
+    axios.request.mockClear()
     await wrapper.vm.deleteTag({ label: 'tag_01' })
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
-      { method: 'POST', body: JSON.stringify({ docIds: [id], tags: ['tag_01'] }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
+      method: 'POST',
+      body: JSON.stringify({ docIds: [id], tags: ['tag_01'] }) })
   })
 
   it('should emit a facet::refresh event on adding a tag', async () => {

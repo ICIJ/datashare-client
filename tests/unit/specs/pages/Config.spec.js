@@ -1,23 +1,23 @@
+import axios from 'axios'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
+import Api from '@/api'
 import { App } from '@/main'
 import Config from '@/pages/Config'
-import { datashare } from '@/store/modules/config'
-import Api from '@/api'
-import { jsonResp } from 'tests/unit/tests_utils'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('Config.vue', () => {
   let wrapper
 
-  beforeAll(() => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
-  })
-
   beforeEach(() => {
-    datashare.fetch.mockClear()
+    axios.request.mockClear()
     wrapper = shallowMount(Config, { localVue, store, mocks: { $t: msg => msg } })
   })
 
@@ -32,14 +32,19 @@ describe('Config.vue', () => {
   })
 
   it('should load the config on component creation', () => {
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/config'), {})
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/config') })
   })
 
   it('should submit the config modifications', () => {
     wrapper.vm.onSubmit()
 
-    expect(datashare.fetch).toBeCalledTimes(2)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/config'), { method: 'PATCH', body: JSON.stringify({ data: {} }), headers: { 'Content-Type': 'application/json' } })
+    expect(axios.request).toBeCalledTimes(2)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/config'),
+      method: 'PATCH',
+      body: JSON.stringify({ data: {} }),
+      headers: { 'Content-Type': 'application/json' }
+    })
   })
 })

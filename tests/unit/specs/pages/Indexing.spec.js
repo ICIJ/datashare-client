@@ -1,11 +1,16 @@
-import { createLocalVue, mount } from '@vue/test-utils'
+import axios from 'axios'
 import flushPromises from 'flush-promises'
+import { createLocalVue, mount } from '@vue/test-utils'
 
-import { App } from '@/main'
-import { datashare } from '@/store/modules/indexing'
 import Api from '@/api'
+import { App } from '@/main'
 import Indexing from '@/pages/Indexing'
-import { jsonResp } from 'tests/unit/tests_utils'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
@@ -14,20 +19,18 @@ describe('Indexing.vue', () => {
 
   beforeEach(() => {
     wrapper = mount(Indexing, { localVue, store, sync: false, mocks: { $t: msg => msg } })
-    jest.spyOn(datashare, 'fetch')
   })
 
   afterEach(() => {
     store.commit('indexing/reset')
-    datashare.fetch.mockClear()
+    axios.request.mockClear()
   })
 
   it('should start polling tasks on beforeRouteEnter and stop polling tasks on beforeRouteLeave', async () => {
-    datashare.fetch.mockReturnValue(jsonResp())
     await Indexing.beforeRouteEnter(undefined, undefined, jest.fn())
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/all'), {})
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/task/all') })
     expect(store.state.indexing.pollHandle).not.toBeNull()
 
     Indexing.beforeRouteLeave(undefined, undefined, jest.fn())
@@ -92,29 +95,33 @@ describe('Indexing.vue', () => {
   })
 
   it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', async () => {
-    datashare.fetch.mockReturnValue(jsonResp())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     await flushPromises()
     expect(wrapper.vm.tasks.length).toEqual(1)
 
     wrapper.find('.btn-stop-pending-tasks').trigger('click')
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/stopAll'), { method: 'PUT' })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/task/stopAll'),
+      method: 'PUT'
+    })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
   it('should call a backend endpoint on click on the "Delete done tasks" button', async () => {
-    datashare.fetch.mockReturnValue(jsonResp())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     await flushPromises()
     expect(wrapper.vm.tasks.length).toEqual(1)
 
     wrapper.find('.btn-delete-done-tasks').trigger('click')
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/clean'),
-      { method: 'POST', body: '{}' })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/task/clean'),
+      method: 'POST',
+      body: '{}'
+    })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
@@ -129,7 +136,6 @@ describe('Indexing.vue', () => {
   })
 
   it('should call a backend endpoint on click on a "Stop task" icon', async () => {
-    datashare.fetch.mockReturnValue(jsonResp())
     store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     await flushPromises()
 
@@ -137,9 +143,11 @@ describe('Indexing.vue', () => {
 
     wrapper.find('.btn-stop-task').trigger('click')
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
-      { method: 'PUT' })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
+      method: 'PUT'
+    })
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 

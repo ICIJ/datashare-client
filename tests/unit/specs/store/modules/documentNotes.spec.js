@@ -1,32 +1,30 @@
-import { datashare } from '@/store/modules/documentNotes'
+import axios from 'axios'
+
 import Api from '@/api'
-import { jsonResp } from 'tests/unit/tests_utils'
 import store from '@/store'
 
+jest.mock('axios')
+
 describe('DocumentNotesStore', () => {
-  beforeAll(() => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
+  beforeAll(() => axios.request.mockResolvedValue({ data: {} }))
+
+  afterEach(() => {
+    axios.request.mockClear()
+    store.commit('documentNotes/reset')
   })
-
-  beforeEach(() => datashare.fetch.mockClear())
-
-  afterEach(() => store.commit('documentNotes/reset'))
-
-  afterAll(() => datashare.fetch.mockClear())
 
   it('should call the retrieveNotes url', async () => {
     await store.dispatch('documentNotes/retrieveNotes', { project: 'projectName', path: 'path' })
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/projectName/notes/path'), {})
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/projectName/notes/path') })
   })
 
   it('should call the API endpoint only once', async () => {
     await store.dispatch('documentNotes/retrieveNotes', { project: 'projectName', path: 'path' })
     await store.dispatch('documentNotes/retrieveNotes', { project: 'projectName', path: 'path' })
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/projectName/notes/path'), {})
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/projectName/notes/path') })
   })
 })

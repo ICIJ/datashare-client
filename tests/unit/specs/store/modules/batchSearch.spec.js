@@ -1,14 +1,20 @@
+import axios from 'axios'
 import toLower from 'lodash/toLower'
 import Vue from 'vue'
 import Vuex from 'vuex'
 
 import Api from '@/api'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { actions, getters, mutations, state, datashare } from '@/store/modules/batchSearch'
+import { actions, getters, mutations, state } from '@/store/modules/batchSearch'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonResp } from 'tests/unit/tests_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 Vue.use(Vuex)
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 describe('BatchSearchStore', () => {
   const index = toLower('BatchSearchStore')
@@ -20,12 +26,7 @@ describe('BatchSearchStore', () => {
     store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, actions, getters, mutations, state } } })
   })
 
-  beforeEach(() => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
-  })
-
-  afterEach(() => datashare.fetch.mockClear())
+  afterEach(() => axios.request.mockClear())
 
   describe('actions', () => {
     it('should submit the new batchSearch form with complete information', async () => {
@@ -41,15 +42,19 @@ describe('BatchSearchStore', () => {
       body.append('paths', '/a/path/to/home')
       body.append('paths', '/another/path')
       body.append('published', false)
-      expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/batch/search/project'), { method: 'POST', body })
-      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/batch/search'), {})
+      expect(axios.request).toBeCalledTimes(2)
+      expect(axios.request).toBeCalledWith({
+        url: Api.getFullUrl('/api/batch/search/project'),
+        method: 'POST',
+        body
+      })
+      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/batch/search') })
     })
 
     it('should retrieve a batchSearch according to its id', async () => {
       await letData(es).have(new IndexedDocument('document', index).withContentType('type_01')).commit()
       const batchSearch = [{ contentType: 'type_01', documentId: 12, rootId: 42 }]
-      datashare.fetch.mockReturnValue(jsonResp(batchSearch))
+      axios.request.mockReturnValue({ data: batchSearch })
 
       await store.dispatch('batchSearch/getBatchSearchResults', { batchId: 12 })
 
@@ -64,8 +69,11 @@ describe('BatchSearchStore', () => {
 
       await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
 
-      expect(datashare.fetch).toBeCalledTimes(1)
-      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/batch/search/batchSearch_01'), { method: 'DELETE' })
+      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledWith({
+        url: Api.getFullUrl('/api/batch/search/batchSearch_01'),
+        method: 'DELETE'
+      })
       expect(store.state.batchSearch.batchSearches).toEqual(['batchSearch_02', 'batchSearch_03'])
     })
 
@@ -74,8 +82,11 @@ describe('BatchSearchStore', () => {
 
       await store.dispatch('batchSearch/deleteBatchSearches')
 
-      expect(datashare.fetch).toBeCalledTimes(1)
-      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/batch/search'), { method: 'DELETE' })
+      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledWith({
+        url: Api.getFullUrl('/api/batch/search'),
+        method: 'DELETE'
+      })
       expect(store.state.batchSearch.batchSearches).toEqual([])
     })
   })

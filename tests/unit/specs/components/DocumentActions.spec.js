@@ -1,14 +1,18 @@
-import toLower from 'lodash/toLower'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 import Murmur from '@icij/murmur'
+import toLower from 'lodash/toLower'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
-import { datashare } from '@/store/modules/search'
 import DocumentActions from '@/components/DocumentActions'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { App } from '@/main'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonResp } from 'tests/unit/tests_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
@@ -21,8 +25,6 @@ describe('DocumentActions.vue', () => {
   beforeAll(() => Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
     store.commit('search/starredDocuments', [])
     document = await letData(es).have(new IndexedDocument('document', index)).commit()
     wrapper = shallowMount(DocumentActions, { localVue, store, propsData: { document }, mocks: { $t: msg => msg }, sync: false })

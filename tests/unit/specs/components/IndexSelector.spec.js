@@ -1,15 +1,20 @@
+import axios from 'axios'
+import Murmur from '@icij/murmur'
 import find from 'lodash/find'
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import Murmur from '@icij/murmur'
 import VueRouter from 'vue-router'
 
-import { App } from '@/main'
-import { datashare } from '@/store/modules/search'
 import Api from '@/api'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import IndexSelector from '@/components/IndexSelector'
-import { jsonResp } from 'tests/unit/tests_utils'
+import { App } from '@/main'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
@@ -47,11 +52,9 @@ describe('IndexSelector.vue', () => {
   describe('on index change', () => {
     beforeEach(() => {
       wrapper = shallowMount(IndexSelector, { localVue, store, router: new VueRouter(), propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
-      jest.spyOn(datashare, 'fetch')
-      datashare.fetch.mockReturnValue(jsonResp())
     })
 
-    afterEach(() => datashare.fetch.mockClear())
+    afterEach(() => axios.request.mockClear())
 
     it('should reset search state on index change', async () => {
       store.commit('search/addFacetValue', { name: 'contentType', value: 'text/javascript' })
@@ -77,15 +80,15 @@ describe('IndexSelector.vue', () => {
     it('should refresh the starred documents on index change', async () => {
       await wrapper.vm.select(anotherIndex)
 
-      expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${anotherIndex}/documents/starred`), {})
+      expect(axios.request).toBeCalledTimes(2)
+      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${anotherIndex}/documents/starred`) })
     })
 
     it('should refresh the isDownloadAllowed on index change', async () => {
       await wrapper.vm.select(anotherIndex)
 
-      expect(datashare.fetch).toBeCalledTimes(2)
-      expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/project/isDownloadAllowed/${anotherIndex}`), {})
+      expect(axios.request).toBeCalledTimes(2)
+      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/project/isDownloadAllowed/${anotherIndex}`) })
     })
 
     it('should refresh the route on index change', async () => {

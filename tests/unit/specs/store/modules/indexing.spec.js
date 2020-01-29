@@ -1,24 +1,24 @@
+import axios from 'axios'
 import cloneDeep from 'lodash/cloneDeep'
 import toLower from 'lodash/toLower'
 
-import { datashare } from '@/store/modules/indexing'
 import Api from '@/api'
-import { jsonResp } from 'tests/unit/tests_utils'
 import store from '@/store'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 describe('IndexingStore', () => {
   const index = toLower('IndexingStore')
 
   beforeAll(() => store.commit('search/index', index))
 
-  beforeEach(() => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
-  })
-
   afterEach(() => {
-    datashare.fetch.mockClear()
     store.commit('indexing/reset')
+    axios.request.mockClear()
   })
 
   it('should define a store module', () => {
@@ -35,17 +35,22 @@ describe('IndexingStore', () => {
   it('should execute a default extract action', async () => {
     await store.dispatch('indexing/submitExtract')
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/batchUpdate/index/file'),
-      { method: 'POST', body: JSON.stringify({ options: { ocr: false, filter: true } }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
+      method: 'POST',
+      body: JSON.stringify({ options: { ocr: false, filter: true } })
+    })
   })
 
   it('should execute a default find named entities action', async () => {
     await store.dispatch('indexing/submitFindNamedEntities')
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/findNames/CORENLP'),
-      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/task/findNames/CORENLP'),
+      method: 'POST',
+      body: JSON.stringify({ options: { syncModels: true } }) })
   })
 
   it('should stop pending tasks', async () => {
@@ -55,9 +60,10 @@ describe('IndexingStore', () => {
     await store.dispatch('indexing/stopPendingTasks')
 
     expect(store.state.indexing.tasks).toHaveLength(0)
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/stopAll'),
-      { method: 'PUT' })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/task/stopAll'),
+      method: 'PUT' })
   })
 
   it('should stop the task named 456', async () => {
@@ -68,9 +74,10 @@ describe('IndexingStore', () => {
     await store.dispatch('indexing/stopTask', 'foo.bar@123')
 
     expect(store.state.indexing.tasks).toHaveLength(1)
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/task/stop/${encodeURIComponent('foo.bar@123')}`),
-      { method: 'PUT' })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl(`/api/task/stop/${encodeURIComponent('foo.bar@123')}`),
+      method: 'PUT' })
   })
 
   it('should delete done tasks', async () => {
@@ -80,9 +87,11 @@ describe('IndexingStore', () => {
     await store.dispatch('indexing/deleteDoneTasks')
 
     expect(store.state.indexing.tasks).toHaveLength(0)
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/clean'),
-      { method: 'POST', body: '{}' })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/task/clean'),
+      method: 'POST',
+      body: '{}' })
   })
 
   it('should stop polling jobs', async () => {
@@ -114,8 +123,9 @@ describe('IndexingStore', () => {
   it('should delete all the documents in the index', async () => {
     await store.dispatch('indexing/deleteAll')
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/project/${index}`),
-      { method: 'DELETE' })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl(`/api/project/${index}`),
+      method: 'DELETE' })
   })
 })

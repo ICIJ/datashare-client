@@ -1,15 +1,20 @@
+import axios from 'axios'
+import Murmur from '@icij/murmur'
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import Murmur from '@icij/murmur'
 import VueRouter from 'vue-router'
 
-import { App } from '@/main'
-import { datashare } from '@/store/modules/document'
 import Api from '@/api'
+import { App } from '@/main'
 import DocumentView from '@/pages/DocumentView'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonResp } from 'tests/unit/tests_utils'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: [{ label: 'tag', user: { id: 'local' }, creationDate: '2019-09-29T21:57:57.565+0000' }] })
+  }
+})
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 const router = new VueRouter()
@@ -38,13 +43,11 @@ describe('DocumentView.vue', () => {
   })
 
   it('should call to the API to retrieve tags', async () => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp([{ label: 'tag', user: { id: 'local' }, creationDate: '2019-09-29T21:57:57.565+0000' }]))
     wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
     await wrapper.vm.getDoc()
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/tags/${id}`), {})
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${index}/documents/tags/${id}`) })
   })
 
   it('should display a document', async () => {

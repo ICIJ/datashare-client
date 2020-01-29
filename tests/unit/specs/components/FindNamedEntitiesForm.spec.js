@@ -1,11 +1,16 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import axios from 'axios'
 import Murmur from '@icij/murmur'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { App } from '@/main'
-import { datashare } from '@/store/modules/indexing'
 import Api from '@/api'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
-import { jsonResp } from 'tests/unit/tests_utils'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
@@ -14,28 +19,34 @@ describe('FindNamedEntitiesForm.vue', () => {
 
   beforeEach(() => {
     wrapper = shallowMount(FindNamedEntitiesForm, { localVue, store, mocks: { $t: msg => msg } })
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
-    datashare.fetch.mockClear()
   })
 
-  afterEach(() => store.commit('indexing/reset'))
+  afterEach(() => {
+    store.commit('indexing/reset')
+    axios.request.mockClear()
+  })
 
   it('should call findNames action with CoreNLP pipeline, by default', () => {
     wrapper.vm.submitFindNamedEntities()
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/findNames/CORENLP'),
-      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/task/findNames/CORENLP'),
+      method: 'POST',
+      body: JSON.stringify({ options: { syncModels: true } })
+    })
   })
 
   it('should call findNames action with OpenNLP pipeline', () => {
     wrapper.vm.pipeline = 'opennlp'
     wrapper.vm.submitFindNamedEntities()
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/findNames/OPENNLP'),
-      { method: 'POST', body: JSON.stringify({ options: { syncModels: true } }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/task/findNames/OPENNLP'),
+      method: 'POST',
+      body: JSON.stringify({ options: { syncModels: true } })
+    })
   })
 
   it('should call findNames action with no models synchronization', () => {
@@ -43,9 +54,12 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.offline = true
     wrapper.vm.submitFindNamedEntities()
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl('/api/task/findNames/CORENLP'),
-      { method: 'POST', body: JSON.stringify({ options: { syncModels: false } }) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl('/api/task/findNames/CORENLP'),
+      method: 'POST',
+      body: JSON.stringify({ options: { syncModels: false } })
+    })
   })
 
   it('should reset the modal params on submitting the form', async () => {

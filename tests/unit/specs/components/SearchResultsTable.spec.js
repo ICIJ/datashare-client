@@ -1,14 +1,19 @@
+import axios from 'axios'
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
-import { App } from '@/main'
-import { datashare } from '@/store/modules/search'
 import Api from '@/api'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocuments, letData } from 'tests/unit/es_utils'
-import { jsonResp } from 'tests/unit/tests_utils'
 import SearchResultsTable from '@/components/SearchResultsTable'
+import { App } from '@/main'
+import { IndexedDocuments, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 const router = new VueRouter()
@@ -27,8 +32,6 @@ describe('SearchResultsTable.vue', () => {
     wrapper = shallowMount(SearchResultsTable, { localVue, store, mocks: { $t: msg => msg } })
   })
 
-  afterAll(() => datashare.fetch.mockRestore())
-
   it('should display a b-table', () => {
     expect(wrapper.find('.search-results-table__items').exists()).toBeTruthy()
   })
@@ -44,15 +47,16 @@ describe('SearchResultsTable.vue', () => {
   })
 
   it('should set each selected document as starred', () => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
     wrapper = mount(SearchResultsTable, { localVue, store, router, mocks: { $t: msg => msg, $n: msg => msg, $tc: msg => msg } })
     wrapper.vm.selected = [{ id: 'document_01' }, { id: 'document_02' }]
 
     wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 
-    expect(datashare.fetch).toBeCalledTimes(1)
-    expect(datashare.fetch).toBeCalledWith(Api.getFullUrl(`/api/${index}/documents/batchUpdate/star`),
-      { method: 'POST', body: JSON.stringify(['document_01', 'document_02']) })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/star`),
+      method: 'POST',
+      body: JSON.stringify(['document_01', 'document_02'])
+    })
   })
 })
