@@ -116,37 +116,17 @@ describe('FacetNamedEntity.vue', () => {
     expect(wrapper.findAll('.facet__items__display span')).toHaveLength(0)
   })
 
-  it('should display the "Show more" button (1/2)', async () => {
+  it('should display the "Show more" button', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
-      .withNer('person_01', 2)).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withNer('person_02', 2)
-      .withNer('person_02', 16)
-      .withNer('person_02', 21)
-      .withNer('person_01', 26)
-      .withNer('person_03', 35)
-      .withNer('person_04', 42)
-      .withNer('person_05', 42)
-      .withNer('person_06', 42)).commit()
-
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.findAll('.facet__items__display > span')).toHaveLength(1)
-    expect(wrapper.find('.facet__items__display > span').text()).toEqual('Show more')
-  })
-
-  it('should display the "Show more" button (2/2)', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withNer('person_01', 2)).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withNer('person_02', 2)
-      .withNer('person_02', 16)
-      .withNer('person_02', 21)
-      .withNer('person_01', 26)
-      .withNer('person_03', 35)
-      .withNer('person_04', 42)
-      .withNer('person_05', 42)
-      .withNer('person_06', 42)).commit()
+      .withNer('person_01', 1)
+      .withNer('person_02', 1)
+      .withNer('person_03', 1)
+      .withNer('person_04', 1)
+      .withNer('person_05', 1)
+      .withNer('person_06', 1)
+      .withNer('person_07', 1)
+      .withNer('person_08', 1)
+      .withNer('person_09', 1)).commit()
 
     await wrapper.vm.root.aggregate()
 

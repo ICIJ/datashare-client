@@ -103,7 +103,8 @@ export default {
       collapseItems: !this.asyncItems,
       isReady: true,
       isInitialized: !!this.asyncItems,
-      results: []
+      results: [],
+      moreToDisplay: false
     }
   },
   watch: {
@@ -200,6 +201,7 @@ export default {
         this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)
         this.$set(this, 'results', this.addInvertedFacets(res))
         this.$set(this, 'isReady', true)
+        this.$set(this, 'moreToDisplay', sumOtherDocCount > 0)
         return this.results
       } else {
         return false
@@ -217,7 +219,7 @@ export default {
       this.collapseItems = !this.collapseItems
     },
     shouldDisplayShowMoreAction () {
-      return !this.hideShowMore && this.totalCount > this.size
+      return !this.hideShowMore && this.moreToDisplay
     }
   }
 }
