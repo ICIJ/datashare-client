@@ -7,7 +7,7 @@
             <fa icon="book" />
           </div>
           <div class="project-cards__item__body py-2 px-3 font-weight-bold">
-            {{ index.split('-').map(capitalize).join(' ') }}
+            {{ startCase(index) }}
           </div>
         </router-link>
       </div>
@@ -38,7 +38,7 @@
 </style>
 
 <script>
-import capitalize from 'lodash/capitalize'
+import startCase from 'lodash/startCase'
 
 export default {
   data () {
@@ -47,10 +47,10 @@ export default {
     }
   },
   methods: {
-    capitalize,
     isActive (index) {
       return index === this.$store.state.search.index
-    }
+    },
+    startCase
   },
   created () {
     this.indices = this.$config.get('userProjects', [])
