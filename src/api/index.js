@@ -10,31 +10,31 @@ export default class Api {
     this.fetch = (...args) => window.fetch(...args)
   }
   index (options) {
-    return this.sendAction(`/api/task/batchUpdate/index/file`, { method: 'POST', body: JSON.stringify({ options }) })
+    return this.sendActionAsText(`/api/task/batchUpdate/index/file`, { method: 'POST', data: { options } })
   }
   runBatchSearch () {
     return this.sendAction(`/api/task/batchSearch`, { method: 'POST' })
   }
   findNames (pipeline, options) {
-    return this.sendAction(`/api/task/findNames/${pipeline}`, { method: 'POST', body: JSON.stringify({ options }) })
+    return this.sendActionAsText(`/api/task/findNames/${pipeline}`, { method: 'POST', data: { options } })
   }
   stopPendingTasks () {
     return this.sendAction('/api/task/stopAll', { method: 'PUT' })
   }
   stopTask (name) {
-    return this.sendAction((`/api/task/stop/${encodeURIComponent(name)}`), { method: 'PUT' }, false)
+    return this.sendActionAsText((`/api/task/stop/${encodeURIComponent(name)}`), { method: 'PUT' })
   }
   deleteDoneTasks () {
-    return this.sendAction('/api/task/clean', { method: 'POST', body: '{}' })
+    return this.sendAction('/api/task/clean', { method: 'POST' })
   }
   getTasks () {
     return this.sendAction('/api/task/all')
   }
   createIndex (project) {
-    return this.sendAction(`/api/index/${project}`, { method: 'PUT' }, false)
+    return this.sendActionAsText(`/api/index/${project}`, { method: 'PUT' })
   }
   deleteAll (project) {
-    return this.sendAction(`/api/project/${project}`, { method: 'DELETE' }, false)
+    return this.sendActionAsText(`/api/project/${project}`, { method: 'DELETE' })
   }
   getVersion () {
     return this.sendAction('/version')
@@ -49,64 +49,66 @@ export default class Api {
     })
   }
   setConfig (config) {
-    return this.sendAction('/api/config', { method: 'PATCH', body: JSON.stringify({ data: config }), headers: { 'Content-Type': 'application/json' } }, false)
+    const headers = { 'Content-Type': 'text/json' }
+    const responseType = 'text'
+    return this.sendAction('/api/config', { method: 'PATCH', data: { data: config }, headers, responseType })
   }
   deleteNamedEntitiesByMentionNorm (project, mentionNorm) {
-    return this.sendAction(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: 'PUT' }, false)
+    return this.sendActionAsText(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: 'PUT' })
   }
   getSource (document) {
-    return this.sendAction(document.url, {}, false)
+    return this.sendAction(document.url, {})
   }
   getStarredDocuments (project) {
     return this.sendAction(`/api/${project}/documents/starred`)
   }
-  starDocuments (project, documents) {
-    return this.sendAction(`/api/${project}/documents/batchUpdate/star`, { method: 'POST', body: JSON.stringify(documents) })
+  starDocuments (project, data) {
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/star`, { method: 'POST', data })
   }
-  unstarDocuments (project, documents) {
-    return this.sendAction(`/api/${project}/documents/batchUpdate/unstar`, { method: 'POST', body: JSON.stringify(documents) })
+  unstarDocuments (project, data) {
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unstar`, { method: 'POST', data })
   }
   getTags (project, documentId) {
     return this.sendAction(`/api/${project}/documents/tags/${documentId}`)
   }
-  tagDocument (project, documentId, routingId, tags) {
-    return this.sendAction(`/api/${project}/documents/tag/${documentId}?routing=${routingId}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
+  tagDocument (project, documentId, routingId, data) {
+    return this.sendActionAsText(`/api/${project}/documents/tag/${documentId}?routing=${routingId}`, { method: 'PUT', data })
   }
-  untagDocument (project, documentId, routingId, tags) {
-    return this.sendAction(`/api/${project}/documents/untag//${documentId}?routing=${routingId}`, { method: 'PUT', body: JSON.stringify(tags) }, false)
+  untagDocument (project, documentId, routingId, data) {
+    return this.sendActionAsText(`/api/${project}/documents/untag//${documentId}?routing=${routingId}`, { method: 'PUT', data })
   }
   tagDocuments (project, docIds, tags) {
-    return this.sendAction(`/api/${project}/documents/batchUpdate/tag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/tag`, { method: 'POST', data: { docIds, tags } })
   }
   untagDocuments (project, docIds, tags) {
-    return this.sendAction(`/api/${project}/documents/batchUpdate/untag`, { method: 'POST', body: JSON.stringify({ docIds, tags }) }, false)
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/untag`, { method: 'POST', data: { docIds, tags } })
   }
   batchSearch (name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published) {
-    const body = new FormData()
-    body.append('name', name)
-    body.append('csvFile', csvFile)
-    body.append('description', description)
-    body.append('phrase_matches', phraseMatch)
-    body.append('fuzziness', fuzziness)
-    map(fileTypes, fileType => body.append('fileTypes', fileType.mime))
-    map(paths, path => body.append('paths', path))
-    body.append('published', published)
-    return this.sendAction(`/api/batch/search/${project}`, { method: 'POST', body }, false)
+    const data = new FormData()
+    data.append('name', name)
+    data.append('csvFile', csvFile)
+    data.append('description', description)
+    data.append('phrase_matches', phraseMatch)
+    data.append('fuzziness', fuzziness)
+    map(fileTypes, fileType => data.append('fileTypes', fileType.mime))
+    map(paths, path => data.append('paths', path))
+    data.append('published', published)
+    return this.sendActionAsText(`/api/batch/search/${project}`, { method: 'POST', data })
   }
   getBatchSearches () {
     return this.sendAction('/api/batch/search')
   }
   getBatchSearchResults (batchId, from = 0, size = 100, queries = [], sort = 'doc_nb', order = 'desc') {
-    return this.sendAction(`/api/batch/search/result/${batchId}`, { method: 'POST', body: JSON.stringify({ from, size, queries, sort, order }) })
+    return this.sendActionAsText(`/api/batch/search/result/${batchId}`, { method: 'POST', data: { from, size, queries, sort, order } })
   }
   deleteBatchSearch (batchId) {
-    return this.sendAction(`/api/batch/search/${batchId}`, { method: 'DELETE' }, false)
+    return this.sendActionAsText(`/api/batch/search/${batchId}`, { method: 'DELETE' })
   }
   deleteBatchSearches () {
-    return this.sendAction('/api/batch/search', { method: 'DELETE' }, false)
+    return this.sendActionAsText('/api/batch/search', { method: 'DELETE' })
   }
   updateBatchSearch (batchId, published) {
-    return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', body: JSON.stringify({ data: { published: published } }) })
+    return this.sendAction(`/api/batch/search/${batchId}`, { method: 'PATCH', data: { data: { published } } })
   }
   static getFullUrl (path) {
     const base = process.env.VUE_APP_DS_HOST || `${window.location.protocol}//${window.location.host}`
@@ -114,12 +116,12 @@ export default class Api {
     return url.href
   }
   isDownloadAllowed (project) {
-    return this.sendAction(`/api/project/isDownloadAllowed/${project}`, {}, false)
+    return this.sendActionAsText(`/api/project/isDownloadAllowed/${project}`)
   }
   retrieveNotes (project) {
     return this.sendAction(replace(`/api/${project}/notes`, '//', '/'))
   }
-  async sendAction (url, config = {}, json = true) {
+  async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })
       return r.data
@@ -127,5 +129,10 @@ export default class Api {
       EventBus.$emit('http::error', error)
       throw error
     }
+  }
+  async sendActionAsText (url, config = {}) {
+    const headers = { 'Content-Type': 'text/plain' }
+    const responseType = 'text'
+    return this.sendAction(url, { headers, responseType, ...config })
   }
 }
