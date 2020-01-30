@@ -189,7 +189,7 @@ export const getters = {
 }
 
 export const mutations = {
-  reset (state, excludedKeys = ['index', 'showFilters', 'layout']) {
+  reset (state, excludedKeys = ['index', 'showFilters', 'layout', 'size', 'sort']) {
     const s = initialState()
     Object.keys(s).forEach(key => {
       if (excludedKeys.indexOf(key) === -1) {

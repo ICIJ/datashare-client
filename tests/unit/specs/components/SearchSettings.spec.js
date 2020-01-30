@@ -12,11 +12,17 @@ const router = new VueRouter()
 describe('SearchSettings.vue', () => {
   const index = toLower('SearchSettings')
   esConnectionHelper(index)
-  let rootWrapper, wrapper
+  let rootWrapper, spy, wrapper
 
   beforeEach(() => {
     wrapper = shallowMount(SearchSettings, { localVue, store, sync: false, mocks: { $t: msg => msg } })
     store.commit('search/reset')
+    spy = jest.spyOn(router, 'push')
+  })
+
+  afterEach(() => {
+    spy.mockClear()
+    store.commit('search/size', 25)
   })
 
   afterAll(() => store.commit('search/reset'))
@@ -31,14 +37,13 @@ describe('SearchSettings.vue', () => {
   })
 
   it('should change the selectedSize via the dropdown', () => {
-    jest.spyOn(router, 'push')
     wrapper = shallowMount(SearchSettings, { localVue, store, router, sync: false, mocks: { $t: msg => msg } })
     rootWrapper = createWrapper(wrapper.vm.$root)
     wrapper.findAll('#input-page-size option').at(3).setSelected()
 
     expect(wrapper.vm.selectedSize).toBe(100)
-    expect(router.push).toBeCalled()
-    expect(router.push).toBeCalledWith(
+    expect(spy).toBeCalledTimes(1)
+    expect(spy).toBeCalledWith(
       { name: 'search', query: { index: '', q: '', size: 100, sort: 'relevance', from: 0, field: 'all' } })
     expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
   })
@@ -49,14 +54,13 @@ describe('SearchSettings.vue', () => {
   })
 
   it('should change the selectedSort via the dropdown', () => {
-    jest.spyOn(router, 'push')
     wrapper = shallowMount(SearchSettings, { localVue, store, router, async: false, mocks: { $t: msg => msg } })
     rootWrapper = createWrapper(wrapper.vm.$root)
     wrapper.findAll('#input-sort option').at(5).setSelected()
 
     expect(wrapper.vm.selectedSort).toBe('sizeLargest')
-    expect(router.push).toBeCalled()
-    expect(router.push).toBeCalledWith(
+    expect(spy).toBeCalledTimes(1)
+    expect(spy).toBeCalledWith(
       { name: 'search', query: { index: '', q: '', size: 25, sort: 'sizeLargest', from: 0, field: 'all' } })
     expect(rootWrapper.emitted('bv::hide::popover')).toHaveLength(1)
   })

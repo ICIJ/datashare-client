@@ -5,11 +5,11 @@ import omit from 'lodash/omit'
 import toLower from 'lodash/toLower'
 
 import Document from '@/api/resources/Document'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
-import NamedEntity from '@/api/resources/NamedEntity'
 import EsDocList from '@/api/resources/EsDocList'
+import NamedEntity from '@/api/resources/NamedEntity'
 import store from '@/store'
+import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('axios')
 
@@ -42,10 +42,13 @@ describe('SearchStore', () => {
 
     await store.dispatch('search/reset')
 
-    expect(omit(store.state.search, ['index', 'isReady', 'facets', 'showFilters', 'response'])).toEqual(omit(initialState, ['index', 'isReady', 'facets', 'showFilters', 'response']))
+    const omittedFields = ['index', 'isReady', 'facets', 'showFilters', 'response', 'size', 'sort']
+    expect(omit(store.state.search, omittedFields)).toEqual(omit(initialState, omittedFields))
     expect(store.state.search.index).toBe(anotherIndex)
     expect(store.state.search.isReady).toBeTruthy()
     expect(find(store.state.search.facets, { name: 'contentType' }).values).toEqual([])
+
+    store.commit('search/size', 25)
   })
 
   it('should not reset the starredDocuments from the facet', async () => {
@@ -263,6 +266,7 @@ describe('SearchStore', () => {
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
     expect(store.state.search.response.hits).toHaveLength(2)
+    store.commit('search/size', 25)
   })
 
   it('should return 3 documents', async () => {
@@ -270,6 +274,7 @@ describe('SearchStore', () => {
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 3 })
     expect(store.state.search.response.hits).toHaveLength(3)
+    store.commit('search/size', 25)
   })
 
   it('should return 1 document (1/3)', async () => {
@@ -277,6 +282,7 @@ describe('SearchStore', () => {
 
     await store.dispatch('search/query', { query: 'document', from: 3, size: 3 })
     expect(store.state.search.response.hits).toHaveLength(1)
+    store.commit('search/size', 25)
   })
 
   it('should return 0 documents in total', async () => {
@@ -289,10 +295,11 @@ describe('SearchStore', () => {
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
     expect(store.state.search.response.total).toEqual(5)
+    store.commit('search/size', 25)
   })
 
   it('should return the default query parameters', () => {
-    expect(store.getters['search/toRouteQuery']).toMatchObject({ index, q: '', size: 25, sort: 'relevance', from: 0 })
+    expect(store.getters['search/toRouteQuery']).toMatchObject({ field: 'all', index, q: '', size: 25, sort: 'relevance', from: 0 })
   })
 
   it('should return an advanced and faceted query parameters', () => {
@@ -303,6 +310,8 @@ describe('SearchStore', () => {
     store.commit('search/addFacetValue', { name: 'contentType', value: 'TXT' })
 
     expect(store.getters['search/toRouteQuery']).toMatchObject({ index: 'another-index', q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[contentType]': ['TXT'] })
+
+    store.commit('search/size', 25)
   })
 
   it('should reset the values of a facet', async () => {
@@ -342,6 +351,7 @@ describe('SearchStore', () => {
       await store.dispatch('search/updateFromRouteQuery', { size: 24 })
 
       expect(store.state.search.size).toBe(24)
+      store.commit('search/size', 25)
     })
 
     it('should set the sort of the store according to the url', async () => {
