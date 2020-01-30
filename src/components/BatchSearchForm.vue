@@ -75,6 +75,7 @@
             </b-form-group>
             <b-form-group
               label-size="sm"
+              class="mb-0"
               :label="fuzzinessLabel"
               :description="fuzzinessDescription">
               <b-form-input
@@ -83,11 +84,11 @@
                 min="0"
                 :max="maxFuzziness"></b-form-input>
             </b-form-group>
-            <div class="help">
+            <p class="help small">
               <a :href="fuzzinessLearnMore" target="_blank" class="text-muted">
                 {{ $t('batchSearch.learnMore') }}
               </a>
-            </div>
+            </p>
             <b-form-group
               label-size="sm"
               :label="$t('batchSearch.fileTypes')">
