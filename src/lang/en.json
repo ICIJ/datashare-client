@@ -319,6 +319,7 @@
     "selectDateRange": "Select a date range"
   },
   "document": {
+    "document": "Document",
     "name": "File name",
     "path": "File path",
     "id": "File ID",

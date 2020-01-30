@@ -106,7 +106,7 @@ export default {
             key: 'path',
             sortBy: 'path',
             sortable: true,
-            label: 'Document',
+            label: this.$t('document.document'),
             class: 'pl-0'
           },
           {
@@ -120,13 +120,13 @@ export default {
             key: 'creationDateHuman',
             sortBy: 'metadata.tika_metadata_creation_date',
             sortable: true,
-            label: 'Creation date'
+            label: this.$t('document.creation_date')
           },
           {
             key: 'contentLength',
             sortBy: 'contentLength',
             sortable: true,
-            label: 'Size',
+            label: this.$t('document.size'),
             formatter (value, name, item) {
               return item.source.contentLength
             }
