@@ -1,7 +1,7 @@
-import FacetDocument from './FilterDocument'
+import FilterDocument from './FilterDocument'
 import Murmur from '@icij/murmur'
 
-export default class FacetPath extends FacetDocument {
+export default class FilterPath extends FilterDocument {
   constructor (name, key, icon, isSearchable) {
     super(name, key, icon, isSearchable, null)
     this.prefix = true

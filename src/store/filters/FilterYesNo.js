@@ -1,6 +1,6 @@
-import FacetText from './FilterText'
+import FilterText from './FilterText'
 
-export default class FacetYesNo extends FacetText {
+export default class FilterYesNo extends FilterText {
   constructor (name, key, icon, isSearchable, labelFun) {
     super(name, key, icon, isSearchable, labelFun)
     this.component = 'FacetYesNo'

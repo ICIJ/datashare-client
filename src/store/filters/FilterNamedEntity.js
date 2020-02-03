@@ -1,4 +1,4 @@
-import FacetType from './FilterType'
+import FilterType from './FilterType'
 import includes from 'lodash/includes'
 
 export const namedEntityCategoryTranslation = {
@@ -7,7 +7,7 @@ export const namedEntityCategoryTranslation = {
   'namedEntityLocation': 'LOCATION'
 }
 
-export default class FacetNamedEntity extends FacetType {
+export default class FacetNamedEntity extends FilterType {
   constructor (name, key, icon, isSearchable, category = 'PERSON') {
     super(name, key, icon, isSearchable, null)
     this.category = category

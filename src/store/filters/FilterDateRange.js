@@ -1,8 +1,8 @@
 import max from 'lodash/max'
 import min from 'lodash/min'
-import FacetDate from './FilterDate'
+import FilterDate from './FilterDate'
 
-export default class FacetDateRange extends FacetDate {
+export default class FilterDateRange extends FilterDate {
   constructor (name, key, icon, isSearchable, labelFun) {
     super(name, key, icon, isSearchable, labelFun)
     this.component = 'FacetDateRange'

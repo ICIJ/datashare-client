@@ -3,7 +3,7 @@ import EsDocList from '@/api/resources/EsDocList'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import settings from '@/utils/settings'
 import { isNarrowScreen } from '@/utils/screen'
-import { FacetText, FacetYesNo, FacetDate, FacetDateRange, FacetPath, FacetNamedEntity } from '@/store/filters'
+import { FilterText, FilterYesNo, FilterDate, FilterDateRange, FilterPath, FilterNamedEntity } from '@/store/filters'
 import { namedEntityCategoryTranslation, starredLabel } from '@/store/facetsStore'
 import Api from '@/api'
 import types from '@/utils/types.json'
@@ -43,17 +43,17 @@ export function initialState () {
     size: 25,
     globalSearch: true,
     facets: [
-      new FacetYesNo('starred', '_id', 'star', false, item => get(starredLabel, item.key, '')),
-      new FacetText('tags', 'tags', 'tags', true),
-      new FacetText('contentType', 'contentType', 'file', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })),
-      new FacetDateRange('creationDate', 'metadata.tika_metadata_creation_date', 'calendar-alt', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key),
-      new FacetText('language', 'language', 'language', false, item => `facet.lang.${item.key}`),
-      new FacetNamedEntity('namedEntityPerson', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityPerson']),
-      new FacetNamedEntity('namedEntityOrganization', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityOrganization']),
-      new FacetNamedEntity('namedEntityLocation', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityLocation']),
-      new FacetPath('path', 'byDirname', 'hdd', false),
-      new FacetText('extractionLevel', 'extractionLevel', 'paperclip', false, item => getExtractionLevelTranslationKey(item.key)),
-      new FacetDate('indexingDate', 'extractionDate', 'calendar-plus', false, item => item.key_as_string)
+      new FilterYesNo('starred', '_id', 'star', false, item => get(starredLabel, item.key, '')),
+      new FilterText('tags', 'tags', 'tags', true),
+      new FilterText('contentType', 'contentType', 'file', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })),
+      new FilterDateRange('creationDate', 'metadata.tika_metadata_creation_date', 'calendar-alt', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key),
+      new FilterText('language', 'language', 'language', false, item => `facet.lang.${item.key}`),
+      new FilterNamedEntity('namedEntityPerson', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityPerson']),
+      new FilterNamedEntity('namedEntityOrganization', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityOrganization']),
+      new FilterNamedEntity('namedEntityLocation', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityLocation']),
+      new FilterPath('path', 'byDirname', 'hdd', false),
+      new FilterText('extractionLevel', 'extractionLevel', 'paperclip', false, item => getExtractionLevelTranslationKey(item.key)),
+      new FilterDate('indexingDate', 'extractionDate', 'calendar-plus', false, item => item.key_as_string)
     ],
     sort: settings.defaultSearchSort,
     field: settings.defaultSearchField,

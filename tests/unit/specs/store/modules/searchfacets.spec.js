@@ -7,7 +7,7 @@ import toLower from 'lodash/toLower'
 import Murmur from '@icij/murmur'
 
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { FacetText } from '@/store/facetsStore'
+import { FilterText } from '@/store/filters'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import store from '@/store'
 
@@ -43,7 +43,7 @@ describe('SearchFacets', () => {
 
       expect(typeof facet).toBe('object')
       expect(facet.key).toBe('language')
-      expect(facet.constructor.name).toBe('FacetText')
+      expect(facet.constructor.name).toBe('FilterText')
     })
 
     it('should not find a "yolo-type" facet', () => {
@@ -52,7 +52,7 @@ describe('SearchFacets', () => {
 
     it('should add a facet', () => {
       const length = store.state.search.facets.length
-      store.commit('search/addFacet', new FacetText('test', 'key', true, null))
+      store.commit('search/addFacet', new FilterText('test', 'key', true, null))
 
       expect(store.state.search.facets).toHaveLength(length + 1)
     })
@@ -64,7 +64,7 @@ describe('SearchFacets', () => {
 
       expect(typeof facet).toBe('object')
       expect(facet.key).toBe('contentType')
-      expect(facet.constructor.name).toBe('FacetText')
+      expect(facet.constructor.name).toBe('FilterText')
     })
 
     it('should find a "contentType" facet using object', () => {
@@ -146,7 +146,7 @@ describe('SearchFacets', () => {
 
       expect(typeof facet).toBe('object')
       expect(facet.key).toBe('byDirname')
-      expect(facet.constructor.name).toBe('FacetPath')
+      expect(facet.constructor.name).toBe('FilterPath')
     })
 
     it('should get no bucket for path aggregation', async () => {
@@ -192,7 +192,7 @@ describe('SearchFacets', () => {
 
       expect(typeof facet).toBe('object')
       expect(facet.key).toBe('extractionDate')
-      expect(facet.constructor.name).toBe('FacetDate')
+      expect(facet.constructor.name).toBe('FilterDate')
     })
 
     it('should return the indexing date buckets', async () => {
@@ -294,7 +294,7 @@ describe('SearchFacets', () => {
 
       expect(typeof facet).toBe('object')
       expect(facet.key).toBe('_id')
-      expect(facet.constructor.name).toBe('FacetYesNo')
+      expect(facet.constructor.name).toBe('FilterYesNo')
       expect(facet.starredDocuments).toEqual([])
     })
   })

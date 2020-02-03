@@ -1,6 +1,6 @@
-import FacetDocument from './FilterDocument'
+import FilterDocument from './FilterDocument'
 
-export default class FacetDate extends FacetDocument {
+export default class FilterDate extends FilterDocument {
   constructor (name, key, icon, isSearchable, labelFun) {
     super(name, key, icon, isSearchable, labelFun)
     this.component = 'FacetDate'

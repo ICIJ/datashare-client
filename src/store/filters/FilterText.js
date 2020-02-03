@@ -1,7 +1,7 @@
 import includes from 'lodash/includes'
 import some from 'lodash/some'
 
-export default class FacetText {
+export default class FilterText {
   constructor (name, key, icon, isSearchable, labelFun, alternativeSearch) {
     this.name = name
     this.key = key
