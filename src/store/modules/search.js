@@ -3,7 +3,8 @@ import EsDocList from '@/api/resources/EsDocList'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import settings from '@/utils/settings'
 import { isNarrowScreen } from '@/utils/screen'
-import { FacetText, FacetYesNo, FacetDate, FacetDateRange, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation, starredLabel } from '@/store/facetsStore'
+import { FacetText, FacetYesNo, FacetDate, FacetDateRange, FacetPath, FacetNamedEntity } from '@/store/filters'
+import { namedEntityCategoryTranslation, starredLabel } from '@/store/facetsStore'
 import Api from '@/api'
 import types from '@/utils/types.json'
 import lucene from 'lucene'
@@ -33,7 +34,7 @@ import toLower from 'lodash/toLower'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
 
-export const datashare = new Api()
+export const api = new Api()
 
 export function initialState () {
   return {
@@ -437,13 +438,13 @@ export const actions = {
   },
   async starDocuments ({ state, commit }, documents) {
     const documentIds = map(documents, 'id')
-    await datashare.starDocuments(state.index, documentIds)
+    await api.starDocuments(state.index, documentIds)
     commit('pushFromStarredDocuments', documentIds)
     commit('setStarredDocuments')
   },
   async unstarDocuments ({ state, commit }, documents) {
     const documentIds = map(documents, 'id')
-    await datashare.unstarDocuments(state.index, documentIds)
+    await api.unstarDocuments(state.index, documentIds)
     commit('removeFromStarredDocuments', documentIds)
     commit('setStarredDocuments')
   },
@@ -456,13 +457,13 @@ export const actions = {
     }
   },
   async getStarredDocuments ({ state, commit }) {
-    const starredDocuments = await datashare.getStarredDocuments(state.index)
+    const starredDocuments = await api.getStarredDocuments(state.index)
     commit('starredDocuments', starredDocuments)
     commit('setStarredDocuments')
   },
   async getIsDownloadAllowed ({ state, commit }) {
     try {
-      await datashare.isDownloadAllowed(state.index)
+      await api.isDownloadAllowed(state.index)
       commit('isDownloadAllowed', true)
     } catch (e) {
       commit('isDownloadAllowed', false)

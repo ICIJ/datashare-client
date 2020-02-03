@@ -1,0 +1,6 @@
+export { default as FacetText } from './FilterText'
+export { default as FacetYesNo } from './FilterYesNo'
+export { default as FacetDate } from './FilterDate'
+export { default as FacetDateRange } from './FilterDateRange'
+export { default as FacetPath } from './FilterPath'
+export { default as FacetNamedEntity } from './FilterNamedEntity'
