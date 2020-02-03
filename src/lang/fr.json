@@ -43,6 +43,7 @@
       "noResults": "Aucun document",
       "on": "sur",
       "perPage": "par page",
+      "sortedByPath": "sorted by path",
       "sort": {
         "sort": "Tri par",
         "relevance": "Pertinence",
@@ -319,6 +320,7 @@
     "selectDateRange": "Sélectionner une période"
   },
   "document": {
+    "document": "Document",
     "name": "Nom du fichier",
     "path": "Chemin du fichier",
     "id": "Identifiant du fichier",
