@@ -56,6 +56,12 @@ $popover-max-width: 480px;
 $popover-box-shadow: 0 20px 40px 10px rgba(black, .2);
 $popover-border-color: white;
 $popover-header-bg: white;
+$popover-bg: black;
+$popover-border-width: 0;
+$popover-border-color: $popover-bg;
+$popover-body-color: white;
+$popover-header-bg: lighten($popover-bg, 5%);
+$popover-header-color: white;
 
 $modal-content-border-width: 0;
 $modal-content-box-shadow-xs: 0 10px 30px 0 rgba(black, .1);
