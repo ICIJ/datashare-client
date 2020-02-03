@@ -43,6 +43,7 @@
       "noResults": "No se han encontrado documentos",
       "on": "en",
       "perPage": "por página",
+      "sortedByPath": "sorted by path",
       "sort": {
         "sort": "Ordenar por",
         "relevance": "Relevancia",
@@ -319,6 +320,7 @@
     "selectDateRange": "Selecciona un intervalo de fechas"
   },
   "document": {
+    "document": "Document",
     "name": "Nombre del archivo",
     "path": "Ruta del archivo",
     "id": "ID de archivo",

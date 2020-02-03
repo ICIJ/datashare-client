@@ -43,6 +43,7 @@
       "noResults": "文書が見つかりません",
       "on": "を表示。総数は",
       "perPage": "ページごと",
+      "sortedByPath": "sorted by path",
       "sort": {
         "sort": "並べ替え",
         "relevance": "関連性",
@@ -319,6 +320,7 @@
     "selectDateRange": "日付範囲を選択"
   },
   "document": {
+    "document": "Document",
     "name": "ファイル名",
     "path": "ファイルパス",
     "id": "ファイルID",
