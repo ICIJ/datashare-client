@@ -10,6 +10,7 @@ const { localVue, store } = App.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('SearchResultsAppliedFilters.vue', () => {
+  jest.setTimeout(1e4)
   let wrapper
 
   beforeEach(() => {

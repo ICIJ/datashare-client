@@ -33,18 +33,20 @@ describe('Config.vue', () => {
 
   it('should load the config on component creation', () => {
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/config') })
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/config')
+    }))
   })
 
   it('should submit the config modifications', () => {
     wrapper.vm.onSubmit()
 
     expect(axios.request).toBeCalledTimes(2)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/config'),
       method: 'PATCH',
-      body: JSON.stringify({ data: {} }),
+      data: { data: {} },
       headers: { 'Content-Type': 'application/json' }
-    })
+    }))
   })
 })

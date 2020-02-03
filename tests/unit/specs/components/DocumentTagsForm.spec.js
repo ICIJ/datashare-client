@@ -85,10 +85,14 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.addTag()
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
       method: 'POST',
-      body: JSON.stringify({ docIds: [id], tags: ['tag_02'] }) })
+      data: {
+        docIds: [id],
+        tags: ['tag_02']
+      }
+    }))
     expect(store.state.document.tags).toHaveLength(2)
     expect(sortBy(store.state.document.tags, ['label'])[0].label).toEqual('tag_01')
     expect(sortBy(store.state.document.tags, ['label'])[1].label).toEqual('tag_02')
@@ -102,10 +106,14 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.addTag()
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
       method: 'POST',
-      body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02', 'tag_03'] }) })
+      data: {
+        docIds: [id],
+        tags: ['tag_01', 'tag_02', 'tag_03']
+      }
+    }))
   })
 
   it('should compact tags to remove empty tags', async () => {
@@ -116,10 +124,14 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.addTag()
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
       method: 'POST',
-      body: JSON.stringify({ docIds: [id], tags: ['tag_01', 'tag_02'] }) })
+      data: {
+        docIds: [id],
+        tags: ['tag_01', 'tag_02']
+      }
+    }))
   })
 
   it('should call API endpoint to remove a tag', async () => {
@@ -129,10 +141,14 @@ describe('DocumentTagsForm.vue', () => {
     await wrapper.vm.deleteTag({ label: 'tag_01' })
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
       method: 'POST',
-      body: JSON.stringify({ docIds: [id], tags: ['tag_01'] }) })
+      data: {
+        docIds: [id],
+        tags: ['tag_01']
+      }
+    }))
   })
 
   it('should emit a facet::refresh event on adding a tag', async () => {

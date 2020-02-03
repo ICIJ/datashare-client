@@ -119,11 +119,14 @@ describe('DocumentStore', () => {
     await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }], tag: 'tag_01 tag_02 tag_03' })
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
       method: 'POST',
-      body: JSON.stringify({ docIds: ['doc_01', 'doc_02'], tags: ['tag_01', 'tag_02', 'tag_03'] })
-    })
+      data: {
+        docIds: ['doc_01', 'doc_02'],
+        tags: ['tag_01', 'tag_02', 'tag_03']
+      }
+    }))
   })
 
   it('should deleteTag from 1 document', async () => {
@@ -136,11 +139,14 @@ describe('DocumentStore', () => {
     await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
       method: 'POST',
-      body: JSON.stringify({ docIds: ['doc_01'], tags: ['tag_01'] })
-    })
+      data: {
+        docIds: ['doc_01'],
+        tags: ['tag_01']
+      }
+    }))
   })
 
   it('should add tags to the store', async () => {

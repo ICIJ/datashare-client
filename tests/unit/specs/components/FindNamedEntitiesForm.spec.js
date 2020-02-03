@@ -30,11 +30,11 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.submitFindNamedEntities()
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/findNames/CORENLP'),
       method: 'POST',
-      body: JSON.stringify({ options: { syncModels: true } })
-    })
+      data: { options: { syncModels: true } }
+    }))
   })
 
   it('should call findNames action with OpenNLP pipeline', () => {
@@ -42,11 +42,11 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.submitFindNamedEntities()
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/findNames/OPENNLP'),
       method: 'POST',
-      body: JSON.stringify({ options: { syncModels: true } })
-    })
+      data: { options: { syncModels: true } }
+    }))
   })
 
   it('should call findNames action with no models synchronization', () => {
@@ -55,11 +55,11 @@ describe('FindNamedEntitiesForm.vue', () => {
     wrapper.vm.submitFindNamedEntities()
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/findNames/CORENLP'),
       method: 'POST',
-      body: JSON.stringify({ options: { syncModels: false } })
-    })
+      data: { options: { syncModels: false } }
+    }))
   })
 
   it('should reset the modal params on submitting the form', async () => {

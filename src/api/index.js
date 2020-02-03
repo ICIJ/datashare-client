@@ -49,7 +49,7 @@ export default class Api {
     })
   }
   setConfig (config) {
-    const headers = { 'Content-Type': 'text/json' }
+    const headers = { 'Content-Type': 'application/json' }
     const responseType = 'text'
     return this.sendAction('/api/config', { method: 'PATCH', data: { data: config }, headers, responseType })
   }

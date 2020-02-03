@@ -31,23 +31,23 @@ describe('BatchSearchStore', () => {
   describe('actions', () => {
     it('should submit the new batchSearch form with complete information', async () => {
       await store.dispatch('batchSearch/onSubmit', { name: 'name', csvFile: 'csvFile', description: 'description', project: 'project', phraseMatch: false, fuzziness: 2, fileTypes: [{ mime: 'pdf' }, { mime: 'csv' }], paths: ['/a/path/to/home', '/another/path'], published: false })
-      const body = new FormData()
-      body.append('name', 'name')
-      body.append('csvFile', 'csvFile')
-      body.append('description', 'description')
-      body.append('phrase_matches', false)
-      body.append('fuzziness', 2)
-      body.append('fileTypes', 'pdf')
-      body.append('fileTypes', 'csv')
-      body.append('paths', '/a/path/to/home')
-      body.append('paths', '/another/path')
-      body.append('published', false)
+      const data = new FormData()
+      data.append('name', 'name')
+      data.append('csvFile', 'csvFile')
+      data.append('description', 'description')
+      data.append('phrase_matches', false)
+      data.append('fuzziness', 2)
+      data.append('fileTypes', 'pdf')
+      data.append('fileTypes', 'csv')
+      data.append('paths', '/a/path/to/home')
+      data.append('paths', '/another/path')
+      data.append('published', false)
       expect(axios.request).toBeCalledTimes(2)
-      expect(axios.request).toBeCalledWith({
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl('/api/batch/search/project'),
         method: 'POST',
-        body
-      })
+        data
+      }))
       expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/batch/search') })
     })
 
@@ -70,10 +70,10 @@ describe('BatchSearchStore', () => {
       await store.dispatch('batchSearch/deleteBatchSearch', { batchId: 'batchSearch_01' })
 
       expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith({
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl('/api/batch/search/batchSearch_01'),
         method: 'DELETE'
-      })
+      }))
       expect(store.state.batchSearch.batchSearches).toEqual(['batchSearch_02', 'batchSearch_03'])
     })
 
@@ -83,10 +83,10 @@ describe('BatchSearchStore', () => {
       await store.dispatch('batchSearch/deleteBatchSearches')
 
       expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith({
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl('/api/batch/search'),
         method: 'DELETE'
-      })
+      }))
       expect(store.state.batchSearch.batchSearches).toEqual([])
     })
   })

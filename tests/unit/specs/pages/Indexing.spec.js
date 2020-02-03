@@ -30,7 +30,9 @@ describe('Indexing.vue', () => {
     await Indexing.beforeRouteEnter(undefined, undefined, jest.fn())
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/task/all') })
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/task/all')
+    }))
     expect(store.state.indexing.pollHandle).not.toBeNull()
 
     Indexing.beforeRouteLeave(undefined, undefined, jest.fn())
@@ -102,10 +104,10 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-stop-pending-tasks').trigger('click')
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/stopAll'),
       method: 'PUT'
-    })
+    }))
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
@@ -117,11 +119,10 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-delete-done-tasks').trigger('click')
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/clean'),
-      method: 'POST',
-      body: '{}'
-    })
+      method: 'POST'
+    }))
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 
@@ -144,10 +145,10 @@ describe('Indexing.vue', () => {
     wrapper.find('.btn-stop-task').trigger('click')
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/stop/' + encodeURIComponent('foo.bar@123')),
       method: 'PUT'
-    })
+    }))
     expect(wrapper.vm.tasks.length).toEqual(0)
   })
 

@@ -27,11 +27,16 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.submitExtract()
 
     expect(axios.request).toHaveBeenCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
       method: 'POST',
-      body: JSON.stringify({ options: { ocr: false, filter: true } })
-    })
+      data: {
+        options: {
+          ocr: false,
+          filter: true
+        }
+      }
+    }))
   })
 
   it('should call extract action with OCR option', () => {
@@ -39,11 +44,16 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.submitExtract()
 
     expect(axios.request).toHaveBeenCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
       method: 'POST',
-      body: JSON.stringify({ options: { ocr: true, filter: true } })
-    })
+      data: {
+        options: {
+          ocr: true,
+          filter: true
+        }
+      }
+    }))
   })
 
   it('should reset the modal params on submitting the form', async () => {

@@ -88,7 +88,9 @@ describe('IndexSelector.vue', () => {
       await wrapper.vm.select(anotherIndex)
 
       expect(axios.request).toBeCalledTimes(2)
-      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/project/isDownloadAllowed/${anotherIndex}`) })
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl(`/api/project/isDownloadAllowed/${anotherIndex}`)
+      }))
     })
 
     it('should refresh the route on index change', async () => {

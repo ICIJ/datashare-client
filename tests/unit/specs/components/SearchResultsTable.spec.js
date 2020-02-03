@@ -53,10 +53,10 @@ describe('SearchResultsTable.vue', () => {
     wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/star`),
       method: 'POST',
-      body: JSON.stringify(['document_01', 'document_02'])
-    })
+      data: ['document_01', 'document_02']
+    }))
   })
 })

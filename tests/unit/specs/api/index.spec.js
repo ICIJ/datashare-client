@@ -116,21 +116,25 @@ describe('Datashare backend client', () => {
     const published = true
     json = await api.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
 
-    const body = new FormData()
-    body.append('name', name)
-    body.append('csvFile', csvFile)
-    body.append('description', description)
-    body.append('phrase_matches', phraseMatch)
-    body.append('fuzziness', fuzziness)
-    body.append('fileTypes', 'application/pdf')
-    body.append('fileTypes', 'text/plain')
-    body.append('paths', 'one')
-    body.append('paths', 'or')
-    body.append('paths', 'two')
-    body.append('paths', 'paths')
-    body.append('published', published)
+    const data = new FormData()
+    data.append('name', name)
+    data.append('csvFile', csvFile)
+    data.append('description', description)
+    data.append('phrase_matches', phraseMatch)
+    data.append('fuzziness', fuzziness)
+    data.append('fileTypes', 'application/pdf')
+    data.append('fileTypes', 'text/plain')
+    data.append('paths', 'one')
+    data.append('paths', 'or')
+    data.append('paths', 'two')
+    data.append('paths', 'paths')
+    data.append('published', published)
     expect(json).toEqual({})
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/batch/search/project'), method: 'POST', body })
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/batch/search/project'),
+      method: 'POST',
+      data
+    }))
   })
 
   it('should return backend response to getBatchSearches', async () => {

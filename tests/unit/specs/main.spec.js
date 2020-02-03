@@ -18,8 +18,8 @@ describe('main', () => {
   })
 
   it('should instantiate Vue', async () => {
-    const { app, vm } = createApp(createLocalVue())
-    await app.ready
+    const app = createApp(createLocalVue())
+    const vm = await app.ready.then(() => app.mount())
     expect(vm).toBeInstanceOf(Vue)
     expect(vm.$router).toBeDefined()
     expect(vm.$store).toBeDefined()
@@ -27,15 +27,16 @@ describe('main', () => {
 
   it('should set the config', async () => {
     axios.request.mockReturnValue({ data: { userProjects: ['first-index'], key: 'value' } })
-    const { app, vm } = createApp(createLocalVue())
-    await app.ready
+    const app = createApp(createLocalVue())
+    const vm = await app.ready.then(() => app.mount())
     expect(vm.$config).toBeDefined()
     expect(vm.$config.get('userProjects')).toEqual(['first-index'])
     expect(vm.$config.get('key')).toEqual('value')
   })
 
-  it('should find several hooked components by their target name', () => {
-    const { app } = createApp(createLocalVue())
+  it('should find several hooked components by their target name', async () => {
+    const app = createApp(createLocalVue())
+    await app.ready.then(() => app.mount())
     app.resetHooks()
     app.registerHook({ target: 'foo' })
     app.registerHook({ target: 'baz' })
@@ -43,8 +44,9 @@ describe('main', () => {
     expect(app.store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(2)
   })
 
-  it('should unregister all components on a hook', () => {
-    const { app } = createApp(createLocalVue())
+  it('should unregister all components on a hook', async () => {
+    const app = createApp(createLocalVue())
+    await app.ready.then(() => app.mount())
     app.resetHooks()
     app.registerHook({ target: 'foo' })
     app.registerHook({ target: 'baz' })

@@ -36,21 +36,22 @@ describe('IndexingStore', () => {
     await store.dispatch('indexing/submitExtract')
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
       method: 'POST',
-      body: JSON.stringify({ options: { ocr: false, filter: true } })
-    })
+      data: { options: { ocr: false, filter: true } }
+    }))
   })
 
   it('should execute a default find named entities action', async () => {
     await store.dispatch('indexing/submitFindNamedEntities')
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/findNames/CORENLP'),
       method: 'POST',
-      body: JSON.stringify({ options: { syncModels: true } }) })
+      data: { options: { syncModels: true } }
+    }))
   })
 
   it('should stop pending tasks', async () => {
@@ -61,9 +62,10 @@ describe('IndexingStore', () => {
 
     expect(store.state.indexing.tasks).toHaveLength(0)
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/stopAll'),
-      method: 'PUT' })
+      method: 'PUT'
+    }))
   })
 
   it('should stop the task named 456', async () => {
@@ -75,9 +77,10 @@ describe('IndexingStore', () => {
 
     expect(store.state.indexing.tasks).toHaveLength(1)
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/task/stop/${encodeURIComponent('foo.bar@123')}`),
-      method: 'PUT' })
+      method: 'PUT'
+    }))
   })
 
   it('should delete done tasks', async () => {
@@ -88,10 +91,10 @@ describe('IndexingStore', () => {
 
     expect(store.state.indexing.tasks).toHaveLength(0)
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/clean'),
-      method: 'POST',
-      body: '{}' })
+      method: 'POST'
+    }))
   })
 
   it('should stop polling jobs', async () => {
@@ -124,8 +127,9 @@ describe('IndexingStore', () => {
     await store.dispatch('indexing/deleteAll')
 
     expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/project/${index}`),
-      method: 'DELETE' })
+      method: 'DELETE'
+    }))
   })
 })
