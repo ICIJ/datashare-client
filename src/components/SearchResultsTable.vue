@@ -100,6 +100,7 @@ export default {
           {
             key: 'relevance',
             label: '#',
+            headerTitle: 'relevance',
             class: 'pr-1'
           },
           {
@@ -112,6 +113,7 @@ export default {
           {
             key: 'highlight',
             label: '',
+            headerTitle: 'highlight',
             formatter (value) {
               return value ? value.content.join(' [...] ') : ''
             }
@@ -134,6 +136,7 @@ export default {
           {
             key: 'actions',
             label: '',
+            headerTitle: 'actions',
             class: 'search-results-table__items__row__actions'
           }
         ]
