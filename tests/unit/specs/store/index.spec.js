@@ -5,8 +5,8 @@ describe('store', () => {
     expect(store).toBeInstanceOf(Object)
   })
 
-  it('should be in strict mode', () => {
-    expect(store.strict).toBeTruthy()
+  it('shouldn\'t be in strict mode', () => {
+    expect(store.strict).toBeFalsy()
   })
 
   it('should define a batchSearch module', () => {

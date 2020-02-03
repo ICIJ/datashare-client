@@ -2,17 +2,20 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { setCookie, removeCookie } from 'tiny-cookie'
 
 import { App } from '@/main'
-import { jsonResp } from 'tests/unit/tests_utils'
 
-const { localVue, router, auth } = App.init(createLocalVue()).useAll()
+jest.mock('axios', () => {
+  return {
+    get: jest.fn().mockReturnValue({ data: {}, status: 401 })
+  }
+})
+
+const { localVue, router } = App.init(createLocalVue()).useAll()
 
 describe('router', () => {
   let wrapper
 
   beforeAll(() => {
     wrapper = shallowMount({ template: '<router-view />' }, { localVue, router })
-    jest.spyOn(auth, 'fetch')
-    auth.fetch.mockReturnValue(jsonResp({}, 401))
   })
 
   beforeEach(() => wrapper.vm.$router.push('/').catch(jest.fn()))

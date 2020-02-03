@@ -5,10 +5,6 @@ import replace from 'lodash/replace'
 import { EventBus } from '@/utils/event-bus'
 
 export default class Api {
-  constructor () {
-    // Build-in fetch method must never be called by an object other than Window
-    this.fetch = (...args) => window.fetch(...args)
-  }
   index (options) {
     return this.sendActionAsText(`/api/task/batchUpdate/index/file`, { method: 'POST', data: { options } })
   }

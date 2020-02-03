@@ -2,10 +2,8 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { App } from '@/main'
-import { datashare } from '@/store/modules/search'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
-import { jsonResp } from 'tests/unit/tests_utils'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
@@ -21,11 +19,7 @@ describe('SearchResultsHeader.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsHeader, { localVue, store, mocks: { $t: msg => msg, $tc: msg => msg, $n: msg => msg } })
     store.commit('search/reset')
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
   })
-
-  afterAll(() => datashare.fetch.mockRestore())
 
   describe('progress', () => {
     it('should display one document', async () => {

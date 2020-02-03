@@ -7,7 +7,8 @@ import ExtractingForm from '@/components/ExtractingForm'
 
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: {} })
+    request: jest.fn().mockResolvedValue({ data: {} }),
+    get: jest.fn().mockReturnValue({ data: {}, status: 401 })
   }
 })
 

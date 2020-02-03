@@ -2,7 +2,7 @@ import { getField, updateField } from 'vuex-map-fields'
 import Api from '@/api'
 import remove from 'lodash/remove'
 
-export const datashare = new Api()
+export const api = new Api()
 
 export function initialState () {
   return {
@@ -60,41 +60,41 @@ export const mutations = {
 
 export const actions = {
   submitExtract ({ state }) {
-    datashare.index({ ocr: state.form.ocr, filter: state.form.filter })
+    api.index({ ocr: state.form.ocr, filter: state.form.filter })
   },
   runBatchSearch () {
-    datashare.runBatchSearch()
+    api.runBatchSearch()
   },
   submitFindNamedEntities ({ state }) {
     switch (state.form.pipeline) {
       case 'corenlp':
-        datashare.findNames('CORENLP', { syncModels: !state.form.offline })
+        api.findNames('CORENLP', { syncModels: !state.form.offline })
         break
       case 'opennlp':
-        datashare.findNames('OPENNLP', { syncModels: !state.form.offline })
+        api.findNames('OPENNLP', { syncModels: !state.form.offline })
         break
       case 'mitie':
-        datashare.findNames('MITIE', { syncModels: !state.form.offline })
+        api.findNames('MITIE', { syncModels: !state.form.offline })
         break
       case 'ixapipe':
-        datashare.findNames('IXAPIPE', { syncModels: !state.form.offline })
+        api.findNames('IXAPIPE', { syncModels: !state.form.offline })
         break
       case 'email':
-        datashare.findNames('EMAIL', { syncModels: false })
+        api.findNames('EMAIL', { syncModels: false })
         break
     }
   },
   stopPendingTasks ({ commit }) {
-    datashare.stopPendingTasks().then(commit('stopPendingTasks'))
+    api.stopPendingTasks().then(commit('stopPendingTasks'))
   },
   stopTask ({ commit }, name) {
-    datashare.stopTask(name).then(commit('stopTask', name))
+    api.stopTask(name).then(commit('stopTask', name))
   },
   deleteDoneTasks ({ commit }) {
-    datashare.deleteDoneTasks().then(commit('deleteDoneTasks'))
+    api.deleteDoneTasks().then(commit('deleteDoneTasks'))
   },
   loadTasks ({ commit }) {
-    return datashare.getTasks()
+    return api.getTasks()
       .then(raw => {
         commit('updateTasks', raw)
         return raw
@@ -114,7 +114,7 @@ export const actions = {
     commit('resetExtractForm')
   },
   deleteAll ({ rootState }) {
-    return datashare.deleteAll(rootState.search.index)
+    return api.deleteAll(rootState.search.index)
   }
 }
 

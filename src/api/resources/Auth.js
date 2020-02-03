@@ -1,4 +1,6 @@
+import axios from 'axios'
 import get from 'lodash/get'
+
 import Api from '@/api'
 import { getCookie } from 'tiny-cookie'
 
@@ -28,13 +30,15 @@ export default class Auth {
   }
 
   async _getBasicAuthUserName () {
-    const r = await this.fetch(Api.getFullUrl('/api/user'))
+    const r = await axios.get(Api.getFullUrl('/api/user'))
     if (r.status === 200) {
       setTimeout(() => this.reset(), 43200 * 1000)
-      const data = await r.json()
+      const { data } = r
       return data.uid
     }
-    if (r.status === 401) return null
+    if (r.status === 401) {
+      return null
+    }
     throw new Error(`${r.status} ${r.statusText}`)
   }
 

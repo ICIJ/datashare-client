@@ -17,7 +17,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: { batchSearch, config, document, documentNotes, hooks, indexing, search, treeView, userHistory },
-  strict: process.env.NODE_ENV !== 'production',
+  strict: process.env.NODE_ENV === 'development',
   plugins: [
     createPersistedState({
       paths: ['userHistory', 'search'],

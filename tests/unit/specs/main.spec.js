@@ -6,7 +6,8 @@ import { createApp } from '@/main'
 
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: { userProjects: ['first-index'] } })
+    request: jest.fn().mockResolvedValue({ data: { userProjects: ['first-index'] } }),
+    get: jest.fn().mockReturnValue({ data: {}, status: 401 })
   }
 })
 

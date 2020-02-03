@@ -3,8 +3,6 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
 import { App } from '@/main'
-import { datashare } from '@/store/modules/search'
-import { jsonResp } from 'tests/unit/tests_utils'
 import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
@@ -13,20 +11,8 @@ const router = new VueRouter()
 describe('SearchResultsAppliedFilter.vue', () => {
   let wrapper
 
-  beforeAll(() => {
-    window.fetch = jest.fn()
-    window.fetch.mockReturnValue(jsonResp({ userProjects: [] }))
-  })
-
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsAppliedFilter, { localVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: false } } })
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
-  })
-
-  afterAll(() => {
-    window.fetch.mockRestore()
-    datashare.fetch.mockRestore()
   })
 
   describe('displays applied filter', () => {

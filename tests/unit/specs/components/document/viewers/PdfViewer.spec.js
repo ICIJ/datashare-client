@@ -1,5 +1,4 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-
 import { responseWithArrayBuffer } from 'tests/unit/tests_utils'
 import { App } from '@/main'
 import PdfViewer from '@/components/document/viewers/PdfViewer'

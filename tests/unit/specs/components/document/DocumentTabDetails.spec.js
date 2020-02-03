@@ -3,11 +3,9 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
 import { App } from '@/main'
-import { datashare } from '@/store/modules/document'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonResp } from 'tests/unit/tests_utils'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
@@ -18,15 +16,9 @@ describe('DocumentTabDetails.vue', () => {
   const id = 'document'
   let wrapper
 
-  beforeEach(() => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp([]))
-  })
-
   afterEach(() => {
     store.commit('document/reset')
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
-    datashare.fetch.mockRestore()
   })
 
   it('should display document path with config.mountedDataDir', async () => {

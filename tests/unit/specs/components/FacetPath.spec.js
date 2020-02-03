@@ -4,11 +4,9 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
 import { App } from '@/main'
-import { datashare } from '@/store/modules/search'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FacetPath from '@/components/FacetPath'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonResp } from 'tests/unit/tests_utils'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
@@ -30,12 +28,8 @@ describe('FacetPath.vue', () => {
   })
 
   beforeEach(() => {
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
     store.commit('search/setGlobalSearch', false)
   })
-
-  afterAll(() => datashare.fetch.mockRestore())
 
   it('should display an empty tree', async () => {
     await wrapper.vm.root.aggregate()

@@ -2,8 +2,6 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
 import { App } from '@/main'
-import { datashare } from '@/store/modules/search'
-import { jsonResp } from 'tests/unit/tests_utils'
 import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
@@ -15,13 +13,9 @@ describe('SearchResultsAppliedFilters.vue', () => {
 
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsAppliedFilters, { localVue, store, mocks: { $t: msg => msg, $te: msg => msg } })
-    jest.spyOn(datashare, 'fetch')
-    datashare.fetch.mockReturnValue(jsonResp())
   })
 
   afterEach(() => store.dispatch('search/reset'))
-
-  afterAll(() => datashare.fetch.mockRestore())
 
   describe('displays applied filters', () => {
     it('should display 2 applied filters', async () => {
