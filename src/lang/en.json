@@ -43,6 +43,7 @@
       "noResults": "No documents found",
       "on": "on",
       "perPage": "per page",
+      "sortedByPath": "sorted by path",
       "sort": {
         "sort": "Sort by",
         "relevance": "Relevance",

@@ -92,57 +92,6 @@ export default {
       isBusy: false
     }
   },
-  props: {
-    fields: {
-      type: Array,
-      default () {
-        return [
-          {
-            key: 'relevance',
-            label: '#',
-            headerTitle: 'relevance',
-            class: 'pr-1'
-          },
-          {
-            key: 'path',
-            sortBy: 'path',
-            sortable: true,
-            label: this.$t('document.document'),
-            class: 'pl-0'
-          },
-          {
-            key: 'highlight',
-            label: '',
-            headerTitle: 'highlight',
-            formatter (value) {
-              return value ? value.content.join(' [...] ') : ''
-            }
-          },
-          {
-            key: 'creationDateHuman',
-            sortBy: 'metadata.tika_metadata_creation_date',
-            sortable: true,
-            label: this.$t('document.creation_date')
-          },
-          {
-            key: 'contentLength',
-            sortBy: 'contentLength',
-            sortable: true,
-            label: this.$t('document.size'),
-            formatter (value, name, item) {
-              return item.source.contentLength
-            }
-          },
-          {
-            key: 'actions',
-            label: '',
-            headerTitle: 'actions',
-            class: 'search-results-table__items__row__actions'
-          }
-        ]
-      }
-    }
-  },
   computed: {
     ...mapState('search', ['query', 'response']),
     ...mapState('search', ['isDownloadAllowed']),
@@ -183,6 +132,52 @@ export default {
       set () {
         return null
       }
+    },
+    fields () {
+      return [
+        {
+          key: 'relevance',
+          label: '#',
+          headerTitle: 'relevance',
+          class: 'pr-1'
+        },
+        {
+          key: 'path',
+          sortBy: 'path',
+          sortable: true,
+          label: this.$t('document.document') + (this.$store.getters['search/sortBy'].field === 'path' ? ` (${this.$t('search.results.sortedByPath')})` : ''),
+          class: 'pl-0'
+        },
+        {
+          key: 'highlight',
+          label: '',
+          headerTitle: 'highlight',
+          formatter (value) {
+            return value ? value.content.join(' [...] ') : ''
+          }
+        },
+        {
+          key: 'creationDateHuman',
+          sortBy: 'metadata.tika_metadata_creation_date',
+          sortable: true,
+          label: this.$t('document.creation_date')
+        },
+        {
+          key: 'contentLength',
+          sortBy: 'contentLength',
+          sortable: true,
+          label: this.$t('document.size'),
+          formatter (value, name, item) {
+            return item.source.contentLength
+          }
+        },
+        {
+          key: 'actions',
+          label: '',
+          headerTitle: 'actions',
+          class: 'search-results-table__items__row__actions'
+        }
+      ]
     }
   },
   methods: {
