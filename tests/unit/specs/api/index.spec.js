@@ -75,9 +75,8 @@ describe('Datashare backend client', () => {
     } catch (error) {
       expect(error.response.status).toBe(401)
     }
-    expect(axios.request).toBeCalledTimes(2)
-    expect(mockCallback).toBeCalledTimes(2)
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/config') })
+    expect(axios.request).toBeCalledTimes(1)
+    expect(mockCallback).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/config') })
 
     axios.request.mockResolvedValue({ data: {} })
