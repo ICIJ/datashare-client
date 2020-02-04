@@ -5,13 +5,13 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "node --max_old_space_size=4096 node_modules/@vue/cli-service/bin/vue-cli-service.js build",
-    "lint": "vue-cli-service lint",
     "test:unit": "TEST_MODE=unit vue-cli-service test:unit --testPathPattern=/unit/ --maxWorkers=5",
-    "test:unit:majestic": "majestic --noOpen",
-    "test:unit:watch": "TEST_MODE=unit vue-cli-service test:unit --testPathPattern=/unit/ --watch",
-    "test:integration": "TEST_MODE=integration vue-cli-service test:unit --testPathPattern=/integration/",
     "test:e2e": "vue-cli-service test:e2e",
-    "test": "yarn test:unit && yarn test:integration && yarn test:e2e"
+    "lint": "vue-cli-service lint",
+    "test": "yarn test:unit && yarn test:integration && yarn test:e2e",
+    "test:integration": "TEST_MODE=integration vue-cli-service test:unit --testPathPattern=/integration/",
+    "test:unit:majestic": "majestic --noOpen",
+    "test:unit:watch": "TEST_MODE=unit vue-cli-service test:unit --testPathPattern=/unit/ --watch"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.4",
@@ -25,6 +25,7 @@
     "bootstrap": ">=4.3.1",
     "bootstrap-vue": "2.0.3",
     "cheerio": "^1.0.0-rc.3",
+    "core-js": "^3.4.4",
     "elasticsearch-browser": "^16.1.1",
     "es6-promise": "^4.2.8",
     "fuse.js": "^3.4.5",
@@ -56,17 +57,20 @@
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
-    "@vue/cli-plugin-babel": "^3.11.0",
-    "@vue/cli-plugin-e2e-nightwatch": "^3.11.0",
-    "@vue/cli-plugin-eslint": "^3.11.0",
-    "@vue/cli-plugin-unit-jest": "^3.11.0",
-    "@vue/cli-service": "^3.11.0",
+    "@vue/cli-plugin-babel": "^4.1.2",
+    "@vue/cli-plugin-e2e-nightwatch": "^4.1.2",
+    "@vue/cli-plugin-eslint": "^4.1.2",
+    "@vue/cli-plugin-unit-jest": "^4.1.2",
+    "@vue/cli-service": "^4.1.2",
     "@vue/eslint-config-standard": "^4.0.0",
     "@vue/test-utils": "^1.0.0-beta.29",
     "babel-core": "7.0.0-bridge.0",
+    "babel-eslint": "^10.0.3",
     "babel-jest": "^25.1.0",
     "babel-plugin-transform-require-context": "^0.1.1",
     "canvas": "^2.6.0",
+    "eslint": "^5.16.0",
+    "eslint-plugin-vue": "^6.1.2",
     "flush-promises": "^1.0.2",
     "front-matter": "^3.0.2",
     "git-revision-webpack-plugin": "^3.0.4",
@@ -108,26 +112,24 @@
       "autoprefixer": {}
     }
   },
-  "engines": {
-    "node": ">= 6.0.0",
-    "npm": ">= 3.0.0"
-  },
   "browserslist": [
     "> 1%",
     "last 2 versions",
     "not ie <= 8"
   ],
+  "engines": {
+    "node": ">= 6.0.0",
+    "npm": ">= 3.0.0"
+  },
   "gitHooks": {
     "pre-commit": "lint-staged"
   },
   "lint-staged": {
     "*.js": [
-      "vue-cli-service lint",
-      "git add"
+      "vue-cli-service lint"
     ],
     "*.vue": [
-      "vue-cli-service lint",
-      "git add"
+      "vue-cli-service lint"
     ]
   },
   "majestic": {
