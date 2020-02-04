@@ -30,16 +30,19 @@ export default class Auth {
   }
 
   async _getBasicAuthUserName () {
-    const r = await axios.get(Api.getFullUrl('/api/user'))
-    if (r.status === 200) {
-      setTimeout(() => this.reset(), 43200 * 1000)
-      const { data } = r
-      return data.uid
-    }
-    if (r.status === 401) {
-      return null
-    }
-    throw new Error(`${r.status} ${r.statusText}`)
+    return axios.get(Api.getFullUrl('/api/user'))
+      .then(response => {
+        setTimeout(() => this.reset(), 43200 * 1000)
+        const { data } = response
+        return data.uid
+      })
+      .catch(error => {
+        if (error && error.response && error.response.status === 401) {
+          return null
+        } else {
+          throw new Error(`${error.response.status} ${error.response.statusText}`)
+        }
+      })
   }
 
   _getCookieUsername () {

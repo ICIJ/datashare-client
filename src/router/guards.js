@@ -21,7 +21,7 @@ export default ({ router, auth, store }) => {
   })
 
   EventBus.$on('http::error', err => {
-    if (err && err.status === 401) {
+    if (err && err.response && err.response.status === 401) {
       router.push('/login')
     }
   })

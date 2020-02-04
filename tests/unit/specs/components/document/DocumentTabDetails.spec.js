@@ -7,6 +7,8 @@ import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
+jest.mock('axios')
+
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
 describe('DocumentTabDetails.vue', () => {
@@ -28,7 +30,7 @@ describe('DocumentTabDetails.vue', () => {
     await store.dispatch('document/get', { id, index })
     wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
-    expect(wrapper.find('.document__content__path').text()).toEqual('C:/Users/ds/docs/foo.txt')
+    expect(wrapper.find('.document__content__path').text()).toBe('C:/Users/ds/docs/foo.txt')
   })
 
   it('should display the document type', async () => {
@@ -36,7 +38,7 @@ describe('DocumentTabDetails.vue', () => {
     await store.dispatch('document/get', { id, index })
     wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
 
-    expect(wrapper.find('.document__content__content-type').text()).toEqual('Portable Document Format (PDF)')
+    expect(wrapper.find('.document__content__content-type').text()).toBe('Portable Document Format (PDF)')
   })
 
   it('should display a child document', async () => {
@@ -46,9 +48,9 @@ describe('DocumentTabDetails.vue', () => {
     await store.dispatch('document/get', { index, id, routing: parentDocument }).then(() => store.dispatch('document/getParent'))
     wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
 
-    expect(wrapper.find('.document__content__basename').text()).toEqual(id)
-    expect(wrapper.find('.document__content__tree-level').text()).toEqual('filter.level.level01')
-    expect(wrapper.find('.document__content__parent').text()).toEqual(parentDocument)
+    expect(wrapper.find('.document__content__basename').text()).toBe(id)
+    expect(wrapper.find('.document__content__tree-level').text()).toBe('filter.level.level01')
+    expect(wrapper.find('.document__content__parent').text()).toBe(parentDocument)
   })
 
   it('should not display the creation date if it is missing', async () => {

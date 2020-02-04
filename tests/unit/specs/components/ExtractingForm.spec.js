@@ -1,14 +1,14 @@
 import axios from 'axios'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
 import Api from '@/api'
 import ExtractingForm from '@/components/ExtractingForm'
+import { App } from '@/main'
 
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: {} }),
-    get: jest.fn().mockReturnValue({ data: {}, status: 401 })
+    get: jest.fn().mockResolvedValue({ data: {} }),
+    request: jest.fn().mockResolvedValue({ data: {} })
   }
 })
 
@@ -27,7 +27,7 @@ describe('ExtractingForm.vue', () => {
   it('should call extract action without OCR option, by default', () => {
     wrapper.vm.submitExtract()
 
-    expect(axios.request).toHaveBeenCalledTimes(1)
+    expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
       method: 'POST',
@@ -44,7 +44,7 @@ describe('ExtractingForm.vue', () => {
     wrapper.vm.ocr = true
     wrapper.vm.submitExtract()
 
-    expect(axios.request).toHaveBeenCalledTimes(1)
+    expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchUpdate/index/file'),
       method: 'POST',
@@ -60,7 +60,6 @@ describe('ExtractingForm.vue', () => {
   it('should reset the modal params on submitting the form', async () => {
     wrapper.vm.ocr = true
     await wrapper.vm.submitExtract()
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.ocr).toBeFalsy()
   })

@@ -1,5 +1,4 @@
 import axios from 'axios'
-import assign from 'lodash/assign'
 
 import Api from '@/api'
 import { EventBus } from '@/utils/event-bus'
@@ -68,7 +67,7 @@ describe('Datashare backend client', () => {
   })
 
   it('should throw a 401 if getConfig return a error', async () => {
-    axios.request.mockImplementation(() => { throw assign(new Error(), { response: { status: 401 } }) })
+    axios.request.mockRejectedValue({ response: { status: 401 } })
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
     try {
@@ -80,7 +79,8 @@ describe('Datashare backend client', () => {
     expect(mockCallback).toBeCalledTimes(2)
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/config') })
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/config') })
-    axios.request.mockImplementation(jest.fn().mockResolvedValue({ data: {} }))
+
+    axios.request.mockResolvedValue({ data: {} })
   })
 
   it('should return backend response to setConfig', async () => {
