@@ -1,15 +1,15 @@
 import Api from '@/api'
 
-export const datashare = new Api()
+export const api = new Api()
 
 export const actions = {
   getConfig () {
     try {
-      return datashare.getConfig()
+      return api.getConfig()
     } catch (_) {}
   },
   onSubmit (state, config) {
-    return datashare.setConfig(config)
+    return api.setConfig(config)
   }
 }
 
