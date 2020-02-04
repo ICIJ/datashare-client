@@ -70,9 +70,13 @@ Export your spreadsheet in a CSV format:
 
 **Important: Use the UTF-8 encoding.**
 
+* **LibreOffice Calc**: it uses UTF-8 by default. If not, go to LibreOffice menu &gt; Preferences &gt; Load/Save &gt; HTML Compatibility and make sur the character set is 'Unicode \(UTF-8\)':
+
+![](../.gitbook/assets/screenshot-2020-02-04-at-22.00.07.png)
+
 * **Microsoft Excel**: if it is not set by default, select "CSV UTF-8" as one of the formats, [as explained here](https://answers.microsoft.com/en-us/msoffice/forum/msoffice_excel-mso_win10-mso_365hp/save-as-csv-with-utf-8-encoding/ff94943c-db5b-42c3-8905-f86d3d8d52c2).
 * **Google Sheets**: it uses UTF-8 by default. Just click "Export to" and "CSV".
-* **LibreOffice Calc**
+* **Other spreadsheet softwares:** please refer to your software's user guide.
 
 ## Launch your batch search
 
