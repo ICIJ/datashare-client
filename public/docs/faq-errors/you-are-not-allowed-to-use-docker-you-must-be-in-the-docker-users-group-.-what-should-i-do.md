@@ -14,7 +14,7 @@ It means that you are on **Windows**.
 
 ![](../.gitbook/assets/screenshot-12.png)
 
-* If you are not in 'docker-users', go to '**Users**' on the left facet and add you in the '**docker-users' group** by clicking on you and '**Add...'**:
+* If you are not in 'docker-users', go to '**Users**' on the left filter and add you in the '**docker-users' group** by clicking on you and '**Add...'**:
 
 ![](../.gitbook/assets/screenshot-13.png)
 
