@@ -49,14 +49,14 @@ export default {
       this.$set(this, 'tag', '')
       this.$set(this, 'existingTags', [])
       this.$set(this, 'updatingTags', false)
-      delay(facetName => this.$root.$emit('facet::refresh', facetName), settings.waitForEsAnswer, 'tags')
+      delay(filterName => this.$root.$emit('filter::refresh', filterName), settings.waitForEsAnswer, 'tags')
       // Feedback only when we are not displaying tags
       if (!this.displayTags) this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
     },
     async deleteTag (tag) {
       this.$set(this, 'updatingTags', true)
       await this.$store.dispatch('document/deleteTag', { documents: this.documents, tag })
-      this.$root.$emit('facet::delete', 'tags', tag)
+      this.$root.$emit('filter::delete', 'tags', tag)
       this.$set(this, 'updatingTags', false)
     },
     generateTagTooltip (tag) {

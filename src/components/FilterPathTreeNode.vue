@@ -22,10 +22,10 @@
       </div>
     </div>
     <ul v-show="hasChildren() && open" class="list-unstyled pl-3">
-      <facet-path-tree-node v-for="(child, index) in node.children" :facet="facet" :node="child" :key="index" ref="treeNodes"></facet-path-tree-node>
+      <filter-path-tree-node v-for="(child, index) in node.children" :filter="filter" :node="child" :key="index" ref="treeNodes"></filter-path-tree-node>
     </ul>
     <div v-show="hasNoChildren() && open" class="text-muted pl-3">
-      └ <span class="small">{{ $t('facet.noSubdirectories') }}</span>
+      └ <span class="small">{{ $t('filter.noSubdirectories') }}</span>
     </div>
   </li>
 </template>
@@ -36,15 +36,15 @@ import repeat from 'lodash/repeat'
 import replace from 'lodash/replace'
 import PQueue from 'p-queue'
 
-import facets from '@/mixins/facets'
+import filters from '@/mixins/filters'
 
 export default {
-  name: 'FacetPathTreeNode',
+  name: 'FilterPathTreeNode',
   props: {
     node: Object,
-    facet: Object
+    filter: Object
   },
-  mixins: [facets],
+  mixins: [filters],
   data () {
     return {
       loading: false,
@@ -99,11 +99,11 @@ export default {
           exclude: repeat('/.*', this.node.path.split('/').length + 1),
           include: `${this.node.path}/.*`
         }
-        return this.$store.dispatch('search/queryFacet', { name: this.facet.name, options }).then(r => {
+        return this.$store.dispatch('search/queryFilter', { name: this.filter.name, options }).then(r => {
           this.loading = false
           this.isLoaded = true
           this.node.children = []
-          get(r, `aggregations.${this.facet.key}.buckets`, []).forEach(bucket => {
+          get(r, `aggregations.${this.filter.key}.buckets`, []).forEach(bucket => {
             this.node.children.push({
               label: replace(bucket.key, this.node.path + '/', ''),
               path: bucket.key,
@@ -139,12 +139,12 @@ export default {
       color: theme-color('secondary');
     }
 
-    .facet--reversed &--active > * > &__label {
+    .filter--reversed &--active > * > &__label {
       color: $body-color;
       text-decoration: line-through;
     }
 
-    .facet--reversed &--active > * > &__label &__label__icon {
+    .filter--reversed &--active > * > &__label &__label__icon {
       color: $text-muted;
     }
 

@@ -179,5 +179,5 @@ export default {
     cancelled: 'warning'
   },
   waitForEsAnswer: 700,
-  facetSize: 8
+  filterSize: 8
 }

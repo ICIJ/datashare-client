@@ -3,7 +3,7 @@ import FilterText from './FilterText'
 export default class FilterType extends FilterText {
   constructor (name, key, icon, isSearchable, labelFun) {
     super(name, key, icon, isSearchable, labelFun)
-    this.component = 'FacetType'
+    this.component = 'FilterType'
   }
 
   addChildIncludeFilter (body, param, func) {

@@ -7,11 +7,11 @@ export const namedEntityCategoryTranslation = {
   'namedEntityLocation': 'LOCATION'
 }
 
-export default class FacetNamedEntity extends FilterType {
+export default class FilterNamedEntity extends FilterType {
   constructor (name, key, icon, isSearchable, category = 'PERSON') {
     super(name, key, icon, isSearchable, null)
     this.category = category
-    this.component = 'FacetNamedEntity'
+    this.component = 'FilterNamedEntity'
   }
 
   isSelfAffected (body) {

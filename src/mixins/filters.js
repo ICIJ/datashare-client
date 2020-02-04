@@ -14,7 +14,7 @@ import utils from '@/mixins/utils'
 export default {
   mixins: [utils],
   props: {
-    facet: Object,
+    filter: Object,
     hideHeader: {
       type: Boolean,
       default: false
@@ -42,7 +42,7 @@ export default {
     return {
       isReady: false,
       offset: 0,
-      pageSize: settings.facetSize,
+      pageSize: settings.filterSize,
       total: 0,
       totalCount: 0,
       selected: [],
@@ -52,39 +52,39 @@ export default {
   mounted () {
     this.selectedValuesFromStore()
     if (this.root.$on) {
-      this.root.$on('add-facet-values', value => this.$emit('add-facet-values', value))
+      this.root.$on('add-filter-values', value => this.$emit('add-filter-values', value))
     }
-    this.$root.$on('facet::search::update', facetName => {
-      if (this.facet && this.facet.name === facetName) {
+    this.$root.$on('filter::search::update', filterName => {
+      if (this.filter && this.filter.name === filterName) {
         this.selectedValuesFromStore()
       }
     })
   },
   computed: {
     root () {
-      return get(this, '$refs.facet', {})
+      return get(this, '$refs.filter', {})
     },
     isGlobal () {
       return this.$store.state.search.globalSearch
     },
-    facetFilter () {
-      return this.$store.getters['search/findFacet'](this.facet.name)
+    filterFilter () {
+      return this.$store.getters['search/findFilter'](this.filter.name)
     },
     size () {
       return this.offset + this.pageSize
     },
     resultPath () {
-      return ['aggregations', this.facet.key, 'buckets']
+      return ['aggregations', this.filter.key, 'buckets']
     },
     queryTokens () {
-      return [ escapeRegExp(this.facetQuery.toLowerCase()) ]
+      return [ escapeRegExp(this.filterQuery.toLowerCase()) ]
     },
     options () {
       return map(this.items, item => {
         return {
           item,
           value: item.key,
-          label: this.labelToHuman(this.facet.itemLabel ? this.facet.itemLabel(item) : item.key)
+          label: this.labelToHuman(this.filter.itemLabel ? this.filter.itemLabel(item) : item.key)
         }
       })
     }
@@ -113,40 +113,40 @@ export default {
       }, {})
     },
     hasValue (item) {
-      return this.$store.getters['search/hasFacetValue'](this.facet.itemParam(item))
+      return this.$store.getters['search/hasFilterValue'](this.filter.itemParam(item))
     },
     removeValue (item) {
-      this.$store.commit('search/removeFacetValue', this.facet.itemParam(item))
+      this.$store.commit('search/removeFilterValue', this.filter.itemParam(item))
       this.refreshRouteAndSearch()
     },
     addValue (item) {
-      this.$store.commit('search/addFacetValue', this.facet.itemParam(item))
+      this.$store.commit('search/addFilterValue', this.filter.itemParam(item))
       this.refreshRouteAndSearch()
     },
     setValue (item) {
-      this.$store.commit('search/setFacetValue', this.facet.itemParam(item))
+      this.$store.commit('search/setFilterValue', this.filter.itemParam(item))
       this.refreshRouteAndSearch()
     },
     toggleValue (item) {
       this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
-      this.isAllSelected = !this.$store.getters['search/hasFacetValues'](this.facet.name)
-      this.$emit('add-facet-values', this.facet, this.selected.selected)
+      this.isAllSelected = !this.$store.getters['search/hasFilterValues'](this.filter.name)
+      this.$emit('add-filter-values', this.filter, this.selected.selected)
     },
     invert () {
-      this.$store.commit('search/toggleFacet', this.facet.name)
+      this.$store.commit('search/toggleFilter', this.filter.name)
       this.refreshRouteAndSearch()
     },
     hasValues () {
-      return this.$store.getters['search/hasFacetValues'](this.facet.name)
+      return this.$store.getters['search/hasFilterValues'](this.filter.name)
     },
     isReversed () {
-      return this.$store.getters['search/isFacetReversed'](this.facet.name)
+      return this.$store.getters['search/isFilterReversed'](this.filter.name)
     },
     watchedForUpdate (state) {
       if (!state.search.globalSearch) {
         // This will allow to watch change on the search only when
         // the aggregation is not global (ie. relative to the search).
-        return pick(state.search, ['index', 'query', 'facets'])
+        return pick(state.search, ['index', 'query', 'filters'])
       } else {
         return pick(state.search, ['index'])
       }
@@ -154,8 +154,8 @@ export default {
     labelToHuman (label) {
       if (this.$te(label)) {
         return this.$t(label)
-      } else if (this.$te(`facet.${label}`)) {
-        return this.$t(`facet.${label}`)
+      } else if (this.$te(`filter.${label}`)) {
+        return this.$t(`filter.${label}`)
       } else {
         return this.translationKeyToHuman(label)
       }
@@ -164,23 +164,23 @@ export default {
       return last(label.split('.'))
     },
     selectedValuesFromStore () {
-      if (this.facet) {
-        this.$set(this, 'selected', find(this.$store.state.search.facets, { name: this.facet.name }).values)
+      if (this.filter) {
+        this.$set(this, 'selected', find(this.$store.state.search.filters, { name: this.filter.name }).values)
         this.isAllSelected = this.selected.length === 0
         this.$emit('selected-values-from-store')
       }
     },
-    resetFacetValues () {
+    resetFilterValues () {
       this.$set(this, 'isAllSelected', true)
       this.$set(this, 'selected', [])
-      this.$store.commit('search/includeFacet', this.facet.name)
-      this.$emit('reset-facet-values', this.facet)
+      this.$store.commit('search/includeFilter', this.filter.name)
+      this.$emit('reset-filter-values', this.filter)
     },
     changeSelectedValues () {
       this.isAllSelected = this.selected.length === 0
-      this.$root.$emit('facet::add-facet-values', this.facet, this.selected)
+      this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
       this.$store.commit('search/from', 0)
-      this.$emit('add-facet-values', this.facet, this.selected)
+      this.$emit('add-filter-values', this.filter, this.selected)
       this.refreshRouteAndSearch()
     }
   }

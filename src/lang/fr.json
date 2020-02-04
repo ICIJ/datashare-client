@@ -91,7 +91,7 @@
     "viewOriginal": "Voir le texte d'origine",
     "viewTranslated": "Voir le texte traduit"
   },
-  "facet": {
+  "filter": {
     "none": "Aucune valeur distincte",
     "noMatches": "Pas de résultat.<br />Presser <kbd>Entrée</kbd> pour chercher dans tous les documents",
     "noResults": "Pas de résultat",

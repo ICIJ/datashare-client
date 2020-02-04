@@ -13,8 +13,8 @@ export default {
   methods: {
     async deleteQueryTerm () {
       if ('name' in this.filter) {
-        await this.$store.dispatch('search/removeFacetValue', this.filter)
-        this.$root.$emit('facet::search::update', this.filter.name)
+        await this.$store.dispatch('search/removeFilterValue', this.filter)
+        this.$root.$emit('filter::search::update', this.filter.name)
       } else {
         await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
       }

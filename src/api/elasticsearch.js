@@ -71,7 +71,7 @@ export function datasharePlugin (Client, config, components) {
       )
   }
 
-  Client.prototype.addQueryToFacet = function (query, body, fields = []) {
+  Client.prototype.addQueryToFilter = function (query, body, fields = []) {
     body.query('match_all')
       .addQuery('bool', b => b
         // Add the query string to the body
@@ -94,14 +94,14 @@ export function datasharePlugin (Client, config, components) {
     if (field !== 'path') body.sort('path', 'asc')
   }
 
-  Client.prototype.searchDocs = function (index, query = '*', facets = [], from = 0, size = 25, sort = 'relevance', fields = []) {
+  Client.prototype.searchDocs = function (index, query = '*', filters = [], from = 0, size = 25, sort = 'relevance', fields = []) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     // Return a promise that build the body composed above
     return this.search({
       index: index,
       type: 'doc',
-      body: this._buildBody(from, size, facets, query, sort, fields).build()
+      body: this._buildBody(from, size, filters, query, sort, fields).build()
     }).then(
       data => data,
       error => {
@@ -111,13 +111,13 @@ export function datasharePlugin (Client, config, components) {
     )
   }
 
-  Client.prototype.searchFacet = function (index, facet, query = '*', facets = [], isGlobalSearch = false, options = {}, fields = []) {
+  Client.prototype.searchFilter = function (index, filter, query = '*', filters = [], isGlobalSearch = false, options = {}, fields = []) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
-    const body = facet.body(bodybuilder(), options)
+    const body = filter.body(bodybuilder(), options)
     if (!isGlobalSearch) {
-      each(facets, facet => facet.addFilter(body))
-      this.addQueryToFacet(query, body, fields)
+      each(filters, filter => filter.addFilter(body))
+      this.addQueryToFilter(query, body, fields)
     }
     return elasticsearch.search({
       index,
@@ -132,9 +132,9 @@ export function datasharePlugin (Client, config, components) {
     )
   }
 
-  Client.prototype._buildBody = function (from, size, facets, query, sort, fields = []) {
+  Client.prototype._buildBody = function (from, size, filters, query, sort, fields = []) {
     const body = bodybuilder().from(from).size(size)
-    this._addFacetsToBody(facets, body)
+    this._addFiltersToBody(filters, body)
     this.addQueryToBody(query, body, fields)
     this.addSortToBody(sort, body)
     // Select only the Documents and not the NamedEntities
@@ -155,9 +155,9 @@ export function datasharePlugin (Client, config, components) {
     return body
   }
 
-  Client.prototype._addFacetsToBody = function (facets, body) {
-    each(facets, facet => {
-      facet.applyTo(body)
+  Client.prototype._addFiltersToBody = function (filters, body) {
+    each(filters, filter => {
+      filter.applyTo(body)
     })
   }
 }

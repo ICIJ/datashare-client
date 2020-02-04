@@ -4,14 +4,14 @@
       <div class="document-translated-content__translation m-3">
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />
-          <abbr :title="$t(`facet.lang.${document.source.language}`)" v-if="document.translationIn(language).source_language === document.source.language">
+          <abbr :title="$t(`filter.lang.${document.source.language}`)" v-if="document.translationIn(language).source_language === document.source.language">
             {{ $t('documentTranslatedContent.detected') }}
           </abbr>
           <span v-else>
-            {{ $t(`facet.lang.${document.translationIn(language).source_language}`) }}
+            {{ $t(`filter.lang.${document.translationIn(language).source_language}`) }}
           </span>
           <fa icon="angle-right" class="mx-2" />
-          <strong>{{ $t(`facet.lang.${language}`) }}</strong>
+          <strong>{{ $t(`filter.lang.${language}`) }}</strong>
           <button class="btn btn-sm btn-link ml-3" @click="toggleOriginalContent">
             {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
           </button>

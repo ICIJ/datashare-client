@@ -91,7 +91,7 @@
     "viewOriginal": "View original text",
     "viewTranslated": "View translated text"
   },
-  "facet": {
+  "filter": {
     "none": "No values",
     "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
     "noResults": "No results",

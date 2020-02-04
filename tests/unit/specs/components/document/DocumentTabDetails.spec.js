@@ -47,7 +47,7 @@ describe('DocumentTabDetails.vue', () => {
     wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
 
     expect(wrapper.find('.document__content__basename').text()).toEqual(id)
-    expect(wrapper.find('.document__content__tree-level').text()).toEqual('facet.level.level01')
+    expect(wrapper.find('.document__content__tree-level').text()).toEqual('filter.level.level01')
     expect(wrapper.find('.document__content__parent').text()).toEqual(parentDocument)
   })
 

@@ -1,5 +1,5 @@
 <template>
-  <facet v-bind="$props" hide-show-more ref="facet">
+  <filter-boilerplate v-bind="$props" hide-show-more ref="filter">
     <template #items>
       <div class="m-2">
         <vc-date-picker
@@ -14,27 +14,27 @@
           <input
             class="form-control"
             slot-scope="{ inputProps, inputEvents, isDragging }"
-            :placeholder="$t('facet.selectDateRange')"
+            :placeholder="$t('filter.selectDateRange')"
             v-bind="inputProps"
             v-on="inputEvents">
         </vc-date-picker>
       </div>
     </template>
-  </facet>
+  </filter-boilerplate>
 </template>
 
 <script>
-import facets from '@/mixins/facets'
-import Facet from '@/components/Facet'
+import filters from '@/mixins/filters'
+import FilterBoilerplate from '@/components/FilterBoilerplate'
 import max from 'lodash/max'
 import min from 'lodash/min'
 
 export default {
-  name: 'FacetDateRange',
+  name: 'FilterDateRange',
   components: {
-    Facet
+    FilterBoilerplate
   },
-  mixins: [facets],
+  mixins: [filters],
   data () {
     return {
       totalCount: 0,
@@ -59,7 +59,7 @@ export default {
     }
   },
   mounted () {
-    this.root.$on('reset-facet-values', this.reset)
+    this.root.$on('reset-filter-values', this.reset)
     this.$on('selected-values-from-store', this.updateFromStore)
     this.updateFromStore()
   },

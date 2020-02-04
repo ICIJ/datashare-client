@@ -11,8 +11,8 @@ import { FilterText } from '@/store/filters'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import store from '@/store'
 
-describe('SearchFacets', () => {
-  const index = toLower('SearchFacets')
+describe('SearchFilters', () => {
+  const index = toLower('SearchFilters')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
 
@@ -20,66 +20,66 @@ describe('SearchFacets', () => {
 
   afterEach(() => store.commit('search/reset'))
 
-  describe('Common facet', () => {
+  describe('Common filter', () => {
     it('should reset the store state', async () => {
       const initialState = cloneDeep(store.state.search)
       await store.commit('search/reset')
 
       // Should filter the functions because these would never be equal
       // So only compare integers, strings, arrays ...
-      initialState.facets = each(initialState.facets, (value, key) => {
-        initialState.facets[key] = omit(value, functionsIn(value))
+      initialState.filters = each(initialState.filters, (value, key) => {
+        initialState.filters[key] = omit(value, functionsIn(value))
       })
 
-      store.commit('search/setFacets', each(store.state.search.facets, (value, key) => {
-        store.state.search.facets[key] = omit(value, functionsIn(value))
+      store.commit('search/setFilters', each(store.state.search.filters, (value, key) => {
+        store.state.search.filters[key] = omit(value, functionsIn(value))
       }))
 
       expect(store.state.search).toEqual(initialState)
     })
 
-    it('should define a "language" facet correctly (name, key and type)', () => {
-      const facet = find(store.state.search.facets, { name: 'language' })
+    it('should define a "language" filter correctly (name, key and type)', () => {
+      const filter = find(store.state.search.filters, { name: 'language' })
 
-      expect(typeof facet).toBe('object')
-      expect(facet.key).toBe('language')
-      expect(facet.constructor.name).toBe('FilterText')
+      expect(typeof filter).toBe('object')
+      expect(filter.key).toBe('language')
+      expect(filter.constructor.name).toBe('FilterText')
     })
 
-    it('should not find a "yolo-type" facet', () => {
-      expect(store.getters['search/getFacet']({ name: 'yo-type' })).toBeUndefined()
+    it('should not find a "yolo-type" filter', () => {
+      expect(store.getters['search/getFilter']({ name: 'yo-type' })).toBeUndefined()
     })
 
-    it('should add a facet', () => {
-      const length = store.state.search.facets.length
-      store.commit('search/addFacet', new FilterText('test', 'key', true, null))
+    it('should add a filter', () => {
+      const length = store.state.search.filters.length
+      store.commit('search/addFilter', new FilterText('test', 'key', true, null))
 
-      expect(store.state.search.facets).toHaveLength(length + 1)
+      expect(store.state.search.filters).toHaveLength(length + 1)
     })
   })
 
-  describe('Content type facet', () => {
-    it('should define a "contentType" facet correctly (name, key and type)', () => {
-      const facet = find(store.state.search.facets, { name: 'contentType' })
+  describe('Content type filter', () => {
+    it('should define a "contentType" filter correctly (name, key and type)', () => {
+      const filter = find(store.state.search.filters, { name: 'contentType' })
 
-      expect(typeof facet).toBe('object')
-      expect(facet.key).toBe('contentType')
-      expect(facet.constructor.name).toBe('FilterText')
+      expect(typeof filter).toBe('object')
+      expect(filter.key).toBe('contentType')
+      expect(filter.constructor.name).toBe('FilterText')
     })
 
-    it('should find a "contentType" facet using object', () => {
-      expect(store.getters['search/getFacet']({ name: 'contentType' })).not.toBeUndefined()
+    it('should find a "contentType" filter using object', () => {
+      expect(store.getters['search/getFilter']({ name: 'contentType' })).not.toBeUndefined()
     })
 
-    it('should find a "contentType" facet using function', () => {
-      expect(store.getters['search/getFacet'](f => f.name === 'contentType')).not.toBeUndefined()
+    it('should find a "contentType" filter using function', () => {
+      expect(store.getters['search/getFilter'](f => f.name === 'contentType')).not.toBeUndefined()
     })
 
     it('should count 2 documents of type "type_01"', async () => {
       await letData(es).have(new IndexedDocument('document_01', index).withContentType('type_01')).commit()
       await letData(es).have(new IndexedDocument('document_02', index).withContentType('type_01')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
+      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(1)
       expect(response.aggregations.contentType.buckets[0].doc_count).toBe(2)
@@ -88,7 +88,7 @@ describe('SearchFacets', () => {
     it('should use contentType (without charset)', async () => {
       await letData(es).have(new IndexedDocument('document', index).withContentType('text/plain; charset=UTF-8')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
+      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets[0].key).toBe('text/plain')
     })
@@ -98,7 +98,7 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('document_02', index).withContentType('type_01')).commit()
       await letData(es).have(new IndexedDocument('document_03', index).withContentType('type_02')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
+      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(2)
       expect(response.aggregations.contentType.buckets[0].doc_count).toBe(2)
@@ -109,7 +109,7 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('document_01', index).withContentType('application/pdf')).commit()
       await letData(es).have(new IndexedDocument('document_02', index).withContentType('application/pdf')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
+      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets[0].doc_count).toBe(2)
       expect(response.hits).toHaveLength(0)
@@ -120,7 +120,7 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('index.html', index).withContentType('text/html')).commit()
       await letData(es).have(new IndexedDocument('index.css', index).withContentType('text/css')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
+      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(3)
     })
@@ -134,25 +134,25 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('index.css', index).withContentType('text/css')).commit()
       await letData(es).have(new IndexedDocument('list.css', index).withContentType('text/css')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'contentType' })
+      const response = await store.dispatch('search/queryFilter', { name: 'contentType' })
 
       expect(response.aggregations.contentType.buckets).toHaveLength(3)
     })
   })
 
-  describe('Path facet', () => {
-    it('should define a `path` facet correctly (name, key and type)', () => {
-      const facet = find(store.state.search.facets, { name: 'path' })
+  describe('Path filter', () => {
+    it('should define a `path` filter correctly (name, key and type)', () => {
+      const filter = find(store.state.search.filters, { name: 'path' })
 
-      expect(typeof facet).toBe('object')
-      expect(facet.key).toBe('byDirname')
-      expect(facet.constructor.name).toBe('FilterPath')
+      expect(typeof filter).toBe('object')
+      expect(filter.key).toBe('byDirname')
+      expect(filter.constructor.name).toBe('FilterPath')
     })
 
     it('should get no bucket for path aggregation', async () => {
       Murmur.config.set('dataDir', '/home/user/data')
 
-      const response = await store.dispatch('search/queryFacet', { name: 'path' })
+      const response = await store.dispatch('search/queryFilter', { name: 'path' })
 
       expect(response.aggregations.byDirname.buckets).toHaveLength(0)
     })
@@ -161,7 +161,7 @@ describe('SearchFacets', () => {
       Murmur.config.set('dataDir', '/home/user/data')
       await letData(es).have(new IndexedDocument('/home/user/data/is/a/path/test.doc', index)).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'path' })
+      const response = await store.dispatch('search/queryFilter', { name: 'path' })
 
       expect(response.aggregations.byDirname.buckets).toHaveLength(1)
       expect(response.aggregations.byDirname.buckets[0].key).toBe('/home/user/data/is')
@@ -174,7 +174,7 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('/home/user/data/is/a/second/path/test.doc', index)).commit()
       await letData(es).have(new IndexedDocument('/home/user/data/was/a/third/path/test.doc', index)).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'path' })
+      const response = await store.dispatch('search/queryFilter', { name: 'path' })
 
       expect(response.aggregations.byDirname.buckets).toHaveLength(2)
       expect(response.aggregations.byDirname.buckets[0].key).toBe('/home/user/data/is')
@@ -184,15 +184,15 @@ describe('SearchFacets', () => {
     })
   })
 
-  describe('Indexing date facet', () => {
+  describe('Indexing date filter', () => {
     const name = 'indexingDate'
 
-    it('should define an `indexing date` facet correctly (name, key and type)', () => {
-      const facet = find(store.state.search.facets, { name })
+    it('should define an `indexing date` filter correctly (name, key and type)', () => {
+      const filter = find(store.state.search.filters, { name })
 
-      expect(typeof facet).toBe('object')
-      expect(facet.key).toBe('extractionDate')
-      expect(facet.constructor.name).toBe('FilterDate')
+      expect(typeof filter).toBe('object')
+      expect(filter.key).toBe('extractionDate')
+      expect(filter.constructor.name).toBe('FilterDate')
     })
 
     it('should return the indexing date buckets', async () => {
@@ -200,7 +200,7 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('doc_02.txt', index).withIndexingDate('2018-04-06T20:20:20.001Z')).commit()
       await letData(es).have(new IndexedDocument('doc_03.txt', index).withIndexingDate('2018-05-04T20:20:20.001Z')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name, options: { size: 8 } })
+      const response = await store.dispatch('search/queryFilter', { name, options: { size: 8 } })
 
       expect(response.aggregations.extractionDate.buckets).toHaveLength(2)
       expect(response.aggregations.extractionDate.buckets[0].key).toBe(1525132800000)
@@ -210,14 +210,14 @@ describe('SearchFacets', () => {
     })
   })
 
-  describe('Named entities facet', () => {
-    it('should define a `named-entity` facet correctly (name, key, type and PERSON category)', () => {
-      const facet = find(store.state.search.facets, { name: 'namedEntityPerson' })
+  describe('Named entities filter', () => {
+    it('should define a `named-entity` filter correctly (name, key, type and PERSON category)', () => {
+      const filter = find(store.state.search.filters, { name: 'namedEntityPerson' })
 
-      expect(typeof facet).toBe('object')
-      expect(facet.key).toBe('byMentions')
-      expect(facet.category).toBe('PERSON')
-      expect(facet.constructor.name).toBe('FacetNamedEntity')
+      expect(typeof filter).toBe('object')
+      expect(filter.key).toBe('byMentions')
+      expect(filter.category).toBe('PERSON')
+      expect(filter.constructor.name).toBe('FilterNamedEntity')
     })
 
     it('should aggregate only the not hidden named entities for PERSON category', async () => {
@@ -226,7 +226,7 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('doc_03.csv', index).withNer('entity_02', 44, 'PERSON', true)).commit()
       await letData(es).have(new IndexedDocument('doc_04.csv', index).withNer('entity_03', 45, 'PERSON', false)).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'namedEntityPerson' })
+      const response = await store.dispatch('search/queryFilter', { name: 'namedEntityPerson' })
 
       expect(response.aggregations.byMentions.buckets).toHaveLength(2)
       expect(response.aggregations.byMentions.buckets[0].key).toBe('entity_01')
@@ -240,7 +240,7 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('doc_02.csv', index).withNer('entity_02', 43, 'LOCATION', false)).commit()
       await letData(es).have(new IndexedDocument('doc_03.csv', index).withNer('entity_03', 44, 'ORGANIZATION', true)).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'namedEntityLocation', category: 'LOCATION' })
+      const response = await store.dispatch('search/queryFilter', { name: 'namedEntityLocation', category: 'LOCATION' })
 
       expect(response.aggregations.byMentions.buckets).toHaveLength(2)
     })
@@ -250,13 +250,13 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('doc_02.csv', index).withNer('entity_02', 43, 'ORGANIZATION', false)).commit()
       await letData(es).have(new IndexedDocument('doc_03.csv', index).withNer('entity_03', 44, 'PERSON', true)).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name: 'namedEntityOrganization', category: 'ORGANIZATION' })
+      const response = await store.dispatch('search/queryFilter', { name: 'namedEntityOrganization', category: 'ORGANIZATION' })
 
       expect(response.aggregations.byMentions.buckets).toHaveLength(2)
     })
   })
 
-  describe('Creation date facet', () => {
+  describe('Creation date filter', () => {
     const name = 'creationDate'
 
     it('should merge all missing data', async () => {
@@ -267,7 +267,7 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('doc_03', index)).commit()
       await letData(es).have(new IndexedDocument('doc_04', index)).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name, options: { size: 8 } })
+      const response = await store.dispatch('search/queryFilter', { name, options: { size: 8 } })
 
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets).toHaveLength(3)
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[0].key).toBe(1525132800000)
@@ -282,20 +282,20 @@ describe('SearchFacets', () => {
       await letData(es).have(new IndexedDocument('doc_01', index)
         .withCreationDate('2018-04-01T00:00:00.001Z').withNer('term_01')).commit()
 
-      const response = await store.dispatch('search/queryFacet', { name, options: { size: 8 } })
+      const response = await store.dispatch('search/queryFilter', { name, options: { size: 8 } })
 
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets).toHaveLength(1)
     })
   })
 
-  describe('Starred facet', () => {
-    it('should define a `starred` facet correctly (name, key, type and starredDocuments)', () => {
-      const facet = find(store.state.search.facets, { name: 'starred' })
+  describe('Starred filter', () => {
+    it('should define a `starred` filter correctly (name, key, type and starredDocuments)', () => {
+      const filter = find(store.state.search.filters, { name: 'starred' })
 
-      expect(typeof facet).toBe('object')
-      expect(facet.key).toBe('_id')
-      expect(facet.constructor.name).toBe('FilterYesNo')
-      expect(facet.starredDocuments).toEqual([])
+      expect(typeof filter).toBe('object')
+      expect(filter.key).toBe('_id')
+      expect(filter.constructor.name).toBe('FilterYesNo')
+      expect(filter.starredDocuments).toEqual([])
     })
   })
 })

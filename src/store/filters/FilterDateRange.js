@@ -5,7 +5,7 @@ import FilterDate from './FilterDate'
 export default class FilterDateRange extends FilterDate {
   constructor (name, key, icon, isSearchable, labelFun) {
     super(name, key, icon, isSearchable, labelFun)
-    this.component = 'FacetDateRange'
+    this.component = 'FilterDateRange'
   }
   queryBuilder (body, param, func) {
     return body.query('bool', sub => {

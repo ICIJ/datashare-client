@@ -5,7 +5,7 @@ export default class FilterPath extends FilterDocument {
   constructor (name, key, icon, isSearchable) {
     super(name, key, icon, isSearchable, null)
     this.prefix = true
-    this.component = 'FacetPath'
+    this.component = 'FilterPath'
   }
 
   queryBuilder (body, param, func) {

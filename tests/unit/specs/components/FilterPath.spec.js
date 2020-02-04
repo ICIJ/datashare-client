@@ -5,23 +5,23 @@ import Murmur from '@icij/murmur'
 
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import FacetPath from '@/components/FacetPath'
+import FilterPath from '@/components/FilterPath'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
-describe('FacetPath.vue', () => {
-  const index = toLower('FacetPath')
+describe('FilterPath.vue', () => {
+  const index = toLower('FilterPath')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   let wrapper
 
   beforeAll(() => {
     Murmur.config.set('dataDir', '/data')
-    wrapper = mount(FacetPath, {
+    wrapper = mount(FilterPath, {
       localVue,
       store,
-      propsData: { facet: find(store.state.search.facets, { name: 'path' }) },
+      propsData: { filter: find(store.state.search.filters, { name: 'path' }) },
       mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
     })
     store.commit('search/reset')
@@ -57,14 +57,14 @@ describe('FacetPath.vue', () => {
     expect(wrapper.findAll('.tree-node').length).toEqual(2)
   })
 
-  describe('filter the facet', () => {
-    it('should filter items according to the path facet search', async () => {
+  describe('filter the filter', () => {
+    it('should filter items according to the path filter search', async () => {
       await letData(es).have(new IndexedDocument('/data/folder_01/document_01', index)).commit()
       await letData(es).have(new IndexedDocument('/data/folder_02/document_02', index)).commit()
 
-      const pathFacet = find(store.state.search.facets, { name: 'path' })
-      pathFacet.value = ['/data/folder_01/']
-      store.commit('search/addFacetValue', pathFacet)
+      const pathFilter = find(store.state.search.filters, { name: 'path' })
+      pathFilter.value = ['/data/folder_01/']
+      store.commit('search/addFilterValue', pathFilter)
       await wrapper.vm.root.aggregate()
 
       expect(wrapper.findAll('.tree-node')).toHaveLength(1)
@@ -75,9 +75,9 @@ describe('FacetPath.vue', () => {
       await letData(es).have(new IndexedDocument('/data/folder_11/document_02', index)).commit()
       await letData(es).have(new IndexedDocument('/data/folder_22/document_03', index)).commit()
 
-      const pathFacet = find(store.state.search.facets, { name: 'path' })
-      pathFacet.value = ['/data/folder_1/']
-      store.commit('search/addFacetValue', pathFacet)
+      const pathFilter = find(store.state.search.filters, { name: 'path' })
+      pathFilter.value = ['/data/folder_1/']
+      store.commit('search/addFilterValue', pathFilter)
       await wrapper.vm.root.aggregate()
 
       expect(wrapper.findAll('.tree-node')).toHaveLength(1)

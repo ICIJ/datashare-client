@@ -10,7 +10,7 @@
       <div v-for="(pages, category) in namedEntitiesPaginatedByCategories" :key="category" class="mb-4" v-if="categoryIsntEmpty(category)">
         <div class="mb-2" :class="getCategoryClass(category, 'text-')">
           <fa :icon="getCategoryIcon(category)" />
-          {{ $t('facet.namedEntity' + capitalize(category)) }}
+          {{ $t('filter.namedEntity' + capitalize(category)) }}
           <i>({{ getCategoryTotal(category) }})</i>
         </div>
         <span v-for="(page, index) in pages" :key="index">

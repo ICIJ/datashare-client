@@ -41,28 +41,28 @@ describe('SearchResultsAppliedFilter.vue', () => {
       expect(deleteQueryTermMock).toBeCalledTimes(1)
     })
 
-    it('should delete a facet term', () => {
-      store.commit('search/addFacetValue', { name: 'contentType', value: 'term_01' })
+    it('should delete a filter term', () => {
+      store.commit('search/addFilterValue', { name: 'contentType', value: 'term_01' })
       wrapper = mount(SearchResultsAppliedFilter, { localVue, store, router, propsData: { filter: { name: 'contentType', label: 'term_01', value: 'term_01', field: '', negation: false } } })
 
       wrapper.find('.search-results-header__applied-filters__filter').trigger('click')
 
-      expect(find(store.state.search.facets, { name: 'contentType' }).values).toHaveLength(0)
+      expect(find(store.state.search.filters, { name: 'contentType' }).values).toHaveLength(0)
     })
 
-    it('should emit an event facet::search::update once the applied filter is deleted from the store', async () => {
-      wrapper = shallowMount(SearchResultsAppliedFilter, { localVue, store, router, propsData: { filter: { name: 'facet-name', label: 'term_01', value: 'term_01', field: '', negation: false } } })
+    it('should emit an event filter::search::update once the applied filter is deleted from the store', async () => {
+      wrapper = shallowMount(SearchResultsAppliedFilter, { localVue, store, router, propsData: { filter: { name: 'filter-name', label: 'term_01', value: 'term_01', field: '', negation: false } } })
       const mockCallback = jest.fn()
-      wrapper.vm.$root.$on('facet::search::update', mockCallback)
+      wrapper.vm.$root.$on('filter::search::update', mockCallback)
 
       await wrapper.vm.deleteQueryTerm()
 
       expect(mockCallback.mock.calls).toHaveLength(1)
     })
 
-    it('should not emit an event facet::search::update once the applied filter is deleted from the store', async () => {
+    it('should not emit an event filter::search::update once the applied filter is deleted from the store', async () => {
       const mockCallback = jest.fn()
-      wrapper.vm.$root.$on('facet::search::update', mockCallback)
+      wrapper.vm.$root.$on('filter::search::update', mockCallback)
 
       await wrapper.vm.deleteQueryTerm()
 

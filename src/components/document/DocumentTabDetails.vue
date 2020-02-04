@@ -158,7 +158,7 @@ export default {
           name: 'language',
           label: this.$t('document.content_language'),
           class: 'document__content__language',
-          value: this.$t(`facet.lang.${this.document.source.language}`),
+          value: this.$t(`filter.lang.${this.document.source.language}`),
           rawValue: this.document.source.language
         },
         {
@@ -176,7 +176,7 @@ export default {
         },
         {
           name: 'extractionLevel',
-          label: this.$t('facet.extractionLevel'),
+          label: this.$t('filter.extractionLevel'),
           class: 'document__content__tree-level',
           value: this.$t(this.getExtractionLevelTranslationKey(this.document.source.extractionLevel)),
           rawValue: this.document.source.extractionLevel

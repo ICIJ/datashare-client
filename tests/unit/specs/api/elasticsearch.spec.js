@@ -4,7 +4,7 @@ import bodybuilder from 'bodybuilder'
 import elasticsearch from '@/api/elasticsearch'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { EventBus } from '@/utils/event-bus'
-import { FacetText, FacetNamedEntity } from '@/store/facetsStore'
+import { FilterText, FilterNamedEntity } from '@/store/filtersStore'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 describe('elasticsearch', () => {
@@ -31,12 +31,12 @@ describe('elasticsearch', () => {
     spy.mockRestore()
   })
 
-  it('should build an ES query with facets', async () => {
-    let facets = [new FacetText('contentType', 'contentType', true, null)]
-    facets[0].values = ['value_01', 'value_02', 'value_03']
+  it('should build an ES query with filters', async () => {
+    let filters = [new FilterText('contentType', 'contentType', true, null)]
+    filters[0].values = ['value_01', 'value_02', 'value_03']
     const body = bodybuilder().from(0).size(25)
 
-    await elasticsearch._addFacetsToBody(facets, body)
+    await elasticsearch._addFiltersToBody(filters, body)
 
     expect(body.build()).toEqual({
       from: 0,
@@ -198,9 +198,9 @@ describe('elasticsearch', () => {
       .withContent('nothing to write')
       .withNer('another')
     ).commit()
-    const facet = new FacetNamedEntity('namedEntityPerson', 'byMentions', true, 'PERSON')
+    const filter = new FilterNamedEntity('namedEntityPerson', 'byMentions', true, 'PERSON')
 
-    const response = await elasticsearch.searchFacet(index, facet, 'document')
+    const response = await elasticsearch.searchFilter(index, filter, 'document')
 
     expect(response.aggregations.byMentions.buckets).toHaveLength(2)
   })

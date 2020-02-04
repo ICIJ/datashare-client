@@ -3,7 +3,7 @@ import FilterDocument from './FilterDocument'
 export default class FilterDate extends FilterDocument {
   constructor (name, key, icon, isSearchable, labelFun) {
     super(name, key, icon, isSearchable, labelFun)
-    this.component = 'FacetDate'
+    this.component = 'FilterDate'
   }
 
   queryBuilder (body, param, func) {

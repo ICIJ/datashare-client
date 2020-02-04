@@ -91,7 +91,7 @@
     "viewOriginal": "原文を見る",
     "viewTranslated": "翻訳された文を見る"
   },
-  "facet": {
+  "filter": {
     "none": "値なし",
     "noMatches": "一致するものがありません。全ての文書を検索するには<br /><kbd>Enter</kbd>キーを押してください",
     "noResults": "検索結果がありません",

@@ -10,7 +10,7 @@ export default class FilterText {
     this.itemLabel = labelFun
     this.reverse = false
     this.values = []
-    this.component = 'FacetText'
+    this.component = 'FilterText'
     this.alternativeSearch = alternativeSearch
   }
 
