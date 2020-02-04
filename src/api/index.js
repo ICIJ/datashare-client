@@ -36,13 +36,7 @@ export default class Api {
     return this.sendAction('/version')
   }
   getConfig () {
-    return this.sendAction('/api/config').catch(err => {
-      if (err && err.response && err.response.status === 401) {
-        return this.sendAction('/config')
-      } else {
-        throw err
-      }
-    })
+    return this.sendAction('/config')
   }
   setConfig (config) {
     const headers = { 'Content-Type': 'application/json' }
