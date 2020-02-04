@@ -25,8 +25,6 @@
 </template>
 
 <script>
-import omit from 'lodash/omit'
-
 export default {
   name: 'Config',
   data () {
@@ -35,7 +33,7 @@ export default {
     }
   },
   async created () {
-    this.config = omit(await this.$store.dispatch('config/getConfig'), 'userProjects')
+    this.config = await this.$store.dispatch('config/getConfig')
   },
   methods: {
     async onSubmit () {
