@@ -3429,6 +3429,10 @@ date-fns@^1.27.2:
   version "1.30.1"
   resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-1.30.1.tgz#2e71bf0b119153dbb4cc4e88d9ea5acfb50dc05c"
 
+date-fns@^2.6.0:
+  version "2.9.0"
+  resolved "https://registry.yarnpkg.com/date-fns/-/date-fns-2.9.0.tgz#d0b175a5c37ed5f17b97e2272bbc1fa5aec677d2"
+
 de-indent@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/de-indent/-/de-indent-1.0.2.tgz#b2038e846dc33baa5796128d0804b455b8c1e21d"
@@ -10224,10 +10228,11 @@ uuid@^3.0.1, uuid@^3.3.2:
   version "3.4.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.4.0.tgz#b23e4358afa8a202fe7a100af1f5f883f02007ee"
 
-v-calendar@1.0.0-beta.16:
-  version "1.0.0-beta.16"
-  resolved "https://registry.yarnpkg.com/v-calendar/-/v-calendar-1.0.0-beta.16.tgz#5dbf46c7cfe681ea403334f1e333f4feb6a68155"
+v-calendar@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/v-calendar/-/v-calendar-1.0.1.tgz#40092c7d4475f3183350b42471af81759c9a8600"
   dependencies:
+    date-fns "^2.6.0"
     lodash "^4.17.11"
     popper.js "^1.14.7"
 
