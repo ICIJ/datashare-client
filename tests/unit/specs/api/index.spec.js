@@ -1,4 +1,5 @@
 import axios from 'axios'
+import assign from 'lodash/assign'
 
 import Api from '@/api'
 import { EventBus } from '@/utils/event-bus'
@@ -13,6 +14,8 @@ const api = new Api()
 
 describe('Datashare backend client', () => {
   let json
+
+  beforeEach(() => axios.request.mockClear())
 
   it('should return backend response to index', async () => {
     json = await api.index({})
@@ -62,6 +65,22 @@ describe('Datashare backend client', () => {
   it('should return backend response to getConfig', async () => {
     json = await api.getConfig()
     expect(json).toEqual({})
+  })
+
+  it('should throw a 401 if getConfig return a error', async () => {
+    axios.request.mockImplementation(() => { throw assign(new Error(), { response: { status: 401 } }) })
+    const mockCallback = jest.fn()
+    EventBus.$on('http::error', mockCallback)
+    try {
+      await api.getConfig()
+    } catch (error) {
+      expect(error.response.status).toBe(401)
+    }
+    expect(axios.request).toBeCalledTimes(2)
+    expect(mockCallback).toBeCalledTimes(2)
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/config') })
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/config') })
+    axios.request.mockImplementation(jest.fn().mockResolvedValue({ data: {} }))
   })
 
   it('should return backend response to setConfig', async () => {
