@@ -11,27 +11,32 @@
     </div>
     <slide-up-down class="list-group list-group-flush filter__items" :active="!collapseItems">
       <div class="p-2">
-        <b-form-select :options="indices" v-model="selectedIndex" class="border-0" @change="select" />
+        <b-form-select :options="projects" v-model="selectedProject" class="border-0" @change="select" />
       </div>
     </slide-up-down>
   </div>
 </template>
 
 <script>
-import filters from '@/mixins/filters'
+import get from 'lodash/get'
 import map from 'lodash/map'
+
+import Api from '@/api'
+import filters from '@/mixins/filters'
+
+const api = new Api()
 
 export default {
   name: 'ProjectSelector',
   mixins: [filters],
   data () {
     return {
-      indices: [],
+      projects: [],
       collapseItems: false
     }
   },
   computed: {
-    selectedIndex: {
+    selectedProject: {
       get: function () {
         return this.$store.state.search.index
       },
@@ -44,7 +49,8 @@ export default {
     }
   },
   async created () {
-    this.$set(this, 'indices', map(this.$config.get('userProjects', []), value => { return { value, text: value } }))
+    const user = await api.getUser()
+    this.$set(this, 'projects', map(JSON.parse(get(user, 'datashare_indices', [])), value => { return { value, text: value } }))
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')
   },

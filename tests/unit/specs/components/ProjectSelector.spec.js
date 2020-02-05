@@ -45,8 +45,8 @@ describe('ProjectSelector.vue', () => {
     expect(wrapper.findAll('option')).toHaveLength(0)
   })
 
-  it('should select the local index as default selected index', () => {
-    expect(wrapper.vm.selectedIndex).toBe(index)
+  it('should select the local index as default selected project', () => {
+    expect(wrapper.vm.selectedProject).toBe(index)
   })
 
   describe('on index change', () => {
