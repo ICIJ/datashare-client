@@ -5,7 +5,7 @@ import { App } from '@/main'
 
 jest.mock('axios', () => {
   return {
-    get: jest.fn().mockRejectedValue({ response: { status: 401 } })
+    request: jest.fn().mockRejectedValue({ response: { status: 401 } })
   }
 })
 

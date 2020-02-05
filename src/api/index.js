@@ -111,6 +111,9 @@ export default class Api {
   retrieveNotes (project) {
     return this.sendAction(replace(`/api/${project}/notes`, '//', '/'))
   }
+  getUser () {
+    return this.sendAction('/api/user')
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })

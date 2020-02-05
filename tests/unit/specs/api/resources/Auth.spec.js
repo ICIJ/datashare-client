@@ -7,29 +7,29 @@ const auth = new Auth()
 
 jest.mock('axios', () => {
   return {
-    get: jest.fn()
+    request: jest.fn()
   }
 })
 
 describe('auth backend client', () => {
-  beforeEach(() => axios.get.mockRejectedValue({ response: { status: 401 } }))
+  beforeEach(() => axios.request.mockRejectedValue({ response: { status: 401 } }))
 
   afterEach(() => auth.reset())
 
   describe('getUsername', () => {
     it('should return user name if user is authenticated with basic auth', async () => {
-      axios.get.mockResolvedValue({ data: { uid: 'john' } })
+      axios.request.mockResolvedValue({ data: { uid: 'john' } })
       expect(await auth.getUsername()).toBe('john')
-      expect(axios.get).toBeCalledWith('http://localhost:9090/api/user')
+      expect(axios.request).toBeCalledWith({ url: 'http://localhost:9090/api/user' })
     })
 
     it('should return null if user is not authenticated with basic auth', async () => {
       expect(await auth.getUsername()).toBeNull()
-      expect(axios.get).toBeCalledWith('http://localhost:9090/api/user')
+      expect(axios.request).toBeCalledWith({ url: 'http://localhost:9090/api/user' })
     })
 
     it('should throw error when testing basic auth and response is other than 200 or 401', async () => {
-      axios.get.mockRejectedValue({ response: { status: 500, statusText: 'message' } })
+      axios.request.mockRejectedValue({ response: { status: 500, statusText: 'message' } })
       try {
         await auth.getUsername()
       } catch (error) {
