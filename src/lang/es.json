@@ -471,7 +471,6 @@
     "title": "Búsquedas masivas",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
-    "fileDescription": "Exportar su hoja de cálculo en formato CSV. Sólo formato CSV aceptado. La primera columna debe contener los términos a buscar. Puedes usar operadores (AND NOT * ? + - etc). Use 'espacio' en lugar de OR o | | con 'Realizar búsquedas similares'. Para usar Regex, escribirle entre 2 barras.",
     "filePlaceholder": "Selecciona un archivo...",
     "submit": "Añadir",
     "success": "Tu búsqueda masiva está ejecutándose.",

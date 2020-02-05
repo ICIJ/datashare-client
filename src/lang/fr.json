@@ -471,7 +471,6 @@
     "title": "Recherches en lot",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
-    "fileDescription": "Exportez votre feuille de calcul en format CSV. Seul le format CSV est accepté. La première colonne doit contenir les termes à rechercher. Vous pouvez utiliser les opérateurs (AND NOT * ? + - etc). Utilisez 'espace' au lieu de OU ou | | quand vous avez coché 'Rechercher les termes exacts'. Pour rechercher avec des Regex, les mettre entre 2 slashes.",
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
