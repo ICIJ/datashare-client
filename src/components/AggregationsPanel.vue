@@ -22,7 +22,7 @@
           </li>
         </ul>
       </div>
-      <index-selector />
+      <project-selector />
       <component v-for="filter in filters" :ref="filter.name" :key="filter.name" :is="filter.component" v-bind="{ filter }"></component>
     </div>
     <b-modal hide-footer lazy ref="asyncFilterSearch" :title="selectedFilter ? $t('filter.' + selectedFilter.name) : null">
@@ -42,7 +42,7 @@ import FilterDateRange from '@/components/FilterDateRange'
 import FilterPath from '@/components/FilterPath'
 import FilterNamedEntity from '@/components/FilterNamedEntity'
 import FilterSearch from '@/components/FilterSearch'
-import IndexSelector from '@/components/IndexSelector'
+import ProjectSelector from '@/components/ProjectSelector'
 
 export default {
   name: 'AggregationsPanel',
@@ -54,7 +54,7 @@ export default {
     FilterPath,
     FilterNamedEntity,
     FilterSearch,
-    IndexSelector
+    ProjectSelector
   },
   mounted () {
     this.$root.$on('filter::async-search', this.asyncFilterSearch)

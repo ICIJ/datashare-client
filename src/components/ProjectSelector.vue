@@ -22,7 +22,7 @@ import filters from '@/mixins/filters'
 import map from 'lodash/map'
 
 export default {
-  name: 'IndexSelector',
+  name: 'ProjectSelector',
   mixins: [filters],
   data () {
     return {
