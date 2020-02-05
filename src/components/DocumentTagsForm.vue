@@ -1,3 +1,29 @@
+<template>
+  <div class="document-tags-form row">
+    <div :class="{ 'col-md-4 mb-3': displayTags }" class="d-flex" v-if="displayForm">
+      <b-form @submit.prevent="addTag" class="document-tags-form__add">
+        <b-input-group size="sm">
+          <b-input-group-text slot="prepend">
+            <fa icon="tag" />
+          </b-input-group-text>
+          <b-form-input v-model="tag" @input="searchTags" required :placeholder="$t('document.tags_new')" :disabled="updatingTags" autocomplete="off" autofocus ref="tag" />
+        </b-input-group>
+        <selectable-dropdown :items="existingTags" @input="tag = $event" @click.native="addTag" :hide="!existingTags.length"></selectable-dropdown>
+      </b-form>
+    </div>
+    <div class="col-md-8" v-if="displayTags">
+      <ul class="document-tags-form__tags list-unstyled mb-0 mt-1">
+        <li class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1" :class="[mode === 'light' ? 'border badge-light': 'badge-dark']" v-for="tag in tags" :key="tag.label">
+          <span :title="generateTagTooltip(tag)" v-b-tooltip>{{ tag.label }}</span>
+          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tag_confirmation')" class="document-tags-form__tags__tag__delete btn btn-sm" :class="mode">
+            <fa icon="times" class="fa-fw pl-2" />
+          </confirm-button>
+        </li>
+      </ul>
+    </div>
+  </div>
+</template>
+
 <script>
 import castArray from 'lodash/castArray'
 import delay from 'lodash/delay'
@@ -13,10 +39,18 @@ import settings from '@/utils/settings'
 export default {
   name: 'DocumentTagsForm',
   props: {
-    document: [Object, Array],
-    tags: Array,
-    displayTags: Boolean,
-    displayForm: Boolean,
+    document: {
+      type: [Object, Array]
+    },
+    tags: {
+      type: Array
+    },
+    displayTags: {
+      type: Boolean
+    },
+    displayForm: {
+      type: Boolean
+    },
     mode: {
       type: String,
       default: 'light'
@@ -50,8 +84,8 @@ export default {
       this.$set(this, 'existingTags', [])
       this.$set(this, 'updatingTags', false)
       delay(filterName => this.$root.$emit('filter::refresh', filterName), settings.waitForEsAnswer, 'tags')
-      // Feedback only when we are not displaying tags
       if (!this.displayTags) this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
+      if (this.$refs && this.$refs.tag) this.$nextTick(() => { this.$refs.tag.focus() })
     },
     async deleteTag (tag) {
       this.$set(this, 'updatingTags', true)
@@ -65,32 +99,6 @@ export default {
   }
 }
 </script>
-
-<template>
-  <div class="document-tags-form row">
-    <div :class="{ 'col-md-4 mb-3': displayTags }" class="d-flex" v-if="displayForm">
-      <b-form @submit.prevent="addTag" class="document-tags-form__add">
-        <b-input-group size="sm">
-          <b-input-group-text slot="prepend">
-            <fa icon="tag" />
-          </b-input-group-text>
-          <b-form-input id="new-tag" v-model="tag" @input="searchTags" autofocus required :placeholder="$t('document.tags_new')" :disabled="updatingTags" autocomplete="off" />
-        </b-input-group>
-        <selectable-dropdown :items="existingTags" @input="tag = $event" @click.native="addTag" :hide="!existingTags.length"></selectable-dropdown>
-      </b-form>
-    </div>
-    <div class="col-md-8" v-if="displayTags">
-      <ul class="document-tags-form__tags list-unstyled mb-0 mt-1">
-        <li class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1" :class="[mode === 'light' ? 'border badge-light': 'badge-dark']" v-for="tag in tags" :key="tag.label">
-          <span :title="generateTagTooltip(tag)" v-b-tooltip>{{ tag.label }}</span>
-          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tag_confirmation')" class="document-tags-form__tags__tag__delete btn btn-sm" :class="mode">
-            <fa icon="times" class="fa-fw pl-2" />
-          </confirm-button>
-        </li>
-      </ul>
-    </div>
-  </div>
-</template>
 
 <style lang="scss">
   .document-tags-form__tags  {
