@@ -35,12 +35,12 @@ describe('IndexSelector.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(IndexSelector, { localVue, store, propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(IndexSelector, { localVue, store, propsData: { filter: find(store.state.search.filters, { name: 'language' }) }, mocks: { $t: msg => msg } })
   })
 
   it('should not display a dropdown if we aren\'t in server mode', () => {
     Murmur.config.merge({ multipleProjects: false })
-    wrapper = shallowMount(IndexSelector, { localVue, store, propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(IndexSelector, { localVue, store, propsData: { filter: find(store.state.search.filters, { name: 'language' }) }, mocks: { $t: msg => msg } })
 
     expect(wrapper.findAll('option')).toHaveLength(0)
   })
@@ -51,13 +51,13 @@ describe('IndexSelector.vue', () => {
 
   describe('on index change', () => {
     beforeEach(() => {
-      wrapper = shallowMount(IndexSelector, { localVue, store, router: new VueRouter(), propsData: { facet: find(store.state.search.facets, { name: 'language' }) }, mocks: { $t: msg => msg } })
+      wrapper = shallowMount(IndexSelector, { localVue, store, router: new VueRouter(), propsData: { filter: find(store.state.search.filters, { name: 'language' }) }, mocks: { $t: msg => msg } })
     })
 
     afterEach(() => axios.request.mockClear())
 
     it('should reset search state on index change', async () => {
-      store.commit('search/addFacetValue', { name: 'contentType', value: 'text/javascript' })
+      store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
       expect(store.getters['search/toRouteQuery']['f[contentType]']).not.toBeUndefined()
 
       await wrapper.vm.select(anotherIndex)
@@ -66,9 +66,9 @@ describe('IndexSelector.vue', () => {
       expect(store.getters['search/toRouteQuery']['f[contentType]']).toBeUndefined()
     })
 
-    it('should emit an event "facet::search::reset-filters" on index change', async () => {
+    it('should emit an event "filter::search::reset-filters" on index change', async () => {
       const mockCallback = jest.fn()
-      wrapper.vm.$root.$on('facet::search::reset-filters', mockCallback)
+      wrapper.vm.$root.$on('filter::search::reset-filters', mockCallback)
 
       mockCallback.mockClear()
 

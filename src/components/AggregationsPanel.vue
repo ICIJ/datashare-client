@@ -23,54 +23,54 @@
         </ul>
       </div>
       <index-selector />
-      <component v-for="facet in facets" :ref="facet.name" :key="facet.name" :is="facet.component" v-bind="{ facet }"></component>
+      <component v-for="filter in filters" :ref="filter.name" :key="filter.name" :is="filter.component" v-bind="{ filter }"></component>
     </div>
-    <b-modal hide-footer lazy ref="asyncFacetSearch" :title="selectedFacet ? $t('facet.' + selectedFacet.name) : null">
-      <facet-search :facet="selectedFacet" :query="facetQuery" />
+    <b-modal hide-footer lazy ref="asyncFilterSearch" :title="selectedFilter ? $t('filter.' + selectedFilter.name) : null">
+      <filter-search :filter="selectedFilter" :query="filterQuery" />
     </b-modal>
   </div>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import FacetText from '@/components/FacetText'
-import FacetYesNo from '@/components/FacetYesNo'
-import FacetDate from '@/components/FacetDate'
-import FacetDateRange from '@/components/FacetDateRange'
-import FacetPath from '@/components/FacetPath'
-import FacetNamedEntity from '@/components/FacetNamedEntity'
-import FacetSearch from '@/components/FacetSearch'
-import IndexSelector from '@/components/IndexSelector'
 import forEach from 'lodash/forEach'
 import isArray from 'lodash/isArray'
+import FilterText from '@/components/FilterText'
+import FilterYesNo from '@/components/FilterYesNo'
+import FilterDate from '@/components/FilterDate'
+import FilterDateRange from '@/components/FilterDateRange'
+import FilterPath from '@/components/FilterPath'
+import FilterNamedEntity from '@/components/FilterNamedEntity'
+import FilterSearch from '@/components/FilterSearch'
+import IndexSelector from '@/components/IndexSelector'
 
 export default {
   name: 'AggregationsPanel',
   components: {
-    FacetText,
-    FacetYesNo,
-    FacetDate,
-    FacetDateRange,
-    FacetPath,
-    FacetNamedEntity,
-    FacetSearch,
+    FilterText,
+    FilterYesNo,
+    FilterDate,
+    FilterDateRange,
+    FilterPath,
+    FilterNamedEntity,
+    FilterSearch,
     IndexSelector
   },
   mounted () {
-    this.$root.$on('facet::async-search', this.asyncFacetSearch)
-    this.$root.$on('facet::add-facet-values', this.addFacetValues)
-    this.$root.$on('facet::search::reset-filters', this.resetFacetValues)
-    this.$root.$on('index::delete::all', this.refreshEachFacet)
-    this.$root.$on('facet::search::add-facet-values', this.updateFacetSelectedValues)
+    this.$root.$on('filter::async-search', this.asyncFilterSearch)
+    this.$root.$on('filter::add-filter-values', this.addFilterValues)
+    this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
+    this.$root.$on('index::delete::all', this.refreshEachFilter)
+    this.$root.$on('filter::search::add-filter-values', this.updateFilterSelectedValues)
   },
   data () {
     return {
-      selectedFacet: null,
-      facetQuery: null
+      selectedFilter: null,
+      filterQuery: null
     }
   },
   computed: {
-    ...mapState('search', ['facets', 'showFilters']),
+    ...mapState('search', ['filters', 'showFilters']),
     contextualizeModel: {
       set (toggler) {
         this.$root.$emit('bv::hide::tooltip')
@@ -82,31 +82,31 @@ export default {
     }
   },
   methods: {
-    asyncFacetSearch (selectedFacet, facetQuery) {
-      if (this.$refs.asyncFacetSearch) {
-        this.$set(this, 'selectedFacet', selectedFacet)
-        this.$set(this, 'facetQuery', facetQuery)
-        this.$refs.asyncFacetSearch.show()
+    asyncFilterSearch (selectedFilter, filterQuery) {
+      if (this.$refs.asyncFilterSearch) {
+        this.$set(this, 'selectedFilter', selectedFilter)
+        this.$set(this, 'filterQuery', filterQuery)
+        this.$refs.asyncFilterSearch.show()
       }
     },
-    addFacetValues (selectedFacet, values) {
-      this.$store.commit('search/addFacetValues', { facet: selectedFacet, values })
+    addFilterValues (selectedFilter, values) {
+      this.$store.commit('search/addFilterValues', { filter: selectedFilter, values })
     },
-    updateFacetSelectedValues (component) {
-      const facet = this.$refs[component.name][0]
-      if (facet) {
-        facet.root.selectedValuesFromStore()
-        facet.selectedValuesFromStore()
+    updateFilterSelectedValues (component) {
+      const filter = this.$refs[component.name][0]
+      if (filter) {
+        filter.root.selectedValuesFromStore()
+        filter.selectedValuesFromStore()
       }
     },
-    resetFacetValues () {
+    resetFilterValues () {
       forEach(this.$refs, component => {
         if (isArray(component) && component[0] && component[0].root) {
-          const facet = component[0]
-          facet.root.facetQuery = ''
-          facet.root.resetFacetValues()
-          if (facet.resetNamedEntityValues) {
-            facet.resetNamedEntityValues()
+          const filter = component[0]
+          filter.root.filterQuery = ''
+          filter.root.resetFilterValues()
+          if (filter.resetNamedEntityValues) {
+            filter.resetNamedEntityValues()
           }
         }
       })
@@ -114,13 +114,13 @@ export default {
     hideFilters () {
       this.$store.commit('search/toggleFilters')
     },
-    refreshEachFacet () {
+    refreshEachFilter () {
       forEach(this.$refs, component => {
         if (isArray(component) && component[0] && component[0].root) {
           component[0].root.aggregateWithLoading()
         }
       })
-      this.resetFacetValues()
+      this.resetFilterValues()
     }
   }
 }
@@ -190,7 +190,7 @@ export default {
 
         & > .list-group {
 
-          .facet__items {
+          .filter__items {
 
             &__search {
               display: flex;

@@ -1,24 +1,24 @@
 <template>
-  <div class="facet-search" v-if="facet">
-    <form @submit.prevent class="facet-search__form input-group">
-      <input type="search" class="form-control" id="input-facet-search" v-model="facetQuery" />
-      <label class="input-group-append m-0" for="input-facet-search">
+  <div class="filter-search" v-if="filter">
+    <form @submit.prevent class="filter-search__form input-group">
+      <input type="search" class="form-control" id="input-filter-search" v-model="filterQuery" />
+      <label class="input-group-append m-0" for="input-filter-search">
         <span class="input-group-text">
           <fa icon="search" />
         </span>
       </label>
     </form>
-    <div v-show="items.length" class="mt-4 facet-search__items card" :key="infiniteId">
+    <div v-show="items.length" class="mt-4 filter-search__items card" :key="infiniteId">
       <component class="border-0"
-                 :is="facet.component"
+                 :is="filter.component"
                  :async-items="items"
                  :async-total="total"
                  :async-total-count="totalCount"
-                 @add-facet-values="onAddedFacetValues"
+                 @add-filter-values="onAddedFilterValues"
                  hide-search
                  hide-header
                  hide-show-more
-                 v-bind="{ facet }"></component>
+                 v-bind="{ filter }"></component>
     </div>
     <infinite-loading @infinite="next" :identifier="infiniteId" v-if="infiniteScroll" spinner="bubbles">
       <template #no-more>
@@ -26,20 +26,20 @@
       </template>
     </infinite-loading>
     <div v-show="!items.length && isReady" class="text-muted text-center p-2 mt-4">
-      {{ $t('facet.noResults') }}
+      {{ $t('filter.noResults') }}
     </div>
   </div>
 </template>
 
 <script>
 import InfiniteLoading from 'vue-infinite-loading'
-import FacetText from '@/components/FacetText'
-import FacetYesNo from '@/components/FacetYesNo'
-import FacetDate from '@/components/FacetDate'
-import FacetDateRange from '@/components/FacetDateRange'
-import FacetPath from '@/components/FacetPath'
-import FacetNamedEntity from '@/components/FacetNamedEntity'
-import facets from '@/mixins/facets'
+import FilterText from '@/components/FilterText'
+import FilterYesNo from '@/components/FilterYesNo'
+import FilterDate from '@/components/FilterDate'
+import FilterDateRange from '@/components/FilterDateRange'
+import FilterPath from '@/components/FilterPath'
+import FilterNamedEntity from '@/components/FilterNamedEntity'
+import filters from '@/mixins/filters'
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
 import get from 'lodash/get'
@@ -49,10 +49,10 @@ import toLower from 'lodash/toLower'
 import uniqueId from 'lodash/uniqueId'
 
 export default {
-  name: 'FacetSearch',
-  mixins: [facets],
+  name: 'FilterSearch',
+  mixins: [filters],
   props: {
-    facet: {
+    filter: {
       type: Object
     },
     query: {
@@ -73,17 +73,17 @@ export default {
     }
   },
   components: {
-    FacetText,
-    FacetYesNo,
-    FacetDate,
-    FacetDateRange,
-    FacetPath,
-    FacetNamedEntity,
+    FilterText,
+    FilterYesNo,
+    FilterDate,
+    FilterDateRange,
+    FilterPath,
+    FilterNamedEntity,
     InfiniteLoading
   },
   data () {
     return {
-      facetQuery: this.query || '',
+      filterQuery: this.query || '',
       items: [],
       infiniteId: uniqueId(),
       total: 0,
@@ -93,23 +93,23 @@ export default {
   },
   mounted () {
     this.startOver()
-    this.$root.$on('facet::hide::named-entities', () => this.startOver())
+    this.$root.$on('filter::hide::named-entities', () => this.startOver())
   },
   watch: {
-    facetQuery () {
+    filterQuery () {
       this.startOverWithThrottle()
     },
-    facet () {
+    filter () {
       this.startOver()
     }
   },
   methods: {
     async search ($state) {
-      if (!this.facet) return
-      // Load the facet using a body build using the facet configuration
-      const alternativeSearch = this.facetQuery !== '' && this.facet.alternativeSearch ? compact(this.facet.alternativeSearch(toLower(this.facetQuery))) : []
+      if (!this.filter) return
+      // Load the filter using a body build using the filter configuration
+      const alternativeSearch = this.filterQuery !== '' && this.filter.alternativeSearch ? compact(this.filter.alternativeSearch(toLower(this.filterQuery))) : []
       const options = { size: this.size, include: `.*(${concat(alternativeSearch, this.queryTokens).join('|')}).*` }
-      const data = await this.$store.dispatch('search/queryFacet', { name: this.facet.name, options })
+      const data = await this.$store.dispatch('search/queryFilter', { name: this.filter.name, options })
       const all = get(data, this.resultPath, [])
       this.$set(this, 'items', all)
       this.$set(this, 'total', data.total)
@@ -132,8 +132,8 @@ export default {
       this.offset += this.pageSize
       return this.search($state)
     },
-    onAddedFacetValues (component) {
-      this.$root.$emit('facet::search::add-facet-values', component)
+    onAddedFilterValues (component) {
+      this.$root.$emit('filter::search::add-filter-values', component)
     }
   },
   computed: {
@@ -145,9 +145,9 @@ export default {
 </script>
 
 <style lang="scss">
-  .facet-search {
+  .filter-search {
     &__items {
-      .facet__items {
+      .filter__items {
         max-height: none;
       }
     }

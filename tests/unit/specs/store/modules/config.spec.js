@@ -14,7 +14,7 @@ describe('ConfigStore', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/config')
+      url: Api.getFullUrl('/config')
     }))
   })
 

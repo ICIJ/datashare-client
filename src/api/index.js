@@ -36,13 +36,7 @@ export default class Api {
     return this.sendAction('/version')
   }
   getConfig () {
-    return this.sendAction('/api/config').catch(err => {
-      if (err && err.response && err.response.status === 401) {
-        return this.sendAction('/config')
-      } else {
-        throw err
-      }
-    })
+    return this.sendAction('/config')
   }
   setConfig (config) {
     const headers = { 'Content-Type': 'application/json' }
@@ -116,6 +110,9 @@ export default class Api {
   }
   retrieveNotes (project) {
     return this.sendAction(replace(`/api/${project}/notes`, '//', '/'))
+  }
+  getUser () {
+    return this.sendAction('/api/user')
   }
   async sendAction (url, config = {}) {
     try {

@@ -1,45 +1,45 @@
 <template>
-  <facet v-bind="propsWithout('hide-show-more')" hide-show-more hide-exclude ref="facet">
+  <filter-boilerplate v-bind="propsWithout('hide-show-more')" hide-show-more hide-exclude ref="filter">
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="changeYesNoValue">
-        <b-form-checkbox v-for="{ value, html } in options" :value="value" class="facet__items__item" :key="value">
+        <b-form-checkbox v-for="{ value, html } in options" :value="value" class="filter__items__item" :key="value">
           <span v-html="html"></span>
         </b-form-checkbox>
       </b-form-checkbox-group>
     </template>
-  </facet>
+  </filter-boilerplate>
 </template>
 
 <script>
 import { mapState } from 'vuex'
-import Facet from '@/components/Facet'
-import facets from '@/mixins/facets'
+import FilterBoilerplate from '@/components/FilterBoilerplate'
+import filters from '@/mixins/filters'
 import utils from '@/mixins/utils'
 
 export default {
-  name: 'FacetYesNo',
-  components: { Facet },
-  mixins: [facets, utils],
+  name: 'FilterYesNo',
+  components: { FilterBoilerplate },
+  mixins: [filters, utils],
   computed: {
     ...mapState('search', ['starredDocuments']),
     options () {
       return [{
         value: true,
         html: `
-          <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
-            ${this.labelToHuman('facet.starred')}
+          <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
+            ${this.labelToHuman('filter.starred')}
           </span>
-          <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
+          <span class="filter__items__item__count badge badge-pill badge-light float-right my-1">
             ${this.$n(this.starredDocuments.length)}
           </span>
         `
       }, {
         value: false,
         html: `
-          <span class="facet__items__item__label px-1 text-truncate w-100 d-inline-block">
-            ${this.labelToHuman('facet.notStarred')}
+          <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
+            ${this.labelToHuman('filter.notStarred')}
           </span>
-          <span class="facet__items__item__count badge badge-pill badge-light float-right my-1">
+          <span class="filter__items__item__count badge badge-pill badge-light float-right my-1">
             ${this.$n(this.root.calculatedCount - this.starredDocuments.length)}
           </span>
         `
@@ -47,7 +47,7 @@ export default {
     }
   },
   mounted () {
-    this.root.$on('reset-facet-values', () => this.changeYesNoValue([]))
+    this.root.$on('reset-filter-values', () => this.changeYesNoValue([]))
   },
   created () {
     return this.$store.dispatch('search/getStarredDocuments')
@@ -67,7 +67,7 @@ export default {
           this.$set(this, 'selected', item.slice(1))
           break
       }
-      this.$root.$emit('facet::add-facet-values', this.facet, this.selected)
+      this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
       this.refreshRouteAndSearch()
     }
   }

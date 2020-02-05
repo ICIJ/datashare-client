@@ -5,7 +5,7 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import FacetYesNo from '@/components/FacetYesNo'
+import FilterYesNo from '@/components/FilterYesNo'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const { localVue, store, router } = App.init(createLocalVue()).useAll()
@@ -19,8 +19,8 @@ jest.mock('@/api', () => {
   })
 })
 
-describe('FacetYesNo.vue', () => {
-  const index = toLower('FacetYesNo')
+describe('FilterYesNo.vue', () => {
+  const index = toLower('FilterYesNo')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   let wrapper
@@ -29,11 +29,11 @@ describe('FacetYesNo.vue', () => {
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
   beforeEach(() => {
-    wrapper = mount(FacetYesNo, {
+    wrapper = mount(FilterYesNo, {
       localVue,
       router,
       store,
-      propsData: { facet: find(store.state.search.facets, { name: 'starred' }) },
+      propsData: { filter: find(store.state.search.filters, { name: 'starred' }) },
       mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
     })
     store.commit('search/index', index)
@@ -50,19 +50,19 @@ describe('FacetYesNo.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__all')).toHaveLength(1)
-    expect(wrapper.find('.facet__items__all .facet__items__item__label').text()).toBe('all')
-    expect(wrapper.find('.facet__items__all .facet__items__item__count').text()).toBe('2')
+    expect(wrapper.findAll('.filter__items__all')).toHaveLength(1)
+    expect(wrapper.find('.filter__items__all .filter__items__item__label').text()).toBe('all')
+    expect(wrapper.find('.filter__items__all .filter__items__item__count').text()).toBe('2')
   })
 
-  it('should display 2 items for the starred facet', async () => {
+  it('should display 2 items for the starred filter', async () => {
     await letData(es).have(new IndexedDocument('document', index)).commit()
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item .custom-control-label .facet__items__item__label')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item').at(0).find('.custom-control-label .facet__items__item__label').text()).toBe('facet.starred')
-    expect(wrapper.findAll('.facet__items__item').at(1).find('.custom-control-label .facet__items__item__label').text()).toBe('facet.notStarred')
+    expect(wrapper.findAll('.filter__items__item .custom-control-label .filter__items__item__label')).toHaveLength(2)
+    expect(wrapper.findAll('.filter__items__item').at(0).find('.custom-control-label .filter__items__item__label').text()).toBe('filter.starred')
+    expect(wrapper.findAll('.filter__items__item').at(1).find('.custom-control-label .filter__items__item__label').text()).toBe('filter.notStarred')
   })
 
   it('should change the selected value', async () => {
@@ -73,15 +73,15 @@ describe('FacetYesNo.vue', () => {
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
 
-    wrapper.findAll('.facet__items__item .custom-control-label').at(0).trigger('click')
+    wrapper.findAll('.filter__items__item .custom-control-label').at(0).trigger('click')
     expect(wrapper.vm.selected).toEqual([true])
     expect(wrapper.vm.root.isAllSelected).toBeFalsy()
 
-    wrapper.findAll('.facet__items__item .custom-control-label').at(1).trigger('click')
+    wrapper.findAll('.filter__items__item .custom-control-label').at(1).trigger('click')
     expect(wrapper.vm.selected).toEqual([false])
     expect(wrapper.vm.root.isAllSelected).toBeFalsy()
 
-    wrapper.findAll('.facet__items__item .custom-control-label').at(1).trigger('click')
+    wrapper.findAll('.filter__items__item .custom-control-label').at(1).trigger('click')
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
   })
@@ -98,7 +98,7 @@ describe('FacetYesNo.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__display')).toHaveLength(0)
+    expect(wrapper.findAll('.filter__items__display')).toHaveLength(0)
   })
 
   it('should display the results count', async () => {
@@ -109,19 +109,19 @@ describe('FacetYesNo.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.facet__items__item .facet__items__item__count')).toHaveLength(2)
-    expect(wrapper.findAll('.facet__items__item').at(0).find('.facet__items__item__count').text()).toBe('2')
-    expect(wrapper.findAll('.facet__items__item').at(1).find('.facet__items__item__count').text()).toBe('1')
+    expect(wrapper.findAll('.filter__items__item .filter__items__item__count')).toHaveLength(2)
+    expect(wrapper.findAll('.filter__items__item').at(0).find('.filter__items__item__count').text()).toBe('2')
+    expect(wrapper.findAll('.filter__items__item').at(1).find('.filter__items__item__count').text()).toBe('1')
   })
 
   it('should not display the exclude button', async () => {
     await letData(es).have(new IndexedDocument('document', index)).commit()
 
     await wrapper.vm.root.aggregate()
-    await wrapper.findAll('.facet__items__item').at(0).find('.custom-control-input').trigger('click')
-    store.commit('search/addFacetValue', { name: 'starred', value: true })
+    await wrapper.findAll('.filter__items__item').at(0).find('.custom-control-input').trigger('click')
+    store.commit('search/addFilterValue', { name: 'starred', value: true })
     wrapper.vm.root.collapseItems = false
 
-    expect(wrapper.findAll('.facet__header__invert')).toHaveLength(0)
+    expect(wrapper.findAll('.filter__header__invert')).toHaveLength(0)
   })
 })

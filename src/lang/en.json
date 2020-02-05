@@ -91,7 +91,7 @@
     "viewOriginal": "View original text",
     "viewTranslated": "View translated text"
   },
-  "facet": {
+  "filter": {
     "none": "No values",
     "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
     "noResults": "No results",
@@ -471,7 +471,7 @@
     "title": "Batch searches",
     "heading": "New batch search",
     "fileLabel": "CSV file",
-    "fileDescription": "Export your spreadsheet as a CSV. Only CSV format accepted. The first and only column should contain the terms to search. You can use operators (AND NOT * ? ! + - etc). Use 'space' instead of OR or | | with 'do phrase matches'. You can use Regex only between 2 slashes.",
+    "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. Only CSV format accepted. The first and only column should contain the terms to search. No line break(s) in cells. You can use operators (AND NOT * ? ! + - etc). Use 'space' instead of OR or | | with 'do phrase matches'. You can use Regex only between 2 slashes.",
     "filePlaceholder": "Choose a file...",
     "submit": "Add",
     "success": "Your batch search is now running.",

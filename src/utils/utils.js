@@ -34,7 +34,7 @@ function getExtractionLevelTranslationKey (key) {
     10: 'level10'
   }
   if (key === undefined) return ''
-  return `facet.level.${get(levels, key, key)}`
+  return `filter.level.${get(levels, key, key)}`
 }
 
 export {

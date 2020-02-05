@@ -20,6 +20,16 @@ To do so, you will:
 
 ![](../.gitbook/assets/screenshot-2019-09-25-at-16.06.40.png)
 
+* **Do not put line break\(s\)** in any of your cells.
+
+![This will lead to a &quot;failure&quot;.](../.gitbook/assets/screenshot-2020-02-03-at-12.18.04.png)
+
+![This will lead to a &quot;success&quot;.](../.gitbook/assets/screenshot-2020-02-03-at-12.18.09.png)
+
+To delete line break\(s\) in your spreadsheet, you can use the "**Find and replace all**" functionality. Find all **"\n"** and replace them all by **nothing or a space**.
+
+![Use this functionality to delete all line break\(s\)](../.gitbook/assets/screenshot-2020-02-03-at-11.51.34.png)
+
 * If you have **blank cells in your spreadsheet...**
 
 ![](../.gitbook/assets/screenshot-2019-11-04-at-16.12.23.png)
@@ -52,13 +62,21 @@ Reserved characters, when misused, can lead to [**failures**](https://icij.gitbo
 
 * Searches are **not case sensitive**: if you search 'HeLlo', it will look for all occurrences of 'Hello', 'hello', 'hEllo', 'heLLo', etc. in the documents.
 
-### Export your spreadsheet as a CSV
+### Export your CSV encoded in UTF-8
 
 Export your spreadsheet in a CSV format:
 
 ![](../.gitbook/assets/screenshot-2019-09-25-at-16.10.06.png)
 
-### 
+**Important: Use the UTF-8 encoding.**
+
+* **LibreOffice Calc**: it uses UTF-8 by default. If not, go to LibreOffice menu &gt; Preferences &gt; Load/Save &gt; HTML Compatibility and make sur the character set is 'Unicode \(UTF-8\)':
+
+![](../.gitbook/assets/screenshot-2020-02-04-at-22.00.07.png)
+
+* **Microsoft Excel**: if it is not set by default, select "CSV UTF-8" as one of the formats, [as explained here](https://answers.microsoft.com/en-us/msoffice/forum/msoffice_excel-mso_win10-mso_365hp/save-as-csv-with-utf-8-encoding/ff94943c-db5b-42c3-8905-f86d3d8d52c2).
+* **Google Sheets**: it uses UTF-8 by default. Just click "Export to" and "CSV".
+* **Other spreadsheet softwares:** please refer to your software's user guide.
 
 ## Launch your batch search
 

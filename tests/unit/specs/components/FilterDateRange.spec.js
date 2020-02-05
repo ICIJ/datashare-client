@@ -5,14 +5,14 @@ import VueRouter from 'vue-router'
 
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import FacetDateRange from '@/components/FacetDateRange'
+import FilterDateRange from '@/components/FilterDateRange'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
-describe('FacetDateRange.vue', () => {
-  const index = toLower('FacetDateRange')
+describe('FilterDateRange.vue', () => {
+  const index = toLower('FilterDateRange')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   let wrapper
@@ -21,7 +21,7 @@ describe('FacetDateRange.vue', () => {
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', index)
-    wrapper = mount(FacetDateRange, { localVue, i18n, store, router, propsData: { facet: find(store.state.search.facets, { name }) } })
+    wrapper = mount(FilterDateRange, { localVue, i18n, store, router, propsData: { filter: find(store.state.search.filters, { name }) } })
   })
 
   afterEach(() => store.commit('search/reset'))
@@ -32,22 +32,22 @@ describe('FacetDateRange.vue', () => {
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.find('.facet__items .date-picker input').exists()).toBeTruthy()
-    expect(wrapper.find('.facet__items .date-picker input').attributes('placeholder')).toBe('Select a date range')
+    expect(wrapper.find('.filter__items .date-picker input').exists()).toBeTruthy()
+    expect(wrapper.find('.filter__items .date-picker input').attributes('placeholder')).toBe('Select a date range')
   })
 
-  it('should add selected value to dedicated facet', () => {
+  it('should add selected value to dedicated filter', () => {
     const start = new Date('2019-08-19')
     const end = new Date('2019-08-20')
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start, end })
 
     wrapper.vm.onInput()
 
-    const existingFacet = find(store.state.search.facets, { name })
-    expect(existingFacet.values).toEqual([start.getTime(), end.getTime()])
+    const existingFilter = find(store.state.search.filters, { name })
+    expect(existingFilter.values).toEqual([start.getTime(), end.getTime()])
   })
 
-  it('should set selected value to dedicated facet, as the only one value', () => {
+  it('should set selected value to dedicated filter, as the only one value', () => {
     const start = new Date('2018-08-19')
     const end = new Date('2018-08-20')
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start, end })
@@ -58,22 +58,22 @@ describe('FacetDateRange.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start: start2, end: end2 })
     wrapper.vm.onInput()
 
-    const existingFacet = find(store.state.search.facets, { name })
-    expect(existingFacet.values).toEqual([start2.getTime(), end2.getTime()])
+    const existingFilter = find(store.state.search.filters, { name })
+    expect(existingFilter.values).toEqual([start2.getTime(), end2.getTime()])
   })
 
-  it('should reset selectedDate on event "reset-facet-values"', () => {
+  it('should reset selectedDate on event "reset-filter-values"', () => {
     const start = new Date('2018-08-19')
     const end = new Date('2018-08-20')
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start, end })
 
-    wrapper.vm.root.$emit('reset-facet-values')
+    wrapper.vm.root.$emit('reset-filter-values')
 
     expect(wrapper.vm.selectedDate).toBeNull()
   })
 
   it('should update selectedDate from the store value', () => {
-    store.commit('search/setFacetValue', { name, value: [new Date('2018-01-01').getTime(), new Date('2018-12-31').getTime()] })
+    store.commit('search/setFilterValue', { name, value: [new Date('2018-01-01').getTime(), new Date('2018-12-31').getTime()] })
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start: new Date('2019-08-19'), end: new Date('2019-08-22') })
 
     wrapper.vm.selectedValuesFromStore()

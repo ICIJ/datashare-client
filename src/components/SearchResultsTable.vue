@@ -110,7 +110,7 @@ export default {
       return this.response.hits.length > 0
     },
     hasFilters () {
-      return this.$store.getters['search/activeFacets'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
+      return this.$store.getters['search/activeFilters'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
     },
     defaultSortField () {
       return this.fields[0]

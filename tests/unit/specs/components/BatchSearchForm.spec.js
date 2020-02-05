@@ -15,7 +15,7 @@ describe('BatchSearchForm.vue', () => {
   let wrapper
   const state = { batchSearches: [] }
   const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
-  const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFacet: jest.fn() } } } })
+  const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFilter: jest.fn() } } } })
 
   beforeAll(() => Murmur.config.merge({ userProjects: [index], dataDir: '/root/project' }))
 

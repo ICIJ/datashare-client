@@ -3,7 +3,8 @@ import EsDocList from '@/api/resources/EsDocList'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import settings from '@/utils/settings'
 import { isNarrowScreen } from '@/utils/screen'
-import { FacetText, FacetYesNo, FacetDate, FacetDateRange, FacetPath, FacetNamedEntity, namedEntityCategoryTranslation, starredLabel } from '@/store/facetsStore'
+import { FilterText, FilterYesNo, FilterDate, FilterDateRange, FilterPath, FilterNamedEntity } from '@/store/filters'
+import { namedEntityCategoryTranslation, starredLabel } from '@/store/filtersStore'
 import Api from '@/api'
 import types from '@/utils/types.json'
 import lucene from 'lucene'
@@ -15,7 +16,7 @@ import difference from 'lodash/difference'
 import each from 'lodash/each'
 import endsWith from 'lodash/endsWith'
 import escapeRegExp from 'lodash/escapeRegExp'
-import filter from 'lodash/filter'
+import filterCollection from 'lodash/filter'
 import find from 'lodash/find'
 import get from 'lodash/get'
 import has from 'lodash/has'
@@ -33,7 +34,7 @@ import toLower from 'lodash/toLower'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
 
-export const datashare = new Api()
+export const api = new Api()
 
 export function initialState () {
   return {
@@ -41,18 +42,18 @@ export function initialState () {
     from: 0,
     size: 25,
     globalSearch: true,
-    facets: [
-      new FacetYesNo('starred', '_id', 'star', false, item => get(starredLabel, item.key, '')),
-      new FacetText('tags', 'tags', 'tags', true),
-      new FacetText('contentType', 'contentType', 'file', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })),
-      new FacetDateRange('creationDate', 'metadata.tika_metadata_creation_date', 'calendar-alt', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key),
-      new FacetText('language', 'language', 'language', false, item => `facet.lang.${item.key}`),
-      new FacetNamedEntity('namedEntityPerson', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityPerson']),
-      new FacetNamedEntity('namedEntityOrganization', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityOrganization']),
-      new FacetNamedEntity('namedEntityLocation', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityLocation']),
-      new FacetPath('path', 'byDirname', 'hdd', false),
-      new FacetText('extractionLevel', 'extractionLevel', 'paperclip', false, item => getExtractionLevelTranslationKey(item.key)),
-      new FacetDate('indexingDate', 'extractionDate', 'calendar-plus', false, item => item.key_as_string)
+    filters: [
+      new FilterYesNo('starred', '_id', 'star', false, item => get(starredLabel, item.key, '')),
+      new FilterText('tags', 'tags', 'tags', true),
+      new FilterText('contentType', 'contentType', 'file', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })),
+      new FilterDateRange('creationDate', 'metadata.tika_metadata_creation_date', 'calendar-alt', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key),
+      new FilterText('language', 'language', 'language', false, item => `filter.lang.${item.key}`),
+      new FilterNamedEntity('namedEntityPerson', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityPerson']),
+      new FilterNamedEntity('namedEntityOrganization', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityOrganization']),
+      new FilterNamedEntity('namedEntityLocation', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityLocation']),
+      new FilterPath('path', 'byDirname', 'hdd', false),
+      new FilterText('extractionLevel', 'extractionLevel', 'paperclip', false, item => getExtractionLevelTranslationKey(item.key)),
+      new FilterDate('indexingDate', 'extractionDate', 'calendar-plus', false, item => item.key_as_string)
     ],
     sort: settings.defaultSearchSort,
     field: settings.defaultSearchField,
@@ -71,34 +72,34 @@ export function initialState () {
 export const state = initialState()
 
 export const getters = {
-  getFacet (state) {
-    return predicate => find(state.facets, predicate)
+  getFilter (state) {
+    return predicate => find(state.filters, predicate)
   },
   getFields (state) {
     return () => find(settings.searchFields, { key: state.field }).fields
   },
-  hasFacetValue (state) {
-    return item => !!find(state.facets, facet => {
-      return facet.name === item.name && facet.values.indexOf(item.value) > -1
+  hasFilterValue (state) {
+    return item => !!find(state.filters, filter => {
+      return filter.name === item.name && filter.values.indexOf(item.value) > -1
     })
   },
-  hasFacetValues (state) {
-    return name => !!find(state.facets, facet => {
-      return facet.name === name && facet.values.length > 0
+  hasFilterValues (state) {
+    return name => !!find(state.filters, filter => {
+      return filter.name === name && filter.values.length > 0
     })
   },
-  isFacetReversed (state) {
+  isFilterReversed (state) {
     return name => {
-      return !!find(state.facets, facet => {
-        return facet.name === name && facet.reverse
+      return !!find(state.filters, filter => {
+        return filter.name === name && filter.reverse
       })
     }
   },
-  activeFacets (state) {
-    return filter(state.facets, f => f.hasValues())
+  activeFilters (state) {
+    return filterCollection(state.filters, f => f.hasValues())
   },
-  findFacet (state) {
-    return name => find(state.facets, { name })
+  findFilter (state) {
+    return name => find(state.filters, { name })
   },
   toRouteQuery (state) {
     return {
@@ -108,17 +109,17 @@ export const getters = {
       sort: state.sort,
       index: state.index,
       field: state.field,
-      ...reduce(state.facets, (memo, facetValue) => {
-        // We need to look for the facet's definition in order to us its `id`
-        // as key for the URL params. This was we track configured facet instead
+      ...reduce(state.filters, (memo, filterValue) => {
+        // We need to look for the filter's definition in order to us its `id`
+        // as key for the URL params. This was we track configured filter instead
         // of arbitrary values provided by the user. This allow to retrieve special
-        // behaviors depending on the facet definition.
-        const facet = find(state.facets, { name: facetValue.name })
-        // We don't add facetValue that match with any existing facets
+        // behaviors depending on the filter definition.
+        const filter = find(state.filters, { name: filterValue.name })
+        // We don't add filterValue that match with any existing filters
         // defined in the `aggregation` store.
-        if (facet && facetValue.values.length > 0) {
-          const key = facetValue.reverse ? `f[-${facet.name}]` : `f[${facet.name}]`
-          memo[key] = facetValue.values
+        if (filter && filterValue.values.length > 0) {
+          const key = filterValue.reverse ? `f[-${filter.name}]` : `f[${filter.name}]`
+          memo[key] = filterValue.values
         }
         return memo
       }, {})
@@ -163,7 +164,7 @@ export const getters = {
   },
   retrieveContentQueryTerms (state, getters) {
     const fields = ['', 'content']
-    return filter(getters.retrieveQueryTerms, item => fields.includes(item.field))
+    return filterCollection(getters.retrieveQueryTerms, item => fields.includes(item.field))
   },
   retrieveContentQueryTermsInContent (state, getters) {
     return (text, field) => getters.retrieveContentQueryTerms.map(term => {
@@ -196,9 +197,9 @@ export const mutations = {
         state[key] = s[key]
       }
     })
-    const existingFacet = find(state.facets, { name: 'starred' })
-    if (existingFacet) {
-      existingFacet.starredDocuments = state.starredDocuments
+    const existingFilter = find(state.filters, { name: 'starred' })
+    if (existingFilter) {
+      existingFilter.starredDocuments = state.starredDocuments
     }
   },
   setGlobalSearch (state, globalSearch) {
@@ -245,72 +246,72 @@ export const mutations = {
   appendToResponse (state, raw) {
     state.response.append(raw)
   },
-  setFacets (state, facets) {
-    state.facets = facets
+  setFilters (state, filters) {
+    state.filters = filters
   },
-  addFacet (state, facet) {
-    if (find(state.facets, { name: facet.name })) {
-      throw new Error('Facet already exists')
+  addFilter (state, filter) {
+    if (find(state.filters, { name: filter.name })) {
+      throw new Error('Filter already exists')
     }
-    return state.facets.push(facet)
+    return state.filters.push(filter)
   },
-  addFacetValue (state, facet) {
-    // We cast the new facet values to allow several new values at the same time
-    const values = castArray(facet.value)
-    // Look for existing facet for this name
-    const existingFacet = find(state.facets, { name: facet.name })
-    if (existingFacet) {
-      existingFacet.values = uniq(existingFacet.values.concat(values))
+  addFilterValue (state, filter) {
+    // We cast the new filter values to allow several new values at the same time
+    const values = castArray(filter.value)
+    // Look for existing filter for this name
+    const existingFilter = find(state.filters, { name: filter.name })
+    if (existingFilter) {
+      existingFilter.values = uniq(existingFilter.values.concat(values))
     } else {
-      throw new Error(`cannot find facet named ${facet.name}`)
+      throw new Error(`cannot find filter named ${filter.name}`)
     }
   },
-  setFacetValue (state, facet) {
-    // Look for existing facet for this name
-    const existingFacet = find(state.facets, { name: facet.name })
-    if (existingFacet) {
-      existingFacet.values = castArray(facet.value)
+  setFilterValue (state, filter) {
+    // Look for existing filter for this name
+    const existingFilter = find(state.filters, { name: filter.name })
+    if (existingFilter) {
+      existingFilter.values = castArray(filter.value)
     } else {
-      throw new Error(`cannot find facet named ${facet.name}`)
+      throw new Error(`cannot find filter named ${filter.name}`)
     }
   },
-  addFacetValues (state, { facet, values }) {
-    const existingFacet = find(state.facets, { name: facet.name })
-    if (existingFacet) {
-      existingFacet.values = values
+  addFilterValues (state, { filter, values }) {
+    const existingFilter = find(state.filters, { name: filter.name })
+    if (existingFilter) {
+      existingFilter.values = values
     } else {
-      throw new Error(`cannot find facet named ${facet.name}`)
+      throw new Error(`cannot find filter named ${filter.name}`)
     }
   },
-  removeFacetValue (state, facet) {
-    const existingFacet = find(state.facets, { name: facet.name })
-    if (existingFacet) {
+  removeFilterValue (state, filter) {
+    const existingFilter = find(state.filters, { name: filter.name })
+    if (existingFilter) {
       // Filter the values for this name to remove the given value
-      existingFacet.values = filter(existingFacet.values, value => value !== facet.value)
+      existingFilter.values = filterCollection(existingFilter.values, value => value !== filter.value)
     }
   },
-  excludeFacet (state, name) {
-    const existingFacet = find(state.facets, { name })
-    if (existingFacet) {
-      existingFacet.reverse = true
+  excludeFilter (state, name) {
+    const existingFilter = find(state.filters, { name })
+    if (existingFilter) {
+      existingFilter.reverse = true
     }
   },
-  includeFacet (state, name) {
-    const existingFacet = find(state.facets, { name })
-    if (existingFacet) {
-      existingFacet.reverse = false
+  includeFilter (state, name) {
+    const existingFilter = find(state.filters, { name })
+    if (existingFilter) {
+      existingFilter.reverse = false
     }
   },
-  toggleFacet (state, name) {
-    const existingFacet = find(state.facets, { name })
-    if (existingFacet) {
-      existingFacet.reverse = !existingFacet.reverse
+  toggleFilter (state, name) {
+    const existingFilter = find(state.filters, { name })
+    if (existingFilter) {
+      existingFilter.reverse = !existingFilter.reverse
     }
   },
-  resetFacetValues (state, name) {
-    const existingFacet = find(state.facets, { name })
-    if (existingFacet) {
-      existingFacet.values = []
+  resetFilterValues (state, name) {
+    const existingFilter = find(state.filters, { name })
+    if (existingFilter) {
+      existingFilter.values = []
     }
   },
   toggleFilters (state, toggler = !state.showFilters) {
@@ -323,9 +324,9 @@ export const mutations = {
     state.starredDocuments = difference(state.starredDocuments, documentIds)
   },
   setStarredDocuments (state) {
-    const existingFacet = find(state.facets, { name: 'starred' })
-    if (existingFacet) {
-      existingFacet.starredDocuments = state.starredDocuments
+    const existingFilter = find(state.filters, { name: 'starred' })
+    if (existingFilter) {
+      existingFilter.starredDocuments = state.starredDocuments
     }
   }
 }
@@ -339,7 +340,7 @@ export const actions = {
     commit('isReady', !updateIsReady)
     commit('error', null)
     try {
-      const raw = await elasticsearch.searchDocs(state.index, state.query, state.facets, state.from, state.size, state.sort, getters.getFields())
+      const raw = await elasticsearch.searchDocs(state.index, state.query, state.filters, state.from, state.size, state.sort, getters.getFields())
       commit('buildResponse', raw)
       return raw
     } catch (error) {
@@ -358,31 +359,31 @@ export const actions = {
     commit('field', queryHasntValue('field') ? state.field : queryOrParams.field)
     return dispatch('refresh', true)
   },
-  queryFacet ({ state, getters }, params) {
-    return elasticsearch.searchFacet(
+  queryFilter ({ state, getters }, params) {
+    return elasticsearch.searchFilter(
       state.index,
-      getters.getFacet({ name: params.name }),
+      getters.getFilter({ name: params.name }),
       state.query,
-      state.facets,
+      state.filters,
       state.globalSearch,
       params.options,
       getters.getFields()
     ).then(raw => new EsDocList(raw))
   },
-  addFacetValue ({ commit, dispatch }, facet) {
-    commit('addFacetValue', facet)
+  addFilterValue ({ commit, dispatch }, filter) {
+    commit('addFilterValue', filter)
     return dispatch('query')
   },
-  removeFacetValue ({ commit, dispatch }, facet) {
-    commit('removeFacetValue', facet)
+  removeFilterValue ({ commit, dispatch }, filter) {
+    commit('removeFilterValue', filter)
     return dispatch('query')
   },
-  resetFacetValues ({ commit, dispatch }, name) {
-    commit('resetFacetValues', name)
+  resetFilterValues ({ commit, dispatch }, name) {
+    commit('resetFilterValues', name)
     return dispatch('query')
   },
-  toggleFacet ({ commit, dispatch }, name) {
-    commit('toggleFacet', name)
+  toggleFilter ({ commit, dispatch }, name) {
+    commit('toggleFilter', name)
     return dispatch('query')
   },
   previousPage ({ state, commit, dispatch }, name) {
@@ -402,19 +403,19 @@ export const actions = {
     if (query.size) commit('size', query.size)
     if (query.sort) commit('sort', query.sort)
     if (query.field) commit('field', query.field)
-    // Iterate over the list of facet
-    each(state.facets, facet => {
-      // The facet key are formatted in the URL as follow.
+    // Iterate over the list of filter
+    each(state.filters, filter => {
+      // The filter key are formatted in the URL as follow.
       // See `query-string` for more info about query string format.
-      each([`f[${facet.name}]`, `f[-${facet.name}]`], (key, index) => {
+      each([`f[${filter.name}]`, `f[-${filter.name}]`], (key, index) => {
         // Add the data if the value exist
         if (query.hasOwnProperty(key)) {
           // Because the values are grouped for each query parameter and because
-          // the `addFacetValue` also accept an array of value, we can directly
+          // the `addFilterValue` also accept an array of value, we can directly
           // use the query values.
-          commit('addFacetValue', facet.itemParam({ key: query[key] }))
-          // Invert the facet if we are using the second key (for reverse facet)
-          if (index) commit('excludeFacet', facet.name)
+          commit('addFilterValue', filter.itemParam({ key: query[key] }))
+          // Invert the filter if we are using the second key (for reverse filter)
+          if (index) commit('excludeFilter', filter.name)
         }
       })
     })
@@ -437,13 +438,13 @@ export const actions = {
   },
   async starDocuments ({ state, commit }, documents) {
     const documentIds = map(documents, 'id')
-    await datashare.starDocuments(state.index, documentIds)
+    await api.starDocuments(state.index, documentIds)
     commit('pushFromStarredDocuments', documentIds)
     commit('setStarredDocuments')
   },
   async unstarDocuments ({ state, commit }, documents) {
     const documentIds = map(documents, 'id')
-    await datashare.unstarDocuments(state.index, documentIds)
+    await api.unstarDocuments(state.index, documentIds)
     commit('removeFromStarredDocuments', documentIds)
     commit('setStarredDocuments')
   },
@@ -456,13 +457,13 @@ export const actions = {
     }
   },
   async getStarredDocuments ({ state, commit }) {
-    const starredDocuments = await datashare.getStarredDocuments(state.index)
+    const starredDocuments = await api.getStarredDocuments(state.index)
     commit('starredDocuments', starredDocuments)
     commit('setStarredDocuments')
   },
   async getIsDownloadAllowed ({ state, commit }) {
     try {
-      await datashare.isDownloadAllowed(state.index)
+      await api.isDownloadAllowed(state.index)
       commit('isDownloadAllowed', true)
     } catch (e) {
       commit('isDownloadAllowed', false)

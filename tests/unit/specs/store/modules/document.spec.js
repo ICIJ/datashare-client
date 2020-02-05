@@ -3,12 +3,11 @@ import orderBy from 'lodash/orderBy'
 import toLower from 'lodash/toLower'
 import uniqueId from 'lodash/uniqueId'
 
-import { auth, initialState } from '@/store/modules/document'
 import Api from '@/api'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { jsonResp } from 'tests/unit/tests_utils'
 import store from '@/store'
+import { initialState } from '@/store/modules/document'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('axios', () => {
   return {
@@ -22,17 +21,9 @@ describe('DocumentStore', () => {
   const es = esConnectionHelper.es
   const id = 'document'
 
-  beforeAll(() => {
-    jest.spyOn(auth, 'fetch')
-    auth.fetch.mockReturnValue(jsonResp({}, 401, {}))
-  })
-
   afterEach(() => store.commit('document/reset'))
 
-  afterAll(() => {
-    axios.request.mockClear()
-    auth.fetch.mockClear()
-  })
+  afterAll(() => axios.request.mockClear())
 
   it('should define a store module', () => {
     expect(store.state.document).not.toBeUndefined()

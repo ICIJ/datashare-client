@@ -34,7 +34,7 @@ describe('Config.vue', () => {
   it('should load the config on component creation', () => {
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/config')
+      url: Api.getFullUrl('/config')
     }))
   })
 

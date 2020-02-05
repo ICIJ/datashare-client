@@ -93,7 +93,7 @@ export default {
       }
     },
     activeFilters () {
-      return this.$store.getters['search/activeFacets'].length
+      return this.$store.getters['search/activeFilters'].length
     },
     bodyWrapper () {
       return this.layout === 'list' ? VuePerfectScrollbar : 'div'
@@ -116,7 +116,7 @@ export default {
   },
   mounted () {
     this.$root.$on('index::delete::all', this.search)
-    this.$root.$on('facet::starred::refresh', this.refresh)
+    this.$root.$on('filter::starred::refresh', this.refresh)
     this.$root.$on('document::content::changed', this.updateScrollBars)
   },
   watch: {

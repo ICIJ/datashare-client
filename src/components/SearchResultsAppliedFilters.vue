@@ -8,7 +8,7 @@
 <script>
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
-import { FacetDate } from '@/store/facetsStore'
+import { FilterDate } from '@/store/filtersStore'
 import map from 'lodash/map'
 
 export default {
@@ -24,15 +24,15 @@ export default {
         term.value = term.label
         filters.push(term)
       })
-      map(this.$store.state.search.facets, facet => {
-        map(facet.values, value => {
-          let label = facet.itemLabel ? facet.itemLabel({ key: value, key_as_string: value }) : value
+      map(this.$store.state.search.filters, filter => {
+        map(filter.values, value => {
+          let label = filter.itemLabel ? filter.itemLabel({ key: value, key_as_string: value }) : value
           label = this.$te(label) ? this.$t(label) : label
-          if (facet.component === new FacetDate().component && Number.isInteger(label)) {
+          if (filter.component === new FilterDate().component && Number.isInteger(label)) {
             const date = new Date(parseInt(label))
             label = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
           }
-          filters.push({ name: facet.name, label, value, negation: facet.reverse })
+          filters.push({ name: filter.name, label, value, negation: filter.reverse })
         })
       })
       return filters

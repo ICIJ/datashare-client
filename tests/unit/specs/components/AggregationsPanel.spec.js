@@ -24,37 +24,37 @@ describe('AggregationsPanel.vue', () => {
     expect(wrapper.find('.aggregations-panel').isVisible()).toBeFalsy()
   })
 
-  it('should call function resetFacetValues on event facet::search::reset-filters emitted', async () => {
-    const resetFacetValuesStub = jest.fn()
-    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { resetFacetValues: resetFacetValuesStub }, sync: false })
-    wrapper.vm.$root.$emit('facet::search::reset-filters')
+  it('should call function resetFilterValues on event filter::search::reset-filters emitted', async () => {
+    const resetFilterValuesStub = jest.fn()
+    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { resetFilterValues: resetFilterValuesStub }, sync: false })
+    wrapper.vm.$root.$emit('filter::search::reset-filters')
 
-    expect(resetFacetValuesStub).toHaveBeenCalled()
+    expect(resetFilterValuesStub).toHaveBeenCalled()
   })
 
-  it('should call function refreshEachFacet on event index::delete::all emitted', async () => {
-    const refreshEachFacetMock = jest.fn()
-    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { refreshEachFacet: refreshEachFacetMock }, sync: false })
+  it('should call function refreshEachFilter on event index::delete::all emitted', async () => {
+    const refreshEachFilterMock = jest.fn()
+    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { refreshEachFilter: refreshEachFilterMock }, sync: false })
 
     wrapper.vm.$root.$emit('index::delete::all')
 
-    expect(refreshEachFacetMock).toHaveBeenCalled()
+    expect(refreshEachFilterMock).toHaveBeenCalled()
   })
 
-  it('should call function updateFacetSelectedValues on event facet::search::add-facet-values emitted', async () => {
-    const updateFacetSelectedValuesMock = jest.fn()
-    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { updateFacetSelectedValues: updateFacetSelectedValuesMock }, sync: false })
+  it('should call function updateFilterSelectedValues on event filter::search::add-filter-values emitted', async () => {
+    const updateFilterSelectedValuesMock = jest.fn()
+    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { updateFilterSelectedValues: updateFilterSelectedValuesMock }, sync: false })
 
-    wrapper.vm.$root.$emit('facet::search::add-facet-values')
+    wrapper.vm.$root.$emit('filter::search::add-filter-values')
 
-    expect(updateFacetSelectedValuesMock).toHaveBeenCalled()
+    expect(updateFilterSelectedValuesMock).toHaveBeenCalled()
   })
 
-  it('should emit an event "facet::search::reset-filters" on filters reset', () => {
+  it('should emit an event "filter::search::reset-filters" on filters reset', () => {
     const mockCallback = jest.fn()
-    wrapper.vm.$root.$on('facet::search::reset-filters', mockCallback)
+    wrapper.vm.$root.$on('filter::search::reset-filters', mockCallback)
 
-    wrapper.vm.$root.$emit('facet::search::reset-filters')
+    wrapper.vm.$root.$emit('filter::search::reset-filters')
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
@@ -62,7 +62,7 @@ describe('AggregationsPanel.vue', () => {
   it('should not reset the starredDocuments on filters reset', () => {
     store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
 
-    wrapper.vm.$root.$emit('facet::search::reset-filters')
+    wrapper.vm.$root.$emit('filter::search::reset-filters')
 
     expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
   })

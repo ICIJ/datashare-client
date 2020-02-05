@@ -151,10 +151,10 @@ describe('DocumentTagsForm.vue', () => {
     }))
   })
 
-  it('should emit a facet::refresh event on adding a tag', async () => {
+  it('should emit a filter::refresh event on adding a tag', async () => {
     wrapper = await createView({ es, index })
     const mockCallback = jest.fn()
-    wrapper.vm.$root.$on('facet::refresh', mockCallback)
+    wrapper.vm.$root.$on('filter::refresh', mockCallback)
 
     wrapper.vm.tag = 'tag'
     await wrapper.vm.addTag()
@@ -163,10 +163,10 @@ describe('DocumentTagsForm.vue', () => {
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
 
-  it('should emit a facet::delete event on deleting a tag', async () => {
+  it('should emit a filter::delete event on deleting a tag', async () => {
     wrapper = await createView({ es, index })
     const mockCallback = jest.fn()
-    wrapper.vm.$root.$on('facet::delete', mockCallback)
+    wrapper.vm.$root.$on('filter::delete', mockCallback)
 
     await wrapper.vm.deleteTag('tag')
 

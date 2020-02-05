@@ -11,7 +11,7 @@
       <hook name="landing.form.project:before" />
       <div class="mt-5 text-white" v-if="$config.is('multipleProjects')">
         <h2 class="text-uppercase h5">
-          {{ $t('facet.projects') }}
+          {{ $t('filter.projects') }}
         </h2>
         <project-cards class="mt-3" />
       </div>

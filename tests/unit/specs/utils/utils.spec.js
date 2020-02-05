@@ -61,11 +61,11 @@ describe('utils', () => {
 
   describe('getExtractionLevelTranslationKey', () => {
     it('should retrieve the correct extraction level translation key', () => {
-      expect(getExtractionLevelTranslationKey(5)).toEqual('facet.level.level05')
+      expect(getExtractionLevelTranslationKey(5)).toEqual('filter.level.level05')
     })
 
     it('should retrieve the extraction level if no level (1/2)', () => {
-      expect(getExtractionLevelTranslationKey('')).toEqual('facet.level.')
+      expect(getExtractionLevelTranslationKey('')).toEqual('filter.level.')
     })
 
     it('should retrieve the extraction level if no level (1/2)', () => {
@@ -73,7 +73,7 @@ describe('utils', () => {
     })
 
     it('should retrieve the extraction level for unknown level', () => {
-      expect(getExtractionLevelTranslationKey('Unknown')).toEqual('facet.level.Unknown')
+      expect(getExtractionLevelTranslationKey('Unknown')).toEqual('filter.level.Unknown')
     })
   })
 })

@@ -5,11 +5,11 @@
         <div class="mb-2 bg-light p-2">
           <span class="text-muted">
             <fa icon="globe" class="mr-2" />
-            <abbr :title="$t(`facet.lang.${translation.source_language}`)">Detected language</abbr>
+            <abbr :title="$t(`filter.lang.${translation.source_language}`)">Detected language</abbr>
           </span>
           <fa icon="angle-right" class="mx-2" />
           <span class="font-weight-bold">
-            {{ $t('facet.lang.' + translation.target_language) }}
+            {{ $t('filter.lang.' + translation.target_language) }}
           </span>
         </div>
         <div class="p-2" v-html="translation.content"></div>

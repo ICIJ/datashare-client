@@ -14,6 +14,8 @@ const api = new Api()
 describe('Datashare backend client', () => {
   let json
 
+  beforeEach(() => axios.request.mockClear())
+
   it('should return backend response to index', async () => {
     json = await api.index({})
     expect(json).toEqual({})
@@ -62,6 +64,22 @@ describe('Datashare backend client', () => {
   it('should return backend response to getConfig', async () => {
     json = await api.getConfig()
     expect(json).toEqual({})
+  })
+
+  it('should throw a 401 if getConfig return a error', async () => {
+    axios.request.mockRejectedValue({ response: { status: 401 } })
+    const mockCallback = jest.fn()
+    EventBus.$on('http::error', mockCallback)
+    try {
+      await api.getConfig()
+    } catch (error) {
+      expect(error.response.status).toBe(401)
+    }
+    expect(axios.request).toBeCalledTimes(1)
+    expect(mockCallback).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/config') })
+
+    axios.request.mockResolvedValue({ data: {} })
   })
 
   it('should return backend response to setConfig', async () => {

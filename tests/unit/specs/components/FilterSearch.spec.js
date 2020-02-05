@@ -4,7 +4,7 @@ import { createLocalVue, mount } from '@vue/test-utils'
 
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import FacetSearch from '@/components/FacetSearch'
+import FilterSearch from '@/components/FilterSearch'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 jest.mock('@/api', () => {
@@ -18,8 +18,8 @@ jest.mock('@/api', () => {
 
 const { localVue, store } = App.init(createLocalVue()).useAll()
 
-describe('FacetSearch.vue', () => {
-  const index = toLower('FacetSearch')
+describe('FilterSearch.vue', () => {
+  const index = toLower('FilterSearch')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   let wrapper
@@ -27,9 +27,9 @@ describe('FacetSearch.vue', () => {
   beforeEach(() => {
     store.commit('search/reset')
     store.commit('search/index', index)
-    const facet = find(store.state.search.facets, { name: 'contentType' })
-    wrapper = mount(FacetSearch,
-      { localVue, store, propsData: { infiniteScroll: false, throttle: 0, facet }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
+    const filter = find(store.state.search.filters, { name: 'contentType' })
+    wrapper = mount(FilterSearch,
+      { localVue, store, propsData: { infiniteScroll: false, throttle: 0, filter }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
   })
 
   afterAll(() => jest.unmock('@/api'))
@@ -43,7 +43,7 @@ describe('FacetSearch.vue', () => {
 
       await wrapper.vm.startOver()
 
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
     })
 
     it('should paginate 4 items on 2 pages', async () => {
@@ -58,10 +58,10 @@ describe('FacetSearch.vue', () => {
         .withContentType('type_04')).commit()
 
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
 
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(4)
     })
 
     it('should paginate 10 items on 10 pages', async () => {
@@ -88,25 +88,25 @@ describe('FacetSearch.vue', () => {
         .withContentType('type_10')).commit()
 
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(2)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(3)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(4)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(4)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(5)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(5)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(6)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(6)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(7)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(7)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(8)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(8)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(9)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(9)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(10)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(10)
     })
 
     it('should paginate 10 items on 2 pages, and start over', async () => {
@@ -133,26 +133,26 @@ describe('FacetSearch.vue', () => {
         .withContentType('type_10')).commit()
 
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(5)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(5)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(10)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(10)
 
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(5)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(5)
       await wrapper.vm.next()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(10)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(10)
     })
   })
 
   describe('search', () => {
     it('should create query tokens', async () => {
-      wrapper.setData({ facetQuery: 'ICIJ' })
+      wrapper.setData({ filterQuery: 'ICIJ' })
       await wrapper.vm.startOver()
 
       expect(wrapper.vm.queryTokens).toContain('icij')
     })
 
-    it('should filter the list according to facetQuery', async () => {
+    it('should filter the list according to filterQuery', async () => {
       await letData(es).have(new IndexedDocument('doc_01', index)
         .withContentType('type_01')).commit()
       await letData(es).have(new IndexedDocument('doc_02', index)
@@ -174,20 +174,20 @@ describe('FacetSearch.vue', () => {
       await letData(es).have(new IndexedDocument('doc_10', index)
         .withContentType('type_10')).commit()
 
-      wrapper.setData({ facetQuery: '' })
+      wrapper.setData({ filterQuery: '' })
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(8)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(8)
 
-      wrapper.setData({ facetQuery: 'type_1' })
+      wrapper.setData({ filterQuery: 'type_1' })
       await wrapper.vm.startOver()
-      expect(wrapper.findAll('.facet__items__item')).toHaveLength(1)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
     })
 
-    it('should trigger a search when value of facetQuery changes', () => {
+    it('should trigger a search when value of filterQuery changes', () => {
       jest.spyOn(wrapper.vm, 'search').mockImplementation(jest.fn)
       expect(wrapper.vm.search).not.toHaveBeenCalled()
 
-      wrapper.setData({ facetQuery: 'pdf' })
+      wrapper.setData({ filterQuery: 'pdf' })
       expect(wrapper.vm.search).toHaveBeenCalled()
     })
   })
@@ -200,18 +200,18 @@ describe('FacetSearch.vue', () => {
         .withContentType('type_02')).commit()
       await wrapper.vm.startOver()
 
-      expect(wrapper.findAll('.facet-search > div.text-muted').isVisible()).toBeFalsy()
+      expect(wrapper.findAll('.filter-search > div.text-muted').isVisible()).toBeFalsy()
 
-      wrapper.setData({ facetQuery: 'not_existing_type' })
+      wrapper.setData({ filterQuery: 'not_existing_type' })
       await wrapper.vm.search({ complete: jest.fn, loaded: jest.fn })
 
-      expect(wrapper.findAll('.facet-search > div.text-muted').isVisible()).toBeTruthy()
+      expect(wrapper.findAll('.filter-search > div.text-muted').isVisible()).toBeTruthy()
     })
   })
 
   it('should display all the indexing dates', async () => {
-    wrapper = mount(FacetSearch,
-      { localVue, store, propsData: { infiniteScroll: false, throttle: 0, facet: find(store.state.search.facets, { name: 'indexingDate' }) }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
+    wrapper = mount(FilterSearch,
+      { localVue, store, propsData: { infiniteScroll: false, throttle: 0, filter: find(store.state.search.filters, { name: 'indexingDate' }) }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
     await letData(es).have(new IndexedDocument('doc_01', index)
       .withIndexingDate('2018-01-01T00:00:00.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02', index)
@@ -235,7 +235,7 @@ describe('FacetSearch.vue', () => {
     await wrapper.vm.startOver()
     await wrapper.vm.next()
 
-    expect(wrapper.findAll('.facet__items__item')).toHaveLength(10)
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(10)
   })
 
   it('should display the total count of content type', async () => {
@@ -248,28 +248,28 @@ describe('FacetSearch.vue', () => {
 
     await wrapper.vm.startOver()
 
-    expect(wrapper.findAll('.facet-search .facet__items__all')).toHaveLength(1)
-    expect(wrapper.find('.facet-search .facet__items__all .facet__items__item__label').text()).toBe('all')
-    expect(wrapper.find('.facet-search .facet__items__all .facet__items__item__count').text()).toBe('3')
+    expect(wrapper.findAll('.filter-search .filter__items__all')).toHaveLength(1)
+    expect(wrapper.find('.filter-search .filter__items__all .filter__items__item__label').text()).toBe('all')
+    expect(wrapper.find('.filter-search .filter__items__all .filter__items__item__count').text()).toBe('3')
   })
 
-  it('should emit an event "facet::search::add-facet-values" on adding facet values', () => {
+  it('should emit an event "filter::search::add-filter-values" on adding filter values', () => {
     const mockCallback = jest.fn()
-    wrapper.vm.$root.$on('facet::search::add-facet-values', mockCallback)
+    wrapper.vm.$root.$on('filter::search::add-filter-values', mockCallback)
 
-    wrapper.vm.onAddedFacetValues()
+    wrapper.vm.onAddedFilterValues()
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
 
-  it('should filter facet values on facet label', async () => {
+  it('should filter filter values on filter label', async () => {
     await letData(es).have(new IndexedDocument('doc_01', index)
       .withContentType('message/rfc822')).commit()
     await letData(es).have(new IndexedDocument('doc_02', index)
       .withContentType('another_type')).commit()
     await letData(es).have(new IndexedDocument('doc_03', index)
       .withContentType('message/rfc822')).commit()
-    wrapper.vm.facetQuery = 'Internet'
+    wrapper.vm.filterQuery = 'Internet'
 
     await wrapper.vm.search()
 
@@ -278,14 +278,14 @@ describe('FacetSearch.vue', () => {
     expect(wrapper.vm.total).toEqual(3)
   })
 
-  it('should filter facet values on facet label in capital letters', async () => {
+  it('should filter filter values on filter label in capital letters', async () => {
     await letData(es).have(new IndexedDocument('doc_01', index)
       .withContentType('message/rfc822')).commit()
     await letData(es).have(new IndexedDocument('doc_02', index)
       .withContentType('another_type')).commit()
     await letData(es).have(new IndexedDocument('doc_03', index)
       .withContentType('message/rfc822')).commit()
-    wrapper.vm.facetQuery = 'EMAIL'
+    wrapper.vm.filterQuery = 'EMAIL'
 
     await wrapper.vm.search()
 

@@ -3,7 +3,7 @@ const { defaults } = require('jest-config')
 const { TEST_MODE } = process.env
 
 module.exports = {
-  setupTestFrameworkScriptFile: '<rootDir>/tests/unit/setup.js',
+  setupFilesAfterEnv: ['<rootDir>/tests/unit/setup.js'],
   moduleFileExtensions: [
     'js',
     'jsx',

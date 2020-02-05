@@ -1,11 +1,11 @@
 <template>
-  <facet v-bind="propsWithout('hide-show-more')" hide-show-more ref="facet">
+  <filter-boilerplate v-bind="propsWithout('hide-show-more')" hide-show-more ref="filter">
     <template #items="{ items }">
-      <vue-perfect-scrollbar class="facet__path__scrollbar">
-        <facet-path-tree :tree-data="displayFirstLevel(items)" :facet="facet"></facet-path-tree>
+      <vue-perfect-scrollbar class="filter__path__scrollbar">
+        <filter-path-tree :tree-data="displayFirstLevel(items)" :filter="filter"></filter-path-tree>
       </vue-perfect-scrollbar>
     </template>
-  </facet>
+  </filter-boilerplate>
 </template>
 
 <script>
@@ -13,16 +13,16 @@ import map from 'lodash/map'
 import replace from 'lodash/replace'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
-import Facet from '@/components/Facet'
-import FacetPathTree from '@/components/FacetPathTree'
-import facets from '@/mixins/facets'
+import FilterBoilerplate from '@/components/FilterBoilerplate'
+import FilterPathTree from '@/components/FilterPathTree'
+import filters from '@/mixins/filters'
 
 export default {
-  name: 'FacetPath',
-  mixins: [facets],
+  name: 'FilterPath',
+  mixins: [filters],
   components: {
-    Facet,
-    FacetPathTree,
+    FilterBoilerplate,
+    FilterPathTree,
     VuePerfectScrollbar
   },
   methods: {
@@ -44,7 +44,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .facet__path__scrollbar {
+  .filter__path__scrollbar {
     max-height: 250px;
   }
 </style>

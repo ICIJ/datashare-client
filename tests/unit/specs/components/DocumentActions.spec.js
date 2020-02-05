@@ -60,9 +60,9 @@ describe('DocumentActions.vue', () => {
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('far,star')
   })
 
-  it('should raise an "facet::starred::refresh" event when adding a star', async () => {
+  it('should raise an "filter::starred::refresh" event when adding a star', async () => {
     const mockCallback = jest.fn()
-    wrapper.vm.$root.$on('facet::starred::refresh', mockCallback)
+    wrapper.vm.$root.$on('filter::starred::refresh', mockCallback)
 
     await wrapper.vm.toggleStarDocument(wrapper.vm.document)
 
