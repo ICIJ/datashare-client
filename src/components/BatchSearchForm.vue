@@ -45,7 +45,7 @@
             v-if="$config.is('multipleProjects')">
             <b-form-select
               v-model="project"
-              :options="indices"
+              :options="projects"
               required></b-form-select>
           </b-form-group>
           <b-form-group
@@ -183,7 +183,7 @@ export default {
       csvFile: null,
       description: '',
       project: '',
-      indices: [],
+      projects: [],
       phraseMatch: true,
       fuzziness: 0,
       fileType: '',
@@ -236,8 +236,8 @@ export default {
     }
   },
   created () {
-    this.$set(this, 'indices', map(this.$config.get('userProjects', []), value => { return { value, text: value } }))
-    this.$set(this, 'project', get(this.indices, ['0', 'value'], ''))
+    this.$set(this, 'projects', map(JSON.parse(this.$config.get('datashare_indices', '[]')), value => { return { value, text: value } }))
+    this.$set(this, 'project', get(this.projects, ['0', 'value'], ''))
   },
   methods: {
     searchFileTypes: throttle(function () {
@@ -280,7 +280,7 @@ export default {
       this.$set(this, 'name', '')
       this.$set(this, 'csvFile', null)
       this.$set(this, 'description', '')
-      this.$set(this, 'project', get(this.indices, ['0', 'value'], ''))
+      this.$set(this, 'project', get(this.projects, ['0', 'value'], ''))
       this.$set(this, 'phraseMatch', true)
       this.$set(this, 'fuzziness', 0)
       this.$set(this, 'fileType', '')

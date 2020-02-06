@@ -67,11 +67,13 @@ export class App {
   async configure () {
     // Get the config object
     const config = await this.api.getConfig()
+    const user = await this.api.getUser()
     // Murmur exposes a config attribute which share a Config object
     // with the current vue instance.
     Murmur.config.merge(mode(config.mode))
     // The backend can yet override some configuration
     Murmur.config.merge(config)
+    Murmur.config.merge(user)
     // Override Murmur default value for content-placeholder
     Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
     this.api.createIndex(config['defaultProject'])

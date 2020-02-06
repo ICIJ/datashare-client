@@ -49,8 +49,7 @@ export default {
     }
   },
   async created () {
-    const user = await api.getUser()
-    this.$set(this, 'projects', map(JSON.parse(get(user, 'datashare_indices', [])), value => { return { value, text: value } }))
+    this.$set(this, 'projects', map(JSON.parse(this.$config.get('datashare_indices', '[]')), value => { return { value, text: value } }))
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')
   },
