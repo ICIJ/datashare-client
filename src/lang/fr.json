@@ -56,7 +56,7 @@
         "path": "Chemin du fichier (A à Z)",
         "pathReverse": "Chemin du fichier (Z à A)",
         "default": "par défaut",
-        "count": "par résultats"
+        "count": "frequency"
       }
     },
     "filtersTitle": "Filtres",

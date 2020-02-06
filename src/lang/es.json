@@ -56,7 +56,7 @@
         "path": "Ruta del archivo (de A a Z)",
         "pathReverse": "Ruta del archivo (de A a Z)",
         "default": "por defecto",
-        "count": "por resultados"
+        "count": "frequency"
       }
     },
     "filtersTitle": "Filtros",
