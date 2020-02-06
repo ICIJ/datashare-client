@@ -56,7 +56,7 @@
         "path": "File path (A to Z)",
         "pathReverse": "File path (Z to A)",
         "default": "default",
-        "count": "count"
+        "count": "frequency"
       }
     },
     "filtersTitle": "Filters",
