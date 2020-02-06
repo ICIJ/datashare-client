@@ -1,5 +1,4 @@
 import cloneDeep from 'lodash/cloneDeep'
-import find from 'lodash/find'
 import toLower from 'lodash/toLower'
 import Murmur from '@icij/murmur'
 
@@ -28,7 +27,7 @@ describe('SearchFilters', () => {
     })
 
     it('should define a "language" filter correctly (name, key and type)', () => {
-      const filter = find(store.getters['search/instantiatedFilters'], { name: 'language' })
+      const filter = store.getters['search/getFilterByName']('language')
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('language')
@@ -48,7 +47,7 @@ describe('SearchFilters', () => {
 
   describe('Content type filter', () => {
     it('should define a "contentType" filter correctly (name, key and type)', () => {
-      const filter = find(store.getters['search/instantiatedFilters'], { name: 'contentType' })
+      const filter = store.getters['search/getFilterByName']('contentType')
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('contentType')
@@ -130,7 +129,7 @@ describe('SearchFilters', () => {
 
   describe('Path filter', () => {
     it('should define a `path` filter correctly (name, key and type)', () => {
-      const filter = find(store.getters['search/instantiatedFilters'], { name: 'path' })
+      const filter = store.getters['search/getFilterByName']('path')
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('byDirname')
@@ -176,7 +175,7 @@ describe('SearchFilters', () => {
     const name = 'indexingDate'
 
     it('should define an `indexing date` filter correctly (name, key and type)', () => {
-      const filter = find(store.getters['search/instantiatedFilters'], { name })
+      const filter = store.getters['search/getFilterByName'](name)
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('extractionDate')
@@ -200,7 +199,7 @@ describe('SearchFilters', () => {
 
   describe('Named entities filter', () => {
     it('should define a `named-entity` filter correctly (name, key, type and PERSON category)', () => {
-      const filter = find(store.getters['search/instantiatedFilters'], { name: 'namedEntityPerson' })
+      const filter = store.getters['search/getFilterByName']('namedEntityPerson')
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('byMentions')
@@ -278,7 +277,7 @@ describe('SearchFilters', () => {
 
   describe('Starred filter', () => {
     it('should define a `starred` filter correctly (name, key, type and starredDocuments)', () => {
-      const filter = find(store.getters['search/instantiatedFilters'], { name: 'starred' })
+      const filter = store.getters['search/getFilterByName']('starred')
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('_id')

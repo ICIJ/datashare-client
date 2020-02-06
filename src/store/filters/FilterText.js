@@ -7,7 +7,7 @@ const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
 const _STATE = typeof Symbol === 'function' ? Symbol('_state') : '_state'
 
 export default class FilterText {
-  constructor (name, key, icon, isSearchable, labelFun, alternativeSearch) {
+  constructor ({ name, key, icon = null, isSearchable = false, labelFun = null, alternativeSearch = null } = { }) {
     this.name = name
     this.key = key
     this.icon = icon

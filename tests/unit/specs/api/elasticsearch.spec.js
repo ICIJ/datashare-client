@@ -4,7 +4,7 @@ import bodybuilder from 'bodybuilder'
 import elasticsearch from '@/api/elasticsearch'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { EventBus } from '@/utils/event-bus'
-import { FilterText, FilterNamedEntity } from '@/store/filtersStore'
+import { FilterText, FilterNamedEntity } from '@/store/filters'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 describe('elasticsearch', () => {
@@ -13,9 +13,9 @@ describe('elasticsearch', () => {
   const es = esConnectionHelper.es
 
   it('should return backend response to a POST request for searchDocs', async () => {
-    const spy = jest.spyOn(elasticsearch, 'search').mockImplementation(() => Promise.resolve({ 'foo': 'bar' }))
+    const spy = jest.spyOn(elasticsearch, 'search').mockImplementation(() => Promise.resolve({ foo: 'bar' }))
     const response = await elasticsearch.searchDocs(index, '*')
-    expect(response).toEqual({ 'foo': 'bar' })
+    expect(response).toEqual({ foo: 'bar' })
     spy.mockRestore()
   })
 
@@ -32,7 +32,7 @@ describe('elasticsearch', () => {
   })
 
   it('should build an ES query with filters', async () => {
-    let filters = [new FilterText('contentType', 'contentType', true, null)]
+    const filters = [new FilterText({ name: 'contentType', key: 'contentType', isSearchable: true })]
     filters[0].values = ['value_01', 'value_02', 'value_03']
     const body = bodybuilder().from(0).size(25)
 
@@ -198,7 +198,7 @@ describe('elasticsearch', () => {
       .withContent('nothing to write')
       .withNer('another')
     ).commit()
-    const filter = new FilterNamedEntity('namedEntityPerson', 'byMentions', true, 'PERSON')
+    const filter = new FilterNamedEntity({ name: 'namedEntityPerson', key: 'byMentions', category: 'PERSON' })
 
     const response = await elasticsearch.searchFilter(index, filter, 'document')
 

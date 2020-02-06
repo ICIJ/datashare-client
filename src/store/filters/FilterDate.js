@@ -1,8 +1,8 @@
 import FilterDocument from './FilterDocument'
 
 export default class FilterDate extends FilterDocument {
-  constructor (name, key, icon, isSearchable, labelFun) {
-    super(name, key, icon, isSearchable, labelFun)
+  constructor (...args) {
+    super(...args)
     this.component = 'FilterDate'
   }
 
@@ -10,7 +10,7 @@ export default class FilterDate extends FilterDocument {
     return body.query('bool', sub => {
       param.values.forEach(date => {
         if (parseInt(date) === -62167219200000) {
-          sub['notQuery']('exists', this.key)
+          sub.notQuery('exists', this.key)
         } else {
           const gte = new Date(parseInt(date))
           const tmp = new Date(parseInt(date))
@@ -28,7 +28,7 @@ export default class FilterDate extends FilterDocument {
       .agg('date_histogram', this.key, {
         interval: '1M',
         format: 'yyyy-MM',
-        order: { '_key': 'desc' },
+        order: { _key: 'desc' },
         min_doc_count: 1,
         missing: '0000-01'
       }, this.key, a => a.agg('bucket_sort', { size: options.size }, 'bucket_sort_truncate'))

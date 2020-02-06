@@ -2,8 +2,8 @@ import FilterDocument from './FilterDocument'
 import Murmur from '@icij/murmur'
 
 export default class FilterPath extends FilterDocument {
-  constructor (name, key, icon, isSearchable) {
-    super(name, key, icon, isSearchable, null)
+  constructor (options) {
+    super(options)
     this.prefix = true
     this.component = 'FilterPath'
   }
@@ -18,7 +18,7 @@ export default class FilterPath extends FilterDocument {
   body (body, options) {
     return body.agg('terms', 'dirname.tree', this.key, {
       size: 1000,
-      order: { '_key': 'asc' },
+      order: { _key: 'asc' },
       exclude: Murmur.config.get('dataDir') + '/.*/.*',
       include: Murmur.config.get('dataDir') + '/.*',
       ...options

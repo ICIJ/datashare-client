@@ -8,7 +8,7 @@
 <script>
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
-import { FilterDate } from '@/store/filtersStore'
+import { FilterDate } from '@/store/filters'
 import map from 'lodash/map'
 
 export default {

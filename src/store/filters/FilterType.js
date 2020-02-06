@@ -1,8 +1,8 @@
 import FilterText from './FilterText'
 
 export default class FilterType extends FilterText {
-  constructor (name, key, icon, isSearchable, labelFun) {
-    super(name, key, icon, isSearchable, labelFun)
+  constructor (...args) {
+    super(...args)
     this.component = 'FilterType'
   }
 

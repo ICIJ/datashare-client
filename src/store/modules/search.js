@@ -1,16 +1,6 @@
-import elasticsearch from '@/api/elasticsearch'
-import EsDocList from '@/api/resources/EsDocList'
-import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
-import settings from '@/utils/settings'
-import { isNarrowScreen } from '@/utils/screen'
-import * as filterTypes from '@/store/filters'
-import { namedEntityCategoryTranslation, starredLabel } from '@/store/filtersStore'
-import Api from '@/api'
-import types from '@/utils/types.json'
-
 import lucene from 'lucene'
-import moment from 'moment'
 import castArray from 'lodash/castArray'
+import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
 import difference from 'lodash/difference'
@@ -23,7 +13,6 @@ import findIndex from 'lodash/findIndex'
 import get from 'lodash/get'
 import has from 'lodash/has'
 import includes from 'lodash/includes'
-import isInteger from 'lodash/isInteger'
 import isString from 'lodash/isString'
 import join from 'lodash/join'
 import keys from 'lodash/keys'
@@ -33,32 +22,27 @@ import orderBy from 'lodash/orderBy'
 import range from 'lodash/range'
 import random from 'lodash/random'
 import reduce from 'lodash/reduce'
-import toLower from 'lodash/toLower'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
 import Vue from 'vue'
 
+import elasticsearch from '@/api/elasticsearch'
+import EsDocList from '@/api/resources/EsDocList'
+import settings from '@/utils/settings'
+import { isNarrowScreen } from '@/utils/screen'
+import * as filterTypes from '@/store/filters'
+import filters from '@/store/filters'
+import Api from '@/api'
+
 export const api = new Api()
 
 export function initialState () {
-  return {
+  return cloneDeep({
     query: '',
     from: 0,
     size: 25,
     globalSearch: true,
-    filters: [
-      { type: 'FilterStarred', options: ['starred', '_id', 'star', false, item => get(starredLabel, item.key, '')] },
-      { type: 'FilterText', options: ['tags', 'tags', 'tags', true] },
-      { type: 'FilterText', options: ['contentType', 'contentType', 'file', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })] },
-      { type: 'FilterDateRange', options: ['creationDate', 'metadata.tika_metadata_creation_date', 'calendar-alt', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key] },
-      { type: 'FilterText', options: ['language', 'language', 'language', false, item => `filter.lang.${item.key}`] },
-      { type: 'FilterNamedEntity', options: ['namedEntityPerson', 'byMentions', null, true, namedEntityCategoryTranslation.namedEntityPerson] },
-      { type: 'FilterNamedEntity', options: ['namedEntityOrganization', 'byMentions', null, true, namedEntityCategoryTranslation.namedEntityOrganization] },
-      { type: 'FilterNamedEntity', options: ['namedEntityLocation', 'byMentions', null, true, namedEntityCategoryTranslation.namedEntityLocation] },
-      { type: 'FilterPath', options: ['path', 'byDirname', 'hdd', false] },
-      { type: 'FilterText', options: ['extractionLevel', 'extractionLevel', 'paperclip', false, item => getExtractionLevelTranslationKey(item.key)] },
-      { type: 'FilterDate', options: ['indexingDate', 'extractionDate', 'calendar-plus', false, item => item.key_as_string] }
-    ],
+    filters,
     values: {},
     reversed: [],
     sort: settings.defaultSearchSort,
@@ -72,7 +56,7 @@ export function initialState () {
     // Different default layout for narrow screen
     layout: isNarrowScreen() ? 'table' : 'list',
     isDownloadAllowed: false
-  }
+  })
 }
 
 export const state = initialState()
@@ -81,7 +65,7 @@ export const getters = {
   instantiateFilter (state) {
     return ({ type, options }) => {
       const Type = filterTypes[type]
-      const filter = new Type(...options)
+      const filter = new Type(options)
       // Bind current state to be able to retrieve its values
       filter.bindState(state)
       // Return the instance
@@ -95,6 +79,9 @@ export const getters = {
   },
   getFilter (state, getters) {
     return predicate => find(getters.instantiatedFilters, predicate)
+  },
+  getFilterByName (state, getters) {
+    return name => find(getters.instantiatedFilters, { name })
   },
   getFields (state) {
     return () => find(settings.searchFields, { key: state.field }).fields
@@ -203,7 +190,9 @@ export const getters = {
     return document => {
       map(['content', 'metadata', 'tags'], field => {
         let extractedField = get(document, ['source', field], '')
-        if (isString(extractedField)) extractedField = castArray(extractedField)
+        if (isString(extractedField)) {
+          extractedField = castArray(extractedField)
+        }
         const text = join(compact(values(extractedField)), ' ')
         getters.retrieveContentQueryTermsInContent(text, field)
       })
@@ -223,10 +212,6 @@ export const mutations = {
         state[key] = s[key]
       }
     })
-    const existingFilter = find(state.filters, { name: 'starred' })
-    if (existingFilter) {
-      existingFilter.starredDocuments = state.starredDocuments
-    }
   },
   setGlobalSearch (state, globalSearch) {
     state.globalSearch = globalSearch
@@ -290,7 +275,7 @@ export const mutations = {
     Vue.set(state.values, filter.name, filterCollection(existingValues, value => value !== filter.value))
   },
   removeFilter (state, name) {
-    const index = findIndex(state.filters, ({ options }) => options[0] === name)
+    const index = findIndex(state.filters, ({ options }) => options.name === name)
     Vue.delete(state.filters, index)
     if (name in state.values) {
       Vue.delete(state.values, name)

@@ -2,15 +2,15 @@ import FilterType from './FilterType'
 import includes from 'lodash/includes'
 
 export const namedEntityCategoryTranslation = {
-  'namedEntityPerson': 'PERSON',
-  'namedEntityOrganization': 'ORGANIZATION',
-  'namedEntityLocation': 'LOCATION'
+  namedEntityPerson: 'PERSON',
+  namedEntityOrganization: 'ORGANIZATION',
+  namedEntityLocation: 'LOCATION'
 }
 
 export default class FilterNamedEntity extends FilterType {
-  constructor (name, key, icon, isSearchable, category = 'PERSON') {
-    super(name, key, icon, isSearchable, null)
-    this.category = category
+  constructor (options) {
+    super(options)
+    this.category = options.category || 'PERSON'
     this.component = 'FilterNamedEntity'
   }
 
@@ -46,12 +46,12 @@ export default class FilterNamedEntity extends FilterType {
     if (this.isSelfAffected(body)) {
       return body.query('terms', 'mentionNorm', param.values)
     } else {
-      return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('has_child', 'type', 'NamedEntity', {}, r => r.query('terms', 'mentionNorm', param.values)))
+      return body.query('has_parent', { parent_type: 'Document' }, q => q.query('has_child', 'type', 'NamedEntity', {}, r => r.query('terms', 'mentionNorm', param.values)))
     }
   }
 
   addParentExcludeFilter (body, param) {
-    return body.query('has_parent', { 'parent_type': 'Document' }, q => q.notQuery('has_child', 'type', 'NamedEntity', {}, r => r.query('terms', 'mentionNorm', param.values)))
+    return body.query('has_parent', { parent_type: 'Document' }, q => q.notQuery('has_child', 'type', 'NamedEntity', {}, r => r.query('terms', 'mentionNorm', param.values)))
   }
 
   body (body, options) {
@@ -61,7 +61,7 @@ export default class FilterNamedEntity extends FilterType {
       .filter('term', 'category', this.category)
       .agg('terms', 'mentionNorm', this.key, {
         size: 50,
-        order: [ { 'byDocs': 'desc' }, { '_count': 'desc' } ],
+        order: [{ byDocs: 'desc' }, { _count: 'desc' }],
         ...options
       }, sub => {
         return sub
