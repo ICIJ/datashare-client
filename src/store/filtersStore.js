@@ -1,5 +1,6 @@
 export { default as FilterText } from './filters/FilterText'
 export { default as FilterYesNo } from './filters/FilterYesNo'
+export { default as FilterStarred } from './filters/FilterStarred'
 export { default as FilterDate } from './filters/FilterDate'
 export { default as FilterDateRange } from './filters/FilterDateRange'
 export { default as FilterPath } from './filters/FilterPath'

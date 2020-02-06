@@ -105,7 +105,7 @@ export default {
     },
     refreshRoute () {
       const name = 'search'
-      const query = this.$store.getters['search/toRouteQuery']
+      const query = this.$store.getters['search/toRouteQuery']()
       this.$router.push({ name, query })
     },
     refreshSearch () {

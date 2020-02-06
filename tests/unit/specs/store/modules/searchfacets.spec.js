@@ -1,13 +1,9 @@
 import cloneDeep from 'lodash/cloneDeep'
-import each from 'lodash/each'
 import find from 'lodash/find'
-import functionsIn from 'lodash/functionsIn'
-import omit from 'lodash/omit'
 import toLower from 'lodash/toLower'
 import Murmur from '@icij/murmur'
 
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { FilterText } from '@/store/filters'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import store from '@/store'
 
@@ -22,24 +18,17 @@ describe('SearchFilters', () => {
 
   describe('Common filter', () => {
     it('should reset the store state', async () => {
-      const initialState = cloneDeep(store.state.search)
-      await store.commit('search/reset')
-
-      // Should filter the functions because these would never be equal
-      // So only compare integers, strings, arrays ...
-      initialState.filters = each(initialState.filters, (value, key) => {
-        initialState.filters[key] = omit(value, functionsIn(value))
-      })
-
-      store.commit('search/setFilters', each(store.state.search.filters, (value, key) => {
-        store.state.search.filters[key] = omit(value, functionsIn(value))
-      }))
-
-      expect(store.state.search).toEqual(initialState)
+      const initialFilters = cloneDeep(store.state.search.filters)
+      store.commit('search/removeFilter', 'contentType')
+      expect(store.state.search.filters).toHaveLength(initialFilters.length - 1)
+      store.commit('search/removeFilter', 'language')
+      expect(store.state.search.filters).toHaveLength(initialFilters.length - 2)
+      store.commit('search/reset')
+      expect(store.state.search.filters).toHaveLength(initialFilters.length)
     })
 
     it('should define a "language" filter correctly (name, key and type)', () => {
-      const filter = find(store.state.search.filters, { name: 'language' })
+      const filter = find(store.getters['search/instantiatedFilters'], { name: 'language' })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('language')
@@ -51,16 +40,15 @@ describe('SearchFilters', () => {
     })
 
     it('should add a filter', () => {
-      const length = store.state.search.filters.length
-      store.commit('search/addFilter', new FilterText('test', 'key', true, null))
-
-      expect(store.state.search.filters).toHaveLength(length + 1)
+      const length = store.getters['search/instantiatedFilters'].length
+      store.commit('search/addFilter', { type: 'FilterText', options: ['test', 'key', true, null] })
+      expect(store.getters['search/instantiatedFilters']).toHaveLength(length + 1)
     })
   })
 
   describe('Content type filter', () => {
     it('should define a "contentType" filter correctly (name, key and type)', () => {
-      const filter = find(store.state.search.filters, { name: 'contentType' })
+      const filter = find(store.getters['search/instantiatedFilters'], { name: 'contentType' })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('contentType')
@@ -142,7 +130,7 @@ describe('SearchFilters', () => {
 
   describe('Path filter', () => {
     it('should define a `path` filter correctly (name, key and type)', () => {
-      const filter = find(store.state.search.filters, { name: 'path' })
+      const filter = find(store.getters['search/instantiatedFilters'], { name: 'path' })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('byDirname')
@@ -188,7 +176,7 @@ describe('SearchFilters', () => {
     const name = 'indexingDate'
 
     it('should define an `indexing date` filter correctly (name, key and type)', () => {
-      const filter = find(store.state.search.filters, { name })
+      const filter = find(store.getters['search/instantiatedFilters'], { name })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('extractionDate')
@@ -212,7 +200,7 @@ describe('SearchFilters', () => {
 
   describe('Named entities filter', () => {
     it('should define a `named-entity` filter correctly (name, key, type and PERSON category)', () => {
-      const filter = find(store.state.search.filters, { name: 'namedEntityPerson' })
+      const filter = find(store.getters['search/instantiatedFilters'], { name: 'namedEntityPerson' })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('byMentions')
@@ -290,11 +278,11 @@ describe('SearchFilters', () => {
 
   describe('Starred filter', () => {
     it('should define a `starred` filter correctly (name, key, type and starredDocuments)', () => {
-      const filter = find(store.state.search.filters, { name: 'starred' })
+      const filter = find(store.getters['search/instantiatedFilters'], { name: 'starred' })
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('_id')
-      expect(filter.constructor.name).toBe('FilterYesNo')
+      expect(filter.constructor.name).toBe('FilterStarred')
       expect(filter.starredDocuments).toEqual([])
     })
   })

@@ -21,7 +21,7 @@ describe('FilterPath.vue', () => {
     wrapper = mount(FilterPath, {
       localVue,
       store,
-      propsData: { filter: find(store.state.search.filters, { name: 'path' }) },
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'path' }) },
       mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
     })
     store.commit('search/reset')
@@ -62,7 +62,7 @@ describe('FilterPath.vue', () => {
       await letData(es).have(new IndexedDocument('/data/folder_01/document_01', index)).commit()
       await letData(es).have(new IndexedDocument('/data/folder_02/document_02', index)).commit()
 
-      const pathFilter = find(store.state.search.filters, { name: 'path' })
+      const pathFilter = find(store.getters['search/instantiatedFilters'], { name: 'path' })
       pathFilter.value = ['/data/folder_01/']
       store.commit('search/addFilterValue', pathFilter)
       await wrapper.vm.root.aggregate()
@@ -75,7 +75,7 @@ describe('FilterPath.vue', () => {
       await letData(es).have(new IndexedDocument('/data/folder_11/document_02', index)).commit()
       await letData(es).have(new IndexedDocument('/data/folder_22/document_03', index)).commit()
 
-      const pathFilter = find(store.state.search.filters, { name: 'path' })
+      const pathFilter = find(store.getters['search/instantiatedFilters'], { name: 'path' })
       pathFilter.value = ['/data/folder_1/']
       store.commit('search/addFilterValue', pathFilter)
       await wrapper.vm.root.aggregate()

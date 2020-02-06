@@ -3,10 +3,11 @@ import EsDocList from '@/api/resources/EsDocList'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import settings from '@/utils/settings'
 import { isNarrowScreen } from '@/utils/screen'
-import { FilterText, FilterYesNo, FilterDate, FilterDateRange, FilterPath, FilterNamedEntity } from '@/store/filters'
+import * as filterTypes from '@/store/filters'
 import { namedEntityCategoryTranslation, starredLabel } from '@/store/filtersStore'
 import Api from '@/api'
 import types from '@/utils/types.json'
+
 import lucene from 'lucene'
 import moment from 'moment'
 import castArray from 'lodash/castArray'
@@ -18,12 +19,14 @@ import endsWith from 'lodash/endsWith'
 import escapeRegExp from 'lodash/escapeRegExp'
 import filterCollection from 'lodash/filter'
 import find from 'lodash/find'
+import findIndex from 'lodash/findIndex'
 import get from 'lodash/get'
 import has from 'lodash/has'
 import includes from 'lodash/includes'
 import isInteger from 'lodash/isInteger'
 import isString from 'lodash/isString'
 import join from 'lodash/join'
+import keys from 'lodash/keys'
 import map from 'lodash/map'
 import omit from 'lodash/omit'
 import orderBy from 'lodash/orderBy'
@@ -33,6 +36,7 @@ import reduce from 'lodash/reduce'
 import toLower from 'lodash/toLower'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
+import Vue from 'vue'
 
 export const api = new Api()
 
@@ -43,18 +47,20 @@ export function initialState () {
     size: 25,
     globalSearch: true,
     filters: [
-      new FilterYesNo('starred', '_id', 'star', false, item => get(starredLabel, item.key, '')),
-      new FilterText('tags', 'tags', 'tags', true),
-      new FilterText('contentType', 'contentType', 'file', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })),
-      new FilterDateRange('creationDate', 'metadata.tika_metadata_creation_date', 'calendar-alt', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key),
-      new FilterText('language', 'language', 'language', false, item => `filter.lang.${item.key}`),
-      new FilterNamedEntity('namedEntityPerson', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityPerson']),
-      new FilterNamedEntity('namedEntityOrganization', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityOrganization']),
-      new FilterNamedEntity('namedEntityLocation', 'byMentions', null, true, namedEntityCategoryTranslation['namedEntityLocation']),
-      new FilterPath('path', 'byDirname', 'hdd', false),
-      new FilterText('extractionLevel', 'extractionLevel', 'paperclip', false, item => getExtractionLevelTranslationKey(item.key)),
-      new FilterDate('indexingDate', 'extractionDate', 'calendar-plus', false, item => item.key_as_string)
+      { type: 'FilterStarred', options: ['starred', '_id', 'star', false, item => get(starredLabel, item.key, '')] },
+      { type: 'FilterText', options: ['tags', 'tags', 'tags', true] },
+      { type: 'FilterText', options: ['contentType', 'contentType', 'file', true, item => getDocumentTypeLabel(item.key), query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })] },
+      { type: 'FilterDateRange', options: ['creationDate', 'metadata.tika_metadata_creation_date', 'calendar-alt', false, item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key] },
+      { type: 'FilterText', options: ['language', 'language', 'language', false, item => `filter.lang.${item.key}`] },
+      { type: 'FilterNamedEntity', options: ['namedEntityPerson', 'byMentions', null, true, namedEntityCategoryTranslation.namedEntityPerson] },
+      { type: 'FilterNamedEntity', options: ['namedEntityOrganization', 'byMentions', null, true, namedEntityCategoryTranslation.namedEntityOrganization] },
+      { type: 'FilterNamedEntity', options: ['namedEntityLocation', 'byMentions', null, true, namedEntityCategoryTranslation.namedEntityLocation] },
+      { type: 'FilterPath', options: ['path', 'byDirname', 'hdd', false] },
+      { type: 'FilterText', options: ['extractionLevel', 'extractionLevel', 'paperclip', false, item => getExtractionLevelTranslationKey(item.key)] },
+      { type: 'FilterDate', options: ['indexingDate', 'extractionDate', 'calendar-plus', false, item => item.key_as_string] }
     ],
+    values: {},
+    reversed: ['language'],
     sort: settings.defaultSearchSort,
     field: settings.defaultSearchField,
     response: EsDocList.none(),
@@ -72,65 +78,85 @@ export function initialState () {
 export const state = initialState()
 
 export const getters = {
-  getFilter (state) {
-    return predicate => find(state.filters, predicate)
+  instantiateFilter (state) {
+    return ({ type, options }) => {
+      const Type = filterTypes[type]
+      const filter = new Type(...options)
+      // Bind current state to be able to retrieve its values
+      filter.bindState(state)
+      // Return the instance
+      return filter
+    }
+  },
+  instantiatedFilters (state, getters) {
+    return state.filters.map(filter => {
+      return getters.instantiateFilter(filter)
+    })
+  },
+  getFilter (state, getters) {
+    return predicate => find(getters.instantiatedFilters, predicate)
   },
   getFields (state) {
     return () => find(settings.searchFields, { key: state.field }).fields
   },
-  hasFilterValue (state) {
-    return item => !!find(state.filters, filter => {
+  hasFilterValue (state, getters) {
+    return item => !!find(state.instantiatedFilters, filter => {
       return filter.name === item.name && filter.values.indexOf(item.value) > -1
     })
   },
-  hasFilterValues (state) {
-    return name => !!find(state.filters, filter => {
+  hasFilterValues (state, getters) {
+    return name => !!find(getters.instantiatedFilters, filter => {
       return filter.name === name && filter.values.length > 0
     })
   },
-  isFilterReversed (state) {
+  isFilterReversed (state, getters) {
     return name => {
-      return !!find(state.filters, filter => {
+      return !!find(getters.instantiatedFilters, filter => {
         return filter.name === name && filter.reverse
       })
     }
   },
-  activeFilters (state) {
-    return filterCollection(state.filters, f => f.hasValues())
+  activeFilters (state, getters) {
+    return filterCollection(getters.instantiatedFilters, f => f.hasValues())
   },
-  findFilter (state) {
-    return name => find(state.filters, { name })
+  findFilter (state, getters) {
+    return name => find(getters.instantiatedFilters, { name })
   },
-  toRouteQuery (state) {
-    return {
+  filterValuesAsRouteQuery (state, getters) {
+    return () => {
+      return reduce(keys(state.values), (memo, name) => {
+        // We need to look for the filter's definition in order to us its `id`
+        // as key for the URL params. This was we track configured filter instead
+        // of arbitrary values provided by the user. This allow to retrieve special
+        // behaviors depending on the filter definition.
+        const filter = find(getters.instantiatedFilters, { name })
+        // We don't add filterValue that match with any existing filters
+        // defined in the `aggregation` store.
+        if (filter && filter.values.length > 0) {
+          const key = filter.reverse ? `f[-${filter.name}]` : `f[${filter.name}]`
+          memo[key] = filter.values
+        }
+        return memo
+      }, {})
+    }
+  },
+  toRouteQuery (state, getters) {
+    return () => ({
       q: state.query,
       from: state.from,
       size: state.size,
       sort: state.sort,
       index: state.index,
       field: state.field,
-      ...reduce(state.filters, (memo, filterValue) => {
-        // We need to look for the filter's definition in order to us its `id`
-        // as key for the URL params. This was we track configured filter instead
-        // of arbitrary values provided by the user. This allow to retrieve special
-        // behaviors depending on the filter definition.
-        const filter = find(state.filters, { name: filterValue.name })
-        // We don't add filterValue that match with any existing filters
-        // defined in the `aggregation` store.
-        if (filter && filterValue.values.length > 0) {
-          const key = filterValue.reverse ? `f[-${filter.name}]` : `f[${filter.name}]`
-          memo[key] = filterValue.values
-        }
-        return memo
-      }, {})
-    }
+      ...getters.filterValuesAsRouteQuery()
+    })
   },
   toRouteQueryWithStamp (state, getters) {
-    return {
-      ...getters.toRouteQuery,
+    return () => ({
+      ...getters.toRouteQuery(),
       // A random string of 6 chars
       stamp: String.fromCharCode.apply(null, range(6).map(() => random(97, 122)))
-    }
+    })
   },
   retrieveQueryTerms (state) {
     let terms = []
@@ -243,91 +269,62 @@ export const mutations = {
     state.isReady = true
     state.response = new EsDocList(raw)
   },
-  appendToResponse (state, raw) {
-    state.response.append(raw)
-  },
-  setFilters (state, filters) {
-    state.filters = filters
-  },
-  addFilter (state, filter) {
-    if (find(state.filters, { name: filter.name })) {
-      throw new Error('Filter already exists')
-    }
-    return state.filters.push(filter)
-  },
   addFilterValue (state, filter) {
     // We cast the new filter values to allow several new values at the same time
     const values = castArray(filter.value)
-    // Look for existing filter for this name
-    const existingFilter = find(state.filters, { name: filter.name })
-    if (existingFilter) {
-      existingFilter.values = uniq(existingFilter.values.concat(values))
-    } else {
-      throw new Error(`cannot find filter named ${filter.name}`)
-    }
+    // Look for existing values for this name
+    const existingValues = get(state, ['values', filter.name], [])
+    Vue.set(state.values, filter.name, uniq(existingValues.concat(values)))
   },
   setFilterValue (state, filter) {
-    // Look for existing filter for this name
-    const existingFilter = find(state.filters, { name: filter.name })
-    if (existingFilter) {
-      existingFilter.values = castArray(filter.value)
-    } else {
-      throw new Error(`cannot find filter named ${filter.name}`)
-    }
+    Vue.set(state.values, filter.name, castArray(filter.value))
   },
   addFilterValues (state, { filter, values }) {
-    const existingFilter = find(state.filters, { name: filter.name })
-    if (existingFilter) {
-      existingFilter.values = values
-    } else {
-      throw new Error(`cannot find filter named ${filter.name}`)
-    }
+    const existingValues = get(state, ['values', filter.name], [])
+    Vue.set(state.values, filter.name, uniq(existingValues.concat(castArray(values))))
   },
   removeFilterValue (state, filter) {
-    const existingFilter = find(state.filters, { name: filter.name })
-    if (existingFilter) {
-      // Filter the values for this name to remove the given value
-      existingFilter.values = filterCollection(existingFilter.values, value => value !== filter.value)
+    // Look for existing values for this name
+    const existingValues = get(state, ['values', filter.name], [])
+    // Filter the values for this name to remove the given value
+    Vue.set(state.values, filter.name, filterCollection(existingValues, value => value !== filter.value))
+  },
+  removeFilter (state, name) {
+    const index = findIndex(state.filters, ({ options }) => options[0] === name)
+    Vue.delete(state.filters, index)
+    if (name in state.values) {
+      Vue.delete(state.values, name)
     }
   },
+  addFilter (state, { type, options }) {
+    state.filters.push({ type, options })
+  },
   excludeFilter (state, name) {
-    const existingFilter = find(state.filters, { name })
-    if (existingFilter) {
-      existingFilter.reverse = true
+    if (state.reversed.indexOf(name) === -1) {
+      state.reversed.push(name)
     }
   },
   includeFilter (state, name) {
-    const existingFilter = find(state.filters, { name })
-    if (existingFilter) {
-      existingFilter.reverse = false
-    }
+    Vue.delete(state.reversed, state.reversed.indexOf(name))
   },
   toggleFilter (state, name) {
-    const existingFilter = find(state.filters, { name })
-    if (existingFilter) {
-      existingFilter.reverse = !existingFilter.reverse
+    if (state.reversed.indexOf(name) > -1) {
+      Vue.delete(state.reversed, state.reversed.indexOf(name))
+    } else {
+      state.reversed.push(name)
     }
   },
   resetFilterValues (state, name) {
-    const existingFilter = find(state.filters, { name })
-    if (existingFilter) {
-      existingFilter.values = []
-    }
+    Vue.set(state.values, name, [])
   },
   toggleFilters (state, toggler = !state.showFilters) {
-    state.showFilters = toggler
+    Vue.set(state, 'showFilters', toggler)
   },
   pushFromStarredDocuments (state, documentIds) {
     state.starredDocuments = uniq(concat(state.starredDocuments, documentIds))
   },
   removeFromStarredDocuments (state, documentIds) {
     state.starredDocuments = difference(state.starredDocuments, documentIds)
-  },
-  setStarredDocuments (state) {
-    const existingFilter = find(state.filters, { name: 'starred' })
-    if (existingFilter) {
-      existingFilter.starredDocuments = state.starredDocuments
-    }
   }
 }
 
@@ -340,7 +337,7 @@ export const actions = {
     commit('isReady', !updateIsReady)
     commit('error', null)
     try {
-      const raw = await elasticsearch.searchDocs(state.index, state.query, state.filters, state.from, state.size, state.sort, getters.getFields())
+      const raw = await elasticsearch.searchDocs(state.index, state.query, getters.instantiatedFilters, state.from, state.size, state.sort, getters.getFields())
       commit('buildResponse', raw)
       return raw
     } catch (error) {
@@ -364,11 +361,15 @@ export const actions = {
       state.index,
       getters.getFilter({ name: params.name }),
       state.query,
-      state.filters,
+      getters.instantiatedFilters,
       state.globalSearch,
       params.options,
       getters.getFields()
     ).then(raw => new EsDocList(raw))
+  },
+  setFilterValue ({ commit, dispatch }, filter) {
+    commit('setFilterValue', filter)
+    return dispatch('query')
   },
   addFilterValue ({ commit, dispatch }, filter) {
     commit('addFilterValue', filter)
@@ -394,7 +395,7 @@ export const actions = {
     commit('from', state.from + state.size)
     return dispatch('query')
   },
-  async updateFromRouteQuery ({ state, commit }, query) {
+  async updateFromRouteQuery ({ state, commit, getters }, query) {
     commit('reset', ['index', 'globalSearch', 'starredDocuments', 'showFilters', 'layout', 'field', 'isDownloadAllowed'])
     // Add the query to the state with a mutation to not triggering a search
     if (query.q) commit('query', query.q)
@@ -404,12 +405,12 @@ export const actions = {
     if (query.sort) commit('sort', query.sort)
     if (query.field) commit('field', query.field)
     // Iterate over the list of filter
-    each(state.filters, filter => {
+    each(getters.instantiatedFilters, filter => {
       // The filter key are formatted in the URL as follow.
       // See `query-string` for more info about query string format.
       each([`f[${filter.name}]`, `f[-${filter.name}]`], (key, index) => {
         // Add the data if the value exist
-        if (query.hasOwnProperty(key)) {
+        if (key in query) {
           // Because the values are grouped for each query parameter and because
           // the `addFilterValue` also accept an array of value, we can directly
           // use the query values.
@@ -440,13 +441,11 @@ export const actions = {
     const documentIds = map(documents, 'id')
     await api.starDocuments(state.index, documentIds)
     commit('pushFromStarredDocuments', documentIds)
-    commit('setStarredDocuments')
   },
   async unstarDocuments ({ state, commit }, documents) {
     const documentIds = map(documents, 'id')
     await api.unstarDocuments(state.index, documentIds)
     commit('removeFromStarredDocuments', documentIds)
-    commit('setStarredDocuments')
   },
   toggleStarDocument ({ state, commit, dispatch }, documentId) {
     const documents = [{ id: documentId }]
@@ -459,7 +458,6 @@ export const actions = {
   async getStarredDocuments ({ state, commit }) {
     const starredDocuments = await api.getStarredDocuments(state.index)
     commit('starredDocuments', starredDocuments)
-    commit('setStarredDocuments')
   },
   async getIsDownloadAllowed ({ state, commit }) {
     try {

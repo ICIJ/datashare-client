@@ -46,7 +46,6 @@ import last from 'lodash/last'
 import { getOS } from '@/utils/utils'
 import shortkeys from '@/mixins/shortkeys'
 
-import RouterLinkPopup from '@/components/RouterLinkPopup'
 import DocumentActions from '@/components/DocumentActions'
 import features from '@/mixins/features'
 
@@ -54,14 +53,13 @@ export default {
   name: 'SearchDocumentNavbar',
   mixins: [features, shortkeys],
   components: {
-    RouterLinkPopup,
     DocumentActions
   },
   computed: {
     ...mapState('search', ['response', 'isDownloadAllowed']),
     ...mapState('document', { currentDocument: 'doc' }),
     query () {
-      return this.$store.getters['search/toRouteQuery']
+      return this.$store.getters['search/toRouteQuery']()
     },
     currentDocumentIndex () {
       if (this.currentDocument) {

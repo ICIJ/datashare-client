@@ -58,7 +58,7 @@ export default {
   },
   mounted () {
     this.$root.$on('filter::async-search', this.asyncFilterSearch)
-    this.$root.$on('filter::add-filter-values', this.addFilterValues)
+    this.$root.$on('filter::add-filter-values', this.setFilterValue)
     this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
     this.$root.$on('index::delete::all', this.refreshEachFilter)
     this.$root.$on('filter::search::add-filter-values', this.updateFilterSelectedValues)
@@ -70,7 +70,10 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['filters', 'showFilters']),
+    ...mapState('search', ['showFilters']),
+    filters () {
+      return this.$store.getters['search/instantiatedFilters']
+    },
     contextualizeModel: {
       set (toggler) {
         this.$root.$emit('bv::hide::tooltip')
@@ -89,8 +92,8 @@ export default {
         this.$refs.asyncFilterSearch.show()
       }
     },
-    addFilterValues (selectedFilter, values) {
-      this.$store.commit('search/addFilterValues', { filter: selectedFilter, values })
+    setFilterValue ({ name }, value) {
+      this.$store.commit('search/setFilterValue', { name, value })
     },
     updateFilterSelectedValues (component) {
       const filter = this.$refs[component.name][0]

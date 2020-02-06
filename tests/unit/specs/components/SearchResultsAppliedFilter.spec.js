@@ -47,7 +47,7 @@ describe('SearchResultsAppliedFilter.vue', () => {
 
       wrapper.find('.search-results-header__applied-filters__filter').trigger('click')
 
-      expect(find(store.state.search.filters, { name: 'contentType' }).values).toHaveLength(0)
+      expect(find(store.getters['search/instantiatedFilters'], { name: 'contentType' }).values).toHaveLength(0)
     })
 
     it('should emit an event filter::search::update once the applied filter is deleted from the store', async () => {

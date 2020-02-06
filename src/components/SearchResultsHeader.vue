@@ -61,7 +61,7 @@ export default {
   },
   methods: {
     getToTemplate () {
-      return { name: 'search', query: cloneDeep(this.$store.getters['search/toRouteQuery']) }
+      return { name: 'search', query: cloneDeep(this.$store.getters['search/toRouteQuery']()) }
     },
     isDisplayed () {
       return this.response.total > this.$store.state.search.size

@@ -57,11 +57,11 @@ export default {
   data () {
     return {
       errorMessages: {
-        'BadRequest': 'search.errors.badRequest',
-        'InternalServerError': 'search.errors.internalError',
-        'NoConnections': 'search.errors.noConnections',
-        'NotFound': 'search.errors.notFound',
-        'ServiceUnavailable': 'search.errors.serviceUnavailable'
+        BadRequest: 'search.errors.badRequest',
+        InternalServerError: 'search.errors.internalError',
+        NoConnections: 'search.errors.noConnections',
+        NotFound: 'search.errors.notFound',
+        ServiceUnavailable: 'search.errors.serviceUnavailable'
       }
     }
   },
@@ -69,7 +69,7 @@ export default {
     ...mapState('search', ['isReady', 'showFilters', 'error', 'layout']),
     ...mapState('document', { currentDocument: 'doc' }),
     toRouteQuery () {
-      return this.$store.getters['search/toRouteQuery']
+      return this.$store.getters['search/toRouteQuery']()
     },
     showDocument () {
       return ['document'].indexOf(this.$route.name) > -1
@@ -154,7 +154,7 @@ export default {
       this.showFilters = !this.showFilters
     },
     isDifferentFromQuery (query) {
-      return !isEqual(query, this.$store.getters['search/toRouteQuery'])
+      return !isEqual(query, this.$store.getters['search/toRouteQuery']())
     },
     updateScrollBars () {
       const refs = [this.$refs.searchBodyScrollbar]

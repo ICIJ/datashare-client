@@ -21,7 +21,7 @@ describe('FilterDateRange.vue', () => {
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', index)
-    wrapper = mount(FilterDateRange, { localVue, i18n, store, router, propsData: { filter: find(store.state.search.filters, { name }) } })
+    wrapper = mount(FilterDateRange, { localVue, i18n, store, router, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name }) } })
   })
 
   afterEach(() => store.commit('search/reset'))
@@ -43,7 +43,7 @@ describe('FilterDateRange.vue', () => {
 
     wrapper.vm.onInput()
 
-    const existingFilter = find(store.state.search.filters, { name })
+    const existingFilter = find(store.getters['search/instantiatedFilters'], { name })
     expect(existingFilter.values).toEqual([start.getTime(), end.getTime()])
   })
 
@@ -58,7 +58,7 @@ describe('FilterDateRange.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start: start2, end: end2 })
     wrapper.vm.onInput()
 
-    const existingFilter = find(store.state.search.filters, { name })
+    const existingFilter = find(store.getters['search/instantiatedFilters'], { name })
     expect(existingFilter.values).toEqual([start2.getTime(), end2.getTime()])
   })
 

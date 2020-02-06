@@ -4,7 +4,6 @@ export default class FilterYesNo extends FilterText {
   constructor (name, key, icon, isSearchable, labelFun) {
     super(name, key, icon, isSearchable, labelFun)
     this.component = 'FilterYesNo'
-    this.starredDocuments = []
   }
 
   addChildIncludeFilter (body, param) {

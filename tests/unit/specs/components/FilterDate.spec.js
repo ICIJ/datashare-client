@@ -18,7 +18,7 @@ describe('FilterDate.vue', () => {
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', index)
-    wrapper = mount(FilterDate, { localVue, i18n, store, propsData: { filter: find(store.state.search.filters, { name: 'indexingDate' }) } })
+    wrapper = mount(FilterDate, { localVue, i18n, store, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'indexingDate' }) } })
   })
 
   afterEach(() => store.commit('search/reset'))

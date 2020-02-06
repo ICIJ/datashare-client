@@ -19,12 +19,12 @@ export default {
   },
   computed: {
     filters () {
-      let filters = []
+      const filters = []
       map(this.$store.getters['search/retrieveQueryTerms'], term => {
         term.value = term.label
         filters.push(term)
       })
-      map(this.$store.state.search.filters, filter => {
+      map(this.$store.getters['search/instantiatedFilters'], filter => {
         map(filter.values, value => {
           let label = filter.itemLabel ? filter.itemLabel({ key: value, key_as_string: value }) : value
           label = this.$te(label) ? this.$t(label) : label

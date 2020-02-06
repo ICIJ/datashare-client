@@ -27,7 +27,7 @@ describe('FilterSearch.vue', () => {
   beforeEach(() => {
     store.commit('search/reset')
     store.commit('search/index', index)
-    const filter = find(store.state.search.filters, { name: 'contentType' })
+    const filter = find(store.getters['search/instantiatedFilters'], { name: 'contentType' })
     wrapper = mount(FilterSearch,
       { localVue, store, propsData: { infiniteScroll: false, throttle: 0, filter }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
   })
@@ -211,7 +211,7 @@ describe('FilterSearch.vue', () => {
 
   it('should display all the indexing dates', async () => {
     wrapper = mount(FilterSearch,
-      { localVue, store, propsData: { infiniteScroll: false, throttle: 0, filter: find(store.state.search.filters, { name: 'indexingDate' }) }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
+      { localVue, store, propsData: { infiniteScroll: false, throttle: 0, filter: find(store.getters['search/instantiatedFilters'], { name: 'indexingDate' }) }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
     await letData(es).have(new IndexedDocument('doc_01', index)
       .withIndexingDate('2018-01-01T00:00:00.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02', index)

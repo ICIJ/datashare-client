@@ -164,7 +164,7 @@ export default {
   },
   computed: {
     query () {
-      return this.$store.getters['search/toRouteQueryWithStamp']
+      return this.$store.getters['search/toRouteQueryWithStamp']()
     },
     tooltipsClass () {
       return this.reduced ? '' : 'd-none'

@@ -1,5 +1,10 @@
+import get from 'lodash/get'
 import includes from 'lodash/includes'
 import some from 'lodash/some'
+
+// Private properties keys
+const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
+const _STATE = typeof Symbol === 'function' ? Symbol('_state') : '_state'
 
 export default class FilterText {
   constructor (name, key, icon, isSearchable, labelFun, alternativeSearch) {
@@ -8,8 +13,6 @@ export default class FilterText {
     this.icon = icon
     this.isSearchable = isSearchable
     this.itemLabel = labelFun
-    this.reverse = false
-    this.values = []
     this.component = 'FilterText'
     this.alternativeSearch = alternativeSearch
   }
@@ -23,11 +26,11 @@ export default class FilterText {
   }
 
   addParentIncludeFilter (body, param) {
-    return body.query('has_parent', { 'parent_type': 'Document' }, q => q.query('terms', this.key, param.values))
+    return body.query('has_parent', { parent_type: 'Document' }, q => q.query('terms', this.key, param.values))
   }
 
   addParentExcludeFilter (body, param) {
-    return body.query('has_parent', { 'parent_type': 'Document' }, q => q.notQuery('terms', this.key, param.values))
+    return body.query('has_parent', { parent_type: 'Document' }, q => q.notQuery('terms', this.key, param.values))
   }
 
   addChildExcludeFilter (body, param) {
@@ -66,5 +69,25 @@ export default class FilterText {
 
   applyTo (body) {
     this.addFilter(body)
+  }
+
+  bindState (state) {
+    this[_STATE] = this[_STATE] || state
+  }
+
+  get state () {
+    return this[_STATE]
+  }
+
+  get values () {
+    return this[_VALUES] || get(this, ['state', 'values', this.name], [])
+  }
+
+  set values (values) {
+    this[_VALUES] = values
+  }
+
+  get reverse () {
+    return get(this, ['state', 'reversed'], []).indexOf(this.name) > -1
   }
 }

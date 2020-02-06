@@ -16,10 +16,11 @@ describe('filters mixin', () => {
   })
 
   it('should commit a setFilterValue and then refresh the route and the search', () => {
-    const state = { filters: store.state.search.filters }
+    const state = { ...store.state.search }
     const mutations = { setFilterValue: jest.fn() }
     const actions = { query: jest.fn() }
-    const localStore = new Vuex.Store({ modules: { search: { namespaced: true, state, mutations, actions } } })
+    const getters = { toRouteQuery: () => jest.fn() }
+    const localStore = new Vuex.Store({ modules: { search: { namespaced: true, state, mutations, actions, getters } } })
     wrapper = shallowMount(App, { localVue, i18n, router, store: localStore, mixins: [filters], propsData: { filter } })
     jest.spyOn(wrapper.vm, 'refreshRouteAndSearch')
 

@@ -1,6 +1,5 @@
 import camelCase from 'lodash/camelCase'
 import escapeRegExp from 'lodash/escapeRegExp'
-import find from 'lodash/find'
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import last from 'lodash/last'
@@ -68,7 +67,7 @@ export default {
       return this.$store.state.search.globalSearch
     },
     filterFilter () {
-      return this.$store.getters['search/findFilter'](this.filter.name)
+      return this.$store.getters['search/findFilter']({ name: this.filter.name })
     },
     size () {
       return this.offset + this.pageSize
@@ -77,7 +76,7 @@ export default {
       return ['aggregations', this.filter.key, 'buckets']
     },
     queryTokens () {
-      return [ escapeRegExp(this.filterQuery.toLowerCase()) ]
+      return [escapeRegExp(this.filterQuery.toLowerCase())]
     },
     options () {
       return map(this.items, item => {
@@ -96,7 +95,7 @@ export default {
     },
     refreshRoute () {
       const name = 'search'
-      const query = this.$store.getters['search/toRouteQuery']
+      const query = this.$store.getters['search/toRouteQuery']()
       this.$router.push({ name, query }).catch(() => {})
     },
     refreshSearch () {
@@ -165,7 +164,7 @@ export default {
     },
     selectedValuesFromStore () {
       if (this.filter) {
-        this.$set(this, 'selected', find(this.$store.state.search.filters, { name: this.filter.name }).values)
+        this.$set(this, 'selected', this.$store.state.search.values[this.filter.name] || [])
         this.isAllSelected = this.selected.length === 0
         this.$emit('selected-values-from-store')
       }

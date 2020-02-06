@@ -26,7 +26,7 @@ describe('FilterText.vue', () => {
       localVue,
       router,
       store,
-      propsData: { filter: find(store.state.search.filters, { name: 'contentType' }) },
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'contentType' }) },
       mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
     })
     store.commit('search/setGlobalSearch', true)
@@ -344,13 +344,13 @@ describe('FilterText.vue', () => {
   })
 
   it('should display the language filter in French', async () => {
-    const i18n = new VueI18n({ locale: 'fr', messages: { 'fr': messagesFr } })
+    const i18n = new VueI18n({ locale: 'fr', messages: { fr: messagesFr } })
     wrapper = mount(FilterText, {
       localVue,
       i18n,
       router,
       store,
-      propsData: { filter: find(store.state.search.filters, { name: 'language' }) }
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }
     })
     await letData(es).have(new IndexedDocument('document_01', index)
       .withLanguage('ENGLISH')).commit()
@@ -361,13 +361,13 @@ describe('FilterText.vue', () => {
   })
 
   it('should translate any weird language', async () => {
-    const i18n = new VueI18n({ locale: 'fr', messages: { 'fr': messagesFr } })
+    const i18n = new VueI18n({ locale: 'fr', messages: { fr: messagesFr } })
     wrapper = mount(FilterText, {
       localVue,
       i18n,
       router,
       store,
-      propsData: { filter: find(store.state.search.filters, { name: 'language' }) }
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }
     })
     await letData(es).have(new IndexedDocument('document_01', index)
       .withLanguage('WELSH')).commit()
@@ -378,7 +378,7 @@ describe('FilterText.vue', () => {
   })
 
   it('should display the extraction level filter with correct labels', async () => {
-    wrapper.setProps({ filter: find(store.state.search.filters, { name: 'extractionLevel' }) })
+    wrapper.setProps({ filter: find(store.getters['search/instantiatedFilters'], { name: 'extractionLevel' }) })
 
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
@@ -390,13 +390,13 @@ describe('FilterText.vue', () => {
   })
 
   it('should display the extraction level filter with correct labels in French', async () => {
-    const i18n = new VueI18n({ locale: 'fr', messages: { 'fr': messagesFr } })
+    const i18n = new VueI18n({ locale: 'fr', messages: { fr: messagesFr } })
     wrapper = mount(FilterText, {
       localVue,
       i18n,
       router,
       store,
-      propsData: { filter: find(store.state.search.filters, { name: 'extractionLevel' }) }
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'extractionLevel' }) }
     })
 
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
@@ -417,7 +417,7 @@ describe('FilterText.vue', () => {
   })
 
   it('should remove "tag_01" from the tags filter on event "filter::delete"', async () => {
-    wrapper.setProps({ filter: find(store.state.search.filters, { name: 'tags' }) })
+    wrapper.setProps({ filter: find(store.getters['search/instantiatedFilters'], { name: 'tags' }) })
 
     await letData(es).have(new IndexedDocument('document_01', index)
       .withTags(['tag_01'])).commit()

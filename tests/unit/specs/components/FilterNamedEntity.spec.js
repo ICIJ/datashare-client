@@ -37,7 +37,7 @@ describe('FilterNamedEntity.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, propsData: { filter: find(store.state.search.filters, { name: 'namedEntityPerson' }) } })
+    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'namedEntityPerson' }) } })
     store.commit('search/setGlobalSearch', false)
   })
 
@@ -210,9 +210,7 @@ describe('FilterNamedEntity.vue', () => {
       .withContentType('type_02')
       .withNer('person_02')).commit()
 
-    const contentTypeFilter = find(store.state.search.filters, { name: 'contentType' })
-    contentTypeFilter.value = ['type_01']
-    store.commit('search/addFilterValue', contentTypeFilter)
+    store.commit('search/setFilterValue', { name: 'contentType', value: 'type_01' })
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
@@ -226,9 +224,8 @@ describe('FilterNamedEntity.vue', () => {
       .withNer('person_02')
       .withIndexingDate('2018-09-19T10:11:12.001Z')).commit()
 
-    const dateFilter = find(store.state.search.filters, { name: 'indexingDate' })
-    dateFilter.value = [new Date('2018-09-01T00:00:00.000Z').getTime().toString()]
-    store.commit('search/addFilterValue', dateFilter)
+    const value = [new Date('2018-09-01T00:00:00.000Z').getTime().toString()]
+    store.commit('search/setFilterValue', { name: 'indexingDate', value })
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
@@ -245,9 +242,7 @@ describe('FilterNamedEntity.vue', () => {
       .withContentType('type_03')
       .withNer('person_03')).commit()
 
-    const contentTypeFilter = find(store.state.search.filters, { name: 'contentType' })
-    contentTypeFilter.value = ['type_01']
-    store.commit('search/addFilterValue', contentTypeFilter)
+    store.commit('search/setFilterValue', { name: 'contentType', value: ['type_01'] })
     store.commit('search/toggleFilter', 'contentType')
     await wrapper.vm.root.aggregate()
 
@@ -281,9 +276,7 @@ describe('FilterNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('document_03', index)
       .withNer('person_03')).commit()
 
-    const namedEntityFilter = find(store.state.search.filters, { name: 'namedEntityPerson' })
-    namedEntityFilter.value = ['person_01']
-    store.commit('search/addFilterValue', namedEntityFilter)
+    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
@@ -310,9 +303,7 @@ describe('FilterNamedEntity.vue', () => {
       .withNer('organization_04', 1, 'ORGANIZATION')
     ).commit()
 
-    const namedEntityFilter = find(store.state.search.filters, { name: 'namedEntityPerson' })
-    namedEntityFilter.value = ['person_02']
-    store.commit('search/addFilterValue', namedEntityFilter)
+    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_02'] })
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
@@ -339,9 +330,7 @@ describe('FilterNamedEntity.vue', () => {
       .withNer('organization_04', 1, 'ORGANIZATION')
     ).commit()
 
-    const namedEntityFilter = find(store.state.search.filters, { name: 'namedEntityOrganization' })
-    namedEntityFilter.value = ['organization_03']
-    store.commit('search/addFilterValue', namedEntityFilter)
+    store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_03'] })
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(3)
@@ -356,9 +345,7 @@ describe('FilterNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument('document_02', index)
       .withNer('bruno')).commit()
 
-    const namedEntityFilter = find(store.state.search.filters, { name: 'namedEntityPerson' })
-    namedEntityFilter.value = ['anne']
-    store.commit('search/addFilterValue', namedEntityFilter)
+    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['anne'] })
     store.commit('search/toggleFilter', 'namedEntityPerson')
     store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate()
@@ -378,12 +365,8 @@ describe('FilterNamedEntity.vue', () => {
       .withNer('location_02', 1, 'LOCATION')
     ).commit()
 
-    let namedEntityFilter = find(store.state.search.filters, { name: 'namedEntityPerson' })
-    namedEntityFilter.value = ['person_01']
-    store.commit('search/addFilterValue', namedEntityFilter)
-    namedEntityFilter = find(store.state.search.filters, { name: 'namedEntityOrganization' })
-    namedEntityFilter.value = ['organization_01']
-    store.commit('search/addFilterValue', namedEntityFilter)
+    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
+    store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_01'] })
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
@@ -394,14 +377,13 @@ describe('FilterNamedEntity.vue', () => {
       .withNer('person_01')
       .withNer('organization_01', 1, 'ORGANIZATION')
     ).commit()
+
     await letData(es).have(new IndexedDocument('document_02', index)
       .withNer('person_02')
       .withNer('organization_02', 1, 'ORGANIZATION')
     ).commit()
 
-    const namedEntityFilter = find(store.state.search.filters, { name: 'namedEntityOrganization' })
-    namedEntityFilter.value = ['organization_01']
-    store.commit('search/addFilterValue', namedEntityFilter)
+    store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_01'] })
     store.commit('search/toggleFilter', 'namedEntityOrganization')
     await wrapper.vm.root.aggregate()
 
@@ -423,13 +405,10 @@ describe('FilterNamedEntity.vue', () => {
   })
 
   it('should load and checked the filter values stored in store', async () => {
-    await letData(es).have(new IndexedDocument(id, index)
-      .withNer('person_01')).commit()
+    await letData(es).have(new IndexedDocument(id, index).withNer('person_01')).commit()
+    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
 
-    const namedEntityFilter = find(store.state.search.filters, { name: 'namedEntityPerson' })
-    namedEntityFilter.value = ['person_01']
-    store.commit('search/addFilterValue', namedEntityFilter)
-    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, propsData: { filter: find(store.state.search.filters, { name: 'namedEntityPerson' }) } })
+    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'namedEntityPerson' }) } })
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
@@ -438,13 +417,10 @@ describe('FilterNamedEntity.vue', () => {
   })
 
   it('should select the "All" item by default if nothing is selected', async () => {
-    await letData(es).have(new IndexedDocument(id, index)
-      .withNer('person_01')).commit()
+    await letData(es).have(new IndexedDocument(id, index).withNer('person_01')).commit()
 
-    const namedEntityFilter = find(store.state.search.filters, { name: 'namedEntityPerson' })
-    namedEntityFilter.value = ['person_01']
-    store.commit('search/addFilterValue', namedEntityFilter)
-    wrapper = mount(FilterNamedEntity, { localVue, i18n, router: new VueRouter(), store, propsData: { filter: find(store.state.search.filters, { name: 'namedEntityPerson' }) } })
+    store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
+    wrapper = mount(FilterNamedEntity, { localVue, i18n, router: new VueRouter(), store, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'namedEntityPerson' }) } })
 
     await wrapper.vm.root.aggregate()
     wrapper.findAll('.list-group-item .filter__items__item input').at(0).trigger('click')

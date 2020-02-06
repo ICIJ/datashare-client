@@ -46,7 +46,7 @@ describe('SearchStore', () => {
     expect(omit(store.state.search, omittedFields)).toEqual(omit(initialState, omittedFields))
     expect(store.state.search.index).toBe(anotherIndex)
     expect(store.state.search.isReady).toBeTruthy()
-    expect(find(store.state.search.filters, { name: 'contentType' }).values).toEqual([])
+    expect(find(store.getters['search/instantiatedFilters'], { name: 'contentType' }).values).toEqual([])
 
     store.commit('search/size', 25)
   })
@@ -56,7 +56,7 @@ describe('SearchStore', () => {
 
     await store.dispatch('search/reset', ['starredDocuments'])
 
-    expect(find(store.state.search.filters, { name: 'starred' }).starredDocuments).toEqual(['document_01', 'document_02'])
+    expect(find(store.getters['search/instantiatedFilters'], { name: 'starred' }).starredDocuments).toEqual(['document_01', 'document_02'])
   })
 
   it('should not reset the starredDocuments', async () => {
@@ -196,7 +196,7 @@ describe('SearchStore', () => {
     await letData(es).have(new IndexedDocument('bar.ico', index).withContentType('ico').withContent('bar')).commit()
 
     await store.dispatch('search/query', '*')
-    await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
+    await store.dispatch('search/setFilterValue', { name: 'contentType', value: 'txt' })
     await store.dispatch('search/toggleFilter', 'contentType')
     expect(store.state.search.response.hits).toHaveLength(3)
     await store.dispatch('search/toggleFilter', 'contentType')
@@ -299,7 +299,7 @@ describe('SearchStore', () => {
   })
 
   it('should return the default query parameters', () => {
-    expect(store.getters['search/toRouteQuery']).toMatchObject({ field: 'all', index, q: '', size: 25, sort: 'relevance', from: 0 })
+    expect(store.getters['search/toRouteQuery']()).toMatchObject({ field: 'all', index, q: '', size: 25, sort: 'relevance', from: 0 })
   })
 
   it('should return an advanced and filtered query parameters', () => {
@@ -309,7 +309,7 @@ describe('SearchStore', () => {
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFilterValue', { name: 'contentType', value: 'TXT' })
 
-    expect(store.getters['search/toRouteQuery']).toMatchObject({ index: 'another-index', q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[contentType]': ['TXT'] })
+    expect(store.getters['search/toRouteQuery']()).toMatchObject({ index: 'another-index', q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[contentType]': ['TXT'] })
 
     store.commit('search/size', 25)
   })
@@ -362,7 +362,6 @@ describe('SearchStore', () => {
 
     it('should set the filter of the store according to the url', async () => {
       await store.dispatch('search/updateFromRouteQuery', { 'f[contentType]': ['new_type'] })
-
       expect(store.getters['search/findFilter']('contentType').values[0]).toBe('new_type')
     })
 
@@ -707,9 +706,8 @@ describe('SearchStore', () => {
       expect(store.getters['search/findFilter']('starred').starredDocuments).toEqual([])
     })
 
-    it('should setStarredDocuments for filter', () => {
+    it('should set the starredDocuments property of the filter', () => {
       store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
-      store.commit('search/setStarredDocuments')
       expect(store.getters['search/findFilter']('starred').starredDocuments).toEqual(['doc_01', 'doc_02'])
     })
   })
@@ -740,7 +738,7 @@ describe('SearchStore', () => {
     store.commit('search/setFilterValue', { name, value: '12' })
     store.commit('search/setFilterValue', { name, value: '42' })
 
-    expect(find(store.state.search.filters, { name }).values).toEqual(['42'])
+    expect(find(store.getters['search/instantiatedFilters'], { name }).values).toEqual(['42'])
   })
 
   it('should star a batch of documents', async () => {

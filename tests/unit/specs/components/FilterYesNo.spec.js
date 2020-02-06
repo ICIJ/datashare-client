@@ -33,7 +33,7 @@ describe('FilterYesNo.vue', () => {
       localVue,
       router,
       store,
-      propsData: { filter: find(store.state.search.filters, { name: 'starred' }) },
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'starred' }) },
       mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
     })
     store.commit('search/index', index)

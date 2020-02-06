@@ -122,7 +122,7 @@ export default {
       this.$store.commit('search/field', this.field)
       this.$store.commit('search/query', this.query)
       this.$store.commit('search/from', 0)
-      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQueryWithStamp'] })
+      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQueryWithStamp']() })
     },
     async suggestTerms (candidates) {
       const query = this.query
@@ -130,7 +130,7 @@ export default {
       const candidate = last(candidates)
       const fields = castArray(candidate.field === '<implicit>' ? settings.suggestedImplicitFields : candidate.field)
       const include = `.*${escapeRegExp(candidate.term).toLowerCase()}.*`
-      let body = bodybuilder().size(0)
+      const body = bodybuilder().size(0)
       each(fields, field => {
         body.aggregation('terms', field, { include }, field)
       })

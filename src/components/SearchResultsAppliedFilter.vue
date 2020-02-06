@@ -18,7 +18,7 @@ export default {
       } else {
         await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
       }
-      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery'] }).catch(() => {})
+      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() }).catch(() => {})
     }
   }
 }
