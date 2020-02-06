@@ -56,7 +56,7 @@
         "path": "ファイルパス(A→Z)",
         "pathReverse": "ファイルパス(Z→A)",
         "default": "デフォルト",
-        "count": "件数"
+        "count": "frequency"
       }
     },
     "filtersTitle": "フィルター",
