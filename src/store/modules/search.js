@@ -60,7 +60,7 @@ export function initialState () {
       { type: 'FilterDate', options: ['indexingDate', 'extractionDate', 'calendar-plus', false, item => item.key_as_string] }
     ],
     values: {},
-    reversed: ['language'],
+    reversed: [],
     sort: settings.defaultSearchSort,
     field: settings.defaultSearchField,
     response: EsDocList.none(),
