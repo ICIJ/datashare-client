@@ -105,7 +105,8 @@
     ],
     "rules": {
       "import/no-webpack-loader-syntax": "off",
-      "no-useless-escape": "off"
+      "no-useless-escape": "off",
+      "lines-between-class-members": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"

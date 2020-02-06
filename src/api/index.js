@@ -6,10 +6,10 @@ import { EventBus } from '@/utils/event-bus'
 
 export default class Api {
   index (options) {
-    return this.sendActionAsText(`/api/task/batchUpdate/index/file`, { method: 'POST', data: { options } })
+    return this.sendActionAsText('/api/task/batchUpdate/index/file', { method: 'POST', data: { options } })
   }
   runBatchSearch () {
-    return this.sendAction(`/api/task/batchSearch`, { method: 'POST' })
+    return this.sendAction('/api/task/batchSearch', { method: 'POST' })
   }
   findNames (pipeline, options) {
     return this.sendActionAsText(`/api/task/findNames/${pipeline}`, { method: 'POST', data: { options } })
@@ -112,7 +112,7 @@ export default class Api {
     return this.sendAction(replace(`/api/${project}/notes`, '//', '/'))
   }
   getUser () {
-    return this.sendAction('/api/user')
+    return this.sendAction('/api/users/me')
   }
   async sendAction (url, config = {}) {
     try {

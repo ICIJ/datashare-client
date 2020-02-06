@@ -20,12 +20,12 @@ describe('auth backend client', () => {
     it('should return user name if user is authenticated with basic auth', async () => {
       axios.request.mockResolvedValue({ data: { uid: 'john' } })
       expect(await auth.getUsername()).toBe('john')
-      expect(axios.request).toBeCalledWith({ url: 'http://localhost:9090/api/user' })
+      expect(axios.request).toBeCalledWith({ url: 'http://localhost:9090/api/users/me' })
     })
 
     it('should return null if user is not authenticated with basic auth', async () => {
       expect(await auth.getUsername()).toBeNull()
-      expect(axios.request).toBeCalledWith({ url: 'http://localhost:9090/api/user' })
+      expect(axios.request).toBeCalledWith({ url: 'http://localhost:9090/api/users/me' })
     })
 
     it('should throw error when testing basic auth and response is other than 200 or 401', async () => {
