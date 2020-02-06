@@ -236,7 +236,7 @@ export default {
     }
   },
   created () {
-    this.$set(this, 'projects', map(JSON.parse(this.$config.get('datashare_indices', '[]')), value => { return { value, text: value } }))
+    this.$set(this, 'projects', map(JSON.parse(this.$config.get('datashare_projects', '[]')), value => { return { value, text: value } }))
     this.$set(this, 'project', get(this.projects, ['0', 'value'], ''))
   },
   methods: {

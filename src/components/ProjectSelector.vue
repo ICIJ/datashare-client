@@ -18,13 +18,9 @@
 </template>
 
 <script>
-import get from 'lodash/get'
 import map from 'lodash/map'
 
-import Api from '@/api'
 import filters from '@/mixins/filters'
-
-const api = new Api()
 
 export default {
   name: 'ProjectSelector',
@@ -49,7 +45,7 @@ export default {
     }
   },
   async created () {
-    this.$set(this, 'projects', map(JSON.parse(this.$config.get('datashare_indices', '[]')), value => { return { value, text: value } }))
+    this.$set(this, 'projects', map(JSON.parse(this.$config.get('datashare_projects', '[]')), value => { return { value, text: value } }))
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')
   },

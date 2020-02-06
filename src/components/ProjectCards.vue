@@ -53,7 +53,7 @@ export default {
     startCase
   },
   created () {
-    this.projects = JSON.parse(this.$config.get('datashare_indices', '[]'))
+    this.projects = JSON.parse(this.$config.get('datashare_projects', '[]'))
   }
 }
 </script>
