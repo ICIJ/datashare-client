@@ -1,7 +1,9 @@
 <template>
   <div class="aggregations-panel" v-show="showFilters">
     <div class="aggregations-panel__sticky w-100">
+      <hook name="aggregations-panel:before" />
       <div class="aggregations-panel__sticky__toolbar">
+        <hook name="aggregations-panel.toolbar:before" />
         <div class="d-flex align-items-center">
           <h5 class="flex-grow-1 my-0">
             {{ $t('search.filtersTitle') }}
@@ -21,9 +23,13 @@
             <b-tooltip placement="bottom" target="input-contextualize-filters" :title="$t('search.contextualizeFiltersDescription')" />
           </li>
         </ul>
+        <hook name="aggregations-panel.toolbar:after" />
       </div>
+      <hook name="aggregations-panel.filters:before" />
       <project-selector />
       <component v-for="filter in filters" :ref="filter.name" :key="filter.name" :is="filter.component" v-bind="{ filter }"></component>
+      <hook name="aggregations-panel.filters:after" />
+      <hook name="aggregations-panel:after" />
     </div>
     <b-modal hide-footer lazy ref="asyncFilterSearch" :title="selectedFilter ? $t('filter.' + selectedFilter.name) : null">
       <filter-search :filter="selectedFilter" :query="filterQuery" />
@@ -35,6 +41,7 @@
 import { mapState } from 'vuex'
 import forEach from 'lodash/forEach'
 import isArray from 'lodash/isArray'
+import Hook from '@/components/Hook'
 import FilterText from '@/components/FilterText'
 import FilterYesNo from '@/components/FilterYesNo'
 import FilterDate from '@/components/FilterDate'
@@ -54,6 +61,7 @@ export default {
     FilterPath,
     FilterNamedEntity,
     FilterSearch,
+    Hook,
     ProjectSelector
   },
   mounted () {
