@@ -1,14 +1,14 @@
 <template>
-  <div class="aggregations-panel" v-show="showFilters">
-    <div class="aggregations-panel__sticky w-100">
-      <hook name="aggregations-panel:before" />
-      <div class="aggregations-panel__sticky__toolbar">
-        <hook name="aggregations-panel.toolbar:before" />
+  <div class="filters-panel" v-show="showFilters">
+    <div class="filters-panel__sticky w-100">
+      <hook name="filters-panel:before" />
+      <div class="filters-panel__sticky__toolbar">
+        <hook name="filters-panel.toolbar:before" />
         <div class="d-flex align-items-center">
           <h5 class="flex-grow-1 my-0">
             {{ $t('search.filtersTitle') }}
           </h5>
-          <button class="aggregations-panel__sticky__toolbar__toggler btn btn-link" @click="hideFilters" :title="$t('search.hideFilters')" v-b-tooltip>
+          <button class="filters-panel__sticky__toolbar__toggler btn btn-link" @click="hideFilters" :title="$t('search.hideFilters')" v-b-tooltip>
             <fa icon="arrow-left" class="text-light" />
             <span class="sr-only">
               {{ $t('search.hideFilters') }}
@@ -17,19 +17,19 @@
         </div>
         <ul class="nav flex-column">
           <li class="nav-item pt-1">
-            <b-form-checkbox class="aggregations-panel__sticky__toolbar__item" switch id="input-contextualize-filters" v-model="contextualizeModel">
+            <b-form-checkbox class="filters-panel__sticky__toolbar__item" switch id="input-contextualize-filters" v-model="contextualizeModel">
               {{ $t('search.contextualizeFiltersLabel') }}
             </b-form-checkbox>
             <b-tooltip placement="bottom" target="input-contextualize-filters" :title="$t('search.contextualizeFiltersDescription')" />
           </li>
         </ul>
-        <hook name="aggregations-panel.toolbar:after" />
+        <hook name="filters-panel.toolbar:after" />
       </div>
-      <hook name="aggregations-panel.filters:before" />
+      <hook name="filters-panel.filters:before" />
       <project-selector />
       <component v-for="filter in filters" :ref="filter.name" :key="filter.name" :is="filter.component" v-bind="{ filter }"></component>
-      <hook name="aggregations-panel.filters:after" />
-      <hook name="aggregations-panel:after" />
+      <hook name="filters-panel.filters:after" />
+      <hook name="filters-panel:after" />
     </div>
     <b-modal hide-footer lazy ref="asyncFilterSearch" :title="selectedFilter ? $t('filter.' + selectedFilter.name) : null">
       <filter-search :filter="selectedFilter" :query="filterQuery" />
@@ -52,7 +52,7 @@ import FilterSearch from '@/components/FilterSearch'
 import ProjectSelector from '@/components/ProjectSelector'
 
 export default {
-  name: 'AggregationsPanel',
+  name: 'FiltersPanel',
   components: {
     FilterText,
     FilterYesNo,
@@ -141,7 +141,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .aggregations-panel {
+  .filters-panel {
     $card-bg: darken($app-context-sidebar-bg, 5%);
     $panel-color: white;
 

@@ -1,32 +1,32 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import AggregationsPanel from '@/components/AggregationsPanel'
+import FiltersPanel from '@/components/FiltersPanel'
 import { App } from '@/main'
 
 const { localVue, store, router, i18n } = App.init(createLocalVue()).useAll()
 
-describe('AggregationsPanel.vue', () => {
+describe('FiltersPanel.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, router, store, sync: false })
+    wrapper = shallowMount(FiltersPanel, { localVue, i18n, router, store, sync: false })
   })
 
   afterAll(() => window.fetch.mockRestore())
 
   it('should display the aggregation panel by default', () => {
-    expect(wrapper.find('.aggregations-panel').isVisible()).toBeTruthy()
+    expect(wrapper.find('.filters-panel').isVisible()).toBeTruthy()
   })
 
   it('should hide the aggregation panel on click on `Hide filters`', async () => {
-    await wrapper.find('.aggregations-panel__sticky__toolbar__toggler').trigger('click')
+    await wrapper.find('.filters-panel__sticky__toolbar__toggler').trigger('click')
 
-    expect(wrapper.find('.aggregations-panel').isVisible()).toBeFalsy()
+    expect(wrapper.find('.filters-panel').isVisible()).toBeFalsy()
   })
 
   it('should call function resetFilterValues on event filter::search::reset-filters emitted', async () => {
     const resetFilterValuesStub = jest.fn()
-    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { resetFilterValues: resetFilterValuesStub }, sync: false })
+    wrapper = shallowMount(FiltersPanel, { localVue, i18n, store, methods: { resetFilterValues: resetFilterValuesStub }, sync: false })
     wrapper.vm.$root.$emit('filter::search::reset-filters')
 
     expect(resetFilterValuesStub).toHaveBeenCalled()
@@ -34,7 +34,7 @@ describe('AggregationsPanel.vue', () => {
 
   it('should call function refreshEachFilter on event index::delete::all emitted', async () => {
     const refreshEachFilterMock = jest.fn()
-    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { refreshEachFilter: refreshEachFilterMock }, sync: false })
+    wrapper = shallowMount(FiltersPanel, { localVue, i18n, store, methods: { refreshEachFilter: refreshEachFilterMock }, sync: false })
 
     wrapper.vm.$root.$emit('index::delete::all')
 
@@ -43,7 +43,7 @@ describe('AggregationsPanel.vue', () => {
 
   it('should call function updateFilterSelectedValues on event filter::search::add-filter-values emitted', async () => {
     const updateFilterSelectedValuesMock = jest.fn()
-    wrapper = shallowMount(AggregationsPanel, { localVue, i18n, store, methods: { updateFilterSelectedValues: updateFilterSelectedValuesMock }, sync: false })
+    wrapper = shallowMount(FiltersPanel, { localVue, i18n, store, methods: { updateFilterSelectedValues: updateFilterSelectedValuesMock }, sync: false })
 
     wrapper.vm.$root.$emit('filter::search::add-filter-values')
 

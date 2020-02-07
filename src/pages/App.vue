@@ -22,7 +22,6 @@
 import compact from 'lodash/compact'
 import some from 'lodash/some'
 
-import AggregationsPanel from '@/components/AggregationsPanel'
 import AppSidebar from '@/components/AppSidebar'
 import ScrollTracker from '@/components/ScrollTracker'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
@@ -30,7 +29,6 @@ import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 export default {
   name: 'App',
   components: {
-    AggregationsPanel,
     AppSidebar,
     ScrollTracker,
     VuePerfectScrollbar
@@ -42,7 +40,7 @@ export default {
     isSearchRoute () {
       return this.matchedRouteNames.indexOf('search') > -1
     },
-    isHiddingAggregationsPanel () {
+    isHiddingFiltersPanel () {
       return this.isSearchRoute && !this.$store.state.search.showFilters
     },
     doesRouteHaveSidebar () {
@@ -51,7 +49,7 @@ export default {
       })
     },
     isContextSidebarReduced () {
-      return this.isHiddingAggregationsPanel || !this.doesRouteHaveSidebar
+      return this.isHiddingFiltersPanel || !this.doesRouteHaveSidebar
     }
   }
 }

@@ -34,7 +34,7 @@ export const router = {
           },
           components: {
             default: () => import('@/pages/Search'),
-            sidebar: () => import('@/components/AggregationsPanel')
+            sidebar: () => import('@/components/FiltersPanel')
           },
           children: [
             {
