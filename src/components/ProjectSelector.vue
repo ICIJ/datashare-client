@@ -1,5 +1,5 @@
 <template>
-  <div class="filter card filter--hide-show-more filter--hide-search" v-if="$config.is('multipleProjects')">
+  <div class="filter card filter--hide-show-more filter--hide-search" v-if="$config.is('multipleProjects') || projects.length > 1">
     <div class="card-header px-2">
       <h6 @click="toggleItems" class="pt-0">
         <span class="filter__items__item__icon pl-0 pr-1">

@@ -63,7 +63,7 @@ export const state = initialState()
 
 export const getters = {
   instantiateFilter (state) {
-    return ({ type, options }) => {
+    return ({ type = 'FilterText', options } = { }) => {
       const Type = filterTypes[type]
       const filter = new Type(options)
       // Bind current state to be able to retrieve its values
