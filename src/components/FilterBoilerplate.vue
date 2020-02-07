@@ -1,5 +1,6 @@
 <template>
   <div class="filter card" :class="{ 'filter--reversed': isReversed(), 'filter--hide-show-more': hideShowMore, 'filter--hide-search': hideSearch, 'filter--hide-header': hideHeader, 'filter--has-values': hasValues() }">
+    <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }" />
     <slot name="header" v-if="!hideHeader">
       <div class="card-header px-2 d-flex filter__header">
         <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate pt-0">
@@ -22,8 +23,10 @@
         <fa v-else icon="circle-notch" spin class="float-right" />
       </div>
     </slot>
+    <hook :name="`filter.${filter.name}.header:after`" :bind="{ filter }" />
     <transition name="slide">
       <div class="list-group list-group-flush filter__items" v-show="isReady && !collapseItems">
+        <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: filterQuery }" />
         <slot name="search" v-if="!hideSearch">
           <form @submit.prevent="asyncFilterSearch" v-if="filter.isSearchable">
             <label class="list-group filter__items__search py-2 px-2">
@@ -32,6 +35,7 @@
             </label>
           </form>
         </slot>
+        <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: filterQuery }" />
         <div class="mb-2">
           <slot name="items" v-if="items.length > 0" :items="items" :options="options" :selected="selected" :total-count="totalCount" :filterQuery="filterQuery">
             <b-form-checkbox v-model="isAllSelected" @change.native="resetFilterValues" class="filter__items__all mb-0">
@@ -93,10 +97,14 @@ import throttle from 'lodash/throttle'
 import toLower from 'lodash/toLower'
 
 import filters from '@/mixins/filters'
+import Hook from './Hook'
 
 export default {
   name: 'FilterBoilerplate',
   mixins: [filters],
+  components: {
+    Hook
+  },
   data () {
     return {
       filterQuery: '',

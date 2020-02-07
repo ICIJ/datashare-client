@@ -1,7 +1,7 @@
 <template>
-  <div class="landing d-flex justify-content-center align-item-center flex-column py-5">
+  <div class="landing d-flex justify-content-center align-item-center flex-column">
     <hook name="landing.form:before" />
-    <div class="landing__form">
+    <div class="landing__form py-5">
       <hook name="landing.form.heading:before" />
       <h1 class="landing__form__heading text-special">
         <img src="~images/logo-white.svg" alt="Datashare" />

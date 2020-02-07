@@ -1,5 +1,6 @@
 <template>
   <header class="app__nav">
+    <hook name="search.nav:before" />
     <div class="app__nav__container">
       <div class="app__nav__container__main py-3 d-flex align-items-center">
         <div class="app__nav__container__main__search-bar px-3 py-0 flex-grow-1">
@@ -8,16 +9,19 @@
         <search-layout-selector class="ml-auto px-3" />
       </div>
     </div>
+    <hook name="search.nav:after" />
   </header>
 </template>
 
 <script>
+import Hook from '@/components/Hook'
 import SearchBar from '@/components/SearchBar'
 import SearchLayoutSelector from '@/components/SearchLayoutSelector'
 
 export default {
   name: 'AppNav',
   components: {
+    Hook,
     SearchBar,
     SearchLayoutSelector
   },

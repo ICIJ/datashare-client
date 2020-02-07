@@ -1,5 +1,6 @@
 <template>
   <div class="search" :class="{ 'search--show-document': showDocument, [`search--${layout}`]: true }">
+    <hook name="search:before" />
     <div class="d-flex">
       <button class="search__show-filters align-self-center ml-3 btn btn-link px-0" @click="clickOnShowFilters()" v-if="!showFilters" :title="$t('search.showFilters')" v-b-tooltip.right>
         <fa icon="arrow-right" />
@@ -9,6 +10,7 @@
       <app-nav class="flex-grow-1" />
     </div>
     <div class="px-0 search__body">
+      <hook name="search.body:before" />
       <component :is="bodyWrapper" class="search__body__search-results search__body__results" ref="searchBodyScrollbar">
         <div v-if="!!error" class="py-5 text-center">
           {{ errorMessage }}
@@ -31,7 +33,9 @@
         </div>
       </transition>
       <router-link v-show="showDocument" class="search__body__backdrop" :to="{ name: 'search', query: toRouteQuery }"></router-link>
+      <hook name="search.body:after" />
     </div>
+    <hook name="search:after" />
   </div>
 </template>
 
@@ -44,6 +48,7 @@ import { errors as esErrors } from 'elasticsearch-browser'
 import { mapState } from 'vuex'
 
 import AppNav from '@/components/AppNav'
+import Hook from '@/components/Hook'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import SearchResults from '@/components/SearchResults'
 
@@ -51,6 +56,7 @@ export default {
   name: 'Search',
   components: {
     AppNav,
+    Hook,
     SearchDocumentNavbar,
     SearchResults
   },
