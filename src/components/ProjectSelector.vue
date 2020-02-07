@@ -1,5 +1,5 @@
 <template>
-  <div class="filter card filter--hide-show-more filter--hide-search" v-if="$config.is('multipleProjects') || projects.length > 1">
+  <div class="filter card filter--hide-show-more filter--hide-search" v-if="showSelector">
     <div class="card-header px-2">
       <h6 @click="toggleItems" class="pt-0">
         <span class="filter__items__item__icon pl-0 pr-1">
@@ -42,6 +42,9 @@ export default {
     },
     headerIcon () {
       return this.collapseItems ? 'plus' : 'minus'
+    },
+    showSelector () {
+      return this.$config.is('multipleProjects') || this.projects.length > 1
     }
   },
   async created () {

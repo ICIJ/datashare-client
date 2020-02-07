@@ -77,7 +77,6 @@ export class App {
     Murmur.config.merge(user)
     // Override Murmur default value for content-placeholder
     Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
-    Murmur.config.set('datashare_projects', '["local-datashare", "local-promera"]')
     this.api.createIndex(config.defaultProject)
     if (this.store.state.search.index === '') {
       this.store.commit('search/index', config.defaultProject)
