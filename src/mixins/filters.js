@@ -83,7 +83,7 @@ export default {
         return {
           item,
           value: item.key,
-          label: this.labelToHuman(this.filter.itemLabel ? this.filter.itemLabel(item) : item.key)
+          label: this.labelToHuman(this.filter.itemLabel(item))
         }
       })
     }
@@ -159,8 +159,8 @@ export default {
         return this.translationKeyToHuman(label)
       }
     },
-    translationKeyToHuman (label) {
-      return last(label.split('.'))
+    translationKeyToHuman (label = '') {
+      return last(String(label).split('.'))
     },
     selectedValuesFromStore () {
       if (this.filter) {

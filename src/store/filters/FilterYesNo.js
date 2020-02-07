@@ -1,8 +1,8 @@
 import FilterText from './FilterText'
 
 export default class FilterYesNo extends FilterText {
-  constructor (...args) {
-    super(...args)
+  constructor (options) {
+    super(options)
     this.component = 'FilterYesNo'
   }
 

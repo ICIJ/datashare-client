@@ -31,7 +31,7 @@ describe('SearchFilters', () => {
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('language')
-      expect(filter.constructor.name).toBe('FilterText')
+      expect(filter.constructor.name).toBe('FilterLanguage')
     })
 
     it('should not find a "yolo-type" filter', () => {
@@ -51,7 +51,7 @@ describe('SearchFilters', () => {
 
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('contentType')
-      expect(filter.constructor.name).toBe('FilterText')
+      expect(filter.constructor.name).toBe('FilterContentType')
     })
 
     it('should find a "contentType" filter using object', () => {

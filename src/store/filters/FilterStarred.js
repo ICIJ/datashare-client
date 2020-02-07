@@ -8,10 +8,9 @@ export const starredLabel = {
 }
 
 export default class FilterStarred extends FilterYesNo {
-  constructor (options) {
-    super({ ...options, labelFun: item => get(starredLabel, item.key, '') })
+  itemLabel (item) {
+    return get(starredLabel, item.key, '')
   }
-
   get starredDocuments () {
     return this.state.starredDocuments
   }

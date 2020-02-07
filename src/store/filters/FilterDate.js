@@ -1,11 +1,13 @@
 import FilterDocument from './FilterDocument'
 
 export default class FilterDate extends FilterDocument {
-  constructor (...args) {
-    super(...args)
+  constructor (options) {
+    super(options)
     this.component = 'FilterDate'
   }
-
+  itemLabel (item) {
+    return item.key_as_string
+  }
   queryBuilder (body, param, func) {
     return body.query('bool', sub => {
       param.values.forEach(date => {
@@ -21,7 +23,6 @@ export default class FilterDate extends FilterDocument {
       return sub
     })
   }
-
   body (body, options) {
     return body
       .query('match', 'type', 'Document')

@@ -1,16 +1,15 @@
-import { map, isInteger, toLower } from 'lodash'
-import moment from 'moment'
-import types from '@/utils/types.json'
-import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 import { namedEntityCategoryTranslation } from '@/store/filters/FilterNamedEntity'
 
-export { default as FilterText } from './FilterText'
-export { default as FilterYesNo } from './FilterYesNo'
-export { default as FilterStarred } from './FilterStarred'
+export { default as FilterContentType } from './FilterContentType'
 export { default as FilterDate } from './FilterDate'
 export { default as FilterDateRange } from './FilterDateRange'
-export { default as FilterPath } from './FilterPath'
+export { default as FilterExtractionLevel } from './FilterExtractionLevel'
+export { default as FilterLanguage } from './FilterLanguage'
 export { default as FilterNamedEntity } from './FilterNamedEntity'
+export { default as FilterPath } from './FilterPath'
+export { default as FilterStarred } from './FilterStarred'
+export { default as FilterText } from './FilterText'
+export { default as FilterYesNo } from './FilterYesNo'
 
 export default [
   {
@@ -31,14 +30,12 @@ export default [
     }
   },
   {
-    type: 'FilterText',
+    type: 'FilterContentType',
     options: {
       name: 'contentType',
       key: 'contentType',
       icon: 'file',
-      isSearchable: true,
-      labelFun: item => getDocumentTypeLabel(item.key),
-      alternativeSearch: query => map(types, (item, key) => { if (toLower(item.label).includes(query)) return key })
+      isSearchable: true
     }
   },
   {
@@ -46,17 +43,15 @@ export default [
     options: {
       name: 'creationDate',
       key: 'metadata.tika_metadata_creation_date',
-      icon: 'calendar-alt',
-      labelFun: item => isInteger(item.key) ? moment(item.key).locale(localStorage.getItem('locale')).format('L') : item.key
+      icon: 'calendar-alt'
     }
   },
   {
-    type: 'FilterText',
+    type: 'FilterLanguage',
     options: {
       name: 'language',
       key: 'language',
-      icon: 'language',
-      labelFun: item => `filter.lang.${item.key}`
+      icon: 'language'
     }
   },
   {
@@ -95,12 +90,11 @@ export default [
     }
   },
   {
-    type: 'FilterText',
+    type: 'FilterExtractionLevel',
     options: {
       name: 'extractionLevel',
       key: 'extractionLevel',
-      icon: 'paperclip',
-      labelFun: item => getExtractionLevelTranslationKey(item.key)
+      icon: 'paperclip'
     }
   },
   {
@@ -108,8 +102,7 @@ export default [
     options: {
       name: 'indexingDate',
       key: 'extractionDate',
-      icon: 'calendar-plus',
-      labelFun: item => item.key_as_string
+      icon: 'calendar-plus'
     }
   }
 ]

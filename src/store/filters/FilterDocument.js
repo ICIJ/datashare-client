@@ -1,8 +1,8 @@
 import FilterType from './FilterType'
 
 export default class FilterDocument extends FilterType {
-  constructor (...args) {
-    super(...args)
+  constructor (options) {
+    super(options)
     this.component = 'FilterDocument'
   }
 

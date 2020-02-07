@@ -7,18 +7,21 @@ const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
 const _STATE = typeof Symbol === 'function' ? Symbol('_state') : '_state'
 
 export default class FilterText {
-  constructor ({ name, key, icon = null, isSearchable = false, labelFun = null, alternativeSearch = null } = { }) {
+  constructor ({ name, key, icon = null, isSearchable = false, alternativeSearch = null } = { }) {
     this.name = name
     this.key = key
     this.icon = icon
     this.isSearchable = isSearchable
-    this.itemLabel = labelFun
     this.component = 'FilterText'
     this.alternativeSearch = alternativeSearch
   }
 
   itemParam (item) {
     return { name: this.name, value: item.key }
+  }
+
+  itemLabel (item) {
+    return item.key || item.value
   }
 
   addChildIncludeFilter (body, param) {
