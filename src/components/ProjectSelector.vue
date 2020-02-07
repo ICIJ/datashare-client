@@ -45,7 +45,8 @@ export default {
     }
   },
   async created () {
-    this.$set(this, 'projects', map(JSON.parse(this.$config.get('datashare_projects', '[]')), value => { return { value, text: value } }))
+    const projects = JSON.parse(this.$config.get('datashare_projects', '[]'))
+    this.$set(this, 'projects', map(projects, value => ({ value, text: value })))
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')
   },
