@@ -209,50 +209,65 @@ export const mutations = {
     const s = initialState()
     Object.keys(s).forEach(key => {
       if (excludedKeys.indexOf(key) === -1) {
-        state[key] = s[key]
+        Vue.set(state, key, s[key])
       }
     })
   },
+  resetFilters (state, name) {
+    const { filters } = initialState()
+    Vue.set(state, 'filters', filters)
+    Vue.set(state, 'values', {})
+    Vue.set(state, 'from', 0)
+  },
+  resetFilterValues (state) {
+    Vue.set(state, 'values', {})
+    Vue.set(state, 'from', 0)
+  },
+  resetQuery (state, name) {
+    Vue.set(state, 'query', '')
+    Vue.set(state, 'field', settings.defaultSearchField)
+    Vue.set(state, 'from', 0)
+  },
   setGlobalSearch (state, globalSearch) {
-    state.globalSearch = globalSearch
+    Vue.set(state, 'globalSearch', globalSearch)
   },
   query (state, query) {
-    state.query = query
+    Vue.set(state, 'query', query)
   },
   from (state, from) {
-    state.from = Number(from)
+    Vue.set(state, 'from', Number(from))
   },
   size (state, size) {
-    state.size = Number(size)
+    Vue.set(state, 'size', Number(size))
   },
   sort (state, sort) {
-    state.sort = sort
+    Vue.set(state, 'sort', sort)
   },
   isReady (state, isReady = !state.isReady) {
-    state.isReady = isReady
+    Vue.set(state, 'isReady', isReady)
   },
   error (state, error = null) {
-    state.error = error
+    Vue.set(state, 'error', error)
   },
   index (state, index) {
-    state.index = index
+    Vue.set(state, 'index', index)
   },
   layout (state, layout) {
-    state.layout = layout
+    Vue.set(state, 'layout', layout)
   },
   field (state, field) {
     const fields = settings.searchFields.map(field => field.key)
-    state.field = fields.indexOf(field) > -1 ? field : settings.defaultSearchField
+    Vue.set(state, 'field', fields.indexOf(field) > -1 ? field : settings.defaultSearchField)
   },
   isDownloadAllowed (state, isDownloadAllowed) {
-    state.isDownloadAllowed = isDownloadAllowed
+    Vue.set(state, 'isDownloadAllowed', isDownloadAllowed)
   },
   starredDocuments (state, starredDocuments) {
-    state.starredDocuments = starredDocuments
+    Vue.set(state, 'starredDocuments', starredDocuments)
   },
   buildResponse (state, raw) {
-    state.isReady = true
-    state.response = new EsDocList(raw)
+    Vue.set(state, 'isReady', true)
+    Vue.set(state, 'response', new EsDocList(raw))
   },
   addFilterValue (state, filter) {
     // We cast the new filter values to allow several new values at the same time
@@ -282,7 +297,9 @@ export const mutations = {
     }
   },
   addFilter (state, { type, options }) {
-    state.filters.push({ type, options })
+    if (!find(state.filters, (filter) => filter.options.name === options.name)) {
+      state.filters.push({ type, options })
+    }
   },
   excludeFilter (state, name) {
     if (state.reversed.indexOf(name) === -1) {
@@ -299,25 +316,18 @@ export const mutations = {
       state.reversed.push(name)
     }
   },
-  resetFilterValues (state, name) {
-    Vue.set(state.values, name, [])
-  },
   toggleFilters (state, toggler = !state.showFilters) {
     Vue.set(state, 'showFilters', toggler)
   },
   pushFromStarredDocuments (state, documentIds) {
-    state.starredDocuments = uniq(concat(state.starredDocuments, documentIds))
+    Vue.set(state, 'starredDocuments', uniq(concat(state.starredDocuments, documentIds)))
   },
   removeFromStarredDocuments (state, documentIds) {
-    state.starredDocuments = difference(state.starredDocuments, documentIds)
+    Vue.set(state, 'starredDocuments', difference(state.starredDocuments, documentIds))
   }
 }
 
 export const actions = {
-  reset ({ commit, dispatch }, excludedKeys) {
-    commit('reset', excludedKeys)
-    return dispatch('query')
-  },
   async refresh ({ state, commit, getters }, updateIsReady = true) {
     commit('isReady', !updateIsReady)
     commit('error', null)
@@ -381,7 +391,6 @@ export const actions = {
     return dispatch('query')
   },
   async updateFromRouteQuery ({ state, commit, getters }, query) {
-    commit('reset', ['index', 'globalSearch', 'starredDocuments', 'showFilters', 'layout', 'field', 'isDownloadAllowed'])
     // Add the query to the state with a mutation to not triggering a search
     if (query.q) commit('query', query.q)
     if (query.index) commit('index', query.index)

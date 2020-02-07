@@ -71,8 +71,11 @@ export default {
   },
   computed: {
     ...mapState('search', ['showFilters']),
-    filters () {
-      return this.$store.getters['search/instantiatedFilters']
+    filters: {
+      cache: false,
+      get () {
+        return this.$store.getters['search/instantiatedFilters']
+      }
     },
     contextualizeModel: {
       set (toggler) {

@@ -52,7 +52,8 @@ export default {
   methods: {
     async select (value) {
       this.$store.commit('search/index', value)
-      await this.$store.dispatch('search/reset')
+      this.$store.commit('search/resetFilterValues')
+      this.$store.commit('search/resetQuery')
       this.$root.$emit('filter::search::reset-filters')
       await this.$store.dispatch('search/getStarredDocuments')
       await this.$store.dispatch('search/getIsDownloadAllowed')

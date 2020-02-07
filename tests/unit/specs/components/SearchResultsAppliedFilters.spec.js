@@ -15,7 +15,7 @@ describe('SearchResultsAppliedFilters.vue', () => {
     wrapper = shallowMount(SearchResultsAppliedFilters, { localVue, store, mocks: { $t: msg => msg, $te: msg => msg } })
   })
 
-  afterEach(() => store.dispatch('search/reset'))
+  afterEach(() => store.commit('search/reset'))
 
   describe('displays applied filters', () => {
     it('should display 2 applied filters', async () => {

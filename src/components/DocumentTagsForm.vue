@@ -85,7 +85,10 @@ export default {
       this.$set(this, 'updatingTags', false)
       delay(filterName => this.$root.$emit('filter::refresh', filterName), settings.waitForEsAnswer, 'tags')
       if (!this.displayTags) this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
-      if (this.$refs && this.$refs.tag) this.$nextTick(() => { this.$refs.tag.focus() })
+      // Focus on the tag
+      if (this.$refs && this.$refs.tag && this.$refs.tag.focus) {
+        this.$nextTick(() => { this.$refs.tag.focus() })
+      }
     },
     async deleteTag (tag) {
       this.$set(this, 'updatingTags', true)

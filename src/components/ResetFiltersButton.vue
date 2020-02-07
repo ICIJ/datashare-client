@@ -1,5 +1,5 @@
 <template>
-  <button class="btn" :class="componentClasses" @click="resetFilters" v-show="!autoHiding || hasFilters" :title="$t('search.clearFiltersDescription')" v-b-tooltip :disabled="!hasFilters">
+  <button class="btn" :class="componentClasses" @click="resetFiltersAndQuery" v-show="!autoHiding || hasFilters" :title="$t('search.clearFiltersDescription')" v-b-tooltip :disabled="!hasFilters">
     <fa :icon="icon" v-if="!noIcon" />
     <slot>
       {{ $t('search.clearFilters') }}
@@ -34,7 +34,13 @@ export default {
   },
   computed: {
     hasFilters () {
-      return this.$store.getters['search/activeFilters'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField || this.$store.state.search.query !== ''
+      return this.$store.getters['search/activeFilters'].length > 0
+    },
+    hasQuery () {
+      return this.$store.state.search.field !== settings.defaultSearchField || this.$store.state.search.query !== ''
+    },
+    hasFiltersOrQuery () {
+      return this.hasFilters || this.hasQuery
     },
     componentClasses () {
       return {
@@ -44,8 +50,9 @@ export default {
     }
   },
   methods: {
-    resetFilters () {
-      this.$store.dispatch('search/reset', ['index', 'globalSearch', 'starredDocuments'])
+    resetFiltersAndQuery () {
+      this.$store.commit('search/resetFilterValues')
+      this.$store.commit('search/resetQuery')
       this.$root.$emit('bv::hide::popover')
       this.$root.$emit('filter::search::reset-filters')
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() }).catch(() => {})

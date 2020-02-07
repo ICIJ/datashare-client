@@ -40,7 +40,7 @@ describe('SearchStore', () => {
     store.commit('search/toggleFilters')
     store.commit('search/isDownloadAllowed', true)
 
-    await store.dispatch('search/reset')
+    store.commit('search/reset')
 
     const omittedFields = ['index', 'isReady', 'filters', 'showFilters', 'response', 'size', 'sort']
     expect(omit(store.state.search, omittedFields)).toEqual(omit(initialState, omittedFields))
@@ -54,7 +54,7 @@ describe('SearchStore', () => {
   it('should not reset the starredDocuments from the filter', async () => {
     store.commit('search/starredDocuments', ['document_01', 'document_02'])
 
-    await store.dispatch('search/reset', ['starredDocuments'])
+    store.commit('search/reset', ['starredDocuments'])
 
     expect(find(store.getters['search/instantiatedFilters'], { name: 'starred' }).starredDocuments).toEqual(['document_01', 'document_02'])
   })
@@ -62,7 +62,7 @@ describe('SearchStore', () => {
   it('should not reset the starredDocuments', async () => {
     store.commit('search/starredDocuments', ['document_01', 'document_02'])
 
-    await store.dispatch('search/reset', ['starredDocuments'])
+    store.commit('search/reset', ['starredDocuments'])
 
     expect(store.state.search.starredDocuments).toEqual(['document_01', 'document_02'])
   })
@@ -318,7 +318,7 @@ describe('SearchStore', () => {
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['txt', 'csv'] })
     expect(store.getters['search/findFilter']('contentType').values).toHaveLength(2)
 
-    await store.dispatch('search/resetFilterValues', 'contentType')
+    store.commit('search/resetFilterValues', 'contentType')
     expect(store.getters['search/findFilter']('contentType').values).toHaveLength(0)
   })
 

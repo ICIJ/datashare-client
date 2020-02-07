@@ -16,6 +16,7 @@ import Api from '@/api'
 import Auth from '@/api/resources/Auth'
 import settings from '@/utils/settings'
 import mode from '@/modes'
+import { dispatch } from '@/utils/event-bus'
 
 import '@/utils/font-awesome'
 import '@/main.scss'
@@ -76,9 +77,9 @@ export class App {
     Murmur.config.merge(user)
     // Override Murmur default value for content-placeholder
     Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
-    this.api.createIndex(config['defaultProject'])
+    this.api.createIndex(config.defaultProject)
     if (this.store.state.search.index === '') {
-      this.store.commit('search/index', config['defaultProject'])
+      this.store.commit('search/index', config.defaultProject)
     }
     // Old a promise that is resolved when the app is configured
     return this.ready && this._readyResolve(this)
@@ -106,11 +107,23 @@ export class App {
   resetHooks () {
     this.store.commit('hooks/reset', name)
   }
+  registerFilter (...args) {
+    this.store.commit('search/addFilter', ...args)
+  }
+  unregisterFilter (name) {
+    this.store.commit('search/removeFilter', name)
+  }
   defer () {
     this._ready = new Promise((resolve, reject) => {
       this._readyResolve = resolve
       this._readyReject = reject
     })
+    // Notify the document the app is ready
+    this._ready.then(() => this.dispatch('ready'))
+  }
+  dispatch (name, ...args) {
+    dispatch(name, { app: this, ...args })
+    return this
   }
   get ready () {
     if (!this._ready) {

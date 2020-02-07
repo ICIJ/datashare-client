@@ -10,7 +10,8 @@ describe('ResetFiltersButton.vue', function () {
   let wrapper
 
   beforeEach(() => {
-    store.commit('search/reset')
+    store.commit('search/resetFilterValues')
+    store.commit('search/resetQuery')
     wrapper = shallowMount(ResetFiltersButton, { localVue, router, store, sync: false, mocks: { $t: msg => msg } })
   })
 
@@ -28,26 +29,26 @@ describe('ResetFiltersButton.vue', function () {
   })
 
   it('shouldn\'t have filters', () => {
-    expect(wrapper.vm.hasFilters).toBeFalsy()
+    expect(wrapper.vm.hasFiltersOrQuery).toBeFalsy()
   })
 
   it('should have filters', () => {
     store.commit('search/addFilterValue', { name: 'language', value: 'en' })
-    expect(wrapper.vm.hasFilters).toBeTruthy()
+    expect(wrapper.vm.hasFiltersOrQuery).toBeTruthy()
   })
 
   it('should reset filters on filters reset', () => {
     store.commit('search/addFilterValue', { name: 'language', value: 'en' })
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.resetFiltersAndQuery()
 
-    expect(wrapper.vm.hasFilters).toBeFalsy()
+    expect(wrapper.vm.hasFiltersOrQuery).toBeFalsy()
   })
 
   it('should reset query on filters reset', () => {
     store.commit('search/query', 'this is a query')
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.resetFiltersAndQuery()
 
     expect(store.state.search.query).toBe('')
   })
@@ -55,7 +56,7 @@ describe('ResetFiltersButton.vue', function () {
   it('should not change the index on filters reset', () => {
     store.commit('search/index', 'my-index')
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.resetFiltersAndQuery()
 
     expect(store.state.search.index).toBe('my-index')
   })
@@ -63,7 +64,7 @@ describe('ResetFiltersButton.vue', function () {
   it('should not change the globalSearch setting on filters reset', () => {
     store.commit('search/setGlobalSearch', false)
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.resetFiltersAndQuery()
 
     expect(store.state.search.globalSearch).toBeFalsy()
   })
@@ -71,7 +72,7 @@ describe('ResetFiltersButton.vue', function () {
   it('should not change the starredDocuments on filters reset', () => {
     store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.resetFiltersAndQuery()
 
     expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
   })
@@ -80,7 +81,7 @@ describe('ResetFiltersButton.vue', function () {
     const mockCallback = jest.fn()
     wrapper.vm.$root.$on('bv::hide::popover', mockCallback)
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.resetFiltersAndQuery()
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
@@ -89,7 +90,7 @@ describe('ResetFiltersButton.vue', function () {
     const mockCallback = jest.fn()
     wrapper.vm.$root.$on('filter::search::reset-filters', mockCallback)
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.resetFiltersAndQuery()
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
@@ -97,7 +98,7 @@ describe('ResetFiltersButton.vue', function () {
   it('should call router push on filters reset', () => {
     jest.spyOn(router, 'push')
 
-    wrapper.vm.resetFilters()
+    wrapper.vm.resetFiltersAndQuery()
 
     expect(router.push).toBeCalled()
   })
