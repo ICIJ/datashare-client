@@ -94,12 +94,12 @@ export default {
 
       &:before {
         top: 0;
-        @include gradient-y(white, rgba(white, 0));
+        @include gradient-y($popover-bg, rgba($popover-bg, 0));
       }
 
       &:after {
         bottom: 0;
-        @include gradient-y(rgba(white, 0), white);
+        @include gradient-y(rgba($popover-bg, 0), $popover-bg);
       }
     }
   }
