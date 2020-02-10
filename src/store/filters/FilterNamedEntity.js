@@ -4,7 +4,8 @@ import includes from 'lodash/includes'
 export const namedEntityCategoryTranslation = {
   namedEntityPerson: 'PERSON',
   namedEntityOrganization: 'ORGANIZATION',
-  namedEntityLocation: 'LOCATION'
+  namedEntityLocation: 'LOCATION',
+  namedEntityEmail: 'EMAIL'
 }
 
 export default class FilterNamedEntity extends FilterType {
