@@ -166,6 +166,7 @@ import filter from 'lodash/filter'
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import includes from 'lodash/includes'
+import isString from 'lodash/isString'
 import map from 'lodash/map'
 import range from 'lodash/range'
 import throttle from 'lodash/throttle'
@@ -236,7 +237,9 @@ export default {
     }
   },
   created () {
-    this.$set(this, 'projects', map(JSON.parse(this.$config.get('datashare_projects', '[]')), value => { return { value, text: value } }))
+    const projectsFromConfig = this.$config.get('datashare_indices', '[]')
+    const projects = isString(projectsFromConfig) ? JSON.parse(projectsFromConfig) : projectsFromConfig
+    this.$set(this, 'projects', map(projects, value => { return { value, text: value } }))
     this.$set(this, 'project', get(this.projects, ['0', 'value'], ''))
   },
   methods: {

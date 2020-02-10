@@ -29,7 +29,7 @@ describe('ProjectSelector.vue', () => {
   let wrapper
 
   beforeAll(() => {
-    Murmur.config.merge({ datashare_projects: JSON.stringify([index, anotherIndex]) })
+    Murmur.config.merge({ datashare_indices: JSON.stringify([index, anotherIndex]) })
     Murmur.config.merge({ multipleProjects: true })
     store.commit('search/index', index)
   })

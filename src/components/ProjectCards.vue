@@ -39,6 +39,7 @@
 
 <script>
 import startCase from 'lodash/startCase'
+import isString from 'lodash/isString'
 
 export default {
   data () {
@@ -53,7 +54,8 @@ export default {
     startCase
   },
   created () {
-    this.projects = JSON.parse(this.$config.get('datashare_projects', '[]'))
+    const projects = this.$config.get('datashare_indices', '[]')
+    this.projects = isString(projects) ? JSON.parse(projects) : projects
   }
 }
 </script>
