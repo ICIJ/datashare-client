@@ -68,11 +68,11 @@ module.exports = {
 
     if (process.env.NODE_ENV === 'test') {
       // Log the user by default
-      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { 'login': 'TOKEN' }, JSON.stringify)
+      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'TOKEN' }, JSON.stringify)
     }
   },
   devServer: {
-    port: 9090
+    port: 9009
   },
   configureWebpack: {
     optimization: {
