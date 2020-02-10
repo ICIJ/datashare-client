@@ -68,16 +68,18 @@ export class App {
   async configure () {
     // Get the config object
     const config = await this.api.getConfig()
-    const user = await this.api.getUser()
+    // Load the user
+    this.config.merge(await this.getUser())
     // Murmur exposes a config attribute which share a Config object
     // with the current vue instance.
-    Murmur.config.merge(mode(config.mode))
+    this.config.merge(mode(config.mode))
     // The backend can yet override some configuration
-    Murmur.config.merge(config)
-    Murmur.config.merge(user)
+    this.config.merge(config)
     // Override Murmur default value for content-placeholder
-    Murmur.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
-    this.api.createIndex(config.defaultProject)
+    this.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
+    // Create the default project for the current user or redirect to login
+    this.createDefaultProject()
+    // Set the default project
     if (this.store.state.search.index === '') {
       this.store.commit('search/index', config.defaultProject)
     }
@@ -124,6 +126,17 @@ export class App {
   dispatch (name, ...args) {
     dispatch(name, { app: this, ...args })
     return this
+  }
+  async getUser () {
+    try {
+      return await this.api.getUser()
+    } catch (_) {
+      await this.router.push('login')
+    }
+  }
+  async createDefaultProject () {
+    const defaultProject = this.config.get('defaultProject')
+    return this.api.createIndex(defaultProject)
   }
   get ready () {
     if (!this._ready) {
