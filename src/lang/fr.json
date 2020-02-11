@@ -43,7 +43,7 @@
       "noResults": "Aucun document",
       "on": "sur",
       "perPage": "par page",
-      "sortedByPath": "sorted by path",
+      "sortedByPath": "tri par chemin",
       "sort": {
         "sort": "Tri par",
         "relevance": "Pertinence",
@@ -56,7 +56,7 @@
         "path": "Chemin du fichier (A à Z)",
         "pathReverse": "Chemin du fichier (Z à A)",
         "default": "par défaut",
-        "count": "frequency"
+        "count": "fréquence"
       }
     },
     "filtersTitle": "Filtres",
@@ -103,10 +103,10 @@
     "namedEntityLocation": "Localisations",
     "namedEntityOrganization": "Organisations",
     "namedEntityEmail": "Emails",
-    "path": "Chemin du fichier",
-    "indexingDate": "Date d'indexation",
-    "extractionLevel": "Niveau d'extraction",
-    "creationDate": "Date de création",
+    "path": "Chemins du fichier",
+    "indexingDate": "Dates d'indexation",
+    "extractionLevel": "Niveaux d'extraction",
+    "creationDate": "Dates de création",
     "projects": "Projets",
     "deleteNamedEntity": "Supprimer cette Entité Nommée",
     "showMore": "Voir plus",
@@ -471,7 +471,7 @@
     "title": "Recherches en lot",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
-    "fileDescription": "Exportez votre feuille de calcul en format CSV. Seul le format CSV est accepté. La première colonne doit contenir les termes à rechercher. Vous pouvez utiliser les opérateurs (AND NOT * ? + - etc). Utilisez 'espace' au lieu de OU ou | | quand vous avez coché 'Rechercher les termes exacts'. Pour rechercher avec des Regex, les mettre entre 2 slashes.",
+    "fileDescription": "Exportez votre feuille de calcul en format CSV. Seul le format CSV est accepté. La première colonne doit contenir les termes à rechercher. N'allez pas à la ligne au sein d'une cellule. Vous pouvez utiliser les opérateurs (AND NOT * ? + - etc). Utilisez 'espace' au lieu de OU ou | | quand vous avez coché 'Rechercher les termes exacts'. Pour rechercher avec des Regex, les mettre entre 2 slashes.",
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
