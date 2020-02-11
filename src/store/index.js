@@ -36,6 +36,11 @@ export default new Vuex.Store({
       filter (mutation) {
         // Only for some mutations
         return some(['userHistory/', 'search/'], k => mutation.type.indexOf(k) === 0)
+      },
+      rehydrated (store) {
+        // This a temporary retro-compatibility fix to ensure persisted
+        // search's states are not corrupted for some users.
+        store.commit('search/resetFilters')
       }
     })
   ]

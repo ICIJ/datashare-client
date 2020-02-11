@@ -216,6 +216,10 @@ export const mutations = {
   resetFilters (state, name) {
     const { filters } = initialState()
     Vue.set(state, 'filters', filters)
+  },
+  resetFiltersAndValues (state, name) {
+    const { filters } = initialState()
+    Vue.set(state, 'filters', filters)
     Vue.set(state, 'values', {})
     Vue.set(state, 'from', 0)
   },

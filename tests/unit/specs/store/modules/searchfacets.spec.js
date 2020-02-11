@@ -22,7 +22,7 @@ describe('SearchFilters', () => {
       expect(store.state.search.filters).toHaveLength(initialFilters.length - 1)
       store.commit('search/removeFilter', 'language')
       expect(store.state.search.filters).toHaveLength(initialFilters.length - 2)
-      store.commit('search/resetFilters')
+      store.commit('search/resetFiltersAndValues')
       expect(store.state.search.filters).toHaveLength(initialFilters.length)
     })
 
