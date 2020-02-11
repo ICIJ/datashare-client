@@ -20,7 +20,19 @@ export default new Vuex.Store({
   strict: process.env.NODE_ENV === 'development',
   plugins: [
     createPersistedState({
-      paths: ['userHistory', 'search'],
+      paths: [
+        'userHistory',
+        'search.query',
+        'search.size',
+        'search.globalSearch',
+        'search.values',
+        'search.reversed',
+        'search.sort',
+        'search.field',
+        'search.index',
+        'search.showFilters',
+        'search.layout'
+      ],
       filter (mutation) {
         // Only for some mutations
         return some(['userHistory/', 'search/'], k => mutation.type.indexOf(k) === 0)
