@@ -11,7 +11,7 @@
     </div>
     <slide-up-down class="list-group list-group-flush filter__items" :active="!collapseItems">
       <div class="p-2">
-        <b-form-select :options="projects" v-model="selectedProject" class="border-0" @change="select" />
+        <project-selector v-model="selectedProject" @input="select" />
       </div>
     </slide-up-down>
   </div>
@@ -20,11 +20,15 @@
 <script>
 import map from 'lodash/map'
 
+import ProjectSelector from '@/components/ProjectSelector.vue'
 import filters from '@/mixins/filters'
 
 export default {
   name: 'FilterProject',
   mixins: [filters],
+  components: {
+    ProjectSelector
+  },
   data () {
     return {
       projects: [],
