@@ -26,7 +26,7 @@
         <hook name="filters-panel.toolbar:after" />
       </div>
       <hook name="filters-panel.filters:before" />
-      <project-selector />
+      <filter-project />
       <component v-for="filter in filters" :ref="filter.name" :key="filter.name" :is="filter.component" v-bind="{ filter }"></component>
       <hook name="filters-panel.filters:after" />
       <hook name="filters-panel:after" />
@@ -49,7 +49,7 @@ import FilterDateRange from '@/components/FilterDateRange'
 import FilterPath from '@/components/FilterPath'
 import FilterNamedEntity from '@/components/FilterNamedEntity'
 import FilterSearch from '@/components/FilterSearch'
-import ProjectSelector from '@/components/ProjectSelector'
+import FilterProject from '@/components/FilterProject'
 
 export default {
   name: 'FiltersPanel',
@@ -62,7 +62,7 @@ export default {
     FilterNamedEntity,
     FilterSearch,
     Hook,
-    ProjectSelector
+    FilterProject
   },
   mounted () {
     this.$root.$on('filter::async-search', this.asyncFilterSearch)

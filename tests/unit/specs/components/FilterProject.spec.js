@@ -6,7 +6,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
 import Api from '@/api'
-import ProjectSelector from '@/components/ProjectSelector'
+import FilterProject from '@/components/FilterProject'
 import { App } from '@/main'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
@@ -22,9 +22,9 @@ localVue.mixin({ created () {} })
 const mergeCreatedStrategy = localVue.config.optionMergeStrategies.created
 localVue.config.optionMergeStrategies.created = (parent, child) => mergeCreatedStrategy(parent)
 
-describe('ProjectSelector.vue', () => {
-  const index = toLower('ProjectSelector')
-  const anotherIndex = toLower('AnotherProjectSelector')
+describe('FilterProject.vue', () => {
+  const index = toLower('FilterProject')
+  const anotherIndex = toLower('AnotherFilterProject')
   esConnectionHelper([index, anotherIndex])
   let wrapper
 
@@ -35,12 +35,12 @@ describe('ProjectSelector.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(FilterProject, { localVue, store, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }, mocks: { $t: msg => msg } })
   })
 
   it('should not display a dropdown if we aren\'t in server mode', () => {
     Murmur.config.merge({ multipleProjects: false })
-    wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(FilterProject, { localVue, store, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }, mocks: { $t: msg => msg } })
 
     expect(wrapper.findAll('option')).toHaveLength(0)
   })
@@ -51,7 +51,7 @@ describe('ProjectSelector.vue', () => {
 
   describe('on index change', () => {
     beforeEach(() => {
-      wrapper = shallowMount(ProjectSelector, { localVue, store, router: new VueRouter(), propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }, mocks: { $t: msg => msg } })
+      wrapper = shallowMount(FilterProject, { localVue, store, router: new VueRouter(), propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }, mocks: { $t: msg => msg } })
     })
 
     afterEach(() => axios.request.mockClear())
