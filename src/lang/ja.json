@@ -540,5 +540,12 @@
     "submit": "送信",
     "submitSuccess": "設定が変更されました。Datashareを再起動してください",
     "submitError": "設定を送信できません。"
+  },
+  "human": {
+    "number": {
+      "K": "%K",
+      "M": "%M",
+      "B": "%B"
+    }
   }
 }
