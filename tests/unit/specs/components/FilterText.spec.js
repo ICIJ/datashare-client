@@ -385,8 +385,8 @@ describe('FilterText.vue', () => {
       .withParent('document_01')).commit()
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('filter.level.level01')
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('filter.level.level00')
   })
 
   it('should display the extraction level filter with correct labels in French', async () => {
@@ -404,8 +404,8 @@ describe('FilterText.vue', () => {
       .withParent('document_01')).commit()
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('1er')
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('Fichier sur le disque')
   })
 
   it('should reload the filter on event "filter::refresh"', () => {
