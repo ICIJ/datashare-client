@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
+import VueWait from 'vue-wait'
 import BootstrapVue from 'bootstrap-vue'
 import Murmur from '@icij/murmur'
 import VueShortkey from 'vue-shortkey'
@@ -57,6 +58,7 @@ export class App {
   useCommons () {
     // Common plugins
     this.use(Murmur)
+    this.use(VueWait)
     this.use(VueProgressBar, { color: settings.progressBar.color })
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
@@ -93,6 +95,7 @@ export class App {
     // from our unit tests
     const vm = new this.LocalVue({
       render,
+      wait: this.wait,
       i18n: this.i18n,
       router: this.router,
       store: this.store
@@ -173,6 +176,10 @@ export class App {
   get api () {
     this._api = this._api || new Api()
     return this._api
+  }
+  get wait () {
+    this._wait = this._wait || new VueWait({ useVuex: true })
+    return this._wait
   }
   static init (...options) {
     return new App(...options)

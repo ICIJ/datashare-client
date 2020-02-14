@@ -3,7 +3,7 @@
     <div class="widget__header" v-if="widget.title" :class="{ 'card-header': widget.card }">
       <h4 v-html="widget.title" class="m-0"></h4>
     </div>
-    <div class="widget__content lead p-3" v-html="widget.content"></div>
+    <div class="widget__content lead" :class="{ 'card-body': widget.card }" v-html="widget.content"></div>
   </div>
 </template>
 

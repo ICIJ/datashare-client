@@ -1,12 +1,15 @@
 <template>
   <div class="widget widget--file-barometer d-flex align-items-center text-center">
-    <p class="p-3 flex-grow-1">
-      <fa icon="hdd" class="widget__icon" />
-      <strong class="widget__main-figure" :title="total">
-        {{ total | humanNumber($t('human.number')) }} documents
-      </strong>
-      among which <span :title="onDisk">{{ onDisk | humanNumber($t('human.number')) }}</span> on disk
-    </p>
+    <v-wait for="counters" class="flex-grow-1" transition="fade">
+      <fa icon="circle-notch" spin slot="waiting" size="2x" />
+      <p :class="{ 'card-body': widget.card }">
+        <fa icon="hdd" class="widget__icon" size="2x" />
+        <strong class="widget__main-figure" :title="total">
+          {{ total | humanNumber($t('human.number')) }} documents
+        </strong>
+        among which <span :title="onDisk">{{ onDisk | humanNumber($t('human.number')) }}</span> on disk
+      </p>
+    </v-wait>
   </div>
 </template>
 
@@ -28,16 +31,25 @@ export default {
       onDisk: null
     }
   },
-  async mounted () {
-    const q = 'type:Document'
-    this.total = await this.count(q)
-    this.onDisk = await this.count(`${q} AND extractionLevel:0`)
+  async created () {
+    this.$wait.start('counters')
+    this.total = await this.countTotal()
+    this.onDisk = await this.countOnDisk()
+    this.$wait.end('counters')
   },
   methods: {
     async count (q) {
       const index = this.$store.state.search.index
       const { count } = await elasticsearch.count({ index, q })
       return count
+    },
+    countTotal () {
+      const q = 'type:Document'
+      return this.count(q)
+    },
+    countOnDisk () {
+      const q = 'type:Document AND extractionLevel:0'
+      return this.count(q)
     }
   }
 }
@@ -46,10 +58,6 @@ export default {
 <style lang="scss" scoped>
   .widget {
     min-height: 100%;
-
-    &__icon {
-      font-size: 2rem;
-    }
 
     &__main-figure {
       font-size: 2rem;
