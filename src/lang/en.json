@@ -540,5 +540,12 @@
     "submit": "Submit",
     "submitSuccess": "Modifications submitted. You should now restart Datashare.",
     "submitError": "Unable to submit the configuration."
+  },
+  "human": {
+    "number": {
+      "K": "%K",
+      "M": "%M",
+      "B": "%B"
+    }
   }
 }

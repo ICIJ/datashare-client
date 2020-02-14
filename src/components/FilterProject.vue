@@ -11,7 +11,7 @@
     </div>
     <slide-up-down class="list-group list-group-flush filter__items" :active="!collapseItems">
       <div class="p-2">
-        <project-selector v-model="selectedProject" @input="select" />
+        <project-selector v-model="selectedProject" @input="select" class="border-0" />
       </div>
     </slide-up-down>
   </div>

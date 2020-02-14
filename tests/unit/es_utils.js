@@ -15,6 +15,7 @@ class IndexedNe {
     this.offset = offset
     this.category = category
     this.isHidden = isHidden
+    return this
   }
   get id () {
     return this.mention + this.offset
@@ -28,6 +29,7 @@ class IndexedDocuments {
     this.content = 'default content'
     this.document = []
     this.index = 'default-index'
+    this.extractionLevel = 0
   }
   setBaseName (pattern) {
     this.baseName = pattern
@@ -45,10 +47,14 @@ class IndexedDocuments {
     this.extractionDate = indexingDate
     return this
   }
+  withExtractionLevel (extractionLevel) {
+    this.extractionLevel = extractionLevel
+    return this
+  }
   count (numberOfDocuments) {
     this.numberOfDocuments = numberOfDocuments
     for (let i = 0; i < this.numberOfDocuments; i++) {
-      let doc = new IndexedDocument(this.baseName + '_' + (i + 1), this.index).withContent(this.content)
+      const doc = new IndexedDocument(this.baseName + '_' + (i + 1), this.index).withContent(this.content)
       if (this.extractionDate) {
         doc.withIndexingDate(this.extractionDate[i])
       }
@@ -72,6 +78,7 @@ class IndexedDocument {
     this.nerList = []
     this.nerTags = []
     this.index = index
+    this.extractionLevel = 0
   }
   withContent (content) {
     this.content = content
@@ -118,11 +125,15 @@ class IndexedDocument {
     this.tags = tags
     return this
   }
+  withExtractionLevel (extractionLevel) {
+    this.extractionLevel = extractionLevel
+    return this
+  }
   hasParent () {
     return this.parentDocument !== undefined
   }
   hideNer (mention) {
-    let ner = find(this.nerList, { mention: mention })
+    const ner = find(this.nerList, { mention: mention })
     ner.isHidden = true
     return ner
   }
@@ -165,7 +176,7 @@ class IndexBuilder {
     } else {
       const docId = this.document.path
       const index = this.document.index
-      let createRequest = {
+      const createRequest = {
         index: index,
         type: 'doc',
         refresh: true,
@@ -178,7 +189,7 @@ class IndexBuilder {
       const { _id } = await this.index.create(createRequest)
       this.committedDocumentIds.push(_id)
       for (let i = 0; i < this.document.nerList.length; i++) {
-        let ner = this.document.nerList[i]
+        const ner = this.document.nerList[i]
         await this.index.create({
           index: index,
           type: 'doc',

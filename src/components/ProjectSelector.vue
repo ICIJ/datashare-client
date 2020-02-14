@@ -1,5 +1,5 @@
 <template>
-  <b-form-select :options="projects" v-model="selectedProject" class="border-0"></b-form-select>
+  <b-form-select :options="projects" v-model="selectedProject" :size="size"></b-form-select>
 </template>
 
 <script>
@@ -7,7 +7,16 @@ import map from 'lodash/map'
 
 export default {
   name: 'ProjectSelector',
-  props: ['value'],
+  props: {
+    value: {
+      type: String,
+      required: true
+    },
+    size: {
+      type: String,
+      default: 'md'
+    }
+  },
   computed: {
     projects () {
       const defaultProjects = [this.$config.get('defaultProject')]
