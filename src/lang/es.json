@@ -540,5 +540,12 @@
     "submit": "Guardar",
     "submitSuccess": "Modificaciones enviadas. Ahora debería reiniciar Datashare.",
     "submitError": "Error al guardar la configuración."
+  },
+  "human": {
+    "number": {
+      "K": "%K",
+      "M": "%M",
+      "B": "%B"
+    }
   }
 }
