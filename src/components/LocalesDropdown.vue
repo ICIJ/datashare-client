@@ -1,5 +1,5 @@
 <template>
-  <a class="locales-dropdown" :id="uniqueId">
+  <b-button class="locales-dropdown" :id="uniqueId" href="#" variant="none">
     <span class="locales-dropdown__button">
       <slot v-bind="{ currentLocale, locales }">
         <fa icon="globe" class="mr-1" />
@@ -13,7 +13,7 @@
         </a>
       </div>
     </b-popover>
-  </a>
+  </b-button>
 </template>
 
 <script>
@@ -79,7 +79,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .locales-dropdown {
 
     &__menu {
