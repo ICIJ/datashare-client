@@ -1,6 +1,6 @@
 import filter from 'lodash/filter'
 import orderBy from 'lodash/orderBy'
-import HookedComponent from '@/utils/hookedComponent'
+import { HookedComponent } from '@/store/hooks'
 
 export const state = {
   // A list of registered hooks
