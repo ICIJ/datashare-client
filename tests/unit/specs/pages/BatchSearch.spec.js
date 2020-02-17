@@ -1,7 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import BatchSearch from '@/pages/BatchSearch'
 import Murmur from '@icij/murmur'
 
@@ -29,7 +29,7 @@ jest.mock('@/api', () => {
   })
 })
 
-const { localVue, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, store, router } = Core.init(createLocalVue()).useAll()
 
 describe('BatchSearch.vue', () => {
   let wrapper

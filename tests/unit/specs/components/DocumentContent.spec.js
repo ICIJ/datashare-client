@@ -1,7 +1,7 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import DocumentContent from '@/components/DocumentContent'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { getOS } from '@/utils/utils'
@@ -13,7 +13,7 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 

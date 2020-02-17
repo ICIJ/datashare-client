@@ -1,10 +1,10 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import Document from '@/api/resources/Document'
 import ImageViewer from '@/components/document/viewers/ImageViewer.vue'
 
-const { localVue } = App.init(createLocalVue()).useAll()
+const { localVue } = Core.init(createLocalVue()).useAll()
 
 describe('ImageViewer.vue', () => {
   let wrapper

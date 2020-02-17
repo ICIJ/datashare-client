@@ -2,9 +2,9 @@ import Pagination from '@/components/Pagination'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import cloneDeep from 'lodash/cloneDeep'
 import flushPromises from 'flush-promises'
-import { App } from '@/main'
+import { Core } from '@/core'
 
-const { localVue } = App.init(createLocalVue()).useAll()
+const { localVue } = Core.init(createLocalVue()).useAll()
 
 describe('Pagination.vue', () => {
   let wrapper

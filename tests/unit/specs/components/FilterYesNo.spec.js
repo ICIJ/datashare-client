@@ -3,12 +3,12 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterYesNo from '@/components/FilterYesNo'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const { localVue, store, router, wait } = App.init(createLocalVue()).useAll()
+const { localVue, store, router, wait } = Core.init(createLocalVue()).useAll()
 
 jest.mock('@/api', () => {
   const { jsonResp } = require('tests/unit/tests_utils')

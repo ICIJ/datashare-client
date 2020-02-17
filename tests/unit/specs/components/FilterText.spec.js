@@ -4,13 +4,13 @@ import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueI18n from 'vue-i18n'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterText from '@/components/FilterText'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import messagesFr from '@/lang/fr'
 
-const { localVue, router, store, wait } = App.init(createLocalVue()).useAll()
+const { localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterText.vue', () => {
   const index = toLower('FilterText')

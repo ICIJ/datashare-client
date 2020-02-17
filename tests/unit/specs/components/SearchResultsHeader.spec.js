@@ -1,12 +1,12 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('SearchResultsHeader.vue', () => {
   const index = toLower('SearchResultsHeader')

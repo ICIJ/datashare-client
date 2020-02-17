@@ -159,7 +159,7 @@ export default {
     saveComponentWidth () {
       const width = `${this.$el.offsetWidth}px`
       // Save component width in a CSS variable after it's been update
-      this.$root.$el.style.setProperty('--app-sidebar-width', width)
+      this.$root.$el.style.setProperty('--core-sidebar-width', width)
     }
   },
   computed: {

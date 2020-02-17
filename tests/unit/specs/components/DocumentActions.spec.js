@@ -4,7 +4,7 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import DocumentActions from '@/components/DocumentActions'
-import { App } from '@/main'
+import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
@@ -14,7 +14,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('DocumentActions.vue', () => {
   const index = toLower('DocumentActions')

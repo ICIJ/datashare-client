@@ -2,7 +2,7 @@ import find from 'lodash/find'
 import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterSearch from '@/components/FilterSearch'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -16,7 +16,7 @@ jest.mock('@/api', () => {
   })
 })
 
-const { localVue, store, wait } = App.init(createLocalVue()).useAll()
+const { localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterSearch.vue', () => {
   const index = toLower('FilterSearch')

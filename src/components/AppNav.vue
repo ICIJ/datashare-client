@@ -35,7 +35,7 @@ export default {
     saveComponentHeight () {
       const height = `${this.$el.offsetHeight}px`
       // Save component height in a CSS variable after it's been update
-      this.$root.$el.style.setProperty('--app-nav-height', height)
+      this.$root.$el.style.setProperty('--core-nav-height', height)
     }
   }
 }

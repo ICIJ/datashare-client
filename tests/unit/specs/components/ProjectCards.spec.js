@@ -2,9 +2,9 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import ProjectCards from '@/components/ProjectCards'
-import { App } from '@/main'
+import { Core } from '@/core'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('ProjectCards.vue', () => {
   let wrapper

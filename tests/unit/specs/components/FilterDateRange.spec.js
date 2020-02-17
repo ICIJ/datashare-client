@@ -3,12 +3,12 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterDateRange from '@/components/FilterDateRange'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const { localVue, i18n, store, wait } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('FilterDateRange.vue', () => {

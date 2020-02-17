@@ -2,12 +2,12 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocuments, IndexedDocument, letData } from 'tests/unit/es_utils'
 import SearchResultsList from '@/components/SearchResultsList'
 
-const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store } = Core.init(createLocalVue()).useAll()
 
 async function createView (query = '*', from = 0, size = 25) {
   await store.dispatch('search/query', { query, from, size })

@@ -1,12 +1,12 @@
 import Vuex from 'vuex'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { App as MainApp } from '@/main'
+import { Core } from '@/core'
 
 import App from '@/pages/App'
 import FilterBoilerplate from '@/components/FilterBoilerplate'
 import filters from '@/mixins/filters'
 
-const { i18n, localVue, router, store, wait } = MainApp.init(createLocalVue()).useAll()
+const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('filters mixin', () => {
   let wrapper, selectedValuesFromStore, filter

@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
-import { App } from '@/main'
+import { Core } from '@/core'
 
 jest.mock('@/utils/shortkeys.json', () => {
   return {
@@ -31,7 +31,7 @@ jest.mock('@/utils/shortkeys.json', () => {
   }
 })
 
-const { localVue, router, store } = App.init(createLocalVue()).useAll()
+const { localVue, router, store } = Core.init(createLocalVue()).useAll()
 
 describe('shortkeys mixin', () => {
   let wrapper

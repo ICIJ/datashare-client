@@ -1,10 +1,10 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import Hook from '@/components/Hook'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('Hook.vue', () => {
   beforeEach(() => {

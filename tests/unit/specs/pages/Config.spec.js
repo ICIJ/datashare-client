@@ -2,7 +2,7 @@ import axios from 'axios'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import Api from '@/api'
-import { App } from '@/main'
+import { Core } from '@/core'
 import Config from '@/pages/Config'
 
 jest.mock('axios', () => {
@@ -11,7 +11,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('Config.vue', () => {
   let wrapper

@@ -1,10 +1,10 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import documentJson from 'tests/unit/resources/document.json'
 import JsonViewer from '@/components/document/viewers/JsonViewer'
 
-const { localVue } = App.init(createLocalVue()).useAll()
+const { localVue } = Core.init(createLocalVue()).useAll()
 
 describe('JsonViewer.vue', () => {
   let wrapper

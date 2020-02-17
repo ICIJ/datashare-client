@@ -3,10 +3,10 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 import Vuex from 'vuex'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import BatchSearchForm from '@/components/BatchSearchForm'
 
-const { localVue } = App.init(createLocalVue()).useAll()
+const { localVue } = Core.init(createLocalVue()).useAll()
 
 jest.mock('lodash/throttle', () => jest.fn(fn => fn))
 

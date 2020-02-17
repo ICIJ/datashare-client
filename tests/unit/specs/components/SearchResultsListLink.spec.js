@@ -2,11 +2,11 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 import toLower from 'lodash/toLower'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import Document from '@/api/resources/Document'
 import SearchResultsListLink from '@/components/SearchResultsListLink'
 
-const { localVue, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, store, router } = Core.init(createLocalVue()).useAll()
 
 describe('SearchResultsListLink.vue', () => {
   const index = toLower('SearchResultsListLink')

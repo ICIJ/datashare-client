@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { setCookie, removeCookie } from 'tiny-cookie'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 
 jest.mock('axios', () => {
   return {
@@ -9,7 +9,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, router } = App.init(createLocalVue()).useAll()
+const { localVue, router } = Core.init(createLocalVue()).useAll()
 
 describe('guards', () => {
   let wrapper

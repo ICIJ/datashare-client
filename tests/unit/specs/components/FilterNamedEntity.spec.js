@@ -4,7 +4,7 @@ import { createLocalVue, mount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 import VueRouter from 'vue-router'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterNamedEntity from '@/components/FilterNamedEntity'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -20,7 +20,7 @@ jest.mock('@/api', () => {
   })
 })
 
-const { localVue, i18n, store, wait } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterNamedEntity.vue', () => {
   const index = toLower('FilterNamedEntity')

@@ -3,11 +3,11 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 import Vuex from 'vuex'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import Search from '@/pages/Search'
 import { state, getters, mutations, actions } from '@/store/modules/search'
 
-const { localVue } = App.init(createLocalVue()).useAll()
+const { localVue } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('Search.vue', () => {

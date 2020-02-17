@@ -2,7 +2,7 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -61,7 +61,7 @@ jest.mock('@/api', () => {
   })
 })
 
-const { localVue, router, store } = App.init(createLocalVue()).useAll()
+const { localVue, router, store } = Core.init(createLocalVue()).useAll()
 
 describe('BatchSearchResultsFilters.vue', () => {
   const index = toLower('BatchSearchResultsFilters')
@@ -170,7 +170,6 @@ describe('BatchSearchResultsFilters.vue', () => {
       await store.dispatch('batchSearch/getBatchSearches')
       wrapper = mount(BatchSearchResultsFilters, { localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
       jest.spyOn(wrapper.vm.$router, 'push')
-
       wrapper.find('.batch-search-results-filters__queries__dropdown__item__search').trigger('click')
 
       expect(wrapper.vm.$router.push).toBeCalled()
@@ -189,9 +188,9 @@ describe('BatchSearchResultsFilters.vue', () => {
       wrapper = mount(BatchSearchResultsFilters, { localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
 
       expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item')).toHaveLength(3)
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(0).text()).toBe('query_01')
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(1).text()).toBe('query_02')
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(2).text()).toBe('query_03')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(0).text()).toBe('query_01')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(1).text()).toBe('query_02')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(2).text()).toBe('query_03')
     })
 
     it('should sort queries by count order', async () => {
@@ -200,9 +199,9 @@ describe('BatchSearchResultsFilters.vue', () => {
       await wrapper.vm.sort('count')
 
       expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item')).toHaveLength(3)
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(0).text()).toBe('query_02')
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(1).text()).toBe('query_03')
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item > span:not(.badge)').at(2).text()).toBe('query_01')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(0).text()).toBe('query_02')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(1).text()).toBe('query_03')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(2).text()).toBe('query_01')
     })
   })
 })

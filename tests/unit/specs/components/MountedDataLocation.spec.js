@@ -1,7 +1,7 @@
 import MountedDataLocation from '@/components/MountedDataLocation'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
-import { App } from '@/main'
+import { Core } from '@/core'
 
 jest.mock('@/api', () => {
   const { jsonResp } = require('tests/unit/tests_utils')
@@ -13,7 +13,7 @@ jest.mock('@/api', () => {
   })
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('MountedDataLocation', () => {
   let wrapper
@@ -44,7 +44,7 @@ describe('MountedDataLocation', () => {
 
   it('should reset batchSearches and userHistory when calling the deleteAll method', async () => {
     store.commit('batchSearch/batchSearches', ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'])
-    store.commit('userHistory/addDocument', { '_id': 12, '_version': 'local' })
+    store.commit('userHistory/addDocument', { _id: 12, _version: 'local' })
 
     await wrapper.vm.deleteAll()
 

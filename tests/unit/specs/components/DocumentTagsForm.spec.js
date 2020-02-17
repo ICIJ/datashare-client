@@ -5,7 +5,7 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import Api from '@/api'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -14,7 +14,7 @@ import settings from '@/utils/settings'
 
 jest.mock('axios')
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 async function createView ({ es, index, tags = [], documentId = 'document', displayTags = true, displayForm = true }) {
   axios.request.mockResolvedValue({ data: map(tags, item => { return { label: item, user: { id: 'test-user' } } }) })

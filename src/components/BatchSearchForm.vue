@@ -240,7 +240,7 @@ export default {
     const projectsFromConfig = this.$config.get('datashare_indices', '[]')
     const projects = isString(projectsFromConfig) ? JSON.parse(projectsFromConfig) : projectsFromConfig
     this.$set(this, 'projects', map(projects, value => { return { value, text: value } }))
-    this.$set(this, 'project', get(this.projects, ['0', 'value'], ''))
+    this.$set(this, 'project', get(this.projects, ['0', 'value'], 'local-datashare'))
   },
   methods: {
     searchFileTypes: throttle(function () {
@@ -283,7 +283,7 @@ export default {
       this.$set(this, 'name', '')
       this.$set(this, 'csvFile', null)
       this.$set(this, 'description', '')
-      this.$set(this, 'project', get(this.projects, ['0', 'value'], ''))
+      this.$set(this, 'project', get(this.projects, ['0', 'value'], 'local-datashare'))
       this.$set(this, 'phraseMatch', true)
       this.$set(this, 'fuzziness', 0)
       this.$set(this, 'fileType', '')

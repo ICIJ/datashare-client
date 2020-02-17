@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('DocumentLocalSearchInput.vue', () => {
   it('should display display search bar, searched term and count of occurrences', () => {

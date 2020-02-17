@@ -2,11 +2,11 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount, createWrapper } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import SearchSettings from '@/components/SearchSettings'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('SearchSettings.vue', () => {

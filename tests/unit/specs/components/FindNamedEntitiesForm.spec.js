@@ -2,7 +2,7 @@ import axios from 'axios'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import Api from '@/api'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 
@@ -12,7 +12,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('FindNamedEntitiesForm.vue', () => {
   let wrapper

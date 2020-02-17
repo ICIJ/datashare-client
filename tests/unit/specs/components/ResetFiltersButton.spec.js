@@ -1,10 +1,10 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import flushPromises from 'flush-promises'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 
-const { localVue, router, store } = App.init(createLocalVue()).useAll()
+const { localVue, router, store } = Core.init(createLocalVue()).useAll()
 
 describe('ResetFiltersButton.vue', function () {
   let wrapper

@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import LocalesDropdown from '@/components/LocalesDropdown'
 
-const { localVue, i18n } = App.init(createLocalVue()).useAll()
+const { localVue, i18n } = Core.init(createLocalVue()).useAll()
 
 describe('LocalesDropdown', () => {
   let wrapper

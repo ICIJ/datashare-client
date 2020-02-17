@@ -1,10 +1,10 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import WidgetFileBarometer from '@/components/WidgetFileBarometer'
 
 describe('WidgetFileBarometer.vue', () => {
-  const { localVue, store, i18n, wait } = App.init(createLocalVue()).useAll()
+  const { localVue, store, i18n, wait } = Core.init(createLocalVue()).useAll()
   const widget = { title: 'Hello world' }
   const propsData = { widget }
   const methods = { count: () => 10 }

@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import ShortkeysModal from '@/components/ShortkeysModal'
 
 jest.mock('@/utils/shortkeys.json', () => {
@@ -47,7 +47,7 @@ jest.mock('@/utils/shortkeys.json', () => {
   }
 })
 
-const { localVue } = App.init(createLocalVue()).useAll()
+const { localVue } = Core.init(createLocalVue()).useAll()
 
 describe('ShortkeysModal', () => {
   let label, wrapper

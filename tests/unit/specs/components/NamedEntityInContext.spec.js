@@ -4,9 +4,9 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import NamedEntityInContext from '@/components/NamedEntityInContext'
 
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import { App } from '@/main'
+import { Core } from '@/core'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('NamedEntityInContext.vue', () => {
   const index = toLower('NamedEntityInContext')

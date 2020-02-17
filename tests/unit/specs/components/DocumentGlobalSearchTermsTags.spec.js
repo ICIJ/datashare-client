@@ -3,9 +3,9 @@ import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTerm
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { App } from '@/main'
+import { Core } from '@/core'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 async function createView (es, index, content = '', query = '', metadata = '', tags = []) {
   const id = 'document'

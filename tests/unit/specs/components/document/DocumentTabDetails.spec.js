@@ -2,14 +2,14 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import DocumentTabDetails from '@/components/document/DocumentTabDetails'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 jest.mock('axios')
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('DocumentTabDetails.vue', () => {
   const index = toLower('DocumentTabDetails')

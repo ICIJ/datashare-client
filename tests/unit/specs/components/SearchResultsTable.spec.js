@@ -5,7 +5,7 @@ import VueRouter from 'vue-router'
 
 import Api from '@/api'
 import SearchResultsTable from '@/components/SearchResultsTable'
-import { App } from '@/main'
+import { Core } from '@/core'
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
@@ -15,7 +15,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('SearchResultsTable.vue', () => {

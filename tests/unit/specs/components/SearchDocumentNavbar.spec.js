@@ -1,7 +1,7 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import { getOS } from '@/utils/utils'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 
@@ -13,7 +13,7 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('SearchDocumentNavbar.vue', () => {
   const index = toLower('SearchDocumentNavbar')

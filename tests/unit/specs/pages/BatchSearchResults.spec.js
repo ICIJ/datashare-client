@@ -3,7 +3,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import BatchSearchResults, { auth } from '@/pages/BatchSearchResults'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -77,17 +77,19 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
-const router = new VueRouter({ routes: [
-  {
-    name: 'batch-search.results',
-    path: 'batch-search/:index/:uuid'
-  }, {
-    name: 'document',
-    path: '/d/:index/:id/:routing?'
-  }
-] })
+const router = new VueRouter({
+  routes: [
+    {
+      name: 'batch-search.results',
+      path: 'batch-search/:index/:uuid'
+    }, {
+      name: 'document',
+      path: '/d/:index/:id/:routing?'
+    }
+  ]
+})
 
 describe('BatchSearchResults.vue', () => {
   const index = toLower('BatchSearchResults')

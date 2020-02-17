@@ -5,7 +5,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
 import Api from '@/api'
-import { App } from '@/main'
+import { Core } from '@/core'
 import DocumentView from '@/pages/DocumentView'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -16,7 +16,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('DocumentView.vue', () => {

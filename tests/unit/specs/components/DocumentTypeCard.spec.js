@@ -1,10 +1,10 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import Document from '@/api/resources/Document'
 import DocumentTypeCard from '@/components/DocumentTypeCard'
 
-const { localVue, i18n } = App.init(createLocalVue()).useAll()
+const { localVue, i18n } = Core.init(createLocalVue()).useAll()
 
 describe('DocumentTypeCard.vue', () => {
   it('should display warning message', () => {

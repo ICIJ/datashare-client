@@ -3,7 +3,7 @@ import flushPromises from 'flush-promises'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import Api from '@/api'
-import { App } from '@/main'
+import { Core } from '@/core'
 import Indexing from '@/pages/Indexing'
 
 jest.mock('axios', () => {
@@ -12,7 +12,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('Indexing.vue', () => {
   let wrapper

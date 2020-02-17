@@ -3,12 +3,12 @@ import flushPromises from 'flush-promises'
 import toLower from 'lodash/toLower'
 import VueRouter from 'vue-router'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import SearchBar from '@/components/SearchBar'
 
-const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('SearchBar.vue', function () {

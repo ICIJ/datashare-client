@@ -4,9 +4,9 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { App } from '@/main'
+import { Core } from '@/core'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('DocumentTabNamedEntities.vue', () => {
   const index = toLower('DocumentTabNamedEntities')

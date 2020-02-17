@@ -3,12 +3,12 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterPath from '@/components/FilterPath'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const { localVue, store, wait } = App.init(createLocalVue()).useAll()
+const { localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterPath.vue', () => {
   const index = toLower('FilterPath')

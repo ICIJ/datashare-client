@@ -3,7 +3,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import Api from '@/api'
 import ExtractingForm from '@/components/ExtractingForm'
-import { App } from '@/main'
+import { Core } from '@/core'
 
 jest.mock('axios', () => {
   return {
@@ -12,7 +12,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, router, store } = App.init(createLocalVue()).useAll()
+const { localVue, router, store } = Core.init(createLocalVue()).useAll()
 
 describe('ExtractingForm.vue', () => {
   let wrapper

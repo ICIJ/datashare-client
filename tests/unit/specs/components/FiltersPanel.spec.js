@@ -1,9 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import FiltersPanel from '@/components/FiltersPanel'
-import { App } from '@/main'
+import { Core } from '@/core'
 
-const { localVue, store, router, i18n, wait } = App.init(createLocalVue()).useAll()
+const { localVue, store, router, i18n, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FiltersPanel.vue', () => {
   let wrapper

@@ -1,15 +1,15 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { responseWithArrayBuffer } from 'tests/unit/tests_utils'
-import { App } from '@/main'
+import { Core } from '@/core'
 import PdfViewer from '@/components/document/viewers/PdfViewer'
 
-const { localVue } = App.init(createLocalVue()).useAll()
+const { localVue } = Core.init(createLocalVue()).useAll()
 
 describe('PdfViewer.vue', () => {
   let wrapper = null
-  let getSource = jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url))
-  let methods = { getSource }
-  let mocks = { $t: msg => msg }
+  const getSource = jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url))
+  const methods = { getSource }
+  const mocks = { $t: msg => msg }
 
   beforeEach(() => {
     wrapper = shallowMount(PdfViewer, { localVue, mocks, methods, propsData: { document: { url: 'document.pdf' } } })

@@ -7,7 +7,7 @@ import VueRouter from 'vue-router'
 
 import Api from '@/api'
 import FilterProject from '@/components/FilterProject'
-import { App } from '@/main'
+import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('axios', () => {
@@ -16,7 +16,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store, wait } = App.init(createLocalVue()).useAll()
+const { localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 localVue.mixin({ created () {} })
 const mergeCreatedStrategy = localVue.config.optionMergeStrategies.created

@@ -25,13 +25,15 @@
           @input="onInput">
           <template #item-label="{ item }">
             <div class="d-flex batch-search-results-filters__queries__dropdown__item" :id="item.label">
-              <span class="flex-grow-1 text-truncate">
+              <span class="flex-grow-1 text-truncate batch-search-results-filters__queries__dropdown__item__label">
                 {{ item.label }}
               </span>
               <b-badge class="my-1 px-2 batch-search-results-filters__queries__dropdown__item__count" variant="tertiary" pill>
                 {{ $n(item.count) }}
               </b-badge>
-              <fa icon="search" class="text-tertiary batch-search-results-filters__queries__dropdown__item__search" @click.stop.prevent="executeSearch(item.label)" />
+              <span class="batch-search-results-filters__queries__dropdown__item__search" @click.stop.prevent="executeSearch(item.label)">
+                <fa icon="search" class="text-tertiary" />
+              </span>
             </div>
             <b-tooltip placement="bottom" :target="item.label" :title="item.label" />
           </template>
@@ -74,6 +76,7 @@ export default {
       if (this.$store.state.batchSearch) {
         return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || {}
       }
+      return null
     },
     metaQueriesKeys () {
       return map(this.meta.queries, (a, b) => { return { label: b, count: a } })

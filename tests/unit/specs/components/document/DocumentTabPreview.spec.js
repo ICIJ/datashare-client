@@ -4,9 +4,9 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 import DocumentTabPreview from '@/components/document/DocumentTabPreview'
-import { App } from '@/main'
+import { Core } from '@/core'
 
-const { localVue } = App.init(createLocalVue()).useAll()
+const { localVue } = Core.init(createLocalVue()).useAll()
 
 describe('DocumentTabPreview.vue', () => {
   const index = toLower('DocumentTabPreview')

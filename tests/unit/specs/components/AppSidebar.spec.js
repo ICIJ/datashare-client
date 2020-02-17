@@ -2,7 +2,7 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import AppSidebar from '@/components/AppSidebar'
 import { getOS } from '@/utils/utils'
-import { App } from '@/main'
+import { Core } from '@/core'
 import mode from '@/modes'
 import { jsonResp } from 'tests/unit/tests_utils'
 
@@ -17,10 +17,10 @@ describe('AppSidebar.vue', () => {
   let localVue = null
   let router = null
   let store = null
-  let mocks = { $t: msg => msg }
+  const mocks = { $t: msg => msg }
 
   beforeAll(async () => {
-    ({ router, store, localVue } = App.init(createLocalVue()).useAll())
+    ({ router, store, localVue } = Core.init(createLocalVue()).useAll())
     window.fetch = jest.fn()
     window.fetch.mockReturnValue(jsonResp({ userProjects: [] }))
   })

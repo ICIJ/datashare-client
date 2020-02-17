@@ -1,9 +1,9 @@
 import { mount, createLocalVue } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import EmailString from '@/components/EmailString'
 
-const { localVue, store } = App.init(createLocalVue()).useBootstrapVue()
+const { localVue, store } = Core.init(createLocalVue()).useBootstrapVue()
 
 describe('EmailString.vue', () => {
   it('is a Vue instance', () => {

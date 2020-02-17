@@ -10,7 +10,7 @@ module.exports = {
 
     browser
       .url(devServer)
-      .waitForElementVisible('.app', 5000)
+      .waitForElementVisible('.core', 5000)
       .assert.containsText('button.btn-primary', 'Search')
       .end()
   }

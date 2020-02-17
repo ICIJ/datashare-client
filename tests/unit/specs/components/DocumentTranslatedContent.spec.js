@@ -1,11 +1,11 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import { App } from '@/main'
+import { Core } from '@/core'
 import Document from '@/api/resources/Document'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('DocumentTranslatedContent.vue', () => {
   const index = toLower('DocumentTabDetails')
