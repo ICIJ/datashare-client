@@ -37,7 +37,7 @@ export default {
   data () {
     return {
       locales: settings.locales,
-      loadedLocales: [ settings.defaultLocale ]
+      loadedLocales: [settings.defaultLocale]
     }
   },
   computed: {
@@ -86,11 +86,18 @@ export default {
 
       .popover-body {
         padding: 0;
+
+        .dropdown-menu {
+          background: inherit;
+          color: inherit;
+
+          .dropdown-item:not(.active) {
+            color: inherit;
+            background: transparent;
+          }
+        }
       }
 
-      .dropdown-menu a:not(.active) {
-        background: transparent;
-      }
     }
   }
 </style>
