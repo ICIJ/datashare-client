@@ -10,7 +10,7 @@ import FilterText from '@/components/FilterText'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import messagesFr from '@/lang/fr'
 
-const { localVue, router, store } = App.init(createLocalVue()).useAll()
+const { localVue, router, store, wait } = App.init(createLocalVue()).useAll()
 
 describe('FilterText.vue', () => {
   const index = toLower('FilterText')
@@ -26,6 +26,7 @@ describe('FilterText.vue', () => {
       localVue,
       router,
       store,
+      wait,
       propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'contentType' }) },
       mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
     })
@@ -350,6 +351,7 @@ describe('FilterText.vue', () => {
       i18n,
       router,
       store,
+      wait,
       propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }
     })
     await letData(es).have(new IndexedDocument('document_01', index)
@@ -367,6 +369,7 @@ describe('FilterText.vue', () => {
       i18n,
       router,
       store,
+      wait,
       propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }
     })
     await letData(es).have(new IndexedDocument('document_01', index)
@@ -396,6 +399,7 @@ describe('FilterText.vue', () => {
       i18n,
       router,
       store,
+      wait,
       propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'extractionLevel' }) }
     })
 

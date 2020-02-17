@@ -3,13 +3,13 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import FiltersPanel from '@/components/FiltersPanel'
 import { App } from '@/main'
 
-const { localVue, store, router, i18n } = App.init(createLocalVue()).useAll()
+const { localVue, store, router, i18n, wait } = App.init(createLocalVue()).useAll()
 
 describe('FiltersPanel.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    wrapper = shallowMount(FiltersPanel, { localVue, i18n, router, store, sync: false })
+    wrapper = shallowMount(FiltersPanel, { localVue, i18n, router, store, wait, sync: false })
   })
 
   afterAll(() => window.fetch.mockRestore())
@@ -26,7 +26,7 @@ describe('FiltersPanel.vue', () => {
 
   it('should call function resetFilterValues on event filter::search::reset-filters emitted', async () => {
     const resetFilterValuesStub = jest.fn()
-    wrapper = shallowMount(FiltersPanel, { localVue, i18n, store, methods: { resetFilterValues: resetFilterValuesStub }, sync: false })
+    wrapper = shallowMount(FiltersPanel, { localVue, i18n, store, wait, methods: { resetFilterValues: resetFilterValuesStub }, sync: false })
     wrapper.vm.$root.$emit('filter::search::reset-filters')
 
     expect(resetFilterValuesStub).toHaveBeenCalled()
@@ -34,7 +34,7 @@ describe('FiltersPanel.vue', () => {
 
   it('should call function refreshEachFilter on event index::delete::all emitted', async () => {
     const refreshEachFilterMock = jest.fn()
-    wrapper = shallowMount(FiltersPanel, { localVue, i18n, store, methods: { refreshEachFilter: refreshEachFilterMock }, sync: false })
+    wrapper = shallowMount(FiltersPanel, { localVue, i18n, store, wait, methods: { refreshEachFilter: refreshEachFilterMock }, sync: false })
 
     wrapper.vm.$root.$emit('index::delete::all')
 
@@ -43,7 +43,7 @@ describe('FiltersPanel.vue', () => {
 
   it('should call function updateFilterSelectedValues on event filter::search::add-filter-values emitted', async () => {
     const updateFilterSelectedValuesMock = jest.fn()
-    wrapper = shallowMount(FiltersPanel, { localVue, i18n, store, methods: { updateFilterSelectedValues: updateFilterSelectedValuesMock }, sync: false })
+    wrapper = shallowMount(FiltersPanel, { localVue, i18n, store, wait, methods: { updateFilterSelectedValues: updateFilterSelectedValuesMock }, sync: false })
 
     wrapper.vm.$root.$emit('filter::search::add-filter-values')
 

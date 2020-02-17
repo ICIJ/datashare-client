@@ -8,7 +8,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterDateRange from '@/components/FilterDateRange'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const { localVue, i18n, store } = App.init(createLocalVue()).useAll()
+const { localVue, i18n, store, wait } = App.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('FilterDateRange.vue', () => {
@@ -21,7 +21,7 @@ describe('FilterDateRange.vue', () => {
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', index)
-    wrapper = mount(FilterDateRange, { localVue, i18n, store, router, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name }) } })
+    wrapper = mount(FilterDateRange, { localVue, i18n, store, router, wait, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name }) } })
   })
 
   afterEach(() => store.commit('search/reset'))

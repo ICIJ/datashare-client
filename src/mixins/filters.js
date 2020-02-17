@@ -39,7 +39,6 @@ export default {
   },
   data () {
     return {
-      isReady: false,
       offset: 0,
       pageSize: settings.filterSize,
       total: 0,
@@ -62,6 +61,9 @@ export default {
   computed: {
     root () {
       return get(this, '$refs.filter', {})
+    },
+    isReady () {
+      return !this.$wait.is(`items for ${this.filter.name}`)
     },
     isGlobal () {
       return this.$store.state.search.globalSearch

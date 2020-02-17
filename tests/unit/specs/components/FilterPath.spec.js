@@ -8,7 +8,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterPath from '@/components/FilterPath'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const { localVue, store } = App.init(createLocalVue()).useAll()
+const { localVue, store, wait } = App.init(createLocalVue()).useAll()
 
 describe('FilterPath.vue', () => {
   const index = toLower('FilterPath')
@@ -21,6 +21,7 @@ describe('FilterPath.vue', () => {
     wrapper = mount(FilterPath, {
       localVue,
       store,
+      wait,
       propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'path' }) },
       mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
     })

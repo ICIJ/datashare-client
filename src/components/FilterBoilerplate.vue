@@ -109,7 +109,6 @@ export default {
     return {
       filterQuery: '',
       collapseItems: !this.asyncItems,
-      isReady: true,
       isInitialized: !!this.asyncItems,
       results: [],
       moreToDisplay: false
@@ -186,7 +185,7 @@ export default {
       this.$emit('async-search', this.filter, this.filterQuery)
     },
     aggregateWithLoading () {
-      this.isReady = false
+      this.$wait.start(`items for ${this.filter.name}`)
       return this.aggregate()
     },
     async aggregate () {
@@ -208,8 +207,8 @@ export default {
         const sumDocCount = sumBy(get(res, this.resultPath, []), 'doc_count')
         this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)
         this.$set(this, 'results', this.addInvertedFilters(res))
-        this.$set(this, 'isReady', true)
         this.$set(this, 'moreToDisplay', sumOtherDocCount > 0)
+        this.$wait.end(`items for ${this.filter.name}`)
         return this.results
       } else {
         return false

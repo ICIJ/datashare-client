@@ -8,7 +8,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterYesNo from '@/components/FilterYesNo'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const { localVue, store, router } = App.init(createLocalVue()).useAll()
+const { localVue, store, router, wait } = App.init(createLocalVue()).useAll()
 
 jest.mock('@/api', () => {
   const { jsonResp } = require('tests/unit/tests_utils')
@@ -33,6 +33,7 @@ describe('FilterYesNo.vue', () => {
       localVue,
       router,
       store,
+      wait,
       propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'starred' }) },
       mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
     })

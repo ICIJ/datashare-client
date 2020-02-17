@@ -6,7 +6,7 @@ import App from '@/pages/App'
 import FilterBoilerplate from '@/components/FilterBoilerplate'
 import filters from '@/mixins/filters'
 
-const { i18n, localVue, router, store } = MainApp.init(createLocalVue()).useAll()
+const { i18n, localVue, router, store, wait } = MainApp.init(createLocalVue()).useAll()
 
 describe('filters mixin', () => {
   let wrapper, selectedValuesFromStore, filter
@@ -21,7 +21,7 @@ describe('filters mixin', () => {
     const actions = { query: jest.fn() }
     const getters = { toRouteQuery: () => jest.fn() }
     const localStore = new Vuex.Store({ modules: { search: { namespaced: true, state, mutations, actions, getters } } })
-    wrapper = shallowMount(App, { localVue, i18n, router, store: localStore, mixins: [filters], propsData: { filter } })
+    wrapper = shallowMount(App, { localVue, i18n, router, wait, store: localStore, mixins: [filters], propsData: { filter } })
     jest.spyOn(wrapper.vm, 'refreshRouteAndSearch')
 
     wrapper.vm.setValue('42')
@@ -33,7 +33,7 @@ describe('filters mixin', () => {
   describe('tests run on specific wrapper', () => {
     beforeEach(() => {
       selectedValuesFromStore = jest.fn()
-      wrapper = shallowMount(FilterBoilerplate, { localVue, i18n, router, store, mixins: [filters], methods: { selectedValuesFromStore }, propsData: { filter } })
+      wrapper = shallowMount(FilterBoilerplate, { localVue, i18n, router, store, wait, mixins: [filters], methods: { selectedValuesFromStore }, propsData: { filter } })
       selectedValuesFromStore.mockClear()
     })
 
@@ -52,7 +52,7 @@ describe('filters mixin', () => {
     })
 
     it('should emit an event "selected-values-from-store" on selectedValuesFromStore', () => {
-      wrapper = shallowMount(FilterBoilerplate, { localVue, i18n, router, store, mixins: [filters], propsData: { filter } })
+      wrapper = shallowMount(FilterBoilerplate, { localVue, i18n, router, store, wait, mixins: [filters], propsData: { filter } })
       wrapper.vm.selectedValuesFromStore()
 
       expect(wrapper.emitted('selected-values-from-store')).toHaveLength(2)

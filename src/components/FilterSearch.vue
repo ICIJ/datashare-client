@@ -20,7 +20,8 @@
                  hide-show-more
                  v-bind="{ filter }"></component>
     </div>
-    <infinite-loading @infinite="next" :identifier="infiniteId" v-if="infiniteScroll" spinner="bubbles">
+    <infinite-loading @infinite="next" :identifier="infiniteId" v-if="infiniteScroll">
+      <fa icon="circle-notch" spin slot="spinner" size="2x" class="mt-4 text-muted" />
       <template #no-more>
         <span class="text-muted"></span>
       </template>
@@ -87,8 +88,7 @@ export default {
       items: [],
       infiniteId: uniqueId(),
       total: 0,
-      totalCount: 0,
-      isReady: false
+      totalCount: 0
     }
   },
   mounted () {
@@ -106,6 +106,7 @@ export default {
   methods: {
     async search ($state) {
       if (!this.filter) return
+      this.$wait.start(`items for ${this.filter.name}`)
       // Load the filter using a body build using the filter configuration
       const alternativeSearch = this.filterQuery !== '' && this.filter.alternativeSearch ? compact(this.filter.alternativeSearch(toLower(this.filterQuery))) : []
       const options = { size: this.size, include: `.*(${concat(alternativeSearch, this.queryTokens).join('|')}).*` }
@@ -117,8 +118,8 @@ export default {
       // Did we reach the end?
       if ($state && all.length < this.size) {
         $state.complete()
-        this.$set(this, 'isReady', true)
       }
+      this.$wait.end(`items for ${this.filter.name}`)
       // Mark this page as loaded
       if ($state) $state.loaded()
     },
