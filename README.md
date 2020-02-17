@@ -30,7 +30,7 @@ sudo yarn global add @vue/cli
 yarn
 ```
 
-* Serve with hot reload at localhost:9090
+* Serve with hot reload at localhost:9009
 
 ```
 yarn serve
@@ -43,7 +43,7 @@ yarn serve
 # install / update dependencies
 yarn
 
-# serve with hot reload at localhost:9090
+# serve with hot reload at localhost:9009
 yarn serve
 
 # build for production with minification
