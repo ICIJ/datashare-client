@@ -9,7 +9,8 @@ export default class FilterDateRange extends FilterDate {
   }
   itemLabel (item) {
     if (isInteger(item.key)) {
-      return moment(item.key).locale(localStorage.getItem('locale')).format('L')
+      const timestamp = item.key + new Date().getTimezoneOffset() * 60 * 1000
+      return moment(timestamp).locale(localStorage.getItem('locale')).format('L')
     } else {
       return item.key
     }

@@ -13,7 +13,7 @@
           :key="locale">
           <input
             class="form-control"
-            slot-scope="{ inputProps, inputEvents, isDragging }"
+            slot-scope="{ inputProps, inputEvents }"
             :placeholder="$t('filter.selectDateRange')"
             v-bind="inputProps"
             v-on="inputEvents">
@@ -68,7 +68,9 @@ export default {
       if (this.selectedDate === null) {
         this.$set(this, 'selected', [])
       } else {
-        this.$set(this, 'selected', [new Date(this.selectedDate.start).getTime(), new Date(this.selectedDate.end).getTime()])
+        const start = Date.parse(this.selectedDate.start) - this.selectedDate.start.getTimezoneOffset() * 60 * 1000
+        const end = Date.parse(this.selectedDate.end) - this.selectedDate.end.getTimezoneOffset() * 60 * 1000 + 24 * 60 * 60 * 1000 - 1
+        this.$set(this, 'selected', [start, end])
       }
       this.setValue({ key: this.selected })
     },

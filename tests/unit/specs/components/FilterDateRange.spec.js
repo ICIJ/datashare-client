@@ -43,8 +43,11 @@ describe('FilterDateRange.vue', () => {
 
     wrapper.vm.onInput()
 
+    const expectedStart = Date.parse(start) - start.getTimezoneOffset() * 60 * 1000
+    const expectedEnd = Date.parse(end) - end.getTimezoneOffset() * 60 * 1000 + 24 * 60 * 60 * 1000 - 1
+
     const existingFilter = find(store.getters['search/instantiatedFilters'], { name })
-    expect(existingFilter.values).toEqual([start.getTime(), end.getTime()])
+    expect(existingFilter.values).toEqual([expectedStart, expectedEnd])
   })
 
   it('should set selected value to dedicated filter, as the only one value', () => {
@@ -58,8 +61,11 @@ describe('FilterDateRange.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start: start2, end: end2 })
     wrapper.vm.onInput()
 
+    const expectedStart = Date.parse(start2) - start2.getTimezoneOffset() * 60 * 1000
+    const expectedEnd = Date.parse(end2) - end2.getTimezoneOffset() * 60 * 1000 + 24 * 60 * 60 * 1000 - 1
+
     const existingFilter = find(store.getters['search/instantiatedFilters'], { name })
-    expect(existingFilter.values).toEqual([start2.getTime(), end2.getTime()])
+    expect(existingFilter.values).toEqual([expectedStart, expectedEnd])
   })
 
   it('should reset selectedDate on event "reset-filter-values"', () => {
