@@ -540,5 +540,12 @@
     "submit": "Actualiser",
     "submitSuccess": "Les modifications sont enregistrées mais vous devez redémarrer Datashare pour qu'elles s'appliquent.",
     "submitError": "Erreur dans la reconfiguration."
+  },
+  "human": {
+    "number": {
+      "K": "%K",
+      "M": "%M",
+      "B": "%B"
+    }
   }
 }
