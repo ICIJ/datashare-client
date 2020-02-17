@@ -1,4 +1,4 @@
-import HookedComponent from '@/utils/hookedComponent'
+import { HookedComponent } from '@/store/hooks'
 
 describe('HookedComponent', () => {
   it('should have an target attribute', () => {

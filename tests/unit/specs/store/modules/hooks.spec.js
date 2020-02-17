@@ -1,5 +1,5 @@
 import store from '@/store'
-import HookedComponent from '@/utils/hookedComponent'
+import { HookedComponent } from '@/store/hooks'
 
 describe('HooksStore', () => {
   beforeEach(() => {
