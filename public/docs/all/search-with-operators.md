@@ -132,7 +132,7 @@ Regex can be combined with standard queries in Datashare :
 
 > Example: /.\*\..\*\@.\*\..\*/ \(the @ was escaped by a backslash \ just before it\)
 
-Datashare relies on **Elastic's Regex syntax** as explained[ here](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html). Please refer to this page for more details.
+Datashare relies on **Elastic's Regex syntax** as explained[ here](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html) \(refer to this page for more details\) and uses [this tokenizer](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-tokenizer.html).
 
 Here are a few examples of useful Regex:
 
