@@ -117,7 +117,9 @@ export default class Core extends Behaviors {
     this._ready.then(() => this.dispatch('ready'))
   }
   dispatch (name, ...args) {
-    dispatch(name, { app: this, ...args })
+    // Add "core" property but kept "app" for retro-compatibility
+  // @TODO remove this property
+    dispatch(name, { app: this, core: this, ...args })
     return this
   }
   async getUser () {
@@ -147,6 +149,8 @@ export default class Core extends Behaviors {
       }
     })
   }
+  // Add "core" getter but kept "app" for retro-compatibility
+  // @TODO remove this getter
   get app () {
     return this
   }
