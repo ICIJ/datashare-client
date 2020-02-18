@@ -13,7 +13,7 @@
             <span class="filter__items__item__label px-1 flex-grow-1">
               {{ value }}
             </span>
-            <span class="filter__items__item__count badge badge-pill badge-light align-self-start">
+            <span class="filter__items__item__count badge badge-pill badge-light align-self-start" :class="{ hideOnHover : $config.is('manageDocuments') }">
               {{ $n(item.byDocs.value) }}
             </span>
           </span>
@@ -65,7 +65,7 @@ export default {
         color: inherit;
       }
 
-      &:hover .filter__items__item__count {
+      &:hover .hideOnHover {
         display: none;
       }
     }
