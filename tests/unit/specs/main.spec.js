@@ -14,7 +14,7 @@ jest.mock('axios', () => {
 describe('main', () => {
   beforeEach(() => {
     const core = document.createElement('div')
-    core.setAttribute('id', 'core')
+    core.setAttribute('id', 'app')
     document.body.appendChild(core)
   })
 
