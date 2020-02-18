@@ -5,7 +5,7 @@
         <span class="flex-grow-1 my-auto">
           {{ $t('batchSearchResultsFilters.queries.heading') }}
         </span>
-        <span class="my-auto mr-2">
+        <span class="my-auto mr-2" v-if="isMultipleQueries">
           {{ $t('search.results.sort.sort') }}
         </span>
         <b-dropdown :text="$t('search.results.sort.' + sortField)" class="batch-search-results-filters__queries__sort" variant="primary" right v-if="isMultipleQueries">
