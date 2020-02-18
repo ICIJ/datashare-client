@@ -1,22 +1,12 @@
 import { createLocalVue } from '@vue/test-utils'
-
 import { Core } from '@/core'
 
-jest.mock('axios', () => {
-  return {
-    get: jest.fn().mockResolvedValue({ data: {} }),
-    request: jest.fn().mockResolvedValue({ data: { userProjects: ['first-index', 'second-index'] } })
-  }
-})
-
-describe('Core', () => {
+describe('HooksMixin', () => {
   let core
 
   beforeEach(async () => {
     core = Core.init(createLocalVue()).useAll()
     core.store.commit('hooks/reset')
-    core.configure()
-    await core.ready
   })
 
   it('should find several hooked components by their target name', async () => {
