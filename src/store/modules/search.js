@@ -300,9 +300,13 @@ export const mutations = {
       Vue.delete(state.values, name)
     }
   },
-  addFilter (state, { type, options }) {
+  addFilter (state, { type = 'FilterText', options = {}, position = null } = {}) {
     if (!find(state.filters, (filter) => filter.options.name === options.name)) {
-      state.filters.push({ type, options })
+      if (position === null) {
+        state.filters.push({ type, options })
+      } else {
+        state.filters.splice(position, 0, { type, options })
+      }
     }
   },
   excludeFilter (state, name) {

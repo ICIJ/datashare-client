@@ -12,6 +12,7 @@ import compose from 'lodash/fp/compose'
 
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
+import ProjectsMixin from './ProjectsMixin'
 
 import router from '@/router'
 import guards from '@/router/guards'
@@ -24,7 +25,7 @@ import mode from '@/modes'
 import { dispatch } from '@/utils/event-bus'
 
 class Base {}
-const Behaviors = compose(FiltersMixin, HooksMixin)(Base)
+const Behaviors = compose(FiltersMixin, HooksMixin, ProjectsMixin)(Base)
 
 export default class Core extends Behaviors {
   constructor (LocalVue = Vue) {
@@ -118,7 +119,7 @@ export default class Core extends Behaviors {
   }
   dispatch (name, ...args) {
     // Add "core" property but kept "app" for retro-compatibility
-  // @TODO remove this property
+    // @TODO remove this property
     dispatch(name, { app: this, core: this, ...args })
     return this
   }
@@ -128,10 +129,6 @@ export default class Core extends Behaviors {
     } catch (_) {
       await this.router.push('login')
     }
-  }
-  async createDefaultProject () {
-    const defaultProject = this.config.get('defaultProject')
-    return this.api.createIndex(defaultProject)
   }
   get ready () {
     if (!this._ready) {
