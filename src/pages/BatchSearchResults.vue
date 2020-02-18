@@ -185,8 +185,12 @@ export const auth = new Auth()
 export default {
   name: 'BatchSearchResults',
   props: {
-    uuid: String,
-    index: String
+    uuid: {
+      type: String
+    },
+    index: {
+      type: String
+    }
   },
   filters: {
     humanSize,

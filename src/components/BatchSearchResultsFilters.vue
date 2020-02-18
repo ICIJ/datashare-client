@@ -62,8 +62,12 @@ import orderBy from 'lodash/orderBy'
 export default {
   name: 'BatchSearchResultsFilters',
   props: {
-    uuid: String,
-    index: String
+    uuid: {
+      type: String
+    },
+    index: {
+      type: String
+    }
   },
   data () {
     return {
@@ -100,6 +104,14 @@ export default {
       }
     }
   },
+  beforeRouteUpdate (to, from, next) {
+    if (to.query.queries_sort === 'count') {
+      this.$set(this, 'sortField', 'count')
+    } else {
+      this.$set(this, 'sortField', 'default')
+    }
+    next()
+  },
   methods: {
     onInput () {
       this.$root.$emit('batch-search-results::filter')
@@ -109,7 +121,7 @@ export default {
       this.$router.push({ name: 'search', query: { q: query } })
     },
     sort (sortField) {
-      this.sortField = sortField
+      this.$router.push({ name: 'batch-search.results', query: { ...this.$route.query, queries_sort: sortField } })
     }
   }
 }
