@@ -8,7 +8,7 @@
         <span class="my-auto mr-2">
           {{ $t('search.results.sort.sort') }}
         </span>
-        <b-dropdown :text="sortField" class="batch-search-results-filters__queries__sort" variant="primary" right v-if="isMultipleQueries">
+        <b-dropdown :text="$t('search.results.sort.' + sortField)" class="batch-search-results-filters__queries__sort" variant="primary" right v-if="isMultipleQueries">
           <b-dropdown-item v-for="key in sortFields" :key="key" @click="sort(key)">
             {{ $t('search.results.sort.' + key) }}
           </b-dropdown-item>
