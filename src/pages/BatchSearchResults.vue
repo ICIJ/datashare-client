@@ -342,7 +342,7 @@ export default {
       return {
         name: 'batch-search.results',
         params: { index: this.$route.params.index, uuid: this.$route.params.uuid },
-        query: { page, queries: queries.map(query => query.label), sort, order }
+        query: { page, queries: queries.map(query => query.label), sort, order, queries_sort: this.$route.query.queries_sort || undefined }
       }
     },
     async deleteBatchSearch () {

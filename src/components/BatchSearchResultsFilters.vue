@@ -56,6 +56,7 @@
 
 <script>
 import find from 'lodash/find'
+import get from 'lodash/get'
 import map from 'lodash/map'
 import orderBy from 'lodash/orderBy'
 
@@ -121,7 +122,11 @@ export default {
       this.$router.push({ name: 'search', query: { q: query } })
     },
     sort (sortField) {
-      this.$router.push({ name: 'batch-search.results', query: { ...this.$route.query, queries_sort: sortField } })
+      const order = get(this, ['this', '$route', 'order'], undefined)
+      const page = get(this, ['this', '$route', 'page'], undefined)
+      const queries = get(this, ['this', '$route', 'queries'], undefined)
+      const sort = get(this, ['this', '$route', 'query'], undefined)
+      this.$router.push({ name: 'batch-search.results', query: { order, page, queries, sort, queries_sort: sortField } })
     }
   }
 }
