@@ -82,7 +82,7 @@ export default {
 <style lang="scss" scoped>
   .locales-menu {
 
-    &__menu {
+    &__list {
 
       .popover-body {
         padding: 0;
