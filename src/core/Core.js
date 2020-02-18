@@ -45,10 +45,18 @@ export default class Core extends Behaviors {
     this.useBootstrapVue()
     this.useCommons()
     this.useRouter()
+    this.useWait()
     return this
   }
   useI18n () {
     this.use(VueI18n)
+    this.i18n = new VueI18n({
+      locale: settings.defaultLocale,
+      fallbackLocale: settings.defaultLocale,
+      messages: {
+        [settings.defaultLocale]: messages
+      }
+    })
     return this
   }
   useBootstrapVue () {
@@ -64,7 +72,6 @@ export default class Core extends Behaviors {
   useCommons () {
     // Common plugins
     this.use(Murmur)
-    this.use(VueWait)
     this.use(VueProgressBar, { color: settings.progressBar.color })
     this.use(VueShortkey, { prevent: settings.hotKeyPrevented })
     this.use(VueScrollTo)
@@ -72,6 +79,10 @@ export default class Core extends Behaviors {
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
     this.use(VCalendar, { componentPrefix: 'vc' })
+  }
+  useWait () {
+    this.use(VueWait)
+    this.wait = new VueWait({ useVuex: true })
   }
   async configure () {
     // Get the config object
@@ -136,16 +147,6 @@ export default class Core extends Behaviors {
     }
     return this._ready
   }
-  get i18n () {
-    // Configure Languages
-    return new VueI18n({
-      locale: settings.defaultLocale,
-      fallbackLocale: settings.defaultLocale,
-      messages: {
-        [settings.defaultLocale]: messages
-      }
-    })
-  }
   // Add "core" getter but kept "app" for retro-compatibility
   // @TODO remove this getter
   get app () {
@@ -170,10 +171,6 @@ export default class Core extends Behaviors {
   get api () {
     this._api = this._api || new Api()
     return this._api
-  }
-  get wait () {
-    this._wait = this._wait || new VueWait({ useVuex: true })
-    return this._wait
   }
   static init (...options) {
     return new Core(...options)

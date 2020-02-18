@@ -16,8 +16,8 @@ describe('HooksStore', () => {
 
   it('should register a hooked component', () => {
     store.commit('hooks/register', { target: 'foo' })
-    expect(store.getters['hooks/hookedComponents']).toHaveLength(1)
-    expect(store.getters['hooks/hookedComponents'][0] instanceof HookedComponent).toBeTruthy()
+    expect(store.getters['hooks/hookedComponents']()).toHaveLength(1)
+    expect(store.getters['hooks/hookedComponents']()[0] instanceof HookedComponent).toBeTruthy()
   })
 
   it('should find a hooked component by its target name', () => {

@@ -11,13 +11,15 @@ export const state = {
 
 export const getters = {
   hookedComponents (state) {
-    return orderBy(state.registered.map(HookedComponent.create), 'order', 'asc')
+    return () => {
+      return orderBy(state.registered.map(HookedComponent.create), 'order', 'asc')
+    }
   },
   filterHookedComponentsByTarget (state, getters) {
-    return target => filter(getters.hookedComponents, { target })
+    return target => filter(getters.hookedComponents(), { target })
   },
   getHookedComponentByName (state, getters) {
-    return name => find(getters.hookedComponents, { name })
+    return name => find(getters.hookedComponents(), { name })
   }
 }
 
@@ -35,7 +37,7 @@ export const mutations = {
     }
   },
   reset (state) {
-    state.registered = []
+    state.registered.splice(0, state.registered.length)
   },
   resetTarget (state, target) {
     state.registered = filter(state.registered, r => r.target !== target)
