@@ -89,12 +89,12 @@
       <hook name="app-sidebar.locales:before" />
       <ul class="app-sidebar__container__menu list-unstyled mb-0">
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--locale">
-          <locales-dropdown class="app-sidebar__container__menu__item__link text-left text-wrap" v-slot="{ currentLocale }">
+          <locales-menu class="app-sidebar__container__menu__item__link text-left text-wrap" v-slot="{ currentLocale }">
             <fa icon="globe" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ currentLocale.label }}
             </span>
-          </locales-dropdown>
+          </locales-menu>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
           <a :href="logoutLink" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
@@ -117,22 +117,23 @@
 </template>
 
 <script>
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+
+import Api from '@/api'
+import Hook from '@/components/Hook'
+import LocalesMenu from '@/components/LocalesMenu'
+import MountedDataLocation from '@/components/MountedDataLocation'
+import VersionNumber from '@/components/VersionNumber'
 import docs from '@/mixins/docs'
 import utils from '@/mixins/utils'
 import { isNarrowScreen } from '@/utils/screen'
-import Api from '@/api'
-import LocalesDropdown from './LocalesDropdown.vue'
-import MountedDataLocation from './MountedDataLocation.vue'
-import VersionNumber from './VersionNumber.vue'
-import Hook from './Hook.vue'
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
   name: 'AppSidebar',
   mixins: [docs, utils],
   components: {
     Hook,
-    LocalesDropdown,
+    LocalesMenu,
     MountedDataLocation,
     VersionNumber,
     VuePerfectScrollbar

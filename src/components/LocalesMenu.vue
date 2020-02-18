@@ -1,12 +1,12 @@
 <template>
-  <b-button class="locales-dropdown" :id="uniqueId" href="#" variant="none">
-    <span class="locales-dropdown__button">
+  <b-button class="shadow-none locales-menu" :id="uniqueId" href="#" variant="none">
+    <span class="locales-menu__button">
       <slot v-bind="{ currentLocale, locales }">
         <fa icon="globe" class="mr-1" />
         {{ currentLocale.label }}
       </slot>
     </span>
-    <b-popover :target="uniqueId" triggers="click blur" custom-class="locales-dropdown__menu" ref="popover">
+    <b-popover :target="uniqueId" triggers="click blur" custom-class="locales-menu__list" ref="popover">
       <div class="dropdown-menu show position-static border-0 px-2 bg-none">
         <a href="#" class="dropdown-item" v-for="locale in locales" :key="locale.key" @click.prevent="chooseLocale(locale.key)" :class="{ active: locale === currentLocale }">
           {{ locale.label }}
@@ -22,7 +22,7 @@ import find from 'lodash/find'
 import settings from '@/utils/settings'
 
 export default {
-  name: 'LocalesDropdown',
+  name: 'LocalesMenu',
   props: {
     size: {
       type: String
@@ -47,7 +47,7 @@ export default {
       return find(this.locales, { key })
     },
     uniqueId () {
-      return uniqueId('locales-dropdown')
+      return uniqueId('locales-menu')
     }
   },
   methods: {
@@ -80,7 +80,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .locales-dropdown {
+  .locales-menu {
 
     &__menu {
 
