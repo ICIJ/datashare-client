@@ -278,7 +278,8 @@ export const mutations = {
     const values = castArray(filter.value)
     // Look for existing values for this name
     const existingValues = get(state, ['values', filter.name], [])
-    Vue.set(state.values, filter.name, uniq(existingValues.concat(values)))
+    const existingValuesAsString = map(existingValues, value => value.toString())
+    Vue.set(state.values, filter.name, uniq(existingValuesAsString.concat(values)))
   },
   setFilterValue (state, filter) {
     Vue.set(state.values, filter.name, castArray(filter.value))

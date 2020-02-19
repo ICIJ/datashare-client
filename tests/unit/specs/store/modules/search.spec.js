@@ -243,21 +243,17 @@ describe('SearchStore', () => {
     expect(store.getters['search/findFilter']('contentType').values).toHaveLength(3)
   })
 
-  it('should add a filter value only once (1/2)', async () => {
-    await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(1)
-    await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(1)
+  it('should add a filter value only once', async () => {
+    await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['txt', 'csv', 'pdf'] })
+    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(3)
+    await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['txt', 'pdf'] })
+    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(3)
   })
 
-  it('should add filter values only once (2/2)', async () => {
-    await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['txt', 'csv'] })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(2)
-    await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(2)
-    await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['csv'] })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(2)
-    await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['csv', 'pdf'] })
+  it('should add a filter value only once even if numbers', async () => {
+    await store.dispatch('search/addFilterValue', { name: 'contentType', value: [1, 2, 3] })
+    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(3)
+    await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['1', '2'] })
     expect(store.getters['search/findFilter']('contentType').values).toHaveLength(3)
   })
 
