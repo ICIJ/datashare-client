@@ -47,21 +47,26 @@
 </template>
 
 <script>
-import { getCookie } from 'tiny-cookie'
+import filter from 'lodash/filter'
 import first from 'lodash/first'
 import get from 'lodash/get'
-import filter from 'lodash/filter'
 import kebabCase from 'lodash/kebabCase'
 import range from 'lodash/range'
-import startCase from 'lodash/startCase'
 import sortBy from 'lodash/sortBy'
+import startCase from 'lodash/startCase'
 import Fuse from 'fuse.js'
+import { getCookie } from 'tiny-cookie'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
+
 import shortkeys from '@/mixins/shortkeys'
 
 export default {
   name: 'SpreadsheetViewer',
-  props: ['document'],
+  props: {
+    document: {
+      type: Object
+    }
+  },
   mixins: [shortkeys],
   components: {
     DynamicScroller,
@@ -69,11 +74,12 @@ export default {
   },
   data () {
     return {
-      isReady: false,
       activeSheetIndex: 0,
-      meta: null,
       fieldsInFirstItem: false,
-      filter: ''
+      filter: '',
+      fuse: null,
+      isReady: false,
+      meta: null
     }
   },
   async mounted () {
@@ -83,6 +89,14 @@ export default {
     this.activeSheetIndex = 0
     this.isReady = true
     this.$Progress.finish()
+    const keys = range(this.firstItem.length).map(String)
+    const options = {
+      distance: 100,
+      keys,
+      shouldSort: true,
+      threshold: 0.1
+    }
+    this.fuse = new Fuse(this.items, options)
   },
   computed: {
     tableVars () {
@@ -127,15 +141,7 @@ export default {
     },
     filteredItems () {
       if (this.filter === '') return this.items
-      const keys = range(this.firstItem.length).map(String)
-      const options = {
-        distance: 100,
-        keys,
-        shouldSort: true,
-        threshold: 0.1
-      }
-      const fuse = new Fuse(this.items, options)
-      return fuse.search(this.filter)
+      return this.fuse.search(this.filter)
     },
     items () {
       const items = get(this, `meta.content.${this.activeSheet}`, [])
