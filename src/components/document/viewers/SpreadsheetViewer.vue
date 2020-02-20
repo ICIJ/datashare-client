@@ -101,7 +101,7 @@ export default {
     debounceFilterInput: debounce(function ({ target: { value } }) {
       this.$wait.start('spreadsheet filtering')
       this.$set(this, 'filter', value)
-    }, 1000)
+    }, 500)
   },
   computed: {
     tableVars () {
@@ -167,7 +167,7 @@ export default {
     },
     fuse () {
       const keys = range(this.firstItem.length).map(String)
-      const options = { distance: 100, keys, shouldSort: true, threshold: 0.1 }
+      const options = { distance: 100, keys, shouldSort: true, threshold: 0.1, tokenize: true }
       return new Fuse(this.items, options)
     }
   }
