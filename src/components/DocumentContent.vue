@@ -1,34 +1,36 @@
 <script>
-import { mapGetters, mapState } from 'vuex'
-import xss from 'xss'
 import compact from 'lodash/compact'
 import identity from 'lodash/identity'
 import once from 'lodash/once'
 import template from 'lodash/template'
 import throttle from 'lodash/throttle'
 import trim from 'lodash/trim'
+import { mapGetters, mapState } from 'vuex'
+import xss from 'xss'
 
 import DocumentAttachments from '@/components/DocumentAttachments'
-import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
-import { highlight } from '@/utils/strings'
-import LocalSearchWorker from '@/utils/local-search.webworker'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
+import LocalSearchWorker from '@/utils/local-search.webworker'
+import { highlight } from '@/utils/strings'
 
 export default {
   name: 'DocumentContent',
   components: {
     DocumentAttachments,
-    DocumentTranslatedContent,
     DocumentGlobalSearchTermsTags,
     DocumentLocalSearchInput
   },
   mixins: [ner, utils],
   props: {
-    document: Object,
-    translatedContent: String
+    document: {
+      type: Object
+    },
+    translatedContent: {
+      type: String
+    }
   },
   data () {
     return {
@@ -153,6 +155,12 @@ export default {
     }
   },
   computed: {
+    ...mapState('document', ['isLoadingNamedEntities']),
+    ...mapGetters('document', ['namedEntities']),
+    ...mapGetters('search', {
+      globalSearchTerms: 'retrieveContentQueryTerms',
+      globalSearchTermsInContent: 'retrieveContentQueryTermsInContent'
+    }),
     showNamedEntities: {
       set (toggler) {
         this.$store.commit('document/toggleShowNamedEntities', toggler)
@@ -181,16 +189,6 @@ export default {
     namedEntityMarkTemplate () {
       return template('<mark class="ner <%= classNames %>" title="<%= extractor %>"><%= mention %></mark>')
     },
-    ...mapGetters('search', {
-      globalSearchTerms: 'retrieveContentQueryTerms',
-      globalSearchTermsInContent: 'retrieveContentQueryTermsInContent'
-    }),
-    ...mapGetters('document', {
-      namedEntities: 'namedEntities'
-    }),
-    ...mapState('document', {
-      isLoadingNamedEntities: 'isLoadingNamedEntities'
-    }),
     content () {
       return this.translatedContent || this.document.source.content
     }
