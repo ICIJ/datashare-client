@@ -166,7 +166,6 @@ import filter from 'lodash/filter'
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import includes from 'lodash/includes'
-import isString from 'lodash/isString'
 import map from 'lodash/map'
 import range from 'lodash/range'
 import throttle from 'lodash/throttle'
@@ -237,10 +236,9 @@ export default {
     }
   },
   created () {
-    const projectsFromConfig = this.$config.get('datashare_indices', '[]')
-    const projects = isString(projectsFromConfig) ? JSON.parse(projectsFromConfig) : projectsFromConfig
+    const projects = this.$config.get('datashare_indices', [])
     this.$set(this, 'projects', map(projects, value => { return { value, text: value } }))
-    this.$set(this, 'project', get(this.projects, ['0', 'value'], 'local-datashare'))
+    this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
   },
   methods: {
     searchFileTypes: throttle(function () {
@@ -283,7 +281,7 @@ export default {
       this.$set(this, 'name', '')
       this.$set(this, 'csvFile', null)
       this.$set(this, 'description', '')
-      this.$set(this, 'project', get(this.projects, ['0', 'value'], 'local-datashare'))
+      this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
       this.$set(this, 'phraseMatch', true)
       this.$set(this, 'fuzziness', 0)
       this.$set(this, 'fileType', '')
