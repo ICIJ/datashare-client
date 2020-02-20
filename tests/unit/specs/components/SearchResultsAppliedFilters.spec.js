@@ -42,6 +42,12 @@ describe('SearchResultsAppliedFilters.vue', () => {
       expect(wrapper.vm.filters[0].label).toBe('2019-05')
     })
 
+    it('should translate the label of a filter date, even if it is a string ie. coming from the url query', () => {
+      store.commit('search/setFilterValue', { name: 'indexingDate', value: '1556668800000' })
+
+      expect(wrapper.vm.filters[0].label).toBe('2019-05')
+    })
+
     it('should translate the label of a filter date range', () => {
       store.commit('search/setFilterValue', { name: 'creationDate', value: [1556668800000, 1566908357980] })
 

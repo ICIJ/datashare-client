@@ -10,6 +10,7 @@ import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
 import { FilterDate } from '@/store/filters'
 import map from 'lodash/map'
+import parseInt from 'lodash/parseInt'
 
 export default {
   name: 'SearchResultsAppliedFilters',
@@ -28,7 +29,7 @@ export default {
         map(filter.values, value => {
           let label = filter.itemLabel ? filter.itemLabel({ key: value, key_as_string: value }) : value
           label = this.$te(label) ? this.$t(label) : label
-          if (filter.component === new FilterDate().component && Number.isInteger(label)) {
+          if (filter.component === new FilterDate().component && parseInt(label)) {
             const date = new Date(parseInt(label))
             label = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
           }
