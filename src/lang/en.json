@@ -381,7 +381,10 @@
     "on": "on",
     "spreadsheet": {
       "fieldsInFirstItem": "Headers in the first row",
-      "findInSpreadsheet": "Find in spreadsheet"
+      "findInSpreadsheet": "Find in spreadsheet",
+      "filtered": {
+        "rows": "No matches | One row | {count} rows"
+      }
     },
     "attachments": {
       "heading": "No attachments | One attachment | {total} attachments",

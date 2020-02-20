@@ -11,8 +11,15 @@
         <b-form-checkbox v-model="fieldsInFirstItem" switch class="ml-3">
           {{ $t('document.spreadsheet.fieldsInFirstItem') }}
         </b-form-checkbox>
-        <div class="spreadsheet-viewer__content__toolbox__filter flex-grow-1 pl-3">
-          <input type="search" class="form-control float-right" v-model="filter" :placeholder="$t('document.spreadsheet.findInSpreadsheet')" v-shortkey.focus="['ctrl', 'f']"/>
+        <div class="spreadsheet-viewer__content__toolbox__filter pl-3 text-right flex-grow-1" :class="{ 'spreadsheet-viewer__content__toolbox__filter--filtered': filter }">
+          <div class="input-group justify-content-end">
+            <input type="search" class="form-control" v-model="filter" :placeholder="$t('document.spreadsheet.findInSpreadsheet')" v-shortkey.focus="['ctrl', 'f']"/>
+            <div class="input-group-append" v-if="filter">
+              <div class="input-group-text">
+                {{ $tc('document.spreadsheet.filtered.rows', filteredItems.length) }}
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <div class="spreadsheet-viewer__content__table mx-3 small flex-grow-1" :style="tableVars">
@@ -160,6 +167,7 @@ export default {
       } else {
         return null
       }
+      return null
     }
   }
 }
@@ -178,11 +186,29 @@ export default {
         box-shadow: 0 -1 * $spacer 0 0 white;
 
         &__filter {
+          max-width: 300px;
+          margin-left: auto;
+
+          &--filtered input.form-control {
+            border-right: 0;
+
+            &:focus + .input-group-append .input-group-text {
+              border-color: $input-focus-border-color;
+            }
+          }
 
           input.form-control {
-            max-width: 300px;
             width: 100%;
             border-radius: 1.5em;
+          }
+
+          .input-group-text {
+            font-size: 0.8rem;
+            color: $text-muted;
+            border-radius: 0 1.5em 1.5em 0;
+            background: $input-bg;
+            margin-left: -1px;
+            transition: $input-transition;
           }
         }
       }
