@@ -2,16 +2,10 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { Core } from '@/core'
-import { getOS } from '@/utils/utils'
+import { getShortkeyOS } from '@/utils/utils'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 
-jest.mock('@/utils/utils', () => {
-  return {
-    getOS: jest.fn(),
-    getShortkeyOS: jest.fn(),
-    isAuthenticated: jest.fn()
-  }
-})
+jest.mock('@/utils/utils')
 
 const { localVue, store } = Core.init(createLocalVue()).useAll()
 
@@ -23,7 +17,6 @@ describe('SearchDocumentNavbar.vue', () => {
 
   beforeEach(() => {
     wrapper = shallowMount(SearchDocumentNavbar, { localVue, store, mocks: { $t: msg => msg } })
-    getOS.mockReset()
   })
 
   afterAll(() => jest.unmock('@/utils/utils'))
@@ -33,13 +26,13 @@ describe('SearchDocumentNavbar.vue', () => {
   })
 
   it('should return the tooltip for mac', () => {
-    getOS.mockImplementation(() => 'mac')
+    getShortkeyOS.mockReturnValueOnce('mac')
 
     expect(wrapper.vm.previousTooltip).toBe('search.nav.previous.tooltipMac')
   })
 
   it('should return the tooltip for NOT mac', () => {
-    getOS.mockImplementation(() => 'default')
+    getShortkeyOS.mockReturnValueOnce('default')
 
     expect(wrapper.vm.previousTooltip).toBe('search.nav.previous.tooltipOthers')
   })

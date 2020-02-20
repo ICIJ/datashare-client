@@ -43,7 +43,7 @@ import { mapState } from 'vuex'
 import findIndex from 'lodash/findIndex'
 import first from 'lodash/first'
 import last from 'lodash/last'
-import { getOS } from '@/utils/utils'
+import { getShortkeyOS } from '@/utils/utils'
 import shortkeys from '@/mixins/shortkeys'
 
 import DocumentActions from '@/components/DocumentActions'
@@ -104,10 +104,10 @@ export default {
       return this.response.hits[this.currentDocumentIndex + 1]
     },
     previousTooltip () {
-      return getOS() === 'mac' ? this.$t('search.nav.previous.tooltipMac') : this.$t('search.nav.previous.tooltipOthers')
+      return getShortkeyOS() === 'mac' ? this.$t('search.nav.previous.tooltipMac') : this.$t('search.nav.previous.tooltipOthers')
     },
     nextTooltip () {
-      return getOS() === 'mac' ? this.$t('search.nav.next.tooltipMac') : this.$t('search.nav.next.tooltipOthers')
+      return getShortkeyOS() === 'mac' ? this.$t('search.nav.next.tooltipMac') : this.$t('search.nav.next.tooltipOthers')
     }
   },
   mounted () {

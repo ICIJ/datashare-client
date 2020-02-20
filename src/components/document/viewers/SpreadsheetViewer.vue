@@ -13,7 +13,7 @@
         </b-form-checkbox>
         <div class="spreadsheet-viewer__content__toolbox__filter pl-3 text-right flex-grow-1" :class="{ 'spreadsheet-viewer__content__toolbox__filter--filtered': filter }">
           <div class="input-group justify-content-end">
-            <input type="search" class="form-control" @input="debounceFilterInput" :placeholder="$t('document.spreadsheet.findInSpreadsheet')" v-shortkey.focus="['ctrl', 'f']"/>
+            <input type="search" class="form-control" @input="debounceFilterInput" :placeholder="$t('document.spreadsheet.findInSpreadsheet')" v-shortkey.focus="getShortcut"/>
             <div class="input-group-append" v-if="filter">
               <div class="input-group-text">
                 {{ $tc('document.spreadsheet.filtered.rows', filteredItems.length) }}
@@ -65,6 +65,7 @@ import debounce from 'lodash/debounce'
 import Fuse from 'fuse.js'
 import { getCookie } from 'tiny-cookie'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
+import { getShortkeyOS } from '@/utils/utils'
 
 import shortkeys from '@/mixins/shortkeys'
 
@@ -169,6 +170,13 @@ export default {
       const keys = range(this.firstItem.length).map(String)
       const options = { distance: 100, keys, shouldSort: true, threshold: 0.1, tokenize: true }
       return new Fuse(this.items, options)
+    },
+    getShortcut () {
+      if (getShortkeyOS() === 'mac') {
+        return ['meta', 'f']
+      } else {
+        return ['ctrl', 'f']
+      }
     }
   }
 }

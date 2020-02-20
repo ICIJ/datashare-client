@@ -158,13 +158,14 @@ export default {
       store.dispatch('indexing/deleteDoneTasks')
     },
     taskLabel (name) {
-      let nameAndId = last(name.split('.')).split('@')
+      const nameAndId = last(name.split('.')).split('@')
       return nameAndId[0] + ' <span class="badge badge-light text-muted">' + nameAndId[1] + '</span>'
     },
     taskStateToClass (state) {
-      switch (state) {
-        case 'RUNNING': return 'bg-info progress-bar-striped progress-bar-animated'
-        default: return `bg-${toVariant(state)}`
+      if (state === 'RUNNING') {
+        return 'bg-info progress-bar-striped progress-bar-animated'
+      } else {
+        return `bg-${toVariant(state)}`
       }
     },
     getProgress (value, state) {
