@@ -3,7 +3,7 @@
     {{ $t('document.fetching') }}
   </div>
   <div class="paginated-viewer d-flex" v-else-if="meta.previewable">
-    <div id="paginated-viewer__header" class="bg-light px-3 py-2">
+    <div id="paginated-viewer__header" class="bg-light px-3 py-2 paginated-viewer__header">
       <div id="paginated-viewer__thumbnails" class="paginated-viewer__thumbnails">
         <div class="text-center mt-2 mb-4 d-flex align-items-center viewer__thumbnails__header" v-if="isReady">
           <select class="form-control form-control-sm" v-model.number="active">
@@ -92,17 +92,22 @@ export default {
 
 <style lang="scss">
   .paginated-viewer {
-    position: relative;
     min-height: 100%;
     min-width: 100%;
+    position: relative;
+
+    &__header {
+      height: 100%;
+      overflow-y: auto;
+      position: absolute;
+      width: 150px;
+    }
 
     &__thumbnails {
-      width: 120px;
-
       &__item {
-        position: relative;
-        border:1px solid $border-color;
+        border: 1px solid $border-color;
         cursor: pointer;
+        position: relative;
 
         img {
           width: 100%;
@@ -110,7 +115,7 @@ export default {
 
         &:hover {
           border-color: $primary;
-          box-shadow:0 0 0 0.1em rgba($primary, .2);
+          box-shadow: 0 0 0 0.1em rgba($primary, .2);
         }
 
         &--active, &--active:hover {
@@ -123,24 +128,22 @@ export default {
         }
 
         &__page {
-          position: absolute;
-          bottom: 0;
-          right: 0;
           background: $light;
-          font-size: 0.8em;
-          padding: 0.2em 0.4em;
-          font-weight: bold;
-          border:1px solid $border-color;
-          border-right: 0;
+          border: 1px solid $border-color;
           border-bottom: 0;
+          border-right: 0;
+          bottom: 0;
+          font-size: 0.8em;
+          font-weight: bold;
+          padding: 0.2em 0.4em;
+          position: absolute;
+          right: 0;
         }
       }
     }
 
     &__preview {
-      width: 110%;
-      flex-grow: 1;
-      min-width: 0;
+      margin-left: 150px;
 
       img {
         max-width: 100%;
