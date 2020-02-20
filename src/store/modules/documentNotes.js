@@ -4,7 +4,7 @@ import set from 'lodash/set'
 
 import Api from '@/api'
 
-export const datashare = new Api()
+export const api = new Api()
 
 export function initialState () {
   return {
@@ -29,7 +29,7 @@ export const actions = {
   },
   async retrieveNotes ({ state, commit, dispatch }, { project, path }) {
     if (!hasIn(state.notes, project)) {
-      const notes = await datashare.retrieveNotes(project)
+      const notes = await api.retrieveNotes(project)
       commit('setNotes', { project, notes })
     }
     return dispatch('filterNotesByPath', { project, path })

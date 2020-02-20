@@ -14,7 +14,7 @@ import Api from '@/api'
 import elasticsearch from '@/api/elasticsearch'
 import EsDocList from '@/api/resources/EsDocList'
 
-export const datashare = new Api()
+export const api = new Api()
 export const auth = new Auth()
 
 export function initialState () {
@@ -23,10 +23,10 @@ export function initialState () {
     doc: null,
     isLoadingNamedEntities: false,
     namedEntitiesPaginatedByCategories: {
-      'PERSON': [],
-      'ORGANIZATION': [],
-      'LOCATION': [],
-      'EMAIL': []
+      PERSON: [],
+      ORGANIZATION: [],
+      LOCATION: [],
+      EMAIL: []
     },
     parentDocument: null,
     showNamedEntities: false,
@@ -156,7 +156,7 @@ export const actions = {
     }
   },
   async getFirstPageForNamedEntityInAllCategories ({ dispatch, getters }) {
-    for (const category of getters['categories']) {
+    for (const category of getters.categories) {
       await dispatch('getFirstPageForNamedEntityInCategory', category)
     }
   },
@@ -183,7 +183,7 @@ export const actions = {
   },
   async getTags ({ state, commit }) {
     try {
-      const tags = await datashare.getTags(state.doc.index, state.doc.id)
+      const tags = await api.getTags(state.doc.index, state.doc.id)
       commit('tags', tags)
     } catch (_) {
       commit('tags')
@@ -191,7 +191,7 @@ export const actions = {
     return state.tags
   },
   async tag ({ state, dispatch }, { documents, tag }) {
-    await datashare.tagDocuments(state.doc.index, map(documents, 'id'), compact(tag.split(' ')))
+    await api.tagDocuments(state.doc.index, map(documents, 'id'), compact(tag.split(' ')))
     if (documents.length === 1) await dispatch('addTag', tag)
   },
   async addTag ({ state, commit }, tag) {
@@ -199,7 +199,7 @@ export const actions = {
     commit('addTag', { tag, userId })
   },
   async deleteTag ({ state, commit }, { documents, tag }) {
-    await datashare.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
+    await api.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
     if (documents.length === 1) commit('deleteTag', tag)
   }
 }

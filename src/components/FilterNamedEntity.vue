@@ -33,7 +33,7 @@ import FilterBoilerplate from '@/components/FilterBoilerplate'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 
-const datashare = new Api()
+const api = new Api()
 
 export default {
   name: 'FilterNamedEntity',
@@ -41,7 +41,7 @@ export default {
   mixins: [filters, ner, utils],
   methods: {
     async deleteNamedEntitiesByMentionNorm (mentionNorm) {
-      await datashare.deleteNamedEntitiesByMentionNorm(this.$store.state.search.index, mentionNorm)
+      await api.deleteNamedEntitiesByMentionNorm(this.$store.state.search.index, mentionNorm)
       this.$root.$emit('filter::hide::named-entities')
       if (this.$refs.filter) {
         this.$refs.filter.aggregate()

@@ -2,7 +2,7 @@ import remove from 'lodash/remove'
 
 import Api from '@/api'
 
-export const datashare = new Api()
+export const api = new Api()
 
 export function initialState () {
   return {
@@ -32,25 +32,25 @@ export const mutations = {
 export const actions = {
   async getBatchSearches ({ commit }) {
     try {
-      const batchSearches = await datashare.getBatchSearches()
+      const batchSearches = await api.getBatchSearches()
       return commit('batchSearches', batchSearches)
     } catch (_) {}
   },
   async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published }) {
     try {
-      await datashare.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
+      await api.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
       return dispatch('getBatchSearches')
     } catch (_) {}
   },
   async getBatchSearchResults ({ state, commit }, { batchId, from, size, queries, sort, order }) {
     try {
-      const results = await datashare.getBatchSearchResults(batchId, from, size, queries, sort, order)
+      const results = await api.getBatchSearchResults(batchId, from, size, queries, sort, order)
       return commit('results', results)
     } catch (_) {}
   },
   async deleteBatchSearch ({ state }, { batchId }) {
     try {
-      await datashare.deleteBatchSearch(batchId)
+      await api.deleteBatchSearch(batchId)
       remove(state.batchSearches, batchSearch => batchSearch === batchId)
       return true
     } catch (_) {
@@ -59,12 +59,12 @@ export const actions = {
   },
   async updateBatchSearch ({ state }, { batchId, published }) {
     try {
-      await datashare.updateBatchSearch(batchId, published)
+      await api.updateBatchSearch(batchId, published)
     } catch (_) {}
   },
   async deleteBatchSearches ({ commit }) {
     try {
-      await datashare.deleteBatchSearches()
+      await api.deleteBatchSearches()
       return commit('batchSearches', [])
     } catch (_) {}
   }

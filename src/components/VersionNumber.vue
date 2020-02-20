@@ -58,8 +58,8 @@ export default {
   },
   methods: {
     async fetchVersion () {
-      const datashare = new Api()
-      return datashare.getVersion()
+      const api = new Api()
+      return api.getVersion()
     },
     async setVersion () {
       const version = await this.fetchVersion()
