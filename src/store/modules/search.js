@@ -22,6 +22,7 @@ import orderBy from 'lodash/orderBy'
 import range from 'lodash/range'
 import random from 'lodash/random'
 import reduce from 'lodash/reduce'
+import toString from 'lodash/toString'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
 import Vue from 'vue'
@@ -278,7 +279,7 @@ export const mutations = {
     const values = castArray(filter.value)
     // Look for existing values for this name
     const existingValues = get(state, ['values', filter.name], [])
-    const existingValuesAsString = map(existingValues, value => value.toString())
+    const existingValuesAsString = map(existingValues, value => toString(value))
     Vue.set(state.values, filter.name, uniq(existingValuesAsString.concat(values)))
   },
   setFilterValue (state, filter) {
