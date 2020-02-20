@@ -4,6 +4,8 @@ import { createLocalVue } from '@vue/test-utils'
 
 import { createCore } from '@/core'
 
+const { localVue } = createLocalVue()
+
 jest.mock('axios', () => {
   return {
     get: jest.fn().mockResolvedValue({ data: {} }),
@@ -12,15 +14,17 @@ jest.mock('axios', () => {
 })
 
 describe('main', () => {
-  beforeEach(() => {
-    const core = document.createElement('div')
-    core.setAttribute('id', 'app')
-    document.body.appendChild(core)
+  let core, vm
+
+  beforeEach(async () => {
+    const app = document.createElement('div')
+    app.setAttribute('id', 'app')
+    document.body.appendChild(app)
+    core = createCore(localVue)
+    vm = await core.ready.then(() => core.mount())
   })
 
-  it('should instantiate Vue', async () => {
-    const core = createCore(createLocalVue())
-    const vm = await core.ready.then(() => core.mount())
+  it('should instantiate Vue', () => {
     expect(vm).toBeInstanceOf(Vue)
     expect(vm.$router).toBeDefined()
     expect(vm.$store).toBeDefined()
@@ -28,16 +32,14 @@ describe('main', () => {
 
   it('should set the config', async () => {
     axios.request.mockReturnValue({ data: { userProjects: ['first-index'], key: 'value' } })
-    const core = createCore(createLocalVue())
+    const core = createCore(localVue)
     const vm = await core.ready.then(() => core.mount())
     expect(vm.$config).toBeDefined()
     expect(vm.$config.get('userProjects')).toEqual(['first-index'])
-    expect(vm.$config.get('key')).toEqual('value')
+    expect(vm.$config.get('key')).toBe('value')
   })
 
-  it('should find several hooked components by their target name', async () => {
-    const core = createCore(createLocalVue())
-    await core.ready.then(() => core.mount())
+  it('should find several hooked components by their target name', () => {
     core.resetHooks()
     core.registerHook({ target: 'foo' })
     core.registerHook({ target: 'baz' })
@@ -45,9 +47,7 @@ describe('main', () => {
     expect(core.store.getters['hooks/filterHookedComponentsByTarget']('baz')).toHaveLength(2)
   })
 
-  it('should unregister all components on a hook', async () => {
-    const core = createCore(createLocalVue())
-    await core.ready.then(() => core.mount())
+  it('should unregister all components on a hook', () => {
     core.resetHooks()
     core.registerHook({ target: 'foo' })
     core.registerHook({ target: 'baz' })
