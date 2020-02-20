@@ -15,11 +15,11 @@ describe('JsonViewer.vue', () => {
     wrapper = shallowMount(JsonViewer, { localVue, propsData: { document }, methods })
   })
 
-  it('should render an array of 1 element', async () => {
+  it('should render an array of 1 element', () => {
     expect(wrapper.find('.json-formatter-row:nth-child(1) .json-formatter-value').text()).toBe('Array[2]')
   })
 
-  it('should render an open row', async () => {
+  it('should render an open row', () => {
     expect(wrapper.find('.json-formatter-row.json-formatter-open').exists()).toBeTruthy()
   })
 })
