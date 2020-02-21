@@ -1,50 +1,56 @@
 <template>
-  <div v-if="!isReady" class="p-3 w-100 text-muted">
-    {{ $t('document.fetching') }}
-  </div>
-  <VuePerfectScrollbar class="paginated-viewer d-flex" v-else-if="meta.previewable" v-once>
-    <div id="paginated-viewer__header" class="bg-light px-3 py-2 paginated-viewer__header">
-      <div id="paginated-viewer__thumbnails" class="paginated-viewer__thumbnails">
-        <div class="text-center mt-2 mb-4 d-flex align-items-center viewer__thumbnails__header" v-if="isReady">
-          <select class="form-control form-control-sm" v-model.number="active">
-            <option v-for="page in pagesRange" :key="page" :value="page">
+  <v-wait for="load_data">
+    <div class="p-3 w-100 text-muted" slot="waiting">
+      {{ $t('document.fetching') }}
+    </div>
+    <VuePerfectScrollbar class="paginated-viewer d-flex" v-if="meta.previewable" v-once>
+      <div id="paginated-viewer__header" class="bg-light px-3 py-2 paginated-viewer__header">
+        <div id="paginated-viewer__thumbnails" class="paginated-viewer__thumbnails">
+          <div class="text-center mt-2 mb-4 d-flex align-items-center viewer__thumbnails__header">
+            <select class="form-control form-control-sm" v-model.number="active">
+              <option v-for="page in pagesRange" :key="page" :value="page">
+                {{ page + 1 }}
+              </option>
+            </select>
+            <span class="w-100">
+              / {{ meta.pages }}
+            </span>
+          </div>
+          <div v-for="page in pagesRange" :key="page" @click="active = page" class="my-2 paginated-viewer__thumbnails__item" :class="{ 'paginated-viewer__thumbnails__item--active': active === page }">
+            <document-thumbnail :document="document" size="150" :page="page" lazy class="w-100 border-0" />
+            <span class="paginated-viewer__thumbnails__item__page">
               {{ page + 1 }}
-            </option>
-          </select>
-          <span class="w-100">
-            / {{ meta.pages }}
-          </span>
-        </div>
-        <div v-for="page in pagesRange" :key="page" @click="active = page" class="my-2 paginated-viewer__thumbnails__item" :class="{ 'paginated-viewer__thumbnails__item--active': active === page }">
-          <document-thumbnail :document="document" size="150" :page="page" lazy class="w-100 border-0" />
-          <span class="paginated-viewer__thumbnails__item__page">
-            {{ page + 1 }}
-          </span>
+            </span>
+          </div>
         </div>
       </div>
+      <div class="paginated-viewer__preview p-3 text-center">
+        <document-thumbnail :document="document" size="1200" :page="active" :key="active" class="w-auto d-inline-block" />
+      </div>
+    </VuePerfectScrollbar>
+    <div class="p-3" v-else>
+      {{ $t('document.not_available') }}
     </div>
-    <div class="paginated-viewer__preview p-3 text-center">
-      <document-thumbnail :document="document" size="1200" :page="active" :key="active" class="w-auto d-inline-block" />
-    </div>
-  </VuePerfectScrollbar>
-  <div class="p-3" v-else>
-    {{ $t('document.not_available') }}
-  </div>
+  </v-wait>
 </template>
 
 <script>
-import { getCookie } from 'tiny-cookie'
 import kebabCase from 'lodash/kebabCase'
-import startCase from 'lodash/startCase'
 import range from 'lodash/range'
+import startCase from 'lodash/startCase'
+import axios from 'axios'
+import { getCookie } from 'tiny-cookie'
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
 
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-
 export default {
   name: 'PaginatedViewer',
-  props: ['document'],
+  props: {
+    document: {
+      type: Object
+    }
+  },
   components: {
     DocumentThumbnail,
     VuePerfectScrollbar
@@ -52,18 +58,17 @@ export default {
   data () {
     return {
       active: 0,
-      isReady: false,
       meta: {
         pages: 1
       }
     }
   },
   async mounted () {
+    this.$wait.start('load_data')
     this.$Progress.start()
-    const response = await fetch(this.metaUrl, this.metaOptions)
-    this.meta = await response.json()
-    this.isReady = true
+    this.meta = (await axios({ url: this.metaUrl, ...this.metaOptions })).data
     this.$Progress.finish()
+    this.$wait.end('load_data')
   },
   computed: {
     pagesRange () {
