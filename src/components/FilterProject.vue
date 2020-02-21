@@ -52,7 +52,9 @@ export default {
     }
   },
   async created () {
-    this.$set(this, 'projects', map(this.$config.get('datashare_indices', []), value => ({ value, text: value })))
+    const defaultProjects = [this.$config.get('defaultProject')]
+    const projects = this.$config.get('datashare_projects', defaultProjects)
+    this.$set(this, 'projects', map(projects, value => ({ value, text: value })))
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')
   },
