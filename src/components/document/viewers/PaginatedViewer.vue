@@ -2,7 +2,7 @@
   <div v-if="!isReady" class="p-3 w-100 text-muted">
     {{ $t('document.fetching') }}
   </div>
-  <div class="paginated-viewer d-flex" v-else-if="meta.previewable">
+  <VuePerfectScrollbar class="paginated-viewer d-flex" v-else-if="meta.previewable" v-once>
     <div id="paginated-viewer__header" class="bg-light px-3 py-2 paginated-viewer__header">
       <div id="paginated-viewer__thumbnails" class="paginated-viewer__thumbnails">
         <div class="text-center mt-2 mb-4 d-flex align-items-center viewer__thumbnails__header" v-if="isReady">
@@ -26,7 +26,7 @@
     <div class="paginated-viewer__preview p-3 text-center">
       <document-thumbnail :document="document" size="1200" :page="active" :key="active" class="w-auto d-inline-block" />
     </div>
-  </div>
+  </VuePerfectScrollbar>
   <div class="p-3" v-else>
     {{ $t('document.not_available') }}
   </div>
@@ -40,11 +40,14 @@ import range from 'lodash/range'
 
 import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
 
+import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+
 export default {
   name: 'PaginatedViewer',
   props: ['document'],
   components: {
-    DocumentThumbnail
+    DocumentThumbnail,
+    VuePerfectScrollbar
   },
   data () {
     return {
