@@ -5,13 +5,12 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "node --max_old_space_size=4096 node_modules/@vue/cli-service/bin/vue-cli-service.js build",
-    "test:unit": "TEST_MODE=unit vue-cli-service test:unit --testPathPattern=/unit/ --maxWorkers=5",
+    "test:unit": "vue-cli-service test:unit --testPathPattern=/unit/ --maxWorkers=5",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
-    "test": "yarn test:unit && yarn test:integration && yarn test:e2e",
-    "test:integration": "TEST_MODE=integration vue-cli-service test:unit --testPathPattern=/integration/",
+    "test": "yarn test:unit && yarn test:e2e",
     "test:unit:majestic": "majestic --noOpen",
-    "test:unit:watch": "TEST_MODE=unit vue-cli-service test:unit --testPathPattern=/unit/ --watch"
+    "test:unit:watch": "vue-cli-service test:unit --testPathPattern=/unit/ --watch"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.4",
@@ -82,13 +81,11 @@
     "html-loader": "^0.5.5",
     "isomorphic-fetch": "^2.2.1",
     "jest-canvas-mock": "^2.1.1",
-    "jest-puppeteer": "^4.3.0",
     "json-loader": "^0.5.7",
     "lint-staged": "^10.0.7",
     "markdown-loader": "^5.1.0",
     "marked": "^0.8.0",
     "node-sass": "^4.12.0",
-    "puppeteer": "^2.1.0",
     "sass-loader": "^8.0.0",
     "sass-resources-loader": "^2.0.1",
     "vue-template-compiler": "^2.6.11",
@@ -140,9 +137,6 @@
   },
   "majestic": {
     "jestScriptPath": "./node_modules/@vue/cli-service/bin/vue-cli-service.js",
-    "env": {
-      "TEST_MODE": "unit"
-    },
     "args": [
       "test:unit",
       "--config=./jest.config.js",

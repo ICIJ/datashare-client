@@ -1,7 +1,3 @@
-const { defaults } = require('jest-config')
-
-const { TEST_MODE } = process.env
-
 module.exports = {
   setupFilesAfterEnv: ['<rootDir>/tests/unit/setup.js'],
   moduleFileExtensions: [
@@ -25,7 +21,7 @@ module.exports = {
   snapshotSerializers: [
     'jest-serializer-vue'
   ],
-  testMatch: TEST_MODE === 'integration' ? ['**/tests/integration/**/*.spec.js'] : ['**/tests/unit/**/*.spec.js'],
+  testMatch: ['**/tests/unit/**/*.spec.js'],
   coverageDirectory: '<rootDir>/tests/unit/coverage',
   collectCoverage: false,
   collectCoverageFrom: [
@@ -34,9 +30,5 @@ module.exports = {
   testURL: 'http://localhost:9090/',
   setupFiles: [
     'jest-canvas-mock'
-  ],
-  preset: TEST_MODE === 'integration' ? 'jest-puppeteer' : defaults.preset,
-  globalSetup: TEST_MODE === 'integration' ? './tests/integration/config/setup.js' : null,
-  globalTeardown: TEST_MODE === 'integration' ? './tests/integration/config/teardown.js' : null,
-  testEnvironment: TEST_MODE === 'integration' ? './tests/integration/config/puppeteer_environment.js' : defaults.testEnvironment
+  ]
 }
