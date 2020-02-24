@@ -3,7 +3,7 @@
     <div class="p-3 w-100 text-muted" slot="waiting">
       {{ $t('document.fetching') }}
     </div>
-    <VuePerfectScrollbar class="paginated-viewer d-flex" v-if="meta.previewable" v-once>
+    <VuePerfectScrollbar class="paginated-viewer d-flex" v-if="meta.previewable">
       <div id="paginated-viewer__header" class="bg-light px-3 py-2 paginated-viewer__header">
         <div id="paginated-viewer__thumbnails" class="paginated-viewer__thumbnails">
           <div class="text-center mt-2 mb-4 d-flex align-items-center viewer__thumbnails__header">
