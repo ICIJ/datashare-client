@@ -877,9 +877,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@icij/murmur@1.18.0":
-  version "1.18.0"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-1.18.0.tgz#763bf84223df23e4e30be6ad1165acc084ed4be7"
+"@icij/murmur@1.19.0":
+  version "1.19.0"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-1.19.0.tgz#dcad2006915892844cfb8a641f7d2ee4187626b8"
+  integrity sha512-jyMuTRqGIfNWJt1VtG1tssXtmmY+nmA40/o3bAsXflMYjYRwfaXDTLYb7aV+BXzBGuNdtgQbEvmJ8VJA2awSLw==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
     "@fortawesome/fontawesome-svg-core" "^1.2.19"

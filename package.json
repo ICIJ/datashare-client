@@ -18,7 +18,7 @@
     "@fortawesome/free-regular-svg-icons": "^5.12.0",
     "@fortawesome/free-solid-svg-icons": "^5.12.0",
     "@fortawesome/vue-fontawesome": "^0.1.9",
-    "@icij/murmur": "1.18.0",
+    "@icij/murmur": "1.19.0",
     "axios": "^0.19.2",
     "bodybuilder": "^2.2.17",
     "bootstrap": ">=4.3.1",
