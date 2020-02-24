@@ -8,7 +8,12 @@
         <span class="my-auto mr-2" v-if="isMultipleQueries">
           {{ $t('search.results.sort.sort') }}
         </span>
-        <b-dropdown :text="$t('search.results.sort.' + sortField)" class="batch-search-results-filters__queries__sort" variant="primary" right v-if="isMultipleQueries">
+        <b-dropdown
+          class="batch-search-results-filters__queries__sort"
+          right
+          :text="$t('search.results.sort.' + sortField)"
+          variant="primary"
+          v-if="isMultipleQueries">
           <b-dropdown-item v-for="key in sortFields" :key="key" @click="sort(key)">
             {{ $t('search.results.sort.' + key) }}
           </b-dropdown-item>
@@ -18,11 +23,11 @@
         <selectable-dropdown
           class="batch-search-results-filters__queries__dropdown border-0 m-0 p-0"
           deactivate-keys
+          @input="onInput"
           :items="queries"
           multiple
           v-if="isMultipleQueries"
-          v-model="selectedQueries"
-          @input="onInput">
+          v-model="selectedQueries">
           <template #item-label="{ item }">
             <div class="d-flex batch-search-results-filters__queries__dropdown__item" :id="item.label">
               <span class="flex-grow-1 text-truncate batch-search-results-filters__queries__dropdown__item__label">
@@ -80,8 +85,9 @@ export default {
     meta () {
       if (this.$store.state.batchSearch) {
         return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || {}
+      } else {
+        return null
       }
-      return null
     },
     metaQueriesKeys () {
       return map(this.meta.queries, (a, b) => { return { label: b, count: a } })
@@ -158,8 +164,8 @@ export default {
           }
 
           &:hover .batch-search-results-filters__queries__dropdown__item__search {
-            display: block;
             color: inherit;
+            display: block;
           }
 
           &:hover .batch-search-results-filters__queries__dropdown__item__count {
