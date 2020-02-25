@@ -381,7 +381,10 @@
     "on": "に",
     "spreadsheet": {
       "fieldsInFirstItem": "最初の列のヘッダー",
-      "findInSpreadsheet": "スプレッドシート内で検索"
+      "findInSpreadsheet": "スプレッドシート内で検索",
+      "filtered": {
+        "rows": "No matches | One row | {count} rows"
+      }
     },
     "attachments": {
       "heading": "添付なし | １件の添付 | {total} 件の添付",
