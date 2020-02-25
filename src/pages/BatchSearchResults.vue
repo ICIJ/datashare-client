@@ -307,9 +307,6 @@ export default {
     store.commit('batchSearch/selectedQueries', [])
     next()
   },
-  mounted () {
-    this.$root.$on('batch-search-results::filter', this.filter)
-  },
   methods: {
     async fetch () {
       this.$set(this, 'isReady', false)

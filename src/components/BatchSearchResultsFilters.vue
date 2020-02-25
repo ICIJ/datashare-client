@@ -120,19 +120,24 @@ export default {
     next()
   },
   methods: {
-    onInput () {
-      this.$root.$emit('batch-search-results::filter')
+    onInput (selectedQueries) {
+      const order = get(this, ['this', '$route', 'order'], undefined)
+      const page = get(this, ['this', '$route', 'page'], undefined)
+      const queries = map(selectedQueries, 'label')
+      const queriesSort = get(this, ['this', '$route', 'queries_sort'], undefined)
+      const sort = get(this, ['this', '$route', 'query'], undefined)
+      this.$router.push({ name: 'batch-search.results', query: { order, page, queries, queries_sort: queriesSort, sort } })
     },
     executeSearch (query) {
       this.$store.commit('search/reset')
       this.$router.push({ name: 'search', query: { q: query } })
     },
-    sort (sortField) {
+    sort (queriesSort) {
       const order = get(this, ['this', '$route', 'order'], undefined)
       const page = get(this, ['this', '$route', 'page'], undefined)
       const queries = get(this, ['this', '$route', 'queries'], undefined)
       const sort = get(this, ['this', '$route', 'query'], undefined)
-      this.$router.push({ name: 'batch-search.results', query: { order, page, queries, sort, queries_sort: sortField } })
+      this.$router.push({ name: 'batch-search.results', query: { order, page, queries, queries_sort: queriesSort, sort } })
     }
   }
 }

@@ -1,5 +1,5 @@
 import toLower from 'lodash/toLower'
-import { createLocalVue, createWrapper, mount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { Core } from '@/core'
@@ -102,19 +102,6 @@ describe('BatchSearchResultsFilters.vue', () => {
   afterAll(() => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
     jest.unmock('@/api')
-  })
-
-  it('should emit a "batch-search-results::filter" event on click on dropdown entry', async () => {
-    await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
-    await store.dispatch('batchSearch/getBatchSearches')
-    wrapper = mount(BatchSearchResultsFilters, { localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
-    const rootWrapper = createWrapper(wrapper.vm.$root)
-    rootWrapper._emitted['batch-search-results::filter'] = []
-
-    wrapper.find('.batch-search-results-filters__queries__dropdown > span').trigger('click')
-    await wrapper.vm.$nextTick()
-
-    expect(rootWrapper.emitted('batch-search-results::filter')).toHaveLength(1)
   })
 
   it('should display simple list if there is only one query', async () => {
