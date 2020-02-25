@@ -20,7 +20,7 @@ export default {
   computed: {
     projects () {
       const defaultProjects = [this.$config.get('defaultProject')]
-      const projects = JSON.parse(this.$config.get('datashare_indices', 'null')) || defaultProjects
+      const projects = this.$config.get('datashare_indices', 'null') || defaultProjects
       return map(projects, value => ({ value, text: value }))
     },
     selectedProject: {
