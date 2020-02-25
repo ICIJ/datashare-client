@@ -23,9 +23,11 @@ import ner from '@/mixins/ner'
 
 export default {
   name: 'SearchResultsLink',
-  mixins: [ ner ],
+  mixins: [ner],
   props: {
-    document: Object
+    document: {
+      type: Object
+    }
   },
   components: {
     DocumentSlicedName,
@@ -34,7 +36,7 @@ export default {
   computed: {
     ...mapState('search', ['query']),
     folder () {
-      let parts = this.document.get('_source.path', '').split('/')
+      const parts = this.document.get('_source.path', '').split('/')
       parts.splice(-1, 1)
       return parts.join('/') + '/'
     },
