@@ -60,8 +60,13 @@
 </template>
 
 <script>
+import castArray from 'lodash/castArray'
+import compact from 'lodash/compact'
+import concat from 'lodash/concat'
+import filter from 'lodash/filter'
 import find from 'lodash/find'
 import get from 'lodash/get'
+import indexOf from 'lodash/indexOf'
 import map from 'lodash/map'
 import orderBy from 'lodash/orderBy'
 
@@ -77,6 +82,7 @@ export default {
   },
   data () {
     return {
+      selectedQueriesOnRouteEnter: [],
       sortField: 'default',
       sortFields: ['default', 'count']
     }
@@ -111,33 +117,41 @@ export default {
       }
     }
   },
+  beforeRouteEnter (to, from, next) {
+    next(vm => {
+      vm.$set(vm, 'selectedQueriesOnRouteEnter', castArray(get(to, ['query', 'queries'], [])))
+    })
+  },
   beforeRouteUpdate (to, from, next) {
     if (to.query.queries_sort === 'count') {
       this.$set(this, 'sortField', 'count')
     } else {
       this.$set(this, 'sortField', 'default')
     }
+    this.$set(this, 'selectedQueries', filter(this.queries, query => indexOf(to.query.queries, query.label) > -1))
     next()
   },
   methods: {
     onInput (selectedQueries) {
-      const order = get(this, ['this', '$route', 'order'], undefined)
-      const page = get(this, ['this', '$route', 'page'], undefined)
-      const queries = map(selectedQueries, 'label')
-      const queriesSort = get(this, ['this', '$route', 'queries_sort'], undefined)
-      const sort = get(this, ['this', '$route', 'query'], undefined)
-      this.$router.push({ name: 'batch-search.results', query: { order, page, queries, queries_sort: queriesSort, sort } })
+      const order = get(this, ['$route', 'query', 'order'], undefined)
+      const page = get(this, ['$route', 'query', 'page'], undefined)
+      const selectedQueriesOnRouteEnter = get(this, 'selectedQueriesOnRouteEnter', [])
+      const queries = compact(concat(selectedQueriesOnRouteEnter, map(selectedQueries, 'label')))
+      const queriesSort = get(this, ['$route', 'query', 'queries_sort'], undefined)
+      const sort = get(this, ['$route', 'query', 'sort'], undefined)
+      this.$set(this, 'selectedQueriesOnRouteEnter', [])
+      this.$router.push({ name: 'batch-search.results', query: { order, page, queries, queries_sort: queriesSort, sort } }).catch(() => {})
     },
     executeSearch (query) {
       this.$store.commit('search/reset')
-      this.$router.push({ name: 'search', query: { q: query } })
+      this.$router.push({ name: 'search', query: { q: query } }).catch(() => {})
     },
     sort (queriesSort) {
-      const order = get(this, ['this', '$route', 'order'], undefined)
-      const page = get(this, ['this', '$route', 'page'], undefined)
-      const queries = get(this, ['this', '$route', 'queries'], undefined)
-      const sort = get(this, ['this', '$route', 'query'], undefined)
-      this.$router.push({ name: 'batch-search.results', query: { order, page, queries, queries_sort: queriesSort, sort } })
+      const order = get(this, ['$route', 'query', 'order'], undefined)
+      const page = get(this, ['$route', 'query', 'page'], undefined)
+      const queries = get(this, ['$route', 'query', 'queries'], undefined)
+      const sort = get(this, ['$route', 'query', 'sort'], undefined)
+      this.$router.push({ name: 'batch-search.results', query: { order, page, queries, queries_sort: queriesSort, sort } }).catch(() => {})
     }
   }
 }
