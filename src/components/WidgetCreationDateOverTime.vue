@@ -45,7 +45,7 @@ export default {
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
       const x = d3.scaleTime()
-        .domain([new Date('2005-01-01'), new Date('2020-01-01')])
+        .domain([d3.min(data, d => d.date), d3.max(data, d => d.date)])
         .range([0, width])
 
       const y = d3.scaleLinear()
@@ -62,12 +62,26 @@ export default {
         .attr('width', '12')
         .attr('height', d => height - y(d.doc_count))
 
+      // Add the x axis
       svg.append('g')
         .attr('transform', `translate(0, ${height})`)
         .call(d3.axisBottom(x))
+      // Text label for the x axis
+      svg.append('text')
+        .attr('transform', `translate(${(width / 2)}, ${(height + margin.top + 20)})`)
+        .style('text-anchor', 'middle')
+        .text('Time')
 
+      // Add the y axis
       svg.append('g')
         .call(d3.axisLeft(y))
+      // Text label for the y axis
+      svg.append('text')
+        .attr('transform', 'rotate(-90)')
+        .attr('y', 15 - margin.left)
+        .attr('x', 0 - (height / 2))
+        .style('text-anchor', 'middle')
+        .text('Number of documents')
     }
   },
   mounted () {
