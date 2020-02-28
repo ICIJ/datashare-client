@@ -1,7 +1,7 @@
 import Component from '@/components/WidgetCreationDateOverTime'
-import WidgetEmpty from './WidgetEmpty'
+import WidgetText from './WidgetText'
 
-class WidgetCreationDateOverTime extends WidgetEmpty {
+class WidgetCreationDateOverTime extends WidgetText {
   get component () {
     return Component
   }
