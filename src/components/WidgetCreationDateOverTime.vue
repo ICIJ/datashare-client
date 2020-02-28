@@ -62,10 +62,16 @@ export default {
         .attr('width', '12')
         .attr('height', d => height - y(d.doc_count))
 
+      // Create the x axis
+      const xAxis = d3.axisBottom(x)
+        .tickValues(data.map(d => d.date))
+        .tickFormat(d3.timeFormat('%m-%Y'))
       // Add the x axis
       svg.append('g')
         .attr('transform', `translate(0, ${height})`)
-        .call(d3.axisBottom(x))
+        .call(xAxis)
+      svg.selectAll('.tick text')
+        .attr('transform', 'translate(20, 20) rotate(45)')
       // Text label for the x axis
       svg.append('text')
         .attr('transform', `translate(${(width / 2)}, ${(height + margin.top + 20)})`)
