@@ -16,7 +16,7 @@
           </li>
           <li class="list-group-item">
             <p>{{ $t('login.support_desk') }}</p>
-            <a class="btn btn-outline-secondary btn-lg" href="https://jira.icij.org/servicedesk/customer/portal/4/create/108">
+            <a class="btn btn-outline-secondary btn-lg" :href="$config.get('helpLink')" target="_blank" :title="$t('login.ask_help')">
               <fa icon="ambulance" class="mr-2" />
               {{ $t('login.ask_help') }}
             </a>

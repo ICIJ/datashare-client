@@ -60,7 +60,7 @@
           </a>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--help">
-          <a :href="$config.get('helpLink')" target="_blank" class="app-sidebar__container__menu__item__link" title="Ask for help" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a :href="$config.get('helpLink')" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.help')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="ambulance" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.help') }}

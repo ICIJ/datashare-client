@@ -51,10 +51,10 @@ describe('AppSidebar.vue', () => {
     expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toEqual(expect.stringContaining('github.com'))
   })
 
-  it('should display the jira help link in SERVER mode', () => {
+  it('should display the help link in SERVER mode', () => {
     Murmur.config.merge(mode('SERVER'))
     const wrapper = shallowMount(AppSidebar, { localVue, store, router, mocks })
-    expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toEqual(expect.stringContaining('jira.icij.org'))
+    expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toBe('https://support.cloud.icij.org/')
   })
 
   it('should NOT display a logout link', () => {
