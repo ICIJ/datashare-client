@@ -82,7 +82,7 @@ export default {
         .attr('transform', 'translate(20, 20) rotate(45)')
       // Text label for the x axis
       svg.append('text')
-        .attr('transform', `translate(${(width / 2)}, ${(height + margin.top + 20)})`)
+        .attr('transform', `translate(${(width / 2)}, ${(height + margin.top + 50)})`)
         .style('text-anchor', 'middle')
         .text('Time')
 
