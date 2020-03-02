@@ -107,6 +107,6 @@ export default {
   }
 
   .chart rect {
-    fill: steelblue;
+    fill: $primary;
   }
 </style>
