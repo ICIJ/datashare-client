@@ -25,7 +25,7 @@ export const mutations = {
 
 export const actions = {
   filterNotesByPath ({ state }, { project, path }) {
-    return filter(state.notes[project], note => path.match(new RegExp(note.path.replace('file://', ''))))
+    return filter(state.notes[project], note => path.match(new RegExp(note.path)))
   },
   async retrieveNotes ({ state, commit, dispatch }, { project, path }) {
     if (!hasIn(state.notes, project)) {
