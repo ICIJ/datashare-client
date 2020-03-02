@@ -59,7 +59,7 @@ export default {
         .append('rect')
         .attr('x', d => x(d.date))
         .attr('y', d => y(d.doc_count))
-        .attr('width', '12')
+        .attr('width', d => x(d3.timeDay.offset(d.date, 10)) - x(d.date))
         .attr('height', d => height - y(d.doc_count))
 
       // Create the x axis
