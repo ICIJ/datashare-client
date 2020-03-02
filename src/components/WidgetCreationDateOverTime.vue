@@ -17,13 +17,19 @@ import sortBy from 'lodash/sortBy'
 import * as d3 from 'd3'
 
 export default {
+  name: 'WidgetCreationDateOverTime',
   props: {
     widget: {
       type: Object
     }
   },
+  data () {
+    return {
+      data: []
+    }
+  },
   methods: {
-    async buildChart () {
+    async loadData () {
       const response = await this.$store.dispatch('search/queryFilter', { name: 'creationDate', options: { size: 1000 } })
       const aggregation = get(response, ['aggregations', 'metadata.tika_metadata_creation_date', 'buckets'])
       const dates = map(aggregation, d => {
@@ -32,8 +38,9 @@ export default {
           return d
         }
       })
-      const data = sortBy(compact(dates), ['key'])
-
+      return sortBy(compact(dates), ['key'])
+    },
+    buildChart () {
       const margin = { top: 20, right: 20, bottom: 100, left: 50 }
       const height = 500 - margin.top - margin.bottom
       const width = 960 - margin.left - margin.right
@@ -45,17 +52,17 @@ export default {
         .attr('transform', `translate(${margin.left}, ${margin.top})`)
 
       const x = d3.scaleTime()
-        .domain([d3.min(data, d => d.date), d3.max(data, d => d.date)])
+        .domain([d3.min(this.data, d => d.date), d3.max(this.data, d => d.date)])
         .range([0, width])
         .nice()
 
       const y = d3.scaleLinear()
-        .domain([0, d3.max(data, d => d.doc_count)])
+        .domain([0, d3.max(this.data, d => d.doc_count)])
         .range([height, 0])
 
       svg.append('g')
         .selectAll('rect')
-        .data(data)
+        .data(this.data)
         .enter()
         .append('rect')
         .attr('x', d => x(d.date))
@@ -65,7 +72,7 @@ export default {
 
       // Create the x axis
       const xAxis = d3.axisBottom(x)
-        .tickValues(data.map(d => d.date))
+        .tickValues(this.data.map(d => d.date))
         .tickFormat(d3.timeFormat('%m-%Y'))
       // Add the x axis
       svg.append('g')
@@ -91,7 +98,8 @@ export default {
         .text('Number of documents')
     }
   },
-  mounted () {
+  async mounted () {
+    this.data = await this.loadData()
     this.buildChart()
   }
 }
