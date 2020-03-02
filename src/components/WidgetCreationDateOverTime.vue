@@ -1,5 +1,5 @@
 <template>
-  <div class="widget widget--text">
+  <div class="widget">
     <div class="widget__header" v-if="widget.title" :class="{ 'card-header': widget.card }">
       <h4 v-html="widget.title" class="m-0"></h4>
     </div>
@@ -98,15 +98,11 @@ export default {
 </script>
 
 <style lang="scss">
-  .widget--text {
+  .widget {
     min-height: 100%;
-  }
 
-  .chart {
-    margin: 10px;
-  }
-
-  .chart rect {
-    fill: $primary;
+    .chart rect {
+      fill: $primary;
+    }
   }
 </style>
