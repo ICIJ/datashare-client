@@ -63,28 +63,26 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import find from 'lodash/find'
+import { mapState } from 'vuex'
 
-import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentActions from '@/components/DocumentActions'
-import DocumentThumbnail from '@/components/DocumentThumbnail'
+import DocumentSlicedName from '@/components/DocumentSlicedName'
+import DocumentTagsForm from '@/components/DocumentTagsForm'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
-import DocumentTagsForm from '@/components/DocumentTagsForm'
-import settings from '@/utils/settings'
 import humanSize from '@/filters/humanSize'
+import settings from '@/utils/settings'
 
 export default {
-  name: 'SearchResults',
+  name: 'SearchResultsTable',
   filters: { humanSize },
   components: {
     DocumentActions,
     DocumentSlicedName,
-    DocumentThumbnail,
+    DocumentTagsForm,
     ResetFiltersButton,
-    SearchResultsHeader,
-    DocumentTagsForm
+    SearchResultsHeader
   },
   data () {
     return {

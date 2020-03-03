@@ -40,7 +40,7 @@ import SearchResultsHeader from '@/components/SearchResultsHeader'
 import settings from '@/utils/settings'
 
 export default {
-  name: 'SearchResults',
+  name: 'SearchResultsGrid',
   components: {
     DocumentActions,
     DocumentThumbnail,
