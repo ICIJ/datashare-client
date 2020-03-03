@@ -10,7 +10,7 @@ jest.mock('@/api', () => {
     return {
       getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([{
         uuid: 1,
-        project: { id: 'project_01', name: 'project_01' },
+        project: { name: 'project_01' },
         name: 'name_01',
         description: 'description_01',
         queries: { query_01: 12 },
@@ -18,7 +18,7 @@ jest.mock('@/api', () => {
         nbResults: 2
       }, {
         uuid: 2,
-        project: { id: 'project_02', name: 'project_02' },
+        project: { name: 'project_02' },
         name: 'name_02',
         description: 'description_02',
         queries: { query_02: 2, query_03: 3 },
@@ -29,7 +29,7 @@ jest.mock('@/api', () => {
   })
 })
 
-const { localVue, store, router } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
 
 describe('BatchSearch.vue', () => {
   let wrapper
@@ -40,7 +40,7 @@ describe('BatchSearch.vue', () => {
   })
 
   beforeEach(async () => {
-    wrapper = mount(BatchSearch, { localVue, store, router, mocks: { $t: msg => msg, $tc: (msg, count) => count, $n: msg => msg } })
+    wrapper = mount(BatchSearch, { i18n, localVue, router, store })
     await wrapper.vm.$nextTick()
   })
 
@@ -58,7 +58,11 @@ describe('BatchSearch.vue', () => {
   })
 
   it('should display the number of queries per batchSearch', () => {
-    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="4"]').text()).toEqual('1')
-    expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="4"]').text()).toEqual('2')
+    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="4"]').text()).toBe('1 query')
+    expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="4"]').text()).toBe('2 queries')
+  })
+
+  it('should display index in the batch search results url', () => {
+    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a').attributes('href')).toContain('/project_01/')
   })
 })

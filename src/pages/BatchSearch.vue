@@ -19,7 +19,7 @@
         </div>
         <b-table v-else striped hover responsive :fields="fields" :items="items" thead-tr-class="text-nowrap" tbody-tr-class="batch-search__items__item small">
           <template v-slot:cell(name)="{ item }">
-            <router-link :to="{ name: 'batch-search.results', params: { index: item.project.id, uuid: item.uuid }, query: { page: 1, sort, order } }" class="batch-search__items__item__link">
+            <router-link :to="{ name: 'batch-search.results', params: { index: item.project.name, uuid: item.uuid }, query: { page: 1, sort, order } }" class="batch-search__items__item__link">
               {{ item.name }}
             </router-link>
           </template>
