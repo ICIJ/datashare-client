@@ -147,7 +147,7 @@ export default {
       if (!state.search.globalSearch) {
         // This will allow to watch change on the search only when
         // the aggregation is not global (ie. relative to the search).
-        return pick(state.search, ['index', 'query', 'filters'])
+        return pick(state.search, ['index', 'query', 'values'])
       } else {
         return pick(state.search, ['index'])
       }

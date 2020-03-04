@@ -45,7 +45,7 @@ describe('FilterText.vue', () => {
     expect(wrapper.vm.root.total).toBe(0)
   })
 
-  it('should display 3 items for the contentType filter', async () => {
+  it('should display 2 items for the contentType filter', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
@@ -63,7 +63,23 @@ describe('FilterText.vue', () => {
     expect(wrapper.vm.root.total).toBe(5)
   })
 
-  it('should display 4 items for the contentType filter', async () => {
+  it('should filter according to the others filters if contextualized search', async () => {
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('type_01')
+      .withLanguage('ENGLISH')).commit()
+    await letData(es).have(new IndexedDocument('document_02', index)
+      .withContentType('type_02')
+      .withLanguage('FRENCH')).commit()
+
+    store.commit('search/setGlobalSearch', false)
+    store.commit('search/setFilterValue', { name: 'language', value: 'ENGLISH' })
+    await wrapper.vm.root.aggregate()
+
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
+    expect(wrapper.vm.root.total).toBe(1)
+  })
+
+  it('should display 3 items for the contentType filter', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
