@@ -1,10 +1,10 @@
 <template>
-  <div v-if="isDisplayedComputed" class="pagination">
+  <div v-if="isDisplayedComputed" class="pagination" :id="id">
     <router-link
       :to="firstPageLinkParameters()"
       :class="{ 'disabled' : isFirstOrPreviousPageUnavailable() }"
       class="pagination__link pagination__first-page px-2"
-      v-b-tooltip.hover
+      v-b-tooltip:[id].hover.topleft
       v-show="!noFirstPageLink"
       :title="$t('pagination.firstPage')">
       <fa icon="angle-double-left" />
@@ -13,7 +13,7 @@
       :to="previousPageLinkParameters()"
       :class="{ 'disabled' : isFirstOrPreviousPageUnavailable() }"
       class="pagination__link pagination__previous-page px-2"
-      v-b-tooltip.hover
+      v-b-tooltip:[id].hover.topleft
       :title="$t('pagination.previousPage')">
       <fa icon="angle-left" />
     </router-link>
@@ -21,7 +21,7 @@
       :to="nextPageLinkParameters()"
       :class="{ 'disabled' : isNextOrLastPageUnavailable() }"
       class="pagination__link pagination__next-page px-2"
-      v-b-tooltip.hover
+      v-b-tooltip:[id].hover.topleft
       :title="$t('pagination.nextPage')">
       <fa icon="angle-right" />
     </router-link>
@@ -29,7 +29,7 @@
       :to="lastPageLinkParameters()"
       :class="{ 'disabled' : isNextOrLastPageUnavailable() }"
       class="pagination__link pagination__last-page px-2"
-      v-b-tooltip.hover
+      v-b-tooltip:[id].hover.topleft
       v-show="!noLastPageLink"
       :title="$t('pagination.lastPage')">
       <fa icon="angle-double-right" />
@@ -42,6 +42,7 @@ import floor from 'lodash/floor'
 import get from 'lodash/get'
 import max from 'lodash/max'
 import noop from 'lodash/noop'
+import uniqueId from 'lodash/uniqueId'
 
 export default {
   name: 'Pagination',
@@ -87,6 +88,9 @@ export default {
     },
     gap () {
       return Number(this.total % this.size === 0)
+    },
+    id () {
+      return uniqueId('pagination')
     }
   },
   methods: {
