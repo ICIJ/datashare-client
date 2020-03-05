@@ -4,7 +4,7 @@
       :to="firstPageLinkParameters()"
       :class="{ 'disabled' : isFirstOrPreviousPageUnavailable() }"
       class="pagination__link pagination__first-page px-2"
-      v-b-tooltip:[id].hover.topleft
+      v-b-tooltip="{ id, placement, trigger: 'hover' }"
       v-show="!noFirstPageLink"
       :title="$t('pagination.firstPage')">
       <fa icon="angle-double-left" />
@@ -13,7 +13,7 @@
       :to="previousPageLinkParameters()"
       :class="{ 'disabled' : isFirstOrPreviousPageUnavailable() }"
       class="pagination__link pagination__previous-page px-2"
-      v-b-tooltip:[id].hover.topleft
+      v-b-tooltip="{ id, placement, trigger: 'hover' }"
       :title="$t('pagination.previousPage')">
       <fa icon="angle-left" />
     </router-link>
@@ -21,7 +21,7 @@
       :to="nextPageLinkParameters()"
       :class="{ 'disabled' : isNextOrLastPageUnavailable() }"
       class="pagination__link pagination__next-page px-2"
-      v-b-tooltip:[id].hover.topleft
+      v-b-tooltip="{ id, placement, trigger: 'hover' }"
       :title="$t('pagination.nextPage')">
       <fa icon="angle-right" />
     </router-link>
@@ -29,7 +29,7 @@
       :to="lastPageLinkParameters()"
       :class="{ 'disabled' : isNextOrLastPageUnavailable() }"
       class="pagination__link pagination__last-page px-2"
-      v-b-tooltip:[id].hover.topleft
+      v-b-tooltip="{ id, placement, trigger: 'hover' }"
       v-show="!noLastPageLink"
       :title="$t('pagination.lastPage')">
       <fa icon="angle-double-right" />
@@ -71,6 +71,10 @@ export default {
     },
     noLastPageLink: {
       type: Boolean
+    },
+    position: {
+      type: String,
+      default: 'top'
     }
   },
   computed: {
@@ -91,6 +95,9 @@ export default {
     },
     id () {
       return uniqueId('pagination')
+    },
+    placement () {
+      return this.position === 'top' ? 'bottomleft' : 'topleft'
     }
   },
   methods: {

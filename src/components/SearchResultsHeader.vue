@@ -9,7 +9,13 @@
           {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
         </span>
       </div>
-      <pagination class="flex-grow-1 justify-content-end text-right mr-3" :total="response.total" :get-to-template="getToTemplate" :is-displayed="isDisplayed" :no-last-page-link="searchWindowTooLarge"></pagination>
+      <pagination
+        class="flex-grow-1 justify-content-end text-right mr-3"
+        :get-to-template="getToTemplate"
+        :is-displayed="isDisplayed"
+        :no-last-page-link="searchWindowTooLarge"
+        :position="position"
+        :total="response.total"></pagination>
     </div>
     <search-results-applied-filters v-if="position === 'top' && !noFilters" />
   </div>
