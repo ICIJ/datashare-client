@@ -81,8 +81,8 @@ export function datasharePlugin (Client, config, components) {
           default_field: fields.length ? undefined : '*'
         })
         .orQuery('has_parent', 'parent_type', 'Document', {
-          'inner_hits': {
-            'size': 30
+          inner_hits: {
+            size: 30
           }
         }, sub => sub.query('match', 'content', query))
       )
@@ -164,7 +164,7 @@ export function datasharePlugin (Client, config, components) {
 
 const elasticsearch = new es.Client({
   host: process.env.VUE_APP_ES_HOST || window.location.hostname + ':' + window.location.port + '/api/index/search',
-  plugins: [ datasharePlugin ]
+  plugins: [datasharePlugin]
 })
 
 export default elasticsearch

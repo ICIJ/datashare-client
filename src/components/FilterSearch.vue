@@ -74,12 +74,12 @@ export default {
     }
   },
   components: {
-    FilterText,
-    FilterYesNo,
     FilterDate,
     FilterDateRange,
-    FilterPath,
     FilterNamedEntity,
+    FilterPath,
+    FilterText,
+    FilterYesNo,
     InfiniteLoading
   },
   data () {

@@ -22,9 +22,9 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import cloneDeep from 'lodash/cloneDeep'
 import min from 'lodash/min'
+import { mapState } from 'vuex'
 
 import Pagination from '@/components/Pagination'
 import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'

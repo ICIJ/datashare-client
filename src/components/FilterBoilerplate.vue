@@ -97,7 +97,7 @@ import throttle from 'lodash/throttle'
 import toLower from 'lodash/toLower'
 
 import filters from '@/mixins/filters'
-import Hook from './Hook'
+import Hook from '@/components/Hook'
 
 export default {
   name: 'FilterBoilerplate',
@@ -107,11 +107,11 @@ export default {
   },
   data () {
     return {
-      filterQuery: '',
       collapseItems: !this.asyncItems,
+      filterQuery: '',
       isInitialized: !!this.asyncItems,
-      results: [],
-      moreToDisplay: false
+      moreToDisplay: false,
+      results: []
     }
   },
   watch: {

@@ -10,7 +10,7 @@ import FilterText from '@/components/FilterText'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import messagesFr from '@/lang/fr'
 
-const { localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterText.vue', () => {
   const index = toLower('FilterText')
@@ -23,12 +23,12 @@ describe('FilterText.vue', () => {
 
   beforeEach(() => {
     wrapper = mount(FilterText, {
+      i18n,
       localVue,
       router,
       store,
       wait,
-      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'contentType' }) },
-      mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'contentType' }) }
     })
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', index)
@@ -319,14 +319,14 @@ describe('FilterText.vue', () => {
 
   it('should display an "All" item on top of others items, and this item should be active by default', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/javascript')).commit()
+      .withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/html')).commit()
+      .withContentType('type_02')).commit()
 
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.filter__items__all')).toHaveLength(1)
-    expect(wrapper.find('.filter__items__all .filter__items__item__label').text()).toBe('all')
+    expect(wrapper.find('.filter__items__all .filter__items__item__label').text()).toBe('All')
     expect(wrapper.findAll('.filter__items__all .filter__items__item__count').at(0).text()).toBe('2')
     expect(wrapper.find('.filter__items__all .custom-control-input').element.checked).toBeTruthy()
     expect(wrapper.vm.root.total).toBe(2)
@@ -337,17 +337,17 @@ describe('FilterText.vue', () => {
     const spyRefreshRoute = jest.spyOn(wrapper.vm.root, 'refreshRoute')
 
     await letData(es).have(new IndexedDocument('document_01', index)
-      .withContentType('text/type_01')).commit()
+      .withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
-      .withContentType('text/type_02')).commit()
+      .withContentType('type_02')).commit()
     await letData(es).have(new IndexedDocument('document_03', index)
-      .withContentType('text/type_02')).commit()
+      .withContentType('type_02')).commit()
     await letData(es).have(new IndexedDocument('document_04', index)
-      .withContentType('text/type_03')).commit()
+      .withContentType('type_03')).commit()
     await letData(es).have(new IndexedDocument('document_05', index)
-      .withContentType('text/type_03')).commit()
+      .withContentType('type_03')).commit()
     await letData(es).have(new IndexedDocument('document_06', index)
-      .withContentType('text/type_03')).commit()
+      .withContentType('type_03')).commit()
 
     await wrapper.vm.root.aggregate()
     wrapper.find('.filter__items__item:nth-child(2) input').trigger('click')
@@ -405,14 +405,14 @@ describe('FilterText.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('filter.level.level00')
+    expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('File on disk')
   })
 
   it('should display the extraction level filter with correct labels in French', async () => {
     const i18n = new VueI18n({ locale: 'fr', messages: { fr: messagesFr } })
     wrapper = mount(FilterText, {
-      localVue,
       i18n,
+      localVue,
       router,
       store,
       wait,
