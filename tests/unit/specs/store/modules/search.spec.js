@@ -326,24 +326,35 @@ describe('SearchStore', () => {
 
   describe('updateFromRouteQuery should restore search state from url', () => {
     it('should set the index of the store according to the url', async () => {
+      store.commit('search/index', 'anything')
       await store.dispatch('search/updateFromRouteQuery', { index: process.env.VUE_APP_ES_ANOTHER_INDEX })
 
       expect(store.state.search.index).toBe(process.env.VUE_APP_ES_ANOTHER_INDEX)
     })
 
     it('should set the query of the store according to the url', async () => {
+      store.commit('search/query', 'anything')
       await store.dispatch('search/updateFromRouteQuery', { q: 'new_query' })
 
       expect(store.state.search.query).toBe('new_query')
     })
 
     it('should set the from of the store according to the url', async () => {
+      store.commit('search/from', 12)
       await store.dispatch('search/updateFromRouteQuery', { from: 42 })
 
       expect(store.state.search.from).toBe(42)
     })
 
+    it('should RESET the from of the store according to the url', async () => {
+      store.commit('search/from', 12)
+      await store.dispatch('search/updateFromRouteQuery', { from: 0 })
+
+      expect(store.state.search.from).toBe(0)
+    })
+
     it('should set the size of the store according to the url', async () => {
+      store.commit('search/size', 12)
       await store.dispatch('search/updateFromRouteQuery', { size: 24 })
 
       expect(store.state.search.size).toBe(24)
@@ -351,6 +362,7 @@ describe('SearchStore', () => {
     })
 
     it('should set the sort of the store according to the url', async () => {
+      store.commit('search/sort', 'anything')
       await store.dispatch('search/updateFromRouteQuery', { sort: 'new_sort' })
 
       expect(store.state.search.sort).toBe('new_sort')
@@ -363,7 +375,6 @@ describe('SearchStore', () => {
 
     it('should not change the starredDocuments on updateFromRouteQuery', async () => {
       store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
-
       await store.dispatch('search/updateFromRouteQuery', {})
 
       expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
@@ -371,7 +382,6 @@ describe('SearchStore', () => {
 
     it('should not change the field on updateFromRouteQuery', async () => {
       store.commit('search/field', 'author')
-
       await store.dispatch('search/updateFromRouteQuery', {})
 
       expect(store.state.search.field).toBe('author')

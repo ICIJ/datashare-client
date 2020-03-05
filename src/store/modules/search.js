@@ -402,12 +402,12 @@ export const actions = {
   },
   async updateFromRouteQuery ({ state, commit, getters }, query) {
     // Add the query to the state with a mutation to not triggering a search
-    if (query.q) commit('query', query.q)
-    if (query.index) commit('index', query.index)
-    if (query.from) commit('from', query.from)
-    if (query.size) commit('size', query.size)
-    if (query.sort) commit('sort', query.sort)
-    if (query.field) commit('field', query.field)
+    if (has(query, 'q')) commit('query', query.q)
+    if (has(query, 'index')) commit('index', query.index)
+    if (has(query, 'from')) commit('from', query.from)
+    if (has(query, 'size')) commit('size', query.size)
+    if (has(query, 'sort')) commit('sort', query.sort)
+    if (has(query, 'field')) commit('field', query.field)
     // Iterate over the list of filter
     each(getters.instantiatedFilters, filter => {
       // The filter key are formatted in the URL as follow.
