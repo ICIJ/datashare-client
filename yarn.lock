@@ -2580,15 +2580,15 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz#68dff5fbe60c51eb37725ea9e3ed310dcc1e776e"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-bootstrap-vue@2.0.3:
-  version "2.0.3"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.0.3.tgz#20d62b010f314a19e1218563c1fe8aa95eabff81"
-  integrity sha512-foI+NRs54lmjpneuwgXrmoOVDg8419ai9IwZNQq29Mnfmfui66UKS89GJnA4RjXJPjFbrIgjnjniaeqF/GOWBQ==
+bootstrap-vue@2.6.0:
+  version "2.6.0"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.6.0.tgz#eb9d37239b26ee3e3eff0151c2b942cec906232b"
+  integrity sha512-6p28wh/nnA5b8H0iVb6cIEkS6VUQikpQPRnCTSNEg3k1T8SNDXads7lJPn1Cxi268SXfrWttb8Pxct1c+0qKyA==
   dependencies:
     "@nuxt/opencollective" "^0.3.0"
-    bootstrap ">=4.3.1 <5.0.0"
-    popper.js "^1.15.0"
-    portal-vue "^2.1.6"
+    bootstrap ">=4.4.1 <5.0.0"
+    popper.js "^1.16.1"
+    portal-vue "^2.1.7"
     vue-functional-data-merge "^3.1.0"
 
 bootstrap-vue@^2.0.0-rc.27:
@@ -2602,7 +2602,7 @@ bootstrap-vue@^2.0.0-rc.27:
     portal-vue "^2.1.7"
     vue-functional-data-merge "^3.1.0"
 
-bootstrap@>=4.3.1, "bootstrap@>=4.3.1 <5.0.0", "bootstrap@>=4.4.1 <5.0.0", bootstrap@^4.3.1:
+bootstrap@>=4.3.1, "bootstrap@>=4.4.1 <5.0.0", bootstrap@^4.3.1:
   version "4.4.1"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.4.1.tgz#8582960eea0c5cd2bede84d8b0baf3789c3e8b01"
   integrity sha512-tbx5cHubwE6e2ZG7nqM3g/FZ5PQEDMWmMGNrCUBVRPHXTJaH7CBDdsLeu3eCh3B1tzAxTnAbtmrzvWEvT2NNEA==
@@ -9833,12 +9833,12 @@ pnp-webpack-plugin@^1.6.0:
   dependencies:
     ts-pnp "^1.1.6"
 
-popper.js@^1.14.7, popper.js@^1.15.0, popper.js@^1.16.1:
+popper.js@^1.14.7, popper.js@^1.16.1:
   version "1.16.1"
   resolved "https://registry.yarnpkg.com/popper.js/-/popper.js-1.16.1.tgz#2a223cb3dc7b6213d740e40372be40de43e65b1b"
   integrity sha512-Wb4p1J4zyFTbM+u6WuO4XstYx4Ky9Cewe4DWrel7B0w6VVICvPwdOpotjzcf6eD8TsckVnIMNONQyPIUFOUbCQ==
 
-portal-vue@^2.1.6, portal-vue@^2.1.7:
+portal-vue@^2.1.7:
   version "2.1.7"
   resolved "https://registry.yarnpkg.com/portal-vue/-/portal-vue-2.1.7.tgz#ea08069b25b640ca08a5b86f67c612f15f4e4ad4"
   integrity sha512-+yCno2oB3xA7irTt0EU5Ezw22L2J51uKAacE/6hMPMoO/mx3h4rXFkkBkT4GFsMDv/vEe8TNKC3ujJJ0PTwb6g==
