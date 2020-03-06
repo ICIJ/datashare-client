@@ -9,7 +9,7 @@ const { localVue } = Core.init(createLocalVue()).useAll()
 describe('JsonViewer.vue', () => {
   let wrapper
   const document = { url: 'document.json' }
-  const methods = { getJson: jest.fn().mockResolvedValue(documentJson) }
+  const methods = { getSource: jest.fn().mockResolvedValue(documentJson) }
 
   beforeEach(() => {
     wrapper = shallowMount(JsonViewer, { localVue, propsData: { document }, methods })

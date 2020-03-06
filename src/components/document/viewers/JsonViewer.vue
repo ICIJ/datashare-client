@@ -20,16 +20,11 @@ export default {
     }
   },
   async mounted () {
-    const source = await this.getJson()
+    const source = await this.getSource(this.document)
     const depth = 1
     const config = { hoverPreviewEnabled: true }
     const formatter = new JSONFormatter(source, depth, config)
     this.$el.appendChild(formatter.render())
-  },
-  methods: {
-    getJson () {
-      return this.getSource(this.document).then(response => response.json())
-    }
   }
 }
 </script>
