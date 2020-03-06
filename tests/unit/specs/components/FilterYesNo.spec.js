@@ -74,15 +74,15 @@ describe('FilterYesNo.vue', () => {
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
 
-    wrapper.findAll('.filter__items__item .custom-control-label').at(0).trigger('click')
+    await wrapper.findAll('.filter__items__item .custom-control-input').at(0).setChecked()
     expect(wrapper.vm.selected).toEqual([true])
     expect(wrapper.vm.root.isAllSelected).toBeFalsy()
 
-    wrapper.findAll('.filter__items__item .custom-control-label').at(1).trigger('click')
+    await wrapper.findAll('.filter__items__item .custom-control-input').at(1).setChecked()
     expect(wrapper.vm.selected).toEqual([false])
     expect(wrapper.vm.root.isAllSelected).toBeFalsy()
 
-    wrapper.findAll('.filter__items__item .custom-control-label').at(1).trigger('click')
+    await wrapper.findAll('.filter__items__item .custom-control-input').at(1).trigger('click')
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
   })

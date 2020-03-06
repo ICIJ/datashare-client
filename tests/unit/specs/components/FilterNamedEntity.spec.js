@@ -422,7 +422,7 @@ describe('FilterNamedEntity.vue', () => {
     wrapper = mount(FilterNamedEntity, { localVue, i18n, wait, router: new VueRouter(), store, propsData: { filter: store.getters['search/getFilterByName']('namedEntityPerson') } })
 
     await wrapper.vm.root.aggregate()
-    wrapper.findAll('.list-group-item .filter__items__item input').at(0).trigger('click')
+    await wrapper.findAll('.list-group-item .filter__items__item input').at(0).trigger('click')
 
     expect(wrapper.findAll('.filter__items__all input').at(0).element.checked).toBeTruthy()
   })

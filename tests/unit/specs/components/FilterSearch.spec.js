@@ -183,11 +183,11 @@ describe('FilterSearch.vue', () => {
       expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
     })
 
-    it('should trigger a search when value of filterQuery changes', () => {
+    it('should trigger a search when value of filterQuery changes', async () => {
       jest.spyOn(wrapper.vm, 'search').mockImplementation(jest.fn)
       expect(wrapper.vm.search).not.toHaveBeenCalled()
 
-      wrapper.setData({ filterQuery: 'pdf' })
+      await wrapper.setData({ filterQuery: 'pdf' })
       expect(wrapper.vm.search).toHaveBeenCalled()
     })
   })

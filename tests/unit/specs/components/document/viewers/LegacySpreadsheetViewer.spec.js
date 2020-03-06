@@ -52,7 +52,7 @@ describe('LegacySpreadsheetViewer.vue', () => {
     wrapper = mount(LegacySpreadsheetViewer, { localVue, mocks, methods, propsData: { document: { url: 'spreadsheet.xlsx' } } })
 
     await wrapper.vm.getWorkbook()
-    wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__header option').at(1).setSelected()
+    await wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__header option').at(1).setSelected()
 
     expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(0).text()).toBe('second')
     expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(1).text()).toBe('sheet')

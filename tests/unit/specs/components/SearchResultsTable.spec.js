@@ -40,21 +40,23 @@ describe('SearchResultsTable.vue', () => {
     expect(wrapper.find('.search-results-table__items').attributes('selectmode')).toBe('multi')
   })
 
-  it('should display 2 action buttons', () => {
+  it('should display 2 action buttons', async () => {
     wrapper.vm.selected = [{ id: 'document_01' }, { id: 'document_02' }]
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('b-list-group-stub > b-list-group-item-stub')).toHaveLength(2)
   })
 
-  it('should set each selected document as starred', () => {
+  it('should set each selected document as starred', async () => {
     wrapper = mount(SearchResultsTable, { localVue, store, router, mocks: { $t: msg => msg, $n: msg => msg, $tc: msg => msg } })
     wrapper.vm.selected = [{ id: 'document_01' }, { id: 'document_02' }]
+    await wrapper.vm.$nextTick()
 
     wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/star`),
+      url: Api.getFullUrl('/api/' + index + '/documents/batchUpdate/star'),
       method: 'POST',
       data: ['document_01', 'document_02']
     }))

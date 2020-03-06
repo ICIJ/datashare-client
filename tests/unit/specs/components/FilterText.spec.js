@@ -281,7 +281,7 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('type_01')).commit()
     await wrapper.vm.root.aggregate()
-    wrapper.find('.filter__items__item:nth-child(1) input').trigger('click')
+    await wrapper.find('.filter__items__item:nth-child(1) input').trigger('click')
 
     expect(wrapper.emitted('add-filter-values')).toHaveLength(1)
     expect(rootWrapper.emitted('filter::add-filter-values')).toHaveLength(1)
@@ -293,7 +293,7 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('type_01')).commit()
     await wrapper.vm.root.aggregate()
-    wrapper.find('.filter__items__item:nth-child(1) input').trigger('click')
+    await wrapper.find('.filter__items__item:nth-child(1) input').trigger('click')
 
     expect(store.state.search.from).toBe(0)
   })
@@ -350,8 +350,8 @@ describe('FilterText.vue', () => {
       .withContentType('type_03')).commit()
 
     await wrapper.vm.root.aggregate()
-    wrapper.find('.filter__items__item:nth-child(2) input').trigger('click')
-    wrapper.find('.filter__items__all input').trigger('click')
+    await wrapper.find('.filter__items__item:nth-child(2) input').trigger('click')
+    await wrapper.find('.filter__items__all input').trigger('click')
 
     expect(wrapper.emitted('add-filter-values')).toHaveLength(2)
     expect(rootWrapper.emitted('filter::add-filter-values')).toHaveLength(2)
@@ -428,10 +428,10 @@ describe('FilterText.vue', () => {
     expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('Fichier sur le disque')
   })
 
-  it('should reload the filter on event "filter::refresh"', () => {
+  it('should reload the filter on event "filter::refresh"', async () => {
     const spyRefreshFilter = jest.spyOn(wrapper.vm.root, 'aggregateWithLoading')
     wrapper.vm.root.collapseItems = false
-    wrapper.vm.$root.$emit('filter::refresh', 'contentType')
+    await wrapper.vm.$root.$emit('filter::refresh', 'contentType')
 
     expect(spyRefreshFilter).toBeCalled()
   })
@@ -450,7 +450,9 @@ describe('FilterText.vue', () => {
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
     wrapper.vm.root.collapseItems = false
 
-    wrapper.vm.$root.$emit('filter::delete', 'tags', { label: 'tag_01' })
+    await wrapper.vm.$nextTick()
+
+    await wrapper.vm.$root.$emit('filter::delete', 'tags', { label: 'tag_01' })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
   })
 

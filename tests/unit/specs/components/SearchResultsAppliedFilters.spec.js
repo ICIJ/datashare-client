@@ -24,8 +24,8 @@ describe('SearchResultsAppliedFilters.vue', () => {
       expect(wrapper.findAll('.search-results-header__applied-filters search-results-applied-filter-stub')).toHaveLength(2)
     })
 
-    it('should display 1 applied filter', () => {
-      store.commit('search/setFilterValue', { name: 'contentType', value: 'term_01' })
+    it('should display 1 applied filter', async () => {
+      await store.commit('search/setFilterValue', { name: 'contentType', value: 'term_01' })
 
       expect(wrapper.findAll('.search-results-header__applied-filters search-results-applied-filter-stub')).toHaveLength(1)
     })

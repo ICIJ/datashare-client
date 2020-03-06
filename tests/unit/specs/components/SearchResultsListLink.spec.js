@@ -61,7 +61,7 @@ describe('SearchResultsListLink.vue', () => {
     expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/child\/parent/)
   })
 
-  it('should make a link to document with query', () => {
+  it('should make a link to document with query', async () => {
     const wrapper = mount(SearchResultsListLink, {
       localVue,
       store,
@@ -74,7 +74,7 @@ describe('SearchResultsListLink.vue', () => {
       }
     })
 
-    store.commit('search/query', 'other')
+    await store.commit('search/query', 'other')
 
     expect(wrapper.find('.search-results-list-link').attributes('href')).toMatch(/foo\/foo\?q=other$/)
   })

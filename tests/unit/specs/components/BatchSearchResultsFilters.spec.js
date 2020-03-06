@@ -182,7 +182,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     })
 
     it('should sort queries by count order', async () => {
-      wrapper = mount(BatchSearchResultsFilters, { localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
+      wrapper = await mount(BatchSearchResultsFilters, { localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index }, mocks: { $t: msg => msg, $n: msg => msg } })
       const spy = jest.spyOn(wrapper.vm.$router, 'push')
       spy.mockClear()
 

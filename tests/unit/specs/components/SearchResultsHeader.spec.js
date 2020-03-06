@@ -57,7 +57,7 @@ describe('SearchResultsHeader.vue', () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('document').withIndex(index).count(3)).commit()
 
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
-    wrapper.setProps({ position: 'bottom' })
+    await wrapper.setProps({ position: 'bottom' })
 
     expect(wrapper.findAll('search-results-applied-filters-stub')).toHaveLength(0)
   })

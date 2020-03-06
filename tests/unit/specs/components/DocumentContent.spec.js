@@ -146,7 +146,7 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getFirstPageForNamedEntityInCategory', 'PERSON')
       store.commit('document/toggleShowNamedEntities', true)
-      const wrapper = shallowMount(DocumentContent, {
+      const wrapper = await shallowMount(DocumentContent, {
         localVue,
         store,
         propsData: {

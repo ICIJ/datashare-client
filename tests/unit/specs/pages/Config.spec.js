@@ -25,8 +25,10 @@ describe('Config.vue', () => {
     expect(wrapper.find('h3').text()).toBe('config.title')
   })
 
-  it('should display a text input', () => {
-    wrapper.vm.config = { property_01: 'value_01', property_02: 'value_02' }
+  it('should display a text input', async () => {
+    wrapper = shallowMount(Config, { localVue, store, mocks: { $t: msg => msg }, stubs: { 'b-form': false } })
+    wrapper.vm.$set(wrapper.vm, 'config', { property_01: 'value_01', property_02: 'value_02' })
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('b-form-input-stub')).toHaveLength(2)
   })
