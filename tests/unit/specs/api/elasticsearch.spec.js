@@ -56,7 +56,7 @@ describe('elasticsearch', () => {
   it('should build a simple ES query', async () => {
     const body = bodybuilder().from(0).size(25)
 
-    await elasticsearch.addQueryToBody('*', body)
+    await elasticsearch._addQueryToBody('*', body)
 
     expect(body.build()).toEqual({
       from: 0,
@@ -94,7 +94,7 @@ describe('elasticsearch', () => {
   it('should build a simple ES query and escape slash in it', async () => {
     const body = bodybuilder().from(0).size(25)
 
-    await elasticsearch.addQueryToBody('path:/home/datashare/path/*', body)
+    await elasticsearch._addQueryToBody('path:/home/datashare/path/*', body)
 
     expect(body.build()).toEqual({
       from: 0,
@@ -131,7 +131,7 @@ describe('elasticsearch', () => {
   it('should build a simple sorted ES query', async () => {
     const body = bodybuilder().from(0).size(25)
 
-    await elasticsearch.addSortToBody('dateOldest', body)
+    await elasticsearch._addSortToBody('dateOldest', body)
 
     expect(body.build()).toEqual({
       from: 0,
@@ -151,7 +151,7 @@ describe('elasticsearch', () => {
   it('should build a simple sorted ES query with correct path sort', async () => {
     const body = bodybuilder().from(0).size(25)
 
-    await elasticsearch.addSortToBody('pathReverse', body)
+    await elasticsearch._addSortToBody('pathReverse', body)
 
     expect(body.build()).toEqual({
       from: 0,
