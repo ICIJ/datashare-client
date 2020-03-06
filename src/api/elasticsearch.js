@@ -9,7 +9,7 @@ import { EventBus } from '@/utils/event-bus'
 import settings from '@/utils/settings'
 
 // Custom API for datashare
-// @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/current/extending_core_components.html
+// @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/extending_core_components.html
 export function datasharePlugin (Client, config, components) {
   Client.prototype.getEsDoc = function (index, id, routing = null) {
     return this.get({
