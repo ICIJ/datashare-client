@@ -11,24 +11,23 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('Config.vue', () => {
   let wrapper
 
   beforeEach(() => {
     axios.request.mockClear()
-    wrapper = shallowMount(Config, { localVue, store, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(Config, { i18n, localVue, store })
   })
 
   it('should load the config page', () => {
-    expect(wrapper.find('h3').text()).toBe('config.title')
+    expect(wrapper.find('h3').text()).toBe('Configuration')
   })
 
   it('should display a text input', async () => {
-    wrapper = shallowMount(Config, { localVue, store, mocks: { $t: msg => msg }, stubs: { 'b-form': false } })
-    wrapper.vm.$set(wrapper.vm, 'config', { property_01: 'value_01', property_02: 'value_02' })
-    await wrapper.vm.$nextTick()
+    wrapper = shallowMount(Config, { i18n, localVue, store, stubs: { 'b-form': false } })
+    await wrapper.vm.$set(wrapper.vm, 'config', { property_01: 'value_01', property_02: 'value_02' })
 
     expect(wrapper.findAll('b-form-input-stub')).toHaveLength(2)
   })

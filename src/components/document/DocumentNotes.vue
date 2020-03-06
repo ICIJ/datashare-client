@@ -10,9 +10,11 @@
 import { mapState } from 'vuex'
 
 export default {
-  name: 'DocumentNote',
+  name: 'DocumentNotes',
   props: {
-    path: String
+    path: {
+      type: String
+    }
   },
   data () {
     return {
@@ -24,7 +26,8 @@ export default {
   },
   methods: {
     async retrieveNotes (project, path) {
-      this.notes = await this.$store.dispatch('documentNotes/retrieveNotes', { project, path })
+      const notes = await this.$store.dispatch('documentNotes/retrieveNotes', { project, path })
+      this.$set(this, 'notes', notes)
     }
   },
   mounted () {

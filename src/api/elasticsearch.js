@@ -99,7 +99,7 @@ export function datasharePlugin (Client, config, components) {
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     // Return a promise that build the body composed above
     return this.search({
-      index: index,
+      index,
       type: 'doc',
       body: this._buildBody(from, size, filters, query, sort, fields).build()
     }).then(
@@ -119,7 +119,7 @@ export function datasharePlugin (Client, config, components) {
       each(filters, filter => filter.addFilter(body))
       this.addQueryToFilter(query, body, fields)
     }
-    return elasticsearch.search({
+    return this.search({
       index,
       type: 'doc',
       body: body.size(0).build()

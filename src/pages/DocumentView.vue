@@ -50,9 +50,15 @@ export default {
     DocumentTagsForm
   },
   props: {
-    id: String,
-    routing: String,
-    index: String
+    id: {
+      type: String
+    },
+    routing: {
+      type: String
+    },
+    index: {
+      type: String
+    }
   },
   data () {
     return {
@@ -86,7 +92,7 @@ export default {
     },
     tabClass (name) {
       return {
-        'active': this.isTabActive(name),
+        active: this.isTabActive(name),
         ['document__content__pane--' + name]: true
       }
     },

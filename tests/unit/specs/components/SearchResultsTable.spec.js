@@ -15,7 +15,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('SearchResultsTable.vue', () => {
@@ -27,9 +27,12 @@ describe('SearchResultsTable.vue', () => {
   beforeAll(() => store.commit('search/index', index))
 
   beforeEach(async () => {
-    await letData(es).have(new IndexedDocuments().setBaseName('document').withIndex(index).count(4)).commit()
+    await letData(es).have(new IndexedDocuments()
+      .setBaseName('document')
+      .withIndex(index)
+      .count(4)).commit()
     await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
-    wrapper = shallowMount(SearchResultsTable, { localVue, store, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store })
   })
 
   it('should display a b-table', () => {
@@ -41,16 +44,14 @@ describe('SearchResultsTable.vue', () => {
   })
 
   it('should display 2 action buttons', async () => {
-    wrapper.vm.selected = [{ id: 'document_01' }, { id: 'document_02' }]
-    await wrapper.vm.$nextTick()
+    await wrapper.vm.$set(wrapper.vm, 'selected', [{ id: 'document_01' }, { id: 'document_02' }])
 
     expect(wrapper.findAll('b-list-group-stub > b-list-group-item-stub')).toHaveLength(2)
   })
 
   it('should set each selected document as starred', async () => {
-    wrapper = mount(SearchResultsTable, { localVue, store, router, mocks: { $t: msg => msg, $n: msg => msg, $tc: msg => msg } })
-    wrapper.vm.selected = [{ id: 'document_01' }, { id: 'document_02' }]
-    await wrapper.vm.$nextTick()
+    wrapper = mount(SearchResultsTable, { i18n, localVue, store, router })
+    await wrapper.vm.$set(wrapper.vm, 'selected', [{ id: 'document_01' }, { id: 'document_02' }])
 
     wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 

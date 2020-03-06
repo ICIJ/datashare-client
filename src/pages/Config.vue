@@ -32,8 +32,9 @@ export default {
       config: {}
     }
   },
-  async created () {
-    this.config = await this.$store.dispatch('config/getConfig')
+  async mounted () {
+    const config = await this.$store.dispatch('config/getConfig')
+    this.$set(this, 'config', config)
   },
   methods: {
     async onSubmit () {
