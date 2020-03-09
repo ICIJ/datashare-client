@@ -1,12 +1,13 @@
 import toLower from 'lodash/toLower'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
-import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { Core } from '@/core'
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+import DocumentTabNamedEntities from '@/components/document/DocumentTabNamedEntities'
+import { Core } from '@/core'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+
+const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('DocumentTabNamedEntities.vue', () => {
   const index = toLower('DocumentTabNamedEntities')
@@ -15,9 +16,7 @@ describe('DocumentTabNamedEntities.vue', () => {
   const id = 'document'
   let document, wrapper
 
-  beforeAll(() => {
-    Murmur.config.set('manageDocuments', true)
-  })
+  beforeAll(() => Murmur.config.set('manageDocuments', true))
 
   beforeEach(() => store.commit('document/reset'))
 
@@ -30,7 +29,7 @@ describe('DocumentTabNamedEntities.vue', () => {
       .commit()
     document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    wrapper = shallowMount(DocumentTabNamedEntities, { localVue, store, propsData: { document }, mocks: { $t: msg => msg }, sync: false })
+    wrapper = shallowMount(DocumentTabNamedEntities, { i18n, localVue, store, wait, propsData: { document }, sync: false })
 
     const pills = wrapper.findAll('b-badge-stub')
     expect(pills).toHaveLength(3)
@@ -46,7 +45,7 @@ describe('DocumentTabNamedEntities.vue', () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    wrapper = shallowMount(DocumentTabNamedEntities, { localVue, store, propsData: { document }, mocks: { $t: msg => msg }, sync: false })
+    wrapper = shallowMount(DocumentTabNamedEntities, { i18n, localVue, store, wait, propsData: { document }, sync: false })
 
     expect(wrapper.findAll('.document__named-entities--not--searched')).toHaveLength(1)
   })
@@ -55,7 +54,7 @@ describe('DocumentTabNamedEntities.vue', () => {
     await letData(es).have(new IndexedDocument(id, index).withPipeline('CORENLP')).commit()
     document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    wrapper = shallowMount(DocumentTabNamedEntities, { localVue, store, propsData: { document }, mocks: { $t: msg => msg }, sync: false })
+    wrapper = shallowMount(DocumentTabNamedEntities, { i18n, localVue, store, wait, propsData: { document }, sync: false })
 
     expect(wrapper.findAll('.document__named-entities--not--found')).toHaveLength(1)
   })
