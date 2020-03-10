@@ -47,7 +47,6 @@
 <script>
 import capitalize from 'lodash/capitalize'
 import get from 'lodash/get'
-import keys from 'lodash/keys'
 import sumBy from 'lodash/sumBy'
 import { mapState } from 'vuex'
 
@@ -68,10 +67,7 @@ export default {
       return sumBy(this.categories, category => this.getCategoryTotal(category))
     },
     categories () {
-      return keys(this.namedEntitiesPaginatedByCategories)
-    },
-    namedEntities () {
-      return this.$store.getters['document/namedEntities']
+      return this.$store.getters['document/categories']
     }
   },
   async mounted () {

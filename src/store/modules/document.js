@@ -41,9 +41,7 @@ export const getters = {
     return category => {
       const pages = get(state, ['namedEntitiesPaginatedByCategories', category], [])
       // Sum up all page size
-      return sumBy(pages, page => {
-        return get(page, 'hits.length', 0)
-      })
+      return sumBy(pages, page => get(page, 'hits.length', 0))
     }
   },
   namedEntities (state) {
@@ -167,17 +165,10 @@ export const actions = {
       const { id, routing } = state.idAndRouting
       const raw = await elasticsearch.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
       const page = new EsDocList(raw)
-      commit('namedEntitiesPageInCategory', { category, page })
-      return page
+      return commit('namedEntitiesPageInCategory', { category, page })
     } catch (_) {
       return null
     }
-  },
-  async loadingNamedEntities ({ commit }, callbackWithPromise) {
-    commit('toggleIsLoadingNamedEntities', true)
-    const result = await callbackWithPromise()
-    commit('toggleIsLoadingNamedEntities', false)
-    return result
   },
   async getTags ({ state, commit }) {
     try {
