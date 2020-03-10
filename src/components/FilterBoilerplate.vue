@@ -9,7 +9,7 @@
           </span>
           <template>
             <slot name="title">
-              {{ $t('filter.' + filter.name) }}
+              {{ $t(`filter.${filter.name}`) }}
             </slot>
           </template>
         </h6>

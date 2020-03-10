@@ -11,11 +11,11 @@
         <b-dropdown
           class="batch-search-results-filters__queries__sort"
           right
-          :text="$t('search.results.sort.' + sortField)"
+          :text="$t(`search.results.sort.${sortField}`)"
           variant="primary"
           v-if="isMultipleQueries">
           <b-dropdown-item v-for="key in sortFields" :key="key" @click="sort(key)">
-            {{ $t('search.results.sort.' + key) }}
+            {{ $t(`search.results.sort.${key}`) }}
           </b-dropdown-item>
         </b-dropdown>
       </h6>

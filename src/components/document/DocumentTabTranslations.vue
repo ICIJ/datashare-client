@@ -9,7 +9,7 @@
           </span>
           <fa icon="angle-right" class="mx-2" />
           <span class="font-weight-bold">
-            {{ $t('filter.lang.' + translation.target_language) }}
+            {{ $t(`filter.lang.${translation.target_language}`) }}
           </span>
         </div>
         <div class="p-2" v-html="translation.content"></div>

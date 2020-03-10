@@ -4,7 +4,7 @@
       <span class="col-2 filter__items__item__icon pl-0 pr-1" :class="getCategoryClass(filter.category, 'text-')">
         <fa :icon="getCategoryIcon(filter.category)" fixed-width />
       </span>
-      {{ $t('filter.' + filter.name) }}
+      {{ $t(`filter.${filter.name}`) }}
     </template>
     <template #item="{ item, value }">
       <div class="d-flex filter__items__item">

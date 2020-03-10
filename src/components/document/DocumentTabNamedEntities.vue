@@ -88,9 +88,9 @@ export default {
     async getNextPageInCategory (category) {
       // Don't load named entities if they are already loading
       if (!this.isLoadingNamedEntities) {
-        this.$wait.start('load_more_data_' + category)
+        this.$wait.start(`load_more_data_${category}`)
         await this.$store.dispatch('document/getNextPageForNamedEntityInCategory', category)
-        this.$wait.end('load_more_data_' + category)
+        this.$wait.end(`load_more_data_${category}`)
       }
     },
     capitalize
