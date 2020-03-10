@@ -1,5 +1,6 @@
 <template>
-    <div>
+  <div>
+    <div v-if="!$config.is('multipleProjects')">
       <div class="bg-white">
         <div class="container py-5">
           <h3>{{ $t('config.title') }}</h3>
@@ -25,6 +26,12 @@
         </v-wait>
       </div>
     </div>
+    <div v-else class="m-4">
+      <b-alert variant="danger" show>
+        {{ $t('config.noAccess') }}
+      </b-alert>
+    </div>
+  </div>
 </template>
 
 <script>

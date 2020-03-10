@@ -542,7 +542,8 @@
     "title": "Configuration",
     "submit": "Submit",
     "submitSuccess": "Modifications submitted. You should now restart Datashare.",
-    "submitError": "Unable to submit the configuration."
+    "submitError": "Unable to submit the configuration.",
+    "noAccess": "You do not have access to that page in server mode."
   },
   "human": {
     "number": {

@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import Api from '@/api'
@@ -49,5 +50,12 @@ describe('Config.vue', () => {
       data: { data: {} },
       headers: { 'Content-Type': 'application/json' }
     }))
+  })
+
+  it('should display an alert', () => {
+    Murmur.config.merge({ multipleProjects: true })
+    wrapper = shallowMount(Config, { i18n, localVue, store, wait })
+
+    expect(wrapper.find('b-alert-stub').exists()).toBeTruthy()
   })
 })

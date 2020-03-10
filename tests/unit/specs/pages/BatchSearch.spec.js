@@ -1,9 +1,9 @@
+import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { Core } from '@/core'
 import BatchSearch from '@/pages/BatchSearch'
-import Murmur from '@icij/murmur'
 
 jest.mock('@/api', () => {
   return jest.fn(() => {
