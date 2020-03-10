@@ -165,9 +165,7 @@ export const actions = {
       const from = getters.countNamedEntitiesInCategory(category)
       const index = state.doc.index
       const { id, routing } = state.idAndRouting
-      const raw = await dispatch('loadingNamedEntities', () => {
-        return elasticsearch.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
-      })
+      const raw = await elasticsearch.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
       const page = new EsDocList(raw)
       commit('namedEntitiesPageInCategory', { category, page })
       return page

@@ -30,11 +30,14 @@
               </b-popover>
             </span>
           </span>
-          <div v-if="categoryHasNextPage(category)">
-            <a class="document__named-entities__more small" href="#" @click.prevent="getNextPageInCategory(category)">
-              {{ $t('document.namedEntities.showMore' + capitalize(category)) }}
-            </a>
-          </div>
+          <v-wait :for="`load_more_data_${category}`">
+            <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
+            <div v-if="categoryHasNextPage(category)">
+              <a class="document__named-entities__more small" href="#" @click.prevent="getNextPageInCategory(category)">
+                {{ $t('document.namedEntities.showMore' + capitalize(category)) }}
+              </a>
+            </div>
+          </v-wait>
         </div>
       </div>
     </div>
@@ -86,10 +89,12 @@ export default {
     categoryHasNextPage (category) {
       return this.getCategoryTotal(category) > this.$store.getters['document/countNamedEntitiesInCategory'](category)
     },
-    getNextPageInCategory (category) {
+    async getNextPageInCategory (category) {
       // Don't load named entities if they are already loading
       if (!this.isLoadingNamedEntities) {
-        return this.$store.dispatch('document/getNextPageForNamedEntityInCategory', category)
+        this.$wait.start('load_more_data_' + category)
+        await this.$store.dispatch('document/getNextPageForNamedEntityInCategory', category)
+        this.$wait.end('load_more_data_' + category)
       }
     },
     capitalize
