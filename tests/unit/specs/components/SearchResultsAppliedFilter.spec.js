@@ -1,15 +1,21 @@
 import find from 'lodash/find'
+import toLower from 'lodash/toLower'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
 import { Core } from '@/core'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
 
 const { localVue, store } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('SearchResultsAppliedFilter.vue', () => {
+  const index = toLower('SearchResultsAppliedFilter')
+  esConnectionHelper(index)
   let wrapper
+
+  beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsAppliedFilter, { localVue, store, router, propsData: { filter: { label: 'term_01', value: 'term_01', field: '', negation: false } } })

@@ -8,7 +8,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import SearchBar from '@/components/SearchBar'
 
-const { localVue, i18n, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('SearchBar.vue', function () {
@@ -21,7 +21,7 @@ describe('SearchBar.vue', function () {
 
   beforeEach(() => {
     store.commit('search/reset')
-    wrapper = shallowMount(SearchBar, { localVue, i18n, router, store, sync: false })
+    wrapper = shallowMount(SearchBar, { i18n, localVue, router, store, sync: false })
   })
 
   afterAll(() => store.commit('search/reset'))

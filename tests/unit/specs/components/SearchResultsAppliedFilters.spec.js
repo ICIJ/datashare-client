@@ -6,7 +6,7 @@ import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('SearchResultsAppliedFilters.vue', () => {
@@ -18,7 +18,7 @@ describe('SearchResultsAppliedFilters.vue', () => {
   beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchResultsAppliedFilters, { localVue, store, mocks: { $t: msg => msg, $te: msg => msg } })
+    wrapper = shallowMount(SearchResultsAppliedFilters, { i18n, localVue, store })
   })
 
   afterEach(() => store.commit('search/reset'))
@@ -72,7 +72,7 @@ describe('SearchResultsAppliedFilters.vue', () => {
     it('should translate the label of a filter yes no', () => {
       store.commit('search/setFilterValue', { name: 'starred', value: true })
 
-      expect(wrapper.vm.filters[0].label).toBe('filter.starred')
+      expect(wrapper.vm.filters[0].label).toBe('Starred')
     })
 
     it('should set filter as positive applied filter', () => {
