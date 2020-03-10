@@ -1,7 +1,9 @@
+import toLower from 'lodash/toLower'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
 import { Core } from '@/core'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import SearchResultsAppliedFilters from '@/components/SearchResultsAppliedFilters'
 
 const { localVue, store } = Core.init(createLocalVue()).useAll()
@@ -9,7 +11,11 @@ const router = new VueRouter()
 
 describe('SearchResultsAppliedFilters.vue', () => {
   jest.setTimeout(1e4)
+  const index = toLower('SearchResultsAppliedFilters')
+  esConnectionHelper(index)
   let wrapper
+
+  beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
     wrapper = shallowMount(SearchResultsAppliedFilters, { localVue, store, mocks: { $t: msg => msg, $te: msg => msg } })
