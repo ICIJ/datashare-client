@@ -1,26 +1,28 @@
-import types from '@/utils/types.json'
-import { findIcon, defaultIcon } from '@/utils/font-awesome-files'
-import Api from '../index'
-import EsDoc from './EsDoc'
-import moment from 'moment'
-import { extname } from 'path'
-import Murmur from '@icij/murmur'
-
 import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
 import endsWith from 'lodash/endsWith'
 import find from 'lodash/find'
 import filter from 'lodash/filter'
-import keys from 'lodash/keys'
 import get from 'lodash/get'
+import keys from 'lodash/keys'
 import last from 'lodash/last'
 import pick from 'lodash/pick'
 import some from 'lodash/some'
 import startsWith from 'lodash/startsWith'
 import trim from 'lodash/trim'
 import truncate from 'lodash/truncate'
+import Murmur from '@icij/murmur'
+import moment from 'moment'
+import { extname } from 'path'
+
+import Api from '@/api'
+import EsDoc from '@/api/resources/EsDoc'
+import humanSize from '@/filters/humanSize'
+import { defaultIcon, findIcon } from '@/utils/font-awesome-files'
+import types from '@/utils/types.json'
 
 const _parent = '_PARENT'
+const _separator = '/'
 
 export default class Document extends EsDoc {
   constructor (raw, parent = null) {
@@ -74,17 +76,17 @@ export default class Document extends EsDoc {
   }
   get folder () {
     // Extract location parts
-    let parts = this.path.split('/')
+    const parts = this.path.split(_separator)
     // Remove the file name
     parts.splice(-1, 1)
     // And return the new path
-    return parts.join('/') + '/'
+    return parts.join(_separator) + _separator
   }
   get location () {
     return this.folder.split(Murmur.config.get('dataDir', process.env.VUE_APP_DATA_PREFIX)).pop()
   }
   get basename () {
-    return last(this.path.split('/'))
+    return last(this.path.split(_separator))
   }
   get extension () {
     return extname(this.basename).toLowerCase()
@@ -98,7 +100,7 @@ export default class Document extends EsDoc {
     return resourceName
   }
   get title () {
-    const titles = [ this.shortId, this.basename ]
+    const titles = [this.shortId, this.basename]
     if (this.isEmail) {
       titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
       titles.push(trim(this.get('_source.metadata.tika_metadata_subject', '')))
@@ -116,7 +118,7 @@ export default class Document extends EsDoc {
   }
   get slicedName () {
     if (this.extractionLevel === 0) {
-      return [ this.title ]
+      return [this.title]
     }
     const distance = this.get('_source.extractionLevel') - 1
     // Sliced name for extracted doc is composed of:
@@ -124,7 +126,7 @@ export default class Document extends EsDoc {
     // - distance with the top parent
     // - the document title
     const root = this.parent ? truncate(this.parent.title, { length: 30 }) : this.basename
-    return [ root ].concat([ distance ].slice(0, distance)).concat(this.title)
+    return [root].concat([distance].slice(0, distance)).concat(this.title)
   }
   get highlight () {
     return this.raw.highlight
@@ -179,12 +181,7 @@ export default class Document extends EsDoc {
     return this.get('_source.extractionLevel', 0)
   }
   get humanSize () {
-    if (this.source.contentLength === -1) return 'unknown'
-    let size = this.source.contentLength
-    let unitIndex = Math.floor(size === 0 ? 0 : Math.log(size) / Math.log(1024))
-    let value = (size / Math.pow(1024, unitIndex)).toFixed(2)
-    let unit = ['B', 'kB', 'MB', 'GB', 'TB'][unitIndex]
-    return unitIndex === 0 ? `${size} B` : `${value} ${unit} (${size} B)`
+    return humanSize(this.source.contentLength, true)
   }
   get index () {
     return this.raw._index
@@ -227,7 +224,7 @@ export default class Document extends EsDoc {
   }
   get translationsHtml () {
     return cloneDeep(this.translations).map(translation => {
-      translation['content'] = this.nl2br(translation['content'])
+      translation.content = this.nl2br(translation.content)
       return translation
     })
   }
