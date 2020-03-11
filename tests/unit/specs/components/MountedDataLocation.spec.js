@@ -13,14 +13,14 @@ jest.mock('@/api', () => {
   })
 })
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('MountedDataLocation', () => {
   let wrapper
 
   beforeEach(async () => {
     Murmur.config.set('mountedDataDir', '/foo/bar')
-    wrapper = shallowMount(MountedDataLocation, { localVue, store, mocks: { $t: msg => msg }, sync: false })
+    wrapper = shallowMount(MountedDataLocation, { i18n, localVue, store, sync: false })
   })
 
   afterAll(() => jest.unmock('@/api'))

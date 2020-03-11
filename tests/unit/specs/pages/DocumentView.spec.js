@@ -16,7 +16,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('DocumentView.vue', () => {
@@ -26,9 +26,7 @@ describe('DocumentView.vue', () => {
   const id = 'document'
   let wrapper
 
-  beforeEach(async () => {
-    await letData(es).have(new IndexedDocument(id, index)).commit()
-  })
+  beforeEach(() => letData(es).have(new IndexedDocument(id, index)).commit())
 
   afterEach(() => {
     store.commit('document/reset')
@@ -36,14 +34,14 @@ describe('DocumentView.vue', () => {
   })
 
   it('should display an error message if document is not found', async () => {
-    wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id: 'notfound', index }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id: 'notfound', index } })
     await wrapper.vm.getDoc()
 
-    expect(wrapper.find('span').text()).toEqual('document.not_found')
+    expect(wrapper.find('span').text()).toEqual('Document not found')
   })
 
   it('should call to the API to retrieve tags', async () => {
-    wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index } })
     await wrapper.vm.getDoc()
 
     expect(axios.request).toBeCalledTimes(1)
@@ -52,7 +50,7 @@ describe('DocumentView.vue', () => {
 
   it('should display a document', async () => {
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
-    wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index } })
     await wrapper.vm.getDoc()
 
     expect(wrapper.contains('.document__header')).toBeTruthy()
@@ -60,7 +58,7 @@ describe('DocumentView.vue', () => {
 
   it('should display tags', async () => {
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
-    wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index } })
 
     await wrapper.vm.getDoc()
 
@@ -69,27 +67,27 @@ describe('DocumentView.vue', () => {
 
   it('should display the named entities tab', async () => {
     Murmur.config.merge({ dataDir: null, mountedDataDir: null, manageDocuments: true })
-    wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index } })
 
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(4)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(2).text()).toContain('document.named_entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(2).text()).toContain('Named Entities')
   })
 
   it('should NOT display the named entities tab', async () => {
     Murmur.config.merge({ manageDocuments: false })
-    wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index } })
 
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(3)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(2).text()).not.toContain('document.named_entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(2).text()).not.toContain('Named Entities')
   })
 
   describe('navigate through tabs as loop', () => {
     beforeEach(async () => {
-      wrapper = shallowMount(DocumentView, { localVue, store, router, propsData: { id, index }, mocks: { $t: msg => msg } })
+      wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index } })
       await wrapper.vm.getDoc()
     })
     it('should set the previous tab as active', () => {

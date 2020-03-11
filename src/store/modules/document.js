@@ -93,9 +93,6 @@ export const mutations = {
   toggleShowNamedEntities (state, toggler = null) {
     state.showNamedEntities = (toggler !== null ? toggler : !state.showNamedEntities)
   },
-  toggleIsLoadingNamedEntities (state, toggler = null) {
-    state.isLoadingNamedEntities = (toggler !== null ? toggler : !state.isLoadingNamedEntities)
-  },
   addTag (state, { tag, userId }) {
     const tags = map(compact(tag.split(' ')), tag => {
       return { label: tag, user: { id: userId }, creationDate: Date.now() }

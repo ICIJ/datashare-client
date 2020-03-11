@@ -86,13 +86,12 @@ export default {
   },
   data () {
     return {
-      selected: [],
-      isBusy: false
+      isBusy: false,
+      selected: []
     }
   },
   computed: {
-    ...mapState('search', ['query', 'response']),
-    ...mapState('search', ['isDownloadAllowed']),
+    ...mapState('search', ['isDownloadAllowed', 'query', 'response']),
     actions () {
       return [{
         id: 'star',

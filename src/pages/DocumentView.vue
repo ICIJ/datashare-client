@@ -1,8 +1,6 @@
 <template>
-  <div v-if="!isReady">
-    <content-placeholder class="document py-2 px-3" />
-  </div>
-  <div v-else>
+  <v-wait for="load_data">
+    <content-placeholder class="document py-2 px-3" slot="waiting" />
     <div class="d-flex flex-column document" v-if="document" v-shortkey="getKeys('tabNavigation')" @shortkey="getAction('tabNavigation')" :class="{ 'document--simplified': $route.name === 'document-simplified' }">
       <div class="document__header">
         <h3 class="document__header__name">
@@ -30,7 +28,7 @@
       <fa icon="exclamation-triangle" />
       <span>{{ $t('document.not_found') }}</span>
     </div>
-  </div>
+  </v-wait>
 </template>
 
 <script>
@@ -62,13 +60,12 @@ export default {
   },
   data () {
     return {
-      activeTab: 'extracted-text',
-      isReady: false
+      activeTab: 'extracted-text'
     }
   },
   methods: {
     async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
-      this.$set(this, 'isReady', false)
+      this.$wait.start('load_data')
       this.$Progress.start()
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
@@ -79,7 +76,7 @@ export default {
         this.$root.$emit('scroll-tracker:request', this.$el, 0, container)
         this.$root.$emit('document::content::changed')
       }
-      this.$set(this, 'isReady', true)
+      this.$wait.end('load_data')
       this.$Progress.finish()
     },
     isTabActive (name) {
