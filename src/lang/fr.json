@@ -542,7 +542,8 @@
     "title": "Configuration",
     "submit": "Actualiser",
     "submitSuccess": "Les modifications sont enregistrées mais vous devez redémarrer Datashare pour qu'elles s'appliquent.",
-    "submitError": "Erreur dans la reconfiguration."
+    "submitError": "Erreur dans la reconfiguration.",
+    "noAccess": "You do not have access to that page in server mode."
   },
   "human": {
     "number": {

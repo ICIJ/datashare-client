@@ -542,7 +542,8 @@
     "title": "設定",
     "submit": "送信",
     "submitSuccess": "設定が変更されました。Datashareを再起動してください",
-    "submitError": "設定を送信できません。"
+    "submitError": "設定を送信できません。",
+    "noAccess": "You do not have access to that page in server mode."
   },
   "human": {
     "number": {
