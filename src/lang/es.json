@@ -542,7 +542,8 @@
     "title": "Configuración",
     "submit": "Guardar",
     "submitSuccess": "Modificaciones enviadas. Ahora debería reiniciar Datashare.",
-    "submitError": "Error al guardar la configuración."
+    "submitError": "Error al guardar la configuración.",
+    "noAccess": "You do not have access to that page in server mode."
   },
   "human": {
     "number": {
