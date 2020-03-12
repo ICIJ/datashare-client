@@ -23,6 +23,7 @@ import get from 'lodash/get'
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
 import * as d3 from 'd3'
+import { mapState } from 'vuex'
 
 export default {
   name: 'WidgetCreationDateOverTime',
@@ -39,7 +40,13 @@ export default {
       margin: { top: 20, right: 20, bottom: 100, left: 50 }
     }
   },
+  watch: {
+    index () {
+      this.init()
+    }
+  },
   computed: {
+    ...mapState('search', ['index']),
     innerHeight () {
       return this.height - this.margin.top - this.margin.bottom
     },
@@ -92,11 +99,14 @@ export default {
       d3.select('.axis-y').call(
         d3.axisLeft(this.y)
           .ticks())
+    },
+    async init () {
+      this.data = await this.loadData()
+      this.buildChart()
     }
   },
-  async mounted () {
-    this.data = await this.loadData()
-    this.buildChart()
+  mounted () {
+    this.init()
   }
 }
 </script>

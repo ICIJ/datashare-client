@@ -11,7 +11,8 @@ describe('WidgetCreationDateOverTime.vue', () => {
   const widget = { title: 'Hello world' }
   const propsData = { widget }
   const index = toLower('WidgetCreationDateOverTime')
-  esConnectionHelper(index)
+  const anotherIndex = toLower('anotherIndex')
+  esConnectionHelper([index, anotherIndex])
   const es = esConnectionHelper.es
 
   beforeAll(() => store.commit('search/index', index))
@@ -42,5 +43,14 @@ describe('WidgetCreationDateOverTime.vue', () => {
     const data = await wrapper.vm.loadData()
 
     expect(data).toHaveLength(1)
+  })
+
+  it('should rerun init on index change', async () => {
+    const wrapper = mount(WidgetCreationDateOverTime, { i18n, localVue, propsData, store, wait, attachToDocument: true })
+    const init = jest.spyOn(wrapper.vm, 'init')
+
+    await store.commit('search/index', anotherIndex)
+
+    expect(init).toBeCalledTimes(1)
   })
 })

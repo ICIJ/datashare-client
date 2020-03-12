@@ -24,7 +24,8 @@
 
 <script>
 import { mapGetters } from 'vuex'
-import ProjectSelector from '../components/ProjectSelector'
+
+import ProjectSelector from '@/components/ProjectSelector'
 
 export default {
   components: {
