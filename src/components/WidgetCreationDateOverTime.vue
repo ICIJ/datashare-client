@@ -73,7 +73,7 @@ export default {
       const response = await this.$store.dispatch('search/queryFilter', { name: 'creationDate', options: { size: 1000 } })
       const aggregation = get(response, ['aggregations', 'metadata.tika_metadata_creation_date', 'buckets'])
       const dates = map(aggregation, d => {
-        if (d.key_as_string !== '0000-01') {
+        if (d.key >= 0) {
           d.date = new Date(d.key)
           return d
         }
