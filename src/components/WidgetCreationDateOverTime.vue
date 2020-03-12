@@ -91,7 +91,7 @@ export default {
       // Create the y axis
       d3.select('.axis-y').call(
         d3.axisLeft(this.y)
-          .ticks(d3.max(this.data, d => d.doc_count)))
+          .ticks())
     }
   },
   async mounted () {
