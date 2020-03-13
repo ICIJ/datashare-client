@@ -1,6 +1,6 @@
-import { getField, updateField } from 'vuex-map-fields'
+import { remove } from 'lodash'
 import Api from '@/api'
-import remove from 'lodash/remove'
+import { getField, updateField } from 'vuex-map-fields'
 
 export const api = new Api()
 

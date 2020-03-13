@@ -1,12 +1,16 @@
-import { findIndex, cloneDeep } from 'lodash'
+import { cloneDeep, findIndex } from 'lodash'
 import Vue from 'vue'
 
 import widgets from '@/store/widgets'
 import * as widgetTypes from '@/store/widgets'
 
 export function initialState () {
-  return cloneDeep({ widgets })
+  return {
+    index: '',
+    widgets: cloneDeep({ widgets }).widgets
+  }
 }
+
 const state = initialState()
 
 const mutations = {
@@ -15,7 +19,7 @@ const mutations = {
     Object.keys(s).forEach(key => Vue.set(state, key, s[key]))
   },
   removeWidget (state, name) {
-    const index = findIndex(state.widgets, (options) => options.name === name)
+    const index = findIndex(state.widgets, options => options.name === name)
     Vue.delete(state.widgets, index)
   },
   addWidget (state, options) {
@@ -23,6 +27,9 @@ const mutations = {
   },
   clearWidgets (state) {
     Vue.set(state, 'widgets', [])
+  },
+  index (state, index) {
+    Vue.set(state, 'index', index)
   }
 }
 
@@ -38,9 +45,7 @@ export const getters = {
     }
   },
   instantiatedWidgets (state, getters) {
-    return state.widgets.map(filter => {
-      return getters.instantiateWidget(filter)
-    })
+    return state.widgets.map(filter => getters.instantiateWidget(filter))
   }
 }
 

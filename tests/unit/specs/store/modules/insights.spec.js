@@ -1,10 +1,14 @@
 import store from '@/store'
-import { WidgetEmpty, WidgetText } from '@/store/widgets'
 import { initialState } from '@/store/modules/insights'
+import { WidgetEmpty, WidgetText } from '@/store/widgets'
 
 describe('InsightsStore', () => {
   beforeEach(() => {
     store.commit('insights/reset')
+  })
+
+  it('should define a store module', () => {
+    expect(store.state.insights).not.toBeUndefined()
   })
 
   it('should return a list of widget', () => {
@@ -58,5 +62,9 @@ describe('InsightsStore', () => {
     const initialLength = store.state.insights.widgets.length
     store.commit('insights/addWidget', { name: 'test-widget', type: 'WidgetText' })
     expect(store.getters['insights/instantiatedWidgets'][initialLength]).toBeInstanceOf(WidgetText)
+  })
+
+  it('should create an empty index by default', () => {
+    expect(store.state.insights.index).toBe('')
   })
 })

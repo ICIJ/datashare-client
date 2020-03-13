@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import map from 'lodash/map'
+import { get, isEmpty, map } from 'lodash'
 
 export default {
   name: 'ProjectSelector',
@@ -25,7 +25,7 @@ export default {
     },
     selectedProject: {
       get () {
-        return this.value
+        return isEmpty(this.value) ? get(this.projects, [0, 'value'], '') : this.value
       },
       set (value) {
         this.$emit('input', value)
