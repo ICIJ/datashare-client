@@ -67,7 +67,9 @@ import filter from 'lodash/filter'
 import find from 'lodash/find'
 import get from 'lodash/get'
 import indexOf from 'lodash/indexOf'
+import isEqual from 'lodash/isEqual'
 import map from 'lodash/map'
+import omit from 'lodash/omit'
 import orderBy from 'lodash/orderBy'
 
 export default {
@@ -140,7 +142,11 @@ export default {
       const queriesSort = get(this, ['$route', 'query', 'queries_sort'], undefined)
       const sort = get(this, ['$route', 'query', 'sort'], undefined)
       this.$set(this, 'selectedQueriesOnRouteEnter', [])
-      this.$router.push({ name: 'batch-search.results', query: { order, page, queries, queries_sort: queriesSort, sort } }).catch(() => {})
+      const query = { order, page, queries, queries_sort: queriesSort, sort }
+      const isEqualQuery = isEqual(omit(query, 'queries'), omit(this.$route.query, 'queries')) && isEqual(castArray(query.queries), castArray(this.$route.query.queries))
+      if (!isEqualQuery) {
+        this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
+      }
     },
     executeSearch (query) {
       this.$store.commit('search/reset')
