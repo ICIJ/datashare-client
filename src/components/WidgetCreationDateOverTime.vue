@@ -89,16 +89,11 @@ export default {
     },
     buildChart () {
       // Create the x axis
-      const xAxis = d3.select('.axis-x').call(
-        d3.axisBottom(this.x)
-          .tickValues(this.data.map(d => d.date))
-          .tickFormat(d3.timeFormat('%m-%Y')))
+      const xAxis = d3.select('.axis-x').call(d3.axisBottom(this.x))
       xAxis.selectAll('.tick text')
         .attr('transform', 'translate(20, 20) rotate(45)')
       // Create the y axis
-      d3.select('.axis-y').call(
-        d3.axisLeft(this.y)
-          .ticks())
+      d3.select('.axis-y').call(d3.axisLeft(this.y))
     },
     async init () {
       this.data = await this.loadData()
