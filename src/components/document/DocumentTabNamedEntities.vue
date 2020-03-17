@@ -1,5 +1,5 @@
 <template>
-  <v-wait for="load_data">
+  <v-wait for="load named entities">
     <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
     <div class="p-3">
       <div v-if="$config.is('manageDocuments') && !document.hasNerTags" class="document__named-entities document__named-entities--not--searched">
@@ -71,9 +71,9 @@ export default {
     }
   },
   async mounted () {
-    this.$wait.start('load_data')
+    this.$wait.start('load named entities')
     await this.$store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    this.$wait.end('load_data')
+    this.$wait.end('load named entities')
   },
   methods: {
     getCategoryTotal (category) {
