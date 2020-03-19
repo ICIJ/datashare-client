@@ -7,9 +7,11 @@
       <div class="widget__content__chart">
         <svg :height="height" width="100%">
           <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
-            <g class="axis-x" :style="{ transform: `translate(0px, ${this.innerHeight}px)` }"></g>
-            <g class="axis-y"></g>
-            <rect v-for="(bar, index) in bars" :key="index" :x="bar.x" :y="bar.y" :height="bar.height" :width="bar.width"></rect>
+            <g class="widget__content__chart__axis widget__content__chart__axis--x" :style="{ transform: `translate(0px, ${this.innerHeight}px)` }"></g>
+            <g class="widget__content__chart__axis widget__content__chart__axis--y"></g>
+            <g class="widget__content__chart__bars">
+              <rect v-for="(bar, index) in bars" :key="index" :x="bar.x" :y="bar.y" :height="bar.height" :width="bar.width"></rect>
+            </g>
           </g>
         </svg>
       </div>
@@ -107,9 +109,9 @@ export default {
       //  this value are refreshed (including scale functions)
       this.width = this.container.offsetWidth
       // Create/Update the x axis
-      this.chart.select('.axis-x').call(d3.axisBottom(this.x))
+      this.chart.select('.widget__content__chart__axis--x').call(d3.axisBottom(this.x))
       // Create/Update the y axis
-      this.chart.select('.axis-y').call(d3.axisLeft(this.y))
+      this.chart.select('.widget__content__chart__axis--y').call(d3.axisLeft(this.y))
     },
     async init () {
       this.data = await this.loadData()
