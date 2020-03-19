@@ -24,14 +24,20 @@ export default class FilterDate extends FilterDocument {
     })
   }
   body (body, options) {
+    let interval = { interval: '1M', format: 'yyyy-MM', missing: '0000-01' }
+    switch (options.interval) {
+      case 'month':
+        interval = { interval: '1M', format: 'yyyy-MM', missing: '0000-01' }
+        break
+      default :
+        break
+    }
     return body
       .query('match', 'type', 'Document')
       .agg('date_histogram', this.key, {
-        interval: '1M',
-        format: 'yyyy-MM',
         order: { _key: 'desc' },
         min_doc_count: 1,
-        missing: '0000-01'
+        ...interval
       }, this.key, a => a.agg('bucket_sort', { size: options.size }, 'bucket_sort_truncate'))
   }
 }

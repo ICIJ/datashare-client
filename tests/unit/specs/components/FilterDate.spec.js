@@ -2,12 +2,12 @@ import find from 'lodash/find'
 import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import { Core } from '@/core'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterDate from '@/components/FilterDate'
+import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterDate.vue', () => {
   const index = toLower('FilterDate')
@@ -16,14 +16,13 @@ describe('FilterDate.vue', () => {
   let wrapper
 
   beforeEach(() => {
-    store.commit('search/setGlobalSearch', true)
     store.commit('search/index', index)
-    wrapper = mount(FilterDate, { localVue, i18n, store, wait, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'indexingDate' }) } })
+    wrapper = mount(FilterDate, { i18n, localVue, store, wait, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'indexingDate' }) } })
   })
 
   afterEach(() => store.commit('search/reset'))
 
-  it('should display an creation date filter with 2 months', async () => {
+  it('should display a creation date filter with 2 months', async () => {
     await letData(es).have(new IndexedDocument('doc_01', index)
       .withIndexingDate('2018-04-01T00:00:00.000Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02', index)
@@ -42,6 +41,6 @@ describe('FilterDate.vue', () => {
     expect(getItemChildText(0, '.filter__items__item__count')).toEqual('2')
     expect(getItemChildText(1, '.filter__items__item__label')).toEqual('2018-04')
     expect(getItemChildText(1, '.filter__items__item__count')).toEqual('1')
-    expect(wrapper.vm.root.totalCount).toEqual(3)
+    expect(wrapper.vm.root.totalCount).toBe(3)
   })
 })

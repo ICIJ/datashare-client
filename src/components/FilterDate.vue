@@ -31,7 +31,7 @@ export default {
     }
   },
   mounted () {
-    this.$store.dispatch('search/queryFilter', { name: this.filter.name, options: { size: 1000 } }).then(response => {
+    this.$store.dispatch('search/queryFilter', { name: this.filter.name, options: { size: 1000, interval: 'month' } }).then(response => {
       this.$set(this, 'totalCount', sumBy(get(response, this.resultPath, []), 'doc_count'))
     })
   }
