@@ -11,7 +11,7 @@
         <svg :height="height" width="100%">
           <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
             <g class="widget__content__chart__axis widget__content__chart__axis--x" :style="{ transform: `translate(0px, ${this.innerHeight}px)` }"></g>
-              <g class="widget__content__chart__axis widget__content__chart_a"></g>
+            <g class="widget__content__chart__axis widget__content__chart__axis--y"></g>
             <g class="widget__content__chart__bars">
               <rect v-for="(bar, index) in bars" :key="index" :x="bar.x" :y="bar.y" :height="bar.height" :width="bar.width"></rect>
             </g>
