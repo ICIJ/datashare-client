@@ -3,16 +3,16 @@
     <div class="widget__header" v-if="widget.title" :class="{ 'card-header': widget.card }">
       <h4 v-html="widget.title" class="m-0"></h4>
     </div>
-    <div class="widget__content lead" :class="{ 'card-body': widget.card }">
-      <svg class="chart" :height="height" :width="width">
-        <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
-          <g class="axis-x" :style="{ transform: `translate(0px, ${this.innerHeight}px)` }"></g>
-          <text transform="translate(445, 450)" style="text-anchor: middle;">Time</text>
-          <g class="axis-y"></g>
-          <text transform="rotate(-90)" y="-35" x="-190" style="text-anchor: middle;">Number of documents</text>
-          <rect v-for="(bar, index) in bars" :key="index" :x="bar.x" :y="bar.y" :height="bar.height" :width="bar.width"></rect>
-        </g>
-      </svg>
+    <div class="widget__content" :class="{ 'card-body': widget.card }">
+      <div class="widget__content__chart">
+        <svg :height="height" width="100%">
+          <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
+            <g class="axis-x" :style="{ transform: `translate(0px, ${this.innerHeight}px)` }"></g>
+            <g class="axis-y"></g>
+            <rect v-for="(bar, index) in bars" :key="index" :x="bar.x" :y="bar.y" :height="bar.height" :width="bar.width"></rect>
+          </g>
+        </svg>
+      </div>
     </div>
   </div>
 </template>
@@ -35,9 +35,9 @@ export default {
   data () {
     return {
       data: [],
-      height: 500,
-      width: 960,
-      margin: { top: 20, right: 20, bottom: 100, left: 50 }
+      mounted: false,
+      width: 0,
+      margin: { top: 20, right: 20, bottom: 20, left: 50 }
     }
   },
   watch: {
@@ -45,8 +45,23 @@ export default {
       this.init()
     }
   },
+  mounted () {
+    this.$nextTick(() => {
+      this.mounted = true
+      this.init()
+    })
+  },
   computed: {
     ...mapState('search', ['index']),
+    container () {
+      return this.mounted ? this.$el.querySelector('.widget__content__chart') : null
+    },
+    chart () {
+      return this.mounted ? d3.select(this.container).select('svg') : null
+    },
+    height () {
+      return this.width * 1 / 2
+    },
     innerHeight () {
       return this.height - this.margin.top - this.margin.bottom
     },
@@ -88,20 +103,20 @@ export default {
       return sortBy(compact(dates), ['key'])
     },
     buildChart () {
-      // Create the x axis
-      const xAxis = d3.select('.axis-x').call(d3.axisBottom(this.x))
-      xAxis.selectAll('.tick text')
-        .attr('transform', 'translate(20, 20) rotate(45)')
-      // Create the y axis
-      d3.select('.axis-y').call(d3.axisLeft(this.y))
+      // Refresh the width so all computed properties that are dependent of
+      //  this value are refreshed (including scale functions)
+      this.width = this.container.offsetWidth
+      // Create/Update the x axis
+      this.chart.select('.axis-x').call(d3.axisBottom(this.x))
+      // Create/Update the y axis
+      this.chart.select('.axis-y').call(d3.axisLeft(this.y))
     },
     async init () {
       this.data = await this.loadData()
-      this.buildChart()
+      // Build the chart when its container is resized
+      const observer = new ResizeObserver(this.buildChart)
+      observer.observe(this.container)
     }
-  },
-  mounted () {
-    this.init()
   }
 }
 </script>
@@ -110,7 +125,7 @@ export default {
   .widget {
     min-height: 100%;
 
-    .chart rect {
+    &__content__chart rect {
       fill: $primary;
     }
   }
