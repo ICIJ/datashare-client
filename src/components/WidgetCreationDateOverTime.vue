@@ -1,14 +1,17 @@
 <template>
   <div class="widget">
-    <div class="widget__header" v-if="widget.title" :class="{ 'card-header': widget.card }">
-      <h4 v-html="widget.title" class="m-0"></h4>
+    <div class="widget__header d-flex align-items-center" v-if="widget.title" :class="{ 'card-header': widget.card }">
+      <h4 v-html="widget.title" class="m-0 flex-grow-1"></h4>
+      <div class="widget__header__selector">
+        Years | <strong>Months</strong> | Days
+      </div>
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
       <div class="widget__content__chart">
         <svg :height="height" width="100%">
           <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
             <g class="widget__content__chart__axis widget__content__chart__axis--x" :style="{ transform: `translate(0px, ${this.innerHeight}px)` }"></g>
-            <g class="widget__content__chart__axis widget__content__chart__axis--y"></g>
+              <g class="widget__content__chart__axis widget__content__chart_a"></g>
             <g class="widget__content__chart__bars">
               <rect v-for="(bar, index) in bars" :key="index" :x="bar.x" :y="bar.y" :height="bar.height" :width="bar.width"></rect>
             </g>
