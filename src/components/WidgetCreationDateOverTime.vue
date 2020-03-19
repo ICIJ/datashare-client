@@ -26,6 +26,7 @@
 import compact from 'lodash/compact'
 import get from 'lodash/get'
 import map from 'lodash/map'
+import ResizeObserver from 'resize-observer-polyfill'
 import sortBy from 'lodash/sortBy'
 import * as d3 from 'd3'
 import { mapState } from 'vuex'

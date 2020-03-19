@@ -48,9 +48,9 @@ describe('WidgetCreationDateOverTime.vue', () => {
   it('should rerun init on index change', async () => {
     const wrapper = mount(WidgetCreationDateOverTime, { i18n, localVue, propsData, store, wait, attachToDocument: true })
     const init = jest.spyOn(wrapper.vm, 'init')
-
-    await store.commit('search/index', anotherIndex)
-
+    await wrapper.vm.$nextTick()
     expect(init).toBeCalledTimes(1)
+    await store.commit('search/index', anotherIndex)
+    expect(init).toBeCalledTimes(2)
   })
 })
