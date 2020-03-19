@@ -40,8 +40,8 @@ export default {
   methods: {
     async count (q) {
       const index = this.$store.state.search.index
-      const { count } = await elasticsearch.count({ index, q })
-      return count
+      const res = await elasticsearch.search({ index, q, size: 0 })
+      return res?.hits?.total || 0
     },
     countTotal () {
       const q = 'type:Document'
