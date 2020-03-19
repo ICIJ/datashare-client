@@ -236,7 +236,7 @@ export default {
     }
   },
   created () {
-    const projects = this.$config.get('datashare_indices', [])
+    const projects = this.$config.get('datashare_projects', [])
     this.$set(this, 'projects', map(projects, value => { return { value, text: value } }))
     this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
   },

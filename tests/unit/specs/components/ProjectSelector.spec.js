@@ -9,7 +9,7 @@ describe('ProjectSelector.vue', () => {
   let wrapper
 
   it('should load projects list from config', () => {
-    Murmur.config.merge({ datashare_indices: ['first-index', 'second-index', 'third-index'] })
+    Murmur.config.merge({ datashare_projects: ['first-index', 'second-index', 'third-index'] })
     wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { value: 'first-index' }, stubs: { 'b-form-select': false } })
 
     expect(wrapper.vm.projects).toHaveLength(3)
@@ -19,7 +19,7 @@ describe('ProjectSelector.vue', () => {
   })
 
   it('should set default project to first project if value is empty', () => {
-    Murmur.config.merge({ datashare_indices: ['first-index', 'second-index'] })
+    Murmur.config.merge({ datashare_projects: ['first-index', 'second-index'] })
     wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { value: '' }, stubs: { 'b-form-select': false } })
 
     expect(wrapper.vm.selectedProject).toEqual('first-index')

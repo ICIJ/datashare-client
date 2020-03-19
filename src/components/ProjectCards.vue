@@ -53,7 +53,7 @@ export default {
     startCase
   },
   created () {
-    this.$set(this, 'projects', this.$config.get('datashare_indices', []))
+    this.$set(this, 'projects', this.$config.get('datashare_projects', []))
   }
 }
 </script>
