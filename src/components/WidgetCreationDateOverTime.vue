@@ -8,7 +8,7 @@
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
       <div class="widget__content__chart">
-        <svg :height="height" width="100%">
+        <svg :height="height" width="100%" shape-rendering="crispEdges">
           <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
             <g class="widget__content__chart__axis widget__content__chart__axis--x" :style="{ transform: `translate(0px, ${this.innerHeight}px)` }"></g>
             <g class="widget__content__chart__axis widget__content__chart__axis--y"></g>
@@ -134,7 +134,6 @@ export default {
 <style lang="scss">
   .widget {
     min-height: 100%;
-    shape-rendering: crispEdges;
 
     &__content__chart {
       svg {
