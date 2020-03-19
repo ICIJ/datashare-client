@@ -113,9 +113,13 @@ export default {
       //  this value are refreshed (including scale functions)
       this.width = this.container.offsetWidth
       // Create/Update the x axis
-      this.chart.select('.widget__content__chart__axis--x').call(d3.axisBottom(this.x))
+      this.chart.select('.widget__content__chart__axis--x')
+        .call(d3.axisBottom(this.x))
       // Create/Update the y axis
-      this.chart.select('.widget__content__chart__axis--y').call(d3.axisLeft(this.y))
+      this.chart.select('.widget__content__chart__axis--y')
+        .call(d3.axisLeft(this.y))
+        .selectAll('.tick line')
+        .attr('x2', this.width - this.margin.left - this.margin.right)
     },
     async init () {
       this.data = await this.loadData()
@@ -130,9 +134,28 @@ export default {
 <style lang="scss">
   .widget {
     min-height: 100%;
+    shape-rendering: crispEdges;
 
-    &__content__chart rect {
-      fill: $primary;
+    &__content__chart {
+      svg {
+        font-family: $font-family-base;
+      }
+
+      rect {
+        fill: $primary;
+      }
+
+      &__axis {
+
+        .tick line {
+          color: $gray-300;
+        }
+
+        .domain,
+        &--x .tick line {
+          display: none;
+        }
+      }
     }
   }
 </style>
