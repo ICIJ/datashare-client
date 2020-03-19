@@ -4,8 +4,15 @@ description: Install Datashare will help you set up the software on your compute
 
 # Install Datashare on Windows
 
-You will need **Windows 10 Pro or more recent versions.** For less recent versions, see [here](https://icij.gitbook.io/datashare/faq/how-can-i-install-datashare-on-a-windows-prior-to-windows-10-pro).  
-****  
+You have **2 options:**
+
+* if you have **Windows 10 Pro**: you can use the **standard** option which installs Datashare with Docker as it is a more powerful version.
+* if you have **Windows 7 Service Pack 2 or newer version**: you can use the **standalone** option which installs Datashare without Docker.
+
+### **Standard \(requirement: Windows 10 Pro\)**
+
+You will need **Windows 10 Pro or more recent versions.**   
+  
 1. Go to the **Datashare's website:** [**https://datashare.icij.org/**](https://datashare.icij.org/).
 
 2. Click the blue button '**DOWNLOAD FOR FREE'**.
@@ -40,4 +47,105 @@ Datashare is installing.
 ![](../.gitbook/assets/capture-de-cran-31.png)
 
 You're now ready to the next step. Let's [open Datashare](https://icij.gitbook.io/datashare/windows/open-datashare-on-windows).
+
+
+
+### **Standalone \(requirement: Windows 7 Service Pack 2 or newer version\)**
+
+You need Windows 7 Service Pack 2 or newer version.
+
+1. Download the latest release installer by **clicking the link below**:
+
+[**https://github.com/ICIJ/datashare-installer/releases/download/5.9.1/installDatashareStandalone.exe**](https://github.com/ICIJ/datashare-installer/releases/download/5.9.1/installDatashareStandalone.exe)
+
+ 2. The file '**InstallDatashareStandalone.exe**' was downloaded. **Double click** on the name of the file in order to execute it.
+
+ 3. As Datashare is not signed, this popup asks for your permission. Don't click 'Don't run' but click '**More info'**: 
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_45_55.png)
+
+ 4. Click '**Run anyway**':
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_46_41.png)
+
+ 5. It asks if you want to allow the app to make changes to your device. Click '**Yes**':
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_48_53.png)
+
+ 6. On the Installer Wizard, as you need to download and install OpenJDK8 if it is not installed on your device, click '**Install**':
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_49_28.png)
+
+The following windows with progress bars will be displayed:
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_49_41.png)
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_50_01.png)
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_50_21.png)
+
+Choose a language and click '**OK**':
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_50_35.png)
+
+ 7. To install **Tesseract OCR**, click the following buttons on the Installer Wizard's windows:
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_50_45.png)
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_50_58.png)
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_51_08.png)
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_51_19.png)
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_51_34.png)
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_51_47.png)
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_51_59.png)
+
+Untick '**Show README**' and click '**Finish**':
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_52_14.png)
+
+Finally, click "**Close**" to close the installer of TesseractOCR.
+
+ 8. It downloads the back end, Datashare.jar:
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_52_27.png)
+
+Then, the front end, Datashare.tgz:
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_54_06.png)
+
+When it is finished, click '**Close**':
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_55_17.png)
+
+ 9. **Datashare is now installed**.  You can click on the Windows key, type 'Datashare' and you will see the App and its version number. Click '**Datashare**':
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_56_06.png)
+
+  
+ 10. It will launch a 'command line', a windows that shows the logs of Datashare's server, that is to say a description of the actions run by Datashare's server:
+
+![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_56_19.png)
+
+
+
+ ****11. **Do you see this error screen?** \(It can happen on Windows 8.1 for instance\)
+
+![](../.gitbook/assets/erreur_droits_w81.png)
+
+If yes, you need to allow 'running scripts' as explained here:  
+
+[https://superuser.com/questions/106360/how-to-enable-execution-of-powershell-scripts](https://superuser.com/questions/106360/how-to-enable-execution-of-powershell-scripts)
+
+In an administrator powershell, type:
+
+`Set-ExecutionPolicy -Scope CurrentUser Bypass`
+
+Then launch again Datashare.
+
+When you'll see the log "Server started on port 8080", you will be able to open your browser and go to the URL [http://localhost:8080](http://localhost:8080/).
 
