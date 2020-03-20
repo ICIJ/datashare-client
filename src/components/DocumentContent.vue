@@ -223,14 +223,18 @@ export default {
         :search-worker-in-progress="localSearchWorkerInProgress" />
       <hook name="document.content.toolbox:after" />
     </div>
-    <div class="document-content__ner-toggler" v-if="showNamedEntitiesToggler">
-      <div class="custom-control custom-switch">
-        <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler" :disabled="isLoadingNamedEntities">
-        <label class="custom-control-label font-weight-bold" for="input-ner-toggler" id="label-ner-toggler">
-          {{ $t('document.showNamedEntities') }}
-        </label>
+    <div class="float-right mb-3 px-3">
+      <hook name="document.content.ner:before" />
+      <div class="document-content__ner-toggler py-1 font-weight-bold" id="ner-toggler" v-if="showNamedEntitiesToggler">
+        <div class="custom-control custom-switch">
+          <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler" :disabled="isLoadingNamedEntities">
+          <label class="custom-control-label font-weight-bold" for="input-ner-toggler" id="label-ner-toggler">
+            {{ $t('document.showNamedEntities') }}
+          </label>
+        </div>
+        <b-tooltip placement="left" target="ner-toggler" :title="$t('document.highlights_caution')" />
       </div>
-      <b-tooltip placement="bottom" target="label-ner-toggler" :title="$t('document.highlights_caution')" />
+      <hook name="document.content.ner:after" />
     </div>
     <hook name="document.content.body:before" />
     <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
@@ -259,9 +263,6 @@ export default {
     }
 
     &__ner-toggler {
-      float: right;
-      margin: $spacer * 0.25 $spacer $spacer;
-
       & > .custom-control.custom-switch {
         display: inline-block;
       }
