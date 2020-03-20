@@ -15,7 +15,7 @@ const HooksMixins = superclass => class extends superclass {
   }
   registerHookForProject (project, options) {
     options = cloneDeep(options)
-    options.name = options.name || uniqueId('hooked-component-')
+    options.name = options.name || uniqueId('core:hooked-component-')
     // Watch store mutations
     return this.toggleForProject({
       project,

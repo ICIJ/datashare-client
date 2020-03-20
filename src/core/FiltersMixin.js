@@ -9,7 +9,7 @@ const FiltersMixin = superclass => class extends superclass {
   }
   registerFilterForProject (project, { type, options = {} } = {}) {
     options = cloneDeep(options)
-    options.name = options.name || uniqueId('filter-')
+    options.name = options.name || uniqueId('core:filter-')
     // Watch store mutations
     return this.toggleForProject({
       project,

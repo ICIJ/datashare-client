@@ -12,6 +12,7 @@ import compose from 'lodash/fp/compose'
 
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
+import PipelinesMixin from './PipelinesMixin'
 import ProjectsMixin from './ProjectsMixin'
 
 import router from '@/router'
@@ -25,7 +26,7 @@ import mode from '@/modes'
 import { dispatch } from '@/utils/event-bus'
 
 class Base {}
-const Behaviors = compose(FiltersMixin, HooksMixin, ProjectsMixin)(Base)
+const Behaviors = compose(FiltersMixin, HooksMixin, PipelinesMixin, ProjectsMixin)(Base)
 
 export default class Core extends Behaviors {
   constructor (LocalVue = Vue) {
