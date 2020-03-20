@@ -26,7 +26,7 @@ export function replaceInChildNodes (element, needle, replacement) {
   }
 }
 
-export function addLocalSearchMarks (content, localSearchTerm = { label: '' }) {
+export function addLocalSearchMarks (content = '<div></div>', localSearchTerm = { label: '' }) {
   const escapedLocalSearchTerm = localSearchTerm.regex ? localSearchTerm.label : escapeRegExp(localSearchTerm.label)
   const regex = new RegExp('(?![^<]*>)' + escapedLocalSearchTerm, 'gi')
   const localSearchOccurrences = (content.match(regex) || []).length
@@ -36,7 +36,7 @@ export function addLocalSearchMarks (content, localSearchTerm = { label: '' }) {
     if (localSearchOccurrences === 0) throw new Error()
 
     const needle = RegExp(`(${escapedLocalSearchTerm})`, 'gim')
-    const dom = cheerio.load(content || '<div></div>')
+    const dom = cheerio.load(content)
     if (!dom) throw new Error()
 
     replaceInChildNodes(dom('body'), needle, '<mark class="local-search-term">$1</mark>')
@@ -54,12 +54,12 @@ export function addLocalSearchMarks (content, localSearchTerm = { label: '' }) {
 
 export function sliceIndexes (str, indexes) {
   if (str.length === 0) return []
-  let orderedIndexes = Array.from(new Set(indexes)).sort((a, b) => a - b)
-  let result = []
+  const orderedIndexes = Array.from(new Set(indexes)).sort((a, b) => a - b)
+  const result = []
   let currentIndex = 0
-  for (let index of orderedIndexes) {
+  for (const index of orderedIndexes) {
     if (index >= 0 && index < str.length) {
-      let items = str.substring(currentIndex, index)
+      const items = str.substring(currentIndex, index)
       result.push(items)
       currentIndex = index
     }
@@ -70,8 +70,8 @@ export function sliceIndexes (str, indexes) {
 
 export function highlight (str = '', marks = [], markFun = (m => `<mark>${m.content}</mark>`), restFun = identity, contentFun = (m => m.content)) {
   const sortedMarks = sortBy(marks, m => m.index)
-  let docContentSlices = sliceIndexes(str, map(sortedMarks, m => m.index))
-  let docContentMarked = map(zip(takeRight(docContentSlices, sortedMarks.length), sortedMarks), ([slice = '', mark]) => {
+  const docContentSlices = sliceIndexes(str, map(sortedMarks, m => m.index))
+  const docContentMarked = map(zip(takeRight(docContentSlices, sortedMarks.length), sortedMarks), ([slice = '', mark]) => {
     return markFun(mark) + restFun(slice.substring(contentFun(mark).length))
   })
   return docContentSlices[0] + docContentMarked.join('')

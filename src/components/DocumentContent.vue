@@ -1,10 +1,10 @@
 <script>
+import concat from 'lodash/concat'
 import compact from 'lodash/compact'
 import identity from 'lodash/identity'
 import once from 'lodash/once'
 import template from 'lodash/template'
 import throttle from 'lodash/throttle'
-import trim from 'lodash/trim'
 import { mapGetters, mapState } from 'vuex'
 import xss from 'xss'
 
@@ -117,12 +117,6 @@ export default {
 
       return workerPromise
     },
-    addLineBreaks (content) {
-      return content.split('\n').map(trim).map(row => `<p>${row}</p>`).join('')
-    },
-    deleteEmptyParagraphs (content) {
-      return content.replace(new RegExp('<p>\s*<\/p>', 'gm'), '')
-    },
     sanitizeHtml (content) {
       const whiteList = { mark: ['style', 'class', 'title'], p: true }
       return xss(content, { stripIgnoreTag: true, whiteList })
@@ -152,6 +146,9 @@ export default {
     },
     getNamedEntitiesTotal () {
       return this.$store.dispatch('document/getNamedEntitiesTotal')
+    },
+    getPipelinesByStage (stage = 'pre') {
+      return this.$store.getters['pipelines/getPipelineChainByCategory'](`extracted-text:${stage}`)
     }
   },
   computed: {
@@ -170,15 +167,19 @@ export default {
       }
     },
     contentPipelineFunctions () {
-      return compact([
-        // Named entities cannot be added on translated content
+      // Collect pre pipelines for this category from the store
+      const prePipelines = this.getPipelinesByStage('pre')
+      // Collect post pipelines for this category from the store
+      const postPipelines = this.getPipelinesByStage('post')
+      // Main pipelines are always applied
+      const mainPipelines = compact([
         (this.shouldApplyNamedEntitiesMarks ? this.addNamedEntitiesMarks : null),
         this.sanitizeHtml,
         this.addLocalSearchMarks,
-        this.addGlobalSearchMarks,
-        this.addLineBreaks,
-        this.deleteEmptyParagraphs
+        this.addGlobalSearchMarks
       ])
+
+      return concat(prePipelines, mainPipelines, postPipelines)
     },
     showNamedEntitiesToggler () {
       return !this.translatedContent && this.hasNamedEntities

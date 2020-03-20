@@ -10,6 +10,7 @@ import documentNotes from './modules/documentNotes'
 import hooks from './modules/hooks'
 import indexing from './modules/indexing'
 import insights from './modules/insights'
+import pipelines from './modules/pipelines'
 import search from './modules/search'
 import treeView from './modules/treeView'
 import userHistory from './modules/userHistory'
@@ -17,7 +18,19 @@ import userHistory from './modules/userHistory'
 Vue.use(Vuex)
 
 export default new Vuex.Store({
-  modules: { batchSearch, config, document, documentNotes, hooks, indexing, insights, search, treeView, userHistory },
+  modules: {
+    batchSearch,
+    config,
+    document,
+    documentNotes,
+    hooks,
+    indexing,
+    insights,
+    pipelines,
+    search,
+    treeView,
+    userHistory
+  },
   strict: process.env.NODE_ENV === 'development',
   plugins: [
     createPersistedState({
