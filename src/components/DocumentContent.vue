@@ -66,6 +66,10 @@ export default {
     },
     async translatedContent () {
       await this.transformContent()
+    },
+    // Watch for changes on the pipeline
+    contentPipelineFunctions () {
+      this.transformContent()
     }
   },
   methods: {
