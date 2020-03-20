@@ -11,6 +11,8 @@ import xss from 'xss'
 import DocumentAttachments from '@/components/DocumentAttachments'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
+import Hook from '@/components/Hook'
+
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import LocalSearchWorker from '@/utils/local-search.webworker'
@@ -21,7 +23,8 @@ export default {
   components: {
     DocumentAttachments,
     DocumentGlobalSearchTermsTags,
-    DocumentLocalSearchInput
+    DocumentLocalSearchInput,
+    Hook
   },
   mixins: [ner, utils],
   props: {
@@ -199,7 +202,9 @@ export default {
 
 <template>
   <div class="document-content">
+    <hook name="document.content:before" />
     <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
+      <hook name="document.content.toolbox:before" />
       <document-global-search-terms-tags
         :document="document"
         @select="localSearchTerm = $event"
@@ -212,6 +217,7 @@ export default {
         :search-occurrences="localSearchOccurrences"
         :search-index="localSearchIndex"
         :search-worker-in-progress="localSearchWorkerInProgress" />
+      <hook name="document.content.toolbox:after" />
     </div>
     <div class="document-content__ner-toggler" v-if="showNamedEntitiesToggler">
       <div class="custom-control custom-switch">
@@ -222,8 +228,11 @@ export default {
       </div>
       <b-tooltip placement="bottom" target="label-ner-toggler" :title="$t('document.highlights_caution')" />
     </div>
+    <hook name="document.content.body:before" />
     <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
+    <hook name="document.content.body:after" />
     <document-attachments :document="document" class="mx-3 mb-3" />
+    <hook name="document.content:before" />
   </div>
 </template>
 

@@ -3,22 +3,32 @@
     <content-placeholder class="document py-2 px-3" slot="waiting" />
     <div class="d-flex flex-column document" v-if="document" v-shortkey="getKeys('tabNavigation')" @shortkey="getAction('tabNavigation')" :class="{ 'document--simplified': $route.name === 'document-simplified' }">
       <div class="document__header">
+        <hook name="document.header:before" />
         <h3 class="document__header__name">
+          <hook name="document.header.name:before" />
           <document-sliced-name interactive-root :document="document" />
+          <hook name="document.header.name:after" />
         </h3>
+        <hook name="document.header.tags:before" />
         <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="false" class="ml-0" mode="dark" />
+        <hook name="document.header.tags:after" />
+        <hook name="document.header.nav:before" />
         <nav class="document__header__nav text-nowrap overflow-auto">
           <ul class="list-inline m-0">
             <li class="document__header__nav__item list-inline-item" v-for="tab in visibleTabs" :key="tab.name">
               <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
+                <hook :name="`document.header.nav.${tab.name}:before`" />
                 <fa :icon="tab.icon" v-if="tab.icon" class="mr-2" />
                 {{ $t(tab.label) }}
+                <hook :name="`document.header.nav.${tab.name}:after`" />
               </a>
             </li>
           </ul>
         </nav>
+        <hook name="document.header.nav:after" />
+        <hook name="document.header:after" />
       </div>
-      <div class="d-flex flex-grow-1 tab-content document__content">
+      <div class="d-flex flex-grow-1 flex-column tab-content document__content">
         <div class="document__content__pane tab-pane w-100" :class="tabClass(tab.name)" v-for="tab in visibleTabs" :key="tab.name">
           <component v-if="isTabActive(tab.name)" :is="tab.component" v-bind="tab.props"></component>
         </div>
@@ -38,6 +48,7 @@ import { mapState } from 'vuex'
 
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
+import Hook from '@/components/Hook'
 import shortkeys from '@/mixins/shortkeys'
 
 export default {
@@ -45,7 +56,8 @@ export default {
   mixins: [shortkeys],
   components: {
     DocumentSlicedName,
-    DocumentTagsForm
+    DocumentTagsForm,
+    Hook
   },
   props: {
     id: {
