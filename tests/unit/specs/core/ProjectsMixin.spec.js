@@ -50,7 +50,7 @@ describe('ProjectsMixin', () => {
     core.store.commit('search/index', 'my-project')
     core.store.commit('search/index', 'my-other-project')
     // And check the function has been called
-    expect(withoutFn).toBeCalledTimes(2)
+    expect(withoutFn).toBeCalledTimes(3)
   })
 
   it('should call the function when a project is selected, then call the other when unselected', async () => {
@@ -61,12 +61,12 @@ describe('ProjectsMixin', () => {
     // Switch between projects
     core.store.commit('search/index', 'my-new-project')
     expect(withFn).toBeCalledTimes(1)
-    expect(withoutFn).toBeCalledTimes(0)
+    expect(withoutFn).toBeCalledTimes(1)
     core.store.commit('search/index', 'my-other-project')
     expect(withFn).toBeCalledTimes(1)
-    expect(withoutFn).toBeCalledTimes(1)
+    expect(withoutFn).toBeCalledTimes(2)
     core.store.commit('search/index', 'my-new-project')
     expect(withFn).toBeCalledTimes(2)
-    expect(withoutFn).toBeCalledTimes(1)
+    expect(withoutFn).toBeCalledTimes(2)
   })
 })
