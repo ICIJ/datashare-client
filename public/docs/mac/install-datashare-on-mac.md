@@ -4,6 +4,13 @@ description: This will help you set up and install Datashare on your computer.
 
 # Install Datashare on Mac
 
+You have **2 options:**
+
+* if you have **OS X El Capitan 10.11** or a more recent version: you can use the **standard** option which installs Datashare with Docker; it is a more powerful version.
+* if you have **a less recent version**: you can use the **standalone** option which installs Datashare without Docker.
+
+### Standard \(OS X El Capitan 10.11\)
+
 You need **OS X El Capitan 10.11 or a more recent version.**  
   
 1. Go to **Datashare's website:** [**https://datashare.icij.org/**](https://datashare.icij.org/)**.**
@@ -78,4 +85,8 @@ If Docker Desktop offers to log in with Docker ID, **do NOT log in and** **close
 ![](../.gitbook/assets/screen-shot-2019-02-01-at-10.29.43-am.png)
 
 You're now ready to take the next step: let's [open Datashare](https://icij.gitbook.io/datashare/mac/open-datashare-on-mac).
+
+### Standalone \(less recent than OS X El Capitan 10.11\)
+
+
 
