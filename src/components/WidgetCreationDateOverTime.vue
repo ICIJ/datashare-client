@@ -58,10 +58,7 @@ export default {
     }
   },
   mounted () {
-    this.$nextTick(() => {
-      this.mounted = true
-      this.init()
-    })
+    this.$nextTick(() => this.init())
   },
   computed: {
     ...mapState('search', ['index']),
@@ -129,10 +126,10 @@ export default {
     },
     async init () {
       this.data = await this.loadData()
+      this.mounted = true
       // Build the chart when its container is resized
       const observer = new ResizeObserver(this.buildChart)
       observer.observe(this.container)
-      this.buildChart()
     }
   }
 }

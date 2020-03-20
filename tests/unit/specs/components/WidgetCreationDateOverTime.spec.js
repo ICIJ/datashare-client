@@ -12,21 +12,20 @@ describe('WidgetCreationDateOverTime.vue', () => {
   const propsData = { widget }
   const index = toLower('WidgetCreationDateOverTime')
   const anotherIndex = toLower('anotherIndex')
+  const methods = { loadData: () => [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }] }
   esConnectionHelper([index, anotherIndex])
   const es = esConnectionHelper.es
 
   beforeAll(() => store.commit('search/index', index))
 
   it('should be a Vue instance', () => {
-    const wrapper = shallowMount(WidgetCreationDateOverTime, { i18n, localVue, propsData, store, wait })
+    const wrapper = shallowMount(WidgetCreationDateOverTime, { i18n, localVue, methods, propsData, store, wait })
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
   it('should display a barchart with 2 bars', async () => {
-    const methods = { loadData: () => [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }] }
     const wrapper = mount(WidgetCreationDateOverTime, { i18n, localVue, methods, propsData, store, wait, attachToDocument: true })
     await wrapper.vm.$nextTick()
-
     expect(wrapper.findAll('svg')).toHaveLength(1)
     expect(wrapper.findAll('svg rect')).toHaveLength(2)
   })
@@ -46,7 +45,7 @@ describe('WidgetCreationDateOverTime.vue', () => {
   })
 
   it('should rerun init on index change', async () => {
-    const wrapper = mount(WidgetCreationDateOverTime, { i18n, localVue, propsData, store, wait, attachToDocument: true })
+    const wrapper = mount(WidgetCreationDateOverTime, { i18n, localVue, methods, propsData, store, wait, attachToDocument: true })
     const init = jest.spyOn(wrapper.vm, 'init')
     await wrapper.vm.$nextTick()
     expect(init).toBeCalledTimes(1)
