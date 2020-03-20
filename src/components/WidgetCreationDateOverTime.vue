@@ -4,8 +4,8 @@
       <h4 v-html="widget.title" class="m-0 flex-grow-1"></h4>
       <div class="widget__header__selectors">
         <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'year' }" @click="click('year')">Years</span> |
-        <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'year' }" @click="click('month')">Months</span> |
-        <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'year' }" @click="click('day')">Days</span>
+        <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'month' }" @click="click('month')">Months</span> |
+        <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'day' }" @click="click('day')">Days</span>
       </div>
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
@@ -33,11 +33,11 @@
 import compact from 'lodash/compact'
 import get from 'lodash/get'
 import map from 'lodash/map'
-import ResizeObserver from 'resize-observer-polyfill'
 import sortBy from 'lodash/sortBy'
 import * as d3 from 'd3'
-import { mapState } from 'vuex'
+import ResizeObserver from 'resize-observer-polyfill'
 import { waitFor } from 'vue-wait'
+import { mapState } from 'vuex'
 
 export default {
   name: 'WidgetCreationDateOverTime',
@@ -130,15 +130,15 @@ export default {
     async init () {
       const data = await this.loadData()
       this.$set(this, 'data', data)
-      this.mounted = true
+      this.$set(this, 'mounted', true)
       // Build the chart when its container is resized
       const observer = new ResizeObserver(this.buildChart)
       observer.observe(this.container)
     },
     async click (value) {
+      this.$set(this, 'mounted', false)
       this.$set(this, 'interval', value)
-      const data = await this.loadData()
-      this.$set(this, 'data', data)
+      await this.init()
     }
   }
 }
