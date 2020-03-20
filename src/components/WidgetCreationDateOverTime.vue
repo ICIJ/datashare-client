@@ -2,8 +2,10 @@
   <div class="widget">
     <div class="widget__header d-flex align-items-center" v-if="widget.title" :class="{ 'card-header': widget.card }">
       <h4 v-html="widget.title" class="m-0 flex-grow-1"></h4>
-      <div class="widget__header__selector">
-        Years | <strong>Months</strong> | Days
+      <div class="widget__header__selectors">
+        <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'year' }" @click="click('year')">Years</span> |
+        <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'year' }" @click="click('month')">Months</span> |
+        <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'year' }" @click="click('day')">Days</span>
       </div>
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
@@ -47,9 +49,10 @@ export default {
   data () {
     return {
       data: [],
+      interval: 'month',
+      margin: { top: 20, right: 20, bottom: 20, left: 50 },
       mounted: false,
-      width: 0,
-      margin: { top: 20, right: 20, bottom: 20, left: 50 }
+      width: 0
     }
   },
   watch: {
@@ -101,7 +104,7 @@ export default {
   },
   methods: {
     loadData: waitFor('loading creationDate data', async function () {
-      const response = await this.$store.dispatch('search/queryFilter', { name: 'creationDate', options: { size: 1000 } })
+      const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options: { size: 1000, interval: this.interval } })
       const aggregation = get(response, ['aggregations', 'metadata.tika_metadata_creation_date', 'buckets'])
       const dates = map(aggregation, d => {
         if (d.key >= 0) {
@@ -125,11 +128,17 @@ export default {
         .attr('x2', this.width - this.margin.left - this.margin.right)
     },
     async init () {
-      this.data = await this.loadData()
+      const data = await this.loadData()
+      this.$set(this, 'data', data)
       this.mounted = true
       // Build the chart when its container is resized
       const observer = new ResizeObserver(this.buildChart)
       observer.observe(this.container)
+    },
+    async click (value) {
+      this.$set(this, 'interval', value)
+      const data = await this.loadData()
+      this.$set(this, 'data', data)
     }
   }
 }
@@ -139,6 +148,9 @@ export default {
   .widget {
     min-height: 100%;
 
+    &__header__selectors__selector {
+      cursor: pointer;
+    }
     &__content {
 
       &__chart {

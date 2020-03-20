@@ -1,8 +1,8 @@
-import axios from 'axios'
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import omit from 'lodash/omit'
 import toLower from 'lodash/toLower'
+import axios from 'axios'
 
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
@@ -25,6 +25,8 @@ describe('SearchStore', () => {
     store.commit('search/index', index)
     store.commit('search/reset')
   })
+
+  afterAll(() => jest.unmock('axios'))
 
   it('should define a store module', () => {
     expect(store.state.search).not.toBeUndefined()

@@ -1,6 +1,7 @@
 import { cloneDeep, findIndex } from 'lodash'
 import Vue from 'vue'
 
+import elasticsearch from '@/api/elasticsearch'
 import widgets from '@/store/widgets'
 import * as widgetTypes from '@/store/widgets'
 
@@ -49,4 +50,18 @@ export const getters = {
   }
 }
 
-export default { state, getters, mutations, namespaced: true }
+const actions = {
+  queryFilter ({ state, getters, rootGetters }, params) {
+    return elasticsearch.searchFilter(
+      state.index,
+      rootGetters['search/getFilter']({ name: params.name }),
+      '*',
+      [],
+      false,
+      params.options,
+      []
+    )
+  }
+}
+
+export default { state, getters, mutations, actions, namespaced: true }

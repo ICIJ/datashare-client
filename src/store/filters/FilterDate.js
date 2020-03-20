@@ -26,8 +26,14 @@ export default class FilterDate extends FilterDocument {
   body (body, options) {
     let interval = { interval: '1M', format: 'yyyy-MM', missing: '0000-01' }
     switch (options.interval) {
+      case 'day':
+        interval = { interval: '1d', format: 'yyyy-MM-dd', missing: '0000-01-01' }
+        break
       case 'month':
         interval = { interval: '1M', format: 'yyyy-MM', missing: '0000-01' }
+        break
+      case 'year':
+        interval = { interval: '1y', format: 'yyyy', missing: '0000' }
         break
       default :
         break
