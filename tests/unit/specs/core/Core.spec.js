@@ -89,4 +89,11 @@ describe('Core', () => {
     core.configure()
     await expect(core.ready).resolves.toBe(core)
   })
+
+  it('should install the internal `VueCore` plugin', async () => {
+    // Create and configure the core
+    const core = Core.init(localVue).useAll()
+    const vm = core.mount('#core')
+    expect(vm.$core).toBeInstanceOf(Core)
+  })
 })

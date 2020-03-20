@@ -46,6 +46,7 @@ export default class Core extends Behaviors {
     this.useCommons()
     this.useRouter()
     this.useWait()
+    this.useCore()
     return this
   }
   useI18n () {
@@ -83,6 +84,14 @@ export default class Core extends Behaviors {
   useWait () {
     this.use(VueWait)
     this.wait = new VueWait({ useVuex: true })
+  }
+  useCore () {
+    const core = this
+    this.use(class VueCore {
+      static install (Vue) {
+        Vue.prototype.$core = core
+      }
+    })
   }
   async configure () {
     // Get the config object
