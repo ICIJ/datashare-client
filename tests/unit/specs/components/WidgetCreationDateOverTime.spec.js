@@ -51,6 +51,7 @@ describe('WidgetCreationDateOverTime.vue', () => {
     expect(init).toBeCalledTimes(1)
     await store.commit('insights/index', anotherIndex)
     expect(init).toBeCalledTimes(2)
+    await store.commit('insights/index', index)
   })
 
   describe('interval value and selectors', () => {
