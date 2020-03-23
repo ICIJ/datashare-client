@@ -5,16 +5,14 @@ import Auth from '@/api/resources/Auth'
 
 const auth = new Auth()
 
-jest.mock('axios', () => {
-  return {
-    request: jest.fn()
-  }
-})
+jest.mock('axios')
 
 describe('auth backend client', () => {
   beforeEach(() => axios.request.mockRejectedValue({ response: { status: 401 } }))
 
   afterEach(() => auth.reset())
+
+  afterAll(() => jest.unmock('axios'))
 
   describe('getUsername', () => {
     it('should return user name if user is authenticated with basic auth', async () => {
