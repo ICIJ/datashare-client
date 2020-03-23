@@ -210,7 +210,7 @@ describe('DocumentStore', () => {
       await store.dispatch('document/get', { id: 'doc_01', index })
       await store.dispatch('document/getMarkAsRead')
 
-      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/markedRead/doc_01`)
       }))
