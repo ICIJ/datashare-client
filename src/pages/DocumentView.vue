@@ -148,6 +148,15 @@ export default {
           }
         },
         {
+          name: 'preview',
+          label: 'document.preview',
+          component: () => import('@/components/document/DocumentTabPreview'),
+          icon: 'eye',
+          props: {
+            document: this.document
+          }
+        },
+        {
           name: 'details',
           label: 'document.tab_details',
           component: () => import('@/components/document/DocumentTabDetails'),
@@ -173,15 +182,6 @@ export default {
           hidden: this.$config.isnt('manageDocuments') && !this.document.hasNerTags,
           component: () => import('@/components/document/DocumentTabNamedEntities'),
           icon: 'database',
-          props: {
-            document: this.document
-          }
-        },
-        {
-          name: 'preview',
-          label: 'document.preview',
-          component: () => import('@/components/document/DocumentTabPreview'),
-          icon: 'eye',
           props: {
             document: this.document
           }

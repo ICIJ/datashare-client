@@ -83,7 +83,7 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(4)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(2).text()).toContain('Named Entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(3).text()).toContain('Named Entities')
   })
 
   it('should NOT display the named entities tab', async () => {
@@ -102,7 +102,7 @@ describe('DocumentView.vue', () => {
       await wrapper.vm.getDoc()
     })
     it('should set the previous tab as active', () => {
-      wrapper.vm.activeTab = 'details'
+      wrapper.vm.activeTab = 'preview'
       wrapper.vm.goToPreviousTab()
 
       expect(wrapper.vm.activeTab).toBe('extracted-text')
@@ -111,17 +111,17 @@ describe('DocumentView.vue', () => {
     it('should set the next tab as active', () => {
       wrapper.vm.goToNextTab()
 
-      expect(wrapper.vm.activeTab).toBe('details')
+      expect(wrapper.vm.activeTab).toBe('preview')
     })
 
     it('should set the last tab as active', () => {
       wrapper.vm.goToPreviousTab()
 
-      expect(wrapper.vm.activeTab).toBe('preview')
+      expect(wrapper.vm.activeTab).toBe('details')
     })
 
     it('should set the first tab as active', () => {
-      wrapper.vm.activeTab = 'preview'
+      wrapper.vm.activeTab = 'details'
       wrapper.vm.goToNextTab()
 
       expect(wrapper.vm.activeTab).toBe('extracted-text')
