@@ -120,6 +120,9 @@ export default class Api {
   setMarkAsUnread (project, docIds) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unmarkRead`, { method: 'POST', data: { docIds } })
   }
+  getMarkAsRead (project, docId) {
+    return this.sendAction(`/api/${project}/documents/markedRead/${docId}`)
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })

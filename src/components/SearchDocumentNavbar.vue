@@ -25,9 +25,12 @@
           <span v-html="nextTooltip"></span>
         </b-tooltip>
       </span>
-      <b-btn class="btn-light px-2 py-0 search-document-navbar__readBy" size="sm" @click="toggleAsRead" v-if="hasFeature('MARK_AS_READ')">
+      <b-btn class="btn-light mx-2 px-2 py-0 search-document-navbar__readBy" size="sm" @click="toggleAsRead" v-if="hasFeature('MARK_AS_READ')">
         {{ markAsReadLabel }}
       </b-btn>
+      <b-badge pill variant="light" class="mx-2 search-document-navbar__numberOfReadBy" v-if="hasFeature('MARK_AS_READ')">
+        {{ readBy.length }}
+      </b-badge>
       <document-actions
         :document="currentDocument"
         class="search-document-navbar__actions d-flex"
@@ -60,7 +63,7 @@ export default {
   },
   computed: {
     ...mapState('search', ['response', 'isDownloadAllowed']),
-    ...mapState('document', { currentDocument: 'doc' }),
+    ...mapState('document', { currentDocument: 'doc', readBy: 'readBy' }),
     query () {
       return this.$store.getters['search/toRouteQuery']()
     },

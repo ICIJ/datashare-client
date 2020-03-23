@@ -31,7 +31,10 @@ describe('SearchDocumentNavbar.vue', () => {
     wrapper = shallowMount(SearchDocumentNavbar, { localVue, store, mocks: { $t: msg => msg } })
   })
 
-  afterAll(() => jest.unmock('@/utils/utils'))
+  afterAll(() => {
+    jest.unmock('axios')
+    jest.unmock('@/utils/utils')
+  })
 
   it('should display a "Back to the search results" link', () => {
     expect(wrapper.find('.search-document-navbar__back').exists()).toBeTruthy()
@@ -69,5 +72,12 @@ describe('SearchDocumentNavbar.vue', () => {
         data: { docIds: ['doc_01'] }
       }))
     })
+  })
+
+  it('should display the number of readBy', async () => {
+    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+    await store.dispatch('document/get', { id: 'doc_01', index })
+
+    expect(wrapper.find('.search-document-navbar__numberOfReadBy').exists()).toBeTruthy()
   })
 })

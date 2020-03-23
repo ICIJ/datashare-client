@@ -82,6 +82,7 @@ export default {
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
       await this.$store.dispatch('document/getTags')
+      await this.$store.dispatch('document/getMarkAsRead')
       if (this.document) {
         await this.$store.commit('userHistory/addDocument', this.document)
         const container = this.$el.closest('.ps-container')

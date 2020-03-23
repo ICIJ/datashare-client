@@ -31,21 +31,32 @@ describe('DocumentView.vue', () => {
   afterEach(() => {
     store.commit('document/reset')
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
+    axios.request.mockClear()
   })
+
+  afterAll(() => jest.unmock('axios'))
 
   it('should display an error message if document is not found', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id: 'notfound', index } })
     await wrapper.vm.getDoc()
 
-    expect(wrapper.find('span').text()).toEqual('Document not found')
+    expect(wrapper.find('span').text()).toBe('Document not found')
   })
 
   it('should call to the API to retrieve tags', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index } })
     await wrapper.vm.getDoc()
 
-    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledTimes(2)
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${index}/documents/tags/${id}`) })
+  })
+
+  it('should call to the API to retrieve readBy', async () => {
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index } })
+    await wrapper.vm.getDoc()
+
+    expect(axios.request).toBeCalledTimes(2)
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${index}/documents/markedRead/${id}`) })
   })
 
   it('should display a document', async () => {

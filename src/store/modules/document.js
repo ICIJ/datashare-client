@@ -31,7 +31,8 @@ export function initialState () {
     parentDocument: null,
     showNamedEntities: false,
     tags: [],
-    isRead: false
+    isRead: false,
+    readBy: []
   }
 }
 
@@ -71,7 +72,7 @@ export const mutations = {
       state.doc = null
     }
   },
-  tags (state, tags) {
+  tags (state, tags = []) {
     state.tags = tags
   },
   namedEntities (state, raw) {
@@ -105,6 +106,9 @@ export const mutations = {
   },
   toggleIsRead (state) {
     state.isRead = !state.isRead
+  },
+  readBy (state, readBy = []) {
+    state.readBy = readBy
   }
 }
 
@@ -199,6 +203,15 @@ export const actions = {
       await api.setMarkAsRead(state.doc.index, map(documents, 'id'))
     }
     commit('toggleIsRead')
+  },
+  async getMarkAsRead ({ state, commit }) {
+    try {
+      const readBy = await api.getMarkAsRead(state.doc.index, state.doc.id)
+      commit('readBy', readBy)
+    } catch (_) {
+      commit('readBy')
+    }
+    return state.readBy
   }
 }
 
