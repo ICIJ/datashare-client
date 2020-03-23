@@ -49,7 +49,7 @@ describe('WidgetCreationDateOverTime.vue', () => {
     const init = jest.spyOn(wrapper.vm, 'init')
     await wrapper.vm.$nextTick()
     expect(init).toBeCalledTimes(1)
-    await store.commit('search/index', anotherIndex)
+    await store.commit('insights/index', anotherIndex)
     expect(init).toBeCalledTimes(2)
   })
 
