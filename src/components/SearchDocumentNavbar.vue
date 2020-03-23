@@ -25,6 +25,9 @@
           <span v-html="nextTooltip"></span>
         </b-tooltip>
       </span>
+      <b-btn class="btn-light px-2 py-0 search-document-navbar__readBy" size="sm" @click="toggleAsRead" v-if="hasFeature('MARK_AS_READ')">
+        {{ markAsReadLabel }}
+      </b-btn>
       <document-actions
         :document="currentDocument"
         class="search-document-navbar__actions d-flex"
@@ -39,15 +42,15 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import findIndex from 'lodash/findIndex'
 import first from 'lodash/first'
 import last from 'lodash/last'
 import { getShortkeyOS } from '@/utils/utils'
-import shortkeys from '@/mixins/shortkeys'
+import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
 import features from '@/mixins/features'
+import shortkeys from '@/mixins/shortkeys'
 
 export default {
   name: 'SearchDocumentNavbar',
@@ -62,10 +65,7 @@ export default {
       return this.$store.getters['search/toRouteQuery']()
     },
     currentDocumentIndex () {
-      if (this.currentDocument) {
-        return findIndex(this.response.hits, { id: this.currentDocument.id })
-      }
-      return -1
+      return this.currentDocument ? findIndex(this.response.hits, { id: this.currentDocument.id }) : -1
     },
     navRequiresPreviousPage () {
       return this.isFirstDocument && !this.isFirstPage
@@ -108,6 +108,9 @@ export default {
     },
     nextTooltip () {
       return getShortkeyOS() === 'mac' ? this.$t('search.nav.next.tooltipMac') : this.$t('search.nav.next.tooltipOthers')
+    },
+    markAsReadLabel () {
+      return this.isRead ? this.$t('search.nav.markAsUnread') : this.$t('search.nav.markAsRead')
     }
   },
   mounted () {
@@ -143,6 +146,9 @@ export default {
         return this.goToDocument(this.firstDocument)
       }
       return this.goToDocument(this.nextDocument)
+    },
+    toggleAsRead () {
+      this.$store.dispatch('document/toggleAsRead', { documents: [this.currentDocument] })
     }
   }
 }

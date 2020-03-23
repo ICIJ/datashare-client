@@ -77,7 +77,9 @@
       },
       "document": {
         "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>%{extension}</code> before you can open it."
-      }
+      },
+      "markAsRead": "Mark as read",
+      "markAsUnread": "Mark as unread"
     }
   },
   "pagination": {

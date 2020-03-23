@@ -363,8 +363,8 @@ describe('FilterText.vue', () => {
   it('should display the language filter in French', async () => {
     const i18n = new VueI18n({ locale: 'fr', messages: { fr: messagesFr } })
     wrapper = mount(FilterText, {
-      localVue,
       i18n,
+      localVue,
       router,
       store,
       wait,
@@ -381,8 +381,8 @@ describe('FilterText.vue', () => {
   it('should translate any weird language', async () => {
     const i18n = new VueI18n({ locale: 'fr', messages: { fr: messagesFr } })
     wrapper = mount(FilterText, {
-      localVue,
       i18n,
+      localVue,
       router,
       store,
       wait,

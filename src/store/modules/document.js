@@ -30,7 +30,8 @@ export function initialState () {
     },
     parentDocument: null,
     showNamedEntities: false,
-    tags: []
+    tags: [],
+    isRead: false
   }
 }
 
@@ -101,6 +102,9 @@ export const mutations = {
   },
   deleteTag (state, tagToDelete) {
     state.tags.splice(findIndex(state.tags, { label: tagToDelete.label }), 1)
+  },
+  toggleIsRead (state) {
+    state.isRead = !state.isRead
   }
 }
 
@@ -187,6 +191,14 @@ export const actions = {
   async deleteTag ({ state, commit }, { documents, tag }) {
     await api.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
     if (documents.length === 1) commit('deleteTag', tag)
+  },
+  async toggleAsRead ({ state, commit }, { documents }) {
+    if (state.isRead) {
+      await api.setMarkAsUnread(state.doc.index, map(documents, 'id'))
+    } else {
+      await api.setMarkAsRead(state.doc.index, map(documents, 'id'))
+    }
+    commit('toggleIsRead')
   }
 }
 

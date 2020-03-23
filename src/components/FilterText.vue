@@ -14,8 +14,8 @@
 </template>
 
 <script>
-import filters from '@/mixins/filters'
 import FilterBoilerplate from '@/components/FilterBoilerplate'
+import filters from '@/mixins/filters'
 
 export default {
   name: 'FilterText',

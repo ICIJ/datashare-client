@@ -114,6 +114,12 @@ export default class Api {
   getUser () {
     return this.sendAction('/api/users/me')
   }
+  setMarkAsRead (project, docIds) {
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/markRead`, { method: 'POST', data: { docIds } })
+  }
+  setMarkAsUnread (project, docIds) {
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unmarkRead`, { method: 'POST', data: { docIds } })
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })

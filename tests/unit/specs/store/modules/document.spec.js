@@ -79,16 +79,6 @@ describe('DocumentStore', () => {
     expect(store.getters['document/namedEntities'][1].raw._routing).toBe(id)
   })
 
-  it('should get the document\'s tags', async () => {
-    const tags = ['tag_01', 'tag_02']
-    axios.request.mockReturnValue({ data: tags })
-    await letData(es).have(new IndexedDocument(id, index).withTags(tags)).commit()
-    await store.dispatch('document/get', { id, index })
-    await store.dispatch('document/getTags')
-    expect(store.state.document.tags).toEqual(tags)
-    axios.request.mockClear()
-  })
-
   it('should get the "showNamedEntities" status falsy by default', () => {
     expect(store.state.document.showNamedEntities).toBeFalsy()
   })
@@ -100,51 +90,119 @@ describe('DocumentStore', () => {
     expect(store.state.document.showNamedEntities).toBeFalsy()
   })
 
-  it('should tag multiple documents and not refresh', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
-    await letData(es).have(new IndexedDocument('doc_02', index)).commit()
-    await store.dispatch('document/get', { id: 'doc_01', index })
+  describe('Manage tags', () => {
+    it('should get the document\'s tags', async () => {
+      const tags = ['tag_01', 'tag_02']
+      axios.request.mockReturnValue({ data: tags })
+      await letData(es).have(new IndexedDocument(id, index).withTags(tags)).commit()
+      await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getTags')
+      expect(store.state.document.tags).toEqual(tags)
+      axios.request.mockClear()
+    })
 
-    axios.request.mockClear()
+    it('should tag multiple documents and not refresh', async () => {
+      await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+      await letData(es).have(new IndexedDocument('doc_02', index)).commit()
+      await store.dispatch('document/get', { id: 'doc_01', index })
 
-    await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }], tag: 'tag_01 tag_02 tag_03' })
+      axios.request.mockClear()
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
-      method: 'POST',
-      data: {
-        docIds: ['doc_01', 'doc_02'],
-        tags: ['tag_01', 'tag_02', 'tag_03']
-      }
-    }))
+      await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }], tag: 'tag_01 tag_02 tag_03' })
+
+      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+        method: 'POST',
+        data: {
+          docIds: ['doc_01', 'doc_02'],
+          tags: ['tag_01', 'tag_02', 'tag_03']
+        }
+      }))
+    })
+
+    it('should deleteTag from 1 document', async () => {
+      await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+      await letData(es).have(new IndexedDocument('doc_02', index)).commit()
+      await store.dispatch('document/get', { id: 'doc_01', index })
+
+      axios.request.mockClear()
+
+      await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
+
+      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
+        method: 'POST',
+        data: {
+          docIds: ['doc_01'],
+          tags: ['tag_01']
+        }
+      }))
+    })
+
+    it('should add tags to the store', () => {
+      store.commit('document/addTag', { tag: 'tag_01      tag_01 tag_02', userId: 'user' })
+
+      expect(store.state.document.tags).toHaveLength(2)
+      expect(orderBy(store.state.document.tags, ['label'])[0].label).toBe('tag_01')
+      expect(orderBy(store.state.document.tags, ['label'])[1].label).toBe('tag_02')
+    })
   })
 
-  it('should deleteTag from 1 document', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
-    await letData(es).have(new IndexedDocument('doc_02', index)).commit()
-    await store.dispatch('document/get', { id: 'doc_01', index })
+  describe('Manage Read status', () => {
+    it('should change isRead status to true', () => {
+      store.state.document.isRead = false
+      store.commit('document/toggleIsRead')
+      expect(store.state.document.isRead).toBeTruthy()
+    })
 
-    axios.request.mockClear()
+    it('should change isRead status to false', () => {
+      store.state.document.isRead = true
+      store.commit('document/toggleIsRead')
+      expect(store.state.document.isRead).toBeFalsy()
+    })
 
-    await store.dispatch('document/deleteTag', { documents: [{ id: 'doc_01' }], tag: { label: 'tag_01' } })
+    it('should mark as read these documents', async () => {
+      await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+      await letData(es).have(new IndexedDocument('doc_02', index)).commit()
+      await store.dispatch('document/get', { id: 'doc_01', index })
+      store.state.document.isRead = false
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
-      method: 'POST',
-      data: {
-        docIds: ['doc_01'],
-        tags: ['tag_01']
-      }
-    }))
-  })
+      axios.request.mockClear()
 
-  it('should add tags to the store', async () => {
-    store.commit('document/addTag', { tag: 'tag_01      tag_01 tag_02', userId: 'user' })
+      await store.dispatch('document/toggleAsRead', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }] })
 
-    expect(store.state.document.tags).toHaveLength(2)
-    expect(orderBy(store.state.document.tags, ['label'])[0].label).toBe('tag_01')
-    expect(orderBy(store.state.document.tags, ['label'])[1].label).toBe('tag_02')
+      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/markRead`),
+        method: 'POST',
+        data: {
+          docIds: ['doc_01', 'doc_02']
+        }
+      }))
+      expect(store.state.document.isRead).toBeTruthy()
+    })
+
+    it('should mark as unread these documents', async () => {
+      await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+      await letData(es).have(new IndexedDocument('doc_02', index)).commit()
+      await store.dispatch('document/get', { id: 'doc_01', index })
+      store.state.document.isRead = true
+
+      axios.request.mockClear()
+
+      await store.dispatch('document/toggleAsRead', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }] })
+
+      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/unmarkRead`),
+        method: 'POST',
+        data: {
+          docIds: ['doc_01', 'doc_02']
+        }
+      }))
+      expect(store.state.document.isRead).toBeFalsy()
+    })
   })
 })
