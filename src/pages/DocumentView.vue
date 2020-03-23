@@ -1,5 +1,5 @@
 <template>
-  <v-wait for="load_data">
+  <v-wait for="load document data">
     <content-placeholder class="document py-2 px-3" slot="waiting" />
     <div class="d-flex flex-column document" v-if="document" v-shortkey="getKeys('tabNavigation')" @shortkey="getAction('tabNavigation')" :class="{ 'document--simplified': $route.name === 'document-simplified' }">
       <div class="document__header">
@@ -77,7 +77,7 @@ export default {
   },
   methods: {
     async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
-      this.$wait.start('load_data')
+      this.$wait.start('load document data')
       this.$Progress.start()
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
@@ -88,7 +88,7 @@ export default {
         this.$root.$emit('scroll-tracker:request', this.$el, 0, container)
         this.$root.$emit('document::content::changed')
       }
-      this.$wait.end('load_data')
+      this.$wait.end('load document data')
       this.$Progress.finish()
     },
     isTabActive (name) {
