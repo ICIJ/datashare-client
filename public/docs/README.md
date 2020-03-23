@@ -17,9 +17,9 @@ Next steps
 
 * [Analyze documents](https://icij.gitbook.io/datashare/all/analyze-documents)
 * [Search documents](https://icij.gitbook.io/datashare/all/search-documents)
+* [Search with operators and Regex](https://icij.gitbook.io/datashare/all/search-with-operators)
 * [Filter documents](https://icij.gitbook.io/datashare/all/filter-documents)
 * [Sort documents by dates, relevance, etc.](https://icij.gitbook.io/datashare/all/sort-documents-by-dates-relevance-etc.)
-* [Search with operators and Regex](https://icij.gitbook.io/datashare/all/search-with-operators)
 * [Batch search documents](https://icij.gitbook.io/datashare/all/batch-search-documents)
 * [Explore a document](https://icij.gitbook.io/datashare/all/explore-a-document)
 * [Star documents](https://icij.gitbook.io/datashare/all/star-documents)
