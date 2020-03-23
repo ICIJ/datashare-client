@@ -90,7 +90,7 @@ export default {
 <style lang="scss">
   $scroll-tracker-size: 8rem;
 
-  .scroll-tracker {
+  a.scroll-tracker {
     position: fixed;
     bottom: 0;
     left: 50%;
