@@ -28,9 +28,16 @@
       <b-btn class="btn-light mx-2 px-2 py-0 search-document-navbar__readBy" size="sm" @click="toggleAsRead" v-if="hasFeature('MARK_AS_READ')">
         {{ markAsReadLabel }}
       </b-btn>
-      <b-badge pill variant="light" class="mx-2 search-document-navbar__numberOfReadBy" v-if="hasFeature('MARK_AS_READ')">
+      <b-badge pill variant="light" class="mx-2 search-document-navbar__numberOfReadBy" v-if="hasFeature('MARK_AS_READ')" id="popover-read-by">
         {{ readBy.length }}
       </b-badge>
+      <b-popover target="popover-read-by" triggers="hover" placement="bottom" v-if="readBy.length > 0">
+        <ul>
+          <li v-for="user in isReadBy" :key="user">
+            {{ user }}
+          </li>
+        </ul>
+      </b-popover>
       <document-actions
         :document="currentDocument"
         class="search-document-navbar__actions d-flex"
