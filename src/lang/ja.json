@@ -77,7 +77,9 @@
       },
       "document": {
         "extensionWarning": "この文書の形式に合わない拡張子がついています。文書を開く前に、拡張子<code>%{extension}</code>を付け加える必要があるかも知れません。"
-      }
+      },
+      "markAsRead": "Mark as read",
+      "markAsUnread": "Mark as unread"
     }
   },
   "pagination": {
