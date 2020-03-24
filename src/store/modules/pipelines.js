@@ -3,6 +3,7 @@ import filter from 'lodash/filter'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
 import isFunction from 'lodash/isFunction'
+import orderBy from 'lodash/orderBy'
 import uniqueId from 'lodash/uniqueId'
 
 import pipelines from '@/store/pipelines'
@@ -30,16 +31,16 @@ export const getters = {
     }
   },
   instantiatedPipelines (state, getters) {
-    return state.registered.map(pipeline => {
+    return orderBy(state.registered.map(pipeline => {
       return getters.instantiatePipeline(pipeline)
-    })
+    }, 'order', 'asc'))
   },
   getPipelineByName (state) {
     return name => find(state.registered, { name })
   },
   getPipelinesByCategory (state, getters) {
     return (category = null) => {
-      return filter(state.registered, { category })
+      return orderBy(filter(state.registered, { category }), 'order', 'asc')
     }
   },
   getInstantiatedPipelineByName (state, getters) {
