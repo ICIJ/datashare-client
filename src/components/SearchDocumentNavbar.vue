@@ -140,7 +140,7 @@ export default {
     },
     goToDocument (document) {
       if (document) {
-        return this.$router.push({ name: 'document', params: document.routerParams })
+        return this.$router.push({ name: 'document', params: document.routerParams, query: { q: this.$store.state.search.query } })
       }
     },
     async goToPreviousDocument () {
