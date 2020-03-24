@@ -108,4 +108,24 @@ describe('PipelinesStore', () => {
     expect(pipelines.reduce((res, fn) => fn(res), 1)).toBe(4)
     expect(pipelines.reduce((res, fn) => fn(res), 10)).toBe(40)
   })
+
+  it('should have ordered pipelines', () => {
+    const category = 'test-category-ordered-case'
+    store.commit('pipelines/register', { category, type: s => s.toLowerCase() })
+    store.commit('pipelines/register', { category, type: s => s.toUpperCase() })
+    const pipelines = store.getters['pipelines/getPipelineChainByCategory'](category)
+    expect(pipelines).toHaveLength(2)
+    expect(pipelines.reduce((res, fn) => fn(res), 'foo BAR')).toBe('FOO BAR')
+    expect(pipelines.reduce((res, fn) => fn(res), 'FOO bar')).toBe('FOO BAR')
+  })
+
+  it('should have ordered pipelines', () => {
+    const category = 'test-category-ordered-case-with-property'
+    store.commit('pipelines/register', { category, type: s => s.toLowerCase(), order: 10 })
+    store.commit('pipelines/register', { category, type: s => s.toUpperCase(), order: 5 })
+    const pipelines = store.getters['pipelines/getPipelineChainByCategory'](category)
+    expect(pipelines).toHaveLength(2)
+    expect(pipelines.reduce((res, fn) => fn(res), 'foo BAR')).toBe('foo bar')
+    expect(pipelines.reduce((res, fn) => fn(res), 'FOO bar')).toBe('foo bar')
+  })
 })
