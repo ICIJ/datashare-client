@@ -1,9 +1,21 @@
 <template>
   <div class="search-document-navbar px-3 py-2 bg-dark text-white text-nowrap">
-    <router-link :to="{ name: 'search', query }" class="search-document-navbar__back flex-grow-1 text-truncate pr-1" v-shortkey="getKeys('backToSearchResults')" @shortkey.native="getAction('backToSearchResults')">
+    <router-link
+      :to="{ name: 'search', query }"
+      class="search-document-navbar__back text-truncate pr-1"
+      :class="{ 'flex-grow-1': !isShrinked }"
+      v-shortkey="getKeys('backToSearchResults')"
+      @shortkey.native="getAction('backToSearchResults')">
       <fa icon="chevron-circle-left" class="mr-1" />
-      {{ $t('search.back') }}
+      <span v-if="!isShrinked">
+        {{ $t('search.back') }}
+      </span>
     </router-link>
+    <div v-if="isShrinked" class="flex-grow-1 pr-1">
+      <b-btn href="#" class="text-white p-0" @click="scrollToTop" variant="link">
+        {{ currentDocument.title }}
+      </b-btn>
+    </div>
     <div v-if="currentDocument" class="ml-auto">
       <span class="search-document-navbar__nav" v-if="currentDocumentIndex > -1">
         <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
@@ -67,6 +79,11 @@ export default {
   mixins: [features, shortkeys],
   components: {
     DocumentActions
+  },
+  props: {
+    isShrinked: {
+      type: Boolean
+    }
   },
   computed: {
     ...mapState('search', ['response', 'isDownloadAllowed']),
@@ -159,6 +176,9 @@ export default {
     },
     toggleAsRead () {
       this.$store.dispatch('document/toggleAsRead', { documents: [this.currentDocument] })
+    },
+    scrollToTop () {
+      document.getElementById('search__body__document__wrapper').scrollTop = 0
     }
   }
 }

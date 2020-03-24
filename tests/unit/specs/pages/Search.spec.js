@@ -46,8 +46,7 @@ describe('Search.vue', () => {
 
   it('should redirect to the complete query', async () => {
     const query = 'this is a query'
-    store.commit('search/query', query)
-    await wrapper.vm.$nextTick()
+    await store.commit('search/query', query)
 
     expect(wrapper.find('.search__body__backdrop').props('to')).toMatchObject({ name: 'search', query: { q: query } })
   })

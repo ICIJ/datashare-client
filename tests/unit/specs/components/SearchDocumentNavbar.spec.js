@@ -1,13 +1,13 @@
 import toLower from 'lodash/toLower'
+import axios from 'axios'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
+import Api from '@/api'
+import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import { Core } from '@/core'
 import { getShortkeyOS } from '@/utils/utils'
-import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import axios from 'axios'
-import Api from '@/api'
 
 jest.mock('@/utils/utils')
 
@@ -79,5 +79,15 @@ describe('SearchDocumentNavbar.vue', () => {
     await store.dispatch('document/get', { id: 'doc_01', index })
 
     expect(wrapper.find('.search-document-navbar__numberOfReadBy').exists()).toBeTruthy()
+  })
+
+  it('should display document title if shrinked', async () => {
+    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+    await store.dispatch('document/get', { id: 'doc_01', index })
+
+    await wrapper.setProps({ isShrinked: true })
+
+    expect(wrapper.find('.search-document-navbar > div.flex-grow-1 > b-btn-stub').exists()).toBeTruthy()
+    expect(wrapper.find('.search-document-navbar > div.flex-grow-1 > b-btn-stub').text()).toBe('doc_01')
   })
 })

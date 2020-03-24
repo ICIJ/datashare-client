@@ -5,7 +5,9 @@
       <button class="search__show-filters align-self-center ml-3 btn btn-link px-0" @click="clickOnShowFilters()" v-if="!showFilters" :title="$t('search.showFilters')" v-b-tooltip.right>
         <fa icon="arrow-right" />
         <span class="sr-only">{{ $t('search.showFilters') }}</span>
-        <b-badge pill variant="warning" class="search__show-filters__counter" v-if="activeFilters">{{ activeFilters }}</b-badge>
+        <b-badge pill variant="warning" class="search__show-filters__counter" v-if="activeFilters">
+          {{ activeFilters }}
+        </b-badge>
       </button>
       <app-nav class="flex-grow-1" />
     </div>
@@ -24,9 +26,9 @@
       </component>
       <transition name="slide-right">
         <div class="search__body__document" v-if="showDocument">
-          <search-document-navbar class="search__body__document__navbar"  />
+          <search-document-navbar class="search__body__document__navbar" :is-shrinked="isShrinked"/>
           <div class="search__body__document__wrapper">
-            <div class="overflow-auto">
+            <div id="search__body__document__wrapper" class="overflow-auto" @scroll="handleScroll">
               <router-view class="search__body__document__wrapper__view" />
             </div>
           </div>
@@ -68,7 +70,8 @@ export default {
         NoConnections: 'search.errors.noConnections',
         NotFound: 'search.errors.notFound',
         ServiceUnavailable: 'search.errors.serviceUnavailable'
-      }
+      },
+      isShrinked: false
     }
   },
   computed: {
@@ -139,6 +142,13 @@ export default {
     }
   },
   methods: {
+    handleScroll (e) {
+      if (e.target.scrollTop > 40) {
+        this.$set(this, 'isShrinked', true)
+      } else {
+        this.$set(this, 'isShrinked', false)
+      }
+    },
     async search (queryOrParams) {
       try {
         return this.$store.dispatch('search/query', queryOrParams)
