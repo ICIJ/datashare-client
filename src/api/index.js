@@ -115,10 +115,10 @@ export default class Api {
     return this.sendAction('/api/users/me')
   }
   setMarkAsRead (project, docIds) {
-    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/markRead`, { method: 'POST', data: { docIds } })
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/markRead`, { method: 'POST', data: docIds })
   }
   setMarkAsUnread (project, docIds) {
-    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unmarkRead`, { method: 'POST', data: { docIds } })
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unmarkRead`, { method: 'POST', data: docIds })
   }
   getMarkAsRead (project, docId) {
     return this.sendAction(`/api/${project}/documents/markedRead/${docId}`)
