@@ -177,9 +177,7 @@ describe('DocumentStore', () => {
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/markRead`),
         method: 'POST',
-        data: {
-          docIds: ['doc_01', 'doc_02']
-        }
+        data: ['doc_01', 'doc_02']
       }))
       expect(store.state.document.isRead).toBeTruthy()
     })
@@ -198,9 +196,7 @@ describe('DocumentStore', () => {
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/unmarkRead`),
         method: 'POST',
-        data: {
-          docIds: ['doc_01', 'doc_02']
-        }
+        data: ['doc_01', 'doc_02']
       }))
       expect(store.state.document.isRead).toBeFalsy()
     })

@@ -69,7 +69,7 @@ describe('SearchDocumentNavbar.vue', () => {
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl('/api/searchdocumentnavbar/documents/batchUpdate/markRead'),
         method: 'POST',
-        data: { docIds: ['doc_01'] }
+        data: ['doc_01']
       }))
     })
   })
