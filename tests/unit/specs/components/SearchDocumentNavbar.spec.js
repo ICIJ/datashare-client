@@ -13,7 +13,7 @@ jest.mock('@/utils/utils')
 
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: {} })
+    request: jest.fn().mockResolvedValue({ data: { uid: 'Jean-Michel' } })
   }
 })
 
@@ -62,15 +62,32 @@ describe('SearchDocumentNavbar.vue', () => {
       expect(wrapper.find('.search-document-navbar__readBy').exists()).toBeTruthy()
     })
 
-    it('should call batchUpdate api function', async () => {
+    it('should call batchUpdate api function and mark document as READ', async () => {
       await wrapper.vm.toggleAsRead()
 
-      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledTimes(2)
+      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me') })
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl('/api/searchdocumentnavbar/documents/batchUpdate/markRead'),
         method: 'POST',
         data: ['doc_01']
       }))
+      expect(wrapper.vm.isRead).toBeTruthy()
+    })
+
+    it('should call batchUpdate api function and mark document as UNREAD', async () => {
+      store.commit('document/isRead', true)
+      axios.request.mockClear()
+
+      await wrapper.vm.toggleAsRead()
+
+      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl('/api/searchdocumentnavbar/documents/batchUpdate/unmarkRead'),
+        method: 'POST',
+        data: ['doc_01']
+      }))
+      expect(wrapper.vm.isRead).toBeFalsy()
     })
   })
 

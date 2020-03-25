@@ -8,6 +8,7 @@ import map from 'lodash/map'
 import sumBy from 'lodash/sumBy'
 import uniqBy from 'lodash/uniqBy'
 import values from 'lodash/values'
+import Vue from 'vue'
 
 import Auth from '@/api/resources/Auth'
 import Api from '@/api'
@@ -104,11 +105,20 @@ export const mutations = {
   deleteTag (state, tagToDelete) {
     state.tags.splice(findIndex(state.tags, { label: tagToDelete.label }), 1)
   },
-  toggleIsRead (state) {
-    state.isRead = !state.isRead
+  isRead (state, isRead) {
+    state.isRead = isRead
   },
   readBy (state, readBy = []) {
     state.readBy = readBy
+  },
+  markAsRead (state, userId) {
+    state.readBy.push(userId)
+  },
+  markAsUnread (state, userId) {
+    const index = state.readBy.indexOf(userId)
+    if (index > -1) {
+      Vue.delete(state.readBy, index)
+    }
   }
 }
 
@@ -196,18 +206,27 @@ export const actions = {
     await api.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
     if (documents.length === 1) commit('deleteTag', tag)
   },
-  async toggleAsRead ({ state, commit }, { documents }) {
+  async toggleAsRead ({ state, commit }) {
+    const userId = await auth.getUsername()
     if (state.isRead) {
-      await api.setMarkAsUnread(state.doc.index, map(documents, 'id'))
+      await api.setMarkAsUnread(state.doc.index, [state.doc.id])
+      commit('markAsUnread', userId)
+      commit('isRead', false)
     } else {
-      await api.setMarkAsRead(state.doc.index, map(documents, 'id'))
+      await api.setMarkAsRead(state.doc.index, [state.doc.id])
+      commit('markAsRead', userId)
+      commit('isRead', true)
     }
-    commit('toggleIsRead')
   },
   async getMarkAsRead ({ state, commit }) {
     try {
       const readBy = await api.getMarkAsRead(state.doc.index, state.doc.id)
-      commit('readBy', readBy)
+      commit('readBy', map(readBy, 'id'))
+      const userId = await auth.getUsername()
+      const index = state.readBy.indexOf(userId)
+      if (index > -1) {
+        commit('isRead', true)
+      }
     } catch (_) {
       commit('readBy')
     }

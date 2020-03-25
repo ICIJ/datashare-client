@@ -1,7 +1,8 @@
-import axios from 'axios'
+import indexOf from 'lodash/indexOf'
 import orderBy from 'lodash/orderBy'
 import toLower from 'lodash/toLower'
 import uniqueId from 'lodash/uniqueId'
+import axios from 'axios'
 
 import Api from '@/api'
 import store from '@/store'
@@ -11,7 +12,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: {} })
+    request: jest.fn().mockResolvedValue({ data: { uid: 'Jean-Michel' } })
   }
 })
 
@@ -99,6 +100,7 @@ describe('DocumentStore', () => {
       await store.dispatch('document/getTags')
       expect(store.state.document.tags).toEqual(tags)
       axios.request.mockClear()
+      axios.request.mockResolvedValue({ data: { uid: 'Jean-Michel' } })
     })
 
     it('should tag multiple documents and not refresh', async () => {
@@ -153,17 +155,31 @@ describe('DocumentStore', () => {
   describe('Manage Read status', () => {
     it('should change isRead status to true', () => {
       store.state.document.isRead = false
-      store.commit('document/toggleIsRead')
+      store.commit('document/isRead', true)
       expect(store.state.document.isRead).toBeTruthy()
     })
 
     it('should change isRead status to false', () => {
       store.state.document.isRead = true
-      store.commit('document/toggleIsRead')
+      store.commit('document/isRead', false)
       expect(store.state.document.isRead).toBeFalsy()
     })
 
+    it('should add user in readBy array', () => {
+      const userId = 'Jean-Michel'
+      store.commit('document/markAsRead', userId)
+      expect(indexOf(store.state.document.readBy, userId)).toBeGreaterThan(-1)
+    })
+
+    it('should remove user from readBy array', () => {
+      const userId = 'Jean-Michel'
+      store.commit('document/markAsRead', userId)
+      store.commit('document/markAsUnread', userId)
+      expect(indexOf(store.state.document.readBy, userId)).toBe(-1)
+    })
+
     it('should mark these documents as read', async () => {
+      const userId = 'Jean-Michel'
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
@@ -171,18 +187,21 @@ describe('DocumentStore', () => {
 
       axios.request.mockClear()
 
-      await store.dispatch('document/toggleAsRead', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }] })
+      await store.dispatch('document/toggleAsRead')
 
-      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledTimes(2)
+      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me') })
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/markRead`),
         method: 'POST',
-        data: ['doc_01', 'doc_02']
+        data: ['doc_01']
       }))
       expect(store.state.document.isRead).toBeTruthy()
+      expect(indexOf(store.state.document.readBy, userId)).toBeGreaterThan(-1)
     })
 
     it('should mark as unread these documents', async () => {
+      const userId = 'Jean-Michel'
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
@@ -190,15 +209,16 @@ describe('DocumentStore', () => {
 
       axios.request.mockClear()
 
-      await store.dispatch('document/toggleAsRead', { documents: [{ id: 'doc_01' }, { id: 'doc_02' }] })
+      await store.dispatch('document/toggleAsRead')
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/unmarkRead`),
         method: 'POST',
-        data: ['doc_01', 'doc_02']
+        data: ['doc_01']
       }))
       expect(store.state.document.isRead).toBeFalsy()
+      expect(indexOf(store.state.document.readBy, userId)).toBe(-1)
     })
 
     it('should retrieve the list of users who read it', async () => {
@@ -213,13 +233,13 @@ describe('DocumentStore', () => {
     })
 
     it('should set the users list', async () => {
-      const users = ['user_01', 'user_02']
+      const users = [{ id: 'user_01' }, { id: 'user_02' }]
       axios.request.mockReturnValue({ data: users })
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
       await store.dispatch('document/getMarkAsRead')
 
-      expect(store.state.document.readBy).toEqual(users)
+      expect(store.state.document.readBy).toEqual(['user_01', 'user_02'])
     })
   })
 })

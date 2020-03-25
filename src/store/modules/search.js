@@ -1,4 +1,3 @@
-import lucene from 'lucene'
 import castArray from 'lodash/castArray'
 import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
@@ -25,6 +24,7 @@ import reduce from 'lodash/reduce'
 import toString from 'lodash/toString'
 import uniq from 'lodash/uniq'
 import values from 'lodash/values'
+import lucene from 'lucene'
 import Vue from 'vue'
 
 import elasticsearch from '@/api/elasticsearch'

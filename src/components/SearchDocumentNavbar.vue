@@ -45,7 +45,7 @@
       </b-badge>
       <b-popover target="popover-read-by" triggers="hover" placement="bottom" v-if="readBy.length > 0">
         <ul>
-          <li v-for="user in isReadBy" :key="user">
+          <li v-for="user in readBy" :key="user">
             {{ user }}
           </li>
         </ul>
@@ -87,7 +87,7 @@ export default {
   },
   computed: {
     ...mapState('search', ['response', 'isDownloadAllowed']),
-    ...mapState('document', { currentDocument: 'doc', readBy: 'readBy' }),
+    ...mapState('document', { currentDocument: 'doc', readBy: 'readBy', isRead: 'isRead' }),
     query () {
       return this.$store.getters['search/toRouteQuery']()
     },
@@ -164,18 +164,20 @@ export default {
       if (this.navRequiresPreviousPage) {
         await this.$store.dispatch('search/previousPage')
         return this.goToDocument(this.lastDocument)
+      } else {
+        return this.goToDocument(this.previousDocument)
       }
-      return this.goToDocument(this.previousDocument)
     },
     async goToNextDocument () {
       if (this.navRequiresNextPage) {
         await this.$store.dispatch('search/nextPage')
         return this.goToDocument(this.firstDocument)
+      } else {
+        return this.goToDocument(this.nextDocument)
       }
-      return this.goToDocument(this.nextDocument)
     },
-    toggleAsRead () {
-      this.$store.dispatch('document/toggleAsRead', { documents: [this.currentDocument] })
+    async toggleAsRead () {
+      await this.$store.dispatch('document/toggleAsRead')
     },
     scrollToTop () {
       document.getElementById('search__body__document__wrapper').scrollTop = 0
