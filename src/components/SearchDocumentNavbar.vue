@@ -37,10 +37,10 @@
           <span v-html="nextTooltip"></span>
         </b-tooltip>
       </span>
-      <b-btn class="btn-light mx-2 px-2 py-0 search-document-navbar__readBy" size="sm" @click="toggleAsRead" v-if="hasFeature('MARK_AS_READ')">
+      <b-btn class="btn-light mx-2 px-2 py-0 search-document-navbar__readBy" size="sm" @click="toggleAsRead">
         {{ markAsReadLabel }}
       </b-btn>
-      <b-badge pill variant="light" class="mx-2 search-document-navbar__numberOfReadBy" v-if="hasFeature('MARK_AS_READ')" id="popover-read-by">
+      <b-badge pill variant="light" class="mx-2 search-document-navbar__numberOfReadBy" id="popover-read-by">
         {{ readBy.length }}
       </b-badge>
       <b-popover target="popover-read-by" triggers="hover" placement="bottom" v-if="readBy.length > 0">
@@ -71,12 +71,11 @@ import { getShortkeyOS } from '@/utils/utils'
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
-import features from '@/mixins/features'
 import shortkeys from '@/mixins/shortkeys'
 
 export default {
   name: 'SearchDocumentNavbar',
-  mixins: [features, shortkeys],
+  mixins: [shortkeys],
   components: {
     DocumentActions
   },
