@@ -44,9 +44,12 @@
         {{ readBy.length }}
       </b-badge>
       <b-popover target="popover-read-by" triggers="hover" placement="bottom" v-if="readBy.length > 0">
-        <ul>
+        <div>
+          {{ $t('search.nav.markAsReadBy') }} {{ $tc('search.nav.member', readBy.length, { count: readBy.length }) }} :
+        </div>
+        <ul class="list-unstyled mb-0">
           <li v-for="user in readBy" :key="user">
-            {{ user }}
+            - {{ user }}
           </li>
         </ul>
       </b-popover>

@@ -17,7 +17,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('SearchDocumentNavbar.vue', () => {
   const index = toLower('SearchDocumentNavbar')
@@ -28,7 +28,7 @@ describe('SearchDocumentNavbar.vue', () => {
   beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchDocumentNavbar, { localVue, store, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(SearchDocumentNavbar, { i18n, localVue, store })
   })
 
   afterAll(() => {
@@ -43,13 +43,13 @@ describe('SearchDocumentNavbar.vue', () => {
   it('should return the tooltip for mac', () => {
     getShortkeyOS.mockReturnValueOnce('mac')
 
-    expect(wrapper.vm.previousTooltip).toBe('search.nav.previous.tooltipMac')
+    expect(wrapper.vm.previousTooltip).toBe('Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)')
   })
 
   it('should return the tooltip for NOT mac', () => {
     getShortkeyOS.mockReturnValueOnce('default')
 
-    expect(wrapper.vm.previousTooltip).toBe('search.nav.previous.tooltipOthers')
+    expect(wrapper.vm.previousTooltip).toBe('Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)')
   })
 
   describe('Mark as read button', () => {
