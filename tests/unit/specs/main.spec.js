@@ -32,6 +32,9 @@ describe('main', () => {
 
   it('should set the config', async () => {
     axios.request.mockReturnValue({ data: { userProjects: ['first-index'], key: 'value' } })
+    const app = document.createElement('div')
+    app.setAttribute('id', 'app')
+    document.body.appendChild(app)
     const core = createCore(localVue)
     const vm = await core.ready.then(() => core.mount())
     expect(vm.$config).toBeDefined()
