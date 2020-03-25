@@ -76,6 +76,7 @@ import { faTrashAlt } from '@fortawesome/free-solid-svg-icons/faTrashAlt'
 import { faToggleOff } from '@fortawesome/free-solid-svg-icons/faToggleOff'
 import { faToggleOn } from '@fortawesome/free-solid-svg-icons/faToggleOn'
 import { faUndo } from '@fortawesome/free-solid-svg-icons/faUndo'
+import { faUsers } from '@fortawesome/free-solid-svg-icons/faUsers'
 import { faUserShield } from '@fortawesome/free-solid-svg-icons/faUserShield'
 import { faUserTag } from '@fortawesome/free-solid-svg-icons/faUserTag'
 import { faStar as farStar } from '@fortawesome/free-regular-svg-icons/faStar'
@@ -161,7 +162,8 @@ library.add(
   faToggleOff,
   faToggleOn,
   faUndo,
-  faUserTag,
+  faUsers,
   faUserShield,
+  faUserTag,
   farStar
 )

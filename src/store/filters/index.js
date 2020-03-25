@@ -7,6 +7,7 @@ export { default as FilterExtractionLevel } from './FilterExtractionLevel'
 export { default as FilterLanguage } from './FilterLanguage'
 export { default as FilterNamedEntity } from './FilterNamedEntity'
 export { default as FilterPath } from './FilterPath'
+export { default as FilterReadBy } from './FilterReadBy'
 export { default as FilterStarred } from './FilterStarred'
 export { default as FilterText } from './FilterText'
 export { default as FilterYesNo } from './FilterYesNo'
@@ -26,6 +27,15 @@ export default [
       name: 'tags',
       key: 'tags',
       icon: 'tags',
+      isSearchable: true
+    }
+  },
+  {
+    type: 'FilterReadBy',
+    options: {
+      name: 'readBy',
+      key: '_id',
+      icon: 'users',
       isSearchable: true
     }
   },
