@@ -35,9 +35,6 @@
               <div class="flex-grow-1 text-truncate">
                 <span v-html="injectTermInQuery(item.key)"></span>
               </div>
-              <div>
-                <b-badge pill variant="light">{{ item.doc_count }}</b-badge>
-              </div>
             </div>
           </template>
         </selectable-dropdown>
