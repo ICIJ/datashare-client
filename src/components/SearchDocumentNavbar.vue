@@ -11,12 +11,10 @@
         {{ $t('search.back') }}
       </span>
     </router-link>
-    <div v-if="isShrinked" class="flex-grow-1 pr-1">
-      <b-btn href="#" class="text-white p-0" @click="scrollToTop" variant="link">
-        {{ currentDocument.title }}
-      </b-btn>
-    </div>
-    <div v-if="currentDocument" class="ml-auto">
+    <b-btn v-if="isShrinked" class="flex-grow-1 px-1 text-white py-0 text-truncate" @click="scrollToTop" variant="link">
+      {{ currentDocument.title }}
+    </b-btn>
+    <div v-if="currentDocument" class="ml-auto d-flex align-items-center">
       <span class="search-document-navbar__nav" v-if="currentDocumentIndex > -1">
         <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
           <fa icon="angle-left" class="mr-1" />
@@ -37,22 +35,24 @@
           <span v-html="nextTooltip"></span>
         </b-tooltip>
       </span>
-      <b-btn class="btn-light mx-2 px-2 py-0 search-document-navbar__readBy" size="sm" @click="toggleAsRead">
+      <b-btn class="mx-2 px-2 py-0 search-document-navbar__readBy" size="sm" @click="toggleAsRead" :variant="markAsReadVariant">
         {{ markAsReadLabel }}
       </b-btn>
-      <b-badge pill variant="light" class="mx-2 search-document-navbar__numberOfReadBy" id="popover-read-by">
-        {{ readBy.length }}
-      </b-badge>
-      <b-popover target="popover-read-by" triggers="hover" placement="bottom" v-if="readBy.length > 0">
-        <div>
-          {{ $t('search.nav.markAsReadBy') }} {{ $tc('search.nav.member', readBy.length, { count: readBy.length }) }} :
-        </div>
-        <ul class="list-unstyled mb-0">
-          <li v-for="user in readBy" :key="user">
-            - {{ user }}
-          </li>
-        </ul>
-      </b-popover>
+      <template v-if="isServer">
+        <b-badge pill :variant="markAsReadVariant" class="mr-2 search-document-navbar__numberOfReadBy" id="popover-read-by">
+          {{ readBy.length }}
+        </b-badge>
+        <b-popover target="popover-read-by" triggers="hover" placement="bottom" v-if="readBy.length > 0">
+          <div>
+            {{ $tc('search.nav.markAsReadBy',  readBy.length, { count: readBy.length }) }}
+          </div>
+          <ul class="mb-0 pl-3">
+            <li v-for="user in readBy" :key="user">
+              {{ user }}
+            </li>
+          </ul>
+        </b-popover>
+      </template>
       <document-actions
         :document="currentDocument"
         class="search-document-navbar__actions d-flex"
@@ -75,10 +75,11 @@ import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
 import shortkeys from '@/mixins/shortkeys'
+import utils from '@/mixins/utils'
 
 export default {
   name: 'SearchDocumentNavbar',
-  mixins: [shortkeys],
+  mixins: [shortkeys, utils],
   components: {
     DocumentActions
   },
@@ -140,6 +141,9 @@ export default {
     },
     markAsReadLabel () {
       return this.isRead ? this.$t('search.nav.markAsUnread') : this.$t('search.nav.markAsRead')
+    },
+    markAsReadVariant () {
+      return this.isRead ? 'success' : 'light'
     }
   },
   mounted () {
@@ -208,10 +212,6 @@ export default {
 
     &__nav .btn {
       cursor: pointer;
-    }
-
-    &__actions {
-      float: right;
     }
   }
 </style>
