@@ -59,7 +59,7 @@ describe('SearchDocumentNavbar.vue', () => {
     })
 
     it('should display a "Mark as read" button', () => {
-      expect(wrapper.find('.search-document-navbar__readBy').exists()).toBeTruthy()
+      expect(wrapper.find('.search-document-navbar__read-by').exists()).toBeTruthy()
     })
 
     it('should call batchUpdate api function and mark document as READ', async () => {

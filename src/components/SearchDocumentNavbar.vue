@@ -35,7 +35,7 @@
           <span v-html="nextTooltip"></span>
         </b-tooltip>
       </span>
-      <b-btn class="mx-2 px-2 py-0 search-document-navbar__readBy" size="sm" @click="toggleAsRead" :variant="markAsReadVariant">
+      <b-btn class="mx-2 px-2 py-0 search-document-navbar__read-by" size="sm" @click="toggleAsRead" :variant="markAsReadVariant">
         {{ markAsReadLabel }}
       </b-btn>
       <template v-if="isServer">
