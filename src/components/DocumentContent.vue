@@ -232,7 +232,7 @@ export default {
             {{ $t('document.showNamedEntities') }}
           </label>
         </div>
-        <b-tooltip placement="left" target="ner-toggler" :title="$t('document.highlights_caution')" />
+        <b-tooltip target="ner-toggler" :title="$t('document.highlights_caution')" />
       </div>
       <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center" />
     </div>
