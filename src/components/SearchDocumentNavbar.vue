@@ -35,7 +35,7 @@
           <span v-html="nextTooltip"></span>
         </b-tooltip>
       </span>
-      <b-btn class="mx-2 px-2 py-0 search-document-navbar__read-by" size="sm" @click="toggleAsRead" :variant="markAsReadVariant">
+      <b-btn class="mx-2 px-2 py-0 search-document-navbar__read-by" size="sm" @click="toggleAsRead"  :data-read-label="$t('search.nav.markAsRead')" :data-unread-label="$t('search.nav.markAsUnread')" :variant="markAsReadVariant">
         {{ markAsReadLabel }}
       </b-btn>
       <template v-if="isServer">
@@ -208,6 +208,27 @@ export default {
       font-size: $font-size-sm;
       color: inherit;
       display: inline;
+    }
+
+    &__read-by {
+      position: relative;
+
+      &:before, &:after{
+        display: block;
+        height: 0;
+        overflow: hidden;
+        text-overflow: -999999px;
+        color: transparent;
+        visibility: hidden;
+      }
+
+      &:before {
+        content: attr(data-unread-label);
+      }
+
+      &:after {
+        content: attr(data-read-label);
+      }
     }
 
     &__nav .btn {
