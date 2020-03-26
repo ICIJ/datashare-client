@@ -11,7 +11,7 @@
         {{ $t('search.back') }}
       </span>
     </router-link>
-    <b-btn v-if="isShrinked" class="flex-grow-1 px-1 text-white py-0 text-truncate" @click="scrollToTop" variant="link">
+    <b-btn v-if="isShrinked" class="search-document-navbar__title flex-grow-1 px-1 text-white py-0 text-truncate" @click="scrollToTop" variant="link">
       {{ currentDocument.title }}
     </b-btn>
     <div v-if="currentDocument" class="ml-auto d-flex align-items-center">
@@ -39,7 +39,7 @@
         {{ markAsReadLabel }}
       </b-btn>
       <template v-if="isServer">
-        <b-badge pill :variant="markAsReadVariant" class="mr-2 search-document-navbar__numberOfReadBy" id="popover-read-by">
+        <b-badge pill :variant="markAsReadVariant" class="mr-2 search-document-navbar__read-by-number" id="popover-read-by">
           {{ readBy.length }}
         </b-badge>
         <b-popover target="popover-read-by" triggers="hover" placement="bottom" v-if="readBy.length > 0">

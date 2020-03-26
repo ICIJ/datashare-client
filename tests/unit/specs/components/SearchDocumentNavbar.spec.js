@@ -28,7 +28,8 @@ describe('SearchDocumentNavbar.vue', () => {
   beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchDocumentNavbar, { i18n, localVue, store })
+    const computed = { isServer: () => true }
+    wrapper = shallowMount(SearchDocumentNavbar, { i18n, localVue, store, computed })
   })
 
   afterAll(() => {
@@ -95,7 +96,7 @@ describe('SearchDocumentNavbar.vue', () => {
     await letData(es).have(new IndexedDocument('doc_01', index)).commit()
     await store.dispatch('document/get', { id: 'doc_01', index })
 
-    expect(wrapper.find('.search-document-navbar__numberOfReadBy').exists()).toBeTruthy()
+    expect(wrapper.find('.search-document-navbar__read-by-number').exists()).toBeTruthy()
   })
 
   it('should display document title if shrinked', async () => {
@@ -104,7 +105,7 @@ describe('SearchDocumentNavbar.vue', () => {
 
     await wrapper.setProps({ isShrinked: true })
 
-    expect(wrapper.find('.search-document-navbar > div.flex-grow-1 > b-btn-stub').exists()).toBeTruthy()
-    expect(wrapper.find('.search-document-navbar > div.flex-grow-1 > b-btn-stub').text()).toBe('doc_01')
+    expect(wrapper.find('.search-document-navbar__title').exists()).toBeTruthy()
+    expect(wrapper.find('.search-document-navbar__title').text()).toBe('doc_01')
   })
 })
