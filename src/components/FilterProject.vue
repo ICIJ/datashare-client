@@ -5,7 +5,7 @@
         <span class="filter__items__item__icon pl-0 pr-1">
           <fa icon="book" fixed-width />
         </span>
-        <fa :icon="headerIcon" class="float-right"/>
+        <fa :icon="headerIcon" class="float-right" />
         {{ $t('filter.projects') }}
       </h6>
     </div>

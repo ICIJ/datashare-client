@@ -38,31 +38,32 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import forEach from 'lodash/forEach'
 import isArray from 'lodash/isArray'
+import { mapState } from 'vuex'
+
 import Hook from '@/components/Hook'
-import FilterText from '@/components/FilterText'
-import FilterYesNo from '@/components/FilterYesNo'
 import FilterDate from '@/components/FilterDate'
 import FilterDateRange from '@/components/FilterDateRange'
-import FilterPath from '@/components/FilterPath'
 import FilterNamedEntity from '@/components/FilterNamedEntity'
-import FilterSearch from '@/components/FilterSearch'
+import FilterPath from '@/components/FilterPath'
 import FilterProject from '@/components/FilterProject'
+import FilterSearch from '@/components/FilterSearch'
+import FilterText from '@/components/FilterText'
+import FilterYesNo from '@/components/FilterYesNo'
 
 export default {
   name: 'FiltersPanel',
   components: {
-    FilterText,
-    FilterYesNo,
     FilterDate,
     FilterDateRange,
-    FilterPath,
     FilterNamedEntity,
+    FilterPath,
+    FilterProject,
     FilterSearch,
-    Hook,
-    FilterProject
+    FilterText,
+    FilterYesNo,
+    Hook
   },
   mounted () {
     this.$root.$on('filter::async-search', this.asyncFilterSearch)

@@ -33,14 +33,6 @@
 </template>
 
 <script>
-import InfiniteLoading from 'vue-infinite-loading'
-import FilterText from '@/components/FilterText'
-import FilterYesNo from '@/components/FilterYesNo'
-import FilterDate from '@/components/FilterDate'
-import FilterDateRange from '@/components/FilterDateRange'
-import FilterPath from '@/components/FilterPath'
-import FilterNamedEntity from '@/components/FilterNamedEntity'
-import filters from '@/mixins/filters'
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
 import get from 'lodash/get'
@@ -48,6 +40,15 @@ import sumBy from 'lodash/sumBy'
 import throttle from 'lodash/throttle'
 import toLower from 'lodash/toLower'
 import uniqueId from 'lodash/uniqueId'
+import InfiniteLoading from 'vue-infinite-loading'
+
+import FilterDate from '@/components/FilterDate'
+import FilterDateRange from '@/components/FilterDateRange'
+import FilterNamedEntity from '@/components/FilterNamedEntity'
+import FilterPath from '@/components/FilterPath'
+import FilterText from '@/components/FilterText'
+import FilterYesNo from '@/components/FilterYesNo'
+import filters from '@/mixins/filters'
 
 export default {
   name: 'FilterSearch',
