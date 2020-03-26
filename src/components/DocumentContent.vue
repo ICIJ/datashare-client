@@ -223,8 +223,8 @@ export default {
         :search-worker-in-progress="localSearchWorkerInProgress" />
       <hook name="document.content.toolbox:after" />
     </div>
-    <div class="d-flex flex-row justify-content-end px-3">
-      <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end" />
+    <div class="d-flex flex-row justify-content-end align-items-center px-3">
+      <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center" />
       <div class="document-content__ner-toggler py-1 ml-3 font-weight-bold" id="ner-toggler" v-if="showNamedEntitiesToggler">
         <div class="custom-control custom-switch">
           <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler" :disabled="isLoadingNamedEntities">
@@ -234,7 +234,7 @@ export default {
         </div>
         <b-tooltip placement="left" target="ner-toggler" :title="$t('document.highlights_caution')" />
       </div>
-      <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end" />
+      <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center" />
     </div>
     <hook name="document.content.body:before" />
     <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
