@@ -4,6 +4,7 @@ import omit from 'lodash/omit'
 import toLower from 'lodash/toLower'
 import axios from 'axios'
 
+import Api from '@/api'
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
@@ -781,5 +782,31 @@ describe('SearchStore', () => {
     expect(store.state.search.response.hits[0].shortId).toBe('a')
     expect(store.state.search.response.hits[1].shortId).toBe('b')
     expect(store.state.search.response.hits[2].shortId).toBe('c')
+  })
+
+  describe('readBy', () => {
+    it('should init readBy to an empty array', () => {
+      expect(store.state.search).toHaveProperty('readBy')
+      expect(store.state.search.readBy).toEqual([])
+    })
+
+    it('should set readBy to userIds', () => {
+      const userIds = ['user_01', 'user_02', 'user_03']
+      store.commit('search/readBy', userIds)
+
+      expect(store.state.search.readBy).toEqual(userIds)
+    })
+
+    it('should load users who read documents from this project', async () => {
+      axios.request.mockResolvedValue({ data: [{ id: 'user_01' }, { id: 'user_02' }] })
+      axios.request.mockClear()
+      await store.dispatch('search/getProjectMarkReadUsers')
+
+      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl('/api/searchstore/documents/markReadUsers')
+      }))
+      expect(store.state.search.readBy).toEqual(['user_01', 'user_02'])
+    })
   })
 })

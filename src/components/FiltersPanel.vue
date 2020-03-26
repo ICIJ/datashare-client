@@ -48,6 +48,7 @@ import FilterDateRange from '@/components/FilterDateRange'
 import FilterNamedEntity from '@/components/FilterNamedEntity'
 import FilterPath from '@/components/FilterPath'
 import FilterProject from '@/components/FilterProject'
+import FilterReadBy from '@/components/FilterReadBy'
 import FilterSearch from '@/components/FilterSearch'
 import FilterText from '@/components/FilterText'
 import FilterYesNo from '@/components/FilterYesNo'
@@ -60,6 +61,7 @@ export default {
     FilterNamedEntity,
     FilterPath,
     FilterProject,
+    FilterReadBy,
     FilterSearch,
     FilterText,
     FilterYesNo,

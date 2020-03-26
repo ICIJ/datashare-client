@@ -1,8 +1,8 @@
-import axios from 'axios'
-import Murmur from '@icij/murmur'
 import find from 'lodash/find'
 import toLower from 'lodash/toLower'
+import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import axios from 'axios'
 import VueRouter from 'vue-router'
 
 import Api from '@/api'
@@ -37,6 +37,8 @@ describe('FilterProject.vue', () => {
   beforeEach(() => {
     wrapper = shallowMount(FilterProject, { localVue, store, wait, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) }, mocks: { $t: msg => msg } })
   })
+
+  afterAll(() => jest.unmock('axios'))
 
   it('should not display a dropdown if we aren\'t in server mode', () => {
     Murmur.config.merge({ multipleProjects: false })

@@ -123,6 +123,9 @@ export default class Api {
   getMarkAsRead (project, docId) {
     return this.sendAction(`/api/${project}/documents/markedRead/${docId}`)
   }
+  getProjectMarkReadUsers (project) {
+    return this.sendAction(`/api/${project}/documents/markReadUsers`)
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })

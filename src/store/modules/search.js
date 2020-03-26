@@ -56,7 +56,8 @@ export function initialState () {
     starredDocuments: [],
     // Different default layout for narrow screen
     layout: isNarrowScreen() ? 'table' : 'list',
-    isDownloadAllowed: false
+    isDownloadAllowed: false,
+    readBy: []
   })
 }
 
@@ -334,6 +335,9 @@ export const mutations = {
   },
   removeFromStarredDocuments (state, documentIds) {
     Vue.set(state, 'starredDocuments', difference(state.starredDocuments, documentIds))
+  },
+  readBy (state, userIds) {
+    Vue.set(state, 'readBy', userIds)
   }
 }
 
@@ -467,9 +471,18 @@ export const actions = {
     try {
       await api.isDownloadAllowed(state.index)
       commit('isDownloadAllowed', true)
-    } catch (e) {
+    } catch (_) {
       commit('isDownloadAllowed', false)
     }
+  },
+  async getProjectMarkReadUsers ({ state, commit }) {
+    try {
+      const users = await api.getProjectMarkReadUsers(state.index)
+      commit('readBy', map(users, 'id'))
+    } catch (_) {
+      commit('readBy', [])
+    }
+    return state.readBy
   }
 }
 

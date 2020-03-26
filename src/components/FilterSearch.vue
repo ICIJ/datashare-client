@@ -46,6 +46,7 @@ import FilterDate from '@/components/FilterDate'
 import FilterDateRange from '@/components/FilterDateRange'
 import FilterNamedEntity from '@/components/FilterNamedEntity'
 import FilterPath from '@/components/FilterPath'
+import FilterReadBy from '@/components/FilterReadBy'
 import FilterText from '@/components/FilterText'
 import FilterYesNo from '@/components/FilterYesNo'
 import filters from '@/mixins/filters'
@@ -79,6 +80,7 @@ export default {
     FilterDateRange,
     FilterNamedEntity,
     FilterPath,
+    FilterReadBy,
     FilterText,
     FilterYesNo,
     InfiniteLoading
