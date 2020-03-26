@@ -11,7 +11,7 @@
         {{ $t('search.back') }}
       </span>
     </router-link>
-    <b-btn v-if="isShrinked" class="search-document-navbar__title flex-grow-1 px-1 text-white py-0 text-truncate" @click="scrollToTop" variant="link">
+    <b-btn v-if="isShrinked" class="search-document-navbar__title text-left flex-grow-1 px-1 text-white py-0 text-truncate" @click="scrollToTop" variant="link">
       {{ currentDocument.title }}
     </b-btn>
     <div v-if="currentDocument" class="ml-auto d-flex align-items-center">

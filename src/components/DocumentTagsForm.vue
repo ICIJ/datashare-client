@@ -1,5 +1,5 @@
 <template>
-  <div class="document-tags-form row">
+  <div class="document-tags-form row no-gutters">
     <div :class="{ 'col-md-4 mb-3': displayTags }" class="d-flex" v-if="displayForm">
       <b-form @submit.prevent="addTag" class="document-tags-form__add">
         <b-input-group size="sm">

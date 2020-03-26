@@ -10,7 +10,7 @@
           <hook name="document.header.name:after" />
         </h3>
         <hook name="document.header.tags:before" />
-        <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="false" class="ml-0" mode="dark" />
+        <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="false" class="px-3 mx-0" mode="dark" />
         <hook name="document.header.tags:after" />
         <hook name="document.header.nav:before" />
         <nav class="document__header__nav text-nowrap overflow-auto">
