@@ -55,11 +55,28 @@ describe('FilterReadBy.vue', () => {
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${index}/documents/markReadUsers`)
     }))
-    expect(wrapper.vm.readBy).toEqual(['user_01', 'user_02'])
   })
 
-  it('should display users who read documents in this project', () => {
+  it('should display users who read documents in this project', async () => {
+    await wrapper.vm.$nextTick()
+
     expect(wrapper.findAll('.filter__items__item').at(0).text()).toBe('user_01')
     expect(wrapper.findAll('.filter__items__item').at(1).text()).toBe('user_02')
+  })
+
+  it('should retrieve documents read by selected users', async () => {
+    const documents = ['document_01', 'document_02', 'document_03']
+    axios.request.mockResolvedValue({ data: documents })
+    axios.request.mockClear()
+
+    await wrapper.vm.selectUsers(['user_01'])
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl(`/api/${index}/documents/markedReadDocuments/user_01`)
+    }))
+    expect(store.state.search.documentsRead).toEqual(documents)
+    expect(wrapper.vm.selected).toEqual(['user_01'])
+    expect(wrapper.vm.root.isAllSelected).toBeFalsy()
   })
 })

@@ -5,4 +5,8 @@ export default class FilterReadBy extends FilterText {
     super(options)
     this.component = 'FilterReadBy'
   }
+
+  addChildIncludeFilter (body, param) {
+    return body.addFilter('terms', this.key, this.state.documentsRead)
+  }
 }

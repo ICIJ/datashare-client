@@ -785,28 +785,42 @@ describe('SearchStore', () => {
   })
 
   describe('readBy', () => {
-    it('should init readBy to an empty array', () => {
-      expect(store.state.search).toHaveProperty('readBy')
-      expect(store.state.search.readBy).toEqual([])
+    it('should init documentsRead to an empty array', () => {
+      expect(store.state.search).toHaveProperty('documentsRead')
+      expect(store.state.search.documentsRead).toEqual([])
     })
 
-    it('should set readBy to userIds', () => {
+    it('should set documentsRead to userIds', () => {
       const userIds = ['user_01', 'user_02', 'user_03']
-      store.commit('search/readBy', userIds)
+      store.commit('search/documentsRead', userIds)
 
-      expect(store.state.search.readBy).toEqual(userIds)
+      expect(store.state.search.documentsRead).toEqual(userIds)
     })
 
-    it('should load users who read documents from this project', async () => {
+    it('should return  users who read documents from this project', async () => {
       axios.request.mockResolvedValue({ data: [{ id: 'user_01' }, { id: 'user_02' }] })
       axios.request.mockClear()
-      await store.dispatch('search/getProjectMarkReadUsers')
+
+      const users = await store.dispatch('search/getProjectMarkReadUsers')
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/searchstore/documents/markReadUsers')
+        url: Api.getFullUrl(`/api/${index}/documents/markReadUsers`)
       }))
-      expect(store.state.search.readBy).toEqual(['user_01', 'user_02'])
+      expect(users).toEqual(['user_01', 'user_02'])
+    })
+
+    it('should set the list of documents read by a list of users', async () => {
+      axios.request.mockResolvedValue({ data: ['document_01', 'document_02', 'document_03'] })
+      axios.request.mockClear()
+
+      await store.dispatch('search/getProjectMarkedReadDocuments', ['user_01', 'user_02'])
+
+      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl(`/api/${index}/documents/markedReadDocuments/user_01,user_02`)
+      }))
+      expect(store.state.search.documentsRead).toEqual(['document_01', 'document_02', 'document_03'])
     })
   })
 })

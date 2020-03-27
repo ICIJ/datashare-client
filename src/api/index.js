@@ -1,6 +1,7 @@
-import axios from 'axios'
+import join from 'lodash/join'
 import map from 'lodash/map'
 import replace from 'lodash/replace'
+import axios from 'axios'
 
 import { EventBus } from '@/utils/event-bus'
 
@@ -125,6 +126,9 @@ export default class Api {
   }
   getProjectMarkReadUsers (project) {
     return this.sendAction(`/api/${project}/documents/markReadUsers`)
+  }
+  getProjectMarkedReadDocuments (project, users) {
+    return this.sendAction(`/api/${project}/documents/markedReadDocuments/${join(users)}`)
   }
   async sendAction (url, config = {}) {
     try {

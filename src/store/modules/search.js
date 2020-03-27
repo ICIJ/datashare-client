@@ -27,13 +27,13 @@ import values from 'lodash/values'
 import lucene from 'lucene'
 import Vue from 'vue'
 
+import Api from '@/api'
 import elasticsearch from '@/api/elasticsearch'
 import EsDocList from '@/api/resources/EsDocList'
 import settings from '@/utils/settings'
 import { isNarrowScreen } from '@/utils/screen'
 import * as filterTypes from '@/store/filters'
 import filters from '@/store/filters'
-import Api from '@/api'
 
 export const api = new Api()
 
@@ -57,7 +57,7 @@ export function initialState () {
     // Different default layout for narrow screen
     layout: isNarrowScreen() ? 'table' : 'list',
     isDownloadAllowed: false,
-    readBy: []
+    documentsRead: []
   })
 }
 
@@ -336,8 +336,8 @@ export const mutations = {
   removeFromStarredDocuments (state, documentIds) {
     Vue.set(state, 'starredDocuments', difference(state.starredDocuments, documentIds))
   },
-  readBy (state, userIds) {
-    Vue.set(state, 'readBy', userIds)
+  documentsRead (state, documentsRead) {
+    Vue.set(state, 'documentsRead', documentsRead)
   }
 }
 
@@ -475,14 +475,24 @@ export const actions = {
       commit('isDownloadAllowed', false)
     }
   },
-  async getProjectMarkReadUsers ({ state, commit }) {
+  async getProjectMarkReadUsers ({ state }) {
+    let users
     try {
-      const users = await api.getProjectMarkReadUsers(state.index)
-      commit('readBy', map(users, 'id'))
+      const tmp = await api.getProjectMarkReadUsers(state.index)
+      users = map(tmp, 'id')
     } catch (_) {
-      commit('readBy', [])
+      users = []
     }
-    return state.readBy
+    return users
+  },
+  async getProjectMarkedReadDocuments ({ state, commit }, users) {
+    let documentsRead
+    try {
+      documentsRead = await api.getProjectMarkedReadDocuments(state.index, users)
+    } catch (_) {
+      documentsRead = []
+    }
+    commit('documentsRead', documentsRead)
   }
 }
 
