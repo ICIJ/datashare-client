@@ -79,7 +79,8 @@
         "extensionWarning": "Ce document a une extension de fichier qui ne correspond pas à son type. Vous aurez peut-être à ajouter l'extension <code>%{extension}</code> avant de l'ouvrir."
       },
       "markAsRead": "Mark as read",
-      "markAsUnread": "Mark as unread"
+      "markAsUnread": "Mark as unread",
+      "markAsReadBy": "Marked as read by nobody: | Marked as read by 1 user: | Marked as read by {count} users:"
     }
   },
   "pagination": {
