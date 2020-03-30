@@ -3,5 +3,5 @@ export default function (size, showBytes = false) {
   const unitIndex = Math.floor(size === 0 ? 0 : Math.log(size) / Math.log(1024))
   const value = (size / Math.pow(1024, unitIndex)).toFixed(2)
   const unit = ['B', 'kB', 'MB', 'GB', 'TB'][unitIndex]
-  return unitIndex === 0 || !showBytes ? `${size} B` : `${value} ${unit} (${size} B)`
+  return unitIndex === 0 || !showBytes ? `${value} ${unit}` : `${value} ${unit} (${size} B)`
 }

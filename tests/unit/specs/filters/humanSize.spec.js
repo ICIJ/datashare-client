@@ -10,15 +10,15 @@ describe('humanSize filter', () => {
   })
 
   it('should display human readable size for 0', () => {
-    expect(humanSize(0)).toBe('0 B')
+    expect(humanSize(0)).toBe('0.00 B')
   })
 
   it('should display human readable size for Bytes', () => {
-    expect(humanSize(12)).toBe('12 B')
+    expect(humanSize(12)).toBe('12.00 B')
   })
 
   it('should display human readable size for Kilobytes WITHOUT bytes', () => {
-    expect(humanSize(10342, false)).toBe('10342 B')
+    expect(humanSize(10342, false)).toBe('10.10 kB')
   })
 
   it('should display human readable size for Kilobytes WITH bytes', () => {
@@ -26,7 +26,7 @@ describe('humanSize filter', () => {
   })
 
   it('should display human readable size for Megabytes WITHOUT bytes', () => {
-    expect(humanSize(12345678, false)).toBe('12345678 B')
+    expect(humanSize(12345678, false)).toBe('11.77 MB')
   })
 
   it('should display human readable size for Megabytes WITH bytes', () => {

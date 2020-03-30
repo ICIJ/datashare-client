@@ -207,7 +207,7 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should return the document size as human readable', () => {
-    expect(wrapper.vm.getDocumentSize(42)).toBe('42 B')
+    expect(wrapper.vm.getDocumentSize(42)).toBe('42.00 B')
   })
 
   it('should change the batchSearch published state', () => {

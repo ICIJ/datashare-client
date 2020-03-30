@@ -43,7 +43,7 @@
           <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" />
         </template>
         <template v-slot:cell(contentLength)="{ value }">
-          {{ value | humanSize(true) }}
+          {{ value | humanSize() }}
         </template>
       </b-table>
       <search-results-header position="bottom" />
