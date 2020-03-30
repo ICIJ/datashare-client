@@ -1,7 +1,6 @@
 import toLower from 'lodash/toLower'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
 
 import DocumentActions from '@/components/DocumentActions'
 import { Core } from '@/core'
@@ -32,8 +31,8 @@ describe('DocumentActions.vue', () => {
 
   it('should display a filled star if document is starred, an empty one otherwise', async () => {
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('far,star')
-    store.commit('search/starredDocuments', [document.id])
-    await flushPromises()
+    await store.commit('search/starredDocuments', [document.id])
+
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')
   })
 
@@ -48,8 +47,7 @@ describe('DocumentActions.vue', () => {
   })
 
   it('should replace a filled star by an empty one on click on it', async () => {
-    store.commit('search/pushFromStarredDocuments', document.id)
-    await flushPromises()
+    await store.commit('search/pushFromStarredDocuments', document.id)
 
     expect(wrapper.vm.starredDocuments).toEqual([document.id])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')

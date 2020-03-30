@@ -8,7 +8,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterYesNo from '@/components/FilterYesNo'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
-const { localVue, store, router, wait } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store, router, wait } = Core.init(createLocalVue()).useAll()
 
 jest.mock('@/api', () => {
   const { jsonResp } = require('tests/unit/tests_utils')
@@ -30,12 +30,12 @@ describe('FilterYesNo.vue', () => {
 
   beforeEach(() => {
     wrapper = mount(FilterYesNo, {
+      i18n,
       localVue,
       router,
       store,
       wait,
-      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'starred' }) },
-      mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg }
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'starred' }) }
     })
     store.commit('search/index', index)
   })
@@ -52,7 +52,7 @@ describe('FilterYesNo.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.filter__items__all')).toHaveLength(1)
-    expect(wrapper.find('.filter__items__all .filter__items__item__label').text()).toBe('all')
+    expect(wrapper.find('.filter__items__all .filter__items__item__label').text()).toBe('All')
     expect(wrapper.find('.filter__items__all .filter__items__item__count').text()).toBe('2')
   })
 
@@ -62,8 +62,8 @@ describe('FilterYesNo.vue', () => {
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.filter__items__item .custom-control-label .filter__items__item__label')).toHaveLength(2)
-    expect(wrapper.findAll('.filter__items__item').at(0).find('.custom-control-label .filter__items__item__label').text()).toBe('filter.starred')
-    expect(wrapper.findAll('.filter__items__item').at(1).find('.custom-control-label .filter__items__item__label').text()).toBe('filter.notStarred')
+    expect(wrapper.findAll('.filter__items__item').at(0).find('.custom-control-label .filter__items__item__label').text()).toBe('Starred')
+    expect(wrapper.findAll('.filter__items__item').at(1).find('.custom-control-label .filter__items__item__label').text()).toBe('Not starred')
   })
 
   it('should change the selected value', async () => {

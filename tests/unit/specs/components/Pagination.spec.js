@@ -1,7 +1,7 @@
-import Pagination from '@/components/Pagination'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
 import cloneDeep from 'lodash/cloneDeep'
-import flushPromises from 'flush-promises'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+
+import Pagination from '@/components/Pagination'
 import { Core } from '@/core'
 
 const { localVue } = Core.init(createLocalVue()).useAll()
@@ -22,8 +22,7 @@ describe('Pagination.vue', () => {
     })
 
     it('should not display the pagination', async () => {
-      wrapper.setProps({ total: 22, isDisplayed: () => false, getToTemplate: () => template })
-      await flushPromises()
+      await wrapper.setProps({ total: 22, isDisplayed: () => false, getToTemplate: () => template })
 
       expect(wrapper.find('.pagination').exists()).toBeFalsy()
     })
@@ -33,8 +32,7 @@ describe('Pagination.vue', () => {
     })
 
     it('should not display the pagination by default if not enough results', async () => {
-      wrapper.setProps({ total: 5, getToTemplate: () => template })
-      await flushPromises()
+      await wrapper.setProps({ total: 5, getToTemplate: () => template })
 
       expect(wrapper.find('.pagination').exists()).toBeFalsy()
     })
@@ -43,8 +41,7 @@ describe('Pagination.vue', () => {
   describe('should set some links as unavailable', () => {
     it('should display the first and the previous page as unavailable', async () => {
       const template = { name: 'router-name', query: { from: 0, size: 10 } }
-      wrapper.setProps({ total: 22, getToTemplate: () => cloneDeep(template) })
-      await flushPromises()
+      await wrapper.setProps({ total: 22, getToTemplate: () => cloneDeep(template) })
 
       expect(wrapper.findAll('.pagination__first-page.disabled')).toHaveLength(1)
       expect(wrapper.findAll('.pagination__previous-page.disabled')).toHaveLength(1)

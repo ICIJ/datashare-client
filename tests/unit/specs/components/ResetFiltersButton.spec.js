@@ -1,10 +1,9 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
 
-import { Core } from '@/core'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
+import { Core } from '@/core'
 
-const { localVue, router, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
 
 describe('ResetFiltersButton.vue', function () {
   let wrapper
@@ -12,7 +11,7 @@ describe('ResetFiltersButton.vue', function () {
   beforeEach(() => {
     store.commit('search/resetFilterValues')
     store.commit('search/resetQuery')
-    wrapper = shallowMount(ResetFiltersButton, { localVue, router, store, sync: false, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(ResetFiltersButton, { i18n, localVue, router, store, sync: false })
   })
 
   it('should display a disabled button, by default', () => {
@@ -21,8 +20,7 @@ describe('ResetFiltersButton.vue', function () {
   })
 
   it('should display an active button if a filter is valuated', async () => {
-    store.commit('search/addFilterValue', { name: 'language', value: 'en' })
-    await flushPromises()
+    await store.commit('search/addFilterValue', { name: 'language', value: 'en' })
 
     expect(wrapper.find('.btn').exists()).toBeTruthy()
     expect(wrapper.find('.btn[disabled]').exists()).toBeFalsy()

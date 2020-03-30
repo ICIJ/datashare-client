@@ -118,7 +118,7 @@ export default {
     buildChart () {
       // Refresh the width so all computed properties that are dependent of
       //  this value are refreshed (including scale functions)
-      this.width = this.container.offsetWidth
+      this.$set(this, 'width', this.container.offsetWidth)
       // Create/Update the x axis
       this.chart.select('.widget__content__chart__axis--x')
         .call(d3.axisBottom(this.x))
@@ -155,19 +155,19 @@ export default {
     &__content {
 
       &__chart {
-        position: relative;
         padding-top: 50%;
+        position: relative;
         width: 100%;
 
         &__spinner {
-          position: absolute;
-          top: 0%;
-          left: 0%;
-          width: 100%;
-          height: 100%;
-          display: flex;
           align-items: center;
+          display: flex;
+          height: 100%;
           justify-content: center;
+          left: 0;
+          position: absolute;
+          top: 0;
+          width: 100%;
 
           .card & {
             background: $card-bg;
@@ -175,10 +175,10 @@ export default {
         }
 
         svg:not(.svg-inline--fa) {
-          position: absolute;
-          top: 0%;
-          left: 0%;
           font-family: $font-family-base;
+          left: 0;
+          position: absolute;
+          top: 0;
         }
 
         rect {

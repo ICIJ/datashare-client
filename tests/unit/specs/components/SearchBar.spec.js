@@ -1,12 +1,11 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
-import flushPromises from 'flush-promises'
 import toLower from 'lodash/toLower'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
-import { Core } from '@/core'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import SearchBar from '@/components/SearchBar'
+import { Core } from '@/core'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
@@ -31,15 +30,13 @@ describe('SearchBar.vue', function () {
   })
 
   it('should display the search-settings component', async () => {
-    wrapper.setProps({ settings: true })
-    await flushPromises()
+    await wrapper.setProps({ settings: true })
 
     expect(wrapper.contains('.search-bar search-settings-stub')).toBeTruthy()
   })
 
   it('should display the shortkeys-modal component', async () => {
-    wrapper.setProps({ settings: true })
-    await flushPromises()
+    await wrapper.setProps({ settings: true })
 
     expect(wrapper.contains('.search-bar shortkeys-modal-stub')).toBeTruthy()
   })
