@@ -9,4 +9,8 @@ export default class FilterReadBy extends FilterText {
   addChildIncludeFilter (body, param) {
     return body.addFilter('terms', this.key, this.state.documentsRead)
   }
+
+  addChildExcludeFilter (body, param) {
+    return body.notFilter('terms', this.key, this.state.documentsRead)
+  }
 }

@@ -1,5 +1,5 @@
 <template>
-  <filter-boilerplate v-bind="propsWithout('hide-show-more')" hide-show-more hide-exclude ref="filter">
+  <filter-boilerplate v-bind="propsWithout('hide-show-more')" hide-show-more ref="filter">
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="selectUsers">
         <b-form-checkbox v-for="userId in readBy" :value="userId" class="filter__items__item" :key="userId">
