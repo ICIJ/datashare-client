@@ -69,14 +69,29 @@ describe('FilterReadBy.vue', () => {
     axios.request.mockResolvedValue({ data: documents })
     axios.request.mockClear()
 
-    await wrapper.vm.selectUsers(['user_01'])
+    await wrapper.vm.selectUsers(['user_01', 'user_02'])
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/markedReadDocuments/user_01`)
+      url: Api.getFullUrl(`/api/${index}/documents/markedReadDocuments/user_01,user_02`)
     }))
     expect(store.state.search.documentsRead).toEqual(documents)
-    expect(wrapper.vm.selected).toEqual(['user_01'])
+    expect(wrapper.vm.selected).toEqual(['user_01', 'user_02'])
     expect(wrapper.vm.root.isAllSelected).toBeFalsy()
+  })
+
+  it('should select no users', async () => {
+    axios.request.mockResolvedValue({ data: [] })
+    axios.request.mockClear()
+
+    await wrapper.vm.selectUsers([])
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl(`/api/${index}/documents/markedReadDocuments/`)
+    }))
+    expect(store.state.search.documentsRead).toEqual([])
+    expect(wrapper.vm.selected).toEqual([])
+    expect(wrapper.vm.root.isAllSelected).toBeTruthy()
   })
 })

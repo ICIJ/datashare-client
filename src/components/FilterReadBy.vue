@@ -32,21 +32,10 @@ export default {
     this.root.$on('reset-filter-values', () => this.selectUsers([]))
   },
   methods: {
-    async selectUsers (item) {
-      await this.$store.dispatch('search/getProjectMarkedReadDocuments', item)
-      switch (item.length) {
-        case 0:
-          this.$set(this, 'selected', [])
-          this.root.isAllSelected = true
-          break
-        case 1:
-          this.$set(this, 'selected', item)
-          this.root.isAllSelected = false
-          break
-        case 2:
-          this.$set(this, 'selected', item.slice(1))
-          break
-      }
+    async selectUsers (users) {
+      await this.$store.dispatch('search/getProjectMarkedReadDocuments', users)
+      this.$set(this, 'selected', users)
+      this.root.isAllSelected = users.length === 0
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
       this.refreshRouteAndSearch()
     }
