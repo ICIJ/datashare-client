@@ -110,13 +110,9 @@ Untick '**Show README**' and click '**Finish**':
 
 Finally, click "**Close**" to close the installer of TesseractOCR.
 
- 8. It now downloads the back end, Datashare.jar:
+ 8. It now downloads the back end and the front end, Datashare.jar:
 
 ![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_52_27.png)
-
-Then, the front end, Datashare.tgz:
-
-![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_54_06.png)
 
 When it is finished, click '**Close**':
 
