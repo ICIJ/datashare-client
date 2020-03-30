@@ -62,4 +62,16 @@ describe('SearchResultsTable.vue', () => {
       data: ['document_01', 'document_02']
     }))
   })
+
+  it('should translate an unknown size', () => {
+    const size = wrapper.vm.humanSize('')
+
+    expect(size).toBe('Unknown')
+  })
+
+  it('should display a humanSize', () => {
+    const size = wrapper.vm.humanSize(12345678)
+
+    expect(size).toBe('11.77 MB')
+  })
 })

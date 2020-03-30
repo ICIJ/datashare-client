@@ -43,7 +43,7 @@
           <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" />
         </template>
         <template v-slot:cell(contentLength)="{ value }">
-          {{ value | humanSize() }}
+          {{ humanSize(value) }}
         </template>
       </b-table>
       <search-results-header position="bottom" />
@@ -76,7 +76,6 @@ import settings from '@/utils/settings'
 
 export default {
   name: 'SearchResultsTable',
-  filters: { humanSize },
   components: {
     DocumentActions,
     DocumentSlicedName,
@@ -210,6 +209,10 @@ export default {
         await this.$store.dispatch('search/refresh', false)
       }
       return this.response.hits
+    },
+    humanSize (value) {
+      const size = humanSize(value)
+      return size === 'unknown' ? this.$t('document.unknown') : size
     }
   }
 }
