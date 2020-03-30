@@ -78,9 +78,9 @@
       "document": {
         "extensionWarning": "Ce document a une extension de fichier qui ne correspond pas à son type. Vous aurez peut-être à ajouter l'extension <code>%{extension}</code> avant de l'ouvrir."
       },
-      "markAsRead": "Mark as read",
-      "markAsUnread": "Mark as unread",
-      "markAsReadBy": "Marked as read by nobody: | Marked as read by 1 user: | Marked as read by {count} users:"
+      "markAsRead": "Marquer comme lu",
+      "markAsUnread": "Marquer comme non lu",
+      "markAsReadBy": "Marqué comme lu par personne : | Marqué comme lu par 1 utilisateur : | Marqué comme lu par {count} utilisateurs :"
     }
   },
   "pagination": {
@@ -117,6 +117,7 @@
     "missing": "Date manquante",
     "starred": "Favoris",
     "notStarred": "Non favoris",
+    "readBy": "Marqué comme lu par",
     "lang": {
       "all": "Tous",
       "ABKHAZIAN": "Abkhaze",
@@ -386,7 +387,7 @@
       "fieldsInFirstItem": "Titres de colonne sur la première ligne",
       "findInSpreadsheet": "Rechercher dans la feuille de calcul",
       "filtered": {
-        "rows": "No matches | One row | {count} rows"
+        "rows": "Pas de correspondance | Une ligne | {count} lignes"
       }
     },
     "attachments": {
@@ -546,7 +547,7 @@
     "submit": "Actualiser",
     "submitSuccess": "Les modifications sont enregistrées mais vous devez redémarrer Datashare pour qu'elles s'appliquent.",
     "submitError": "Erreur dans la reconfiguration.",
-    "noAccess": "You do not have access to that page in server mode."
+    "noAccess": "Vous n'avez pas accès à cette page en mode serveur."
   },
   "human": {
     "number": {
