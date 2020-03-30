@@ -1,4 +1,5 @@
-import { cloneDeep, findIndex } from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import findIndex from 'lodash/findIndex'
 import Vue from 'vue'
 
 import elasticsearch from '@/api/elasticsearch'

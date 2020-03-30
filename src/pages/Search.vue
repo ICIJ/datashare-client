@@ -187,18 +187,17 @@ export default {
     @include clearfix();
 
     &__show-filters.btn {
-      position: relative;
+      background: $app-context-sidebar-bg;
+      border-radius: 20px;
+      color: white;
       display: block;
       height: 40px;
-      width: 40px;
-      flex-grow: 40px;
-      min-width: 1;
-      text-align: center;
       line-height: 40px;
+      min-width: 1px;
       padding: 0;
-      border-radius: 20px;
-      background: $app-context-sidebar-bg;
-      color: white;
+      position: relative;
+      text-align: center;
+      width: 40px;
 
       &:hover {
         background: lighten($app-context-sidebar-bg, 10%);
@@ -217,31 +216,31 @@ export default {
       }
 
       &.search .search__body__document {
-        z-index: 20;
-        position: fixed;
-        top: 0;
-        bottom: 0;
-        right: 0;
-        width: $document-min-width;
-        max-width: calc(100vw - var(--app-sidebar-width));
         background: white;
         border-radius: 0;
+        bottom: 0;
         box-shadow: $modal-content-box-shadow-sm-up;
+        max-width: calc(100vw - var(--app-sidebar-width));
+        position: fixed;
+        right: 0;
+        top: 0;
+        width: $document-min-width;
+        z-index: 20;
       }
     }
 
     &--list {
 
       &.search .search__body__results {
-        right: auto;
         background: white;
+        right: auto;
         width: calc(#{$search-results-list-width}  - #{$spacer * 2});
       }
 
       &.search .search__body__document,
       &.search .search__body__results {
-        box-shadow: 0 2px 10px 0 rgba(black, .05), 0 2px 30px 0 rgba(black, .02);
         border-radius: $card-border-radius;
+        box-shadow: 0 2px 10px 0 rgba(black, .05), 0 2px 30px 0 rgba(black, .02);
         overflow: hidden;
       }
 
@@ -249,20 +248,20 @@ export default {
 
     &__body {
       height: calc(100vh - var(--app-nav-height));
-      position: relative;
       overflow: hidden;
+      position: relative;
 
       & &__document, & &__results {
-        position: absolute;
-        z-index: 10;
-        top: 0;
         bottom: $spacer;
+        position: absolute;
+        top: 0;
+        z-index: 10;
       }
 
       & &__results {
         left: $spacer;
-        right: $spacer;
         overflow: auto;
+        right: $spacer;
       }
 
       & &__document {

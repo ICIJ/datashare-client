@@ -163,22 +163,22 @@
 </template>
 
 <script>
-import moment from 'moment'
-import { mapState } from 'vuex'
 import capitalize from 'lodash/capitalize'
 import find from 'lodash/find'
 import get from 'lodash/get'
 import indexOf from 'lodash/indexOf'
 import keys from 'lodash/keys'
 import sumBy from 'lodash/sumBy'
+import moment from 'moment'
+import { mapState } from 'vuex'
 
-import Auth from '@/api/resources/Auth'
 import Api from '@/api'
-import { getDocumentTypeLabel } from '@/utils/utils'
+import Auth from '@/api/resources/Auth'
 import humanSize from '@/filters/humanSize'
-import settings from '@/utils/settings'
-import store from '@/store'
 import toVariant from '@/filters/toVariant'
+import store from '@/store'
+import settings from '@/utils/settings'
+import { getDocumentTypeLabel } from '@/utils/utils'
 
 export const auth = new Auth()
 

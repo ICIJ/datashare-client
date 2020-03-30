@@ -13,7 +13,9 @@ import utils from '@/mixins/utils'
 export default {
   mixins: [utils],
   props: {
-    filter: Object,
+    filter: {
+      type: Object
+    },
     hideHeader: {
       type: Boolean,
       default: false

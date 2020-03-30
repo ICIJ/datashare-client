@@ -3,7 +3,9 @@
 </template>
 
 <script>
-import { get, isEmpty, map } from 'lodash'
+import get from 'lodash/get'
+import isEmpty from 'lodash/isEmpty'
+import map from 'lodash/map'
 
 export default {
   name: 'ProjectSelector',

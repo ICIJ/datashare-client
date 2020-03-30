@@ -1,16 +1,16 @@
 <template>
   <v-wait for="load document data">
     <content-placeholder class="document py-2 px-3" slot="waiting" />
-    <div class="d-flex flex-column document" v-if="document" v-shortkey="getKeys('tabNavigation')" @shortkey="getAction('tabNavigation')" :class="{ 'document--simplified': $route.name === 'document-simplified' }">
+    <div class="d-flex flex-column document" v-if="doc" v-shortkey="getKeys('tabNavigation')" @shortkey="getAction('tabNavigation')" :class="{ 'document--simplified': $route.name === 'document-simplified' }">
       <div class="document__header">
         <hook name="document.header:before" />
         <h3 class="document__header__name">
           <hook name="document.header.name:before" />
-          <document-sliced-name interactive-root :document="document" />
+          <document-sliced-name interactive-root :document="doc" />
           <hook name="document.header.name:after" />
         </h3>
         <hook name="document.header.tags:before" />
-        <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="false" class="px-3 mx-0" mode="dark" />
+        <document-tags-form :document="doc" :tags="tags" :displayTags="true" :displayForm="false" class="px-3 mx-0" mode="dark" />
         <hook name="document.header.tags:after" />
         <hook name="document.header.nav:before" />
         <nav class="document__header__nav text-nowrap overflow-auto">
@@ -75,6 +75,67 @@ export default {
       activeTab: 'extracted-text'
     }
   },
+  computed: {
+    ...mapState('document', ['doc', 'parentDocument', 'tags']),
+    visibleTabs () {
+      return filter(this.tabs, t => !t.hidden)
+    },
+    tabs () {
+      return [
+        {
+          name: 'extracted-text',
+          label: 'document.extracted_text',
+          component: () => import('@/components/document/DocumentTabExtractedText'),
+          icon: 'align-left',
+          props: {
+            document: this.doc
+          }
+        },
+        {
+          name: 'preview',
+          label: 'document.preview',
+          component: () => import('@/components/document/DocumentTabPreview'),
+          icon: 'eye',
+          props: {
+            document: this.doc
+          }
+        },
+        {
+          name: 'details',
+          label: 'document.tab_details',
+          component: () => import('@/components/document/DocumentTabDetails'),
+          icon: 'info-circle',
+          props: {
+            document: this.doc,
+            parentDocument: this.parentDocument
+          }
+        },
+        {
+          name: 'translations',
+          label: 'document.translations',
+          component: () => import('@/components/document/DocumentTabTranslations'),
+          hidden: !this.doc.hasTranslations,
+          icon: 'globe',
+          props: {
+            document: this.doc
+          }
+        },
+        {
+          name: 'named-entities',
+          label: 'document.named_entities',
+          hidden: this.$config.isnt('manageDocuments') && !this.doc.hasNerTags,
+          component: () => import('@/components/document/DocumentTabNamedEntities'),
+          icon: 'database',
+          props: {
+            document: this.doc
+          }
+        }
+      ]
+    },
+    indexActiveTab () {
+      return findIndex(this.visibleTabs, tab => tab.name === this.activeTab)
+    }
+  },
   methods: {
     async getDoc (params = { id: this.id, routing: this.routing, index: this.index }) {
       this.$wait.start('load document data')
@@ -83,8 +144,8 @@ export default {
       await this.$store.dispatch('document/getParent')
       await this.$store.dispatch('document/getTags')
       await this.$store.dispatch('document/getMarkAsRead')
-      if (this.document) {
-        await this.$store.commit('userHistory/addDocument', this.document)
+      if (this.doc) {
+        await this.$store.commit('userHistory/addDocument', this.doc)
         const container = this.$el.closest('.ps-container')
         this.$root.$emit('scroll-tracker:request', this.$el, 0, container)
         this.$root.$emit('document::content::changed')
@@ -117,76 +178,12 @@ export default {
       }
     },
     goToPreviousTab () {
-      const indexActiveTab = findIndex(this.visibleTabs, tab => tab.name === this.activeTab)
-      const indexPreviousActiveTab = indexActiveTab === 0 ? this.visibleTabs.length - 1 : indexActiveTab - 1
+      const indexPreviousActiveTab = this.indexActiveTab === 0 ? this.visibleTabs.length - 1 : this.indexActiveTab - 1
       this.$set(this, 'activeTab', this.visibleTabs[indexPreviousActiveTab].name)
     },
     goToNextTab () {
-      const indexActiveTab = findIndex(this.visibleTabs, tab => tab.name === this.activeTab)
-      const indexNextActiveTab = indexActiveTab === this.visibleTabs.length - 1 ? 0 : indexActiveTab + 1
+      const indexNextActiveTab = this.indexActiveTab === this.visibleTabs.length - 1 ? 0 : this.indexActiveTab + 1
       this.$set(this, 'activeTab', this.visibleTabs[indexNextActiveTab].name)
-    }
-  },
-  computed: {
-    ...mapState('document', {
-      document: 'doc',
-      parentDocument: 'parentDocument',
-      tags: 'tags'
-    }),
-    visibleTabs () {
-      return filter(this.tabs, t => !t.hidden)
-    },
-    tabs () {
-      return [
-        {
-          name: 'extracted-text',
-          label: 'document.extracted_text',
-          component: () => import('@/components/document/DocumentTabExtractedText'),
-          icon: 'align-left',
-          props: {
-            document: this.document
-          }
-        },
-        {
-          name: 'preview',
-          label: 'document.preview',
-          component: () => import('@/components/document/DocumentTabPreview'),
-          icon: 'eye',
-          props: {
-            document: this.document
-          }
-        },
-        {
-          name: 'details',
-          label: 'document.tab_details',
-          component: () => import('@/components/document/DocumentTabDetails'),
-          icon: 'info-circle',
-          props: {
-            document: this.document,
-            parentDocument: this.parentDocument
-          }
-        },
-        {
-          name: 'translations',
-          label: 'document.translations',
-          component: () => import('@/components/document/DocumentTabTranslations'),
-          hidden: !this.document.hasTranslations,
-          icon: 'globe',
-          props: {
-            document: this.document
-          }
-        },
-        {
-          name: 'named-entities',
-          label: 'document.named_entities',
-          hidden: this.$config.isnt('manageDocuments') && !this.document.hasNerTags,
-          component: () => import('@/components/document/DocumentTabNamedEntities'),
-          icon: 'database',
-          props: {
-            document: this.document
-          }
-        }
-      ]
     }
   },
   beforeRouteEnter (to, _from, next) {

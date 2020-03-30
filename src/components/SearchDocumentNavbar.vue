@@ -194,31 +194,30 @@ export default {
 
 <style lang="scss">
   .search-document-navbar {
-    display: flex;
     align-items: center;
+    display: flex;
     margin: 0;
-    border-radius: inherit inherit 0 0;
 
     @media (max-width: $document-float-breakpoint-width) {
-      margin: 0;
       border-radius: 0;
+      margin: 0;
     }
 
     &__back, &__back:hover {
-      font-size: $font-size-sm;
       color: inherit;
       display: inline;
+      font-size: $font-size-sm;
     }
 
     &__read-by {
       position: relative;
 
       &:before, &:after{
+        color: transparent;
         display: block;
         height: 0;
         overflow: hidden;
         text-overflow: -999999px;
-        color: transparent;
         visibility: hidden;
       }
 

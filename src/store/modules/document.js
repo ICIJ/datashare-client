@@ -64,20 +64,20 @@ export const mutations = {
   },
   idAndRouting (state, idAndRouting) {
     mutations.reset(state)
-    state.idAndRouting = idAndRouting
+    Vue.set(state, 'idAndRouting', idAndRouting)
   },
   doc (state, raw) {
     if (raw !== null) {
-      state.doc = EsDocList.instantiate(raw)
+      Vue.set(state, 'doc', EsDocList.instantiate(raw))
     } else {
-      state.doc = null
+      Vue.set(state, 'doc', null)
     }
   },
   tags (state, tags = []) {
-    state.tags = tags
+    Vue.set(state, 'tags', tags)
   },
   namedEntities (state, raw) {
-    state.namedEntities = new EsDocList(raw).hits
+    Vue.set(state, 'namedEntities', new EsDocList(raw).hits)
   },
   namedEntitiesPageInCategory (state, { category, page }) {
     if (state.namedEntitiesPaginatedByCategories[category]) {
@@ -86,30 +86,30 @@ export const mutations = {
   },
   parentDocument (state, raw) {
     if (raw !== null) {
-      state.parentDocument = EsDocList.instantiate(raw)
+      Vue.set(state, 'parentDocument', EsDocList.instantiate(raw))
       state.doc.setParent(raw)
     } else {
-      state.parentDocument = null
+      Vue.set(state, 'parentDocument', null)
     }
     return state.parentDocument
   },
-  toggleShowNamedEntities (state, toggler = null) {
-    state.showNamedEntities = (toggler !== null ? toggler : !state.showNamedEntities)
+  toggleShowNamedEntities (state, toggle = null) {
+    Vue.set(state, 'showNamedEntities', (toggle !== null ? toggle : !state.showNamedEntities))
   },
   addTag (state, { tag, userId }) {
     const tags = map(compact(tag.split(' ')), tag => {
       return { label: tag, user: { id: userId }, creationDate: Date.now() }
     })
-    state.tags = uniqBy(concat(state.tags, tags), 'label')
+    Vue.set(state, 'tags', uniqBy(concat(state.tags, tags), 'label'))
   },
   deleteTag (state, tagToDelete) {
     state.tags.splice(findIndex(state.tags, { label: tagToDelete.label }), 1)
   },
   isRead (state, isRead) {
-    state.isRead = isRead
+    Vue.set(state, 'isRead', isRead)
   },
   readBy (state, readBy = []) {
-    state.readBy = readBy
+    Vue.set(state, 'readBy', readBy)
   },
   markAsRead (state, userId) {
     state.readBy.push(userId)
