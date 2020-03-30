@@ -5,6 +5,7 @@ import flattenDeep from 'lodash/flattenDeep'
 import get from 'lodash/get'
 import keys from 'lodash/keys'
 import map from 'lodash/map'
+import sortBy from 'lodash/sortBy'
 import sumBy from 'lodash/sumBy'
 import uniqBy from 'lodash/uniqBy'
 import values from 'lodash/values'
@@ -221,14 +222,14 @@ export const actions = {
   async getMarkAsRead ({ state, commit }) {
     try {
       const readBy = await api.getMarkAsRead(state.doc.index, state.doc.id)
-      commit('readBy', map(readBy, 'id'))
+      commit('readBy', map(sortBy(readBy, 'id'), 'id'))
       const userId = await auth.getUsername()
       const index = state.readBy.indexOf(userId)
       if (index > -1) {
         commit('isRead', true)
       }
     } catch (_) {
-      commit('readBy')
+      commit('readBy', [])
     }
     return state.readBy
   }

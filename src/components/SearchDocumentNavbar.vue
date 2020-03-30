@@ -90,7 +90,11 @@ export default {
   },
   computed: {
     ...mapState('search', ['response', 'isDownloadAllowed']),
-    ...mapState('document', { currentDocument: 'doc', readBy: 'readBy', isRead: 'isRead' }),
+    ...mapState('document', {
+      currentDocument: 'doc',
+      readBy: 'readBy',
+      isRead: 'isRead'
+    }),
     query () {
       return this.$store.getters['search/toRouteQuery']()
     },

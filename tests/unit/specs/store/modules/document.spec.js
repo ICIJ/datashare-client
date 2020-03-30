@@ -221,7 +221,9 @@ describe('DocumentStore', () => {
       expect(indexOf(store.state.document.readBy, userId)).toBe(-1)
     })
 
-    it('should retrieve the list of users who read it', async () => {
+    it('should retrieve the list of users who read it and set it to the store', async () => {
+      const users = [{ id: 'user_01' }, { id: 'user_02' }]
+      axios.request.mockReturnValue({ data: users })
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
       await store.dispatch('document/getMarkAsRead')
@@ -230,16 +232,17 @@ describe('DocumentStore', () => {
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/markedRead/doc_01`)
       }))
+      expect(store.state.document.readBy).toEqual(['user_01', 'user_02'])
     })
 
-    it('should set the users list', async () => {
-      const users = [{ id: 'user_01' }, { id: 'user_02' }]
+    it('should sort users by alphabetical order of id', async () => {
+      const users = [{ id: 'user_02' }, { id: 'user_03' }, { id: 'user_01' }]
       axios.request.mockReturnValue({ data: users })
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
       await store.dispatch('document/getMarkAsRead')
 
-      expect(store.state.document.readBy).toEqual(['user_01', 'user_02'])
+      expect(store.state.document.readBy).toEqual(['user_01', 'user_02', 'user_03'])
     })
   })
 })
