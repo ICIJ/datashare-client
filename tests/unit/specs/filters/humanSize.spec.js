@@ -5,6 +5,10 @@ describe('humanSize filter', () => {
     expect(humanSize(-1)).toBe('unknown')
   })
 
+  it('should display human readable size for ""', () => {
+    expect(humanSize('')).toBe('unknown')
+  })
+
   it('should display human readable size for 0', () => {
     expect(humanSize(0)).toBe('0 B')
   })
