@@ -112,42 +112,42 @@
           </dd>
         </dl>
       </div>
-      <div v-if="!isReady" class="card">
-        <div>
-          <content-placeholder :rows="rows" class="p-0 my-3" />
-          <content-placeholder :rows="rows" class="p-0 my-3" />
-          <content-placeholder :rows="rows" class="p-0 my-3" />
+      <v-wait for="load batchSearch results">
+        <div slot="waiting" class="card py-2">
+          <content-placeholder :rows="rows" class="p-0 my-2" />
+          <content-placeholder :rows="rows" class="p-0 my-2" />
+          <content-placeholder :rows="rows" class="p-0 my-2" />
         </div>
-      </div>
-      <div v-else class="batch-search-results__queries">
-        <div class="card small">
-          <b-table striped hover responsive no-local-sorting :per-page="perPage" :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query" show-empty>
-            <template v-slot:cell(documentNumber)="{ item }">
-              {{ item.documentNumber + 1 }}
-            </template>
-            <template v-slot:cell(documentName)="{ item }">
-              <router-link :to="{ name: 'document', params: { index: $route.params.index, id: item.documentId, routing: item.rootId } }" target="_blank" class="batch-search-results__queries__query__link">
-                {{ item.documentName }}
-              </router-link>
-            </template>
-            <template v-slot:cell(creationDate)="{ item }">
-              {{ moment(item.creationDate).isValid() ? moment(item.creationDate).format('LLL') : '' }}
-            </template>
-            <template v-slot:cell(contentType)="{ item }">
-              {{ getDocumentTypeLabel(item.contentType) }}
-            </template>
-            <template v-slot:cell(contentLength)="{ item }">
-              {{ getDocumentSize(item.contentLength) }}
-            </template>
-            <template v-slot:cell(empty)>
-              <div class="text-center">
-                {{ $t('batchSearchResults.empty') }}
-              </div>
-            </template>
-          </b-table>
+        <div class="batch-search-results__queries">
+          <div class="card small">
+            <b-table striped hover responsive no-local-sorting :per-page="perPage" :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query" show-empty>
+              <template v-slot:cell(documentNumber)="{ item }">
+                {{ item.documentNumber + 1 }}
+              </template>
+              <template v-slot:cell(documentName)="{ item }">
+                <router-link :to="{ name: 'document', params: { index: $route.params.index, id: item.documentId, routing: item.rootId } }" target="_blank" class="batch-search-results__queries__query__link">
+                  {{ item.documentName }}
+                </router-link>
+              </template>
+              <template v-slot:cell(creationDate)="{ item }">
+                {{ moment(item.creationDate).isValid() ? moment(item.creationDate).format('LLL') : '' }}
+              </template>
+              <template v-slot:cell(contentType)="{ item }">
+                {{ getDocumentTypeLabel(item.contentType) }}
+              </template>
+              <template v-slot:cell(contentLength)="{ item }">
+                {{ getDocumentSize(item.contentLength) }}
+              </template>
+              <template v-slot:cell(empty)>
+                <div class="text-center">
+                  {{ $t('batchSearchResults.empty') }}
+                </div>
+              </template>
+            </b-table>
+          </div>
         </div>
-      </div>
-      <b-pagination-nav v-if="numberOfPages > 1" :link-gen="linkGen" :number-of-pages="numberOfPages" use-router class="mt-2" />
+        <b-pagination-nav v-if="numberOfPages > 1" :link-gen="linkGen" :number-of-pages="numberOfPages" use-router class="mt-2" />
+      </v-wait>
     </div>
     <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
       <div v-html="$t('batchSearchResults.errorMessage')" />
@@ -234,7 +234,6 @@ export default {
           name: 'content_length'
         }
       ],
-      isReady: false,
       rows: [
         {
           height: '1em',
@@ -291,7 +290,7 @@ export default {
     next(async vm => {
       await vm.fetchBatchSearches()
       await vm.checkIsMyBatchSearch()
-      vm.published = vm.meta.published
+      vm.set(vm, 'published', vm.meta.published)
     })
   },
   async beforeRouteUpdate (to, from, next) {
@@ -309,11 +308,11 @@ export default {
   },
   methods: {
     async fetch () {
-      this.$set(this, 'isReady', false)
+      this.$wait.start('load batchSearch results')
       this.$Progress.start()
       await this.fetchBatchSearchResults()
       this.$Progress.finish()
-      this.$set(this, 'isReady', true)
+      this.$wait.end('load batchSearch results')
     },
     fetchBatchSearches () {
       return store.dispatch('batchSearch/getBatchSearches')
@@ -365,8 +364,8 @@ export default {
       this.isMyBatchSearch = username === get(this, 'meta.user.id', '')
     },
     capitalize,
-    moment,
-    getDocumentTypeLabel
+    getDocumentTypeLabel,
+    moment
   }
 }
 </script>

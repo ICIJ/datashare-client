@@ -48,9 +48,7 @@ export default {
   },
   mounted () {
     this.root.$on('reset-filter-values', () => this.changeYesNoValue([]))
-  },
-  created () {
-    return this.$store.dispatch('search/getStarredDocuments')
+    this.$store.dispatch('search/getStarredDocuments')
   },
   methods: {
     changeYesNoValue (item) {

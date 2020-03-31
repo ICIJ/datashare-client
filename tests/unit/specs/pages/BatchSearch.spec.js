@@ -29,7 +29,7 @@ jest.mock('@/api', () => {
   })
 })
 
-const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('BatchSearch.vue', () => {
   let wrapper
@@ -40,7 +40,7 @@ describe('BatchSearch.vue', () => {
   })
 
   beforeEach(async () => {
-    wrapper = mount(BatchSearch, { i18n, localVue, router, store })
+    wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
     await wrapper.vm.$nextTick()
   })
 

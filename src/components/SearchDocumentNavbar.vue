@@ -12,10 +12,10 @@
       </span>
     </router-link>
     <b-btn v-if="isShrinked" class="search-document-navbar__title text-left flex-grow-1 px-1 text-white py-0 text-truncate" @click="scrollToTop" variant="link">
-      {{ currentDocument.title }}
+      {{ doc.title }}
     </b-btn>
-    <div v-if="currentDocument" class="ml-auto d-flex align-items-center">
-      <span class="search-document-navbar__nav" v-if="currentDocumentIndex > -1">
+    <div v-if="doc" class="ml-auto d-flex align-items-center">
+      <span class="search-document-navbar__nav" v-if="documentIndex > -1">
         <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
           <fa icon="angle-left" class="mr-1" />
           <span class="d-sm-none d-md-inline">
@@ -54,7 +54,7 @@
         </b-popover>
       </template>
       <document-actions
-        :document="currentDocument"
+        :document="doc"
         class="search-document-navbar__actions d-flex"
         star-btn-class="btn btn-link text-white py-0 px-2 order-1"
         popup-btn-class="btn btn-link text-white py-0 px-2 order-1"
@@ -83,23 +83,14 @@ export default {
   components: {
     DocumentActions
   },
-  props: {
-    isShrinked: {
-      type: Boolean
-    }
-  },
   computed: {
-    ...mapState('search', ['response', 'isDownloadAllowed']),
-    ...mapState('document', {
-      currentDocument: 'doc',
-      readBy: 'readBy',
-      isRead: 'isRead'
-    }),
+    ...mapState('document', ['doc', 'isRead', 'readBy']),
+    ...mapState('search', ['isDownloadAllowed', 'response']),
     query () {
       return this.$store.getters['search/toRouteQuery']()
     },
-    currentDocumentIndex () {
-      return this.currentDocument ? findIndex(this.response.hits, { id: this.currentDocument.id }) : -1
+    documentIndex () {
+      return this.doc ? findIndex(this.response.hits, { id: this.doc.id }) : -1
     },
     navRequiresPreviousPage () {
       return this.isFirstDocument && !this.isFirstPage
@@ -108,10 +99,10 @@ export default {
       return this.isLastDocument && !this.isLastPage
     },
     isFirstDocument () {
-      return this.currentDocumentIndex === 0
+      return this.documentIndex === 0
     },
     isLastDocument () {
-      return this.currentDocumentIndex === this.response.hits.length - 1
+      return this.documentIndex === this.response.hits.length - 1
     },
     firstDocument () {
       return first(this.response.hits)
@@ -132,10 +123,10 @@ export default {
       return !this.isLastDocument || !this.isLastPage
     },
     previousDocument () {
-      return this.response.hits[this.currentDocumentIndex - 1]
+      return this.response.hits[this.documentIndex - 1]
     },
     nextDocument () {
-      return this.response.hits[this.currentDocumentIndex + 1]
+      return this.response.hits[this.documentIndex + 1]
     },
     previousTooltip () {
       return getShortkeyOS() === 'mac' ? this.$t('search.nav.previous.tooltipMac') : this.$t('search.nav.previous.tooltipOthers')
@@ -148,6 +139,11 @@ export default {
     },
     markAsReadVariant () {
       return this.isRead ? 'success' : 'light'
+    }
+  },
+  props: {
+    isShrinked: {
+      type: Boolean
     }
   },
   mounted () {

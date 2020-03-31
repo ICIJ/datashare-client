@@ -77,7 +77,7 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 const router = new VueRouter({
   routes: [
@@ -140,7 +140,7 @@ describe('BatchSearchResults.vue', () => {
     }])
     propsData = { uuid: '12', index }
     wrapper = shallowMount(BatchSearchResults,
-      { i18n, localVue, store, router, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
+      { i18n, localVue, store, router, wait, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
     await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index, uuid: '12' }, query: { page: 1 } }).catch(() => {})
     await wrapper.vm.fetch()
   })
@@ -170,7 +170,7 @@ describe('BatchSearchResults.vue', () => {
 
   it('should NOT display a button to delete the batchSearch', async () => {
     wrapper = shallowMount(BatchSearchResults,
-      { i18n, localVue, store, router, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
+      { i18n, localVue, store, router, wait, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
 
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()

@@ -12,35 +12,37 @@
     </div>
     <div class="container pt-4">
       <div class="batch-search__items card">
-        <div v-if="!isReady">
-          <content-placeholder :rows="rows" class="p-0 my-3" />
-          <content-placeholder :rows="rows" class="p-0 my-3" />
-          <content-placeholder :rows="rows" class="p-0 my-3" />
-        </div>
-        <b-table v-else striped hover responsive :fields="fields" :items="items" thead-tr-class="text-nowrap" tbody-tr-class="batch-search__items__item small">
-          <template v-slot:cell(name)="{ item }">
-            <router-link :to="{ name: 'batch-search.results', params: { index: item.project.name, uuid: item.uuid }, query: { page: 1, sort, order } }" class="batch-search__items__item__link">
-              {{ item.name }}
-            </router-link>
-          </template>
-          <template v-slot:cell(queries)="{ item }">
-            {{ $tc('batchSearch.query', keys(item.queries).length) }}
-          </template>
-          <template v-slot:cell(state)="{ item }">
-            <b-badge :variant="item.state | toVariant">
-              {{ capitalize(item.state) }}
-            </b-badge>
-          </template>
-          <template v-slot:cell(date)="{ item }">
-            {{ moment(item.date).format('LLL') }}
-          </template>
-          <template v-slot:cell(nbResults)="{ item }">
-            {{ $n(item.nbResults) }}
-          </template>
-          <template v-slot:cell(published)="{ item }">
-            {{ item.published ? $t('indexing.yes') : $t('indexing.no') }}
-          </template>
-        </b-table>
+        <v-wait for="load batchSearches">
+          <div slot="waiting">
+            <content-placeholder :rows="rows" class="p-0 my-3" />
+            <content-placeholder :rows="rows" class="p-0 my-3" />
+            <content-placeholder :rows="rows" class="p-0 my-3" />
+          </div>
+          <b-table striped hover responsive :fields="fields" :items="items" thead-tr-class="text-nowrap" tbody-tr-class="batch-search__items__item small">
+            <template v-slot:cell(name)="{ item }">
+              <router-link :to="{ name: 'batch-search.results', params: { index: item.project.name, uuid: item.uuid }, query: { page: 1, sort, order } }" class="batch-search__items__item__link">
+                {{ item.name }}
+              </router-link>
+            </template>
+            <template v-slot:cell(queries)="{ item }">
+              {{ $tc('batchSearch.query', keys(item.queries).length) }}
+            </template>
+            <template v-slot:cell(state)="{ item }">
+              <b-badge :variant="item.state | toVariant">
+                {{ capitalize(item.state) }}
+              </b-badge>
+            </template>
+            <template v-slot:cell(date)="{ item }">
+              {{ moment(item.date).format('LLL') }}
+            </template>
+            <template v-slot:cell(nbResults)="{ item }">
+              {{ $n(item.nbResults) }}
+            </template>
+            <template v-slot:cell(published)="{ item }">
+              {{ item.published ? $t('indexing.yes') : $t('indexing.no') }}
+            </template>
+          </b-table>
+        </v-wait>
       </div>
     </div>
   </div>
@@ -50,11 +52,11 @@
 import capitalize from 'lodash/capitalize'
 import compact from 'lodash/compact'
 import keys from 'lodash/keys'
-import { mapState } from 'vuex'
 import moment from 'moment'
+import { mapState } from 'vuex'
 
-import settings from '@/utils/settings'
 import toVariant from '@/filters/toVariant'
+import settings from '@/utils/settings'
 
 export default {
   name: 'BatchSearches.vue',
@@ -63,7 +65,6 @@ export default {
   },
   data () {
     return {
-      isReady: false,
       rows: [
         {
           height: '1em',
@@ -131,25 +132,23 @@ export default {
     }
   },
   async created () {
-    this.$set(this, 'isReady', false)
+    this.$wait.start('load batchSearches')
     this.$Progress.start()
     await this.$store.dispatch('batchSearch/getBatchSearches')
     this.$Progress.finish()
-    this.$set(this, 'isReady', true)
+    this.$wait.end('load batchSearches')
   },
   methods: {
-    moment,
     capitalize,
-    keys
+    keys,
+    moment
   }
 }
 </script>
 
 <style lang="scss">
   .batch-search {
-
      & .batch-search-form {
-
        .card {
          border: 2px solid $tertiary;
          box-shadow: 0 0 10px 0 rgba($dark, .1);
@@ -157,11 +156,11 @@ export default {
     }
 
     &__items {
-      position: static;
-      margin-top: $spacer;
-      border-radius: $card-border-radius 0 0 0;
       background: white;
+      border-radius: $card-border-radius 0 0 0;
+      margin-top: $spacer;
       overflow: hidden;
+      position: static;
 
       .table-responsive {
         margin: 0;

@@ -1,6 +1,6 @@
 import toLower from 'lodash/toLower'
-import axios from 'axios'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import axios from 'axios'
 
 import Api from '@/api'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
