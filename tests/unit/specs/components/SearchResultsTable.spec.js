@@ -1,6 +1,6 @@
-import axios from 'axios'
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import axios from 'axios'
 import VueRouter from 'vue-router'
 
 import Api from '@/api'
@@ -34,6 +34,8 @@ describe('SearchResultsTable.vue', () => {
     await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
     wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store })
   })
+
+  afterAll(() => jest.unmock('axios'))
 
   it('should display a b-table', () => {
     expect(wrapper.find('.search-results-table__items').exists()).toBeTruthy()

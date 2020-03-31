@@ -146,7 +146,6 @@ export default {
         },
         {
           key: 'highlight',
-          label: '',
           headerTitle: 'highlight',
           formatter (value) {
             return value ? value.content.join(' [...] ') : ''
