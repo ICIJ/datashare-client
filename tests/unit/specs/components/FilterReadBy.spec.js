@@ -53,7 +53,7 @@ describe('FilterReadBy.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/markReadUsers`)
+      url: Api.getFullUrl(`/api/${index}/documents/readBy`)
     }))
   })
 
@@ -73,7 +73,7 @@ describe('FilterReadBy.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/markedReadDocuments/user_01,user_02`)
+      url: Api.getFullUrl(`/api/${index}/documents/documentsReadBy/user_01,user_02`)
     }))
     expect(store.state.search.documentsRead).toEqual(documents)
     expect(wrapper.vm.selected).toEqual(['user_01', 'user_02'])
@@ -88,7 +88,7 @@ describe('FilterReadBy.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/markedReadDocuments/`)
+      url: Api.getFullUrl(`/api/${index}/documents/documentsReadBy/`)
     }))
     expect(store.state.search.documentsRead).toEqual([])
     expect(wrapper.vm.selected).toEqual([])

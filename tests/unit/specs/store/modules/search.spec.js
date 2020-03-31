@@ -805,7 +805,7 @@ describe('SearchStore', () => {
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${index}/documents/markReadUsers`)
+        url: Api.getFullUrl(`/api/${index}/documents/readBy`)
       }))
       expect(users).toEqual(['user_01', 'user_02'])
     })
@@ -818,7 +818,7 @@ describe('SearchStore', () => {
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${index}/documents/markedReadDocuments/user_01,user_02`)
+        url: Api.getFullUrl(`/api/${index}/documents/documentsReadBy/user_01,user_02`)
       }))
       expect(store.state.search.documentsRead).toEqual(['document_01', 'document_02', 'document_03'])
     })

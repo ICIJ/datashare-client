@@ -192,7 +192,7 @@ describe('DocumentStore', () => {
       expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me') })
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/markRead`),
+        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/markReadBy`),
         method: 'POST',
         data: ['doc_01']
       }))
@@ -213,7 +213,7 @@ describe('DocumentStore', () => {
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/unmarkRead`),
+        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/unmarkReadBy`),
         method: 'POST',
         data: ['doc_01']
       }))
@@ -230,7 +230,7 @@ describe('DocumentStore', () => {
 
       expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${index}/documents/markedRead/doc_01`)
+        url: Api.getFullUrl(`/api/${index}/documents/readBy/doc_01`)
       }))
       expect(store.state.document.readBy).toEqual(['user_01', 'user_02'])
     })

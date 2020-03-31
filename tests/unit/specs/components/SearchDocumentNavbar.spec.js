@@ -69,7 +69,7 @@ describe('SearchDocumentNavbar.vue', () => {
       expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me') })
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/searchdocumentnavbar/documents/batchUpdate/markRead'),
+        url: Api.getFullUrl('/api/searchdocumentnavbar/documents/batchUpdate/markReadBy'),
         method: 'POST',
         data: ['doc_01']
       }))
@@ -84,7 +84,7 @@ describe('SearchDocumentNavbar.vue', () => {
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/searchdocumentnavbar/documents/batchUpdate/unmarkRead'),
+        url: Api.getFullUrl('/api/searchdocumentnavbar/documents/batchUpdate/unmarkReadBy'),
         method: 'POST',
         data: ['doc_01']
       }))
