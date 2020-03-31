@@ -5,14 +5,14 @@ import VueRouter from 'vue-router'
 
 import { Core } from '@/core'
 import BatchSearchResults, { auth } from '@/pages/BatchSearchResults'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import Murmur from '@icij/murmur'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('@/api', () => {
   return jest.fn(() => {
     return {
-      getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([
+      getBatchSearches: jest.fn().mockResolvedValue([
         {
           uuid: '12',
           project: { name: 'ProjectName' },
@@ -38,8 +38,8 @@ jest.mock('@/api', () => {
           nbResults: 15,
           published: true
         }
-      ])),
-      getBatchSearchResults: jest.fn().mockReturnValue(Promise.resolve([
+      ]),
+      getBatchSearchResults: jest.fn().mockResolvedValue([
         {
           creationDate: '2011-10-11T04:12:49.000+0000',
           documentId: 42,
@@ -65,7 +65,7 @@ jest.mock('@/api', () => {
           query: 'query_02',
           rootId: 44
         }
-      ])),
+      ]),
       deleteBatchSearch: jest.fn()
     }
   })
@@ -77,7 +77,7 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 
 const router = new VueRouter({
   routes: [
@@ -140,7 +140,7 @@ describe('BatchSearchResults.vue', () => {
     }])
     propsData = { uuid: '12', index }
     wrapper = shallowMount(BatchSearchResults,
-      { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link' }, propsData, mocks: { $t: msg => msg } })
+      { i18n, localVue, store, router, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
     await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index, uuid: '12' }, query: { page: 1 } }).catch(() => {})
     await wrapper.vm.fetch()
   })
@@ -170,7 +170,7 @@ describe('BatchSearchResults.vue', () => {
 
   it('should NOT display a button to delete the batchSearch', async () => {
     wrapper = shallowMount(BatchSearchResults,
-      { localVue, store, router, computed: { downloadLink: () => 'mocked-download-link' }, propsData, mocks: { $t: msg => msg } })
+      { i18n, localVue, store, router, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
 
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()
@@ -203,7 +203,7 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should return empty string if the document size is 0', () => {
-    expect(wrapper.vm.getDocumentSize(0)).toBe('')
+    expect(wrapper.vm.getDocumentSize(undefined)).toBe('Unknown')
   })
 
   it('should return the document size as human readable', () => {

@@ -348,12 +348,9 @@ export default {
       this.$root.$bvToast.toast(isDeleted ? this.$t('batchSearch.deleted') : this.$t('batchSearch.notDeleted'),
         { noCloseButton: true, variant: isDeleted ? 'success' : 'warning' })
     },
-    getDocumentSize (size) {
-      if (size === 0) {
-        return ''
-      } else {
-        return this.$options.filters.humanSize(size)
-      }
+    getDocumentSize (value) {
+      const size = humanSize(value)
+      return size === 'unknown' ? this.$t('document.unknown') : size
     },
     changePublished (published) {
       store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })

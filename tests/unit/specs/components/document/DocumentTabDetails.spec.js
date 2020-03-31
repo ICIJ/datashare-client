@@ -9,7 +9,7 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 jest.mock('axios')
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('DocumentTabDetails.vue', () => {
   const index = toLower('DocumentTabDetails')
@@ -23,12 +23,14 @@ describe('DocumentTabDetails.vue', () => {
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
   })
 
+  afterAll(() => jest.unmock('axios'))
+
   it('should display document path with config.mountedDataDir', async () => {
     Murmur.config.merge({ dataDir: '/home/datashare/data', mountedDataDir: 'C:/Users/ds/docs' })
     const id = '/home/datashare/data/foo.txt'
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await store.dispatch('document/get', { id, index })
-    wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
 
     expect(wrapper.find('.document__content__path').text()).toBe('C:/Users/ds/docs/foo.txt')
   })
@@ -36,7 +38,7 @@ describe('DocumentTabDetails.vue', () => {
   it('should display the document type', async () => {
     await letData(es).have(new IndexedDocument(id, index).withContentType('application/pdf')).commit()
     await store.dispatch('document/get', { id, index })
-    wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
 
     expect(wrapper.find('.document__content__content-type').text()).toBe('Portable Document Format (PDF)')
   })
@@ -46,17 +48,17 @@ describe('DocumentTabDetails.vue', () => {
     await letData(es).have(new IndexedDocument(parentDocument, index)).commit()
     await letData(es).have(new IndexedDocument(id, index).withParent(parentDocument)).commit()
     await store.dispatch('document/get', { index, id, routing: parentDocument }).then(() => store.dispatch('document/getParent'))
-    wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc, parentDocument: store.state.document.parentDocument } })
 
     expect(wrapper.find('.document__content__basename').text()).toBe(id)
-    expect(wrapper.find('.document__content__tree-level').text()).toBe('filter.level.level01')
+    expect(wrapper.find('.document__content__tree-level').text()).toBe('1st')
     expect(wrapper.find('.document__content__parent').text()).toBe(parentDocument)
   })
 
   it('should not display the creation date if it is missing', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await store.dispatch('document/get', { id, index })
-    wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
 
     expect(wrapper.find('.document__content__creation-date').exists()).toBeFalsy()
   })
@@ -64,8 +66,26 @@ describe('DocumentTabDetails.vue', () => {
   it('should display a link to the list of children documents', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     await store.dispatch('document/get', { id, index })
-    wrapper = shallowMount(DocumentTabDetails, { localVue, store, propsData: { document: store.state.document.doc }, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
 
     expect(wrapper.find('.document__content__details__children').exists()).toBeTruthy()
+  })
+
+  it('should display an "Unknown" file size', async () => {
+    await letData(es).have(new IndexedDocument(id, index)).commit()
+    await store.dispatch('document/get', { id, index })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
+
+    expect(wrapper.find('.document__content__content-length').exists()).toBeTruthy()
+    expect(wrapper.find('.document__content__content-length').text()).toBe('Unknown')
+  })
+
+  it('should display an file size', async () => {
+    await letData(es).have(new IndexedDocument(id, index).withContentLength('123456')).commit()
+    await store.dispatch('document/get', { id, index })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
+
+    expect(wrapper.find('.document__content__content-length').exists()).toBeTruthy()
+    expect(wrapper.find('.document__content__content-length').text()).toBe('120.56 kB (123456 B)')
   })
 })

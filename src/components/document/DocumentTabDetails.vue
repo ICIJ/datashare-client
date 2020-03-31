@@ -21,7 +21,7 @@
           {{ $t('document.search_children_document') }}
         </router-link>
       </div>
-      <div class="row document__content__details__item" v-for="field in canonicalFields" :key="field.name" v-if="field.value && field.value !== 'unknown'">
+      <div class="row document__content__details__item" v-for="field in filteredCanonicalFields" :key="field.name">
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
           <div class="text-truncate mr-1 w-100" :title="field.name">
             {{ field.label }}
@@ -35,12 +35,17 @@
         <div class="col-sm-8">
           <div class="w-100 text-truncate" :class="field.class">
             <component :is="field.component || 'div'" :title="field.value">
-              {{ field.value }}
+              <span v-if="field.value === 'unknown'">
+                {{ $t('document.unknown') }}
+              </span>
+              <span v-else>
+                {{ field.value }}
+              </span>
             </component>
           </div>
         </div>
       </div>
-      <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name" v-if="metadataVisible" v-once>
+      <div class="row document__content__details__item" v-for="name in metaFieldsNames" :key="name">
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
           <div class="text-truncate mr-1 w-100" :title="name">
             <var>{{ document.shortMetaName(name) | startCase }}</var>
@@ -79,8 +84,12 @@ import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/
 export default {
   name: 'DocumentTabDetails',
   props: {
-    document: [Object, Array],
-    parentDocument: Object
+    document: {
+      type: [Object, Array]
+    },
+    parentDocument: {
+      type: Object
+    }
   },
   components: {
     DocumentTagsForm
@@ -90,8 +99,8 @@ export default {
   },
   data () {
     return {
-      metadataVisible: false,
-      index: this.$store.state.search.index
+      index: this.$store.state.search.index,
+      metadataVisible: false
     }
   },
   computed: {
@@ -104,9 +113,11 @@ export default {
       }
     },
     metaFieldsNames () {
-      return filter(this.document.metas, name => {
-        return map(this.canonicalFields, 'name').indexOf(name) === -1
-      })
+      if (this.metadataVisible) {
+        return filter(this.document.metas, name => map(this.canonicalFields, 'name').indexOf(name) === -1)
+      } else {
+        return []
+      }
     },
     canonicalFields () {
       return [
@@ -194,6 +205,9 @@ export default {
           value: get(this, 'parentDocument.basename', null)
         }
       ]
+    },
+    filteredCanonicalFields () {
+      return filter(this.canonicalFields, field => field.value)
     }
   },
   async created () {

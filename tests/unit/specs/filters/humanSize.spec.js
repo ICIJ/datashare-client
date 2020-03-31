@@ -1,12 +1,16 @@
 import humanSize from '@/filters/humanSize'
 
 describe('humanSize filter', () => {
-  it('should display human readable size for -1', () => {
+  it('should return "unknown" if size equals -1', () => {
     expect(humanSize(-1)).toBe('unknown')
   })
 
-  it('should display human readable size for ""', () => {
+  it('should return "unknown" if size is an empty string', () => {
     expect(humanSize('')).toBe('unknown')
+  })
+
+  it('should return "unknown" if size is undefined', () => {
+    expect(humanSize(undefined)).toBe('unknown')
   })
 
   it('should display human readable size for 0', () => {

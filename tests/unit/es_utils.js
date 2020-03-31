@@ -84,6 +84,10 @@ class IndexedDocument {
     this.content = content
     return this
   }
+  withContentLength (contentLength) {
+    this.contentLength = contentLength
+    return this
+  }
   withContentType (contentType) {
     this.metadata.tika_metadata_content_type = contentType
     this.contentType = contentType.split(';')[0].trim()
