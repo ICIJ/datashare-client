@@ -1,7 +1,12 @@
 <template>
   <v-wait for="load document data">
     <content-placeholder class="document py-2 px-3" slot="waiting" />
-    <div class="d-flex flex-column document" v-if="doc" v-shortkey="getKeys('tabNavigation')" @shortkey="getAction('tabNavigation')" :class="{ 'document--simplified': $route.name === 'document-simplified' }">
+    <div
+      class="d-flex flex-column document"
+      :class="{ 'document--simplified': $route.name === 'document-simplified' }"
+      v-if="doc"
+      v-shortkey="getKeys('tabNavigation')"
+      @shortkey="getAction('tabNavigation')">
       <div class="document__header">
         <hook name="document.header:before" />
         <h3 class="document__header__name">
@@ -10,7 +15,13 @@
           <hook name="document.header.name:after" />
         </h3>
         <hook name="document.header.tags:before" />
-        <document-tags-form :document="doc" :tags="tags" :displayTags="true" :displayForm="false" class="px-3 mx-0" mode="dark" />
+        <document-tags-form
+          class="px-3 mx-0"
+          :displayForm="false"
+          :displayTags="true"
+          :document="doc"
+          mode="dark"
+          :tags="tags" />
         <hook name="document.header.tags:after" />
         <hook name="document.header.nav:before" />
         <nav class="document__header__nav text-nowrap overflow-auto">
@@ -29,7 +40,11 @@
         <hook name="document.header:after" />
       </div>
       <div class="d-flex flex-grow-1 flex-column tab-content document__content">
-        <div class="document__content__pane tab-pane w-100" :class="tabClass(tab.name)" v-for="tab in visibleTabs" :key="tab.name">
+        <div
+          class="document__content__pane tab-pane w-100"
+          :class="tabClass(tab.name)"
+          :key="tab.name"
+          v-for="tab in visibleTabs">
           <component v-if="isTabActive(tab.name)" :is="tab.component" v-bind="tab.props"></component>
         </div>
       </div>
@@ -214,9 +229,9 @@ export default {
   &__header {
     @include gradient-directional($primary, theme-color(dark));
     color: white;
+    display: inline-block;
     padding: $spacer * 2 0;
     padding-bottom: 0;
-    display: inline-block;
     width: 100%;
 
     &__name {
@@ -231,35 +246,35 @@ export default {
       padding: $spacer $spacer 0;
 
       & &__item  {
-        margin:0;
+        margin: 0;
 
         a {
-          display: inline-block;
-          text-transform: uppercase;
-          font-weight: bolder;
-          font-size: 0.8em;
-          padding: $spacer * .75 $spacer;
-          margin: 0;
-          position: relative;
           cursor: pointer;
+          display: inline-block;
+          font-size: 0.8em;
+          font-weight: bolder;
+          margin: 0;
+          padding: $spacer * .75 $spacer;
+          position: relative;
+          text-transform: uppercase;
 
           &:hover {
-            background:rgba(white, .05);
+            background: rgba(white, .05);
           }
 
           &.active, &.active:hover {
-            font-weight: bold;
             background: white;
             color: $link-color;
+            font-weight: bold;
 
             &:before {
-              content: "";
               border-top: 2px solid $secondary;
-              position: absolute;
-              top: 0;
-              left: 0;
-              right: 0;
               box-shadow: 0 0 10px 0 $secondary;
+              content: "";
+              left: 0;
+              position: absolute;
+              right: 0;
+              top: 0;
             }
           }
         }

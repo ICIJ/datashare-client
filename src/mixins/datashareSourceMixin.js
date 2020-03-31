@@ -1,6 +1,7 @@
 import Api from '@/api'
 
 const api = new Api()
+
 export const mixin = {
   methods: {
     getSource (document) {

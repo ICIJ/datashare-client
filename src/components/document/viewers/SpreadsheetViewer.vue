@@ -186,17 +186,15 @@ export default {
   @import '~node_modules/vue-virtual-scroller/dist/vue-virtual-scroller.css';
 
   .spreadsheet-viewer {
-
     &__content {
-
       &__toolbox {
-        margin: $spacer $grid-gutter-width * 0.5;
         background: $light;
         box-shadow: 0 -1 * $spacer 0 0 white;
+        margin: $spacer $grid-gutter-width * 0.5;
 
         &__filter {
-          max-width: 300px;
           margin-left: auto;
+          max-width: 300px;
 
           &--filtered input.form-control {
             border-right: 0;
@@ -207,15 +205,15 @@ export default {
           }
 
           input.form-control {
-            width: 100%;
             border-radius: 1.5em;
+            width: 100%;
           }
 
           .input-group-text {
-            font-size: 0.8rem;
-            color: $text-muted;
-            border-radius: 0 1.5em 1.5em 0;
             background: $input-bg;
+            border-radius: 0 1.5em 1.5em 0;
+            color: $text-muted;
+            font-size: 0.8rem;
             margin-left: -1px;
             transition: $input-transition;
           }
@@ -223,22 +221,20 @@ export default {
       }
 
       &__table {
-
         position: relative;
 
         &__item {
-
           &__col.border-right:last-child {
             border-right: 0 !important;
           }
         }
 
         &__scroller {
-          position: absolute;
-          top: 0;
-          left: 0;
-          right: 0;
           bottom: 0;
+          left: 0;
+          position: absolute;
+          right: 0;
+          top: 0;
 
           .vue-recycle-scroller__slot,
           .vue-recycle-scroller__item-wrapper {
@@ -246,12 +242,12 @@ export default {
           }
 
           .vue-recycle-scroller__slot:first-child {
+            background: $light;
+            border-bottom: 1px solid $border-color;
+            font-weight: bold;
             position: sticky;
             top: 0;
             z-index: 10;
-            background: $light;
-            font-weight: bold;
-            border-bottom: 1px solid $border-color;
           }
         }
       }

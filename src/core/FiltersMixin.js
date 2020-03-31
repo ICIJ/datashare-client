@@ -1,4 +1,6 @@
-import { findIndex, uniqueId, cloneDeep } from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
+import findIndex from 'lodash/findIndex'
+import uniqueId from 'lodash/uniqueId'
 
 const FiltersMixin = superclass => class extends superclass {
   registerFilter (...args) {

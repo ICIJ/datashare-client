@@ -31,9 +31,13 @@ import DocumentContent from '@/components/DocumentContent'
 export default {
   name: 'DocumentTranslatedContent',
   props: {
-    document: Object
+    document: {
+      type: Object
+    }
   },
-  components: { DocumentContent },
+  components: {
+    DocumentContent
+  },
   data () {
     return {
       language: 'ENGLISH',
@@ -58,9 +62,7 @@ export default {
 
 <style lang="scss">
   .document-translated-content {
-
     &__translation {
-
       box-shadow: 0 0 0 3px $translation-bg inset;
 
       .document-translated-content--original & {

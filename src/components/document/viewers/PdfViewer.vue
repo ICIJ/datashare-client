@@ -144,20 +144,20 @@ export default {
 
 <style lang="scss">
   .pdf-viewer {
-    position: relative;
     min-height: 100%;
+    position: relative;
 
     &__thumbnails {
       min-width: 100px;
 
       &__item {
-        position: relative;
-        border:1px solid $border-color;
+        border: 1px solid $border-color;
         cursor: pointer;
+        position: relative;
 
         &:hover {
           border-color: $primary;
-          box-shadow:0 0 0 0.1em rgba($primary, .2);
+          box-shadow: 0 0 0 0.1em rgba($primary, .2);
         }
 
         &--active, &--active:hover {
@@ -170,16 +170,16 @@ export default {
         }
 
         &__page {
-          position: absolute;
-          bottom: 0;
-          right: 0;
           background: $light;
-          font-size: 0.8em;
-          padding: 0.2em 0.4em;
-          font-weight: bold;
-          border:1px solid $border-color;
-          border-right: 0;
+          border: 1px solid $border-color;
           border-bottom: 0;
+          border-right: 0;
+          bottom: 0;
+          font-size: 0.8em;
+          font-weight: bold;
+          padding: 0.2em 0.4em;
+          position: absolute;
+          right: 0;
         }
       }
     }

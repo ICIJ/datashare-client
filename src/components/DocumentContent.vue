@@ -12,7 +12,6 @@ import DocumentAttachments from '@/components/DocumentAttachments'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 import Hook from '@/components/Hook'
-
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import LocalSearchWorker from '@/utils/local-search.webworker'
@@ -37,8 +36,8 @@ export default {
   },
   data () {
     return {
-      hasStickyToolbox: false,
       hasNamedEntities: false,
+      hasStickyToolbox: false,
       localSearchIndex: 0,
       localSearchOccurrences: 0,
       localSearchTerm: { label: '' },

@@ -12,18 +12,20 @@
 
 <script>
 import DocumentNotes from '@/components/document/DocumentNotes'
-import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 import DocumentThread from '@/components/DocumentThread'
+import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
 export default {
   name: 'DocumentTabExtractedText',
   props: {
-    document: Object
+    document: {
+      type: Object
+    }
   },
   components: {
     DocumentNotes,
-    DocumentTranslatedContent,
-    DocumentThread
+    DocumentThread,
+    DocumentTranslatedContent
   }
 }
 </script>
