@@ -96,7 +96,7 @@ describe('Document', () => {
           contentType: 'application/json; twint',
           metadata: {
             tika_metadata_dc_title: 'This is a nice tweet title',
-            tika_metadata_resourcename: '=?and?somethig?else?but a resourceName?='
+            tika_metadata_resourcename: '=?and?something?else?but a resourceName?='
           },
           extractionLevel: 1
         }

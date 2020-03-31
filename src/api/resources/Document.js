@@ -177,6 +177,9 @@ export default class Document extends EsDoc {
   get creationDateHuman () {
     return this.creationDate ? moment(this.creationDate).format('LLL') : null
   }
+  get creationDateHumanShort () {
+    return this.creationDate ? moment(this.creationDate).format('L LT') : null
+  }
   get extractionLevel () {
     return this.get('_source.extractionLevel', 0)
   }

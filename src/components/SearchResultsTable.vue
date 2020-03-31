@@ -5,7 +5,8 @@
         <div v-if="selected.length" class="d-inline-flex search-results-table__actions mr-2 align-self-start align-items-center">
           <b-list-group horizontal>
             <b-list-group-item class="search-results-table__actions__action py-2" button v-for="action in actions" :key="action.id" @click="onClick(action.id)">
-              <fa :icon="action.icon" :class="action.iconClass"/>{{ action.label }}
+              <fa :icon="action.icon" :class="action.iconClass" />
+              {{ action.label }}
             </b-list-group-item>
           </b-list-group>
           <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" :displayTags="false" :displayForm="true" />
@@ -39,11 +40,11 @@
         <template v-slot:cell(highlight)="{ value }">
           <span v-html="value" class="text-truncate text-muted"></span>
         </template>
-        <template v-slot:cell(actions)="{ item }">
-          <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" />
-        </template>
         <template v-slot:cell(contentLength)="{ value }">
           {{ humanSize(value) }}
+        </template>
+        <template v-slot:cell(actions)="{ item }">
+          <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" />
         </template>
       </b-table>
       <search-results-header position="bottom" />
@@ -152,7 +153,7 @@ export default {
           }
         },
         {
-          key: 'creationDateHuman',
+          key: 'creationDateHumanShort',
           sortBy: 'metadata.tika_metadata_creation_date',
           sortable: true,
           label: this.$t('document.creation_date')
