@@ -1,9 +1,10 @@
 <template>
-  <div class="json-viewer w-100"></div>
+  <div class="json-viewer w-100 m-3"></div>
 </template>
 
 <script>
 import JSONFormatter from 'json-formatter-js'
+
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 export default {
@@ -31,15 +32,11 @@ export default {
 
 <style lang="scss">
   .json-viewer {
-    position: relative;
-    overflow: auto;
-
     & > * {
-      position: absolute;
-      top: $spacer;
+      bottom: $spacer;
       left: $spacer;
       right: $spacer;
-      bottom: $spacer;
+      top: $spacer;
     }
   }
 </style>

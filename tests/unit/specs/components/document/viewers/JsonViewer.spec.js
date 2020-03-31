@@ -1,8 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
+import JsonViewer from '@/components/document/viewers/JsonViewer'
 import { Core } from '@/core'
 import documentJson from 'tests/unit/resources/document.json'
-import JsonViewer from '@/components/document/viewers/JsonViewer'
 
 const { localVue } = Core.init(createLocalVue()).useAll()
 
