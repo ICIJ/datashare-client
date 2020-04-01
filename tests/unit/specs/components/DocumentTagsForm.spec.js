@@ -37,7 +37,10 @@ describe('DocumentTagsForm.vue', () => {
 
   afterEach(() => store.commit('document/reset'))
 
-  afterAll(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
+  afterAll(() => {
+    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    jest.unmock('axios')
+  })
 
   it('should display form to add new tag', async () => {
     wrapper = await createView({ es, index })

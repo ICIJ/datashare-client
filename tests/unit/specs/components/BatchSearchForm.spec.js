@@ -1,6 +1,6 @@
 import toLower from 'lodash/toLower'
-import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 
 import BatchSearchForm from '@/components/BatchSearchForm'
@@ -8,23 +8,24 @@ import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-const { localVue } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue } = Core.init(createLocalVue()).useAll()
 
 jest.mock('lodash/throttle', () => jest.fn(fn => fn))
 
 describe('BatchSearchForm.vue', () => {
-  const index = toLower('BatchSearchForm')
-  esConnectionHelper(index)
+  const project = toLower('BatchSearchForm')
+  const anotherProject = toLower('anotherProject')
+  esConnectionHelper([project, anotherProject])
   const es = esConnectionHelper.es
   let wrapper
   const state = { batchSearches: [] }
   const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
   const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFilter: jest.fn() } } } })
 
-  beforeAll(() => Murmur.config.merge({ datashare_projects: [index], dataDir: '/root/project' }))
+  beforeAll(() => Murmur.config.merge({ datashare_projects: [project], dataDir: '/root/project' }))
 
   beforeEach(() => {
-    wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store })
   })
 
   afterAll(() => jest.unmock('lodash/throttle'))
@@ -64,7 +65,7 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.name).toBe('')
     expect(wrapper.vm.csvFile).toBeNull()
     expect(wrapper.vm.description).toBe('')
-    expect(wrapper.vm.project).toBe(index)
+    expect(wrapper.vm.project).toBe(project)
     expect(wrapper.vm.phraseMatch).toBeTruthy()
     expect(wrapper.vm.fuzziness).toBe(0)
     expect(wrapper.vm.fileType).toBe('')
@@ -87,7 +88,7 @@ describe('BatchSearchForm.vue', () => {
 
   it('should display "Published" button on server', () => {
     Murmur.config.merge({ multipleProjects: true })
-    wrapper = shallowMount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store })
 
     expect(wrapper.find('.card .published').exists()).toBeTruthy()
   })
@@ -128,7 +129,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should set the clicked item in the fileTypes input', () => {
-      wrapper = mount(BatchSearchForm, { localVue, store, mocks: { $t: msg => msg } })
+      wrapper = mount(BatchSearchForm, { i18n, localVue, store })
       wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'Excel 2003 XML spreadsheet visio' }])
       wrapper.vm.searchFileType({ label: 'StarWriter 5 document' })
 
@@ -174,7 +175,7 @@ describe('BatchSearchForm.vue', () => {
     it('should reset fileType and path', async () => {
       wrapper.vm.$set(wrapper.vm, 'fileType', 'fileTypeTest')
       wrapper.vm.$set(wrapper.vm, 'path', 'pathTest')
-      await wrapper.vm.$set(wrapper.vm, 'project', 'another_project')
+      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
 
       expect(wrapper.vm.fileType).toBe('')
       expect(wrapper.vm.path).toBe('')
@@ -183,7 +184,7 @@ describe('BatchSearchForm.vue', () => {
     it('should reset fileTypes and paths', async () => {
       wrapper.vm.$set(wrapper.vm, 'fileTypes', ['fileType_01', 'fileType_02'])
       wrapper.vm.$set(wrapper.vm, 'paths', ['path_01', 'path_02'])
-      await wrapper.vm.$set(wrapper.vm, 'project', 'another_project')
+      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
 
       expect(wrapper.vm.fileTypes).toEqual([])
       expect(wrapper.vm.paths).toEqual([])
@@ -192,7 +193,7 @@ describe('BatchSearchForm.vue', () => {
     it('should reset allFileTypes and allPaths', async () => {
       wrapper.vm.$set(wrapper.vm, 'allFileTypes', ['fileType_01', 'fileType_02'])
       wrapper.vm.$set(wrapper.vm, 'allPaths', ['path_01', 'path_02'])
-      await wrapper.vm.$set(wrapper.vm, 'project', 'another_project')
+      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
 
       expect(wrapper.vm.allFileTypes).toEqual([])
       expect(wrapper.vm.allPaths).toEqual([])
@@ -202,7 +203,7 @@ describe('BatchSearchForm.vue', () => {
       jest.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
       jest.spyOn(wrapper.vm, 'hideSuggestionsPaths')
 
-      await wrapper.vm.$set(wrapper.vm, 'project', 'another_project')
+      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
 
       expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
       expect(wrapper.vm.hideSuggestionsPaths).toBeCalled()
@@ -212,7 +213,7 @@ describe('BatchSearchForm.vue', () => {
       jest.spyOn(wrapper.vm, 'retrieveFileTypes')
       jest.spyOn(wrapper.vm, 'retrievePaths')
 
-      await wrapper.vm.$set(wrapper.vm, 'project', 'another_project')
+      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
 
       expect(wrapper.vm.retrieveFileTypes).toBeCalled()
       expect(wrapper.vm.retrievePaths).toBeCalled()
@@ -220,7 +221,7 @@ describe('BatchSearchForm.vue', () => {
   })
 
   it('should return content type description if exists', async () => {
-    await letData(es).have(new IndexedDocument('document', index).withContentType('application/pdf')).commit()
+    await letData(es).have(new IndexedDocument('document', project).withContentType('application/pdf')).commit()
 
     await wrapper.vm.retrieveFileTypes()
 
@@ -231,7 +232,7 @@ describe('BatchSearchForm.vue', () => {
   })
 
   it('should return content type itself if content type description does NOT exist', async () => {
-    await letData(es).have(new IndexedDocument('document', index).withContentType('application/test')).commit()
+    await letData(es).have(new IndexedDocument('document', project).withContentType('application/test')).commit()
 
     await wrapper.vm.retrieveFileTypes()
 

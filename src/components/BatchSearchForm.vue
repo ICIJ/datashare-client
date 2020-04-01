@@ -165,8 +165,8 @@ import each from 'lodash/each'
 import filter from 'lodash/filter'
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
+import has from 'lodash/has'
 import includes from 'lodash/includes'
-import indexOf from 'lodash/indexOf'
 import map from 'lodash/map'
 import range from 'lodash/range'
 import throttle from 'lodash/throttle'
@@ -327,7 +327,7 @@ export default {
     async retrieveFileTypes () {
       const aggTypes = await this.aggregate('contentType', 'contentType')
       each(aggTypes, aggType => {
-        const label = indexOf(types, aggType) > -1 ? types[aggType].label : aggType
+        const label = has(types, aggType) ? types[aggType].label : aggType
         this.allFileTypes.push({ label, mime: aggType })
       })
     }
