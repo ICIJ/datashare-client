@@ -33,7 +33,7 @@ export default {
   },
   methods: {
     async selectUsers (users) {
-      await this.$store.dispatch('search/getProjectMarkedReadDocuments', users)
+      await this.$store.dispatch('search/getDocumentsReadBy', users)
       this.$set(this, 'selected', users)
       this.root.isAllSelected = users.length === 0
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)

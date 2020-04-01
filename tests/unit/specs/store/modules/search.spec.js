@@ -814,7 +814,7 @@ describe('SearchStore', () => {
       axios.request.mockResolvedValue({ data: ['document_01', 'document_02', 'document_03'] })
       axios.request.mockClear()
 
-      await store.dispatch('search/getProjectMarkedReadDocuments', ['user_01', 'user_02'])
+      await store.dispatch('search/getDocumentsReadBy', ['user_01', 'user_02'])
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({

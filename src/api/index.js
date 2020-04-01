@@ -127,7 +127,7 @@ export default class Api {
   getProjectMarkReadUsers (project) {
     return this.sendAction(`/api/${project}/documents/readBy`)
   }
-  getProjectMarkedReadDocuments (project, users) {
+  getDocumentsReadBy (project, users) {
     return this.sendAction(`/api/${project}/documents/documentsReadBy/${join(users)}`)
   }
   async sendAction (url, config = {}) {

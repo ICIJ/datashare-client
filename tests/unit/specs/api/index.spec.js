@@ -190,8 +190,8 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getProjectMarkedReadDocuments', async () => {
-    json = await api.getProjectMarkedReadDocuments()
+  it('should return backend response to getDocumentsReadBy', async () => {
+    json = await api.getDocumentsReadBy()
     expect(json).toEqual({})
   })
 

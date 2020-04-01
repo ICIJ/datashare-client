@@ -485,10 +485,10 @@ export const actions = {
     }
     return users
   },
-  async getProjectMarkedReadDocuments ({ state, commit }, users) {
+  async getDocumentsReadBy ({ state, commit }, users) {
     let documentsRead
     try {
-      documentsRead = await api.getProjectMarkedReadDocuments(state.index, users)
+      documentsRead = await api.getDocumentsReadBy(state.index, users)
     } catch (_) {
       documentsRead = []
     }
