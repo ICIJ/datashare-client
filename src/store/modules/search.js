@@ -492,7 +492,11 @@ export const actions = {
   async getDocumentsReadBy ({ state, commit }, users) {
     let documentsRead
     try {
-      documentsRead = await api.getDocumentsReadBy(state.index, users)
+      if (users.length === 0) {
+        documentsRead = []
+      } else {
+        documentsRead = await api.getDocumentsReadBy(state.index, users)
+      }
     } catch (_) {
       documentsRead = []
     }

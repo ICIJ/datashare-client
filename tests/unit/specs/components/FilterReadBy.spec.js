@@ -87,10 +87,7 @@ describe('FilterReadBy.vue', () => {
 
     await wrapper.vm.selectUsers([])
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${project}/documents/documentsReadBy/`)
-    }))
+    expect(axios.request).toBeCalledTimes(0)
     expect(store.state.search.documentsRead).toEqual([])
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()

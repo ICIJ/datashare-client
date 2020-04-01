@@ -822,5 +822,14 @@ describe('SearchStore', () => {
       }))
       expect(store.state.search.documentsRead).toEqual(['document_01', 'document_02', 'document_03'])
     })
+
+    it('should reset the list of documents read if no users', async () => {
+      axios.request.mockClear()
+
+      await store.dispatch('search/getDocumentsReadBy', [])
+
+      expect(axios.request).toBeCalledTimes(0)
+      expect(store.state.search.documentsRead).toEqual([])
+    })
   })
 })
