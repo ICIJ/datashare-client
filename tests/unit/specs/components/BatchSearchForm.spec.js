@@ -3,8 +3,10 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 import Vuex from 'vuex'
 
-import { Core } from '@/core'
 import BatchSearchForm from '@/components/BatchSearchForm'
+import { Core } from '@/core'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 const { localVue } = Core.init(createLocalVue()).useAll()
 
@@ -12,6 +14,8 @@ jest.mock('lodash/throttle', () => jest.fn(fn => fn))
 
 describe('BatchSearchForm.vue', () => {
   const index = toLower('BatchSearchForm')
+  esConnectionHelper(index)
+  const es = esConnectionHelper.es
   let wrapper
   const state = { batchSearches: [] }
   const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
@@ -204,7 +208,7 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.hideSuggestionsPaths).toBeCalled()
     })
 
-    it('should call retrieveFileTypes and retrievePaths', async () => {
+    it('should call retrieveFileTypes and retrievePaths on project change', async () => {
       jest.spyOn(wrapper.vm, 'retrieveFileTypes')
       jest.spyOn(wrapper.vm, 'retrievePaths')
 
@@ -213,5 +217,27 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.retrieveFileTypes).toBeCalled()
       expect(wrapper.vm.retrievePaths).toBeCalled()
     })
+  })
+
+  it('should return content type description if exists', async () => {
+    await letData(es).have(new IndexedDocument('document', index).withContentType('application/pdf')).commit()
+
+    await wrapper.vm.retrieveFileTypes()
+
+    expect(wrapper.vm.allFileTypes).toEqual([{
+      label: 'Portable Document Format (PDF)',
+      mime: 'application/pdf'
+    }])
+  })
+
+  it('should return content type itself if content type description does NOT exist', async () => {
+    await letData(es).have(new IndexedDocument('document', index).withContentType('application/test')).commit()
+
+    await wrapper.vm.retrieveFileTypes()
+
+    expect(wrapper.vm.allFileTypes).toEqual([{
+      label: 'application/test',
+      mime: 'application/test'
+    }])
   })
 })

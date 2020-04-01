@@ -166,6 +166,7 @@ import filter from 'lodash/filter'
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import includes from 'lodash/includes'
+import indexOf from 'lodash/indexOf'
 import map from 'lodash/map'
 import range from 'lodash/range'
 import throttle from 'lodash/throttle'
@@ -325,7 +326,10 @@ export default {
     },
     async retrieveFileTypes () {
       const aggTypes = await this.aggregate('contentType', 'contentType')
-      each(aggTypes, aggType => this.allFileTypes.push({ label: types[aggType].label, mime: aggType }))
+      each(aggTypes, aggType => {
+        const label = indexOf(types, aggType) > -1 ? types[aggType].label : aggType
+        this.allFileTypes.push({ label, mime: aggType })
+      })
     }
   }
 }
