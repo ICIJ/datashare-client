@@ -16,10 +16,10 @@ jest.mock('axios', () => {
 const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterReadBy.vue', () => {
-  const index = toLower('FilterReadBy')
+  const project = toLower('FilterReadBy')
   let wrapper
 
-  beforeAll(() => store.commit('search/index', index))
+  beforeAll(() => store.commit('search/index', project))
 
   beforeEach(async () => {
     wrapper = shallowMount(FilterReadBy, {
@@ -53,8 +53,9 @@ describe('FilterReadBy.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/readBy`)
+      url: Api.getFullUrl(`/api/${project}/documents/readBy`)
     }))
+    expect(wrapper.vm.readByUsers).toEqual(['user_01', 'user_02'])
   })
 
   it('should display users who read documents in this project', async () => {
@@ -73,7 +74,7 @@ describe('FilterReadBy.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/documentsReadBy/user_01,user_02`)
+      url: Api.getFullUrl(`/api/${project}/documents/documentsReadBy/user_01,user_02`)
     }))
     expect(store.state.search.documentsRead).toEqual(documents)
     expect(wrapper.vm.selected).toEqual(['user_01', 'user_02'])
@@ -88,7 +89,7 @@ describe('FilterReadBy.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/documentsReadBy/`)
+      url: Api.getFullUrl(`/api/${project}/documents/documentsReadBy/`)
     }))
     expect(store.state.search.documentsRead).toEqual([])
     expect(wrapper.vm.selected).toEqual([])

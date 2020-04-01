@@ -12,13 +12,16 @@
 
 <script>
 import { mapState } from 'vuex'
+
 import FilterBoilerplate from '@/components/FilterBoilerplate'
 import filters from '@/mixins/filters'
 import utils from '@/mixins/utils'
 
 export default {
   name: 'FilterYesNo',
-  components: { FilterBoilerplate },
+  components: {
+    FilterBoilerplate
+  },
   mixins: [filters, utils],
   computed: {
     ...mapState('search', ['starredDocuments']),

@@ -2,7 +2,7 @@
   <filter-boilerplate v-bind="propsWithout('hide-show-more')" hide-show-more ref="filter">
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="selectUsers">
-        <b-form-checkbox v-for="userId in readBy" :value="userId" class="filter__items__item" :key="userId">
+        <b-form-checkbox v-for="userId in readByUsers" :value="userId" class="filter__items__item" :key="userId">
           <span>{{ userId }}</span>
         </b-form-checkbox>
       </b-form-checkbox-group>
@@ -11,6 +11,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import FilterBoilerplate from '@/components/FilterBoilerplate'
 import filters from '@/mixins/filters'
 import utils from '@/mixins/utils'
@@ -21,14 +23,11 @@ export default {
     FilterBoilerplate
   },
   mixins: [filters, utils],
-  data () {
-    return {
-      readBy: []
-    }
+  computed: {
+    ...mapState('search', ['readByUsers'])
   },
   async mounted () {
-    const readBy = await this.$store.dispatch('search/getProjectMarkReadUsers')
-    this.$set(this, 'readBy', readBy)
+    await this.$store.dispatch('search/getProjectMarkReadUsers')
     this.root.$on('reset-filter-values', () => this.selectUsers([]))
   },
   methods: {

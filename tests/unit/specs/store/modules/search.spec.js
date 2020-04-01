@@ -801,13 +801,13 @@ describe('SearchStore', () => {
       axios.request.mockResolvedValue({ data: [{ id: 'user_01' }, { id: 'user_02' }] })
       axios.request.mockClear()
 
-      const users = await store.dispatch('search/getProjectMarkReadUsers')
+      await store.dispatch('search/getProjectMarkReadUsers')
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/readBy`)
       }))
-      expect(users).toEqual(['user_01', 'user_02'])
+      expect(store.state.search.readByUsers).toEqual(['user_01', 'user_02'])
     })
 
     it('should set the list of documents read by a list of users', async () => {

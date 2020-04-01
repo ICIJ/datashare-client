@@ -57,7 +57,8 @@ export function initialState () {
     // Different default layout for narrow screen
     layout: isNarrowScreen() ? 'table' : 'list',
     isDownloadAllowed: false,
-    documentsRead: []
+    documentsRead: [],
+    readByUsers: []
   })
 }
 
@@ -338,6 +339,9 @@ export const mutations = {
   },
   documentsRead (state, documentsRead) {
     Vue.set(state, 'documentsRead', documentsRead)
+  },
+  readByUsers (state, readByUsers) {
+    Vue.set(state, 'readByUsers', readByUsers)
   }
 }
 
@@ -475,15 +479,15 @@ export const actions = {
       commit('isDownloadAllowed', false)
     }
   },
-  async getProjectMarkReadUsers ({ state }) {
-    let users
+  async getProjectMarkReadUsers ({ state, commit }) {
+    let readByUsers
     try {
-      const tmp = await api.getProjectMarkReadUsers(state.index)
-      users = map(tmp, 'id')
+      readByUsers = await api.getProjectMarkReadUsers(state.index)
+      readByUsers = map(readByUsers, 'id')
     } catch (_) {
-      users = []
+      readByUsers = []
     }
-    return users
+    commit('readByUsers', readByUsers)
   },
   async getDocumentsReadBy ({ state, commit }, users) {
     let documentsRead
