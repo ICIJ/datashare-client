@@ -290,7 +290,7 @@ export default {
     next(async vm => {
       await vm.fetchBatchSearches()
       await vm.checkIsMyBatchSearch()
-      vm.set(vm, 'published', vm.meta.published)
+      vm.$set(vm, 'published', vm.meta.published)
     })
   },
   async beforeRouteUpdate (to, from, next) {

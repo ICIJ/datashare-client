@@ -12,33 +12,6 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 jest.mock('@/api', () => {
   return jest.fn(() => {
     return {
-      getBatchSearches: jest.fn().mockResolvedValue([
-        {
-          uuid: '12',
-          project: { name: 'ProjectName' },
-          description: 'This is the description of the batch search',
-          queries: {
-            query_01: 6,
-            query_02: 6,
-            query_03: 6
-          },
-          state: 'SUCCESS',
-          date: '2019-07-18T14:45:34.869+0000',
-          nbResults: 333,
-          published: true
-        }, {
-          uuid: '13',
-          project: { name: 'ProjectName2' },
-          description: 'Another description',
-          queries: {
-            query_04: 6
-          },
-          state: 'SUCCESS',
-          date: '2019-07-28T14:45:34.869+0000',
-          nbResults: 15,
-          published: true
-        }
-      ]),
       getBatchSearchResults: jest.fn().mockResolvedValue([
         {
           creationDate: '2011-10-11T04:12:49.000+0000',
@@ -114,7 +87,7 @@ describe('BatchSearchResults.vue', () => {
       fuzziness: 1,
       fileTypes: [],
       paths: [],
-      published: 0,
+      published: true,
       queries: {
         query_01: 6,
         query_02: 6,
@@ -132,7 +105,7 @@ describe('BatchSearchResults.vue', () => {
       fuzziness: 1,
       fileTypes: [],
       paths: [],
-      published: 0,
+      published: true,
       queries: {
         query_04: 6
       },
