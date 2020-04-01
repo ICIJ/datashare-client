@@ -399,7 +399,8 @@
       "showMoreOrganization": "もっと多くの組織を表示",
       "showMoreLocation": "もっと多くの場所を表示",
       "showMoreEmail": "もっと多くのメールを表示"
-    }
+    },
+    "unknown": "Unknown"
   },
   "namedEntityInContext": {
     "title": "<code>%{extractorLanguage}</code> の<code>%{extractor}</code> を使って抽出",
