@@ -31,10 +31,13 @@ export const mutations = {
 
 export const actions = {
   async getBatchSearches ({ commit }) {
+    let batchSearches
     try {
-      const batchSearches = await api.getBatchSearches()
-      return commit('batchSearches', batchSearches)
-    } catch (_) {}
+      batchSearches = await api.getBatchSearches()
+    } catch (_) {
+      batchSearches = []
+    }
+    return commit('batchSearches', batchSearches)
   },
   async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published }) {
     try {
@@ -43,10 +46,13 @@ export const actions = {
     } catch (_) {}
   },
   async getBatchSearchResults ({ state, commit }, { batchId, from, size, queries, sort, order }) {
+    let results
     try {
-      const results = await api.getBatchSearchResults(batchId, from, size, queries, sort, order)
-      return commit('results', results)
-    } catch (_) {}
+      results = await api.getBatchSearchResults(batchId, from, size, queries, sort, order)
+    } catch (_) {
+      results = []
+    }
+    return commit('results', results)
   },
   async deleteBatchSearch ({ state }, { batchId }) {
     try {

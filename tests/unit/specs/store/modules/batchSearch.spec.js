@@ -28,6 +28,8 @@ describe('BatchSearchStore', () => {
 
   afterEach(() => axios.request.mockClear())
 
+  afterAll(() => jest.unmock('axios'))
+
   describe('actions', () => {
     it('should submit the new batchSearch form with complete information', async () => {
       await store.dispatch('batchSearch/onSubmit', { name: 'name', csvFile: 'csvFile', description: 'description', project: 'project', phraseMatch: false, fuzziness: 2, fileTypes: [{ mime: 'pdf' }, { mime: 'csv' }], paths: ['/a/path/to/home', '/another/path'], published: false })

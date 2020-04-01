@@ -291,15 +291,20 @@ export default {
       await vm.fetchBatchSearches()
       await vm.checkIsMyBatchSearch()
       vm.$set(vm, 'published', vm.meta.published)
+      vm.$set(vm, 'page', parseInt(get(to.query, 'page', vm.page)))
+      vm.$set(vm, 'queries', get(to.query, 'queries', vm.queries))
+      vm.$set(vm, 'sort', get(to.query, 'sort', vm.sort))
+      vm.$set(vm, 'order', get(to.query, 'order', vm.order))
+      await vm.fetch()
     })
   },
   async beforeRouteUpdate (to, from, next) {
+    await this.checkIsMyBatchSearch()
     this.$set(this, 'page', parseInt(get(to.query, 'page', this.page)))
     this.$set(this, 'queries', get(to.query, 'queries', this.queries))
     this.$set(this, 'sort', get(to.query, 'sort', this.sort))
     this.$set(this, 'order', get(to.query, 'order', this.order))
     await this.fetch()
-    await this.checkIsMyBatchSearch()
     next()
   },
   beforeRouteLeave (to, from, next) {
