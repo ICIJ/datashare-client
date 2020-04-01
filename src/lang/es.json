@@ -399,7 +399,8 @@
       "showMoreOrganization": "Mostrar más organizaciones",
       "showMoreLocation": "Mostrar más ubicaciones",
       "showMoreEmail": "Mostrar más correos electrónicos"
-    }
+    },
+    "unknown": "Unknown"
   },
   "namedEntityInContext": {
     "title": "Extraído usando <code>%{extractor}</code> en <code>%{extractorLanguage}</code>",
