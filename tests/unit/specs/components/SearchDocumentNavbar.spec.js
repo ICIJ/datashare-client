@@ -64,6 +64,7 @@ describe('SearchDocumentNavbar.vue', () => {
     })
 
     it('should call batchUpdate api function and mark document as READ', async () => {
+      axios.request.mockClear()
       await wrapper.vm.toggleAsRead()
 
       expect(axios.request).toBeCalledTimes(2)
