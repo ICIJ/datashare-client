@@ -28,7 +28,7 @@
         <div class="search__body__document" v-if="showDocument">
           <search-document-navbar class="search__body__document__navbar" :is-shrinked="isShrinked"/>
           <div class="search__body__document__wrapper">
-            <div id="search__body__document__wrapper" class="overflow-auto" @scroll="handleScroll">
+            <div id="search__body__document__wrapper" class="overflow-auto text-break" @scroll="handleScroll">
               <router-view class="search__body__document__wrapper__view" />
             </div>
           </div>
