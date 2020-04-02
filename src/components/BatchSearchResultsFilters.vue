@@ -148,9 +148,9 @@ export default {
         this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
       }
     },
-    executeSearch (query) {
+    executeSearch (q) {
       this.$store.commit('search/reset')
-      this.$router.push({ name: 'search', query: { q: query } }).catch(() => {})
+      this.$router.push({ name: 'search', query: { q, index: this.index } }).catch(() => {})
     },
     sort (queriesSort) {
       const order = get(this, ['$route', 'query', 'order'], undefined)

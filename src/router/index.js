@@ -41,7 +41,7 @@ export const router = {
               name: 'document',
               path: 'd/:index/:id/:routing?',
               alias: 'e/:index/:id/:routing?',
-              component: () => import(`@/pages/DocumentView`),
+              component: () => import('@/pages/DocumentView'),
               props: true,
               meta: {
                 docs: [
@@ -56,7 +56,7 @@ export const router = {
         {
           name: 'indexing',
           path: 'indexing',
-          component: () => import(`@/pages/Indexing`),
+          component: () => import('@/pages/Indexing'),
           meta: {
             docs: [
               '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
@@ -92,14 +92,14 @@ export const router = {
         {
           name: 'user-history',
           path: 'user-history',
-          component: () => import(`@/pages/UserHistory`)
+          component: () => import('@/pages/UserHistory')
         },
         {
           name: 'docs',
           path: 'docs/:slug',
           components: {
-            default: () => import(`@/pages/RouteDoc`),
-            sidebar: () => import(`@/components/RouteDocsLinks`)
+            default: () => import('@/pages/RouteDoc'),
+            sidebar: () => import('@/components/RouteDocsLinks')
           },
           props: {
             default: true,
@@ -108,7 +108,7 @@ export const router = {
         },
         {
           path: '/config',
-          component: () => import(`@/pages/Config`)
+          component: () => import('@/pages/Config')
         },
         {
           path: '/insights',
@@ -119,11 +119,11 @@ export const router = {
     {
       name: 'document-simplified',
       path: '/ds/:index/:id/:routing?',
-      component: () => import(`@/pages/DocumentView`)
+      component: () => import('@/pages/DocumentView')
     },
     {
       path: '/login',
-      component: () => import(`@/pages/Login`),
+      component: () => import('@/pages/Login'),
       meta: {
         skipsAuth: true
       }

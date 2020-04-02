@@ -1,5 +1,5 @@
 import toLower from 'lodash/toLower'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
 
@@ -65,17 +65,17 @@ const router = new VueRouter({
 })
 
 describe('BatchSearchResults.vue', () => {
-  const index = toLower('BatchSearchResults')
-  esConnectionHelper(index)
+  const project = toLower('BatchSearchResults')
+  esConnectionHelper(project)
   const es = esConnectionHelper.es
   let propsData, wrapper
 
   beforeAll(() => Murmur.config.merge({ multipleProjects: true }))
 
   beforeEach(async () => {
-    await letData(es).have(new IndexedDocument('42', index).withContentType('type_01')).commit()
-    await letData(es).have(new IndexedDocument('43', index).withContentType('type_01')).commit()
-    await letData(es).have(new IndexedDocument('44', index).withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('43', project).withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
     store.commit('batchSearch/batchSearches', [{
       uuid: '12',
       project: { name: 'ProjectName' },
@@ -111,10 +111,10 @@ describe('BatchSearchResults.vue', () => {
       },
       user: { id: 'test' }
     }])
-    propsData = { uuid: '12', index }
+    propsData = { uuid: '12', project }
     wrapper = shallowMount(BatchSearchResults,
       { i18n, localVue, store, router, wait, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
-    await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index, uuid: '12' }, query: { page: 1 } }).catch(() => {})
+    await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: project, uuid: '12' }, query: { page: 1 } }).catch(() => {})
     await wrapper.vm.fetch()
   })
 
@@ -151,7 +151,7 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__delete').exists()).toBeFalsy()
   })
 
-  it('should display info about the BatchSearch', () => {
+  it('should display 10 info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
     expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(10)
     expect(wrapper.findAll('.batch-search-results__info dd').at(9).text()).toEqual('test')
@@ -163,7 +163,7 @@ describe('BatchSearchResults.vue', () => {
     await wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
 
     expect(router.push).toBeCalled()
-    expect(router.push).toBeCalledWith({ name: 'batch-search.results', params: { index, uuid: '12' }, query: { page: 1, queries: [], sort: 'content_type', order: 'desc' } })
+    expect(router.push).toBeCalledWith({ name: 'batch-search.results', params: { index: project, uuid: '12' }, query: { page: 1, queries: [], sort: 'content_type', order: 'desc' } })
   })
 
   it('should redirect on batchSearch deletion', async () => {
@@ -202,5 +202,15 @@ describe('BatchSearchResults.vue', () => {
 
       expect(wrapper.vm.numberOfPages).toBe(1)
     })
+  })
+
+  it('should redirect to document including the search query', async () => {
+    wrapper = mount(BatchSearchResults,
+      { i18n, localVue, store, router, wait, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
+    await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: project, uuid: '12' }, query: { page: 1 } }).catch(() => {})
+    await wrapper.vm.fetch()
+
+    expect(wrapper.findAll('.batch-search-results__queries__query')).toHaveLength(3)
+    expect(wrapper.find('.batch-search-results__queries__query__link').attributes('href')).toBe(`#/d/${project}/42/42?q=query_01`)
   })
 })

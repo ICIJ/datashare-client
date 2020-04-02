@@ -39,7 +39,10 @@
             {{ $t('batchSearch.state') }}
           </dt>
           <dd class="col-sm-8">
-            <b-badge :variant="meta.state | toVariant" @click.prevent="openErrorMessage" :class="{ 'cursor-pointer': isFailed }">
+            <b-badge
+              :class="{ 'cursor-pointer': isFailed }"
+              @click.prevent="openErrorMessage"
+              :variant="meta.state | toVariant">
               {{ capitalize(meta.state) }}
             </b-badge>
           </dd>
@@ -120,12 +123,27 @@
         </div>
         <div class="batch-search-results__queries">
           <div class="card small">
-            <b-table striped hover responsive no-local-sorting :per-page="perPage" :fields="fields" :items="results" :sort-by="sortBy" :sort-desc="orderBy" @sort-changed="sortChanged" tbody-tr-class="batch-search-results__queries__query" show-empty>
+            <b-table
+              :fields="fields"
+              hover
+              :items="results"
+              no-local-sorting
+              :per-page="perPage"
+              responsive
+              show-empty
+              :sort-by="sortBy"
+              @sort-changed="sortChanged"
+              :sort-desc="orderBy"
+              striped
+              tbody-tr-class="batch-search-results__queries__query">
               <template v-slot:cell(documentNumber)="{ item }">
                 {{ item.documentNumber + 1 }}
               </template>
               <template v-slot:cell(documentName)="{ item }">
-                <router-link :to="{ name: 'document', params: { index: $route.params.index, id: item.documentId, routing: item.rootId } }" target="_blank" class="batch-search-results__queries__query__link">
+                <router-link
+                  class="batch-search-results__queries__query__link"
+                  target="_blank"
+                  :to="{ name: 'document', params: { index: $route.params.index, id: item.documentId, routing: item.rootId }, query: { q: item.query } }">
                   {{ item.documentName }}
                 </router-link>
               </template>
@@ -146,7 +164,12 @@
             </b-table>
           </div>
         </div>
-        <b-pagination-nav v-if="numberOfPages > 1" :link-gen="linkGen" :number-of-pages="numberOfPages" use-router class="mt-2" />
+        <b-pagination-nav
+          class="mt-2"
+          :link-gen="linkGen"
+          :number-of-pages="numberOfPages"
+          use-router
+          v-if="numberOfPages > 1" />
       </v-wait>
     </div>
     <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
@@ -261,7 +284,7 @@ export default {
       return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || { }
     },
     downloadLink () {
-      return Api.getFullUrl(`/api/batch/search/result/csv/${this.uuid}`)
+      return Api.getFullUrl('/api/batch/search/result/csv/' + this.uuid)
     },
     sortBy () {
       return find(this.fields, item => item.name === this.sort).key
@@ -378,7 +401,6 @@ export default {
 <style lang="scss">
 .batch-search-results {
   &__queries {
-
     .table-responsive {
       margin: 0;
     }
