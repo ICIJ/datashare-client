@@ -17,7 +17,7 @@ jest.mock('axios', () => {
   }
 })
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store, router } = Core.init(createLocalVue()).useAll()
 
 describe('SearchDocumentNavbar.vue', () => {
   const index = toLower('SearchDocumentNavbar')
@@ -29,7 +29,7 @@ describe('SearchDocumentNavbar.vue', () => {
 
   beforeEach(() => {
     const computed = { isServer: () => true }
-    wrapper = shallowMount(SearchDocumentNavbar, { i18n, localVue, store, computed })
+    wrapper = shallowMount(SearchDocumentNavbar, { i18n, localVue, store, router, computed })
   })
 
   afterAll(() => {

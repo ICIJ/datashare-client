@@ -128,6 +128,9 @@ export default class Document extends EsDoc {
     const root = this.parent ? truncate(this.parent.title, { length: 30 }) : this.basename
     return [root].concat([distance].slice(0, distance)).concat(this.title)
   }
+  get slicedNameToString () {
+    return this.slicedName.join(' › ')
+  }
   get highlight () {
     return this.raw.highlight
   }

@@ -59,6 +59,7 @@ import { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCi
 import { faRedo } from '@fortawesome/free-solid-svg-icons/faRedo'
 import { faRocket } from '@fortawesome/free-solid-svg-icons/faRocket'
 import { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch'
+import { faShareAlt } from '@fortawesome/free-solid-svg-icons/faShareAlt'
 import { faServer } from '@fortawesome/free-solid-svg-icons/faServer'
 import { faSquare } from '@fortawesome/free-solid-svg-icons/faSquare'
 import { faSquare as farSquare } from '@fortawesome/free-regular-svg-icons/faSquare'
@@ -146,6 +147,7 @@ library.add(
   faRocket,
   faServer,
   faSearch,
+  faShareAlt,
   faSignOutAlt,
   faSquare,
   farSquare,

@@ -62,7 +62,11 @@ export default class Core extends Behaviors {
     return this
   }
   useBootstrapVue () {
-    this.use(BootstrapVue)
+    this.use(BootstrapVue, {
+      BPopover: {
+        boundaryPadding: 14
+      }
+    })
     return this
   }
   useRouter () {

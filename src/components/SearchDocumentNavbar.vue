@@ -53,6 +53,23 @@
           </ul>
         </b-popover>
       </template>
+      <b-btn variant="link" class="text-white py-0 px-2 px-2 py-0 search-document-navbar__share" id="popover-document-share" size="sm">
+        <fa icon="share-alt" />
+      </b-btn>
+      <b-popover target="popover-document-share"
+                 triggers="click"
+                 placement="bottom"
+                 custom-class="popover-body-p-0 popover-body-overflow-hidden w-100"
+                 @show="$root.$emit('bv::hide::tooltip')">
+        <advanced-link-form
+          card
+          no-fade
+          :title="doc.slicedNameToString"
+          :link="documentLink" />
+      </b-popover>
+      <b-tooltip target="popover-document-share" triggers="hover">
+        {{ $t('search.nav.share') }}
+      </b-tooltip>
       <document-actions
         :document="doc"
         class="search-document-navbar__actions d-flex"
@@ -88,6 +105,11 @@ export default {
     ...mapState('search', ['isDownloadAllowed', 'response']),
     query () {
       return this.$store.getters['search/toRouteQuery']()
+    },
+    documentLink () {
+      const route = this.$router.resolve({ name: 'document', params: this.doc.routerParams })
+      const { protocol, host, pathname } = window.location
+      return [protocol, '//', host, pathname, route.href].join('')
     },
     documentIndex () {
       return this.doc ? findIndex(this.response.hits, { id: this.doc.id }) : -1

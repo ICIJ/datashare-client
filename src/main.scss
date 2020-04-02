@@ -20,6 +20,51 @@ html {
   padding: $spacer;
 }
 
+.popover-body-p-0 .popover-body {
+  padding: 0;
+}
+
+.popover-body-overflow-hidden .popover-body {
+  overflow: hidden;
+  border-radius: inherit;
+}
+
+.popover-header {
+  margin: $popover-body-padding-y $popover-body-padding-x 0;
+  border-radius: $popover-inner-border-radius;
+}
+
+.popover-body {
+
+  .text-muted {
+    color: mix($popover-body-color, $popover-bg, 60) !important;
+  }
+
+  .card-header {
+    background-color: $popover-header-bg;
+    @include gradient-y($popover-bg, $popover-bg);
+
+    .nav-item .nav-link {
+      color: white;
+
+      &:hover {
+        border-color: transparent;
+        text-decoration: underline;
+      }
+    }
+
+    .nav-item .nav-link.active {
+      background: $popover-header-bg;
+      border-color: transparent;
+      font-weight: bold;
+    }
+  }
+
+  .card-body {
+    background: $popover-header-bg;
+  }
+}
+
 body {
   max-width: 100vw;
   overflow-x: hidden;
