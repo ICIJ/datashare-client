@@ -65,6 +65,7 @@
     "back": "Regresar a resultados de búsqueda",
     "try": "Usted puede intentar a",
     "nav": {
+      "share": "Share a link to this document",
       "previous": {
         "label": "Anterior",
         "tooltipMac": "Documento anterior (<kbd>⌘</kbd> + <kbd>←</kbd>)",
