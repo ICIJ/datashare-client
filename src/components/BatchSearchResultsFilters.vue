@@ -33,9 +33,11 @@
               <span class="flex-grow-1 text-truncate batch-search-results-filters__queries__dropdown__item__label">
                 {{ item.label }}
               </span>
-              <b-badge class="my-1 px-2 batch-search-results-filters__queries__dropdown__item__count" variant="tertiary" pill>
+              <span class="batch-search-results-filters__queries__dropdown__item__count">
+                <b-badge class="px-2" variant="tertiary" pill>
                 {{ $n(item.count) }}
               </b-badge>
+              </span>
               <span class="batch-search-results-filters__queries__dropdown__item__search" @click.stop.prevent="executeSearch(item.label)">
                 <fa icon="search" class="text-tertiary" />
               </span>
