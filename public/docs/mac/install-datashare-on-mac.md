@@ -92,7 +92,7 @@ You're now ready to take the next step: let's [open Datashare](https://icij.gitb
 
 ### Standalone \(less recent than OS X El Capitan 10.11\)
 
- ****1. Open your **Finder**:
+ ****1. Let's first install Homebrew, which is needed for installing Tesseract OCR. Open your **Finder**:
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-16.55.39.png)
 
@@ -159,6 +159,12 @@ You're now ready to take the next step: let's [open Datashare](https://icij.gitb
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.41.16.png)
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.41.23.png)
+
+The installation begins. You see a progress bar. It stays a long time on "Running package scripts" because it is installing Tesseract OCR, Java Runtime Environment, Datashare backend and Datashare frontend.
+
+You can see what it actually does by typing command+L, it will open a window which logs every action made. 
+
+In the end, you should see this screen:
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.42.02.png)
 
