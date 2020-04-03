@@ -129,19 +129,5 @@ When it is finished, click '**Close**':
 
 
 
- ****11. **Do you see this error screen?** \(It can happen on Windows 8.1 for instance\)
-
-![](../.gitbook/assets/erreur_droits_w81.png)
-
-**If yes**, you need to allow 'running scripts' as explained here:  
-
-[https://superuser.com/questions/106360/how-to-enable-execution-of-powershell-scripts](https://superuser.com/questions/106360/how-to-enable-execution-of-powershell-scripts)
-
-In an administrator powershell, **type**:
-
-`Set-ExecutionPolicy -Scope CurrentUser Bypass`
-
-Then launch Datashare.
-
 When you'll see the log '**Server started on port 8080**', you will be able to open your browser and go to the URL [http://localhost:8080](http://localhost:8080/).
 
