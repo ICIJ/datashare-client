@@ -147,7 +147,6 @@ export default {
       const dates = map(aggregation, d => {
         if (d.key >= 0) {
           d.date = new Date(d.key)
-          d.doc_count = Math.round(d3.randomUniform(0, 5000)())
           return d
         }
       })
