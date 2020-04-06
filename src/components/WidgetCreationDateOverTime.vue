@@ -19,7 +19,17 @@
               <g class="widget__content__chart__axis widget__content__chart__axis--x" :style="{ transform: `translate(0px, ${this.innerHeight}px)` }"></g>
               <g class="widget__content__chart__axis widget__content__chart__axis--y"></g>
               <g class="widget__content__chart__bars">
-                <rect v-for="(bar, index) in bars" :key="index" :x="bar.x" :y="bar.y" :height="bar.height" :width="bar.width"></rect>
+                <g class="widget__content__chart__bars__item" v-for="(bar, index) in bars" :key="index" :transform="`translate(${bar.x}, ${bar.y})`">
+                  <rect class="widget__content__chart__bars__item__bar" :height="bar.height" :width="bar.width"></rect>
+                  <foreignObject :x="bar.flipX ? -200 : 0" :y="bar.flipY ? 0 : -100" width="200" height="100" class="widget__content__chart__bars__item__tooltip" :class="tooltipClasses(bar)">
+                    <div class="widget__content__chart__bars__item__tooltip__wrapper" xmlns="http://www.w3.org/1999/xhtml">
+                      <span>
+                        <h6 class="mb-0">{{ intervalFormatFn(bar.date) }}</h6>
+                        {{ bar.doc_count }}&nbsp;documents
+                      </span>
+                    </div>
+                  </foreignObject>
+                </g>
               </g>
             </g>
           </svg>
@@ -52,7 +62,12 @@ export default {
       interval: 'year',
       margin: { top: 20, right: 20, bottom: 20, left: 50 },
       mounted: false,
-      width: 0
+      width: 0,
+      intervalFormats: {
+        year: '%Y',
+        month: '%b %y',
+        day: '%b %d, %y'
+      }
     }
   },
   watch: {
@@ -92,11 +107,19 @@ export default {
         .domain([0, d3.max(this.data, d => d.doc_count)])
         .range([this.innerHeight, 0])
     },
+    intervalFormatFn (date) {
+      return d3.timeFormat(this.intervalFormats[this.interval])
+    },
     bars () {
       return this.data.map(d => {
+        const x = this.x(d.date)
+        const y = this.y(d.doc_count)
         return {
-          x: this.x(d.date),
-          y: this.y(d.doc_count),
+          ...d,
+          x,
+          y,
+          flipX: x > this.innerWidth / 2,
+          flipY: y < this.innerHeight / 2,
           height: this.innerHeight - this.y(d.doc_count),
           width: this.x(d3.timeDay.offset(d.date, 10)) - this.x(d.date)
         }
@@ -140,6 +163,12 @@ export default {
       this.$set(this, 'mounted', false)
       this.$set(this, 'interval', value)
       await this.init()
+    },
+    tooltipClasses ({ flipX, flipY }) {
+      return {
+        'widget__content__chart__bars__item__tooltip--flip-x': flipX,
+        'widget__content__chart__bars__item__tooltip--flip-y': flipY
+      }
     }
   }
 }
@@ -179,6 +208,74 @@ export default {
           left: 0;
           position: absolute;
           top: 0;
+        }
+
+        &__bars {
+
+          &__item {
+
+            &__bar:hover {
+              filter: drop-shadow(0 0 3px $mark-bg);
+            }
+
+            &__bar:hover + &__tooltip {
+              display: flex;
+            }
+
+            &__tooltip {
+              display: none;
+
+              &--flip-x &__wrapper {
+                justify-content: flex-end;
+              }
+
+              &--flip-x &__wrapper:after {
+                border-left-color: rgba($tooltip-bg, $tooltip-opacity);
+                transform: translateX(-$tooltip-arrow-width / 2);
+              }
+
+              &:not(&--flip-x)  &__wrapper:after {
+                border-right-color: rgba($tooltip-bg, $tooltip-opacity);
+              }
+
+              &--flip-y &__wrapper {
+                align-items: flex-start;
+              }
+
+              &--flip-y &__wrapper:after {
+                border-top-color: rgba($tooltip-bg, $tooltip-opacity);
+              }
+
+              &:not(&--flip-y)  &__wrapper:after {
+                border-bottom-color: rgba($tooltip-bg, $tooltip-opacity);
+              }
+
+              &__wrapper {
+                display: flex;
+                text-align: center;
+                flex-direction: row;
+                align-items: flex-end;
+                justify-content: flex-start;
+                height: 100%;
+                pointer-events: none;
+                position: relative;
+
+                &:after {
+                  content: "";
+                  border: ($tooltip-arrow-width / 2) solid transparent;
+                  position: absolute;
+                  transform: translateX($tooltip-arrow-width / 2);
+                }
+
+                & > span {
+                  background: rgba($tooltip-bg, $tooltip-opacity);
+                  color: $tooltip-color;
+                  margin: 0 $tooltip-arrow-width;
+                  padding: .2rem .4rem;
+                }
+              }
+            }
+          }
         }
 
         rect {
