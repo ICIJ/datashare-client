@@ -1,6 +1,6 @@
 <template>
   <div class="insights">
-    <div class="bg-secondary text-white insights__toolbox position-sticky sticky-top">
+    <div class="bg-secondary text-white insights__toolbox position-sticky sticky-top mb-4" v-if="$config.is('multipleProjects')">
       <div class="container py-2 d-flex align-items-center">
         <div class="pr-2">
           Select a project
@@ -41,6 +41,9 @@ export default {
         this.$store.commit('insights/index', value)
       }
     }
+  },
+  beforeMount () {
+    this.$store.commit('insights/index', this.$store.state.search.index)
   }
 }
 </script>
@@ -49,7 +52,7 @@ export default {
   .insights {
 
     &__container {
-      margin-top: $grid-gutter-width;
+      margin-top: $spacer;
 
       &__widget {
         position: relative;
