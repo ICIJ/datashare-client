@@ -38,9 +38,10 @@ export default {
     this.$wait.end('counters')
   },
   methods: {
-    async count (q) {
+    async count (query) {
       const index = this.$store.state.search.index
-      const res = await elasticsearch.search({ index, q, size: 0 })
+      const body = { query: { query_string: { query } } }
+      const res = await elasticsearch.search({ index, body, size: 0 })
       return res?.hits?.total || 0
     },
     countTotal () {
