@@ -49,7 +49,7 @@ export default {
   data () {
     return {
       data: [],
-      interval: 'month',
+      interval: 'year',
       margin: { top: 20, right: 20, bottom: 20, left: 50 },
       mounted: false,
       width: 0
