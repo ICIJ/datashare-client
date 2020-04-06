@@ -90,6 +90,7 @@ export default {
     async onSubmit () {
       try {
         await this.$store.dispatch('config/onSubmit', this.config)
+        this.$set(this, 'master', cloneDeep(this.config))
         this.$bvToast.toast(this.$t('config.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('config.submitError'), { noCloseButton: true, variant: 'danger' })
