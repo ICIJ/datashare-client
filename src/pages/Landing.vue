@@ -9,11 +9,17 @@
       <hook name="landing.form.heading:after" />
       <search-bar class="landing__form__search-bar py-3" size="md" />
       <hook name="landing.form.project:before" />
-      <div class="mt-5 text-white" v-if="$config.is('multipleProjects')">
-        <h2 class="text-uppercase h5">
-          {{ $t('filter.projects') }}
-        </h2>
-        <project-cards class="mt-3" />
+      <div class="mt-5 text-white">
+        <div v-if="projects.length" class="landing__form__projects">
+          <h2 class="text-uppercase h5">
+            {{ $t('filter.projects') }}
+          </h2>
+          <project-cards class="mt-3" />
+        </div>
+        <div v-else class="landing__form__no-projects">
+          <fa icon="exclamation-triangle" class="mr-1" />
+          {{ $t('landing.noProjects') }}
+        </div>
       </div>
       <hook name="landing.form.project:after" />
     </div>
@@ -28,7 +34,19 @@ import SearchBar from '@/components/SearchBar'
 
 export default {
   name: 'Landing',
-  components: { Hook, ProjectCards, SearchBar }
+  components: {
+    Hook,
+    ProjectCards,
+    SearchBar
+  },
+  data () {
+    return {
+      projects: []
+    }
+  },
+  created () {
+    this.$set(this, 'projects', this.$config.get('datashare_projects', []))
+  }
 }
 </script>
 

@@ -559,5 +559,8 @@
       "M": "%M",
       "B": "%B"
     }
+  },
+  "landing": {
+    "noProjects": "You have no projects yet. Please contact your admin."
   }
 }
