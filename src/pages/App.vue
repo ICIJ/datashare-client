@@ -63,6 +63,11 @@ export default {
 
     min-height: 100vh;
     background: $app-bg;
+    transition: filter 200ms;
+
+    .modal-open & {
+      filter: blur(3.24px);
+    }
 
     @media (max-width: $app-sidebar-float-breakpoint-width) {
 
