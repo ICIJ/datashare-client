@@ -57,7 +57,7 @@
         <fa icon="share-alt" />
       </b-btn>
       <b-popover target="popover-document-share"
-                 triggers="focus"
+                 triggers="click blur"
                  placement="bottom"
                  custom-class="popover-body-p-0 popover-body-overflow-hidden w-100"
                  @show="$root.$emit('bv::hide::tooltip')">
