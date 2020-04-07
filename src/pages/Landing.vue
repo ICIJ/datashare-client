@@ -4,7 +4,7 @@
     <div class="landing__form py-5">
       <hook name="landing.form.heading:before" />
       <h1 class="landing__form__heading text-special">
-        <img src="~images/logo-white.svg" alt="Datashare" />
+        <img src="~images/logo-color.svg" alt="Datashare" />
       </h1>
       <hook name="landing.form.heading:after" />
       <search-bar class="landing__form__search-bar py-3" size="md" />
