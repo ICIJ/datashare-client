@@ -451,6 +451,8 @@
     "batch": "Búsquedas masivas",
     "search": "Buscar en documentos",
     "history": "Tu historial",
+    "insights": "Insights",
+    "config": "Settings",
     "logout": "Cerrar sesión",
     "addDocuments": "Cómo añadir documentos",
     "faq": "Preguntas frecuentes (FAQ)",
@@ -545,7 +547,7 @@
     "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento"
   },
   "config": {
-    "title": "Configuración",
+    "title": "Settings",
     "submit": "Guardar",
     "submitSuccess": "Modificaciones enviadas. Ahora debería reiniciar Datashare.",
     "submitError": "Error al guardar la configuración.",
