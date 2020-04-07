@@ -451,6 +451,8 @@
     "batch": "Recherches en lot",
     "search": "Rechercher dans les documents",
     "history": "Votre historique",
+    "insights": "Insights",
+    "config": "Settings",
     "logout": "Déconnexion",
     "addDocuments": "Comment ajouter des documents",
     "faq": "FAQ",
@@ -545,7 +547,7 @@
     "findNextOccurrenceAlt": "Aller à l'occurrence suivante dans le document"
   },
   "config": {
-    "title": "Configuration",
+    "title": "Settings",
     "submit": "Actualiser",
     "submitSuccess": "Les modifications sont enregistrées mais vous devez redémarrer Datashare pour qu'elles s'appliquent.",
     "submitError": "Erreur dans la reconfiguration.",
