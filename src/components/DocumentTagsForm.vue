@@ -34,6 +34,7 @@ import bodybuilder from 'bodybuilder'
 import moment from 'moment'
 
 import elasticsearch from '@/api/elasticsearch'
+import displayUser from '@/filters/displayUser'
 import settings from '@/utils/settings'
 
 export default {
@@ -97,7 +98,7 @@ export default {
       this.$set(this, 'updatingTags', false)
     },
     generateTagTooltip (tag) {
-      return `${this.$t('document.created_by')} ${tag.user.id} ${this.$t('document.on')} ${moment(tag.creationDate).format('LLL')}`
+      return `${this.$t('document.created_by')} ${displayUser(tag.user.id)} ${this.$t('document.on')} ${moment(tag.creationDate).format('LLL')}`
     }
   }
 }

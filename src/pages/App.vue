@@ -3,13 +3,11 @@
     <div class="app__sidebar">
       <app-sidebar />
     </div>
-    <div class="app__main flex-grow-1 d-flex ">
-      <vue-perfect-scrollbar class="app__main__context-sidebar" v-if="!isContextSidebarReduced">
-        <transition name="slide-left">
-          <router-view name="sidebar" />
-        </transition>
+    <div class="app__main flex-grow-1 d-flex" :class="{ 'app__main--has-context-sidebar': doesRouteHaveSidebar }">
+      <vue-perfect-scrollbar class="app__main__context-sidebar p-1" v-if="!isContextSidebarReduced">
+        <router-view name="sidebar" />
       </vue-perfect-scrollbar>
-      <div class="flex-grow-1">
+      <div class="app__main__view flex-grow-1">
         <scroll-tracker />
         <router-view />
       </div>
@@ -62,10 +60,14 @@ export default {
     --app-sidebar-width: #{$app-sidebar-width};
 
     min-height: 100vh;
-    background: $app-bg;
+    background: $app-sidebar-bg;
+    transition: filter 200ms;
+
+    .modal-open & {
+      filter: blur(3.24px);
+    }
 
     @media (max-width: $app-sidebar-float-breakpoint-width) {
-
       &__main {
         margin-left: $app-sidebar-reduced-width;
       }
@@ -75,10 +77,17 @@ export default {
       box-shadow: $box-shadow-lg;
       background: $body-bg;
       padding-bottom: 0;
-      mask:  0 0 no-repeat luminance url('../assets/images/corner-top.svg'),
-             0 100% no-repeat luminance url('../assets/images/corner-bottom.svg'),
-             0 0 no-repeat luminance linear-gradient(white 0%, white 100%);
-      mask-composite: exclude;
+
+      &--has-context-sidebar {
+        background: $app-context-sidebar-bg;
+      }
+
+      &, &--has-context-sidebar &__view {
+        mask:  0 0 no-repeat luminance url('../assets/images/corner-top.svg'),
+        0 100% no-repeat luminance url('../assets/images/corner-bottom.svg'),
+        0 0 no-repeat luminance linear-gradient(white 0%, white 100%);
+        mask-composite: exclude;
+      }
 
       & &__context-sidebar {
         position: sticky;
@@ -87,22 +96,20 @@ export default {
         height: 100vh;
         max-height: 100vh;
         background: $app-context-sidebar-bg;
+        color: $app-context-sidebar-color;
         width: $app-context-sidebar-width;
         max-width: $app-context-sidebar-width;
         min-width: $app-context-sidebar-width;
 
-        /**
-         * Disabled
-        & > .slide-left-enter-active,
-        & > .slide-left-leave-active {
-          transition: .2s;
+        .card {
+          color: $body-color;
         }
+      }
 
-        & > .slide-left-enter,
-        & > .slide-left-leave-to {
-          transform: translateX(-100%);
-        } */
+      & &__view {
+        background: $body-bg;
       }
     }
+
   }
 </style>

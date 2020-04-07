@@ -63,10 +63,10 @@ $popover-header-bg: #31313a;
 $popover-header-color: white;
 
 $modal-content-border-width: 0;
-$modal-content-box-shadow-xs: 0 10px 30px 0 rgba(black, .1);
-$modal-content-box-shadow-sm-up: 0 20px 60px 0 rgba(black, .2);
+$modal-content-box-shadow-xs: 0 1px 3px 0 rgba(black, .15);
+$modal-content-box-shadow-sm-up: 0 2px 6px 0 rgba(black, .25);
 $modal-backdrop-bg: #292930;
-$modal-backdrop-opacity: .85;
+$modal-backdrop-opacity: .5;
 $modal-inner-padding: 1.5rem;
 
 $kbd-padding-y: .2em;
@@ -90,18 +90,22 @@ $line-height-sm: 1.7;
 @import './functions.scss';
 @import './mixins.scss';
 
-$app-bg: #292930;
+$app-bg: #31313a;
 $app-border-radius: 1rem;
 
 $app-nav-height: 4.5rem;
 $app-nav-brand-height: $app-nav-height - ($spacer * 2);
 
+$app-sidebar-bg: darken(#31313a, 10%);
+$app-sidebar-color: #fff;
+$app-sidebar-border-color: mix($app-sidebar-color, $app-sidebar-bg, 5%);
 $app-sidebar-width: 290px;
 $app-sidebar-reduced-width: 70px;
 $app-sidebar-float-breakpoint-width:  1200px;
 
-$app-context-sidebar-width: 340px;
-$app-context-sidebar-bg: #31313a;
+$app-context-sidebar-bg: mix(white, $app-sidebar-bg, 5%);
+$app-context-sidebar-color: #fff;
+$app-context-sidebar-width: 360px;
 
 $search-results-list-width: 420px;
 

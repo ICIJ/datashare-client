@@ -22,7 +22,7 @@ describe('FilterReadBy.vue', () => {
   beforeAll(() => store.commit('search/index', project))
 
   beforeEach(async () => {
-    wrapper = shallowMount(FilterReadBy, {
+    wrapper = await shallowMount(FilterReadBy, {
       i18n,
       localVue,
       router,
@@ -30,7 +30,6 @@ describe('FilterReadBy.vue', () => {
       wait,
       propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'readBy' }) }
     })
-    await wrapper.vm.$nextTick()
   })
 
   afterAll(() => jest.unmock('axios'))
@@ -39,7 +38,7 @@ describe('FilterReadBy.vue', () => {
     expect(wrapper.find('filter-boilerplate-stub').exists()).toBeTruthy()
   })
 
-  it('should load users who read documents in this project', async () => {
+  it('should load users who read documents in this project', () => {
     axios.request.mockClear()
     wrapper = shallowMount(FilterReadBy, {
       i18n,
@@ -49,7 +48,6 @@ describe('FilterReadBy.vue', () => {
       wait,
       propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'readBy' }) }
     })
-    await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -58,9 +56,7 @@ describe('FilterReadBy.vue', () => {
     expect(wrapper.vm.readByUsers).toEqual(['user_01', 'user_02'])
   })
 
-  it('should display users who read documents in this project', async () => {
-    await wrapper.vm.$nextTick()
-
+  it('should display users who read documents in this project', () => {
     expect(wrapper.findAll('.filter__items__item').at(0).text()).toBe('user_01')
     expect(wrapper.findAll('.filter__items__item').at(1).text()).toBe('user_02')
   })

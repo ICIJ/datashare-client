@@ -52,14 +52,14 @@ export const getters = {
 }
 
 const actions = {
-  queryFilter ({ state, getters, rootGetters }, params) {
+  queryFilter ({ state, getters, rootGetters }, { name, options }) {
     return elasticsearch.searchFilter(
       state.index,
-      rootGetters['search/getFilter']({ name: params.name }),
+      rootGetters['search/getFilter']({ name }),
       '*',
       [],
       false,
-      params.options,
+      options,
       []
     )
   }

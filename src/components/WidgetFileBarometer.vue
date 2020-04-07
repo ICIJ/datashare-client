@@ -14,6 +14,7 @@
 </template>
 
 <script>
+import { waitFor } from 'vue-wait'
 import elasticsearch from '@/api/elasticsearch'
 import humanNumber from '@/filters/humanNumber'
 
@@ -32,15 +33,21 @@ export default {
     }
   },
   async created () {
-    this.$wait.start('counters')
-    this.total = await this.countTotal()
-    this.onDisk = await this.countOnDisk()
-    this.$wait.end('counters')
+    await this.loadData()
+  },
+  mounted () {
+    this.$store.subscribe(async ({ type }) => {
+      // The index changed
+      if (type === 'insights/index') {
+        await this.loadData()
+      }
+    })
   },
   methods: {
-    async count (q) {
-      const index = this.$store.state.search.index
-      const res = await elasticsearch.search({ index, q, size: 0 })
+    async count (query) {
+      const index = this.$store.state.insights.index
+      const body = { query: { query_string: { query } } }
+      const res = await elasticsearch.search({ index, body, size: 0 })
       return res?.hits?.total || 0
     },
     countTotal () {
@@ -50,7 +57,11 @@ export default {
     countOnDisk () {
       const q = 'type:Document AND extractionLevel:0'
       return this.count(q)
-    }
+    },
+    loadData: waitFor('counters', async function () {
+      this.total = await this.countTotal()
+      this.onDisk = await this.countOnDisk()
+    })
   }
 }
 </script>

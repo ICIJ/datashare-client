@@ -3,7 +3,7 @@
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="selectUsers">
         <b-form-checkbox v-for="userId in readByUsers" :value="userId" class="filter__items__item" :key="userId">
-          <span>{{ userId }}</span>
+          <span>{{ userId | displayUser }}</span>
         </b-form-checkbox>
       </b-form-checkbox-group>
     </template>
@@ -14,6 +14,7 @@
 import { mapState } from 'vuex'
 
 import FilterBoilerplate from '@/components/FilterBoilerplate'
+import displayUser from '@/filters/displayUser'
 import filters from '@/mixins/filters'
 import utils from '@/mixins/utils'
 
@@ -21,6 +22,9 @@ export default {
   name: 'FilterReadBy',
   components: {
     FilterBoilerplate
+  },
+  filters: {
+    displayUser
   },
   mixins: [filters, utils],
   computed: {

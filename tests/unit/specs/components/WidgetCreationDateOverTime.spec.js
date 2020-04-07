@@ -65,8 +65,8 @@ describe('WidgetCreationDateOverTime.vue', () => {
       expect(wrapper.findAll('.widget__header__selectors__selector')).toHaveLength(3)
     })
 
-    it('interval default value should be month', () => {
-      expect(wrapper.vm.interval).toBe('month')
+    it('interval default value should be year', () => {
+      expect(wrapper.vm.interval).toBe('year')
     })
 
     it('should change the value of the interval and reload data', async () => {

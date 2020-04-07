@@ -1,6 +1,7 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
+import { removeCookie, setCookie } from 'tiny-cookie'
 
 import Api from '@/api'
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
@@ -10,22 +11,20 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('@/utils/utils')
-
-jest.mock('axios', () => {
-  return {
-    request: jest.fn().mockResolvedValue({ data: { uid: 'Jean-Michel' } })
-  }
-})
+jest.mock('axios')
 
 const { i18n, localVue, store, router } = Core.init(createLocalVue()).useAll()
 
 describe('SearchDocumentNavbar.vue', () => {
-  const index = toLower('SearchDocumentNavbar')
-  esConnectionHelper(index)
+  const project = toLower('SearchDocumentNavbar')
+  esConnectionHelper(project)
   const es = esConnectionHelper.es
   let wrapper
 
-  beforeAll(() => store.commit('search/index', index))
+  beforeAll(() => {
+    store.commit('search/index', project)
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+  })
 
   beforeEach(() => {
     const computed = { isServer: () => true }
@@ -33,8 +32,9 @@ describe('SearchDocumentNavbar.vue', () => {
   })
 
   afterAll(() => {
-    jest.unmock('axios')
+    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
     jest.unmock('@/utils/utils')
+    jest.unmock('axios')
   })
 
   it('should display a "Back to the search results" link', () => {
@@ -55,54 +55,59 @@ describe('SearchDocumentNavbar.vue', () => {
 
   describe('Mark as read button', () => {
     beforeAll(async () => {
-      await letData(es).have(new IndexedDocument('doc_01', index)).commit()
-      await store.dispatch('document/get', { id: 'doc_01', index })
+      await letData(es).have(new IndexedDocument('doc_01', project)).commit()
+      await store.dispatch('document/get', { id: 'doc_01', index: project })
     })
 
     it('should display a "Mark as read" button', () => {
       expect(wrapper.find('.search-document-navbar__read-by').exists()).toBeTruthy()
     })
 
-    it('should call batchUpdate api function and mark document as READ', async () => {
+    it('should call batchUpdate api function, mark document as READ and update readBy in search store', async () => {
       axios.request.mockClear()
+      axios.request.mockResolvedValue({ data: [{ id: 'Jean-Michel' }] })
       await wrapper.vm.toggleAsRead()
 
       expect(axios.request).toBeCalledTimes(2)
-      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me') })
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/searchdocumentnavbar/documents/batchUpdate/markReadBy'),
+        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/markReadBy`),
         method: 'POST',
         data: ['doc_01']
       }))
       expect(wrapper.vm.isRead).toBeTruthy()
+      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${project}/documents/readBy`) })
+      expect(store.state.search.readByUsers).toEqual(['Jean-Michel'])
     })
 
-    it('should call batchUpdate api function and mark document as UNREAD', async () => {
+    it('should call batchUpdate api function, mark document as UNREAD and update readBy in search store', async () => {
       store.commit('document/isRead', true)
       axios.request.mockClear()
+      axios.request.mockResolvedValue({ data: [] })
 
       await wrapper.vm.toggleAsRead()
 
-      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/searchdocumentnavbar/documents/batchUpdate/unmarkReadBy'),
+        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/unmarkReadBy`),
         method: 'POST',
         data: ['doc_01']
       }))
       expect(wrapper.vm.isRead).toBeFalsy()
+      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${project}/documents/readBy`) })
+      expect(store.state.search.readByUsers).toEqual([])
     })
   })
 
   it('should display the number of readBy', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
-    await store.dispatch('document/get', { id: 'doc_01', index })
+    await letData(es).have(new IndexedDocument('doc_01', project)).commit()
+    await store.dispatch('document/get', { id: 'doc_01', index: project })
 
     expect(wrapper.find('.search-document-navbar__read-by-number').exists()).toBeTruthy()
   })
 
   it('should display document title if shrinked', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', index)).commit()
-    await store.dispatch('document/get', { id: 'doc_01', index })
+    await letData(es).have(new IndexedDocument('doc_01', project)).commit()
+    await store.dispatch('document/get', { id: 'doc_01', index: project })
 
     await wrapper.setProps({ isShrinked: true })
 

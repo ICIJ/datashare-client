@@ -35,7 +35,7 @@
           <span v-html="nextTooltip"></span>
         </b-tooltip>
       </span>
-      <b-btn class="mx-2 px-2 py-0 search-document-navbar__read-by" size="sm" @click="toggleAsRead"  :data-read-label="$t('search.nav.markAsRead')" :data-unread-label="$t('search.nav.markAsUnread')" :variant="markAsReadVariant">
+      <b-btn class="mx-2 px-2 py-0 search-document-navbar__read-by" size="sm" @click="toggleAsRead" :data-read-label="$t('search.nav.markAsRead')" :data-unread-label="$t('search.nav.markAsUnread')" :variant="markAsReadVariant">
         {{ markAsReadLabel }}
       </b-btn>
       <template v-if="isServer">
@@ -57,7 +57,7 @@
         <fa icon="share-alt" />
       </b-btn>
       <b-popover target="popover-document-share"
-                 triggers="focus"
+                 triggers="click blur"
                  placement="bottom"
                  custom-class="popover-body-p-0 popover-body-overflow-hidden w-100"
                  @show="$root.$emit('bv::hide::tooltip')">
@@ -206,6 +206,7 @@ export default {
     },
     async toggleAsRead () {
       await this.$store.dispatch('document/toggleAsRead')
+      await this.$store.dispatch('search/getProjectMarkReadUsers')
     },
     scrollToTop () {
       document.getElementById('search__body__document__wrapper').scrollTop = 0

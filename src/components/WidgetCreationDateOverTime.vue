@@ -19,7 +19,19 @@
               <g class="widget__content__chart__axis widget__content__chart__axis--x" :style="{ transform: `translate(0px, ${this.innerHeight}px)` }"></g>
               <g class="widget__content__chart__axis widget__content__chart__axis--y"></g>
               <g class="widget__content__chart__bars">
-                <rect v-for="(bar, index) in bars" :key="index" :x="bar.x" :y="bar.y" :height="bar.height" :width="bar.width"></rect>
+                <g class="widget__content__chart__bars__item" v-for="(bar, index) in bars" :key="index" :transform="`translate(${bar.x}, ${bar.y})`">
+                  <rect class="widget__content__chart__bars__item__bar" @mouseover="shownTooltip = index" @mouseleave="shownTooltip = -1" :height="bar.height" :width="bar.width"></rect>
+                </g>
+                <g class="widget__content__chart__tooltips">
+                  <foreignObject :x="bar.flipX ? -200 : bar.width" :y="bar.flipY ? 0 : -100" width="200" height="100" class="widget__content__chart__tooltips__item" :class="tooltipClasses(index, bar)" v-for="(bar, index) in bars" :key="index" :transform="`translate(${bar.x}, ${bar.y})`">
+                    <div class="widget__content__chart__tooltips__item__wrapper" xmlns="http://www.w3.org/1999/xhtml">
+                      <span>
+                        <h6 class="mb-0">{{ intervalFormatFn(bar.date) }}</h6>
+                        {{ bar.doc_count }}&nbsp;documents
+                      </span>
+                    </div>
+                  </foreignObject>
+                </g>
               </g>
             </g>
           </svg>
@@ -49,10 +61,16 @@ export default {
   data () {
     return {
       data: [],
-      interval: 'month',
+      interval: 'year',
       margin: { top: 20, right: 20, bottom: 20, left: 50 },
       mounted: false,
-      width: 0
+      width: 0,
+      shownTooltip: -1,
+      intervalFormats: {
+        year: '%Y',
+        month: '%b %y',
+        day: '%b %d, %y'
+      }
     }
   },
   watch: {
@@ -84,7 +102,7 @@ export default {
     x () {
       return d3.scaleTime()
         .domain([d3.min(this.data, d => d.date), d3.max(this.data, d => d.date)])
-        .range([0, this.innerWidth])
+        .range([50, this.innerWidth - 50])
         .nice()
     },
     y () {
@@ -92,13 +110,32 @@ export default {
         .domain([0, d3.max(this.data, d => d.doc_count)])
         .range([this.innerHeight, 0])
     },
+    intervalFormatFn () {
+      return d3.timeFormat(this.intervalFormats[this.interval])
+    },
+    intervalTime () {
+      return {
+        year: d3.timeYear,
+        month: d3.timeMonth,
+        day: d3.timeDay
+      }[this.interval]
+    },
+    barWidth () {
+      const width = Math.ceil(this.innerWidth / this.x.ticks(this.intervalTime.every(1)).length)
+      return Math.ceil(width - width * 0.7)
+    },
     bars () {
       return this.data.map(d => {
+        const x = this.x(d.date) - this.barWidth / 2
+        const y = this.y(d.doc_count)
         return {
-          x: this.x(d.date),
-          y: this.y(d.doc_count),
-          height: this.innerHeight - this.y(d.doc_count),
-          width: this.x(d3.timeDay.offset(d.date, 10)) - this.x(d.date)
+          ...d,
+          x,
+          y,
+          flipX: x > this.innerWidth / 2,
+          flipY: y < this.innerHeight / 2,
+          width: this.barWidth,
+          height: this.innerHeight - this.y(d.doc_count)
         }
       })
     }
@@ -140,6 +177,14 @@ export default {
       this.$set(this, 'mounted', false)
       this.$set(this, 'interval', value)
       await this.init()
+    },
+    tooltipClasses (index, { flipX, flipY }) {
+      return {
+        'widget__content__chart__tooltips__item--flip-x': flipX,
+        'widget__content__chart__tooltips__item--flip-y': flipY,
+        'widget__content__chart__tooltips__item--visible': this.shownTooltip === index
+
+      }
     }
   }
 }
@@ -152,6 +197,7 @@ export default {
     &__header__selectors__selector {
       cursor: pointer;
     }
+
     &__content {
 
       &__chart {
@@ -181,8 +227,83 @@ export default {
           top: 0;
         }
 
-        rect {
-          fill: $primary;
+        &__bars {
+
+          &__item {
+
+            &__bar {
+              fill: $primary;
+            }
+
+            &__bar:hover {
+              fill: $secondary;
+            }
+
+            &__bar:hover + &__tooltip {
+              display: flex;
+            }
+          }
+        }
+
+        &__tooltips {
+
+          &__item {
+            display: none;
+
+            &--visible {
+              display: block;
+            }
+
+            &--flip-x &__wrapper {
+              justify-content: flex-end;
+            }
+
+            &--flip-x &__wrapper:after {
+              border-left-color: rgba($tooltip-bg, $tooltip-opacity);
+              transform: translateX(-$tooltip-arrow-width / 2);
+            }
+
+            &:not(&--flip-x)  &__wrapper:after {
+              border-right-color: rgba($tooltip-bg, $tooltip-opacity);
+            }
+
+            &--flip-y &__wrapper {
+              align-items: flex-start;
+            }
+
+            &--flip-y &__wrapper:after {
+              border-top-color: rgba($tooltip-bg, $tooltip-opacity);
+            }
+
+            &:not(&--flip-y)  &__wrapper:after {
+              border-bottom-color: rgba($tooltip-bg, $tooltip-opacity);
+            }
+
+            &__wrapper {
+              display: flex;
+              text-align: center;
+              flex-direction: row;
+              align-items: flex-end;
+              justify-content: flex-start;
+              height: 100%;
+              pointer-events: none;
+              position: relative;
+
+              &:after {
+                content: "";
+                border: ($tooltip-arrow-width / 2) solid transparent;
+                position: absolute;
+                transform: translateX($tooltip-arrow-width / 2);
+              }
+
+              & > span {
+                background: rgba($tooltip-bg, $tooltip-opacity);
+                color: $tooltip-color;
+                margin: 0 $tooltip-arrow-width;
+                padding: .2rem .4rem;
+              }
+            }
+          }
         }
 
         &__axis {

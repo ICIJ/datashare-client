@@ -23,7 +23,7 @@ describe('Config.vue', () => {
   })
 
   it('should load the config page', () => {
-    expect(wrapper.find('h3').text()).toBe('Configuration')
+    expect(wrapper.find('h3').text()).toBe('Settings')
   })
 
   it('should display a text input', async () => {

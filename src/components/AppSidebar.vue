@@ -16,7 +16,7 @@
       <hook name="app-sidebar.menu:before" />
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'search', query }" class="app-sidebar__container__menu__item__link" title="Search in documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link :to="{ name: 'search', query }" class="app-sidebar__container__menu__item__link" :title="$t('menu.search')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="search" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.search') }}
@@ -24,7 +24,7 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" title="Batch searches" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.batch')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="layer-group" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.batch') }}
@@ -32,7 +32,7 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="$config.is('manageDocuments')">
-          <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" title="Analyze my documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.analyse')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="rocket" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.analyse') }}
@@ -40,13 +40,31 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'user-history' }" class="app-sidebar__container__menu__item__link" title="Your history" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
+          <router-link :to="{ name: 'user-history' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.history')" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
             <fa icon="clock" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.history') }}
             </span>
           </router-link>
         </li>
+        <li class="app-sidebar__container__menu__item">
+          <router-link :to="{ name: 'insights' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.insights')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+            <fa icon="chart-bar" fixed-width />
+            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+              {{ $t('menu.insights') }}
+            </span>
+          </router-link>
+        </li>
+        <template v-if="hasFeature('CONFIG') && !isServer">
+          <li class="app-sidebar__container__menu__item">
+            <router-link :to="{ name: 'config' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.config')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+              <fa icon="cog" fixed-width />
+              <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+                {{ $t('menu.config') }}
+              </span>
+            </router-link>
+          </li>
+        </template>
       </ul>
       <hook name="app-sidebar.menu:after" />
       <hook name="app-sidebar.help:before" />
@@ -125,12 +143,13 @@ import LocalesMenu from '@/components/LocalesMenu'
 import MountedDataLocation from '@/components/MountedDataLocation'
 import VersionNumber from '@/components/VersionNumber'
 import docs from '@/mixins/docs'
+import features from '@/mixins/features'
 import utils from '@/mixins/utils'
 import { isNarrowScreen } from '@/utils/screen'
 
 export default {
   name: 'AppSidebar',
-  mixins: [docs, utils],
+  mixins: [docs, features, utils],
   components: {
     Hook,
     LocalesMenu,
@@ -179,12 +198,12 @@ export default {
 
 <style lang="scss">
   $item-tree-width: 2px;
-  $item-tree-color: rgba(white, .5);
+  $item-tree-color: rgba($app-sidebar-color, .5);
 
   .app-sidebar {
     height: 100vh;
-    color: white;
-    background: $app-bg;
+    color: $app-sidebar-color;
+    background: $app-sidebar-bg;
     min-width: 60px;
     max-width: $app-sidebar-width;
     width: $app-sidebar-width;
@@ -204,7 +223,7 @@ export default {
 
     @media (max-width: $app-sidebar-float-breakpoint-width) {
       &:not(&--reduced) {
-        box-shadow: 0 0 2rem 1rem darken($app-bg, 10);
+        box-shadow: 0 0 2rem 1rem darken($app-sidebar-bg, 10);
 
         .app-sidebar__backdrop {
           z-index: -1;
@@ -246,7 +265,7 @@ export default {
         padding: .05em .2em;
         display: inline-block;
         height: auto;
-        color: white;
+        color: $app-sidebar-color;
         position: relative;
         top: -0.5em;
         margin-left: 0.5em;
@@ -267,7 +286,7 @@ export default {
         padding: 0;
 
         &:hover {
-          background: rgba(white, 0.1);
+          background: $app-sidebar-border-color;
         }
 
         .app-sidebar--reduced & {
@@ -286,7 +305,7 @@ export default {
 
         &:not(&--borderless):before {
           content:"";
-          border-top: rgba(white, 0.1) 1px solid;
+          border-top: $app-sidebar-border-color 1px solid;
           position: absolute;
           top: 0;
           left: $spacer;
@@ -309,7 +328,7 @@ export default {
 
         &:not(&--borderless):before {
           content:"";
-          border-top: rgba(white, 0.1) 1px solid;
+          border-top: $app-sidebar-border-color 1px solid;
           position: absolute;
           top: 0;
           left: $spacer;
@@ -321,6 +340,7 @@ export default {
         }
 
         &__item {
+          position: relative;
 
           &:last-of-type &__link--tree:before {
             transform: none;
@@ -331,15 +351,30 @@ export default {
           &__link, &__link.btn {
             margin: $spacer * 0.5 $spacer;
             padding: $spacer * 0.75;
-            color: rgba(white, 0.6);
+            color: rgba($app-sidebar-color, 0.6);
             display: flex;
-            border-radius: 0;
+            border-radius: $border-radius;
             font-size: $font-size-sm;
             font-weight: bold;
 
             &.router-link-active, &:hover, &:active {
-              color: white;
-              background: rgba(white, .05);
+              color: $app-sidebar-color;
+              background: mix($app-sidebar-color, $app-sidebar-bg, 5%);
+            }
+
+            &.router-link-active:before {
+              content: "";
+              position: absolute;
+              left: 0;
+              top: 0;
+              bottom: 0;
+              width: 2px;
+              background: $secondary;
+              box-shadow: 2px 0 $spacer 0 $secondary;
+            }
+
+            &.router-link-active .svg-inline--fa {
+              color: $secondary;
             }
 
             &--tree {
@@ -397,7 +432,7 @@ export default {
     }
 
     &__version, &__data-location {
-      color: rgba(white, 0.6);
+      color: rgba($app-sidebar-color, 0.6);
       padding: 0 $spacer * 1.5 $spacer;
       font-size: $font-size-sm;
     }

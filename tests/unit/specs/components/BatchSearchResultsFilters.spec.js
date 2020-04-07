@@ -140,7 +140,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
 
     expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown > span span.badge')).toHaveLength(3)
-    expect(wrapper.find('.batch-search-results-filters__queries__dropdown > span span.badge').text()).toBe('1')
+    expect(wrapper.find('.batch-search-results-filters__queries__dropdown > span span.badge').text()).toBe('3')
   })
 
   describe('search', () => {
@@ -160,7 +160,7 @@ describe('BatchSearchResultsFilters.vue', () => {
       wrapper.find('.batch-search-results-filters__queries__dropdown__item__search').trigger('click')
 
       expect(wrapper.vm.$router.push).toBeCalled()
-      expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'search', query: { q: 'query_01', index: project } })
+      expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'search', query: { q: 'query_02', index: project } })
       spy.mockClear()
     })
   })
@@ -172,25 +172,25 @@ describe('BatchSearchResultsFilters.vue', () => {
       expect(wrapper.findAll('.batch-search-results-filters__queries__sort .dropdown-menu')).toHaveLength(1)
     })
 
-    it('should sort queries in default order', () => {
+    it('should sort queries in default order ie. by count', () => {
       wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
 
       expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item')).toHaveLength(3)
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(0).text()).toBe('query_01')
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(1).text()).toBe('query_02')
-      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(2).text()).toBe('query_03')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(0).text()).toBe('query_02')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(1).text()).toBe('query_03')
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(2).text()).toBe('query_01')
     })
 
-    it('should sort queries by count order', async () => {
+    it('should sort queries by "default" order ie. as in database', async () => {
       wrapper = await mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
       const spy = jest.spyOn(wrapper.vm.$router, 'push')
       spy.mockClear()
 
-      await wrapper.vm.sort('count')
+      await wrapper.vm.sort('default')
 
       expect(wrapper.vm.$router.push).toBeCalled()
       expect(wrapper.vm.$router.push).toBeCalledTimes(1)
-      expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'batch-search.results', query: { order: undefined, page: undefined, queries: [], queries_sort: 'count', sort: undefined } })
+      expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'batch-search.results', query: { order: undefined, page: undefined, queries: [], queries_sort: 'default', sort: undefined } })
     })
   })
 })

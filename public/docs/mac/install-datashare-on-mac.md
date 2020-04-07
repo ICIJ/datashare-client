@@ -86,7 +86,95 @@ If Docker Desktop offers to log in with Docker ID, **do NOT log in and** **close
 
 You're now ready to take the next step: let's [open Datashare](https://icij.gitbook.io/datashare/mac/open-datashare-on-mac).
 
+### 
+
+### 
+
 ### Standalone \(less recent than OS X El Capitan 10.11\)
 
+ ****1. Let's first install Homebrew, which is needed for installing Tesseract OCR. Open your **Finder**:
 
+![](../.gitbook/assets/screenshot-2020-04-03-at-16.55.39.png)
+
+ 2. Search for '**Terminal**' in your applications and double click on '**Terminal.app**' to open it:
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-16.54.02.png)
+
+ 3. A Terminal window opens:
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-16.56.50.png)
+
+**Copy and paste** this and press **Enter**: 
+
+```text
+/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
+```
+
+ 4. Press '**Enter**' when it displays this message:
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.09.56.png)
+
+ 5. **Close the windows** when it displays this:
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.10.26.png)
+
+6. **Go to this page**: [https://github.com/ICIJ/datashare-installer/releases/](https://github.com/ICIJ/datashare-installer/releases/)
+
+7. In 'Latest release', **click** '**DatashareStandalone.pkg**':
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.02.23.png)
+
+  8. Go to your '**Downloads**' and double-click '**DatashareStandalone.pkg**':
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.34.40.png)
+
+9. You might see this window which says '"Datashare.pkg” can’t be opened because it was not downloaded from the App Store.'. Click '**Ok**'.
+
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.50.18.png)
+
+10. To open 'Dartashare.pkg' despite this, go to your Mac's **System Preferences**:
+
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.41.59.png)
+
+11. Open '**Security & Privacy**':
+
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.10.png)
+
+12. Click '**Open Anyway**':
+
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.22.png)
+
+13. Click '**Open**':
+
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.29.png)
+
+ 
+
+14. Click '**Continue**', '**Install**', enter your password and '**Close**':
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.41.03.png)
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.41.10.png)
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.41.16.png)
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.41.23.png)
+
+The installation begins. You see a progress bar. It stays a long time on "Running package scripts" because it is installing Tesseract OCR, Java Runtime Environment, Datashare backend and Datashare frontend.
+
+You can see what it actually does by typing command+L, it will open a window which logs every action made. 
+
+In the end, you should see this screen:
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.42.02.png)
+
+15. Then, go in your **Applications**, and double-click on '**Datashare.app**':
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.49.29.png)
+
+16. A Terminal windows opens. Wait for it to display 'INFO  Fluent - Server started on port 8080' like this:
+
+![](../.gitbook/assets/screenshot-2020-04-03-at-17.51.46.png)
+
+ 17.  Now, **open your browser, and go to the URL**: [http://localhost:8080](http://localhost:8080/#/)/. 
 
