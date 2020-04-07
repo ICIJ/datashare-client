@@ -14,24 +14,24 @@ import settings from '@/utils/settings'
 
 jest.mock('axios')
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 
-async function createView ({ es, index, tags = [], documentId = 'document', displayTags = true, displayForm = true }) {
+async function createView ({ es, project, tags = [], documentId = 'document', displayTags = true, displayForm = true }) {
   axios.request.mockResolvedValue({ data: map(tags, item => { return { label: item, user: { id: 'test-user' } } }) })
-  await letData(es).have(new IndexedDocument(documentId, index).withTags(tags)).commit()
-  await store.dispatch('document/get', { id: documentId, index })
+  await letData(es).have(new IndexedDocument(documentId, project).withTags(tags)).commit()
+  await store.dispatch('document/get', { id: documentId, index: project })
   await store.dispatch('document/getTags')
-  return shallowMount(DocumentTagsForm, { localVue, store, propsData: { document: store.state.document.doc, tags: store.state.document.tags, displayTags, displayForm }, mocks: { $t: msg => msg }, sync: false })
+  return shallowMount(DocumentTagsForm, { i18n, localVue, store, propsData: { document: store.state.document.doc, tags: store.state.document.tags, displayTags, displayForm }, sync: false })
 }
 
 describe('DocumentTagsForm.vue', () => {
-  const index = toLower('DocumentTagsForm')
-  esConnectionHelper(index)
+  const project = toLower('DocumentTagsForm')
+  esConnectionHelper(project)
   const es = esConnectionHelper.es
   const id = 'document'
   let wrapper
 
-  beforeAll(() => store.commit('search/index', index))
+  beforeAll(() => store.commit('search/index', project))
 
   beforeEach(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
@@ -43,45 +43,45 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   it('should display form to add new tag', async () => {
-    wrapper = await createView({ es, index })
+    wrapper = await createView({ es, project })
 
     expect(wrapper.findAll('.document-tags-form__add')).toHaveLength(1)
   })
 
   it('should NOT display form to add new tag', async () => {
-    wrapper = await createView({ es, index, displayForm: false })
+    wrapper = await createView({ es, project, displayForm: false })
 
     expect(wrapper.findAll('.document-tags-form__add').exists()).toBeFalsy()
   })
 
   it('should display a text input without autocomplete', async () => {
-    wrapper = await createView({ es, index })
+    wrapper = await createView({ es, project })
 
     expect(wrapper.findAll('.document-tags-form__add b-form-input-stub')).toHaveLength(1)
     expect(wrapper.find('.document-tags-form__add b-form-input-stub').attributes('autocomplete')).toEqual('off')
   })
 
   it('should display tags, with delete button', async () => {
-    wrapper = await createView({ es, index, tags: ['tag_01', 'tag_02'] })
+    wrapper = await createView({ es, project, tags: ['tag_01', 'tag_02'] })
 
     expect(wrapper.findAll('.document-tags-form__tags__tag')).toHaveLength(2)
     expect(wrapper.findAll('.document-tags-form__tags__tag__delete')).toHaveLength(2)
   })
 
   it('should NOT display tags', async () => {
-    wrapper = await createView({ es, index, tags: ['tag_01', 'tag_02'], displayTags: false })
+    wrapper = await createView({ es, project, tags: ['tag_01', 'tag_02'], displayTags: false })
 
     expect(wrapper.find('.document-tags-form__tags__tag').exists()).toBeFalsy()
   })
 
   it('should display a tooltip to a tag', async () => {
-    wrapper = await createView({ es, index, tags: ['tag_01'] })
+    wrapper = await createView({ es, project, tags: ['tag_01'] })
 
-    expect(wrapper.find('.document-tags-form__tags__tag span').attributes('title')).toContain('document.created_by test-user document.on')
+    expect(wrapper.find('.document-tags-form__tags__tag span').attributes('title')).toContain('Created by test-user on ')
   })
 
   it('should call API endpoint to add a tag', async () => {
-    wrapper = await createView({ es, index, tags: ['tag_01'] })
+    wrapper = await createView({ es, project, tags: ['tag_01'] })
 
     axios.request.mockClear()
     wrapper.vm.tag = 'tag_02'
@@ -89,7 +89,7 @@ describe('DocumentTagsForm.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+      url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/tag`),
       method: 'POST',
       data: {
         docIds: [id],
@@ -102,7 +102,7 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   it('should split tags by space', async () => {
-    wrapper = await createView({ es, index })
+    wrapper = await createView({ es, project })
 
     axios.request.mockClear()
     wrapper.vm.tag = 'tag_01 tag_02 tag_03'
@@ -110,7 +110,7 @@ describe('DocumentTagsForm.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+      url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/tag`),
       method: 'POST',
       data: {
         docIds: [id],
@@ -120,7 +120,7 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   it('should compact tags to remove empty tags', async () => {
-    wrapper = await createView({ es, index })
+    wrapper = await createView({ es, project })
 
     axios.request.mockClear()
     wrapper.vm.tag = 'tag_01        tag_02'
@@ -128,7 +128,7 @@ describe('DocumentTagsForm.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+      url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/tag`),
       method: 'POST',
       data: {
         docIds: [id],
@@ -138,14 +138,14 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   it('should call API endpoint to remove a tag', async () => {
-    wrapper = await createView({ es, index, tags: ['tag_01', 'tag_02'] })
+    wrapper = await createView({ es, project, tags: ['tag_01', 'tag_02'] })
 
     axios.request.mockClear()
     await wrapper.vm.deleteTag({ label: 'tag_01' })
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/untag`),
+      url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/untag`),
       method: 'POST',
       data: {
         docIds: [id],
@@ -155,7 +155,7 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   it('should emit a filter::refresh event on adding a tag', async () => {
-    wrapper = await createView({ es, index })
+    wrapper = await createView({ es, project })
     const mockCallback = jest.fn()
     wrapper.vm.$root.$on('filter::refresh', mockCallback)
 
@@ -167,7 +167,7 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   it('should emit a filter::delete event on deleting a tag', async () => {
-    wrapper = await createView({ es, index })
+    wrapper = await createView({ es, project })
     const mockCallback = jest.fn()
     wrapper.vm.$root.$on('filter::delete', mockCallback)
 
