@@ -11,7 +11,7 @@
             <p>{{ $t('login.authentication_platform') }}</p>
             <a class="btn btn-dark btn-lg" :href="signinUrl">
               <fa icon="user-shield" class="mr-2" />
-              {{ $t('login.xemx') }}
+              {{ $t('login.account') }}
             </a>
           </li>
           <li class="list-group-item">
