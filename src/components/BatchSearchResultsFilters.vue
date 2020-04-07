@@ -87,7 +87,7 @@ export default {
   data () {
     return {
       selectedQueriesOnRouteEnter: [],
-      sortField: 'default',
+      sortField: 'count',
       sortFields: ['default', 'count']
     }
   },
