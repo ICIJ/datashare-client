@@ -342,6 +342,7 @@ export default {
         }
 
         &__item {
+          position: relative;
 
           &:last-of-type &__link--tree:before {
             transform: none;
@@ -361,6 +362,17 @@ export default {
             &.router-link-active, &:hover, &:active {
               color: white;
               background: rgba(white, .05);
+            }
+
+            &.router-link-active:before {
+              content: "";
+              position: absolute;
+              left: 0;
+              top: 0;
+              bottom: 0;
+              width: 2px;
+              background: $secondary;
+              box-shadow: 2px 0 $spacer 0 $secondary;
             }
 
             &--tree {
