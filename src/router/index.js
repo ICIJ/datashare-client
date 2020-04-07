@@ -107,10 +107,12 @@ export const router = {
           }
         },
         {
+          name: 'config',
           path: '/config',
           component: () => import('@/pages/Config')
         },
         {
+          name: 'insights',
           path: '/insights',
           component: () => import('@/pages/Insights')
         }

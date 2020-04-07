@@ -450,6 +450,8 @@
     "analyse": "Analyser vos documents",
     "batch": "Recherches en lot",
     "search": "Rechercher dans les documents",
+    "insights": "Panorama",
+    "config": "Préférences",
     "history": "Votre historique",
     "logout": "Déconnexion",
     "addDocuments": "Comment ajouter des documents",
@@ -545,8 +547,8 @@
     "findNextOccurrenceAlt": "Aller à l'occurrence suivante dans le document"
   },
   "config": {
-    "title": "Configuration",
-    "submit": "Actualiser",
+    "title": "Préférences",
+    "submit": "Envoyer",
     "submitSuccess": "Les modifications sont enregistrées mais vous devez redémarrer Datashare pour qu'elles s'appliquent.",
     "submitError": "Erreur dans la reconfiguration.",
     "noAccess": "Vous n'avez pas accès à cette page en mode serveur."

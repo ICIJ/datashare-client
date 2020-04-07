@@ -16,7 +16,7 @@
       <hook name="app-sidebar.menu:before" />
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'search', query }" class="app-sidebar__container__menu__item__link" title="Search in documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link :to="{ name: 'search', query }" class="app-sidebar__container__menu__item__link" :title="$t('menu.search')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="search" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.search') }}
@@ -24,7 +24,7 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" title="Batch searches" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.batch')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="layer-group" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.batch') }}
@@ -32,7 +32,7 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="$config.is('manageDocuments')">
-          <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" title="Analyze my documents" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.analyse')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="rocket" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.analyse') }}
@@ -40,13 +40,33 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'user-history' }" class="app-sidebar__container__menu__item__link" title="Your history" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
+          <router-link :to="{ name: 'user-history' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.history')" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
             <fa icon="clock" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.history') }}
             </span>
           </router-link>
         </li>
+        <template v-if="hasFeature('INSIGHTS')">
+          <li class="app-sidebar__container__menu__item">
+            <router-link :to="{ name: 'insights' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.insights')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+              <fa icon="chart-bar" fixed-width />
+              <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+                {{ $t('menu.insights') }}
+              </span>
+            </router-link>
+          </li>
+        </template>
+        <template v-if="hasFeature('CONFIG') && !isServer">
+          <li class="app-sidebar__container__menu__item">
+            <router-link :to="{ name: 'config' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.config')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+              <fa icon="cog" fixed-width />
+              <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+                {{ $t('menu.config') }}
+              </span>
+            </router-link>
+          </li>
+        </template>
       </ul>
       <hook name="app-sidebar.menu:after" />
       <hook name="app-sidebar.help:before" />
@@ -125,12 +145,13 @@ import LocalesMenu from '@/components/LocalesMenu'
 import MountedDataLocation from '@/components/MountedDataLocation'
 import VersionNumber from '@/components/VersionNumber'
 import docs from '@/mixins/docs'
+import features from '@/mixins/features'
 import utils from '@/mixins/utils'
 import { isNarrowScreen } from '@/utils/screen'
 
 export default {
   name: 'AppSidebar',
-  mixins: [docs, utils],
+  mixins: [docs, features, utils],
   components: {
     Hook,
     LocalesMenu,

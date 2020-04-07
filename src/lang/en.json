@@ -451,6 +451,8 @@
     "batch": "Batch searches",
     "search": "Search in documents",
     "history": "Your history",
+    "insights": "Insights",
+    "config": "Settings",
     "logout": "Logout",
     "addDocuments": "How to add documents",
     "faq": "FAQ",
@@ -545,7 +547,7 @@
     "findNextOccurrenceAlt":"Find the next occurrence in the document"
   },
   "config": {
-    "title": "Configuration",
+    "title": "Settings",
     "submit": "Submit",
     "submitSuccess": "Modifications submitted. You should now restart Datashare.",
     "submitError": "Unable to submit the configuration.",

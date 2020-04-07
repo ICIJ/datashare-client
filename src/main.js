@@ -1,7 +1,11 @@
-import { createCore } from '@/core'
+import { library as fortawesome } from '@fortawesome/fontawesome-svg-core'
 
-import '@/utils/font-awesome'
+import * as icons from '@/utils/font-awesome'
+import { createCore } from '@/core'
 import '@/main.scss'
+
+// Register exported icons
+fortawesome.add(...Object.values(icons))
 
 if (process.env.NODE_ENV !== 'test' && window) {
   const datashare = createCore()
