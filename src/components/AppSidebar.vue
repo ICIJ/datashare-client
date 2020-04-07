@@ -47,16 +47,14 @@
             </span>
           </router-link>
         </li>
-        <template v-if="hasFeature('INSIGHTS')">
-          <li class="app-sidebar__container__menu__item">
-            <router-link :to="{ name: 'insights' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.insights')" v-b-tooltip.right="{ customClass: tooltipsClass }">
-              <fa icon="chart-bar" fixed-width />
-              <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-                {{ $t('menu.insights') }}
-              </span>
-            </router-link>
-          </li>
-        </template>
+        <li class="app-sidebar__container__menu__item">
+          <router-link :to="{ name: 'insights' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.insights')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+            <fa icon="chart-bar" fixed-width />
+            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+              {{ $t('menu.insights') }}
+            </span>
+          </router-link>
+        </li>
         <template v-if="hasFeature('CONFIG') && !isServer">
           <li class="app-sidebar__container__menu__item">
             <router-link :to="{ name: 'config' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.config')" v-b-tooltip.right="{ customClass: tooltipsClass }">
