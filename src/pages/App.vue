@@ -100,6 +100,10 @@ export default {
         width: $app-context-sidebar-width;
         max-width: $app-context-sidebar-width;
         min-width: $app-context-sidebar-width;
+
+        .card {
+          color: $body-color;
+        }
       }
 
       & &__view {
