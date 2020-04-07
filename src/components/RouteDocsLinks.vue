@@ -1,6 +1,6 @@
 <template>
   <div class="route-docs-links p-3">
-    <h5 class="text-light py-1">
+    <h5 class="py-2 h6 text-uppercase text-muted">
       {{ $t('menu.userGuides') }}
     </h5>
     <div class="card">
@@ -32,7 +32,7 @@ import docs from '@/mixins/docs'
 
 export default {
   name: 'RouteDocsLinks',
-  mixins: [ docs ],
+  mixins: [docs],
   methods: {
     isActive (meta = null) {
       return meta && get(this, '$route.params.slug', null) === meta.slug

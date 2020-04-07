@@ -5,7 +5,7 @@
       <div class="filters-panel__sticky__toolbar">
         <hook name="filters-panel.toolbar:before" />
         <div class="d-flex align-items-center">
-          <h5 class="flex-grow-1 my-0">
+          <h5 class="flex-grow-1 my-0 h6 text-uppercase text-muted">
             {{ $t('search.filtersTitle') }}
           </h5>
           <button class="filters-panel__sticky__toolbar__toggler btn btn-link" @click="hideFilters" :title="$t('search.hideFilters')" v-b-tooltip>

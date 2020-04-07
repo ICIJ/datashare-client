@@ -200,12 +200,12 @@ export default {
 
 <style lang="scss">
   $item-tree-width: 2px;
-  $item-tree-color: rgba(white, .5);
+  $item-tree-color: rgba($app-sidebar-color, .5);
 
   .app-sidebar {
     height: 100vh;
-    color: white;
-    background: $app-bg;
+    color: $app-sidebar-color;
+    background: $app-sidebar-bg;
     min-width: 60px;
     max-width: $app-sidebar-width;
     width: $app-sidebar-width;
@@ -225,7 +225,7 @@ export default {
 
     @media (max-width: $app-sidebar-float-breakpoint-width) {
       &:not(&--reduced) {
-        box-shadow: 0 0 2rem 1rem darken($app-bg, 10);
+        box-shadow: 0 0 2rem 1rem darken($app-sidebar-bg, 10);
 
         .app-sidebar__backdrop {
           z-index: -1;
@@ -267,7 +267,7 @@ export default {
         padding: .05em .2em;
         display: inline-block;
         height: auto;
-        color: white;
+        color: $app-sidebar-color;
         position: relative;
         top: -0.5em;
         margin-left: 0.5em;
@@ -288,7 +288,7 @@ export default {
         padding: 0;
 
         &:hover {
-          background: rgba(white, 0.1);
+          background: $app-sidebar-border-color;
         }
 
         .app-sidebar--reduced & {
@@ -307,7 +307,7 @@ export default {
 
         &:not(&--borderless):before {
           content:"";
-          border-top: rgba(white, 0.1) 1px solid;
+          border-top: $app-sidebar-border-color 1px solid;
           position: absolute;
           top: 0;
           left: $spacer;
@@ -330,7 +330,7 @@ export default {
 
         &:not(&--borderless):before {
           content:"";
-          border-top: rgba(white, 0.1) 1px solid;
+          border-top: $app-sidebar-border-color 1px solid;
           position: absolute;
           top: 0;
           left: $spacer;
@@ -353,15 +353,15 @@ export default {
           &__link, &__link.btn {
             margin: $spacer * 0.5 $spacer;
             padding: $spacer * 0.75;
-            color: rgba(white, 0.6);
+            color: rgba($app-sidebar-color, 0.6);
             display: flex;
-            border-radius: 0;
+            border-radius: $border-radius;
             font-size: $font-size-sm;
             font-weight: bold;
 
             &.router-link-active, &:hover, &:active {
-              color: white;
-              background: rgba(white, .05);
+              color: $app-sidebar-color;
+              background: mix($app-sidebar-color, $app-sidebar-bg, 5%);
             }
 
             &.router-link-active:before {
@@ -373,6 +373,10 @@ export default {
               width: 2px;
               background: $secondary;
               box-shadow: 2px 0 $spacer 0 $secondary;
+            }
+
+            &.router-link-active .svg-inline--fa {
+              color: $secondary;
             }
 
             &--tree {
@@ -430,7 +434,7 @@ export default {
     }
 
     &__version, &__data-location {
-      color: rgba(white, 0.6);
+      color: rgba($app-sidebar-color, 0.6);
       padding: 0 $spacer * 1.5 $spacer;
       font-size: $font-size-sm;
     }

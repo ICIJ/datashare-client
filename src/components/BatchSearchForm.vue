@@ -1,7 +1,7 @@
 <template>
   <div class="batch-search-form m-3">
     <b-form @submit.prevent="onSubmit">
-      <h5 class="text-light py-1">
+      <h5 class="py-2 h6 text-uppercase text-muted">
         {{ $t('batchSearch.heading') }}
       </h5>
       <div class="card w-100">
