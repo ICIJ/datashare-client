@@ -19,6 +19,7 @@
 <script>
 import uniqueId from 'lodash/uniqueId'
 import find from 'lodash/find'
+
 import settings from '@/utils/settings'
 
 export default {

@@ -115,7 +115,7 @@
           </a>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--help">
-          <a :href="$config.get('helpLink')" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.help')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.help')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="ambulance" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.help') }}
@@ -183,6 +183,7 @@ import docs from '@/mixins/docs'
 import features from '@/mixins/features'
 import utils from '@/mixins/utils'
 import { isNarrowScreen } from '@/utils/screen'
+import settings from '@/utils/settings'
 
 export default {
   name: 'AppSidebar',
@@ -212,6 +213,9 @@ export default {
     },
     isLinkActivated () {
       return !!this.$config.get('datashare_projects', []).length
+    },
+    helpLink () {
+      return this.$config.get('helpLink', settings.helpLink)
     }
   },
   watch: {

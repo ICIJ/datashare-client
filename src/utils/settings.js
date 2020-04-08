@@ -179,5 +179,6 @@ export default {
     cancelled: 'warning'
   },
   waitForEsAnswer: 700,
-  filterSize: 8
+  filterSize: 8,
+  helpLink: 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
 }
