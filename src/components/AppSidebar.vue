@@ -18,9 +18,9 @@
         <li class="app-sidebar__container__menu__item">
           <router-link
             class="app-sidebar__container__menu__item__link"
-            :class="{ 'app-sidebar__container__menu__item__link--disabled': !isSearchLinkActivated }"
-            :disabled="!isSearchLinkActivated"
-            :event="isSearchLinkActivated ? 'click' : ''"
+            :class="{ 'app-sidebar__container__menu__item__link--disabled': !isLinkActivated }"
+            :disabled="!isLinkActivated"
+            :event="isLinkActivated ? 'click' : ''"
             :title="$t('menu.search')"
             :to="{ name: 'search', query }"
             v-b-tooltip.right="{ customClass: tooltipsClass }">
@@ -31,7 +31,14 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'batch-search' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.batch')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link
+            class="app-sidebar__container__menu__item__link"
+            :class="{ 'app-sidebar__container__menu__item__link--disabled': !isLinkActivated }"
+            :disabled="!isLinkActivated"
+            :event="isLinkActivated ? 'click' : ''"
+            :title="$t('menu.batch')"
+            :to="{ name: 'batch-search' }"
+            v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="layer-group" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.batch') }}
@@ -39,7 +46,14 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="$config.is('manageDocuments')">
-          <router-link :to="{ name: 'indexing' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.analyse')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link
+            class="app-sidebar__container__menu__item__link"
+            :class="{ 'app-sidebar__container__menu__item__link--disabled': !isLinkActivated }"
+            :disabled="!isLinkActivated"
+            :event="isLinkActivated ? 'click' : ''"
+            :title="$t('menu.analyse')"
+            :to="{ name: 'indexing' }"
+            v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="rocket" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.analyse') }}
@@ -47,7 +61,12 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'user-history' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.history')" v-b-tooltip.right="{ customClass: tooltipsClass }" @click.prevent="$root.$emit('history::toggle')">
+          <router-link
+            class="app-sidebar__container__menu__item__link"
+            @click.prevent="$root.$emit('history::toggle')"
+            :title="$t('menu.history')"
+            :to="{ name: 'user-history' }"
+            v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="clock" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.history') }}
@@ -55,7 +74,14 @@
           </router-link>
         </li>
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'insights' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.insights')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link
+            class="app-sidebar__container__menu__item__link"
+            :class="{ 'app-sidebar__container__menu__item__link--disabled': !isLinkActivated }"
+            :disabled="!isLinkActivated"
+            :event="isLinkActivated ? 'click' : ''"
+            :title="$t('menu.insights')"
+            :to="{ name: 'insights' }"
+            v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="chart-bar" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.insights') }}
@@ -64,7 +90,11 @@
         </li>
         <template v-if="hasFeature('CONFIG') && !isServer">
           <li class="app-sidebar__container__menu__item">
-            <router-link :to="{ name: 'config' }" class="app-sidebar__container__menu__item__link" :title="$t('menu.config')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+            <router-link
+              class="app-sidebar__container__menu__item__link"
+              :title="$t('menu.config')"
+              :to="{ name: 'config' }"
+              v-b-tooltip.right="{ customClass: tooltipsClass }">
               <fa icon="cog" fixed-width />
               <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
                 {{ $t('menu.config') }}
@@ -180,7 +210,7 @@ export default {
     logoutLink () {
       return Api.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     },
-    isSearchLinkActivated () {
+    isLinkActivated () {
       return !!this.$config.get('datashare_projects', []).length
     }
   },
