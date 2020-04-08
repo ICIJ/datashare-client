@@ -450,8 +450,6 @@
     "analyse": "Analyser vos documents",
     "batch": "Recherches en lot",
     "search": "Rechercher dans les documents",
-    "insights": "Panorama",
-    "config": "Préférences",
     "history": "Votre historique",
     "insights": "Insights",
     "config": "Settings",
@@ -469,7 +467,7 @@
     "welcome": "Bienvenue dans Datashare",
     "sum_up": "La plateforme de recherche et de découverte de l'<a href=\"https://icij.org\">ICIJ</a>.",
     "authentication_platform": "Pour se connecter, utiliser la plateforme sécurisée d'authentification de l'ICIJ:",
-    "xemx": "Se connecter avec Xemx",
+    "account": "Login with Account",
     "support_desk": "Si vous avez besoin d'aide, veuillez contacter notre bureau support :",
     "ask_help": "Aide"
   },
@@ -549,8 +547,8 @@
     "findNextOccurrenceAlt": "Aller à l'occurrence suivante dans le document"
   },
   "config": {
-    "title": "Préférences",
-    "submit": "Envoyer",
+    "title": "Settings",
+    "submit": "Actualiser",
     "submitSuccess": "Les modifications sont enregistrées mais vous devez redémarrer Datashare pour qu'elles s'appliquent.",
     "submitError": "Erreur dans la reconfiguration.",
     "noAccess": "Vous n'avez pas accès à cette page en mode serveur."
@@ -561,5 +559,8 @@
       "M": "%M",
       "B": "%B"
     }
+  },
+  "landing": {
+    "noProjects": "You have no projects yet. Please contact your admin."
   }
 }
