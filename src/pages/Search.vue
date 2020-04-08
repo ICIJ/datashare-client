@@ -143,20 +143,16 @@ export default {
   },
   methods: {
     handleScroll (e) {
-      if (e.target.scrollTop > 40) {
-        this.$set(this, 'isShrinked', true)
-      } else {
-        this.$set(this, 'isShrinked', false)
-      }
+      this.$set(this, 'isShrinked', e.target.scrollTop > 40)
     },
-    async search (queryOrParams) {
+    search (queryOrParams) {
       try {
         return this.$store.dispatch('search/query', queryOrParams)
       } catch (_) {
         this.wrongQuery()
       }
     },
-    async refresh () {
+    refresh () {
       try {
         return this.$store.dispatch('search/refresh', false)
       } catch (_) {
