@@ -10,6 +10,7 @@ describe('Landing.vue', () => {
   let wrapper
 
   beforeEach(() => {
+    Murmur.config.merge({ multipleProjects: true })
     wrapper = shallowMount(Landing, { i18n, localVue, store })
   })
 
