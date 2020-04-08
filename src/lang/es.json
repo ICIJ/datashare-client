@@ -467,7 +467,7 @@
     "welcome": "Bienvenido a Datashare",
     "sum_up": "<a href=\"https://icij.org\">ICIJ</a> plataforma de búsqueda y descubrimiento.",
     "authentication_platform": "Para iniciar sesión, utilice la plataforma de autenticación segura de ICIJ:",
-    "xemx": "Iniciar sesión con Xemx",
+    "account": "Login with Account",
     "support_desk": "Si necesita ayuda, por favor visite nuestro servicio de asistencia:",
     "ask_help": "Pedir ayuda"
   },
@@ -559,5 +559,8 @@
       "M": "%M",
       "B": "%B"
     }
+  },
+  "landing": {
+    "noProjects": "You have no projects yet. Please contact your admin."
   }
 }
