@@ -467,7 +467,7 @@
     "welcome": "データシェアにようこそ",
     "sum_up": "<a href=\"https://icij.org\">ICIJ</a> の検索・発見プラットフォームです",
     "authentication_platform": "ログインするには、ICIJの安全な認証プラットフォームを使ってください",
-    "xemx": "Xemxを使ってログイン",
+    "account": "Login with Account",
     "support_desk": "何か必要な場合にはサポートデスクをご利用ください",
     "ask_help": "ヘルプを求める"
   },
@@ -559,5 +559,8 @@
       "M": "%M",
       "B": "%B"
     }
+  },
+  "landing": {
+    "noProjects": "You have no projects yet. Please contact your admin."
   }
 }
