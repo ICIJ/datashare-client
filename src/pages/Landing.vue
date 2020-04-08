@@ -1,7 +1,7 @@
 <template>
   <div class="landing d-flex justify-content-center align-item-center flex-column">
     <hook name="landing.form:before" />
-    <div class="landing__form py-5">
+    <div class="landing__form py-5" v-if="projects.length">
       <hook name="landing.form.heading:before" />
       <h1 class="landing__form__heading text-special">
         <img src="~images/logo-color.svg" alt="Datashare" />
@@ -10,18 +10,18 @@
       <search-bar class="landing__form__search-bar py-3" size="md" />
       <hook name="landing.form.project:before" />
       <div class="mt-5 text-white" v-if="$config.is('multipleProjects')">
-        <div v-if="projects.length" class="landing__form__projects">
+        <div class="landing__form__projects">
           <h2 class="text-uppercase h5">
             {{ $t('filter.projects') }}
           </h2>
           <project-cards class="mt-3" />
         </div>
-        <div v-else class="landing__form__no-projects">
-          <fa icon="exclamation-triangle" class="mr-1" />
-          {{ $t('landing.noProjects') }}
-        </div>
       </div>
       <hook name="landing.form.project:after" />
+    </div>
+    <div v-else class="landing__form__no-projects ml-5 text-white">
+      <fa icon="exclamation-triangle" class="mr-2" />
+      {{ $t('landing.noProjects') }}
     </div>
     <hook name="landing.form:after" />
   </div>
@@ -79,6 +79,10 @@ export default {
 
       &__search-bar {
         margin: 0;
+      }
+
+      &__no-projects {
+        font-size: $font-size-lg;
       }
     }
   }
