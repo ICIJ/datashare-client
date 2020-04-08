@@ -16,7 +16,14 @@
       <hook name="app-sidebar.menu:before" />
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
-          <router-link :to="{ name: 'search', query }" class="app-sidebar__container__menu__item__link" :title="$t('menu.search')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <router-link
+            class="app-sidebar__container__menu__item__link"
+            :class="{ 'app-sidebar__container__menu__item__link--disabled': !isSearchLinkActivated }"
+            :disabled="!isSearchLinkActivated"
+            :event="isSearchLinkActivated ? 'click' : ''"
+            :title="$t('menu.search')"
+            :to="{ name: 'search', query }"
+            v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="search" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.search') }}
@@ -163,13 +170,27 @@ export default {
       reduced: isNarrowScreen()
     }
   },
-  mounted () {
-    this.$nextTick(this.saveComponentWidth)
+  computed: {
+    query () {
+      return this.$store.getters['search/toRouteQueryWithStamp']()
+    },
+    tooltipsClass () {
+      return this.reduced ? '' : 'd-none'
+    },
+    logoutLink () {
+      return Api.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
+    },
+    isSearchLinkActivated () {
+      return !!this.$config.get('datashare_projects', []).length
+    }
   },
   watch: {
     $route () {
       this.reduced = isNarrowScreen() || this.reduced
     }
+  },
+  mounted () {
+    this.$nextTick(this.saveComponentWidth)
   },
   methods: {
     hideSidebar () {
@@ -180,17 +201,6 @@ export default {
       const width = `${this.$el.offsetWidth}px`
       // Save component width in a CSS variable after it's been update
       this.$root.$el.style.setProperty('--core-sidebar-width', width)
-    }
-  },
-  computed: {
-    query () {
-      return this.$store.getters['search/toRouteQueryWithStamp']()
-    },
-    tooltipsClass () {
-      return this.reduced ? '' : 'd-none'
-    },
-    logoutLink () {
-      return Api.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     }
   }
 }
@@ -358,23 +368,30 @@ export default {
             font-weight: bold;
 
             &.router-link-active, &:hover, &:active {
-              color: $app-sidebar-color;
               background: mix($app-sidebar-color, $app-sidebar-bg, 5%);
+              color: $app-sidebar-color;
             }
 
             &.router-link-active:before {
-              content: "";
-              position: absolute;
-              left: 0;
-              top: 0;
-              bottom: 0;
-              width: 2px;
               background: $secondary;
+              bottom: 0;
               box-shadow: 2px 0 $spacer 0 $secondary;
+              content: "";
+              left: 0;
+              position: absolute;
+              top: 0;
+              width: 2px;
             }
 
             &.router-link-active .svg-inline--fa {
               color: $secondary;
+            }
+
+            &--disabled,
+            &--disabled:hover {
+              color: $text-muted;
+              cursor: not-allowed;
+              text-decoration: none;
             }
 
             &--tree {

@@ -9,7 +9,7 @@
       <hook name="landing.form.heading:after" />
       <search-bar class="landing__form__search-bar py-3" size="md" />
       <hook name="landing.form.project:before" />
-      <div class="mt-5 text-white" v-if="$config.is('multipleProjects')">>
+      <div class="mt-5 text-white" v-if="$config.is('multipleProjects')">
         <div v-if="projects.length" class="landing__form__projects">
           <h2 class="text-uppercase h5">
             {{ $t('filter.projects') }}
