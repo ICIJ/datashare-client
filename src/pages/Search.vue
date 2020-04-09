@@ -187,6 +187,9 @@ export default {
 <style lang="scss">
   .search {
     @include clearfix();
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
 
     &__show-filters.btn {
       background: $app-context-sidebar-bg;
