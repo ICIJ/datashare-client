@@ -1,9 +1,9 @@
 <template>
-  <v-wait for="load data paginated viewer">
+  <v-wait for="load data paginated viewer" class="w-100 d-flex flex-column">
     <div class="p-3 w-100 text-muted" slot="waiting">
       {{ $t('document.fetching') }}
     </div>
-    <div class="paginated-viewer d-flex" v-if="meta.previewable">
+    <div class="paginated-viewer d-flex flex-grow-1" v-if="meta.previewable">
       <div id="paginated-viewer__header" class="bg-light py-2 paginated-viewer__header">
         <div id="paginated-viewer__thumbnails" class="paginated-viewer__thumbnails">
           <div class="text-center m-2 d-flex align-items-center viewer__thumbnails__header">
@@ -27,7 +27,7 @@
         </div>
       </div>
       <div class="paginated-viewer__preview p-3 text-center">
-        <document-thumbnail :document="document" size="1200" :page="active" :key="active" class="w-auto d-inline-block" />
+        <document-thumbnail :document="document" size="1200" :page="active" :key="active" class="w-auto d-inline-block border" />
       </div>
     </div>
     <div class="p-3" v-else>
@@ -154,6 +154,8 @@ export default {
     }
 
     &__preview {
+      width: 100%;
+
       img {
         max-width: 100%;
       }

@@ -41,7 +41,7 @@
       </div>
       <div class="d-flex flex-grow-1 flex-column tab-content document__content">
         <div
-          class="document__content__pane tab-pane w-100"
+          class="document__content__pane tab-pane flex-grow-1 w-100"
           :class="tabClass(tab.name)"
           :key="tab.name"
           v-for="tab in visibleTabs">
@@ -284,6 +284,13 @@ export default {
 
   .ner {
     border-bottom: 1px dotted;
+  }
+
+  &__content {
+
+    .tab-content > &__pane--preview.active {
+      display: flex;
+    }
   }
 }
 

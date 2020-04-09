@@ -1,5 +1,5 @@
 <template>
-  <div class="d-flex h-100 document__preview">
+  <div class="d-flex flex-grow-1 document__preview">
     <template v-if="!disabled && previewComponent">
       <component :is="importPreviewComponent" :document="document" />
     </template>
