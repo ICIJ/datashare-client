@@ -146,7 +146,7 @@ export default {
 <style lang="scss">
   .filters-panel {
     $card-bg: darken($app-context-sidebar-bg, 5%);
-    $panel-color: white;
+    $panel-color: $app-sidebar-color;
 
     background: $app-context-sidebar-bg;
     color: $panel-color;
@@ -182,6 +182,7 @@ export default {
           border-width: 0;
           background: inherit;
           border-radius: $card-border-radius;
+          color: rgba($panel-color, 0.6);
 
           & > h6 {
             font-weight: bolder;
@@ -190,14 +191,14 @@ export default {
             background: transparent;
             cursor: pointer;
             font-size: 0.9rem;
-            color: rgba(white, 0.6);
+            color: rgba($panel-color, 0.6);
           }
         }
 
         & > .list-group,
         & > .card-body {
           font-size: 0.8rem;
-          color: inherit;
+          color: $panel-color;
           padding:0;
         }
 

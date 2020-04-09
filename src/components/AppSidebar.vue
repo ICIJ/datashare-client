@@ -162,7 +162,7 @@
       </ul>
       <hook name="app-sidebar.locales:after" />
     </vue-perfect-scrollbar>
-    <div class="app-sidebar__version text-left">
+    <div class="app-sidebar__version">
       <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" class="d-inline-block" :no-icon="reduced" />
     </div>
     <div class="app-sidebar__data-location" v-if="$config.is('manageDocuments')" v-show="!reduced">
@@ -480,6 +480,12 @@ export default {
     &__version {
       z-index: 100;
       position: relative;
+      text-align: left;
+
+      .app-sidebar--reduced & {
+        text-align: center;
+        padding: 0 0 $spacer;
+      }
     }
 
     &__version, &__data-location {
