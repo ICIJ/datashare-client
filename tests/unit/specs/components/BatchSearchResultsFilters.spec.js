@@ -10,6 +10,9 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 jest.mock('@/api', () => {
   return jest.fn(() => {
     return {
+      // Mock user session
+      getUser: jest.fn().mockResolvedValue({ uid: 'doe' }),
+      // Mock all axios requests
       getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([
         {
           uuid: '12',
@@ -190,7 +193,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
       expect(wrapper.vm.$router.push).toBeCalled()
       expect(wrapper.vm.$router.push).toBeCalledTimes(1)
-      expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'batch-search.results', query: { order: undefined, page: undefined, queries: [], queries_sort: 'default', sort: undefined } })
+      expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'batch-search.results', query: { order: undefined, page: undefined, queries_sort: 'default', sort: undefined } })
     })
   })
 })

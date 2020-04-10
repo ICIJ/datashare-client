@@ -180,5 +180,8 @@ export default {
   },
   waitForEsAnswer: 700,
   filterSize: 8,
-  helpLink: 'https://github.com/ICIJ/datashare/wiki/Datashare-Support'
+  helpLink: 'https://github.com/ICIJ/datashare/wiki/Datashare-Support',
+  faqLink: 'https://icij.gitbook.io/datashare/faq/',
+  userGuidesLink: 'https://icij.gitbook.io/datashare/',
+  devWikiLink: 'https://github.com/icij/datashare/wiki'
 }

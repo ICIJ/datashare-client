@@ -10,7 +10,11 @@ fortawesome.add(...Object.values(icons))
 if (process.env.NODE_ENV !== 'test' && window) {
   const datashare = createCore()
   // Mount the core when it's ready
-  datashare.ready.then(() => datashare.mount())
+  datashare.ready
+    // Everything is fine
+    .then(() => datashare.mount())
+    // Redirect to the error page
+    .catch(error => datashare.mount().$router.push({ name: 'error', params: { error } }))
   // Register the core globally (so plugins can use it)
   window.datashare = datashare
 }

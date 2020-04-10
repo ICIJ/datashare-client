@@ -1,28 +1,52 @@
 import get from 'lodash/get'
 import { EventBus } from '@/utils/event-bus'
 
-export default ({ router, auth, store }) => {
-  router.beforeEach(async (to, from, next) => {
+export default ({ router, auth, store, config, i18n }) => {
+  function setProjectFromParams (to, from, next) {
     // Read the current index from the params
     if (to.params.index && store.state.search.index !== to.params.index) {
       store.commit('search/index', to.params.index)
     }
-    // True if the authentication must be skipped
-    const skipsAuth = to.matched.some(r => get(r, 'meta.skipsAuth', false))
-    try {
-      if (skipsAuth || await auth.getUsername() !== null) {
-        next()
-      } else {
-        next('/login')
-      }
-    } catch (e) {
-      console.log(e)
-    }
-  })
+    next()
+  }
 
-  EventBus.$on('http::error', ({ request }) => {
-    if (get(request, 'response.status') === 401) {
-      router.push('/login')
+  async function checkUserAuthentication (to, from, next) {
+    try {
+      // This route skip auth
+      if (to.matched.some(r => get(r, 'meta.skipsAuth', false))) {
+        next()
+      // The user is authenticated
+      } else if (await auth.getUsername()) {
+        next()
+      // The user isn't authenticated
+      } else {
+        next({ name: 'login' })
+      }
+    } catch (error) {
+      next({ name: 'error', params: { error } })
+    }
+  }
+
+  function checkUserProjects (to, from, next) {
+    // No project given for this user
+    if (!config.get('datashare_projects', []).length && ['error', 'login'].indexOf(to.name) === -1) {
+      const description = i18n.t('error.noProjects')
+      next({ name: 'error', params: { description } })
+    } else {
+      next()
+    }
+  }
+
+  router.beforeEach(setProjectFromParams)
+  router.beforeEach(checkUserAuthentication)
+  router.beforeEach(checkUserProjects)
+
+  EventBus.$on('http::error', error => {
+    const code = get(error, 'request.response.status') || get(error, 'response.status')
+    if (code === 401) {
+      if (router.currentRoute.name !== 'login') {
+        router.push({ name: 'login' })
+      }
     }
   })
 }

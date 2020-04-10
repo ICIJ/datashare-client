@@ -11,7 +11,7 @@ export default class Auth {
   }
 
   async getUsername () {
-    if (this.cachedUsername === null) {
+    if (!this.cachedUsername) {
       this.cachedUsername = await this._checkAuthentication()
     }
     return this.cachedUsername
@@ -22,25 +22,27 @@ export default class Auth {
   }
 
   async _checkAuthentication () {
-    if (process.env.NODE_ENV === 'development') return 'local'
-    const userInCookie = this._getCookieUsername()
-    if (userInCookie !== null) return userInCookie
-    return this._getBasicAuthUserName()
+    try {
+      if (process.env.NODE_ENV === 'development') {
+        return 'local'
+      }
+      return this._getCookieUsername() || await this._getBasicAuthUserName()
+    } catch (_) {
+      return null
+    }
   }
 
   async _getBasicAuthUserName () {
-    return api.getUser()
-      .then(response => {
-        setTimeout(() => this.reset(), 43200 * 1000)
-        return response.uid
-      })
-      .catch(error => {
-        if (error && error.response && error.response.status === 401) {
-          return null
-        } else {
-          throw new Error(`${error.response.status} ${error.response.statusText}`)
-        }
-      })
+    try {
+      const response = await api.getUser()
+      setTimeout(() => this.reset(), 43200 * 1000)
+      return response.uid
+    } catch (error) {
+      if (error && error.response && error.response.status !== 401) {
+        throw new Error(`${error.response.status} ${error.response.statusText}`)
+      }
+      return null
+    }
   }
 
   _getCookieUsername () {

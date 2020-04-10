@@ -7,6 +7,10 @@ import Api from '@/api'
 import FilterReadBy from '@/components/FilterReadBy'
 import { Core } from '@/core'
 
+// Mock user session
+Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })
+
+// Mock all axios requests
 jest.mock('axios', () => {
   return {
     request: jest.fn().mockResolvedValue({ data: [{ id: 'user_01' }, { id: 'user_02' }] })
@@ -28,7 +32,11 @@ describe('FilterReadBy.vue', () => {
       router,
       store,
       wait,
-      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'readBy' }) }
+      propsData: {
+        filter: find(store.getters['search/instantiatedFilters'], {
+          name: 'readBy'
+        })
+      }
     })
   })
 

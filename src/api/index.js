@@ -133,7 +133,7 @@ export default class Api {
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })
-      return r.data
+      return r ? r.data : null
     } catch (error) {
       EventBus.$emit('http::error', error)
       throw error

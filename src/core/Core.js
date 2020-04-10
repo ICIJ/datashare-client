@@ -99,25 +99,29 @@ export default class Core extends Behaviors {
     })
   }
   async configure () {
-    // Get the config object
-    const config = await this.api.getConfig()
-    // Load the user
-    this.config.merge(await this.getUser())
-    // Murmur exposes a config attribute which share a Config object
-    // with the current vue instance.
-    this.config.merge(mode(config.mode))
-    // The backend can yet override some configuration
-    this.config.merge(config)
-    // Override Murmur default value for content-placeholder
-    this.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
-    // Create the default project for the current user or redirect to login
-    this.createDefaultProject()
-    // Set the default project
-    if (this.store.state.search.index === '') {
-      this.store.commit('search/index', config.defaultProject)
+    try {
+      // Get the config object
+      const config = await this.api.getConfig()
+      // Load the user
+      this.config.merge(await this.getUser())
+      // Murmur exposes a config attribute which share a Config object
+      // with the current vue instance.
+      this.config.merge(mode(config.mode))
+      // The backend can yet override some configuration
+      this.config.merge(config)
+      // Override Murmur default value for content-placeholder
+      this.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
+      // Create the default project for the current user or redirect to login
+      this.createDefaultProject()
+      // Set the default project
+      if (this.store.state.search.index === '') {
+        this.store.commit('search/index', config.defaultProject)
+      }
+      // Old a promise that is resolved when the core is configured
+      return this.ready && this._readyResolve(this)
+    } catch (error) {
+      return this.ready && this._readyReject(error)
     }
-    // Old a promise that is resolved when the core is configured
-    return this.ready && this._readyResolve(this)
   }
   mount (selector = '#app') {
     // Render function returns a router-view component by default

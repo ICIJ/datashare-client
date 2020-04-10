@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="version-number" ref="appFooterVersion">
+    <div class="version-number d-inline-block" ref="appFooterVersion">
       <fa icon="bolt" class="mr-1" v-if="!noIcon" />
       {{ label }} {{ serverVersion }}
     </div>

@@ -125,7 +125,17 @@ export const router = {
     },
     {
       path: '/login',
+      name: 'login',
       component: () => import('@/pages/Login'),
+      meta: {
+        skipsAuth: true
+      }
+    },
+    {
+      name: 'error',
+      path: '',
+      component: () => import('@/pages/Error'),
+      props: true,
       meta: {
         skipsAuth: true
       }

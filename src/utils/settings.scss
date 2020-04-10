@@ -103,6 +103,7 @@ $app-sidebar-border-color: mix($app-sidebar-color, $app-sidebar-bg, 5%);
 $app-sidebar-width: 290px;
 $app-sidebar-reduced-width: 70px;
 $app-sidebar-float-breakpoint-width:  1200px;
+$app-sidebar-link-color: mix($app-sidebar-bg, $app-sidebar-color, 40%);
 
 $app-context-sidebar-bg: mix(white, $app-sidebar-bg, 5%);
 $app-context-sidebar-color: #fff;

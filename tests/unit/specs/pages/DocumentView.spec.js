@@ -10,9 +10,17 @@ import DocumentView from '@/pages/DocumentView'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
+// Mock user session
+Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })
+
+// Mock all axios requests
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: [{ label: 'tag', user: { id: 'local' }, creationDate: '2019-09-29T21:57:57.565+0000' }] })
+    request: jest.fn().mockResolvedValue({
+      data: [
+        { label: 'tag', user: { id: 'local' }, creationDate: '2019-09-29T21:57:57.565+0000' }
+      ]
+    })
   }
 })
 
@@ -47,7 +55,7 @@ describe('DocumentView.vue', () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index } })
     await wrapper.vm.getDoc()
 
-    expect(axios.request).toBeCalledTimes(3)
+    expect(axios.request).toBeCalledTimes(2)
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${index}/documents/tags/${id}`) })
   })
 

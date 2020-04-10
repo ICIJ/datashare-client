@@ -107,7 +107,7 @@
       <hook name="app-sidebar.help:before" />
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
-          <a href="https://icij.gitbook.io/datashare/faq/" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.faq')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a :href="faqLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.faq')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="question" fixed-width />
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.faq') }}
@@ -216,6 +216,9 @@ export default {
     },
     helpLink () {
       return this.$config.get('helpLink', settings.helpLink)
+    },
+    faqLink () {
+      return this.$config.get('faqLink', settings.faqLink)
     }
   },
   watch: {
@@ -395,7 +398,7 @@ export default {
           &__link, &__link.btn {
             margin: $spacer * 0.5 $spacer;
             padding: $spacer * 0.75;
-            color: rgba($app-sidebar-color, 0.6);
+            color: $app-sidebar-link-color;
             display: flex;
             border-radius: $border-radius;
             font-size: $font-size-sm;
@@ -489,7 +492,7 @@ export default {
     }
 
     &__version, &__data-location {
-      color: rgba($app-sidebar-color, 0.6);
+      color: $app-sidebar-link-color;
       padding: 0 $spacer * 1.5 $spacer;
       font-size: $font-size-sm;
     }
