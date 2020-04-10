@@ -17,20 +17,9 @@ describe('Landing.vue', () => {
 
   it('should display a search bar', () => {
     expect(wrapper.find('.landing__form__search-bar').exists()).toBeTruthy()
-    expect(wrapper.find('.landing__form__no-projects').exists()).toBeFalsy()
   })
 
   it('should display project cards', () => {
     expect(wrapper.find('.landing__form__projects').exists()).toBeTruthy()
-    expect(wrapper.find('.landing__form__no-projects').exists()).toBeFalsy()
-  })
-
-  it('should display NO search bar and NO project cards', () => {
-    Murmur.config.merge({ datashare_projects: [] })
-    wrapper = shallowMount(Landing, { i18n, localVue, store })
-
-    expect(wrapper.find('.landing__form__search-bar').exists()).toBeFalsy()
-    expect(wrapper.find('.landing__form__projects').exists()).toBeFalsy()
-    expect(wrapper.find('.landing__form__no-projects').exists()).toBeTruthy()
   })
 })

@@ -108,12 +108,6 @@ export default {
       return this.layout === 'list' ? VuePerfectScrollbar : 'div'
     }
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      if (vm.$config.get('datashare_projects', []).length === 0) next({ name: 'landing' })
-      else next()
-    })
-  },
   beforeRouteUpdate (to, from, next) {
     if (to.name === 'search' && this.isDifferentFromQuery(to.query)) {
       this.$store.dispatch('search/updateFromRouteQuery', to.query)

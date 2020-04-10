@@ -1,7 +1,7 @@
 <template>
   <div class="landing d-flex justify-content-center align-item-center flex-column">
     <hook name="landing.form:before" />
-    <div class="landing__form py-5" v-if="projects.length">
+    <div class="landing__form py-5">
       <hook name="landing.form.heading:before" />
       <h1 class="landing__form__heading text-special">
         <img src="~images/logo-color.svg" alt="Datashare" />
@@ -18,10 +18,6 @@
         </div>
       </div>
       <hook name="landing.form.project:after" />
-    </div>
-    <div v-else class="landing__form__no-projects ml-5 text-white">
-      <fa icon="exclamation-triangle" class="mr-2" />
-      {{ $t('landing.noProjects') }}
     </div>
     <hook name="landing.form:after" />
   </div>

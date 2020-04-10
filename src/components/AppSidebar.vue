@@ -18,9 +18,6 @@
         <li class="app-sidebar__container__menu__item">
           <router-link
             class="app-sidebar__container__menu__item__link"
-            :class="{ 'app-sidebar__container__menu__item__link--disabled': !isLinkActivated }"
-            :disabled="!isLinkActivated"
-            :event="isLinkActivated ? 'click' : ''"
             :title="$t('menu.search')"
             :to="{ name: 'search', query }"
             v-b-tooltip.right="{ customClass: tooltipsClass }">
@@ -33,9 +30,6 @@
         <li class="app-sidebar__container__menu__item">
           <router-link
             class="app-sidebar__container__menu__item__link"
-            :class="{ 'app-sidebar__container__menu__item__link--disabled': !isLinkActivated }"
-            :disabled="!isLinkActivated"
-            :event="isLinkActivated ? 'click' : ''"
             :title="$t('menu.batch')"
             :to="{ name: 'batch-search' }"
             v-b-tooltip.right="{ customClass: tooltipsClass }">
@@ -48,9 +42,6 @@
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="$config.is('manageDocuments')">
           <router-link
             class="app-sidebar__container__menu__item__link"
-            :class="{ 'app-sidebar__container__menu__item__link--disabled': !isLinkActivated }"
-            :disabled="!isLinkActivated"
-            :event="isLinkActivated ? 'click' : ''"
             :title="$t('menu.analyse')"
             :to="{ name: 'indexing' }"
             v-b-tooltip.right="{ customClass: tooltipsClass }">
@@ -76,9 +67,6 @@
         <li class="app-sidebar__container__menu__item">
           <router-link
             class="app-sidebar__container__menu__item__link"
-            :class="{ 'app-sidebar__container__menu__item__link--disabled': !isLinkActivated }"
-            :disabled="!isLinkActivated"
-            :event="isLinkActivated ? 'click' : ''"
             :title="$t('menu.insights')"
             :to="{ name: 'insights' }"
             v-b-tooltip.right="{ customClass: tooltipsClass }">
@@ -210,9 +198,6 @@ export default {
     },
     logoutLink () {
       return Api.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
-    },
-    isLinkActivated () {
-      return !!this.$config.get('datashare_projects', []).length
     },
     helpLink () {
       return this.$config.get('helpLink', settings.helpLink)

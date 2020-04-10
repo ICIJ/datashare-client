@@ -78,16 +78,4 @@ describe('AppSidebar.vue', () => {
     const wrapper = shallowMount(AppSidebar, { i18n, localVue, router, store })
     expect(wrapper.findAll('.app-sidebar__data-location').exists()).toBeTruthy()
   })
-
-  it('should disable 4 menu links if no projects', () => {
-    Murmur.config.set('datashare_projects', [])
-    const wrapper = shallowMount(AppSidebar, { i18n, localVue, router, store })
-    expect(wrapper.findAll('.app-sidebar__container__menu__item__link--disabled')).toHaveLength(4)
-  })
-
-  it('should enable menu links if projects', () => {
-    Murmur.config.set('datashare_projects', ['project'])
-    const wrapper = shallowMount(AppSidebar, { i18n, localVue, router, store })
-    expect(wrapper.findAll('.app-sidebar__container__menu__item__link--disabled').exists()).toBeFalsy()
-  })
 })
