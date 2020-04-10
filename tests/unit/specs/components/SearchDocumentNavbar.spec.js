@@ -70,12 +70,12 @@ describe('SearchDocumentNavbar.vue', () => {
 
       expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/markReadBy`),
+        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/recommend`),
         method: 'POST',
         data: ['doc_01']
       }))
       expect(wrapper.vm.isRead).toBeTruthy()
-      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${project}/documents/readBy`) })
+      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/users/recommendations?project=${project}`) })
       expect(store.state.search.readByUsers).toEqual(['Jean-Michel'])
     })
 
@@ -88,12 +88,12 @@ describe('SearchDocumentNavbar.vue', () => {
 
       expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/unmarkReadBy`),
+        url: Api.getFullUrl(`/api/${project}/documents/batchUpdate/unrecommend`),
         method: 'POST',
         data: ['doc_01']
       }))
       expect(wrapper.vm.isRead).toBeFalsy()
-      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${project}/documents/readBy`) })
+      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/users/recommendations?project=${project}`) })
       expect(store.state.search.readByUsers).toEqual([])
     })
   })

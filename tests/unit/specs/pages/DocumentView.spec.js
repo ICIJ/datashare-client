@@ -64,7 +64,7 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     expect(axios.request).toBeCalledTimes(2)
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${index}/documents/readBy/${id}`) })
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/users/recommendationsby?project=${index}&docIds=${id}`) })
   })
 
   it('should display a document', async () => {

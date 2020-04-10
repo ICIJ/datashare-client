@@ -116,19 +116,19 @@ export default class Api {
     return this.sendAction('/api/users/me')
   }
   setMarkAsRead (project, docIds) {
-    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/markReadBy`, { method: 'POST', data: docIds })
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/recommend`, { method: 'POST', data: docIds })
   }
   setMarkAsUnread (project, docIds) {
-    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unmarkReadBy`, { method: 'POST', data: docIds })
+    return this.sendActionAsText(`/api/${project}/documents/batchUpdate/unrecommend`, { method: 'POST', data: docIds })
   }
   getMarkAsRead (project, docId) {
-    return this.sendAction(`/api/${project}/documents/readBy/${docId}`)
+    return this.sendAction(`/api/users/recommendationsby?project=${project}&docIds=${docId}`)
   }
   getProjectMarkReadUsers (project) {
-    return this.sendAction(`/api/${project}/documents/readBy`)
+    return this.sendAction(`/api/users/recommendations?project=${project}`)
   }
   getDocumentsReadBy (project, users) {
-    return this.sendAction(`/api/${project}/documents/documentsReadBy/${join(users)}`)
+    return this.sendAction(`/api/${project}/documents/recommendations?userids=${join(users)}`)
   }
   async sendAction (url, config = {}) {
     try {
