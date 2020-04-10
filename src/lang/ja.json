@@ -4,6 +4,11 @@
     "placeholder": "人物、組織、地名を検索",
     "relative": "検索結果と関連"
   },
+  "error": {
+    "title": "Something's wrong here",
+    "description": "An error has occured. Please try again later or contact your administrator if the problem persists.",
+    "noProjects": "You have no projects yet. Please contact your administrator."
+  },
   "search": {
     "errors": {
       "badRequest": "検索ワードが正しくありません",
@@ -456,7 +461,8 @@
     "logout": "ログアウト",
     "addDocuments": "文書追加のしかた",
     "faq": "よくある質問",
-    "userGuides": "ユーザーガイド"
+    "userGuides": "ユーザーガイド",
+    "devWiki": "Developper wiki"
   },
   "footer": {
     "homedir": "解析のため、ファイルをこのディレクトリに移動してください",
@@ -559,8 +565,5 @@
       "M": "%M",
       "B": "%B"
     }
-  },
-  "landing": {
-    "noProjects": "You have no projects yet. Please contact your admin."
   }
 }
