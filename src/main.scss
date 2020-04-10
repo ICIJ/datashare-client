@@ -12,6 +12,73 @@ html {
   font-size: 14px;
 }
 
+@keyframes rotateLogo {
+	100% {
+		transform: translate(-50%, -50%) rotate(1turn);
+	}
+}
+
+.splashscreen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: theme-color('dark');
+  color: white;
+
+  &__panel {
+    text-align: center;
+    max-width: 330px;
+    margin: $spacer;
+    font-weight: bolder;
+
+    &__spinner {
+      margin-bottom: $spacer;
+      position: relative;
+      height: 130px;
+      width: 130px;
+      display: flex;
+      border-radius: $spacer;
+      overflow: hidden;
+
+      &:before {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 200%;
+        width: 200%;
+        transform: translate(-50%, -50%);
+        z-index: -1;
+        border-radius: inherit;
+		    background-repeat: no-repeat;
+    		background-size: 50% 50%, 50% 50%;
+    		background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+    		background-image: linear-gradient(#48C2FC, #48C2FC),
+                          linear-gradient($secondary, $secondary),
+                          linear-gradient(#48C2FC, #48C2FC),
+                          linear-gradient($secondary, $secondary);
+		    animation: rotateLogo 4s linear infinite;
+      }
+
+      &:after {
+        content: "";
+        display: block;
+        margin: auto;
+        background:white url('~images/logo-color-symbol.svg') no-repeat center center;
+        background-size: 80% 80%;
+        height: 95%;
+        width: 95%;
+        border-radius: inherit;
+      }
+    }
+  }
+}
+
 .text-special {
   font-family: $special-font-family;
 }
