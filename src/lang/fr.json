@@ -4,6 +4,11 @@
     "placeholder": "Rechercher des personnes, organisations, lieux",
     "relative": "Relatifs à la recherche"
   },
+  "error": {
+    "title": "Something's wrong here",
+    "description": "An error has occured. Please try again later or contact your administrator if the problem persists.",
+    "noProjects": "You have no projects yet. Please contact your administrator."
+  },
   "search": {
     "errors": {
       "badRequest": "Votre recherche contient une erreur",
@@ -456,7 +461,8 @@
     "logout": "Déconnexion",
     "addDocuments": "Comment ajouter des documents",
     "faq": "FAQ",
-    "userGuides": "Guides d'utilisateurs"
+    "userGuides": "Guides d'utilisateurs",
+    "devWiki": "Developper wiki"
   },
   "footer": {
     "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
@@ -559,8 +565,5 @@
       "M": "%M",
       "B": "%B"
     }
-  },
-  "landing": {
-    "noProjects": "You have no projects yet. Please contact your admin."
   }
 }
