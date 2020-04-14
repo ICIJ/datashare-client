@@ -54,6 +54,7 @@
 </template>
 
 <script>
+import debounce from 'lodash/debounce'
 import filter from 'lodash/filter'
 import first from 'lodash/first'
 import get from 'lodash/get'
@@ -61,11 +62,10 @@ import kebabCase from 'lodash/kebabCase'
 import range from 'lodash/range'
 import sortBy from 'lodash/sortBy'
 import startCase from 'lodash/startCase'
-import debounce from 'lodash/debounce'
+import { getShortkeyOS } from '@/utils/utils'
 import Fuse from 'fuse.js'
 import { getCookie } from 'tiny-cookie'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
-import { getShortkeyOS } from '@/utils/utils'
 
 import shortkeys from '@/mixins/shortkeys'
 
@@ -168,7 +168,7 @@ export default {
     },
     fuse () {
       const keys = range(this.firstItem.length).map(String)
-      const options = { distance: 100, keys, shouldSort: true, threshold: 0.1, tokenize: true }
+      const options = { distance: 100, keys, shouldSort: true, threshold: 0.1 }
       return new Fuse(this.items, options)
     },
     getShortcut () {

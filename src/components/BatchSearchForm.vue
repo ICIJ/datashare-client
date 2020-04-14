@@ -170,6 +170,7 @@ import range from 'lodash/range'
 import throttle from 'lodash/throttle'
 import uniq from 'lodash/uniq'
 import bodybuilder from 'bodybuilder'
+import Fuse from 'fuse.js'
 
 import elasticsearch from '@/api/elasticsearch'
 import types from '@/utils/types.json'
@@ -215,6 +216,11 @@ export default {
     },
     advancedFiltersIcon () {
       return this.showCollapse ? 'angle-down' : 'angle-right'
+    },
+    fuse () {
+      const keys = ['extensions', 'label', 'mime']
+      const options = { distance: 100, keys, shouldSort: true }
+      return new Fuse(this.allFileTypes, options)
     }
   },
   watch: {
@@ -242,7 +248,7 @@ export default {
   methods: {
     searchFileTypes: throttle(function () {
       this.hideSuggestionsPaths()
-      this.$set(this, 'suggestionFileTypes', filter(this.allFileTypes, item => ((item.label.indexOf(this.fileType) > -1) || item.mime.indexOf(this.fileType) > -1) && !includes(map(this.fileTypes, 'mime'), item.mime)))
+      this.$set(this, 'suggestionFileTypes', filter(this.fuse.search(this.fileType), item => !includes(map(this.fileTypes, 'mime'), item.mime)))
     }, 200),
     searchFileType (fileType) {
       if (fileType) {
@@ -325,8 +331,9 @@ export default {
     async retrieveFileTypes () {
       const aggTypes = await this.aggregate('contentType', 'contentType')
       each(aggTypes, aggType => {
+        const extensions = has(types, aggType) ? types[aggType].extensions : []
         const label = has(types, aggType) ? types[aggType].label : aggType
-        this.allFileTypes.push({ label, mime: aggType })
+        this.allFileTypes.push({ extensions, label, mime: aggType })
       })
     }
   }

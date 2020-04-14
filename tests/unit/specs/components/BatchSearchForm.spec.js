@@ -238,6 +238,7 @@ describe('BatchSearchForm.vue', () => {
     await wrapper.vm.retrieveFileTypes()
 
     expect(wrapper.vm.allFileTypes).toEqual([{
+      extensions: ['.pdf'],
       label: 'Portable Document Format (PDF)',
       mime: 'application/pdf'
     }])
@@ -249,6 +250,7 @@ describe('BatchSearchForm.vue', () => {
     await wrapper.vm.retrieveFileTypes()
 
     expect(wrapper.vm.allFileTypes).toEqual([{
+      extensions: [],
       label: 'application/test',
       mime: 'application/test'
     }])
