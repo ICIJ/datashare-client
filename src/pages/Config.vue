@@ -4,6 +4,7 @@
       <div class="bg-white">
         <div class="container py-5">
           <h3>{{ $t('config.title') }}</h3>
+          <div>{{ $t('config.description') }}</div>
         </div>
       </div>
       <div class="container my-4">

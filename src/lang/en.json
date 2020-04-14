@@ -555,6 +555,7 @@
   },
   "config": {
     "title": "Settings",
+    "description": "Don't change these settings if you don't know what you're doing.",
     "submit": "Submit",
     "submitSuccess": "Modifications submitted. You should now restart Datashare.",
     "submitError": "Unable to submit the configuration.",
