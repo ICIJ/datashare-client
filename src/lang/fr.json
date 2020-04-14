@@ -84,9 +84,9 @@
       "document": {
         "extensionWarning": "Ce document a une extension de fichier qui ne correspond pas à son type. Vous aurez peut-être à ajouter l'extension <code>%{extension}</code> avant de l'ouvrir."
       },
-      "markAsRead": "Marquer comme lu",
-      "markAsUnread": "Marquer comme non lu",
-      "markAsReadBy": "Marqué comme lu par personne : | Marqué comme lu par 1 utilisateur : | Marqué comme lu par {count} utilisateurs :"
+      "markAsRecommended": "Mark as recommended",
+      "unmarkAsRecommended": "Unmark as recommended",
+      "markAsRecommendedBy": "Marked as recommended by nobody: | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
     }
   },
   "pagination": {
@@ -123,7 +123,7 @@
     "missing": "Date manquante",
     "starred": "Favoris",
     "notStarred": "Non favoris",
-    "readBy": "Marqué comme lu par",
+    "recommendedBy": "Recommended by",
     "lang": {
       "all": "Tous",
       "ABKHAZIAN": "Abkhaze",
