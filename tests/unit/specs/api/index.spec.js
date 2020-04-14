@@ -170,28 +170,28 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to setMarkAsRead', async () => {
-    json = await api.setMarkAsRead()
+  it('should return backend response to setMarkAsRecommended', async () => {
+    json = await api.setMarkAsRecommended()
     expect(json).toEqual({})
   })
 
-  it('should return backend response to setMarkAsUnread', async () => {
-    json = await api.setMarkAsUnread()
+  it('should return backend response to setUnmarkAsRecommended', async () => {
+    json = await api.setUnmarkAsRecommended()
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getMarkAsRead', async () => {
-    json = await api.getMarkAsRead()
+  it('should return backend response to getRecommendationsByDocuments', async () => {
+    json = await api.getRecommendationsByDocuments()
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getProjectMarkReadUsers', async () => {
-    json = await api.getProjectMarkReadUsers()
+  it('should return backend response to getRecommendationsByProject', async () => {
+    json = await api.getRecommendationsByProject()
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getDocumentsReadBy', async () => {
-    json = await api.getDocumentsReadBy()
+  it('should return backend response to getDocumentsRecommendedBy', async () => {
+    json = await api.getDocumentsRecommendedBy()
     expect(json).toEqual({})
   })
 

@@ -2,7 +2,7 @@
   <filter-boilerplate v-bind="propsWithout('hide-show-more')" hide-show-more ref="filter">
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="selectUsers">
-        <b-form-checkbox v-for="userId in readByUsers" :value="userId" class="filter__items__item" :key="userId">
+        <b-form-checkbox v-for="userId in recommendedByUsers" :value="userId" class="filter__items__item" :key="userId">
           <span>{{ userId | displayUser }}</span>
         </b-form-checkbox>
       </b-form-checkbox-group>
@@ -19,7 +19,7 @@ import filters from '@/mixins/filters'
 import utils from '@/mixins/utils'
 
 export default {
-  name: 'FilterReadBy',
+  name: 'FilterRecommendedBy',
   components: {
     FilterBoilerplate
   },
@@ -28,15 +28,15 @@ export default {
   },
   mixins: [filters, utils],
   computed: {
-    ...mapState('search', ['readByUsers'])
+    ...mapState('search', ['recommendedByUsers'])
   },
   async mounted () {
-    await this.$store.dispatch('search/getProjectMarkReadUsers')
+    await this.$store.dispatch('search/getRecommendationsByProject')
     this.root.$on('reset-filter-values', () => this.selectUsers([]))
   },
   methods: {
     async selectUsers (users) {
-      await this.$store.dispatch('search/getDocumentsReadBy', users)
+      await this.$store.dispatch('search/getDocumentsRecommendedBy', users)
       this.$set(this, 'selected', users)
       this.root.isAllSelected = users.length === 0
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)

@@ -57,8 +57,8 @@ export function initialState () {
     // Different default layout for narrow screen
     layout: isNarrowScreen() ? 'table' : 'list',
     isDownloadAllowed: false,
-    documentsRead: [],
-    readByUsers: []
+    documentsRecommended: [],
+    recommendedByUsers: []
   })
 }
 
@@ -337,11 +337,11 @@ export const mutations = {
   removeFromStarredDocuments (state, documentIds) {
     Vue.set(state, 'starredDocuments', difference(state.starredDocuments, documentIds))
   },
-  documentsRead (state, documentsRead) {
-    Vue.set(state, 'documentsRead', documentsRead)
+  documentsRecommended (state, documentsRecommended) {
+    Vue.set(state, 'documentsRecommended', documentsRecommended)
   },
-  readByUsers (state, readByUsers) {
-    Vue.set(state, 'readByUsers', readByUsers)
+  recommendedByUsers (state, recommendedByUsers) {
+    Vue.set(state, 'recommendedByUsers', recommendedByUsers)
   }
 }
 
@@ -479,28 +479,28 @@ export const actions = {
       commit('isDownloadAllowed', false)
     }
   },
-  async getProjectMarkReadUsers ({ state, commit }) {
-    let readByUsers
+  async getRecommendationsByProject ({ state, commit }) {
+    let recommendedByUsers
     try {
-      readByUsers = await api.getProjectMarkReadUsers(state.index)
-      readByUsers = map(readByUsers, 'id')
+      recommendedByUsers = await api.getRecommendationsByProject(state.index)
+      recommendedByUsers = map(recommendedByUsers, 'id')
     } catch (_) {
-      readByUsers = []
+      recommendedByUsers = []
     }
-    commit('readByUsers', readByUsers)
+    commit('recommendedByUsers', recommendedByUsers)
   },
-  async getDocumentsReadBy ({ state, commit }, users) {
-    let documentsRead
+  async getDocumentsRecommendedBy ({ state, commit }, users) {
+    let documentsRecommended
     try {
       if (users.length === 0) {
-        documentsRead = []
+        documentsRecommended = []
       } else {
-        documentsRead = await api.getDocumentsReadBy(state.index, users)
+        documentsRecommended = await api.getDocumentsRecommendedBy(state.index, users)
       }
     } catch (_) {
-      documentsRead = []
+      documentsRecommended = []
     }
-    commit('documentsRead', documentsRead)
+    commit('documentsRecommended', documentsRecommended)
   }
 }
 

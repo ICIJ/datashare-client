@@ -158,7 +158,7 @@ export default {
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
       await this.$store.dispatch('document/getTags')
-      await this.$store.dispatch('document/getMarkAsRead')
+      await this.$store.dispatch('document/getRecommendationsByDocuments')
       if (this.doc) {
         await this.$store.commit('userHistory/addDocument', this.doc)
         const container = this.$el.closest('.ps-container')

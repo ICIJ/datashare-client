@@ -35,19 +35,19 @@
           <span v-html="nextTooltip"></span>
         </b-tooltip>
       </span>
-      <b-btn class="mx-2 px-2 py-0 search-document-navbar__read-by" size="sm" @click="toggleAsRead" :data-read-label="$t('search.nav.markAsRead')" :data-unread-label="$t('search.nav.markAsUnread')" :variant="markAsReadVariant">
-        {{ markAsReadLabel }}
+      <b-btn class="mx-2 px-2 py-0 search-document-navbar__recommended-by" size="sm" @click="toggleAsRecommended" :data-recommended-label="$t('search.nav.markAsRecommended')" :data-unrecommended-label="$t('search.nav.unmarkAsRecommended')" :variant="markAsRecommendedVariant">
+        {{ markAsRecommendedLabel }}
       </b-btn>
       <template v-if="isServer">
-        <b-badge pill :variant="markAsReadVariant" class="mr-2 search-document-navbar__read-by-number" id="popover-read-by">
-          {{ readBy.length }}
+        <b-badge pill :variant="markAsRecommendedVariant" class="mr-2 search-document-navbar__recommended-by-number" id="popover-recommended-by">
+          {{ recommendedBy.length }}
         </b-badge>
-        <b-popover target="popover-read-by" triggers="hover" placement="bottom" v-if="readBy.length > 0">
+        <b-popover target="popover-recommended-by" triggers="hover" placement="bottom" v-if="recommendedBy.length > 0">
           <div>
-            {{ $tc('search.nav.markAsReadBy',  readBy.length, { count: readBy.length }) }}
+            {{ $tc('search.nav.markAsRecommendedBy',  recommendedBy.length, { count: recommendedBy.length }) }}
           </div>
           <ul class="mb-0 pl-3">
-            <li v-for="user in readBy" :key="user">
+            <li v-for="user in recommendedBy" :key="user">
               {{ user }}
             </li>
           </ul>
@@ -101,7 +101,7 @@ export default {
     DocumentActions
   },
   computed: {
-    ...mapState('document', ['doc', 'isRead', 'readBy']),
+    ...mapState('document', ['doc', 'isRecommended', 'recommendedBy']),
     ...mapState('search', ['isDownloadAllowed', 'response']),
     query () {
       return this.$store.getters['search/toRouteQuery']()
@@ -156,11 +156,11 @@ export default {
     nextTooltip () {
       return getShortkeyOS() === 'mac' ? this.$t('search.nav.next.tooltipMac') : this.$t('search.nav.next.tooltipOthers')
     },
-    markAsReadLabel () {
-      return this.isRead ? this.$t('search.nav.markAsUnread') : this.$t('search.nav.markAsRead')
+    markAsRecommendedLabel () {
+      return this.isRecommended ? this.$t('search.nav.unmarkAsRecommended') : this.$t('search.nav.markAsRecommended')
     },
-    markAsReadVariant () {
-      return this.isRead ? 'success' : 'light'
+    markAsRecommendedVariant () {
+      return this.isRecommended ? 'success' : 'light'
     }
   },
   props: {
@@ -204,9 +204,9 @@ export default {
         return this.goToDocument(this.nextDocument)
       }
     },
-    async toggleAsRead () {
-      await this.$store.dispatch('document/toggleAsRead')
-      await this.$store.dispatch('search/getProjectMarkReadUsers')
+    async toggleAsRecommended () {
+      await this.$store.dispatch('document/toggleAsRecommended')
+      await this.$store.dispatch('search/getRecommendationsByProject')
     },
     scrollToTop () {
       document.getElementById('search__body__document__wrapper').scrollTop = 0
@@ -232,7 +232,7 @@ export default {
       font-size: $font-size-sm;
     }
 
-    &__read-by {
+    &__recommended-by {
       position: relative;
 
       &:before, &:after{
@@ -245,11 +245,11 @@ export default {
       }
 
       &:before {
-        content: attr(data-unread-label);
+        content: attr(data-unrecommended-label);
       }
 
       &:after {
-        content: attr(data-read-label);
+        content: attr(data-recommended-label);
       }
     }
 

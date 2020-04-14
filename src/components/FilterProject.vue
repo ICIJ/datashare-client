@@ -57,7 +57,7 @@ export default {
     this.$set(this, 'projects', map(projects, value => ({ value, text: value })))
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')
-    await this.$store.dispatch('search/getProjectMarkReadUsers')
+    await this.$store.dispatch('search/getRecommendationsByProject')
   },
   methods: {
     async select (value) {
@@ -67,7 +67,7 @@ export default {
       this.$root.$emit('filter::search::reset-filters')
       await this.$store.dispatch('search/getStarredDocuments')
       await this.$store.dispatch('search/getIsDownloadAllowed')
-      await this.$store.dispatch('search/getProjectMarkReadUsers')
+      await this.$store.dispatch('search/getRecommendationsByProject')
       this.refreshRoute()
     },
     toggleItems () {

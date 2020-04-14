@@ -152,42 +152,42 @@ describe('DocumentStore', () => {
     })
   })
 
-  describe('Manage Read status', () => {
-    it('should change isRead status to true', () => {
-      store.state.document.isRead = false
-      store.commit('document/isRead', true)
-      expect(store.state.document.isRead).toBeTruthy()
+  describe('Manage isRecommended status', () => {
+    it('should change isRecommended status to true', () => {
+      store.state.document.isRecommended = false
+      store.commit('document/isRecommended', true)
+      expect(store.state.document.isRecommended).toBeTruthy()
     })
 
-    it('should change isRead status to false', () => {
-      store.state.document.isRead = true
-      store.commit('document/isRead', false)
-      expect(store.state.document.isRead).toBeFalsy()
+    it('should change isRecommended status to false', () => {
+      store.state.document.isRecommended = true
+      store.commit('document/isRecommended', false)
+      expect(store.state.document.isRecommended).toBeFalsy()
     })
 
-    it('should add user in readBy array', () => {
+    it('should add user in recommendedBy array', () => {
       const userId = 'Jean-Michel'
-      store.commit('document/markAsRead', userId)
-      expect(indexOf(store.state.document.readBy, userId)).toBeGreaterThan(-1)
+      store.commit('document/markAsRecommended', userId)
+      expect(indexOf(store.state.document.recommendedBy, userId)).toBeGreaterThan(-1)
     })
 
-    it('should remove user from readBy array', () => {
+    it('should remove user from recommendedBy array', () => {
       const userId = 'Jean-Michel'
-      store.commit('document/markAsRead', userId)
-      store.commit('document/markAsUnread', userId)
-      expect(indexOf(store.state.document.readBy, userId)).toBe(-1)
+      store.commit('document/markAsRecommended', userId)
+      store.commit('document/unmarkAsRecommended', userId)
+      expect(indexOf(store.state.document.recommendedBy, userId)).toBe(-1)
     })
 
-    it('should mark these documents as read', async () => {
+    it('should MARK these documents as recommended', async () => {
       const userId = 'Jean-Michel'
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
-      store.state.document.isRead = false
+      store.state.document.isRecommended = false
 
       axios.request.mockClear()
 
-      await store.dispatch('document/toggleAsRead')
+      await store.dispatch('document/toggleAsRecommended')
 
       expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me') })
@@ -196,20 +196,20 @@ describe('DocumentStore', () => {
         method: 'POST',
         data: ['doc_01']
       }))
-      expect(store.state.document.isRead).toBeTruthy()
-      expect(indexOf(store.state.document.readBy, userId)).toBeGreaterThan(-1)
+      expect(store.state.document.isRecommended).toBeTruthy()
+      expect(indexOf(store.state.document.recommendedBy, userId)).toBeGreaterThan(-1)
     })
 
-    it('should mark as unread these documents', async () => {
+    it('should UNMARK these documents as recommended', async () => {
       const userId = 'Jean-Michel'
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
-      store.state.document.isRead = true
+      store.state.document.isRecommended = true
 
       axios.request.mockClear()
 
-      await store.dispatch('document/toggleAsRead')
+      await store.dispatch('document/toggleAsRecommended')
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -217,22 +217,22 @@ describe('DocumentStore', () => {
         method: 'POST',
         data: ['doc_01']
       }))
-      expect(store.state.document.isRead).toBeFalsy()
-      expect(indexOf(store.state.document.readBy, userId)).toBe(-1)
+      expect(store.state.document.isRecommended).toBeFalsy()
+      expect(indexOf(store.state.document.recommendedBy, userId)).toBe(-1)
     })
 
-    it('should retrieve the list of users who read it and set it to the store', async () => {
+    it('should retrieve the list of users who recommended it and set it to the store', async () => {
       const users = [{ id: 'user_01' }, { id: 'user_02' }]
       axios.request.mockReturnValue({ data: users })
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
-      await store.dispatch('document/getMarkAsRead')
+      await store.dispatch('document/getRecommendationsByDocuments')
 
       expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/users/recommendationsby?project=${index}&docIds=doc_01`)
       }))
-      expect(store.state.document.readBy).toEqual(['user_01', 'user_02'])
+      expect(store.state.document.recommendedBy).toEqual(['user_01', 'user_02'])
     })
 
     it('should sort users by alphabetical order of id', async () => {
@@ -240,9 +240,9 @@ describe('DocumentStore', () => {
       axios.request.mockReturnValue({ data: users })
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
-      await store.dispatch('document/getMarkAsRead')
+      await store.dispatch('document/getRecommendationsByDocuments')
 
-      expect(store.state.document.readBy).toEqual(['user_01', 'user_02', 'user_03'])
+      expect(store.state.document.recommendedBy).toEqual(['user_01', 'user_02', 'user_03'])
     })
   })
 })

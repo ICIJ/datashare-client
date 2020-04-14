@@ -59,7 +59,7 @@ describe('DocumentView.vue', () => {
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${index}/documents/tags/${id}`) })
   })
 
-  it('should call to the API to retrieve readBy', async () => {
+  it('should call to the API to retrieve document recommendations', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index } })
     await wrapper.vm.getDoc()
 

@@ -95,7 +95,7 @@ describe('FilterProject.vue', () => {
       }))
     })
 
-    it('should refresh the readByUsers', async () => {
+    it('should refresh the recommendedByUsers', async () => {
       await wrapper.vm.select(anotherProject)
 
       expect(axios.request).toBeCalledTimes(3)

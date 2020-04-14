@@ -784,52 +784,52 @@ describe('SearchStore', () => {
     expect(store.state.search.response.hits[2].shortId).toBe('c')
   })
 
-  describe('readBy', () => {
-    it('should init documentsRead to an empty array', () => {
-      expect(store.state.search).toHaveProperty('documentsRead')
-      expect(store.state.search.documentsRead).toEqual([])
+  describe('documentsRecommended', () => {
+    it('should init documentsRecommended to an empty array', () => {
+      expect(store.state.search).toHaveProperty('documentsRecommended')
+      expect(store.state.search.documentsRecommended).toEqual([])
     })
 
-    it('should set documentsRead to userIds', () => {
+    it('should set documentsRecommended to userIds', () => {
       const userIds = ['user_01', 'user_02', 'user_03']
-      store.commit('search/documentsRead', userIds)
+      store.commit('search/documentsRecommended', userIds)
 
-      expect(store.state.search.documentsRead).toEqual(userIds)
+      expect(store.state.search.documentsRecommended).toEqual(userIds)
     })
 
-    it('should return  users who read documents from this project', async () => {
+    it('should return  users who recommended documents from this project', async () => {
       axios.request.mockResolvedValue({ data: [{ id: 'user_01' }, { id: 'user_02' }] })
       axios.request.mockClear()
 
-      await store.dispatch('search/getProjectMarkReadUsers')
+      await store.dispatch('search/getRecommendationsByProject')
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/users/recommendations?project=${index}`)
       }))
-      expect(store.state.search.readByUsers).toEqual(['user_01', 'user_02'])
+      expect(store.state.search.recommendedByUsers).toEqual(['user_01', 'user_02'])
     })
 
-    it('should set the list of documents read by a list of users', async () => {
+    it('should set the list of documents recommended by a list of users', async () => {
       axios.request.mockResolvedValue({ data: ['document_01', 'document_02', 'document_03'] })
       axios.request.mockClear()
 
-      await store.dispatch('search/getDocumentsReadBy', ['user_01', 'user_02'])
+      await store.dispatch('search/getDocumentsRecommendedBy', ['user_01', 'user_02'])
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/recommendations?userids=user_01,user_02`)
       }))
-      expect(store.state.search.documentsRead).toEqual(['document_01', 'document_02', 'document_03'])
+      expect(store.state.search.documentsRecommended).toEqual(['document_01', 'document_02', 'document_03'])
     })
 
-    it('should reset the list of documents read if no users', async () => {
+    it('should reset the list of documents recommended if no users', async () => {
       axios.request.mockClear()
 
-      await store.dispatch('search/getDocumentsReadBy', [])
+      await store.dispatch('search/getDocumentsRecommendedBy', [])
 
       expect(axios.request).toBeCalledTimes(0)
-      expect(store.state.search.documentsRead).toEqual([])
+      expect(store.state.search.documentsRecommended).toEqual([])
     })
   })
 })

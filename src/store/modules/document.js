@@ -33,8 +33,8 @@ export function initialState () {
     parentDocument: null,
     showNamedEntities: false,
     tags: [],
-    isRead: false,
-    readBy: []
+    isRecommended: false,
+    recommendedBy: []
   }
 }
 
@@ -106,19 +106,19 @@ export const mutations = {
   deleteTag (state, tagToDelete) {
     state.tags.splice(findIndex(state.tags, { label: tagToDelete.label }), 1)
   },
-  isRead (state, isRead) {
-    Vue.set(state, 'isRead', isRead)
+  isRecommended (state, isRecommended) {
+    Vue.set(state, 'isRecommended', isRecommended)
   },
-  readBy (state, readBy = []) {
-    Vue.set(state, 'readBy', readBy)
+  recommendedBy (state, recommendedBy = []) {
+    Vue.set(state, 'recommendedBy', recommendedBy)
   },
-  markAsRead (state, userId) {
-    state.readBy.push(userId)
+  markAsRecommended (state, userId) {
+    state.recommendedBy.push(userId)
   },
-  markAsUnread (state, userId) {
-    const index = state.readBy.indexOf(userId)
+  unmarkAsRecommended (state, userId) {
+    const index = state.recommendedBy.indexOf(userId)
     if (index > -1) {
-      Vue.delete(state.readBy, index)
+      Vue.delete(state.recommendedBy, index)
     }
   }
 }
@@ -207,31 +207,31 @@ export const actions = {
     await api.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
     if (documents.length === 1) commit('deleteTag', tag)
   },
-  async toggleAsRead ({ state, commit }) {
+  async toggleAsRecommended ({ state, commit }) {
     const userId = await auth.getUsername()
-    if (state.isRead) {
-      await api.setMarkAsUnread(state.doc.index, [state.doc.id])
-      commit('markAsUnread', userId)
-      commit('isRead', false)
+    if (state.isRecommended) {
+      await api.setUnmarkAsRecommended(state.doc.index, [state.doc.id])
+      commit('unmarkAsRecommended', userId)
+      commit('isRecommended', false)
     } else {
-      await api.setMarkAsRead(state.doc.index, [state.doc.id])
-      commit('markAsRead', userId)
-      commit('isRead', true)
+      await api.setMarkAsRecommended(state.doc.index, [state.doc.id])
+      commit('markAsRecommended', userId)
+      commit('isRecommended', true)
     }
   },
-  async getMarkAsRead ({ state, commit }) {
+  async getRecommendationsByDocuments ({ state, commit }) {
     try {
-      const readBy = await api.getMarkAsRead(state.doc.index, state.doc.id)
-      commit('readBy', map(sortBy(readBy, 'id'), 'id'))
+      const recommendedBy = await api.getRecommendationsByDocuments(state.doc.index, state.doc.id)
+      commit('recommendedBy', map(sortBy(recommendedBy, 'id'), 'id'))
       const userId = await auth.getUsername()
-      const index = state.readBy.indexOf(userId)
+      const index = state.recommendedBy.indexOf(userId)
       if (index > -1) {
-        commit('isRead', true)
+        commit('isRecommended', true)
       }
     } catch (_) {
-      commit('readBy', [])
+      commit('recommendedBy', [])
     }
-    return state.readBy
+    return state.recommendedBy
   }
 }
 
