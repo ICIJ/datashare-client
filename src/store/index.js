@@ -3,6 +3,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import createPersistedState from 'vuex-persistedstate'
 
+import app from './modules/app'
 import batchSearch from './modules/batchSearch'
 import config from './modules/config'
 import document from './modules/document'
@@ -19,6 +20,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   modules: {
+    app,
     batchSearch,
     config,
     document,
@@ -35,7 +37,7 @@ export default new Vuex.Store({
   plugins: [
     createPersistedState({
       paths: [
-        'userHistory',
+        'app',
         'search.query',
         'search.size',
         'search.globalSearch',
@@ -45,11 +47,12 @@ export default new Vuex.Store({
         'search.field',
         'search.index',
         'search.showFilters',
-        'search.layout'
+        'search.layout',
+        'userHistory'
       ],
       filter (mutation) {
         // Only for some mutations
-        return some(['userHistory/', 'search/'], k => mutation.type.indexOf(k) === 0)
+        return some(['app/', 'search/', 'userHistory/'], k => mutation.type.indexOf(k) === 0)
       },
       rehydrated (store) {
         // This a temporary retro-compatibility fix to ensure persisted

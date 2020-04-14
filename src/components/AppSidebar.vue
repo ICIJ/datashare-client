@@ -170,8 +170,8 @@ import VersionNumber from '@/components/VersionNumber'
 import docs from '@/mixins/docs'
 import features from '@/mixins/features'
 import utils from '@/mixins/utils'
-import { isNarrowScreen } from '@/utils/screen'
 import settings from '@/utils/settings'
+import { isNarrowScreen } from '@/utils/screen'
 
 export default {
   name: 'AppSidebar',
@@ -182,12 +182,6 @@ export default {
     MountedDataLocation,
     VersionNumber,
     VuePerfectScrollbar
-  },
-  data () {
-    return {
-      // Quick and dirty responsive default value
-      reduced: isNarrowScreen()
-    }
   },
   computed: {
     query () {
@@ -204,6 +198,14 @@ export default {
     },
     faqLink () {
       return this.$config.get('faqLink', settings.faqLink)
+    },
+    reduced: {
+      get () {
+        return this.$store.state.app.sidebar.reduced
+      },
+      set (toggle) {
+        return this.$store.dispatch('app/toggleSidebar', toggle)
+      }
     }
   },
   watch: {
