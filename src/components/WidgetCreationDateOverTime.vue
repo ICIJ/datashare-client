@@ -1,6 +1,6 @@
 <template>
   <div class="widget">
-    <div class="widget__header d-flex align-items-center" v-if="widget.title" :class="{ 'card-header': widget.card }">
+    <div class="widget__header d-md-flex align-items-center" v-if="widget.title" :class="{ 'card-header': widget.card }">
       <h4 v-html="widget.title" class="m-0 flex-grow-1"></h4>
       <div class="widget__header__selectors">
         <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'year' }" @click="click('year')">Years</span> |
