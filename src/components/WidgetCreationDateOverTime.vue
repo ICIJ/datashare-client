@@ -122,7 +122,7 @@ export default {
     },
     barWidth () {
       const width = Math.ceil(this.innerWidth / this.x.ticks(this.intervalTime.every(1)).length)
-      return Math.ceil(width - width * 0.7)
+      return Math.ceil(width - width * 0.3)
     },
     bars () {
       return this.data.map(d => {
