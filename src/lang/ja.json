@@ -4,6 +4,11 @@
     "placeholder": "人物、組織、地名を検索",
     "relative": "検索結果と関連"
   },
+  "error": {
+    "title": "Something's wrong here",
+    "description": "An error has occured. Please try again later or contact your administrator if the problem persists.",
+    "noProjects": "You have no projects yet. Please contact your administrator."
+  },
   "search": {
     "errors": {
       "badRequest": "検索ワードが正しくありません",
@@ -79,9 +84,9 @@
       "document": {
         "extensionWarning": "この文書の形式に合わない拡張子がついています。文書を開く前に、拡張子<code>%{extension}</code>を付け加える必要があるかも知れません。"
       },
-      "markAsRead": "Mark as read",
-      "markAsUnread": "Mark as unread",
-      "markAsReadBy": "Marked as read by nobody: | Marked as read by 1 user: | Marked as read by {count} users:"
+      "markAsRecommended": "Mark as recommended",
+      "unmarkAsRecommended": "Unmark as recommended",
+      "markAsRecommendedBy": "Marked as recommended by nobody: | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
     }
   },
   "pagination": {
@@ -118,7 +123,7 @@
     "missing": "日付がありません",
     "starred": "スター付き",
     "notStarred": "スターなし",
-    "readBy": "Read by",
+    "recommendedBy": "Recommended by",
     "lang": {
       "all": "すべて",
       "ABKHAZIAN": "アブハズ語",
@@ -456,7 +461,8 @@
     "logout": "ログアウト",
     "addDocuments": "文書追加のしかた",
     "faq": "よくある質問",
-    "userGuides": "ユーザーガイド"
+    "userGuides": "ユーザーガイド",
+    "devWiki": "Developper wiki"
   },
   "footer": {
     "homedir": "解析のため、ファイルをこのディレクトリに移動してください",
@@ -559,8 +565,5 @@
       "M": "%M",
       "B": "%B"
     }
-  },
-  "landing": {
-    "noProjects": "You have no projects yet. Please contact your admin."
   }
 }

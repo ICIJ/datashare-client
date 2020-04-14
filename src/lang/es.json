@@ -4,6 +4,11 @@
     "placeholder": "Búsqueda de personas, organizaciones, localizaciones...",
     "relative": "Relacionado a la búsqueda"
   },
+  "error": {
+    "title": "Something's wrong here",
+    "description": "An error has occured. Please try again later or contact your administrator if the problem persists.",
+    "noProjects": "You have no projects yet. Please contact your administrator."
+  },
   "search": {
     "errors": {
       "badRequest": "Tu término de búsqueda es incorrecto",
@@ -79,9 +84,9 @@
       "document": {
         "extensionWarning": "Este documento tiene una extensión incorrecta para su tipo. Puede que necesite añadir la extensión <code>%{extension}</code> antes de poder abrirlo."
       },
-      "markAsRead": "Mark as read",
-      "markAsUnread": "Mark as unread",
-      "markAsReadBy": "Marked as read by nobody: | Marked as read by 1 user: | Marked as read by {count} users:"
+      "markAsRecommended": "Mark as recommended",
+      "unmarkAsRecommended": "Unmark as recommended",
+      "markAsRecommendedBy": "Marked as recommended by nobody: | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
     }
   },
   "pagination": {
@@ -118,7 +123,7 @@
     "missing": "Fecha faltante",
     "starred": "Favoritos",
     "notStarred": "No favoritos",
-    "readBy": "Read by",
+    "recommendedBy": "Recommended by",
     "lang": {
       "all": "Todos",
       "ABKHAZIAN": "Abjasio",
@@ -456,7 +461,8 @@
     "logout": "Cerrar sesión",
     "addDocuments": "Cómo añadir documentos",
     "faq": "Preguntas frecuentes (FAQ)",
-    "userGuides": "Guía del Usuario"
+    "userGuides": "Guía del Usuario",
+    "devWiki": "Developper wiki"
   },
   "footer": {
     "homedir": "Mueve archivos a este directorio para analizarlos",
@@ -559,8 +565,5 @@
       "M": "%M",
       "B": "%B"
     }
-  },
-  "landing": {
-    "noProjects": "You have no projects yet. Please contact your admin."
   }
 }
