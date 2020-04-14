@@ -260,7 +260,7 @@ export default {
     },
     searchPaths: throttle(function () {
       this.hideSuggestionsFileTypes()
-      this.$set(this, 'suggestionPaths', filter(this.allPaths, item => item.indexOf(this.path) > -1))
+      this.$set(this, 'suggestionPaths', filter(this.allPaths, item => (item.indexOf(this.path) > -1) && !includes(this.paths, item)))
     }, 200),
     searchPath (path) {
       if (path) {

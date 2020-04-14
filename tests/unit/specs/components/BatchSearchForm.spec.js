@@ -39,7 +39,7 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.resetForm).toBeCalled()
   })
 
-  it('should display a form with 7 fields: name, csvFile, description, phraseMatch, fuzziness, fileTypes, paths and published', () => {
+  it('should display a form with 8 fields: name, csvFile, description, phraseMatch, fuzziness, fileTypes, paths and published', () => {
     expect(wrapper.findAll('.card-body b-form-group-stub')).toHaveLength(7)
     expect(wrapper.findAll('.card-body b-form-input-stub')).toHaveLength(4)
     expect(wrapper.findAll('.card-body b-form-file-stub')).toHaveLength(1)
@@ -98,6 +98,14 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.contains('selectable-dropdown-stub')).toBeTruthy()
     })
 
+    it('should hide suggestions', () => {
+      wrapper.vm.$set(wrapper.vm, 'suggestionFileTypes', ['suggestion_01', 'suggestion_02', 'suggestion_03'])
+
+      wrapper.vm.hideSuggestionsFileTypes()
+
+      expect(wrapper.vm.suggestionFileTypes).toEqual([])
+    })
+
     it('should filter fileTypes according to the fileTypes input on mime file', () => {
       wrapper.vm.$set(wrapper.vm, 'allFileTypes', [{ label: 'Visio document', mime: 'visio' }, { label: 'StarWriter 5 document', mime: 'vision' }, { label: 'Something else', mime: 'else' }])
       wrapper.vm.$set(wrapper.vm, 'fileType', 'visi')
@@ -128,20 +136,24 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.suggestionFileTypes).toHaveLength(0)
     })
 
-    it('should set the clicked item in the fileTypes input', () => {
+    it('should set the clicked item in fileTypes', () => {
       wrapper = mount(BatchSearchForm, { i18n, localVue, store })
       wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'Excel 2003 XML spreadsheet visio' }])
       wrapper.vm.searchFileType({ label: 'StarWriter 5 document' })
 
       expect(wrapper.vm.fileTypes).toEqual([{ label: 'Excel 2003 XML spreadsheet visio' }, { label: 'StarWriter 5 document' }])
     })
+  })
 
-    it('should hide suggestions', () => {
-      wrapper.vm.$set(wrapper.vm, 'suggestionFileTypes', ['suggestion_01', 'suggestion_02', 'suggestion_03'])
+  describe('Paths suggestions', () => {
+    it('should hide already selected paths from suggestions', () => {
+      wrapper.vm.$set(wrapper.vm, 'allPaths', ['folder_01', 'folder_02', 'folder_03'])
+      wrapper.vm.$set(wrapper.vm, 'paths', ['folder_01'])
+      wrapper.vm.$set(wrapper.vm, 'path', '_01')
 
-      wrapper.vm.hideSuggestionsFileTypes()
+      wrapper.vm.searchPaths()
 
-      expect(wrapper.vm.suggestionFileTypes).toEqual([])
+      expect(wrapper.vm.suggestionPaths).toHaveLength(0)
     })
   })
 
