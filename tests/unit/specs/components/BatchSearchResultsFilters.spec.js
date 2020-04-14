@@ -168,7 +168,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     })
   })
 
-  describe('sort dropdown', () => {
+  describe('sort queries', () => {
     it('should display a dropdown to sort', () => {
       wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
 

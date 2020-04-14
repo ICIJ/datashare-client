@@ -127,10 +127,10 @@ export default {
     })
   },
   beforeRouteUpdate (to, from, next) {
-    if (to.query.queries_sort === 'count') {
-      this.$set(this, 'sortField', 'count')
-    } else {
+    if (to.query.queries_sort === 'default') {
       this.$set(this, 'sortField', 'default')
+    } else {
+      this.$set(this, 'sortField', 'count')
     }
     this.$set(this, 'selectedQueries', filter(this.queries, query => indexOf(to.query.queries, query.label) > -1))
     next()
