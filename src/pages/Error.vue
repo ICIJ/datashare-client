@@ -1,10 +1,15 @@
 <script>
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
+
+import Api from '@/api'
+import Auth from '@/api/resources/Auth'
 import VersionNumber from '@/components/VersionNumber'
 import settings from '@/utils/settings'
+import utils from '@/mixins/utils'
 
 export default {
   name: 'Error',
+  mixins: [utils],
   components: {
     FontAwesomeLayers,
     VersionNumber
@@ -22,6 +27,15 @@ export default {
     code: {
       type: Number
     }
+  },
+  data () {
+    return {
+      username: null
+    }
+  },
+  async mounted () {
+    const auth = new Auth()
+    this.username = await auth.getUsername()
   },
   computed: {
     titleAsString () {
@@ -41,56 +55,70 @@ export default {
     },
     devWikiLink () {
       return this.$config.get('devWikiLink', settings.devWikiLink)
+    },
+    showHeader () {
+      return this.isServer && !!this.username
+    },
+    logoutLink () {
+      return Api.getFullUrl(process.env.VUE_APP_DS_AUTH_SIGNOUT)
     }
   }
 }
 </script>
 
 <template>
-  <div class="error">
-    <div class="error__container container">
-      <h1 class="mb-3 error__container__heading">
-        <span class="error__container__heading__code mr-3">
-          <font-awesome-layers class="fa-sm error__container__heading__code__icon">
-            <fa icon="circle" />
-            <fa icon="sad-tear" class="text-secondary" transform="shrink-6" />
-          </font-awesome-layers>
-          <span class="px-2 error__container__heading__code__value">{{ code }}</span>
-        </span>
-        {{ titleAsString || $t('error.title') }}
-      </h1>
-      <p class="error__container__description lead">
-        {{ description || $t('error.description') }}
-      </p>
-      <ul class="error__container__links list-inline text-capitalize">
-        <li class="list-inline-item error__container__links__item">
-          <a :href="faqLink" target="_blank">
-            <fa icon="question" fixed-width class="error__container__links__item__icon mr-1" />
-            {{ $t('menu.faq') }}
-          </a>
-        </li>
-        <li class="list-inline-item error__container__links__item">
-          <a :href="userGuidesLink" target="_blank">
-            <fa icon="book" fixed-width class="error__container__links__item__icon mr-1" />
-            {{ $t('menu.userGuides') }}
-          </a>
-        </li>
-        <li class="list-inline-item error__container__links__item">
-          <a :href="devWikiLink" target="_blank">
-            <fa icon="server" fixed-width class="error__container__links__item__icon mr-1" />
-            {{ $t('menu.devWiki') }}
-          </a>
-        </li>
-        <li class="list-inline-item error__container__links__item">
-          <a :href="helpLink" target="_blank">
-            <fa icon="ambulance" fixed-width class="error__container__links__item__icon mr-1" />
-            {{ $t('menu.help') }}
-          </a>
-        </li>
-        <li class="list-inline-item error__container__links__item">
-          <version-number tooltip-placement="top" class="d-inline" />
-        </li>
-      </ul>
+  <div class="error d-flex flex-column">
+    <div class="error__header p-3 text-right" v-if="showHeader">
+      <a :href="logoutLink" class="btn btn-outline-light btn-sm" :title="$t('menu.connectedAs', { username })" v-b-tooltip.html>
+        <fa icon="sign-out-alt" fixed-width />
+        {{ $t('menu.logout') }}
+      </a>
+    </div>
+    <div class="flex-grow-1 d-flex align-items-center justify-content-center">
+      <div class="error__container container">
+        <h1 class="mb-3 error__container__heading">
+          <span class="error__container__heading__code mr-3">
+            <font-awesome-layers class="fa-sm error__container__heading__code__icon">
+              <fa icon="circle" />
+              <fa icon="sad-tear" class="text-secondary" transform="shrink-6" />
+            </font-awesome-layers>
+            <span class="px-2 error__container__heading__code__value">{{ code }}</span>
+          </span>
+          {{ titleAsString || $t('error.title') }}
+        </h1>
+        <p class="error__container__description lead">
+          {{ description || $t('error.description') }}
+        </p>
+        <ul class="error__container__links list-inline text-capitalize">
+          <li class="list-inline-item error__container__links__item">
+            <a :href="faqLink" target="_blank">
+              <fa icon="question" fixed-width class="error__container__links__item__icon mr-1" />
+              {{ $t('menu.faq') }}
+            </a>
+          </li>
+          <li class="list-inline-item error__container__links__item">
+            <a :href="userGuidesLink" target="_blank">
+              <fa icon="book" fixed-width class="error__container__links__item__icon mr-1" />
+              {{ $t('menu.userGuides') }}
+            </a>
+          </li>
+          <li class="list-inline-item error__container__links__item">
+            <a :href="devWikiLink" target="_blank">
+              <fa icon="server" fixed-width class="error__container__links__item__icon mr-1" />
+              {{ $t('menu.devWiki') }}
+            </a>
+          </li>
+          <li class="list-inline-item error__container__links__item">
+            <a :href="helpLink" target="_blank">
+              <fa icon="ambulance" fixed-width class="error__container__links__item__icon mr-1" />
+              {{ $t('menu.help') }}
+            </a>
+          </li>
+          <li class="list-inline-item error__container__links__item">
+            <version-number tooltip-placement="top" class="d-inline" />
+          </li>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -101,9 +129,9 @@ export default {
     color: $app-context-sidebar-color;
     width: 100%;
     min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+
+    &__header {
+    }
 
     &__container {
       margin: $spacer auto;

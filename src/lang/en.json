@@ -462,7 +462,8 @@
     "addDocuments": "How to add documents",
     "faq": "FAQ",
     "userGuides": "User guides",
-    "devWiki": "Developper wiki"
+    "devWiki": "Developper wiki",
+    "connectedAs": "You're connected as <strong>{username}</strong>"
   },
   "footer": {
     "homedir": "Move files to this directory in order to analyze them",
