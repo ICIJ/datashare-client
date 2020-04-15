@@ -462,7 +462,8 @@
     "addDocuments": "Comment ajouter des documents",
     "faq": "FAQ",
     "userGuides": "Guides d'utilisateurs",
-    "devWiki": "Developper wiki"
+    "devWiki": "Developper wiki",
+    "connectedAs": "You're connected as <strong>{username}</strong>"
   },
   "footer": {
     "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
@@ -554,6 +555,7 @@
   },
   "config": {
     "title": "Settings",
+    "description": "Don't change these settings if you don't know what you're doing.",
     "submit": "Actualiser",
     "submitSuccess": "Les modifications sont enregistrées mais vous devez redémarrer Datashare pour qu'elles s'appliquent.",
     "submitError": "Erreur dans la reconfiguration.",
