@@ -462,7 +462,8 @@
     "addDocuments": "Cómo añadir documentos",
     "faq": "Preguntas frecuentes (FAQ)",
     "userGuides": "Guía del Usuario",
-    "devWiki": "Developper wiki"
+    "devWiki": "Developper wiki",
+    "connectedAs": "You're connected as <strong>{username}</strong>"
   },
   "footer": {
     "homedir": "Mueve archivos a este directorio para analizarlos",
@@ -554,6 +555,7 @@
   },
   "config": {
     "title": "Settings",
+    "description": "Don't change these settings if you don't know what you're doing.",
     "submit": "Guardar",
     "submitSuccess": "Modificaciones enviadas. Ahora debería reiniciar Datashare.",
     "submitError": "Error al guardar la configuración.",
