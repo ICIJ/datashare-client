@@ -462,7 +462,8 @@
     "addDocuments": "文書追加のしかた",
     "faq": "よくある質問",
     "userGuides": "ユーザーガイド",
-    "devWiki": "Developper wiki"
+    "devWiki": "Developper wiki",
+    "connectedAs": "You're connected as <strong>{username}</strong>"
   },
   "footer": {
     "homedir": "解析のため、ファイルをこのディレクトリに移動してください",
@@ -554,6 +555,7 @@
   },
   "config": {
     "title": "Settings",
+    "description": "Don't change these settings if you don't know what you're doing.",
     "submit": "送信",
     "submitSuccess": "設定が変更されました。Datashareを再起動してください",
     "submitError": "設定を送信できません。",
