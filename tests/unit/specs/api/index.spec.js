@@ -61,17 +61,17 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getConfig', async () => {
-    json = await api.getConfig()
+  it('should return backend response to getSettings', async () => {
+    json = await api.getSettings()
     expect(json).toEqual({})
   })
 
-  it('should throw a 401 if getConfig return a error', async () => {
+  it('should throw a 401 if getSettings return a error', async () => {
     axios.request.mockRejectedValue({ response: { status: 401 } })
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
     try {
-      await api.getConfig()
+      await api.getSettings()
     } catch (error) {
       expect(error.response.status).toBe(401)
     }
@@ -82,8 +82,8 @@ describe('Datashare backend client', () => {
     axios.request.mockResolvedValue({ data: {} })
   })
 
-  it('should return backend response to setConfig', async () => {
-    json = await api.setConfig({})
+  it('should return backend response to setSettings', async () => {
+    json = await api.setSettings({})
     expect(json).toEqual({})
   })
 

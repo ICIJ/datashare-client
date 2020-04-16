@@ -5,7 +5,6 @@ import createPersistedState from 'vuex-persistedstate'
 
 import app from './modules/app'
 import batchSearch from './modules/batchSearch'
-import config from './modules/config'
 import document from './modules/document'
 import documentNotes from './modules/documentNotes'
 import hooks from './modules/hooks'
@@ -13,6 +12,7 @@ import indexing from './modules/indexing'
 import insights from './modules/insights'
 import pipelines from './modules/pipelines'
 import search from './modules/search'
+import settings from './modules/settings'
 import treeView from './modules/treeView'
 import userHistory from './modules/userHistory'
 
@@ -22,7 +22,6 @@ export default new Vuex.Store({
   modules: {
     app,
     batchSearch,
-    config,
     document,
     documentNotes,
     hooks,
@@ -30,6 +29,7 @@ export default new Vuex.Store({
     insights,
     pipelines,
     search,
+    settings,
     treeView,
     userHistory
   },

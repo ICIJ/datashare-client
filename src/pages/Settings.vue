@@ -3,15 +3,15 @@
     <div v-if="!$config.is('multipleProjects')">
       <div class="bg-white">
         <div class="container py-5">
-          <h3>{{ $t('config.title') }}</h3>
-          <div>{{ $t('config.description') }}</div>
+          <h3>{{ $t('settings.title') }}</h3>
+          <div>{{ $t('settings.description') }}</div>
         </div>
       </div>
       <div class="container my-4">
         <v-wait for="load_data">
           <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
           <b-form @submit.prevent="onSubmit">
-            <b-form-group v-for="(value, name) in config" :key="name" label-cols-xs="12" label-cols-sm="4" label-cols-lg="3">
+            <b-form-group v-for="(value, name) in settings" :key="name" label-cols-xs="12" label-cols-sm="4" label-cols-lg="3">
               <template v-slot:label>
                 <span :class="{ 'font-weight-bold': fieldChanged(name) }" class="d-flex align-items-top">
                   <span class="flex-grow-1 pb-1" :title="name">
@@ -24,12 +24,12 @@
                   </span>
                 </span>
               </template>
-              <b-form-input v-model="config[name]" />
+              <b-form-input v-model="settings[name]" />
             </b-form-group>
             <b-row>
               <b-col offset-xs="0" offset-sm="4" offset-lg="3">
                 <b-button type="submit" variant="primary">
-                  {{ $t('config.submit') }}
+                  {{ $t('settings.submit') }}
                 </b-button>
               </b-col>
             </b-row>
@@ -39,14 +39,14 @@
     </div>
     <div v-else class="m-4">
       <b-alert variant="danger" show>
-        {{ $t('config.noAccess') }}
+        {{ $t('settings.noAccess') }}
       </b-alert>
     </div>
   </div>
 </template>
 
 <script>
-import { cloneDeep } from 'lodash'
+import cloneDeep from 'lodash/cloneDeep'
 
 const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth', 'CORS']
 
@@ -70,31 +70,31 @@ export default {
   },
   data () {
     return {
-      config: {},
-      master: {}
+      master: {},
+      settings: {}
     }
   },
   async mounted () {
     this.$wait.start('load_data')
-    const master = await this.$store.dispatch('config/getConfig')
+    const master = await this.$store.dispatch('settings/getSettings')
     this.$set(this, 'master', master)
-    this.$set(this, 'config', cloneDeep(master))
+    this.$set(this, 'settings', cloneDeep(master))
     this.$wait.end('load_data')
   },
   methods: {
     fieldChanged (field) {
-      return this.config[field] !== this.master[field]
+      return this.settings[field] !== this.master[field]
     },
     restore (field) {
-      this.config[field] = this.master[field]
+      this.settings[field] = this.master[field]
     },
     async onSubmit () {
       try {
-        await this.$store.dispatch('config/onSubmit', this.config)
-        this.$set(this, 'master', cloneDeep(this.config))
-        this.$bvToast.toast(this.$t('config.submitSuccess'), { noCloseButton: true, variant: 'success' })
+        await this.$store.dispatch('settings/onSubmit', this.settings)
+        this.$set(this, 'master', cloneDeep(this.settings))
+        this.$bvToast.toast(this.$t('settings.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
-        this.$bvToast.toast(this.$t('config.submitError'), { noCloseButton: true, variant: 'danger' })
+        this.$bvToast.toast(this.$t('settings.submitError'), { noCloseButton: true, variant: 'danger' })
       }
     }
   }

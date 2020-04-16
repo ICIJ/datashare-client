@@ -4,13 +4,13 @@ import store from '@/store'
 
 jest.mock('axios')
 
-describe('ConfigStore', () => {
+describe('SettingsStore', () => {
   beforeAll(() => axios.request.mockResolvedValue({ data: {} }))
 
   beforeEach(() => axios.request.mockClear())
 
-  it('should call the getConfig url', () => {
-    store.dispatch('config/getConfig')
+  it('should call the getSettings url', () => {
+    store.dispatch('settings/getSettings')
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -18,8 +18,8 @@ describe('ConfigStore', () => {
     }))
   })
 
-  it('should send the config modifications', () => {
-    store.dispatch('config/onSubmit', { foo: 'bar' })
+  it('should send the settings modifications', () => {
+    store.dispatch('settings/onSubmit', { foo: 'bar' })
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({

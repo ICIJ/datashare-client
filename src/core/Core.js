@@ -101,7 +101,7 @@ export default class Core extends Behaviors {
   async configure () {
     try {
       // Get the config object
-      const config = await this.api.getConfig()
+      const config = await this.api.getSettings()
       // Load the user
       this.config.merge(await this.getUser())
       // Murmur exposes a config attribute which share a Config object

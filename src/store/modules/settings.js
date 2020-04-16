@@ -3,13 +3,13 @@ import Api from '@/api'
 export const api = new Api()
 
 export const actions = {
-  getConfig () {
+  getSettings () {
     try {
-      return api.getConfig()
+      return api.getSettings()
     } catch (_) {}
   },
-  onSubmit (state, config) {
-    return api.setConfig(config)
+  onSubmit (state, settings) {
+    return api.setSettings(settings)
   }
 }
 

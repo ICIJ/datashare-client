@@ -553,12 +553,12 @@
     "findNextOccurrence": "Find the next occurrence in the document",
     "findNextOccurrenceAlt":"Find the next occurrence in the document"
   },
-  "config": {
+  "settings": {
     "title": "Settings",
     "description": "Don't change these settings if you don't know what you're doing.",
     "submit": "Submit",
     "submitSuccess": "Modifications submitted. You should now restart Datashare.",
-    "submitError": "Unable to submit the configuration.",
+    "submitError": "Unable to submit the settings.",
     "noAccess": "You do not have access to that page in server mode."
   },
   "human": {

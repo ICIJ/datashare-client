@@ -13,8 +13,8 @@ describe('store', () => {
     expect(store.state.batchSearch).toBeDefined()
   })
 
-  it('should define a config module', () => {
-    expect(store.state.config).toBeDefined()
+  it('should define a settings module', () => {
+    expect(store.state.settings).toBeDefined()
   })
 
   it('should define a document module', () => {
