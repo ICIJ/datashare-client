@@ -8,10 +8,15 @@
         </div>
       </div>
       <div class="container my-4">
-        <v-wait for="load_data">
+        <v-wait for="load settings">
           <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
           <b-form @submit.prevent="onSubmit">
-            <b-form-group v-for="(value, name) in settings" :key="name" label-cols-xs="12" label-cols-sm="4" label-cols-lg="3">
+            <b-form-group
+              :key="name"
+              label-cols-xs="12"
+              label-cols-sm="4"
+              label-cols-lg="3"
+              v-for="(value, name) in settings">
               <template v-slot:label>
                 <span :class="{ 'font-weight-bold': fieldChanged(name) }" class="d-flex align-items-top">
                   <span class="flex-grow-1 pb-1" :title="name">
@@ -75,11 +80,11 @@ export default {
     }
   },
   async mounted () {
-    this.$wait.start('load_data')
+    this.$wait.start('load settings')
     const master = await this.$store.dispatch('settings/getSettings')
     this.$set(this, 'master', master)
     this.$set(this, 'settings', cloneDeep(master))
-    this.$wait.end('load_data')
+    this.$wait.end('load settings')
   },
   methods: {
     fieldChanged (field) {
@@ -91,6 +96,7 @@ export default {
     async onSubmit () {
       try {
         await this.$store.dispatch('settings/onSubmit', this.settings)
+        this.$config.merge(this.settings)
         this.$set(this, 'master', cloneDeep(this.settings))
         this.$bvToast.toast(this.$t('settings.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
