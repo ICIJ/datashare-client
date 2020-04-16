@@ -107,9 +107,9 @@ export const router = {
           }
         },
         {
-          name: 'config',
-          path: '/config',
-          component: () => import('@/pages/Config')
+          name: 'settings',
+          path: '/settings',
+          component: () => import('@/pages/Settings')
         },
         {
           name: 'insights',

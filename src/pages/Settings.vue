@@ -51,7 +51,7 @@ import { cloneDeep } from 'lodash'
 const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth', 'CORS']
 
 export default {
-  name: 'Config',
+  name: 'Settings',
   filters: {
     sentenceCase (str) {
       const result = str.replace(/([A-Z])/g, ' $1')

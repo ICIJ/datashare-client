@@ -76,16 +76,16 @@
             </span>
           </router-link>
         </li>
-        <template v-if="hasFeature('CONFIG') && !isServer">
+        <template v-if="hasFeature('SETTINGS') && !isServer">
           <li class="app-sidebar__container__menu__item">
             <router-link
               class="app-sidebar__container__menu__item__link"
-              :title="$t('menu.config')"
-              :to="{ name: 'config' }"
+              :title="$t('menu.settings')"
+              :to="{ name: 'settings' }"
               v-b-tooltip.right="{ customClass: tooltipsClass }">
               <fa icon="cog" fixed-width />
               <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-                {{ $t('menu.config') }}
+                {{ $t('menu.settings') }}
               </span>
             </router-link>
           </li>
