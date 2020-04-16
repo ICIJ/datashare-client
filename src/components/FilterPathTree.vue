@@ -12,8 +12,12 @@ import FilterPathTreeNode from '@/components/FilterPathTreeNode'
 export default {
   name: 'FilterPathTree',
   props: {
-    treeData: Array,
-    filter: Object
+    treeData: {
+      type: Array
+    },
+    filter: {
+      type: Object
+    }
   },
   components: {
     FilterPathTreeNode

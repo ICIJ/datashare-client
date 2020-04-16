@@ -87,8 +87,8 @@ import bodybuilder from 'bodybuilder'
 
 import elasticsearch from '@/api/elasticsearch'
 import EsDocList from '@/api/resources/EsDocList'
-import DocumentTranslatedContent from '@/components/DocumentTranslatedContent.vue'
-import EmailString from '@/components/EmailString.vue'
+import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
+import EmailString from '@/components/EmailString'
 
 export default {
   name: 'DocumentThread',

@@ -74,9 +74,15 @@ function escapeLuceneChars (str) {
 export default {
   name: 'SearchBar',
   props: {
-    tips: Boolean,
-    animated: Boolean,
-    settings: Boolean,
+    tips: {
+      type: Boolean
+    },
+    animated: {
+      type: Boolean
+    },
+    settings: {
+      type: Boolean
+    },
     fieldOptions: {
       type: Array,
       default () {

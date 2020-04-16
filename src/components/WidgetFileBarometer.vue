@@ -15,6 +15,7 @@
 
 <script>
 import { waitFor } from 'vue-wait'
+
 import elasticsearch from '@/api/elasticsearch'
 import humanNumber from '@/filters/humanNumber'
 
@@ -28,8 +29,8 @@ export default {
   },
   data () {
     return {
-      total: null,
-      onDisk: null
+      onDisk: null,
+      total: null
     }
   },
   async created () {

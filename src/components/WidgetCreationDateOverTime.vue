@@ -27,7 +27,7 @@
                     <div class="widget__content__chart__tooltips__item__wrapper" xmlns="http://www.w3.org/1999/xhtml">
                       <span>
                         <h6 class="mb-0">{{ intervalFormatFn(bar.date) }}</h6>
-                        {{ bar.doc_count }}&nbsp;documents
+                        {{ bar.doc_count }} documents
                       </span>
                     </div>
                   </foreignObject>

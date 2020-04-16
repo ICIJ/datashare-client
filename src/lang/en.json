@@ -567,5 +567,8 @@
       "M": "%M",
       "B": "%B"
     }
+  },
+  "insights": {
+    "selectProject": "Select a project"
   }
 }

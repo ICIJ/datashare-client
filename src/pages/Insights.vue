@@ -3,7 +3,7 @@
     <div class="bg-secondary text-white insights__toolbox position-sticky sticky-top mb-4" v-if="$config.is('multipleProjects')">
       <div class="container py-2 d-flex align-items-center">
         <div class="pr-2">
-          Select a project
+          {{ $t('insights.selectProject') }}
         </div>
         <div>
           <project-selector v-model="project" size="sm" />
@@ -12,7 +12,7 @@
     </div>
     <div class="container insights__container">
       <b-row class="align-items-stretch">
-        <b-col v-for="(widget, index) in widgets" :md="widget.cols" :key="index">
+        <b-col v-for="(widget, index) in instantiatedWidgets" :md="widget.cols" :key="index">
           <div class="insights__container__widget" :class="{ card: widget.card }">
             <component :is="widget.component" :widget="widget" class="flex-grow-1" />
           </div>
@@ -32,7 +32,7 @@ export default {
     ProjectSelector
   },
   computed: {
-    ...mapGetters('insights', { widgets: 'instantiatedWidgets' }),
+    ...mapGetters('insights', ['instantiatedWidgets']),
     project: {
       get: function () {
         return this.$store.state.insights.index
@@ -50,16 +50,15 @@ export default {
 
 <style lang="scss">
   .insights {
-
     &__container {
       margin-top: $spacer;
 
       &__widget {
-        position: relative;
-        min-height: calc(100% - #{$grid-gutter-width});
-        margin-bottom: $grid-gutter-width;
         display: flex;
         flex-direction: row;
+        margin-bottom: $grid-gutter-width;
+        min-height: calc(100% - #{$grid-gutter-width});
+        position: relative;
       }
     }
   }

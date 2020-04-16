@@ -41,8 +41,12 @@ import filters from '@/mixins/filters'
 export default {
   name: 'FilterPathTreeNode',
   props: {
-    node: Object,
-    filter: Object
+    node: {
+      type: Object
+    },
+    filter: {
+      type: Object
+    }
   },
   mixins: [filters],
   data () {
