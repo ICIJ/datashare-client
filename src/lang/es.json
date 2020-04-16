@@ -457,7 +457,7 @@
     "search": "Buscar en documentos",
     "history": "Tu historial",
     "insights": "Insights",
-    "config": "Settings",
+    "settings": "Settings",
     "logout": "Cerrar sesión",
     "addDocuments": "Cómo añadir documentos",
     "faq": "Preguntas frecuentes (FAQ)",
@@ -553,12 +553,12 @@
     "findNextOccurrence": "Encontrar la próxima ocurrencia en el documento",
     "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento"
   },
-  "config": {
+  "settings": {
     "title": "Settings",
     "description": "Don't change these settings if you don't know what you're doing.",
-    "submit": "Guardar",
-    "submitSuccess": "Modificaciones enviadas. Ahora debería reiniciar Datashare.",
-    "submitError": "Error al guardar la configuración.",
+    "submit": "Submit",
+    "submitSuccess": "Modifications submitted. You should now restart Datashare.",
+    "submitError": "Unable to submit the settings.",
     "noAccess": "You do not have access to that page in server mode."
   },
   "human": {
@@ -567,5 +567,8 @@
       "M": "%M",
       "B": "%B"
     }
+  },
+  "insights": {
+    "selectProject": "Select a project"
   }
 }

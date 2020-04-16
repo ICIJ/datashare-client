@@ -457,7 +457,7 @@
     "search": "ドキュメントの検索",
     "history": "あなたの履歴",
     "insights": "Insights",
-    "config": "Settings",
+    "settings": "Settings",
     "logout": "ログアウト",
     "addDocuments": "文書追加のしかた",
     "faq": "よくある質問",
@@ -553,12 +553,12 @@
     "findNextOccurrence": "検索結果のうち次の語に移動",
     "findNextOccurrenceAlt": "検索結果のうち次の語に移動"
   },
-  "config": {
+  "settings": {
     "title": "Settings",
     "description": "Don't change these settings if you don't know what you're doing.",
-    "submit": "送信",
-    "submitSuccess": "設定が変更されました。Datashareを再起動してください",
-    "submitError": "設定を送信できません。",
+    "submit": "Submit",
+    "submitSuccess": "Modifications submitted. You should now restart Datashare.",
+    "submitError": "Unable to submit the settings.",
     "noAccess": "You do not have access to that page in server mode."
   },
   "human": {
@@ -567,5 +567,8 @@
       "M": "%M",
       "B": "%B"
     }
+  },
+  "insights": {
+    "selectProject": "Select a project"
   }
 }
