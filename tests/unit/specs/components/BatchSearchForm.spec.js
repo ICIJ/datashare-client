@@ -139,7 +139,8 @@ describe('BatchSearchForm.vue', () => {
     it('should set the clicked item in fileTypes', () => {
       wrapper = mount(BatchSearchForm, { i18n, localVue, store })
       wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'Excel 2003 XML spreadsheet visio' }])
-      wrapper.vm.searchFileType({ label: 'StarWriter 5 document' })
+      wrapper.vm.$set(wrapper.vm, 'selectedFileType', { label: 'StarWriter 5 document' })
+      wrapper.vm.searchFileType()
 
       expect(wrapper.vm.fileTypes).toEqual([{ label: 'Excel 2003 XML spreadsheet visio' }, { label: 'StarWriter 5 document' }])
     })

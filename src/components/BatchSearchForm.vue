@@ -12,7 +12,7 @@
             <b-form-input
               v-model="name"
               type="text"
-              required></b-form-input>
+              required />
           </b-form-group>
           <b-form-group
             label-size="sm"
@@ -24,10 +24,13 @@
               :placeholder="$t('batchSearch.filePlaceholder')"
               accept=".csv"
               class="text-truncate"
-              required></b-form-file>
+              required />
           </b-form-group>
           <p class="help small">
-            <a href="https://icij.gitbook.io/datashare/all/batch-search-documents#write-your-queries-in-a-spreadsheet" target="_blank" class="text-muted">
+            <a
+              class="text-muted"
+              href="https://icij.gitbook.io/datashare/all/batch-search-documents#write-your-queries-in-a-spreadsheet"
+              target="_blank">
               {{ $t('batchSearch.learnMore') }}
             </a>
           </p>
@@ -37,7 +40,7 @@
             <b-form-textarea
               v-model="description"
               rows="2"
-              max-rows="6"></b-form-textarea>
+              max-rows="6" />
           </b-form-group>
           <b-form-group
             label-size="sm"
@@ -46,7 +49,7 @@
             <b-form-select
               v-model="project"
               :options="projects"
-              required></b-form-select>
+              required />
           </b-form-group>
           <b-form-group
             label-size="sm"
@@ -82,7 +85,7 @@
                 type="number"
                 v-model="fuzziness"
                 min="0"
-                :max="maxFuzziness"></b-form-input>
+                :max="maxFuzziness" />
             </b-form-group>
             <p class="help small">
               <a :href="fuzzinessLearnMore" target="_blank" class="text-muted">
@@ -96,11 +99,12 @@
                 v-model="fileType"
                 @input="searchFileTypes"
                 autocomplete="off"
-                ref="fileType">
-              </b-form-input>
+                ref="fileType"
+                @keydown.enter.prevent="searchFileType" />
               <selectable-dropdown
                 ref="suggestionFileTypes"
-                @input="searchFileType"
+                @input="selectFileType"
+                @click.native="searchFileType"
                 @deactivate="hideSuggestionsFileTypes"
                 :hide="!suggestionFileTypes.length"
                 :items="suggestionFileTypes">
@@ -111,7 +115,13 @@
                   <b-tooltip placement="right" :target="item.mime" :title="item.label" />
                 </template>
               </selectable-dropdown>
-              <b-badge v-for="(fileType, index) in fileTypes" :key="fileType.mime" class="mr-2 pl-1 batch-search-form__advanced-filters" variant="warning" pill @click.prevent="deleteFileType(index)">
+              <b-badge
+                class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
+                @click.prevent="deleteFileType(index)"
+                :key="fileType.mime"
+                pill
+                v-for="(fileType, index) in fileTypes"
+                variant="warning">
                 <fa icon="times-circle" />
                 {{ fileType.label }}
               </b-badge>
@@ -120,14 +130,16 @@
               label-size="sm"
               :label="$t('batchSearch.path')">
               <b-form-input
-                v-model="path"
-                @input="searchPaths"
                 autocomplete="off"
-                ref="path">
+                @input="searchPaths"
+                ref="path"
+                v-model="path"
+                @keydown.enter.prevent="searchPath">
               </b-form-input>
               <selectable-dropdown
                 ref="suggestionPaths"
-                @input="searchPath"
+                @input="selectPath"
+                @click.native="searchPath"
                 @deactivate="hideSuggestionsPaths"
                 :hide="!suggestionPaths.length"
                 :items="suggestionPaths">
@@ -179,23 +191,25 @@ export default {
   name: 'BatchSearchForm',
   data () {
     return {
-      name: '',
+      allFileTypes: [],
+      allPaths: [],
       csvFile: null,
       description: '',
-      project: '',
-      projects: [],
-      phraseMatch: true,
-      fuzziness: 0,
       fileType: '',
       fileTypes: [],
-      suggestionFileTypes: [],
+      fuzziness: 0,
+      name: '',
       path: '',
       paths: [],
-      suggestionPaths: [],
-      allPaths: [],
-      allFileTypes: [],
+      phraseMatch: true,
+      project: '',
+      projects: [],
       published: true,
-      showCollapse: false
+      selectedFileType: '',
+      selectedPath: '',
+      showCollapse: false,
+      suggestionFileTypes: [],
+      suggestionPaths: []
     }
   },
   computed: {
@@ -246,13 +260,16 @@ export default {
     this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
   },
   methods: {
+    selectFileType (fileType) {
+      this.selectedFileType = fileType || this.selectedFileType
+    },
     searchFileTypes: throttle(function () {
       this.hideSuggestionsPaths()
       this.$set(this, 'suggestionFileTypes', filter(this.fuse.search(this.fileType), item => !includes(map(this.fileTypes, 'mime'), item.mime)))
     }, 200),
-    searchFileType (fileType) {
-      if (fileType) {
-        this.fileTypes.push(fileType)
+    searchFileType () {
+      if (this.selectedFileType) {
+        this.fileTypes.push(this.selectedFileType)
         this.hideSuggestionsFileTypes()
         this.$set(this, 'fileType', '')
         if (this.$refs && this.$refs.fileType) this.$refs.fileType.focus()
@@ -264,13 +281,16 @@ export default {
     deleteFileType (index) {
       this.fileTypes.splice(index, 1)
     },
+    selectPath (path) {
+      this.selectedPath = path || this.selectedPath
+    },
     searchPaths: throttle(function () {
       this.hideSuggestionsFileTypes()
       this.$set(this, 'suggestionPaths', filter(this.allPaths, item => (item.indexOf(this.path) > -1) && !includes(this.paths, item)))
     }, 200),
-    searchPath (path) {
-      if (path) {
-        this.paths.push(path)
+    searchPath () {
+      if (this.selectedPath) {
+        this.paths.push(this.selectedPath)
         this.hideSuggestionsPaths()
         this.$set(this, 'path', '')
         if (this.$refs && this.$refs.path) this.$refs.path.focus()
