@@ -37,12 +37,12 @@ export default class Api {
     return this.sendAction('/version')
   }
   getSettings () {
-    return this.sendAction('/config')
+    return this.sendAction('/settings')
   }
   setSettings (settings) {
     const headers = { 'Content-Type': 'application/json' }
     const responseType = 'text'
-    return this.sendAction('/api/config', { method: 'PATCH', data: { data: settings }, headers, responseType })
+    return this.sendAction('/api/settings', { method: 'PATCH', data: { data: settings }, headers, responseType })
   }
   deleteNamedEntitiesByMentionNorm (project, mentionNorm) {
     return this.sendActionAsText(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: 'PUT' })

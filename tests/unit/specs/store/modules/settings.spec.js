@@ -14,7 +14,7 @@ describe('SettingsStore', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/config')
+      url: Api.getFullUrl('/settings')
     }))
   })
 
@@ -23,7 +23,7 @@ describe('SettingsStore', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/config'),
+      url: Api.getFullUrl('/api/settings'),
       method: 'PATCH',
       data: { data: { foo: 'bar' } },
       headers: { 'Content-Type': 'application/json' }
