@@ -150,7 +150,7 @@
                   <b-tooltip placement="right" :target="item" :title="item" />
                 </template>
               </selectable-dropdown>
-              <b-badge v-for="(path, index) in paths" :key="path" class="mr-2 pl-1 batch-search-form__advanced-filters" variant="warning" pill @click.prevent="deletePath(index)">
+              <b-badge v-for="(path, index) in paths" :key="path" class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters" variant="warning" pill @click.prevent="deletePath(index)">
                 <fa icon="times-circle" />
                 {{ path }}
               </b-badge>
@@ -171,6 +171,7 @@
 
 <script>
 import compact from 'lodash/compact'
+import concat from 'lodash/concat'
 import each from 'lodash/each'
 import filter from 'lodash/filter'
 import flatten from 'lodash/flatten'
@@ -328,9 +329,18 @@ export default {
       }
     },
     async aggregate (field, name) {
-      const body = bodybuilder().size(0).agg('terms', field, { size: 100 }, name).build()
-      const response = await elasticsearch.search({ index: this.project, body })
-      return map(get(response, ['aggregations', name, 'buckets'], []), 'key')
+      let body, options, responses, searchResult
+      let after = null
+      let result = []
+      while (responses === undefined || responses.length === 10) {
+        options = after ? { after } : {}
+        body = bodybuilder().size(0).agg('composite', { sources: [{ field: { terms: { field } } }] }, options, name).build()
+        searchResult = await elasticsearch.search({ index: this.project, body })
+        after = get(searchResult, ['aggregations', name, 'after_key'], null)
+        responses = get(searchResult, ['aggregations', name, 'buckets'], [])
+        result = concat(result, map(responses, 'key.field'))
+      }
+      return result
     },
     buildTreeFromPaths (paths) {
       const tree = map(paths, path => {
