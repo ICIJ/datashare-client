@@ -160,25 +160,25 @@ describe('BatchSearchForm.vue', () => {
 
   describe('buildTreeFromPaths', () => {
     it('should extract all the first level paths', () => {
-      const tree = wrapper.vm.buildTreeFromPaths(['/folder_01/doc_01.txt', '/folder_02/doc_02.txt', '/folder_03/doc_03.txt'])
+      const tree = wrapper.vm.buildTreeFromPaths(['/folder_01', '/folder_02', '/folder_03'])
 
       expect(tree).toEqual(['folder_01', 'folder_02', 'folder_03'])
     })
 
     it('should extract all the levels of the path', () => {
-      const tree = wrapper.vm.buildTreeFromPaths(['/folder_01/folder_02/folder_03/document.txt'])
+      const tree = wrapper.vm.buildTreeFromPaths(['/folder_01/folder_02/folder_03'])
 
       expect(tree).toEqual(['folder_01', 'folder_01/folder_02', 'folder_01/folder_02/folder_03'])
     })
 
     it('should filter by uniq paths', () => {
-      const tree = wrapper.vm.buildTreeFromPaths(['/folder_01/folder_02/document_01.txt', '/folder_01/folder_03/document_02.txt'])
+      const tree = wrapper.vm.buildTreeFromPaths(['/folder_01/folder_02', '/folder_01/folder_03'])
 
       expect(tree).toEqual(['folder_01', 'folder_01/folder_02', 'folder_01/folder_03'])
     })
 
     it('should filter off the dataDir', () => {
-      const tree = wrapper.vm.buildTreeFromPaths(['/root/project/folder_01/document_01.txt'])
+      const tree = wrapper.vm.buildTreeFromPaths(['/root/project/folder_01'])
 
       expect(tree).toEqual(['folder_01'])
     })

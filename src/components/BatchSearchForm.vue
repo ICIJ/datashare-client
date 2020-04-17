@@ -335,7 +335,7 @@ export default {
     buildTreeFromPaths (paths) {
       const tree = map(paths, path => {
         const subpath = path.replace(this.$config.get('dataDir', ''), '')
-        const split = compact(subpath.substr(0, subpath.lastIndexOf('/')).split('/'))
+        const split = compact(subpath.split('/'))
         const arr = []
         for (const i in range(0, split.length)) {
           arr.push(split.slice(0, parseInt(i) + 1).join('/'))
@@ -345,7 +345,7 @@ export default {
       return uniq(flatten(tree))
     },
     async retrievePaths () {
-      const aggPaths = await this.aggregate('path', 'byDirname')
+      const aggPaths = await this.aggregate('dirname', 'byDirname')
       this.$set(this, 'allPaths', this.buildTreeFromPaths(aggPaths))
     },
     async retrieveFileTypes () {
