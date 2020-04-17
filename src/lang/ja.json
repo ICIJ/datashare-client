@@ -557,7 +557,7 @@
     "title": "Settings",
     "description": "Don't change these settings if you don't know what you're doing.",
     "submit": "Submit",
-    "submitSuccess": "Modifications submitted. You should now restart Datashare.",
+    "submitSuccess": "Modifications submitted.",
     "submitError": "Unable to submit the settings.",
     "noAccess": "You do not have access to that page in server mode."
   },
