@@ -328,7 +328,7 @@ export default {
       }
     },
     async aggregate (field, name) {
-      const body = bodybuilder().size(0).aggregation('terms', field, {}, name).build()
+      const body = bodybuilder().size(0).agg('terms', field, { size: 100 }, name).build()
       const response = await elasticsearch.search({ index: this.project, body })
       return map(get(response, ['aggregations', name, 'buckets'], []), 'key')
     },

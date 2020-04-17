@@ -233,6 +233,24 @@ describe('BatchSearchForm.vue', () => {
     })
   })
 
+  it('should return all the content types', async () => {
+    await letData(es).have(new IndexedDocument('document_01', project).withContentType('contentType_01')).commit()
+    await letData(es).have(new IndexedDocument('document_02', project).withContentType('contentType_02')).commit()
+    await letData(es).have(new IndexedDocument('document_03', project).withContentType('contentType_03')).commit()
+    await letData(es).have(new IndexedDocument('document_04', project).withContentType('contentType_04')).commit()
+    await letData(es).have(new IndexedDocument('document_05', project).withContentType('contentType_05')).commit()
+    await letData(es).have(new IndexedDocument('document_06', project).withContentType('contentType_06')).commit()
+    await letData(es).have(new IndexedDocument('document_07', project).withContentType('contentType_07')).commit()
+    await letData(es).have(new IndexedDocument('document_08', project).withContentType('contentType_08')).commit()
+    await letData(es).have(new IndexedDocument('document_09', project).withContentType('contentType_09')).commit()
+    await letData(es).have(new IndexedDocument('document_10', project).withContentType('contentType_10')).commit()
+    await letData(es).have(new IndexedDocument('document_11', project).withContentType('contentType_11')).commit()
+
+    await wrapper.vm.retrieveFileTypes()
+
+    expect(wrapper.vm.allFileTypes).toHaveLength(11)
+  })
+
   it('should return content type description if exists', async () => {
     await letData(es).have(new IndexedDocument('document', project).withContentType('application/pdf')).commit()
 
