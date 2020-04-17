@@ -570,5 +570,8 @@
   },
   "insights": {
     "selectProject": "Select a project"
+  },
+  "widgets": {
+    "document": "1 document | %{total} documents"
   }
 }

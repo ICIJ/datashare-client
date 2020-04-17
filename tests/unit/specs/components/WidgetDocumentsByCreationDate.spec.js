@@ -54,7 +54,7 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
     await store.commit('insights/index', project)
   })
 
-  describe('interval value and selectors', () => {
+  describe('selectedInterval value and selectors', () => {
     let wrapper
 
     beforeEach(() => {
@@ -65,11 +65,11 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
       expect(wrapper.findAll('.widget__header__selectors__selector')).toHaveLength(3)
     })
 
-    it('interval default value should be year', () => {
-      expect(wrapper.vm.interval).toBe('year')
+    it('selectedInterval default value should be year', () => {
+      expect(wrapper.vm.selectedInterval).toBe('year')
     })
 
-    it('should change the value of the interval and reload data', async () => {
+    it('should change the value of the selectedInterval and reload data', async () => {
       await letData(es).have(new IndexedDocument('document_01', project)
         .withCreationDate('2019-08-01T00:00:00.000Z')).commit()
       await letData(es).have(new IndexedDocument('document_02', project)
@@ -80,7 +80,7 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
 
       await wrapper.vm.click('year')
 
-      expect(wrapper.vm.interval).toBe('year')
+      expect(wrapper.vm.selectedInterval).toBe('year')
       expect(wrapper.vm.data).toHaveLength(1)
     })
   })

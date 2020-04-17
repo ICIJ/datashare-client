@@ -3,9 +3,14 @@
     <div class="widget__header d-md-flex align-items-center" v-if="widget.title" :class="{ 'card-header': widget.card }">
       <h4 v-html="widget.title" class="m-0 flex-grow-1"></h4>
       <div class="widget__header__selectors">
-        <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'year' }" @click="click('year')">Years</span> |
-        <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'month' }" @click="click('month')">Months</span> |
-        <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': interval === 'day' }" @click="click('day')">Days</span>
+        <span v-for="(value, interval, index) in intervals" :key="interval">
+          <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': selectedInterval === interval }" @click="click(interval)">
+            {{ interval | startCase }}
+          </span>
+          <span v-if="index !== keys(intervals).length - 1">
+            |
+          </span>
+        </span>
       </div>
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
@@ -26,8 +31,10 @@
                   <foreignObject :x="bar.flipX ? -200 : bar.width" :y="bar.flipY ? 0 : -100" width="200" height="100" class="widget__content__chart__tooltips__item" :class="tooltipClasses(index, bar)" v-for="(bar, index) in bars" :key="index" :transform="`translate(${bar.x}, ${bar.y})`">
                     <div class="widget__content__chart__tooltips__item__wrapper" xmlns="http://www.w3.org/1999/xhtml">
                       <span>
-                        <h6 class="mb-0">{{ intervalFormatFn(bar.date) }}</h6>
-                        {{ bar.doc_count }} documents
+                        <h6 class="mb-0">
+                          {{ intervalFormatFn(bar.date) }}
+                        </h6>
+                        {{ $tc('widgets.document', bar.doc_count, { total: $n(bar.doc_count) }) }}
                       </span>
                     </div>
                   </foreignObject>
@@ -44,8 +51,10 @@
 <script>
 import compact from 'lodash/compact'
 import get from 'lodash/get'
+import keys from 'lodash/keys'
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
+import startCase from 'lodash/startCase'
 import * as d3 from 'd3'
 import ResizeObserver from 'resize-observer-polyfill'
 import { waitFor } from 'vue-wait'
@@ -61,15 +70,24 @@ export default {
   data () {
     return {
       data: [],
-      interval: 'year',
+      selectedInterval: 'year',
       margin: { top: 20, right: 20, bottom: 20, left: 50 },
       mounted: false,
       width: 0,
       shownTooltip: -1,
-      intervalFormats: {
-        year: '%Y',
-        month: '%b %y',
-        day: '%b %d, %y'
+      intervals: {
+        year: {
+          format: '%Y',
+          time: d3.timeYear
+        },
+        month: {
+          format: '%b %y',
+          time: d3.timeMonth
+        },
+        day: {
+          format: '%b %d, %y',
+          time: d3.timeDay
+        }
       }
     }
   },
@@ -78,6 +96,9 @@ export default {
       this.$set(this, 'mounted', false)
       this.init()
     }
+  },
+  filters: {
+    startCase
   },
   mounted () {
     this.$nextTick(() => this.init())
@@ -111,14 +132,10 @@ export default {
         .range([this.innerHeight, 0])
     },
     intervalFormatFn () {
-      return d3.timeFormat(this.intervalFormats[this.interval])
+      return d3.timeFormat(this.intervals[this.selectedInterval].format)
     },
     intervalTime () {
-      return {
-        year: d3.timeYear,
-        month: d3.timeMonth,
-        day: d3.timeDay
-      }[this.interval]
+      return this.intervals[this.selectedInterval].time
     },
     barWidth () {
       const width = Math.ceil(this.innerWidth / this.x.ticks(this.intervalTime.every(1)).length)
@@ -142,7 +159,7 @@ export default {
   },
   methods: {
     loadData: waitFor('loading creationDate data', async function () {
-      const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options: { size: 1000, interval: this.interval } })
+      const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options: { size: 1000, interval: this.selectedInterval } })
       const aggregation = get(response, ['aggregations', 'metadata.tika_metadata_creation_date', 'buckets'])
       const dates = map(aggregation, d => {
         if (d.key >= 0 && d.key < new Date().getTime()) {
@@ -175,7 +192,7 @@ export default {
     },
     async click (value) {
       this.$set(this, 'mounted', false)
-      this.$set(this, 'interval', value)
+      this.$set(this, 'selectedInterval', value)
       await this.init()
     },
     tooltipClasses (index, { flipX, flipY }) {
@@ -185,7 +202,8 @@ export default {
         'widget__content__chart__tooltips__item--visible': this.shownTooltip === index
 
       }
-    }
+    },
+    keys
   }
 }
 </script>
@@ -199,7 +217,6 @@ export default {
     }
 
     &__content {
-
       &__chart {
         padding-top: 50%;
         position: relative;
@@ -228,9 +245,7 @@ export default {
         }
 
         &__bars {
-
           &__item {
-
             &__bar {
               fill: $primary;
             }
@@ -246,7 +261,6 @@ export default {
         }
 
         &__tooltips {
-
           &__item {
             display: none;
 
@@ -307,7 +321,6 @@ export default {
         }
 
         &__axis {
-
           .tick line {
             color: $gray-300;
           }
