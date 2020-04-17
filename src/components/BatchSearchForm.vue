@@ -66,7 +66,7 @@
             <fa :icon="advancedFiltersIcon" class="fa-fw" />
             <span>{{ $t('batchSearch.advancedFilters') }}</span>
           </div>
-          <b-collapse id="advanced-filters" v-model="showCollapse" class="pt-2">
+          <b-collapse id="advanced-filters" v-model="showAdvancedFilters" class="pt-2">
             <b-form-group
               label-size="sm"
               :description="phraseMatchDescription">
@@ -178,6 +178,7 @@ import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import has from 'lodash/has'
 import includes from 'lodash/includes'
+import isEmpty from 'lodash/isEmpty'
 import map from 'lodash/map'
 import range from 'lodash/range'
 import throttle from 'lodash/throttle'
@@ -208,7 +209,7 @@ export default {
       published: true,
       selectedFileType: '',
       selectedPath: '',
-      showCollapse: false,
+      showAdvancedFilters: false,
       suggestionFileTypes: [],
       suggestionPaths: []
     }
@@ -230,7 +231,7 @@ export default {
       return this.phraseMatch ? 'https://icij.gitbook.io/datashare/faq-definitions/what-are-proximity-searches' : 'https://icij.gitbook.io/datashare/faq-definitions/what-is-fuzziness'
     },
     advancedFiltersIcon () {
-      return this.showCollapse ? 'angle-down' : 'angle-right'
+      return this.showAdvancedFilters ? 'angle-down' : 'angle-right'
     },
     fuse () {
       const keys = ['extensions', 'label', 'mime']
@@ -251,8 +252,12 @@ export default {
       this.$set(this, 'allPaths', [])
       this.hideSuggestionsFileTypes()
       this.hideSuggestionsPaths()
-      this.retrieveFileTypes()
-      this.retrievePaths()
+    },
+    showAdvancedFilters () {
+      if (this.showAdvancedFilters && isEmpty(this.allFileTypes) && isEmpty(this.allPaths)) {
+        this.retrieveFileTypes()
+        this.retrievePaths()
+      }
     }
   },
   created () {

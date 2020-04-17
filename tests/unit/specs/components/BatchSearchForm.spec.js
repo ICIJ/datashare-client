@@ -221,57 +221,59 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
       expect(wrapper.vm.hideSuggestionsPaths).toBeCalled()
     })
+  })
 
-    it('should call retrieveFileTypes and retrievePaths on project change', async () => {
+  describe('should load contentTypes and paths from the current project', () => {
+    it('should call retrieveFileTypes and retrievePaths on showAdvancedFilters change', async () => {
       jest.spyOn(wrapper.vm, 'retrieveFileTypes')
       jest.spyOn(wrapper.vm, 'retrievePaths')
 
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', true)
 
       expect(wrapper.vm.retrieveFileTypes).toBeCalled()
       expect(wrapper.vm.retrievePaths).toBeCalled()
     })
-  })
 
-  it('should return all the content types', async () => {
-    await letData(es).have(new IndexedDocument('document_01', project).withContentType('contentType_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', project).withContentType('contentType_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', project).withContentType('contentType_03')).commit()
-    await letData(es).have(new IndexedDocument('document_04', project).withContentType('contentType_04')).commit()
-    await letData(es).have(new IndexedDocument('document_05', project).withContentType('contentType_05')).commit()
-    await letData(es).have(new IndexedDocument('document_06', project).withContentType('contentType_06')).commit()
-    await letData(es).have(new IndexedDocument('document_07', project).withContentType('contentType_07')).commit()
-    await letData(es).have(new IndexedDocument('document_08', project).withContentType('contentType_08')).commit()
-    await letData(es).have(new IndexedDocument('document_09', project).withContentType('contentType_09')).commit()
-    await letData(es).have(new IndexedDocument('document_10', project).withContentType('contentType_10')).commit()
-    await letData(es).have(new IndexedDocument('document_11', project).withContentType('contentType_11')).commit()
+    it('should return all the content types', async () => {
+      await letData(es).have(new IndexedDocument('document_01', project).withContentType('contentType_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', project).withContentType('contentType_02')).commit()
+      await letData(es).have(new IndexedDocument('document_03', project).withContentType('contentType_03')).commit()
+      await letData(es).have(new IndexedDocument('document_04', project).withContentType('contentType_04')).commit()
+      await letData(es).have(new IndexedDocument('document_05', project).withContentType('contentType_05')).commit()
+      await letData(es).have(new IndexedDocument('document_06', project).withContentType('contentType_06')).commit()
+      await letData(es).have(new IndexedDocument('document_07', project).withContentType('contentType_07')).commit()
+      await letData(es).have(new IndexedDocument('document_08', project).withContentType('contentType_08')).commit()
+      await letData(es).have(new IndexedDocument('document_09', project).withContentType('contentType_09')).commit()
+      await letData(es).have(new IndexedDocument('document_10', project).withContentType('contentType_10')).commit()
+      await letData(es).have(new IndexedDocument('document_11', project).withContentType('contentType_11')).commit()
 
-    await wrapper.vm.retrieveFileTypes()
+      await wrapper.vm.retrieveFileTypes()
 
-    expect(wrapper.vm.allFileTypes).toHaveLength(11)
-  })
+      expect(wrapper.vm.allFileTypes).toHaveLength(11)
+    })
 
-  it('should return content type description if exists', async () => {
-    await letData(es).have(new IndexedDocument('document', project).withContentType('application/pdf')).commit()
+    it('should return content type description if exists', async () => {
+      await letData(es).have(new IndexedDocument('document', project).withContentType('application/pdf')).commit()
 
-    await wrapper.vm.retrieveFileTypes()
+      await wrapper.vm.retrieveFileTypes()
 
-    expect(wrapper.vm.allFileTypes).toEqual([{
-      extensions: ['.pdf'],
-      label: 'Portable Document Format (PDF)',
-      mime: 'application/pdf'
-    }])
-  })
+      expect(wrapper.vm.allFileTypes).toEqual([{
+        extensions: ['.pdf'],
+        label: 'Portable Document Format (PDF)',
+        mime: 'application/pdf'
+      }])
+    })
 
-  it('should return content type itself if content type description does NOT exist', async () => {
-    await letData(es).have(new IndexedDocument('document', project).withContentType('application/test')).commit()
+    it('should return content type itself if content type description does NOT exist', async () => {
+      await letData(es).have(new IndexedDocument('document', project).withContentType('application/test')).commit()
 
-    await wrapper.vm.retrieveFileTypes()
+      await wrapper.vm.retrieveFileTypes()
 
-    expect(wrapper.vm.allFileTypes).toEqual([{
-      extensions: [],
-      label: 'application/test',
-      mime: 'application/test'
-    }])
+      expect(wrapper.vm.allFileTypes).toEqual([{
+        extensions: [],
+        label: 'application/test',
+        mime: 'application/test'
+      }])
+    })
   })
 })
