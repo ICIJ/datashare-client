@@ -52,7 +52,7 @@ import { waitFor } from 'vue-wait'
 import { mapState } from 'vuex'
 
 export default {
-  name: 'WidgetCreationDateOverTime',
+  name: 'WidgetDocumentsByCreationDate',
   props: {
     widget: {
       type: Object
