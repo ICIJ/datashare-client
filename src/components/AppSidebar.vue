@@ -76,7 +76,7 @@
             </span>
           </router-link>
         </li>
-        <template v-if="hasFeature('SETTINGS') && !isServer">
+        <template v-if="!isServer">
           <li class="app-sidebar__container__menu__item">
             <router-link
               class="app-sidebar__container__menu__item__link"
@@ -168,14 +168,13 @@ import LocalesMenu from '@/components/LocalesMenu'
 import MountedDataLocation from '@/components/MountedDataLocation'
 import VersionNumber from '@/components/VersionNumber'
 import docs from '@/mixins/docs'
-import features from '@/mixins/features'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 import { isNarrowScreen } from '@/utils/screen'
 
 export default {
   name: 'AppSidebar',
-  mixins: [docs, features, utils],
+  mixins: [docs, utils],
   components: {
     Hook,
     LocalesMenu,
