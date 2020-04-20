@@ -305,7 +305,7 @@ export const mutations = {
     }
   },
   addFilter (state, { type = 'FilterText', options = {}, position = null } = {}) {
-    if (!find(state.filters, (filter) => filter.options.name === options.name)) {
+    if (!find(state.filters, filter => filter.options.name === options.name)) {
       if (position === null) {
         state.filters.push({ type, options })
       } else {
