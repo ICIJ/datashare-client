@@ -1,15 +1,23 @@
 <template>
   <b-badge variant="warning" pill class="mr-2 pl-1 search-results-header__applied-filters__filter" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()">
     <fa icon="times-circle" />
-    {{ filter.label }}
+    {{ filter.label | displayUser }}
   </b-badge>
 </template>
 
 <script>
+import displayUser from '@/filters/displayUser'
 
 export default {
   name: 'SearchResultsAppliedFilter',
-  props: ['filter'],
+  props: {
+    filter: {
+      type: Object
+    }
+  },
+  filters: {
+    displayUser
+  },
   methods: {
     async deleteQueryTerm () {
       if ('name' in this.filter) {
