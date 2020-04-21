@@ -8,8 +8,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('WidgetDocumentsByCreationDate.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  const widget = { title: 'Hello world' }
-  const propsData = { widget }
+  const propsData = { widget: { title: 'Hello world' } }
   const project = toLower('WidgetDocumentsByCreationDate')
   const anotherProject = toLower('anotherProject')
   const methods = { loadData: () => [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }] }
