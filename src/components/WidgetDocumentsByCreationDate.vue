@@ -15,7 +15,7 @@
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
       <div class="widget__content__chart align-items-center">
-        <v-wait for="loading creationDate data">
+        <v-wait :for="loader">
           <div class="widget__content__chart__spinner" slot="waiting">
             <fa icon="circle-notch" spin size="2x" />
           </div>
@@ -55,9 +55,9 @@ import keys from 'lodash/keys'
 import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
 import startCase from 'lodash/startCase'
+import uniqueId from 'lodash/uniqueId'
 import * as d3 from 'd3'
 import ResizeObserver from 'resize-observer-polyfill'
-import { waitFor } from 'vue-wait'
 import { mapState } from 'vuex'
 
 export default {
@@ -88,7 +88,8 @@ export default {
           format: '%b %d, %y',
           time: d3.timeDay
         }
-      }
+      },
+      loader: `loading creationDate data ${uniqueId()}`
     }
   },
   watch: {
@@ -112,7 +113,7 @@ export default {
       return this.mounted ? d3.select(this.container).select('svg') : null
     },
     height () {
-      return this.width * 1 / 2
+      return this.width / 2
     },
     innerHeight () {
       return this.height - this.margin.top - this.margin.bottom
@@ -158,7 +159,8 @@ export default {
     }
   },
   methods: {
-    loadData: waitFor('loading creationDate data', async function () {
+    async loadData () {
+      this.$wait.start(this.loader)
       const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options: { size: 1000, interval: this.selectedInterval } })
       const aggregation = get(response, ['aggregations', 'metadata.tika_metadata_creation_date', 'buckets'])
       const dates = map(aggregation, d => {
@@ -167,8 +169,9 @@ export default {
           return d
         }
       })
+      this.$wait.end(this.loader)
       return sortBy(compact(dates), ['key'])
-    }),
+    },
     buildChart () {
       // Refresh the width so all computed properties that are dependent of
       //  this value are refreshed (including scale functions)
