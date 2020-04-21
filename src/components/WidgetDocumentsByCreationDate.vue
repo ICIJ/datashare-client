@@ -34,7 +34,7 @@
                         <h6 class="mb-0">
                           {{ intervalFormatFn(bar.date) }}
                         </h6>
-                        {{ $tc('widgets.document', bar.doc_count, { total: $n(bar.doc_count) }) }}
+                        {{ $tc('widget.document', bar.doc_count, { total: $n(bar.doc_count) }) }}
                       </span>
                     </div>
                   </foreignObject>

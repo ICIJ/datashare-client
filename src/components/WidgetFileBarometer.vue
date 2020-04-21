@@ -5,9 +5,11 @@
       <p :class="{ 'card-body': widget.card }">
         <fa icon="hdd" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">
-          {{ total | humanNumber($t('human.number')) }} documents
+          {{ $tc('widget.document', total, { total: humanNumber(total, $t('human.number')) }) }}
         </strong>
-        among which <span :title="onDisk">{{ onDisk | humanNumber($t('human.number')) }}</span> on disk
+        {{ $t('widget.amongWhich') }}
+        <span :title="onDisk">{{ onDisk | humanNumber($t('human.number')) }}</span>
+        {{ $t('widget.onDisk') }}
       </p>
     </v-wait>
   </div>
@@ -62,7 +64,8 @@ export default {
     loadData: waitFor('counters', async function () {
       this.total = await this.countTotal()
       this.onDisk = await this.countOnDisk()
-    })
+    }),
+    humanNumber
   }
 }
 </script>
