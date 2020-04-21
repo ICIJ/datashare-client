@@ -571,7 +571,9 @@
   "insights": {
     "selectProject": "Select a project"
   },
-  "widgets": {
-    "document": "1 document | %{total} documents"
+  "widget": {
+    "document": "1 document | %{total} documents",
+    "amongWhich": "among which",
+    "onDisk": "on disk"
   }
 }
