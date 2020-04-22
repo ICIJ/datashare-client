@@ -5,7 +5,7 @@
       <div class="widget__header__selectors">
         <slot name="selector" :selectedPath="selectedPath" :setSelectedPath="setSelectedPath"></slot>
         <span v-for="(value, interval, index) in intervals" :key="interval">
-          <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': selectedInterval === interval }" @click="click(interval)">
+          <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': selectedInterval === interval }" @click="selectInterval(interval)">
             {{ interval | startCase }}
           </span>
           <span v-if="index !== keys(intervals).length - 1">
@@ -71,11 +71,6 @@ export default {
   data () {
     return {
       data: [],
-      selectedInterval: 'year',
-      margin: { top: 20, right: 20, bottom: 20, left: 50 },
-      mounted: false,
-      width: 0,
-      shownTooltip: -1,
       intervals: {
         year: {
           format: '%Y',
@@ -91,7 +86,12 @@ export default {
         }
       },
       loader: `loading creationDate data ${uniqueId()}`,
-      selectedPath: null
+      margin: { top: 20, right: 20, bottom: 20, left: 50 },
+      mounted: false,
+      selectedInterval: 'year',
+      selectedPath: null,
+      shownTooltip: -1,
+      width: 0
     }
   },
   watch: {
@@ -209,7 +209,7 @@ export default {
       const observer = new ResizeObserver(this.buildChart)
       observer.observe(this.container)
     },
-    async click (value) {
+    async selectInterval (value) {
       this.$set(this, 'mounted', false)
       this.$set(this, 'selectedInterval', value)
       await this.init()

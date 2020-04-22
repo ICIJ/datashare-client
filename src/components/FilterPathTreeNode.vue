@@ -51,8 +51,8 @@ export default {
   mixins: [filters],
   data () {
     return {
-      loading: false,
       isLoaded: false,
+      loading: false,
       queue: new PQueue({ concurrency: 1 })
     }
   },

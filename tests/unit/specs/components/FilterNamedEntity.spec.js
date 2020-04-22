@@ -36,7 +36,7 @@ describe('FilterNamedEntity.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, wait, propsData: { filter: store.getters['search/getFilterByName']('namedEntityPerson') } })
+    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, wait, propsData: { filter: store.getters['search/getFilter']({ name: 'namedEntityPerson' }) } })
     store.commit('search/setGlobalSearch', false)
   })
 
@@ -407,7 +407,7 @@ describe('FilterNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument(id, index).withNer('person_01')).commit()
     store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
 
-    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, wait, propsData: { filter: store.getters['search/getFilterByName']('namedEntityPerson') } })
+    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, wait, propsData: { filter: store.getters['search/getFilter']({ name: 'namedEntityPerson' }) } })
     await wrapper.vm.root.aggregate()
 
     expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
@@ -419,7 +419,7 @@ describe('FilterNamedEntity.vue', () => {
     await letData(es).have(new IndexedDocument(id, index).withNer('person_01')).commit()
 
     store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
-    wrapper = mount(FilterNamedEntity, { localVue, i18n, wait, router: new VueRouter(), store, propsData: { filter: store.getters['search/getFilterByName']('namedEntityPerson') } })
+    wrapper = mount(FilterNamedEntity, { localVue, i18n, wait, router: new VueRouter(), store, propsData: { filter: store.getters['search/getFilter']({ name: 'namedEntityPerson' }) } })
 
     await wrapper.vm.root.aggregate()
     await wrapper.findAll('.list-group-item .filter__items__item input').at(0).trigger('click')

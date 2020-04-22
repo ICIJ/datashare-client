@@ -76,28 +76,21 @@ export const getters = {
     }
   },
   instantiatedFilters (state, getters) {
-    return state.filters.map(filter => {
-      return getters.instantiateFilter(filter)
-    })
+    return state.filters.map(filter => getters.instantiateFilter(filter))
   },
   getFilter (state, getters) {
     return predicate => find(getters.instantiatedFilters, predicate)
   },
-  getFilterByName (state, getters) {
-    return name => find(getters.instantiatedFilters, { name })
-  },
   getFields (state) {
     return () => find(settings.searchFields, { key: state.field }).fields
   },
-  hasFilterValue (state, getters) {
-    return item => !!find(state.instantiatedFilters, filter => {
-      return filter.name === item.name && filter.values.indexOf(item.value) > -1
-    })
+  hasFilterValue (state) {
+    return item => !!find(state.instantiatedFilters,
+      filter => filter.name === item.name && filter.values.indexOf(item.value) > -1)
   },
   hasFilterValues (state, getters) {
-    return name => !!find(getters.instantiatedFilters, filter => {
-      return filter.name === name && filter.values.length > 0
-    })
+    return name => !!find(getters.instantiatedFilters,
+      filter => filter.name === name && filter.values.length > 0)
   },
   isFilterReversed (state, getters) {
     return name => {
@@ -108,9 +101,6 @@ export const getters = {
   },
   activeFilters (state, getters) {
     return filterCollection(getters.instantiatedFilters, f => f.hasValues())
-  },
-  findFilter (state, getters) {
-    return name => find(getters.instantiatedFilters, { name })
   },
   filterValuesAsRouteQuery (state, getters) {
     return () => {

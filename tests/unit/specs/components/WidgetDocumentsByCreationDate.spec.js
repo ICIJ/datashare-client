@@ -77,7 +77,7 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
         .withCreationDate('2019-06-01T00:00:00.000Z')).commit()
       wrapper = await shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, propsData, store, wait, attachToDocument: true })
 
-      await wrapper.vm.click('year')
+      await wrapper.vm.selectInterval('year')
 
       expect(wrapper.vm.selectedInterval).toBe('year')
       expect(wrapper.vm.data).toHaveLength(1)

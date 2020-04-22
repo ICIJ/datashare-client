@@ -71,7 +71,7 @@ export default {
       return this.$store.state.search.globalSearch
     },
     filterFilter () {
-      return this.$store.getters['search/findFilter']({ name: this.filter.name })
+      return this.$store.getters['search/getFilter']({ name: this.filter.name })
     },
     size () {
       return this.offset + this.pageSize

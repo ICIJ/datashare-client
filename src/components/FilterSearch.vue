@@ -88,8 +88,8 @@ export default {
   data () {
     return {
       filterQuery: this.query || '',
-      items: [],
       infiniteId: uniqueId(),
+      items: [],
       total: 0,
       totalCount: 0
     }

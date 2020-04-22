@@ -19,17 +19,20 @@ const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
 
 describe('SearchResultsTable.vue', () => {
-  const index = toLower('SearchResultsTable')
-  esConnectionHelper(index)
+  const project = toLower('SearchResultsTable')
+  esConnectionHelper(project)
   const es = esConnectionHelper.es
   let wrapper
 
-  beforeAll(() => store.commit('search/index', index))
+  beforeAll(() => {
+    jest.unmock('axios')
+    store.commit('search/index', project)
+  })
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocuments()
       .setBaseName('document')
-      .withIndex(index)
+      .withIndex(project)
       .count(4)).commit()
     await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
     wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store })
@@ -59,7 +62,7 @@ describe('SearchResultsTable.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/' + index + '/documents/batchUpdate/star'),
+      url: Api.getFullUrl('/api/' + project + '/documents/batchUpdate/star'),
       method: 'POST',
       data: ['document_01', 'document_02']
     }))

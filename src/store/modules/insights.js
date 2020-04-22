@@ -49,15 +49,15 @@ export const getters = {
   instantiateWidget (state) {
     return ({ type = 'WidgetEmpty', ...options } = {}) => {
       const Type = widgetTypes[type]
-      const filter = new Type(options)
+      const widget = new Type(options)
       // Bind current state to be able to retrieve its values
-      filter.bindState(state)
+      widget.bindState(state)
       // Return the instance
-      return filter
+      return widget
     }
   },
   instantiatedWidgets (state, getters) {
-    return state.widgets.map(filter => getters.instantiateWidget(filter))
+    return state.widgets.map(widget => getters.instantiateWidget(widget))
   }
 }
 

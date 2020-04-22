@@ -236,28 +236,28 @@ describe('SearchStore', () => {
 
   it('should add filter with several values', async () => {
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['txt', 'pdf'] })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(2)
+    expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(2)
   })
 
   it('should merge filter values with several other values', async () => {
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: 'txt' })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(1)
+    expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(1)
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['csv', 'pdf'] })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(3)
+    expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(3)
   })
 
   it('should add a filter value only once', async () => {
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['txt', 'csv', 'pdf'] })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(3)
+    expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(3)
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['txt', 'pdf'] })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(3)
+    expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(3)
   })
 
   it('should add a filter value only once even if numbers', async () => {
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: [1, 2, 3] })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(3)
+    expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(3)
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['1', '2'] })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(3)
+    expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(3)
   })
 
   it('should return 2 documents', async () => {
@@ -315,10 +315,10 @@ describe('SearchStore', () => {
 
   it('should reset the values of a filter', async () => {
     await store.dispatch('search/addFilterValue', { name: 'contentType', value: ['txt', 'csv'] })
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(2)
+    expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(2)
 
     store.commit('search/resetFilterValues', 'contentType')
-    expect(store.getters['search/findFilter']('contentType').values).toHaveLength(0)
+    expect(store.getters['search/getFilter']({ name: 'contentType' }).values).toHaveLength(0)
   })
 
   it('should change the state after `toggleFilters` mutation', () => {
@@ -373,7 +373,7 @@ describe('SearchStore', () => {
 
     it('should set the filter of the store according to the url', async () => {
       await store.dispatch('search/updateFromRouteQuery', { 'f[contentType]': ['new_type'] })
-      expect(store.getters['search/findFilter']('contentType').values[0]).toBe('new_type')
+      expect(store.getters['search/getFilter']({ name: 'contentType' }).values[0]).toBe('new_type')
     })
 
     it('should not change the starredDocuments on updateFromRouteQuery', async () => {
@@ -673,7 +673,7 @@ describe('SearchStore', () => {
       await store.dispatch('search/getStarredDocuments')
 
       expect(store.state.search.starredDocuments).toEqual([42])
-      expect(store.getters['search/findFilter']('starred').starredDocuments).toEqual([42])
+      expect(store.getters['search/getFilter']({ name: 'starred' }).starredDocuments).toEqual([42])
     })
 
     it('should remove a documentId from the list of the starredDocuments', () => {
@@ -704,7 +704,7 @@ describe('SearchStore', () => {
       await store.dispatch('search/toggleStarDocument', 45)
 
       expect(store.state.search.starredDocuments).toEqual([45])
-      expect(store.getters['search/findFilter']('starred').starredDocuments).toEqual([45])
+      expect(store.getters['search/getFilter']({ name: 'starred' }).starredDocuments).toEqual([45])
     })
 
     it('should toggle a starred documentId, remove it if it is starred', async () => {
@@ -712,12 +712,12 @@ describe('SearchStore', () => {
       await store.dispatch('search/toggleStarDocument', 48)
 
       expect(store.state.search.starredDocuments).toEqual([])
-      expect(store.getters['search/findFilter']('starred').starredDocuments).toEqual([])
+      expect(store.getters['search/getFilter']({ name: 'starred' }).starredDocuments).toEqual([])
     })
 
     it('should set the starredDocuments property of the filter', () => {
       store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
-      expect(store.getters['search/findFilter']('starred').starredDocuments).toEqual(['doc_01', 'doc_02'])
+      expect(store.getters['search/getFilter']({ name: 'starred' }).starredDocuments).toEqual(['doc_01', 'doc_02'])
     })
   })
 
