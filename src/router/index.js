@@ -133,7 +133,7 @@ export const router = {
     },
     {
       name: 'error',
-      path: '',
+      path: '*',
       component: () => import('@/pages/Error'),
       props: true,
       meta: {
