@@ -1,8 +1,10 @@
 import cloneDeep from 'lodash/cloneDeep'
+import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
 import Vue from 'vue'
 
 import elasticsearch from '@/api/elasticsearch'
+import FilterPath from '@/store/filters/FilterPath'
 import widgets from '@/store/widgets'
 import * as widgetTypes from '@/store/widgets'
 
@@ -36,6 +38,14 @@ const mutations = {
 }
 
 export const getters = {
+  getFilter (state, getters) {
+    return predicate => find(getters.instantiatedFilters, predicate)
+  },
+  instantiatedFilters (state) {
+    const filter = new FilterPath({ name: 'path', key: 'byDirname', icon: 'hdd' })
+    filter.bindState(state)
+    return [filter]
+  },
   instantiateWidget (state) {
     return ({ type = 'WidgetEmpty', ...options } = {}) => {
       const Type = widgetTypes[type]
@@ -52,12 +62,12 @@ export const getters = {
 }
 
 const actions = {
-  queryFilter ({ state, getters, rootGetters }, { name, options }) {
+  queryFilter ({ state, getters, rootGetters }, { name, options, filters }) {
     return elasticsearch.searchFilter(
       state.index,
       rootGetters['search/getFilter']({ name }),
       '*',
-      [],
+      filters,
       false,
       options,
       []

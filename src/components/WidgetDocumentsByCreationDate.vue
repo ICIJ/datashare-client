@@ -3,6 +3,7 @@
     <div class="widget__header d-md-flex align-items-center" v-if="widget.title" :class="{ 'card-header': widget.card }">
       <h4 v-html="widget.title" class="m-0 flex-grow-1"></h4>
       <div class="widget__header__selectors">
+        <slot name="selector" :selectedPath="selectedPath" :setSelectedPath="setSelectedPath"></slot>
         <span v-for="(value, interval, index) in intervals" :key="interval">
           <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': selectedInterval === interval }" @click="click(interval)">
             {{ interval | startCase }}
@@ -89,11 +90,16 @@ export default {
           time: d3.timeDay
         }
       },
-      loader: `loading creationDate data ${uniqueId()}`
+      loader: `loading creationDate data ${uniqueId()}`,
+      selectedPath: null
     }
   },
   watch: {
     index () {
+      this.$set(this, 'mounted', false)
+      this.init()
+    },
+    selectedPath () {
       this.$set(this, 'mounted', false)
       this.init()
     }
@@ -159,9 +165,19 @@ export default {
     }
   },
   methods: {
+    setSelectedPath (value) {
+      this.selectedPath = value
+    },
     async loadData () {
       this.$wait.start(this.loader)
-      const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options: { size: 1000, interval: this.selectedInterval } })
+      const options = { size: 1000, interval: this.selectedInterval }
+      const filters = []
+      if (this.selectedPath) {
+        const filter = this.$store.getters['insights/getFilter']({ name: 'path' })
+        filter.values = [`${this.$config.get('dataDir', '')}/${this.selectedPath}`]
+        filters.push(filter)
+      }
+      const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options, filters })
       const aggregation = get(response, ['aggregations', 'metadata.tika_metadata_creation_date', 'buckets'])
       const dates = map(aggregation, d => {
         if (d.key >= 0 && d.key < new Date().getTime()) {
@@ -174,7 +190,7 @@ export default {
     },
     buildChart () {
       // Refresh the width so all computed properties that are dependent of
-      //  this value are refreshed (including scale functions)
+      // this value are refreshed (including scale functions)
       this.$set(this, 'width', this.container.offsetWidth)
       // Create/Update the x axis
       this.chart.select('.widget__content__chart__axis--x')
