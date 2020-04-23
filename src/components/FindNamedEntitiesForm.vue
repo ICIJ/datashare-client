@@ -2,12 +2,12 @@
   <form class="find-named-entities-form" id="find-named-entities-form" @submit.prevent="submitFindNamedEntities">
     <div class="find-named-entities-form__header mb-4">
       <h4>
-        {{ $t('indexing.find_named_entities_header') }}
+        {{ $t('indexing.findNamedEntitiesHeader') }}
       </h4>
     </div>
     <div class="find-named-entities-form__subheader mb-4">
       <span>
-          {{ $t('indexing.find_named_entities_subheader') }}
+          {{ $t('indexing.findNamedEntitiesSubheader') }}
       </span>
     </div>
     <div class="find-named-entities-form__body form-group mb-4 pl-4">
@@ -47,7 +47,7 @@
     </div>
     <div class="find-named-entities-form__offline form-group pl-4" v-if="$config.is('manageDocuments')">
       <b-form-checkbox id="syncModels" v-model="offline">
-        {{ $t('indexing.sync_models') }}
+        {{ $t('indexing.syncModels') }}
       </b-form-checkbox>
     </div>
     <div class="find-named-entities-form__footer mt-4 row no-gutters">
@@ -66,8 +66,8 @@ import utils from '@/mixins/utils'
 import noop from 'lodash/noop'
 
 const { mapFields } = createHelpers({
-  getterType: `indexing/getField`,
-  mutationType: `indexing/updateField`
+  getterType: 'indexing/getField',
+  mutationType: 'indexing/updateField'
 })
 
 export default {

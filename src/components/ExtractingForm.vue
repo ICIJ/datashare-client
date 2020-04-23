@@ -4,11 +4,11 @@
     <div class="extracting-form__group mb-4">
       <b-form-checkbox v-model="ocr" name="check-button" switch>
         <div class="font-weight-bold ml-2">
-          {{ $t('indexing.extract_with_ocr_label') }}
+          {{ $t('indexing.extractWithOcrLabel') }}
         </div>
         <div class="extracting-form__group__help ml-2 small">
           <span>
-            {{ $t('indexing.extract_with_ocr_help') }}
+            {{ $t('indexing.extractWithOcrHelp') }}
           </span>
         </div>
       </b-form-checkbox>
@@ -17,11 +17,11 @@
     <div class="extracting-form__group">
       <b-form-checkbox v-model="filter" name="check-button" switch>
         <div class="font-weight-bold ml-2">
-          {{ $t('indexing.extract_only_new_label') }}
+          {{ $t('indexing.extractOnlyNewLabel') }}
         </div>
         <div class="extracting-form__group__help ml-2 small">
           <span>
-            {{ $t('indexing.extract_only_new_help') }}
+            {{ $t('indexing.extractOnlyNewHelp') }}
           </span>
         </div>
       </b-form-checkbox>

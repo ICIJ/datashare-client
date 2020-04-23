@@ -6,26 +6,26 @@
           <div class="text-right">
             <button class="btn btn-primary mr-2 btn-extract" type="button" @click="openExtractingForm">
               <fa icon="rocket" class="mr-2" />
-              {{ $t('indexing.extract_text') }}
+              {{ $t('indexing.extractText') }}
             </button>
             <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
               <button class="btn btn-primary btn-find-named-entites mr-2" type="button"
                       :disabled="isPendingTasks" @click="openFindNamedEntitiesForm">
                 <fa icon="user-tag" class="mr-2" />
-                {{ $t('indexing.find_named_entities') }}
+                {{ $t('indexing.findNamedEntities') }}
               </button>
             </span>
           </div>
           <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
             <template #modal-title>
               <fa icon="rocket" class="mr-2" />
-              {{ $t('indexing.extract_text') }}
+              {{ $t('indexing.extractText') }}
             </template>
             <extracting-form id="extracting-form" :finally="closeExtractingForm" />
           </b-modal>
           <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md">
             <template #modal-title>
-              {{ $t('indexing.find_named_entities') }}
+              {{ $t('indexing.findNamedEntities') }}
             </template>
             <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm" />
           </b-modal>
@@ -61,7 +61,7 @@
               </div>
             </div>
             <div class="col-md-auto p-0 my-auto">
-              <button class="btn btn-link btn-stop-task" :title="$t('indexing.stop_task')"
+              <button class="btn btn-link btn-stop-task" :title="$t('indexing.stopTask')"
                       @click="task.state === 'RUNNING' ? stopTask(task.name) : ''" :disabled="task.state !== 'RUNNING'">
                 <fa icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '']" />
               </button>
@@ -74,12 +74,12 @@
         <div class="card-footer text-right border-0" v-if="isPendingTasks||isDoneTasks">
           <button class="btn btn-primary btn-stop-pending-tasks mr-2"
                   type="button" :disabled="!isPendingTasks" @click="stopPendingTasks">
-            {{ $t('indexing.stop_pending_tasks') }}
+            {{ $t('indexing.stopPendingTasks') }}
           </button>
           <button class="btn btn-primary btn-delete-done-tasks"
                   type="button" :disabled="!isDoneTasks" @click="deleteDoneTasks">
             <fa icon="trash-alt" class="mr-1" />
-            {{ $t('indexing.delete_done_tasks') }}
+            {{ $t('indexing.deleteDoneTasks') }}
           </button>
         </div>
       </div>
@@ -110,7 +110,7 @@ export default {
       return filter(this.tasks, { state: 'DONE' }).length !== 0
     },
     findNamedEntitiesTooltip () {
-      return this.isPendingTasks ? this.$t('indexing.find_named_entities_tooltip') : ''
+      return this.isPendingTasks ? this.$t('indexing.findNamedEntitiesTooltip') : ''
     },
     howToLink () {
       const os = getOS()
