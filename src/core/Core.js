@@ -1,29 +1,29 @@
+import compose from 'lodash/fp/compose'
+import Murmur from '@icij/murmur'
+import BootstrapVue from 'bootstrap-vue'
+import VCalendar from 'v-calendar/lib/v-calendar.umd.js'
 import Vue from 'vue'
 import VueI18n from 'vue-i18n'
 import VueProgressBar from 'vue-progressbar'
-import VueWait from 'vue-wait'
-import BootstrapVue from 'bootstrap-vue'
-import Murmur from '@icij/murmur'
-import VueShortkey from 'vue-shortkey'
-import VueScrollTo from 'vue-scrollto'
 import VueRouter from 'vue-router'
-import VCalendar from 'v-calendar/lib/v-calendar.umd.js'
-import compose from 'lodash/fp/compose'
+import VueScrollTo from 'vue-scrollto'
+import VueShortkey from 'vue-shortkey'
+import VueWait from 'vue-wait'
 
 import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
 import PipelinesMixin from './PipelinesMixin'
 import ProjectsMixin from './ProjectsMixin'
 
-import router from '@/router'
-import guards from '@/router/guards'
-import messages from '@/lang/en'
-import store from '@/store'
 import Api from '@/api'
 import Auth from '@/api/resources/Auth'
-import settings from '@/utils/settings'
+import messages from '@/lang/en'
 import mode from '@/modes'
+import router from '@/router'
+import guards from '@/router/guards'
+import store from '@/store'
 import { dispatch } from '@/utils/event-bus'
+import settings from '@/utils/settings'
 
 class Base {}
 const Behaviors = compose(FiltersMixin, HooksMixin, PipelinesMixin, ProjectsMixin)(Base)
@@ -117,6 +117,9 @@ export default class Core extends Behaviors {
       if (this.store.state.search.index === '') {
         this.store.commit('search/index', config.defaultProject)
       }
+      // Check if "Download" functionality is available for the selected project
+      // Because otherwise, if the FilterPanel is closed, it is never caller
+      await this.store.dispatch('search/getIsDownloadAllowed')
       // Old a promise that is resolved when the core is configured
       return this.ready && this._readyResolve(this)
     } catch (error) {
