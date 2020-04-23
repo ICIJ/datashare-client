@@ -112,7 +112,7 @@ export default class Core extends Behaviors {
       // Override Murmur default value for content-placeholder
       this.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
       // Create the default project for the current user or redirect to login
-      this.createDefaultProject()
+      await this.createDefaultProject()
       // Set the default project
       if (this.store.state.search.index === '') {
         this.store.commit('search/index', config.defaultProject)

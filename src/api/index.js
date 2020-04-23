@@ -27,7 +27,7 @@ export default class Api {
   getTasks () {
     return this.sendAction('/api/task/all')
   }
-  createIndex (project) {
+  createProject (project) {
     return this.sendActionAsText(`/api/index/${project}`, { method: 'PUT' })
   }
   deleteAll (project) {

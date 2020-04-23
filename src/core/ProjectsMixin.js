@@ -1,4 +1,4 @@
-import { noop } from 'lodash'
+import noop from 'lodash/noop'
 
 const ProjectsMixin = superclass => class extends superclass {
   toggleForProject ({ project = null, withFn = noop, withoutFn = noop } = {}, ...args) {
@@ -13,9 +13,9 @@ const ProjectsMixin = superclass => class extends superclass {
       }
     })
   }
-  async createDefaultProject () {
+  createDefaultProject () {
     const defaultProject = this.config.get('defaultProject')
-    return this.api.createIndex(defaultProject)
+    return this.api.createProject(defaultProject)
   }
 }
 
