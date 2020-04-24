@@ -146,7 +146,7 @@ We encourage you to **use the AND operator** to work around this limitation and 
 
 If you're looking for French International Bank Account Number \(IBAN\) that can or cannot contain space and contain FR followed by numbers and/or letters \(it could be FR7630001007941234567890185 ou FR76 3000 4000 0312 3456 7890 H43 for example\), you can then search for:
 
-> /FR\[0-9\]{2}./ AND /\[0-9\]{4}./ AND /\[0-9a-zA-Z\]{11}.\*/
+> Example: /FR\[0-9\]{14}\[0-9a-zA-Z\]{11}/ OR \(/FR\[0-9\]{2}.\*/ AND /\[0-9\]{4}.\*/ AND /\[0-9a-zA-Z\]{11}.\*/\)
 
 
 
