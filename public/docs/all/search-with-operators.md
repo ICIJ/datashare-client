@@ -118,25 +118,41 @@ The default boost value is 1, but can be any positive floating point number. Boo
 
 ### **Regular expressions \(Regex\)**
 
-**‌**Regular expressions \(Regex\) in Datashare need to be **written between 2 slashes.**
+‌"A regular expression \(shortened as regex or regexp \(...\)\) is a sequence of characters that define a search pattern." \([Wikipedia](https://en.wikipedia.org/wiki/Regular_expression)\).
+
+ ****1. ****You can use Regex in Datashare. Regular expressions \(Regex\) in Datashare need to be **written between 2 slashes.**
 
 > Example: /.\*\..\*\@.\*\..\*/
 
-The example above will search for any expression which looks like an email address with a dot between two expressions before the @ and a dot between two expressions after the @ like in 'first.lastname@email.com' for instance.
+The example above will search for any expression which is **structured like an email address** with a dot between two expressions before the @ and a dot between two expressions after the @ like in 'first.lastname@email.com' for instance.
 
-Regex can be combined with standard queries in Datashare :
+
+
+ 2. ****Regex can be combined with standard queries in Datashare :
 
 > Example: \("Ada Lovelace" OR "Ado Lavelace"\) AND paris AND /.\*\..\*\@.\*\..\*/
 
-**Please note that you need to escape the following characters by typing a backslash just before them \(without space\):‌ \# @ & &lt; &gt; ~**
+\*\*\*\*
+
+ ****3. **You need to escape the following characters by typing a backslash just before them \(without space\):‌ \# @ & &lt; &gt; ~**
 
 > Example: /.\*\..\*\@.\*\..\*/ \(the @ was escaped by a backslash \ just before it\)
 
-Datashare relies on **Elastic's Regex syntax** as explained[ here](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html) \(refer to this page for more details\) and uses [this tokenizer](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-tokenizer.html).
+\*\*\*\*
 
-Here are a few examples of useful Regex:
+ ****4. ****Important: **Datashare relies on Elastic's Regex syntax** as explained[ here](https://www.elastic.co/guide/en/elasticsearch/reference/current/regexp-syntax.html). Datashare uses [the Standard tokenizer](https://www.elastic.co/guide/en/elasticsearch/reference/current/analysis-standard-tokenizer.html). A consequence of this is that **spaces cannot be searched as such in Regex**. 
 
-* You can search for **/Dimitr\[iyu\]/** instead of searching for **Dimitri OR Dimitry OR Dimitru**. It will find all the Dimitri, Dimitry or Dimitru in Datashare.
+We encourage you to **use the AND operator** to work around this limitation and make sure you can make your search. 
+
+If you're looking for French International Bank Account Number \(IBAN\) that can or cannot contain space and contain FR followed by numbers and/or letters \(it could be FR7630001007941234567890185 ou FR76 3000 4000 0312 3456 7890 H43 for example\), you can then search for:
+
+> /FR\[0-9\]{2}./ AND /\[0-9\]{4}./ AND /\[0-9a-zA-Z\]{11}.\*/
+
+
+
+ 5. Here are a few examples of useful Regex:
+
+* You can search for **/Dimitr\[iyu\]/** instead of searching for **Dimitri OR Dimitry OR Dimitru**. It will find all the Dimitri, Dimitry or Dimitru.
 
 
 
@@ -145,7 +161,6 @@ Here are a few examples of useful Regex:
 
 
 * You can search for **/Dimitri&lt;1-5&gt;/** if you want to search **Dimitri1, Dimitri2, Dimitri3, Dimitri4 or Dimitri5**.
-* You can search for \[a-z0-9\]
 
 
 
