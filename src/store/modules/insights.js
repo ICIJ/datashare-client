@@ -1,6 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
+import sortBy from 'lodash/sortBy'
 import Vue from 'vue'
 
 import elasticsearch from '@/api/elasticsearch'
@@ -57,7 +58,8 @@ export const getters = {
     }
   },
   instantiatedWidgets (state, getters) {
-    return state.widgets.map(widget => getters.instantiateWidget(widget))
+    const widgets = state.widgets.map(getters.instantiateWidget)
+    return sortBy(widgets, ['order'])
   }
 }
 

@@ -14,6 +14,7 @@ import FiltersMixin from './FiltersMixin'
 import HooksMixin from './HooksMixin'
 import PipelinesMixin from './PipelinesMixin'
 import ProjectsMixin from './ProjectsMixin'
+import WidgetsMixin from './WidgetsMixin'
 
 import Api from '@/api'
 import Auth from '@/api/resources/Auth'
@@ -26,7 +27,7 @@ import { dispatch } from '@/utils/event-bus'
 import settings from '@/utils/settings'
 
 class Base {}
-const Behaviors = compose(FiltersMixin, HooksMixin, PipelinesMixin, ProjectsMixin)(Base)
+const Behaviors = compose(FiltersMixin, HooksMixin, PipelinesMixin, ProjectsMixin, WidgetsMixin)(Base)
 
 export default class Core extends Behaviors {
   constructor (LocalVue = Vue) {

@@ -11,7 +11,7 @@ const HooksMixins = superclass => class extends superclass {
     this.store.commit('hooks/resetTarget', name)
   }
   resetHooks () {
-    this.store.commit('hooks/reset', name)
+    this.store.commit('hooks/reset')
   }
   registerHookForProject (project, options) {
     options = cloneDeep(options)

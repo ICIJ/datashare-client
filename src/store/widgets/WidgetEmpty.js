@@ -4,10 +4,11 @@ import Component from '@/components/WidgetEmpty'
 const _STATE = typeof Symbol === 'function' ? Symbol('_state') : '_state'
 
 class WidgetEmpty {
-  constructor ({ name = uniqueId('widget-'), card = true, cols = 12 } = { }) {
+  constructor ({ name = uniqueId('widget-'), card = true, cols = 12, order = 0 } = { }) {
     this.name = name
     this.card = card
     this.cols = cols
+    this.order = order
   }
   bindState (state) {
     this[_STATE] = this[_STATE] || state
