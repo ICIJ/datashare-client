@@ -3,8 +3,8 @@
     <template #selector="{ selectedPath, setSelectedPath }">
       <span>
         <b-dropdown :text="selectedPath" v-if="paths.length">
-          <b-dropdown-item v-for="key in paths" :key="key" @click="setSelectedPath(key)">
-            {{ key }}
+          <b-dropdown-item v-for="path in paths" :key="path.folder" @click="setSelectedPath(path.folder)">
+            {{ path.label }}
           </b-dropdown-item>
         </b-dropdown>
       </span>
@@ -13,6 +13,7 @@
 </template>
 
 <script>
+import concat from 'lodash/concat'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import replace from 'lodash/replace'
@@ -34,7 +35,7 @@ export default {
   },
   data () {
     return {
-      paths: []
+      paths: [{ label: 'All', folder: '' }]
     }
   },
   computed: {
@@ -52,7 +53,11 @@ export default {
       }
       const body = bodybuilder().size(0).agg('terms', 'dirname.tree', options, 'byDirname').build()
       const response = await elasticsearch.search({ index: this.index, body })
-      this.paths = map(get(response, ['aggregations', 'byDirname', 'buckets'], []), item => replace(item.key, this.$config.get('dataDir', '') + '/', ''))
+      const paths = map(get(response, ['aggregations', 'byDirname', 'buckets'], []), item => {
+        const folder = replace(item.key, this.$config.get('dataDir', '') + '/', '')
+        return { label: folder, folder }
+      })
+      this.$set(this, 'paths', concat(this.paths, paths))
     }
   }
 }
