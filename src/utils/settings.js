@@ -183,5 +183,9 @@ export default {
   helpLink: 'https://github.com/ICIJ/datashare/wiki/Datashare-Support',
   faqLink: 'https://icij.gitbook.io/datashare/faq/',
   userGuidesLink: 'https://icij.gitbook.io/datashare/',
-  devWikiLink: 'https://github.com/icij/datashare/wiki'
+  devWikiLink: 'https://github.com/icij/datashare/wiki',
+  widgetTextDefaultContent: `Welcome to Datashare Insights!
+                             The smartest way to get insights about your documents in minutes.
+                             Each widget can be customized with plugins, depending on your project
+                             or your documents.`
 }
