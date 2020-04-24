@@ -17,13 +17,6 @@ describe('WidgetText.vue', () => {
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
-  it('should contain nothing but the void', () => {
-    const widget = { content: '' }
-    const propsData = { widget }
-    const wrapper = shallowMount(WidgetText, { localVue, store, propsData })
-    expect(wrapper.text()).toBe('')
-  })
-
   it('should have a `widget--text` class', () => {
     const widget = { content: '' }
     const propsData = { widget }
