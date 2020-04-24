@@ -11,20 +11,24 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   const propsData = { widget: { title: 'Hello world' } }
   const project = toLower('WidgetDocumentsByCreationDate')
   const anotherProject = toLower('anotherProject')
-  const methods = { loadData: () => [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }] }
   esConnectionHelper([project, anotherProject])
   const es = esConnectionHelper.es
 
   beforeAll(() => store.commit('insights/index', project))
 
   it('should be a Vue instance', () => {
-    const wrapper = shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, methods, propsData, store, wait })
+    const wrapper = shallowMount(WidgetDocumentsByCreationDate,
+      { i18n, localVue, propsData, store, wait })
+
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
   it('should display a barchart with 2 bars', async () => {
-    const wrapper = shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, methods, propsData, store, wait, attachToDocument: true })
-    await wrapper.vm.$nextTick()
+    const wrapper = shallowMount(WidgetDocumentsByCreationDate,
+      { i18n, localVue, propsData, store, wait, attachToDocument: true })
+    await wrapper.vm.$set(wrapper.vm, 'data',
+      [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }])
+
     expect(wrapper.findAll('svg')).toHaveLength(1)
     expect(wrapper.findAll('svg rect')).toHaveLength(2)
   })
@@ -38,13 +42,13 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
       .withCreationDate('1968-01-01T00:00:00.000Z')).commit()
     const wrapper = await shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, propsData, store, wait, attachToDocument: true })
 
-    const data = await wrapper.vm.loadData()
+    await wrapper.vm.loadData()
 
-    expect(data).toHaveLength(1)
+    expect(wrapper.vm.data).toHaveLength(1)
   })
 
   it('should rerun init on project change', async () => {
-    const wrapper = shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, methods, propsData, store, wait, attachToDocument: true })
+    const wrapper = shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, propsData, store, wait, attachToDocument: true })
     const init = jest.spyOn(wrapper.vm, 'init')
     await wrapper.vm.$nextTick()
     expect(init).toBeCalledTimes(1)

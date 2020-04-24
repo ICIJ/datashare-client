@@ -185,8 +185,8 @@ export default {
           return d
         }
       })
+      this.$set(this, 'data', sortBy(compact(dates), ['key']))
       this.$wait.end(this.loader)
-      return sortBy(compact(dates), ['key'])
     },
     buildChart () {
       // Refresh the width so all computed properties that are dependent of
@@ -202,8 +202,7 @@ export default {
         .attr('x2', this.width - this.margin.left - this.margin.right)
     },
     async init () {
-      const data = await this.loadData()
-      this.$set(this, 'data', data)
+      await this.loadData()
       this.$set(this, 'mounted', true)
       // Build the chart when its container is resized
       const observer = new ResizeObserver(this.buildChart)
@@ -219,7 +218,6 @@ export default {
         'widget__content__chart__tooltips__item--flip-x': flipX,
         'widget__content__chart__tooltips__item--flip-y': flipY,
         'widget__content__chart__tooltips__item--visible': this.shownTooltip === index
-
       }
     },
     keys
