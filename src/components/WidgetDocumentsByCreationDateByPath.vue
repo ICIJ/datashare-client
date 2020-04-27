@@ -1,9 +1,9 @@
 <template>
-  <widget-documents-by-creation-date :widget="widget">
-    <template #selector="{ selectedPath, setSelectedPath }">
+  <widget-documents-by-creation-date :widget="widget" ref="widgetDocumentsByCreationDate">
+    <template #selector="{ selectedPath }">
       <span>
-        <b-dropdown :text="selectedPath" v-if="paths.length">
-          <b-dropdown-item v-for="path in paths" :key="path.folder" @click="setSelectedPath(path.folder)">
+        <b-dropdown :text="selectedPath.label" v-if="paths.length">
+          <b-dropdown-item v-for="path in paths" :key="path.folder" @click="setSelectedPath(path)">
             {{ path.label }}
           </b-dropdown-item>
         </b-dropdown>
@@ -42,7 +42,10 @@ export default {
     ...mapState('insights', ['index'])
   },
   mounted () {
-    this.$nextTick(() => this.loadPath())
+    this.$nextTick(() => {
+      this.loadPath()
+      this.setSelectedPath({ label: 'All', folder: '' })
+    })
   },
   methods: {
     async loadPath () {
@@ -58,6 +61,9 @@ export default {
         return { label: folder, folder }
       })
       this.$set(this, 'paths', concat(this.paths, paths))
+    },
+    setSelectedPath (path) {
+      this.$refs.widgetDocumentsByCreationDate.setSelectedPath(path)
     }
   }
 }

@@ -165,8 +165,8 @@ export default {
     }
   },
   methods: {
-    setSelectedPath (value) {
-      this.selectedPath = value
+    setSelectedPath (path) {
+      this.selectedPath = path
     },
     async loadData () {
       this.$wait.start(this.loader)
@@ -174,7 +174,7 @@ export default {
       const filters = []
       if (this.selectedPath) {
         const filter = this.$store.getters['insights/getFilter']({ name: 'path' })
-        filter.values = [`${this.$config.get('dataDir', '')}/${this.selectedPath}`]
+        filter.values = [`${this.$config.get('dataDir', '')}/${this.selectedPath.folder}`]
         filters.push(filter)
       }
       const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options, filters })

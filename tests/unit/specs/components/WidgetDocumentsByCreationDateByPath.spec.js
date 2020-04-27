@@ -24,6 +24,11 @@ describe('WidgetDocumentsByCreationDateByPath.vue', () => {
 
     await wrapper.vm.loadPath()
 
-    expect(wrapper.vm.paths).toEqual(['folder_01', 'folder_02', 'folder_03'])
+    expect(wrapper.vm.paths).toEqual([
+      { folder: '', label: 'All' },
+      { folder: 'folder_01', label: 'folder_01' },
+      { folder: 'folder_02', label: 'folder_02' },
+      { folder: 'folder_03', label: 'folder_03' }
+    ])
   })
 })
