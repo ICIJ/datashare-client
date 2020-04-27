@@ -1,6 +1,6 @@
 {
   "general": {
-    "all": "All"
+    "all": "Tous"
   },
   "aggregations": {
     "more": "Explorer plus",
@@ -8,9 +8,9 @@
     "relative": "Relatifs à la recherche"
   },
   "error": {
-    "title": "Something's wrong here",
-    "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",
-    "noProjects": "You have no projects yet. Please contact your administrator."
+    "title": "Quelque chose ne va pas",
+    "description": "Une erreur s'est produite. Merci de réessayer plus tard ou contacter votre administrateur•rice si le problème persiste.",
+    "noProjects": "Vous n'avez pas encore de projet. Veuillez contacter votre administrateur•rice."
   },
   "search": {
     "errors": {
@@ -25,8 +25,8 @@
       "all": "Tous les champs",
       "tags": "Tags",
       "title": "Titre",
-      "author": "Auteur·trice",
-      "recipients": "Destinataires·trices",
+      "author": "Auteur·e",
+      "recipients": "Destinataires",
       "content": "Contenu",
       "path": "Chemin",
       "thread": "ID de fil de discussion"
@@ -73,7 +73,7 @@
     "back": "Retour aux résultats de recherche",
     "try": "Vous devriez essayer de",
     "nav": {
-      "share": "Share a link to this document",
+      "share": "Partager un lien vers ce document",
       "previous": {
         "label": "Précédent",
         "tooltipMac": "Document précédent (<kbd>⌘</kbd> + <kbd>←</kbd>)",
@@ -87,9 +87,9 @@
       "document": {
         "extensionWarning": "Ce document a une extension de fichier qui ne correspond pas à son type. Vous aurez peut-être à ajouter l'extension <code>%{extension}</code> avant de l'ouvrir."
       },
-      "markAsRecommended": "Mark as recommended",
-      "unmarkAsRecommended": "Unmark as recommended",
-      "markAsRecommendedBy": "Marked as recommended by nobody: | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
+      "markAsRecommended": "Marquer comme recommandé",
+      "unmarkAsRecommended": "Ne plus marquer comme recommandé",
+      "markAsRecommendedBy": "Marqué comme recommandé par personne : | Marqué comme recommandé par 1 personne : | Marqué comme recommandé par {count} personnes :"
     }
   },
   "pagination": {
@@ -99,7 +99,7 @@
     "lastPage": "Aller à la dernière page"
   },
   "documentTranslatedContent": {
-    "detected": "Langue detectée",
+    "detected": "Langue détectée",
     "viewOriginal": "Voir le texte d'origine",
     "viewTranslated": "Voir le texte traduit"
   },
@@ -109,7 +109,7 @@
     "noResults": "Pas de résultat",
     "noSubdirectories": "Pas de sous-dossier",
     "invert": "Exclure",
-    "contentType": "File types",
+    "contentType": "Types de fichiers",
     "language": "Langues",
     "namedEntityPerson": "Personnes",
     "namedEntityLocation": "Localisations",
@@ -125,7 +125,7 @@
     "missing": "Date manquante",
     "starred": "Favoris",
     "notStarred": "Non favoris",
-    "recommendedBy": "Recommended by",
+    "recommendedBy": "Recommandé par",
     "lang": {
       "all": "Tous",
       "ABKHAZIAN": "Abkhaze",
@@ -336,58 +336,58 @@
     "name": "Nom du fichier",
     "path": "Chemin du fichier",
     "id": "Identifiant du fichier",
-    "creationDate": "Creation date",
+    "creationDate": "Date de création",
     "size": "Taille du ficher",
-    "contentLanguage": "Content language",
-    "contentType": "Content type",
-    "contentEncoding": "Content encoding",
-    "tabDetails": "Tags & Details",
-    "namedEntities": "Named Entities",
-    "extractedText": "Extracted text",
+    "contentLanguage": "Langue",
+    "contentType": "Type de contenu",
+    "contentEncoding": "Encodage",
+    "tabDetails": "Tags & Détails",
+    "namedEntities": "Entités nommées",
+    "extractedText": "Texte extrait",
     "translations": "Traductions",
     "preview": "Prévisualisation",
-    "downloadButton": "Download",
-    "externalWindow": "Open in a new window",
-    "starButton": "Star",
-    "unstarButton": "Unstar",
+    "downloadButton": "Télécharger",
+    "externalWindow": "Ouvrir dans une nouvelle fenêtre",
+    "starButton": "Mettre en favoris",
+    "unstarButton": "Enlever des favoris",
     "starred": "Les documents ont été placés dans les favoris.",
-    "starringError": "Unable to star the document.",
+    "starringError": "Le document n'a pas été mis en favoris.",
     "unstarred": "Les documents ont été enlevés des favoris.",
     "tagged": "Les documents ont été tagués.",
-    "starFile": "Star document",
-    "notFound": "Document not found",
-    "notAvailable": "Preview is available for some formats only.",
-    "namedEntitiesNotFound": "No named entities found",
-    "namedEntitiesNotSearched": "<p>Document not analyzed.</p><p class=\"text-muted small\">To search named entities, go to <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> and start a new task \"@:indexing.findNamedEntities\".</p>",
-    "generatingPreview": "Generating preview...",
+    "starFile": "Mettre en favoris le document",
+    "notFound": "Document non trouvé",
+    "notAvailable": "La prévisualisation est disponible seulement pour certains formats de documents.",
+    "namedEntitiesNotFound": "Pas d'entités nommées trouvées",
+    "namedEntitiesNotSearched": "<p>Document non analysé.</p><p class=\\\"text-muted small\\\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> et lancez une nouvelle tâche \\\"@:indexing.findNamedEntities\\\".</p>",
+    "generatingPreview": "Génération d'une prévisualisation...",
     "sheet": "Feuille",
-    "searchDirectory": "Search within this directory",
-    "tiffLimitations": "The browser preview of this TIFF file may not show all the images. We suggest you download it in your computer to view all the contents.",
-    "threadIndex": "Thread ID",
+    "searchDirectory": "Chercher dans ce dossier",
+    "tiffLimitations": "La prévisualisation des fichiers TIFF dans le navigateur peut ne pas montrer toutes les images. Nous vous conseillons de le télécharger afin de voir tout le contenu.",
+    "threadIndex": "ID du fil de discussion",
     "showNamedEntities": "Afficher les entités nommées",
-    "highlightsCaution": "Warning! the named entities will be highlighted and may replace text underneath. This does not impact your search results.",
-    "errorNotFound": "Your file was indexed in Datashare but the original is no longer in your Datashare folder on your computer. Preview is thus not available.",
+    "highlightsCaution": "Attention ! Les entités nommées seront surlignées et cacheront le texte. Ceci n'affectera cependant pas les résultats de recherche.",
+    "errorNotFound": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre fichier Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible.",
     "search": "Rechercher",
     "find": "Rechercher dans le document",
     "of": "de",
-    "researchedTerms": "In this document:",
+    "researchedTerms": "Dans ce document :",
     "fetching": "Chargement de la prévisualisation...",
     "tags": "Tags",
     "tag": "Tag",
-    "tagsVisibility": "These tags are visible for all users. Tags should be separated by space.",
-    "tagsNew": "Add a new tag",
+    "tagsVisibility": "Ces tags sont visibles par tou•tes les utilisateur•ices. Les tags sont séparés par des espaces.",
+    "tagsNew": "Ajouter un nouveau tag",
     "details": "Détails",
-    "detailsInfo": "These information are extracted from the document's metadata.",
+    "detailsInfo": "Ces informations sont tirées des méta-données du document.",
     "showMoreDetails": "Afficher plus de détails",
     "showLessDetails": "Afficher moins de détails",
-    "author": "Auteur·trice",
-    "extractionDate": "Indexing date",
+    "author": "Auteur·e",
+    "extractionDate": "Date d'indexation",
     "parent": "Parent",
-    "inMetadata": "in metadata",
-    "inTags": "in tags",
-    "searchChildrenDocument": "See children documents",
-    "tagConfirmation": "Are you sure you want to delete this tag?",
-    "createdBy": "Created by",
+    "inMetadata": "dans les métadonnées",
+    "inTags": "dans les tags",
+    "searchChildrenDocument": "Voir les documents 'enfants'",
+    "tagConfirmation": "Êtes-vous sûr(e) de supprimer ce tag ?",
+    "createdBy": "Créé par",
     "on": "sur",
     "spreadsheet": {
       "fieldsInFirstItem": "Titres de colonne sur la première ligne",
@@ -401,12 +401,12 @@
       "more": "Plus de pièces jointes..."
     },
     "namedEntitiesShowMore": {
-      "showMorePerson": "Show more people",
-      "showMoreOrganization": "Show more organizations",
-      "showMoreLocation": "Show more locations",
-      "showMoreEmail": "Show more emails"
+      "showMorePerson": "Afficher plus de personnes",
+      "showMoreOrganization": "Afficher plus d'organisations",
+      "showMoreLocation": "Afficher plus de lieux",
+      "showMoreEmail": "Afficher plus d'emails"
     },
-    "unknown": "Unknown"
+    "unknown": "Inconnu"
   },
   "namedEntityInContext": {
     "title": "Extrait en utilisant <code>%{extractor}</code> en <code>%{extractorLanguage}</code>",
@@ -426,30 +426,30 @@
     "go": "Exécuter",
     "tasks": "Tâches",
     "empty": "Vous n'avez pas encore démarré de tâches.",
-    "extractText": "Extract text",
-    "extractWithOcrLabel": "Do you want to extract text also from images and PDFs?",
-    "extractWithOcrHelp": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
-    "extractOnlyNewLabel": "Do you want to skip already indexed files?",
-    "extractOnlyNewHelp": "If yes, Datashare will only extract text from files that are not yet searchable in Datashare.",
-    "findNamedEntities": "Find people, organizations, locations and email addresses",
-    "findNamedEntitiesHeader": "Which technology do you want to apply in order to find people, organizations and locations?",
-    "findNamedEntitiesSubheader": "Datashare uses Natural Language Processing models. Please choose one of them:",
-    "findNamedEntitiesTooltip": "Texts must be extracted before finding named entities",
+    "extractText": "Extraire le texte",
+    "extractWithOcrLabel": "Voulez-vous aussi extraire le texte des images et des PDFs ?",
+    "extractWithOcrHelp": "Si oui, Datashare exécutera l'OCR (Optical Character Recognition - la reconnaissance de caractère optique). Cela peut prendre jusqu'à 10 fois plus de temps.",
+    "extractOnlyNewLabel": "Voulez-vous ignorer les fichiers déjà indexés ?",
+    "extractOnlyNewHelp": "Si oui, Datashare extraira seulement le texte des fichiers qui ne sont pas déjà dans Datashare.",
+    "findNamedEntities": "Trouver des personnes, des organisations, des lieux et des adresses e-mail",
+    "findNamedEntitiesHeader": "Quelle technologie voulez-vous utiliser pour trouver les entités nommées ?",
+    "findNamedEntitiesSubheader": "Datashare applique des modèles de Traitement de Language Naturel. Veuillez choisir l'un d'eux:",
+    "findNamedEntitiesTooltip": "Les textes doivent être extraits avant de chercher les entités nommées",
     "pipelines": "Algo(s)",
     "corenlp": "Core NLP",
     "opennlp": "Open NLP",
     "mitie": "Mitie",
     "ixapipe": "Ixa Pipe",
     "email": "Extraction d'adresses emails",
-    "default": "Par défaut - Meilleure probablilité de fonctionner pour tous les documents",
-    "syncModels": "Please check this box if you are currently working offline with no internet connection.",
-    "stopTask": "Stop this task",
-    "stopPendingTasks": "Stop all pending tasks",
-    "deleteDoneTasks": "Clear done tasks",
-    "deleteIndexLabel": "Remove all your documents from Datashare",
-    "deleteIndexDescription": "To be 100% safe, please remove your documents from the Datashare folder on your computer – don't forget to empty your trash bin of all Datashare documents! Make sure you have a copy of them in another secure place beforehand.",
-    "deleteSuccess": "Your documents are now removed from Datashare.",
-    "deleteFailure": "Something went wrong, unable to remove your documents."
+    "default": "Par défaut - Meilleure probabilité de fonctionner pour tous les documents",
+    "syncModels": "Veuillez cocher cette case si vous travaillez actuellement hors ligne.",
+    "stopTask": "Arrêter cette tâche",
+    "stopPendingTasks": "Arrêter toutes les tâches en cours",
+    "deleteDoneTasks": "Supprimer les tâches terminées",
+    "deleteIndexLabel": "Effacer tous les documents de Datashare",
+    "deleteIndexDescription": "Pour être 100% sûr·e, effacez tous les documents dans le fichier Datashare de votre ordinateur - n'oubliez pas de vider tous les documents Datashare de votre corbeille également ! Assurez-vous d'avoir gardé une copie de vos documents dans un endroit sûr.",
+    "deleteSuccess": "Vos documents sont maintenant supprimés de Datashare.",
+    "deleteFailure": "Une erreur est survenue, impossible de supprimer vos documents."
   },
   "menu": {
     "help": "Demander de l'aide",
@@ -457,14 +457,14 @@
     "batch": "Recherches en lot",
     "search": "Rechercher dans les documents",
     "history": "Votre historique",
-    "insights": "Insights",
-    "settings": "Settings",
+    "insights": "Aperçu",
+    "settings": "Paramètres",
     "logout": "Déconnexion",
     "addDocuments": "Comment ajouter des documents",
     "faq": "FAQ",
     "userGuides": "Guides d'utilisateurs",
-    "devWiki": "Developper wiki",
-    "connectedAs": "You're connected as <strong>{username}</strong>"
+    "devWiki": "Wiki pour développeurs",
+    "connectedAs": "Vous êtes connecté•e en tant que <strong>{username}</strong>"
   },
   "footer": {
     "homedir": "Placer les fichiers dans ce dossier afin de pouvoir les analyser",
@@ -473,11 +473,11 @@
   },
   "login": {
     "welcome": "Bienvenue dans Datashare",
-    "sumUp": "<a href=\"https://icij.org\">ICIJ</a> search and discovery platform.",
-    "authenticationPlatform": "To log in, use ICIJ secure authentication platform:",
-    "account": "Login with Account",
-    "supportDesk": "If you need any help, please visit our support desk:",
-    "askHelp": "Ask for help"
+    "sumUp": "La plateforme de recherche et de découverte de l'<a href=\\\"https://icij.org\\\">ICIJ</a>.",
+    "authenticationPlatform": "Pour se connecter, utiliser la plateforme sécurisée d'authentification de l'ICIJ :",
+    "account": "Se connecter avec Account",
+    "supportDesk": "Si vous avez besoin d'aide, veuillez contacter notre bureau support :",
+    "askHelp": "Aide"
   },
   "userHistory": {
     "heading": "Votre historique",
@@ -508,12 +508,12 @@
     "state": "Status",
     "date": "Date",
     "nbResults": "Nombre de résultats",
-    "query": "pas de recherches | 1 recherche | {count} recherches",
+    "query": "pas de recherche | 1 recherche | {count} recherches",
     "delete": "Supprimer la recherche en lot",
     "deleted": "La recherche en lot a été supprimée.",
     "notDeleted": "La recherche en lot n'a pas été supprimée.",
     "published": "Publiée",
-    "publishedDescription": "Donner accès aux autres membres du projet à cette rechercher en lot. Vous pourrez changer ceci plus tard.",
+    "publishedDescription": "Donner accès aux autres membres du projet à cette recherche en lot. Vous pourrez changer ceci plus tard.",
     "phraseMatch": "Rechercher les termes exacts",
     "phraseMatchDescription": "Cela vous permet de rechercher des documents qui contiennent l'expression exacte et non les termes dans un autre ordre.",
     "phraseMatchDescriptionOperators": "Ne pas insérer d'opérateurs dans vos recherches",
@@ -554,12 +554,12 @@
     "findNextOccurrenceAlt": "Aller à l'occurrence suivante dans le document"
   },
   "settings": {
-    "title": "Settings",
-    "description": "Don't change these settings if you don't know what you're doing.",
-    "submit": "Submit",
-    "submitSuccess": "Modifications submitted.",
-    "submitError": "Unable to submit the settings.",
-    "noAccess": "You do not have access to that page in server mode."
+    "title": "Paramètres",
+    "description": "Ne changez pas ces paramètres si vous ne maîtrisez pas ce que vous faites.",
+    "submit": "Valider",
+    "submitSuccess": "Modifications envoyées.",
+    "submitError": "Impossible de soumettre ces paramètres.",
+    "noAccess": "Vous n'avez pas accès à cette page en mode serveur."
   },
   "human": {
     "number": {
@@ -569,12 +569,12 @@
     }
   },
   "insights": {
-    "selectProject": "Select a project"
+    "selectProject": "Sélectionner un projet"
   },
   "widget": {
     "document": "1 document | %{total} documents",
-    "amongWhich": "among which",
-    "onDisk": "on disk",
-    "noData": "No data"
+    "amongWhich": "parmi lesquels",
+    "onDisk": "sur le disque",
+    "noData": "Pas de données"
   }
 }
