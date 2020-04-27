@@ -1,6 +1,6 @@
 {
   "general": {
-    "all": "All"
+    "all": "Todos"
   },
   "aggregations": {
     "more": "Explora más",
@@ -8,9 +8,9 @@
     "relative": "Relacionado a la búsqueda"
   },
   "error": {
-    "title": "Something's wrong here",
-    "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",
-    "noProjects": "You have no projects yet. Please contact your administrator."
+    "title": "Hay algo mal",
+    "description": "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde o póngase en contacto con su administrador si el problema persiste.",
+    "noProjects": "Aún no tiene proyectos. Por favor, póngase en contacto con su administrador."
   },
   "search": {
     "errors": {
@@ -51,7 +51,7 @@
       "noResults": "No se han encontrado documentos",
       "on": "en",
       "perPage": "por página",
-      "sortedByPath": "sorted by path",
+      "sortedByPath": "ordenado por ruta",
       "sort": {
         "sort": "Ordenar por",
         "relevance": "Relevancia",
@@ -64,7 +64,7 @@
         "path": "Ruta del archivo (de A a Z)",
         "pathReverse": "Ruta del archivo (de A a Z)",
         "default": "por defecto",
-        "count": "frequency"
+        "count": "frecuencia"
       }
     },
     "filtersTitle": "Filtros",
@@ -73,7 +73,7 @@
     "back": "Regresar a resultados de búsqueda",
     "try": "Usted puede intentar a",
     "nav": {
-      "share": "Share a link to this document",
+      "share": "Comparte un enlace a este archivo",
       "previous": {
         "label": "Anterior",
         "tooltipMac": "Documento anterior (<kbd>⌘</kbd> + <kbd>←</kbd>)",
@@ -87,9 +87,9 @@
       "document": {
         "extensionWarning": "Este documento tiene una extensión incorrecta para su tipo. Puede que necesite añadir la extensión <code>%{extension}</code> antes de poder abrirlo."
       },
-      "markAsRecommended": "Mark as recommended",
-      "unmarkAsRecommended": "Unmark as recommended",
-      "markAsRecommendedBy": "Marked as recommended by nobody: | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
+      "markAsRecommended": "Marcar como recomendado",
+      "unmarkAsRecommended": "Desmarcar como recomendado",
+      "markAsRecommendedBy": "Marcado como recomendado por nadie: | Marcado como recomendado por 1 usuario: | Marcado como recomendado por {count} usuarios:"
     }
   },
   "pagination": {
@@ -125,7 +125,7 @@
     "missing": "Fecha faltante",
     "starred": "Favoritos",
     "notStarred": "No favoritos",
-    "recommendedBy": "Recommended by",
+    "recommendedBy": "Recomendado por",
     "lang": {
       "all": "Todos",
       "ABKHAZIAN": "Abjasio",
@@ -332,7 +332,7 @@
     "selectDateRange": "Selecciona un intervalo de fechas"
   },
   "document": {
-    "document": "Document",
+    "document": "Archivo",
     "name": "Nombre del archivo",
     "path": "Ruta del archivo",
     "id": "ID de archivo",
@@ -393,7 +393,7 @@
       "fieldsInFirstItem": "Cabeceras en la primera línea",
       "findInSpreadsheet": "Buscar en hoja de cálculos",
       "filtered": {
-        "rows": "No matches | One row | {count} rows"
+        "rows": "Sin coincidencias | Una fila | {count} filas"
       }
     },
     "attachments": {
@@ -406,7 +406,7 @@
       "showMoreLocation": "Mostrar más ubicaciones",
       "showMoreEmail": "Mostrar más correos electrónicos"
     },
-    "unknown": "Unknown"
+    "unknown": "Desconocido"
   },
   "namedEntityInContext": {
     "title": "Extraído usando <code>%{extractor}</code> en <code>%{extractorLanguage}</code>",
@@ -448,8 +448,8 @@
     "deleteDoneTasks": "Borrar tareas completadas",
     "deleteIndexLabel": "Elimina todos tus documentos de Datashare",
     "deleteIndexDescription": "Para estar 100% seguro, elimine sus documentos de la carpeta Datashare de su computadora. ¡No olvide vaciar su papelera de todos los documentos de Datashare! Asegúrese de tener una copia de ellos en otro lugar seguro de antemano.",
-    "deleteSuccess": "Your documents are now removed from Datashare.",
-    "deleteFailure": "Something went wrong, unable to remove your documents."
+    "deleteSuccess": "Sus archivos han sido eliminados de Datashare.",
+    "deleteFailure": "Se ha producido un error al eliminar los archivos."
   },
   "menu": {
     "help": "Pedir ayuda",

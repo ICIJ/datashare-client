@@ -29,7 +29,7 @@
       "recipients": "Destinataires",
       "content": "Contenu",
       "path": "Chemin",
-      "thread": "ID de fil de discussion"
+      "thread": "ID du fil de discussion"
     },
     "placeholder": "Rechercher dans les documents...",
     "buttonLabel": "Rechercher",
@@ -112,7 +112,7 @@
     "contentType": "Types de fichiers",
     "language": "Langues",
     "namedEntityPerson": "Personnes",
-    "namedEntityLocation": "Localisations",
+    "namedEntityLocation": "Lieux",
     "namedEntityOrganization": "Organisations",
     "namedEntityEmail": "Emails",
     "path": "Chemins du fichier",
@@ -366,7 +366,7 @@
     "threadIndex": "ID du fil de discussion",
     "showNamedEntities": "Afficher les entités nommées",
     "highlightsCaution": "Attention ! Les entités nommées seront surlignées et cacheront le texte. Ceci n'affectera cependant pas les résultats de recherche.",
-    "errorNotFound": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre fichier Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible.",
+    "errorNotFound": "Votre fichier a été indexé dans Datashare mais le fichier n'est plus présent dans votre dossier Datashare sur votre ordinateur. La prévisualisation n'est donc pas disponible.",
     "search": "Rechercher",
     "find": "Rechercher dans le document",
     "of": "de",
@@ -386,7 +386,7 @@
     "inMetadata": "dans les métadonnées",
     "inTags": "dans les tags",
     "searchChildrenDocument": "Voir les documents 'enfants'",
-    "tagConfirmation": "Êtes-vous sûr(e) de supprimer ce tag ?",
+    "tagConfirmation": "Êtes-vous sûr•e de supprimer ce tag ?",
     "createdBy": "Créé par",
     "on": "sur",
     "spreadsheet": {
@@ -463,7 +463,7 @@
     "addDocuments": "Comment ajouter des documents",
     "faq": "FAQ",
     "userGuides": "Guides d'utilisateurs",
-    "devWiki": "Wiki pour développeurs",
+    "devWiki": "Wiki pour développeur•se•s",
     "connectedAs": "Vous êtes connecté•e en tant que <strong>{username}</strong>"
   },
   "footer": {
