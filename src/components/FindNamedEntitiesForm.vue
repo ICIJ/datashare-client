@@ -1,69 +1,50 @@
 <template>
-  <form class="find-named-entities-form" id="find-named-entities-form" @submit.prevent="submitFindNamedEntities">
-    <div class="find-named-entities-form__header mb-4">
-      <h4>
-        {{ $t('indexing.findNamedEntitiesHeader') }}
-      </h4>
-    </div>
-    <div class="find-named-entities-form__subheader mb-4">
-      <span>
-          {{ $t('indexing.findNamedEntitiesSubheader') }}
-      </span>
-    </div>
-    <div class="find-named-entities-form__body form-group mb-4 pl-4">
-      <div class="custom-control custom-radio">
-        <input class="custom-control-input" type="radio" id="pipeline_corenlp" value="corenlp" v-model="pipeline">
-        <label class="custom-control-label" for="pipeline_corenlp">
-          {{ $t('indexing.corenlp') }}
-          <div class="font-italic small">
-            {{ $t('indexing.default') }}
-          </div>
-        </label>
+  <v-wait for="load ner pipelines">
+    <form class="find-named-entities-form" id="find-named-entities-form" @submit.prevent="submitFindNamedEntities">
+      <div class="find-named-entities-form__header mb-4">
+        <h4>
+          {{ $t('indexing.findNamedEntitiesHeader') }}
+        </h4>
       </div>
-      <div class="custom-control custom-radio">
-        <input class="custom-control-input" type="radio" id="pipeline_opennlp" value="opennlp" v-model="pipeline">
-        <label class="custom-control-label" for="pipeline_opennlp">
-          {{ $t('indexing.opennlp') }}
-        </label>
+      <div class="find-named-entities-form__subheader mb-4">
+        <span>
+            {{ $t('indexing.findNamedEntitiesSubheader') }}
+        </span>
       </div>
-      <div class="custom-control custom-radio">
-        <input class="custom-control-input" type="radio" id="pipeline_mitie" value="mitie" v-model="pipeline">
-        <label class="custom-control-label" for="pipeline_mitie">
-          {{ $t('indexing.mitie') }}
-        </label>
+      <div class="find-named-entities-form__body form-group mb-4 pl-4">
+        <div class="custom-control custom-radio" v-for="pip in pipelines" :key="pip">
+          <input class="custom-control-input" type="radio" :id="pip" :value="pip" v-model="pipeline">
+          <label class="custom-control-label" :for="pip">
+            {{ pip | lowerCase | startCase }}
+            <div class="font-italic small" v-if="pip === 'CORENLP'">
+              {{ $t('indexing.default') }}
+            </div>
+          </label>
+        </div>
       </div>
-      <div class="custom-control custom-radio">
-        <input class="custom-control-input" type="radio" id="pipeline_ixapipe" value="ixapipe" v-model="pipeline">
-        <label class="custom-control-label" for="pipeline_ixapipe">
-          {{ $t('indexing.ixapipe') }}
-        </label>
+      <div class="find-named-entities-form__offline form-group pl-4" v-if="$config.is('manageDocuments')">
+        <b-form-checkbox id="syncModels" v-model="offline">
+          {{ $t('indexing.syncModels') }}
+        </b-form-checkbox>
       </div>
-      <div class="custom-control custom-radio">
-        <input class="custom-control-input" type="radio" id="pipeline_email" value="email" v-model="pipeline">
-        <label class="custom-control-label" for="pipeline_email">
-          {{ $t('indexing.email') }}
-        </label>
+      <div class="find-named-entities-form__footer mt-4 row no-gutters">
+        <div class="col text-right">
+          <button class="btn btn-primary font-weight-bold" type="submit">
+            {{ $t('indexing.go') }}
+          </button>
+        </div>
       </div>
-    </div>
-    <div class="find-named-entities-form__offline form-group pl-4" v-if="$config.is('manageDocuments')">
-      <b-form-checkbox id="syncModels" v-model="offline">
-        {{ $t('indexing.syncModels') }}
-      </b-form-checkbox>
-    </div>
-    <div class="find-named-entities-form__footer mt-4 row no-gutters">
-      <div class="col text-right">
-        <button class="btn btn-primary font-weight-bold" type="submit">
-          {{ $t('indexing.go') }}
-        </button>
-      </div>
-    </div>
-  </form>
+    </form>
+  </v-wait>
 </template>
 
 <script>
-import { createHelpers } from 'vuex-map-fields'
-import utils from '@/mixins/utils'
+import lowerCase from 'lodash/lowerCase'
 import noop from 'lodash/noop'
+import startCase from 'lodash/startCase'
+import { createHelpers } from 'vuex-map-fields'
+
+import utils from '@/mixins/utils'
 
 const { mapFields } = createHelpers({
   getterType: 'indexing/getField',
@@ -79,18 +60,33 @@ export default {
       default: noop
     }
   },
+  filters: {
+    lowerCase,
+    startCase
+  },
+  data () {
+    return {
+      pipelines: []
+    }
+  },
   computed: {
     ...mapFields([
-      'form.pipeline',
-      'form.offline'
+      'form.offline',
+      'form.pipeline'
     ])
   },
   methods: {
     submitFindNamedEntities () {
       this.finally(this.$store.dispatch('indexing/submitFindNamedEntities').then(() => {
-        this.$store.dispatch('indexing/resetFindNamedEntitiesForm')
+        this.$store.commit('indexing/resetFindNamedEntitiesForm')
       }))
     }
+  },
+  async mounted () {
+    this.$wait.start('load ner pipelines')
+    const pipelines = await this.$store.dispatch('indexing/getNerPipelines')
+    this.$set(this, 'pipelines', pipelines)
+    this.$wait.end('load ner pipelines')
   }
 }
 

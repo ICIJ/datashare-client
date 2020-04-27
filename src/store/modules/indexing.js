@@ -1,16 +1,17 @@
 import { remove } from 'lodash'
-import Api from '@/api'
 import { getField, updateField } from 'vuex-map-fields'
+
+import Api from '@/api'
 
 export const api = new Api()
 
 export function initialState () {
   return {
     form: {
-      ocr: false,
       filter: true,
-      pipeline: 'corenlp',
-      offline: false
+      ocr: false,
+      offline: false,
+      pipeline: 'CORENLP'
     },
     pollHandle: null,
     tasks: []
@@ -66,23 +67,7 @@ export const actions = {
     api.runBatchSearch()
   },
   submitFindNamedEntities ({ state }) {
-    switch (state.form.pipeline) {
-      case 'corenlp':
-        api.findNames('CORENLP', { syncModels: !state.form.offline })
-        break
-      case 'opennlp':
-        api.findNames('OPENNLP', { syncModels: !state.form.offline })
-        break
-      case 'mitie':
-        api.findNames('MITIE', { syncModels: !state.form.offline })
-        break
-      case 'ixapipe':
-        api.findNames('IXAPIPE', { syncModels: !state.form.offline })
-        break
-      case 'email':
-        api.findNames('EMAIL', { syncModels: false })
-        break
-    }
+    api.findNames(state.form.pipeline, { syncModels: !state.form.offline })
   },
   stopPendingTasks ({ commit }) {
     api.stopPendingTasks().then(commit('stopPendingTasks'))
@@ -104,17 +89,11 @@ export const actions = {
     const pollHandle = setInterval(() => dispatch('loadTasks'), 2000)
     commit('setPollHandle', pollHandle)
   },
-  stopPollTasks ({ commit }) {
-    commit('stopPolling')
-  },
-  resetFindNamedEntitiesForm ({ commit }) {
-    commit('resetFindNamedEntitiesForm')
-  },
-  resetExtractForm ({ commit }) {
-    commit('resetExtractForm')
-  },
   deleteAll ({ rootState }) {
     return api.deleteAll(rootState.search.index)
+  },
+  getNerPipelines () {
+    return api.getNerPipelines()
   }
 }
 

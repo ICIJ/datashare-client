@@ -125,14 +125,13 @@ export default {
     })
   },
   beforeRouteEnter (to, from, next) {
-    return store.dispatch('indexing/loadTasks').then(() => {
-      store.dispatch('indexing/startPollTasks')
-      return next()
-    // Proceed anyway
-    }, () => next())
+    next(async () => {
+      await store.dispatch('indexing/loadTasks')
+      await store.dispatch('indexing/startPollTasks')
+    })
   },
   beforeRouteLeave (to, from, next) {
-    store.dispatch('indexing/stopPollTasks')
+    store.commit('indexing/stopPolling')
     next()
   },
   methods: {

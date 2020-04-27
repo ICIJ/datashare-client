@@ -130,6 +130,9 @@ export default class Api {
   getDocumentsRecommendedBy (project, users) {
     return this.sendAction(`/api/${project}/documents/recommendations?userids=${join(users)}`)
   }
+  getNerPipelines () {
+    return this.sendAction('/api/ner/pipelines')
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })

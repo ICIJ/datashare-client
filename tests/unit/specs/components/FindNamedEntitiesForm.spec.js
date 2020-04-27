@@ -1,10 +1,10 @@
-import axios from 'axios'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import axios from 'axios'
 
-import { Core } from '@/core'
 import Api from '@/api'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
+import { Core } from '@/core'
 
 jest.mock('axios', () => {
   return {
@@ -12,21 +12,32 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FindNamedEntitiesForm.vue', () => {
-  let wrapper
+  let wrapper = null
 
   beforeEach(() => {
-    wrapper = shallowMount(FindNamedEntitiesForm, { localVue, store, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(FindNamedEntitiesForm, { i18n, localVue, store, wait })
   })
 
-  afterEach(() => {
+  beforeEach(() => {
     store.commit('indexing/reset')
     axios.request.mockClear()
   })
 
-  it('should call findNames action with CoreNLP pipeline, by default', () => {
+  afterAll(() => jest.unmock('axios'))
+
+  it('should load NER pipelines on component mounted', () => {
+    wrapper = shallowMount(FindNamedEntitiesForm, { i18n, localVue, store, wait })
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/ner/pipelines')
+    }))
+  })
+
+  it('should call findNames action with CORENLP pipeline, by default', () => {
     wrapper.vm.submitFindNamedEntities()
 
     expect(axios.request).toBeCalledTimes(1)
@@ -37,21 +48,21 @@ describe('FindNamedEntitiesForm.vue', () => {
     }))
   })
 
-  it('should call findNames action with OpenNLP pipeline', () => {
-    wrapper.vm.pipeline = 'opennlp'
+  it('should call findNames action with ANOTHERNLP pipeline', () => {
+    wrapper.vm.$set(wrapper.vm, 'pipeline', 'ANOTHERNLP')
     wrapper.vm.submitFindNamedEntities()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/task/findNames/OPENNLP'),
+      url: Api.getFullUrl('/api/task/findNames/ANOTHERNLP'),
       method: 'POST',
       data: { options: { syncModels: true } }
     }))
   })
 
   it('should call findNames action with no models synchronization', () => {
-    wrapper.vm.pipeline = 'corenlp'
-    wrapper.vm.offline = true
+    wrapper.vm.$set(wrapper.vm, 'pipeline', 'CORENLP')
+    wrapper.vm.$set(wrapper.vm, 'offline', true)
     wrapper.vm.submitFindNamedEntities()
 
     expect(axios.request).toBeCalledTimes(1)
@@ -63,16 +74,16 @@ describe('FindNamedEntitiesForm.vue', () => {
   })
 
   it('should reset the modal params on submitting the form', async () => {
-    wrapper.vm.pipeline = 'opennlp'
+    wrapper.vm.$set(wrapper.vm, 'pipeline', 'ANOTHERNLP')
     await wrapper.vm.submitFindNamedEntities()
     await wrapper.vm.$nextTick()
 
-    expect(wrapper.vm.pipeline).toBe('corenlp')
+    expect(wrapper.vm.pipeline).toBe('CORENLP')
   })
 
   it('should NOT show offline checkbox in SERVER mode', () => {
     Murmur.config.merge({ mode: 'SERVER' })
-    wrapper = shallowMount(FindNamedEntitiesForm, { localVue, store, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(FindNamedEntitiesForm, { i18n, localVue, store, wait })
 
     expect(wrapper.contains('.find-named-entities-form__offline')).toBeFalsy()
   })
