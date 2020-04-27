@@ -15,7 +15,7 @@
       </div>
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
-      <div class="widget__content__chart align-items-center">
+      <div class="widget__content__chart align-items-center" v-if="data.length > 0">
         <v-wait :for="loader">
           <div class="widget__content__chart__spinner" slot="waiting">
             <fa icon="circle-notch" spin size="2x" />
@@ -44,6 +44,9 @@
             </g>
           </svg>
         </v-wait>
+      </div>
+      <div v-else>
+        {{ $t('widget.noData') }}
       </div>
     </div>
   </div>

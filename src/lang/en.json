@@ -1,4 +1,7 @@
 {
+  "general": {
+    "all": "All"
+  },
   "aggregations": {
     "more": "Explore more",
     "placeholder": "Search for people, organizations, locations...",
@@ -575,6 +578,7 @@
   "widget": {
     "document": "1 document | %{total} documents",
     "amongWhich": "among which",
-    "onDisk": "on disk"
+    "onDisk": "on disk",
+    "noData": "No data"
   }
 }

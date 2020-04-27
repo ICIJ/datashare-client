@@ -1,19 +1,18 @@
 <template>
   <widget-documents-by-creation-date :widget="widget" ref="widgetDocumentsByCreationDate">
     <template #selector="{ selectedPath }">
-      <span>
-        <b-dropdown :text="selectedPath.label" v-if="paths.length">
-          <b-dropdown-item v-for="path in paths" :key="path.folder" @click="setSelectedPath(path)">
-            {{ path.label }}
-          </b-dropdown-item>
-        </b-dropdown>
-      </span>
+      <b-dropdown :text="selectedPath.label" v-if="paths.length" class="mr-3">
+        <b-dropdown-item v-for="path in paths" :key="path.folder" @click="setSelectedPath(path)">
+          {{ path.label }}
+        </b-dropdown-item>
+      </b-dropdown>
     </template>
   </widget-documents-by-creation-date>
 </template>
 
 <script>
 import concat from 'lodash/concat'
+import first from 'lodash/first'
 import get from 'lodash/get'
 import map from 'lodash/map'
 import replace from 'lodash/replace'
@@ -35,7 +34,7 @@ export default {
   },
   data () {
     return {
-      paths: [{ label: 'All', folder: '' }]
+      paths: [{ label: this.$t('general.all'), folder: '' }]
     }
   },
   computed: {
@@ -44,7 +43,7 @@ export default {
   mounted () {
     this.$nextTick(() => {
       this.loadPath()
-      this.setSelectedPath({ label: 'All', folder: '' })
+      this.setSelectedPath(first(this.paths))
     })
   },
   methods: {
