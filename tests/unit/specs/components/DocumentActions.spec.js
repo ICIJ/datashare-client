@@ -13,11 +13,11 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 
 describe('DocumentActions.vue', () => {
-  const index = toLower('DocumentActions')
-  esConnectionHelper(index)
+  const project = toLower('DocumentActions')
+  esConnectionHelper(project)
   const es = esConnectionHelper.es
   let document, wrapper
 
@@ -25,37 +25,39 @@ describe('DocumentActions.vue', () => {
 
   beforeEach(async () => {
     store.commit('search/starredDocuments', [])
-    document = await letData(es).have(new IndexedDocument('document', index)).commit()
-    wrapper = shallowMount(DocumentActions, { localVue, store, propsData: { document }, mocks: { $t: msg => msg }, sync: false })
+    document = await letData(es).have(new IndexedDocument('document', project)).commit()
+    wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document }, sync: false })
   })
 
+  afterAll(() => jest.unmock('axios'))
+
   it('should display a filled star if document is starred, an empty one otherwise', async () => {
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('far,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
     await store.commit('search/starredDocuments', [document.id])
 
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
 
   it('should replace an empty star by a filled one on click on it', async () => {
     expect(wrapper.vm.starredDocuments).toEqual([])
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('far,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
 
     await wrapper.vm.toggleStarDocument(wrapper.vm.document.id)
 
     expect(wrapper.vm.starredDocuments).toEqual([document.id])
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
 
   it('should replace a filled star by an empty one on click on it', async () => {
     await store.commit('search/pushFromStarredDocuments', document.id)
 
     expect(wrapper.vm.starredDocuments).toEqual([document.id])
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('fa,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
 
     await wrapper.vm.toggleStarDocument(wrapper.vm.document.id)
 
     expect(wrapper.vm.starredDocuments).toEqual([])
-    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toEqual('far,star')
+    expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
   })
 
   it('should raise an "filter::starred::refresh" event when adding a star', async () => {
@@ -72,7 +74,7 @@ describe('DocumentActions.vue', () => {
   })
 
   it('should display "Download" button if download is allowed', () => {
-    wrapper = shallowMount(DocumentActions, { localVue, store, propsData: { document, isDownloadAllowed: true }, mocks: { $t: msg => msg }, sync: false })
+    wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document, isDownloadAllowed: true }, sync: false })
     expect(wrapper.find('.document-actions__download').exists()).toBeTruthy()
   })
 })

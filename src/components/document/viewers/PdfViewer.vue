@@ -48,7 +48,7 @@ export default {
   mixins: [datashareSourceMixin],
   data () {
     return {
-      message: this.$t('document.generating_preview'),
+      message: this.$t('document.generatingPreview'),
       pdf: null,
       doc: {
         active: 0,

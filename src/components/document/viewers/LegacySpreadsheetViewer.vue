@@ -34,7 +34,7 @@ export default {
   mixins: [datashareSourceMixin],
   data () {
     return {
-      message: this.$t('document.generating_preview'),
+      message: this.$t('document.generatingPreview'),
       doc: {
         active: 0,
         sheets: {}
@@ -63,7 +63,7 @@ export default {
             arr += String.fromCharCode(data[i])
           }
           const workbook = XLSX.read(arr, { type: 'binary' })
-          let result = {}
+          const result = {}
           workbook.SheetNames.forEach(function (sheetname) {
             const roa = XLSX.utils.sheet_to_html(workbook.Sheets[sheetname])
             if (roa.length > 0) result[sheetname] = roa

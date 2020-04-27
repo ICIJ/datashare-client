@@ -6,7 +6,7 @@
           <b-input-group-text slot="prepend">
             <fa icon="tag" />
           </b-input-group-text>
-          <b-form-input v-model="tag" @input="searchTags" required :placeholder="$t('document.tags_new')" :disabled="updatingTags" autocomplete="off" autofocus ref="tag" />
+          <b-form-input v-model="tag" @input="searchTags" required :placeholder="$t('document.tagsNew')" :disabled="updatingTags" autocomplete="off" autofocus ref="tag" />
         </b-input-group>
         <selectable-dropdown :items="existingTags" @input="tag = $event" @click.native="addTag" :hide="!existingTags.length"></selectable-dropdown>
       </b-form>
@@ -15,7 +15,7 @@
       <ul class="document-tags-form__tags list-unstyled mb-0 mt-1">
         <li class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1" :class="[mode === 'light' ? 'border badge-light': 'badge-dark']" v-for="tag in tags" :key="tag.label">
           <span :title="generateTagTooltip(tag)" v-b-tooltip>{{ tag.label }}</span>
-          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tag_confirmation')" class="document-tags-form__tags__tag__delete btn btn-sm" :class="mode">
+          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tagConfirmation')" class="document-tags-form__tags__tag__delete btn btn-sm" :class="mode">
             <fa icon="times" class="fa-fw pl-2" />
           </confirm-button>
         </li>
@@ -98,7 +98,7 @@ export default {
       this.$set(this, 'updatingTags', false)
     },
     generateTagTooltip (tag) {
-      return `${this.$t('document.created_by')} ${displayUser(tag.user.id)} ${this.$t('document.on')} ${moment(tag.creationDate).format('LLL')}`
+      return `${this.$t('document.createdBy')} ${displayUser(tag.user.id)} ${this.$t('document.on')} ${moment(tag.creationDate).format('LLL')}`
     }
   }
 }

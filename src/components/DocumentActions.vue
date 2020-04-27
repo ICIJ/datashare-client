@@ -2,24 +2,24 @@
   <div class="document-actions" :class="{ 'btn-group-vertical': !noBtnGroup && vertical, 'btn-group': !noBtnGroup && !vertical }">
     <a class="document-actions__star btn" :class="starBtnClassDefinition" href @click.prevent="toggleStarDocument(document.id)" :id="starBtnId">
       <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fixed-width />
-      <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">{{ $t('document.star_button') }}</span>
+      <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">{{ $t('document.starButton') }}</span>
     </a>
     <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
-      {{ $t('document.star_file') }}
+      {{ $t('document.starFile') }}
     </b-tooltip>
     <a class="document-actions__download btn" :class="downloadBtnClassDefinition" :href="document.fullUrl" target="_blank" v-if="canIDownload" :id="downloadBtnId">
       <fa icon="download" fixed-width />
-      <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">{{ $t('document.download_button') }}</span>
+      <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">{{ $t('document.downloadButton') }}</span>
     </a>
     <b-popover :target="downloadBtnId" triggers="hover focus" :placement="tooltipsPlacement" :title="document.contentTypeLabel">
       <document-type-card :document="document" />
     </b-popover>
     <router-link-popup class="document-actions__popup btn" :class="popupBtnClassDefinition" :to="{ name: 'document-simplified', params: document.routerParams }" :id="popupBtnId">
       <fa icon="external-link-alt" fixed-width />
-      <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">{{ $t('document.external_window') }}</span>
+      <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">{{ $t('document.externalWindow') }}</span>
     </router-link-popup>
     <b-tooltip :target="popupBtnId" :placement="tooltipsPlacement">
-      {{ $t('document.external_window') }}
+      {{ $t('document.externalWindow') }}
     </b-tooltip>
   </div>
 </template>
@@ -122,7 +122,7 @@ export default {
       try {
         await this.$store.dispatch('search/toggleStarDocument', documentId)
       } catch (_) {
-        this.$bvToast.toast(this.$t('document.starring_error'), { noCloseButton: true, variant: 'danger' })
+        this.$bvToast.toast(this.$t('document.starringError'), { noCloseButton: true, variant: 'danger' })
       }
       this.$root.$emit('bv::hide::tooltip')
       this.$root.$emit('filter::starred::refresh')

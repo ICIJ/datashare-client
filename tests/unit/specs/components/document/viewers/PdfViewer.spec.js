@@ -1,22 +1,22 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import { responseWithArrayBuffer } from 'tests/unit/tests_utils'
-import { Core } from '@/core'
-import PdfViewer from '@/components/document/viewers/PdfViewer'
 
-const { localVue } = Core.init(createLocalVue()).useAll()
+import PdfViewer from '@/components/document/viewers/PdfViewer'
+import { Core } from '@/core'
+import { responseWithArrayBuffer } from 'tests/unit/tests_utils'
+
+const { i18n, localVue } = Core.init(createLocalVue()).useAll()
 
 describe('PdfViewer.vue', () => {
   let wrapper = null
   const getSource = jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url))
   const methods = { getSource }
-  const mocks = { $t: msg => msg }
 
   beforeEach(() => {
-    wrapper = shallowMount(PdfViewer, { localVue, mocks, methods, propsData: { document: { url: 'document.pdf' } } })
+    wrapper = shallowMount(PdfViewer, { i18n, localVue, methods, propsData: { document: { url: 'document.pdf' } } })
   })
 
   it('should display an error message if the document does not exist', async () => {
-    wrapper = shallowMount(PdfViewer, { localVue, mocks, methods, propsData: { document: { url: 'nodoc.pdf' } } })
+    wrapper = shallowMount(PdfViewer, { i18n, localVue, methods, propsData: { document: { url: 'nodoc.pdf' } } })
 
     await wrapper.vm.loadPage(1)
 
@@ -24,7 +24,7 @@ describe('PdfViewer.vue', () => {
   })
 
   it('should display a message while generating the preview', () => {
-    expect(wrapper.find('.pdf-viewer .alert').text()).toBe('document.generating_preview')
+    expect(wrapper.find('.pdf-viewer .alert').text()).toBe('Generating preview...')
   })
 
   it('should load a pdf content file', async () => {

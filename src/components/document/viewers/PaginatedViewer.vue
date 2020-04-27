@@ -31,7 +31,7 @@
       </div>
     </div>
     <div class="p-3" v-else>
-      {{ $t('document.not_available') }}
+      {{ $t('document.notAvailable') }}
     </div>
   </v-wait>
 </template>

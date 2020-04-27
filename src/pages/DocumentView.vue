@@ -30,6 +30,7 @@
               <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
                 <hook :name="`document.header.nav.${tab.name}:before`" />
                 <fa :icon="tab.icon" v-if="tab.icon" class="mr-2" />
+                {{ tab.label }}
                 {{ $t(tab.label) }}
                 <hook :name="`document.header.nav.${tab.name}:after`" />
               </a>
@@ -51,7 +52,7 @@
     </div>
     <div v-else class="nodocument">
       <fa icon="exclamation-triangle" />
-      <span>{{ $t('document.not_found') }}</span>
+      <span>{{ $t('document.notFound') }}</span>
     </div>
   </v-wait>
 </template>
@@ -99,7 +100,7 @@ export default {
       return [
         {
           name: 'extracted-text',
-          label: 'document.extracted_text',
+          label: 'document.extractedText',
           component: () => import('@/components/document/DocumentTabExtractedText'),
           icon: 'align-left',
           props: {
@@ -117,7 +118,7 @@ export default {
         },
         {
           name: 'details',
-          label: 'document.tab_details',
+          label: 'document.tabDetails',
           component: () => import('@/components/document/DocumentTabDetails'),
           icon: 'info-circle',
           props: {
@@ -137,7 +138,7 @@ export default {
         },
         {
           name: 'named-entities',
-          label: 'document.named_entities',
+          label: 'document.namedEntities',
           hidden: this.$config.isnt('manageDocuments') && !this.doc.hasNerTags,
           component: () => import('@/components/document/DocumentTabNamedEntities'),
           icon: 'database',

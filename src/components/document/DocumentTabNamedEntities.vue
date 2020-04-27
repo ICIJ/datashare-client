@@ -3,10 +3,10 @@
     <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
     <div class="p-3">
       <div v-if="$config.is('manageDocuments') && !document.hasNerTags" class="document__named-entities document__named-entities--not--searched">
-        <div v-html="$t('document.named_entities_not_searched', { indexing_link: '#/indexing' })"></div>
+        <div v-html="$t('document.namedEntitiesNotSearched', { indexing_link: '#/indexing' })"></div>
       </div>
       <div v-else-if="!hasNamedEntities && !isLoadingNamedEntities" class="document__named-entities document__named-entities--not--found">
-        {{ $t('document.named_entities_not_found') }}
+        {{ $t('document.namedEntitiesNotFound') }}
       </div>
       <div v-else-if="!isLoadingNamedEntities" class="document__named-entities">
         <div v-for="(pages, category) in namedEntitiesPaginatedByCategories" :key="category" class="mb-4">
@@ -34,7 +34,7 @@
             <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
             <div v-if="categoryHasNextPage(category)">
               <a class="document__named-entities__more small" href="#" @click.prevent="getNextPageInCategory(category)">
-                {{ $t('document.namedEntities.showMore' + capitalize(category)) }}
+                {{ $t('document.namedEntitiesShowMore.showMore' + capitalize(category)) }}
               </a>
             </div>
           </v-wait>

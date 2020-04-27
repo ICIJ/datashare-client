@@ -4,7 +4,9 @@
       <component :is="importPreviewComponent" :document="document" />
     </template>
     <template v-else>
-      <div class="p-3">{{ $t('document.not_available') }}</div>
+      <div class="p-3">{
+        { $t('document.notAvailable') }}
+      </div>
     </template>
   </div>
 </template>
@@ -44,7 +46,7 @@ export default {
   },
   methods: {
     importPreviewComponent () {
-      return import(`@/components/document/viewers/${this.previewComponent}.vue`)
+      return import('@/components/document/viewers/' + this.previewComponent + '.vue')
     }
   },
   computed: {

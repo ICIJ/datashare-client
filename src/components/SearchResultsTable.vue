@@ -95,11 +95,11 @@ export default {
     actions () {
       return [{
         id: 'star',
-        label: this.$t('document.star_button'),
+        label: this.$t('document.starButton'),
         icon: ['fa', 'star']
       }, {
         id: 'unstar',
-        label: this.$t('document.unstar_button'),
+        label: this.$t('document.unstarButton'),
         icon: ['far', 'star']
       }]
     },
@@ -156,7 +156,7 @@ export default {
           key: 'creationDateHumanShort',
           sortBy: 'metadata.tika_metadata_creation_date',
           sortable: true,
-          label: this.$t('document.creation_date')
+          label: this.$t('document.creationDate')
         },
         {
           key: 'contentLength',

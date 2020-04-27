@@ -157,6 +157,8 @@ export default {
     labelToHuman (label) {
       if (this.$te(label)) {
         return this.$t(label)
+      } else if (this.$te(`general.${label}`)) {
+        return this.$t(`general.${label}`)
       } else if (this.$te(`filter.${label}`)) {
         return this.$t(`filter.${label}`)
       } else {

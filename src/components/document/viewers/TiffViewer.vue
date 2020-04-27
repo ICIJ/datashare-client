@@ -27,7 +27,7 @@
         <div class="img-thumbnail">
           <div class="alert tiff-viewer__warning">
             <fa icon="exclamation-triangle" />
-            {{ $t('document.tiff_limitations') }}
+            {{ $t('document.tiffLimitations') }}
           </div>
           <img class="tiff-viewer__canvas img-responsive" :width="maxWidth" :src="loadPage(doc.active)" />
         </div>
@@ -50,7 +50,7 @@ export default {
   mixins: [datashareSourceMixin],
   data () {
     return {
-      message: this.$t('document.generating_preview'),
+      message: this.$t('document.generatingPreview'),
       maxWidth: 750,
       thumbWidth: 80,
       tiff: null,
@@ -107,13 +107,13 @@ export default {
       })
     },
     rotate (canvas, direction = 1) {
-      let ctx = canvas.getContext('2d')
-      let cw = canvas.width
-      let ch = canvas.height
+      const ctx = canvas.getContext('2d')
+      const cw = canvas.width
+      const ch = canvas.height
       // Store current data to a temporary image
       let img = new Image()
       // Create a promise to return when the image is rotated
-      let promise = new Promise(resolve => {
+      const promise = new Promise(resolve => {
         img.onload = () => {
           // Reset the canvas with new dimensions
           canvas.width = ch

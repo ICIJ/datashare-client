@@ -12,7 +12,7 @@
           href
           @click.prevent="toggleValue(nodeParams)"
           v-b-tooltip.hover
-          :title="$t('document.search_directory')"
+          :title="$t('document.searchDirectory')"
           class="badge badge-pill badge-light">
           <fa icon="search" class="tree-node__count__icon" />
           <span>

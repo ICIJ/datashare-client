@@ -6,7 +6,7 @@ import store from '@/store'
 export default {
   name: 'DocumentGlobalSearchTermsTags',
   store,
-  mixins: [ utils ],
+  mixins: [utils],
   props: {
     document: Object
   },
@@ -32,7 +32,7 @@ export default {
 <template>
   <div class="document-global-search-terms-tags d-flex align-items-center" v-if="document && terms.length" v-once>
     <div class="mr-2">
-      {{ $t('document.researched_terms') }}
+      {{ $t('document.researchedTerms') }}
     </div>
     <ul class="list-inline m-0">
       <li v-for="(term, index) in terms" :key="term.label" class="list-inline-item">
@@ -41,10 +41,10 @@ export default {
             {{ term.label }}
           </span>
           <span v-if="term.content === 0 && term.metadata > 0" class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0" :style="getTermIndexBackgroundColor(index)">
-            {{ $t('document.in_metadata') }}
+            {{ $t('document.inMetadata') }}
           </span>
           <span v-else-if="term.content === 0 && term.tags > 0" class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0" :style="getTermIndexBackgroundColor(index)">
-            {{ $t('document.in_tags') }}
+            {{ $t('document.inTags') }}
           </span>
           <span v-else class="document-global-search-terms-tags__item__count py-0" :style="getTermIndexBackgroundColor(index)">
             {{ term.content }}

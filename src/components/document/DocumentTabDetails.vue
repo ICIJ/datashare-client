@@ -5,7 +5,7 @@
         {{ $t('document.tags') }}
       </h5>
       <p class="text-muted">
-        {{ $t('document.tags_visibility') }}
+        {{ $t('document.tagsVisibility') }}
       </p>
       <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="true" />
     </div>
@@ -14,11 +14,11 @@
         {{ $t('document.details') }}
       </h5>
       <p class="text-muted">
-        {{ $t('document.details_info') }}
+        {{ $t('document.detailsInfo') }}
       </p>
       <div class="row document__content__details__children m-2">
         <router-link :to="{ name: 'search', query: { q: `_routing:${document.id}`, index } }">
-          {{ $t('document.search_children_document') }}
+          {{ $t('document.searchChildrenDocument') }}
         </router-link>
       </div>
       <div class="row document__content__details__item" v-for="field in filteredCanonicalFields" :key="field.name">
@@ -142,7 +142,7 @@ export default {
         },
         {
           name: 'metadata.tika_metadata_creation_date',
-          label: this.$t('document.creation_date'),
+          label: this.$t('document.creationDate'),
           class: 'document__content__creation-date',
           value: this.document.meta('creation_date')
         },
@@ -154,7 +154,7 @@ export default {
         },
         {
           name: 'extractionDate',
-          label: this.$t('document.extraction_date'),
+          label: this.$t('document.extractionDate'),
           class: 'document__content__extraction-date',
           value: this.document.source.extractionDate
         },
@@ -167,21 +167,21 @@ export default {
         },
         {
           name: 'language',
-          label: this.$t('document.content_language'),
+          label: this.$t('document.contentLanguage'),
           class: 'document__content__language',
           value: this.$t(`filter.lang.${this.document.source.language}`),
           rawValue: this.document.source.language
         },
         {
           name: 'contentType',
-          label: this.$t('document.content_type'),
+          label: this.$t('document.contentType'),
           class: 'document__content__content-type',
           value: this.getDocumentTypeLabel(this.document.source.contentType),
           rawValue: this.document.source.contentType
         },
         {
           name: 'contentEncoding',
-          label: this.$t('document.content_encoding'),
+          label: this.$t('document.contentEncoding'),
           class: 'document__content__content-encoding',
           value: this.document.source.contentEncoding
         },
@@ -194,7 +194,7 @@ export default {
         },
         {
           name: 'metadata.tika_metadata_message_raw_header_thread_index',
-          label: this.$t('document.thread_index'),
+          label: this.$t('document.threadIndex'),
           class: 'document__content__thread',
           value: this.document.threadIndex
         },

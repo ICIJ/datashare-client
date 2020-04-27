@@ -4,7 +4,7 @@
       {{ $t('document.fetching') }}
     </div>
     <div v-else-if="!isPreviewable" class="p-3">
-      {{ $t('document.not_available') }}
+      {{ $t('document.notAvailable') }}
     </div>
     <div v-else class="spreadsheet-viewer__content d-flex flex-column h-100">
       <div class="spreadsheet-viewer__content__toolbox d-flex align-items-center p-2">

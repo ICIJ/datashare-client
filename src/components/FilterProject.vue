@@ -20,7 +20,7 @@
 <script>
 import map from 'lodash/map'
 
-import ProjectSelector from '@/components/ProjectSelector.vue'
+import ProjectSelector from '@/components/ProjectSelector'
 import filters from '@/mixins/filters'
 
 export default {
