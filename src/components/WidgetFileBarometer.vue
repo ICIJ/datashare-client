@@ -75,8 +75,8 @@ export default {
     min-height: 100%;
 
     &__main-figure {
+      font-size: 1.8rem;
       display: block;
-      font-size: 2rem;
     }
   }
 </style>
