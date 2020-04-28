@@ -143,7 +143,7 @@ export default class Api {
     }
   }
   async sendActionAsText (url, config = {}) {
-    const headers = { 'Content-Type': 'text/plain' }
+    const headers = { 'Content-Type': 'text/plain;charset=UTF-8' }
     const responseType = 'text'
     return this.sendAction(url, { headers, responseType, ...config })
   }

@@ -7,8 +7,8 @@ export const api = new Api()
 export function initialState () {
   return {
     batchSearches: [],
-    selectedQueries: [],
-    results: []
+    results: [],
+    selectedQueries: []
   }
 }
 
