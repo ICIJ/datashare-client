@@ -117,18 +117,13 @@ export default {
       return settings.documentationLinks.indexing[os] || settings.documentationLinks.indexing.default
     }
   },
-  mounted () {
-    store.dispatch('search/query', '*').then(hits => {
-      if (hits.hits.total === 0 && this.tasks.length === 0) {
-        this.openExtractingForm()
-      }
-    })
-  },
-  beforeRouteEnter (to, from, next) {
-    next(async () => {
-      await store.dispatch('indexing/loadTasks')
-      await store.dispatch('indexing/startPollTasks')
-    })
+  async mounted () {
+    await store.dispatch('indexing/loadTasks')
+    await store.dispatch('indexing/startPollTasks')
+    const hits = await store.dispatch('search/query', '*')
+    if (hits.hits.total === 0 && this.tasks.length === 0) {
+      this.openExtractingForm()
+    }
   },
   beforeRouteLeave (to, from, next) {
     store.commit('indexing/stopPolling')
