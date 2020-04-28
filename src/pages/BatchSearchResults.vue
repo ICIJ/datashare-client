@@ -199,7 +199,6 @@ import Api from '@/api'
 import Auth from '@/api/resources/Auth'
 import humanSize from '@/filters/humanSize'
 import toVariant from '@/filters/toVariant'
-import store from '@/store'
 import settings from '@/utils/settings'
 import { getDocumentTypeLabel } from '@/utils/utils'
 
@@ -331,7 +330,7 @@ export default {
     next()
   },
   beforeRouteLeave (to, from, next) {
-    store.commit('batchSearch/selectedQueries', [])
+    this.$store.commit('batchSearch/selectedQueries', [])
     next()
   },
   methods: {
@@ -343,12 +342,12 @@ export default {
       this.$wait.end('load batchSearch results')
     },
     fetchBatchSearches () {
-      return store.dispatch('batchSearch/getBatchSearches')
+      return this.$store.dispatch('batchSearch/getBatchSearches')
     },
     fetchBatchSearchResults () {
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
-      return store.dispatch('batchSearch/getBatchSearchResults',
+      return this.$store.dispatch('batchSearch/getBatchSearchResults',
         { batchId: this.uuid, from, size, queries: this.queries, sort: this.sort, order: this.order })
     },
     async sortChanged (ctx) {
@@ -370,7 +369,7 @@ export default {
       }
     },
     async deleteBatchSearch () {
-      const isDeleted = await store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
+      const isDeleted = await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
       this.$router.push({ name: 'batch-search' })
       this.$root.$bvToast.toast(isDeleted ? this.$t('batchSearch.deleted') : this.$t('batchSearch.notDeleted'),
         { noCloseButton: true, variant: isDeleted ? 'success' : 'warning' })
@@ -380,7 +379,7 @@ export default {
       return size === 'unknown' ? this.$t('document.unknown') : size
     },
     changePublished (published) {
-      store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
+      this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
     },
     openErrorMessage () {
       if (this.isFailed) {

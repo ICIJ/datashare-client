@@ -11,13 +11,13 @@ jest.mock('axios', () => {
   }
 })
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('Indexing.vue', () => {
   let wrapper = null
 
   beforeEach(() => {
-    wrapper = shallowMount(Indexing, { i18n, localVue, store })
+    wrapper = shallowMount(Indexing, { i18n, localVue, store, wait })
   })
 
   beforeEach(() => {
@@ -27,8 +27,8 @@ describe('Indexing.vue', () => {
 
   afterAll(() => jest.unmock('axios'))
 
-  it('should start polling tasks on beforeRouteEnter and stop polling tasks on beforeRouteLeave', async () => {
-    wrapper = await shallowMount(Indexing, { i18n, localVue, store })
+  it('should start polling tasks on mount and stop polling tasks on beforeRouteLeave', async () => {
+    wrapper = await shallowMount(Indexing, { i18n, localVue, store, wait })
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -36,7 +36,7 @@ describe('Indexing.vue', () => {
     }))
     expect(store.state.indexing.pollHandle).not.toBeNull()
 
-    Indexing.beforeRouteLeave(undefined, undefined, jest.fn())
+    Indexing.beforeRouteLeave.call(wrapper.vm, undefined, undefined, jest.fn())
     expect(store.state.indexing.pollHandle).toBeNull()
   })
 
@@ -98,6 +98,8 @@ describe('Indexing.vue', () => {
     expect(wrapper.vm.tasks).toHaveLength(1)
 
     wrapper.find('.btn-stop-pending-tasks').trigger('click')
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -112,6 +114,8 @@ describe('Indexing.vue', () => {
     expect(wrapper.vm.tasks).toHaveLength(1)
 
     wrapper.find('.btn-delete-done-tasks').trigger('click')
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -136,6 +140,8 @@ describe('Indexing.vue', () => {
     expect(wrapper.findAll('.btn-stop-task')).toHaveLength(1)
 
     wrapper.find('.btn-stop-task').trigger('click')
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({

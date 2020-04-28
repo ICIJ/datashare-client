@@ -16,7 +16,7 @@ describe('IndexingStore', () => {
 
   beforeAll(() => store.commit('search/index', project))
 
-  afterEach(() => {
+  beforeEach(() => {
     store.commit('indexing/reset')
     axios.request.mockClear()
   })

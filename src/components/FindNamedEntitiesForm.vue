@@ -1,5 +1,6 @@
 <template>
   <v-wait for="load ner pipelines">
+    <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-3" />
     <form class="find-named-entities-form" id="find-named-entities-form" @submit.prevent="submitFindNamedEntities">
       <div class="find-named-entities-form__header mb-4">
         <h4>
@@ -8,7 +9,7 @@
       </div>
       <div class="find-named-entities-form__subheader mb-4">
         <span>
-            {{ $t('indexing.findNamedEntitiesSubheader') }}
+          {{ $t('indexing.findNamedEntitiesSubheader') }}
         </span>
       </div>
       <div class="find-named-entities-form__body form-group mb-4 pl-4">

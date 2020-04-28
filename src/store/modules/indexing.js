@@ -61,32 +61,42 @@ export const mutations = {
 
 export const actions = {
   submitExtract ({ state }) {
-    api.index({ ocr: state.form.ocr, filter: state.form.filter })
+    return api.index({ ocr: state.form.ocr, filter: state.form.filter })
   },
   runBatchSearch () {
-    api.runBatchSearch()
+    return api.runBatchSearch()
   },
   submitFindNamedEntities ({ state }) {
-    api.findNames(state.form.pipeline, { syncModels: !state.form.offline })
+    return api.findNames(state.form.pipeline, { syncModels: !state.form.offline })
   },
-  stopPendingTasks ({ commit }) {
-    api.stopPendingTasks().then(commit('stopPendingTasks'))
+  async stopPendingTasks ({ commit }) {
+    try {
+      await api.stopPendingTasks()
+      return commit('stopPendingTasks')
+    } catch (_) {}
   },
-  stopTask ({ commit }, name) {
-    api.stopTask(name).then(commit('stopTask', name))
+  async stopTask ({ commit }, name) {
+    try {
+      await api.stopTask(name)
+      commit('stopTask', name)
+    } catch (_) {}
   },
-  deleteDoneTasks ({ commit }) {
-    api.deleteDoneTasks().then(commit('deleteDoneTasks'))
+  async deleteDoneTasks ({ commit }) {
+    try {
+      await api.deleteDoneTasks()
+      commit('deleteDoneTasks')
+    } catch (_) {}
   },
-  loadTasks ({ commit }) {
-    return api.getTasks()
-      .then(raw => {
-        commit('updateTasks', raw)
-        return raw
-      })
+  async getTasks ({ commit }) {
+    try {
+      const tasks = await api.getTasks()
+      commit('updateTasks', tasks)
+    } catch (_) {
+      commit('updateTasks', [])
+    }
   },
   startPollTasks ({ commit, dispatch }) {
-    const pollHandle = setInterval(() => dispatch('loadTasks'), 2000)
+    const pollHandle = setInterval(() => dispatch('getTasks'), 2000)
     commit('setPollHandle', pollHandle)
   },
   deleteAll ({ rootState }) {

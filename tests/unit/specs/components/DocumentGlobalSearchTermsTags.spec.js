@@ -25,7 +25,7 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
   const project = toLower('DocumentGlobalSearchTermsTags')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
-  let wrapper
+  let wrapper = null
 
   afterEach(() => {
     store.commit('document/reset')
