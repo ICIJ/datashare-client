@@ -5,11 +5,11 @@
       <p :class="{ 'card-body': widget.card }">
         <fa icon="hdd" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">
-          {{ $tc('widget.document', total, { total: humanNumber(total, $t('human.number')) }) }}
+          {{ $tc('widget.barometer.document', total, { total: humanNumber(total, $t('human.number')) }) }}
         </strong>
-        {{ $t('widget.amongWhich') }}
+        {{ $t('widget.barometer.amongWhich') }}
         <span :title="onDisk">{{ onDisk | humanNumber($t('human.number')) }}</span>
-        {{ $t('widget.onDisk') }}
+        {{ $t('widget.barometer.onDisk') }}
       </p>
     </v-wait>
   </div>

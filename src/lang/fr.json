@@ -572,9 +572,11 @@
     "selectProject": "Sélectionner un projet"
   },
   "widget": {
-    "document": "1 document | %{total} documents",
-    "amongWhich": "parmi lesquels",
-    "onDisk": "sur le disque",
-    "noData": "Pas de données"
+    "noData": "Pas de données",
+    "barometer": {
+      "document": "1 document | %{total} documents",
+      "amongWhich": "parmi lesquels",
+      "onDisk": "sur disque"
+    }
   }
 }
