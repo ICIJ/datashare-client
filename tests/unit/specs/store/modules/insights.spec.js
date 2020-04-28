@@ -11,7 +11,7 @@ describe('InsightsStore', () => {
   esConnectionHelper(project)
   const es = esConnectionHelper.es
 
-  beforeAll(() => store.commit('insights/index', project))
+  beforeAll(() => store.commit('insights/project', project))
 
   it('should define a store module', () => {
     expect(store.state.insights).not.toBeUndefined()
@@ -72,8 +72,8 @@ describe('InsightsStore', () => {
 
   it('should create an empty project by default', () => {
     store.commit('insights/reset')
-    expect(store.state.insights.index).toBe('')
-    store.commit('insights/index', project)
+    expect(store.state.insights.project).toBe('')
+    store.commit('insights/project', project)
   })
 
   describe('Date aggregation', () => {

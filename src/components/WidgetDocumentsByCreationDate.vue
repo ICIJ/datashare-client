@@ -98,7 +98,7 @@ export default {
     }
   },
   watch: {
-    index () {
+    project () {
       this.$set(this, 'mounted', false)
       this.init()
     },
@@ -114,7 +114,7 @@ export default {
     this.$nextTick(() => this.init())
   },
   computed: {
-    ...mapState('insights', ['index']),
+    ...mapState('insights', ['project']),
     container () {
       return this.mounted ? this.$el.querySelector('.widget__content__chart') : null
     },

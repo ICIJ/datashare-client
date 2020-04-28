@@ -38,7 +38,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('insights', ['index'])
+    ...mapState('insights', ['project'])
   },
   mounted () {
     this.$nextTick(() => {
@@ -54,7 +54,7 @@ export default {
         size: 100
       }
       const body = bodybuilder().size(0).agg('terms', 'dirname.tree', options, 'byDirname').build()
-      const response = await elasticsearch.search({ index: this.index, body })
+      const response = await elasticsearch.search({ index: this.project, body })
       const paths = map(get(response, ['aggregations', 'byDirname', 'buckets'], []), item => {
         const folder = replace(item.key, this.$config.get('dataDir', '') + '/', '')
         return { label: folder, folder }

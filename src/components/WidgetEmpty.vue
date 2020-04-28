@@ -24,15 +24,15 @@ export default {
     }
 
     &:after {
-      content: "This is an empty widget";
-      position: absolute;
-      top: 50%;
-      left: 0;
-      right: 0;
-      transform: translateY(-50%);
-      text-align: center;
       color: $text-muted;
+      content: "This is an empty widget";
       font-weight: lighter;
+      left: 0;
+      position: absolute;
+      right: 0;
+      text-align: center;
+      top: 50%;
+      transform: translateY(-50%);
     }
   }
 </style>

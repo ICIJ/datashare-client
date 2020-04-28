@@ -40,17 +40,17 @@ export default {
   },
   mounted () {
     this.$store.subscribe(async ({ type }) => {
-      // The index changed
-      if (type === 'insights/index') {
+      // The project changed
+      if (type === 'insights/project') {
         await this.loadData()
       }
     })
   },
   methods: {
     async count (query) {
-      const index = this.$store.state.insights.index
+      const project = this.$store.state.insights.project
       const body = { query: { query_string: { query } } }
-      const res = await elasticsearch.search({ index, body, size: 0 })
+      const res = await elasticsearch.search({ index: project, body, size: 0 })
       return res?.hits?.total || 0
     },
     countTotal () {
@@ -75,8 +75,8 @@ export default {
     min-height: 100%;
 
     &__main-figure {
-      font-size: 2rem;
       display: block;
+      font-size: 2rem;
     }
   }
 </style>
