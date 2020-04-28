@@ -30,7 +30,6 @@
               <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
                 <hook :name="`document.header.nav.${tab.name}:before`" />
                 <fa :icon="tab.icon" v-if="tab.icon" class="mr-2" />
-                {{ tab.label }}
                 {{ $t(tab.label) }}
                 <hook :name="`document.header.nav.${tab.name}:after`" />
               </a>
