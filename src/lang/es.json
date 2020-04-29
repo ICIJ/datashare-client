@@ -457,14 +457,14 @@
     "batch": "Búsquedas masivas",
     "search": "Buscar en documentos",
     "history": "Tu historial",
-    "insights": "Insights",
-    "settings": "Settings",
+    "insights": "Percepciones",
+    "settings": "Configuración",
     "logout": "Cerrar sesión",
     "addDocuments": "Cómo añadir documentos",
     "faq": "Preguntas frecuentes (FAQ)",
     "userGuides": "Guía del Usuario",
-    "devWiki": "Developper wiki",
-    "connectedAs": "You're connected as <strong>{username}</strong>"
+    "devWiki": "Wiki de desarrolladores",
+    "connectedAs": "Estás conectado como <strong>{username}</strong>"
   },
   "footer": {
     "homedir": "Mueve archivos a este directorio para analizarlos",
@@ -473,11 +473,11 @@
   },
   "login": {
     "welcome": "Bienvenido a Datashare",
-    "sumUp": "<a href=\"https://icij.org\">ICIJ</a> search and discovery platform.",
-    "authenticationPlatform": "To log in, use ICIJ secure authentication platform:",
-    "account": "Login with Account",
-    "supportDesk": "If you need any help, please visit our support desk:",
-    "askHelp": "Ask for help"
+    "sumUp": "<a href=\"https://icij.org\">ICIJ</a> plataforma de búsqueda y descubrimiento.",
+    "authenticationPlatform": "Para iniciar sesión, utilice la plataforma de autenticación segura de ICIJ:",
+    "account": "Ingresar con Account",
+    "supportDesk": "Si necesita ayuda, por favor visite nuestro servicio de asistencia:",
+    "askHelp": "Pedir ayuda"
   },
   "userHistory": {
     "heading": "Tu historial de navegación",
@@ -490,7 +490,7 @@
     "title": "Búsquedas masivas",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
-    "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. Only CSV format accepted. The first and only column should contain the terms to search. No line break(s) in cells. You can use operators (AND NOT * ? ! + - etc). Use 'space' instead of OR or | | with 'do phrase matches'. You can use Regex only between 2 slashes.",
+    "fileDescription": "Exportar su hoja de cálculo en formato CSV con la codificación UTF-8. Sólo formato CSV aceptado. La primera columna debe contener los términos a buscar. No salto de línea en las celdas. Puedes usar operadores (AND NOT * ? + - etc). Use 'espacio' en lugar de OR o | | con ''Hacer la frase coincide exactamente\". Para usar Regex, escribirle entre 2 barras.",
     "filePlaceholder": "Selecciona un archivo...",
     "submit": "Añadir",
     "success": "Tu búsqueda masiva está ejecutándose.",
@@ -514,7 +514,7 @@
     "notDeleted": "La búsqueda masiva no ha sido eliminada.",
     "published": "Publicado",
     "publishedDescription": "Dar a otros miembros del proyecto acceso a esta búsqueda masiva. Puedes cambiar esto más tarde.",
-    "phraseMatch": "Realizar búsquedas similares",
+    "phraseMatch": "Hacer la frase coincide exactamente",
     "phraseMatchDescription": "Te permite buscar en documentos que contengan la oración exacta o frase más allá de comparar un conjunto de palabras de manera aleatoria.",
     "phraseMatchDescriptionOperators": "No inserte operadores en sus consultas",
     "learnMore": "Leer más",
@@ -554,29 +554,40 @@
     "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento"
   },
   "settings": {
-    "title": "Settings",
-    "description": "Don't change these settings if you don't know what you're doing.",
-    "submit": "Submit",
-    "submitSuccess": "Modifications submitted.",
-    "submitError": "Unable to submit the settings.",
-    "noAccess": "You do not have access to that page in server mode."
+    "title": "Configuración",
+    "description": "No cambie esta configuración si no sabe lo que está haciendo.",
+    "submit": "Guardar",
+    "submitSuccess": "Modificaciones enviadas.",
+    "submitError": "No se puede actualizar la configuración.",
+    "noAccess": "No tienes acceso a esa página en modo servidor."
   },
   "human": {
     "number": {
       "K": "%K",
       "M": "%M",
       "B": "%B"
+    },
+    "size": {
+      "B": "% B",
+      "KB": "% KB",
+      "MB": "% MB",
+      "GB": "% GB",
+      "TB": "% T"
     }
   },
   "insights": {
-    "selectProject": "Select a project"
+    "selectProject": "Seleccione un proyecto"
   },
   "widget": {
-    "noData": "No data",
+    "noData": "No hay datos",
     "barometer": {
-      "document": "1 document | %{total} documents",
+      "document": "no documents | 1 document | %{total} documents",
       "amongWhich": "among which",
       "onDisk": "on disk"
-    }
+    },
+    "diskUsage": {
+      "details": "See disk usage",
+      "hits": "no documents | 1 document | %{hits} documents"
+    },
   }
 }

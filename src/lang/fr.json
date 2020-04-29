@@ -566,6 +566,13 @@
       "K": "%K",
       "M": "%M",
       "B": "%B"
+    },
+    "size": {
+      "B": "% B",
+      "KB": "% KB",
+      "MB": "% MB",
+      "GB": "% GB",
+      "TB": "% T"
     }
   },
   "insights": {
@@ -574,9 +581,13 @@
   "widget": {
     "noData": "Pas de données",
     "barometer": {
-      "document": "1 document | %{total} documents",
+      "document": "pas de document | 1 document | %{total} documents",
       "amongWhich": "parmi lesquels",
-      "onDisk": "sur disque"
+      "onDisk": "sur le disque"
+    },
+    "diskUsage": {
+      "details": "See disk usage",
+      "hits": "no documents | 1 document | %{hits} documents"
     }
   }
 }
