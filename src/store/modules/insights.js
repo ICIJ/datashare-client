@@ -11,7 +11,7 @@ import * as widgetTypes from '@/store/widgets'
 
 export function initialState () {
   return {
-    index: '',
+    project: '',
     widgets: cloneDeep({ widgets }).widgets
   }
 }
@@ -33,8 +33,8 @@ const mutations = {
   clearWidgets (state) {
     Vue.set(state, 'widgets', [])
   },
-  index (state, index) {
-    Vue.set(state, 'index', index)
+  project (state, project) {
+    Vue.set(state, 'project', project)
   }
 }
 
@@ -66,7 +66,7 @@ export const getters = {
 const actions = {
   queryFilter ({ state, getters, rootGetters }, { name, options, filters }) {
     return elasticsearch.searchFilter(
-      state.index,
+      state.project,
       rootGetters['search/getFilter']({ name }),
       '*',
       filters,

@@ -581,9 +581,9 @@
   "widget": {
     "noData": "Pas de données",
     "barometer": {
-      "document": "no documents | 1 document | %{total} documents",
-      "amongWhich": "among which",
-      "onDisk": "on disk"
+      "document": "pas de document | 1 document | %{total} documents",
+      "amongWhich": "parmi lesquels",
+      "onDisk": "sur le disque"
     },
     "diskUsage": {
       "details": "See disk usage",

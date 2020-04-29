@@ -1,6 +1,5 @@
 <template>
   <form class="extracting-form" id="extracting-form" @submit.prevent="submitExtract">
-
     <div class="extracting-form__group mb-4">
       <b-form-checkbox v-model="ocr" name="check-button" switch>
         <div class="font-weight-bold ml-2">
@@ -13,7 +12,6 @@
         </div>
       </b-form-checkbox>
     </div>
-
     <div class="extracting-form__group">
       <b-form-checkbox v-model="filter" name="check-button" switch>
         <div class="font-weight-bold ml-2">
@@ -26,7 +24,6 @@
         </div>
       </b-form-checkbox>
     </div>
-
     <div class="extracting-form__footer mt-4 row no-gutters">
       <div class="col text-right">
         <button class="btn btn-primary font-weight-bold" type="submit">
@@ -55,12 +52,12 @@ export default {
     }
   },
   computed: {
-    ...mapFields(['form.ocr', 'form.filter'])
+    ...mapFields(['form.filter', 'form.ocr'])
   },
   methods: {
     async submitExtract () {
       await this.$store.dispatch('indexing/submitExtract')
-      this.$store.dispatch('indexing/resetExtractForm')
+      this.$store.commit('indexing/resetExtractForm')
       this.finally()
     }
   }

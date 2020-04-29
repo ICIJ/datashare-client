@@ -43,34 +43,37 @@
             {{ $t('indexing.tasks') }}
           </h3>
         </div>
-        <ul class="list-group list-group-flush" v-if="tasks.length">
-          <li v-for="task in tasks" :key="task.name" class="indexing__tasks list-group-item d-flex">
-            <div class="col">
-              <div class="d-flex align-items-end mb-1">
-                <span v-html="taskLabel(task.name)" class="w-100"></span>
-                <span class="badge small mr-auto">
-                {{ task.state }}
-                </span>
-              </div>
-              <div class="indexing__tasks__progress progress">
-                <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar"
-                     :style="'width: ' + getProgress(task.progress, task.state) + '%'" :aria-valuenow="getProgress(task.progress, task.state)"
-                     aria-valuemin="0" aria-valuemax="100">
-                  {{ getProgress(task.progress, task.state) }}%
+        <v-wait for="load indexing tasks">
+          <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-3" />
+          <ul class="list-group list-group-flush" v-if="tasks.length">
+            <li v-for="task in tasks" :key="task.name" class="indexing__tasks list-group-item d-flex">
+              <div class="col">
+                <div class="d-flex align-items-end mb-1">
+                  <span v-html="taskLabel(task.name)" class="w-100"></span>
+                  <span class="badge small mr-auto">
+                    {{ task.state }}
+                  </span>
+                </div>
+                <div class="indexing__tasks__progress progress">
+                  <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar"
+                       :style="'width: ' + getProgress(task.progress, task.state) + '%'" :aria-valuenow="getProgress(task.progress, task.state)"
+                       aria-valuemin="0" aria-valuemax="100">
+                    {{ getProgress(task.progress, task.state) }}%
+                  </div>
                 </div>
               </div>
-            </div>
-            <div class="col-md-auto p-0 my-auto">
-              <button class="btn btn-link btn-stop-task" :title="$t('indexing.stopTask')"
-                      @click="task.state === 'RUNNING' ? stopTask(task.name) : ''" :disabled="task.state !== 'RUNNING'">
-                <fa icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '']" />
-              </button>
-            </div>
-          </li>
-        </ul>
-        <div v-else class="px-4 py-2 text-center text-muted">
-          {{ $t('indexing.empty') }}
-        </div>
+              <div class="col-md-auto p-0 my-auto">
+                <button class="btn btn-link btn-stop-task" :title="$t('indexing.stopTask')"
+                        @click="task.state === 'RUNNING' ? stopTask(task.name) : ''" :disabled="task.state !== 'RUNNING'">
+                  <fa icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '']" />
+                </button>
+              </div>
+            </li>
+          </ul>
+          <div v-else class="px-4 py-2 text-center text-muted">
+            {{ $t('indexing.empty') }}
+          </div>
+        </v-wait>
         <div class="card-footer text-right border-0" v-if="isPendingTasks||isDoneTasks">
           <button class="btn btn-primary btn-stop-pending-tasks mr-2"
                   type="button" :disabled="!isPendingTasks" @click="stopPendingTasks">
@@ -88,19 +91,22 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
-import ExtractingForm from '@/components/ExtractingForm'
-import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
-import settings from '@/utils/settings'
-import { getOS } from '@/utils/utils'
-import toVariant from '@/filters/toVariant'
-import store from '@/store'
 import filter from 'lodash/filter'
 import last from 'lodash/last'
+import { mapState } from 'vuex'
+
+import ExtractingForm from '@/components/ExtractingForm'
+import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
+import toVariant from '@/filters/toVariant'
+import settings from '@/utils/settings'
+import { getOS } from '@/utils/utils'
 
 export default {
   name: 'indexing',
-  components: { ExtractingForm, FindNamedEntitiesForm },
+  components: {
+    ExtractingForm,
+    FindNamedEntitiesForm
+  },
   computed: {
     ...mapState('indexing', ['tasks']),
     isPendingTasks () {
@@ -117,22 +123,18 @@ export default {
       return settings.documentationLinks.indexing[os] || settings.documentationLinks.indexing.default
     }
   },
-  mounted () {
-    store.dispatch('search/query', '*').then(hits => {
-      if (hits.hits.total === 0 && this.tasks.length === 0) {
-        this.openExtractingForm()
-      }
-    })
-  },
-  beforeRouteEnter (to, from, next) {
-    return store.dispatch('indexing/loadTasks').then(() => {
-      store.dispatch('indexing/startPollTasks')
-      return next()
-    // Proceed anyway
-    }, () => next())
+  async mounted () {
+    this.$wait.start('load indexing tasks')
+    await this.$store.dispatch('indexing/getTasks')
+    await this.$store.dispatch('indexing/startPollTasks')
+    const hits = await this.$store.dispatch('search/query', '*')
+    if (hits.hits.total === 0 && this.tasks.length === 0) {
+      this.openExtractingForm()
+    }
+    this.$wait.end('load indexing tasks')
   },
   beforeRouteLeave (to, from, next) {
-    store.dispatch('indexing/stopPollTasks')
+    this.$store.commit('indexing/stopPolling')
     next()
   },
   methods: {
@@ -149,13 +151,13 @@ export default {
       this.$refs.findNamedEntitiesForm.hide()
     },
     stopPendingTasks () {
-      store.dispatch('indexing/stopPendingTasks')
+      return this.$store.dispatch('indexing/stopPendingTasks')
     },
     stopTask (name) {
-      store.dispatch('indexing/stopTask', name)
+      this.$store.dispatch('indexing/stopTask', name)
     },
     deleteDoneTasks () {
-      store.dispatch('indexing/deleteDoneTasks')
+      this.$store.dispatch('indexing/deleteDoneTasks')
     },
     taskLabel (name) {
       const nameAndId = last(name.split('.')).split('@')
@@ -189,7 +191,6 @@ export default {
 
 <style lang="scss">
   .indexing {
-
     &__form-modal .modal-body {
       background: darken($primary, 20);
       color: white;

@@ -130,6 +130,9 @@ export default class Api {
   getDocumentsRecommendedBy (project, users) {
     return this.sendAction(`/api/${project}/documents/recommendations?userids=${join(users)}`)
   }
+  getNerPipelines () {
+    return this.sendAction('/api/ner/pipelines')
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })
@@ -140,7 +143,7 @@ export default class Api {
     }
   }
   async sendActionAsText (url, config = {}) {
-    const headers = { 'Content-Type': 'text/plain' }
+    const headers = { 'Content-Type': 'text/plain;charset=UTF-8' }
     const responseType = 'text'
     return this.sendAction(url, { headers, responseType, ...config })
   }

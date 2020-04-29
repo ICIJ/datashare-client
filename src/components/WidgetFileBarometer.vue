@@ -5,11 +5,11 @@
       <p :class="{ 'card-body': widget.card }">
         <fa icon="hdd" class="widget__icon" size="2x" />
         <strong class="widget__main-figure" :title="total">
-          {{ $tc('widget.document', total, { total: humanNumber(total, $t('human.number')) }) }}
+          {{ $tc('widget.barometer.document', total, { total: humanNumber(total, $t('human.number')) }) }}
         </strong>
-        {{ $t('widget.amongWhich') }}
+        {{ $t('widget.barometer.amongWhich') }}
         <span :title="onDisk">{{ onDisk | humanNumber($t('human.number')) }}</span>
-        {{ $t('widget.onDisk') }}
+        {{ $t('widget.barometer.onDisk') }}
       </p>
     </v-wait>
   </div>
@@ -40,17 +40,17 @@ export default {
   },
   mounted () {
     this.$store.subscribe(async ({ type }) => {
-      // The index changed
-      if (type === 'insights/index') {
+      // The project changed
+      if (type === 'insights/project') {
         await this.loadData()
       }
     })
   },
   methods: {
     async count (query) {
-      const index = this.$store.state.insights.index
+      const project = this.$store.state.insights.project
       const body = { query: { query_string: { query } } }
-      const res = await elasticsearch.search({ index, body, size: 0 })
+      const res = await elasticsearch.search({ index: project, body, size: 0 })
       return res?.hits?.total || 0
     },
     countTotal () {
@@ -75,7 +75,7 @@ export default {
     min-height: 100%;
 
     &__main-figure {
-      font-size: 2rem;
+      font-size: 1.8rem;
       display: block;
     }
   }

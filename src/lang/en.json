@@ -566,15 +566,28 @@
       "K": "%K",
       "M": "%M",
       "B": "%B"
+    },
+    "size": {
+      "B": "% B",
+      "KB": "% KB",
+      "MB": "% MB",
+      "GB": "% GB",
+      "TB": "% T"
     }
   },
   "insights": {
     "selectProject": "Select a project"
   },
   "widget": {
-    "document": "1 document | %{total} documents",
-    "amongWhich": "among which",
-    "onDisk": "on disk",
-    "noData": "No data"
+    "noData": "No data",
+    "barometer": {
+      "document": "no documents | 1 document | %{total} documents",
+      "amongWhich": "among which",
+      "onDisk": "on disk"
+    },
+    "diskUsage": {
+      "details": "See disk usage",
+      "hits": "no documents | 1 document | %{hits} documents"
+    }
   }
 }

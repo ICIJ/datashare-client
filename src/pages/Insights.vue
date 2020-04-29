@@ -35,15 +35,15 @@ export default {
     ...mapGetters('insights', ['instantiatedWidgets']),
     project: {
       get: function () {
-        return this.$store.state.insights.index
+        return this.$store.state.insights.project
       },
       set: function (value) {
-        this.$store.commit('insights/index', value)
+        this.$store.commit('insights/project', value)
       }
     }
   },
   beforeMount () {
-    this.$store.commit('insights/index', this.$store.state.search.index)
+    this.$store.commit('insights/project', this.$store.state.search.index)
   }
 }
 </script>

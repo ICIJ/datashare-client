@@ -86,6 +86,6 @@ describe('DocumentTabDetails.vue', () => {
     wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
 
     expect(wrapper.find('.document__content__content-length').exists()).toBeTruthy()
-    expect(wrapper.find('.document__content__content-length').text()).toBe('120.56 kB (123456 B)')
+    expect(wrapper.find('.document__content__content-length').text()).toBe('120.56 KB (123456 B)')
   })
 })

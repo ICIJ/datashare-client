@@ -22,11 +22,11 @@ describe('humanSize filter', () => {
   })
 
   it('should display human readable size for Kilobytes WITHOUT bytes', () => {
-    expect(humanSize(10342, false)).toBe('10.10 kB')
+    expect(humanSize(10342, false)).toBe('10.10 KB')
   })
 
   it('should display human readable size for Kilobytes WITH bytes', () => {
-    expect(humanSize(10342, true)).toBe('10.10 kB (10342 B)')
+    expect(humanSize(10342, true)).toBe('10.10 KB (10342 B)')
   })
 
   it('should display human readable size for Megabytes WITHOUT bytes', () => {

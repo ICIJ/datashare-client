@@ -38,14 +38,20 @@
                 {{ $n(item.count) }}
               </b-badge>
               </span>
-              <span class="batch-search-results-filters__queries__dropdown__item__search" @click.stop.prevent="executeSearch(item.label)">
+              <span
+                class="batch-search-results-filters__queries__dropdown__item__search"
+                @click.stop.prevent="executeSearch(item.label)">
                 <fa icon="search" class="text-tertiary" />
               </span>
             </div>
             <b-tooltip placement="bottom" :target="item.label" :title="item.label" />
           </template>
         </selectable-dropdown>
-        <div v-else v-for="query in queries" :key="query.label" class="flex-grow-1 batch-search-results-filters__queries__list px-3 py-1">
+        <div
+          class="flex-grow-1 batch-search-results-filters__queries__list px-3 py-1"
+          :key="query.label"
+          v-else
+          v-for="query in queries">
           <div class="d-flex" :id="query.label">
             <span class="flex-grow-1 text-truncate">
               {{ query.label }}
@@ -165,16 +171,14 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .batch-search-results-filters {
     max-width: $app-context-sidebar-width;
     min-width: $app-context-sidebar-width;
     width: 100%;
 
     &__queries {
-
       &__sort {
-
         & .dropdown-menu {
           z-index: 1001;
         }
@@ -185,7 +189,6 @@ export default {
         overflow: auto;
 
         &__item {
-
           &__search:not([aria-describedby]) {
             display: none;
           }

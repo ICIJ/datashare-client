@@ -1,6 +1,6 @@
-import axios from 'axios'
 import cloneDeep from 'lodash/cloneDeep'
 import toLower from 'lodash/toLower'
+import axios from 'axios'
 
 import Api from '@/api'
 import store from '@/store'
@@ -12,14 +12,16 @@ jest.mock('axios', () => {
 })
 
 describe('IndexingStore', () => {
-  const index = toLower('IndexingStore')
+  const project = toLower('IndexingStore')
 
-  beforeAll(() => store.commit('search/index', index))
+  beforeAll(() => store.commit('search/index', project))
 
-  afterEach(() => {
+  beforeEach(() => {
     store.commit('indexing/reset')
     axios.request.mockClear()
   })
+
+  afterAll(() => jest.unmock('axios'))
 
   it('should define a store module', () => {
     expect(store.state.indexing).not.toBeUndefined()
@@ -97,29 +99,29 @@ describe('IndexingStore', () => {
     }))
   })
 
-  it('should stop polling jobs', async () => {
-    await store.dispatch('indexing/stopPollTasks')
+  it('should stop polling jobs', () => {
+    store.commit('indexing/stopPolling')
 
     expect(store.state.indexing.pollHandle).toBeNull()
   })
 
-  it('should reset the extracting form', async () => {
+  it('should reset the extracting form', () => {
     store.commit('indexing/updateField', { path: 'form.ocr', value: true })
     expect(store.state.indexing.form.ocr).toBeTruthy()
 
-    await store.dispatch('indexing/resetExtractForm')
+    store.commit('indexing/resetExtractForm')
     expect(store.state.indexing.form.ocr).toBeFalsy()
   })
 
-  it('should reset the Find Named Entities form', async () => {
-    store.commit('indexing/updateField', { path: 'form.pipeline', value: 'opennlp' })
+  it('should reset the Find Named Entities form', () => {
+    store.commit('indexing/updateField', { path: 'form.pipeline', value: 'OPENNLP' })
     store.commit('indexing/updateField', { path: 'form.offline', value: true })
-    expect(store.state.indexing.form.pipeline).toBe('opennlp')
+    expect(store.state.indexing.form.pipeline).toBe('OPENNLP')
     expect(store.state.indexing.form.offline).toBeTruthy()
 
-    await store.dispatch('indexing/resetFindNamedEntitiesForm')
+    store.commit('indexing/resetFindNamedEntitiesForm')
 
-    expect(store.state.indexing.form.pipeline).toBe('corenlp')
+    expect(store.state.indexing.form.pipeline).toBe('CORENLP')
     expect(store.state.indexing.form.offline).toBeFalsy()
   })
 
@@ -128,8 +130,17 @@ describe('IndexingStore', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/project/${index}`),
+      url: Api.getFullUrl(`/api/project/${project}`),
       method: 'DELETE'
+    }))
+  })
+
+  it('should retrieve the NER pipelines', async () => {
+    await store.dispatch('indexing/getNerPipelines')
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/ner/pipelines')
     }))
   })
 })

@@ -14,7 +14,7 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   esConnectionHelper([project, anotherProject])
   const es = esConnectionHelper.es
 
-  beforeAll(() => store.commit('insights/index', project))
+  beforeAll(() => store.commit('insights/project', project))
 
   it('should be a Vue instance', () => {
     const wrapper = shallowMount(WidgetDocumentsByCreationDate,
@@ -52,9 +52,9 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
     const init = jest.spyOn(wrapper.vm, 'init')
     await wrapper.vm.$nextTick()
     expect(init).toBeCalledTimes(1)
-    await store.commit('insights/index', anotherProject)
+    await store.commit('insights/project', anotherProject)
     expect(init).toBeCalledTimes(2)
-    await store.commit('insights/index', project)
+    await store.commit('insights/project', project)
   })
 
   describe('selectedInterval value and selectors', () => {

@@ -195,6 +195,11 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
+  it('should return backend response to getNerPipelines', async () => {
+    json = await api.getNerPipelines()
+    expect(json).toEqual({})
+  })
+
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
     axios.request.mockReturnValue(Promise.reject(error))
