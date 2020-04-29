@@ -1,7 +1,7 @@
 <template>
   <div class="tree-view">
     <div class="bg-light py-3 px-4 d-flex flex-row text-nowrap">
-      <tree-breadcrumb :path="path" @input="$emit('input', $event)" />
+      <tree-breadcrumb :path="path" @input="$emit('input', $event)" no-datadir />
       <transition name="fade">
         <div v-if="!$wait.waiting('loading tree view data')">
           <fa icon="weight" />

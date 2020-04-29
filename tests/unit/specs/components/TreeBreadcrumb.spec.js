@@ -11,19 +11,19 @@ describe('TreeBreadcrumb.vue', () => {
   })
 
   it('should be a Vue instance', () => {
-    const propsData = { path: '/home/foo/bar' }
+    const propsData = { path: '/home/foo/bar', noDatadir: true }
     const wrapper = shallowMount(TreeBreadcrumb, { i18n, localVue, propsData })
     expect(wrapper.isVueInstance()).toBeTruthy()
   })
 
   it('should display 2 directories', async () => {
-    const propsData = { path: '/home/foo/bar' }
+    const propsData = { path: '/home/foo/bar', noDatadir: true }
     const wrapper = shallowMount(TreeBreadcrumb, { i18n, localVue, propsData })
     expect(wrapper.findAll('.tree-breadcrumb__item')).toHaveLength(2)
   })
 
   it('should display 3 directories', async () => {
-    const propsData = { path: '/home/foo/bar/baz' }
+    const propsData = { path: '/home/foo/bar/baz', noDatadir: true }
     const wrapper = shallowMount(TreeBreadcrumb, { i18n, localVue, propsData })
     expect(wrapper.findAll('.tree-breadcrumb__item')).toHaveLength(3)
     // One for the root link
@@ -33,7 +33,7 @@ describe('TreeBreadcrumb.vue', () => {
   })
 
   it('should display 4 directories (including the root and the abbreviation)', async () => {
-    const propsData = { path: '/home/foo/bar/baz/lo/rem', maxDirectories: 2 }
+    const propsData = { path: '/home/foo/bar/baz/lo/rem', maxDirectories: 2, noDatadir: true }
     const wrapper = shallowMount(TreeBreadcrumb, { i18n, localVue, propsData })
     expect(wrapper.findAll('.tree-breadcrumb__item')).toHaveLength(4)
     // One for the root link and one for the abbreviation

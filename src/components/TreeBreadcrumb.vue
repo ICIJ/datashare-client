@@ -8,7 +8,7 @@
     <li v-if="treeWithoutDataDir.length > maxDirectories" class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--abbr">
       ...
     </li>
-    <li class="list-inline-item  tree-breadcrumb__item" v-for="directory in treeWithoutDataDir.slice(-maxDirectories)" :key="directory">
+    <li class="list-inline-item  tree-breadcrumb__item" v-for="directory in tree.slice(-maxDirectories)" :key="directory">
       <a href @click.prevent="$emit('input', directory)">
         {{ directory | basename }}
       </a>
@@ -33,13 +33,16 @@ export default {
     maxDirectories: {
       type: Number,
       default: 5
+    },
+    noDatadir: {
+      type: Boolean
     }
   },
   filters: {
     basename
   },
   computed: {
-    tree () {
+    fullTree () {
       return reduce(this.path.split('/'), (tree, d) => {
         if (d !== '') {
           tree.push([last(tree), basename(d)].join('/'))
@@ -48,7 +51,10 @@ export default {
       }, [])
     },
     treeWithoutDataDir () {
-      return filter(this.tree, d => d.length > this.dataDir.length)
+      return filter(this.fullTree, d => d.length > this.dataDir.length)
+    },
+    tree () {
+      return this.noDatadir ? this.treeWithoutDataDir : this.fullTree
     },
     dataDir () {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
