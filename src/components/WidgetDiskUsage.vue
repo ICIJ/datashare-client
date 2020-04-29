@@ -62,7 +62,7 @@ export default {
   },
   methods: {
     async sumTotal () {
-      const index = this.$store.state.insights.index
+      const index = this.$store.state.insights.project
       // Build the query using Bodynuilder
       const body = bodybuilder()
         // Only documents...

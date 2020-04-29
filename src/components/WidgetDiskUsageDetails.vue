@@ -2,10 +2,12 @@
   <div class="widget-disk-usage-details">
     <div class="bg-light py-3 px-4 d-flex flex-row text-nowrap">
       <widget-disk-usage-details-tree :path="path" @input="$emit('input', $event)" />
-      <div v-if="total > 0">
-        <fa icon="weight" />
-        {{ humanSize(total, false, $t('human.size')) }}
-      </div>
+      <transition name="fade">
+        <div v-if="total >= 0 && !$wait.waiting('disk usage details')">
+          <fa icon="weight" />
+          {{ humanSize(total, false, $t('human.size')) }}
+        </div>
+      </transition>
     </div>
     <v-wait for="disk usage details" transition="fade">
       <div slot="waiting" class="p-4 text-center">
@@ -17,10 +19,10 @@
             <a class="flex-grow-1" href @click.prevent="$emit('input', directory.key)">
               {{ directory.key | basename  }}
             </a>
-            <span class="font-weight-bold" :title="directory.contentLengthSum.value">
-              {{ humanSize(directory.contentLengthSum.value, false, $t('human.size'))  }}
+            <span class="font-weight-bold" :title="directory.contentLength.value">
+              {{ humanSize(directory.contentLength.value, false, $t('human.size'))  }}
             </span>
-            <span class="widget-disk-usage-details__directories__item__bar" :style="{ width: totalPercentage(directory.contentLengthSum.value) }"></span>
+            <span class="widget-disk-usage-details__directories__item__bar" :style="{ width: totalPercentage(directory.contentLength.value) }"></span>
           </li>
           <li class="list-group-item widget-disk-usage-details__directories__item widget-disk-usage-details__directories__item--hits" :title="$tc('widget.diskUsage.hits', hits, { hits })">
             {{ $tc('widget.diskUsage.hits', hits, { hits: humanNumber(hits, $t('human.number')) }) }}
@@ -64,11 +66,11 @@ export default {
     }
   },
   async created () {
-    await this.loadData()
+    Object.assign(this, await this.loadData())
   },
   watch: {
-    path () {
-      return this.loadData()
+    async path () {
+      Object.assign(this, await this.loadData())
     }
   },
   filters: {
@@ -79,9 +81,27 @@ export default {
       return {
         include: `${this.path}/.*`,
         exclude: `${this.path}/.*/.*`,
-        order: { contentLengthSum: 'desc' },
+        order: { contentLength: 'desc' },
         size: 1000
       }
+    },
+    bodybuilderBase () {
+      return bodybuilder()
+        // Returns no documents
+        .size(0)
+        // Only documents...
+        .andQuery('match', 'type', 'Document')
+        // ...on disk
+        .andQuery('match', 'extractionLevel', 0)
+        // On a specific directory
+        .andFilter('term', 'dirname.tree', this.path)
+        // Aggregate by dirname entry
+        .agg('terms', 'dirname.tree', this.sumOptions, 'byDirname', b => {
+          // Create a sub-aggregation to sum the contentLength
+          return b.agg('sum', 'contentLength', 'contentLength')
+        })
+        // Calculate the total size
+        .aggregation('sum', 'contentLength', 'totalContentLength')
     }
   },
   methods: {
@@ -94,49 +114,14 @@ export default {
         return '0%'
       }
     },
-    async sumByDirectory () {
-      const index = this.$store.state.insights.index
-      // Build the query using Bodynuilder
-      const body = bodybuilder()
-        // On a specific directory
-        .andFilter('term', 'dirname.tree', this.path)
-        // Returns no document
-        .size(0)
-        // Aggregate by dirname entry
-        .agg('terms', 'dirname.tree', this.sumOptions, 'byDirname', b => {
-          // Create a sub-aggregation to sum the contentLength
-          return b.agg('sum', 'contentLength', 'contentLengthSum')
-        })
-        .build()
+    loadData: waitFor('disk usage details', async function () {
+      const index = this.$store.state.insights.project
+      const body = this.bodybuilderBase.build()
       const res = await elasticsearch.search({ index, body, size: 0 })
       const directories = res?.aggregations?.byDirname?.buckets || []
       const hits = res?.hits?.total || 0
-      return { directories, hits }
-    },
-    async sumTotal () {
-      const index = this.$store.state.insights.index
-      // Build the query using Bodynuilder
-      const body = bodybuilder()
-        // Only documents...
-        .andQuery('match', 'type', 'Document')
-        // ...on disk
-        .andQuery('match', 'extractionLevel', 0)
-        // On a specific directory
-        .andFilter('term', 'dirname.tree', this.path)
-        // Returns no document
-        .size(0)
-        // Sum up all sizes
-        .aggregation('sum', 'contentLength')
-        .build()
-      const res = await elasticsearch.search({ index, body, size: 0 })
-      // eslint-disable-next-line camelcase
-      return res?.aggregations?.agg_sum_contentLength?.value || 0
-    },
-    loadData: waitFor('disk usage details', async function () {
-      const { directories, hits } = await this.sumByDirectory()
-      this.directories = directories
-      this.hits = hits
-      this.total = await this.sumTotal()
+      const total = res?.aggregations?.totalContentLength?.value || 0
+      return { directories, hits, total }
     })
   }
 }
@@ -154,6 +139,15 @@ export default {
 
   .widget-disk-usage-details {
       overflow: hidden;
+
+      .fade-enter-active,
+      .fade-leave-active {
+        transition: opacity .5s;
+      }
+      .fade-enter,
+      .fade-leave-to {
+        opacity: 0;
+      }
 
       &__directories {
 
