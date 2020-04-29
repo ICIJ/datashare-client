@@ -13,7 +13,7 @@
       </p>
     </v-wait>
     <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
-      <widget-disk-usage-details v-model="selectedPath" />
+      <tree-view v-model="selectedPath" />
     </b-modal>
   </div>
 </template>
@@ -22,14 +22,14 @@
 import bodybuilder from 'bodybuilder'
 import { waitFor } from 'vue-wait'
 
-import WidgetDiskUsageDetails from '@/components/WidgetDiskUsageDetails.vue'
+import TreeView from '@/components/TreeView.vue'
 import elasticsearch from '@/api/elasticsearch'
 import humanSize from '@/filters/humanSize'
 
 export default {
   name: 'WidgetDiskUsage',
   components: {
-    WidgetDiskUsageDetails
+    TreeView
   },
   props: {
     widget: {

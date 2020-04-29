@@ -1,30 +1,30 @@
 <template>
-  <div class="widget-disk-usage-details">
+  <div class="tree-view">
     <div class="bg-light py-3 px-4 d-flex flex-row text-nowrap">
-      <widget-disk-usage-details-tree :path="path" @input="$emit('input', $event)" />
+      <tree-breadcrumb :path="path" @input="$emit('input', $event)" />
       <transition name="fade">
-        <div v-if="total >= 0 && !$wait.waiting('disk usage details')">
+        <div v-if="!$wait.waiting('loading tree view data')">
           <fa icon="weight" />
           {{ humanSize(total, false, $t('human.size')) }}
         </div>
       </transition>
     </div>
-    <v-wait for="disk usage details" transition="fade">
+    <v-wait for="loading tree view data" transition="fade">
       <div slot="waiting" class="p-4 text-center">
         <fa icon="circle-notch" spin size="2x" />
       </div>
       <div>
-        <ul class="list-group list-group-flush widget-disk-usage-details__directories">
-          <li v-for="directory in directories" :key="directory.key" class="list-group-item d-flex flex-row widget-disk-usage-details__directories__item">
+        <ul class="list-group list-group-flush tree-view__directories">
+          <li v-for="directory in directories" :key="directory.key" class="list-group-item d-flex flex-row tree-view__directories__item">
             <a class="flex-grow-1" href @click.prevent="$emit('input', directory.key)">
               {{ directory.key | basename  }}
             </a>
             <span class="font-weight-bold" :title="directory.contentLength.value">
               {{ humanSize(directory.contentLength.value, false, $t('human.size'))  }}
             </span>
-            <span class="widget-disk-usage-details__directories__item__bar" :style="{ width: totalPercentage(directory.contentLength.value) }"></span>
+            <span class="tree-view__directories__item__bar" :style="{ width: totalPercentage(directory.contentLength.value) }"></span>
           </li>
-          <li class="list-group-item widget-disk-usage-details__directories__item widget-disk-usage-details__directories__item--hits" :title="$tc('widget.diskUsage.hits', hits, { hits })">
+          <li class="list-group-item tree-view__directories__item tree-view__directories__item--hits" :title="$tc('widget.diskUsage.hits', hits, { hits })">
             {{ $tc('widget.diskUsage.hits', hits, { hits: humanNumber(hits, $t('human.number')) }) }}
           </li>
         </ul>
@@ -42,10 +42,11 @@ import { round } from 'lodash'
 import elasticsearch from '@/api/elasticsearch'
 import humanSize from '@/filters/humanSize'
 import humanNumber from '@/filters/humanNumber'
-import WidgetDiskUsageDetailsTree from '@/components/WidgetDiskUsageDetailsTree.vue'
+
+import TreeBreadcrumb from '@/components/TreeBreadcrumb.vue'
 
 export default {
-  name: 'WidgetDiskUsageDetails',
+  name: 'TreeView',
   model: {
     prop: 'path',
     event: 'input'
@@ -56,7 +57,7 @@ export default {
     }
   },
   components: {
-    WidgetDiskUsageDetailsTree
+    TreeBreadcrumb
   },
   data () {
     return {
@@ -114,7 +115,7 @@ export default {
         return '0%'
       }
     },
-    loadData: waitFor('disk usage details', async function () {
+    loadData: waitFor('loading tree view data', async function () {
       const index = this.$store.state.insights.project
       const body = this.bodybuilderBase.build()
       const res = await elasticsearch.search({ index, body, size: 0 })
@@ -137,7 +138,7 @@ export default {
     }
   }
 
-  .widget-disk-usage-details {
+  .tree-view {
       overflow: hidden;
 
       .fade-enter-active,

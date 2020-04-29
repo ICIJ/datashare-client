@@ -1,14 +1,14 @@
 <template>
-  <ul class="list-inline flex-grow-1 m-0 widget-disk-usage-details-tree text-truncate">
-    <li class="list-inline-item widget-disk-usage-details-tree__item widget-disk-usage-details-tree__item--root">
+  <ul class="list-inline flex-grow-1 m-0 tree-breadcrumb text-truncate">
+    <li class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--root">
       <a href @click.prevent="$emit('input', dataDir)">
         <fa icon="folder" fixed-width />
       </a>
     </li>
-    <li v-if="treeWithoutDataDir.length > maxDirectories" class="list-inline-item widget-disk-usage-details-tree__item widget-disk-usage-details-tree__item--abbr">
+    <li v-if="treeWithoutDataDir.length > maxDirectories" class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--abbr">
       ...
     </li>
-    <li class="list-inline-item  widget-disk-usage-details-tree__item" v-for="directory in treeWithoutDataDir.slice(-maxDirectories)" :key="directory">
+    <li class="list-inline-item  tree-breadcrumb__item" v-for="directory in treeWithoutDataDir.slice(-maxDirectories)" :key="directory">
       <a href @click.prevent="$emit('input', directory)">
         {{ directory | basename }}
       </a>
@@ -21,7 +21,7 @@ import { basename } from 'path'
 import { filter, last, reduce } from 'lodash'
 
 export default {
-  name: 'WidgetDiskUsageDetailsTree',
+  name: 'TreeBreadcrumb',
   model: {
     prop: 'path',
     event: 'input'
@@ -58,7 +58,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .widget-disk-usage-details-tree {
+  .tree-breadcrumb {
 
     &__item.list-inline-item {
       padding: 0;
