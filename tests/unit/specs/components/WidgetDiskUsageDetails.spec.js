@@ -13,14 +13,14 @@ describe('WidgetDiskUsageDetails.vue', () => {
 
   it('should be a Vue instance', () => {
     const methods = {
-      sumByDirectory: () => ({
+      loadData: () => ({
         hits: 10,
+        total: 2048,
         directories: [
-          { key: 'bar', contentLengthSum: { value: 1024 } },
-          { key: 'baz', contentLengthSum: { value: 1024 } }
+          { key: 'bar', contentLength: { value: 1024 } },
+          { key: 'baz', contentLength: { value: 1024 } }
         ]
-      }),
-      sumTotal: () => 2048
+      })
     }
     const wrapper = shallowMount(WidgetDiskUsageDetails, { i18n, localVue, wait, store, propsData, methods })
     expect(wrapper.isVueInstance()).toBeTruthy()
@@ -28,14 +28,14 @@ describe('WidgetDiskUsageDetails.vue', () => {
 
   it('should display 2 directories', async () => {
     const methods = {
-      sumByDirectory: () => ({
+      loadData: () => ({
         hits: 10,
+        total: 2048,
         directories: [
-          { key: 'bar', contentLengthSum: { value: 1024 } },
-          { key: 'baz', contentLengthSum: { value: 1024 } }
+          { key: 'bar', contentLength: { value: 1024 } },
+          { key: 'baz', contentLength: { value: 1024 } }
         ]
-      }),
-      sumTotal: () => 2048
+      })
     }
     const wrapper = shallowMount(WidgetDiskUsageDetails, { i18n, localVue, wait, store, propsData, methods })
     await wrapper.vm.$nextTick()
