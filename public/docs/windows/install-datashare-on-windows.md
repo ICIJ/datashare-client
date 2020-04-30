@@ -54,6 +54,8 @@ You're now ready to the next step. Let's [open Datashare](https://icij.gitbook.i
 
 You will need **Windows 7 Service Pack 2** or a newer version.
 
+ 0. Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. You can follow these steps: [https://www.laptopmag.com/articles/uninstall-programs-windows-10](https://www.laptopmag.com/articles/uninstall-programs-windows-10)
+
 1. Download the latest release installer by **going here**:
 
 {% embed url="https://github.com/ICIJ/datashare-installer/releases" %}

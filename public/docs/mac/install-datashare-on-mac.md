@@ -92,7 +92,7 @@ You're now ready to take the next step: let's [open Datashare](https://icij.gitb
 
 ### Standalone \(less recent than OS X El Capitan 10.11\)
 
- ****0. Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. Go to **Applications** and put '**Datashare**' in the trash.
+ 0. Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. Go to **Applications** and put '**Datashare**' in the trash.
 
  1. Let's first install Homebrew, which is needed for installing Tesseract OCR. Open your **Finder**:
 
