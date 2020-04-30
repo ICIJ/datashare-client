@@ -1,9 +1,12 @@
 <template>
-  <li v-if="node" :class="{ 'tree-node--has-children': hasChildren(), 'tree-node--active': hasValue(nodeParams) }" class="tree-node">
+  <li
+    :class="{ 'tree-node--has-children': hasChildren(), 'tree-node--active': hasValue(nodeParams) }"
+    class="tree-node"
+    v-if="node">
     <div class="d-flex flex-row">
       <div class="tree-node__label" :class="{ 'pb-1': !hasNoChildren() }">
         <a @click="toggleNode" :title="node.label" v-b-tooltip.hover>
-          <fa :icon="icon" fixed-width class="mr-1 tree-node__label__icon" :spin="loading" />
+          <fa :icon="icon" fixed-width class="mr-1 tree-node__label__icon" :spin="loading"></fa>
           {{ node.label }}
         </a>
       </div>
@@ -14,7 +17,7 @@
           v-b-tooltip.hover
           :title="$t('document.searchDirectory')"
           class="badge badge-pill badge-light">
-          <fa icon="search" class="tree-node__count__icon" />
+          <fa icon="search" class="tree-node__count__icon"></fa>
           <span>
             {{ $n(node.count || 0 ) }}
           </span>
@@ -22,10 +25,17 @@
       </div>
     </div>
     <ul v-show="hasChildren() && open" class="list-unstyled pl-3">
-      <filter-path-tree-node v-for="(child, index) in node.children" :filter="filter" :node="child" :key="index" ref="treeNodes"></filter-path-tree-node>
+      <filter-path-tree-node
+        :filter="filter"
+        :key="index"
+        :node="child"
+        ref="treeNodes"
+        v-for="(child, index) in node.children"></filter-path-tree-node>
     </ul>
     <div v-show="hasNoChildren() && open" class="text-muted pl-3">
-      └ <span class="small">{{ $t('filter.noSubdirectories') }}</span>
+      └ <span class="small">
+          {{ $t('filter.noSubdirectories') }}
+        </span>
     </div>
   </li>
 </template>
@@ -133,10 +143,10 @@ export default {
 
     &__label {
       display: block;
-      width: 100%;
       overflow: hidden;
-      white-space: nowrap;
       text-overflow: ellipsis;
+      width: 100%;
+      white-space: nowrap;
     }
 
     &--active > * > &__label &__label__icon {

@@ -104,7 +104,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .document-tags-form__tags  {
     font-size: 1rem;
 
@@ -113,8 +113,8 @@ export default {
 
       .selectable-dropdown.dropdown-menu {
         position: absolute;
-        top: 100%;
         right: 0;
+        top: 100%;
       }
     }
 
@@ -124,10 +124,10 @@ export default {
       }
 
       &__delete.btn {
-        line-height: 1;
         border: 0;
-        font-size: 0.8rem;
         cursor: pointer;
+        font-size: 0.8rem;
+        line-height: 1;
         padding: 0;
 
         &.dark {

@@ -84,8 +84,8 @@ export const getters = {
   getFields (state) {
     return () => find(settings.searchFields, { key: state.field }).fields
   },
-  hasFilterValue (state) {
-    return item => !!find(state.instantiatedFilters,
+  hasFilterValue (state, getters) {
+    return item => !!find(getters.instantiatedFilters,
       filter => filter.name === item.name && filter.values.indexOf(item.value) > -1)
   },
   hasFilterValues (state, getters) {

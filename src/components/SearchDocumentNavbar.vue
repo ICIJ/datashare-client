@@ -1,12 +1,12 @@
 <template>
   <div class="search-document-navbar px-3 py-2 bg-dark text-white text-nowrap">
     <router-link
-      :to="{ name: 'search', query }"
       class="search-document-navbar__back text-truncate pr-1"
       :class="{ 'flex-grow-1': !isShrinked }"
-      v-shortkey="getKeys('backToSearchResults')"
-      @shortkey.native="getAction('backToSearchResults')">
-      <fa icon="chevron-circle-left" class="mr-1" />
+      @shortkey.native="getAction('backToSearchResults')"
+      :to="{ name: 'search', query }"
+      v-shortkey="getKeys('backToSearchResults')">
+      <fa icon="chevron-circle-left" class="mr-1"></fa>
       <span v-if="!isShrinked">
         {{ $t('search.back') }}
       </span>
@@ -17,7 +17,7 @@
     <div v-if="doc" class="ml-auto d-flex align-items-center">
       <span class="search-document-navbar__nav" v-if="documentIndex > -1">
         <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
-          <fa icon="angle-left" class="mr-1" />
+          <fa icon="angle-left" class="mr-1"></fa>
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.previous.label') }}
           </span>
@@ -29,7 +29,7 @@
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.next.label') }}
           </span>
-          <fa icon="angle-right" class="ml-1" />
+          <fa icon="angle-right" class="ml-1"></fa>
         </button>
         <b-tooltip target="next-document-button" triggers="hover">
           <span v-html="nextTooltip"></span>
@@ -54,7 +54,7 @@
         </b-popover>
       </template>
       <b-btn variant="link" class="text-white py-0 px-2 px-2 py-0 search-document-navbar__share" id="popover-document-share" size="sm">
-        <fa icon="share-alt" />
+        <fa icon="share-alt"></fa>
       </b-btn>
       <b-popover target="popover-document-share"
                  triggers="click blur"
@@ -65,20 +65,20 @@
           card
           no-fade
           :title="doc.slicedNameToString"
-          :link="documentLink" />
+          :link="documentLink"></advanced-link-form>
       </b-popover>
       <b-tooltip target="popover-document-share" triggers="hover">
         {{ $t('search.nav.share') }}
       </b-tooltip>
       <document-actions
-        :document="doc"
         class="search-document-navbar__actions d-flex"
-        star-btn-class="btn btn-link text-white py-0 px-2 order-1"
-        popup-btn-class="btn btn-link text-white py-0 px-2 order-1"
+        :document="doc"
         download-btn-class="btn btn-secondary order-2 btn-sm py-0 ml-1"
         download-btn-label
+        :is-download-allowed="isDownloadAllowed"
         no-btn-group
-        :is-download-allowed="isDownloadAllowed" />
+        popup-btn-class="btn btn-link text-white py-0 px-2 order-1"
+        star-btn-class="btn btn-link text-white py-0 px-2 order-1"></document-actions>
     </div>
   </div>
 </template>
