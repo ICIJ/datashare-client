@@ -588,6 +588,6 @@
     "diskUsage": {
       "details": "See disk usage",
       "hits": "no documents | 1 document | %{hits} documents"
-    },
+    }
   }
 }
