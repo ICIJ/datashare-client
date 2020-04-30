@@ -54,9 +54,13 @@ You're now ready to the next step. Let's [open Datashare](https://icij.gitbook.i
 
 You will need **Windows 7 Service Pack 2** or a newer version.
 
-1. Download the latest release installer by **clicking the link below**:
+1. Download the latest release installer by **going here**:
 
-[**https://github.com/ICIJ/datashare-installer/releases/download/5.9.1/installDatashareStandalone.exe**](https://github.com/ICIJ/datashare-installer/releases/download/5.9.1/installDatashareStandalone.exe)
+{% embed url="https://github.com/ICIJ/datashare-installer/releases" %}
+
+And on the latest release \(not necessarily 6.3.1\), **click on 'InstallDatashareStandalone.exe'**:
+
+![](../.gitbook/assets/screenshot-2020-04-30-at-10.51.47.png)
 
  2. The file '**InstallDatashareStandalone.exe**' was downloaded. **Double click** on the name of the file in order to execute it.
 
