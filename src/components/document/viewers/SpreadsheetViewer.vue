@@ -62,12 +62,12 @@ import kebabCase from 'lodash/kebabCase'
 import range from 'lodash/range'
 import sortBy from 'lodash/sortBy'
 import startCase from 'lodash/startCase'
-import { getShortkeyOS } from '@/utils/utils'
 import Fuse from 'fuse.js'
 import { getCookie } from 'tiny-cookie'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
 
 import shortkeys from '@/mixins/shortkeys'
+import { getShortkeyOS } from '@/utils/utils'
 
 export default {
   name: 'SpreadsheetViewer',
@@ -100,7 +100,6 @@ export default {
   },
   methods: {
     debounceFilterInput: debounce(function ({ target: { value } }) {
-      this.$wait.start('spreadsheet filtering')
       this.$set(this, 'filter', value)
     }, 500)
   },

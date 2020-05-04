@@ -205,13 +205,13 @@ export default {
 
 <template>
   <div class="document-content">
-    <hook name="document.content:before" />
+    <hook name="document.content:before"></hook>
     <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
-      <hook name="document.content.toolbox:before" />
+      <hook name="document.content.toolbox:before"></hook>
       <document-global-search-terms-tags
         :document="document"
         @select="localSearchTerm = $event"
-        class="p-3 w-100" />
+        class="p-3 w-100"></document-global-search-terms-tags>
       <document-local-search-input class="ml-auto"
         v-model="localSearchTerm"
         v-bind:activated.sync="hasStickyToolbox"
@@ -219,11 +219,11 @@ export default {
         @previous="findPreviousLocalSearchTerm"
         :search-occurrences="localSearchOccurrences"
         :search-index="localSearchIndex"
-        :search-worker-in-progress="localSearchWorkerInProgress" />
-      <hook name="document.content.toolbox:after" />
+        :search-worker-in-progress="localSearchWorkerInProgress"></document-local-search-input>
+      <hook name="document.content.toolbox:after"></hook>
     </div>
     <div class="d-flex flex-row justify-content-end align-items-center px-3">
-      <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center" />
+      <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
       <div class="document-content__ner-toggler py-1 ml-3 font-weight-bold" id="ner-toggler" v-if="showNamedEntitiesToggler">
         <div class="custom-control custom-switch">
           <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler" :disabled="isLoadingNamedEntities">
@@ -231,30 +231,29 @@ export default {
             {{ $t('document.showNamedEntities') }}
           </label>
         </div>
-        <b-tooltip target="ner-toggler" :title="$t('document.highlightsCaution')" />
+        <b-tooltip target="ner-toggler" :title="$t('document.highlightsCaution')"></b-tooltip>
       </div>
-      <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center" />
+      <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
     </div>
-    <hook name="document.content.body:before" />
+    <hook name="document.content.body:before"></hook>
     <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
-    <hook name="document.content.body:after" />
-    <document-attachments :document="document" class="mx-3 mb-3" />
-    <hook name="document.content:before" />
+    <hook name="document.content.body:after"></hook>
+    <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
+    <hook name="document.content:before"></hook>
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .document-content {
-
     &__toolbox {
+      background: $light;
+      box-shadow: 0 -1 * $spacer 0 0 white;
+      left: 0;
       margin: $spacer $grid-gutter-width * 0.5;
       margin-bottom: 0;
-      background: $light;
       position: static;
       top: $spacer;
-      left: 0;
       z-index: 50;
-      box-shadow: 0 -1 * $spacer 0 0 white;
 
       &--sticky {
         position: sticky;
@@ -269,8 +268,8 @@ export default {
 
     .local-search-term {
       background: #EF0FFF;
-      padding: 0;
       color: white;
+      padding: 0;
 
       &--active {
         background: #38D878;

@@ -1,5 +1,6 @@
-import types from '@/utils/types.json'
 import get from 'lodash/get'
+
+import types from '@/utils/types.json'
 
 function getOS () {
   let OSName
@@ -20,6 +21,7 @@ function getDocumentTypeLabel (key) {
 }
 
 function getExtractionLevelTranslationKey (key) {
+  if (key === undefined) return ''
   const levels = {
     0: 'level00',
     1: 'level01',
@@ -33,13 +35,12 @@ function getExtractionLevelTranslationKey (key) {
     9: 'level09',
     10: 'level10'
   }
-  if (key === undefined) return ''
   return `filter.level.${get(levels, key, key)}`
 }
 
 export {
-  getOS,
-  getShortkeyOS,
   getDocumentTypeLabel,
-  getExtractionLevelTranslationKey
+  getExtractionLevelTranslationKey,
+  getOS,
+  getShortkeyOS
 }

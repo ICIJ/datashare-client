@@ -10,70 +10,70 @@ describe('utils', () => {
   describe('getOS', () => {
     it('should retrieve Mac OS', () => {
       languageGetter.mockReturnValue('MacIntel')
-      expect(getOS()).toEqual('mac')
+      expect(getOS()).toBe('mac')
     })
 
     it('should retrieve Windows OS', () => {
       languageGetter.mockReturnValue('Win32')
-      expect(getOS()).toEqual('windows')
+      expect(getOS()).toBe('windows')
     })
 
     it('should retrieve Linux OS', () => {
       languageGetter.mockReturnValue('Linux x86_64')
-      expect(getOS()).toEqual('linux')
+      expect(getOS()).toBe('linux')
     })
 
     it('should retrieve no OS', () => {
       languageGetter.mockReturnValue('FreeBSD i386')
-      expect(getOS()).toEqual('other')
+      expect(getOS()).toBe('other')
     })
   })
 
   describe('getShortkeyOS', () => {
     it('should return "mac" if mac OS', () => {
       languageGetter.mockReturnValue('MacIntel')
-      expect(getShortkeyOS()).toEqual('mac')
+      expect(getShortkeyOS()).toBe('mac')
     })
 
     it('should return "default" if other than mac OS', () => {
       languageGetter.mockReturnValue('Other OS')
-      expect(getShortkeyOS()).toEqual('default')
+      expect(getShortkeyOS()).toBe('default')
     })
   })
 
   describe('getDocumentTypeLabel', () => {
     it('should retrieve the document type for PDF', () => {
-      expect(getDocumentTypeLabel('application/pdf')).toEqual('Portable Document Format (PDF)')
+      expect(getDocumentTypeLabel('application/pdf')).toBe('Portable Document Format (PDF)')
     })
 
     it('should retrieve the document type if no type (1/2)', () => {
-      expect(getDocumentTypeLabel('')).toEqual('')
+      expect(getDocumentTypeLabel('')).toBe('')
     })
 
     it('should retrieve the document type if no type (2/2)', () => {
-      expect(getDocumentTypeLabel()).toEqual('')
+      expect(getDocumentTypeLabel()).toBe('')
     })
 
     it('should retrieve the document type for unknown type', () => {
-      expect(getDocumentTypeLabel('Unknown')).toEqual('Unknown')
+      expect(getDocumentTypeLabel('Unknown')).toBe('Unknown')
     })
   })
 
   describe('getExtractionLevelTranslationKey', () => {
     it('should retrieve the correct extraction level translation key', () => {
-      expect(getExtractionLevelTranslationKey(5)).toEqual('filter.level.level05')
+      expect(getExtractionLevelTranslationKey(5)).toBe('filter.level.level05')
     })
 
     it('should retrieve the extraction level if no level (1/2)', () => {
-      expect(getExtractionLevelTranslationKey('')).toEqual('filter.level.')
+      expect(getExtractionLevelTranslationKey('')).toBe('filter.level.')
     })
 
     it('should retrieve the extraction level if no level (1/2)', () => {
-      expect(getExtractionLevelTranslationKey()).toEqual('')
+      expect(getExtractionLevelTranslationKey()).toBe('')
     })
 
     it('should retrieve the extraction level for unknown level', () => {
-      expect(getExtractionLevelTranslationKey('Unknown')).toEqual('filter.level.Unknown')
+      expect(getExtractionLevelTranslationKey('Unknown')).toBe('filter.level.Unknown')
     })
   })
 })

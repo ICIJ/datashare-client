@@ -36,8 +36,14 @@ export default {
       type: Array,
       default: null
     },
-    asyncTotal: 0,
-    asyncTotalCount: 0
+    asyncTotal: {
+      type: Number,
+      default: 0
+    },
+    asyncTotalCount: {
+      type: Number,
+      default: 0
+    }
   },
   data () {
     return {

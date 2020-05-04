@@ -10,7 +10,9 @@ export default {
     event: 'input'
   },
   props: {
-    searchTerm: Object,
+    searchTerm: {
+      type: Object
+    },
     searchIndex: {
       type: Number,
       default: 0
@@ -19,7 +21,9 @@ export default {
       type: Number,
       default: 0
     },
-    searchWorkerInProgress: Boolean
+    searchWorkerInProgress: {
+      type: Boolean
+    }
   },
   data () {
     return {
@@ -84,7 +88,7 @@ export default {
         <input type="search" :value="searchTerm.label" @input="$emit('input', { label: $event.target.value })" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="getKeys('findInDocument')" @shortkey="getAction('findInDocument')" />
         <div class="document-local-search-input__count input-group-append" v-if="searchTerm.label.length > 0">
           <span v-if="searchWorkerInProgress" class="input-group-text">
-            <fa icon="circle-notch" spin />
+            <fa icon="circle-notch" spin></fa>
           </span>
           <span v-else class="input-group-text">
             <span>{{ searchIndex }} {{ $t('document.of') }} {{ searchOccurrences }}</span>
@@ -94,16 +98,16 @@ export default {
     </div>
     <div class="form-group">
       <button class="document-local-search-input__previous btn btn-sm p-2" @click="previous" :disabled="searchOccurrences === 0 || searchTerm.label.length === 0">
-        <fa icon="angle-up" />
+        <fa icon="angle-up"></fa>
       </button>
       <button class="document-local-search-input__next btn btn-sm p-2" @click="next" :disabled="searchOccurrences === 0 || searchTerm.label.length === 0">
-        <fa icon="angle-down" />
+        <fa icon="angle-down"></fa>
       </button>
     </div>
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .document-local-search-input {
     justify-content: flex-end;
     white-space: nowrap;
@@ -121,15 +125,15 @@ export default {
     }
 
     &.form-inline {
-      white-space: nowrap;
       flex-wrap: nowrap;
+      white-space: nowrap;
 
       .input-group {
         width: 300px;
 
         .input-group-text {
-          border-left: 0;
           background: $input-bg;
+          border-left: 0;
         }
       }
     }
