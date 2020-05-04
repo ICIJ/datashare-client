@@ -41,7 +41,7 @@ describe('LocalesMenu', () => {
     })
 
     it('should display a menu with 4 languages', () => {
-      expect(wrapper.findAll('b-popover-stub .dropdown-item').length).toBe(4)
+      expect(wrapper.findAll('b-popover-stub .dropdown-item')).toHaveLength(4)
     })
 
     it('should switch from English to French interface language', async () => {

@@ -26,7 +26,7 @@ describe('elasticsearch', () => {
 
     await expect(elasticsearch.searchDocs(index, '*')).rejects.toThrow('this is an error')
 
-    expect(mockCallback.mock.calls.length).toBe(1)
+    expect(mockCallback.mock.calls).toHaveLength(1)
     expect(mockCallback.mock.calls[0][0].message).toEqual('this is an error')
     spy.mockRestore()
   })
