@@ -40,11 +40,13 @@ export default {
   computed: {
     ...mapState('insights', ['project'])
   },
-  mounted () {
-    this.$nextTick(() => {
+  watch: {
+    project () {
       this.loadPath()
-      this.setSelectedPath(first(this.paths))
-    })
+    }
+  },
+  mounted () {
+    this.$nextTick(() => this.loadPath())
   },
   methods: {
     async loadPath () {
@@ -60,6 +62,7 @@ export default {
         return { label: folder, folder }
       })
       this.$set(this, 'paths', concat(this.paths, paths))
+      this.setSelectedPath(first(this.paths))
     },
     setSelectedPath (path) {
       this.$refs.widgetDocumentsByCreationDate.setSelectedPath(path)
