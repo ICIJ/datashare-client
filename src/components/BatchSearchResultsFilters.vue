@@ -202,6 +202,7 @@ export default {
 
           &:hover .batch-search-results-filters__queries__dropdown__item__search {
             color: inherit;
+            cursor: pointer;
             display: block;
           }
 
