@@ -1,6 +1,4 @@
 <script>
-import concat from 'lodash/concat'
-import compact from 'lodash/compact'
 import identity from 'lodash/identity'
 import once from 'lodash/once'
 import template from 'lodash/template'
@@ -127,11 +125,14 @@ export default {
       const whiteList = { mark: ['style', 'class', 'title'], p: true }
       return xss(content, { stripIgnoreTag: true, whiteList })
     },
-    // The pipeline that transforms the content must be asynchronous
-    async contentPipeline () {
-      return this.contentPipelineFunctions.reduce(async (content, fn) => {
-        return fn(await content)
-      }, this.content || '')
+    contentPipeline () {
+      const mainPipelines = [
+        (this.shouldApplyNamedEntitiesMarks ? this.addNamedEntitiesMarks : null),
+        this.sanitizeHtml,
+        this.addLocalSearchMarks,
+        this.addGlobalSearchMarks
+      ]
+      return this.applyPipelineChain('extracted-text', ...mainPipelines)(this.content || '')
     },
     findNextLocalSearchTerm () {
       this.localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
@@ -152,14 +153,15 @@ export default {
     },
     getNamedEntitiesTotal () {
       return this.$store.dispatch('document/getNamedEntitiesTotal')
-    },
-    getPipelinesByStage (stage = 'pre') {
-      return this.$store.getters['pipelines/getPipelineChainByCategory'](`extracted-text:${stage}`)
     }
   },
   computed: {
     ...mapState('document', ['isLoadingNamedEntities']),
     ...mapGetters('document', ['namedEntities']),
+    ...mapGetters('pipelines', {
+      applyPipelineChain: 'applyPipelineChainByCategory',
+      getFullPipelineChain: 'getFullPipelineChainByCategory'
+    }),
     ...mapGetters('search', {
       globalSearchTerms: 'retrieveContentQueryTerms',
       globalSearchTermsInContent: 'retrieveContentQueryTermsInContent'
@@ -173,19 +175,7 @@ export default {
       }
     },
     contentPipelineFunctions () {
-      // Collect pre pipelines for this category from the store
-      const prePipelines = this.getPipelinesByStage('pre')
-      // Collect post pipelines for this category from the store
-      const postPipelines = this.getPipelinesByStage('post')
-      // Main pipelines are always applied
-      const mainPipelines = compact([
-        (this.shouldApplyNamedEntitiesMarks ? this.addNamedEntitiesMarks : null),
-        this.sanitizeHtml,
-        this.addLocalSearchMarks,
-        this.addGlobalSearchMarks
-      ])
-
-      return concat(prePipelines, mainPipelines, postPipelines)
+      return this.getFullPipelineChain('extracted-text')
     },
     showNamedEntitiesToggler () {
       return !this.translatedContent && this.hasNamedEntities

@@ -1,4 +1,6 @@
 import cloneDeep from 'lodash/cloneDeep'
+import compact from 'lodash/compact'
+import concat from 'lodash/concat'
 import filter from 'lodash/filter'
 import find from 'lodash/find'
 import findIndex from 'lodash/findIndex'
@@ -58,6 +60,25 @@ export const getters = {
     return (category = null) => {
       const pipelines = getters.getInstantiatedPipelineByCategory(category)
       return pipelines.map(p => p.apply.bind(p))
+    }
+  },
+  getFullPipelineChainByCategory (state, getters) {
+    return (category = null, ...mainPipelines) => {
+      const prePipelines = getters.getPipelineChainByCategory(`${category}:pre`)
+      const postPipelines = getters.getPipelineChainByCategory(`${category}:post`)
+      return concat(prePipelines, compact(mainPipelines), postPipelines)
+    }
+  },
+  applyPipelineChainByCategory (state, getters) {
+    return (category = null, ...mainPipelines) => {
+      const allPipelines = getters.getFullPipelineChainByCategory(category, ...mainPipelines)
+      // Return a closure function that must be invoked with the value
+      // that is transformed by the pipeline
+      return async (value = null) => {
+        return allPipelines.reduce(async (intermediateValue, fn) => {
+          return fn(await intermediateValue)
+        }, value)
+      }
     }
   }
 }
