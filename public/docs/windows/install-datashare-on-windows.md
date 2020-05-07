@@ -9,46 +9,7 @@ You have **2 options:**
 * if you have **Windows 10 Pro**: you can use the **standard** option which installs Datashare with Docker; it is a more powerful version.
 * if you have **Windows 7 Service Pack 2 or newer version**: you can use the **standalone** option which installs Datashare without Docker.
 
-### **Standard \(Windows 10 Pro\)**
-
-You will need **Windows 10 Pro** or a newer version.   
-****  
-1. Go to the **Datashare's website:** [**https://datashare.icij.org/**](https://datashare.icij.org/).
-
-2. Click the blue button '**DOWNLOAD FOR FREE'**.
-
-![](../.gitbook/assets/landing-windows.png)
-
-3. You might see a window saying 'Windows protected your computer'.   
-**DO NOT click on the button 'Don't run'**.   
-**Click on the text 'More info':**
-
-![](../.gitbook/assets/windows-protected-your-pc.jpg)
-
-When the next window opens, click on '**Run anyway'**.
-
-![](../.gitbook/assets/run-anyway.png)
-
-  
-4. On the next window, click **'Install'**.
-
-![](../.gitbook/assets/capture-de-cran-26%20%281%29.png)
-
-Datashare is installing.
-
-![](../.gitbook/assets/capture-de-cran-27.png)
-
-5. The system will ask you to reboot to restart your computer. Click on '**Yes'**.
-
-![](../.gitbook/assets/yes%20%281%29.png)
-
-6. When you restart, another application will automatically open: Docker Desktop with its little whale icon. It will be visible on your Windows' menu bar, at the bottom right of your computer screen. It contains components necessary to have Datashare work. Docker Desktop will automatically be running when you use Datashare. You don't need an I.D. for this. To close this window, **click on the white 'x' on the right side of the red background.**
-
-![](../.gitbook/assets/capture-de-cran-31.png)
-
-You're now ready to the next step. Let's [open Datashare](https://icij.gitbook.io/datashare/windows/open-datashare-on-windows).
-
-
+\*\*\*\*
 
 ### **Standalone \(Windows 7 Service Pack 2 or newer version\)**
 
@@ -136,4 +97,43 @@ When it is finished, click '**Close**':
 
 
 When you'll see the log '**Server started on port 8080**', you will be able to open your browser and go to the URL [http://localhost:8080](http://localhost:8080/).
+
+### **Standard \(Windows 10 Pro\)**
+
+You will need **Windows 10 Pro** or a newer version.   
+****  
+1. Go to the **Datashare's website:** [**https://datashare.icij.org/**](https://datashare.icij.org/).
+
+2. Click the blue button '**DOWNLOAD FOR FREE'**.
+
+![](../.gitbook/assets/landing-windows.png)
+
+3. You might see a window saying 'Windows protected your computer'.   
+**DO NOT click on the button 'Don't run'**.   
+**Click on the text 'More info':**
+
+![](../.gitbook/assets/windows-protected-your-pc.jpg)
+
+When the next window opens, click on '**Run anyway'**.
+
+![](../.gitbook/assets/run-anyway.png)
+
+  
+4. On the next window, click **'Install'**.
+
+![](../.gitbook/assets/capture-de-cran-26%20%281%29.png)
+
+Datashare is installing.
+
+![](../.gitbook/assets/capture-de-cran-27.png)
+
+5. The system will ask you to reboot to restart your computer. Click on '**Yes'**.
+
+![](../.gitbook/assets/yes%20%281%29.png)
+
+6. When you restart, another application will automatically open: Docker Desktop with its little whale icon. It will be visible on your Windows' menu bar, at the bottom right of your computer screen. It contains components necessary to have Datashare work. Docker Desktop will automatically be running when you use Datashare. You don't need an I.D. for this. To close this window, **click on the white 'x' on the right side of the red background.**
+
+![](../.gitbook/assets/capture-de-cran-31.png)
+
+You're now ready to the next step. Let's [open Datashare](https://icij.gitbook.io/datashare/windows/open-datashare-on-windows).
 
