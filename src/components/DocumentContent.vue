@@ -79,8 +79,8 @@ export default {
       this.terminateLocalSearchWorker()
       this.localSearchWorker = new LocalSearchWorker()
     },
-    addLocalSearchMarks (content, { localSearchTerm = this.localSearchTerm } = {}) {
-      if (!localSearchTerm.label || localSearchTerm.label.length === 0) {
+    addLocalSearchMarks (content) {
+      if (!this.localSearchTerm.label || this.localSearchTerm.label.length === 0) {
         return content
       }
 
@@ -100,7 +100,7 @@ export default {
         this.localSearchWorker.onerror = () => { resolve(content) }
       })
 
-      this.localSearchWorker.postMessage({ content, localSearchTerm })
+      this.localSearchWorker.postMessage({ content, localSearchTerm: this.localSearchTerm })
 
       return workerPromise
     },

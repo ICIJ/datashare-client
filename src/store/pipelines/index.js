@@ -7,9 +7,9 @@ export { default as DeleteEmptyParagraphsPipeline } from './DeleteEmptyParagraph
 export { default as SanitizeHtml } from './SanitizeHtml'
 
 export default [
-  { name: 'extracted-text-named-entities', type: 'AddNamedEntitiesPipeline', category: 'extracted-text' },
-  { name: 'extracted-text-sanitize-html', type: 'SanitizeHtml', category: 'extracted-text' },
-  { name: 'extracted-text-global-search-marks', type: 'AddGlobalSearchMarks', category: 'extracted-text' },
-  { name: 'extracted-text-line-break', type: 'AddLineBreaksPipeline', category: 'extracted-text' },
-  { name: 'extracted-text-delete-empty-p', type: 'DeleteEmptyParagraphsPipeline', category: 'extracted-text' }
+  { name: 'extracted-text-named-entities', type: 'AddNamedEntitiesPipeline', category: 'extracted-text:pre' },
+  { name: 'extracted-text-sanitize-html', type: 'SanitizeHtml', category: 'extracted-text:pre' },
+  { name: 'extracted-text-global-search-marks', type: 'AddGlobalSearchMarks', category: 'extracted-text:post' },
+  { name: 'extracted-text-line-break', type: 'AddLineBreaksPipeline', category: 'extracted-text:post' },
+  { name: 'extracted-text-delete-empty-p', type: 'DeleteEmptyParagraphsPipeline', category: 'extracted-text:post' }
 ]
