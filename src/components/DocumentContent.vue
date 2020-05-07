@@ -1,10 +1,8 @@
 <script>
-import identity from 'lodash/identity'
 import once from 'lodash/once'
-import template from 'lodash/template'
+import pick from 'lodash/pick'
 import throttle from 'lodash/throttle'
 import { mapGetters, mapState } from 'vuex'
-import xss from 'xss'
 
 import DocumentAttachments from '@/components/DocumentAttachments'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
@@ -13,7 +11,6 @@ import Hook from '@/components/Hook'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import LocalSearchWorker from '@/utils/local-search.webworker'
-import { highlight } from '@/utils/strings'
 
 export default {
   name: 'DocumentContent',
@@ -71,7 +68,7 @@ export default {
   },
   methods: {
     async transformContent () {
-      this.transformedContent = await this.contentPipeline()
+      this.transformedContent = await this.applyContentPipeline()
     },
     terminateLocalSearchWorker () {
       if (this.localSearchWorker !== null) {
@@ -82,24 +79,10 @@ export default {
       this.terminateLocalSearchWorker()
       this.localSearchWorker = new LocalSearchWorker()
     },
-    buildNamedEntityMark (ne) {
-      const extractor = ne.source.extractor
-      const mention = ne.source.mention
-      const classNames = this.getCategoryClass(ne.source.category, 'ner--')
-      return this.namedEntityMarkTemplate({ classNames, extractor, mention })
-    },
-    addNamedEntitiesMarks (content) {
-      return highlight(content, this.namedEntities, this.buildNamedEntityMark, identity, m => m.source.mention)
-    },
-    addGlobalSearchMarks (content) {
-      return this.globalSearchTermsInContent(content, 'length').reduce((content, term, index) => {
-        const needle = new RegExp(term.label, 'gi')
-        const fn = match => `<mark class="global-search-term" style="border-color: ${this.getTermIndexColor(index)}">${match}</mark>`
-        return content.replace(needle, fn)
-      }, content)
-    },
-    addLocalSearchMarks (content, localSearchTerm = this.localSearchTerm) {
-      if (localSearchTerm.label.length === 0) return content
+    addLocalSearchMarks (content, { localSearchTerm = this.localSearchTerm } = {}) {
+      if (!localSearchTerm.label || localSearchTerm.label.length === 0) {
+        return content
+      }
 
       this.createLocalSearchWorker()
       this.localSearchWorkerInProgress = true
@@ -121,18 +104,8 @@ export default {
 
       return workerPromise
     },
-    sanitizeHtml (content) {
-      const whiteList = { mark: ['style', 'class', 'title'], p: true }
-      return xss(content, { stripIgnoreTag: true, whiteList })
-    },
-    contentPipeline () {
-      const mainPipelines = [
-        (this.shouldApplyNamedEntitiesMarks ? this.addNamedEntitiesMarks : null),
-        this.sanitizeHtml,
-        this.addLocalSearchMarks,
-        this.addGlobalSearchMarks
-      ]
-      return this.applyPipelineChain('extracted-text', ...mainPipelines)(this.content || '')
+    applyContentPipeline () {
+      return this.contentPipeline(this.content, this.contentPipelineParams)
     },
     findNextLocalSearchTerm () {
       this.localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
@@ -159,12 +132,11 @@ export default {
     ...mapState('document', ['isLoadingNamedEntities']),
     ...mapGetters('document', ['namedEntities']),
     ...mapGetters('pipelines', {
-      applyPipelineChain: 'applyPipelineChainByCategory',
+      getPipelineChain: 'applyPipelineChainByCategory',
       getFullPipelineChain: 'getFullPipelineChainByCategory'
     }),
     ...mapGetters('search', {
-      globalSearchTerms: 'retrieveContentQueryTerms',
-      globalSearchTermsInContent: 'retrieveContentQueryTermsInContent'
+      globalSearchTerms: 'retrieveContentQueryTerms'
     }),
     showNamedEntities: {
       set (toggler) {
@@ -183,11 +155,25 @@ export default {
     shouldApplyNamedEntitiesMarks () {
       return !this.translatedContent && this.showNamedEntities
     },
-    namedEntityMarkTemplate () {
-      return template('<mark class="ner <%= classNames %>" title="<%= extractor %>"><%= mention %></mark>')
-    },
     content () {
-      return this.translatedContent || this.document.source.content
+      return this.translatedContent || this.document.source.content || ''
+    },
+    contentPipeline () {
+      return this.getPipelineChain('extracted-text', ...[
+        this.addLocalSearchMarks
+      ])
+    },
+    contentPipelineParams () {
+      return pick(this, [
+        'hasStickyToolbox',
+        'globalSearchTerms',
+        'localSearchIndex',
+        'localSearchOccurrences',
+        'localSearchTerm',
+        'localSearchWorkerInProgress',
+        'namedEntities',
+        'shouldApplyNamedEntitiesMarks'
+      ])
     }
   }
 }

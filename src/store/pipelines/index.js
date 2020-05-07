@@ -1,9 +1,15 @@
 export { default as IdentityPipeline } from './IdentityPipeline'
 export { default as SimplePipeline } from './SimplePipeline'
+export { default as AddGlobalSearchMarks } from './AddGlobalSearchMarks'
+export { default as AddNamedEntitiesPipeline } from './AddNamedEntitiesPipeline'
 export { default as AddLineBreaksPipeline } from './AddLineBreaksPipeline'
 export { default as DeleteEmptyParagraphsPipeline } from './DeleteEmptyParagraphsPipeline'
+export { default as SanitizeHtml } from './SanitizeHtml'
 
 export default [
-  { name: 'extracted-text-line-break', type: 'AddLineBreaksPipeline', category: 'extracted-text:post' },
-  { name: 'extracted-text-delete-empty-p', type: 'DeleteEmptyParagraphsPipeline', category: 'extracted-text:post' }
+  { name: 'extracted-text-named-entities', type: 'AddNamedEntitiesPipeline', category: 'extracted-text' },
+  { name: 'extracted-text-sanitize-html', type: 'SanitizeHtml', category: 'extracted-text' },
+  { name: 'extracted-text-global-search-marks', type: 'AddGlobalSearchMarks', category: 'extracted-text' },
+  { name: 'extracted-text-line-break', type: 'AddLineBreaksPipeline', category: 'extracted-text' },
+  { name: 'extracted-text-delete-empty-p', type: 'DeleteEmptyParagraphsPipeline', category: 'extracted-text' }
 ]

@@ -63,10 +63,11 @@ export const getters = {
     }
   },
   getFullPipelineChainByCategory (state, getters) {
-    return (category = null, ...mainPipelines) => {
+    return (category = null, ...contextualPipelines) => {
       const prePipelines = getters.getPipelineChainByCategory(`${category}:pre`)
+      const mainPipelines = getters.getPipelineChainByCategory(category)
       const postPipelines = getters.getPipelineChainByCategory(`${category}:post`)
-      return concat(prePipelines, compact(mainPipelines), postPipelines)
+      return concat(prePipelines, mainPipelines, compact(contextualPipelines), postPipelines)
     }
   },
   applyPipelineChainByCategory (state, getters) {
@@ -74,9 +75,9 @@ export const getters = {
       const allPipelines = getters.getFullPipelineChainByCategory(category, ...mainPipelines)
       // Return a closure function that must be invoked with the value
       // that is transformed by the pipeline
-      return async (value = null) => {
+      return async (value = null, ...params) => {
         return allPipelines.reduce(async (intermediateValue, fn) => {
-          return fn(await intermediateValue)
+          return fn(await intermediateValue, ...params)
         }, value)
       }
     }
