@@ -6,12 +6,12 @@ description: This will help you set up and install Datashare on your computer.
 
 You have **2 options:**
 
-* if you have **a less recent version**: you can use the **standalone** option which installs Datashare without Docker.
-* if you have **OS X El Capitan 10.11** or a more recent version: you can use the **standard** option which installs Datashare with Docker; it is a more powerful version.
+* the simplest, if you have **any Mac**, you can use the **standard** option which installs Datashare without Docker.
+* if you have **OS X El Capitan 10.11** or a more recent version: you can use the version which installs Datashare with Docker; it is a more powerful version.
 
 
 
-### Standalone \(less recent than OS X El Capitan 10.11\)
+### Standard \(less recent than OS X El Capitan 10.11\)
 
  0. Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. Go to **Applications** and put '**Datashare**' in the trash.
 
@@ -103,7 +103,7 @@ In the end, you should see this screen:
 
 
 
-### Standard \(OS X El Capitan 10.11\)
+### Version with Docker installer \(OS X El Capitan 10.11\)
 
 You need **OS X El Capitan 10.11 or a more recent version.**  
   

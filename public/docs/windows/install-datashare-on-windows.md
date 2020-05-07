@@ -6,12 +6,10 @@ description: Install Datashare will help you set up the software on your compute
 
 You have **2 options:**
 
-* if you have **Windows 10 Pro**: you can use the **standard** option which installs Datashare with Docker; it is a more powerful version.
-* if you have **Windows 7 Service Pack 2 or newer version**: you can use the **standalone** option which installs Datashare without Docker.
+* if you have **Windows 7 Service Pack 2 or newer version**: you can use the **standard** option which installs Datashare without Docker.
+* if you have **Windows 10 Pro**: you can use another option which installs Datashare with Docker; it is a more powerful version.
 
-\*\*\*\*
-
-### **Standalone \(Windows 7 Service Pack 2 or newer version\)**
+### **Standard \(Windows 7 Service Pack 2 or newer version\)**
 
 You will need **Windows 7 Service Pack 2** or a newer version.
 
@@ -98,7 +96,7 @@ When it is finished, click '**Close**':
 
 When you'll see the log '**Server started on port 8080**', you will be able to open your browser and go to the URL [http://localhost:8080](http://localhost:8080/).
 
-### **Standard \(Windows 10 Pro\)**
+### **Version with Docker installer \(Windows 10 Pro\)**
 
 You will need **Windows 10 Pro** or a newer version.   
 ****  
