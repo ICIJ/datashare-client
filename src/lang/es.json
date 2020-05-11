@@ -581,13 +581,13 @@
   "widget": {
     "noData": "No hay datos",
     "barometer": {
-      "document": "no documents | 1 document | %{total} documents",
-      "amongWhich": "among which",
-      "onDisk": "on disk"
+      "document": "no hay archivos | 1 archivo | %{total} archivos",
+      "amongWhich": "entre los cuales",
+      "onDisk": "en el disco"
     },
     "diskUsage": {
-      "details": "See disk usage",
-      "hits": "no documents | 1 document | %{hits} documents"
-    },
+      "details": "Ver el uso del disco",
+      "hits": "no hay archivos | 1 archivo | %{hits} archivos"
+    }
   }
 }
