@@ -53,7 +53,8 @@ export default {
     startCase
   },
   created () {
-    this.$set(this, 'projects', this.$config.get('datashare_projects', []))
+    const projects = [...this.$config.get('datashare_projects', [])].sort()
+    this.$set(this, 'projects', projects)
   }
 }
 </script>
