@@ -1,22 +1,22 @@
 <template>
-  <div class="search-results-header__applied-filters" v-if="filters.length">
-    <search-results-applied-filter v-for="(filter, index) in filters" :key="index" :filter="filter" />
+  <div class="applied-search-filters" v-if="filters.length">
+    <applied-search-filters-item v-for="(filter, index) in filters" :key="index" :filter="filter" />
     <reset-filters-button variant="link" class="text-muted badge font-weight-normal" auto-hiding />
   </div>
 </template>
 
 <script>
 import ResetFiltersButton from '@/components/ResetFiltersButton'
-import SearchResultsAppliedFilter from '@/components/SearchResultsAppliedFilter'
+import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 import { FilterDate } from '@/store/filters'
 import map from 'lodash/map'
 import parseInt from 'lodash/parseInt'
 
 export default {
-  name: 'SearchResultsAppliedFilters',
+  name: 'AppliedSearchFilters',
   components: {
     ResetFiltersButton,
-    SearchResultsAppliedFilter
+    AppliedSearchFiltersItem
   },
   computed: {
     filters () {
