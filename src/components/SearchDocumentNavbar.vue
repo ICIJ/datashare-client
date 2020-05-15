@@ -1,19 +1,25 @@
 <template>
-  <div class="search-document-navbar px-3 py-2 bg-dark text-white text-nowrap">
+  <div class="search-document-navbar px-3 py-2 bg-dark text-white text-nowrap" :class="{ 'search-document-navbar--shrinked': isShrinked }">
     <router-link
-      class="search-document-navbar__back text-truncate pr-1"
+      class="search-document-navbar__back pr-1"
       :class="{ 'flex-grow-1': !isShrinked }"
-      @shortkey.native="getAction('backToSearchResults')"
       :to="{ name: 'search', query }"
-      v-shortkey="getKeys('backToSearchResults')">
-      <fa icon="chevron-circle-left" class="mr-1"></fa>
-      <span v-if="!isShrinked">
-        {{ $t('search.back') }}
-      </span>
+      :title="$t('search.back')"
+      v-b-tooltip.right="{ customClass: isShrinked ? '' : 'd-none' }"
+      v-shortkey="getKeys('backToSearchResults')"
+      @shortkey.native="getAction('backToSearchResults')">
+      <fa icon="chevron-circle-left"></fa>
+      <transition name="slide-x">
+        <span v-if="!isShrinked" class="search-document-navbar__back__label ml-2">
+          {{ $t('search.back') }}
+        </span>
+      </transition>
     </router-link>
-    <b-btn v-if="isShrinked" class="search-document-navbar__title text-left flex-grow-1 px-1 text-white py-0 text-truncate" @click="scrollToTop" variant="link">
-      {{ doc.title }}
-    </b-btn>
+    <transition name="slide-x">
+      <b-btn v-if="isShrinked" class="search-document-navbar__title text-left font-weight-bold flex-grow-1 px-2 text-white py-0 text-truncate" @click="scrollToTop" variant="link">
+        {{ doc.title }}
+      </b-btn>
+    </transition>
     <div v-if="doc" class="ml-auto d-flex align-items-center">
       <span class="search-document-navbar__nav" v-if="documentIndex > -1">
         <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
@@ -230,6 +236,37 @@ export default {
       color: inherit;
       display: inline;
       font-size: $font-size-sm;
+    }
+
+    &__back .svg-inline--fa {
+      transition: 500ms transform;
+    }
+
+    &--shrinked &__back .svg-inline--fa {
+      transform: scale(1.3)
+    }
+
+    &__back__label {
+      position: absolute;
+    }
+
+    &__title, &__back__label {
+      display: inline-block;
+
+      &.slide-x-enter-active,
+      &.slide-x-leave-active {
+        transition: 500ms;
+      }
+
+      &.slide-x-enter {
+        opacity: 0;
+        transform: translateY(100%);
+      }
+
+      &.slide-x-leave-to {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
     }
 
     &__recommended-by {
