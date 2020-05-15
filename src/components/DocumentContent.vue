@@ -219,7 +219,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .document-content {
     &__toolbox {
       background: $light;
@@ -243,12 +243,13 @@ export default {
     }
 
     .local-search-term {
-      background: #EF0FFF;
-      color: white;
+      background: #F1C40F;
+      color: black;
       padding: 0;
 
       &--active {
         background: #38D878;
+        color: white;
       }
 
       > .global-search-term {
