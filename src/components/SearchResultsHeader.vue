@@ -1,33 +1,8 @@
 <template>
   <div class="search-results-header" :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
-    <div class="search-results-header__paging">
-      <div class="search-results-header__paging__progress mr-2 flex-grow-1" v-if="!noProgress">
-        <span class="search-results-header__paging__progress__pagination mr-2">
-          <b-dropdown size="sm"  variant="link" toggle-class="text-decoration-none py-1 border search-results-header__paging__progress__pagination__toggler" menu-class="search-results-header__paging__progress__pagination__dropdown">
-            <template v-slot:button-content>
-              {{ searchFrom + 1 }} – {{ lastDocument }}
-            </template>
-            <b-dropdown-header>
-              {{ $t('search.settings.resultsPerPage') }}
-            </b-dropdown-header>
-            <b-dropdown-item v-for="size in searchSizes" :key="size" :active="size === searchSize" @click="selectSearchSize(size)">
-              <div class="d-flex align-items-center">
-                <span>
-                  {{ searchFrom + 1 }} – <span class="font-weight-bold">{{ Math.min(searchFrom + size, response.total) }}</span>
-                </span>
-                <span class="text-muted ml-auto pl-4" v-if="searchFrom > 0">
-                  {{ size }}/page
-                </span>
-              </div>
-            </b-dropdown-item>
-          </b-dropdown>
-        </span>
-        <span class="search-results-header__paging__progress_number-of-results">
-          {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
-        </span>
-      </div>
-      <div class="search-results-header__sort mr-auto">
-        <b-dropdown size="sm" right variant="link" toggle-class="text-decoration-none py-1 border search-results-header__sort__toggler" menu-class="search-results-header__sort__dropdown">
+    <div class="search-results-header__settings d-flex align-items-center">
+      <b-btn-group class="flex-grow-1">
+        <b-dropdown size="sm" variant="link" class="search-results-header__settings__sort" toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__sort__toggler" menu-class="search-results-header__settings__sort__dropdown">
           <template v-slot:button-content>
             Sort
           </template>
@@ -38,9 +13,29 @@
             {{ $t('search.results.sort.' + sort) }}
           </b-dropdown-item>
         </b-dropdown>
-      </div>
+        <b-dropdown v-if="!noProgress" size="sm" variant="link" class="search-results-header__settings__size mr-2" toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__size__toggler" menu-class="search-results-header__settings__size__dropdown">
+          <template v-slot:button-content>
+            <span class="search-results-header__settings__size__toggler__slot">
+              {{ searchFrom + 1 }} – {{ lastDocument }}
+            </span>
+            <span class="search-results-header__settings__size__toggler__hits text-muted">
+              {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
+            </span>
+          </template>
+          <b-dropdown-header>
+            {{ $t('search.settings.resultsPerPage') }}
+          </b-dropdown-header>
+          <b-dropdown-item v-for="size in searchSizes" :key="size" :active="size === searchSize" @click="selectSearchSize(size)">
+            <div class="d-flex align-items-center">
+              <span>
+                {{ size }} by page
+              </span>
+            </div>
+          </b-dropdown-item>
+        </b-dropdown>
+      </b-btn-group>
       <pagination
-        class="justify-content-end text-right mr-3"
+        class="search-results-header__settings__pagination justify-content-end text-right mr-3"
         :get-to-template="getToTemplate"
         :is-displayed="isDisplayed"
         :no-last-page-link="searchWindowTooLarge"
@@ -166,32 +161,23 @@ export default {
       }
     }
 
-    &__paging {
+    &__settings {
       font-size: 0.95em;
       color: $text-muted;
       display: inline-flex;
       width: 100%;
 
-      &, &__progress, &__progress__pagination {
-        display: flex;
-        flex-direction: row;
-        align-items: center;
-      }
+      &__size, &__sort {
 
-      &__progress {
-
-        &__pagination {
-
-          &__toggler {
-            font-size: inherit;
-            line-height: inherit;
-          }
+        &__toggler {
+          font-size: inherit;
+          line-height: inherit;
         }
       }
     }
 
-    .search-results-header__paging__progress__pagination__dropdown,
-    .search-results-header__sort__dropdown {
+    .search-results-header__settings__size__dropdown,
+    .search-results-header__settings__sort__dropdown {
       min-width: 100%;
       padding-top: 0;
 
