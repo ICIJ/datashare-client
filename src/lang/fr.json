@@ -47,7 +47,7 @@
     "results": {
       "match": "dans le doc",
       "entities": "nb entités",
-      "results": "1 document | %{total} documents",
+      "results": "1 | %{total} documents",
       "noResults": "Aucun document",
       "on": "sur",
       "perPage": "par page",
