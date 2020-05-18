@@ -4,8 +4,8 @@
       <component :is="importPreviewComponent" :document="document" />
     </template>
     <template v-else>
-      <div class="p-3">{
-        { $t('document.notAvailable') }}
+      <div class="p-3">
+        {{ $t('document.notAvailable') }}
       </div>
     </template>
   </div>
