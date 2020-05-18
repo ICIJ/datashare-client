@@ -87,50 +87,69 @@ html {
   padding: $spacer;
 }
 
-.popover-body-p-0 .popover-body {
-  padding: 0;
-}
 
-.popover-body-overflow-hidden .popover-body {
-  overflow: hidden;
-  border-radius: inherit;
-}
-
-.popover-header {
-  margin: $popover-body-padding-y $popover-body-padding-x 0;
-  border-radius: $popover-inner-border-radius;
-}
-
-.popover-body {
-
-  .text-muted {
-    color: mix($popover-body-color, $popover-bg, 60) !important;
+@each $variant, $value in $theme-colors {
+  .popover-magnified-#{$variant} {
+    @include popover-magnified-variant($value);
   }
+}
+.popover {
 
-  .card-header {
-    background-color: $popover-header-bg;
-    @include gradient-y($popover-bg, $popover-bg);
+  .popover-body {
 
-    .nav-item .nav-link {
-      color: white;
+    .text-muted {
+      color: mix($popover-body-color, $popover-bg, 60) !important;
+    }
 
-      &:hover {
+    .card-header {
+      background-color: $popover-header-bg;
+      @include gradient-y($popover-bg, $popover-bg);
+
+      .nav-item .nav-link {
+        color: white;
+
+        &:hover {
+          border-color: transparent;
+          text-decoration: underline;
+        }
+      }
+
+      .nav-item .nav-link.active {
+        background: $popover-header-bg;
         border-color: transparent;
-        text-decoration: underline;
+        font-weight: bold;
       }
     }
 
-    .nav-item .nav-link.active {
+    .card-body {
       background: $popover-header-bg;
-      border-color: transparent;
-      font-weight: bold;
     }
   }
 
-  .card-body {
-    background: $popover-header-bg;
+  &.popover-body-p-0 {
+
+    .popover-body {
+      padding: 0;
+    }
+
+    &.bs-popover-bottom > .arrow::after,
+    &.bs-popover-auto[x-placement^="bottom"] > .arrow::after {
+      border-bottom-color: $popover-bg;
+    }
+  }
+
+  &.popover-body-overflow-hidden .popover-body {
+    overflow: hidden;
+    border-radius: inherit;
+  }
+
+
+  &.bs-popover-bottom > .arrow::after,
+  &.bs-popover-auto[x-placement^="bottom"] > .arrow::after {
+    border-bottom-color: $popover-header-bg;
   }
 }
+
 
 body {
   max-width: 100vw;

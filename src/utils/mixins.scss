@@ -5,3 +5,29 @@
     }
   }
 }
+
+@mixin popover-magnified-variant($bg, $bg-darker: $primary) {
+  color: text-contrast($bg);
+  @include gradient-y(mix($bg, $bg-darker), $bg);
+
+  .popover-header {
+    background: mix($bg-darker, $bg);
+    border: 0;
+    color: text-contrast(mix($bg-darker, $bg));
+  }
+
+  .popover-body {
+    color: inherit;
+    padding: $spacer;
+  }
+
+  &.bs-popover-top > .arrow::after,
+  &.bs-popover-auto[x-placement^="top"] > .arrow::after {
+    border-top-color: $bg;
+  }
+
+  &.bs-popover-bottom > .arrow::after,
+  &.bs-popover-auto[x-placement^="bottom"] > .arrow::after {
+    border-bottom-color: mix($bg, $bg-darker);
+  }
+}
