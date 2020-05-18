@@ -47,7 +47,7 @@
     "results": {
       "match": "dans le doc",
       "entities": "nb entités",
-      "results": "1 document | %{total} documents",
+      "results": "1 | %{total} documents",
       "noResults": "Aucun document",
       "on": "sur",
       "perPage": "par page",
@@ -581,13 +581,13 @@
   "widget": {
     "noData": "Pas de données",
     "barometer": {
-      "document": "pas de document | 1 document | %{total} documents",
-      "amongWhich": "parmi lesquels",
+      "document": "aucun document | 1 document | %{total} documents",
+      "amongWhich": "parmi le(s)quel(s)",
       "onDisk": "sur le disque"
     },
     "diskUsage": {
-      "details": "See disk usage",
-      "hits": "no documents | 1 document | %{hits} documents"
+      "details": "Voir l'utilisation du disque",
+      "hits": "aucun document | 1 document | %{hits} documents"
     }
   }
 }
