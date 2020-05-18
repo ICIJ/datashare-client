@@ -131,7 +131,7 @@ export default {
       ])
     }
   },
-  async created () {
+  async mounted () {
     this.$wait.start('load batchSearches')
     this.$Progress.start()
     await this.$store.dispatch('batchSearch/getBatchSearches')

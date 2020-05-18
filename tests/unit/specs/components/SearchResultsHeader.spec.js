@@ -1,23 +1,30 @@
 import toLower from 'lodash/toLower'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
+const { localVue, store, router } = Core.init(createLocalVue()).useAll()
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 describe('SearchResultsHeader.vue', () => {
   const index = toLower('SearchResultsHeader')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
+  const mocks = { refreshRouteAndSearch: () => null, $t: msg => msg, $tc: msg => msg, $n: msg => msg }
   let wrapper
 
   beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
-    wrapper = shallowMount(SearchResultsHeader, { localVue, store, mocks: { $t: msg => msg, $tc: msg => msg, $n: msg => msg } })
+    wrapper = mount(SearchResultsHeader, { localVue, router, store, mocks })
     store.commit('search/reset')
   })
 
@@ -28,8 +35,8 @@ describe('SearchResultsHeader.vue', () => {
       await store.dispatch('search/query', 'bar')
       await wrapper.vm.$nextTick()
 
-      expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toBe('1 – 1')
-      expect(wrapper.find('.search-results-header__paging__progress_number-of-results').text()).toBe('search.results.on search.results.results')
+      expect(wrapper.find('.search-results-header__settings__size__toggler__slot').text()).toBe('1 – 1')
+      expect(wrapper.find('.search-results-header__settings__size__toggler__hits').text()).toBe('search.results.on search.results.results')
     })
 
     it('should display 2 documents', async () => {
@@ -39,8 +46,8 @@ describe('SearchResultsHeader.vue', () => {
       await store.dispatch('search/query', 'bar')
       await wrapper.vm.$nextTick()
 
-      expect(wrapper.find('.search-results-header__paging__progress__pagination').text()).toBe('1 – 2')
-      expect(wrapper.find('.search-results-header__paging__progress_number-of-results').text()).toBe('search.results.on search.results.results')
+      expect(wrapper.find('.search-results-header__settings__size__toggler__slot').text()).toBe('1 – 2')
+      expect(wrapper.find('.search-results-header__settings__size__toggler__hits').text()).toBe('search.results.on search.results.results')
     })
   })
 
@@ -49,8 +56,9 @@ describe('SearchResultsHeader.vue', () => {
 
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
     wrapper.setProps({ position: 'top' })
+    await wrapper.vm.$nextTick()
 
-    expect(wrapper.findAll('search-results-applied-filters-stub')).toHaveLength(1)
+    expect(wrapper.findAll('.search-results-header__applied-search-filters')).toHaveLength(1)
   })
 
   it('should not display an applied filters component on bottom position', async () => {
@@ -59,6 +67,27 @@ describe('SearchResultsHeader.vue', () => {
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
     await wrapper.setProps({ position: 'bottom' })
 
-    expect(wrapper.findAll('search-results-applied-filters-stub')).toHaveLength(0)
+    expect(wrapper.findAll('.search-results-header__applied-search-filters')).toHaveLength(0)
+  })
+
+  it('should display the dropdown to choose the number of results per page', () => {
+    const toggler = wrapper.find('.search-results-header__settings__size__toggler')
+    const dropdown = wrapper.find('.search-results-header__settings__size__dropdown')
+    expect(toggler.exists()).toBeTruthy()
+    expect(dropdown.exists()).toBeTruthy()
+  })
+
+  it('should display the dropdown to choose the number of results per page', () => {
+    const toggler = wrapper.find('.search-results-header__settings__sort__toggler')
+    const dropdown = wrapper.find('.search-results-header__settings__sort__dropdown')
+    expect(toggler.exists()).toBeTruthy()
+    expect(dropdown.exists()).toBeTruthy()
+  })
+
+  it('should change the searchSort and searchSize via the dropdown', () => {
+    wrapper.findAll('.search-results-header__settings__sort__dropdown .dropdown-item').at(3).trigger('click')
+    expect(wrapper.vm.searchSort).toBe('sizeLargest')
+    wrapper.findAll('.search-results-header__settings__size__dropdown .dropdown-item').at(3).trigger('click')
+    expect(wrapper.vm.searchSize).toBe(100)
   })
 })

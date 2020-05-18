@@ -3,22 +3,24 @@
     <div class="batch-search-results__explanation bg-white py-5">
       <div class="container">
         <div class="float-right d-flex my-2 mx-3">
-          <div class="batch-search-results__download float-right">
+          <div class="batch-search-results__download float-right" v-if="results.length > 0">
             <a :href="downloadLink" class="btn btn-primary">
-              <fa icon="download" />
+              <fa icon="download"></fa>
               {{ $t('batchSearchResults.downloadResults') }} (CSV)
             </a>
           </div>
           <div class="batch-search-results__delete" v-if="isMyBatchSearch">
             <confirm-button class="btn btn-primary ml-2" :confirmed="deleteBatchSearch">
-              <fa icon="trash-alt" />
+              <fa icon="trash-alt"></fa>
               {{ $t('batchSearch.delete') }}
             </confirm-button>
           </div>
         </div>
         <h3>
-          <router-link :to="{ name: 'batch-search' }">{{ $t('batchSearch.title') }}</router-link>
-          <fa icon="angle-right" class="small ml-2" />
+          <router-link :to="{ name: 'batch-search' }">
+            {{ $t('batchSearch.title') }}
+          </router-link>
+          <fa icon="angle-right" class="small ml-2"></fa>
           {{ meta.name }}
         </h3>
         <p class="m-0">
@@ -104,7 +106,7 @@
             {{ $t('batchSearch.published') }}
           </dt>
           <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
-            <b-form-checkbox v-model="published" switch @change="changePublished" v-if="isMyBatchSearch" />
+            <b-form-checkbox v-model="published" switch @change="changePublished" v-if="isMyBatchSearch"></b-form-checkbox>
             <span v-else>{{ meta.published ? $t('indexing.yes') : $t('indexing.no') }}</span>
           </dd>
           <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
@@ -117,9 +119,9 @@
       </div>
       <v-wait for="load batchSearch results">
         <div slot="waiting" class="card py-2">
-          <content-placeholder :rows="rows" class="p-0 my-2" />
-          <content-placeholder :rows="rows" class="p-0 my-2" />
-          <content-placeholder :rows="rows" class="p-0 my-2" />
+          <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
+          <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
+          <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
         </div>
         <div class="batch-search-results__queries">
           <div class="card small">
@@ -169,14 +171,16 @@
           :link-gen="linkGen"
           :number-of-pages="numberOfPages"
           use-router
-          v-if="numberOfPages > 1" />
+          v-if="numberOfPages > 1"></b-pagination-nav>
       </v-wait>
     </div>
     <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
-      <div v-html="$t('batchSearchResults.errorMessage')" />
+      <div v-html="$t('batchSearchResults.errorMessage')"></div>
       <div v-b-toggle.error-message class="my-2 cursor-pointer" @click="showErrorMessage = !showErrorMessage">
-        <fa :icon="showErrorMessage ? 'angle-down' : 'angle-right'" class="mr-2" />
-        <span>{{ $t('batchSearchResults.seeErrorMessage') }}</span>
+        <fa :icon="showErrorMessage ? 'angle-down' : 'angle-right'" class="mr-2"></fa>
+        <span>
+          {{ $t('batchSearchResults.seeErrorMessage') }}
+        </span>
       </div>
       <b-collapse id="error-message" class="code px-3 py-1 text-monospace text-break">
         {{ this.meta.errorMessage }}

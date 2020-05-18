@@ -40,7 +40,6 @@
         </selectable-dropdown>
       </div>
       <div class="px-0" v-if="settings">
-        <search-settings placement="bottomleft" :size="size" :container="uniqueId" />
         <shortkeys-modal class="d-none d-md-inline"></shortkeys-modal>
       </div>
     </div>
@@ -62,7 +61,6 @@ import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 
 import elasticsearch from '@/api/elasticsearch'
-import SearchSettings from '@/components/SearchSettings'
 import settings from '@/utils/settings'
 import ShortkeysModal from '@/components/ShortkeysModal'
 
@@ -95,7 +93,6 @@ export default {
     }
   },
   components: {
-    SearchSettings,
     ShortkeysModal
   },
   data () {

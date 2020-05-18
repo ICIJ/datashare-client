@@ -29,12 +29,6 @@ describe('SearchBar.vue', function () {
     expect(wrapper.contains('.search-bar')).toBeTruthy()
   })
 
-  it('should display the search-settings component', async () => {
-    await wrapper.setProps({ settings: true })
-
-    expect(wrapper.contains('.search-bar search-settings-stub')).toBeTruthy()
-  })
-
   it('should display the shortkeys-modal component', async () => {
     await wrapper.setProps({ settings: true })
 

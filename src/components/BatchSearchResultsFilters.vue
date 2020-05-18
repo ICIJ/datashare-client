@@ -35,32 +35,39 @@
               </span>
               <span class="batch-search-results-filters__queries__dropdown__item__count">
                 <b-badge class="px-2" variant="tertiary" pill>
-                {{ $n(item.count) }}
-              </b-badge>
+                  {{ $n(item.count) }}
+                </b-badge>
               </span>
               <span
                 class="batch-search-results-filters__queries__dropdown__item__search"
                 @click.stop.prevent="executeSearch(item.label)">
-                <fa icon="search" class="text-tertiary" />
+                <fa icon="search" class="text-tertiary"></fa>
               </span>
             </div>
-            <b-tooltip placement="bottom" :target="item.label" :title="item.label" />
+            <b-tooltip placement="bottom" :target="item.label" :title="item.label"></b-tooltip>
           </template>
         </selectable-dropdown>
         <div
-          class="flex-grow-1 batch-search-results-filters__queries__list px-3 py-1"
-          :key="query.label"
+          class="flex-grow-1 batch-search-results-filters__queries__dropdown px-3 py-1"
+          :key="item.label"
           v-else
-          v-for="query in queries">
-          <div class="d-flex" :id="query.label">
+          v-for="item in queries">
+          <div class="d-flex batch-search-results-filters__queries__dropdown__item" :id="item.label">
             <span class="flex-grow-1 text-truncate">
-              {{ query.label }}
+              {{ item.label }}
             </span>
-            <b-badge class="my-1 px-2" variant="tertiary" pill>
-              {{ $n(query.count) }}
-            </b-badge>
+            <span class="batch-search-results-filters__queries__dropdown__item__count">
+              <b-badge class="px-2" variant="tertiary" pill>
+                {{ $n(item.count) }}
+              </b-badge>
+            </span>
+            <span
+              class="batch-search-results-filters__queries__dropdown__item__search"
+              @click.stop.prevent="executeSearch(item.label)">
+              <fa icon="search" class="text-tertiary"></fa>
+            </span>
           </div>
-          <b-tooltip placement="bottom" :target="query.label" :title="query.label" />
+          <b-tooltip placement="bottom" :target="item.label" :title="item.label"></b-tooltip>
         </div>
       </div>
     </div>
@@ -195,6 +202,7 @@ export default {
 
           &:hover .batch-search-results-filters__queries__dropdown__item__search {
             color: inherit;
+            cursor: pointer;
             display: block;
           }
 

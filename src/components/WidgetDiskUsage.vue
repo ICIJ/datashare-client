@@ -54,8 +54,7 @@ export default {
   },
   mounted () {
     this.$store.subscribe(async ({ type }) => {
-      // The index changed
-      if (type === 'insights/index') {
+      if (type === 'insights/project') {
         await this.loadData()
       }
     })

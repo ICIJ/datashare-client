@@ -73,7 +73,7 @@ describe('DocumentStore', () => {
 
     await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
 
-    expect(store.getters['document/namedEntities'].length).toBe(2)
+    expect(store.getters['document/namedEntities']).toHaveLength(2)
     expect(store.getters['document/namedEntities'][0].raw._source.mention).toBe('entity_01')
     expect(store.getters['document/namedEntities'][0].raw._routing).toBe(id)
     expect(store.getters['document/namedEntities'][1].raw._source.mention).toBe('entity_03')

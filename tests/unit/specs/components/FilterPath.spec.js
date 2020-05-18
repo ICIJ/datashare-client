@@ -33,33 +33,50 @@ describe('FilterPath.vue', () => {
   it('should display an empty tree', async () => {
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.tree-node').length).toEqual(0)
+    expect(wrapper.findAll('.tree-node')).toHaveLength(0)
   })
 
   it('should display a not empty tree', async () => {
-    await letData(es).have(new IndexedDocument('/data/folder_01/doc_01', project)).commit()
-    await letData(es).have(new IndexedDocument('/data/folder_02/doc_02', project)).commit()
-    await letData(es).have(new IndexedDocument('/data/folder_03/doc_03', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_01/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_02/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_03/document', project)).commit()
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.tree-node').length).toEqual(3)
+    expect(wrapper.findAll('.tree-node')).toHaveLength(3)
   })
 
   it('should display the first level of the tree', async () => {
-    await letData(es).have(new IndexedDocument('/data/folder_01/doc_01', project)).commit()
-    await letData(es).have(new IndexedDocument('/data/folder_02/doc_02', project)).commit()
-    await letData(es).have(new IndexedDocument('/data/folder_02/folder_03/doc_03', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_01/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_02/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_02/folder_03/document', project)).commit()
 
     await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.tree-node').length).toEqual(2)
+    expect(wrapper.findAll('.tree-node')).toHaveLength(2)
+  })
+
+  it('should display all folders of the first level of the tree', async () => {
+    await letData(es).have(new IndexedDocument('/data/folder_01/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_02/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_03/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_04/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_05/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_06/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_07/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_08/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_09/document', project)).commit()
+    await letData(es).have(new IndexedDocument('/data/folder_10/document', project)).commit()
+
+    await wrapper.vm.root.aggregate()
+
+    expect(wrapper.findAll('.tree-node')).toHaveLength(10)
   })
 
   describe('filter the filter', () => {
     it('should filter items according to the path filter search', async () => {
-      await letData(es).have(new IndexedDocument('/data/folder_01/document_01', project)).commit()
-      await letData(es).have(new IndexedDocument('/data/folder_02/document_02', project)).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_01/document', project)).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_02/document', project)).commit()
 
       const pathFilter = find(store.getters['search/instantiatedFilters'], { name: 'path' })
       pathFilter.value = ['/data/folder_01/']
@@ -70,9 +87,9 @@ describe('FilterPath.vue', () => {
     })
 
     it('should filter on a specific folder even if another folder starts with the same name', async () => {
-      await letData(es).have(new IndexedDocument('/data/folder_1/document_01', project)).commit()
-      await letData(es).have(new IndexedDocument('/data/folder_11/document_02', project)).commit()
-      await letData(es).have(new IndexedDocument('/data/folder_22/document_03', project)).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_1/document', project)).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_11/document', project)).commit()
+      await letData(es).have(new IndexedDocument('/data/folder_22/document', project)).commit()
 
       const pathFilter = find(store.getters['search/instantiatedFilters'], { name: 'path' })
       pathFilter.value = ['/data/folder_1/']

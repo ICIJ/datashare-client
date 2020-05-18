@@ -1,23 +1,29 @@
 <template>
-  <div class="search-document-navbar px-3 py-2 bg-dark text-white text-nowrap">
+  <div class="search-document-navbar px-3 py-2 bg-dark text-white text-nowrap" :class="{ 'search-document-navbar--shrinked': isShrinked }">
     <router-link
-      :to="{ name: 'search', query }"
-      class="search-document-navbar__back text-truncate pr-1"
+      class="search-document-navbar__back pr-1"
       :class="{ 'flex-grow-1': !isShrinked }"
+      :to="{ name: 'search', query }"
+      :title="$t('search.back')"
+      v-b-tooltip.right="{ customClass: isShrinked ? '' : 'd-none' }"
       v-shortkey="getKeys('backToSearchResults')"
       @shortkey.native="getAction('backToSearchResults')">
-      <fa icon="chevron-circle-left" class="mr-1" />
-      <span v-if="!isShrinked">
-        {{ $t('search.back') }}
-      </span>
+      <fa icon="chevron-circle-left"></fa>
+      <transition name="slide-x">
+        <span v-if="!isShrinked" class="search-document-navbar__back__label ml-2">
+          {{ $t('search.back') }}
+        </span>
+      </transition>
     </router-link>
-    <b-btn v-if="isShrinked" class="search-document-navbar__title text-left flex-grow-1 px-1 text-white py-0 text-truncate" @click="scrollToTop" variant="link">
-      {{ doc.title }}
-    </b-btn>
+    <transition name="slide-x">
+      <b-btn v-if="isShrinked" class="search-document-navbar__title text-left font-weight-bold flex-grow-1 px-2 text-white py-0 text-truncate" @click="scrollToTop" variant="link">
+        {{ doc.title }}
+      </b-btn>
+    </transition>
     <div v-if="doc" class="ml-auto d-flex align-items-center">
       <span class="search-document-navbar__nav" v-if="documentIndex > -1">
         <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
-          <fa icon="angle-left" class="mr-1" />
+          <fa icon="angle-left" class="mr-1"></fa>
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.previous.label') }}
           </span>
@@ -29,7 +35,7 @@
           <span class="d-sm-none d-md-inline">
             {{ $t('search.nav.next.label') }}
           </span>
-          <fa icon="angle-right" class="ml-1" />
+          <fa icon="angle-right" class="ml-1"></fa>
         </button>
         <b-tooltip target="next-document-button" triggers="hover">
           <span v-html="nextTooltip"></span>
@@ -54,7 +60,7 @@
         </b-popover>
       </template>
       <b-btn variant="link" class="text-white py-0 px-2 px-2 py-0 search-document-navbar__share" id="popover-document-share" size="sm">
-        <fa icon="share-alt" />
+        <fa icon="share-alt"></fa>
       </b-btn>
       <b-popover target="popover-document-share"
                  triggers="click blur"
@@ -65,20 +71,20 @@
           card
           no-fade
           :title="doc.slicedNameToString"
-          :link="documentLink" />
+          :link="documentLink"></advanced-link-form>
       </b-popover>
       <b-tooltip target="popover-document-share" triggers="hover">
         {{ $t('search.nav.share') }}
       </b-tooltip>
       <document-actions
-        :document="doc"
         class="search-document-navbar__actions d-flex"
-        star-btn-class="btn btn-link text-white py-0 px-2 order-1"
-        popup-btn-class="btn btn-link text-white py-0 px-2 order-1"
+        :document="doc"
         download-btn-class="btn btn-secondary order-2 btn-sm py-0 ml-1"
         download-btn-label
+        :is-download-allowed="isDownloadAllowed"
         no-btn-group
-        :is-download-allowed="isDownloadAllowed" />
+        popup-btn-class="btn btn-link text-white py-0 px-2 order-1"
+        star-btn-class="btn btn-link text-white py-0 px-2 order-1"></document-actions>
     </div>
   </div>
 </template>
@@ -230,6 +236,37 @@ export default {
       color: inherit;
       display: inline;
       font-size: $font-size-sm;
+    }
+
+    &__back .svg-inline--fa {
+      transition: 500ms transform;
+    }
+
+    &--shrinked &__back .svg-inline--fa {
+      transform: scale(1.3)
+    }
+
+    &__back__label {
+      position: absolute;
+    }
+
+    &__title, &__back__label {
+      display: inline-block;
+
+      &.slide-x-enter-active,
+      &.slide-x-leave-active {
+        transition: 500ms;
+      }
+
+      &.slide-x-enter {
+        opacity: 0;
+        transform: translateY(100%);
+      }
+
+      &.slide-x-leave-to {
+        opacity: 0;
+        transform: translateY(-100%);
+      }
     }
 
     &__recommended-by {

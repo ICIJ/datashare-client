@@ -113,9 +113,8 @@ describe('BatchSearchResultsFilters.vue', () => {
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
 
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
-    expect(wrapper.find('.batch-search-results-filters__queries__list').exists()).toBeTruthy()
-    expect(wrapper.find('.batch-search-results-filters__queries__list').text()).toMatch(/^query_04/)
-    expect(wrapper.find('.batch-search-results-filters__queries__dropdown').exists()).toBeFalsy()
+    expect(wrapper.find('.batch-search-results-filters__queries__dropdown').exists()).toBeTruthy()
+    expect(wrapper.find('.batch-search-results-filters__queries__dropdown').text()).toMatch(/^query_04/)
   })
 
   it('should display a selectable dropdown if there are more than one query', async () => {
@@ -133,8 +132,8 @@ describe('BatchSearchResultsFilters.vue', () => {
     await store.dispatch('batchSearch/getBatchSearches')
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
 
-    expect(wrapper.findAll('.batch-search-results-filters__queries__list span.badge')).toHaveLength(1)
-    expect(wrapper.find('.batch-search-results-filters__queries__list span.badge').text()).toBe('12')
+    expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown span.badge')).toHaveLength(1)
+    expect(wrapper.find('.batch-search-results-filters__queries__dropdown span.badge').text()).toBe('12')
   })
 
   it('should add badge with query number of results on selectable dropdown', async () => {

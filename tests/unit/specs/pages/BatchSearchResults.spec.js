@@ -135,6 +135,12 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__download').exists()).toBeTruthy()
   })
 
+  it('should NOT display the download button if no results', async () => {
+    await store.commit('batchSearch/results', [])
+
+    expect(wrapper.find('.batch-search-results__download').exists()).toBeFalsy()
+  })
+
   it('should display a button to delete the batchSearch', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()

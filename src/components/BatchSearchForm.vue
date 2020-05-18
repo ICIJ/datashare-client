@@ -64,7 +64,9 @@
           </b-form-group>
           <div v-b-toggle.advanced-filters class="batch-search-form__advanced-filters my-2">
             <fa :icon="advancedFiltersIcon" class="fa-fw" />
-            <span>{{ $t('batchSearch.advancedFilters') }}</span>
+            <span>
+              {{ $t('batchSearch.advancedFilters') }}
+            </span>
           </div>
           <b-collapse id="advanced-filters" v-model="showAdvancedFilters" class="pt-2">
             <b-form-group
@@ -150,7 +152,13 @@
                   <b-tooltip placement="right" :target="item" :title="item" />
                 </template>
               </selectable-dropdown>
-              <b-badge v-for="(path, index) in paths" :key="path" class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters" variant="warning" pill @click.prevent="deletePath(index)">
+              <b-badge
+                class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
+                @click.prevent="deletePath(index)"
+                :key="path"
+                pill
+                v-for="(path, index) in paths"
+                variant="warning">
                 <fa icon="times-circle" />
                 {{ path }}
               </b-badge>
@@ -261,7 +269,7 @@ export default {
     }
   },
   created () {
-    const projects = this.$config.get('datashare_projects', [])
+    const projects = [...this.$config.get('datashare_projects', [])].sort()
     this.$set(this, 'projects', map(projects, value => { return { value, text: value } }))
     this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
   },
@@ -309,17 +317,18 @@ export default {
       this.paths.splice(index, 1)
     },
     resetForm () {
-      this.$set(this, 'name', '')
       this.$set(this, 'csvFile', null)
       this.$set(this, 'description', '')
-      this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
-      this.$set(this, 'phraseMatch', true)
-      this.$set(this, 'fuzziness', 0)
       this.$set(this, 'fileType', '')
       this.$set(this, 'fileTypes', [])
+      this.$set(this, 'fuzziness', 0)
+      this.$set(this, 'name', '')
       this.$set(this, 'path', '')
       this.$set(this, 'paths', [])
+      this.$set(this, 'phraseMatch', true)
+      this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
       this.$set(this, 'published', true)
+      this.$set(this, 'showAdvancedFilters', false)
     },
     async onSubmit () {
       await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, csvFile: this.csvFile, description: this.description, project: this.project, phraseMatch: this.phraseMatch, fuzziness: this.fuzziness, fileTypes: this.fileTypes, paths: this.paths, published: this.published })

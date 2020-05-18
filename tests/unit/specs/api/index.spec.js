@@ -212,7 +212,7 @@ describe('Datashare backend client', () => {
       expect(err).toEqual(error)
     }
 
-    expect(mockCallback.mock.calls.length).toBe(1)
+    expect(mockCallback.mock.calls).toHaveLength(1)
     expect(mockCallback.mock.calls[0][0]).toEqual(error)
   })
 })

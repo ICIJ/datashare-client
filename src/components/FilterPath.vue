@@ -43,7 +43,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .filter__path__scrollbar {
     max-height: 250px;
   }

@@ -17,11 +17,11 @@ export default class FilterPath extends FilterDocument {
 
   body (body, options) {
     return body.agg('terms', 'dirname.tree', this.key, {
-      size: 1000,
       order: { _key: 'asc' },
       exclude: Murmur.config.get('dataDir') + '/.*/.*',
       include: Murmur.config.get('dataDir') + '/.*',
-      ...options
+      ...options,
+      size: 1000
     })
   }
 }

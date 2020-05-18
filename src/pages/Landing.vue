@@ -34,14 +34,6 @@ export default {
     Hook,
     ProjectCards,
     SearchBar
-  },
-  data () {
-    return {
-      projects: []
-    }
-  },
-  created () {
-    this.$set(this, 'projects', this.$config.get('datashare_projects', []))
   }
 }
 </script>

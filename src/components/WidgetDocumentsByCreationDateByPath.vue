@@ -34,20 +34,23 @@ export default {
   },
   data () {
     return {
-      paths: [{ label: this.$t('general.all'), folder: '' }]
+      paths: []
     }
   },
   computed: {
     ...mapState('insights', ['project'])
   },
-  mounted () {
-    this.$nextTick(() => {
+  watch: {
+    project () {
       this.loadPath()
-      this.setSelectedPath(first(this.paths))
-    })
+    }
+  },
+  mounted () {
+    this.$nextTick(() => this.loadPath())
   },
   methods: {
     async loadPath () {
+      const initialPath = [{ label: this.$t('general.all'), folder: '' }]
       const options = {
         exclude: `${this.$config.get('dataDir', '')}/.*/.*`,
         include: `${this.$config.get('dataDir', '')}/.*`,
@@ -59,7 +62,8 @@ export default {
         const folder = replace(item.key, this.$config.get('dataDir', '') + '/', '')
         return { label: folder, folder }
       })
-      this.$set(this, 'paths', concat(this.paths, paths))
+      this.$set(this, 'paths', concat(initialPath, paths))
+      this.setSelectedPath(first(this.paths))
     },
     setSelectedPath (path) {
       this.$refs.widgetDocumentsByCreationDate.setSelectedPath(path)

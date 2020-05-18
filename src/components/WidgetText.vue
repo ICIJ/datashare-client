@@ -8,6 +8,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex'
 import settings from '@/utils/settings'
 
 export default {
@@ -17,9 +18,23 @@ export default {
       type: Object
     }
   },
+  data () {
+    return {
+      content: ''
+    }
+  },
+  async mounted () {
+    this.content = await this.applyPipelineChain('widget-text')(this.widgetContent)
+  },
   computed: {
-    content () {
-      return this.widget.content || this.$config.get('widgetTextDefaultContent', settings.widgetTextDefaultContent)
+    ...mapGetters('pipelines', {
+      applyPipelineChain: 'applyPipelineChainByCategory'
+    }),
+    defaultContent () {
+      return this.$config.get('widgetTextDefaultContent', settings.widgetTextDefaultContent)
+    },
+    widgetContent () {
+      return this.widget.content || this.defaultContent
     }
   }
 }

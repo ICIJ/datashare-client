@@ -1,5 +1,5 @@
 <template>
-  <b-badge variant="warning" pill class="mr-2 pl-1 search-results-header__applied-filters__filter" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()">
+  <b-badge variant="warning" pill class="mr-2 pl-1 applied-search-filters-item" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()">
     <fa icon="times-circle" />
     {{ filter.label | displayUser }}
   </b-badge>
@@ -9,7 +9,7 @@
 import displayUser from '@/filters/displayUser'
 
 export default {
-  name: 'SearchResultsAppliedFilter',
+  name: 'AppliedSearchFiltersItem',
   props: {
     filter: {
       type: Object
@@ -33,7 +33,7 @@ export default {
 </script>
 
 <style lang="scss">
-  .search-results-header__applied-filters__filter {
+  .applied-search-filters-item {
     cursor: pointer;
 
     &.strikethrough {
