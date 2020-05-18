@@ -32,7 +32,7 @@ Frequently Asked Questions - **General**
 * [Can I download a document from Datashare?](https://icij.gitbook.io/datashare/faq-general/can-i-download-a-document)
 * [Can I remove document\(s\) from Datashare?](https://icij.gitbook.io/datashare/faq-general/can-i-remove-a-document-from-datashare)
 * [How can I install Datashare on a Windows prior to Windows 10 Pro?](https://icij.gitbook.io/datashare/faq-general/how-can-i-install-datashare-on-a-windows-prior-to-windows-10-pro)
-* [Do you recommend OS or machines for large corpuses?](faq-general/do-you-recommend-os-or-machines-for-large-corpuses.md)
+* [Do you recommend OS or machines for large corpuses?](https://icij.gitbook.io/datashare/faq-general/do-you-recommend-os-or-machines-for-large-corpuses)
 * [How can I contact ICIJ for help, bug reporting or suggestions?](https://icij.gitbook.io/datashare/faq-general/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions)
 
 Frequently Asked Questions - **Errors**
