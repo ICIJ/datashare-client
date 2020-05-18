@@ -82,9 +82,7 @@ export default {
               <fa icon="circle" />
               <fa icon="sad-tear" class="text-secondary" transform="shrink-6" />
             </font-awesome-layers>
-            <span class="px-2 error__container__heading__code__value">
-              {{ code }}
-            </span>
+            <span class="px-2 error__container__heading__code__value">{{ code }}</span>
           </span>
           {{ titleAsString || $t('error.title') }}
         </h1>
