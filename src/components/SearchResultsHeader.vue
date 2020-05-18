@@ -83,14 +83,14 @@ export default {
       searchSizes: [10, 25, 50, 100],
       searchSorts: [
         'relevance',
-        'dateNewest',
-        'dateOldest',
         'creationDateNewest',
         'creationDateOldest',
         'sizeLargest',
         'sizeSmallest',
         'path',
-        'pathReverse'
+        'pathReverse',
+        'dateNewest',
+        'dateOldest'
       ]
     }
   },

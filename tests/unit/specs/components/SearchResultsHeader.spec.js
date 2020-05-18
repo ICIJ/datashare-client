@@ -85,7 +85,7 @@ describe('SearchResultsHeader.vue', () => {
   })
 
   it('should change the searchSort and searchSize via the dropdown', () => {
-    wrapper.findAll('.search-results-header__settings__sort__dropdown .dropdown-item').at(5).trigger('click')
+    wrapper.findAll('.search-results-header__settings__sort__dropdown .dropdown-item').at(3).trigger('click')
     expect(wrapper.vm.searchSort).toBe('sizeLargest')
     wrapper.findAll('.search-results-header__settings__size__dropdown .dropdown-item').at(3).trigger('click')
     expect(wrapper.vm.searchSize).toBe(100)
