@@ -186,9 +186,7 @@ export default {
 
     &__queries {
       &__sort {
-        & .dropdown-menu {
-          z-index: 1001;
-        }
+        z-index: 1001;
       }
 
       &__dropdown {
