@@ -24,7 +24,7 @@ export default {
     }
   },
   async mounted () {
-    this.content = await this.applyPipelineChain('widget-text')(this.widgetContent)
+    this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
   },
   computed: {
     ...mapGetters('pipelines', {
