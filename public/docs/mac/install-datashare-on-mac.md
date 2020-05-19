@@ -11,7 +11,7 @@ You have **2 options:**
 
 
 
-### Standard \(less recent than OS X El Capitan 10.11\)
+### Standard \(High Sierra and more recent versions\)
 
  0. Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. Go to **Applications** and put '**Datashare**' in the trash.
 
