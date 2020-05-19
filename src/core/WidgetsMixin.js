@@ -35,19 +35,8 @@ const WidgetsMixins = superclass => class extends superclass {
     return this.toggleForProject({
       project,
       // Conditional callbacks
-      withFn: () => {
-        // Unregister existing widget
-        this.unregisterWidget(name)
-        // Register the new one and ensure the "name" of the widget
-        // is the same than the one we replace
-        this.registerWidget({ ...options, name })
-      },
-      withoutFn: () => {
-        // Unregister existing widget
-        this.unregisterWidget(name)
-        // Restore the initial valu
-        this.registerWidget({ ...initialOptions })
-      }
+      withFn: () => this.replaceWidget(name, options),
+      withoutFn: () => this.replaceWidget(name, initialOptions)
     })
   }
 }
