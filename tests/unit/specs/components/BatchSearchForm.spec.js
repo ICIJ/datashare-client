@@ -223,6 +223,14 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
       expect(wrapper.vm.hideSuggestionsPaths).toBeCalled()
     })
+
+    it('should call retrieveFileTypesAndPath', async () => {
+      jest.spyOn(wrapper.vm, 'retrieveFileTypesAndPath')
+
+      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+
+      expect(wrapper.vm.retrieveFileTypesAndPath).toBeCalled()
+    })
   })
 
   describe('should load contentTypes and paths from the current project', () => {

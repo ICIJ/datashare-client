@@ -260,12 +260,10 @@ export default {
       this.$set(this, 'allPaths', [])
       this.hideSuggestionsFileTypes()
       this.hideSuggestionsPaths()
+      this.retrieveFileTypesAndPath()
     },
     showAdvancedFilters () {
-      if (this.showAdvancedFilters && isEmpty(this.allFileTypes) && isEmpty(this.allPaths)) {
-        this.retrieveFileTypes()
-        this.retrievePaths()
-      }
+      this.retrieveFileTypesAndPath()
     }
   },
   created () {
@@ -295,6 +293,14 @@ export default {
     deleteFileType (index) {
       this.fileTypes.splice(index, 1)
     },
+    async retrieveFileTypes () {
+      const aggTypes = await this.aggregate('contentType', 'contentType')
+      each(aggTypes, aggType => {
+        const extensions = has(types, aggType) ? types[aggType].extensions : []
+        const label = has(types, aggType) ? types[aggType].label : aggType
+        this.allFileTypes.push({ extensions, label, mime: aggType })
+      })
+    },
     selectPath (path) {
       this.selectedPath = path || this.selectedPath
     },
@@ -315,6 +321,16 @@ export default {
     },
     deletePath (index) {
       this.paths.splice(index, 1)
+    },
+    async retrievePaths () {
+      const aggPaths = await this.aggregate('dirname', 'byDirname')
+      this.$set(this, 'allPaths', this.buildTreeFromPaths(aggPaths))
+    },
+    retrieveFileTypesAndPath () {
+      if (this.showAdvancedFilters && isEmpty(this.allFileTypes) && isEmpty(this.allPaths)) {
+        this.retrieveFileTypes()
+        this.retrievePaths()
+      }
     },
     resetForm () {
       this.$set(this, 'csvFile', null)
@@ -367,18 +383,6 @@ export default {
         return arr
       })
       return uniq(flatten(tree))
-    },
-    async retrievePaths () {
-      const aggPaths = await this.aggregate('dirname', 'byDirname')
-      this.$set(this, 'allPaths', this.buildTreeFromPaths(aggPaths))
-    },
-    async retrieveFileTypes () {
-      const aggTypes = await this.aggregate('contentType', 'contentType')
-      each(aggTypes, aggType => {
-        const extensions = has(types, aggType) ? types[aggType].extensions : []
-        const label = has(types, aggType) ? types[aggType].label : aggType
-        this.allFileTypes.push({ extensions, label, mime: aggType })
-      })
     }
   }
 }
