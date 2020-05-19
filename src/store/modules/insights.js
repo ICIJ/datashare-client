@@ -42,6 +42,9 @@ export const getters = {
   getFilter (state, getters) {
     return predicate => find(getters.instantiatedFilters, predicate)
   },
+  getWidget (state, getters) {
+    return predicate => find(state.widgets, predicate)
+  },
   instantiatedFilters (state) {
     const filter = new FilterPath({ name: 'path', key: 'byDirname', icon: 'hdd' })
     filter.bindState(state)
