@@ -29,7 +29,21 @@ import settings from '@/utils/settings'
 class Base {}
 const Behaviors = compose(FiltersMixin, HooksMixin, PipelinesMixin, ProjectsMixin, WidgetsMixin)(Base)
 
-export default class Core extends Behaviors {
+/**
+  @class
+  @classdesc Class representing the core application with public methods for plugins.
+  @mixes FiltersMixin
+  @mixes HooksMixin
+  @mixes PipelinesMixin
+  @mixes ProjectsMixin
+  @mixes WidgetsMixin
+  @typicalname datashare
+*/
+class Core extends Behaviors {
+  /**
+   * Create an application
+   * @param {Object} LocalVue - The Vue class to instantiate the application with.
+   */
   constructor (LocalVue = Vue) {
     super(LocalVue)
     this.LocalVue = LocalVue
@@ -38,10 +52,20 @@ export default class Core extends Behaviors {
     // Setup deferred state
     this.defer()
   }
+  /**
+   * Add a Vue plugin to the instance's LocalVue
+   * @param {Object} Plugin - The actual Vue plugin class
+   * @param {Object} options - Option to pass to the plugin
+   * @returns {Core} the current instance of Core
+   */
   use (Plugin, options) {
     this.LocalVue.use(Plugin, options)
     return this
   }
+  /**
+   * Configure all default Vue plugins for this application
+   * @returns {Core} the current instance of Core
+   */
   useAll () {
     this.useI18n()
     this.useBootstrapVue()
@@ -51,6 +75,10 @@ export default class Core extends Behaviors {
     this.useCore()
     return this
   }
+  /**
+   * Configure vue-i18n plugin
+   * @returns {Core} the current instance of Core
+   */
   useI18n () {
     this.use(VueI18n)
     this.i18n = new VueI18n({
@@ -62,6 +90,10 @@ export default class Core extends Behaviors {
     })
     return this
   }
+  /**
+   * Configure bootstrap-vue plugin
+   * @returns {Core} the current instance of Core
+   */
   useBootstrapVue () {
     this.use(BootstrapVue, {
       BPopover: {
@@ -70,12 +102,20 @@ export default class Core extends Behaviors {
     })
     return this
   }
+  /**
+   * Configure vue-router plugin
+   * @returns {Core} the current instance of Core
+   */
   useRouter () {
     this.use(VueRouter)
     this.router = new VueRouter(router)
     guards(this)
     return this
   }
+  /**
+   * Configure most common Vue plugins (Murmur, VueProgressBar, VueShortkey, VueScrollTo and VueCalendar)
+   * @returns {Core} the current instance of Core
+   */
   useCommons () {
     // Common plugins
     this.use(Murmur)
@@ -86,11 +126,21 @@ export default class Core extends Behaviors {
     // dynamic chunk import with third party modules.
     // @see https://github.com/nathanreyes/v-calendar/issues/413#issuecomment-530633437
     this.use(VCalendar, { componentPrefix: 'vc' })
+    return this
   }
+  /**
+   * Configure vue-wait plugin
+   * @returns {Core} the current instance of Core
+   */
   useWait () {
     this.use(VueWait)
     this.wait = new VueWait({ useVuex: true })
+    return this
   }
+  /**
+   * Add a $core property to the instance's Vue
+   * @returns {Core} the current instance of Core
+   */
   useCore () {
     const core = this
     this.use(class VueCore {
@@ -98,7 +148,15 @@ export default class Core extends Behaviors {
         Vue.prototype.$core = core
       }
     })
+    return this
   }
+  /**
+   * Load settings from the server and instantiate most the application configuration.
+   * @async
+   * @fullfil {Core} - The instance of the core application
+   * @reject {Object} - The Error object
+   * @returns {Promise<Object>}
+   */
   async configure () {
     try {
       // Get the config object
@@ -127,6 +185,11 @@ export default class Core extends Behaviors {
       return this.ready && this._readyReject(error)
     }
   }
+  /**
+   * Mount the instance's vue application
+   * @param {String} [selector=#app] - Query selector to the mounting point
+   * @returns {Vue} The instantiated Vue
+   */
   mount (selector = '#app') {
     // Render function returns a router-view component by default
     const render = h => h('router-view')
@@ -142,6 +205,9 @@ export default class Core extends Behaviors {
     // Return an instance of the Vue constructor we receive.
     return vm
   }
+  /**
+   * Build a promise to be resolved when the application is configured.
+   */
   defer () {
     this._ready = new Promise((resolve, reject) => {
       this._readyResolve = resolve
@@ -150,12 +216,22 @@ export default class Core extends Behaviors {
     // Notify the document the core is ready
     this._ready.then(() => this.dispatch('ready'))
   }
+  /**
+   * Dispatch an event from the document root, passing the core application through event message.
+   * @param {String} name - Name of the event to fire
+   * @param {...Mixed} args - Additional params to pass to the event
+   * @returns {Core} the current instance of Core
+   */
   dispatch (name, ...args) {
-    // Add "core" property but kept "app" for retro-compatibility
-    // @TODO remove this property
     dispatch(name, { app: this, core: this, ...args })
     return this
   }
+  /**
+   * Get the current signed user. If none, redirect to the login page.
+   * @async
+   * @fullfil {Object} Current user
+   * @type {Promise<Object>}
+   */
   async getUser () {
     try {
       return await this.api.getUser()
@@ -163,38 +239,77 @@ export default class Core extends Behaviors {
       await this.router.push('login')
     }
   }
+  /**
+   * Get a promise that is resolved when the application is ready
+   * @fullfil {Object} The actual application core instance.
+   * @type {Promise<Object>}
+   */
   get ready () {
     if (!this._ready) {
       this.defer()
     }
     return this._ready
   }
-  // Add "core" getter but kept "app" for retro-compatibility
-  // @TODO remove this getter
+  /**
+   * The application core instance. Deprecated in favor or the `app` property.
+   * @type {Core}
+   * @deprecated
+   */
   get app () {
     return this
   }
+  /**
+   * The application core instance
+   * @type {Core}
+   */
   get core () {
     return this
   }
+  /**
+   * The Vue class to instantiate the application with
+   * @type {Vue}
+   */
   get localVue () {
     return this.LocalVue
   }
+  /**
+   * The Vuex instance
+   * @type {Vuex.Store}
+   */
   get store () {
     return store
   }
+  /**
+   * The Auth module instance
+   * @type {Auth}
+   */
   get auth () {
     this._auth = this._auth || new Auth()
     return this._auth
   }
+  /**
+   * The configuration object provided by Murmur
+   * @type {Object}
+   */
   get config () {
     return Murmur.config
   }
+  /**
+   * The Datashare api interface
+   * @type {Api}
+   */
   get api () {
     this._api = this._api || new Api()
     return this._api
   }
+  /**
+   * instantiate a Core class (useful for chaining usage or mapping)
+   * @param {...Mixed} options - Options to pass to the Core constructor
+   * @returns {Core}
+   */
   static init (...options) {
     return new Core(...options)
   }
 }
+
+export default Core
