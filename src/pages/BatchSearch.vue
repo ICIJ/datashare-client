@@ -28,7 +28,10 @@
               {{ $tc('batchSearch.query', keys(item.queries).length) }}
             </template>
             <template v-slot:cell(state)="{ item }">
-              <b-badge :variant="item.state | toVariant">
+              <b-badge
+                :class="{ 'cursor-pointer': item.state === 'FAILURE' }"
+                @click.prevent="openErrorMessage(item)"
+                :variant="item.state | toVariant">
                 {{ capitalize(item.state) }}
               </b-badge>
             </template>
@@ -45,6 +48,12 @@
         </v-wait>
       </div>
     </div>
+    <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
+      <div v-html="$t('batchSearchResults.errorMessage')"></div>
+      <div class="batch-search__modal mt-3 px-3 py-1 text-monospace text-break">
+        {{ this.errorMessage }}
+      </div>
+    </b-modal>
   </div>
 </template>
 
@@ -70,7 +79,8 @@ export default {
           height: '1em',
           boxes: [['10%', '80%']]
         }
-      ]
+      ],
+      errorMessage: ''
     }
   },
   computed: {
@@ -150,12 +160,18 @@ export default {
   methods: {
     capitalize,
     keys,
-    moment
+    moment,
+    openErrorMessage (item) {
+      if (item.state === 'FAILURE') {
+        this.errorMessage = item.errorMessage
+        this.$bvModal.show('error-modal')
+      }
+    }
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .batch-search {
      & .batch-search-form {
        .card {
@@ -188,5 +204,14 @@ export default {
         padding: $spacer * 3 0;
       }
     }
+
+    &__modal {
+      background-color: black;
+      color: white;
+    }
+  }
+
+  .cursor-pointer {
+    cursor: pointer;
   }
 </style>

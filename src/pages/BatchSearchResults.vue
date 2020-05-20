@@ -394,7 +394,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .batch-search-results {
   &__queries {
     .table-responsive {
@@ -413,7 +413,7 @@ export default {
 }
 
 .code {
-  background: black;
+  background-color: black;
   color: white;
 }
 
