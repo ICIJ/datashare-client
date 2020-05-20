@@ -176,15 +176,9 @@
     </div>
     <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
       <div v-html="$t('batchSearchResults.errorMessage')"></div>
-      <div v-b-toggle.error-message class="my-2 cursor-pointer" @click="showErrorMessage = !showErrorMessage">
-        <fa :icon="showErrorMessage ? 'angle-down' : 'angle-right'" class="mr-2"></fa>
-        <span>
-          {{ $t('batchSearchResults.seeErrorMessage') }}
-        </span>
-      </div>
-      <b-collapse id="error-message" class="code px-3 py-1 text-monospace text-break">
+      <div class="code mt-3 px-3 py-1 text-monospace text-break">
         {{ this.meta.errorMessage }}
-      </b-collapse>
+      </div>
     </b-modal>
   </div>
 </template>
@@ -270,7 +264,6 @@ export default {
       queries: [],
       sort: settings.batchSearchResults.sort,
       order: settings.batchSearchResults.order,
-      showErrorMessage: false,
       published: false,
       isMyBatchSearch: false
     }
