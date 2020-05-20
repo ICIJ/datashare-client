@@ -479,7 +479,7 @@ export default {
 
     &__version, &__data-location {
       color: $app-sidebar-link-color;
-      padding: 0 $spacer * 1.5 $spacer;
+      padding: 0 $spacer * 1.7 $spacer $spacer * 1.5;
       font-size: $font-size-sm;
     }
   }

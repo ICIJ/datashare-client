@@ -1,6 +1,6 @@
 <template>
   <div class="mounted-data-location d-flex align-items-center px-1">
-    <div class="d-flex align-items-center flex-grow-1" @click="showTreeView()">
+    <div class="d-flex align-items-center flex-grow-1 mw-100" @click="showTreeView()">
       <fa icon="folder" class="ml-1 mr-2 text-muted mounted-data-location__icon" />
       <div class="flex-grow-1 text-monospace px-0 py-1 text-truncate mounted-data-location__value" :id="valueId">
         {{ dataDir }}
