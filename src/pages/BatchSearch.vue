@@ -100,7 +100,8 @@ export default {
         this.projectNameField,
         {
           key: 'name',
-          label: this.$t('batchSearch.name')
+          label: this.$t('batchSearch.name'),
+          sortable: true
         },
         {
           key: 'description',
