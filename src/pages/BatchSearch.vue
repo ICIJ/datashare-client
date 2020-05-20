@@ -88,6 +88,13 @@ export default {
         sortable: true
       } : null
     },
+    authorField () {
+      return this.$config.is('multipleProjects') ? {
+        key: 'user.id',
+        label: this.$t('batchSearch.author'),
+        sortable: true
+      } : null
+    },
     publishedField () {
       return this.$config.is('multipleProjects') ? {
         key: 'published',
@@ -103,6 +110,7 @@ export default {
           label: this.$t('batchSearch.name'),
           sortable: true
         },
+        this.authorField,
         {
           key: 'description',
           label: this.$t('batchSearch.description'),

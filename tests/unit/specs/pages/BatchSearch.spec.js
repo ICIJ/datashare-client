@@ -53,13 +53,13 @@ describe('BatchSearch.vue', () => {
     expect(wrapper.findAll('.batch-search__items__item')).toHaveLength(2)
   })
 
-  it('should display 8 columns of info per row', () => {
-    expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(8)
+  it('should display 9 columns of info per row', () => {
+    expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(9)
   })
 
   it('should display the number of queries per batchSearch', () => {
-    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="4"]').text()).toBe('1 query')
-    expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="4"]').text()).toBe('2 queries')
+    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="5"]').text()).toBe('1 query')
+    expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="5"]').text()).toBe('2 queries')
   })
 
   it('should display index in the batch search results url', () => {
