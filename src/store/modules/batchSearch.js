@@ -40,10 +40,8 @@ export const actions = {
     return commit('batchSearches', batchSearches)
   },
   async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published }) {
-    try {
-      await api.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
-      return dispatch('getBatchSearches')
-    } catch (_) {}
+    await api.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
+    return dispatch('getBatchSearches')
   },
   async getBatchSearchResults ({ state, commit }, { batchId, from, size, queries, sort, order }) {
     let results

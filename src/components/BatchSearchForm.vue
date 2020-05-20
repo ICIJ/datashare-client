@@ -347,15 +347,21 @@ export default {
       this.$set(this, 'showAdvancedFilters', false)
     },
     async onSubmit () {
-      await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, csvFile: this.csvFile, description: this.description, project: this.project, phraseMatch: this.phraseMatch, fuzziness: this.fuzziness, fileTypes: this.fileTypes, paths: this.paths, published: this.published })
-      this.resetForm()
-      if (this.$config.is('manageDocuments')) {
-        try {
-          await this.$store.dispatch('indexing/runBatchSearch')
-          this.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
-        } catch (_) {
-          this.$bvToast.toast(this.$t('batchSearch.failure'), { noCloseButton: true, variant: 'danger' })
+      try {
+        await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, csvFile: this.csvFile, description: this.description, project: this.project, phraseMatch: this.phraseMatch, fuzziness: this.fuzziness, fileTypes: this.fileTypes, paths: this.paths, published: this.published })
+        this.resetForm()
+        if (this.$config.is('manageDocuments')) {
+          try {
+            await this.$store.dispatch('indexing/runBatchSearch')
+            this.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
+          } catch (_) {
+            this.$bvToast.toast(this.$t('batchSearch.failure'), { noCloseButton: true, variant: 'danger' })
+          }
+        } else {
+          this.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
         }
+      } catch (_) {
+        this.$bvToast.toast(this.$t('batchSearch.submitFailure'), { noCloseButton: true, variant: 'danger' })
       }
     },
     async aggregate (field, name) {
