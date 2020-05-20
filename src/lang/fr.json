@@ -495,6 +495,8 @@
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
     "failure": "Il y a eu une erreur, votre recherche en lot n'a pas démarré.",
+    "submitSuccess": "Your batch search has been added.",
+    "submitFailure": "Something went wrong, unable to add your batch search.",
     "project": "Projet",
     "name": "Nom",
     "description": "Description",
