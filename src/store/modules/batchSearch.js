@@ -6,6 +6,7 @@ export const api = new Api()
 
 export function initialState () {
   return {
+    batchSearch: {},
     batchSearches: [],
     results: [],
     selectedQueries: []
@@ -17,6 +18,9 @@ export const state = initialState()
 export const mutations = {
   reset (state) {
     Object.assign(state, initialState())
+  },
+  batchSearch (state, batchSearch) {
+    state.batchSearch = batchSearch
   },
   batchSearches (state, batchSearches) {
     state.batchSearches = batchSearches
@@ -30,6 +34,15 @@ export const mutations = {
 }
 
 export const actions = {
+  async getBatchSearch ({ commit }, batchId) {
+    let batchSearch
+    try {
+      batchSearch = await api.getBatchSearch(batchId)
+    } catch (_) {
+      batchSearch = {}
+    }
+    return commit('batchSearch', batchSearch)
+  },
   async getBatchSearches ({ commit }) {
     let batchSearches
     try {

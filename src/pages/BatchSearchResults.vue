@@ -21,21 +21,21 @@
             {{ $t('batchSearch.title') }}
           </router-link>
           <fa icon="angle-right" class="small ml-2"></fa>
-          {{ meta.name }}
+          {{ batchSearch.name }}
         </h3>
         <p class="m-0">
-          {{ meta.description }}
+          {{ batchSearch.description }}
         </p>
       </div>
     </div>
     <div class="container py-4">
       <div class="batch-search-results__info d-flex">
-        <dl class="row w-100 mx-0" v-if="Object.keys(meta).length !== 0">
+        <dl class="row w-100 mx-0" v-if="Object.keys(batchSearch).length !== 0">
           <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.project') }}
           </dt>
           <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
-            {{ meta.project.name }}
+            {{ batchSearch.project.name }}
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.state') }}
@@ -44,40 +44,40 @@
             <b-badge
               :class="{ 'cursor-pointer': isFailed }"
               @click.prevent="openErrorMessage"
-              :variant="meta.state | toVariant">
-              {{ capitalize(meta.state) }}
+              :variant="batchSearch.state | toVariant">
+              {{ capitalize(batchSearch .state) }}
             </b-badge>
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.date') }}
           </dt>
           <dd class="col-sm-8">
-            {{ moment(meta.date).format('LLL') }}
+            {{ moment(batchSearch.date).format('LLL') }}
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.nbResults') }}
           </dt>
           <dd class="col-sm-8">
-            {{ meta.nbResults }}
+            {{ batchSearch.nbResults }}
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.phraseMatch') }}
           </dt>
           <dd class="col-sm-8">
-            {{ meta.phraseMatches ? $t('indexing.yes') : $t('indexing.no') }}
+            {{ batchSearch.phraseMatches ? $t('indexing.yes') : $t('indexing.no') }}
           </dd>
           <dt class="col-sm-4 text-right">
             {{ fuzzinessLabel }}
           </dt>
           <dd class="col-sm-8">
-            {{ meta.fuzziness }}
+            {{ batchSearch.fuzziness }}
           </dd>
           <dt class="col-sm-4 text-right">
             {{ $t('batchSearch.fileTypes') }}
           </dt>
           <dd class="col-sm-8">
-            <ul v-if="meta.fileTypes.length" class="list-unstyled list-group list-group-horizontal">
-              <li v-for="fileType in meta.fileTypes" :key="fileType" class="mr-2">
+            <ul v-if="batchSearch.fileTypes.length" class="list-unstyled list-group list-group-horizontal">
+              <li v-for="fileType in batchSearch.fileTypes" :key="fileType" class="mr-2">
                 <b-badge variant="dark">
                   {{ fileType }}
                 </b-badge>
@@ -91,8 +91,8 @@
             {{ $t('batchSearch.path') }}
           </dt>
           <dd class="col-sm-8">
-            <ul v-if="meta.paths.length" class="list-unstyled list-group list-group-horizontal">
-              <li v-for="path in meta.paths" :key="path" class="mr-2">
+            <ul v-if="batchSearch.paths.length" class="list-unstyled list-group list-group-horizontal">
+              <li v-for="path in batchSearch.paths" :key="path" class="mr-2">
                 <b-badge variant="dark">
                   {{ path }}
                 </b-badge>
@@ -107,13 +107,13 @@
           </dt>
           <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
             <b-form-checkbox v-model="published" switch @change="changePublished" v-if="isMyBatchSearch"></b-form-checkbox>
-            <span v-else>{{ meta.published ? $t('indexing.yes') : $t('indexing.no') }}</span>
+            <span v-else>{{ batchSearch.published ? $t('indexing.yes') : $t('indexing.no') }}</span>
           </dd>
           <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.author') }}
           </dt>
           <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
-            {{ meta.user.id }}
+            {{ batchSearch.user.id }}
           </dd>
         </dl>
       </div>
@@ -177,7 +177,7 @@
     <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
       <div v-html="$t('batchSearchResults.errorMessage')"></div>
       <div class="code mt-3 px-3 py-1 text-monospace text-break">
-        {{ this.meta.errorMessage }}
+        {{ this.batchSearch.errorMessage }}
       </div>
     </b-modal>
   </div>
@@ -269,15 +269,12 @@ export default {
     }
   },
   computed: {
-    ...mapState('batchSearch', ['results']),
+    ...mapState('batchSearch', ['batchSearch', 'results']),
     fuzzinessLabel () {
-      return this.meta.phraseMatches ? this.$t('batchSearch.proximitySearches') : this.$t('batchSearch.fuzziness')
+      return this.batchSearch.phraseMatches ? this.$t('batchSearch.proximitySearches') : this.$t('batchSearch.fuzziness')
     },
     perPage () {
       return settings.batchSearchResults.size
-    },
-    meta () {
-      return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || { }
     },
     downloadLink () {
       return Api.getFullUrl('/api/batch/search/result/csv/' + this.uuid)
@@ -291,25 +288,23 @@ export default {
     numberOfPages () {
       let total
       if (this.$store.state.batchSearch.selectedQueries.length === 0) {
-        total = this.meta.nbResults
+        total = this.batchSearch.nbResults
       } else {
-        total = sumBy(keys(this.meta.queries), query => {
+        total = sumBy(keys(this.batchSearch.queries), query => {
           if (indexOf(this.$store.state.batchSearch.selectedQueries, query) > -1) {
-            return this.meta.queries[query]
+            return this.batchSearch.queries[query]
           }
         })
       }
       return Math.ceil(total / this.perPage)
     },
     isFailed () {
-      return this.meta.state === 'FAILURE'
+      return this.batchSearch.state === 'FAILURE'
     }
   },
   beforeRouteEnter (to, from, next) {
     next(async vm => {
-      await vm.fetchBatchSearches()
-      await vm.checkIsMyBatchSearch()
-      vm.$set(vm, 'published', vm.meta.published)
+      vm.$set(vm, 'published', vm.batchSearch.published)
       vm.$set(vm, 'page', parseInt(get(to.query, 'page', vm.page)))
       vm.$set(vm, 'queries', get(to.query, 'queries', vm.queries))
       vm.$set(vm, 'sort', get(to.query, 'sort', vm.sort))
@@ -318,7 +313,6 @@ export default {
     })
   },
   async beforeRouteUpdate (to, from, next) {
-    await this.checkIsMyBatchSearch()
     this.$set(this, 'page', parseInt(get(to.query, 'page', this.page)))
     this.$set(this, 'queries', get(to.query, 'queries', this.queries))
     this.$set(this, 'sort', get(to.query, 'sort', this.sort))
@@ -327,25 +321,26 @@ export default {
     next()
   },
   beforeRouteLeave (to, from, next) {
+    this.$store.commit('batchSearch/batchSearch', {})
     this.$store.commit('batchSearch/selectedQueries', [])
     next()
   },
   methods: {
+    async checkIsMyBatchSearch () {
+      const username = await auth.getUsername()
+      this.isMyBatchSearch = username === get(this, 'batchSearch.user.id', '')
+    },
     async fetch () {
       this.$wait.start('load batchSearch results')
       this.$Progress.start()
-      await this.fetchBatchSearchResults()
-      this.$Progress.finish()
-      this.$wait.end('load batchSearch results')
-    },
-    fetchBatchSearches () {
-      return this.$store.dispatch('batchSearch/getBatchSearches')
-    },
-    fetchBatchSearchResults () {
+      await this.$store.dispatch('batchSearch/getBatchSearch', this.uuid)
+      await this.checkIsMyBatchSearch()
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
-      return this.$store.dispatch('batchSearch/getBatchSearchResults',
+      await this.$store.dispatch('batchSearch/getBatchSearchResults',
         { batchId: this.uuid, from, size, queries: this.queries, sort: this.sort, order: this.order })
+      this.$Progress.finish()
+      this.$wait.end('load batchSearch results')
     },
     async sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
@@ -382,10 +377,6 @@ export default {
       if (this.isFailed) {
         this.$bvModal.show('error-modal')
       }
-    },
-    async checkIsMyBatchSearch () {
-      const username = await auth.getUsername()
-      this.isMyBatchSearch = username === get(this, 'meta.user.id', '')
     },
     capitalize,
     getDocumentTypeLabel,

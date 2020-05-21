@@ -155,6 +155,11 @@ describe('Datashare backend client', () => {
     }))
   })
 
+  it('should return backend response to getBatchSearch', async () => {
+    json = await api.getBatchSearch(12)
+    expect(json).toEqual({})
+  })
+
   it('should return backend response to getBatchSearches', async () => {
     json = await api.getBatchSearches()
     expect(json).toEqual({})

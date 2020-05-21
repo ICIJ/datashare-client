@@ -39,6 +39,25 @@ jest.mock('@/api', () => {
           rootId: 44
         }
       ]),
+      getBatchSearch: jest.fn().mockResolvedValue({
+        uuid: '12',
+        project: { name: 'ProjectName' },
+        description: 'This is the description of the batch search',
+        state: 'SUCCESS',
+        date: '2019-07-18T14:45:34.869+0000',
+        nbResults: 333,
+        phraseMatch: 1,
+        fuzziness: 1,
+        fileTypes: [],
+        paths: [],
+        published: true,
+        queries: {
+          query_01: 6,
+          query_02: 6,
+          query_03: 6
+        },
+        user: { id: 'test' }
+      }),
       deleteBatchSearch: jest.fn()
     }
   })
@@ -76,41 +95,6 @@ describe('BatchSearchResults.vue', () => {
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
-    store.commit('batchSearch/batchSearches', [{
-      uuid: '12',
-      project: { name: 'ProjectName' },
-      description: 'This is the description of the batch search',
-      state: 'SUCCESS',
-      date: '2019-07-18T14:45:34.869+0000',
-      nbResults: 333,
-      phraseMatch: 1,
-      fuzziness: 1,
-      fileTypes: [],
-      paths: [],
-      published: true,
-      queries: {
-        query_01: 6,
-        query_02: 6,
-        query_03: 6
-      },
-      user: { id: 'test' }
-    }, {
-      uuid: '13',
-      project: { name: 'ProjectName2' },
-      description: 'Another description',
-      state: 'SUCCESS',
-      date: '2019-07-28T14:45:34.869+0000',
-      nbResults: 15,
-      phraseMatch: 1,
-      fuzziness: 1,
-      fileTypes: [],
-      paths: [],
-      published: true,
-      queries: {
-        query_04: 6
-      },
-      user: { id: 'test' }
-    }])
     propsData = { uuid: '12', project }
     wrapper = shallowMount(BatchSearchResults,
       { i18n, localVue, store, router, wait, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
@@ -143,7 +127,9 @@ describe('BatchSearchResults.vue', () => {
 
   it('should display a button to delete the batchSearch', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
+
     await wrapper.vm.checkIsMyBatchSearch()
+
     expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
   })
 

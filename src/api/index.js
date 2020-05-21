@@ -86,6 +86,9 @@ export default class Api {
     data.append('published', published)
     return this.sendActionAsText(`/api/batch/search/${project}`, { method: 'POST', data })
   }
+  getBatchSearch (batchId) {
+    return this.sendActionAsText(`/api/batch/search/${batchId}`)
+  }
   getBatchSearches () {
     return this.sendAction('/api/batch/search')
   }
