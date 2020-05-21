@@ -533,8 +533,7 @@
     "downloadResults": "ダウンロード結果",
     "empty": "検索結果がありません",
     "errorTitle": "エラー",
-    "errorMessage": "システムは問題を検出しました。あなたのCSVファイルの中で構文エラーがあるか、またはその他のエラーの可能性があります。 <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">このヘルプページを参照してください。よくあるエラーの説明があります。</a>",
-    "seeErrorMessage": "エラーメッセージを見る"
+    "errorMessage": "システムは問題を検出しました。あなたのCSVファイルの中で構文エラーがあるか、またはその他のエラーの可能性があります。 <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">このヘルプページを参照してください。よくあるエラーの説明があります。</a>"
   },
   "batchSearchResultsFilters": {
     "queries": {
