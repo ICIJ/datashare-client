@@ -533,8 +533,7 @@
     "downloadResults": "Descargar los resultados",
     "empty": "Sin resultados",
     "errorTitle": "Error",
-    "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas cometido en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>",
-    "seeErrorMessage": "Mensaje de error"
+    "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas cometido en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>"
   },
   "batchSearchResultsFilters": {
     "queries": {
