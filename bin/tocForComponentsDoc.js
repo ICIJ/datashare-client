@@ -25,9 +25,11 @@ function collectToc (files) {
   })
 }
 
-const components = collectToc(glob.sync(joinToDoc('/components/**/*.md')))
+const widgets = collectToc(glob.sync(joinToDoc('/components/**/Widget*.md')))
+const filters = collectToc(glob.sync(joinToDoc('/components/**/Filter*.md')))
 const pages = collectToc(glob.sync(joinToDoc('/pages/**/*.md')))
-const toc = buildToc({ components, pages })
+const others = collectToc(glob.sync(joinToDoc('/components/**/!(Widget|Filter)*.md')))
+const toc = buildToc({ widgets, filters, others, pages })
 
 // Write the table of content for all components!
 writeFileSync(joinToDoc('COMPONENTS.md'), toc)

@@ -1,17 +1,42 @@
 # Datashare Client Components
 
-## Page Components
+This project uses [Vue.js](https://vuejs.org) framework. Here are all the
+components used in this application.
 
-{{#each pages}}
+## Widget Components
+
+These widgets are used on the insights page.
+
+{{#each widgets}}
   {{#with this}}
-* [{{title}}]({{path}}) {{#if description}}— _{{description}}_{{/if}}
+* [{{title}}]({{path}}) {{#if description}}<br />— _{{description}}_{{/if}}
   {{/with}}
 {{/each}}
 
-## Standalone Components
+## Filter Components
 
-{{#each components}}
+These filters are used on the search filters panel.
+
+{{#each filters}}
   {{#with this}}
-* [{{title}}]({{path}}) {{#if description}}— _{{description}}_{{/if}}
+* [{{title}}]({{path}}) {{#if description}}<br />— _{{description}}_{{/if}}
+  {{/with}}
+{{/each}}
+
+## Page Components
+
+All pages components.
+
+{{#each pages}}
+  {{#with this}}
+* [{{title}}]({{path}}) {{#if description}}<br />— _{{description}}_{{/if}}
+  {{/with}}
+{{/each}}
+
+## Other Components
+
+{{#each others}}
+  {{#with this}}
+* [{{title}}]({{path}}) {{#if description}}<br />— _{{description}}_{{/if}}
   {{/with}}
 {{/each}}
