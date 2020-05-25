@@ -16,6 +16,9 @@
 </template>
 
 <script>
+/**
+ * Change the search results layout (grid, list or table).
+ */
 export default {
   name: 'SearchLayoutSelector',
   computed: {

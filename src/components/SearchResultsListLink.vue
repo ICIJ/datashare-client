@@ -21,10 +21,16 @@ import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
 import ner from '@/mixins/ner'
 
+/**
+ * A result link for the search results list.
+ */
 export default {
   name: 'SearchResultsLink',
   mixins: [ner],
   props: {
+    /**
+     * The document to link to.
+     */
     document: {
       type: Object
     }

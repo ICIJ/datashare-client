@@ -22,12 +22,18 @@ import { mapState } from 'vuex'
 import elasticsearch from '@/api/elasticsearch'
 import WidgetDocumentsByCreationDate from '@/components/WidgetDocumentsByCreationDate'
 
+/**
+ * Widget to display number of files by creation date by directory on the insights page.
+ */
 export default {
   name: 'WidgetDocumentsByCreationDateByPath',
   components: {
     WidgetDocumentsByCreationDate
   },
   props: {
+    /**
+     * The widget definition object.
+     */
     widget: {
       type: Object
     }

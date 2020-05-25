@@ -26,12 +26,18 @@ import TreeView from '@/components/TreeView.vue'
 import elasticsearch from '@/api/elasticsearch'
 import humanSize from '@/filters/humanSize'
 
+/**
+ * Widget to display the disk space occupied by indexed files on the insights page.
+ */
 export default {
   name: 'WidgetDiskUsage',
   components: {
     TreeView
   },
   props: {
+    /**
+     * The widget definition object.
+     */
     widget: {
       type: Object
     }

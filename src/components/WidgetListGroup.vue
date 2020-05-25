@@ -19,9 +19,15 @@
 <script>
 import { mapGetters } from 'vuex'
 
+/**
+ * Widget to display a list of items or links on the insights page.
+ */
 export default {
   name: 'WidgetText',
   props: {
+    /**
+     * The widget definition object.
+     */
     widget: {
       type: Object
     }

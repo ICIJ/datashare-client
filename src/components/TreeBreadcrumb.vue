@@ -20,6 +20,10 @@
 import { basename } from 'path'
 import { filter, last, reduce } from 'lodash'
 
+
+/**
+ * A clickable path breadcrumb.
+ */
 export default {
   name: 'TreeBreadcrumb',
   model: {
@@ -27,13 +31,23 @@ export default {
     event: 'input'
   },
   props: {
+    /**
+     * Path to use in the breadcrumb.
+     * @model
+     */
     path: {
       type: String
     },
+    /**
+     * Maximum number of directories to display (truncate from the begining using ellipsis)
+     */
     maxDirectories: {
       type: Number,
       default: 5
     },
+    /**
+     * Hide Datashare's root data directory from the breadcrumb.
+     */
     noDatadir: {
       type: Boolean
     }

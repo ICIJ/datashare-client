@@ -11,9 +11,15 @@
 import { mapGetters } from 'vuex'
 import settings from '@/utils/settings'
 
+/**
+ * Widget to display text on the insights page.
+ */
 export default {
   name: 'WidgetText',
   props: {
+    /**
+     * The widget definition object.
+     */
     widget: {
       type: Object
     }

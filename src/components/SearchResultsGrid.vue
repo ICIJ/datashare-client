@@ -39,6 +39,9 @@ import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import settings from '@/utils/settings'
 
+/**
+ * Display search results as grid.
+ */
 export default {
   name: 'SearchResultsGrid',
   components: {

@@ -33,6 +33,9 @@ import isArray from 'lodash/isArray'
 import join from 'lodash/join'
 import map from 'lodash/map'
 
+/**
+ * A button to display global shortcuts in a modal.
+ */
 export default {
   name: 'ShortkeysModal',
   data () {

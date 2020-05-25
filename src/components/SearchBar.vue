@@ -69,24 +69,43 @@ function escapeLuceneChars (str) {
   return some(escapable, char => str.indexOf(char) > -1) ? JSON.stringify(str) : str
 }
 
+/**
+ * The general search form.
+ */
 export default {
   name: 'SearchBar',
   props: {
+    /**
+     * Show search suggestions.
+     */
     tips: {
       type: Boolean
     },
+    /**
+     * Animate the focus on the search input.
+     */
     animated: {
       type: Boolean
     },
+    /**
+     * Display the shortcuts button.
+     */
     settings: {
       type: Boolean
     },
+    /**
+     * Search field configuration dictionary.
+     */
     fieldOptions: {
       type: Array,
       default () {
         return settings.searchFields.map(field => field.key)
       }
     },
+    /**
+     * Search input size
+     * @values sm, md, lg
+     */
     size: {
       type: String,
       default: 'md'

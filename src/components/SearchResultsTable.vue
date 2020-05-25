@@ -75,6 +75,9 @@ import SearchResultsHeader from '@/components/SearchResultsHeader'
 import humanSize from '@/filters/humanSize'
 import settings from '@/utils/settings'
 
+/**
+ * Display search results as table.
+ */
 export default {
   name: 'SearchResultsTable',
   components: {

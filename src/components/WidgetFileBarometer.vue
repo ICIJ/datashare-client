@@ -21,10 +21,16 @@ import { waitFor } from 'vue-wait'
 import elasticsearch from '@/api/elasticsearch'
 import humanNumber from '@/filters/humanNumber'
 
+/**
+ * Widget to display the number of indexed files on the insights page.
+ */
 export default {
   name: 'WidgetFileBarometer',
   filters: { humanNumber },
   props: {
+    /**
+     * The widget definition object.
+     */
     widget: {
       type: Object
     }

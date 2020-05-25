@@ -32,16 +32,29 @@
 <script>
 import Api from '@/api'
 
+/**
+ * Display Datashare's version number.
+ */
 export default {
   name: 'VersionNumber',
   props: {
+    /**
+     * Placement of the tooltip with version info.
+     * @values auto, top, bottom, left, right, topleft, topright, bottomleft, bottomright, lefttop, leftbottom, righttop, rightbottom
+     */
     tooltipPlacement: {
       type: String,
       default: 'righttop'
     },
+    /**
+     * Hide the version icon (a lighting bolt)
+     */
     noIcon: {
       type: Boolean
     },
+    /**
+     * Version prefix label
+     */
     label: {
       type: String,
       default: 'Version'

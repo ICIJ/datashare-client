@@ -3,9 +3,15 @@ import { faArrowDown } from '@fortawesome/free-solid-svg-icons/faArrowDown'
 import { faArrowUp } from '@fortawesome/free-solid-svg-icons/faArrowUp'
 import VueScrollTo from 'vue-scrollto'
 
+/**
+ * An contextual link to the "right" scroll position.
+ */
 export default {
   name: 'ScrollTracker',
   props: {
+    /**
+     * Hide the scroll tracker after this delay.
+     */
     timeout: {
       type: Number,
       default: 3000

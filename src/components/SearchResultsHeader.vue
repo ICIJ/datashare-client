@@ -56,6 +56,9 @@ import { mapState } from 'vuex'
 import Pagination from '@/components/Pagination'
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
 
+/**
+ * Search results header displaying sorting and page length options.
+ */
 export default {
   name: 'SearchResultsHeader',
   components: {
@@ -63,17 +66,30 @@ export default {
     AppliedSearchFilters
   },
   props: {
+    /**
+     * Position of the header.
+     * @values top, bottom
+     */
     position: {
       type: String,
       default: 'top',
       validator: value => ['top', 'bottom'].indexOf(value) >= -1
     },
+    /**
+     * Use borders
+     */
     bordered: {
       type: Boolean
     },
+    /**
+     * Display the search results page offset.
+     */
     noProgress: {
       type: Boolean
     },
+    /**
+     * Hide the active search filters.
+     */
     noFilters: {
       type: Boolean
     }

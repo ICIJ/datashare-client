@@ -64,9 +64,15 @@ import * as d3 from 'd3'
 import ResizeObserver from 'resize-observer-polyfill'
 import { mapState } from 'vuex'
 
+/**
+ * Widget to display the number of file by creation date on the insights page.
+ */
 export default {
   name: 'WidgetDocumentsByCreationDate',
   props: {
+    /**
+     * The widget definition object.
+     */
     widget: {
       type: Object
     }

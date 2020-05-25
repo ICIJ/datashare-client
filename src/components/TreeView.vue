@@ -45,6 +45,9 @@ import humanNumber from '@/filters/humanNumber'
 
 import TreeBreadcrumb from '@/components/TreeBreadcrumb.vue'
 
+/**
+ * A view listing directories from a specific path.
+ */
 export default {
   name: 'TreeView',
   model: {
@@ -52,6 +55,10 @@ export default {
     event: 'input'
   },
   props: {
+    /**
+     * List directories from this path.
+     * @model
+     */
     path: {
       type: String
     }

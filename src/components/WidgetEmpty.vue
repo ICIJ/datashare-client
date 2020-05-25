@@ -3,9 +3,15 @@
 </template>
 
 <script>
+/**
+ * A placeholder widget for the insights page.
+ */
 export default {
   name: 'WidgetEmpty',
   props: {
+    /**
+     * The widget definition object.
+     */
     widget: {
       type: Object
     }

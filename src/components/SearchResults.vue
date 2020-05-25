@@ -5,6 +5,9 @@
 <script>
 import { mapState } from 'vuex'
 
+/**
+ * Display the search results (from the store) in the selected layout.
+ */
 export default {
   name: 'SearchResults',
   computed: {

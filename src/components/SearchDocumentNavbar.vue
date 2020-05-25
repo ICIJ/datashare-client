@@ -100,6 +100,9 @@ import DocumentActions from '@/components/DocumentActions'
 import shortkeys from '@/mixins/shortkeys'
 import utils from '@/mixins/utils'
 
+/**
+ * Document navbar in the context of a search.
+ */
 export default {
   name: 'SearchDocumentNavbar',
   mixins: [shortkeys, utils],
@@ -170,6 +173,9 @@ export default {
     }
   },
   props: {
+    /**
+     * Shrink the layout of the navbar.
+     */
     isShrinked: {
       type: Boolean
     }

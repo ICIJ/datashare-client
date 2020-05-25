@@ -35,6 +35,9 @@ import SearchResultsListLink from '@/components/SearchResultsListLink'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
 import settings from '@/utils/settings'
 
+/**
+ * Display search results as list.
+ */
 export default {
   name: 'SearchResultsList',
   components: {
