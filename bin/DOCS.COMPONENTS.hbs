@@ -1,0 +1,17 @@
+# Datashare Client Components
+
+## Page Components
+
+{{#each pages}}
+  {{#with this}}
+* [{{title}}]({{path}}) {{#if description}}— _{{description}}_{{/if}}
+  {{/with}}
+{{/each}}
+
+## Standalone Components
+
+{{#each components}}
+  {{#with this}}
+* [{{title}}]({{path}}) {{#if description}}— _{{description}}_{{/if}}
+  {{/with}}
+{{/each}}
