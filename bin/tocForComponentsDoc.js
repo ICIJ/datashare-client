@@ -2,7 +2,7 @@ const Handlebars = require('handlebars')
 const glob = require('glob')
 const { readFileSync, writeFileSync } = require('fs')
 const { basename, join, relative } = require('path')
-const { findIndex, trimStart } = require('lodash')
+const { findIndex, filter, startsWith, trimStart } = require('lodash')
 
 const RE_HEADER = /^#+(.*)$/
 const RE_DESCRIPTION = /^>+(.*)$/
@@ -25,11 +25,31 @@ function collectToc (files) {
   })
 }
 
-const widgets = collectToc(glob.sync(joinToDoc('/components/**/Widget*.md')))
-const filters = collectToc(glob.sync(joinToDoc('/components/**/Filter*.md')))
-const pages = collectToc(glob.sync(joinToDoc('/pages/**/*.md')))
-const others = collectToc(glob.sync(joinToDoc('/components/**/!(Widget|Filter)*.md')))
-const toc = buildToc({ widgets, filters, others, pages })
+function widgetComponents () {
+  return glob.sync(joinToDoc('/components/**/Widget*.md'))
+}
 
+function filterComponents () {
+  return glob.sync(joinToDoc('/components/**/Filter!(s)*.md'))
+}
+
+function pageComponents () {
+  return glob.sync(joinToDoc('/pages/**/*.md'))
+}
+
+function otherComponents () {
+  const all = glob.sync(joinToDoc('/components/**/*.md'))
+  return filter(all, f => {
+    const sw = target => startsWith(basename(f), target)
+    return sw('Filters') || !(sw('Filter') || sw('Widget'))
+  })
+}
+
+const widgets = collectToc(widgetComponents())
+const filters = collectToc(filterComponents())
+const pages = collectToc(pageComponents())
+const others = collectToc(otherComponents())
+// Compile templates using components collections
+const toc = buildToc({ widgets, filters, others, pages })
 // Write the table of content for all components!
 writeFileSync(joinToDoc('COMPONENTS.md'), toc)

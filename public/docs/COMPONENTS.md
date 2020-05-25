@@ -29,7 +29,6 @@ These filters are used on the search filters panel.
 * [FilterProject](components/FilterProject.md) 
 * [FilterRecommendedBy](components/FilterRecommendedBy.md) 
 * [FilterSearch](components/FilterSearch.md) 
-* [FiltersPanel](components/FiltersPanel.md) 
 * [FilterText](components/FilterText.md) 
 * [FilterYesNo](components/FilterYesNo.md) 
 
@@ -85,6 +84,7 @@ All pages components.
 * [DocumentTypeCard](components/DocumentTypeCard.md) 
 * [EmailString](components/EmailString.md) 
 * [ExtractingForm](components/ExtractingForm.md) 
+* [FiltersPanel](components/FiltersPanel.md) 
 * [FindNamedEntitiesForm](components/FindNamedEntitiesForm.md) 
 * [Hook](components/Hook.md) 
 * [LocalesMenu](components/LocalesMenu.md) 
