@@ -1,6 +1,6 @@
 <template>
   <div class="batch-search-results-filters">
-    <div class="card m-3 batch-search-results-filters__queries overflow-hidden">
+    <div class="card batch-search-results-filters__queries overflow-hidden">
       <h6 class="card-header d-flex">
         <span class="flex-grow-1 my-auto">
           {{ $t('batchSearchResultsFilters.queries.heading') }}
@@ -10,11 +10,12 @@
         </span>
         <b-dropdown
           class="batch-search-results-filters__queries__sort"
+          toggle-class="p-0"
           right
           :text="$t(`search.results.sort.${sortField}`)"
-          variant="primary"
+          variant="link"
           v-if="isMultipleQueries">
-          <b-dropdown-item v-for="key in sortFields" :key="key" @click="sort(key)">
+          <b-dropdown-item v-for="key in sortFields" :key="key" @click="sort(key)" :active="key === sortField">
             {{ $t(`search.results.sort.${key}`) }}
           </b-dropdown-item>
         </b-dropdown>
@@ -108,7 +109,6 @@ export default {
   },
   data () {
     return {
-      selectedQueriesOnRouteEnter: [],
       sortField: 'count',
       sortFields: ['default', 'count']
     }
@@ -143,29 +143,21 @@ export default {
       }
     }
   },
-  beforeRouteEnter (to, from, next) {
-    next(vm => {
-      vm.$set(vm, 'selectedQueriesOnRouteEnter', castArray(get(to, ['query', 'queries'], [])))
-    })
+  mounted () {
+    this.readQueryFromRoute()
   },
-  beforeRouteUpdate (to, from, next) {
-    if (to.query.queries_sort === 'default') {
-      this.$set(this, 'sortField', 'default')
-    } else {
-      this.$set(this, 'sortField', 'count')
+  watch: {
+    $route () {
+      this.readQueryFromRoute()
     }
-    this.$set(this, 'selectedQueries', filter(this.queries, query => indexOf(to.query.queries, query.label) > -1))
-    next()
   },
   methods: {
-    onInput (selectedQueries) {
+    onInput (selectedQueries = this.selectedQueries) {
       const order = get(this, ['$route', 'query', 'order'], undefined)
       const page = get(this, ['$route', 'query', 'page'], undefined)
-      const selectedQueriesOnRouteEnter = get(this, 'selectedQueriesOnRouteEnter', [])
-      const queries = compact(concat(selectedQueriesOnRouteEnter, map(selectedQueries, 'label')))
+      const queries = compact(map(selectedQueries, 'label'))
       const queriesSort = get(this, ['$route', 'query', 'queries_sort'], undefined)
       const sort = get(this, ['$route', 'query', 'sort'], undefined)
-      this.$set(this, 'selectedQueriesOnRouteEnter', [])
       const query = { order, page, queries, queries_sort: queriesSort, sort }
       const isEqualQuery = isEqual(omit(query, 'queries'), omit(this.$route.query, 'queries')) && isEqual(castArray(query.queries), castArray(this.$route.query.queries))
       if (!isEqualQuery) {
@@ -182,6 +174,15 @@ export default {
       const queries = get(this, ['$route', 'query', 'queries'], undefined)
       const sort = get(this, ['$route', 'query', 'sort'], undefined)
       this.$router.push({ name: 'batch-search.results', query: { order, page, queries, queries_sort: queriesSort, sort } }).catch(() => {})
+    },
+    readQueryFromRoute () {
+      if (get(this, ['$route', 'query', 'query_sort'], 'default') === 'default') {
+        this.$set(this, 'sortField', 'default')
+      } else {
+        this.$set(this, 'sortField', 'count')
+      }
+      const queries = get(this, ['$route', 'query', 'queries'], [])
+      this.$set(this, 'selectedQueries', filter(this.queries, ({ label }) => indexOf(queries, label) > -1))
     }
   }
 }
@@ -189,8 +190,6 @@ export default {
 
 <style lang="scss" scoped>
   .batch-search-results-filters {
-    max-width: $app-context-sidebar-width;
-    min-width: $app-context-sidebar-width;
     width: 100%;
 
     &__queries {
@@ -199,7 +198,7 @@ export default {
       }
 
       &__dropdown {
-        max-height: calc(40vh + 100px);
+        max-height: 180px;
         overflow: auto;
 
         &__item {

@@ -1,10 +1,10 @@
 <template>
-  <div class="batch-search-form m-3">
+  <div class="batch-search-form">
     <b-form @submit.prevent="onSubmit">
-      <h5 class="py-2 h6 text-uppercase text-muted">
+      <h5 class="py-2 h6 text-uppercase text-muted" v-if="!hideTitle">
         {{ $t('batchSearch.heading') }}
       </h5>
-      <div class="card w-100">
+      <div class="card w-100" :class="{ 'border-0': hideBorder }">
         <div class="card-body pb-1">
           <b-form-group
             label-size="sm"
@@ -202,6 +202,20 @@ import types from '@/utils/types.json'
  */
 export default {
   name: 'BatchSearchForm',
+  props: {
+    /**
+     * 	Disables rendering of the form title
+     */
+    hideTitle: {
+      type: Boolean
+    },
+    /**
+     * 	Disables rendering of the form border
+     */
+    hideBorder: {
+      type: Boolean
+    }
+  },
   data () {
     return {
       allFileTypes: [],
@@ -356,15 +370,20 @@ export default {
         if (this.$config.is('manageDocuments')) {
           try {
             await this.$store.dispatch('indexing/runBatchSearch')
-            this.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
+            this.$root.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
           } catch (_) {
-            this.$bvToast.toast(this.$t('batchSearch.failure'), { noCloseButton: true, variant: 'danger' })
+            this.$root.$bvToast.toast(this.$t('batchSearch.failure'), { noCloseButton: true, variant: 'danger' })
           }
         } else {
-          this.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
+          this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
         }
       } catch (_) {
-        this.$bvToast.toast(this.$t('batchSearch.submitFailure'), { noCloseButton: true, variant: 'danger' })
+        this.$root.$bvToast.toast(this.$t('batchSearch.submitFailure'), { noCloseButton: true, variant: 'danger' })
+      } finally {
+        /**
+         * The form has been submitted
+         */
+        this.$emit("submit")
       }
     },
     async aggregate (field, name) {

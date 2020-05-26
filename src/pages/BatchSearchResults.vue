@@ -29,15 +29,16 @@
       </div>
     </div>
     <div class="container py-4">
-      <div class="batch-search-results__info d-flex">
+      <div class="batch-search-results__info d-md-flex">
+        <batch-search-results-filters :uuid="uuid" :index="index" class="order-2 mb-3" />
         <dl class="row w-100 mx-0" v-if="Object.keys(batchSearch).length !== 0">
-          <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
+          <dt class="text-nowrap col-sm-4 text-right" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.project') }}
           </dt>
           <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
             {{ batchSearch.project.name }}
           </dd>
-          <dt class="col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-4 text-right">
             {{ $t('batchSearch.state') }}
           </dt>
           <dd class="col-sm-8">
@@ -48,31 +49,31 @@
               {{ capitalize(batchSearch .state) }}
             </b-badge>
           </dd>
-          <dt class="col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-4 text-right">
             {{ $t('batchSearch.date') }}
           </dt>
           <dd class="col-sm-8">
             {{ moment(batchSearch.date).format('LLL') }}
           </dd>
-          <dt class="col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-4 text-right">
             {{ $t('batchSearch.nbResults') }}
           </dt>
           <dd class="col-sm-8">
             {{ batchSearch.nbResults }}
           </dd>
-          <dt class="col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-4 text-right">
             {{ $t('batchSearch.phraseMatch') }}
           </dt>
           <dd class="col-sm-8">
             {{ batchSearch.phraseMatches ? $t('indexing.yes') : $t('indexing.no') }}
           </dd>
-          <dt class="col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-4 text-right">
             {{ fuzzinessLabel }}
           </dt>
           <dd class="col-sm-8">
             {{ batchSearch.fuzziness }}
           </dd>
-          <dt class="col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-4 text-right">
             {{ $t('batchSearch.fileTypes') }}
           </dt>
           <dd class="col-sm-8">
@@ -87,7 +88,7 @@
               {{ $t('indexing.no') }}
             </span>
           </dd>
-          <dt class="col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-4 text-right">
             {{ $t('batchSearch.path') }}
           </dt>
           <dd class="col-sm-8">
@@ -195,6 +196,7 @@ import { mapState } from 'vuex'
 
 import Api from '@/api'
 import Auth from '@/api/resources/Auth'
+import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import humanSize from '@/filters/humanSize'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
@@ -204,6 +206,9 @@ export const auth = new Auth()
 
 export default {
   name: 'BatchSearchResults',
+  components: {
+    BatchSearchResultsFilters
+  },
   props: {
     uuid: {
       type: String

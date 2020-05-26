@@ -2,6 +2,13 @@
   <div class="batch-search h-100">
     <div class="batch-search__explanation bg-white py-5">
       <div class="container">
+        <b-button @click="$refs['batch-search-form'].show()" variant="primary" class="float-right">
+          <fa icon="plus" class="mr-1" />
+          {{ $t('batchSearch.heading') }}
+        </b-button>
+        <b-modal ref="batch-search-form" hide-footer :title="$t('batchSearch.heading')" size="md" body-class="p-0">
+          <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()" />
+        </b-modal>
         <h3>
           {{ $t('batchSearch.title') }}
         </h3>
@@ -66,9 +73,13 @@ import { mapState } from 'vuex'
 
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
+import BatchSearchForm from '@/components/BatchSearchForm'
 
 export default {
   name: 'BatchSearches',
+  components: {
+    BatchSearchForm
+  },
   filters: {
     toVariant
   },
@@ -173,12 +184,6 @@ export default {
 
 <style lang="scss" scoped>
   .batch-search {
-     & .batch-search-form {
-       .card {
-         border: 2px solid $tertiary;
-         box-shadow: 0 0 10px 0 rgba($dark, .1);
-       }
-    }
 
     &__items {
       background: white;

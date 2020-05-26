@@ -68,8 +68,7 @@ export const router = {
           name: 'batch-search',
           path: 'batch-search',
           components: {
-            default: () => import('@/pages/BatchSearch'),
-            sidebar: () => import('@/components/BatchSearchForm')
+            default: () => import('@/pages/BatchSearch')
           },
           meta: {
             docs: [
@@ -81,8 +80,7 @@ export const router = {
           name: 'batch-search.results',
           path: 'batch-search/:index/:uuid',
           components: {
-            default: () => import('@/pages/BatchSearchResults'),
-            sidebar: () => import('@/components/BatchSearchResultsFilters')
+            default: () => import('@/pages/BatchSearchResults')
           },
           props: {
             default: true,
