@@ -1,6 +1,6 @@
 # DocumentTabExtractedText
 
-> Panel displaying the extract text of a document.
+> A panel displaying the extract text of a document.
 
 ## Props
 

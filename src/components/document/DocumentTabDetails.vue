@@ -82,7 +82,7 @@ import DocumentTagsForm from '@/components/DocumentTagsForm'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 
 /**
- * Panel display details and metadate about an indexed document.
+ * A panel displaying details and metadata about an indexed document.
  */
 export default {
   name: 'DocumentTabDetails',

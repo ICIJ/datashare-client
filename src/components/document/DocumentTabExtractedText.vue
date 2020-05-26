@@ -16,7 +16,7 @@ import DocumentThread from '@/components/DocumentThread'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
 /**
- * Panel displaying the extract text of a document.
+ * A panel displaying the extract text of a document.
  */
 export default {
   name: 'DocumentTabExtractedText',

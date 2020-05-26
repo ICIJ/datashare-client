@@ -1,6 +1,6 @@
 # DocumentTabDetails
 
-> Panel display details and metadate about an indexed document.
+> A panel displaying details and metadata about an indexed document.
 
 ## Props
 
