@@ -68,7 +68,7 @@ import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
 
 export default {
-  name: 'BatchSearches.vue',
+  name: 'BatchSearches',
   filters: {
     toVariant
   },
