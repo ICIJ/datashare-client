@@ -18,6 +18,9 @@ import displayUser from '@/filters/displayUser'
 import filters from '@/mixins/filters'
 import utils from '@/mixins/utils'
 
+/**
+ * A Filter component to list number of document recommended by each user.
+ */
 export default {
   name: 'FilterRecommendedBy',
   components: {

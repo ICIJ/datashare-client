@@ -1,5 +1,7 @@
 # FilterNamedEntity
 
+> A Filter component to list named entity for a specific type.
+
 ## Props
 
 | Prop name       | Description | Type    | Values | Default |

@@ -17,6 +17,9 @@ import FilterBoilerplate from '@/components/FilterBoilerplate'
 import FilterPathTree from '@/components/FilterPathTree'
 import filters from '@/mixins/filters'
 
+/**
+ * A Filter component to list unique directory paths.
+ */
 export default {
   name: 'FilterPath',
   mixins: [filters],

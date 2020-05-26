@@ -51,25 +51,43 @@ import FilterText from '@/components/FilterText'
 import FilterYesNo from '@/components/FilterYesNo'
 import filters from '@/mixins/filters'
 
+/**
+ * A panel to search into a specific filter.
+ */
 export default {
   name: 'FilterSearch',
   mixins: [filters],
   props: {
+    /**
+     * Filter definition
+     */
     filter: {
       type: Object
     },
+    /**
+     * The initial query terms
+     */
     query: {
       type: String,
       default: ''
     },
+    /**
+     * Either or not results should be selectable
+     */
     selectable: {
       type: Boolean,
       default: true
     },
+    /**
+     * Either or not results should be loaded on scroll
+     */
     infiniteScroll: {
       type: Boolean,
       default: true
     },
+    /**
+     * Throttle time in milliseconds between each search
+     */
     throttle: {
       type: Number,
       default: 600
@@ -137,6 +155,9 @@ export default {
       return this.search($state)
     },
     onAddedFilterValues (component) {
+      /**
+       * A value is selected for a specific component
+       */
       this.$root.$emit('filter::search::add-filter-values', component)
     }
   },

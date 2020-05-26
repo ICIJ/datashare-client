@@ -3,36 +3,36 @@
 This project uses [Vue.js](https://vuejs.org) framework. Here are all the
 components used in this application.
 
-## Widget Components
+## Widgets
 
 These widgets are used on the insights page.
 
 * [WidgetDiskUsage](components/WidgetDiskUsage.md) <br />— _Widget to display the disk space occupied by indexed files on the insights page._
 * [WidgetDocumentsByCreationDate](components/WidgetDocumentsByCreationDate.md) <br />— _Widget to display the number of file by creation date on the insights page._
 * [WidgetDocumentsByCreationDateByPath](components/WidgetDocumentsByCreationDateByPath.md) <br />— _Widget to display number of files by creation date by directory on the insights page._
-* [WidgetEmpty](components/WidgetEmpty.md) <br />— _A placeholder widget for the insights page._
+* [WidgetEmpty](components/WidgetEmpty.md) <br />— _A placeholder widget for the insights page. This widget is not intended to be usued directly._
 * [WidgetFileBarometer](components/WidgetFileBarometer.md) <br />— _Widget to display the number of indexed files on the insights page._
 * [WidgetText](components/WidgetListGroup.md) <br />— _Widget to display a list of items or links on the insights page._
 * [WidgetText](components/WidgetText.md) <br />— _Widget to display text on the insights page._
 
-## Filter Components
+## Filters
 
 These filters are used on the search filters panel.
 
-* [FilterBoilerplate](components/FilterBoilerplate.md) 
-* [FilterDate](components/FilterDate.md) 
-* [FilterDateRange](components/FilterDateRange.md) 
-* [FilterNamedEntity](components/FilterNamedEntity.md) 
-* [FilterPath](components/FilterPath.md) 
-* [FilterPathTree](components/FilterPathTree.md) 
-* [FilterPathTreeNode](components/FilterPathTreeNode.md) 
-* [FilterProject](components/FilterProject.md) 
-* [FilterRecommendedBy](components/FilterRecommendedBy.md) 
-* [FilterSearch](components/FilterSearch.md) 
-* [FilterText](components/FilterText.md) 
-* [FilterYesNo](components/FilterYesNo.md) 
+* [FilterBoilerplate](components/FilterBoilerplate.md) <br />— _A base component to wrap other filter components. Not intended to be used directly._
+* [FilterDate](components/FilterDate.md) <br />— _A Filter component to list unique date values by month._
+* [FilterDateRange](components/FilterDateRange.md) <br />— _A Filter component to pick a date range._
+* [FilterNamedEntity](components/FilterNamedEntity.md) <br />— _A Filter component to list named entity for a specific type._
+* [FilterPath](components/FilterPath.md) <br />— _A Filter component to list unique directory paths._
+* [FilterPathTree](components/FilterPathTree.md) <br />— _A child of the FilterPath component to display a list of node of the path tree._
+* [FilterPathTreeNode](components/FilterPathTreeNode.md) <br />— _A child of the FilterPathTree component to display a node._
+* [FilterProject](components/FilterProject.md) <br />— _A Filter component to list projects._
+* [FilterRecommendedBy](components/FilterRecommendedBy.md) <br />— _A Filter component to list number of document recommended by each user._
+* [FilterSearch](components/FilterSearch.md) <br />— _A panel to search into a specific filter._
+* [FilterText](components/FilterText.md) <br />— _A Filter component to list unique text values._
+* [FilterYesNo](components/FilterYesNo.md) <br />— _A Filter component to boolean values. Currently used for the &quot;starred&quot; filter but should be made generic in future versions._
 
-## Page Components
+## Pages
 
 All pages components.
 
@@ -50,7 +50,7 @@ All pages components.
 * [Settings](pages/Settings.md) 
 * [UserHistory](pages/UserHistory.md) 
 
-## Other Components
+## Others
 
 * [AppliedSearchFilters](components/AppliedSearchFilters.md) <br />— _A list of applied search filters._
 * [AppliedSearchFiltersItem](components/AppliedSearchFiltersItem.md) <br />— _One applied search filter item._
@@ -59,8 +59,8 @@ All pages components.
 * [BatchSearchForm](components/BatchSearchForm.md) <br />— _A form to create a batch search._
 * [BatchSearchResultsFilters](components/BatchSearchResultsFilters.md) <br />— _Form to filter a bash search results by query_
 * [DocumentNotes](components/document/DocumentNotes.md) <br />— _A list of notes related to a document&#x27;s path and provided by the backend_
-* [DocumentTabDetails](components/document/DocumentTabDetails.md) <br />— _Panel display details and metadate about an indexed document._
-* [DocumentTabExtractedText](components/document/DocumentTabExtractedText.md) <br />— _Panel displaying the extract text of a document._
+* [DocumentTabDetails](components/document/DocumentTabDetails.md) <br />— _A panel displaying details and metadata about an indexed document._
+* [DocumentTabExtractedText](components/document/DocumentTabExtractedText.md) <br />— _A panel displaying the extract text of a document._
 * [DocumentTabNamedEntities](components/document/DocumentTabNamedEntities.md) <br />— _A panel to navigate through the named entities of a document_
 * [DocumentTabPreview](components/document/DocumentTabPreview.md) <br />— _A panel displaying a preview for a document._
 * [DocumentTabTranslations](components/document/DocumentTabTranslations.md) <br />— _A panel listing a document&#x27;s translations_
@@ -84,7 +84,7 @@ All pages components.
 * [DocumentTypeCard](components/DocumentTypeCard.md) <br />— _A small card to display information about the content-type of a document._
 * [EmailString](components/EmailString.md) <br />— _Rich email display with shortcuts to the global search._
 * [ExtractingForm](components/ExtractingForm.md) <br />— _A form to start indexing documents in the data directory._
-* [FiltersPanel](components/FiltersPanel.md) 
+* [FiltersPanel](components/FiltersPanel.md) <br />— _A panel displaying all registered filters._
 * [FindNamedEntitiesForm](components/FindNamedEntitiesForm.md) <br />— _A form to start indexing named entities in indexed documents._
 * [Hook](components/Hook.md) <br />— _Create a Hook slot. Hooks are registred on-the-fly by plugins to insert arbitrary components._
 * [LocalesMenu](components/LocalesMenu.md) <br />— _A button toggling a menu to select active locale._

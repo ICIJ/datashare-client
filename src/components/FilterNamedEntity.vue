@@ -35,6 +35,9 @@ import utils from '@/mixins/utils'
 
 const api = new Api()
 
+/**
+ * A Filter component to list named entity for a specific type.
+ */
 export default {
   name: 'FilterNamedEntity',
   components: { FilterBoilerplate },

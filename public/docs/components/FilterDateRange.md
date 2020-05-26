@@ -1,5 +1,7 @@
 # FilterDateRange
 
+> A Filter component to pick a date range.
+
 ## Props
 
 | Prop name       | Description | Type    | Values | Default |

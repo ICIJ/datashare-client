@@ -1,5 +1,7 @@
 # FilterProject
 
+> A Filter component to list projects.
+
 ## Props
 
 | Prop name       | Description | Type    | Values | Default |

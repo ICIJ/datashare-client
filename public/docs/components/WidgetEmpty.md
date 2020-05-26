@@ -1,6 +1,6 @@
 # WidgetEmpty
 
-> A placeholder widget for the insights page.
+> A placeholder widget for the insights page. This widget is not intended to be usued directly.
 
 ## Props
 

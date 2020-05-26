@@ -1,18 +1,20 @@
 # FilterPathTreeNode
 
+> A child of the FilterPathTree component to display a node.
+
 ## Props
 
-| Prop name       | Description | Type    | Values | Default |
-| --------------- | ----------- | ------- | ------ | ------- |
-| filter          |             | object  | -      |         |
-| hideHeader      |             | boolean | -      | false   |
-| hideSearch      |             | boolean | -      | false   |
-| hideShowMore    |             | boolean | -      | false   |
-| hideExclude     |             | boolean | -      | false   |
-| asyncItems      |             | array   | -      | null    |
-| asyncTotal      |             | number  | -      | 0       |
-| asyncTotalCount |             | number  | -      | 0       |
-| node            |             | object  | -      |         |
+| Prop name       | Description       | Type    | Values | Default |
+| --------------- | ----------------- | ------- | ------ | ------- |
+| filter          | Filter definition | object  | -      |         |
+| hideHeader      |                   | boolean | -      | false   |
+| hideSearch      |                   | boolean | -      | false   |
+| hideShowMore    |                   | boolean | -      | false   |
+| hideExclude     |                   | boolean | -      | false   |
+| asyncItems      |                   | array   | -      | null    |
+| asyncTotal      |                   | number  | -      | 0       |
+| asyncTotalCount |                   | number  | -      | 0       |
+| node            | Node definition   | object  | -      |         |
 
 ## Events
 

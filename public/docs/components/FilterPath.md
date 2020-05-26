@@ -1,5 +1,7 @@
 # FilterPath
 
+> A Filter component to list unique directory paths.
+
 ## Props
 
 | Prop name       | Description | Type    | Values | Default |

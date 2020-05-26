@@ -13,12 +13,21 @@
 <script>
 import FilterPathTreeNode from '@/components/FilterPathTreeNode'
 
+/**
+ * A child of the FilterPath component to display a list of node of the path tree.
+ */
 export default {
   name: 'FilterPathTree',
   props: {
+    /**
+     * List of nodes
+     */
     treeData: {
       type: Array
     },
+    /**
+     * Filter definition
+     */
     filter: {
       type: Object
     }

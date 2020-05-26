@@ -1,5 +1,7 @@
 # FilterText
 
+> A Filter component to list unique text values.
+
 ## Props
 
 | Prop name       | Description | Type    | Values | Default |

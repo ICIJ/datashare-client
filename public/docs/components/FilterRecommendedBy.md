@@ -1,5 +1,7 @@
 # FilterRecommendedBy
 
+> A Filter component to list number of document recommended by each user.
+
 ## Props
 
 | Prop name       | Description | Type    | Values | Default |

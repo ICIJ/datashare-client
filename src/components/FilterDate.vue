@@ -19,6 +19,9 @@ import FilterBoilerplate from '@/components/FilterBoilerplate'
 import get from 'lodash/get'
 import sumBy from 'lodash/sumBy'
 
+/**
+ * A Filter component to list unique date values by month.
+ */
 export default {
   name: 'FilterDate',
   components: {

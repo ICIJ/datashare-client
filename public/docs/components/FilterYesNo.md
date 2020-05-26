@@ -1,5 +1,7 @@
 # FilterYesNo
 
+> A Filter component to boolean values. Currently used for the "starred" filter but should be made generic in future versions.
+
 ## Props
 
 | Prop name       | Description | Type    | Values | Default |

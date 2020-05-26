@@ -48,12 +48,21 @@ import PQueue from 'p-queue'
 
 import filters from '@/mixins/filters'
 
+/**
+ * A child of the FilterPathTree component to display a node.
+ */
 export default {
   name: 'FilterPathTreeNode',
   props: {
+    /**
+     * Node definition
+     */
     node: {
       type: Object
     },
+    /**
+     * Filter definition
+     */
     filter: {
       type: Object
     }

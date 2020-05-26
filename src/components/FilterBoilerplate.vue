@@ -99,6 +99,10 @@ import toLower from 'lodash/toLower'
 import filters from '@/mixins/filters'
 import Hook from '@/components/Hook'
 
+/**
+ * A base component to wrap other filter components. Not intended to be used directly.
+ * This was created to implement an "extendable" component with template slots because Vue.js doesn't allow to extend a component while redefining only "slots" in its templates.
+ */
 export default {
   name: 'FilterBoilerplate',
   mixins: [filters],
@@ -181,7 +185,13 @@ export default {
       }
     },
     asyncFilterSearch () {
+      /**
+       * Triggered at the root level when user starts to search in the filter values.
+       */
       this.$root.$emit('filter::async-search', this.filter, this.filterQuery)
+      /**
+       * Triggered when user starts to search in the filter values.
+       */
       this.$emit('async-search', this.filter, this.filterQuery)
     },
     aggregateWithLoading () {

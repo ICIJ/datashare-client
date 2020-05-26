@@ -29,6 +29,9 @@ import FilterBoilerplate from '@/components/FilterBoilerplate'
 import max from 'lodash/max'
 import min from 'lodash/min'
 
+/**
+ * A Filter component to pick a date range.
+ */
 export default {
   name: 'FilterDateRange',
   components: {

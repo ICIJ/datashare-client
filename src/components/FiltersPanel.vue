@@ -53,6 +53,9 @@ import FilterSearch from '@/components/FilterSearch'
 import FilterText from '@/components/FilterText'
 import FilterYesNo from '@/components/FilterYesNo'
 
+/**
+ * A panel displaying all registered filters.
+ */
 export default {
   name: 'FiltersPanel',
   components: {

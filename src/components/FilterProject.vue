@@ -23,6 +23,9 @@ import map from 'lodash/map'
 import ProjectSelector from '@/components/ProjectSelector'
 import filters from '@/mixins/filters'
 
+/**
+ * A Filter component to list projects.
+ */
 export default {
   name: 'FilterProject',
   mixins: [filters],
