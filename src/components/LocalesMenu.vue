@@ -22,17 +22,24 @@ import find from 'lodash/find'
 
 import settings from '@/utils/settings'
 
+/**
+ * A button toggling a menu to select active locale.
+ */
 export default {
   name: 'LocalesMenu',
   props: {
+    /**
+     * Button size
+     * @values sm, md, lg
+     */
     size: {
       type: String
     },
+    /**
+     * Hide de caret
+     */
     noCaret: {
       type: Boolean
-    },
-    toggleClass: {
-      type: String
     }
   },
   data () {

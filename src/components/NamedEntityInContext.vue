@@ -11,15 +11,27 @@
 import trim from 'lodash/trim'
 import VueScrollTo from 'vue-scrollto'
 
+/**
+ * Display a named entity in context.
+ */
 export default {
   name: 'NamedEntityInContext',
   props: {
+    /**
+     * Document to get extracted text from.
+     */
     document: {
       type: Object
     },
+    /**
+     * Named entity to highlight in the text
+     */
     namedEntity: {
       type: Object
     },
+    /**
+     * Size of the text extract
+     */
     extractLength: {
       type: Number,
       default: 560

@@ -43,9 +43,15 @@ const { mapFields } = createHelpers({
   mutationType: 'indexing/updateField'
 })
 
+/**
+ * A form to start indexing documents in the data directory.
+ */
 export default {
   name: 'ExtractingForm',
   props: {
+    /**
+     * Callback function to call when the form have been submitted (this should be replaced by an event in future versions).
+     */
     finally: {
       type: Function,
       default: noop

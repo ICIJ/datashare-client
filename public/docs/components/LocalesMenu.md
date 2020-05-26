@@ -1,12 +1,13 @@
 # LocalesMenu
 
+> A button toggling a menu to select active locale.
+
 ## Props
 
-| Prop name   | Description | Type    | Values | Default |
-| ----------- | ----------- | ------- | ------ | ------- |
-| size        |             | string  | -      |         |
-| noCaret     |             | boolean | -      |         |
-| toggleClass |             | string  | -      |         |
+| Prop name | Description   | Type    | Values           | Default |
+| --------- | ------------- | ------- | ---------------- | ------- |
+| size      | Button size   | string  | `sm`, `md`, `lg` |         |
+| noCaret   | Hide de caret | boolean | -                |         |
 
 ## Slots
 

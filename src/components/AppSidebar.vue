@@ -172,6 +172,9 @@ import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 import { isNarrowScreen } from '@/utils/screen'
 
+/**
+ * The global app sidebar.
+ */
 export default {
   name: 'AppSidebar',
   mixins: [docs, utils],

@@ -37,21 +37,39 @@ import elasticsearch from '@/api/elasticsearch'
 import displayUser from '@/filters/displayUser'
 import settings from '@/utils/settings'
 
+/**
+ * A small form to add tags to a one or several documents.
+ */
 export default {
   name: 'DocumentTagsForm',
   props: {
+    /**
+     * The selected document(s)
+     */
     document: {
       type: [Object, Array]
     },
+    /**
+     * List of existing tags for the selection
+     */
     tags: {
       type: Array
     },
+    /**
+     * Display the list of tags
+     */
     displayTags: {
       type: Boolean
     },
+    /**
+     * Display the form
+     */
     displayForm: {
       type: Boolean
     },
+    /**
+     * Form display mode
+     */
     mode: {
       type: String,
       default: 'light'

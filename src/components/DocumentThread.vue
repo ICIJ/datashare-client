@@ -90,12 +90,21 @@ import EsDocList from '@/api/resources/EsDocList'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 import EmailString from '@/components/EmailString'
 
+/**
+ * Display a document's thread (for emails)
+ */
 export default {
   name: 'DocumentThread',
   props: {
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     },
+    /**
+     * A list of named entities to forward to the document content component
+     */
     namedEntities: {
       type: Array,
       default: () => ([])

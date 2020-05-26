@@ -18,6 +18,9 @@ import Hook from '@/components/Hook'
 import SearchBar from '@/components/SearchBar'
 import SearchLayoutSelector from '@/components/SearchLayoutSelector'
 
+/**
+ * The global app navigation bar.
+ */
 export default {
   name: 'AppNav',
   components: {

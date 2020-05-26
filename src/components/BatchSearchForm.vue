@@ -197,6 +197,9 @@ import Fuse from 'fuse.js'
 import elasticsearch from '@/api/elasticsearch'
 import types from '@/utils/types.json'
 
+/**
+ * A form to create a batch search.
+ */
 export default {
   name: 'BatchSearchForm',
   data () {

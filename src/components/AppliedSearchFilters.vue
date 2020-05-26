@@ -12,6 +12,9 @@ import { FilterDate } from '@/store/filters'
 import map from 'lodash/map'
 import parseInt from 'lodash/parseInt'
 
+/**
+ * A list of applied search filters.
+ */
 export default {
   name: 'AppliedSearchFilters',
   components: {

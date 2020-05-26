@@ -44,34 +44,62 @@ import max from 'lodash/max'
 import noop from 'lodash/noop'
 import uniqueId from 'lodash/uniqueId'
 
+/**
+ * Pagination links (previous, next, first and last) for the global search.
+ */
 export default {
   name: 'Pagination',
   props: {
+    /**
+     * Total number of entries.
+     */
     total: {
       type: Number
     },
+    /**
+     * Template function to build the `to` value of each link.
+     */
     getToTemplate: {
       type: Function,
       default: noop
     },
+    /**
+     * A function to call to determine if the paginator is displayed.
+     */
     isDisplayed: {
       type: Function,
       default: noop
     },
+    /**
+     * Page size property in the `to` object.
+     */
     sizeAttr: {
       type: String,
       default: 'size'
     },
+    /**
+     * Page offset property in the `to` object.
+     */
     fromAttr: {
       type: String,
       default: 'from'
     },
+    /**
+     * Hide the link to the first page.
+     */
     noFirstPageLink: {
       type: Boolean
     },
+    /**
+     * Hide the link to the last page.
+     */
     noLastPageLink: {
       type: Boolean
     },
+    /**
+     * Position of the paginator to choose tooltip's placement
+     * @values top, bottom
+     */
     position: {
       type: String,
       default: 'top'

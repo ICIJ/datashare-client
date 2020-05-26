@@ -36,6 +36,9 @@
 import uniqueId from 'lodash/uniqueId'
 import TreeView from '@/components/TreeView'
 
+/**
+ * Disk path to the data directory mounted by Datashare.
+ */
 export default {
   name: 'MountedDataLocation',
   components: {

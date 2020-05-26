@@ -2,6 +2,9 @@
 import shortkeys from '@/mixins/shortkeys'
 import utils from '@/mixins/utils'
 
+/**
+ * A form to search for terms inside the current document.
+ */
 export default {
   name: 'DocumentLocalSearchInput',
   mixins: [shortkeys, utils],
@@ -10,17 +13,30 @@ export default {
     event: 'input'
   },
   props: {
+    /**
+     * An object containing a property `label` to use as search term
+     * @model
+     */
     searchTerm: {
       type: Object
     },
+    /**
+     * The position of the current occurence of the term
+     */
     searchIndex: {
       type: Number,
       default: 0
     },
+    /**
+     * The list of all occurencies
+     */
     searchOccurrences: {
       type: Number,
       default: 0
     },
+    /**
+     * True if a worker is currently searching for the term
+     */
     searchWorkerInProgress: {
       type: Boolean
     }
@@ -37,15 +53,27 @@ export default {
   },
   methods: {
     start () {
+      /**
+       * User started to search a term
+       */
       this.$emit('start', this.searchTerm)
     },
     previous () {
+      /**
+       * User selected the previous occurence of the term
+       */
       this.$emit('previous', this.searchTerm)
     },
     next () {
+      /**
+       * User selected the next occurence of the term
+       */
       this.$emit('next', this.searchTerm)
     },
     activateSearchBar () {
+      /**
+       * User set focus on the search input
+       */
       this.$emit('update:activated', true)
       this.$set(this, 'isActive', true)
       this.$nextTick(() => {
@@ -55,6 +83,9 @@ export default {
       })
     },
     deactivateSearchBar () {
+      /**
+       * User lost focus on the search input
+       */
       this.$emit('update:activated', false)
       this.$set(this, 'isActive', false)
       this.$emit('input', '')

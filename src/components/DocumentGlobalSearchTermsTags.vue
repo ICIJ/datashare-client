@@ -3,10 +3,16 @@ import { mapGetters } from 'vuex'
 
 import utils from '@/mixins/utils'
 
+/**
+ * A list of search terms tags.
+ */
 export default {
   name: 'DocumentGlobalSearchTermsTags',
   mixins: [utils],
   props: {
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     }

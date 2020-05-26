@@ -12,20 +12,45 @@ import { getCookie } from 'tiny-cookie'
 import kebabCase from 'lodash/kebabCase'
 import startCase from 'lodash/startCase'
 
+/**
+ * The document's thumbnail (using the preview) server
+ */
 export default {
   name: 'DocumentThumbnail',
   props: {
-    document: Object,
+    /**
+     * The selected document
+     */
+    document: {
+      type: Object
+    },
+    /**
+     * The page to display
+     */
     page: {
       type: Number,
       default: 0
     },
+    /**
+     * Size of the thumbnail
+     * @values xs, sm, md, lg, xl
+     */
     size: {
       type: [Number, String],
       default: 'sm'
     },
-    crop: Boolean,
-    lazy: Boolean
+    /**
+     * Crop the image to have fixed squared size
+     */
+    crop: {
+      type: Boolean,
+    },
+    /**
+     * Load the thumbnail only when it enters the viewport
+     */
+    lazy: {
+      type: Boolean,
+    },
   },
   data () {
     return {

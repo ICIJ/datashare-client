@@ -27,12 +27,21 @@ import trim from 'lodash/trim'
 
 const EMAIL_REGEX = new RegExp('(.+)\<(.+)\>', 'i')
 
+/**
+ * Rich email display with shortcuts to the global search.
+ */
 export default {
   name: 'EmailString',
   props: {
+    /**
+     * Email to display.
+     */
     email: {
       type: String
     },
+    /**
+     * Specify the HTML tag to render instead of the default tag.
+     */
     tag: {
       type: String,
       default: 'span'

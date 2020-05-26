@@ -87,12 +87,21 @@ import map from 'lodash/map'
 import omit from 'lodash/omit'
 import orderBy from 'lodash/orderBy'
 
+/**
+ * Form to filter a bash search results by query
+ */
 export default {
   name: 'BatchSearchResultsFilters',
   props: {
+    /**
+     * The bath search uuid
+     */
     uuid: {
       type: String
     },
+    /**
+     * The bath search index
+     */
     index: {
       type: String
     }

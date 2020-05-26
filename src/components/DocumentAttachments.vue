@@ -22,9 +22,15 @@ import flatten from 'lodash/flatten'
 import sum from 'lodash/sum'
 import elasticsearch from '@/api/elasticsearch'
 
+/**
+ * A list of attachments for a document (usualy, it's child documents)
+ */
 export default {
   name: 'DocumentAttachments',
   props: {
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     }

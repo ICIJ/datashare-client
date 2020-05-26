@@ -52,10 +52,16 @@ const { mapFields } = createHelpers({
   mutationType: 'indexing/updateField'
 })
 
+/**
+ * A form to start indexing named entities in indexed documents.
+ */
 export default {
   name: 'FindNamedEntitiesForm',
   mixins: [utils],
   props: {
+    /**
+     * Callback function to call when the form have been submitted (this should be replaced by an event in future versions).
+     */
     finally: {
       type: Function,
       default: noop

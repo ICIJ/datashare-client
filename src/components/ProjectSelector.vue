@@ -7,13 +7,24 @@ import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import map from 'lodash/map'
 
+/**
+ * A single-project selector input.
+ */
 export default {
   name: 'ProjectSelector',
   props: {
+    /**
+     * The selected project value.
+     * @model
+     */
     value: {
       type: String,
       required: true
     },
+    /**
+     * Select size
+     * @values sm, md, lg
+     */
     size: {
       type: String,
       default: 'md'

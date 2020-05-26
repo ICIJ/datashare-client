@@ -40,6 +40,9 @@
 <script>
 import startCase from 'lodash/startCase'
 
+/**
+ * List all the projects with cards linking to the search.
+ */
 export default {
   data () {
     return {

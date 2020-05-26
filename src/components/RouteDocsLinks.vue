@@ -30,6 +30,9 @@
 import get from 'lodash/get'
 import docs from '@/mixins/docs'
 
+/**
+ * Create a list of links to the user-guides.
+ */
 export default {
   name: 'RouteDocsLinks',
   mixins: [docs],

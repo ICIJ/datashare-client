@@ -10,23 +10,44 @@
 <script>
 import settings from '@/utils/settings'
 
+/**
+ * Button to reset all search filters.
+ */
 export default {
   name: 'ResetFiltersButton',
   props: {
+    /**
+     * Bootsrap variant class of the button.
+     *
+     * @values primary, secondary, success, danger, warning, info, light, dark, outline-primary, outline-secondary, outline-success, outline-danger, outline-warning, outline-info, outline-light, outline-dark
+     */
     variant: {
-      default: 'btn-outline-secondary',
+      default: 'outline-secondary',
       type: String
     },
+    /**
+     * Button size
+     * @values sm, md, lg
+     */
     size: {
       default: 'sm',
       type: String
     },
+    /**
+     * Hide the default icon
+     */
     noIcon: {
       type: Boolean
     },
+    /**
+     * Hide the button automaticaly when no filters are active
+     */
     autoHiding: {
       type: Boolean
     },
+    /**
+     * Default icon for the button
+     */
     icon: {
       type: String,
       default: 'times-circle'
@@ -54,6 +75,9 @@ export default {
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
       this.$root.$emit('bv::hide::popover')
+      /**
+       * Filters have been reseted.
+       */
       this.$root.$emit('filter::search::reset-filters')
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() }).catch(() => {})
     }

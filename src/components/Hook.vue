@@ -1,14 +1,26 @@
 <script>
+/**
+ * Create a Hook slot. Hooks are registred on-the-fly by plugins to insert arbitrary components.
+ */
 export default {
   name: 'Hook',
   props: {
+    /**
+     * Name of the hook (targetted by plugins).
+     */
     name: {
       type: String
     },
+    /**
+     * Specify the HTML tag to render instead of the default tag.
+     */
     tag: {
       type: String,
       default: 'span'
     },
+    /**
+     * Properties to pass to each hooks.
+     */
     bind: {
       type: Object,
       default: () => {}

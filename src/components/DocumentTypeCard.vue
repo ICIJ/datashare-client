@@ -17,9 +17,19 @@
 <script>
 import DocumentThumbnail from './DocumentThumbnail.vue'
 
+/**
+ * A small card to display information about the content-type of a document.
+ */
 export default {
   name: 'DocumentTypeCard',
-  props: ['document'],
+  props: {
+    /**
+     * The selected document.
+     */
+    document: {
+      type: Object
+    }
+  },
   components: {
     DocumentThumbnail
   },

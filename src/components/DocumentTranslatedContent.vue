@@ -28,9 +28,15 @@
 <script>
 import DocumentContent from '@/components/DocumentContent'
 
+/**
+ * Displayed document text content and it's translated alternatives.
+ */
 export default {
   name: 'DocumentTranslatedContent',
   props: {
+    /**
+     * The selected document.
+     */
     document: {
       type: Object
     }

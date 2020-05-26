@@ -12,6 +12,9 @@ import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import LocalSearchWorker from '@/utils/local-search.webworker'
 
+/**
+ * Display a document's extract text after applying a series of transformation with a pipeline.
+ */
 export default {
   name: 'DocumentContent',
   components: {
@@ -22,9 +25,15 @@ export default {
   },
   mixins: [ner, utils],
   props: {
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     },
+    /**
+     * The active content translation
+     */
     translatedContent: {
       type: String
     }

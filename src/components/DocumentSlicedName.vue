@@ -26,11 +26,20 @@
 import types from '@/utils/types.json'
 import get from 'lodash/get'
 
+/**
+ * Display a document name in a sliced maner (to include parents).
+ */
 export default {
   props: {
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     },
+    /**
+     * Document's root should be links
+     */
     interactiveRoot: {
       type: Boolean
     }

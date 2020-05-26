@@ -8,9 +8,15 @@
 <script>
 import displayUser from '@/filters/displayUser'
 
+/**
+ * One applied search filter item.
+ */
 export default {
   name: 'AppliedSearchFiltersItem',
   props: {
+    /**
+     * The applied filter
+     */
     filter: {
       type: Object
     }

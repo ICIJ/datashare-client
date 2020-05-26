@@ -32,6 +32,9 @@ import DocumentTypeCard from '@/components/DocumentTypeCard'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
 import features from '@/mixins/features'
 
+/**
+ * A list actions to apply to a document
+ */
 export default {
   name: 'DocumentActions',
   components: {
@@ -40,47 +43,87 @@ export default {
   },
   mixins: [features],
   props: {
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     },
+    /**
+     * Use a vertical layout
+     */
     vertical: {
       type: Boolean
     },
+    /**
+     * Tooltip's placement on each action
+     * @values auto, top, bottom, left, right, topleft, topright, bottomleft, bottomright, lefttop, leftbottom, righttop, rightbottom
+     */
     tooltipsPlacement: {
       type: String,
       default: 'top'
     },
+    /**
+     * Show the download button
+     */
     displayDownload: {
       type: Boolean
     },
+    /**
+     * True if download is allowed for the document
+     */
     isDownloadAllowed: {
       type: Boolean
     },
+    /**
+     * Class to apply to the starring button
+     */
     starBtnClass: {
       type: String,
       default: 'btn-link btn-sm'
     },
+    /**
+     * Class to apply to the starring button when document is starred
+     */
     starredBtnClass: {
       type: String,
       default: 'starred'
     },
+    /**
+     * Class to apply to the download button
+     */
     downloadBtnClass: {
       type: String,
       default: 'btn-link btn-sm'
     },
+    /**
+     * Class to apply to the popup button
+     */
     popupBtnClass: {
       type: String,
       default: 'btn-link btn-sm'
     },
+    /**
+     * Show label for the starring button
+     */
     starBtnLabel: {
       type: Boolean
     },
+    /**
+     * Show label for the download button
+     */
     downloadBtnLabel: {
       type: Boolean
     },
+    /**
+     * Show label for the popup button
+     */
     popupBtnLabel: {
       type: Boolean
     },
+    /**
+     * Disable the use of button group arround each button
+     */
     noBtnGroup: {
       type: Boolean
     }
