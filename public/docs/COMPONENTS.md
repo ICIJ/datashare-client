@@ -52,12 +52,12 @@ All pages components.
 
 ## Other Components
 
-* [AppliedSearchFilters](components/AppliedSearchFilters.md) 
-* [AppliedSearchFiltersItem](components/AppliedSearchFiltersItem.md) 
-* [AppNav](components/AppNav.md) 
-* [AppSidebar](components/AppSidebar.md) 
-* [BatchSearchForm](components/BatchSearchForm.md) 
-* [BatchSearchResultsFilters](components/BatchSearchResultsFilters.md) 
+* [AppliedSearchFilters](components/AppliedSearchFilters.md) <br />— _A list of applied search filters._
+* [AppliedSearchFiltersItem](components/AppliedSearchFiltersItem.md) <br />— _One applied search filter item._
+* [AppNav](components/AppNav.md) <br />— _The global app navigation bar._
+* [AppSidebar](components/AppSidebar.md) <br />— _The global app sidebar._
+* [BatchSearchForm](components/BatchSearchForm.md) <br />— _A form to create a batch search._
+* [BatchSearchResultsFilters](components/BatchSearchResultsFilters.md) <br />— _Form to filter a bash search results by query_
 * [DocumentNotes](components/document/DocumentNotes.md) 
 * [DocumentTabDetails](components/document/DocumentTabDetails.md) 
 * [DocumentTabExtractedText](components/document/DocumentTabExtractedText.md) 
@@ -71,31 +71,31 @@ All pages components.
 * [PdfViewer](components/document/viewers/PdfViewer.md) 
 * [SpreadsheetViewer](components/document/viewers/SpreadsheetViewer.md) 
 * [TiffViewer](components/document/viewers/TiffViewer.md) 
-* [DocumentActions](components/DocumentActions.md) 
-* [DocumentAttachments](components/DocumentAttachments.md) 
-* [DocumentContent](components/DocumentContent.md) 
-* [DocumentGlobalSearchTermsTags](components/DocumentGlobalSearchTermsTags.md) 
-* [DocumentLocalSearchInput](components/DocumentLocalSearchInput.md) 
-* [DocumentSlicedName](components/DocumentSlicedName.md) 
-* [DocumentTagsForm](components/DocumentTagsForm.md) 
-* [DocumentThread](components/DocumentThread.md) 
-* [DocumentThumbnail](components/DocumentThumbnail.md) 
-* [DocumentTranslatedContent](components/DocumentTranslatedContent.md) 
-* [DocumentTypeCard](components/DocumentTypeCard.md) 
-* [EmailString](components/EmailString.md) 
-* [ExtractingForm](components/ExtractingForm.md) 
+* [DocumentActions](components/DocumentActions.md) <br />— _A list actions to apply to a document_
+* [DocumentAttachments](components/DocumentAttachments.md) <br />— _A list of attachments for a document (usualy, it&#x27;s child documents)_
+* [DocumentContent](components/DocumentContent.md) <br />— _Display a document&#x27;s extract text after applying a series of transformation with a pipeline._
+* [DocumentGlobalSearchTermsTags](components/DocumentGlobalSearchTermsTags.md) <br />— _A list of search terms tags._
+* [DocumentLocalSearchInput](components/DocumentLocalSearchInput.md) <br />— _A form to search for terms inside the current document._
+* [DocumentSlicedName](components/DocumentSlicedName.md) <br />— _Display a document name in a sliced maner (to include parents)._
+* [DocumentTagsForm](components/DocumentTagsForm.md) <br />— _A small form to add tags to a one or several documents._
+* [DocumentThread](components/DocumentThread.md) <br />— _Display a document&#x27;s thread (for emails)_
+* [DocumentThumbnail](components/DocumentThumbnail.md) <br />— _The document&#x27;s thumbnail (using the preview) server_
+* [DocumentTranslatedContent](components/DocumentTranslatedContent.md) <br />— _Displayed document text content and it&#x27;s translated alternatives._
+* [DocumentTypeCard](components/DocumentTypeCard.md) <br />— _A small card to display information about the content-type of a document._
+* [EmailString](components/EmailString.md) <br />— _Rich email display with shortcuts to the global search._
+* [ExtractingForm](components/ExtractingForm.md) <br />— _A form to start indexing documents in the data directory._
 * [FiltersPanel](components/FiltersPanel.md) 
-* [FindNamedEntitiesForm](components/FindNamedEntitiesForm.md) 
-* [Hook](components/Hook.md) 
-* [LocalesMenu](components/LocalesMenu.md) 
-* [MountedDataLocation](components/MountedDataLocation.md) 
-* [NamedEntityInContext](components/NamedEntityInContext.md) 
-* [Pagination](components/Pagination.md) 
-* [ProjectCards](components/ProjectCards.md) 
-* [ProjectSelector](components/ProjectSelector.md) 
-* [ResetFiltersButton](components/ResetFiltersButton.md) 
-* [RouteDocsLinks](components/RouteDocsLinks.md) 
-* [RouterLinkPopup](components/RouterLinkPopup.md) 
+* [FindNamedEntitiesForm](components/FindNamedEntitiesForm.md) <br />— _A form to start indexing named entities in indexed documents._
+* [Hook](components/Hook.md) <br />— _Create a Hook slot. Hooks are registred on-the-fly by plugins to insert arbitrary components._
+* [LocalesMenu](components/LocalesMenu.md) <br />— _A button toggling a menu to select active locale._
+* [MountedDataLocation](components/MountedDataLocation.md) <br />— _Disk path to the data directory mounted by Datashare._
+* [NamedEntityInContext](components/NamedEntityInContext.md) <br />— _Display a named entity in context._
+* [Pagination](components/Pagination.md) <br />— _Pagination links (previous, next, first and last) for the global search._
+* [ProjectCards](components/ProjectCards.md) <br />— _List all the projects with cards linking to the search._
+* [ProjectSelector](components/ProjectSelector.md) <br />— _A single-project selector input._
+* [ResetFiltersButton](components/ResetFiltersButton.md) <br />— _Button to reset all search filters._
+* [RouteDocsLinks](components/RouteDocsLinks.md) <br />— _Create a list of links to the user-guides._
+* [RouterLinkPopup](components/RouterLinkPopup.md) <br />— _A router-link that opens link in a popup._
 * [ScrollTracker](components/ScrollTracker.md) <br />— _An contextual link to the &quot;right&quot; scroll position._
 * [SearchBar](components/SearchBar.md) <br />— _The general search form._
 * [SearchDocumentNavbar](components/SearchDocumentNavbar.md) <br />— _Document navbar in the context of a search._
