@@ -69,9 +69,15 @@ import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
 import shortkeys from '@/mixins/shortkeys'
 import { getShortkeyOS } from '@/utils/utils'
 
+/**
+ * Display a spreadsheet preview of a document
+ */
 export default {
   name: 'SpreadsheetViewer',
   props: {
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     }

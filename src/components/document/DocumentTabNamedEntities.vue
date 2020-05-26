@@ -54,9 +54,19 @@ import NamedEntityInContext from '@/components/NamedEntityInContext'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 
+/**
+ * A panel to navigate through the named entities of a document
+ */
 export default {
   name: 'DocumentTabNamedEntities',
-  props: ['document'],
+  props: {
+    /**
+    * The selected document
+    */
+    document: {
+      type: Object
+    }
+  },
   mixins: [ner, utils],
   components: {
     NamedEntityInContext

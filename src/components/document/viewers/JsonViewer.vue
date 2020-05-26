@@ -7,10 +7,16 @@ import JSONFormatter from 'json-formatter-js'
 
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
+/**
+ * Display an interactive preview of JSON for a document.
+ */
 export default {
   name: 'JsonViewer',
   mixins: [datashareSourceMixin],
   props: {
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     }

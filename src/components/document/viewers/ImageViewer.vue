@@ -5,9 +5,15 @@
 </template>
 
 <script>
+/**
+ * Display a preview image of the document.
+ */
 export default {
   name: 'ImageViewer',
   props: {
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     }

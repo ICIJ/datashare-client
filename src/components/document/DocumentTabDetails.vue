@@ -81,12 +81,21 @@ import { mapState } from 'vuex'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
 
+/**
+ * Panel display details and metadate about an indexed document.
+ */
 export default {
   name: 'DocumentTabDetails',
   props: {
+    /**
+     * The selected document
+     */
     document: {
-      type: [Object, Array]
+      type: Object
     },
+    /**
+     * The parent document (if any)
+     */
     parentDocument: {
       type: Object
     }

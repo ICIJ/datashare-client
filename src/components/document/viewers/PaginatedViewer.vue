@@ -45,9 +45,15 @@ import { getCookie } from 'tiny-cookie'
 
 import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
 
+/**
+ * Display a paginated preview of a document using the preview server.
+ */
 export default {
   name: 'PaginatedViewer',
   props: {
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     }

@@ -28,9 +28,19 @@
 import XLSX from 'xlsx'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
+/**
+ * Display a legacy preview of spreadsheet for a document, using the XLXS library.
+ */
 export default {
   name: 'LegacySpreadsheetViewer',
-  props: ['document'],
+  props: {
+    /**
+     * The selected document
+     */
+    document: {
+      type: Object
+    }
+  },
   mixins: [datashareSourceMixin],
   data () {
     return {

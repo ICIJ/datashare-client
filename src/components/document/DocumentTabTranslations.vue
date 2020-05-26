@@ -21,9 +21,19 @@
 <script>
 import { mapState } from 'vuex'
 
+/**
+ * A panel listing a document's translations
+ */
 export default {
   name: 'DocumentTabTranslations',
-  props: ['document'],
+  props: {
+    /**
+    * The selected document
+    */
+    document: {
+      type: Object
+    }
+  },
   computed: {
     ...mapState('search', ['query']),
     ...mapState('document', ['showNamedEntities'])

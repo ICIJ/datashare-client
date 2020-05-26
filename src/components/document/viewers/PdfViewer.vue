@@ -42,9 +42,19 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 PDFJS.GlobalWorkerOptions.workerSrc = 'static/js/pdf.worker.js'
 
+/**
+ * Display a PDF preview of a document.
+ */
 export default {
   name: 'PdfViewer',
-  props: ['document'],
+  props: {
+    /**
+     * The selected document
+     */
+    document: {
+      type: Object
+    }
+  },
   mixins: [datashareSourceMixin],
   data () {
     return {

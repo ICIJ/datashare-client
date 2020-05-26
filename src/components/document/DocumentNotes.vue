@@ -9,9 +9,15 @@
 <script>
 import { mapState } from 'vuex'
 
+/**
+ * A list of notes related to a document's path and provided by the backend
+ */
 export default {
   name: 'DocumentNotes',
   props: {
+    /**
+     * Path to the document
+     */
     path: {
       type: String
     }

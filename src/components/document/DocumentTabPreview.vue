@@ -14,13 +14,22 @@
 <script>
 import features from '@/mixins/features'
 
+/**
+ * A panel displaying a preview for a document.
+ */
 export default {
   name: 'DocumentTabPreview',
   mixins: [features],
   props: {
+    /**
+     * Disable the preview
+     */
     disabled: {
       type: Boolean
     },
+    /**
+     * The selected document
+     */
     document: {
       type: Object
     }

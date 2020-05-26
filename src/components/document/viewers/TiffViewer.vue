@@ -44,9 +44,19 @@
 import Tiff from 'tiff.js'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
+/**
+ * Display a Tiff preview of a document
+ */
 export default {
   name: 'TiffViewer',
-  props: ['document'],
+  props: {
+    /**
+     * The selected document
+     */
+    document: {
+      type: Object
+    }
+  },
   mixins: [datashareSourceMixin],
   data () {
     return {

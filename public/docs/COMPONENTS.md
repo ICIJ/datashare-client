@@ -37,7 +37,7 @@ These filters are used on the search filters panel.
 All pages components.
 
 * [App](pages/App.md) 
-* [BatchSearches.vue](pages/BatchSearch.md) 
+* [BatchSearches](pages/BatchSearch.md) 
 * [BatchSearchResults](pages/BatchSearchResults.md) 
 * [DocumentView](pages/DocumentView.md) 
 * [Error](pages/Error.md) 
@@ -58,19 +58,19 @@ All pages components.
 * [AppSidebar](components/AppSidebar.md) <br />— _The global app sidebar._
 * [BatchSearchForm](components/BatchSearchForm.md) <br />— _A form to create a batch search._
 * [BatchSearchResultsFilters](components/BatchSearchResultsFilters.md) <br />— _Form to filter a bash search results by query_
-* [DocumentNotes](components/document/DocumentNotes.md) 
-* [DocumentTabDetails](components/document/DocumentTabDetails.md) 
-* [DocumentTabExtractedText](components/document/DocumentTabExtractedText.md) 
-* [DocumentTabNamedEntities](components/document/DocumentTabNamedEntities.md) 
-* [DocumentTabPreview](components/document/DocumentTabPreview.md) 
-* [DocumentTabTranslations](components/document/DocumentTabTranslations.md) 
-* [ImageViewer](components/document/viewers/ImageViewer.md) 
-* [JsonViewer](components/document/viewers/JsonViewer.md) 
-* [LegacySpreadsheetViewer](components/document/viewers/LegacySpreadsheetViewer.md) 
-* [PaginatedViewer](components/document/viewers/PaginatedViewer.md) 
-* [PdfViewer](components/document/viewers/PdfViewer.md) 
-* [SpreadsheetViewer](components/document/viewers/SpreadsheetViewer.md) 
-* [TiffViewer](components/document/viewers/TiffViewer.md) 
+* [DocumentNotes](components/document/DocumentNotes.md) <br />— _A list of notes related to a document&#x27;s path and provided by the backend_
+* [DocumentTabDetails](components/document/DocumentTabDetails.md) <br />— _Panel display details and metadate about an indexed document._
+* [DocumentTabExtractedText](components/document/DocumentTabExtractedText.md) <br />— _Panel displaying the extract text of a document._
+* [DocumentTabNamedEntities](components/document/DocumentTabNamedEntities.md) <br />— _A panel to navigate through the named entities of a document_
+* [DocumentTabPreview](components/document/DocumentTabPreview.md) <br />— _A panel displaying a preview for a document._
+* [DocumentTabTranslations](components/document/DocumentTabTranslations.md) <br />— _A panel listing a document&#x27;s translations_
+* [ImageViewer](components/document/viewers/ImageViewer.md) <br />— _Display a preview image of the document._
+* [JsonViewer](components/document/viewers/JsonViewer.md) <br />— _Display an interactive preview of JSON for a document._
+* [LegacySpreadsheetViewer](components/document/viewers/LegacySpreadsheetViewer.md) <br />— _Display a legacy preview of spreadsheet for a document, using the XLXS library._
+* [PaginatedViewer](components/document/viewers/PaginatedViewer.md) <br />— _Display a paginated preview of a document using the preview server._
+* [PdfViewer](components/document/viewers/PdfViewer.md) <br />— _Display a PDF preview of a document._
+* [SpreadsheetViewer](components/document/viewers/SpreadsheetViewer.md) <br />— _Display a spreadsheet preview of a document_
+* [TiffViewer](components/document/viewers/TiffViewer.md) <br />— _Display a Tiff preview of a document_
 * [DocumentActions](components/DocumentActions.md) <br />— _A list actions to apply to a document_
 * [DocumentAttachments](components/DocumentAttachments.md) <br />— _A list of attachments for a document (usualy, it&#x27;s child documents)_
 * [DocumentContent](components/DocumentContent.md) <br />— _Display a document&#x27;s extract text after applying a series of transformation with a pipeline._
