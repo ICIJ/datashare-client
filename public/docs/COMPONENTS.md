@@ -91,6 +91,7 @@ All pages components.
 * [LocalesMenu](components/LocalesMenu.md) <br />— _A button toggling a menu to select active locale._
 * [MountedDataLocation](components/MountedDataLocation.md) <br />— _Disk path to the data directory mounted by Datashare._
 * [NamedEntityInContext](components/NamedEntityInContext.md) <br />— _Display a named entity in context._
+* [PageIcon](components/PageIcon.md) <br />— _A squared icon to display on every page title_
 * [Pagination](components/Pagination.md) <br />— _Pagination links (previous, next, first and last) for the global search._
 * [ProjectCards](components/ProjectCards.md) <br />— _List all the projects with cards linking to the search._
 * [ProjectSelector](components/ProjectSelector.md) <br />— _A single-project selector input._

@@ -10,6 +10,7 @@
           <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()" />
         </b-modal>
         <h3>
+          <page-icon icon="layer-group" />
           {{ $t('batchSearch.title') }}
         </h3>
         <p class="m-0">
@@ -74,11 +75,13 @@ import { mapState } from 'vuex'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
 import BatchSearchForm from '@/components/BatchSearchForm'
+import PageIcon from '@/components/PageIcon'
 
 export default {
   name: 'BatchSearches',
   components: {
-    BatchSearchForm
+    BatchSearchForm,
+    PageIcon
   },
   filters: {
     toVariant
@@ -182,7 +185,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .batch-search {
 
     &__items {

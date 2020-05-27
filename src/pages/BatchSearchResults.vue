@@ -30,6 +30,7 @@
           </div>
         </div>
         <h3>
+          <page-icon icon="layer-group" />
           <router-link :to="{ name: 'batch-search' }">
             {{ $t('batchSearch.title') }}
           </router-link>
@@ -212,6 +213,7 @@ import Api from '@/api'
 import Auth from '@/api/resources/Auth'
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
+import PageIcon from '@/components/PageIcon'
 import humanSize from '@/filters/humanSize'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
@@ -222,7 +224,8 @@ export default {
   name: 'BatchSearchResults',
   components: {
     BatchSearchResultsFilters,
-    ContentTypeBadge
+    ContentTypeBadge,
+    PageIcon
   },
   props: {
     uuid: {

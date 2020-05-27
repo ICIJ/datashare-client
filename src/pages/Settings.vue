@@ -3,7 +3,10 @@
     <div v-if="!$config.is('multipleProjects')">
       <div class="bg-white">
         <div class="container py-5">
-          <h3>{{ $t('settings.title') }}</h3>
+          <h3>
+            <page-icon icon="cog" />
+            {{ $t('settings.title') }}
+          </h3>
           <div>{{ $t('settings.description') }}</div>
         </div>
       </div>
@@ -52,11 +55,15 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep'
+import PageIcon from '@/components/PageIcon'
 
 const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth', 'CORS']
 
 export default {
   name: 'Settings',
+  components: {
+    PageIcon
+  },
   filters: {
     sentenceCase (str) {
       const result = str.replace(/([A-Z])/g, ' $1')

@@ -8,6 +8,7 @@
             {{ $t('userHistory.clear') }}
           </confirm-button>
           <h3>
+            <page-icon icon="clock" />
             {{ $t('userHistory.heading') }}
           </h3>
           <p v-if="documents.length" class="m-0">
@@ -44,11 +45,13 @@
 import reverse from 'lodash/reverse'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
+import PageIcon from '@/components/PageIcon'
 
 export default {
   components: {
     DocumentSlicedName,
-    DocumentThumbnail
+    DocumentThumbnail,
+    PageIcon
   },
   computed: {
     documents () {

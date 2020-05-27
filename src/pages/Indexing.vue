@@ -31,6 +31,7 @@
           </b-modal>
         </div>
         <h3>
+          <page-icon icon="rocket" />
           {{ $t('indexing.title') }}
         </h3>
         <p class="m-0" v-html="$t('indexing.description', { howToLink })"></p>
@@ -97,6 +98,7 @@ import { mapState } from 'vuex'
 
 import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
+import PageIcon from '@/components/PageIcon'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
 import { getOS } from '@/utils/utils'
@@ -105,7 +107,8 @@ export default {
   name: 'indexing',
   components: {
     ExtractingForm,
-    FindNamedEntitiesForm
+    FindNamedEntitiesForm,
+    PageIcon
   },
   computed: {
     ...mapState('indexing', ['tasks']),

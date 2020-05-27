@@ -4,6 +4,7 @@
       <div class="container">
         <div class="route-doc__header py-5">
           <h3>
+            <page-icon icon="book" />
             {{ meta.title }}
           </h3>
           <p class="m-0 route-doc__header__description">
@@ -20,9 +21,13 @@
 
 <script>
 import docs from '@/mixins/docs'
+import PageIcon from '@/components/PageIcon'
 
 export default {
   name: 'RouteDoc',
+  components: {
+    PageIcon
+  },
   mixins: [ docs ],
   props: {
     slug: {
