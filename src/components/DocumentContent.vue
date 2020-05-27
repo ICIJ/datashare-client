@@ -231,7 +231,7 @@ export default {
 <style lang="scss">
   .document-content {
     &__toolbox {
-      background: $light;
+      background: $lighter;
       box-shadow: 0 -1 * $spacer 0 0 white;
       left: 0;
       margin: $spacer $grid-gutter-width * 0.5;

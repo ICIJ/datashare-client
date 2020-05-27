@@ -3,17 +3,30 @@
     <div class="batch-search-results__explanation bg-white py-5">
       <div class="container">
         <div class="float-right d-flex my-2 mx-3">
+          <div>
+            <b-button variant="light" class="mr-2" id="batch-search-results-filters-toggler" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
+              <fa icon="filter" />
+              <span class="sr-only">
+                {{ $t('batchSearchResultsFilters.queries.heading') }}
+              </span>
+            </b-button>
+            <b-popover target="batch-search-results-filters-toggler" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
+              <batch-search-results-filters :uuid="uuid" :index="index" hide-border />
+            </b-popover>
+          </div>
+          <div class="batch-search-results__delete" v-if="isMyBatchSearch">
+            <confirm-button class="btn btn-light mr-2" :confirmed="deleteBatchSearch" v-b-tooltip.hover :title="$t('batchSearch.delete')">
+              <fa icon="trash-alt" />
+              <span class="sr-only">
+                {{ $t('batchSearch.delete') }}
+              </span>
+            </confirm-button>
+          </div>
           <div class="batch-search-results__download float-right" v-if="results.length > 0">
             <a :href="downloadLink" class="btn btn-primary">
               <fa icon="download" />
               {{ $t('batchSearchResults.downloadResults') }} (CSV)
             </a>
-          </div>
-          <div class="batch-search-results__delete" v-if="isMyBatchSearch">
-            <confirm-button class="btn btn-primary ml-2" :confirmed="deleteBatchSearch">
-              <fa icon="trash-alt" />
-              {{ $t('batchSearch.delete') }}
-            </confirm-button>
           </div>
         </div>
         <h3>
@@ -29,14 +42,20 @@
       </div>
     </div>
     <div class="container py-4">
-      <div class="batch-search-results__info d-md-flex">
-        <batch-search-results-filters :uuid="uuid" :index="index" class="order-2 mb-3" />
-        <dl class="row w-100 mx-0" v-if="Object.keys(batchSearch).length !== 0">
+      <div class="batch-search-results__info d-md-flex align-items-start" v-if="Object.keys(batchSearch).length !== 0">
+        <dl class="row mb-0">
           <dt class="text-nowrap col-sm-4 text-right" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.project') }}
           </dt>
           <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
             {{ batchSearch.project.name }}
+          </dd>
+          <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
+            {{ $t('batchSearch.published') }}
+          </dt>
+          <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
+            <b-form-checkbox v-model="published" switch @change="changePublished" v-if="isMyBatchSearch"></b-form-checkbox>
+            <span v-else>{{ batchSearch.published ? $t('indexing.yes') : $t('indexing.no') }}</span>
           </dd>
           <dt class="text-nowrap col-sm-4 text-right">
             {{ $t('batchSearch.state') }}
@@ -46,7 +65,7 @@
               @click.prevent="openErrorMessage"
               :class="{ 'cursor-pointer': isFailed }"
               :variant="batchSearch.state | toVariant">
-              {{ capitalize(batchSearch .state) }}
+              {{ capitalize(batchSearch.state) }}
             </b-badge>
           </dd>
           <dt class="text-nowrap col-sm-4 text-right">
@@ -61,6 +80,8 @@
           <dd class="col-sm-8">
             {{ batchSearch.nbResults }}
           </dd>
+        </dl>
+        <dl class="row mb-0">
           <dt class="text-nowrap col-sm-4 text-right">
             {{ $t('batchSearch.phraseMatch') }}
           </dt>
@@ -102,13 +123,6 @@
             </span>
           </dd>
           <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
-            {{ $t('batchSearch.published') }}
-          </dt>
-          <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
-            <b-form-checkbox v-model="published" switch @change="changePublished" v-if="isMyBatchSearch"></b-form-checkbox>
-            <span v-else>{{ batchSearch.published ? $t('indexing.yes') : $t('indexing.no') }}</span>
-          </dd>
-          <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.author') }}
           </dt>
           <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
@@ -123,7 +137,7 @@
           <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
         </div>
         <div class="batch-search-results__queries">
-          <div class="card border-top-0 border-bottom-0 small">
+          <div class="card small">
             <b-table
               hover
               no-local-sorting
@@ -393,9 +407,10 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .batch-search-results {
   &__queries {
+
     .table-responsive {
       margin: 0;
     }
@@ -403,9 +418,13 @@ export default {
     table {
       margin: 0;
 
-      thead th {
+      thead tr th {
         border-top: 0;
         white-space: nowrap;
+
+        &[aria-sort]:hover {
+          background-color: $lighter;
+        }
       }
     }
   }

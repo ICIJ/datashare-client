@@ -2,10 +2,13 @@ $saddle-red: #FA4070;
 $primary: #193D87;
 $secondary: #FA4070;
 $tertiary: #FFBF57;
+$danger: #dc3545;
 
 $warning: #FFBF57;
 $success: #00bb84;
 $info: #45C4FF;
+$light: #F0F0F0;
+$lighter: #F4F4F6;
 
 $link-color: $primary;
 $body-bg: #F2F0F0;
@@ -21,8 +24,9 @@ $theme-colors: (
   success: $success,
   info: $info,
   warning: $warning,
-  danger: #dc3545,
-  light: #F0F0F0,
+  danger: $danger,
+  light: $light,
+  lighter: $lighter,
   dark: darken($primary, 10),
   darker: darken($primary, 20),
   darkest: darken($primary, 30),

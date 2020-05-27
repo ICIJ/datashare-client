@@ -110,7 +110,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   it('should display simple list if there is only one query', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
-    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
+    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
 
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown').exists()).toBeTruthy()
@@ -130,7 +130,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   it('should add badge with query number of results on list', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
-    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
+    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
 
     expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown span.badge')).toHaveLength(1)
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown span.badge').text()).toBe('12')

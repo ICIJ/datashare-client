@@ -1,11 +1,11 @@
 <template>
   <div class="batch-search-results-filters">
-    <div class="card batch-search-results-filters__queries overflow-hidden">
+    <div class="card batch-search-results-filters__queries overflow-hidden border-0">
       <h6 class="card-header d-flex">
         <span class="flex-grow-1 my-auto">
           {{ $t('batchSearchResultsFilters.queries.heading') }}
         </span>
-        <span class="my-auto mr-2" v-if="isMultipleQueries">
+        <span class="my-auto mr-2" v-if="hasMultipleQueries">
           {{ $t('search.results.sort.sort') }}
         </span>
         <b-dropdown
@@ -14,7 +14,7 @@
           right
           :text="$t(`search.results.sort.${sortField}`)"
           variant="link"
-          v-if="isMultipleQueries">
+          v-if="hasMultipleQueries">
           <b-dropdown-item v-for="key in sortFields" :key="key" @click="sort(key)" :active="key === sortField">
             {{ $t(`search.results.sort.${key}`) }}
           </b-dropdown-item>
@@ -26,11 +26,10 @@
           deactivate-keys
           @input="onInput"
           :items="queries"
-          multiple
-          v-if="isMultipleQueries"
+          :multiple="hasMultipleQueries"
           v-model="selectedQueries">
           <template #item-label="{ item }">
-            <div class="d-flex batch-search-results-filters__queries__dropdown__item" :id="item.label">
+            <div class="d-flex batch-search-results-filters__queries__dropdown__item">
               <span class="flex-grow-1 text-truncate batch-search-results-filters__queries__dropdown__item__label">
                 {{ item.label }}
               </span>
@@ -45,31 +44,8 @@
                 <fa icon="search" class="text-tertiary"></fa>
               </span>
             </div>
-            <b-tooltip placement="bottom" :target="item.label" :title="item.label"></b-tooltip>
           </template>
         </selectable-dropdown>
-        <div
-          class="flex-grow-1 batch-search-results-filters__queries__dropdown px-3 py-1"
-          :key="item.label"
-          v-else
-          v-for="item in queries">
-          <div class="d-flex batch-search-results-filters__queries__dropdown__item" :id="item.label">
-            <span class="flex-grow-1 text-truncate">
-              {{ item.label }}
-            </span>
-            <span class="batch-search-results-filters__queries__dropdown__item__count">
-              <b-badge class="px-2" variant="tertiary" pill>
-                {{ $n(item.count) }}
-              </b-badge>
-            </span>
-            <span
-              class="batch-search-results-filters__queries__dropdown__item__search"
-              @click.stop.prevent="executeSearch(item.label)">
-              <fa icon="search" class="text-tertiary"></fa>
-            </span>
-          </div>
-          <b-tooltip placement="bottom" :target="item.label" :title="item.label"></b-tooltip>
-        </div>
       </div>
     </div>
   </div>
@@ -131,7 +107,7 @@ export default {
         return this.metaQueriesKeys
       }
     },
-    isMultipleQueries () {
+    hasMultipleQueries () {
       return this.queries && this.queries.length > 1
     },
     selectedQueries: {
@@ -153,13 +129,14 @@ export default {
   },
   methods: {
     onInput (selectedQueries = this.selectedQueries) {
-      const order = get(this, ['$route', 'query', 'order'], undefined)
-      const page = get(this, ['$route', 'query', 'page'], undefined)
+      const routeQuery = get(this, '$route.query', {})
+      const order = routeQuery.order
+      const page = routeQuery.page
       const queries = compact(map(selectedQueries, 'label'))
-      const queriesSort = get(this, ['$route', 'query', 'queries_sort'], undefined)
-      const sort = get(this, ['$route', 'query', 'sort'], undefined)
+      const queriesSort = routeQuery.queries_sort
+      const sort = routeQuery.sort
       const query = { order, page, queries, queries_sort: queriesSort, sort }
-      const isEqualQuery = isEqual(omit(query, 'queries'), omit(this.$route.query, 'queries')) && isEqual(castArray(query.queries), castArray(this.$route.query.queries))
+      const isEqualQuery = isEqual(omit(query, 'queries'), omit(routeQuery, 'queries')) && isEqual(castArray(query.queries), castArray(routeQuery.queries))
       if (!isEqualQuery) {
         this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
       }
@@ -176,7 +153,7 @@ export default {
       this.$router.push({ name: 'batch-search.results', query: { order, page, queries, queries_sort: queriesSort, sort } }).catch(() => {})
     },
     readQueryFromRoute () {
-      if (get(this, ['$route', 'query', 'query_sort'], 'default') === 'default') {
+      if (get(this, ['$route', 'query', 'queries_sort'], 'default') === 'default') {
         this.$set(this, 'sortField', 'default')
       } else {
         this.$set(this, 'sortField', 'count')
@@ -188,20 +165,28 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .batch-search-results-filters {
-    width: 100%;
+    max-width: 90vw;
+    width: 300px;
 
     &__queries {
+
       &__sort {
         z-index: 1001;
+
+        .btn.dropdown-toggle {
+          color: white;
+        }
       }
 
       &__dropdown {
         max-height: 180px;
         overflow: auto;
+        border-radius: 0;
 
         &__item {
+
           &__search:not([aria-describedby]) {
             display: none;
           }
