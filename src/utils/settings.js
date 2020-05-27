@@ -181,7 +181,7 @@ export default {
   waitForEsAnswer: 700,
   filterSize: 8,
   helpLink: 'https://github.com/ICIJ/datashare/wiki/Datashare-Support',
-  faqLink: 'https://icij.gitbook.io/datashare/faq/',
+  faqLink: 'https://icij.gitbook.io/datashare/faq/table-of-contents',
   userGuidesLink: 'https://icij.gitbook.io/datashare/',
   devWikiLink: 'https://github.com/icij/datashare/wiki',
   widgetTextDefaultContent: `Welcome to Datashare Insights!
