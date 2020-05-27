@@ -115,14 +115,14 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('b-table-stub').attributes('items').split(',')).toHaveLength(3)
   })
 
-  it('should display a button to download the results as a CSV file', () => {
-    expect(wrapper.find('.batch-search-results__download').exists()).toBeTruthy()
+  it('should not disable button to download the results as a CSV file', () => {
+    expect(wrapper.find('.batch-search-results__download').attributes('disable')).toBeUndefined()
   })
 
-  it('should NOT display the download button if no results', async () => {
+  it('should disable the download button if no results', async () => {
     await store.commit('batchSearch/results', [])
 
-    expect(wrapper.find('.batch-search-results__download').exists()).toBeFalsy()
+    expect(wrapper.find('.batch-search-results__download').attributes('disable')).toBeTruthy()
   })
 
   it('should display a button to delete the batchSearch', async () => {
