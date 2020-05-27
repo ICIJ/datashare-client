@@ -537,7 +537,7 @@
   },
   "batchSearchResultsFilters": {
     "queries": {
-      "heading": "検索語"
+      "heading": "Filter by queries"
     }
   },
   "shortkeys": {
