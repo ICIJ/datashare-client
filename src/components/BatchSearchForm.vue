@@ -97,12 +97,15 @@
             <b-form-group
               label-size="sm"
               :label="$t('batchSearch.fileTypes')">
-              <b-form-input
-                v-model="fileType"
-                @input="searchFileTypes"
-                autocomplete="off"
-                ref="fileType"
-                @keydown.enter.prevent="searchFileType" />
+              <v-wait for="load all file types">
+                <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-3" />
+                <b-form-input
+                  v-model="fileType"
+                  @input="searchFileTypes"
+                  autocomplete="off"
+                  ref="fileType"
+                  @keydown.enter.prevent="searchFileType" />
+              </v-wait>
               <selectable-dropdown
                 ref="suggestionFileTypes"
                 @input="selectFileType"
@@ -131,13 +134,16 @@
             <b-form-group
               label-size="sm"
               :label="$t('batchSearch.path')">
-              <b-form-input
-                autocomplete="off"
-                @input="searchPaths"
-                ref="path"
-                v-model="path"
-                @keydown.enter.prevent="searchPath">
-              </b-form-input>
+              <v-wait for="load all paths">
+                <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-3" />
+                <b-form-input
+                  autocomplete="off"
+                  @input="searchPaths"
+                  ref="path"
+                  v-model="path"
+                  @keydown.enter.prevent="searchPath">
+                </b-form-input>
+              </v-wait>
               <selectable-dropdown
                 ref="suggestionPaths"
                 @input="selectPath"
@@ -204,13 +210,13 @@ export default {
   name: 'BatchSearchForm',
   props: {
     /**
-     * 	Disables rendering of the form title
+     * Disables rendering of the form title
      */
     hideTitle: {
       type: Boolean
     },
     /**
-     * 	Disables rendering of the form border
+     * Disables rendering of the form border
      */
     hideBorder: {
       type: Boolean
@@ -311,12 +317,14 @@ export default {
       this.fileTypes.splice(index, 1)
     },
     async retrieveFileTypes () {
+      this.$wait.start('load all file types')
       const aggTypes = await this.aggregate('contentType', 'contentType')
       each(aggTypes, aggType => {
         const extensions = has(types, aggType) ? types[aggType].extensions : []
         const label = has(types, aggType) ? types[aggType].label : aggType
         this.allFileTypes.push({ extensions, label, mime: aggType })
       })
+      this.$wait.end('load all file types')
     },
     selectPath (path) {
       this.selectedPath = path || this.selectedPath
@@ -340,8 +348,10 @@ export default {
       this.paths.splice(index, 1)
     },
     async retrievePaths () {
+      this.$wait.start('load all paths')
       const aggPaths = await this.aggregate('dirname', 'byDirname')
       this.$set(this, 'allPaths', this.buildTreeFromPaths(aggPaths))
+      this.$wait.end('load all paths')
     },
     retrieveFileTypesAndPath () {
       if (this.showAdvancedFilters && isEmpty(this.allFileTypes) && isEmpty(this.allPaths)) {
@@ -383,7 +393,7 @@ export default {
         /**
          * The form has been submitted
          */
-        this.$emit("submit")
+        this.$emit('submit')
       }
     },
     async aggregate (field, name) {
