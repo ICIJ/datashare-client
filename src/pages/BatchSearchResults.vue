@@ -318,7 +318,7 @@ export default {
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results']),
     selectedQueries () {
-      return get(this, '$store.state.batchSearch.batchSearch.selectedQueries', [])
+      return get(this, '$store.state.batchSearch.selectedQueries', [])
     },
     fuzzinessLabel () {
       return this.batchSearch.phraseMatches ? this.$t('batchSearch.proximitySearches') : this.$t('batchSearch.fuzziness')

@@ -87,6 +87,8 @@ $font-size-sm: .9rem;
 $font-size-lg: 1.2rem;
 $line-height-sm: 1.7;
 
+$table-accent-bg: mix($body-bg, white);
+
 // Bootstrap variables and mixins must be available everywhere
 @import '~node_modules/bootstrap/scss/_functions.scss';
 @import '~node_modules/bootstrap/scss/_variables.scss';
