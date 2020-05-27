@@ -18,7 +18,7 @@ import { extname } from 'path'
 import Api from '@/api'
 import EsDoc from '@/api/resources/EsDoc'
 import humanSize from '@/filters/humanSize'
-import { defaultIcon, findIcon } from '@/utils/font-awesome-files'
+import { findContentTypeIcon } from '@/utils/font-awesome-files'
 import types from '@/utils/types.json'
 
 const _parent = '_PARENT'
@@ -153,9 +153,7 @@ export default class Document extends EsDoc {
     return get(types, [this.contentType, 'warning'], {})
   }
   get contentTypeIcon () {
-    const extensions = get(types, [this.contentType, 'extensions'], [])
-    const icon = get(types, [this.contentType, 'icon'], null)
-    return icon ? findIcon(icon) : find(extensions.map(findIcon)) || defaultIcon
+    return findContentTypeIcon(this.contentType)
   }
   get standardExtension () {
     return get(types, [this.contentType, 'extensions', 0], null)

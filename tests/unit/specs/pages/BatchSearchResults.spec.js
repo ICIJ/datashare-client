@@ -168,7 +168,7 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should return empty string if the document size is 0', () => {
-    expect(wrapper.vm.getDocumentSize(undefined)).toBe('Unknown')
+    expect(wrapper.vm.getDocumentSize(undefined)).toBe('-')
   })
 
   it('should return the document size as human readable', () => {

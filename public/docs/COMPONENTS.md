@@ -58,6 +58,7 @@ All pages components.
 * [AppSidebar](components/AppSidebar.md) <br />— _The global app sidebar._
 * [BatchSearchForm](components/BatchSearchForm.md) <br />— _A form to create a batch search._
 * [BatchSearchResultsFilters](components/BatchSearchResultsFilters.md) <br />— _Form to filter a bash search results by query_
+* [ContentTypeBadge](components/ContentTypeBadge.md) <br />— _A small badge to display content type nicely._
 * [DocumentNotes](components/document/DocumentNotes.md) <br />— _A list of notes related to a document&#x27;s path and provided by the backend_
 * [DocumentTabDetails](components/document/DocumentTabDetails.md) <br />— _A panel displaying details and metadata about an indexed document._
 * [DocumentTabExtractedText](components/document/DocumentTabExtractedText.md) <br />— _A panel displaying the extract text of a document._

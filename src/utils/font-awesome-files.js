@@ -1,6 +1,10 @@
 import { basename } from 'path'
 import find from 'lodash/find'
+import get from 'lodash/get'
 import trim from 'lodash/trim'
+import types from '@/utils/types.json'
+
+import { faFile as defaultIcon } from '@fortawesome/free-solid-svg-icons/faFile'
 export { faFile as defaultIcon } from '@fortawesome/free-solid-svg-icons/faFile'
 
 // Import all file icon
@@ -17,4 +21,10 @@ export function findIcon (type) {
     return iconName.split('file-').join('').toLowerCase() === type
   })
   return icon
+}
+
+export function findContentTypeIcon (contentType) {
+  const extensions = get(types, [contentType, 'extensions'], [])
+  const icon = get(types, [contentType, 'icon'], null)
+  return icon ? findIcon(icon) : find(extensions.map(findIcon)) || defaultIcon
 }

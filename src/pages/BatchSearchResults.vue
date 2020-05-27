@@ -5,13 +5,13 @@
         <div class="float-right d-flex my-2 mx-3">
           <div class="batch-search-results__download float-right" v-if="results.length > 0">
             <a :href="downloadLink" class="btn btn-primary">
-              <fa icon="download"></fa>
+              <fa icon="download" />
               {{ $t('batchSearchResults.downloadResults') }} (CSV)
             </a>
           </div>
           <div class="batch-search-results__delete" v-if="isMyBatchSearch">
             <confirm-button class="btn btn-primary ml-2" :confirmed="deleteBatchSearch">
-              <fa icon="trash-alt"></fa>
+              <fa icon="trash-alt" />
               {{ $t('batchSearch.delete') }}
             </confirm-button>
           </div>
@@ -43,8 +43,8 @@
           </dt>
           <dd class="col-sm-8">
             <b-badge
-              :class="{ 'cursor-pointer': isFailed }"
               @click.prevent="openErrorMessage"
+              :class="{ 'cursor-pointer': isFailed }"
               :variant="batchSearch.state | toVariant">
               {{ capitalize(batchSearch .state) }}
             </b-badge>
@@ -53,7 +53,7 @@
             {{ $t('batchSearch.date') }}
           </dt>
           <dd class="col-sm-8">
-            {{ moment(batchSearch.date).format('LLL') }}
+            {{ moment(batchSearch.date).locale($i18n.locale).format('LLL') }}
           </dd>
           <dt class="text-nowrap col-sm-4 text-right">
             {{ $t('batchSearch.nbResults') }}
@@ -79,9 +79,7 @@
           <dd class="col-sm-8">
             <ul v-if="batchSearch.fileTypes.length" class="list-unstyled list-group list-group-horizontal">
               <li v-for="fileType in batchSearch.fileTypes" :key="fileType" class="mr-2">
-                <b-badge variant="dark">
-                  {{ fileType }}
-                </b-badge>
+                <content-type-badge :value="fileType" />
               </li>
             </ul>
             <span v-else>
@@ -125,19 +123,19 @@
           <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
         </div>
         <div class="batch-search-results__queries">
-          <div class="card small">
+          <div class="card border-top-0 border-bottom-0 small">
             <b-table
-              :fields="fields"
               hover
-              :items="results"
               no-local-sorting
-              :per-page="perPage"
+              striped
               responsive
               show-empty
+              :fields="fields"
+              :items="results"
+              :per-page="perPage"
               :sort-by="sortBy"
-              @sort-changed="sortChanged"
               :sort-desc="orderBy"
-              striped
+              @sort-changed="sortChanged"
               tbody-tr-class="batch-search-results__queries__query">
               <template v-slot:cell(documentNumber)="{ item }">
                 {{ item.documentNumber + 1 }}
@@ -151,13 +149,15 @@
                 </router-link>
               </template>
               <template v-slot:cell(creationDate)="{ item }">
-                {{ moment(item.creationDate).isValid() ? moment(item.creationDate).format('LLL') : '' }}
+                <span :title="moment(item.creationDate).locale($i18n.locale).format('LLL')">
+                  {{ moment(item.creationDate).isValid() ? moment(item.creationDate).locale($i18n.locale).format('MMM DD, YYYY') : '' }}
+                </span>
               </template>
               <template v-slot:cell(contentType)="{ item }">
-                {{ getDocumentTypeLabel(item.contentType) }}
+                <content-type-badge :value="item.contentType" :document-name="item.documentName" />
               </template>
               <template v-slot:cell(contentLength)="{ item }">
-                {{ getDocumentSize(item.contentLength) }}
+                {{ getDocumentSize(item.contentLength, '-') }}
               </template>
               <template v-slot:cell(empty)>
                 <div class="text-center">
@@ -197,17 +197,18 @@ import { mapState } from 'vuex'
 import Api from '@/api'
 import Auth from '@/api/resources/Auth'
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
+import ContentTypeBadge from '@/components/ContentTypeBadge'
 import humanSize from '@/filters/humanSize'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
-import { getDocumentTypeLabel } from '@/utils/utils'
 
 export const auth = new Auth()
 
 export default {
   name: 'BatchSearchResults',
   components: {
-    BatchSearchResultsFilters
+    BatchSearchResultsFilters,
+    ContentTypeBadge
   },
   props: {
     uuid: {
@@ -373,7 +374,7 @@ export default {
     },
     getDocumentSize (value) {
       const size = humanSize(value)
-      return size === 'unknown' ? this.$t('document.unknown') : size
+      return size === 'unknown' ? '-' : size
     },
     changePublished (published) {
       this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
@@ -383,8 +384,10 @@ export default {
         this.$bvModal.show('error-modal')
       }
     },
+    extname (name) {
+      return '.' + name.split('.').pop()
+    },
     capitalize,
-    getDocumentTypeLabel,
     moment
   }
 }
