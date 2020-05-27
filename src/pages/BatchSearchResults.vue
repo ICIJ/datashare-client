@@ -206,6 +206,7 @@
 import capitalize from 'lodash/capitalize'
 import find from 'lodash/find'
 import get from 'lodash/get'
+import isEqual from 'lodash/isEqual'
 import indexOf from 'lodash/indexOf'
 import keys from 'lodash/keys'
 import sumBy from 'lodash/sumBy'
@@ -294,8 +295,31 @@ export default {
       isMyBatchSearch: false
     }
   },
+  watch: {
+    page () {
+      this.fetch()
+    },
+    queries (queries, oldQueries = []) {
+      // Check array values to avoid unecessary fetching
+      if (!isEqual(queries, oldQueries)) {
+        this.fetch()
+      }
+    },
+    sort () {
+      this.fetch()
+    },
+    order () {
+      this.fetch()
+    }
+  },
+  mounted () {
+    this.fetch()
+  },
   computed: {
-    ...mapState('batchSearch', ['batchSearch', 'results', 'selectedQueries']),
+    ...mapState('batchSearch', ['batchSearch', 'results']),
+    selectedQueries () {
+      return get(this, '$store.state.batchSearch.batchSearch.selectedQueries', [])
+    },
     fuzzinessLabel () {
       return this.batchSearch.phraseMatches ? this.$t('batchSearch.proximitySearches') : this.$t('batchSearch.fuzziness')
     },
@@ -329,21 +353,19 @@ export default {
     }
   },
   beforeRouteEnter (to, from, next) {
-    next(async vm => {
+    next(vm => {
       vm.$set(vm, 'published', vm.batchSearch.published)
-      vm.$set(vm, 'page', parseInt(get(to.query, 'page', vm.page)))
-      vm.$set(vm, 'queries', get(to.query, 'queries', vm.queries))
-      vm.$set(vm, 'sort', get(to.query, 'sort', vm.sort))
-      vm.$set(vm, 'order', get(to.query, 'order', vm.order))
-      await vm.fetch()
+      vm.$set(vm, 'page', parseInt(get(to, 'query.page', vm.page)))
+      vm.$set(vm, 'queries', get(to, 'query.queries', vm.queries))
+      vm.$set(vm, 'sort', get(to, 'query.sort', vm.sort))
+      vm.$set(vm, 'order', get(to, 'query.order', vm.order))
     })
   },
-  async beforeRouteUpdate (to, from, next) {
-    this.$set(this, 'page', parseInt(get(to.query, 'page', this.page)))
-    this.$set(this, 'queries', get(to.query, 'queries', this.queries))
-    this.$set(this, 'sort', get(to.query, 'sort', this.sort))
-    this.$set(this, 'order', get(to.query, 'order', this.order))
-    await this.fetch()
+  beforeRouteUpdate (to, from, next) {
+    this.$set(this, 'page', parseInt(get(to, 'query.page', this.page)))
+    this.$set(this, 'queries', get(to, 'query.queries', this.queries))
+    this.$set(this, 'sort', get(to, 'query.sort', this.sort))
+    this.$set(this, 'order', get(to, 'query.order', this.order))
     next()
   },
   beforeRouteLeave (to, from, next) {

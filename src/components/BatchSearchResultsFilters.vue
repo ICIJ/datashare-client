@@ -71,13 +71,13 @@ export default {
   name: 'BatchSearchResultsFilters',
   props: {
     /**
-     * The bath search uuid
+     * The batch search uuid
      */
     uuid: {
       type: String
     },
     /**
-     * The bath search index
+     * The batch search index
      */
     index: {
       type: String
@@ -91,20 +91,16 @@ export default {
   },
   computed: {
     meta () {
-      if (this.$store.state.batchSearch) {
-        return find(this.$store.state.batchSearch.batchSearches, { uuid: this.uuid }) || {}
-      } else {
-        return null
-      }
+      return get(this, '$store.state.batchSearch.batchSearch', null)
     },
-    metaQueriesKeys () {
-      return map(this.meta.queries, (a, b) => { return { label: b, count: a } })
+    queriesKeys () {
+      return map(this.meta.queries, (count, label) => ({ label, count }))
     },
     queries () {
       if (this.sortField === 'count') {
-        return orderBy(this.metaQueriesKeys, ['count'], ['desc'])
+        return orderBy(this.queriesKeys, ['count'], ['desc'])
       } else {
-        return this.metaQueriesKeys
+        return this.queriesKeys
       }
     },
     hasMultipleQueries () {
@@ -130,14 +126,9 @@ export default {
   methods: {
     onInput (selectedQueries = this.selectedQueries) {
       const routeQuery = get(this, '$route.query', {})
-      const order = routeQuery.order
-      const page = routeQuery.page
       const queries = compact(map(selectedQueries, 'label'))
-      const queriesSort = routeQuery.queries_sort
-      const sort = routeQuery.sort
-      const query = { order, page, queries, queries_sort: queriesSort, sort }
-      const isEqualQuery = isEqual(omit(query, 'queries'), omit(routeQuery, 'queries')) && isEqual(castArray(query.queries), castArray(routeQuery.queries))
-      if (!isEqualQuery) {
+      if (!isEqual(routeQuery.queries || [], queries)) {
+        const query = { ...routeQuery, queries }
         this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
       }
     },
@@ -146,11 +137,9 @@ export default {
       this.$router.push({ name: 'search', query: { q, index: this.index } }).catch(() => {})
     },
     sort (queriesSort) {
-      const order = get(this, ['$route', 'query', 'order'], undefined)
-      const page = get(this, ['$route', 'query', 'page'], undefined)
-      const queries = get(this, ['$route', 'query', 'queries'], undefined)
-      const sort = get(this, ['$route', 'query', 'sort'], undefined)
-      this.$router.push({ name: 'batch-search.results', query: { order, page, queries, queries_sort: queriesSort, sort } }).catch(() => {})
+      const routeQuery = get(this, '$route.query', {})
+      const query = { ...routeQuery, queries_sort: queriesSort }
+      this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
     },
     readQueryFromRoute () {
       if (get(this, ['$route', 'query', 'queries_sort'], 'default') === 'default') {
