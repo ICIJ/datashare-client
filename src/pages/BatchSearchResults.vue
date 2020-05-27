@@ -4,17 +4,20 @@
       <div class="container">
         <div class="float-right d-flex my-2 mx-3">
           <div>
-            <b-button variant="light" class="mr-2" id="batch-search-results-filters-toggler" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
+            <b-button variant="light" class="batch-search-results__action mr-2" id="batch-search-results-filters-toggler" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
               <fa icon="filter" />
               <span class="sr-only">
                 {{ $t('batchSearchResultsFilters.queries.heading') }}
               </span>
+              <b-badge variant="secondary" class="batch-search-results__action__counter" v-if="selectedQueries.length">
+                {{ selectedQueries.length }}
+              </b-badge>
             </b-button>
             <b-popover target="batch-search-results-filters-toggler" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
               <batch-search-results-filters :uuid="uuid" :index="index" hide-border />
             </b-popover>
           </div>
-          <div class="batch-search-results__delete" v-if="isMyBatchSearch">
+          <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch">
             <confirm-button class="btn btn-light mr-2" :confirmed="deleteBatchSearch" v-b-tooltip.hover :title="$t('batchSearch.delete')">
               <fa icon="trash-alt" />
               <span class="sr-only">
@@ -22,7 +25,7 @@
               </span>
             </confirm-button>
           </div>
-          <div class="batch-search-results__download float-right" v-if="results.length > 0">
+          <div class="batch-search-results__action batch-search-results__download float-right" :disable="results.length === 0">
             <a :href="downloadLink" class="btn btn-primary">
               <fa icon="download" />
               {{ $t('batchSearchResults.downloadResults') }} (CSV)
@@ -292,7 +295,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('batchSearch', ['batchSearch', 'results']),
+    ...mapState('batchSearch', ['batchSearch', 'results', 'selectedQueries']),
     fuzzinessLabel () {
       return this.batchSearch.phraseMatches ? this.$t('batchSearch.proximitySearches') : this.$t('batchSearch.fuzziness')
     },
@@ -310,11 +313,11 @@ export default {
     },
     numberOfPages () {
       let total
-      if (this.$store.state.batchSearch.selectedQueries.length === 0) {
+      if (this.selectedQueries.length === 0) {
         total = this.batchSearch.nbResults
       } else {
         total = sumBy(keys(this.batchSearch.queries), query => {
-          if (indexOf(this.$store.state.batchSearch.selectedQueries, query) > -1) {
+          if (indexOf(this.selectedQueries, query) > -1) {
             return this.batchSearch.queries[query]
           }
         })
@@ -371,10 +374,10 @@ export default {
       this.$router.push(this.generateLinkToBatchSearchResults(this.page, this.queries, sort, order))
     },
     filter () {
-      this.$router.push(this.generateLinkToBatchSearchResults(1, this.$store.state.batchSearch.selectedQueries))
+      this.$router.push(this.generateLinkToBatchSearchResults(1, this.selectedQueries))
     },
     linkGen (page) {
-      return this.generateLinkToBatchSearchResults(page, this.$store.state.batchSearch.selectedQueries)
+      return this.generateLinkToBatchSearchResults(page, this.selectedQueries)
     },
     generateLinkToBatchSearchResults (page = this.page, queries = this.queries, sort = this.sort, order = this.order) {
       return {
@@ -412,6 +415,21 @@ export default {
 
 <style lang="scss">
 .batch-search-results {
+
+  &__action {
+    position: relative;
+
+    & &__counter {
+      position: absolute;
+      right: 0;
+      top: 0;
+      margin: 0;
+      z-index: 100;
+      transform: translate(50%, -50%);
+    }
+  }
+
+
   &__queries {
 
     .table-responsive {
