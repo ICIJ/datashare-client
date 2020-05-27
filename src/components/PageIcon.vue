@@ -1,5 +1,5 @@
 <template>
-  <div class="p-1 bg-secondary text-white d-inline-block mr-1 rounded">
+  <div class="page-icon p-1 bg-secondary text-white d-inline-block mr-1 rounded">
     <fa :icon="icon" fixed-width />
   </div>
 </template>

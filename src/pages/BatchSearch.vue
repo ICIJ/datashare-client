@@ -44,7 +44,9 @@
               </b-badge>
             </template>
             <template v-slot:cell(date)="{ item }">
-              {{ moment(item.date).format('LLL') }}
+              <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
+                {{ moment(item.date).locale($i18n.locale).format('LL') }}
+              </span>
             </template>
             <template v-slot:cell(nbResults)="{ item }">
               {{ $n(item.nbResults) }}

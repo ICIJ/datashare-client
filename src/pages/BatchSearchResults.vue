@@ -168,7 +168,7 @@
               </template>
               <template v-slot:cell(creationDate)="{ item }">
                 <span :title="moment(item.creationDate).locale($i18n.locale).format('LLL')">
-                  {{ moment(item.creationDate).isValid() ? moment(item.creationDate).locale($i18n.locale).format('MMM DD, YYYY') : '' }}
+                  {{ moment(item.creationDate).isValid() ? moment(item.creationDate).locale($i18n.locale).format('LL') : '' }}
                 </span>
               </template>
               <template v-slot:cell(contentType)="{ item }">
