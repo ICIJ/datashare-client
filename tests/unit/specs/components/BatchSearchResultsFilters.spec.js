@@ -7,35 +7,43 @@ import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
+
 jest.mock('@/api', () => {
+  const batchSearches = {
+    12: {
+      uuid: '12',
+      project: { name: 'ProjectName' },
+      description: 'This is the description of the batch search',
+      queries: {
+        query_01: 1,
+        query_02: 3,
+        query_03: 2
+      },
+      state: 'SUCCESS',
+      date: '2019-07-18T14:45:34.869+0000'
+    },
+    13: {
+      uuid: '13',
+      project: { name: 'ProjectName2' },
+      description: 'Another description',
+      queries: {
+        query_04: 12
+      },
+      state: 'SUCCESS',
+      date: '2019-07-28T14:45:34.869+0000'
+    }
+  }
+
   return jest.fn(() => {
     return {
       // Mock user session
       getUser: jest.fn().mockResolvedValue({ uid: 'doe' }),
-      // Mock all axios requests
-      getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([
-        {
-          uuid: '12',
-          project: { name: 'ProjectName' },
-          description: 'This is the description of the batch search',
-          queries: {
-            query_01: 1,
-            query_02: 3,
-            query_03: 2
-          },
-          state: 'SUCCESS',
-          date: '2019-07-18T14:45:34.869+0000'
-        }, {
-          uuid: '13',
-          project: { name: 'ProjectName2' },
-          description: 'Another description',
-          queries: {
-            query_04: 12
-          },
-          state: 'SUCCESS',
-          date: '2019-07-28T14:45:34.869+0000'
-        }
-      ])),
+      // Mock request to get one specific batch search
+      getBatchSearch: jest.fn(uuid => {
+        return Promise.resolve(batchSearches[uuid])
+      }),
+      // Mock request to get all batch search
+      getBatchSearches: jest.fn().mockReturnValue(Promise.resolve(Object.values(batchSearches))),
       getBatchSearchResults: jest.fn().mockReturnValue(Promise.resolve([
         {
           creationDate: '2011-10-11T04:12:49.000+0000',
@@ -110,6 +118,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   it('should display simple list if there is only one query', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
+    await store.dispatch('batchSearch/getBatchSearch', '13')
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
 
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
@@ -120,6 +129,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   it('should display a selectable dropdown if there are more than one query', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
+    await store.dispatch('batchSearch/getBatchSearch', '12')
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
 
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
@@ -130,6 +140,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   it('should add badge with query number of results on list', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
+    await store.dispatch('batchSearch/getBatchSearch', '13')
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
 
     expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown span.badge')).toHaveLength(1)
@@ -139,6 +150,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   it('should add badge with query number of results on selectable dropdown', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches')
+    await store.dispatch('batchSearch/getBatchSearch', '12')
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
 
     expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown > span span.badge')).toHaveLength(3)
@@ -149,6 +161,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     it('should display the "search" button', async () => {
       await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
       await store.dispatch('batchSearch/getBatchSearches')
+      await store.dispatch('batchSearch/getBatchSearch', '12')
       wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
 
       expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__search')).toHaveLength(3)
@@ -157,6 +170,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     it('should redirect to a search with project and query', async () => {
       await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
       await store.dispatch('batchSearch/getBatchSearches')
+      await store.dispatch('batchSearch/getBatchSearch', '12')
       wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
       const spy = jest.spyOn(wrapper.vm.$router, 'push')
       wrapper.find('.batch-search-results-filters__queries__dropdown__item__search').trigger('click')
