@@ -84,6 +84,12 @@
           <dd class="col-sm-8">
             {{ batchSearch.nbResults }}
           </dd>
+          <dt class="text-nowrap col-sm-4 text-right">
+            {{ $t('batchSearch.queries') }}
+          </dt>
+          <dd class="col-sm-8">
+            {{ keys(batchSearch.queries).length }}
+          </dd>
         </dl>
         <dl class="row mb-0">
           <dt class="text-nowrap col-sm-4 text-right">
@@ -430,7 +436,8 @@ export default {
       return '.' + name.split('.').pop()
     },
     capitalize,
-    moment
+    moment,
+    keys
   }
 }
 </script>
