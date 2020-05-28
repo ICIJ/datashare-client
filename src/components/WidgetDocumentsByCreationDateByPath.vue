@@ -1,11 +1,15 @@
 <template>
   <widget-documents-by-creation-date :widget="widget" ref="widgetDocumentsByCreationDate">
-    <template #selector="{ selectedPath }">
-      <b-dropdown :text="selectedPath.label" v-if="paths.length" class="mr-3">
-        <b-dropdown-item v-for="path in paths" :key="path.folder" @click="setSelectedPath(path)">
-          {{ path.label }}
-        </b-dropdown-item>
-      </b-dropdown>
+    <template #selector="{ selectedPath, setSelectedPath }">
+      <span v-b-modal.modal-widget-select-path class="mr-3 py-1 px-2 border btn btn-link d-inline-flex" v-if="selectedPath">
+        <tree-breadcrumb datadir-icon="filter" :path="selectedPath" no-datadir @input="treeViewPath = $event" />
+        <span v-if="selectedPath === dataDir">
+          {{ $t('widget.creationDate.filterFolder') }}
+        </span>
+      </span>
+      <b-modal id="modal-widget-select-path" lazy scrollable hide-header body-class="p-0 border-bottom" cancel-variant="outline-primary" :ok-title="$t('widget.creationDate.selectFolder')" :cancel-title="$t('widget.creationDate.cancel')" size="lg" @ok="setSelectedPath(treeViewPath)">
+        <tree-view :path="treeViewPath || selectedPath" @input="treeViewPath = $event" />
+      </b-modal>
     </template>
   </widget-documents-by-creation-date>
 </template>
@@ -20,6 +24,8 @@ import bodybuilder from 'bodybuilder'
 import { mapState } from 'vuex'
 
 import elasticsearch from '@/api/elasticsearch'
+import TreeBreadcrumb from '@/components/TreeBreadcrumb.vue'
+import TreeView from '@/components/TreeView.vue'
 import WidgetDocumentsByCreationDate from '@/components/WidgetDocumentsByCreationDate'
 
 /**
@@ -28,6 +34,8 @@ import WidgetDocumentsByCreationDate from '@/components/WidgetDocumentsByCreatio
 export default {
   name: 'WidgetDocumentsByCreationDateByPath',
   components: {
+    TreeBreadcrumb,
+    TreeView,
     WidgetDocumentsByCreationDate
   },
   props: {
@@ -40,39 +48,12 @@ export default {
   },
   data () {
     return {
-      paths: []
+      treeViewPath: null
     }
   },
   computed: {
-    ...mapState('insights', ['project'])
-  },
-  watch: {
-    project () {
-      this.loadPath()
-    }
-  },
-  mounted () {
-    this.$nextTick(() => this.loadPath())
-  },
-  methods: {
-    async loadPath () {
-      const initialPath = [{ label: this.$t('general.all'), folder: '' }]
-      const options = {
-        exclude: `${this.$config.get('dataDir', '')}/.*/.*`,
-        include: `${this.$config.get('dataDir', '')}/.*`,
-        size: 100
-      }
-      const body = bodybuilder().size(0).agg('terms', 'dirname.tree', options, 'byDirname').build()
-      const response = await elasticsearch.search({ index: this.project, body })
-      const paths = map(get(response, ['aggregations', 'byDirname', 'buckets'], []), item => {
-        const folder = replace(item.key, this.$config.get('dataDir', '') + '/', '')
-        return { label: folder, folder }
-      })
-      this.$set(this, 'paths', concat(initialPath, paths))
-      this.setSelectedPath(first(this.paths))
-    },
-    setSelectedPath (path) {
-      this.$refs.widgetDocumentsByCreationDate.setSelectedPath(path)
+    dataDir () {
+      return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
   }
 }

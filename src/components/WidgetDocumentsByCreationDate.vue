@@ -2,16 +2,15 @@
   <div class="widget">
     <div class="widget__header d-md-flex align-items-center" v-if="widget.title" :class="{ 'card-header': widget.card }">
       <h4 v-html="widget.title" class="m-0 flex-grow-1"></h4>
-      <div class="widget__header__selectors">
+      <div class="widget__header__selectors d-flex align-items-center">
         <slot name="selector" :selectedPath="selectedPath" :setSelectedPath="setSelectedPath"></slot>
-        <span v-for="(value, interval, index) in intervals" :key="interval">
-          <span class="widget__header__selectors__selector" :class="{ 'font-weight-bold': selectedInterval === interval }" @click="selectInterval(interval)">
-            {{ interval | startCase }}
+        <div class="btn-group">
+          <span v-for="(value, interval, index) in intervals" :key="interval" class="btn btn-link border py-1 px-2" :class="{ 'active': selectedInterval === interval }">
+            <span class="widget__header__selectors__selector" @click="selectInterval(interval)">
+              {{ $t('widget.creationDate.intervals.' + interval) }}
+            </span>
           </span>
-          <span v-if="index !== keys(intervals).length - 1">
-            |
-          </span>
-        </span>
+        </div>
       </div>
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
@@ -98,7 +97,7 @@ export default {
       margin: { top: 20, right: 20, bottom: 20, left: 50 },
       mounted: false,
       selectedInterval: 'year',
-      selectedPath: '',
+      selectedPath: null,
       shownTooltip: -1,
       width: 0
     }
@@ -106,10 +105,7 @@ export default {
   watch: {
     project () {
       this.$set(this, 'mounted', false)
-      this.init()
-    },
-    selectedPath () {
-      this.$set(this, 'mounted', false)
+      this.$set(this, 'selectedPath', this.dataDir)
       this.init()
     }
   },
@@ -117,10 +113,14 @@ export default {
     startCase
   },
   mounted () {
+    this.$set(this, 'selectedPath', this.dataDir)
     this.$nextTick(() => this.init())
   },
   computed: {
     ...mapState('insights', ['project']),
+    dataDir () {
+      return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
+    },
     container () {
       return this.mounted ? this.$el.querySelector('.widget__content__chart') : null
     },
@@ -175,7 +175,9 @@ export default {
   },
   methods: {
     setSelectedPath (path) {
-      this.selectedPath = path
+      this.$set(this, 'mounted', false)
+      this.$set(this, 'selectedPath', path)
+      this.init()
     },
     async loadData () {
       this.$wait.start(this.loader)
@@ -183,7 +185,7 @@ export default {
       const filters = []
       if (this.selectedPath) {
         const filter = this.$store.getters['insights/getFilter']({ name: 'path' })
-        filter.values = [`${this.$config.get('dataDir', '')}/${this.selectedPath.folder}`]
+        filter.values = [this.selectedPath]
         filters.push(filter)
       }
       const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options, filters })

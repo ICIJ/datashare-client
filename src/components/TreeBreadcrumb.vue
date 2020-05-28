@@ -2,7 +2,7 @@
   <ul class="list-inline flex-grow-1 m-0 tree-breadcrumb text-truncate">
     <li class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--root">
       <a href @click.prevent="$emit('input', dataDir)">
-        <fa icon="folder" fixed-width />
+        <fa :icon="datadirIcon" fixed-width />
       </a>
     </li>
     <li v-if="treeWithoutDataDir.length > maxDirectories" class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--abbr">
@@ -50,6 +50,13 @@ export default {
      */
     noDatadir: {
       type: Boolean
+    },
+    /**
+     * Data directory icon
+     */
+    datadirIcon: {
+      type: [String, Object, Array],
+      default: 'folder'
     }
   },
   filters: {
