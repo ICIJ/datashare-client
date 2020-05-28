@@ -143,10 +143,10 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__delete').exists()).toBeFalsy()
   })
 
-  it('should display 10 info about the BatchSearch', () => {
+  it('should display 11 info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(10)
-    expect(wrapper.findAll('.batch-search-results__info dd').at(9).text()).toEqual('test')
+    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(11)
+    expect(wrapper.findAll('.batch-search-results__info dd').at(10).text()).toEqual('test')
   })
 
   it('should redirect on sort changed', async () => {
