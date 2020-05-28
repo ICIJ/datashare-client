@@ -8,7 +8,7 @@ import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-const { i18n, localVue } = Core.init(createLocalVue()).useAll()
+const { i18n, localVue, wait } = Core.init(createLocalVue()).useAll()
 
 jest.mock('lodash/throttle', () => jest.fn(fn => fn))
 
@@ -25,7 +25,7 @@ describe('BatchSearchForm.vue', () => {
   beforeAll(() => Murmur.config.merge({ datashare_projects: [project], dataDir: '/root/project' }))
 
   beforeEach(() => {
-    wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store })
+    wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store, wait })
   })
 
   afterAll(() => jest.unmock('lodash/throttle'))
@@ -90,7 +90,7 @@ describe('BatchSearchForm.vue', () => {
 
   it('should display "Published" button on server', () => {
     Murmur.config.merge({ multipleProjects: true })
-    wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store })
+    wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store, wait })
 
     expect(wrapper.find('.card .published').exists()).toBeTruthy()
   })
@@ -139,7 +139,7 @@ describe('BatchSearchForm.vue', () => {
     })
 
     it('should set the clicked item in fileTypes', () => {
-      wrapper = mount(BatchSearchForm, { i18n, localVue, store })
+      wrapper = mount(BatchSearchForm, { i18n, localVue, store, wait })
       wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'Excel 2003 XML spreadsheet visio' }])
       wrapper.vm.$set(wrapper.vm, 'selectedFileType', { label: 'StarWriter 5 document' })
       wrapper.vm.searchFileType()
