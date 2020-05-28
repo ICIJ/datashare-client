@@ -97,15 +97,15 @@
             <b-form-group
               label-size="sm"
               :label="$t('batchSearch.fileTypes')">
-              <v-wait for="load all file types">
-                <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-3" />
+              <b-overlay :show="$wait.is('load all file types')" rounded opacity="0.6" spinner-small>
                 <b-form-input
-                  v-model="fileType"
-                  @input="searchFileTypes"
-                  autocomplete="off"
                   ref="fileType"
+                  v-model="fileType"
+                  autocomplete="off"
+                  :disabled="$wait.is('load all file types')"
+                  @input="searchFileTypes"
                   @keydown.enter.prevent="searchFileType" />
-              </v-wait>
+              </b-overlay>
               <selectable-dropdown
                 ref="suggestionFileTypes"
                 @input="selectFileType"
@@ -134,16 +134,16 @@
             <b-form-group
               label-size="sm"
               :label="$t('batchSearch.path')">
-              <v-wait for="load all paths">
-                <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-3" />
+              <b-overlay :show="$wait.is('load all paths')" rounded opacity="0.6" spinner-small>
                 <b-form-input
-                  autocomplete="off"
-                  @input="searchPaths"
                   ref="path"
                   v-model="path"
+                  autocomplete="off"
+                  :disabled="$wait.is('load all paths')"
+                  @input="searchPaths"
                   @keydown.enter.prevent="searchPath">
                 </b-form-input>
-              </v-wait>
+              </b-overlay>
               <selectable-dropdown
                 ref="suggestionPaths"
                 @input="selectPath"
