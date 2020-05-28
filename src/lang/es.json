@@ -589,6 +589,16 @@
     "diskUsage": {
       "details": "Ver el uso del disco",
       "hits": "no hay archivos | 1 archivo | %{hits} archivos"
+    },
+    "creationDate": {
+      "filterFolder": "Filter by folder",
+      "selectFolder": "Select folder",
+      "cancel": "Cancel",
+      "intervals": {
+        "year": "Year",
+        "month": "Month",
+        "day": "Day"
+      }
     }
   }
 }
