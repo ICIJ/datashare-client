@@ -149,17 +149,18 @@
         <div class="batch-search-results__queries">
           <div class="card small">
             <b-table
-              hover
-              no-local-sorting
-              striped
-              responsive
-              show-empty
               :fields="fields"
+              hover
               :items="results"
+              no-local-sorting
+              no-sort-reset
               :per-page="perPage"
+              responsive="true"
+              show-empty
+              striped
               :sort-by="sortBy"
-              :sort-desc="orderBy"
               @sort-changed="sortChanged"
+              :sort-desc="orderBy"
               tbody-tr-class="batch-search-results__queries__query">
               <template v-slot:cell(documentNumber)="{ item }">
                 {{ item.documentNumber + 1 }}
