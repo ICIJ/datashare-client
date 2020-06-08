@@ -168,7 +168,7 @@ export default {
 
       &__dropdown {
         border-radius: 0;
-        max-height: 180px;
+        max-height: 280px;
         overflow: auto;
 
         &__item {

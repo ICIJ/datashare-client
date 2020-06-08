@@ -4,7 +4,7 @@
       <div class="container">
         <div class="float-right d-flex my-2 mx-3">
           <div>
-            <b-button variant="light" class="batch-search-results__action mr-2" id="batch-search-results-filters-toggler" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
+            <b-button variant="light" class="batch-search-results__action mr-2" id="batch-search-results-filters-toggle" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
               <fa icon="filter" />
               <span class="sr-only">
                 {{ $t('batchSearchResultsFilters.queries.heading') }}
@@ -13,7 +13,7 @@
                 {{ selectedQueries.length }}
               </b-badge>
             </b-button>
-            <b-popover target="batch-search-results-filters-toggler" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
+            <b-popover target="batch-search-results-filters-toggle" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
               <batch-search-results-filters :uuid="uuid" :index="index" hide-border />
             </b-popover>
           </div>
@@ -40,9 +40,7 @@
         </div>
         <h3>
           <page-icon icon="layer-group" />
-          <router-link :to="{ name: 'batch-search' }">
-            {{ $t('batchSearch.title') }}
-          </router-link>
+          <router-link :to="{ name: 'batch-search' }">{{ $t('batchSearch.title') }}</router-link>
           <fa icon="angle-right" class="small ml-2"></fa>
           {{ batchSearch.name }}
         </h3>
