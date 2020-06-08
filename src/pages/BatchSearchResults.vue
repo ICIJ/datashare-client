@@ -58,7 +58,7 @@
             {{ $t('batchSearch.published') }}
           </dt>
           <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
-            <b-form-checkbox v-model="published" switch @change="changePublished" v-if="isMyBatchSearch"></b-form-checkbox>
+            <b-form-checkbox v-model="batchSearch.published" switch @change="changePublished" v-if="isMyBatchSearch"></b-form-checkbox>
             <span v-else>{{ batchSearch.published ? $t('indexing.yes') : $t('indexing.no') }}</span>
           </dd>
           <dt class="text-nowrap col-sm-4 text-right">
