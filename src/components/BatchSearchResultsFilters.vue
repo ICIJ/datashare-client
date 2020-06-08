@@ -52,16 +52,12 @@
 </template>
 
 <script>
-import castArray from 'lodash/castArray'
 import compact from 'lodash/compact'
-import concat from 'lodash/concat'
 import filter from 'lodash/filter'
-import find from 'lodash/find'
 import get from 'lodash/get'
 import indexOf from 'lodash/indexOf'
 import isEqual from 'lodash/isEqual'
 import map from 'lodash/map'
-import omit from 'lodash/omit'
 import orderBy from 'lodash/orderBy'
 
 /**
@@ -127,7 +123,7 @@ export default {
     onInput (selectedQueries = this.selectedQueries) {
       const routeQuery = get(this, '$route.query', {})
       const queries = compact(map(selectedQueries, 'label'))
-      if (!isEqual(routeQuery.queries || [], queries)) {
+      if (!isEqual(routeQuery.queries || [], queries)) {
         const query = { ...routeQuery, queries }
         this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
       }
@@ -142,7 +138,7 @@ export default {
       this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
     },
     readQueryFromRoute () {
-      if (get(this, ['$route', 'query', 'queries_sort'], 'default') === 'default') {
+      if (get(this, ['$route', 'query', 'queries_sort'], null) === 'default') {
         this.$set(this, 'sortField', 'default')
       } else {
         this.$set(this, 'sortField', 'count')
@@ -166,13 +162,14 @@ export default {
 
         .btn.dropdown-toggle {
           color: white;
+          text-decoration: none;
         }
       }
 
       &__dropdown {
+        border-radius: 0;
         max-height: 180px;
         overflow: auto;
-        border-radius: 0;
 
         &__item {
 
