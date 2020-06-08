@@ -260,7 +260,9 @@ export default {
         },
         {
           key: 'query',
-          label: this.$t('batchSearchResults.query')
+          label: this.$t('batchSearchResults.query'),
+          sortable: true,
+          name: 'query'
         },
         {
           key: 'documentName',
@@ -457,7 +459,6 @@ export default {
       transform: translate(50%, -50%);
     }
   }
-
 
   &__queries {
 
