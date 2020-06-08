@@ -5,7 +5,7 @@
       <div class="widget__header__selectors d-flex align-items-center">
         <slot name="selector" :selectedPath="selectedPath" :setSelectedPath="setSelectedPath"></slot>
         <div class="btn-group">
-          <span v-for="(value, interval, index) in intervals" :key="interval" class="btn btn-link border py-1 px-2" :class="{ 'active': selectedInterval === interval }">
+          <span v-for="(value, interval) in intervals" :key="interval" class="btn btn-link border py-1 px-2" :class="{ 'active': selectedInterval === interval }">
             <span class="widget__header__selectors__selector" @click="selectInterval(interval)">
               {{ $t('widget.creationDate.intervals.' + interval) }}
             </span>
@@ -34,7 +34,7 @@
                         <h6 class="mb-0">
                           {{ intervalFormatFn(bar.date) }}
                         </h6>
-                        {{ $tc('widget.document', bar.doc_count, { total: $n(bar.doc_count) }) }}
+                        {{ $tc('widget.creationDate.document', bar.doc_count, { total: $n(bar.doc_count) }) }}
                       </span>
                     </div>
                   </foreignObject>

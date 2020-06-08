@@ -7,25 +7,26 @@
           {{ $t('widget.creationDate.filterFolder') }}
         </span>
       </span>
-      <b-modal id="modal-widget-select-path" lazy scrollable hide-header body-class="p-0 border-bottom" cancel-variant="outline-primary" :ok-title="$t('widget.creationDate.selectFolder')" :cancel-title="$t('widget.creationDate.cancel')" size="lg" @ok="setSelectedPath(treeViewPath)">
-        <tree-view :path="treeViewPath || selectedPath" @input="treeViewPath = $event" />
+      <b-modal
+        body-class="p-0 border-bottom"
+        cancel-variant="outline-primary"
+        :cancel-title="$t('widget.creationDate.cancel')"
+        hide-header
+        id="modal-widget-select-path"
+        lazy
+        @ok="setSelectedPath(treeViewPath)"
+        :ok-title="$t('widget.creationDate.selectFolder')"
+        scrollable
+        size="lg">
+        <tree-view :path="treeViewPath || selectedPath" @input="treeViewPath = $event"></tree-view>
       </b-modal>
     </template>
   </widget-documents-by-creation-date>
 </template>
 
 <script>
-import concat from 'lodash/concat'
-import first from 'lodash/first'
-import get from 'lodash/get'
-import map from 'lodash/map'
-import replace from 'lodash/replace'
-import bodybuilder from 'bodybuilder'
-import { mapState } from 'vuex'
-
-import elasticsearch from '@/api/elasticsearch'
-import TreeBreadcrumb from '@/components/TreeBreadcrumb.vue'
-import TreeView from '@/components/TreeView.vue'
+import TreeBreadcrumb from '@/components/TreeBreadcrumb'
+import TreeView from '@/components/TreeView'
 import WidgetDocumentsByCreationDate from '@/components/WidgetDocumentsByCreationDate'
 
 /**
