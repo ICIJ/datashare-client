@@ -48,7 +48,7 @@
         <b-badge pill :variant="markAsRecommendedVariant" class="mr-2 search-document-navbar__recommended-by-number" id="popover-recommended-by">
           {{ recommendedBy.length }}
         </b-badge>
-        <b-popover target="popover-recommended-by" triggers="hover" placement="bottom" v-if="recommendedBy.length > 0">
+        <b-popover target="popover-recommended-by" triggers="hover" placement="bottom">
           <div>
             {{ $tc('search.nav.markAsRecommendedBy',  recommendedBy.length, { count: recommendedBy.length }) }}
           </div>
