@@ -598,7 +598,8 @@
         "year": "Year",
         "month": "Month",
         "day": "Day"
-      }
+      },
+      "document": "no documents | 1 document | %{total} documents"
     }
   }
 }
