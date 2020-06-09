@@ -25,10 +25,16 @@
               </span>
             </confirm-button>
           </div>
-          <div class="batch-search-results__action batch-search-results__download float-right" :disable="results.length === 0">
-            <a :href="downloadLink" class="btn btn-primary">
+          <div class="batch-search-results__action batch-search-results__download__queries float-right" :disable="queries.length === 0" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
+             <a :href="downloadLink" class="btn btn-light mr-2" :disable="queries.length === 0">
+               <fa icon="download" />
+               {{ $t('batchSearchResults.downloadQueries') }}
+             </a>
+           </div>
+          <div class="batch-search-results__action batch-search-results__download__results float-right" :disable="results.length === 0" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
+            <a :href="downloadResultLink" class="btn btn-primary" :disable="results.length === 0" >
               <fa icon="download" />
-              {{ $t('batchSearchResults.downloadResults') }} (CSV)
+              {{ $t('batchSearchResults.downloadResults') }}
             </a>
           </div>
         </div>
@@ -336,6 +342,9 @@ export default {
       return settings.batchSearchResults.size
     },
     downloadLink () {
+      return Api.getFullUrl('/api/batch/search/' + this.uuid + '/queries?format=csv')
+    },
+    downloadResultLink () {
       return Api.getFullUrl('/api/batch/search/result/csv/' + this.uuid)
     },
     sortBy () {
