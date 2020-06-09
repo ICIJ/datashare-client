@@ -30,6 +30,10 @@ To delete line break\(s\) in your spreadsheet, you can use the "**Find and repla
 
 ![Use this functionality to delete all line break\(s\)](../.gitbook/assets/screenshot-2020-02-03-at-11.51.34.png)
 
+* Write **2 characters minimum in all cells**. If there is only one character in a cell, the batch search will lead to 'failure'.
+
+
+
 * If you have **blank cells in your spreadsheet...**
 
 ![](../.gitbook/assets/screenshot-2019-11-04-at-16.12.23.png)
