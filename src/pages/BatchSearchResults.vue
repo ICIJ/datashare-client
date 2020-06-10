@@ -25,14 +25,14 @@
               </span>
             </confirm-button>
           </div>
-          <div class="batch-search-results__action batch-search-results__download__queries float-right" :disable="queries.length === 0" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
-             <a :href="downloadLink" class="btn btn-light mr-2" :disable="queries.length === 0">
+          <div class="batch-search-results__action batch-search-results__download__queries" :disable="queries.length === 0" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
+             <a :href="apiFullUrl('/api/batch/search/' + uuid + '/queries?format=csv')" class="btn btn-light mr-2">
                <fa icon="download" />
                {{ $t('batchSearchResults.downloadQueries') }}
              </a>
            </div>
           <div class="batch-search-results__action batch-search-results__download__results float-right" :disable="results.length === 0" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
-            <a :href="downloadResultLink" class="btn btn-primary" :disable="results.length === 0" >
+            <a :href="apiFullUrl('/api/batch/search/result/csv/' + uuid)" class="btn btn-primary" >
               <fa icon="download" />
               {{ $t('batchSearchResults.downloadResults') }}
             </a>
@@ -341,12 +341,6 @@ export default {
     perPage () {
       return settings.batchSearchResults.size
     },
-    downloadLink () {
-      return Api.getFullUrl('/api/batch/search/' + this.uuid + '/queries?format=csv')
-    },
-    downloadResultLink () {
-      return Api.getFullUrl('/api/batch/search/result/csv/' + this.uuid)
-    },
     sortBy () {
       return find(this.fields, item => item.name === this.sort).key
     },
@@ -418,6 +412,9 @@ export default {
     },
     linkGen (page) {
       return this.generateLinkToBatchSearchResults(page, this.selectedQueries)
+    },
+    apiFullUrl (url) {
+      return Api.getFullUrl(url)
     },
     generateLinkToBatchSearchResults (page = this.page, queries = this.queries, sort = this.sort, order = this.order) {
       return {

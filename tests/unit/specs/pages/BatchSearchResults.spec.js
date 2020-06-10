@@ -8,6 +8,9 @@ import BatchSearchResults, { auth } from '@/pages/BatchSearchResults'
 import Murmur from '@icij/murmur'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import Api from '@/api'
+
+Api.getFullUrl = jest.fn() // mock static function
 
 jest.mock('@/api', () => {
   return jest.fn(() => {
@@ -57,16 +60,9 @@ jest.mock('@/api', () => {
           query_03: 6
         },
         user: { id: 'test' }
-      }),
-      deleteBatchSearch: jest.fn()
+      })
     }
   })
-})
-
-jest.mock('@/utils/utils', () => {
-  return {
-    getDocumentTypeLabel: jest.fn()
-  }
 })
 
 const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
@@ -96,8 +92,7 @@ describe('BatchSearchResults.vue', () => {
     await letData(es).have(new IndexedDocument('43', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
     propsData = { uuid: '12', project }
-    wrapper = shallowMount(BatchSearchResults,
-      { i18n, localVue, store, router, wait, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
+    wrapper = shallowMount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
     await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: project, uuid: '12' }, query: { page: 1 } }).catch(() => {})
     await wrapper.vm.fetch()
   })
@@ -116,13 +111,13 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should not disable button to download the results as a CSV file', () => {
-    expect(wrapper.find('.batch-search-results__download').attributes('disable')).toBeUndefined()
+    expect(wrapper.find('.batch-search-results__download__results').attributes('disable')).toBeUndefined()
   })
 
   it('should disable the download button if no results', async () => {
     await store.commit('batchSearch/results', [])
 
-    expect(wrapper.find('.batch-search-results__download').attributes('disable')).toBeTruthy()
+    expect(wrapper.find('.batch-search-results__download__results').attributes('disable')).toBeTruthy()
   })
 
   it('should display a button to delete the batchSearch', async () => {
@@ -134,8 +129,7 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should NOT display a button to delete the batchSearch', async () => {
-    wrapper = shallowMount(BatchSearchResults,
-      { i18n, localVue, store, router, wait, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
+    wrapper = shallowMount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
 
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()
@@ -197,8 +191,7 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should redirect to document including the search query', async () => {
-    wrapper = mount(BatchSearchResults,
-      { i18n, localVue, store, router, wait, computed: { downloadLink: () => 'mocked-download-link' }, propsData })
+    wrapper = mount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
     await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: project, uuid: '12' }, query: { page: 1 } }).catch(() => {})
     await wrapper.vm.fetch()
 
