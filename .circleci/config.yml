@@ -20,15 +20,22 @@ jobs:
     working_directory: ~/datashare-client
     steps:
       - checkout
+      # Restore dependencies cache from previous builds
       - restore_cache:
           key: dependency-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
           command: make install
+      # Save dependencies cache for future builds
       - save_cache:
           key: dependency-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
+      # Save the app bundle (repo + dependencies) for downstream jobs
+      - save_cache:
+          key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/datshare-client
 
   # This job will run unit tests for the client
   test:
@@ -46,7 +53,9 @@ jobs:
         name: elasticsearch
     working_directory: ~/datashare-client
     steps:
-      - checkout
+      # Restore app bundle (repo + dependencies) from the `build` job
+      - restore_cache:
+          key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Run unit tests
           command: make unit
@@ -60,7 +69,9 @@ jobs:
       - image: circleci/node:10.15.2
     working_directory: ~/datashare-client
     steps:
-      - checkout
+      # Restore app bundle (repo + dependencies) from the `build` job
+      - restore_cache:
+          key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Generate the doc
           command: make doc
