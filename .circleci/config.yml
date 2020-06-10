@@ -35,7 +35,7 @@ jobs:
       - save_cache:
           key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - ~/datshare-client
+            - ~/datashare-client
 
   # This job will run unit tests for the client
   test:
