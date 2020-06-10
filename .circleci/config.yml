@@ -11,6 +11,9 @@ workflows:
       - generate_doc:
           requires:
             - build
+      - publish_doc:
+          requires:
+            - generate_doc
 jobs:
 
   # This job will build the client environment with the correct dependencies
@@ -75,3 +78,34 @@ jobs:
       - run:
           name: Generate the doc
           command: make doc
+      # Save the generated doc for downstream jobs
+      - save_cache:
+          key: doc-cache-{{ .Environment.CIRCLE_SHA1 }}
+          paths:
+            - ~/datashare-client/docs/components
+            - ~/datashare-client/docs/pages
+            - ~/datashare-client/docs/API.md
+            - ~/datashare-client/docs/COMPONENTS.md
+
+  # This job wll publish the doc to Datashare central Wiki
+  publish_doc:
+    docker:
+      - image: circleci/node:10.15.2
+    working_directory: ~/datashare-wiki
+    steps:
+      # Restore app bundle (repo + dependencies) from the `build` job
+      - restore_cache:
+          key: doc-cache-{{ .Environment.CIRCLE_SHA1 }}
+      - run:
+           name: Prepare SSH directory
+           command: |
+             mkdir -p ~/.ssh
+             chmod 700 ~/.ssh
+      - add_ssh_keys:
+          fingerprints:
+            - "b3:e6:7c:f3:86:9e:e9:88:d1:cf:22:8c:97:3e:93:54"
+      - run:
+          name: Checkout Datashare Wiki repository
+          command: |
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
+            git clone git@github.com:ICIJ/datashare.wiki.git ~/datashare-wiki
