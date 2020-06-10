@@ -11,9 +11,9 @@ workflows:
       - generate_doc:
           requires:
             - build
-      - publish_doc:
-          requires:
-            - generate_doc
+      # - publish_doc:
+      #     requires:
+      #       - generate_doc
 jobs:
 
   # This job will build the client environment with the correct dependencies
