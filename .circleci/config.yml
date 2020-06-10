@@ -115,7 +115,7 @@ jobs:
             git clone git@github.com:ICIJ/datashare.wiki.git ~/datashare-wiki
       - run:
           name: Copy generated doc inside the Wiki with a flatten structure
-          command: cp -Rf ~/datashare-client/public/docs/client ~/datashare-wiki
+          command: cp -Rf ~/datashare-client/public/docs/client/*.md ~/datashare-wiki
       - run:
           name: Add/Commit changes to the Wiki (if any)
           command: |
