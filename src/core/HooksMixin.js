@@ -13,7 +13,7 @@ const HooksMixin = superclass => class extends superclass {
    * @param {String} args.name - Name of the hook
    * @param {String} args.target - Target of the hook
    * @param {Number} args.order - Priority of the hook
-   * @param {Object} args.definition - Options to pass to the hook contructor
+   * @param {Object} args.definition - Options to pass to the hook constructor
    */
   registerHook (...args) {
     this.store.commit('hooks/register', ...args)
@@ -49,7 +49,7 @@ const HooksMixin = superclass => class extends superclass {
    * @param {String} options.name - Name of the hoo
    * @param {String} options.target - Target of the hook
    * @param {Number} options.order - Priority of the hook
-   * @param {Object} options.definition - Options to pass to the hook contructor
+   * @param {Object} options.definition - Options to pass to the hook constructor
    */
   registerHookForProject (project, options) {
     options = cloneDeep(options)

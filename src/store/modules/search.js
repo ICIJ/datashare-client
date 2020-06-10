@@ -76,7 +76,7 @@ export const getters = {
     }
   },
   instantiatedFilters (state, getters) {
-    return state.filters.map(filter => getters.instantiateFilter(filter))
+    return orderBy(state.filters.map(filter => getters.instantiateFilter(filter)), 'order', 'asc')
   },
   getFilter (state, getters) {
     return predicate => find(getters.instantiatedFilters, predicate)

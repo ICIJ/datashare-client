@@ -18,7 +18,8 @@ export default [
     options: {
       name: 'starred',
       key: '_id',
-      icon: 'star'
+      icon: 'star',
+      order: 10
     }
   },
   {
@@ -27,7 +28,8 @@ export default [
       name: 'tags',
       key: 'tags',
       icon: 'tags',
-      isSearchable: true
+      isSearchable: true,
+      order: 20
     }
   },
   {
@@ -36,7 +38,8 @@ export default [
       name: 'recommendedBy',
       key: '_id',
       icon: 'users',
-      isSearchable: true
+      isSearchable: true,
+      order: 30
     }
   },
   {
@@ -45,7 +48,8 @@ export default [
       name: 'contentType',
       key: 'contentType',
       icon: 'file',
-      isSearchable: true
+      isSearchable: true,
+      order: 40
     }
   },
   {
@@ -53,7 +57,8 @@ export default [
     options: {
       name: 'creationDate',
       key: 'metadata.tika_metadata_creation_date',
-      icon: 'calendar-alt'
+      icon: 'calendar-alt',
+      order: 50
     }
   },
   {
@@ -61,7 +66,8 @@ export default [
     options: {
       name: 'language',
       key: 'language',
-      icon: 'language'
+      icon: 'language',
+      order: 60
     }
   },
   {
@@ -70,7 +76,8 @@ export default [
       name: 'namedEntityPerson',
       key: 'byMentions',
       isSearchable: true,
-      category: namedEntityCategoryTranslation.namedEntityPerson
+      category: namedEntityCategoryTranslation.namedEntityPerson,
+      order: 70
     }
   },
   {
@@ -79,7 +86,8 @@ export default [
       name: 'namedEntityOrganization',
       key: 'byMentions',
       isSearchable: true,
-      category: namedEntityCategoryTranslation.namedEntityOrganization
+      category: namedEntityCategoryTranslation.namedEntityOrganization,
+      order: 80
     }
   },
   {
@@ -88,7 +96,8 @@ export default [
       name: 'namedEntityLocation',
       key: 'byMentions',
       isSearchable: true,
-      category: namedEntityCategoryTranslation.namedEntityLocation
+      category: namedEntityCategoryTranslation.namedEntityLocation,
+      order: 90
     }
   },
   {
@@ -96,7 +105,8 @@ export default [
     options: {
       name: 'path',
       key: 'byDirname',
-      icon: 'hdd'
+      icon: 'hdd',
+      order: 100
     }
   },
   {
@@ -104,7 +114,8 @@ export default [
     options: {
       name: 'extractionLevel',
       key: 'extractionLevel',
-      icon: 'paperclip'
+      icon: 'paperclip',
+      order: 110
     }
   },
   {
@@ -112,7 +123,8 @@ export default [
     options: {
       name: 'indexingDate',
       key: 'extractionDate',
-      icon: 'calendar-plus'
+      icon: 'calendar-plus',
+      order: 120
     }
   }
 ]

@@ -11,10 +11,15 @@ const FiltersMixin = superclass => class extends superclass {
   /**
    * Register a filter
    * @memberof FiltersMixin.prototype
-   * @param {...Mixed} args - Filter's options.
-   * @param {String} args.name - Name of the filter
+   * @param {...Mixed} args - Filter's params.
    * @param {String} args.type - Type of the filter.
-   * @param {Object} args.options - Options to pass to the filter contructor
+   * @param {Object} args.options - Options to pass to the filter constructor.
+   * @param {String} args.options.name - Name of the filter.
+   * @param {String} args.options.key - Key of the filter. Typically ElasticSearch field name.
+   * @param {String} [args.options.icon=null] - Icon of the filter.
+   * @param {Boolean} [args.options.isSearchable=false] - Set if this filter should be searchable or not.
+   * @param {function} [args.options.alternativeSearch=null] - Set a function about how to transform query term before searching for it.
+   * @param {Number} [args.options.order=null] - Order of the filter. Will be added as last filter by default.
    */
   registerFilter (...args) {
     this.store.commit('search/addFilter', ...args)
@@ -34,7 +39,7 @@ const FiltersMixin = superclass => class extends superclass {
    * @param {...Mixed} args - Filter's options.
    * @param {String} args.name - Name of the filter
    * @param {String} args.type - Type of the filter.
-   * @param {Object} args.options - Options to pass to the filter contructor
+   * @param {Object} args.options - Options to pass to the filter constructor
    */
   registerFilterForProject (project, { type, options = {} } = {}) {
     options = cloneDeep(options)

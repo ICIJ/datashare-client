@@ -33,6 +33,13 @@ describe('SearchStore', () => {
     expect(store.state.search).not.toBeUndefined()
   })
 
+  it('should instantiate the default 12 filters, with order', () => {
+    const filters = store.getters['search/instantiatedFilters']
+
+    expect(filters).toHaveLength(12)
+    expect(find(filters, { name: 'contentType' }).order).toEqual(40)
+  })
+
   it('should reset to initial state', async () => {
     const initialState = cloneDeep(store.state.search)
     store.commit('search/index', anotherProject)
