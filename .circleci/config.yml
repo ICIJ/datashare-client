@@ -120,8 +120,10 @@ jobs:
           name: Copy generated doc inside the Wiki
           command: cp -Rf ~/datashare-client/public/docs/ ~/datashare-wiki/client/
       - run:
-          name: Commit changes to the Wiki (if any)
-          command: git -C ~/datashare-wiki commit -am "Publish client documentation [${CIRCLE_SHA1}]"
+          name: Add/Commit changes to the Wiki (if any)
+          command: |
+            git -C ~/datashare-wiki add -A
+            git -C ~/datashare-wiki commit -am "Publish client documentation [${CIRCLE_SHA1}]"
       - run:
           name: Push changes to the Wiki (if any)
           command: git -C ~/datashare-wiki push origin master
