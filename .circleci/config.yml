@@ -82,16 +82,16 @@ jobs:
           name: Save the generated doc for downstream jobs
           key: doc-cache-{{ .Environment.CIRCLE_SHA1 }}
           paths:
-            - ~/datashare-client/docs/components
-            - ~/datashare-client/docs/pages
-            - ~/datashare-client/docs/API.md
-            - ~/datashare-client/docs/COMPONENTS.md
+            - ~/datashare-client/public/docs/components
+            - ~/datashare-client/public/docs/pages
+            - ~/datashare-client/public/docs/API.md
+            - ~/datashare-client/public/docs/COMPONENTS.md
 
   # This job wll publish the doc to Datashare central Wiki
   publish_doc:
     docker:
       - image: circleci/node:10.15.2
-    working_directory: ~
+    working_directory: ~/datashare-client
     steps:
       - restore_cache:
           name: Restore app bundle (repo + dependencies) from the `build` job
