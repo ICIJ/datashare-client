@@ -4,7 +4,7 @@
 
 ## Props
 
-| Prop name | Description           | Type   | Values | Default |
-| --------- | --------------------- | ------ | ------ | ------- |
-| uuid      | The bath search uuid  | string | -      |         |
-| index     | The bath search index | string | -      |         |
+| Prop name | Description            | Type   | Values | Default |
+| --------- | ---------------------- | ------ | ------ | ------- |
+| uuid      | The batch search uuid  | string | -      |         |
+| index     | The batch search index | string | -      |         |
