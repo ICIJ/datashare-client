@@ -1,6 +1,37 @@
 version: 2
+
+workflows:
+  version: 2
+  test_and_publish_doc:
+    jobs:
+      - build
+      - test:
+          requires:
+            - build
+      - generate_doc:
+          requires:
+            - build
 jobs:
+
+  # This job will build the client environment with the correct dependencies
   build:
+    docker:
+      - image: circleci/node:10.15.2
+    working_directory: ~/datashare-client
+    steps:
+      - checkout
+      - restore_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+      - run:
+          name: Install dependencies
+          command: make install
+      - save_cache:
+          key: dependency-cache-{{ checksum "package.json" }}
+          paths:
+            - ./node_modules
+
+  # This job will run unit tests for the client
+  test:
     docker:
       - image: circleci/node:10.15.2
       - image: docker.elastic.co/elasticsearch/elasticsearch:6.3.0
@@ -13,20 +44,23 @@ jobs:
           - "http.cors.allow-origin=*"
           - "http.cors.allow-methods=OPTIONS, HEAD, GET, POST, PUT, DELETE"
         name: elasticsearch
-
+    working_directory: ~/datashare-client
     steps:
       - checkout
       - run:
-          name: make install
-          command: make install
-      - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
-          paths:
-            - ./node_modules
-      - run:
-          name: run unit tests
+          name: Run unit tests
           command: make unit
       - run:
-          name: make distribution
+          name: Make distribution
           command: make dist
 
+  # This job will generate the API documentation
+  generate_doc:
+    docker:
+      - image: circleci/node:10.15.2
+    working_directory: ~/datashare-client
+    steps:
+      - checkout
+      - run:
+          name: Generate the doc
+          command: make doc

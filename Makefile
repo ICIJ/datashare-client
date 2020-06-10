@@ -18,3 +18,6 @@ release:
 
 unit:
 		yarn test:unit
+
+doc:
+		yarn doc
