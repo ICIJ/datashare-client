@@ -103,9 +103,25 @@ jobs:
              chmod 700 ~/.ssh
       - add_ssh_keys:
           fingerprints:
-            - "b3:e6:7c:f3:86:9e:e9:88:d1:cf:22:8c:97:3e:93:54"
+            # This deploy key has read-write permission on Datashare repository
+            # @see https://app.circleci.com/settings/project/github/ICIJ/datashare-client/ssh
+            - "ee:80:dd:ca:56:91:b8:9b:ee:b4:f8:53:63:77:e4:8a"
+      - run:
+          name: Configure Git identy
+          command: |
+            git config user.name $CIRCLE_USERNAME
+            git config.user.email "engineering@icij.org"
       - run:
           name: Checkout Datashare Wiki repository
           command: |
             ssh-keyscan github.com >> ~/.ssh/known_hosts
             git clone git@github.com:ICIJ/datashare.wiki.git ~/datashare-wiki
+      - run:
+          name: Copy generated doc inside the Wiki
+          command: cp -Rf ~/datashare-client/public/docs/ ~/datashare-wiki/client/
+      - run:
+          name: Commit changes to the Wiki (if any)
+          command: git -C ~/datashare-wiki commit -am "Publish client documentation [${CIRCLE_SHA1}]"
+      - run:
+          name: Push changes to the Wiki (if any)
+          command: git -C ~/datashare-wiki push origin master
