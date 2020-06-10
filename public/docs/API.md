@@ -279,12 +279,17 @@ Register a filter
 
 **Kind**: instance method of [<code>FiltersMixin</code>](#FiltersMixin)  
 
-| Param | Type | Description |
-| --- | --- | --- |
-| ...args | <code>Mixed</code> | Filter's options. |
-| args.name | <code>String</code> | Name of the filter |
-| args.type | <code>String</code> | Type of the filter. |
-| args.options | <code>Object</code> | Options to pass to the filter contructor |
+| Param | Type | Default | Description |
+| --- | --- | --- | --- |
+| ...args | <code>Mixed</code> |  | Filter's params. |
+| args.type | <code>String</code> |  | Type of the filter. |
+| args.options | <code>Object</code> |  | Options to pass to the filter constructor. |
+| args.options.name | <code>String</code> |  | Name of the filter. |
+| args.options.key | <code>String</code> |  | Key of the filter. Typically ElasticSearch field name. |
+| [args.options.icon] | <code>String</code> | <code></code> | Icon of the filter. |
+| [args.options.isSearchable] | <code>Boolean</code> | <code>false</code> | Set if this filter should be searchable or not. |
+| [args.options.alternativeSearch] | <code>function</code> | <code></code> | Set a function about how to transform query term before searching for it. |
+| [args.options.order] | <code>Number</code> | <code></code> | Order of the filter. Will be added as last filter by default. |
 
 <a name="FiltersMixin+unregisterFilter"></a>
 
@@ -310,7 +315,7 @@ Register a filter only for a specific project
 | ...args | <code>Mixed</code> | Filter's options. |
 | args.name | <code>String</code> | Name of the filter |
 | args.type | <code>String</code> | Type of the filter. |
-| args.options | <code>Object</code> | Options to pass to the filter contructor |
+| args.options | <code>Object</code> | Options to pass to the filter constructor |
 
 <a name="FiltersMixin+unregisterFilterForProject"></a>
 
@@ -351,7 +356,7 @@ Register a hook
 | args.name | <code>String</code> | Name of the hook |
 | args.target | <code>String</code> | Target of the hook |
 | args.order | <code>Number</code> | Priority of the hook |
-| args.definition | <code>Object</code> | Options to pass to the hook contructor |
+| args.definition | <code>Object</code> | Options to pass to the hook constructor |
 
 <a name="HooksMixin+unregisterHook"></a>
 
@@ -395,7 +400,7 @@ Register a hook for a specific project
 | options.name | <code>String</code> | Name of the hoo |
 | options.target | <code>String</code> | Target of the hook |
 | options.order | <code>Number</code> | Priority of the hook |
-| options.definition | <code>Object</code> | Options to pass to the hook contructor |
+| options.definition | <code>Object</code> | Options to pass to the hook constructor |
 
 <a name="PipelinesMixin"></a>
 
