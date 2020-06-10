@@ -107,10 +107,10 @@ jobs:
             # @see https://app.circleci.com/settings/project/github/ICIJ/datashare-client/ssh
             - "ee:80:dd:ca:56:91:b8:9b:ee:b4:f8:53:63:77:e4:8a"
       - run:
-          name: Configure Git identy
+          name: Configure Git identity
           command: |
-            git config user.name $CIRCLE_USERNAME
-            git config.user.email "engineering@icij.org"
+            git config --global user.name $CIRCLE_USERNAME
+            git config --global user.email "engineering@icij.org"
       - run:
           name: Checkout Datashare Wiki repository
           command: |
