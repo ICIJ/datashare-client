@@ -121,7 +121,7 @@ jobs:
           command: |
             for source in `find ./public/docs/ -type f` ; do
               # Rename root of the doc to "client"
-              dest=$(echo $f | sed 's/\.\/public\/docs/client/')
+              dest=$(echo $source | sed 's/\.\/public\/docs/client/')
               # Replace "/" (directories) by spaces
               dest=$(echo $dest | sed 's/\//\ /g')
               # Capitalize each directory name
