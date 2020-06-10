@@ -531,6 +531,8 @@
     "contentType": "Type de contenu",
     "size": "Taille",
     "downloadResults": "Télécharger les résultats",
+    "downloadQueries": "Download queries",
+    "downloadTooltip": "Download as CSV",
     "empty": "Pas de résultat",
     "errorTitle": "Erreur",
     "errorMessage": "Le système a rencontré un problème. Il peut s'agir d'une erreur de syntaxe que vous avez commise dans votre CSV ou d'une autre erreur. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Veuillez vous référer à cette page d'aide où les erreurs les plus courantes sont expliquées.</a>"
