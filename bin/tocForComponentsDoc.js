@@ -6,7 +6,7 @@ const { findIndex, filter, isArrayLike, startsWith, trimStart } = require('lodas
 
 const RE_HEADER = /^#+(.*)$/
 const RE_DESCRIPTION = /^>+(.*)$/
-const DOC_PATH = join('public', 'docs')
+const DOC_PATH = join('public', 'docs', 'client')
 
 const buildToc = Handlebars.compile(readFileSync('bin/DOCS.COMPONENTS.hbs', 'UTF-8'))
 const joinToDoc = path => join(DOC_PATH, path)
@@ -34,18 +34,18 @@ const components = {
     }, {})
   },
   get widgets () {
-    return glob.sync(joinToDoc('/components/**/Widget*.md'))
+    return glob.sync(joinToDoc('Client | Components | Widget*.md'))
   },
   get filters () {
-    return glob.sync(joinToDoc('/components/**/Filter!(s)*.md'))
+    return glob.sync(joinToDoc('Client | Components | Filter!(s)*.md'))
   },
   get pages () {
-    return glob.sync(joinToDoc('/pages/**/*.md'))
+    return glob.sync(joinToDoc('Client | Pages | *.md'))
   },
   get others () {
-    const all = glob.sync(joinToDoc('/components/**/*.md'))
+    const all = glob.sync(joinToDoc('Client | Components | *.md'))
     return filter(all, f => {
-      const sw = target => startsWith(basename(f), target)
+      const sw = target => startsWith(basename(f).split(' | ').pop(), target)
       return sw('Filters') || !(sw('Filter') || sw('Widget'))
     })
   }
@@ -54,4 +54,4 @@ const components = {
 // Compile templates using components collections
 const toc = buildToc(components.collectAllTocs())
 // Write the table of content for all components!
-writeFileSync(joinToDoc('COMPONENTS.md'), toc)
+writeFileSync(joinToDoc('Client | Table of Content.md'), toc)

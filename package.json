@@ -11,7 +11,7 @@
     "lint": "vue-cli-service lint",
     "test": "yarn test:unit && yarn test:e2e",
     "doc": "yarn doc:api && yarn doc:components && yarn doc:components:toc",
-    "doc:api": "npx jsdoc-to-markdown --template bin/DOCS.API.hbs src/core/*.js > public/docs/API.md",
+    "doc:api": "npx jsdoc-to-markdown --template bin/DOCS.API.hbs src/core/*.js > 'public/docs/client/Client | API.md'",
     "doc:components": "npx vue-docgen-cli",
     "doc:components:toc": "node bin/tocForComponentsDoc.js"
   },
