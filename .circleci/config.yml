@@ -23,19 +23,19 @@ jobs:
     working_directory: ~/datashare-client
     steps:
       - checkout
-      # Restore dependencies cache from previous builds
       - restore_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          name: Restore dependencies cache from previous builds
+          key: dependencies-cache-{{ checksum "package.json" }}
       - run:
           name: Install dependencies
           command: make install
-      # Save dependencies cache for future builds
       - save_cache:
-          key: dependency-cache-{{ checksum "package.json" }}
+          name: Save dependencies cache for future builds
+          key: dependencies-cache-{{ checksum "package.json" }}
           paths:
             - ./node_modules
-      # Save the app bundle (repo + dependencies) for downstream jobs
       - save_cache:
+          name: Save the app bundle (repo + dependencies) for downstream jobs
           key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/datashare-client
@@ -56,8 +56,8 @@ jobs:
         name: elasticsearch
     working_directory: ~/datashare-client
     steps:
-      # Restore app bundle (repo + dependencies) from the `build` job
       - restore_cache:
+          name: Restore app bundle (repo + dependencies) from the `build` job
           key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Run unit tests
@@ -72,14 +72,14 @@ jobs:
       - image: circleci/node:10.15.2
     working_directory: ~/datashare-client
     steps:
-      # Restore app bundle (repo + dependencies) from the `build` job
       - restore_cache:
+          name: Restore app bundle (repo + dependencies) from the `build` job
           key: bundle-cache-{{ .Environment.CIRCLE_SHA1 }}
       - run:
           name: Generate the doc
           command: make doc
-      # Save the generated doc for downstream jobs
       - save_cache:
+          name: Save the generated doc for downstream jobs
           key: doc-cache-{{ .Environment.CIRCLE_SHA1 }}
           paths:
             - ~/datashare-client/docs/components
@@ -91,10 +91,10 @@ jobs:
   publish_doc:
     docker:
       - image: circleci/node:10.15.2
-    working_directory: ~/datashare-wiki
+    working_directory: ~
     steps:
-      # Restore app bundle (repo + dependencies) from the `build` job
       - restore_cache:
+          name: Restore app bundle (repo + dependencies) from the `build` job
           key: doc-cache-{{ .Environment.CIRCLE_SHA1 }}
       - run:
            name: Prepare SSH directory
