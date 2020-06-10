@@ -131,13 +131,13 @@ jobs:
               # Replace spaces by pipes in the file name
               dest=$(echo $dest | sed 's/ / | /g')
               # Copy the file (finally!)
-              cp $source ~/datashare-wiki/$dest
+              cp $source "../datashare-wiki/$dest"
             done
       - run:
           name: Add/Commit changes to the Wiki (if any)
           command: |
             git -C ~/datashare-wiki add -A
-            git -C ~/datashare-wiki commit -am "Publish client documentation [${CIRCLE_SHA1}]"
+            git -C ~/datashare-wiki commit -am "Publish client documentation [${CIRCLE_SHA1}]" || true
       - run:
           name: Push changes to the Wiki (if any)
           command: git -C ~/datashare-wiki push origin master
