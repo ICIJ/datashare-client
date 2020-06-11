@@ -1,7 +1,11 @@
 {
   "name": "datashare-client",
   "version": "0.1.0-canary.1",
-  "private": true,
+  "private": false,
+  "repository": {
+    "type" : "git",
+    "url" : "https://github.com/ICIJ/datashare-client/"
+  },
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "node --max_old_space_size=4096 node_modules/@vue/cli-service/bin/vue-cli-service.js build",
@@ -10,8 +14,9 @@
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
     "test": "yarn test:unit && yarn test:e2e",
-    "doc": "yarn doc:api && yarn doc:components && yarn doc:components:toc",
+    "doc": "yarn doc:api && yarn doc:hooks && yarn doc:components && yarn doc:components:toc",
     "doc:api": "npx jsdoc-to-markdown --template bin/DOCS.API.hbs src/core/*.js > 'public/docs/client/Client-›-API.md'",
+    "doc:hooks": "node bin/collectHooks.js",
     "doc:components": "npx vue-docgen-cli",
     "doc:components:toc": "node bin/tocForComponentsDoc.js"
   },
