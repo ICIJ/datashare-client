@@ -89,7 +89,7 @@
       },
       "markAsRecommended": "Marcar como recomendado",
       "unmarkAsRecommended": "Desmarcar como recomendado",
-      "markAsRecommendedBy": "Marcado como recomendado por nadie: | Marcado como recomendado por 1 usuario: | Marcado como recomendado por {count} usuarios:"
+      "markAsRecommendedBy": "Marked as recommended by nobody | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
     }
   },
   "pagination": {
