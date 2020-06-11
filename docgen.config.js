@@ -10,10 +10,10 @@ module.exports = {
   components: '**/[A-Z]*.vue',
   outDir: 'public/docs/client/',
   getDestFile: (file, config) => {
-    const outPath = dirname(file).split('/').map(capitalize).join(' | ')
+    const outPath = dirname(file).split('/').map(capitalize).join('-›-')
     const outFile = basename(file).replace(/\.vue$/, '.md')
     // Flattn structure to be display correctly by Github Wiki
-    return join(config.outDir, `Client | ${outPath} | ${outFile}`)
+    return join(config.outDir, `Client-›-${outPath}-›-${outFile}`)
   },
   // inform vue-docgen-api of Webpack aliases
   apiOptions
