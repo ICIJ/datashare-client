@@ -19,7 +19,7 @@ These filters are used on the search filters panel.
 
 {{#each filters}}
   {{#with this}}
-* [{{title}}]({{path}}) {{#if description}}<br />— _{{description}}_{{/if}}
+* [{{title}}]({{wikiPath}}) {{#if description}}<br />— _{{description}}_{{/if}}
   {{/with}}
 {{/each}}
 
@@ -29,7 +29,7 @@ All pages components.
 
 {{#each pages}}
   {{#with this}}
-* [{{title}}]({{path}}) {{#if description}}<br />— _{{description}}_{{/if}}
+* [{{title}}]({{wikiPath}}) {{#if description}}<br />— _{{description}}_{{/if}}
   {{/with}}
 {{/each}}
 
@@ -37,6 +37,6 @@ All pages components.
 
 {{#each others}}
   {{#with this}}
-* [{{title}}]({{path}}) {{#if description}}<br />— _{{description}}_{{/if}}
+* [{{title}}]({{wikiPath}}) {{#if description}}<br />— _{{description}}_{{/if}}
   {{/with}}
 {{/each}}
