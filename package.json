@@ -18,7 +18,7 @@
     "doc:api": "npx jsdoc-to-markdown --template bin/DOCS.API.hbs src/core/*.js > 'public/docs/client/Client-›-API.md'",
     "doc:hooks": "node bin/collectHooks.js",
     "doc:components": "npx vue-docgen-cli",
-    "doc:components:toc": "node bin/tocForComponentsDoc.js"
+    "doc:components:toc": "node bin/collectTocForComponentsDoc.js"
   },
   "dependencies": {
     "@fortawesome/fontawesome": "^1.1.4",

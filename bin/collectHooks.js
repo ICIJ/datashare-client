@@ -10,7 +10,7 @@ const DOC_PATH = join('public', 'docs', 'client')
 const build = Handlebars.compile(readFileSync('bin/DOCS.HOOKS.hbs', 'UTF-8'))
 const joinToDoc = path => join(DOC_PATH, path)
 
-function srcToGithubWikiPath(src) {
+function srcToGithubWikiPath (src) {
   const name = basename(src, '.vue')
   const path = src.split('/').slice(1, -1).map(capitalize).join('-›-')
   return `Client-›-${path}-›-${name}`
