@@ -17,7 +17,7 @@ function srcToGithubWikiPath (src) {
 }
 
 // Collect hook occurences with `git grep`
-const occurences = execSync('git grep --line --only-matching --no-color --extended-regexp \'<hook name="(.*:\\w*)"\'').toString()
+const occurences = execSync('git grep --line --no-color --extended-regexp \'<hook name="(.*:\\w*)"\'').toString()
 // Each line is an occurence, with 3 columns separated by :
 const hooks = compact(occurences.split('\n')).map(occurence => {
   const path = occurence.split(':')[0]
