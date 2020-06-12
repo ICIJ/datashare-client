@@ -4,7 +4,6 @@ import map from 'lodash/map'
 import sortBy from 'lodash/sortBy'
 import takeRight from 'lodash/takeRight'
 import zip from 'lodash/zip'
-import cheerio from 'cheerio'
 
 export function slugger (value = '') {
   return value
@@ -12,18 +11,6 @@ export function slugger (value = '') {
     .trim()
     .replace(/[\u2000-\u206F\u2E00-\u2E7F\\'!"#$%&()*+,./:;<=>?@[\]^`{|}~]/g, '')
     .replace(/\s/g, '-')
-}
-
-export function replaceInChildNodes (element, needle, replacement) {
-  if (element.type === 'text') {
-    const index = element.parent.children.indexOf(element)
-    const node = cheerio(element.parent.children[index])
-    node.replaceWith(element.nodeValue.replace(needle, replacement))
-  } else if (element.type === 'tag') {
-    element.childNodes.forEach(child => replaceInChildNodes(child, needle, replacement))
-  } else {
-    element.toArray().forEach(child => replaceInChildNodes(child, needle, replacement))
-  }
 }
 
 export function addLocalSearchMarks (content = '<div></div>', localSearchTerm = { label: '' }) {
@@ -34,15 +21,11 @@ export function addLocalSearchMarks (content = '<div></div>', localSearchTerm = 
 
   try {
     if (localSearchOccurrences === 0) throw new Error()
-
     const needle = RegExp(`(${escapedLocalSearchTerm})`, 'gim')
-    const dom = cheerio.load(content)
-    if (!dom) throw new Error()
-
-    replaceInChildNodes(dom('body'), needle, '<mark class="local-search-term">$1</mark>')
+    const replacedContent = content.replace(needle, '<mark class="local-search-term">$1</mark>')
 
     return {
-      content: dom('body').html(),
+      content: replacedContent,
       localSearchIndex,
       localSearchOccurrences
     }

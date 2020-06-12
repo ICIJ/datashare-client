@@ -160,8 +160,12 @@ describe('strings', () => {
 
     it('should wrap regex', () => {
       const { content } = addLocalSearchMarks('France is not a tax heaven.\nBut most probably a taxidermists country.', { label: 'tax.*', regex: true })
-
       expect(content).toBe('France is not a <mark class="local-search-term">tax heaven.</mark>\nBut most probably a <mark class="local-search-term">taxidermists country.</mark>')
+    })
+
+    it('should display HTML characters', () => {
+      const { content } = addLocalSearchMarks('Lorem ipsum <dolor & other > or', { label: 'ipsum' })
+      expect(content).toBe('Lorem <mark class="local-search-term">ipsum</mark> <dolor & other > or')
     })
   })
 })

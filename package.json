@@ -31,7 +31,6 @@
     "bodybuilder": "^2.2.17",
     "bootstrap": ">=4.3.1",
     "bootstrap-vue": "2.10.0",
-    "cheerio": "^1.0.0-rc.3",
     "core-js": "^3.4.4",
     "d3": "^5.15.0",
     "elasticsearch-browser": "16.1.1",

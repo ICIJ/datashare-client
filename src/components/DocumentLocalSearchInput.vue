@@ -21,14 +21,14 @@ export default {
       type: Object
     },
     /**
-     * The position of the current occurence of the term
+     * The position of the current occurrence of the term
      */
     searchIndex: {
       type: Number,
       default: 0
     },
     /**
-     * The list of all occurencies
+     * The list of all occurrences
      */
     searchOccurrences: {
       type: Number,
@@ -60,13 +60,13 @@ export default {
     },
     previous () {
       /**
-       * User selected the previous occurence of the term
+       * User selected the previous occurrence of the term
        */
       this.$emit('previous', this.searchTerm)
     },
     next () {
       /**
-       * User selected the next occurence of the term
+       * User selected the next occurrence of the term
        */
       this.$emit('next', this.searchTerm)
     },
