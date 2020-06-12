@@ -15,7 +15,7 @@ describe('WidgetListGroup.vue', () => {
     const propsData = { widget }
     const wrapper = shallowMount(WidgetListGroup, { localVue, store, propsData })
     await new Promise(resolve => setImmediate(resolve))
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 
   it('should have a `widget--list-group` class', async () => {

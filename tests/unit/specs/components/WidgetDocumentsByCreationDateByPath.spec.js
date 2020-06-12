@@ -15,6 +15,6 @@ describe('WidgetDocumentsByCreationDateByPath.vue', () => {
 
   it('should be a Vue instance', () => {
     const wrapper = mount(WidgetDocumentsByCreationDateByPath, { i18n, localVue, propsData, store, wait })
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 })

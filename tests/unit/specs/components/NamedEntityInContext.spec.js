@@ -37,7 +37,7 @@ describe('NamedEntityInContext.vue', () => {
   it('should be a Vue instance', async () => {
     const propsData = await defaultPropsData()
     const wrapper = shallowMount(NamedEntityInContext, { i18n, localVue, propsData })
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 
   it('should display the named entity at the beginning of the text', async () => {

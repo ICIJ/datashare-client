@@ -15,7 +15,7 @@ describe('WidgetText.vue', () => {
     const propsData = { widget }
     const wrapper = shallowMount(WidgetText, { localVue, store, propsData })
     await new Promise(resolve => setImmediate(resolve))
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 
   it('should have a `widget--text` class', async () => {

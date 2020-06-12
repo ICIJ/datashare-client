@@ -20,7 +20,7 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
     const wrapper = shallowMount(WidgetDocumentsByCreationDate,
       { i18n, localVue, propsData, store, wait })
 
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 
   it('should display a barchart with 2 bars', async () => {

@@ -13,7 +13,7 @@ describe('WidgetFileBarometer.vue', () => {
 
   it('should be a Vue instance', () => {
     const wrapper = shallowMount(WidgetFileBarometer, { i18n, localVue, store, wait, propsData, methods })
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 
   it('should display the total number of document', async () => {

@@ -16,7 +16,7 @@ describe('EmailString.vue', () => {
       mocks: { $t: msg => msg }
     })
 
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 
   it('renders the email address only', () => {

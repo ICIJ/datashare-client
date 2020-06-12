@@ -14,7 +14,7 @@ describe('Hook.vue', () => {
 
   it('should be a Vue instance', () => {
     const wrapper = shallowMount(Hook, { localVue, store })
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 
   it('should have one component', () => {

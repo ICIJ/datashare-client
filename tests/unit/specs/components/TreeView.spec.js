@@ -23,7 +23,7 @@ describe('TreeView.vue', () => {
       })
     }
     const wrapper = shallowMount(TreeView, { i18n, localVue, wait, store, propsData, methods })
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 
   it('should display 2 directories', async () => {

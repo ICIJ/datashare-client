@@ -13,7 +13,7 @@ describe('TreeBreadcrumb.vue', () => {
   it('should be a Vue instance', () => {
     const propsData = { path: '/home/foo/bar', noDatadir: true }
     const wrapper = shallowMount(TreeBreadcrumb, { i18n, localVue, propsData })
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 
   it('should display 2 directories', async () => {

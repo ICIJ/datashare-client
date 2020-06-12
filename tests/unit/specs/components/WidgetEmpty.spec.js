@@ -12,7 +12,7 @@ describe('WidgetEmpty.vue', () => {
 
   it('should be a Vue instance', () => {
     const wrapper = shallowMount(WidgetEmpty, { localVue, store })
-    expect(wrapper.isVueInstance()).toBeTruthy()
+    expect(wrapper).toBeTruthy()
   })
 
   it('should contain nothing but the void', () => {
