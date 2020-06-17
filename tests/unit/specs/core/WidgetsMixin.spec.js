@@ -50,12 +50,39 @@ describe('WidgetsMixin', () => {
     expect(core.store.state.insights.widgets).toHaveLength(1)
   })
 
+  it('should find one unamed widget on the current project', () => {
+    core.registerWidgetForProject('a-uniq-project-a', { foo: 'bar' })
+    expect(core.store.state.insights.widgets).toHaveLength(0)
+    core.store.commit('search/index', 'a-uniq-project-a')
+    expect(core.store.state.insights.widgets).toHaveLength(1)
+    core.store.commit('search/index', 'a-uniq-project-b')
+    expect(core.store.state.insights.widgets).toHaveLength(0)
+    core.store.commit('search/index', 'a-uniq-project-a')
+    expect(core.store.state.insights.widgets).toHaveLength(1)
+  })
+
   it('should find no widgets on the current project', () => {
     core.registerWidgetForProject('an-project', { name: 'foo' })
     core.store.commit('search/index', 'an-project')
     expect(core.store.state.insights.widgets).toHaveLength(1)
     core.store.commit('search/index', 'another-project')
     expect(core.store.state.insights.widgets).toHaveLength(0)
+    core.store.commit('search/index', 'an-project')
+    expect(core.store.state.insights.widgets).toHaveLength(1)
+    core.store.commit('search/index', 'another-project')
+    expect(core.store.state.insights.widgets).toHaveLength(0)
+  })
+
+  it('should register a widget for a project only once', () => {
+    core.registerWidgetForProject('a-project-with-widget-once', { name: 'foo' })
+    core.store.commit('search/index', 'a-project-with-widget-once')
+    expect(core.store.state.insights.widgets).toHaveLength(1)
+    core.store.commit('search/index', 'a-project-with-widget-once')
+    core.store.commit('search/index', 'a-project-with-widget-once')
+    core.store.commit('search/index', 'a-project-with-widget-once')
+    core.store.commit('search/index', 'a-project-with-widget-once')
+    core.store.commit('search/index', 'a-project-with-widget-once')
+    expect(core.store.state.insights.widgets).toHaveLength(1)
   })
 
   it('should replace an existing widget', () => {

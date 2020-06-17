@@ -45,13 +45,13 @@ const WidgetsMixin = superclass => class extends superclass {
    */
   registerWidgetForProject (project, options) {
     options = cloneDeep(options)
-    options.name = options.name || uniqueId('core:insight-')
+    const name = options.name || uniqueId('core:insight-')
     // Watch store mutations
     return this.toggleForProject({
       project,
       // Conditional callbacks
-      withFn: () => this.registerWidget(options),
-      withoutFn: () => this.unregisterWidget(options.name)
+      withFn: () => this.registerWidget({ ...options, name }),
+      withoutFn: () => this.unregisterWidget(name)
     })
   }
   /**

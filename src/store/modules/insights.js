@@ -28,7 +28,9 @@ const mutations = {
     Vue.delete(state.widgets, index)
   },
   addWidget (state, options) {
-    state.widgets.push(options)
+    if (!options.name || !find(state.widgets, { name: options.name })) {
+      state.widgets.push(options)
+    }
   },
   clearWidgets (state) {
     Vue.set(state, 'widgets', [])
