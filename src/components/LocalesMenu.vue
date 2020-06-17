@@ -36,7 +36,7 @@ export default {
       type: String
     },
     /**
-     * Hide de caret
+     * Hide the caret
      */
     noCaret: {
       type: Boolean
