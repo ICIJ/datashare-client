@@ -54,20 +54,18 @@ describe('InsightsStore', () => {
   })
 
   it('should register a new widget with a default type', () => {
-    const initialLength = store.state.insights.widgets.length
     store.commit('insights/addWidget', { name: 'test-widget' })
-    expect(store.getters['insights/instantiatedWidgets'][initialLength]).toBeInstanceOf(WidgetEmpty)
+    expect(store.getters['insights/instantiatedWidgets'].pop()).toBeInstanceOf(WidgetEmpty)
   })
 
   it('should instantiate a widget of type WidgetText', () => {
-    const widget = { name: 'test-widget', type: 'WidgetText' }
+    const widget = { name: 'test-text-widget-instance', type: 'WidgetText' }
     expect(store.getters['insights/instantiateWidget'](widget)).toBeInstanceOf(WidgetText)
   })
 
   it('should register a new widget of type WidgetText', () => {
-    const initialLength = store.state.insights.widgets.length
-    store.commit('insights/addWidget', { name: 'test-widget', type: 'WidgetText' })
-    expect(store.getters['insights/instantiatedWidgets'][initialLength]).toBeInstanceOf(WidgetText)
+    store.commit('insights/addWidget', { name: 'test-text-widget-register', type: 'WidgetText', order: 1000 })
+    expect(store.getters['insights/instantiatedWidgets'].pop()).toBeInstanceOf(WidgetText)
   })
 
   it('should create an empty project by default', () => {
