@@ -47,7 +47,7 @@
     "results": {
       "match": "coincidir en doc",
       "entities": "nb entidades",
-      "results": "1 | %{total} archivos",
+      "results": "1 document | %{total} documents",
       "noResults": "No se han encontrado documentos",
       "on": "en",
       "perPage": "por página",
