@@ -251,7 +251,7 @@ class Core extends Behaviors {
     return this._ready
   }
   /**
-   * The application core instance. Deprecated in favor or the `app` property.
+   * The application core instance. Deprecated in favor or the `core` property.
    * @type {Core}
    * @deprecated
    */
