@@ -47,7 +47,7 @@
     "results": {
       "match": "文書内での一致",
       "entities": "固有表現の数",
-      "results": "1 | %{total} documents",
+      "results": "1 document | %{total} documents",
       "noResults": "文書が見つかりません",
       "on": "を表示。総数は",
       "perPage": "ページごと",
