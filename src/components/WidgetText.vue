@@ -32,6 +32,11 @@ export default {
   async mounted () {
     this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
   },
+  watch: {
+    async widget () {
+      this.content = await this.applyPipelineChain(this.widget.pipeline)(this.widgetContent)
+    }
+  },
   computed: {
     ...mapGetters('pipelines', {
       applyPipelineChain: 'applyPipelineChainByCategory'
