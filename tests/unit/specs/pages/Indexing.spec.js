@@ -11,9 +11,8 @@ jest.mock('axios', () => {
   }
 })
 
-const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('Indexing.vue', () => {
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   let wrapper = null
 
   beforeEach(() => {
@@ -50,8 +49,8 @@ describe('Indexing.vue', () => {
   })
 
   it('should display the extract and the find named entities buttons', () => {
-    expect(wrapper.contains('.btn-extract')).toBeTruthy()
-    expect(wrapper.contains('.btn-find-named-entites')).toBeTruthy()
+    expect(wrapper.find('.btn-extract').element).toBeTruthy()
+    expect(wrapper.find('.btn-find-named-entites').element).toBeTruthy()
   })
 
   it('should enable the find named entities button by default, and display no tooltip', () => {
@@ -67,15 +66,15 @@ describe('Indexing.vue', () => {
   })
 
   it('should not display the "Stop pending tasks" and "Delete done tasks" buttons', () => {
-    expect(wrapper.contains('.btn-stop-pending-tasks')).toBeFalsy()
-    expect(wrapper.contains('.btn-delete-done-tasks')).toBeFalsy()
+    expect(wrapper.find('.btn-stop-pending-tasks').element).toBeFalsy()
+    expect(wrapper.find('.btn-delete-done-tasks').element).toBeFalsy()
   })
 
   it('should display the "Stop pending tasks" and "Delete done tasks" buttons, if a task is running', async () => {
     await store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
 
-    expect(wrapper.contains('.btn-stop-pending-tasks')).toBeTruthy()
-    expect(wrapper.contains('.btn-delete-done-tasks')).toBeTruthy()
+    expect(wrapper.find('.btn-stop-pending-tasks').element).toBeTruthy()
+    expect(wrapper.find('.btn-delete-done-tasks').element).toBeTruthy()
   })
 
   it('should enable the "Stop pending tasks" if a task is running', async () => {
@@ -97,8 +96,7 @@ describe('Indexing.vue', () => {
 
     expect(wrapper.vm.tasks).toHaveLength(1)
 
-    wrapper.find('.btn-stop-pending-tasks').trigger('click')
-    await wrapper.vm.$nextTick()
+    await wrapper.find('.btn-stop-pending-tasks').trigger('click')
     await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)
@@ -113,8 +111,7 @@ describe('Indexing.vue', () => {
     await store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     expect(wrapper.vm.tasks).toHaveLength(1)
 
-    wrapper.find('.btn-delete-done-tasks').trigger('click')
-    await wrapper.vm.$nextTick()
+    await wrapper.find('.btn-delete-done-tasks').trigger('click')
     await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)
@@ -139,8 +136,7 @@ describe('Indexing.vue', () => {
 
     expect(wrapper.findAll('.btn-stop-task')).toHaveLength(1)
 
-    wrapper.find('.btn-stop-task').trigger('click')
-    await wrapper.vm.$nextTick()
+    await wrapper.find('.btn-stop-task').trigger('click')
     await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)

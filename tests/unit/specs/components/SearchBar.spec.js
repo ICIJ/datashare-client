@@ -7,32 +7,31 @@ import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-const router = new VueRouter()
-
 describe('SearchBar.vue', function () {
+  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+  const router = new VueRouter()
   const index = toLower('SearchBar')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
-  let wrapper
+  let wrapper = null
 
   beforeAll(() => store.commit('search/index', index))
 
   beforeEach(() => {
     store.commit('search/reset')
-    wrapper = shallowMount(SearchBar, { i18n, localVue, router, store, sync: false })
+    wrapper = shallowMount(SearchBar, { i18n, localVue, router, store })
   })
 
   afterAll(() => store.commit('search/reset'))
 
   it('should display search bar', () => {
-    expect(wrapper.contains('.search-bar')).toBeTruthy()
+    expect(wrapper.find('.search-bar').element).toBeTruthy()
   })
 
   it('should display the shortkeys-modal component', async () => {
     await wrapper.setProps({ settings: true })
 
-    expect(wrapper.contains('.search-bar shortkeys-modal-stub')).toBeTruthy()
+    expect(wrapper.find('.search-bar shortkeys-modal-stub').element).toBeTruthy()
   })
 
   it('should submit search', () => {

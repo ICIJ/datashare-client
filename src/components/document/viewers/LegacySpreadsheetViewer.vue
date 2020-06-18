@@ -38,7 +38,8 @@ export default {
      * The selected document
      */
     document: {
-      type: Object
+      type: Object,
+      default: () => ({})
     }
   },
   mixins: [datashareSourceMixin],

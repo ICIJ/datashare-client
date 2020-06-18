@@ -76,8 +76,8 @@ export default {
     },
     async setVersion () {
       const version = await this.fetchVersion()
-      this.serverHash = version['git.commit.id.abbrev']
-      this.serverVersion = version['git.build.version']
+      this.$set(this, 'serverHash', version['git.commit.id.abbrev'])
+      this.$set(this, 'serverVersion', version['git.build.version'])
     }
   },
   computed: {

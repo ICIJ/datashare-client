@@ -1,5 +1,6 @@
 import find from 'lodash/find'
 import toLower from 'lodash/toLower'
+import '@testing-library/jest-dom'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import FilterSearch from '@/components/FilterSearch'
@@ -200,12 +201,12 @@ describe('FilterSearch.vue', () => {
         .withContentType('type_02')).commit()
       await wrapper.vm.startOver()
 
-      expect(wrapper.findAll('.filter-search > div.text-muted').isVisible()).toBeFalsy()
+      expect(wrapper.find('.filter-search > div.text-muted').element).not.toBeVisible()
 
       wrapper.setData({ filterQuery: 'not_existing_type' })
       await wrapper.vm.search({ complete: jest.fn, loaded: jest.fn })
 
-      expect(wrapper.findAll('.filter-search > div.text-muted').isVisible()).toBeTruthy()
+      expect(wrapper.find('.filter-search > div.text-muted').element).toBeVisible()
     })
   })
 

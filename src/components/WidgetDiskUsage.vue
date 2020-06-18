@@ -50,7 +50,7 @@ export default {
     }
   },
   async created () {
-    this.selectedPath = this.dataDir
+    this.$set(this, 'selectedPath', this.dataDir)
     await this.loadData()
   },
   computed: {
@@ -68,15 +68,10 @@ export default {
   methods: {
     async sumTotal () {
       const index = this.$store.state.insights.project
-      // Build the query using Bodynuilder
       const body = bodybuilder()
-        // Only documents...
         .andQuery('match', 'type', 'Document')
-        // ...on disk
         .andQuery('match', 'extractionLevel', 0)
-        // Returns no document
         .size(0)
-        // Sum up all sizes
         .aggregation('sum', 'contentLength')
         .build()
       const res = await elasticsearch.search({ index, body, size: 0 })
@@ -84,7 +79,8 @@ export default {
       return res?.aggregations?.agg_sum_contentLength?.value || 0
     },
     loadData: waitFor('disk usage', async function () {
-      this.total = await this.sumTotal()
+      const total = await this.sumTotal()
+      this.$set(this, 'total', total)
     }),
     humanSize
   }
@@ -96,13 +92,13 @@ export default {
     min-height: 100%;
 
     &__main-figure {
-      font-size: 1.8rem;
       display: block;
+      font-size: 1.8rem;
     }
 
     &__details {
-      cursor: pointer;
       color: $link-color;
+      cursor: pointer;
 
       &:hover {
         text-decoration: underline;

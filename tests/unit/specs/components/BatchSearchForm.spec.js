@@ -8,19 +8,18 @@ import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-const { i18n, localVue, wait } = Core.init(createLocalVue()).useAll()
-
 jest.mock('lodash/throttle', () => jest.fn(fn => fn))
 
 describe('BatchSearchForm.vue', () => {
+  const { i18n, localVue, wait } = Core.init(createLocalVue()).useAll()
   const project = toLower('BatchSearchForm')
   const anotherProject = toLower('anotherProject')
   esConnectionHelper([project, anotherProject])
   const es = esConnectionHelper.es
-  let wrapper
   const state = { batchSearches: [] }
   const actions = { onSubmit: jest.fn(), getBatchSearches: jest.fn() }
   const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFilter: jest.fn() } } } })
+  let wrapper = null
 
   beforeAll(() => Murmur.config.merge({ datashare_projects: [project], dataDir: '/root/project' }))
 
@@ -97,7 +96,7 @@ describe('BatchSearchForm.vue', () => {
 
   describe('FileTypes suggestions', () => {
     it('should display suggestions', () => {
-      expect(wrapper.contains('selectable-dropdown-stub')).toBeTruthy()
+      expect(wrapper.find('selectable-dropdown-stub').element).toBeTruthy()
     })
 
     it('should hide suggestions', () => {

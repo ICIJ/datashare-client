@@ -9,10 +9,8 @@ import DocumentView from '@/pages/DocumentView'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-// Mock user session
 Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })
 
-// Mock all axios requests
 jest.mock('axios', () => {
   return {
     request: jest.fn().mockResolvedValue({
@@ -23,14 +21,13 @@ jest.mock('axios', () => {
   }
 })
 
-const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('DocumentView.vue', () => {
-  let wrapper = null
+  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
   const project = toLower('DocumentView')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
   const id = 'document'
+  let wrapper = null
 
   beforeEach(() => letData(es).have(new IndexedDocument(id, project)).commit())
 
@@ -70,7 +67,7 @@ describe('DocumentView.vue', () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index: project } })
     await wrapper.vm.getDoc()
 
-    expect(wrapper.contains('.document__header')).toBeTruthy()
+    expect(wrapper.find('.document__header').element).toBeTruthy()
   })
 
   it('should display tags', async () => {
@@ -79,7 +76,7 @@ describe('DocumentView.vue', () => {
 
     await wrapper.vm.getDoc()
 
-    expect(wrapper.contains('document-tags-form-stub')).toBeTruthy()
+    expect(wrapper.find('document-tags-form-stub').element).toBeTruthy()
   })
 
   it('should display the named entities tab', async () => {

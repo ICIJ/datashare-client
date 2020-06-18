@@ -54,9 +54,9 @@ export default {
   },
   methods: {
     async count (query) {
-      const project = this.$store.state.insights.project
+      const index = this.$store.state.insights.project
       const body = { query: { query_string: { query } } }
-      const res = await elasticsearch.search({ index: project, body, size: 0 })
+      const res = await elasticsearch.search({ index, body, size: 0 })
       return res?.hits?.total || 0
     },
     countTotal () {
@@ -68,8 +68,10 @@ export default {
       return this.count(q)
     },
     loadData: waitFor('counters', async function () {
-      this.total = await this.countTotal()
-      this.onDisk = await this.countOnDisk()
+      const total = await this.countTotal()
+      this.$set(this, 'total', total)
+      const onDisk = await this.countOnDisk()
+      this.$set(this, 'onDisk', onDisk)
     }),
     humanNumber
   }
@@ -81,8 +83,8 @@ export default {
     min-height: 100%;
 
     &__main-figure {
-      font-size: 1.8rem;
       display: block;
+      font-size: 1.8rem;
     }
   }
 </style>

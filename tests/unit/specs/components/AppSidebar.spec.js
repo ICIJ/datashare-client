@@ -5,7 +5,6 @@ import AppSidebar from '@/components/AppSidebar'
 import { Core } from '@/core'
 import mode from '@/modes'
 import { getOS } from '@/utils/utils'
-import { jsonResp } from 'tests/unit/tests_utils'
 
 jest.mock('@/utils/utils', () => {
   return {
@@ -17,10 +16,6 @@ jest.mock('@/utils/utils', () => {
 const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
 
 describe('AppSidebar.vue', () => {
-  beforeAll(() => {
-    window.fetch = jest.fn().mockReturnValue(jsonResp({ userProjects: [] }))
-  })
-
   beforeEach(() => getOS.mockReset())
 
   afterAll(() => jest.unmock('@/utils/utils'))

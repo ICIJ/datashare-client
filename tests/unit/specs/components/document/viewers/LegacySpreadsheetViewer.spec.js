@@ -2,32 +2,44 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 
 import LegacySpreadsheetViewer from '@/components/document/viewers/LegacySpreadsheetViewer'
 import { Core } from '@/core'
-import { responseWithArrayBuffer } from 'tests/unit/tests_utils'
 
-const { i18n, localVue } = Core.init(createLocalVue()).useAll()
+jest.mock('@/api', () => {
+  const { responseWithArrayBuffer } = require('tests/unit/tests_utils')
+  return jest.fn(() => {
+    return {
+      getSource: jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url))
+    }
+  })
+})
 
 describe('LegacySpreadsheetViewer.vue', () => {
+  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   let wrapper = null
-  const getSource = jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url))
-  const methods = { getSource }
+
+  beforeEach(() => {
+    wrapper = shallowMount(LegacySpreadsheetViewer, { i18n, localVue })
+  })
+
+  afterAll(() => jest.unmock('@/api'))
 
   it('should display a message while generating the preview', () => {
-    wrapper = shallowMount(LegacySpreadsheetViewer, { i18n, localVue, methods, propsData: { document: { url: 'spreadsheet.xlsx' } } })
+    wrapper.setProps({ document: { url: 'spreadsheet.xlsx' } })
+
     expect(wrapper.find('.legacy-spreadsheet-viewer .alert').text()).toBe('Generating preview...')
   })
 
   it('should display an error message if the document does not exist', async () => {
-    wrapper = shallowMount(LegacySpreadsheetViewer, { i18n, localVue, methods, propsData: { document: { url: 'nodoc.xlsx' } } })
-
+    wrapper.setProps({ document: { url: 'nodoc.xlsx' } })
     await wrapper.vm.getWorkbook()
+
     expect(wrapper.find('.legacy-spreadsheet-viewer .alert').text()).toBe('document.error_not_found')
   })
 
   it('should load a csv content file', async () => {
-    wrapper = shallowMount(LegacySpreadsheetViewer, { i18n, localVue, methods, propsData: { document: { url: 'spreadsheet.csv' } } })
-
+    wrapper.setProps({ document: { url: 'spreadsheet.csv' } })
     await wrapper.vm.getWorkbook()
-    expect(wrapper.contains('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table')).toBeTruthy()
+
+    expect(wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table').element).toBeTruthy()
     expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td').at(0).text()).toBe('this')
     expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td').at(1).text()).toBe('is')
     expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table td').at(2).text()).toBe('a')
@@ -36,10 +48,10 @@ describe('LegacySpreadsheetViewer.vue', () => {
   })
 
   it('should load a xlsx content file', async () => {
-    wrapper = shallowMount(LegacySpreadsheetViewer, { i18n, localVue, methods, propsData: { document: { url: 'spreadsheet.xlsx' } } })
-
+    wrapper.setProps({ document: { url: 'spreadsheet.xlsx' } })
     await wrapper.vm.getWorkbook()
-    expect(wrapper.contains('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table')).toBeTruthy()
+
+    expect(wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table').element).toBeTruthy()
     expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(0).text()).toBe('this')
     expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(1).text()).toBe('is')
     expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content table td').at(2).text()).toBe('a')
@@ -48,8 +60,7 @@ describe('LegacySpreadsheetViewer.vue', () => {
   })
 
   it('should change the displayed sheet', async () => {
-    wrapper = mount(LegacySpreadsheetViewer, { i18n, localVue, methods, propsData: { document: { url: 'spreadsheet.xlsx' } } })
-
+    wrapper = mount(LegacySpreadsheetViewer, { i18n, localVue, propsData: { document: { url: 'spreadsheet.xlsx' } } })
     await wrapper.vm.getWorkbook()
     await wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__header option').at(1).setSelected()
 
@@ -58,9 +69,9 @@ describe('LegacySpreadsheetViewer.vue', () => {
   })
 
   it('should display a thumbnail by page', async () => {
-    wrapper = mount(LegacySpreadsheetViewer, { i18n, localVue, methods, propsData: { document: { url: 'spreadsheet.xlsx' } } })
-
+    wrapper.setProps({ document: { url: 'spreadsheet.xlsx' } })
     await wrapper.vm.getWorkbook()
+
     expect(wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__header .legacy-spreadsheet-viewer__header__thumbnails').exists()).toBeTruthy()
     expect(wrapper.findAll('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__header .legacy-spreadsheet-viewer__header__thumbnails .img-thumbnail')).toHaveLength(2)
   })

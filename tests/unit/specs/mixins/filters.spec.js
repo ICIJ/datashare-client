@@ -1,19 +1,15 @@
-import Vuex from 'vuex'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { Core } from '@/core'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+import Vuex from 'vuex'
 
-import App from '@/pages/App'
 import FilterBoilerplate from '@/components/FilterBoilerplate'
 import filters from '@/mixins/filters'
-
-const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
+import App from '@/pages/App'
 
 describe('filters mixin', () => {
-  let wrapper, selectedValuesFromStore, filter
-
-  beforeAll(() => {
-    filter = { name: 'creationDate', itemParam: item => { return { name: 'creationDate', value: item } } }
-  })
+  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
+  const filter = { name: 'creationDate', itemParam: item => { return { name: 'creationDate', value: item } } }
+  let wrapper = null
 
   it('should commit a setFilterValue and then refresh the route and the search', () => {
     const state = { ...store.state.search }
@@ -32,15 +28,14 @@ describe('filters mixin', () => {
 
   describe('tests run on specific wrapper', () => {
     beforeEach(() => {
-      selectedValuesFromStore = jest.fn()
-      wrapper = shallowMount(FilterBoilerplate, { localVue, i18n, router, store, wait, mixins: [filters], methods: { selectedValuesFromStore }, propsData: { filter } })
-      selectedValuesFromStore.mockClear()
+      wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, mixins: [filters], propsData: { filter } })
     })
 
     it('should refresh the filter on "filter::search::update" event emitted', () => {
+      jest.spyOn(wrapper.vm, 'selectedValuesFromStore')
       wrapper.vm.$root.$emit('filter::search::update', 'creationDate')
 
-      expect(selectedValuesFromStore.mock.calls).toHaveLength(1)
+      expect(wrapper.vm.selectedValuesFromStore).toBeCalledTimes(1)
     })
 
     it('should refresh the route', () => {

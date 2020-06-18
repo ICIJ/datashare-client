@@ -2,21 +2,28 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import PdfViewer from '@/components/document/viewers/PdfViewer'
 import { Core } from '@/core'
-import { responseWithArrayBuffer } from 'tests/unit/tests_utils'
 
-const { i18n, localVue } = Core.init(createLocalVue()).useAll()
+jest.mock('@/api', () => {
+  const { responseWithArrayBuffer } = require('tests/unit/tests_utils')
+  return jest.fn(() => {
+    return {
+      getSource: jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url))
+    }
+  })
+})
 
 describe('PdfViewer.vue', () => {
+  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   let wrapper = null
-  const getSource = jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url))
-  const methods = { getSource }
 
   beforeEach(() => {
-    wrapper = shallowMount(PdfViewer, { i18n, localVue, methods, propsData: { document: { url: 'document.pdf' } } })
+    wrapper = shallowMount(PdfViewer, { i18n, localVue, propsData: { document: { url: 'document.pdf' } } })
   })
 
+  afterAll(() => jest.unmock('@/api'))
+
   it('should display an error message if the document does not exist', async () => {
-    wrapper = shallowMount(PdfViewer, { i18n, localVue, methods, propsData: { document: { url: 'nodoc.pdf' } } })
+    wrapper.setProps({ document: { url: 'nodoc.pdf' } })
 
     await wrapper.vm.loadPage(1)
 

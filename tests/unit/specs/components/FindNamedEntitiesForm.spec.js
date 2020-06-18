@@ -12,9 +12,8 @@ jest.mock('axios', () => {
   }
 })
 
-const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('FindNamedEntitiesForm.vue', () => {
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   let wrapper = null
 
   beforeEach(() => {
@@ -86,6 +85,6 @@ describe('FindNamedEntitiesForm.vue', () => {
     Murmur.config.merge({ mode: 'SERVER' })
     wrapper = shallowMount(FindNamedEntitiesForm, { i18n, localVue, store, wait })
 
-    expect(wrapper.contains('.find-named-entities-form__offline')).toBeFalsy()
+    expect(wrapper.find('.find-named-entities-form__offline').element).toBeFalsy()
   })
 })

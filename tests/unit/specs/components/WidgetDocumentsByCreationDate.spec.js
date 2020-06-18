@@ -13,21 +13,22 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   const anotherProject = toLower('anotherProject')
   esConnectionHelper([project, anotherProject])
   const es = esConnectionHelper.es
+  let wrapper = null
 
   beforeAll(() => store.commit('insights/project', project))
 
-  it('should be a Vue instance', () => {
-    const wrapper = shallowMount(WidgetDocumentsByCreationDate,
-      { i18n, localVue, propsData, store, wait })
+  beforeEach(() => {
+    wrapper = shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, propsData, store, wait })
+  })
 
+  it('should be a Vue instance', () => {
     expect(wrapper).toBeTruthy()
   })
 
   it('should display a barchart with 2 bars', async () => {
-    const wrapper = shallowMount(WidgetDocumentsByCreationDate,
-      { i18n, localVue, propsData, store, wait, attachToDocument: true })
-    await wrapper.vm.$set(wrapper.vm, 'data',
-      [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }])
+    await wrapper.setData({
+      data: [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }]
+    })
 
     expect(wrapper.findAll('svg')).toHaveLength(1)
     expect(wrapper.findAll('svg rect')).toHaveLength(2)
@@ -40,7 +41,6 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
       .withCreationDate('0000-01-01T00:00:00.000Z')).commit()
     await letData(es).have(new IndexedDocument('document_03', project)
       .withCreationDate('1968-01-01T00:00:00.000Z')).commit()
-    const wrapper = await shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, propsData, store, wait, attachToDocument: true })
 
     await wrapper.vm.loadData()
 
@@ -48,22 +48,14 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   })
 
   it('should rerun init on project change', async () => {
-    const wrapper = shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, propsData, store, wait, attachToDocument: true })
     const init = jest.spyOn(wrapper.vm, 'init')
-    await wrapper.vm.$nextTick()
-    expect(init).toBeCalledTimes(1)
     await store.commit('insights/project', anotherProject)
-    expect(init).toBeCalledTimes(2)
+    expect(init).toBeCalledTimes(1)
     await store.commit('insights/project', project)
+    expect(init).toBeCalledTimes(2)
   })
 
   describe('selectedInterval value and selectors', () => {
-    let wrapper
-
-    beforeEach(() => {
-      wrapper = shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, propsData, store, wait, attachToDocument: true })
-    })
-
     it('should display 3 selectors', () => {
       expect(wrapper.findAll('.widget__header__selectors__selector')).toHaveLength(3)
     })
@@ -79,7 +71,6 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
         .withCreationDate('2019-07-01T00:00:00.000Z')).commit()
       await letData(es).have(new IndexedDocument('document_03', project)
         .withCreationDate('2019-06-01T00:00:00.000Z')).commit()
-      wrapper = await shallowMount(WidgetDocumentsByCreationDate, { i18n, localVue, propsData, store, wait, attachToDocument: true })
 
       await wrapper.vm.selectInterval('year')
 

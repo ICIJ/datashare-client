@@ -47,7 +47,8 @@ export default {
     }
   },
   async mounted () {
-    this.items = await this.applyPipelineChain(this.widget.pipeline)(this.widget.items)
+    const items = await this.applyPipelineChain(this.widget.pipeline)(this.widget.items)
+    this.$set(this, 'items', items)
   },
   computed: {
     ...mapGetters('pipelines', {
@@ -64,9 +65,7 @@ export default {
     }
 
     &__list {
-
       &__item {
-
         color: $body-color;
 
         &[href] {

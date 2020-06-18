@@ -95,20 +95,11 @@ export default {
     },
     bodybuilderBase () {
       return bodybuilder()
-        // Returns no documents
         .size(0)
-        // Only documents...
         .andQuery('match', 'type', 'Document')
-        // ...on disk
         .andQuery('match', 'extractionLevel', 0)
-        // On a specific directory
         .andFilter('term', 'dirname.tree', this.path)
-        // Aggregate by dirname entry
-        .agg('terms', 'dirname.tree', this.sumOptions, 'byDirname', b => {
-          // Create a sub-aggregation to sum the contentLength
-          return b.agg('sum', 'contentLength', 'contentLength')
-        })
-        // Calculate the total size
+        .agg('terms', 'dirname.tree', this.sumOptions, 'byDirname', b => b.agg('sum', 'contentLength', 'contentLength'))
         .aggregation('sum', 'contentLength', 'totalContentLength')
     }
   },

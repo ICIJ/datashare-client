@@ -1,15 +1,15 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import WidgetDocumentsByCreationDateByPath from '@/components/WidgetDocumentsByCreationDateByPath'
 import { Core } from '@/core'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('WidgetDocumentsByCreationDateByPath.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = { widget: { title: 'Hello world' } }
   const project = toLower('WidgetDocumentsByCreationDateByPath')
-  esConnectionHelper([project])
+  esConnectionHelper(project)
 
   beforeAll(() => store.commit('insights/project', project))
 

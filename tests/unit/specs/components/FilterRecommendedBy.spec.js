@@ -7,21 +7,18 @@ import Api from '@/api'
 import FilterRecommendedBy from '@/components/FilterRecommendedBy'
 import { Core } from '@/core'
 
-// Mock user session
 Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })
 
-// Mock all axios requests
 jest.mock('axios', () => {
   return {
     request: jest.fn().mockResolvedValue({ data: [{ id: 'user_01' }, { id: 'user_02' }] })
   }
 })
 
-const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('FilterRecommendedBy.vue', () => {
+  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
   const project = toLower('FilterRecommendedBy')
-  let wrapper
+  let wrapper = null
 
   beforeAll(() => store.commit('search/index', project))
 
