@@ -7,7 +7,7 @@ describe('WidgetsMixin', () => {
   beforeEach(async () => {
     core = Core.init(createLocalVue()).useAll()
     core.clearWidgets()
-    core.store.commit('search/index', 'local-project')
+    core.store.commit('insights/project', 'local-project')
   })
 
   it('should find 2 widgets', () => {
@@ -46,42 +46,42 @@ describe('WidgetsMixin', () => {
   it('should find one widget on the current project', () => {
     core.registerWidgetForProject('first-project', { name: 'biz' })
     expect(core.store.state.insights.widgets).toHaveLength(0)
-    core.store.commit('search/index', 'first-project')
+    core.store.commit('insights/project', 'first-project')
     expect(core.store.state.insights.widgets).toHaveLength(1)
   })
 
   it('should find one unamed widget on the current project', () => {
     core.registerWidgetForProject('a-uniq-project-a', { foo: 'bar' })
     expect(core.store.state.insights.widgets).toHaveLength(0)
-    core.store.commit('search/index', 'a-uniq-project-a')
+    core.store.commit('insights/project', 'a-uniq-project-a')
     expect(core.store.state.insights.widgets).toHaveLength(1)
-    core.store.commit('search/index', 'a-uniq-project-b')
+    core.store.commit('insights/project', 'a-uniq-project-b')
     expect(core.store.state.insights.widgets).toHaveLength(0)
-    core.store.commit('search/index', 'a-uniq-project-a')
+    core.store.commit('insights/project', 'a-uniq-project-a')
     expect(core.store.state.insights.widgets).toHaveLength(1)
   })
 
   it('should find no widgets on the current project', () => {
     core.registerWidgetForProject('an-project', { name: 'foo' })
-    core.store.commit('search/index', 'an-project')
+    core.store.commit('insights/project', 'an-project')
     expect(core.store.state.insights.widgets).toHaveLength(1)
-    core.store.commit('search/index', 'another-project')
+    core.store.commit('insights/project', 'another-project')
     expect(core.store.state.insights.widgets).toHaveLength(0)
-    core.store.commit('search/index', 'an-project')
+    core.store.commit('insights/project', 'an-project')
     expect(core.store.state.insights.widgets).toHaveLength(1)
-    core.store.commit('search/index', 'another-project')
+    core.store.commit('insights/project', 'another-project')
     expect(core.store.state.insights.widgets).toHaveLength(0)
   })
 
   it('should register a widget for a project only once', () => {
     core.registerWidgetForProject('a-project-with-widget-once', { name: 'foo' })
-    core.store.commit('search/index', 'a-project-with-widget-once')
+    core.store.commit('insights/project', 'a-project-with-widget-once')
     expect(core.store.state.insights.widgets).toHaveLength(1)
-    core.store.commit('search/index', 'a-project-with-widget-once')
-    core.store.commit('search/index', 'a-project-with-widget-once')
-    core.store.commit('search/index', 'a-project-with-widget-once')
-    core.store.commit('search/index', 'a-project-with-widget-once')
-    core.store.commit('search/index', 'a-project-with-widget-once')
+    core.store.commit('insights/project', 'a-project-with-widget-once')
+    core.store.commit('insights/project', 'a-project-with-widget-once')
+    core.store.commit('insights/project', 'a-project-with-widget-once')
+    core.store.commit('insights/project', 'a-project-with-widget-once')
+    core.store.commit('insights/project', 'a-project-with-widget-once')
     expect(core.store.state.insights.widgets).toHaveLength(1)
   })
 
@@ -120,14 +120,14 @@ describe('WidgetsMixin', () => {
     expect(widgets[0].name).toBe('bar')
     expect(widgets[0].order).toBe(0)
     // Replace widget for a specific project
-    core.store.commit('search/index', 'another-project-to-replace-widget')
+    core.store.commit('insights/project', 'another-project-to-replace-widget')
     core.replaceWidgetForProject('another-project-to-replace-widget', 'bar', { order: 10 })
     widgets = core.store.getters['insights/instantiatedWidgets']
     expect(widgets).toHaveLength(1)
     expect(widgets[0].name).toBe('bar')
     expect(widgets[0].order).toBe(10)
     // Restore initial value for this project
-    core.store.commit('search/index', 'another-project-with-no-widget')
+    core.store.commit('insights/project', 'another-project-with-no-widget')
     widgets = core.store.getters['insights/instantiatedWidgets']
     expect(widgets).toHaveLength(1)
     expect(widgets[0].name).toBe('bar')

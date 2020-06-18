@@ -1,3 +1,4 @@
+import get from 'lodash/get'
 import noop from 'lodash/noop'
 
 /**
@@ -11,15 +12,17 @@ const ProjectsMixin = superclass => class extends superclass {
    * @param {String} name - Name of the project
    * @param {Function} withFn - Function to call when the project is selected
    * @param {Function} withoutFn - Function to call when the project is unselected
+   * @param {String} mutationType - Mutation type that will be watched for changes.
+   * @param {String} storePath - Path to the project in the store
    * @memberof ProjectsMixin.prototype
    */
-  toggleForProject ({ project = null, withFn = noop, withoutFn = noop } = {}, ...args) {
+  toggleForProject ({ project = null, withFn = noop, withoutFn = noop, mutationType = 'search/index', storePath = 'search.index' } = {}, ...args) {
     const toggle = name => name === project ? withFn(...args) : withoutFn(...args)
     // Toggle once
-    toggle(this.store.state.search.index)
+    toggle(get(this.store.state, storePath))
     // Watch store mutations
     return this.store.subscribe(({ type, payload }) => {
-      if (type === 'search/index') {
+      if (type === mutationType) {
         // The payload contains the name of the selected project
         toggle(payload)
       }

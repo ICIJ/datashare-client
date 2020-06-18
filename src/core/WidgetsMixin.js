@@ -49,6 +49,9 @@ const WidgetsMixin = superclass => class extends superclass {
     // Watch store mutations
     return this.toggleForProject({
       project,
+      // Widgets are bound to the insights module, not the search module
+      mutationType: 'insights/project',
+      storePath: 'insights.project',
       // Conditional callbacks
       withFn: () => this.registerWidget({ ...options, name }),
       withoutFn: () => this.unregisterWidget(name)
@@ -84,7 +87,7 @@ const WidgetsMixin = superclass => class extends superclass {
    * @memberof WidgetsMixin.prototype
    * @param {String} project - Name of the project to add this widget to
    * @param {String} name - Name of the widget to replace
-   * @param {Object} options - Widget's options passed to widget constructor
+   * @param {Object} options - Widget's options passed to widget constructor. Each widget class can define its own default values.
    * @param {Boolean} options.card - Either or not this widget should be a `card` component from Boostrap
    * @param {Number} options.cols - Number of columns to fill in the grid (from 1 to 12)
    * @param {String} [options.type=WidgetEmpty] - Type of the widget
@@ -95,6 +98,9 @@ const WidgetsMixin = superclass => class extends superclass {
     // Watch store mutations
     return this.toggleForProject({
       project,
+      // Widgets are bound to the insights module, not the search module
+      mutationType: 'insights/project',
+      storePath: 'insights.project',
       // Conditional callbacks
       withFn: () => this.replaceWidget(name, options),
       withoutFn: () => this.replaceWidget(name, initialOptions)
