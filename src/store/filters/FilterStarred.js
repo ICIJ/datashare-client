@@ -2,7 +2,7 @@ import get from 'lodash/get'
 import FilterYesNo from './FilterYesNo'
 
 export const starredLabel = {
-  all: 'general.all',
+  all: 'global.all',
   true: 'filter.starred',
   false: 'filter.notStarred'
 }

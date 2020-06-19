@@ -71,7 +71,7 @@ export default {
       return get(this, '$refs.filter', {})
     },
     isReady () {
-      return !this.$wait.is(`items for ${this.filter.name}`)
+      return !this.$wait.is('items for ' + this.filter.name)
     },
     isGlobal () {
       return this.$store.state.search.globalSearch
@@ -163,10 +163,10 @@ export default {
     labelToHuman (label) {
       if (this.$te(label)) {
         return this.$t(label)
-      } else if (this.$te(`general.${label}`)) {
-        return this.$t(`general.${label}`)
-      } else if (this.$te(`filter.${label}`)) {
-        return this.$t(`filter.${label}`)
+      } else if (this.$te('global.' + label)) {
+        return this.$t('global.' + label)
+      } else if (this.$te('filter.' + label)) {
+        return this.$t('filter.' + label)
       } else {
         return this.translationKeyToHuman(label)
       }

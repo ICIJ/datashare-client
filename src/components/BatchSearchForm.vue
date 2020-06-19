@@ -12,7 +12,7 @@
             <b-form-input
               v-model="name"
               type="text"
-              required />
+              required></b-form-input>
           </b-form-group>
           <b-form-group
             label-size="sm"
@@ -24,7 +24,7 @@
               :placeholder="$t('batchSearch.filePlaceholder')"
               accept=".csv"
               class="text-truncate"
-              required />
+              required></b-form-file>
           </b-form-group>
           <p class="help small">
             <a
@@ -40,7 +40,7 @@
             <b-form-textarea
               v-model="description"
               rows="2"
-              max-rows="6" />
+              max-rows="6"></b-form-textarea>
           </b-form-group>
           <b-form-group
             label-size="sm"
@@ -49,7 +49,7 @@
             <b-form-select
               v-model="project"
               :options="projects"
-              required />
+              required></b-form-select>
           </b-form-group>
           <b-form-group
             label-size="sm"
@@ -63,7 +63,7 @@
             </b-form-checkbox>
           </b-form-group>
           <div v-b-toggle.advanced-filters class="batch-search-form__advanced-filters my-2">
-            <fa :icon="advancedFiltersIcon" class="fa-fw" />
+            <fa :icon="advancedFiltersIcon" class="fa-fw"></fa>
             <span>
               {{ $t('batchSearch.advancedFilters') }}
             </span>
@@ -87,7 +87,7 @@
                 type="number"
                 v-model="fuzziness"
                 min="0"
-                :max="maxFuzziness" />
+                :max="maxFuzziness"></b-form-input>
             </b-form-group>
             <p class="help small">
               <a :href="fuzzinessLearnMore" target="_blank" class="text-muted">
@@ -104,7 +104,7 @@
                   autocomplete="off"
                   :disabled="$wait.is('load all file types')"
                   @input="searchFileTypes"
-                  @keydown.enter.prevent="searchFileType" />
+                  @keydown.enter.prevent="searchFileType"></b-form-input>
               </b-overlay>
               <selectable-dropdown
                 ref="suggestionFileTypes"
@@ -117,7 +117,7 @@
                   <div :id="item.mime">
                     {{ item.label }}
                   </div>
-                  <b-tooltip placement="right" :target="item.mime" :title="item.label" />
+                  <b-tooltip placement="right" :target="item.mime" :title="item.label"></b-tooltip>
                 </template>
               </selectable-dropdown>
               <b-badge
@@ -127,47 +127,41 @@
                 pill
                 v-for="(fileType, index) in fileTypes"
                 variant="warning">
-                <fa icon="times-circle" />
+                <fa icon="times-circle"></fa>
                 {{ fileType.label }}
               </b-badge>
             </b-form-group>
             <b-form-group
               label-size="sm"
               :label="$t('batchSearch.path')">
-              <b-overlay :show="$wait.is('load all paths')" rounded opacity="0.6" spinner-small>
-                <b-form-input
-                  ref="path"
-                  v-model="path"
-                  autocomplete="off"
-                  :disabled="$wait.is('load all paths')"
-                  @input="searchPaths"
-                  @keydown.enter.prevent="searchPath">
-                </b-form-input>
-              </b-overlay>
-              <selectable-dropdown
-                ref="suggestionPaths"
-                @input="selectPath"
-                @click.native="searchPath"
-                @deactivate="hideSuggestionsPaths"
-                :hide="!suggestionPaths.length"
-                :items="suggestionPaths">
-                <template v-slot:item-label="{ item }">
-                  <div :id="item">
-                    {{ item }}
-                  </div>
-                  <b-tooltip placement="right" :target="item" :title="item" />
-                </template>
-              </selectable-dropdown>
-              <b-badge
-                class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
-                @click.prevent="deletePath(index)"
-                :key="path"
-                pill
-                v-for="(path, index) in paths"
-                variant="warning">
-                <fa icon="times-circle" />
-                {{ path }}
-              </b-badge>
+              <div v-b-modal.modal-select-path class="mr-3 py-1 px-2 border btn btn-link">
+                {{ $t('batchSearch.selectFolder') }}
+              </div>
+              <b-modal
+                body-class="p-0 border-bottom"
+                cancel-variant="outline-primary"
+                :cancel-title="$t('global.cancel')"
+                hide-header
+                id="modal-select-path"
+                lazy
+                @ok="addPath(path)"
+                :ok-title="$t('batchSearch.selectFolder')"
+                scrollable
+                size="lg">
+                <tree-view :path="path" @input="path = $event"></tree-view>
+              </b-modal>
+              <div>
+                <b-badge
+                  class="mt-2 mr-2 pl-1 batch-search-form__advanced-filters"
+                  @click.prevent="deletePath(index)"
+                  :key="path"
+                  pill
+                  v-for="(path, index) in paths"
+                  variant="warning">
+                  <fa icon="times-circle"></fa>
+                  {{ path }}
+                </b-badge>
+              </div>
             </b-form-group>
           </b-collapse>
         </div>
@@ -184,30 +178,23 @@
 </template>
 
 <script>
-import compact from 'lodash/compact'
-import concat from 'lodash/concat'
-import each from 'lodash/each'
-import filter from 'lodash/filter'
-import flatten from 'lodash/flatten'
-import get from 'lodash/get'
-import has from 'lodash/has'
-import includes from 'lodash/includes'
-import isEmpty from 'lodash/isEmpty'
-import map from 'lodash/map'
-import range from 'lodash/range'
+import { compact, concat, each, filter, flatten, get, has, includes, isEmpty, map, range, uniq } from 'lodash'
 import throttle from 'lodash/throttle'
-import uniq from 'lodash/uniq'
 import bodybuilder from 'bodybuilder'
 import Fuse from 'fuse.js'
 
 import elasticsearch from '@/api/elasticsearch'
+import TreeView from '@/components/TreeView'
 import types from '@/utils/types.json'
 
 /**
- * A form to create a batch search.
+ * A form to create a new batch search.
  */
 export default {
   name: 'BatchSearchForm',
+  components: {
+    TreeView
+  },
   props: {
     /**
      * Disables rendering of the form title
@@ -225,24 +212,21 @@ export default {
   data () {
     return {
       allFileTypes: [],
-      allPaths: [],
       csvFile: null,
       description: '',
       fileType: '',
       fileTypes: [],
       fuzziness: 0,
       name: '',
-      path: '',
+      path: this.$config.get('mountedDataDir') || this.$config.get('dataDir'),
       paths: [],
       phraseMatch: true,
       project: '',
       projects: [],
       published: true,
       selectedFileType: '',
-      selectedPath: '',
       showAdvancedFilters: false,
-      suggestionFileTypes: [],
-      suggestionPaths: []
+      suggestionFileTypes: []
     }
   },
   computed: {
@@ -276,17 +260,14 @@ export default {
     },
     project () {
       this.$set(this, 'fileType', '')
-      this.$set(this, 'path', '')
       this.$set(this, 'fileTypes', [])
       this.$set(this, 'paths', [])
       this.$set(this, 'allFileTypes', [])
-      this.$set(this, 'allPaths', [])
       this.hideSuggestionsFileTypes()
-      this.hideSuggestionsPaths()
-      this.retrieveFileTypesAndPath()
+      this.retrieveFileTypes()
     },
     showAdvancedFilters () {
-      this.retrieveFileTypesAndPath()
+      this.retrieveFileTypes()
     }
   },
   created () {
@@ -296,10 +277,9 @@ export default {
   },
   methods: {
     selectFileType (fileType) {
-      this.selectedFileType = fileType || this.selectedFileType
+      this.$set(this, 'selectedFileType', fileType || this.selectedFileType)
     },
     searchFileTypes: throttle(function () {
-      this.hideSuggestionsPaths()
       this.$set(this, 'suggestionFileTypes', filter(this.fuse.search(this.fileType), item => !includes(map(this.fileTypes, 'mime'), item.mime)))
     }, 200),
     searchFileType () {
@@ -317,47 +297,25 @@ export default {
       this.fileTypes.splice(index, 1)
     },
     async retrieveFileTypes () {
-      this.$wait.start('load all file types')
-      const aggTypes = await this.aggregate('contentType', 'contentType')
-      each(aggTypes, aggType => {
-        const extensions = has(types, aggType) ? types[aggType].extensions : []
-        const label = has(types, aggType) ? types[aggType].label : aggType
-        this.allFileTypes.push({ extensions, label, mime: aggType })
-      })
-      this.$wait.end('load all file types')
-    },
-    selectPath (path) {
-      this.selectedPath = path || this.selectedPath
-    },
-    searchPaths: throttle(function () {
-      this.hideSuggestionsFileTypes()
-      this.$set(this, 'suggestionPaths', filter(this.allPaths, item => (item.indexOf(this.path) > -1) && !includes(this.paths, item)))
-    }, 200),
-    searchPath () {
-      if (this.selectedPath) {
-        this.paths.push(this.selectedPath)
-        this.hideSuggestionsPaths()
-        this.$set(this, 'path', '')
-        if (this.$refs && this.$refs.path) this.$refs.path.focus()
+      if (this.showAdvancedFilters && isEmpty(this.allFileTypes)) {
+        this.$wait.start('load all file types')
+        const aggTypes = await this.aggregate('contentType', 'contentType')
+        each(aggTypes, aggType => {
+          const extensions = has(types, aggType) ? types[aggType].extensions : []
+          const label = has(types, aggType) ? types[aggType].label : aggType
+          this.allFileTypes.push({ extensions, label, mime: aggType })
+        })
+        this.$wait.end('load all file types')
       }
     },
-    hideSuggestionsPaths () {
-      this.$set(this, 'suggestionPaths', [])
+    addPath (path) {
+      if (path) {
+        this.paths.push(path)
+      }
+      this.$set(this, 'path', this.$config.get('mountedDataDir') || this.$config.get('dataDir'))
     },
     deletePath (index) {
       this.paths.splice(index, 1)
-    },
-    async retrievePaths () {
-      this.$wait.start('load all paths')
-      const aggPaths = await this.aggregate('dirname', 'byDirname')
-      this.$set(this, 'allPaths', this.buildTreeFromPaths(aggPaths))
-      this.$wait.end('load all paths')
-    },
-    retrieveFileTypesAndPath () {
-      if (this.showAdvancedFilters && isEmpty(this.allFileTypes) && isEmpty(this.allPaths)) {
-        this.retrieveFileTypes()
-        this.retrievePaths()
-      }
     },
     resetForm () {
       this.$set(this, 'csvFile', null)
@@ -366,7 +324,6 @@ export default {
       this.$set(this, 'fileTypes', [])
       this.$set(this, 'fuzziness', 0)
       this.$set(this, 'name', '')
-      this.$set(this, 'path', '')
       this.$set(this, 'paths', [])
       this.$set(this, 'phraseMatch', true)
       this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))

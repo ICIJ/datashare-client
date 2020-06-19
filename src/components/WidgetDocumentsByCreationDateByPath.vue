@@ -10,7 +10,7 @@
       <b-modal
         body-class="p-0 border-bottom"
         cancel-variant="outline-primary"
-        :cancel-title="$t('widget.creationDate.cancel')"
+        :cancel-title="$t('global.cancel')"
         hide-header
         id="modal-widget-select-path"
         lazy

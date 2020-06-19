@@ -40,7 +40,7 @@ describe('BatchSearchForm.vue', () => {
 
   it('should display a form with 8 fields: name, csvFile, description, phraseMatch, fuzziness, fileTypes, paths and published', () => {
     expect(wrapper.findAll('.card-body b-form-group-stub')).toHaveLength(7)
-    expect(wrapper.findAll('.card-body b-form-input-stub')).toHaveLength(4)
+    expect(wrapper.findAll('.card-body b-form-input-stub')).toHaveLength(3)
     expect(wrapper.findAll('.card-body b-form-file-stub')).toHaveLength(1)
     expect(wrapper.findAll('.card-body b-form-textarea-stub')).toHaveLength(1)
     expect(wrapper.findAll('.card-body b-form-checkbox-stub')).toHaveLength(1)
@@ -53,7 +53,6 @@ describe('BatchSearchForm.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'fileTypes', [{ label: 'PDF' }])
     wrapper.vm.$set(wrapper.vm, 'fuzziness', 2)
     wrapper.vm.$set(wrapper.vm, 'name', 'Example')
-    wrapper.vm.$set(wrapper.vm, 'path', 'path test')
     wrapper.vm.$set(wrapper.vm, 'paths', ['This', 'is', 'a', 'multiple', 'paths'])
     wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
     wrapper.vm.$set(wrapper.vm, 'project', 'project-example')
@@ -68,7 +67,6 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.fileTypes).toEqual([])
     expect(wrapper.vm.fuzziness).toBe(0)
     expect(wrapper.vm.name).toBe('')
-    expect(wrapper.vm.path).toBe('')
     expect(wrapper.vm.paths).toEqual([])
     expect(wrapper.vm.phraseMatch).toBeTruthy()
     expect(wrapper.vm.project).toBe(project)
@@ -147,18 +145,6 @@ describe('BatchSearchForm.vue', () => {
     })
   })
 
-  describe('Paths suggestions', () => {
-    it('should hide already selected paths from suggestions', () => {
-      wrapper.vm.$set(wrapper.vm, 'allPaths', ['folder_01', 'folder_02', 'folder_03'])
-      wrapper.vm.$set(wrapper.vm, 'paths', ['folder_01'])
-      wrapper.vm.$set(wrapper.vm, 'path', '_01')
-
-      wrapper.vm.searchPaths()
-
-      expect(wrapper.vm.suggestionPaths).toHaveLength(0)
-    })
-  })
-
   describe('buildTreeFromPaths', () => {
     it('should extract all the first level paths', () => {
       const tree = wrapper.vm.buildTreeFromPaths(['/folder_01', '/folder_02', '/folder_03'])
@@ -188,11 +174,9 @@ describe('BatchSearchForm.vue', () => {
   describe('On project change', () => {
     it('should reset fileType and path', async () => {
       wrapper.vm.$set(wrapper.vm, 'fileType', 'fileTypeTest')
-      wrapper.vm.$set(wrapper.vm, 'path', 'pathTest')
       await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
 
       expect(wrapper.vm.fileType).toBe('')
-      expect(wrapper.vm.path).toBe('')
     })
 
     it('should reset fileTypes and paths', async () => {
@@ -204,43 +188,39 @@ describe('BatchSearchForm.vue', () => {
       expect(wrapper.vm.paths).toEqual([])
     })
 
-    it('should reset allFileTypes and allPaths', async () => {
+    it('should reset allFileTypes', async () => {
       wrapper.vm.$set(wrapper.vm, 'allFileTypes', ['fileType_01', 'fileType_02'])
-      wrapper.vm.$set(wrapper.vm, 'allPaths', ['path_01', 'path_02'])
       await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
 
       expect(wrapper.vm.allFileTypes).toEqual([])
-      expect(wrapper.vm.allPaths).toEqual([])
     })
 
     it('should call hideSuggestionsFileTypes and hideSuggestionsPaths', async () => {
       jest.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
-      jest.spyOn(wrapper.vm, 'hideSuggestionsPaths')
-
       await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
 
       expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
-      expect(wrapper.vm.hideSuggestionsPaths).toBeCalled()
     })
 
-    it('should call retrieveFileTypesAndPath', async () => {
-      jest.spyOn(wrapper.vm, 'retrieveFileTypesAndPath')
-
+    it('should call retrieveFileTypes', async () => {
+      jest.spyOn(wrapper.vm, 'retrieveFileTypes')
       await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
 
-      expect(wrapper.vm.retrieveFileTypesAndPath).toBeCalled()
+      expect(wrapper.vm.retrieveFileTypes).toBeCalled()
     })
   })
 
-  describe('should load contentTypes and paths from the current project', () => {
-    it('should call retrieveFileTypes and retrievePaths on showAdvancedFilters change', async () => {
-      jest.spyOn(wrapper.vm, 'retrieveFileTypes')
-      jest.spyOn(wrapper.vm, 'retrievePaths')
+  describe('should load contentTypes from the current project', () => {
+    beforeEach(() => {
+      wrapper.vm.$set(wrapper.vm, 'allFileTypes', [])
+      wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', true)
+    })
 
-      await wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', true)
+    it('should call retrieveFileTypes on showAdvancedFilters change', async () => {
+      jest.spyOn(wrapper.vm, 'retrieveFileTypes')
+      await wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', false)
 
       expect(wrapper.vm.retrieveFileTypes).toBeCalled()
-      expect(wrapper.vm.retrievePaths).toBeCalled()
     })
 
     it('should return all the content types', async () => {
