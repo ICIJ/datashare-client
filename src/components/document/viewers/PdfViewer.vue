@@ -14,19 +14,19 @@
             </span>
           </div>
           <div v-for="page in numberOfThumbnails" :key="page" @click="doc.active = page" class="my-2 pdf-viewer__thumbnails__item" :class="{ 'pdf-viewer__thumbnails__item--active': doc.active === page }">
-            <img :src="loadThumbnail(page)" />
+            <img :src="loadThumbnail(page)" alt="thumbnail of the PDF page">
             <span class="pdf-viewer__thumbnails__item__page">{{ page }}</span>
           </div>
         </div>
       </div>
       <div class="pdf-viewer__preview w-100 p-3">
         <div v-if="loadPage(doc.active)">
-          <img class="pdf-viewer__preview__canvas img-responsive img-thumbnail" :src="loadPage(doc.active)"/>
+          <img class="pdf-viewer__preview__canvas img-responsive img-thumbnail" :src="loadPage(doc.active)" alt="preview of the PDF active page">
         </div>
       </div>
     </template>
     <div v-else class="alert">
-      <fa icon="cog" spin />
+      <fa icon="cog" spin></fa>
       {{ message }}
     </div>
   </div>
@@ -40,10 +40,8 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 (typeof window !== 'undefined' ? window : {}).pdfjsWorker = Worker
 
-PDFJS.GlobalWorkerOptions.workerSrc = 'static/js/pdf.worker.js'
-
 /**
- * Display a PDF preview of a document.
+ * Display a preview of a PDF document.
  */
 export default {
   name: 'PdfViewer',
@@ -69,7 +67,7 @@ export default {
     }
   },
   mounted () {
-    this.doc.active = 1
+    this.$set(this.doc, 'active', 1)
     this.loadPage(1)
   },
   methods: {
@@ -91,22 +89,22 @@ export default {
           })
           .then(pdf => {
             if (this.doc.pages.length === 0) {
-              this.doc.pages = new Array(pdf.numPages)
+              this.$set(this.doc, 'pages', new Array(pdf.numPages))
               this.numberOfThumbnails = min([this.doc.pages.length, 10])
             }
-            this.pdf = pdf
+            this.$set(this, 'pdf', pdf)
             return pdf
           })
       }
     },
-    loadPage (p) {
-      if (this.doc.pages[p - 1]) {
-        return this.doc.pages[p - 1]
+    loadPage (page) {
+      if (this.doc.pages[page - 1]) {
+        return this.doc.pages[page - 1]
       } else {
         return this.loadPdf()
-          .then(pdf => this.renderPage(pdf, p))
-          .catch(err => {
-            this.message = err.message
+          .then(pdf => this.renderPage(pdf, page))
+          .catch(error => {
+            this.$set(this, 'message', error.message)
           })
       }
     },
@@ -129,8 +127,8 @@ export default {
       } else {
         return this.loadPdf()
           .then(pdf => this.renderThumbnail(pdf, p))
-          .catch(err => {
-            this.message = err.message
+          .catch(error => {
+            this.$set(this, 'message', error.message)
           })
       }
     },
