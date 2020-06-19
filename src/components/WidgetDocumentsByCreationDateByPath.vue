@@ -30,7 +30,7 @@ import TreeView from '@/components/TreeView'
 import WidgetDocumentsByCreationDate from '@/components/WidgetDocumentsByCreationDate'
 
 /**
- * Widget to display number of files by creation date by directory on the insights page.
+ * Widget to display number of files by creation date by path
  */
 export default {
   name: 'WidgetDocumentsByCreationDateByPath',

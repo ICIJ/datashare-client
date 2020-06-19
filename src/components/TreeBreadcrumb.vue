@@ -2,7 +2,7 @@
   <ul class="list-inline flex-grow-1 m-0 tree-breadcrumb text-truncate">
     <li class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--root">
       <a href @click.prevent="$emit('input', dataDir)">
-        <fa :icon="datadirIcon" fixed-width />
+        <fa :icon="datadirIcon" fixed-width></fa>
       </a>
     </li>
     <li v-if="treeWithoutDataDir.length > maxDirectories" class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--abbr">
@@ -17,9 +17,8 @@
 </template>
 
 <script>
-import { basename } from 'path'
 import { filter, last, reduce } from 'lodash'
-
+import { basename } from 'path'
 
 /**
  * A clickable path breadcrumb.
@@ -84,12 +83,11 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .tree-breadcrumb {
-
     &__item.list-inline-item {
-      padding: 0;
       margin-right: $spacer * 0.10;
+      padding: 0;
 
       &:not(:last-child):after {
         content: "/";

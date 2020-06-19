@@ -24,6 +24,9 @@
             </span>
             <span class="tree-view__directories__item__bar" :style="{ width: totalPercentage(directory.contentLength.value) }"></span>
           </li>
+          <li v-if="!directories.length" class="list-group-item d-flex flex-row tree-view__directories__item font-italic">
+            {{ $t('widget.noFolders') }}
+          </li>
           <li class="list-group-item tree-view__directories__item tree-view__directories__item--hits" :title="$tc('widget.diskUsage.hits', hits, { hits })">
             {{ $tc('widget.diskUsage.hits', hits, { hits: humanNumber(hits, $t('human.number')) }) }}
           </li>
@@ -35,15 +38,14 @@
 
 <script>
 import bodybuilder from 'bodybuilder'
-import { waitFor } from 'vue-wait'
-import { basename } from 'path'
 import { round } from 'lodash'
+import { basename } from 'path'
+import { waitFor } from 'vue-wait'
 
 import elasticsearch from '@/api/elasticsearch'
+import TreeBreadcrumb from '@/components/TreeBreadcrumb'
 import humanSize from '@/filters/humanSize'
 import humanNumber from '@/filters/humanNumber'
-
-import TreeBreadcrumb from '@/components/TreeBreadcrumb.vue'
 
 /**
  * A view listing directories from a specific path.
@@ -87,8 +89,8 @@ export default {
   computed: {
     sumOptions () {
       return {
-        include: `${this.path}/.*`,
-        exclude: `${this.path}/.*/.*`,
+        include: this.path + '/.*',
+        exclude: this.path + '/.*/.*',
         order: { contentLength: 'desc' },
         size: 1000
       }
@@ -108,7 +110,7 @@ export default {
     humanNumber,
     totalPercentage (value) {
       if (this.total > 0) {
-        return `${round(value / this.total * 100, 2)}%`
+        return round(value / this.total * 100, 2) + '%'
       } else {
         return '0%'
       }

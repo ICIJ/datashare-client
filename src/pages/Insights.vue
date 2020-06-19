@@ -6,7 +6,7 @@
           {{ $t('insights.selectProject') }}
         </div>
         <div>
-          <project-selector v-model="project" size="sm" />
+          <project-selector v-model="project" size="sm"></project-selector>
         </div>
       </div>
     </div>
@@ -14,7 +14,7 @@
       <b-row class="align-items-stretch">
         <b-col v-for="(widget, index) in instantiatedWidgets" :md="widget.cols" :key="index">
           <div class="insights__container__widget" :class="{ card: widget.card }">
-            <component :is="widget.component" :widget="widget" class="flex-grow-1" />
+            <component :is="widget.component" :widget="widget" class="flex-grow-1"></component>
           </div>
         </b-col>
       </b-row>
@@ -48,7 +48,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .insights {
     &__container {
       margin-top: $spacer;
