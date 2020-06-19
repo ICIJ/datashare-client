@@ -27,11 +27,12 @@
             <content-placeholder :rows="rows" class="p-0 my-3" />
           </div>
           <b-table
+            class="m-0"
             :fields="fields"
             hover
             :items="items"
             no-sort-reset
-            responsive="true"
+            responsive
             striped
             tbody-tr-class="batch-search__items__item small"
             thead-tr-class="text-nowrap">
@@ -204,10 +205,6 @@ export default {
       margin-top: $spacer;
       overflow: hidden;
       position: static;
-
-      .table-responsive {
-        margin: 0;
-      }
 
       table {
         margin: 0;

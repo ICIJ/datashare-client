@@ -65,25 +65,24 @@ jest.mock('@/api', () => {
   })
 })
 
-const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-
-const router = new VueRouter({
-  routes: [
-    {
-      name: 'batch-search.results',
-      path: 'batch-search/:index/:uuid'
-    }, {
-      name: 'document',
-      path: '/d/:index/:id/:routing?'
-    }
-  ]
-})
-
 describe('BatchSearchResults.vue', () => {
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const router = new VueRouter({
+    routes: [
+      {
+        name: 'batch-search.results',
+        path: 'batch-search/:index/:uuid'
+      }, {
+        name: 'document',
+        path: '/d/:index/:id/:routing?'
+      }
+    ]
+  })
   const project = toLower('BatchSearchResults')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
-  let propsData, wrapper
+  let propsData
+  let wrapper = null
 
   beforeAll(() => Murmur.config.merge({ multipleProjects: true }))
 
@@ -105,21 +104,6 @@ describe('BatchSearchResults.vue', () => {
 
   afterAll(() => jest.restoreAllMocks())
 
-  it('should display the list of the queries of this batch search', () => {
-    expect(wrapper.find('.batch-search-results').exists()).toBeTruthy()
-    expect(wrapper.find('b-table-stub').attributes('items').split(',')).toHaveLength(3)
-  })
-
-  it('should not disable button to download the results as a CSV file', () => {
-    expect(wrapper.find('.batch-search-results__download__results').attributes('disable')).toBeUndefined()
-  })
-
-  it('should disable the download button if no results', async () => {
-    await store.commit('batchSearch/results', [])
-
-    expect(wrapper.find('.batch-search-results__download__results').attributes('disable')).toBeTruthy()
-  })
-
   it('should display a button to delete the batchSearch', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
 
@@ -128,7 +112,7 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
   })
 
-  it('should NOT display a button to delete the batchSearch', async () => {
+  it('should NOT display a button to delete the batchSearch if it is not mine', async () => {
     wrapper = shallowMount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
 
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
@@ -137,10 +121,29 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__delete').exists()).toBeFalsy()
   })
 
+  it('should display a button to download queries', () => {
+    expect(wrapper.find('.batch-search-results__download__queries').exists()).toBeTruthy()
+  })
+
+  it('should display a button to download results', () => {
+    expect(wrapper.find('.batch-search-results__download__results').exists()).toBeTruthy()
+  })
+
+  it('should NOT display a button to download results if there are no results', async () => {
+    await store.commit('batchSearch/results', [])
+
+    expect(wrapper.find('.batch-search-results__download__results').exists()).toBeFalsy()
+  })
+
   it('should display 11 info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
     expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(11)
     expect(wrapper.findAll('.batch-search-results__info dd').at(10).text()).toEqual('test')
+  })
+
+  it('should display the list of the queries of this batch search', () => {
+    expect(wrapper.find('.batch-search-results').exists()).toBeTruthy()
+    expect(wrapper.find('b-table-stub').attributes('items').split(',')).toHaveLength(3)
   })
 
   it('should redirect on sort changed', async () => {

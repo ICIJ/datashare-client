@@ -5,7 +5,7 @@
         <div class="float-right d-flex my-2 mx-3">
           <div>
             <b-button variant="light" class="batch-search-results__action mr-2" id="batch-search-results-filters-toggle" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
-              <fa icon="filter" />
+              <fa icon="filter"></fa>
               <span class="sr-only">
                 {{ $t('batchSearchResultsFilters.queries.heading') }}
               </span>
@@ -14,32 +14,32 @@
               </b-badge>
             </b-button>
             <b-popover target="batch-search-results-filters-toggle" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
-              <batch-search-results-filters :uuid="uuid" :index="index" hide-border />
+              <batch-search-results-filters :uuid="uuid" :index="index" hide-border></batch-search-results-filters>
             </b-popover>
           </div>
           <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch">
             <confirm-button class="btn btn-light mr-2" :confirmed="deleteBatchSearch" v-b-tooltip.hover :title="$t('batchSearch.delete')">
-              <fa icon="trash-alt" />
+              <fa icon="trash-alt"></fa>
               <span class="sr-only">
                 {{ $t('batchSearch.delete') }}
               </span>
             </confirm-button>
           </div>
-          <div class="batch-search-results__action batch-search-results__download__queries" :disable="queries.length === 0" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
+          <div class="batch-search-results__action batch-search-results__download__queries" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
              <a :href="apiFullUrl('/api/batch/search/' + uuid + '/queries?format=csv')" class="btn btn-light mr-2">
-               <fa icon="download" />
+               <fa icon="download"></fa>
                {{ $t('batchSearchResults.downloadQueries') }}
              </a>
            </div>
-          <div class="batch-search-results__action batch-search-results__download__results float-right" :disable="results.length === 0" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
+          <div class="batch-search-results__action batch-search-results__download__results float-right" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')" v-if="results.length">
             <a :href="apiFullUrl('/api/batch/search/result/csv/' + uuid)" class="btn btn-primary" >
-              <fa icon="download" />
+              <fa icon="download"></fa>
               {{ $t('batchSearchResults.downloadResults') }}
             </a>
           </div>
         </div>
         <h3>
-          <page-icon icon="layer-group" />
+          <page-icon icon="layer-group"></page-icon>
           <router-link :to="{ name: 'batch-search' }">{{ $t('batchSearch.title') }}</router-link>
           <fa icon="angle-right" class="small ml-2"></fa>
           {{ batchSearch.name }}
@@ -114,7 +114,7 @@
           <dd class="col-sm-8">
             <ul v-if="batchSearch.fileTypes.length" class="list-unstyled list-group list-group-horizontal">
               <li v-for="fileType in batchSearch.fileTypes" :key="fileType" class="mr-2">
-                <content-type-badge :value="fileType" />
+                <content-type-badge :value="fileType"></content-type-badge>
               </li>
             </ul>
             <span v-else>
@@ -153,13 +153,14 @@
         <div class="batch-search-results__queries">
           <div class="card small">
             <b-table
+              class="m-0"
               :fields="fields"
               hover
               :items="results"
               no-local-sorting
               no-sort-reset
               :per-page="perPage"
-              responsive="true"
+              responsive
               show-empty
               striped
               :sort-by="sortBy"
@@ -183,7 +184,7 @@
                 </span>
               </template>
               <template v-slot:cell(contentType)="{ item }">
-                <content-type-badge :value="item.contentType" :document-name="item.documentName" />
+                <content-type-badge :value="item.contentType" :document-name="item.documentName"></content-type-badge>
               </template>
               <template v-slot:cell(contentLength)="{ item }">
                 {{ getDocumentSize(item.contentLength, '-') }}
@@ -313,7 +314,7 @@ export default {
       this.fetch()
     },
     queries (queries, oldQueries = []) {
-      // Check array values to avoid unecessary fetching
+      // Check array values to avoid unnecessary fetching
       if (!isEqual(queries, oldQueries)) {
         this.fetch()
       }
@@ -439,9 +440,6 @@ export default {
         this.$bvModal.show('error-modal')
       }
     },
-    extname (name) {
-      return '.' + name.split('.').pop()
-    },
     capitalize,
     moment,
     keys
@@ -466,10 +464,6 @@ export default {
   }
 
   &__queries {
-
-    .table-responsive {
-      margin: 0;
-    }
 
     table {
       margin: 0;
