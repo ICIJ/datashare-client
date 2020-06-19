@@ -167,5 +167,10 @@ describe('strings', () => {
       const { content } = addLocalSearchMarks('Lorem ipsum <dolor & other > or', { label: 'ipsum' })
       expect(content).toBe('Lorem <mark class="local-search-term">ipsum</mark> <dolor & other > or')
     })
+
+    it('should preserve HTML tags', () => {
+      const { content } = addLocalSearchMarks('Lorem <div>ipsum</div> <span>dolor</span>', { label: 'ipsum' })
+      expect(content).toBe('Lorem <div><mark class="local-search-term">ipsum</mark></div> <span>dolor</span>')
+    })
   })
 })
