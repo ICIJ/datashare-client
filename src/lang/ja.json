@@ -583,6 +583,7 @@
   },
   "widget": {
     "noData": "No data",
+    "noFolders": "No folders",
     "barometer": {
       "document": "no documents | 1 document | %{total} documents",
       "amongWhich": "among which",
