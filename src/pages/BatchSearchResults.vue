@@ -13,8 +13,8 @@
                 {{ selectedQueries.length }}
               </b-badge>
             </b-button>
-            <b-popover target="batch-search-results-filters-toggle" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
-              <batch-search-results-filters :uuid="uuid" :index="index" hide-border></batch-search-results-filters>
+            <b-popover target="batch-search-results-filters-toggle" show placement="bottom" lazy custom-class="popover-body-p-0">
+              <batch-search-results-filters :uuid="uuid" :index="index" hide-border />
             </b-popover>
           </div>
           <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch">

@@ -93,6 +93,9 @@
       "markAsRecommendedBy": "Marked as recommended by nobody | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
     }
   },
+  "searchFormControl": {
+    "submitLabel": "Search"
+  },
   "pagination": {
     "firstPage": "Go to first page",
     "previousPage": "Go to previous page",
@@ -540,6 +543,7 @@
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Please refer to this Help page where most common errors are described.</a>"
   },
   "batchSearchResultsFilters": {
+    "filterQueries": "Filter queries...",
     "queries": {
       "heading": "Filter by queries"
     }

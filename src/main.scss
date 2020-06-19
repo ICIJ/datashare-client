@@ -102,8 +102,7 @@ html {
     }
 
     .card-header {
-      background-color: $popover-header-bg;
-      @include gradient-y($popover-bg, $popover-bg);
+      background-color: $popover-bg;
 
       .nav-item .nav-link {
         color: white;

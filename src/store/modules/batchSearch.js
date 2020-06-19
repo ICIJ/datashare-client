@@ -1,6 +1,7 @@
 import remove from 'lodash/remove'
 
 import Api from '@/api'
+import Vue from 'vue'
 
 export const api = new Api()
 
@@ -20,16 +21,16 @@ export const mutations = {
     Object.assign(state, initialState())
   },
   batchSearch (state, batchSearch) {
-    state.batchSearch = batchSearch
+    Vue.set(state, 'batchSearch', batchSearch)
   },
   batchSearches (state, batchSearches) {
-    state.batchSearches = batchSearches
+    Vue.set(state, 'batchSearches', batchSearches)
   },
   selectedQueries (state, selectedQueries) {
-    state.selectedQueries = selectedQueries
+    Vue.set(state, 'selectedQueries', selectedQueries)
   },
   results (state, results) {
-    state.results = results
+    Vue.set(state, 'results', results)
   }
 }
 

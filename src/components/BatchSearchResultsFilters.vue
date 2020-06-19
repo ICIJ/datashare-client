@@ -20,14 +20,17 @@
           </b-dropdown-item>
         </b-dropdown>
       </h6>
+      <div class="batch-search-results-filters__queries__search text-dark">
+        <search-form-control :placeholder="$t('batchSearchResultsFilters.filterQueries')" v-model="queriesFilter" />
+      </div>
       <div class="small">
         <selectable-dropdown
           class="batch-search-results-filters__queries__dropdown border-0 m-0 p-0"
           deactivate-keys
-          @input="onInput"
-          :items="queries"
-          :multiple="hasMultipleQueries"
-          v-model="selectedQueries">
+          multiple
+          v-model="selectedQueries"
+          :eq="(item, other) => item.label === other.label"
+          :items="filteredQueries">
           <template #item-label="{ item }">
             <div class="d-flex batch-search-results-filters__queries__dropdown__item">
               <span class="flex-grow-1 text-truncate batch-search-results-filters__queries__dropdown__item__label">
@@ -52,13 +55,16 @@
 </template>
 
 <script>
+import Fuse from 'fuse.js'
+import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
-import filter from 'lodash/filter'
+import find from 'lodash/find'
 import get from 'lodash/get'
-import indexOf from 'lodash/indexOf'
 import isEqual from 'lodash/isEqual'
 import map from 'lodash/map'
 import orderBy from 'lodash/orderBy'
+
+import SearchFormControl from './SearchFormControl.vue'
 
 /**
  * Form to filter a bash search results by query
@@ -79,13 +85,22 @@ export default {
       type: String
     }
   },
+  components: {
+    SearchFormControl
+  },
   data () {
     return {
       sortField: 'count',
-      sortFields: ['default', 'count']
+      sortFields: ['default', 'count'],
+      queriesFilter: null
     }
   },
   computed: {
+    fuse () {
+      const keys = ['label']
+      const options = { distance: 100, shouldSort: false, keys }
+      return new Fuse(this.queries, options)
+    },
     meta () {
       return get(this, '$store.state.batchSearch.batchSearch', null)
     },
@@ -99,12 +114,16 @@ export default {
         return this.queriesKeys
       }
     },
+    filteredQueries () {
+      return this.queriesFilter ? this.fuse.search(this.queriesFilter) : this.queries
+    },
     hasMultipleQueries () {
       return this.queries && this.queries.length > 1
     },
     selectedQueries: {
       set (queries) {
-        this.$store.commit('batchSearch/selectedQueries', queries)
+        this.$store.commit('batchSearch/selectedQueries', cloneDeep(queries))
+        this.updateRoute()
       },
       get () {
         return this.$store.state.batchSearch.selectedQueries
@@ -120,9 +139,9 @@ export default {
     }
   },
   methods: {
-    onInput (selectedQueries = this.selectedQueries) {
+    updateRoute () {
       const routeQuery = get(this, '$route.query', {})
-      const queries = compact(map(selectedQueries, 'label'))
+      const queries = compact(map(this.selectedQueries, 'label'))
       if (!isEqual(routeQuery.queries || [], queries)) {
         const query = { ...routeQuery, queries }
         this.$router.push({ name: 'batch-search.results', query }).catch(() => {})
@@ -144,7 +163,7 @@ export default {
         this.$set(this, 'sortField', 'count')
       }
       const queries = get(this, ['$route', 'query', 'queries'], [])
-      this.$set(this, 'selectedQueries', filter(this.queries, ({ label }) => indexOf(queries, label) > -1))
+      this.selectedQueries = queries.map(label => find(this.queries, { label }))
     }
   }
 }
@@ -156,6 +175,11 @@ export default {
     width: 300px;
 
     &__queries {
+
+      &__search {
+        padding: $card-spacer-y $card-spacer-x;
+        background-color: $card-cap-bg;
+      }
 
       &__sort {
         z-index: 1001;
