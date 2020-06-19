@@ -1,11 +1,11 @@
 <template>
   <div class="batch-search-results-filters">
     <div class="card batch-search-results-filters__queries overflow-hidden border-0">
-      <h6 class="card-header d-flex">
+      <h6 class="card-header d-flex align-items-center">
         <span class="flex-grow-1 my-auto">
           {{ $t('batchSearchResultsFilters.queries.heading') }}
         </span>
-        <span class="my-auto mr-2" v-if="hasMultipleQueries">
+        <span class="mr-2" v-if="hasMultipleQueries">
           {{ $t('search.results.sort.sort') }}
         </span>
         <b-dropdown
