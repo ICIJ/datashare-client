@@ -6,7 +6,7 @@
           {{ $t('insights.selectProject') }}
         </div>
         <div>
-          <project-selector v-model="project" size="sm"></project-selector>
+          <project-selector v-model="project" size="md" class="insights__toolbox__project-selector" />
         </div>
       </div>
     </div>
@@ -50,6 +50,7 @@ export default {
 
 <style lang="scss" scoped>
   .insights {
+
     &__container {
       margin-top: $spacer;
 
