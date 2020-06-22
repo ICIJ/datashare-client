@@ -1,6 +1,7 @@
 {
-  "general": {
-    "all": "Todos"
+  "global": {
+    "all": "All",
+    "cancel": "Cancel"
   },
   "aggregations": {
     "more": "Explora más",
@@ -91,6 +92,9 @@
       "unmarkAsRecommended": "Desmarcar como recomendado",
       "markAsRecommendedBy": "Marked as recommended by nobody | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
     }
+  },
+  "searchFormControl": {
+    "submitLabel": "Search"
   },
   "pagination": {
     "firstPage": "Ir a primera página",
@@ -521,7 +525,8 @@
     "phraseMatchDescriptionOperators": "No inserte operadores en sus consultas",
     "learnMore": "Leer más",
     "author": "Autor·a",
-    "advancedFilters": "Filtros avanzados"
+    "advancedFilters": "Filtros avanzados",
+    "selectFolder": "Select folder"
   },
   "batchSearchResults": {
     "rank": "Rango",
@@ -538,6 +543,7 @@
     "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas cometido en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>"
   },
   "batchSearchResultsFilters": {
+    "filterQueries": "Filter queries...",
     "queries": {
       "heading": "Filter by queries"
     }
@@ -596,7 +602,6 @@
     "creationDate": {
       "filterFolder": "Filter by folder",
       "selectFolder": "Select folder",
-      "cancel": "Cancel",
       "intervals": {
         "year": "Year",
         "month": "Month",

@@ -1,6 +1,7 @@
 {
-  "general": {
-    "all": "All"
+  "global": {
+    "all": "All",
+    "cancel": "Cancel"
   },
   "aggregations": {
     "more": "さらに調べる",
@@ -91,6 +92,9 @@
       "unmarkAsRecommended": "Unmark as recommended",
       "markAsRecommendedBy": "Marked as recommended by nobody | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
     }
+  },
+  "searchFormControl": {
+    "submitLabel": "Search"
   },
   "pagination": {
     "firstPage": "最初のページに移動",
@@ -521,7 +525,8 @@
     "phraseMatchDescriptionOperators": "クエリ（検索対象）の中に、演算子を入れないでください",
     "learnMore": "もっと詳しく",
     "author": "作成者",
-    "advancedFilters": "高度なフィルタ"
+    "advancedFilters": "高度なフィルタ",
+    "selectFolder": "Select folder"
   },
   "batchSearchResults": {
     "rank": "ランク",
@@ -538,6 +543,7 @@
     "errorMessage": "システムは問題を検出しました。あなたのCSVファイルの中で構文エラーがあるか、またはその他のエラーの可能性があります。 <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">このヘルプページを参照してください。よくあるエラーの説明があります。</a>"
   },
   "batchSearchResultsFilters": {
+    "filterQueries": "Filter queries...",
     "queries": {
       "heading": "Filter by queries"
     }
@@ -596,7 +602,6 @@
     "creationDate": {
       "filterFolder": "Filter by folder",
       "selectFolder": "Select folder",
-      "cancel": "Cancel",
       "intervals": {
         "year": "Year",
         "month": "Month",
