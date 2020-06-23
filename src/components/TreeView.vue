@@ -37,15 +37,15 @@
 </template>
 
 <script>
+import round from 'lodash/round'
 import bodybuilder from 'bodybuilder'
-import { round } from 'lodash'
 import { basename } from 'path'
 import { waitFor } from 'vue-wait'
 
 import elasticsearch from '@/api/elasticsearch'
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
-import humanSize from '@/filters/humanSize'
 import humanNumber from '@/filters/humanNumber'
+import humanSize from '@/filters/humanSize'
 
 /**
  * A view listing directories from a specific path.
