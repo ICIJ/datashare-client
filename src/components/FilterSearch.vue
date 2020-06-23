@@ -1,14 +1,14 @@
 <template>
   <div class="filter-search" v-if="filter">
-    <form @submit.prevent class="filter-search__form input-group">
-      <input type="search" class="form-control" id="input-filter-search" v-model="filterQuery" />
+    <form @submit.prevent class="filter-search__form input-group mb-4" v-if="filter.isSearchable">
+      <input type="search" class="form-control" id="input-filter-search" v-model="filterQuery">
       <label class="input-group-append m-0" for="input-filter-search">
         <span class="input-group-text">
-          <fa icon="search" />
+          <fa icon="search"></fa>
         </span>
       </label>
     </form>
-    <div v-show="items.length" class="mt-4 filter-search__items card" :key="infiniteId">
+    <div v-show="items.length" class="filter-search__items card" :key="infiniteId">
       <component class="border-0"
                  :is="filter.component"
                  :async-items="items"
@@ -21,7 +21,7 @@
                  v-bind="{ filter }"></component>
     </div>
     <infinite-loading @infinite="next" :identifier="infiniteId" v-if="infiniteScroll">
-      <fa icon="circle-notch" spin slot="spinner" size="2x" class="mt-4 text-muted" />
+      <fa icon="circle-notch" spin slot="spinner" size="2x" class="mt-4 text-muted"></fa>
       <template #no-more>
         <span class="text-muted"></span>
       </template>

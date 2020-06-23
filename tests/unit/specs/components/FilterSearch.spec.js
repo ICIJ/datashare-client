@@ -289,15 +289,22 @@ describe('FilterSearch.vue', () => {
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
 
-  it('should filter filter values on filter label', async () => {
+  it('should filter values on their label - not case sensitive', async () => {
     await letData(es).have(new IndexedDocument('doc_01', project)
       .withContentType('message/rfc822')).commit()
     await letData(es).have(new IndexedDocument('doc_02', project)
       .withContentType('another_type')).commit()
     await letData(es).have(new IndexedDocument('doc_03', project)
       .withContentType('message/rfc822')).commit()
-    wrapper.vm.filterQuery = 'Internet'
 
+    wrapper.vm.filterQuery = 'internet'
+    await wrapper.vm.search()
+
+    expect(wrapper.vm.items).toHaveLength(1)
+    expect(wrapper.vm.items[0].doc_count).toEqual(2)
+    expect(wrapper.vm.total).toEqual(3)
+
+    wrapper.vm.filterQuery = 'INTERNET'
     await wrapper.vm.search()
 
     expect(wrapper.vm.items).toHaveLength(1)
@@ -305,19 +312,16 @@ describe('FilterSearch.vue', () => {
     expect(wrapper.vm.total).toEqual(3)
   })
 
-  it('should filter filter values on filter label in capital letters', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project)
-      .withContentType('message/rfc822')).commit()
-    await letData(es).have(new IndexedDocument('doc_02', project)
-      .withContentType('another_type')).commit()
-    await letData(es).have(new IndexedDocument('doc_03', project)
-      .withContentType('message/rfc822')).commit()
-    wrapper.vm.filterQuery = 'EMAIL'
+  describe('search bar', () => {
+    it('should be displayed', () => {
+      expect(wrapper.find('.filter-search__form').exists()).toBeTruthy()
+    })
 
-    await wrapper.vm.search()
+    it('should NOT be displayed if filter is not searchable', async () => {
+      wrapper.setProps({ filter: find(store.getters['search/instantiatedFilters'], { name: 'extractionLevel' }) })
+      await wrapper.vm.$nextTick()
 
-    expect(wrapper.vm.items).toHaveLength(1)
-    expect(wrapper.vm.items[0].doc_count).toEqual(2)
-    expect(wrapper.vm.total).toEqual(3)
+      expect(wrapper.find('.filter-search__form').exists()).toBeFalsy()
+    })
   })
 })
