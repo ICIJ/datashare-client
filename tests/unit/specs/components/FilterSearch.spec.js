@@ -17,13 +17,12 @@ jest.mock('@/api', () => {
   })
 })
 
-const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('FilterSearch.vue', () => {
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const project = toLower('FilterSearch')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
-  let wrapper
+  let wrapper = null
 
   beforeEach(() => {
     store.commit('search/reset')
@@ -175,7 +174,6 @@ describe('FilterSearch.vue', () => {
       await letData(es).have(new IndexedDocument('doc_10', project)
         .withContentType('type_10')).commit()
 
-      wrapper.setData({ filterQuery: '' })
       await wrapper.vm.startOver()
       expect(wrapper.findAll('.filter__items__item')).toHaveLength(8)
 
@@ -190,6 +188,34 @@ describe('FilterSearch.vue', () => {
 
       await wrapper.setData({ filterQuery: 'pdf' })
       expect(wrapper.vm.search).toHaveBeenCalled()
+    })
+
+    it('should be able to search into a not string filter', async () => {
+      wrapper.setProps({ filter: find(store.getters['search/instantiatedFilters'], { name: 'extractionLevel' }) })
+      await letData(es).have(new IndexedDocument('doc_01', project)
+        .withExtractionLevel(0)).commit()
+      await letData(es).have(new IndexedDocument('doc_02', project)
+        .withExtractionLevel(1)).commit()
+      await letData(es).have(new IndexedDocument('doc_03', project)
+        .withExtractionLevel(2)).commit()
+      await letData(es).have(new IndexedDocument('doc_04', project)
+        .withExtractionLevel(3)).commit()
+      await letData(es).have(new IndexedDocument('doc_05', project)
+        .withExtractionLevel(4)).commit()
+      await letData(es).have(new IndexedDocument('doc_06', project)
+        .withExtractionLevel(5)).commit()
+      await letData(es).have(new IndexedDocument('doc_07', project)
+        .withExtractionLevel(6)).commit()
+      await letData(es).have(new IndexedDocument('doc_08', project)
+        .withExtractionLevel(7)).commit()
+      await letData(es).have(new IndexedDocument('doc_09', project)
+        .withExtractionLevel(8)).commit()
+      await letData(es).have(new IndexedDocument('doc_10', project)
+        .withExtractionLevel(9)).commit()
+
+      await wrapper.vm.startOver()
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(8)
     })
   })
 
@@ -211,8 +237,7 @@ describe('FilterSearch.vue', () => {
   })
 
   it('should display all the indexing dates', async () => {
-    wrapper = mount(FilterSearch,
-      { localVue, store, wait, propsData: { infiniteScroll: false, throttle: 0, filter: find(store.getters['search/instantiatedFilters'], { name: 'indexingDate' }) }, mocks: { $t: msg => msg, $te: msg => msg, $n: msg => msg } })
+    wrapper.setProps({ filter: find(store.getters['search/instantiatedFilters'], { name: 'indexingDate' }) })
     await letData(es).have(new IndexedDocument('doc_01', project)
       .withIndexingDate('2018-01-01T00:00:00.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_02', project)
@@ -233,6 +258,7 @@ describe('FilterSearch.vue', () => {
       .withIndexingDate('2018-09-01T00:00:00.001Z')).commit()
     await letData(es).have(new IndexedDocument('doc_10', project)
       .withIndexingDate('2018-10-01T00:00:00.001Z')).commit()
+
     await wrapper.vm.startOver()
     await wrapper.vm.next()
 

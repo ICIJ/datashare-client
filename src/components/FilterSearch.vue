@@ -127,10 +127,13 @@ export default {
   methods: {
     async search ($state) {
       if (!this.filter) return
-      this.$wait.start(`items for ${this.filter.name}`)
+      this.$wait.start('items for ' + this.filter.name)
       // Load the filter using a body build using the filter configuration
-      const alternativeSearch = this.filterQuery !== '' && this.filter.alternativeSearch ? compact(this.filter.alternativeSearch(toLower(this.filterQuery))) : []
-      const options = { size: this.size, include: `.*(${concat(alternativeSearch, this.queryTokens).join('|')}).*` }
+      let options = { size: this.size }
+      if (this.filter.isSearchable && this.filterQuery !== '' && this.filter.alternativeSearch) {
+        const alternativeSearch = compact(this.filter.alternativeSearch(toLower(this.filterQuery)))
+        options = { ...options, include: '.*(' + concat(alternativeSearch, this.queryTokens).join('|') + ').*' }
+      }
       const data = await this.$store.dispatch('search/queryFilter', { name: this.filter.name, options })
       const all = get(data, this.resultPath, [])
       this.$set(this, 'items', all)
@@ -140,7 +143,7 @@ export default {
       if ($state && all.length < this.size) {
         $state.complete()
       }
-      this.$wait.end(`items for ${this.filter.name}`)
+      this.$wait.end('items for ' + this.filter.name)
       // Mark this page as loaded
       if ($state) $state.loaded()
     },
