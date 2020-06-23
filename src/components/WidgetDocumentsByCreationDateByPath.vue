@@ -18,13 +18,15 @@
         :ok-title="$t('widget.creationDate.selectFolder')"
         scrollable
         size="lg">
-        <tree-view :path="treeViewPath || selectedPath" @input="treeViewPath = $event"></tree-view>
+        <tree-view :path="treeViewPath || selectedPath" :project="project" @input="treeViewPath = $event"></tree-view>
       </b-modal>
     </template>
   </widget-documents-by-creation-date>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
 import TreeView from '@/components/TreeView'
 import WidgetDocumentsByCreationDate from '@/components/WidgetDocumentsByCreationDate'
@@ -53,6 +55,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('insights', ['project']),
     dataDir () {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }

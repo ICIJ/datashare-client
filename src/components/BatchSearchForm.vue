@@ -148,7 +148,7 @@
                 :ok-title="$t('batchSearch.selectFolder')"
                 scrollable
                 size="lg">
-                <tree-view :path="path" @input="path = $event"></tree-view>
+                <tree-view :path="path" :project="project" @input="path = $event"></tree-view>
               </b-modal>
               <div>
                 <b-badge

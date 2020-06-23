@@ -13,7 +13,7 @@
       </p>
     </v-wait>
     <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
-      <tree-view v-model="selectedPath" />
+      <tree-view v-model="selectedPath" :project="project"></tree-view>
     </b-modal>
   </div>
 </template>
@@ -21,9 +21,10 @@
 <script>
 import bodybuilder from 'bodybuilder'
 import { waitFor } from 'vue-wait'
+import { mapState } from 'vuex'
 
-import TreeView from '@/components/TreeView.vue'
 import elasticsearch from '@/api/elasticsearch'
+import TreeView from '@/components/TreeView'
 import humanSize from '@/filters/humanSize'
 
 /**
@@ -54,6 +55,7 @@ export default {
     await this.loadData()
   },
   computed: {
+    ...mapState('insights', ['project']),
     dataDir () {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }

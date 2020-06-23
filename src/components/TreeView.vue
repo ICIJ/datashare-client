@@ -63,6 +63,13 @@ export default {
      */
     path: {
       type: String
+    },
+    /**
+     * The ES index
+     */
+    project: {
+      type: String,
+      default: undefined
     }
   },
   components: {
@@ -70,9 +77,9 @@ export default {
   },
   data () {
     return {
-      total: -1,
+      directories: [],
       hits: 0,
-      directories: []
+      total: -1
     }
   },
   async created () {
@@ -116,9 +123,8 @@ export default {
       }
     },
     loadData: waitFor('loading tree view data', async function () {
-      const index = this.$store.state.insights.project
       const body = this.bodybuilderBase.build()
-      const res = await elasticsearch.search({ index, body, size: 0 })
+      const res = await elasticsearch.search({ index: this.project, body, size: 0 })
       const directories = res?.aggregations?.byDirname?.buckets || []
       const hits = res?.hits?.total || 0
       const total = res?.aggregations?.totalContentLength?.value || 0
