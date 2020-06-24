@@ -1,5 +1,6 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import Murmur from '@icij/murmur'
 
 import WidgetDiskUsage from '@/components/WidgetDiskUsage'
 import { Core } from '@/core'
@@ -10,11 +11,13 @@ describe('WidgetDiskUsage.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = { widget: { title: 'Hello world' } }
   const project = toLower('WidgetDiskUsage')
-  esConnectionHelper(project)
+  const anotherProject = toLower('AnotherWidgetDiskUsage')
+  esConnectionHelper([project, anotherProject])
   const es = esConnectionHelper.es
-  let wrapper
+  let wrapper = null
 
   beforeEach(() => {
+    Murmur.config.merge({ dataDir: 'dataDir' })
     store.commit('insights/reset')
     store.commit('insights/project', project)
     wrapper = shallowMount(WidgetDiskUsage, { i18n, localVue, store, wait, propsData })
@@ -29,5 +32,14 @@ describe('WidgetDiskUsage.vue', () => {
     await wrapper.vm.loadData()
 
     expect(wrapper.find('.widget__main-figure').text()).toBe('10.00 B')
+  })
+
+  it('should reset path on project change', async () => {
+    wrapper.vm.$set(wrapper.vm, 'path', 'path_01')
+    expect(wrapper.vm.path).toBe('path_01')
+
+    await store.commit('insights/project', anotherProject)
+
+    expect(wrapper.vm.path).toBe('dataDir')
   })
 })

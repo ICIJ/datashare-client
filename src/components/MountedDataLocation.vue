@@ -1,7 +1,7 @@
 <template>
   <div class="mounted-data-location d-flex align-items-center px-1">
     <div class="d-flex align-items-center flex-grow-1 mw-100" @click="showTreeView()">
-      <fa icon="folder" class="ml-1 mr-2 text-muted mounted-data-location__icon" />
+      <fa icon="folder" class="ml-1 mr-2 text-muted mounted-data-location__icon"></fa>
       <div class="flex-grow-1 text-monospace px-0 py-1 text-truncate mounted-data-location__value" :id="valueId">
         {{ dataDir }}
       </div>
@@ -13,7 +13,7 @@
       :label="$t('indexing.deleteIndexLabel')"
       :title="$t('indexing.deleteIndexLabel')"
       v-b-tooltip>
-      <fa icon="trash-alt" />
+      <fa icon="trash-alt"></fa>
       <span class="sr-only">
         {{ $t('indexing.deleteIndexLabel') }}
       </span>
@@ -27,13 +27,14 @@
       </div>
     </b-popover>
     <b-modal id="mounting-data-location-tree-view" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
-      <tree-view v-model="selectedPath" />
+      <tree-view :path="path"></tree-view>
     </b-modal>
   </div>
 </template>
 
 <script>
 import uniqueId from 'lodash/uniqueId'
+
 import TreeView from '@/components/TreeView'
 
 /**
@@ -46,7 +47,7 @@ export default {
   },
   data () {
     return {
-      selectedPath: null
+      path: null
     }
   },
   methods: {
@@ -62,7 +63,7 @@ export default {
       }
     },
     showTreeView () {
-      this.selectedPath = this.dataDir
+      this.$set(this, 'path', this.dataDir)
       this.$bvModal.show('mounting-data-location-tree-view')
     }
   },

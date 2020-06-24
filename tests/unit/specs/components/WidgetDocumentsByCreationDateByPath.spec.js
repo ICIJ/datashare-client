@@ -1,5 +1,6 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
+import Murmur from '@icij/murmur'
 
 import WidgetDocumentsByCreationDateByPath from '@/components/WidgetDocumentsByCreationDateByPath'
 import { Core } from '@/core'
@@ -9,12 +10,29 @@ describe('WidgetDocumentsByCreationDateByPath.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = { widget: { title: 'Hello world' } }
   const project = toLower('WidgetDocumentsByCreationDateByPath')
-  esConnectionHelper(project)
+  const anotherProject = toLower('AnotherWidgetDocumentsByCreationDateByPath')
+  esConnectionHelper([project, anotherProject])
+  let wrapper = null
 
-  beforeAll(() => store.commit('insights/project', project))
+  beforeAll(() => {
+    Murmur.config.merge({ dataDir: 'dataDir' })
+    store.commit('insights/project', project)
+  })
+
+  beforeEach(() => {
+    wrapper = mount(WidgetDocumentsByCreationDateByPath, { i18n, localVue, propsData, store, wait })
+  })
 
   it('should be a Vue instance', () => {
-    const wrapper = mount(WidgetDocumentsByCreationDateByPath, { i18n, localVue, propsData, store, wait })
     expect(wrapper).toBeTruthy()
+  })
+
+  it('should reset treeViewPath on project change', async () => {
+    wrapper.vm.$set(wrapper.vm, 'treeViewPath', 'path_01')
+    expect(wrapper.vm.treeViewPath).toBe('path_01')
+
+    await store.commit('insights/project', anotherProject)
+
+    expect(wrapper.vm.treeViewPath).toBe('dataDir')
   })
 })

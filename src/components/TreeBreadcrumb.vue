@@ -8,7 +8,7 @@
     <li v-if="treeWithoutDataDir.length > maxDirectories" class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--abbr">
       ...
     </li>
-    <li class="list-inline-item  tree-breadcrumb__item" v-for="directory in tree.slice(-maxDirectories)" :key="directory">
+    <li class="list-inline-item tree-breadcrumb__item" v-for="directory in tree.slice(-maxDirectories)" :key="directory">
       <a href @click.prevent="$emit('input', directory)">
         {{ directory | basename }}
       </a>
@@ -17,7 +17,9 @@
 </template>
 
 <script>
-import { filter, last, reduce } from 'lodash'
+import filter from 'lodash/filter'
+import last from 'lodash/last'
+import reduce from 'lodash/reduce'
 import { basename } from 'path'
 
 /**
@@ -38,7 +40,7 @@ export default {
       type: String
     },
     /**
-     * Maximum number of directories to display (truncate from the begining using ellipsis)
+     * Maximum number of directories to display (truncate from the beginning using ellipsis)
      */
     maxDirectories: {
       type: Number,

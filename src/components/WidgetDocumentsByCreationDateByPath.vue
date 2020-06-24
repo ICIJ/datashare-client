@@ -59,6 +59,11 @@ export default {
     dataDir () {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     }
+  },
+  watch: {
+    project () {
+      this.$set(this, 'treeViewPath', this.dataDir)
+    }
   }
 }
 </script>

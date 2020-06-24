@@ -10,7 +10,7 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = { widget: { title: 'Hello world' } }
   const project = toLower('WidgetDocumentsByCreationDate')
-  const anotherProject = toLower('anotherProject')
+  const anotherProject = toLower('AnotherWidgetDocumentsByCreationDate')
   esConnectionHelper([project, anotherProject])
   const es = esConnectionHelper.es
   let wrapper = null

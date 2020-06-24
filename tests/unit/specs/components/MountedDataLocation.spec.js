@@ -7,12 +7,12 @@ import { Core } from '@/core'
 jest.mock('axios')
 
 describe('MountedDataLocation', () => {
-  let wrapper
   const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+  let wrapper = null
   Murmur.config.set('mountedDataDir', '/foo/bar')
 
   beforeEach(() => {
-    wrapper = shallowMount(MountedDataLocation, { i18n, localVue, store, sync: false })
+    wrapper = shallowMount(MountedDataLocation, { i18n, localVue, store })
   })
 
   afterAll(() => jest.unmock('axios'))
@@ -31,7 +31,7 @@ describe('MountedDataLocation', () => {
 
     await wrapper.vm.deleteAll()
 
-    expect(mockCallback.mock.calls).toHaveLength(1)
+    expect(mockCallback).toBeCalledTimes(1)
   })
 
   it('should reset batchSearches and userHistory when calling the deleteAll method', async () => {

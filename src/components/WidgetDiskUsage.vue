@@ -13,7 +13,7 @@
       </p>
     </v-wait>
     <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
-      <tree-view v-model="selectedPath" :project="project"></tree-view>
+      <tree-view :path="path" :project="project" @input="path = $event"></tree-view>
     </b-modal>
   </div>
 </template>
@@ -46,12 +46,12 @@ export default {
   data () {
     return {
       onDisk: null,
-      total: null,
-      selectedPath: null
+      path: null,
+      total: null
     }
   },
   async created () {
-    this.$set(this, 'selectedPath', this.dataDir)
+    this.$set(this, 'path', this.dataDir)
     await this.loadData()
   },
   computed: {
@@ -85,6 +85,11 @@ export default {
       this.$set(this, 'total', total)
     }),
     humanSize
+  },
+  watch: {
+    project () {
+      this.$set(this, 'path', this.dataDir)
+    }
   }
 }
 </script>

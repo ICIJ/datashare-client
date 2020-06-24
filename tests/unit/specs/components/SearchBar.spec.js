@@ -10,12 +10,12 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 describe('SearchBar.vue', function () {
   const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
-  const index = toLower('SearchBar')
-  esConnectionHelper(index)
+  const project = toLower('SearchBar')
+  esConnectionHelper(project)
   const es = esConnectionHelper.es
   let wrapper = null
 
-  beforeAll(() => store.commit('search/index', index))
+  beforeAll(() => store.commit('search/index', project))
 
   beforeEach(() => {
     store.commit('search/reset')
@@ -53,7 +53,7 @@ describe('SearchBar.vue', function () {
 
   describe('search suggestions', () => {
     it('should retrieve suggestions in NamedEntities and tags for default search', async () => {
-      await letData(es).have(new IndexedDocument('document', index)
+      await letData(es).have(new IndexedDocument('document', project)
         .withNer('ne_01')
         .withTags(['ne_tag'])
       ).commit()
@@ -64,11 +64,11 @@ describe('SearchBar.vue', function () {
     })
 
     it('should order suggestions by doc_count descending', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index)
+      await letData(es).have(new IndexedDocument('document_01', project)
         .withNer('ne_01')
         .withNer('ne_02')
       ).commit()
-      await letData(es).have(new IndexedDocument('document_02', index)
+      await letData(es).have(new IndexedDocument('document_02', project)
         .withNer('ne_02')
       ).commit()
 

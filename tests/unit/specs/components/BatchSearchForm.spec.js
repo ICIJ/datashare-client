@@ -13,7 +13,7 @@ jest.mock('lodash/throttle', () => jest.fn(fn => fn))
 describe('BatchSearchForm.vue', () => {
   const { i18n, localVue, wait } = Core.init(createLocalVue()).useAll()
   const project = toLower('BatchSearchForm')
-  const anotherProject = toLower('anotherProject')
+  const anotherProject = toLower('AnotherBatchSearchForm')
   esConnectionHelper([project, anotherProject])
   const es = esConnectionHelper.es
   const state = { batchSearches: [] }

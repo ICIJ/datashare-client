@@ -1,17 +1,17 @@
 <template>
   <div class="tree-view">
     <div class="bg-light py-3 px-4 d-flex flex-row text-nowrap">
-      <tree-breadcrumb :path="path" @input="$emit('input', $event)" no-datadir />
+      <tree-breadcrumb :path="path" @input="$emit('input', $event)" no-datadir></tree-breadcrumb>
       <transition name="fade">
         <div v-if="!$wait.waiting('loading tree view data')">
-          <fa icon="weight" />
+          <fa icon="weight"></fa>
           {{ humanSize(total, false, $t('human.size')) }}
         </div>
       </transition>
     </div>
     <v-wait for="loading tree view data" transition="fade">
       <div slot="waiting" class="p-4 text-center">
-        <fa icon="circle-notch" spin size="2x" />
+        <fa icon="circle-notch" spin size="2x"></fa>
       </div>
       <div>
         <ul class="list-group list-group-flush tree-view__directories">
@@ -162,13 +162,13 @@ export default {
           position: relative;
 
           &__bar {
-            position: absolute;
-            left: 0;
+            animation: slidingBar 200ms forwards;
+            background: $primary;
             bottom: 0;
             height: 3px;
-            background: $primary;
+            left: 0;
+            position: absolute;
             transform: translateX(-100%);
-            animation: slidingBar 200ms forwards;
           }
 
           @for $i from 0 through 100 {
