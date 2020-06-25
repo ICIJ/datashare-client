@@ -1,7 +1,7 @@
 {
   "global": {
-    "all": "All",
-    "cancel": "Cancel"
+    "all": "Todos",
+    "cancel": "Cancelar"
   },
   "aggregations": {
     "more": "Explora más",
