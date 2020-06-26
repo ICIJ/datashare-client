@@ -42,7 +42,7 @@
               </router-link>
             </template>
             <template v-slot:cell(queries)="{ item }">
-              {{ $tc('batchSearch.query', keys(item.queries).length) }}
+              {{ $tc('batchSearch.query', item.nbQueries) }}
             </template>
             <template v-slot:cell(state)="{ item }">
               <b-badge

@@ -13,26 +13,25 @@ jest.mock('@/api', () => {
         project: { name: 'project_01' },
         name: 'name_01',
         description: 'description_01',
-        queries: { query_01: 12 },
         date: '2019-01-01',
-        nbResults: 2
+        nbResults: 2,
+        nbQueries: 1
       }, {
         uuid: 2,
         project: { name: 'project_02' },
         name: 'name_02',
         description: 'description_02',
-        queries: { query_02: 2, query_03: 3 },
         date: '2019-01-01',
-        nbResults: 3
+        nbResults: 3,
+        nbQueries: 2
       }]))
     }
   })
 })
 
-const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('BatchSearch.vue', () => {
-  let wrapper
+  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
+  let wrapper = null
 
   beforeAll(() => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
