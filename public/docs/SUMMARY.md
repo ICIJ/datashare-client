@@ -42,7 +42,6 @@
 * [Can I use Datashare with no internet connection?](faq-general/can-i-use-datashare-with-no-internet-connection.md)
 * [Can I download a document from Datashare?](faq-general/can-i-download-a-document.md)
 * [Can I remove document\(s\) from Datashare?](faq-general/can-i-remove-a-document-from-datashare.md)
-* [How can I install Datashare on a Windows prior to Windows 10 Pro?](faq-general/how-can-i-install-datashare-on-a-windows-prior-to-windows-10-pro.md)
 * [Do you recommend OS or machines for large corpuses?](faq-general/do-you-recommend-os-or-machines-for-large-corpuses.md)
 * [How can I contact ICIJ for help, bug reporting or suggestions?](faq-general/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions.md)
 
