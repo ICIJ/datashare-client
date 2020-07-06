@@ -397,7 +397,7 @@
       "en": "Open using a plain text editor. This file is unlikely to contain any information that's useful to non-programmers."
     },
     "warning": {
-      "en": "Do not execute this script."
+      "en": "For safety reasons, do not execute this script."
     },
     "preview": "yes"
   },
@@ -503,7 +503,7 @@
       "en": "A PHP script source file. Open using an IDE or plain text editor."
     },
     "warning": {
-      "en": "Do not execute this file."
+      "en": "For safety reasons, do not execute this file."
     },
     "preview": "yes"
   },
@@ -513,7 +513,7 @@
       "en": "VBA script embedded in a document. Open using an IDE or plain text editor. Unlikely to contain information useful to non-programmers."
     },
     "warning": {
-      "en": "Do not execute this script."
+      "en": "For safety reasons, do not execute this script."
     },
     "preview": "yes"
   },
@@ -526,7 +526,7 @@
       "en": "Open using an IDE or plain text editor. Unlikely to contain information useful to non-programmers."
     },
     "warning": {
-      "en": "Do not execute this script."
+      "en": "For safety reasons, do not execute this script."
     },
     "preview": "yes"
   },
