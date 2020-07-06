@@ -44,7 +44,7 @@
           {{ humanSize(value) }}
         </template>
         <template v-slot:cell(actions)="{ item }">
-          <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" />
+          <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" tooltips-placement="rightbottom" />
         </template>
       </b-table>
       <search-results-header position="bottom" />
