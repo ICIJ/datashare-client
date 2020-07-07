@@ -44,6 +44,7 @@
 * [Can I remove document\(s\) from Datashare?](faq-general/can-i-remove-a-document-from-datashare.md)
 * [Do you recommend OS or machines for large corpuses?](faq-general/do-you-recommend-os-or-machines-for-large-corpuses.md)
 * [How can I contact ICIJ for help, bug reporting or suggestions?](faq-general/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions.md)
+* [How can we use Datashare on a collaborative mode on a server?](faq-general/how-can-we-use-datashare-on-a-collaborative-mode-on-a-server.md)
 
 ## FAQ - Errors
 
