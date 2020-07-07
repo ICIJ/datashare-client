@@ -622,6 +622,14 @@ describe('SearchStore', () => {
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 1, field: '', label: '.*test.*', metadata: 0, negation: false, tags: 0, regex: true }])
     })
+
+    it('should find phrase match across carriage return', async () => {
+      await letData(es).have(new IndexedDocument(id, project).withContent('content content Emmanuel\nMacron content')).commit()
+      await store.dispatch('document/get', { id, index: project })
+      await store.dispatch('search/query', '"Emmanuel Macron"')
+
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 1, field: '', label: 'Emmanuel Macron', metadata: 0, negation: false, tags: 0, regex: false }])
+    })
   })
 
   describe('deleteQueryTerm', () => {

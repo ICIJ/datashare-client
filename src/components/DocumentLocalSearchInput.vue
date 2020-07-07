@@ -28,7 +28,7 @@ export default {
       default: 0
     },
     /**
-     * The list of all occurrences
+     * The total number of occurrences found in the document
      */
     searchOccurrences: {
       type: Number,

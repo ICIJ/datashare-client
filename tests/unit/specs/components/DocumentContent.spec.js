@@ -301,7 +301,7 @@ describe('DocumentContent.vue', () => {
       wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'test.*', regex: true })
       await wrapper.vm.transformContent()
 
-      expect(wrapper.vm.localSearchOccurrences).toEqual(2)
+      expect(wrapper.vm.localSearchOccurrences).toEqual(1)
     })
   })
 })

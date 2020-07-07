@@ -160,7 +160,7 @@ describe('strings', () => {
 
     it('should wrap regex', () => {
       const { content } = addLocalSearchMarks('France is not a tax heaven.\nBut most probably a taxidermists country.', { label: 'tax.*', regex: true })
-      expect(content).toBe('France is not a <mark class="local-search-term">tax heaven.</mark>\nBut most probably a <mark class="local-search-term">taxidermists country.</mark>')
+      expect(content).toBe('France is not a <mark class="local-search-term">tax heaven. But most probably a taxidermists country.</mark>')
     })
 
     it('should display HTML characters', () => {
@@ -171,6 +171,13 @@ describe('strings', () => {
     it('should preserve HTML tags', () => {
       const { content } = addLocalSearchMarks('Lorem <div>ipsum</div> <span>dolor</span>', { label: 'ipsum' })
       expect(content).toBe('Lorem <div><mark class="local-search-term">ipsum</mark></div> <span>dolor</span>')
+    })
+
+    it('should ignore carriage return', () => {
+      const { content, localSearchOccurrences } = addLocalSearchMarks('content content Donald\nTrump content', { label: 'Donald Trump' })
+
+      expect(localSearchOccurrences).toBe(1)
+      expect(content).toBe('content content <mark class="local-search-term">Donald Trump</mark> content')
     })
   })
 })

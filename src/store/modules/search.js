@@ -186,7 +186,8 @@ export const getters = {
         if (isString(extractedField)) {
           extractedField = castArray(extractedField)
         }
-        const text = join(compact(values(extractedField)), ' ')
+        let text = join(compact(values(extractedField)), ' ')
+        text = text.replace(/\n/g, ' ').replace(/\s\s+/g, ' ')
         getters.retrieveContentQueryTermsInContent(text, field)
       })
       return orderBy(getters.retrieveContentQueryTerms, ['content'], ['desc']).sort(a => a.content === 0 && a.metadata > 0)
