@@ -69,6 +69,7 @@ export default {
         InternalServerError: 'search.errors.internalError',
         NoConnections: 'search.errors.noConnections',
         NotFound: 'search.errors.notFound',
+        RequestTimeout: 'search.errors.requestTimeout',
         ServiceUnavailable: 'search.errors.serviceUnavailable'
       },
       isShrinked: false
