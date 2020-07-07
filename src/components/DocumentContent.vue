@@ -77,7 +77,8 @@ export default {
   },
   methods: {
     async transformContent () {
-      this.transformedContent = await this.applyContentPipeline()
+      const transformedContent = await this.applyContentPipeline()
+      this.$set(this, 'transformedContent', transformedContent)
     },
     terminateLocalSearchWorker () {
       if (this.localSearchWorker !== null) {
@@ -86,7 +87,8 @@ export default {
     },
     createLocalSearchWorker () {
       this.terminateLocalSearchWorker()
-      this.localSearchWorker = new LocalSearchWorker()
+      const localSearchWorker = new LocalSearchWorker()
+      this.$set(this, 'localSearchWorker', localSearchWorker)
     },
     addLocalSearchMarks (content) {
       if (!this.localSearchTerm.label || this.localSearchTerm.label.length === 0) {
@@ -99,8 +101,10 @@ export default {
       const workerPromise = new Promise(resolve => {
         // We receive a content from the worker
         this.localSearchWorker.addEventListener('message', once(({ data }) => {
-          this.localSearchOccurrences = data.localSearchOccurrences
-          this.localSearchIndex = data.localSearchIndex
+          const localSearchOccurrences = data.localSearchOccurrences
+          this.$set(this, 'localSearchOccurrences', localSearchOccurrences)
+          const localSearchIndex = data.localSearchIndex
+          this.$set(this, 'localSearchIndex', localSearchIndex)
           this.localSearchWorkerInProgress = false
           this.terminateLocalSearchWorker()
           resolve(data.content)
@@ -117,11 +121,13 @@ export default {
       return this.contentPipeline(this.content, this.contentPipelineParams)
     },
     findNextLocalSearchTerm () {
-      this.localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
+      const localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
+      this.$set(this, 'localSearchIndex', localSearchIndex)
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     },
     findPreviousLocalSearchTerm () {
-      this.localSearchIndex = Math.max(1, this.localSearchIndex - 1)
+      const localSearchIndex = Math.max(1, this.localSearchIndex - 1)
+      this.$set(this, 'localSearchIndex', localSearchIndex)
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     },
     jumpToActiveLocalSearchTerm () {
@@ -148,8 +154,8 @@ export default {
       globalSearchTerms: 'retrieveContentQueryTerms'
     }),
     showNamedEntities: {
-      set (toggler) {
-        this.$store.commit('document/toggleShowNamedEntities', toggler)
+      set (toggle) {
+        this.$store.commit('document/toggleShowNamedEntities', toggle)
       },
       get () {
         return this.$store.state.document.showNamedEntities
@@ -158,7 +164,7 @@ export default {
     contentPipelineFunctions () {
       return this.getFullPipelineChain('extracted-text')
     },
-    showNamedEntitiesToggler () {
+    showNamedEntitiesToggle () {
       return !this.translatedContent && this.hasNamedEntities
     },
     shouldApplyNamedEntitiesMarks () {
@@ -209,7 +215,7 @@ export default {
     </div>
     <div class="d-flex flex-row justify-content-end align-items-center px-3">
       <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
-      <div class="document-content__ner-toggler py-1 ml-3 font-weight-bold" id="ner-toggler" v-if="showNamedEntitiesToggler">
+      <div class="document-content__ner-toggler py-1 ml-3 font-weight-bold" id="ner-toggler" v-if="showNamedEntitiesToggle">
         <div class="custom-control custom-switch">
           <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler" :disabled="isLoadingNamedEntities">
           <label class="custom-control-label font-weight-bold" for="input-ner-toggler" id="label-ner-toggler">
