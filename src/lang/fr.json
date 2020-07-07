@@ -90,11 +90,11 @@
       },
       "markAsRecommended": "Marquer comme recommandé",
       "unmarkAsRecommended": "Ne plus marquer comme recommandé",
-      "markAsRecommendedBy": "Marked as recommended by nobody | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
+      "markAsRecommendedBy": "Recommandé par personne | Recommandé par 1 personne : | Recommandé par {count} personnes : "
     }
   },
   "searchFormControl": {
-    "submitLabel": "Search"
+    "submitLabel": "Rechercher"
   },
   "pagination": {
     "firstPage": "Aller à la première page",
@@ -526,7 +526,7 @@
     "learnMore": "En savoir plus",
     "author": "Auteur·e",
     "advancedFilters": "Filtres avancés",
-    "selectFolder": "Select folder"
+    "selectFolder": "Sélectionner un dossier"
   },
   "batchSearchResults": {
     "rank": "Rang",
@@ -536,16 +536,16 @@
     "contentType": "Type de contenu",
     "size": "Taille",
     "downloadResults": "Télécharger les résultats",
-    "downloadQueries": "Download queries",
-    "downloadTooltip": "Download as CSV",
+    "downloadQueries": "Télécharger les requêtes",
+    "downloadTooltip": "Télécharger au format CSV",
     "empty": "Pas de résultat",
     "errorTitle": "Erreur",
     "errorMessage": "Le système a rencontré un problème. Il peut s'agir d'une erreur de syntaxe que vous avez commise dans votre CSV ou d'une autre erreur. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Veuillez vous référer à cette page d'aide où les erreurs les plus courantes sont expliquées.</a>"
   },
   "batchSearchResultsFilters": {
-    "filterQueries": "Filter queries...",
+    "filterQueries": "Filtrer par requêtes...",
     "queries": {
-      "heading": "Filter by queries"
+      "heading": "Filtrer par requêtes"
     }
   },
   "shortkeys": {
@@ -589,7 +589,7 @@
   },
   "widget": {
     "noData": "Pas de données",
-    "noFolders": "No folders",
+    "noFolders": "Aucun dossier",
     "barometer": {
       "document": "aucun document | 1 document | %{total} documents",
       "amongWhich": "parmi le(s)quel(s)",
@@ -600,14 +600,14 @@
       "hits": "aucun document | 1 document | %{hits} documents"
     },
     "creationDate": {
-      "filterFolder": "Filter by folder",
-      "selectFolder": "Select folder",
+      "filterFolder": "Filtrer par dossier",
+      "selectFolder": "Sélectionner un dossier",
       "intervals": {
-        "year": "Year",
-        "month": "Month",
-        "day": "Day"
+        "year": "Année",
+        "month": "Mois",
+        "day": "Jour"
       },
-      "document": "no documents | 1 document | %{total} documents"
+      "document": "aucun document | 1 document | %{total} documents"
     }
   }
 }
