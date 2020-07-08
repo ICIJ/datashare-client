@@ -178,7 +178,9 @@ export default {
     warning: 'warning',
     cancelled: 'warning'
   },
-  waitForEsAnswer: 700,
+  elasticsearch: {
+    waitForAnswer: 700
+  },
   filterSize: 8,
   helpLink: 'https://github.com/ICIJ/datashare/wiki/Datashare-Support',
   faqLink: 'https://icij.gitbook.io/datashare/faq/table-of-contents',

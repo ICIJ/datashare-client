@@ -161,7 +161,7 @@ describe('DocumentTagsForm.vue', () => {
 
     wrapper.vm.tag = 'tag'
     await wrapper.vm.addTag()
-    await delay(settings.waitForEsAnswer)
+    await delay(settings.elasticsearch.waitForAnswer)
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })

@@ -102,7 +102,7 @@ export default {
       this.$set(this, 'tag', '')
       this.$set(this, 'existingTags', [])
       this.$set(this, 'updatingTags', false)
-      delay(filterName => this.$root.$emit('filter::refresh', filterName), settings.waitForEsAnswer, 'tags')
+      delay(filterName => this.$root.$emit('filter::refresh', filterName), settings.elasticsearch.waitForAnswer, 'tags')
       if (!this.displayTags) this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
       // Focus on the tag
       if (this.$refs && this.$refs.tag && this.$refs.tag.focus) {
