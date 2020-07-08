@@ -19,6 +19,7 @@
       "internalError": "サーバーに問題が発生しました",
       "noConnections": "サーバーが接続されていません",
       "notFound": "何も見つかりませんでした",
+      "requestTimeout": "Your query did not succeed because of a timeout",
       "serviceUnavailable": "サーバーはあなたの要求に応じることができません",
       "somethingWrong": "何かの問題が発生しました"
     },
