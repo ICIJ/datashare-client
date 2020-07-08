@@ -179,7 +179,8 @@ export default {
     cancelled: 'warning'
   },
   elasticsearch: {
-    waitForAnswer: 700
+    waitForAnswer: 700,
+    requestTimeout: 60000
   },
   filterSize: 8,
   helpLink: 'https://github.com/ICIJ/datashare/wiki/Datashare-Support',

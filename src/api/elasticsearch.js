@@ -156,7 +156,7 @@ export function datasharePlugin (Client, config, components) {
 const elasticsearch = new es.Client({
   host: process.env.VUE_APP_ES_HOST || window.location.hostname + ':' + window.location.port + '/api/index/search',
   plugins: [datasharePlugin],
-  requestTimeout: 60000
+  requestTimeout: settings.elasticsearch.requestTimeout
 })
 
 export default elasticsearch
