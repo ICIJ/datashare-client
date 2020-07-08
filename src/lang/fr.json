@@ -19,6 +19,7 @@
       "internalError": "Le serveur a rencontré un problème",
       "noConnections": "Le serveur n'est pas connecté",
       "notFound": "Aucun résultat",
+      "requestTimeout": "Your query did not succeed because of a timeout",
       "serviceUnavailable": "Le serveur ne peut répondre à votre requête",
       "somethingWrong": "Erreur"
     },
