@@ -5,11 +5,11 @@ import FiltersPanel from '@/components/FiltersPanel'
 import { Core } from '@/core'
 
 describe('FiltersPanel.vue', () => {
-  const { localVue, store, router, i18n, wait } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
   let wrapper = null
 
   beforeEach(() => {
-    wrapper = shallowMount(FiltersPanel, { localVue, i18n, router, store, wait })
+    wrapper = shallowMount(FiltersPanel, { i18n, localVue, router, store, wait })
   })
 
   it('should display the aggregation panel by default', () => {

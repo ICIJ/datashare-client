@@ -21,7 +21,8 @@
       "notFound": "Nothing was found",
       "requestTimeout": "Your query did not succeed because of a timeout",
       "serviceUnavailable": "The server is unable to satisfy your request",
-      "somethingWrong": "Something went wrong."
+      "somethingWrong": "Something went wrong.",
+      "tryAgain": "Try again"
     },
     "field": {
       "all": "All fields",

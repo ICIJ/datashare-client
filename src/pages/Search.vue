@@ -16,6 +16,11 @@
       <component :is="bodyWrapper" class="search__body__search-results search__body__results" ref="searchBodyScrollbar">
         <div v-if="!!error" class="py-5 text-center">
           {{ errorMessage }}
+          <div class="mt-2" v-if="isRequestTimeoutError">
+            <b-button @click="refresh">
+              {{ $t('search.errors.tryAgain') }}
+            </b-button>
+          </div>
         </div>
         <search-results v-else-if="isReady" :layout="layout" />
         <div v-else>
@@ -93,6 +98,9 @@ export default {
         }
       }
       return get(this.error, 'body.error.root_cause.0.reason', defaultMessage)
+    },
+    isRequestTimeoutError () {
+      return this.error instanceof esErrors.RequestTimeout
     },
     showFilters: {
       get () {
