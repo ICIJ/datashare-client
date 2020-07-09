@@ -144,11 +144,17 @@
                 hide-header
                 id="modal-select-path"
                 lazy
-                @ok="addPath(path)"
+                @ok="addPaths()"
                 :ok-title="$t('batchSearch.selectFolder')"
                 scrollable
                 size="lg">
-                <tree-view :path="path" :project="project" @input="path = $event"></tree-view>
+                <tree-view
+                  @input="path = $event"
+                  @checked="selectedPaths = $event"
+                  :path="path"
+                  :project="project"
+                  selectable
+                  :selectedPaths="selectedPaths"></tree-view>
               </b-modal>
               <div>
                 <b-badge
@@ -225,6 +231,7 @@ export default {
       projects: [],
       published: true,
       selectedFileType: '',
+      selectedPaths: [],
       showAdvancedFilters: false,
       suggestionFileTypes: []
     }
@@ -308,10 +315,8 @@ export default {
         this.$wait.end('load all file types')
       }
     },
-    addPath (path) {
-      if (path) {
-        this.paths.push(path)
-      }
+    addPaths () {
+      this.$set(this, 'paths', uniq(concat(this.paths, this.selectedPaths)))
       this.$set(this, 'path', this.$config.get('mountedDataDir') || this.$config.get('dataDir'))
     },
     deletePath (index) {

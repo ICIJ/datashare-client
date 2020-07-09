@@ -14,23 +14,26 @@
         <fa icon="circle-notch" spin size="2x"></fa>
       </div>
       <div>
-        <ul class="list-group list-group-flush tree-view__directories">
-          <li v-for="directory in directories" :key="directory.key" class="list-group-item d-flex flex-row tree-view__directories__item">
-            <a class="flex-grow-1" href @click.prevent="$emit('input', directory.key)">
-              {{ directory.key | basename  }}
-            </a>
-            <span class="font-weight-bold" :title="directory.contentLength.value">
-              {{ humanSize(directory.contentLength.value, false, $t('human.size'))  }}
-            </span>
-            <span class="tree-view__directories__item__bar" :style="{ width: totalPercentage(directory.contentLength.value) }"></span>
-          </li>
-          <li v-if="!directories.length" class="list-group-item d-flex flex-row tree-view__directories__item font-italic">
-            {{ $t('widget.noFolders') }}
-          </li>
-          <li class="list-group-item tree-view__directories__item tree-view__directories__item--hits" :title="$tc('widget.diskUsage.hits', hits, { hits })">
-            {{ $tc('widget.diskUsage.hits', hits, { hits: humanNumber(hits, $t('human.number')) }) }}
-          </li>
-        </ul>
+        <b-form-checkbox-group v-model="selected" @input="$emit('checked', $event)">
+          <ul class="list-group list-group-flush tree-view__directories">
+            <li v-for="directory in directories" :key="directory.key" class="list-group-item d-flex flex-row tree-view__directories__item">
+              <b-form-checkbox :value="directory.key" v-if="selectable"></b-form-checkbox>
+              <a class="flex-grow-1" href @click.prevent="$emit('input', directory.key)">
+                {{ directory.key | basename }}
+              </a>
+              <span class="font-weight-bold" :title="directory.contentLength.value">
+                {{ humanSize(directory.contentLength.value, false, $t('human.size'))  }}
+              </span>
+              <span class="tree-view__directories__item__bar" :style="{ width: totalPercentage(directory.contentLength.value) }"></span>
+            </li>
+            <li v-if="!directories.length" class="list-group-item d-flex flex-row tree-view__directories__item font-italic">
+              {{ $t('widget.noFolders') }}
+            </li>
+            <li class="list-group-item tree-view__directories__item tree-view__directories__item--hits" :title="$tc('widget.diskUsage.hits', hits, { hits })">
+              {{ $tc('widget.diskUsage.hits', hits, { hits: humanNumber(hits, $t('human.number')) }) }}
+            </li>
+          </ul>
+        </b-form-checkbox-group>
       </div>
     </v-wait>
   </div>
@@ -52,14 +55,9 @@ import humanSize from '@/filters/humanSize'
  */
 export default {
   name: 'TreeView',
-  model: {
-    prop: 'path',
-    event: 'input'
-  },
   props: {
     /**
      * List directories from this path.
-     * @model
      */
     path: {
       type: String
@@ -70,6 +68,14 @@ export default {
     project: {
       type: String,
       default: undefined
+    },
+    selectedPaths: {
+      type: Array,
+      default: () => []
+    },
+    selectable: {
+      type: Boolean,
+      default: false
     }
   },
   components: {
@@ -79,10 +85,12 @@ export default {
     return {
       directories: [],
       hits: 0,
+      selected: [],
       total: -1
     }
   },
   async created () {
+    this.$set(this, 'selected', this.selectedPaths)
     Object.assign(this, await this.loadData())
   },
   watch: {

@@ -265,4 +265,24 @@ describe('BatchSearchForm.vue', () => {
       }])
     })
   })
+
+  describe('addPaths method', () => {
+    it('should add unique selected paths to paths', () => {
+      wrapper.vm.$set(wrapper.vm, 'paths', ['path_01', 'path_02'])
+      wrapper.vm.$set(wrapper.vm, 'selectedPaths', ['path_02', 'path_03'])
+
+      wrapper.vm.addPaths()
+
+      expect(wrapper.vm.paths).toEqual(['path_01', 'path_02', 'path_03'])
+      expect(wrapper.vm.selectedPaths).toEqual(['path_02', 'path_03'])
+    })
+
+    it('should reset the path', () => {
+      wrapper.vm.$set(wrapper.vm, 'path', 'lalilou')
+
+      wrapper.vm.addPaths()
+
+      expect(wrapper.vm.path).toBe('/root/project')
+    })
+  })
 })
