@@ -10,10 +10,11 @@ import { state, getters, mutations, actions } from '@/store/modules/search'
 
 describe('Search.vue', () => {
   let store
-  let wrapper = null
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
   const actionsStore = Object.assign(cloneDeep(actions), { query: jest.fn(), refresh: jest.fn(), updateFromRouteQuery: jest.fn() })
+  let wrapper = null
+  jest.setTimeout(1e4)
 
   beforeEach(() => {
     store = new Vuex.Store({
@@ -66,6 +67,24 @@ describe('Search.vue', () => {
     it('should display a button to try again if error is RequestTimeout', async () => {
       await store.commit('search/error', new esErrors.RequestTimeout())
       expect(wrapper.find('b-button-stub').exists()).toBeTruthy()
+    })
+  })
+
+  describe('the progress bar', () => {
+    it('should increase of 2 per second', async () => {
+      await store.commit('search/isReady', false)
+      await new Promise(resolve => setTimeout(resolve, 5500))
+      expect(wrapper.vm.$Progress.get()).toBe(10)
+      expect(wrapper.vm.intervalId).not.toBe(-1)
+      await store.commit('search/isReady', true)
+    })
+
+    it('should be reset', async () => {
+      await store.commit('search/isReady', false)
+      await new Promise(resolve => setTimeout(resolve, 5500))
+      await store.commit('search/isReady', true)
+      expect(wrapper.vm.$Progress.get()).toBe(100)
+      expect(wrapper.vm.intervalId).toBe(-1)
     })
   })
 })

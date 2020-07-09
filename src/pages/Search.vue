@@ -78,7 +78,8 @@ export default {
         RequestTimeout: 'search.errors.requestTimeout',
         ServiceUnavailable: 'search.errors.serviceUnavailable'
       },
-      isShrinked: false
+      isShrinked: false,
+      intervalId: -1
     }
   },
   computed: {
@@ -140,8 +141,15 @@ export default {
   },
   watch: {
     isReady (isReady) {
-      const method = isReady ? 'finish' : 'start'
-      this.$Progress[method]()
+      if (isReady) {
+        this.$Progress.finish()
+        clearInterval(this.intervalId)
+        this.$set(this, 'intervalId', -1)
+      } else {
+        this.$Progress.set(0)
+        const intervalId = setInterval(() => this.$Progress.increase(2), 1000)
+        this.$set(this, 'intervalId', intervalId)
+      }
       this.updateScrollBars()
     },
     $route () {
