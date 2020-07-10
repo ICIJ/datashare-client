@@ -21,7 +21,7 @@
       "notFound": "No se han encontrado resultados",
       "requestTimeout": "Your query did not succeed because of a timeout",
       "serviceUnavailable": "El servidor no puede realizar tu búsqueda",
-      "somethingWrong": "Algo ha ocurrido.",
+      "somethingWrong": "Something went wrong",
       "tryAgain": "Try again"
     },
     "field": {

@@ -19,10 +19,10 @@
       "internalError": "Le serveur a rencontré un problème",
       "noConnections": "Le serveur n'est pas connecté",
       "notFound": "Aucun résultat",
-      "requestTimeout": "Your query did not succeed because of a timeout",
+      "requestTimeout": "Votre requête n'a pas abouti en raison d'un délai d'attente de connexion écoulé",
       "serviceUnavailable": "Le serveur ne peut répondre à votre requête",
-      "somethingWrong": "Erreur",
-      "tryAgain": "Try again"
+      "somethingWrong": "Something went wrong",
+      "tryAgain": "Réessayez"
     },
     "field": {
       "all": "Tous les champs",
