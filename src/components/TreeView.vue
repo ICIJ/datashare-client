@@ -55,9 +55,14 @@ import humanSize from '@/filters/humanSize'
  */
 export default {
   name: 'TreeView',
+  model: {
+    prop: 'path',
+    event: 'input'
+  },
   props: {
     /**
      * List directories from this path.
+     * @model
      */
     path: {
       type: String

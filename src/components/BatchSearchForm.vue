@@ -149,12 +149,11 @@
                 scrollable
                 size="lg">
                 <tree-view
-                  @input="path = $event"
                   @checked="selectedPaths = $event"
-                  :path="path"
                   :project="project"
                   selectable
-                  :selectedPaths="selectedPaths"></tree-view>
+                  :selectedPaths="selectedPaths"
+                  v-model="path"></tree-view>
               </b-modal>
               <div>
                 <b-badge
