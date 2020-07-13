@@ -144,7 +144,7 @@
                 hide-header
                 id="modal-select-path"
                 lazy
-                @ok="addPaths()"
+                @ok="setPaths()"
                 :ok-title="$t('batchSearch.selectFolder')"
                 scrollable
                 size="lg">
@@ -184,7 +184,18 @@
 </template>
 
 <script>
-import { compact, concat, each, filter, flatten, get, has, includes, isEmpty, map, range, uniq } from 'lodash'
+import compact from 'lodash/compact'
+import concat from 'lodash/concat'
+import each from 'lodash/each'
+import filter from 'lodash/filter'
+import flatten from 'lodash/flatten'
+import get from 'lodash/get'
+import has from 'lodash/has'
+import includes from 'lodash/includes'
+import isEmpty from 'lodash/isEmpty'
+import map from 'lodash/map'
+import range from 'lodash/range'
+import uniq from 'lodash/uniq'
 import throttle from 'lodash/throttle'
 import bodybuilder from 'bodybuilder'
 import Fuse from 'fuse.js'
@@ -315,8 +326,8 @@ export default {
         this.$wait.end('load all file types')
       }
     },
-    addPaths () {
-      this.$set(this, 'paths', uniq(concat(this.paths, this.selectedPaths)))
+    setPaths () {
+      this.$set(this, 'paths', this.selectedPaths)
       this.$set(this, 'path', this.$config.get('mountedDataDir') || this.$config.get('dataDir'))
     },
     deletePath (index) {
