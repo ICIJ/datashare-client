@@ -4,6 +4,33 @@ description: Install Datashare will help you set up the software on your compute
 
 # Install Datashare on Linux
 
+There are two ways of installing datashare on linux :
+
+1. install it standalone
+2. install it with docker
+
+### Standalone
+
+download the deb package from [https://github.com/ICIJ/datashare-installer/releases/latest](https://github.com/ICIJ/datashare-installer/releases/latest)
+
+Then you can install it from the command line : 
+
+```text
+$ sudo apt install /dir/to/debian/package/datashare-dist_7.2.0_all.deb
+```
+
+Then simply run datashare with 
+
+```text
+$ datashare -h
+```
+
+If you want to run it standalone with another linux distribution you can download latest version of the datashare jar here : [https://github.com/ICIJ/datashare/releases/latest](https://github.com/ICIJ/datashare/releases/latest)
+
+And adapt the following launch script : [https://github.com/ICIJ/datashare/blob/master/datashare-dist/src/main/deb/bin/datashare](https://github.com/ICIJ/datashare/blob/master/datashare-dist/src/main/deb/bin/datashare) for your environment.
+
+### Docker 
+
 1. Install **Docker for Linux**:   
 [ - **https://docs.docker.com/install/linux/docker-ce/centos/**](https://docs.docker.com/install/linux/docker-ce/centos/)\*\*\*\*
 
