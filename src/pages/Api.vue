@@ -2,7 +2,7 @@
   <div class="api h-100">
     <div class="api__explanation bg-white py-5">
       <div class="container">
-        <b-button @click="getApiKey" variant="primary" class="float-right">
+        <b-button @click="getApiKey" variant="primary" class="float-right" v-if="!apiKey">
           <fa icon="plus" class="mr-1"></fa>
           {{ $t('api.newApiKey') }}
         </b-button>

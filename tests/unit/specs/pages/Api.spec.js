@@ -23,6 +23,16 @@ describe('Api.vue', () => {
 
   afterAll(() => jest.unmock('axios'))
 
+  it('should display a button to generate the API key but default', () => {
+    expect(wrapper.findAll('.api__explanation b-button-stub')).toHaveLength(1)
+  })
+
+  it('should NOT display the button to generate the API key if apiKey is set', async () => {
+    await wrapper.vm.$set(wrapper.vm, 'apiKey', '123abc')
+
+    expect(wrapper.findAll('.api__explanation b-button-stub')).toHaveLength(0)
+  })
+
   it('should display no rows by default', () => {
     expect(wrapper.findAll('.row')).toHaveLength(0)
   })
