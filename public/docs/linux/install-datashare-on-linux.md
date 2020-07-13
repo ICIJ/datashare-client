@@ -11,7 +11,15 @@ There are two ways of installing Datashare on Linux :
 
 ### Standalone
 
- 1. Download the deb package from [https://github.com/ICIJ/datashare-installer/releases/latest](https://github.com/ICIJ/datashare-installer/releases/latest)
+1. Go to the **Datashare's website:** [**https://datashare.icij.org/**](https://datashare.icij.org/).
+
+2. Click the blue button '**DOWNLOAD FOR FREE'.**
+
+![](../.gitbook/assets/group-42123131.png)
+
+3. Save the debian package as a file
+
+![save as file](../.gitbook/assets/save_as.png)
 
  2. Install it with the following command line: 
 
@@ -55,25 +63,21 @@ CONTAINER ID    IMAGE     COMMAND      CREATED     STATUS      PORTS          NA
 
 3. Install **Docker Compose**: [**https://docs.docker.com/compose/install/**](https://docs.docker.com/compose/install/)\*\*\*\*
 
-4. Go to the **Datashare's website:** [**https://datashare.icij.org/**](https://datashare.icij.org/).
+4. Download the datashare.sh file from [https://github.com/ICIJ/datashare-installer/releases/latest](https://github.com/ICIJ/datashare-installer/releases/latest)
 
-5. Click the blue button '**DOWNLOAD FOR FREE'.**
-
-![](../.gitbook/assets/group-42123131.png)
-
-6. On the next window, select '**Save File'** and click '**OK'**.
+5. On the next window, select '**Save File'** and click '**OK'**.
 
 ![](../.gitbook/assets/linux.png)
 
-7. In your Terminal, you can **start installing Datashare**:
+6. In your Terminal, you can **start installing Datashare**:
 
 ![](../.gitbook/assets/screen-shot-2019-01-22-at-11.14.38-am.png)
 
-8. Once installation is done, **open your browser and use Datashare at** [http://localhost:8080/\#/](http://localhost:8080/#/):
+7. Once installation is done, **open your browser and use Datashare at** [http://localhost:8080/\#/](http://localhost:8080/#/):
 
 ![](../.gitbook/assets/linux3.png)
 
-9. It will :
+8. It will :
 
 * download [redis](https://redis.io), [elasticsearch](https://www.elastic.co/) and Datashare [docker](https://www.docker.com/docker-community) containers
 * initialize an Elasticsearch index with Datashare mapping
