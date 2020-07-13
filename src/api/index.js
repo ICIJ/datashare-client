@@ -136,6 +136,9 @@ export default class Api {
   getNerPipelines () {
     return this.sendAction('/api/ner/pipelines')
   }
+  createApiKey () {
+    return this.sendActionAsText('/api/key/create', { method: 'PUT' })
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })

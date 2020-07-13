@@ -57,6 +57,7 @@ export { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons/faLongArr
 export { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons/faMapMarkerAlt'
 export { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus'
 export { faPaperclip } from '@fortawesome/free-solid-svg-icons/faPaperclip'
+export { faPlug } from '@fortawesome/free-solid-svg-icons/faPlug'
 export { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 export { faQuestion } from '@fortawesome/free-solid-svg-icons/faQuestion'
 export { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCircle'
