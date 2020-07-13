@@ -11,6 +11,12 @@ There are two ways of installing Datashare on Linux :
 
 ### Standalone
 
+There is only a package for debian/ubuntu systems \(.deb file\).
+
+If you want to run it standalone with another Linux distribution, you can download the latest version of the Datashare jar here : [https://github.com/ICIJ/datashare/releases/latest](https://github.com/ICIJ/datashare/releases/latest)
+
+And adapt the following launch script : [https://github.com/ICIJ/datashare/blob/master/datashare-dist/src/main/deb/bin/datashare](https://github.com/ICIJ/datashare/blob/master/datashare-dist/src/main/deb/bin/datashare) to your environment.
+
 1. Go to the **Datashare's website:** [**https://datashare.icij.org/**](https://datashare.icij.org/).
 
 2. Click the blue button '**DOWNLOAD FOR FREE'.**
@@ -21,21 +27,17 @@ There are two ways of installing Datashare on Linux :
 
 ![save as file](../.gitbook/assets/save_as.png)
 
- 2. Install it with the following command line: 
+ 4. Install it with the following command line: 
 
 ```text
 $ sudo apt install /dir/to/debian/package/datashare-dist_7.2.0_all.deb
 ```
 
- 3. Run Datashare with:
+ 5. Run Datashare with:
 
 ```text
 $ datashare -h
 ```
-
-If you want to run it standalone with another Linux distribution, you can download the latest version of the Datashare jar here : [https://github.com/ICIJ/datashare/releases/latest](https://github.com/ICIJ/datashare/releases/latest)
-
-And adapt the following launch script : [https://github.com/ICIJ/datashare/blob/master/datashare-dist/src/main/deb/bin/datashare](https://github.com/ICIJ/datashare/blob/master/datashare-dist/src/main/deb/bin/datashare) to your environment.
 
 ### With Docker 
 
