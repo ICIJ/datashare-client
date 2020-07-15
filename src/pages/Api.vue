@@ -17,14 +17,17 @@
     </div>
     <div class="container pt-4">
       <div class="row" v-if="apiKey">
-        <div class="col-sm my-auto">
+        <div class="col-3 my-auto">
           {{ $t('api.apiKey') }}
         </div>
-        <div class="col-sm my-auto">
+        <div class="col-6 my-auto text-center">
           {{ apiKey }}
         </div>
-        <div class="col-sm">
-          <haptic-copy :text="apiKey" hide-label class="float-right btn-link"></haptic-copy>
+        <div class="col-3 text-right">
+          <haptic-copy :text="apiKey" hide-label class="btn-link"></haptic-copy>
+          <b-button class="btn-link" @click="getApiKey" variant="none">
+            <fa icon="redo"></fa>
+          </b-button>
         </div>
       </div>
     </div>
