@@ -15,15 +15,18 @@ export function slugger (value = '') {
 
 export function addLocalSearchMarks (content = '<div></div>', localSearchTerm = { label: '' }) {
   const escapedLocalSearchTerm = localSearchTerm.regex ? localSearchTerm.label : escapeRegExp(localSearchTerm.label)
-  const regex = new RegExp('(?![^<]*>)' + escapedLocalSearchTerm, 'gi')
-  content = content.replace(/\n/g, ' ')
+  // In case the searched term is split on 2 lines in the content
+  const escapedLocalSearchTermAsRegex = escapedLocalSearchTerm.replace(' ', '( |  |.|..| .)')
+  const regex = new RegExp(`(?![^<]*>)${escapedLocalSearchTermAsRegex}`, 'gims')
   const localSearchOccurrences = (content.match(regex) || []).length
   const localSearchIndex = Number(!!localSearchOccurrences)
 
   try {
     if (localSearchOccurrences === 0) throw new Error()
-    const needle = RegExp(`(${escapedLocalSearchTerm})`, 'gim')
-    const replacedContent = content.replace(needle, '<mark class="local-search-term">$1</mark>')
+    const needle = new RegExp(`(${escapedLocalSearchTermAsRegex})`, 'gims')
+    const replacedContent = content.replace(needle,
+      m => `<mark class="local-search-term">${m.replace(/(\r\n|\n|\r)/gm, ' ').replace('  ', ' ')}</mark>`
+    )
 
     return {
       content: replacedContent,
