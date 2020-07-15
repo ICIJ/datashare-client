@@ -21,7 +21,7 @@
       "notFound": "Aucun résultat",
       "requestTimeout": "Votre requête n'a pas abouti en raison d'un délai d'attente de connexion écoulé",
       "serviceUnavailable": "Le serveur ne peut répondre à votre requête",
-      "somethingWrong": "Something went wrong",
+      "somethingWrong": "Une erreur s'est produite",
       "tryAgain": "Réessayez"
     },
     "field": {
@@ -614,8 +614,8 @@
   },
   "api": {
     "title": "API",
-    "subtitle": "Manage your API key",
-    "newApiKey": "Create Api Key",
-    "apiKey": "API key"
+    "subtitle": "Gérer votre clé d'API",
+    "newApiKey": "Create Api key",
+    "apiKey": "Clé d'API"
   }
 }
