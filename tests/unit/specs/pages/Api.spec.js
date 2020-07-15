@@ -41,7 +41,7 @@ describe('Api.vue', () => {
     await wrapper.vm.getApiKey()
 
     expect(wrapper.findAll('.row')).toHaveLength(1)
-    expect(wrapper.findAll('.row .col-sm').at(1).text()).toBe('123456abcdef')
+    expect(wrapper.find('.row .col-6').text()).toBe('123456abcdef')
   })
 
   it('should request the API key', () => {
