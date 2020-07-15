@@ -16,7 +16,7 @@ export function slugger (value = '') {
 export function addLocalSearchMarks (content = '<div></div>', localSearchTerm = { label: '' }) {
   const escapedLocalSearchTerm = localSearchTerm.regex ? localSearchTerm.label : escapeRegExp(localSearchTerm.label)
   const regex = new RegExp('(?![^<]*>)' + escapedLocalSearchTerm, 'gi')
-  content = content.replace(/\n/g, ' ').replace(/  +/g, ' ')
+  content = content.replace(/\n/g, ' ')
   const localSearchOccurrences = (content.match(regex) || []).length
   const localSearchIndex = Number(!!localSearchOccurrences)
 

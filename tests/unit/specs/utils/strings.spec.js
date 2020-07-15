@@ -174,7 +174,7 @@ describe('strings', () => {
     })
 
     it('should ignore carriage return', () => {
-      const { content, localSearchOccurrences } = addLocalSearchMarks('content content Donald\n Trump content', { label: 'Donald Trump' })
+      const { content, localSearchOccurrences } = addLocalSearchMarks('content content Donald\nTrump content', { label: 'Donald Trump' })
 
       expect(localSearchOccurrences).toBe(1)
       expect(content).toBe('content content <mark class="local-search-term">Donald Trump</mark> content')
