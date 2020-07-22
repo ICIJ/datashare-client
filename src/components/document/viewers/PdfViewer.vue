@@ -34,11 +34,8 @@
 
 <script>
 import PDFJS from 'pdfjs-dist'
-import Worker from 'pdfjs-dist/build/pdf.worker'
 import min from 'lodash/min'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
-
-(typeof window !== 'undefined' ? window : {}).pdfjsWorker = Worker
 
 /**
  * Display a preview of a PDF document.
@@ -81,11 +78,11 @@ export default {
       if (this.pdf !== null) {
         return new Promise(resolve => resolve(this.pdf))
       } else {
-        return this.getSource(this.document)
-          .then(r => r.arrayBuffer())
-          .then(arrayBuffer => {
-            const pdf = PDFJS.getDocument(new Uint8Array(arrayBuffer))
-            return pdf.promise
+        return this.getSource(this.document, { responseType: 'arraybuffer' })
+          .then(data => {
+            PDFJS.GlobalWorkerOptions.workerSrc = require('!!file-loader!node_modules/pdfjs-dist/build/pdf.worker.js').default
+            const loadingTask = PDFJS.getDocument({ data })
+            return loadingTask.promise
           })
           .then(pdf => {
             if (this.doc.pages.length === 0) {

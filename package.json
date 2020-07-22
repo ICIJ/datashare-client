@@ -36,6 +36,7 @@
     "d3": "^5.15.0",
     "elasticsearch-browser": "16.1.1",
     "es6-promise": "^4.2.8",
+    "file-loader": "^6.0.0",
     "fuse.js": "^3.4.5",
     "json-formatter-js": "^2.2.1",
     "lodash": "^4.17.19",
@@ -117,7 +118,7 @@
       "import/no-webpack-loader-syntax": "off",
       "no-useless-escape": "off",
       "lines-between-class-members": "off",
-      "template-curly-spacing" : "off"
+      "template-curly-spacing": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"

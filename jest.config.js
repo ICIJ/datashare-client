@@ -16,7 +16,8 @@ module.exports = {
   ],
   moduleNameMapper: {
     '^@/(.*)$': '<rootDir>/src/$1',
-    'tests/(.*)$': '<rootDir>/tests/$1'
+    'tests/(.*)$': '<rootDir>/tests/$1',
+    '!!file-loader!node_modules/pdfjs-dist/(.*)$': '<rootDir>/node_modules/pdfjs-dist/$1'
   },
   snapshotSerializers: [
     'jest-serializer-vue'

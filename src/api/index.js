@@ -47,8 +47,8 @@ export default class Api {
   deleteNamedEntitiesByMentionNorm (project, mentionNorm) {
     return this.sendActionAsText(`/api/${project}/namedEntities/hide/${mentionNorm}`, { method: 'PUT' })
   }
-  getSource (document) {
-    return this.sendAction(document.url, {})
+  getSource (document, config = {}) {
+    return this.sendAction(document.url, config)
   }
   getStarredDocuments (project) {
     return this.sendAction(`/api/${project}/documents/starred`)

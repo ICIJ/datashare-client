@@ -7,7 +7,7 @@ jest.mock('@/api', () => {
   const { responseWithArrayBuffer } = require('tests/unit/tests_utils')
   return jest.fn(() => {
     return {
-      getSource: jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url))
+      getSource: jest.fn().mockImplementation(({ url }) => responseWithArrayBuffer(url, false))
     }
   })
 })

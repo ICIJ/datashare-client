@@ -10,16 +10,16 @@ export function responseWithJson (body = {}, status = 200, headers = {}) {
   return Promise.resolve(mockResponse)
 }
 
-export function responseWithArrayBuffer (path) {
+export function responseWithArrayBuffer (path, returnBuffer = true) {
   try {
     const arrayBuffer = fs.readFileSync(join(__dirname, `resources/${path}`))
     const status = 200
-    const response = { status, arrayBuffer: () => arrayBuffer }
-    return Promise.resolve(response)
+    const mockResponse = returnBuffer ? { status, arrayBuffer: () => arrayBuffer } : arrayBuffer
+    return Promise.resolve(mockResponse)
   } catch (_) {
     const status = 404
-    const response = { status, message: 'document.error_not_found' }
-    return Promise.reject(response)
+    const mockResponse = { status, message: 'document.error_not_found' }
+    return Promise.reject(mockResponse)
   }
 }
 
