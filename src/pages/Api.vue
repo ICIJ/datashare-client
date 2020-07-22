@@ -16,7 +16,7 @@
       </div>
     </div>
     <div class="container pt-4">
-      <div class="row" v-if="apiKey">
+      <div class="api__key row" v-if="apiKey">
         <div class="col-3 my-auto">
           {{ $t('api.apiKey') }}
         </div>
@@ -25,8 +25,11 @@
         </div>
         <div class="col-3 text-right">
           <haptic-copy :text="apiKey" hide-label class="btn-link"></haptic-copy>
-          <b-button class="btn-link" @click="getApiKey" variant="none">
+          <b-button class="api__key__create btn-link" @click="getApiKey" variant="none">
             <fa icon="redo"></fa>
+          </b-button>
+          <b-button class="api__key__delete btn-link" @click="deleteApiKey" variant="none">
+            <fa icon="trash-alt"></fa>
           </b-button>
         </div>
       </div>
@@ -57,6 +60,11 @@ export default {
       const userId = await auth.getUsername()
       const { apiKey } = await api.createApiKey(userId)
       this.$set(this, 'apiKey', apiKey)
+    },
+    async deleteApiKey () {
+      const userId = await auth.getUsername()
+      await api.deleteApiKey(userId)
+      this.$set(this, 'apiKey', null)
     }
   }
 }

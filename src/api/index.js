@@ -139,6 +139,9 @@ export default class Api {
   createApiKey (userId) {
     return this.sendActionAsText(`/api/key/${userId}`, { method: 'PUT' })
   }
+  deleteApiKey (userId) {
+    return this.sendActionAsText(`/api/key/${userId}`, { method: 'DELETE' })
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })
