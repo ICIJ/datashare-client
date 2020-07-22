@@ -136,8 +136,8 @@ export default class Api {
   getNerPipelines () {
     return this.sendAction('/api/ner/pipelines')
   }
-  createApiKey () {
-    return this.sendActionAsText('/api/key/create', { method: 'PUT' })
+  createApiKey (userId) {
+    return this.sendActionAsText(`/api/key/${userId}`, { method: 'PUT' })
   }
   async sendAction (url, config = {}) {
     try {

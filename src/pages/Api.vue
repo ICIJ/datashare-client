@@ -36,9 +36,11 @@
 
 <script>
 import Api from '@/api'
+import Auth from '@/api/resources/Auth'
 import PageIcon from '@/components/PageIcon'
 
 const api = new Api()
+const auth = new Auth()
 
 export default {
   name: 'Api',
@@ -52,7 +54,8 @@ export default {
   },
   methods: {
     async getApiKey () {
-      const { apiKey } = await api.createApiKey()
+      const userId = await auth.getUsername()
+      const { apiKey } = await api.createApiKey(userId)
       this.$set(this, 'apiKey', apiKey)
     }
   }
