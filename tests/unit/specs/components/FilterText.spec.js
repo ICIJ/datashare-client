@@ -17,7 +17,7 @@ describe('FilterText.vue', () => {
   const anotherIndex = toLower('AnotherFilterText')
   esConnectionHelper([index, anotherIndex])
   const es = esConnectionHelper.es
-  let wrapper
+  let wrapper = null
 
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 

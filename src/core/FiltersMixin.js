@@ -18,7 +18,7 @@ const FiltersMixin = superclass => class extends superclass {
    * @param {String} args.options.key - Key of the filter. Typically ElasticSearch field name.
    * @param {String} [args.options.icon=null] - Icon of the filter.
    * @param {Boolean} [args.options.isSearchable=false] - Set if this filter should be searchable or not.
-   * @param {function} [args.options.alternativeSearch=null] - Set a function about how to transform query term before searching for it.
+   * @param {function} [args.options.alternativeSearch=()=>{})] - Set a function about how to transform query term before searching for it.
    * @param {Number} [args.options.order=null] - Order of the filter. Will be added as last filter by default.
    */
   registerFilter (...args) {
