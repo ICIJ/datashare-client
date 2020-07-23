@@ -15,8 +15,8 @@ describe('FilterDateRange.vue', () => {
   const index = toLower('FilterDateRange')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
-  let wrapper
   const name = 'creationDate'
+  let wrapper = null
 
   beforeEach(() => {
     store.commit('search/setGlobalSearch', true)

@@ -181,11 +181,11 @@ export default {
         this.$emit('selected-values-from-store')
       }
     },
-    resetFilterValues () {
+    resetFilterValues (refresh = true) {
       this.$set(this, 'isAllSelected', true)
       this.$set(this, 'selected', [])
       this.$store.commit('search/includeFilter', this.filter.name)
-      this.$emit('reset-filter-values', this.filter)
+      this.$emit('reset-filter-values', this.filter, refresh)
     },
     changeSelectedValues () {
       this.isAllSelected = this.selected.length === 0

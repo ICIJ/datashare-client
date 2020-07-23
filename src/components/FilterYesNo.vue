@@ -53,11 +53,11 @@ export default {
     }
   },
   mounted () {
-    this.root.$on('reset-filter-values', () => this.changeYesNoValue([]))
     this.$store.dispatch('search/getStarredDocuments')
+    this.root.$on('reset-filter-values', (_, refresh) => this.changeYesNoValue([], refresh))
   },
   methods: {
-    changeYesNoValue (item) {
+    changeYesNoValue (item = [], refresh = true) {
       switch (item.length) {
         case 0:
           this.$set(this, 'selected', [])
@@ -72,7 +72,7 @@ export default {
           break
       }
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
-      this.refreshRouteAndSearch()
+      if (refresh) this.refreshRouteAndSearch()
     }
   }
 }

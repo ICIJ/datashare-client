@@ -73,7 +73,7 @@ export default {
   mounted () {
     this.$root.$on('filter::async-search', this.asyncFilterSearch)
     this.$root.$on('filter::add-filter-values', this.setFilterValue)
-    this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
+    this.$root.$on('filter::search::reset-filters', refresh => this.resetFilterValues(refresh))
     this.$root.$on('index::delete::all', this.refreshEachFilter)
     this.$root.$on('filter::search::add-filter-values', this.updateFilterSelectedValues)
   },
@@ -119,12 +119,12 @@ export default {
         filter.selectedValuesFromStore()
       }
     },
-    resetFilterValues () {
+    resetFilterValues (refresh = true) {
       forEach(this.$refs, component => {
         if (isArray(component) && component[0] && component[0].root) {
           const filter = component[0]
           filter.root.filterQuery = ''
-          filter.root.resetFilterValues()
+          filter.root.resetFilterValues(refresh)
           if (filter.resetNamedEntityValues) {
             filter.resetNamedEntityValues()
           }

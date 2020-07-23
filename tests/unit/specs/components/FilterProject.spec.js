@@ -20,13 +20,13 @@ const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 localVue.mixin({ created () {} })
 const mergeCreatedStrategy = localVue.config.optionMergeStrategies.created
-localVue.config.optionMergeStrategies.created = (parent, child) => mergeCreatedStrategy(parent)
+localVue.config.optionMergeStrategies.created = (parent, _) => mergeCreatedStrategy(parent)
 
 describe('FilterProject.vue', () => {
   const project = toLower('FilterProject')
   const anotherProject = toLower('AnotherFilterProject')
   esConnectionHelper([project, anotherProject])
-  let wrapper
+  let wrapper = null
 
   beforeAll(() => {
     Murmur.config.merge({ datashare_projects: JSON.stringify([project, anotherProject]) })

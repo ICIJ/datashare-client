@@ -35,15 +35,16 @@ export default {
   },
   async mounted () {
     await this.$store.dispatch('search/getRecommendationsByProject')
-    this.root.$on('reset-filter-values', () => this.selectUsers([]))
+    this.root.$on('reset-filter-values', (_, refresh) => this.selectUsers([], refresh))
   },
   methods: {
-    async selectUsers (users) {
+    async selectUsers (users = [], refresh = true) {
+      console.log('selectUsers')
       await this.$store.dispatch('search/getDocumentsRecommendedBy', users)
       this.$set(this, 'selected', users)
       this.root.isAllSelected = users.length === 0
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
-      this.refreshRouteAndSearch()
+      if (refresh) this.refreshRouteAndSearch()
     }
   }
 }

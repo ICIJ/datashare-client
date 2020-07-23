@@ -67,11 +67,11 @@ export default {
       this.$store.commit('search/index', project)
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
-      this.$root.$emit('filter::search::reset-filters')
+      this.$root.$emit('filter::search::reset-filters', false)
       await this.$store.dispatch('search/getStarredDocuments')
       await this.$store.dispatch('search/getIsDownloadAllowed')
       await this.$store.dispatch('search/getRecommendationsByProject')
-      this.refreshRoute()
+      this.refreshRouteAndSearch()
     },
     toggleItems () {
       this.collapseItems = !this.collapseItems
