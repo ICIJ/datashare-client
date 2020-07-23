@@ -615,7 +615,7 @@
   "api": {
     "title": "API",
     "subtitle": "Gérer votre clé d'API",
-    "newApiKey": "Create Api key",
+    "newApiKey": "Créer une clé API",
     "apiKey": "Clé d'API"
   }
 }
