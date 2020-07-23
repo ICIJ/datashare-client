@@ -40,7 +40,7 @@ export default {
       type: Boolean
     },
     /**
-     * Hide the button automaticaly when no filters are active
+     * Hide the button automatically when no filters are active
      */
     autoHiding: {
       type: Boolean
@@ -76,7 +76,7 @@ export default {
       this.$store.commit('search/resetQuery')
       this.$root.$emit('bv::hide::popover')
       /**
-       * Filters have been reseted.
+       * Filters have been reset.
        */
       this.$root.$emit('filter::search::reset-filters')
       this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() }).catch(() => {})

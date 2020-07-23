@@ -43,8 +43,8 @@ export default {
       get: function () {
         return this.$store.state.search.index
       },
-      set: function (value) {
-        this.$store.commit('search/index', value)
+      set: function (project) {
+        this.$store.commit('search/index', project)
       }
     },
     headerIcon () {
@@ -63,8 +63,8 @@ export default {
     await this.$store.dispatch('search/getRecommendationsByProject')
   },
   methods: {
-    async select (value) {
-      this.$store.commit('search/index', value)
+    async select (project) {
+      this.$store.commit('search/index', project)
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
       this.$root.$emit('filter::search::reset-filters')

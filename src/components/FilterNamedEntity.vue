@@ -54,18 +54,16 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .filter--named-entity {
-
     .filter__items__item {
-
       &__delete:not([aria-describedby]) {
         display: none;
       }
 
       &:hover .filter__items__item__delete {
-        display: block;
         color: inherit;
+        display: block;
       }
 
       &:hover .hideOnHover {
