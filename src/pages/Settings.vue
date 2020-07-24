@@ -4,7 +4,7 @@
       <div class="bg-white">
         <div class="container py-5">
           <h3>
-            <page-icon icon="cog" />
+            <page-icon icon="cog"></page-icon>
             {{ $t('settings.title') }}
           </h3>
           <div>{{ $t('settings.description') }}</div>
@@ -12,7 +12,7 @@
       </div>
       <div class="container my-4">
         <v-wait for="load settings">
-          <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
+          <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
           <b-form @submit.prevent="onSubmit">
             <b-form-group
               :key="name"
@@ -27,12 +27,12 @@
                   </span>
                   <span>
                     <b-btn variant="link text-muted" size="sm py-0" v-if="fieldChanged(name)" @click="restore(name)">
-                      <fa icon="undo" />
+                      <fa icon="undo"></fa>
                     </b-btn>
                   </span>
                 </span>
               </template>
-              <b-form-input v-model="settings[name]" />
+              <b-form-input v-model="settings[name]"></b-form-input>
             </b-form-group>
             <b-row>
               <b-col offset-xs="0" offset-sm="4" offset-lg="3">
@@ -55,6 +55,7 @@
 
 <script>
 import cloneDeep from 'lodash/cloneDeep'
+
 import PageIcon from '@/components/PageIcon'
 
 const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth', 'CORS']
@@ -98,7 +99,7 @@ export default {
       return this.settings[field] !== this.master[field]
     },
     restore (field) {
-      this.settings[field] = this.master[field]
+      this.$set(this.settings, field, this.master[field])
     },
     async onSubmit () {
       try {
@@ -107,6 +108,7 @@ export default {
         this.$set(this, 'master', cloneDeep(this.settings))
         this.$bvToast.toast(this.$t('settings.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
+        this.$set(this, 'settings', cloneDeep(this.master))
         this.$bvToast.toast(this.$t('settings.submitError'), { noCloseButton: true, variant: 'danger' })
       }
     }

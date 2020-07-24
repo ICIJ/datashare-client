@@ -15,19 +15,21 @@ jest.mock('axios', () => {
 const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('Settings.vue', () => {
-  let wrapper
+  let wrapper = null
 
-  beforeEach(() => {
+  beforeEach(async () => {
     axios.request.mockClear()
-    wrapper = shallowMount(Settings, { i18n, localVue, store, wait })
+    wrapper = await shallowMount(Settings, { i18n, localVue, store, wait })
   })
+
+  afterAll(() => jest.unmock('axios'))
 
   it('should load the settings page', () => {
     expect(wrapper.find('h3').text()).toBe('Settings')
   })
 
   it('should display a text input', async () => {
-    wrapper = shallowMount(Settings, { i18n, localVue, store, wait, stubs: { 'b-form': false } })
+    wrapper = await shallowMount(Settings, { i18n, localVue, store, wait, stubs: { 'b-form': false } })
     await wrapper.vm.$set(wrapper.vm, 'settings', { property_01: 'value_01', property_02: 'value_02' })
 
     expect(wrapper.findAll('b-form-input-stub')).toHaveLength(2)
@@ -52,9 +54,22 @@ describe('Settings.vue', () => {
     }))
   })
 
-  it('should display an alert', () => {
+  it('should restore master settings if submit fails', async () => {
+    axios.request.mockRejectedValue({ response: { status: 404 } })
+    wrapper.setData({
+      master: { property_01: 'value_01', property_02: 'value_02' },
+      settings: { property_01: 'another_value', property_02: 'value_02' }
+    })
+
+    await wrapper.vm.onSubmit()
+
+    expect(wrapper.vm.settings.property_01).toBe('value_01')
+    axios.request.mockResolvedValue({ data: {} })
+  })
+
+  it('should display an alert', async () => {
     Murmur.config.merge({ multipleProjects: true })
-    wrapper = shallowMount(Settings, { i18n, localVue, store, wait })
+    wrapper = await shallowMount(Settings, { i18n, localVue, store, wait })
 
     expect(wrapper.find('b-alert-stub').exists()).toBeTruthy()
   })
