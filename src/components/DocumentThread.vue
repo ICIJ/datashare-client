@@ -1,34 +1,37 @@
 <template>
-  <div class="document-thread p-0" v-if="document && isReady">
-    <ul class="list-unstyled document-thread__list m-0">
-      <li v-for="email in thread.hits" :key="email.id" class="document-thread__list__email" :class="{ 'document-thread__list__email--active': isActive(email) }">
-        <router-link :to="{ name: 'document', params: email.routerParams }" class="px-3 py-2 d-block" v-once>
-          <div class="d-flex text-nowrap">
-            <div class="w-100">
-              <email-string class="document-thread__list__email__from mr-3" :email="email.messageFrom" tag="strong" />
+  <v-wait for="load thread">
+    <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
+    <div class="document-thread p-0" v-if="document">
+      <ul class="list-unstyled document-thread__list m-0">
+        <li v-for="email in thread.hits" :key="email.id" class="document-thread__list__email" :class="{ 'document-thread__list__email--active': isActive(email) }">
+          <router-link :to="{ name: 'document', params: email.routerParams }" class="px-3 py-2 d-block" v-once>
+            <div class="d-flex text-nowrap">
+              <div class="w-100">
+                <email-string class="document-thread__list__email__from mr-3" :email="email.messageFrom" tag="strong" />
+              </div>
+              <abbr class="document-thread__list__email__date align-self-end small" :title="email.creationDateHuman" v-if="email.creationDate" v-b-tooltip>
+                {{ $d(email.creationDate) }}
+              </abbr>
             </div>
-            <abbr class="document-thread__list__email__date align-self-end small" :title="email.creationDateHuman" v-if="email.creationDate" v-b-tooltip>
-              {{ $d(email.creationDate) }}
-            </abbr>
-          </div>
-          <div class="d-flex">
+            <div class="d-flex">
             <span class="document-thread__list__email__to text-muted mr-3" v-if="isActive(email) && email.messageTo">
               {{ $t('email.to') }}
               <ul class="list-inline d-inline">
                 <email-string v-for="to in email.messageTo.split(',')" :email="to" :key="to" tag="li" class="list-inline-item" />
               </ul>
             </span>
-            <span class="document-thread__list__email__excerpt text-muted w-100" v-else>
+              <span class="document-thread__list__email__excerpt text-muted w-100" v-else>
               {{ email.excerpt }}
             </span>
+            </div>
+          </router-link>
+          <div v-if="isActive(email)">
+            <document-translated-content class="document-thread__list__email__content" :document="email" :named-entities="namedEntities" />
           </div>
-        </router-link>
-        <div v-if="isActive(email)">
-          <document-translated-content class="document-thread__list__email__content" :document="email" :named-entities="namedEntities" />
-        </div>
-      </li>
-    </ul>
-  </div>
+        </li>
+      </ul>
+    </div>
+  </v-wait>
 </template>
 
 <style lang="scss">
@@ -116,7 +119,6 @@ export default {
   },
   data () {
     return {
-      isReady: false,
       thread: { hits: [] },
       threadQueryFields: {
         threadIndex: 'metadata.tika_metadata_message_raw_header_thread_index',
@@ -162,13 +164,13 @@ export default {
       this.$root.$emit('scroll-tracker:request', element, offset, $container)
     },
     async init () {
-      this.isReady = false
+      this.$wait.start('load thread')
       // Load it's thread (if any)
       this.thread = await this.getThread()
       this.thread.push('hits.hits', this.document.raw)
       this.thread.removeDuplicates()
       this.thread.orderBy('creationDate', ['asc'])
-      this.isReady = true
+      this.$wait.end('load thread')
       // Add the document to the user's history
       await this.$store.commit('userHistory/addDocument', this.document)
       // Scroll to the active email

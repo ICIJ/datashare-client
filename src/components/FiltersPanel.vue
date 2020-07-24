@@ -92,9 +92,9 @@ export default {
       }
     },
     contextualizeModel: {
-      set (toggler) {
+      set (toggle) {
         this.$root.$emit('bv::hide::tooltip')
-        this.$store.commit('search/setGlobalSearch', !toggler)
+        this.$store.commit('search/setGlobalSearch', !toggle)
       },
       get () {
         return !this.$store.state.search.globalSearch

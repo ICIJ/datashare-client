@@ -1,6 +1,6 @@
 <template>
   <v-wait for="load ner pipelines">
-    <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-3" />
+    <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto mt-5" />
     <form class="find-named-entities-form" id="find-named-entities-form" @submit.prevent="submitFindNamedEntities">
       <div class="find-named-entities-form__header mb-4">
         <h4>

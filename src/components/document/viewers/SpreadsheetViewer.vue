@@ -187,7 +187,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   @import '~node_modules/vue-virtual-scroller/dist/vue-virtual-scroller.css';
 
   .spreadsheet-viewer {
