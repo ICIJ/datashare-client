@@ -39,7 +39,6 @@ export default {
   },
   methods: {
     async selectUsers (users = [], refresh = true) {
-      console.log('selectUsers')
       await this.$store.dispatch('search/getDocumentsRecommendedBy', users)
       this.$set(this, 'selected', users)
       this.root.isAllSelected = users.length === 0
