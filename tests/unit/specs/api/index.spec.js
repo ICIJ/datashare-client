@@ -210,6 +210,16 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
+  it('should return backend response to getPlugins', async () => {
+    json = await api.getPlugins()
+    expect(json).toEqual({})
+  })
+
+  it('should return backend response to deleteApiKey', async () => {
+    json = await api.deleteApiKey()
+    expect(json).toEqual({})
+  })
+
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
     axios.request.mockReturnValue(Promise.reject(error))

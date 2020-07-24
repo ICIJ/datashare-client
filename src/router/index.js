@@ -118,6 +118,11 @@ export const router = {
           name: 'api',
           path: '/api',
           component: () => import('@/pages/Api')
+        },
+        {
+          name: 'plugins',
+          path: '/plugins',
+          component: () => import('@/pages/Plugins')
         }
       ]
     },
