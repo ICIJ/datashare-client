@@ -19,10 +19,10 @@
       "internalError": "El servidor ha encontrado un problema",
       "noConnections": "El servidor no está conectado",
       "notFound": "No se han encontrado resultados",
-      "requestTimeout": "Your query did not succeed because of a timeout",
+      "requestTimeout": "Su consulta no tuvo éxito debido a un tiempo de espera",
       "serviceUnavailable": "El servidor no puede realizar tu búsqueda",
-      "somethingWrong": "Something went wrong",
-      "tryAgain": "Try again"
+      "somethingWrong": "Error",
+      "tryAgain": "Intentar de nuevo"
     },
     "field": {
       "all": "Todos los campos",
@@ -50,7 +50,7 @@
     "results": {
       "match": "coincidir en doc",
       "entities": "nb entidades",
-      "results": "1 document | %{total} documents",
+      "results": "1 archivo | %{total} archivos",
       "noResults": "No se han encontrado documentos",
       "on": "en",
       "perPage": "por página",
@@ -92,11 +92,11 @@
       },
       "markAsRecommended": "Marcar como recomendado",
       "unmarkAsRecommended": "Desmarcar como recomendado",
-      "markAsRecommendedBy": "Marked as recommended by nobody | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
+      "markAsRecommendedBy": "Marcado como recomendado por nadie: | Marcado como recomendado por 1 usuario: | Marcado como recomendado por {count} usuarios:"
     }
   },
   "searchFormControl": {
-    "submitLabel": "Search"
+    "submitLabel": "Buscar"
   },
   "pagination": {
     "firstPage": "Ir a primera página",
@@ -528,7 +528,7 @@
     "learnMore": "Leer más",
     "author": "Autor·a",
     "advancedFilters": "Filtros avanzados",
-    "selectFolder": "Select folder"
+    "selectFolder": "Seleccionar directorio"
   },
   "batchSearchResults": {
     "rank": "Rango",
@@ -538,16 +538,16 @@
     "contentType": "Tipo de contenido",
     "size": "Tamaño",
     "downloadResults": "Descargar los resultados",
-    "downloadQueries": "Download queries",
-    "downloadTooltip": "Download as CSV",
+    "downloadQueries": "Descargar consultas",
+    "downloadTooltip": "Descargar como CSV",
     "empty": "Sin resultados",
     "errorTitle": "Error",
     "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas cometido en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>"
   },
   "batchSearchResultsFilters": {
-    "filterQueries": "Filter queries...",
+    "filterQueries": "Filtrar por consultas...",
     "queries": {
-      "heading": "Filter by queries"
+      "heading": "Filtrar por consultas"
     }
   },
   "shortkeys": {
@@ -591,7 +591,7 @@
   },
   "widget": {
     "noData": "No hay datos",
-    "noFolders": "No folders",
+    "noFolders": "Sin carpetas",
     "barometer": {
       "document": "no hay archivos | 1 archivo | %{total} archivos",
       "amongWhich": "entre los cuales",
@@ -602,20 +602,20 @@
       "hits": "no hay archivos | 1 archivo | %{hits} archivos"
     },
     "creationDate": {
-      "filterFolder": "Filter by folder",
-      "selectFolder": "Select folder",
+      "filterFolder": "Filtrar por carpeta",
+      "selectFolder": "Seleccionar carpeta",
       "intervals": {
-        "year": "Year",
-        "month": "Month",
-        "day": "Day"
+        "year": "Año",
+        "month": "Mes",
+        "day": "Día"
       },
-      "document": "no documents | 1 document | %{total} documents"
+      "document": "no hay archivos | 1 archivo | %{total} archivos"
     }
   },
   "api": {
     "title": "API",
-    "subtitle": "Manage your API key",
-    "newApiKey": "Create Api key",
-    "apiKey": "API key"
+    "subtitle": "Administra tu clave API",
+    "newApiKey": "Crear una clave API",
+    "apiKey": "Clave API"
   }
 }
