@@ -617,5 +617,9 @@
     "subtitle": "Administra tu clave API",
     "newApiKey": "Crear una clave API",
     "apiKey": "Clave API"
+  },
+  "plugins": {
+    "title": "Plugins",
+    "subtitle": "Manage your plugins"
   }
 }
