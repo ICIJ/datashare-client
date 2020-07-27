@@ -1,7 +1,7 @@
-import { getOS, getShortkeyOS, getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/utils'
+import { getDocumentTypeLabel, getExtractionLevelTranslationKey, getOS, getShortkeyOS, objectIncludes } from '@/utils/utils'
 
 describe('utils', () => {
-  let languageGetter
+  let languageGetter = null
 
   beforeEach(() => {
     languageGetter = jest.spyOn(window.navigator, 'platform', 'get')
@@ -74,6 +74,36 @@ describe('utils', () => {
 
     it('should retrieve the extraction level for unknown level', () => {
       expect(getExtractionLevelTranslationKey('Unknown')).toBe('filter.level.Unknown')
+    })
+  })
+
+  describe('objectIncludes', () => {
+    it('should filter on a simple string, not case sensitive', () => {
+      expect(objectIncludes('This is a Long and Complex string', 'compl')).toBeTruthy()
+      expect(objectIncludes('This is a Long and simple string', 'compl')).toBeFalsy()
+    })
+
+    it('should filter on an array of strings', () => {
+      expect(objectIncludes(['less and', 'array of', 'normal and complex', 'strings'], 'compl')).toBeTruthy()
+      expect(objectIncludes(['less and', 'array of', 'normal and simple', 'strings'], 'compl')).toBeFalsy()
+    })
+
+    it('should filter on a simple object of strings', () => {
+      expect(objectIncludes({ id: 'obj_01', name: 'this is an object', description: 'this is a complex description' }, 'compl')).toBeTruthy()
+      expect(objectIncludes({ id: 'obj_02', name: 'this is an object', description: 'this is a simple description' }, 'compl')).toBeFalsy()
+    })
+
+    it('should filter on a complex object of strings', () => {
+      expect(objectIncludes({
+        id: 'obj_01',
+        name: ['this has multiple', 'and some complex', 'names'],
+        description: 'this is a description'
+      }, 'compl')).toBeTruthy()
+      expect(objectIncludes({
+        id: 'obj_01',
+        name: ['this has multiple', 'and some simple', 'names'],
+        description: 'this is a description'
+      }, 'compl')).toBeFalsy()
     })
   })
 })

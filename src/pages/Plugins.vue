@@ -12,7 +12,18 @@
       </div>
     </div>
     <div class="container pt-4">
-      <div v-for="plugin in plugins" :key="plugin.id" class="plugins__plugin mb-3">
+      <div class="plugins__search input-group mb-3">
+        <div class="input-group-prepend">
+          <span class="input-group-text rounded-0 border-0 bg-white">
+            <fa icon="search"></fa>
+          </span>
+        </div>
+        <b-form-input type="text" class="form-control border-0" required :placeholder="$t('plugins.search')" @input="search" v-model="searchTerm"></b-form-input>
+        <div class="invalid-feedback">
+          {{ $t('plugins.search') }}
+        </div>
+      </div>
+      <div v-for="plugin in filteredPlugins" :key="plugin.id" class="plugins__plugin mb-3">
         <div>
           <span class="plugins__plugin__name font-weight-bold">
             <a :href="plugin.url" target="_blank" class="text-dark">
@@ -32,8 +43,11 @@
 </template>
 
 <script>
+import filter from 'lodash/filter'
+
 import Api from '@/api'
 import PageIcon from '@/components/PageIcon'
+import { objectIncludes } from '@/utils/utils'
 
 const api = new Api()
 
@@ -44,12 +58,21 @@ export default {
   },
   data () {
     return {
-      plugins: []
+      filteredPlugins: [],
+      plugins: [],
+      searchTerm: ''
     }
   },
   async mounted () {
     const plugins = await api.getPlugins()
     this.$set(this, 'plugins', plugins)
+    this.$set(this, 'filteredPlugins', plugins)
+  },
+  methods: {
+    search () {
+      const filteredPlugins = filter(this.plugins, plugin => objectIncludes(plugin, this.searchTerm))
+      this.$set(this, 'filteredPlugins', filteredPlugins)
+    }
   }
 }
 </script>

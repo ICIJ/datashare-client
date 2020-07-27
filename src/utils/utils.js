@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+import lowerCase from 'lodash/lowerCase'
 
 import types from '@/utils/types.json'
 
@@ -38,9 +39,15 @@ function getExtractionLevelTranslationKey (key) {
   return `filter.level.${get(levels, key, key)}`
 }
 
+function objectIncludes (object, text) {
+  if (typeof object === 'string') return lowerCase(object).includes(lowerCase(text))
+  return Object.values(object).some(object => objectIncludes(object, text))
+}
+
 export {
   getDocumentTypeLabel,
   getExtractionLevelTranslationKey,
   getOS,
-  getShortkeyOS
+  getShortkeyOS,
+  objectIncludes
 }

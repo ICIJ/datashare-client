@@ -620,6 +620,7 @@
   },
   "plugins": {
     "title": "Plugins",
-    "subtitle": "Manage your plugins"
+    "subtitle": "Manage your plugins",
+    "search": "Search plugins"
   }
 }
