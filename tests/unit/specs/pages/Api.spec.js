@@ -20,8 +20,9 @@ describe('Api.vue', () => {
 
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
-  beforeEach(() => {
-    wrapper = shallowMount(ApiPage, { i18n, localVue, router, store })
+  beforeEach(async () => {
+    axios.request.mockClear()
+    wrapper = await shallowMount(ApiPage, { i18n, localVue, router, store })
   })
 
   afterAll(() => {
@@ -43,15 +44,23 @@ describe('Api.vue', () => {
     expect(wrapper.findAll('.api__key')).toHaveLength(0)
   })
 
-  it('should display the apiKey', async () => {
-    await wrapper.vm.getApiKey()
+  it('should request the API key on load and display it', async () => {
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/key/doe')
+    }))
 
     expect(wrapper.findAll('.api__key')).toHaveLength(1)
     expect(wrapper.find('.api__key .col-6').text()).toBe('123456abcdef')
   })
 
   it('should request the creation of the API key', async () => {
-    wrapper = mount(ApiPage, { i18n, localVue, router, store })
+    wrapper = await mount(ApiPage, { i18n, localVue, router, store })
+    await wrapper.vm.$nextTick()
+
     axios.request.mockClear()
 
     await wrapper.find('.api__explanation .btn').trigger('click')

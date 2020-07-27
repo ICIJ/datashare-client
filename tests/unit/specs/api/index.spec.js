@@ -12,7 +12,7 @@ jest.mock('axios', () => {
 const api = new Api()
 
 describe('Datashare backend client', () => {
-  let json
+  let json = null
 
   beforeEach(() => axios.request.mockClear())
 
@@ -205,18 +205,23 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
+  it('should return backend response to getApiKey', async () => {
+    json = await api.getApiKey()
+    expect(json).toEqual({})
+  })
+
   it('should return backend response to createApiKey', async () => {
     json = await api.createApiKey()
     expect(json).toEqual({})
   })
 
-  it('should return backend response to getPlugins', async () => {
-    json = await api.getPlugins()
+  it('should return backend response to deleteApiKey', async () => {
+    json = await api.deleteApiKey()
     expect(json).toEqual({})
   })
 
-  it('should return backend response to deleteApiKey', async () => {
-    json = await api.deleteApiKey()
+  it('should return backend response to getPlugins', async () => {
+    json = await api.getPlugins()
     expect(json).toEqual({})
   })
 
