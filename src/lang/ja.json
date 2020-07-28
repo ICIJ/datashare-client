@@ -615,11 +615,12 @@
   "api": {
     "title": "API",
     "subtitle": "Manage your API key",
-    "newApiKey": "Create Api key",
+    "newApiKey": "Create API key",
     "apiKey": "API key"
   },
   "plugins": {
     "title": "Plugins",
-    "subtitle": "Manage your plugins"
+    "subtitle": "Manage your plugins",
+    "search": "Search plugins"
   }
 }
