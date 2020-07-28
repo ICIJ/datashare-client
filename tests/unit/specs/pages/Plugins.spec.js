@@ -77,4 +77,15 @@ describe('Plugins.vue', () => {
       url: Api.getFullUrl('/api/plugins/install/plugin_01_id')
     })
   })
+
+  it('should call for plugin deletion', () => {
+    axios.request.mockClear()
+    wrapper.vm.uninstall('plugin_01_id')
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      method: 'DELETE',
+      url: Api.getFullUrl('/api/plugins/remove/plugin_01_id')
+    })
+  })
 })

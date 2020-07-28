@@ -623,6 +623,8 @@
     "subtitle": "Manage your plugins",
     "search": "Search plugins",
     "submitSuccess": "Plugin successfully installed.",
-    "submitError": "Error while installing the plugin."
+    "submitError": "Error while installing the plugin.",
+    "deleteSuccess": "Plugin successfully deleted.",
+    "deleteError": "Error while deleting the plugin."
   }
 }

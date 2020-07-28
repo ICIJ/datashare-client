@@ -149,6 +149,9 @@ export default class Api {
   installPlugin (pluginId) {
     return this.sendAction(`/api/plugins/install/${pluginId}`, { method: 'PUT' })
   }
+  uninstallPlugin (pluginId) {
+    return this.sendAction(`/api/plugins/remove/${pluginId}`, { method: 'DELETE' })
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })

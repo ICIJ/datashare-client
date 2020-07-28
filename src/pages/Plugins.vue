@@ -35,11 +35,14 @@
           </b-card-text>
           <template v-slot:footer>
             <div class="text-center">
-              <b-btn :href="plugin.url" target="_blank">
+              <b-btn :href="plugin.url" target="_blank" title="Home page">
                 <fa icon="home"></fa>
               </b-btn>
-              <b-btn class="ml-2" @click="install(plugin.id)">
+              <b-btn class="ml-2" @click="install(plugin.id)" title="Install plugin">
                 <fa icon="cloud-upload-alt"></fa>
+              </b-btn>
+              <b-btn class="ml-2" @click="uninstall(plugin.id)" title="Uninstall plugin">
+                <fa icon="trash-alt"></fa>
               </b-btn>
             </div>
           </template>
@@ -81,6 +84,14 @@ export default {
         this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('plugins.submitError'), { noCloseButton: true, variant: 'danger' })
+      }
+    },
+    async uninstall (pluginId) {
+      try {
+        await api.uninstallPlugin(pluginId)
+        this.$bvToast.toast(this.$t('plugins.deleteSuccess'), { noCloseButton: true, variant: 'success' })
+      } catch (_) {
+        this.$bvToast.toast(this.$t('plugins.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
     }
   }
