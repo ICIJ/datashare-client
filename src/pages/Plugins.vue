@@ -23,7 +23,7 @@
           {{ $t('plugins.search') }}
         </div>
       </div>
-      <div v-for="plugin in filteredPlugins" :key="plugin.id" class="plugins__plugin mb-3">
+      <div v-for="plugin in plugins" :key="plugin.id" class="plugins__plugin mb-3">
         <div>
           <span class="plugins__plugin__name font-weight-bold">
             <a :href="plugin.url" target="_blank" class="text-dark">
@@ -43,11 +43,8 @@
 </template>
 
 <script>
-import filter from 'lodash/filter'
-
 import Api from '@/api'
 import PageIcon from '@/components/PageIcon'
-import { objectIncludes } from '@/utils/utils'
 
 const api = new Api()
 
@@ -58,7 +55,6 @@ export default {
   },
   data () {
     return {
-      filteredPlugins: [],
       plugins: [],
       searchTerm: ''
     }
@@ -66,12 +62,11 @@ export default {
   async mounted () {
     const plugins = await api.getPlugins()
     this.$set(this, 'plugins', plugins)
-    this.$set(this, 'filteredPlugins', plugins)
   },
   methods: {
-    search () {
-      const filteredPlugins = filter(this.plugins, plugin => objectIncludes(plugin, this.searchTerm))
-      this.$set(this, 'filteredPlugins', filteredPlugins)
+    async search () {
+      const plugins = await api.getPlugins(this.searchTerm)
+      this.$set(this, 'plugins', plugins)
     }
   }
 }

@@ -1,6 +1,7 @@
 import join from 'lodash/join'
 import map from 'lodash/map'
 import replace from 'lodash/replace'
+import toLower from 'lodash/toLower'
 import axios from 'axios'
 
 import { EventBus } from '@/utils/event-bus'
@@ -142,8 +143,8 @@ export default class Api {
   deleteApiKey (userId) {
     return this.sendActionAsText(`/api/key/${userId}`, { method: 'DELETE' })
   }
-  getPlugins () {
-    return this.sendAction('/api/plugins')
+  getPlugins (query = '') {
+    return this.sendAction(`/api/plugins?filter=.*${toLower(query)}.*`)
   }
   async sendAction (url, config = {}) {
     try {
