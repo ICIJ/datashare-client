@@ -2,7 +2,7 @@
   <div class="api h-100">
     <div class="api__explanation bg-white py-5">
       <div class="container">
-        <b-button @click="createApiKey" variant="primary" class="float-right" v-if="!apiKey">
+        <b-button @click="getApiKey" variant="primary" class="float-right" v-if="!apiKey">
           <fa icon="plus" class="mr-1"></fa>
           {{ $t('api.newApiKey') }}
         </b-button>
@@ -25,7 +25,7 @@
         </div>
         <div class="col-3 text-right">
           <haptic-copy :text="apiKey" hide-label class="btn-link"></haptic-copy>
-          <b-button class="api__key__create btn-link" @click="createApiKey" variant="none">
+          <b-button class="api__key__create btn-link" @click="getApiKey" variant="none">
             <fa icon="redo"></fa>
           </b-button>
           <b-button class="api__key__delete btn-link" @click="deleteApiKey" variant="none">
@@ -52,26 +52,18 @@ export default {
   },
   data () {
     return {
-      apiKey: null,
-      userId: null
+      apiKey: null
     }
-  },
-  async mounted () {
-    const userId = await auth.getUsername()
-    this.$set(this, 'userId', userId)
-    await this.getApiKey()
   },
   methods: {
     async getApiKey () {
-      const { apiKey } = await api.getApiKey(this.userId)
-      this.$set(this, 'apiKey', apiKey)
-    },
-    async createApiKey () {
-      const { apiKey } = await api.createApiKey(this.userId)
+      const userId = await auth.getUsername()
+      const { apiKey } = await api.createApiKey(userId)
       this.$set(this, 'apiKey', apiKey)
     },
     async deleteApiKey () {
-      await api.deleteApiKey(this.userId)
+      const userId = await auth.getUsername()
+      await api.deleteApiKey(userId)
       this.$set(this, 'apiKey', null)
     }
   }
