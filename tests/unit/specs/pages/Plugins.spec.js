@@ -23,7 +23,7 @@ jest.mock('axios', () => {
   }
 })
 
-describe('Api.vue', () => {
+describe('Plugins.vue', () => {
   const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
   let wrapper = null
 
@@ -39,7 +39,7 @@ describe('Api.vue', () => {
   })
 
   it('should display a list of plugins', () => {
-    expect(wrapper.findAll('.plugins__plugin')).toHaveLength(2)
+    expect(wrapper.findAll('.plugins__card')).toHaveLength(2)
   })
 
   it('should search for matching plugins', async () => {

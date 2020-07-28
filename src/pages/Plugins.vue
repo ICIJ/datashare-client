@@ -23,21 +23,20 @@
           {{ $t('plugins.search') }}
         </div>
       </div>
-      <div v-for="plugin in plugins" :key="plugin.id" class="plugins__plugin mb-3">
-        <div>
-          <span class="plugins__plugin__name font-weight-bold">
-            <a :href="plugin.url" target="_blank" class="text-dark">
-              {{ plugin.name }}
-            </a>
-          </span>
-          <span class="plugins__plugin__version">
-            {{ plugin.version }}
-          </span>
-        </div>
-        <div class="plugins__plugin__description">
-          {{ plugin.description }}
-        </div>
-      </div>
+      <b-card-group deck>
+        <b-card :header="plugin.name" v-for="plugin in plugins" :key="plugin.id" class="plugins__card mb-3" footer-bg-variant="white" footer-border-variant="white">
+          <b-card-text>
+            {{ plugin.description }}
+          </b-card-text>
+          <template v-slot:footer>
+            <div class="text-center">
+              <b-btn :href="plugin.url" target="_blank">
+                <fa icon="home"></fa>
+              </b-btn>
+            </div>
+          </template>
+        </b-card>
+      </b-card-group>
     </div>
   </div>
 </template>
@@ -71,3 +70,10 @@ export default {
   }
 }
 </script>
+<style lang="scss" scoped>
+.plugins__card {
+  max-width: calc(25% - 30px);
+  min-width: calc(25% - 30px);
+  width: calc(25% - 30px);
+}
+</style>
