@@ -66,4 +66,15 @@ describe('Plugins.vue', () => {
       description: 'plugin_02_description'
     })
   })
+
+  it('should call for plugin installation', () => {
+    axios.request.mockClear()
+    wrapper.vm.install('plugin_01_id')
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      method: 'PUT',
+      url: Api.getFullUrl('/api/plugins/install/plugin_01_id')
+    })
+  })
 })

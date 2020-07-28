@@ -146,6 +146,9 @@ export default class Api {
   getPlugins (query = '') {
     return this.sendAction(`/api/plugins?filter=.*${toLower(query)}.*`)
   }
+  installPlugin (pluginId) {
+    return this.sendAction(`/api/plugins/install/${pluginId}`, { method: 'PUT' })
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })

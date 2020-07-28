@@ -26,12 +26,20 @@
       <b-card-group deck>
         <b-card :header="plugin.name" v-for="plugin in plugins" :key="plugin.id" class="plugins__card mb-3" footer-bg-variant="white" footer-border-variant="white">
           <b-card-text>
-            {{ plugin.description }}
+            <div>
+              {{ plugin.description }}
+            </div>
+            <div v-if="plugin.version" class="font-italic mt-2">
+              Version: {{ plugin.version }}
+            </div>
           </b-card-text>
           <template v-slot:footer>
             <div class="text-center">
               <b-btn :href="plugin.url" target="_blank">
                 <fa icon="home"></fa>
+              </b-btn>
+              <b-btn class="ml-2" @click="install(plugin.id)">
+                <fa icon="cloud-upload-alt"></fa>
               </b-btn>
             </div>
           </template>
@@ -66,6 +74,14 @@ export default {
     async search () {
       const plugins = await api.getPlugins(this.searchTerm)
       this.$set(this, 'plugins', plugins)
+    },
+    async install (pluginId) {
+      try {
+        await api.installPlugin(pluginId)
+        this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
+      } catch (_) {
+        this.$bvToast.toast(this.$t('plugins.submitError'), { noCloseButton: true, variant: 'danger' })
+      }
     }
   }
 }
@@ -75,5 +91,9 @@ export default {
   max-width: calc(25% - 30px);
   min-width: calc(25% - 30px);
   width: calc(25% - 30px);
+
+  .card-header {
+    font-weight: bold;
+  }
 }
 </style>
