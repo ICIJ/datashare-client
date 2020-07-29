@@ -18,7 +18,7 @@
         :ok-title="$t('widget.creationDate.selectFolder')"
         scrollable
         size="lg">
-        <tree-view :path="treeViewPath || selectedPath" :project="project" @input="treeViewPath = $event"></tree-view>
+        <tree-view :path="treeViewPath || selectedPath" :project="project" @input="treeViewPath = $event" count size></tree-view>
       </b-modal>
     </template>
   </widget-documents-by-creation-date>

@@ -5,7 +5,7 @@ import { Core } from '@/core'
 
 describe('TreeView.vue', () => {
   const { config, i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  const propsData = { path: '/home/foo', selectedPaths: ['path_01', 'path_02'] }
+  const propsData = { path: '/home/foo', selectedPaths: ['path_01', 'path_02'], size: true, count: true }
   let wrapper = null
 
   beforeAll(() => config.set('dataDir', '/home/foo'))

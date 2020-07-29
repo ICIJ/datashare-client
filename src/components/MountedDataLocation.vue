@@ -27,7 +27,7 @@
       </div>
     </b-popover>
     <b-modal id="mounting-data-location-tree-view" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
-      <tree-view v-model="path"></tree-view>
+      <tree-view v-model="path" size count></tree-view>
     </b-modal>
   </div>
 </template>

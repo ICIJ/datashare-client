@@ -149,6 +149,8 @@
                 scrollable
                 size="lg">
                 <tree-view
+                  count
+                  size
                   @checked="selectedPaths = $event"
                   :project="project"
                   selectable

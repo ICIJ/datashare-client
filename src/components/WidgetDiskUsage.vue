@@ -13,7 +13,7 @@
       </p>
     </v-wait>
     <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
-      <tree-view v-model="path" :project="project"></tree-view>
+      <tree-view v-model="path" :project="project" count size></tree-view>
     </b-modal>
   </div>
 </template>
