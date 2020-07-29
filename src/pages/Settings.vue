@@ -1,15 +1,7 @@
 <template>
   <div>
     <div v-if="!$config.is('multipleProjects')">
-      <div class="bg-white">
-        <div class="container py-5">
-          <h3>
-            <page-icon icon="cog"></page-icon>
-            {{ $t('settings.title') }}
-          </h3>
-          <div>{{ $t('settings.description') }}</div>
-        </div>
-      </div>
+      <page-header icon="cog" :title="$t('settings.title')" :description="$t('settings.description')"></page-header>
       <div class="container my-4">
         <v-wait for="load settings">
           <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
@@ -56,14 +48,14 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep'
 
-import PageIcon from '@/components/PageIcon'
+import PageHeader from '@/components/PageHeader'
 
 const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth', 'CORS']
 
 export default {
   name: 'Settings',
   components: {
-    PageIcon
+    PageHeader
   },
   filters: {
     sentenceCase (str) {

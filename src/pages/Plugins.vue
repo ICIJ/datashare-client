@@ -1,16 +1,6 @@
 <template>
   <div class="plugins h-100">
-    <div class="plugins__explanation bg-white py-5">
-      <div class="container">
-        <h3>
-          <page-icon icon="plug"></page-icon>
-          {{ $t('plugins.title') }}
-        </h3>
-        <p class="m-0">
-          {{ $t('plugins.subtitle') }}
-        </p>
-      </div>
-    </div>
+    <page-header icon="plug" :title="$t('plugins.title')" :description="$t('plugins.subtitle')"></page-header>
     <div class="container pt-4">
       <div class="plugins__search input-group mb-3">
         <div class="input-group-prepend">
@@ -19,7 +9,7 @@
           </span>
         </div>
         <b-form-input type="text" class="form-control border-0" required :placeholder="$t('plugins.search')" @input="search" v-model="searchTerm"></b-form-input>
-        <div class="invalid-feedback">
+        <div cass="invalid-feedback">
           {{ $t('plugins.search') }}
         </div>
       </div>
@@ -54,14 +44,14 @@
 
 <script>
 import Api from '@/api'
-import PageIcon from '@/components/PageIcon'
+import PageHeader from '@/components/PageHeader'
 
 const api = new Api()
 
 export default {
   name: 'Plugins',
   components: {
-    PageIcon
+    PageHeader
   },
   data () {
     return {

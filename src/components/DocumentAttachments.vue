@@ -23,7 +23,7 @@ import sum from 'lodash/sum'
 import elasticsearch from '@/api/elasticsearch'
 
 /**
- * A list of attachments for a document (usualy, it's child documents)
+ * A list of attachments for a document (usually, it's child documents)
  */
 export default {
   name: 'DocumentAttachments',

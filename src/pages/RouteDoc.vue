@@ -1,18 +1,6 @@
 <template>
   <div class="route-doc">
-    <div class="bg-white border-bottom">
-      <div class="container">
-        <div class="route-doc__header py-5">
-          <h3>
-            <page-icon icon="book" />
-            {{ meta.title }}
-          </h3>
-          <p class="m-0 route-doc__header__description">
-            {{ meta.description }}
-          </p>
-        </div>
-      </div>
-    </div>
+    <page-header icon="book" :title="meta.title" :description="meta.description"></page-header>
     <div class="container py-4">
       <div class="route-doc__content card card-body" v-html="html"></div>
     </div>
@@ -21,14 +9,14 @@
 
 <script>
 import docs from '@/mixins/docs'
-import PageIcon from '@/components/PageIcon'
+import PageHeader from '@/components/PageHeader'
 
 export default {
   name: 'RouteDoc',
   components: {
-    PageIcon
+    PageHeader
   },
-  mixins: [ docs ],
+  mixins: [docs],
   props: {
     slug: {
       type: String
@@ -57,7 +45,7 @@ export default {
   methods: {
     async fetch (slug = this.slug) {
       const { resourcePath } = this.findRouteDocMetaBySlug(slug)
-      const module = await import(/* webpackChunkName: "[request]" */ `../../public/docs/${resourcePath}`)
+      const module = await import(/* webpackChunkName: "[request]" */ '../../public/docs/' + resourcePath)
       this.html = module.default
     }
   }

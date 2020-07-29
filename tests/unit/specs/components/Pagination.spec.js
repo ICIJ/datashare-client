@@ -7,7 +7,7 @@ import { Core } from '@/core'
 const { localVue } = Core.init(createLocalVue()).useAll()
 
 describe('Pagination.vue', () => {
-  let wrapper
+  let wrapper = null
   const template = { name: 'router-name', query: { from: 0, size: 10 } }
 
   beforeEach(() => {
