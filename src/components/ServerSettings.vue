@@ -1,9 +1,8 @@
 <template>
   <div>
     <div v-if="!$config.is('multipleProjects')">
-      <page-header icon="cog" :title="$t('serverSettings.title')" :description="$t('serverSettings.description')"></page-header>
       <div class="container my-4">
-        <v-wait for="load settings">
+        <v-wait for="load server settings">
           <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
           <b-form @submit.prevent="onSubmit">
             <b-form-group
@@ -48,15 +47,10 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep'
 
-import PageHeader from '@/components/PageHeader'
-
 const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth', 'CORS']
 
 export default {
   name: 'ServerSettings',
-  components: {
-    PageHeader
-  },
   filters: {
     sentenceCase (str) {
       const result = str.replace(/([A-Z])/g, ' $1')
@@ -80,11 +74,11 @@ export default {
     }
   },
   async mounted () {
-    this.$wait.start('load settings')
+    this.$wait.start('load server settings')
     const master = await this.$store.dispatch('settings/getSettings')
     this.$set(this, 'master', master)
     this.$set(this, 'settings', cloneDeep(master))
-    this.$wait.end('load settings')
+    this.$wait.end('load server settings')
   },
   methods: {
     fieldChanged (field) {

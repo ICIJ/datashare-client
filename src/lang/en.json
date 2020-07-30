@@ -564,9 +564,12 @@
     "findNextOccurrence": "Find the next occurrence in the document",
     "findNextOccurrenceAlt":"Find the next occurrence in the document"
   },
-  "serverSettings": {
+  "server": {
     "title": "Settings",
-    "description": "Don't change these settings if you don't know what you're doing.",
+    "description": "Don't change these settings if you don't know what you're doing."
+  },
+  "serverSettings": {
+    "title": "Server Settings",
     "submit": "Submit",
     "submitSuccess": "Modifications submitted.",
     "submitError": "Unable to submit the settings.",
@@ -630,5 +633,8 @@
     "installFromUrl": "Install plugin from URL",
     "install": "Install",
     "enterCorrectUrl": "Please enter a correct URL."
+  },
+  "extensions": {
+    "title": "Extensions"
   }
 }
