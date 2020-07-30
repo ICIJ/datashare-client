@@ -16,7 +16,7 @@
       <p class="text-muted">
         {{ $t('document.detailsInfo') }}
       </p>
-      <div class="row document__content__details__children m-2">
+      <div class="row document__content__details__children mx-2">
         <router-link :to="{ name: 'search', query: { q: `_routing:${document.id}`, index } }">
           {{ $t('document.searchChildrenDocument') }}
         </router-link>

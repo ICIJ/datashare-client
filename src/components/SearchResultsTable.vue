@@ -50,13 +50,10 @@
       <search-results-header position="bottom" />
     </div>
     <div v-else>
+      <search-results-header position="top" class="flex-grow-1 align-self-center" />
       <div class="search-results-table__header border-0 py-5 d-flex flex-column text-center">
         <div class="search-results-table__header__number-of-results">
           {{ $t('search.results.noResults') }}
-        </div>
-        <div class="mt-3" v-if="hasFilters">
-          {{ $t('search.try') }}
-          <reset-filters-button variant="outline-secondary" no-icon />
         </div>
       </div>
     </div>
@@ -70,7 +67,6 @@ import { mapState } from 'vuex'
 import DocumentActions from '@/components/DocumentActions'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
-import ResetFiltersButton from '@/components/ResetFiltersButton'
 import SearchResultsHeader from '@/components/SearchResultsHeader'
 import humanSize from '@/filters/humanSize'
 import settings from '@/utils/settings'
@@ -84,7 +80,6 @@ export default {
     DocumentActions,
     DocumentSlicedName,
     DocumentTagsForm,
-    ResetFiltersButton,
     SearchResultsHeader
   },
   data () {
