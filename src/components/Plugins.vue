@@ -1,11 +1,11 @@
 <template>
   <div class="plugins h-100">
-    <page-header icon="plug" :title="$t('plugins.title')" :description="$t('plugins.description')">
+    <div class="plugins__add float-right">
       <b-btn variant="primary" @click="$refs.installPluginFromUrl.show()">
         <fa icon="link" class="mr-1"></fa>
         {{ $t('plugins.installFromUrl') }}
       </b-btn>
-      <b-modal ref="installPluginFromUrl" hide-footer id="plugins__modal">
+      <b-modal ref="installPluginFromUrl" hide-footer id="plugins__add__modal">
         <template #modal-title>
           <fa icon="link" class="mr-1"></fa>
           {{ $t('plugins.installFromUrl') }}
@@ -25,7 +25,7 @@
           {{ $t('plugins.install') }}
         </b-btn>
       </b-modal>
-    </page-header>
+    </div>
     <div class="container pt-4">
       <div class="plugins__search input-group mb-3">
         <div class="input-group-prepend">
@@ -66,15 +66,11 @@
 
 <script>
 import Api from '@/api'
-import PageHeader from '@/components/PageHeader'
 
 const api = new Api()
 
 export default {
   name: 'Plugins',
-  components: {
-    PageHeader
-  },
   data () {
     return {
       plugins: [],
@@ -142,7 +138,7 @@ export default {
   }
 }
 
-#plugins__modal {
+#plugins__add_modal {
   .modal-body {
     background: darken($primary, 20);
     color: white;

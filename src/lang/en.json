@@ -623,7 +623,6 @@
   },
   "plugins": {
     "title": "Plugins",
-    "description": "Manage your plugins.",
     "search": "Search plugins",
     "submitSuccess": "Plugin successfully installed.",
     "submitError": "Error while installing the plugin.",

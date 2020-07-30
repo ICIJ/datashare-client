@@ -2,8 +2,8 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 
 import Api from '@/api'
+import Plugins from '@/components/Plugins'
 import { Core } from '@/core'
-import Plugins from '@/pages/Plugins'
 
 jest.mock('axios', () => {
   return {
@@ -24,21 +24,21 @@ jest.mock('axios', () => {
 })
 
 describe('Plugins.vue', () => {
-  const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   let wrapper = null
 
   beforeEach(async () => {
-    wrapper = await shallowMount(Plugins, { i18n, localVue, router, store, data: () => { return { url: 'this.is.an.url' } } })
+    wrapper = await shallowMount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
   })
 
   afterAll(() => jest.unmock('axios'))
 
   it('should display a button to install a plugin from url', () => {
-    expect(wrapper.find('.plugins page-header-stub b-btn-stub').exists()).toBeTruthy()
+    expect(wrapper.find('.plugins .plugins__add b-btn-stub').exists()).toBeTruthy()
   })
 
   it('should display a modal to install a plugin from url', () => {
-    expect(wrapper.find('.plugins page-header-stub b-modal-stub').exists()).toBeTruthy()
+    expect(wrapper.find('.plugins .plugins__add b-modal-stub').exists()).toBeTruthy()
   })
 
   it('should display a search bar', () => {

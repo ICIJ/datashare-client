@@ -12,9 +12,8 @@ jest.mock('axios', () => {
   }
 })
 
-const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('ServerSettings.vue', () => {
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   let wrapper = null
 
   beforeEach(async () => {
@@ -24,8 +23,8 @@ describe('ServerSettings.vue', () => {
 
   afterAll(() => jest.unmock('axios'))
 
-  it('should load the settings page', () => {
-    expect(wrapper.find('page-header-stub').exists()).toBeTruthy()
+  it('should load the server settings page', () => {
+    expect(wrapper.find('.container').exists()).toBeTruthy()
   })
 
   it('should display a text input', async () => {

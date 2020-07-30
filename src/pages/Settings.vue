@@ -9,7 +9,7 @@
           </b-tab>
           <b-tab :title="$t('plugins.title')" v-if="hasFeature('PLUGINS_AVAILABLE')">
             <b-card-text>
-              {{ $t('plugins.title')  }}
+              <plugins></plugins>
             </b-card-text>
           </b-tab>
           <b-tab :title="$t('extensions.title')" v-if="hasFeature('EXTENSIONS_AVAILABLE')">
@@ -30,6 +30,7 @@
 
 <script>
 import PageHeader from '@/components/PageHeader'
+import Plugins from '@/components/Plugins'
 import ServerSettings from '@/components/ServerSettings'
 import features from '@/mixins/features'
 
@@ -37,6 +38,7 @@ export default {
   name: 'Settings',
   components: {
     PageHeader,
+    Plugins,
     ServerSettings
   },
   mixins: [features]
