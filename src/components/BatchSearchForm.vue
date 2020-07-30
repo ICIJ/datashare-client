@@ -24,6 +24,8 @@
               :placeholder="$t('batchSearch.filePlaceholder')"
               accept=".csv"
               class="text-truncate"
+              :state="Boolean(csvFile)"
+              :drop-placeholder="$t('batchSearch.dropFilePlaceholder')"
               required></b-form-file>
           </b-form-group>
           <p class="help small">

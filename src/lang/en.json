@@ -528,7 +528,8 @@
     "learnMore": "Learn more",
     "author": "Author",
     "advancedFilters": "Advanced filters",
-    "selectFolder": "Select folder"
+    "selectFolder": "Select folder",
+    "dropFilePlaceholder": "Drop file here..."
   },
   "batchSearchResults": {
     "rank": "Rank",
