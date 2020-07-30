@@ -1,4 +1,5 @@
 export { default as WidgetDiskUsage } from './WidgetDiskUsage'
+export { default as WidgetDuplicates } from './WidgetDuplicates'
 export { default as WidgetDocumentsByCreationDate } from './WidgetDocumentsByCreationDate'
 export { default as WidgetDocumentsByCreationDateByPath } from './WidgetDocumentsByCreationDateByPath'
 export { default as WidgetEmpty } from './WidgetEmpty'
@@ -38,8 +39,16 @@ const widgets = [
     title: 'Number of documents by creation date'
   },
   {
-    name: 'default-list',
+    name: 'duplicates-in-documents',
     order: 50,
+    card: true,
+    cols: 12,
+    type: 'WidgetDuplicates',
+    title: 'Number of duplicates in your documents'
+  },
+  {
+    name: 'default-list',
+    order: 60,
     card: true,
     cols: 12,
     type: 'WidgetListGroup',
