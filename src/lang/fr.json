@@ -620,11 +620,15 @@
   },
   "plugins": {
     "title": "Plugins",
-    "subtitle": "Manage your plugins",
+    "description": "Manage your plugins.",
     "search": "Search plugins",
     "submitSuccess": "Plugin successfully installed.",
     "submitError": "Error while installing the plugin.",
     "deleteSuccess": "Plugin successfully deleted.",
-    "deleteError": "Error while deleting the plugin."
+    "deleteError": "Error while deleting the plugin.",
+    "version": "Version",
+    "installFromUrl": "Install plugin from URL",
+    "install": "Install",
+    "enterCorrectUrl": "Please enter a correct URL."
   }
 }
