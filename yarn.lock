@@ -1250,9 +1250,9 @@
   integrity sha512-T7VNNlYVM1SgQ+VsMYhnDkcGmWhQdL0bDyGm5TlQ3GBXnJscEClUUOKduWTmm2zCnvNLC1hc3JpuXjs/nFOc5w==
 
 "@testing-library/jest-dom@^5.10.1":
-  version "5.11.1"
-  resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-5.11.1.tgz#b9541d7625cec9e5feb647f49a96c43f7c055cdd"
-  integrity sha512-NHOHjDwyBoqM7mXjNLieSp/6vJ17DILzhNTw7+RarluaBkyWRzWgFj+d6xnd1adMBlwfQSeR2FWGTxHXCxeMSA==
+  version "5.11.2"
+  resolved "https://registry.yarnpkg.com/@testing-library/jest-dom/-/jest-dom-5.11.2.tgz#c49de331555c70127b5d7fc97344ad5265f4c54c"
+  integrity sha512-s+rWJx+lanEGKqvOl4qJR0rGjCrxsEjj9qjxFlg4NV4/FRD7fnUUAWPHqwpyafNHfLYArs58FADgdn4UKmjFmw==
   dependencies:
     "@babel/runtime" "^7.9.2"
     "@types/testing-library__jest-dom" "^5.9.1"
@@ -1404,9 +1404,9 @@
   integrity sha512-7NQmHra/JILCd1QqpSzl8+mJRc8ZHz3uDm8YV1Ks9IhK0epEiTw8aIErbvH9PI+6XbqhyIQy3462nEsn7UVzjQ==
 
 "@types/testing-library__jest-dom@^5.9.1":
-  version "5.9.1"
-  resolved "https://registry.yarnpkg.com/@types/testing-library__jest-dom/-/testing-library__jest-dom-5.9.1.tgz#aba5ee062b7880f69c212ef769389f30752806e5"
-  integrity sha512-yYn5EKHO3MPEMSOrcAb1dLWY+68CG29LiXKsWmmpVHqoP5+ZRiAVLyUHvPNrO2dABDdUGZvavMsaGpWNjM6N2g==
+  version "5.9.2"
+  resolved "https://registry.yarnpkg.com/@types/testing-library__jest-dom/-/testing-library__jest-dom-5.9.2.tgz#59e4771a1cf87d51e89a5cc8195cd3b647cba322"
+  integrity sha512-K7nUSpH/5i8i0NagTJ+uFUDRueDlnMNhJtMjMwTGPPSqyImbWC/hgKPDCKt6Phu2iMJg2kWqlax+Ucj2DKMwpA==
   dependencies:
     "@types/jest" "*"
 
@@ -10919,9 +10919,9 @@ relateurl@0.2.x:
   integrity sha1-VNvzd+UUQKypCkzSdGANP/LYiKk=
 
 release@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/release/-/release-6.1.0.tgz#e4231d6c99b2ac41f058ef6db5f4b1136bf723ca"
-  integrity sha512-YnwR5Rb001UisihQKvYvEKvwj5OrMTScrh03d/+/u7YBqe2dITRNQsLTS8rIoGWSoy65sLtQgibwVYgjkW4Pzg==
+  version "6.3.0"
+  resolved "https://registry.yarnpkg.com/release/-/release-6.3.0.tgz#bbd351d7460948f1ed55ea02b4b2393f98a1637a"
+  integrity sha512-p2dQcsNzCwI0LMHFb/BAd49NrTbIlt2krjaDVHsjV40tScLIRHVatEtN+4MV4Xx9jKKGiZGoM2gtrSn6vJeM1g==
   dependencies:
     "@octokit/rest" "15.2.6"
     args "4.0.0"
@@ -12886,7 +12886,12 @@ vue-hot-reload-api@^2.3.0:
   resolved "https://registry.yarnpkg.com/vue-hot-reload-api/-/vue-hot-reload-api-2.3.4.tgz#532955cc1eb208a3d990b3a9f9a70574657e08f2"
   integrity sha512-BXq3jwIagosjgNVae6tkHzzIk6a8MHFtzAdwhnV5VlvPTFxDCvIttgSiHWjdGoTJvXtmRu5HacExfdarRcFhog==
 
-vue-i18n@^8.15.3, vue-i18n@^8.18.2:
+vue-i18n@^8.15.3:
+  version "8.20.0"
+  resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.20.0.tgz#c81b01d6541182b28565316cafe881b65a3c0f1b"
+  integrity sha512-ZiAOoeR4d/JtKpbjipx3I80ey7cYG1ki5gQ7HwzWm4YFio9brA15BEYHjalEoBaEfzF5OBEZP+Y2MvAaWnyXXg==
+
+vue-i18n@^8.18.2:
   version "8.18.2"
   resolved "https://registry.yarnpkg.com/vue-i18n/-/vue-i18n-8.18.2.tgz#cd7c12f2e178e6faa23b0e3cfd2f7bac9305f8fc"
   integrity sha512-0X5nBTCZAVjlwcrPaYJwNs3iipBBTv0AUHwQUOa8yP3XbQGWKbRHqBb3OhCYtum/IHDD21d/df5Xd2VgyxbxfA==
@@ -12950,9 +12955,9 @@ vue-router@^3.1.5:
   integrity sha512-SdKRBeoXUjaZ9R/8AyxsdTqkOfMcI5tWxPZOUX5Ie1BTL5rPSZ0O++pbiZCeYeythiZIdLEfkDiQPKIaWk5hDg==
 
 vue-scrollto@^2.17.1:
-  version "2.18.1"
-  resolved "https://registry.yarnpkg.com/vue-scrollto/-/vue-scrollto-2.18.1.tgz#e23620489583f0b3f21410f149b6585a730672f2"
-  integrity sha512-JojeVOP1Z50Jt0OCOd61jRRRF8TrNvPAzF4LAKwkTEZnt30mpDd48aDZZOEPD3l6z2PybOyUGFT/FNWfTtFv9w==
+  version "2.18.2"
+  resolved "https://registry.yarnpkg.com/vue-scrollto/-/vue-scrollto-2.18.2.tgz#113a3548341974d3a2560145f39fcc0378533821"
+  integrity sha512-LQOsuCfDJ5JXsRBb6frM85sCFABZdkwwwchLh4k3wbp8P6URRDcQvwp31U4cTnbyYEOo6JFP7+3p0wkvwy7MdA==
   dependencies:
     bezier-easing "2.1.0"
 
@@ -13452,9 +13457,9 @@ xregexp@^4.2.4:
     "@babel/runtime-corejs3" "^7.8.3"
 
 xss@^1.0.6:
-  version "1.0.7"
-  resolved "https://registry.yarnpkg.com/xss/-/xss-1.0.7.tgz#a554cbd5e909324bd6893fb47fff441ad54e2a95"
-  integrity sha512-A9v7tblGvxu8TWXQC9rlpW96a+LN1lyw6wyhpTmmGW+FwRMactchBR3ROKSi33UPCUcUHSu8s9YP6F+K3Mw//w==
+  version "1.0.8"
+  resolved "https://registry.yarnpkg.com/xss/-/xss-1.0.8.tgz#32feb87feb74b3dcd3d404b7a68ababf10700535"
+  integrity sha512-3MgPdaXV8rfQ/pNn16Eio6VXYPTkqwa0vc7GkiymmY/DqR1SE/7VPAAVZz1GJsJFrllMYO3RHfEaiUGjab6TNw==
   dependencies:
     commander "^2.20.3"
     cssfilter "0.0.10"
