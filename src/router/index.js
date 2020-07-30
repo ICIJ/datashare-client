@@ -113,11 +113,6 @@ export const router = {
           name: 'insights',
           path: '/insights',
           component: () => import('@/pages/Insights')
-        },
-        {
-          name: 'api',
-          path: '/api',
-          component: () => import('@/pages/Api')
         }
       ]
     },

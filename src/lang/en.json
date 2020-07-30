@@ -617,9 +617,9 @@
   },
   "api": {
     "title": "API",
-    "subtitle": "Manage your API key",
     "newApiKey": "Create API key",
-    "apiKey": "API key"
+    "apiKey": "API key",
+    "noAccess": "You do not have access to that page in local mode."
   },
   "plugins": {
     "title": "Plugins",

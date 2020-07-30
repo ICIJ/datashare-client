@@ -4,7 +4,7 @@
     <div class="container pt-4">
       <b-card no-body>
         <b-tabs pills card>
-          <b-tab :title="$t('serverSettings.title')" active>
+          <b-tab :title="$t('serverSettings.title')" active v-if="!$config.is('multipleProjects')">
             <server-settings></server-settings>
           </b-tab>
           <b-tab :title="$t('plugins.title')" v-if="hasFeature('PLUGINS_AVAILABLE')">
@@ -17,9 +17,9 @@
               {{ $t('extensions.title') }}
             </b-card-text>
           </b-tab>
-          <b-tab :title="$t('api.title')" v-if="hasFeature('API_AVAILABLE')">
+          <b-tab :title="$t('api.title')" v-if="!!$config.is('multipleProjects') && hasFeature('API_AVAILABLE')">
             <b-card-text>
-              {{ $t('api.title') }}
+              <api></api>
             </b-card-text>
           </b-tab>
         </b-tabs>
@@ -29,6 +29,7 @@
 </template>
 
 <script>
+import Api from '@/components/Api'
 import PageHeader from '@/components/PageHeader'
 import Plugins from '@/components/Plugins'
 import ServerSettings from '@/components/ServerSettings'
@@ -37,6 +38,7 @@ import features from '@/mixins/features'
 export default {
   name: 'Settings',
   components: {
+    Api,
     PageHeader,
     Plugins,
     ServerSettings

@@ -10,7 +10,7 @@
               label-cols-xs="12"
               label-cols-sm="4"
               label-cols-lg="3"
-              v-for="(value, name) in settings">
+              v-for="(_, name) in settings">
               <template v-slot:label>
                 <span :class="{ 'font-weight-bold': fieldChanged(name) }" class="d-flex align-items-top">
                   <span class="flex-grow-1 pb-1" :title="name">

@@ -1,10 +1,11 @@
+import Murmur from '@icij/murmur'
 import axios from 'axios'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
 import Api from '@/api'
+import ApiPage from '@/components/Api'
 import { Core } from '@/core'
-import ApiPage from '@/pages/Api'
 
 jest.mock('axios', () => {
   return {
@@ -21,6 +22,7 @@ describe('Api.vue', () => {
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
   beforeEach(() => {
+    Murmur.config.merge({ multipleProjects: true })
     wrapper = shallowMount(ApiPage, { i18n, localVue, router, store })
   })
 
@@ -30,13 +32,13 @@ describe('Api.vue', () => {
   })
 
   it('should display a button to generate the API key by default', () => {
-    expect(wrapper.findAll('page-header-stub b-button-stub')).toHaveLength(1)
+    expect(wrapper.find('.api .api__create-key b-button-stub').exists()).toBeTruthy()
   })
 
   it('should NOT display the button to generate the API key if apiKey is set', async () => {
     await wrapper.vm.$set(wrapper.vm, 'apiKey', '123abc')
 
-    expect(wrapper.findAll('.api__explanation b-button-stub')).toHaveLength(0)
+    expect(wrapper.find('.api .api__create-key b-button-stub').exists()).toBeFalsy()
   })
 
   it('should display no rows by default', () => {
@@ -54,7 +56,7 @@ describe('Api.vue', () => {
     wrapper = mount(ApiPage, { i18n, localVue, router, store })
     axios.request.mockClear()
 
-    await wrapper.find('.api .page-header .btn').trigger('click')
+    await wrapper.find('.api .api__create-key .btn').trigger('click')
     await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)
