@@ -17,7 +17,7 @@
         </div>
         <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
           <template #modal-title>
-            <fa icon="rocket" class="mr-2" />
+            <fa icon="rocket" class="mr-1" />
             {{ $t('indexing.extractText') }}
           </template>
           <extracting-form id="extracting-form" :finally="closeExtractingForm" />

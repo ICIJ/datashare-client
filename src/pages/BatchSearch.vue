@@ -1,10 +1,10 @@
 <template>
   <div class="batch-search h-100">
     <page-header icon="layer-group" :title="$t('batchSearch.title')" :description="$t('batchSearch.lead')">
-      <b-button @click="$refs['batch-search-form'].show()" variant="primary">
+      <b-btn @click="$refs['batch-search-form'].show()" variant="primary">
         <fa icon="plus" class="mr-1" />
         {{ $t('batchSearch.heading') }}
-      </b-button>
+      </b-btn>
       <b-modal ref="batch-search-form" hide-footer :title="$t('batchSearch.heading')" size="md" body-class="p-0">
         <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()" />
       </b-modal>

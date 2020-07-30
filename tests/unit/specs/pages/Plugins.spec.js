@@ -28,18 +28,26 @@ describe('Plugins.vue', () => {
   let wrapper = null
 
   beforeEach(async () => {
-    wrapper = await shallowMount(Plugins, { i18n, localVue, router, store })
+    wrapper = await shallowMount(Plugins, { i18n, localVue, router, store, data: () => { return { url: 'this.is.an.url' } } })
   })
 
   afterAll(() => jest.unmock('axios'))
 
+  it('should display a button to install a plugin from url', () => {
+    expect(wrapper.find('.plugins page-header-stub b-btn-stub').exists()).toBeTruthy()
+  })
+
+  it('should display a modal to install a plugin from url', () => {
+    expect(wrapper.find('.plugins page-header-stub b-modal-stub').exists()).toBeTruthy()
+  })
+
   it('should display a search bar', () => {
-    expect(wrapper.find('.plugins__search')).toBeTruthy()
-    expect(wrapper.find('.plugins__search b-form-input-stub')).toBeTruthy()
+    expect(wrapper.find('.plugins .plugins__search').exists()).toBeTruthy()
+    expect(wrapper.find('.plugins .plugins__search b-form-input-stub').exists()).toBeTruthy()
   })
 
   it('should display a list of plugins', () => {
-    expect(wrapper.findAll('.plugins__card')).toHaveLength(2)
+    expect(wrapper.findAll('.plugins .plugins__card')).toHaveLength(2)
   })
 
   it('should search for matching plugins', async () => {
@@ -67,14 +75,26 @@ describe('Plugins.vue', () => {
     })
   })
 
-  it('should call for plugin installation', () => {
+  it('should call for plugin installation from pluginId', () => {
     axios.request.mockClear()
-    wrapper.vm.install('plugin_01_id')
+    wrapper.vm.installFromId('plugin_01_id')
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith({
       method: 'PUT',
-      url: Api.getFullUrl('/api/plugins/install/plugin_01_id')
+      url: Api.getFullUrl('/api/plugins/install?id=plugin_01_id')
+    })
+  })
+
+  it('should call for plugin installation from pluginUrl', async () => {
+    axios.request.mockClear()
+
+    wrapper.vm.installFromUrl()
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      method: 'PUT',
+      url: Api.getFullUrl('/api/plugins/install?url=this.is.an.url')
     })
   })
 

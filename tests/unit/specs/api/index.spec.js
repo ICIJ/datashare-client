@@ -220,8 +220,13 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
-  it('should return backend response to installPlugin', async () => {
-    json = await api.installPlugin()
+  it('should return backend response to installPluginFromId', async () => {
+    json = await api.installPluginFromId()
+    expect(json).toEqual({})
+  })
+
+  it('should return backend response to installPluginFromUrl', async () => {
+    json = await api.installPluginFromUrl()
     expect(json).toEqual({})
   })
 

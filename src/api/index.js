@@ -146,8 +146,11 @@ export default class Api {
   getPlugins (query = '') {
     return this.sendAction(`/api/plugins?filter=.*${toLower(query)}.*`)
   }
-  installPlugin (pluginId) {
-    return this.sendAction(`/api/plugins/install/${pluginId}`, { method: 'PUT' })
+  installPluginFromId (pluginId) {
+    return this.sendAction(`/api/plugins/install?id=${pluginId}`, { method: 'PUT' })
+  }
+  installPluginFromUrl (pluginUrl) {
+    return this.sendAction(`/api/plugins/install?url=${pluginUrl}`, { method: 'PUT' })
   }
   uninstallPlugin (pluginId) {
     return this.sendAction(`/api/plugins/remove/${pluginId}`, { method: 'DELETE' })
