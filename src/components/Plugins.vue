@@ -1,39 +1,43 @@
 <template>
   <div class="plugins h-100">
-    <div class="plugins__add float-right">
-      <b-btn variant="primary" @click="$refs.installPluginFromUrl.show()">
-        <fa icon="link" class="mr-1"></fa>
-        {{ $t('plugins.installFromUrl') }}
-      </b-btn>
-      <b-modal ref="installPluginFromUrl" hide-footer id="plugins__add__modal">
-        <template #modal-title>
-          <fa icon="link" class="mr-1"></fa>
-          {{ $t('plugins.installFromUrl') }}
-        </template>
-        <div class="input-group mb-3">
-          <div class="input-group-prepend">
-          <span class="input-group-text rounded-0 border-0 bg-white">
-            <fa icon="link"></fa>
-          </span>
-          </div>
-          <b-form-input type="url" class="b-form-control border-0" required placeholder="URL" v-model="url" :state="isUrl"></b-form-input>
-          <b-form-invalid-feedback class="text-secondary mt-2">
-            {{ $t('plugins.enterCorrectUrl') }}
-          </b-form-invalid-feedback>
-        </div>
-        <b-btn variant="primary" class="float-right" @click="installFromUrl">
-          {{ $t('plugins.install') }}
-        </b-btn>
-      </b-modal>
-    </div>
     <div class="container pt-4">
-      <div class="plugins__search input-group mb-3">
-        <div class="input-group-prepend">
+      <div class="d-flex">
+        <div class="flex-grow-1">
+          <div class="plugins__search input-group mb-3">
+            <div class="input-group-prepend">
           <span class="input-group-text rounded-0 border-0 bg-white">
             <fa icon="search"></fa>
           </span>
+            </div>
+            <b-form-input type="text" class="form-control border-0" required :placeholder="$t('plugins.search')" @input="search" v-model="searchTerm"></b-form-input>
+          </div>
         </div>
-        <b-form-input type="text" class="form-control border-0" required :placeholder="$t('plugins.search')" @input="search" v-model="searchTerm"></b-form-input>
+        <div class="plugins__add">
+          <b-btn variant="primary" @click="$refs.installPluginFromUrl.show()">
+            <fa icon="link" class="mr-1"></fa>
+            {{ $t('plugins.installFromUrl') }}
+          </b-btn>
+          <b-modal ref="installPluginFromUrl" hide-footer id="plugins__add__modal">
+            <template #modal-title>
+              <fa icon="link" class="mr-1"></fa>
+              {{ $t('plugins.installFromUrl') }}
+            </template>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+          <span class="input-group-text rounded-0 border-0 bg-white">
+            <fa icon="link"></fa>
+          </span>
+              </div>
+              <b-form-input type="url" class="b-form-control border-0" required placeholder="URL" v-model="url" :state="isUrl"></b-form-input>
+              <b-form-invalid-feedback class="text-secondary mt-2">
+                {{ $t('plugins.enterCorrectUrl') }}
+              </b-form-invalid-feedback>
+            </div>
+            <b-btn variant="primary" class="float-right" @click="installFromUrl">
+              {{ $t('plugins.install') }}
+            </b-btn>
+          </b-modal>
+        </div>
       </div>
       <b-card-group deck>
         <b-card :header="plugin.name" v-for="plugin in plugins" :key="plugin.id" class="plugins__card mb-3" footer-bg-variant="white" footer-border-variant="white">
@@ -138,7 +142,7 @@ export default {
   }
 }
 
-#plugins__add_modal {
+#plugins__add__modal {
   .modal-body {
     background: darken($primary, 20);
     color: white;

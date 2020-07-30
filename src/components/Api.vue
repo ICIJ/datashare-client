@@ -1,7 +1,7 @@
 <template>
   <div class="api h-100">
     <div v-if="!!$config.is('multipleProjects')">
-      <div class="api__create-key float-right">
+      <div class="api__create-key">
         <b-button @click="getApiKey" variant="primary" v-if="!apiKey">
           <fa icon="plus" class="mr-1"></fa>
           {{ $t('api.newApiKey') }}
