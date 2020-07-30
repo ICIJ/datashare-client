@@ -1,25 +1,11 @@
 <template>
   <div class="user-history">
-    <div class="bg-white">
-      <div class="container">
-        <div class="user-history__header py-5">
-          <confirm-button class="btn btn-primary float-right" :confirmed="clear" v-if="documents.length">
-            <fa icon="trash-alt" class="mr-1" />
-            {{ $t('userHistory.clear') }}
-          </confirm-button>
-          <h3>
-            <page-icon icon="clock" />
-            {{ $t('userHistory.heading') }}
-          </h3>
-          <p v-if="documents.length" class="m-0">
-            {{ $t('userHistory.description') }}
-          </p>
-          <p v-else class="text-muted m-0">
-            {{ $t('userHistory.empty') }}
-          </p>
-        </div>
-      </div>
-    </div>
+    <page-header icon="clock" :title="$t('userHistory.heading')" :description="documents.length ? $t('userHistory.description') : $t('userHistory.empty')">
+      <confirm-button class="btn btn-primary" :confirmed="clear" v-if="documents.length">
+        <fa icon="trash-alt" class="mr-1" />
+        {{ $t('userHistory.clear') }}
+      </confirm-button>
+    </page-header>
     <div class="container mt-4">
       <ul class="list-unstyled user-history__list card mb-4" v-if="documents.length">
         <li v-for="(document, i) in documents" :key="i" class="user-history__list__item">
@@ -45,13 +31,13 @@
 import reverse from 'lodash/reverse'
 import DocumentSlicedName from '@/components/DocumentSlicedName'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
-import PageIcon from '@/components/PageIcon'
+import PageHeader from '@/components/PageHeader'
 
 export default {
   components: {
     DocumentSlicedName,
     DocumentThumbnail,
-    PageIcon
+    PageHeader
   },
   computed: {
     documents () {

@@ -1,54 +1,47 @@
 <template>
   <div class="batch-search-results">
-    <div class="batch-search-results__explanation bg-white py-5">
-      <div class="container">
-        <div class="float-right d-flex my-2 mx-3">
-          <div>
-            <b-button variant="light" class="batch-search-results__action mr-2" id="batch-search-results-filters-toggle" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
-              <fa icon="filter"></fa>
-              <span class="sr-only">
+    <page-header icon="layer-group" :title="batchSearch.name" :description="batchSearch.description">
+      <template v-slot:preTitle>
+        <router-link :to="{ name: 'batch-search' }">{{ $t('batchSearch.title') }}</router-link>
+        <fa icon="angle-right" class="small ml-2"></fa>
+      </template>
+      <div class="d-flex my-2 mx-3">
+        <div>
+          <b-button variant="light" class="batch-search-results__action mr-2" id="batch-search-results-filters-toggle" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
+            <fa icon="filter"></fa>
+            <span class="sr-only">
                 {{ $t('batchSearchResultsFilters.queries.heading') }}
               </span>
-              <b-badge variant="secondary" class="batch-search-results__action__counter" v-if="selectedQueries.length">
-                {{ selectedQueries.length }}
-              </b-badge>
-            </b-button>
-            <b-popover target="batch-search-results-filters-toggle" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
-              <batch-search-results-filters :uuid="uuid" :index="index" hide-border />
-            </b-popover>
-          </div>
-          <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch">
-            <confirm-button class="btn btn-light mr-2" :confirmed="deleteBatchSearch" v-b-tooltip.hover :title="$t('batchSearch.delete')">
-              <fa icon="trash-alt"></fa>
-              <span class="sr-only">
+            <b-badge variant="secondary" class="batch-search-results__action__counter" v-if="selectedQueries.length">
+              {{ selectedQueries.length }}
+            </b-badge>
+          </b-button>
+          <b-popover target="batch-search-results-filters-toggle" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
+            <batch-search-results-filters :uuid="uuid" :index="index" hide-border />
+          </b-popover>
+        </div>
+        <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch">
+          <confirm-button class="btn btn-light mr-2" :confirmed="deleteBatchSearch" v-b-tooltip.hover :title="$t('batchSearch.delete')">
+            <fa icon="trash-alt"></fa>
+            <span class="sr-only">
                 {{ $t('batchSearch.delete') }}
               </span>
-            </confirm-button>
-          </div>
-          <div class="batch-search-results__action batch-search-results__download__queries" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
-             <a :href="apiFullUrl('/api/batch/search/' + uuid + '/queries?format=csv')" class="btn btn-light mr-2">
-               <fa icon="download"></fa>
-               {{ $t('batchSearchResults.downloadQueries') }}
-             </a>
-           </div>
-          <div class="batch-search-results__action batch-search-results__download__results float-right" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')" v-if="results.length">
-            <a :href="apiFullUrl('/api/batch/search/result/csv/' + uuid)" class="btn btn-primary" >
-              <fa icon="download"></fa>
-              {{ $t('batchSearchResults.downloadResults') }}
-            </a>
-          </div>
+          </confirm-button>
         </div>
-        <h3>
-          <page-icon icon="layer-group"></page-icon>
-          <router-link :to="{ name: 'batch-search' }">{{ $t('batchSearch.title') }}</router-link>
-          <fa icon="angle-right" class="small ml-2"></fa>
-          {{ batchSearch.name }}
-        </h3>
-        <p class="m-0">
-          {{ batchSearch.description }}
-        </p>
+        <div class="batch-search-results__action batch-search-results__download__queries" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
+          <a :href="apiFullUrl('/api/batch/search/' + uuid + '/queries?format=csv')" class="btn btn-light mr-2">
+            <fa icon="download"></fa>
+            {{ $t('batchSearchResults.downloadQueries') }}
+          </a>
+        </div>
+        <div class="batch-search-results__action batch-search-results__download__results float-right" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')" v-if="results.length">
+          <a :href="apiFullUrl('/api/batch/search/result/csv/' + uuid)" class="btn btn-primary" >
+            <fa icon="download"></fa>
+            {{ $t('batchSearchResults.downloadResults') }}
+          </a>
+        </div>
       </div>
-    </div>
+    </page-header>
     <div class="container py-4">
       <div class="batch-search-results__info d-md-flex align-items-start" v-if="Object.keys(batchSearch).length !== 0">
         <dl class="row mb-0">
@@ -229,7 +222,7 @@ import Api from '@/api'
 import Auth from '@/api/resources/Auth'
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
-import PageIcon from '@/components/PageIcon'
+import PageHeader from '@/components/PageHeader'
 import humanSize from '@/filters/humanSize'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
@@ -241,7 +234,7 @@ export default {
   components: {
     BatchSearchResultsFilters,
     ContentTypeBadge,
-    PageIcon
+    PageHeader
   },
   props: {
     uuid: {

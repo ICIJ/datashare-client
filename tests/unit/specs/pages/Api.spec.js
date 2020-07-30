@@ -29,8 +29,8 @@ describe('Api.vue', () => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
   })
 
-  it('should display a button to generate the API key but default', () => {
-    expect(wrapper.findAll('.api__explanation b-button-stub')).toHaveLength(1)
+  it('should display a button to generate the API key by default', () => {
+    expect(wrapper.findAll('page-header-stub b-button-stub')).toHaveLength(1)
   })
 
   it('should NOT display the button to generate the API key if apiKey is set', async () => {
@@ -54,7 +54,7 @@ describe('Api.vue', () => {
     wrapper = mount(ApiPage, { i18n, localVue, router, store })
     axios.request.mockClear()
 
-    await wrapper.find('.api__explanation .btn').trigger('click')
+    await wrapper.find('.api .page-header .btn').trigger('click')
     await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)

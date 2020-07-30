@@ -1,20 +1,11 @@
 <template>
   <div class="api h-100">
-    <div class="api__explanation bg-white py-5">
-      <div class="container">
-        <b-button @click="getApiKey" variant="primary" class="float-right" v-if="!apiKey">
-          <fa icon="plus" class="mr-1"></fa>
-          {{ $t('api.newApiKey') }}
-        </b-button>
-        <h3>
-          <page-icon icon="plug"></page-icon>
-          {{ $t('api.title') }}
-        </h3>
-        <p class="m-0">
-          {{ $t('api.subtitle') }}
-        </p>
-      </div>
-    </div>
+    <page-header icon="plus" :title="$t('api.newApiKey')" :description="$t('api.subtitle')">
+      <b-button @click="getApiKey" variant="primary" v-if="!apiKey">
+        <fa icon="plus" class="mr-1"></fa>
+        {{ $t('api.newApiKey') }}
+      </b-button>
+    </page-header>
     <div class="container pt-4">
       <div class="api__key row" v-if="apiKey">
         <div class="col-3 my-auto">
@@ -40,7 +31,7 @@
 <script>
 import Api from '@/api'
 import Auth from '@/api/resources/Auth'
-import PageIcon from '@/components/PageIcon'
+import PageHeader from '@/components/PageHeader'
 
 const api = new Api()
 const auth = new Auth()
@@ -48,7 +39,7 @@ const auth = new Auth()
 export default {
   name: 'Api',
   components: {
-    PageIcon
+    PageHeader
   },
   data () {
     return {

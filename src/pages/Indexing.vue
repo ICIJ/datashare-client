@@ -1,42 +1,35 @@
 <template>
   <div class="indexing">
-    <div class="indexing__explaination bg-white">
-      <div class="container py-5">
-        <div class="float-right">
-          <div class="text-right">
-            <button class="btn btn-primary mr-2 btn-extract" type="button" @click="openExtractingForm">
-              <fa icon="rocket" class="mr-2" />
-              {{ $t('indexing.extractText') }}
-            </button>
-            <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
-              <button class="btn btn-primary btn-find-named-entites mr-2" type="button"
-                      :disabled="isPendingTasks" @click="openFindNamedEntitiesForm">
-                <fa icon="user-tag" class="mr-2" />
-                {{ $t('indexing.findNamedEntities') }}
-              </button>
-            </span>
-          </div>
-          <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
-            <template #modal-title>
-              <fa icon="rocket" class="mr-2" />
-              {{ $t('indexing.extractText') }}
-            </template>
-            <extracting-form id="extracting-form" :finally="closeExtractingForm" />
-          </b-modal>
-          <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md">
-            <template #modal-title>
+    <page-header icon="rocket" :title="$t('indexing.title')" :description="$t('indexing.description', { howToLink })">
+      <div>
+        <div class="text-right">
+          <button class="btn btn-primary mr-2 btn-extract" type="button" @click="openExtractingForm">
+            <fa icon="rocket" class="mr-2" />
+            {{ $t('indexing.extractText') }}
+          </button>
+          <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
+            <button class="btn btn-primary btn-find-named-entites mr-2" type="button"
+                    :disabled="isPendingTasks" @click="openFindNamedEntitiesForm">
+              <fa icon="user-tag" class="mr-2" />
               {{ $t('indexing.findNamedEntities') }}
-            </template>
-            <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm" />
-          </b-modal>
+            </button>
+          </span>
         </div>
-        <h3>
-          <page-icon icon="rocket" />
-          {{ $t('indexing.title') }}
-        </h3>
-        <p class="m-0" v-html="$t('indexing.description', { howToLink })"></p>
+        <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
+          <template #modal-title>
+            <fa icon="rocket" class="mr-2" />
+            {{ $t('indexing.extractText') }}
+          </template>
+          <extracting-form id="extracting-form" :finally="closeExtractingForm" />
+        </b-modal>
+        <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md">
+          <template #modal-title>
+            {{ $t('indexing.findNamedEntities') }}
+          </template>
+          <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm" />
+        </b-modal>
       </div>
-    </div>
+    </page-header>
     <div class="mt-4 container">
       <div class="card">
         <div class="card-header">
@@ -98,7 +91,7 @@ import { mapState } from 'vuex'
 
 import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
-import PageIcon from '@/components/PageIcon'
+import PageHeader from '@/components/PageHeader'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
 import { getOS } from '@/utils/utils'
@@ -108,7 +101,7 @@ export default {
   components: {
     ExtractingForm,
     FindNamedEntitiesForm,
-    PageIcon
+    PageHeader
   },
   computed: {
     ...mapState('indexing', ['tasks']),

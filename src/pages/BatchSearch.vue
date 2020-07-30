@@ -1,23 +1,14 @@
 <template>
   <div class="batch-search h-100">
-    <div class="batch-search__explanation bg-white py-5">
-      <div class="container">
-        <b-button @click="$refs['batch-search-form'].show()" variant="primary" class="float-right">
-          <fa icon="plus" class="mr-1" />
-          {{ $t('batchSearch.heading') }}
-        </b-button>
-        <b-modal ref="batch-search-form" hide-footer :title="$t('batchSearch.heading')" size="md" body-class="p-0">
-          <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()" />
-        </b-modal>
-        <h3>
-          <page-icon icon="layer-group" />
-          {{ $t('batchSearch.title') }}
-        </h3>
-        <p class="m-0">
-          {{ $t('batchSearch.lead') }}
-        </p>
-      </div>
-    </div>
+    <page-header icon="layer-group" :title="$t('batchSearch.title')" :description="$t('batchSearch.lead')">
+      <b-button @click="$refs['batch-search-form'].show()" variant="primary">
+        <fa icon="plus" class="mr-1" />
+        {{ $t('batchSearch.heading') }}
+      </b-button>
+      <b-modal ref="batch-search-form" hide-footer :title="$t('batchSearch.heading')" size="md" body-class="p-0">
+        <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()" />
+      </b-modal>
+    </page-header>
     <div class="container pt-4">
       <div class="batch-search__items card">
         <v-wait for="load batchSearches">
@@ -83,16 +74,16 @@ import keys from 'lodash/keys'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
+import BatchSearchForm from '@/components/BatchSearchForm'
+import PageHeader from '@/components/PageHeader'
 import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
-import BatchSearchForm from '@/components/BatchSearchForm'
-import PageIcon from '@/components/PageIcon'
 
 export default {
   name: 'BatchSearches',
   components: {
     BatchSearchForm,
-    PageIcon
+    PageHeader
   },
   filters: {
     toVariant

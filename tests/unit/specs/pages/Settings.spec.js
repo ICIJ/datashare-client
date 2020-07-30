@@ -25,7 +25,7 @@ describe('Settings.vue', () => {
   afterAll(() => jest.unmock('axios'))
 
   it('should load the settings page', () => {
-    expect(wrapper.find('h3').text()).toBe('Settings')
+    expect(wrapper.find('page-header-stub').exists()).toBeTruthy()
   })
 
   it('should display a text input', async () => {

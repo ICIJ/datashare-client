@@ -1,12 +1,16 @@
 <template>
   <div class="page-header bg-white">
     <div class="container py-5">
+      <div class="float-right">
+        <slot></slot>
+      </div>
       <h3 class="page-header__title">
         <page-icon :icon="icon" v-if="icon"></page-icon>
+        <slot name="preTitle"></slot>
         {{ title }}
       </h3>
       <div class="page-header__description">
-        {{ description }}
+        <span v-html="description"></span>
       </div>
     </div>
   </div>
