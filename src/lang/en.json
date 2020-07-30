@@ -564,7 +564,7 @@
     "findNextOccurrence": "Find the next occurrence in the document",
     "findNextOccurrenceAlt":"Find the next occurrence in the document"
   },
-  "settings": {
+  "serverSettings": {
     "title": "Settings",
     "description": "Don't change these settings if you don't know what you're doing.",
     "submit": "Submit",

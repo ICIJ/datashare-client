@@ -3,8 +3,8 @@ import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import Api from '@/api'
+import ServerSettings from '@/components/ServerSettings'
 import { Core } from '@/core'
-import Settings from '@/pages/Settings'
 
 jest.mock('axios', () => {
   return {
@@ -14,12 +14,12 @@ jest.mock('axios', () => {
 
 const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 
-describe('Settings.vue', () => {
+describe('ServerSettings.vue', () => {
   let wrapper = null
 
   beforeEach(async () => {
     axios.request.mockClear()
-    wrapper = await shallowMount(Settings, { i18n, localVue, store, wait })
+    wrapper = await shallowMount(ServerSettings, { i18n, localVue, store, wait })
   })
 
   afterAll(() => jest.unmock('axios'))
@@ -29,7 +29,7 @@ describe('Settings.vue', () => {
   })
 
   it('should display a text input', async () => {
-    wrapper = await shallowMount(Settings, { i18n, localVue, store, wait, stubs: { 'b-form': false } })
+    wrapper = await shallowMount(ServerSettings, { i18n, localVue, store, wait, stubs: { 'b-form': false } })
     await wrapper.vm.$set(wrapper.vm, 'settings', { property_01: 'value_01', property_02: 'value_02' })
 
     expect(wrapper.findAll('b-form-input-stub')).toHaveLength(2)
@@ -69,7 +69,7 @@ describe('Settings.vue', () => {
 
   it('should display an alert', async () => {
     Murmur.config.merge({ multipleProjects: true })
-    wrapper = await shallowMount(Settings, { i18n, localVue, store, wait })
+    wrapper = await shallowMount(ServerSettings, { i18n, localVue, store, wait })
 
     expect(wrapper.find('b-alert-stub').exists()).toBeTruthy()
   })
