@@ -159,6 +159,8 @@ class Core extends Behaviors {
    */
   async configure () {
     try {
+      // Override Murmur default value for content-placeholder
+      this.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
       // Get the config object
       const config = await this.api.getSettings()
       // Load the user
@@ -168,8 +170,6 @@ class Core extends Behaviors {
       this.config.merge(mode(config.mode))
       // The backend can yet override some configuration
       this.config.merge(config)
-      // Override Murmur default value for content-placeholder
-      this.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
       // Create the default project for the current user or redirect to login
       await this.createDefaultProject()
       // Set the default project
@@ -227,17 +227,13 @@ class Core extends Behaviors {
     return this
   }
   /**
-   * Get the current signed user. If none, redirect to the login page.
+   * Get the current signed user.
    * @async
    * @fullfil {Object} Current user
    * @type {Promise<Object>}
    */
-  async getUser () {
-    try {
-      return await this.api.getUser()
-    } catch (_) {
-      await this.router.push('login')
-    }
+  getUser () {
+    return this.api.getUser()
   }
   /**
    * Get a promise that is resolved when the application is ready

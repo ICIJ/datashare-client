@@ -149,6 +149,32 @@ html {
   }
 }
 
+#b-toaster-top-right.b-toaster .b-toaster-slot,
+#b-toaster-top-left.b-toaster .b-toaster-slot,
+#b-toaster-bottom-right.b-toaster .b-toaster-slot,
+#b-toaster-bottom-left.b-toaster .b-toaster-slot {
+
+  &, .b-toast, .b-toast .toast {
+    max-width: 460px;
+  }
+
+  .b-toast {
+
+    .toast {
+      font-size: 1rem;
+    }
+
+    &-danger .toast,
+    &-warning .toast,
+    &-info .toast,
+    &-success .toast {
+      border-left-width: 25px;
+    }
+  }
+}
+
+
+
 
 body {
   max-width: 100vw;

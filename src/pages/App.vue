@@ -13,13 +13,23 @@
       </div>
     </div>
     <vue-progress-bar />
+    <b-toast id="logged-out-toast" variant="danger" no-close-button no-auto-hide>
+      <p>You have been logged out from Datashare.</p>
+      <div class="d-flex">
+        <b-button :href="signinUrl" variant="danger" class="ml-auto">
+          Login to continue
+        </b-button>
+      </div>
+    </b-toast>
   </div>
 </template>
 
 <script>
 import compact from 'lodash/compact'
+import get from 'lodash/get'
 import some from 'lodash/some'
 
+import { EventBus } from '@/utils/event-bus'
 import AppSidebar from '@/components/AppSidebar'
 import ScrollTracker from '@/components/ScrollTracker'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
@@ -32,6 +42,9 @@ export default {
     VuePerfectScrollbar
   },
   computed: {
+    signinUrl () {
+      return process.env.VUE_APP_DS_AUTH_SIGNIN
+    },
     matchedRouteNames () {
       return compact(this.$route.matched.map(r => r.name))
     },
@@ -48,6 +61,20 @@ export default {
     },
     isContextSidebarReduced () {
       return this.isHiddingFiltersPanel || !this.doesRouteHaveSidebar
+    }
+  },
+  created () {
+    EventBus.$on('http::error', this.handleHttpError)
+  },
+  beforeDestroy () {
+    EventBus.$off('http::error', this.handleHttpError)
+  },
+  methods: {
+    handleHttpError (err) {
+      const code = get(err, 'request.response.status') || get(err, 'response.status')
+      if (code === 401) {
+        this.$bvToast.show('logged-out-toast')
+      }
     }
   }
 }

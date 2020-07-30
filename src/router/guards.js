@@ -1,5 +1,4 @@
 import get from 'lodash/get'
-import { EventBus } from '@/utils/event-bus'
 
 export default ({ router, auth, store, config, i18n }) => {
   function setProjectFromParams (to, from, next) {
@@ -40,13 +39,4 @@ export default ({ router, auth, store, config, i18n }) => {
   router.beforeEach(setProjectFromParams)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
-
-  EventBus.$on('http::error', error => {
-    const code = get(error, 'request.response.status') || get(error, 'response.status')
-    if (code === 401) {
-      if (router.currentRoute.name !== 'login') {
-        router.push({ name: 'login' })
-      }
-    }
-  })
 }
