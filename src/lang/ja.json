@@ -528,7 +528,8 @@
     "learnMore": "もっと詳しく",
     "author": "作成者",
     "advancedFilters": "高度なフィルタ",
-    "selectFolder": "Select folder"
+    "selectFolder": "Select folder",
+    "dropFilePlaceholder": "Drop file here..."
   },
   "batchSearchResults": {
     "rank": "ランク",
@@ -564,9 +565,12 @@
     "findNextOccurrence": "検索結果のうち次の語に移動",
     "findNextOccurrenceAlt": "検索結果のうち次の語に移動"
   },
-  "settings": {
+  "server": {
     "title": "Settings",
-    "description": "Don't change these settings if you don't know what you're doing.",
+    "description": "Don't change these settings if you don't know what you're doing."
+  },
+  "serverSettings": {
+    "title": "Server Settings",
     "submit": "Submit",
     "submitSuccess": "Modifications submitted.",
     "submitError": "Unable to submit the settings.",
@@ -614,13 +618,12 @@
   },
   "api": {
     "title": "API",
-    "subtitle": "Manage your API key",
     "newApiKey": "Create API key",
-    "apiKey": "API key"
+    "apiKey": "API key",
+    "noAccess": "You do not have access to that page in local mode."
   },
   "plugins": {
     "title": "Plugins",
-    "description": "Manage your plugins.",
     "search": "Search plugins",
     "submitSuccess": "Plugin successfully installed.",
     "submitError": "Error while installing the plugin.",
@@ -630,5 +633,8 @@
     "installFromUrl": "Install plugin from URL",
     "install": "Install",
     "enterCorrectUrl": "Please enter a correct URL."
+  },
+  "extensions": {
+    "title": "Extensions"
   }
 }
