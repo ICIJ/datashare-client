@@ -85,5 +85,9 @@ export default {
 <style lang="scss">
   .widget--duplicates {
     width: 100%;
+
+    .stacked-bar-chart__groups__item__label {
+      display: none;
+    }
   }
 </style>
