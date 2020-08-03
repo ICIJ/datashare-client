@@ -105,7 +105,7 @@ describe('Plugins.vue', () => {
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith({
       method: 'DELETE',
-      url: Api.getFullUrl('/api/plugins/remove/plugin_01_id')
+      url: Api.getFullUrl('/api/plugins/uninstall?id=plugin_01_id')
     })
   })
 })
