@@ -21,7 +21,7 @@
         </b-dropdown>
       </h6>
       <div class="batch-search-results-filters__queries__search text-dark">
-        <search-form-control :placeholder="$t('batchSearchResultsFilters.filterQueries')" v-model="queriesFilter" />
+        <search-form-control :placeholder="$t('batchSearchResultsFilters.filterQueries')" v-model="queriesFilter"></search-form-control>
       </div>
       <div class="small">
         <selectable-dropdown
@@ -55,7 +55,6 @@
 </template>
 
 <script>
-import Fuse from 'fuse.js'
 import cloneDeep from 'lodash/cloneDeep'
 import compact from 'lodash/compact'
 import find from 'lodash/find'
@@ -63,8 +62,9 @@ import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
 import map from 'lodash/map'
 import orderBy from 'lodash/orderBy'
+import Fuse from 'fuse.js'
 
-import SearchFormControl from './SearchFormControl.vue'
+import SearchFormControl from '@/components/SearchFormControl'
 
 /**
  * Form to filter a bash search results by query

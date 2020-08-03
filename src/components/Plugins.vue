@@ -1,18 +1,11 @@
 <template>
   <div class="plugins h-100">
     <div class="container pt-4">
-      <div class="d-flex">
-        <div class="flex-grow-1">
-          <div class="plugins__search input-group mb-3">
-            <div class="input-group-prepend">
-          <span class="input-group-text rounded-0 border-0 bg-white">
-            <fa icon="search"></fa>
-          </span>
-            </div>
-            <b-form-input type="text" class="form-control border-0" required :placeholder="$t('plugins.search')" @input="search" v-model="searchTerm"></b-form-input>
-          </div>
+      <div class="d-flex mb-2">
+        <div class="plugins__search flex-grow-1">
+          <search-form-control :placeholder="$t('plugins.search')" v-model="searchTerm" @input="search"></search-form-control>
         </div>
-        <div class="plugins__add">
+        <div class="plugins__add ml-2">
           <b-btn variant="primary" @click="$refs.installPluginFromUrl.show()">
             <fa icon="link" class="mr-1"></fa>
             {{ $t('plugins.installFromUrl') }}
@@ -70,11 +63,15 @@
 
 <script>
 import Api from '@/api'
+import SearchFormControl from '@/components/SearchFormControl'
 
 const api = new Api()
 
 export default {
   name: 'Plugins',
+  components: {
+    SearchFormControl
+  },
   data () {
     return {
       plugins: [],

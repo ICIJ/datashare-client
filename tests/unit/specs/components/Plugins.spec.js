@@ -43,7 +43,7 @@ describe('Plugins.vue', () => {
 
   it('should display a search bar', () => {
     expect(wrapper.find('.plugins .plugins__search').exists()).toBeTruthy()
-    expect(wrapper.find('.plugins .plugins__search b-form-input-stub').exists()).toBeTruthy()
+    expect(wrapper.find('.plugins .plugins__search search-form-control-stub').exists()).toBeTruthy()
   })
 
   it('should display a list of plugins', () => {
