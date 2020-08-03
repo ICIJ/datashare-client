@@ -18,10 +18,9 @@ If you want to run it standalone with another Linux distribution, you can downlo
 And adapt the following launch script : [https://github.com/ICIJ/datashare/blob/master/datashare-dist/src/main/deb/bin/datashare](https://github.com/ICIJ/datashare/blob/master/datashare-dist/src/main/deb/bin/datashare) to your environment.
 
 1. Go to the **Datashare's website:** [**https://datashare.icij.org/**](https://datashare.icij.org/).
-
 2. Click the blue button '**DOWNLOAD FOR FREE'.**
 
-![](../.gitbook/assets/group-42123131.png)
+![](../.gitbook/assets/install.png)
 
 3. Save the debian package as a file
 
