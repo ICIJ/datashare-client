@@ -36,7 +36,7 @@ $ sudo apt install /dir/to/debian/package/datashare-dist_7.2.0_all.deb
  5. Run Datashare with:
 
 ```text
-$ datashare -h
+$ datashare
 ```
 
 ### With Docker 
