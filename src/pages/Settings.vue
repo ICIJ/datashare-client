@@ -7,12 +7,12 @@
           <b-tab :title="$t('serverSettings.title')" active v-if="!$config.is('multipleProjects')">
             <server-settings></server-settings>
           </b-tab>
-          <b-tab :title="$t('plugins.title')" v-if="hasFeature('PLUGINS_AVAILABLE')">
+          <b-tab :title="$t('plugins.title')" v-if="!$config.is('multipleProjects') && hasFeature('PLUGINS_AVAILABLE')">
             <b-card-text>
               <plugins></plugins>
             </b-card-text>
           </b-tab>
-          <b-tab :title="$t('extensions.title')" v-if="hasFeature('EXTENSIONS_AVAILABLE')">
+          <b-tab :title="$t('extensions.title')" v-if="!$config.is('multipleProjects') && hasFeature('EXTENSIONS_AVAILABLE')">
             <b-card-text>
               {{ $t('extensions.title') }}
             </b-card-text>
