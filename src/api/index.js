@@ -153,7 +153,7 @@ export default class Api {
     return this.sendAction(`/api/plugins/install?url=${pluginUrl}`, { method: 'PUT' })
   }
   uninstallPlugin (pluginId) {
-    return this.sendAction(`/api/plugins/remove/${pluginId}`, { method: 'DELETE' })
+    return this.sendAction(`/api/plugins/uninstall?id=${pluginId}`, { method: 'DELETE' })
   }
   async sendAction (url, config = {}) {
     try {
