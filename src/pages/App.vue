@@ -1,23 +1,25 @@
 <template>
   <div class="app d-flex">
     <div class="app__sidebar">
-      <app-sidebar />
+      <app-sidebar></app-sidebar>
     </div>
     <div class="app__main flex-grow-1 d-flex" :class="{ 'app__main--has-context-sidebar': doesRouteHaveSidebar }">
       <vue-perfect-scrollbar class="app__main__context-sidebar p-1" v-if="!isContextSidebarReduced">
-        <router-view name="sidebar" />
+        <router-view name="sidebar"></router-view>
       </vue-perfect-scrollbar>
       <div class="app__main__view flex-grow-1">
-        <scroll-tracker />
-        <router-view />
+        <scroll-tracker></scroll-tracker>
+        <router-view></router-view>
       </div>
     </div>
-    <vue-progress-bar />
+    <vue-progress-bar></vue-progress-bar>
     <b-toast id="logged-out-toast" variant="danger" no-close-button no-auto-hide>
-      <p>You have been logged out from Datashare.</p>
+      <p>
+        {{ $t('login.logout') }}
+      </p>
       <div class="d-flex">
         <b-button :href="signinUrl" variant="danger" class="ml-auto">
-          Login to continue
+          {{ $t('login.login') }}
         </b-button>
       </div>
     </b-toast>
@@ -29,9 +31,9 @@ import compact from 'lodash/compact'
 import get from 'lodash/get'
 import some from 'lodash/some'
 
-import { EventBus } from '@/utils/event-bus'
 import AppSidebar from '@/components/AppSidebar'
 import ScrollTracker from '@/components/ScrollTracker'
+import { EventBus } from '@/utils/event-bus'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
 
 export default {
@@ -86,8 +88,8 @@ export default {
     --app-nav-height: #{$app-nav-height};
     --app-sidebar-width: #{$app-sidebar-width};
 
-    min-height: 100vh;
     background: $app-sidebar-bg;
+    min-height: 100vh;
     transition: filter 200ms;
 
     .modal-open & {
@@ -101,8 +103,8 @@ export default {
     }
 
     &__main {
-      box-shadow: $box-shadow-lg;
       background: $body-bg;
+      box-shadow: $box-shadow-lg;
       padding-bottom: 0;
 
       &--has-context-sidebar {
@@ -117,16 +119,16 @@ export default {
       }
 
       & &__context-sidebar {
-        position: sticky;
-        top: 0;
-        left: 0;
-        height: 100vh;
-        max-height: 100vh;
         background: $app-context-sidebar-bg;
         color: $app-context-sidebar-color;
-        width: $app-context-sidebar-width;
+        height: 100vh;
+        left: 0;
+        max-height: 100vh;
         max-width: $app-context-sidebar-width;
         min-width: $app-context-sidebar-width;
+        position: sticky;
+        top: 0;
+        width: $app-context-sidebar-width;
 
         .card {
           color: $body-color;

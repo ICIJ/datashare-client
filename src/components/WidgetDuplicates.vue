@@ -5,11 +5,11 @@
     </div>
     <div class="p-4">
       <v-wait for="duplicate-counters" transition="fade">
-        <fa icon="circle-notch" spin slot="waiting" size="2x" class="m-auto d-block" />
+        <fa icon="circle-notch" spin slot="waiting" size="2x" class="m-auto d-block"></fa>
         <div>
-          <stacked-bar-chart :data="data" :x-axis-tick-format="humanNumber" :bar-colors="colors" :keys="keys" :groups="groups"/>
+          <stacked-bar-chart :data="data" :x-axis-tick-format="humanNumber" :bar-colors="colors" :keys="keys" :groups="groups"></stacked-bar-chart>
           <p class="small text-muted">
-            *Duplicated documents are not indexed in Datashare to ease search and avoid creating unecessary noise.
+            {{ $t('widget.duplicates.') }}
           </p>
         </div>
       </v-wait>
@@ -82,7 +82,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .widget--duplicates {
     width: 100%;
 
