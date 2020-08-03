@@ -1,5 +1,5 @@
 <template>
-  <div class="batch-search-results">
+  <div class="batch-search-results" v-if="Object.keys(batchSearch).length !== 0">
     <page-header icon="layer-group" :title="batchSearch.name" :description="batchSearch.description">
       <template v-slot:preTitle>
         <router-link :to="{ name: 'batch-search' }">{{ $t('batchSearch.title') }}</router-link>
@@ -434,30 +434,28 @@ export default {
       }
     },
     capitalize,
-    moment,
-    keys
+    keys,
+    moment
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .batch-search-results {
-
   &__action {
     position: relative;
 
     & &__counter {
+      margin: 0;
       position: absolute;
       right: 0;
       top: 0;
-      margin: 0;
-      z-index: 100;
       transform: translate(50%, -50%);
+      z-index: 100;
     }
   }
 
   &__queries {
-
     table {
       margin: 0;
 
