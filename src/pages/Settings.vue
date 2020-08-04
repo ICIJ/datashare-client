@@ -14,7 +14,7 @@
           </b-tab>
           <b-tab :title="$t('extensions.title')" v-if="!$config.is('multipleProjects') && hasFeature('EXTENSIONS_AVAILABLE')">
             <b-card-text>
-              {{ $t('extensions.title') }}
+              <extensions></extensions>
             </b-card-text>
           </b-tab>
           <b-tab :title="$t('api.title')" v-if="!!$config.is('multipleProjects') && hasFeature('API_AVAILABLE')">
@@ -30,6 +30,7 @@
 
 <script>
 import Api from '@/components/Api'
+import Extensions from '@/components/Extensions'
 import PageHeader from '@/components/PageHeader'
 import Plugins from '@/components/Plugins'
 import ServerSettings from '@/components/ServerSettings'
@@ -39,6 +40,7 @@ export default {
   name: 'Settings',
   components: {
     Api,
+    Extensions,
     PageHeader,
     Plugins,
     ServerSettings

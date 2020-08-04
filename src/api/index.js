@@ -155,6 +155,9 @@ export default class Api {
   uninstallPlugin (pluginId) {
     return this.sendAction(`/api/plugins/uninstall?id=${pluginId}`, { method: 'DELETE' })
   }
+  getExtensions () {
+    return this.sendAction('/api/extensions')
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })
