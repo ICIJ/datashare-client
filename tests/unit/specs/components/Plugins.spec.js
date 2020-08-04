@@ -52,27 +52,12 @@ describe('Plugins.vue', () => {
 
   it('should search for matching plugins', async () => {
     axios.request.mockClear()
-    axios.request.mockResolvedValue({
-      data: [{
-        id: 'plugin_02_id',
-        name: 'plugin_02_name',
-        version: 'plugin_02_version',
-        description: 'plugin_02_description'
-      }]
-    })
     await wrapper.setData({ searchTerm: '02_desc' })
 
     await wrapper.vm.search()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/plugins?filter=.*02_desc.*') })
-    expect(wrapper.vm.plugins).toHaveLength(1)
-    expect(wrapper.vm.plugins[0]).toMatchObject({
-      id: 'plugin_02_id',
-      name: 'plugin_02_name',
-      version: 'plugin_02_version',
-      description: 'plugin_02_description'
-    })
   })
 
   it('should call for plugin installation from pluginId', () => {
