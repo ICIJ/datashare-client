@@ -483,7 +483,9 @@
     "authenticationPlatform": "Pour se connecter, utiliser la plateforme sécurisée d'authentification de l'ICIJ :",
     "account": "Se connecter avec Account",
     "supportDesk": "Si vous avez besoin d'aide, veuillez contacter notre bureau support :",
-    "askHelp": "Aide"
+    "askHelp": "Aide",
+    "logout": "You have been logged out from Datashare.",
+    "login": "Login to continue"
   },
   "userHistory": {
     "heading": "Votre historique",
@@ -614,6 +616,9 @@
         "day": "Jour"
       },
       "document": "aucun document | 1 document | %{total} documents"
+    },
+    "duplicates": {
+      "duplicated": "* Duplicated documents are not indexed in Datashare to ease search and avoid creating unnecessary noise."
     }
   },
   "api": {
