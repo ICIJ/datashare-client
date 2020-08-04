@@ -645,8 +645,11 @@
     "title": "Extensions",
     "submitSuccess": "Extension successfully installed.",
     "submitError": "Error while installing the extension.",
+    "deleteSuccess": "Extension successfully deleted.",
+    "deleteError": "Error while deleting the extension.",
     "version": "Version",
     "homePage": "Extension home page",
-    "install": "Install extension"
+    "install": "Install extension",
+    "uninstall": "Uninstall extension"
   }
 }

@@ -86,7 +86,7 @@ describe('Plugins.vue', () => {
 
   it('should call for plugin uninstallation', () => {
     axios.request.mockClear()
-    wrapper.vm.uninstall('plugin_01_id')
+    wrapper.vm.uninstallPlugin('plugin_01_id')
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith({

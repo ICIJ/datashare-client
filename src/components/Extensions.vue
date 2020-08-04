@@ -19,6 +19,9 @@
               <b-btn class="ml-2" @click="installExtensionFromId(extension.id)" :title="$t('extensions.install')">
                 <fa icon="cloud-upload-alt"></fa>
               </b-btn>
+              <b-btn class="ml-2" @click="uninstallExtension(extension.id)" :title="$t('extensions.uninstall')">
+                <fa icon="trash-alt"></fa>
+              </b-btn>
             </div>
           </template>
         </b-card>
@@ -58,6 +61,14 @@ export default {
         this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
       }
       extension.show = false
+    },
+    async uninstallExtension (extensionId) {
+      try {
+        await api.uninstallExtension(extensionId)
+        this.$bvToast.toast(this.$t('extensions.deleteSuccess'), { noCloseButton: true, variant: 'success' })
+      } catch (_) {
+        this.$bvToast.toast(this.$t('extensions.deleteError'), { noCloseButton: true, variant: 'danger' })
+      }
     }
   }
 }

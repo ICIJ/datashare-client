@@ -48,4 +48,15 @@ describe('Extensions.vue', () => {
     })
     expect(wrapper.vm.extensions[0].show).toBeTruthy()
   })
+
+  it('should call for extension uninstallation', () => {
+    axios.request.mockClear()
+    wrapper.vm.uninstallExtension('extension_01_id')
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      method: 'DELETE',
+      url: Api.getFullUrl('/api/extensions/uninstall?id=extension_01_id')
+    })
+  })
 })

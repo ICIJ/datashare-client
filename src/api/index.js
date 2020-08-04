@@ -161,6 +161,9 @@ export default class Api {
   installExtensionFromId (extensionId) {
     return this.sendAction(`/api/extensions/install?id=${extensionId}`, { method: 'PUT' })
   }
+  uninstallExtension (extensionId) {
+    return this.sendAction(`/api/extensions/uninstall?id=${extensionId}`, { method: 'DELETE' })
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })

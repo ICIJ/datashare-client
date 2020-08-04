@@ -51,7 +51,7 @@
                 <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')">
                   <fa icon="cloud-upload-alt"></fa>
                 </b-btn>
-                <b-btn class="ml-2" @click="uninstall(plugin.id)" :title="$t('plugins.uninstall')">
+                <b-btn class="ml-2" @click="uninstallPlugin(plugin.id)" :title="$t('plugins.uninstall')">
                   <fa icon="trash-alt"></fa>
                 </b-btn>
               </div>
@@ -126,7 +126,7 @@ export default {
       this.$refs.installPluginFromUrl.hide()
       this.$set(this, 'url', '')
     },
-    async uninstall (pluginId) {
+    async uninstallPlugin (pluginId) {
       try {
         await api.uninstallPlugin(pluginId)
         this.$bvToast.toast(this.$t('plugins.deleteSuccess'), { noCloseButton: true, variant: 'success' })
