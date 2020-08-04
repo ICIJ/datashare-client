@@ -93,5 +93,6 @@ describe('Plugins.vue', () => {
       method: 'DELETE',
       url: Api.getFullUrl('/api/plugins/uninstall?id=plugin_01_id')
     })
+    expect(wrapper.vm.plugins[0].show).toBeTruthy()
   })
 })

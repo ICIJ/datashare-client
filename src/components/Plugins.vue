@@ -107,8 +107,8 @@ export default {
     },
     async installPluginFromId (pluginId) {
       const plugin = find(this.plugins, { id: pluginId })
+      plugin.show = true
       try {
-        plugin.show = true
         await api.installPluginFromId(pluginId)
         this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
@@ -127,12 +127,15 @@ export default {
       this.$set(this, 'url', '')
     },
     async uninstallPlugin (pluginId) {
+      const plugin = find(this.plugins, { id: pluginId })
+      plugin.show = true
       try {
         await api.uninstallPlugin(pluginId)
         this.$bvToast.toast(this.$t('plugins.deleteSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('plugins.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
+      plugin.show = false
     }
   }
 }

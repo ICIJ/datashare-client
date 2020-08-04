@@ -58,5 +58,6 @@ describe('Extensions.vue', () => {
       method: 'DELETE',
       url: Api.getFullUrl('/api/extensions/uninstall?id=extension_01_id')
     })
+    expect(wrapper.vm.extensions[0].show).toBeTruthy()
   })
 })

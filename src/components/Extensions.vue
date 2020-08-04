@@ -53,8 +53,8 @@ export default {
   methods: {
     async installExtensionFromId (extensionId) {
       const extension = find(this.extensions, { id: extensionId })
+      extension.show = true
       try {
-        extension.show = true
         await api.installExtensionFromId(extensionId)
         this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
@@ -63,12 +63,15 @@ export default {
       extension.show = false
     },
     async uninstallExtension (extensionId) {
+      const extension = find(this.extensions, { id: extensionId })
+      extension.show = true
       try {
         await api.uninstallExtension(extensionId)
         this.$bvToast.toast(this.$t('extensions.deleteSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('extensions.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
+      extension.show = false
     }
   }
 }
