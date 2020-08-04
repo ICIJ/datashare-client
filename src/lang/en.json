@@ -642,6 +642,11 @@
     "enterCorrectUrl": "Please enter a correct URL."
   },
   "extensions": {
-    "title": "Extensions"
+    "title": "Extensions",
+    "submitSuccess": "Extension successfully installed.",
+    "submitError": "Error while installing the extension.",
+    "version": "Version",
+    "homePage": "Extension home page",
+    "install": "Install extension"
   }
 }

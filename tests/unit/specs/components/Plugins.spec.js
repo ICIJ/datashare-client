@@ -98,7 +98,7 @@ describe('Plugins.vue', () => {
     })
   })
 
-  it('should call for plugin deletion', () => {
+  it('should call for plugin uninstallation', () => {
     axios.request.mockClear()
     wrapper.vm.uninstall('plugin_01_id')
 

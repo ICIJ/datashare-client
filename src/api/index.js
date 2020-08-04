@@ -158,6 +158,9 @@ export default class Api {
   getExtensions () {
     return this.sendAction('/api/extensions')
   }
+  installExtensionFromId (extensionId) {
+    return this.sendAction(`/api/extensions/install?id=${extensionId}`, { method: 'PUT' })
+  }
   async sendAction (url, config = {}) {
     try {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })

@@ -7,9 +7,19 @@
             {{ extension.description }}
           </div>
           <div v-if="extension.version" class="font-italic mt-2">
-            {{ $t('extension.version') }}: {{ extension.version }}
+            {{ $t('extensions.version') }}: {{ extension.version }}
           </div>
         </b-card-text>
+        <template v-slot:footer>
+          <div class="text-center">
+            <b-btn :href="extension.url" target="_blank" :title="$t('extensions.homePage')" v-if="extension.url">
+              <fa icon="home"></fa>
+            </b-btn>
+            <b-btn class="ml-2" @click="installExtensionFromId(extension.id)" :title="$t('extensions.install')">
+              <fa icon="cloud-upload-alt"></fa>
+            </b-btn>
+          </div>
+        </template>
       </b-card>
     </b-card-group>
   </div>
@@ -30,6 +40,16 @@ export default {
   async mounted () {
     const extensions = await api.getExtensions()
     this.$set(this, 'extensions', extensions)
+  },
+  methods: {
+    async installExtensionFromId (extensionId) {
+      try {
+        await api.installExtensionFromId(extensionId)
+        this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
+      } catch (_) {
+        this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
+      }
+    }
   }
 }
 </script>

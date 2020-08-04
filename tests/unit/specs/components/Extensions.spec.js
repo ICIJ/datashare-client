@@ -1,5 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import axios from 'axios'
 
+import Api from '@/api'
 import Extensions from '@/components/Extensions'
 import { Core } from '@/core'
 
@@ -33,5 +35,16 @@ describe('Extensions.vue', () => {
 
   it('should display a list of extensions', async () => {
     expect(wrapper.findAll('.extensions .extensions__card')).toHaveLength(2)
+  })
+
+  it('should call for extension installation from extensionId', () => {
+    axios.request.mockClear()
+    wrapper.vm.installExtensionFromId('extension_01_id')
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      method: 'PUT',
+      url: Api.getFullUrl('/api/extensions/install?id=extension_01_id')
+    })
   })
 })
