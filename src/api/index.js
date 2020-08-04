@@ -155,8 +155,8 @@ export default class Api {
   uninstallPlugin (pluginId) {
     return this.sendAction(`/api/plugins/uninstall?id=${pluginId}`, { method: 'DELETE' })
   }
-  getExtensions () {
-    return this.sendAction('/api/extensions')
+  getExtensions (query = '') {
+    return this.sendAction(`/api/extensions?filter=.*${toLower(query)}.*`)
   }
   installExtensionFromId (extensionId) {
     return this.sendAction(`/api/extensions/install?id=${extensionId}`, { method: 'PUT' })

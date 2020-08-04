@@ -37,6 +37,16 @@ describe('Extensions.vue', () => {
     expect(wrapper.findAll('.extensions .extensions__card')).toHaveLength(2)
   })
 
+  it('should search for matching extensions', async () => {
+    axios.request.mockClear()
+    await wrapper.setData({ searchTerm: '02_desc' })
+
+    await wrapper.vm.search()
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/extensions?filter=.*02_desc.*') })
+  })
+
   it('should call for extension installation from extensionId', () => {
     axios.request.mockClear()
     wrapper.vm.installExtensionFromId('extension_01_id')

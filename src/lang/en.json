@@ -643,6 +643,7 @@
   },
   "extensions": {
     "title": "Extensions",
+    "search": "Search extensions",
     "submitSuccess": "Extension successfully installed.",
     "submitError": "Error while installing the extension.",
     "deleteSuccess": "Extension successfully deleted.",
