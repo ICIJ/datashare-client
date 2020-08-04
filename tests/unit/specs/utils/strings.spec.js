@@ -1,6 +1,6 @@
 import escape from 'lodash/escape'
 
-import { sliceIndexes, highlight, addLocalSearchMarks } from '@/utils/strings'
+import { addLocalSearchMarks, highlight, isUrl, sliceIndexes } from '@/utils/strings'
 
 describe('strings', () => {
   describe('sliceIndexes', () => {
@@ -178,6 +178,18 @@ describe('strings', () => {
 
       expect(localSearchOccurrences).toBe(1)
       expect(content).toBe('content content <mark class="local-search-term">Donald Trump</mark> content')
+    })
+  })
+
+  describe('isUrl', () => {
+    it('should return false if it is NOT an url', () => {
+      const url = 'no_url'
+      expect(isUrl(url)).toBeFalsy()
+    })
+
+    it('should return true if it is an url', () => {
+      const url = 'http://www.google.fr'
+      expect(isUrl(url)).toBeTruthy()
     })
   })
 })

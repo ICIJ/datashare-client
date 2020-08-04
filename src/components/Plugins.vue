@@ -21,7 +21,7 @@
                   <fa icon="link"></fa>
                 </span>
               </div>
-              <b-form-input type="url" class="b-form-control border-0" required placeholder="URL" v-model="url" :state="isUrl"></b-form-input>
+              <b-form-input type="url" class="b-form-control border-0" required placeholder="URL" v-model="url" :state="isUrl(url)"></b-form-input>
               <b-form-invalid-feedback class="text-secondary mt-2">
                 {{ $t('plugins.enterCorrectUrl') }}
               </b-form-invalid-feedback>
@@ -69,6 +69,7 @@ import map from 'lodash/map'
 
 import Api from '@/api'
 import SearchFormControl from '@/components/SearchFormControl'
+import { isUrl } from '@/utils/strings'
 
 const api = new Api()
 
@@ -88,17 +89,6 @@ export default {
     const plugins = await api.getPlugins()
     map(plugins, plugin => { plugin.show = false })
     this.$set(this, 'plugins', plugins)
-  },
-  computed: {
-    isUrl () {
-      const pattern = new RegExp('^(https?:\\/\\/)?' + // protocol
-        '((([a-z\\d]([a-z\\d-]*[a-z\\d])*)\\.)+[a-z]{2,}|' + // domain name
-        '((\\d{1,3}\\.){3}\\d{1,3}))' + // OR ip (v4) address
-        '(\\:\\d+)?(\\/[-a-z\\d%_.~+]*)*' + // port and path
-        '(\\?[;&a-z\\d%_.~+=-]*)?' + // query string
-        '(\\#[-a-z\\d_]*)?$', 'i') // fragment locator
-      return !!pattern.test(this.url)
-    }
   },
   methods: {
     async search () {
@@ -136,7 +126,8 @@ export default {
         this.$bvToast.toast(this.$t('plugins.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
       plugin.show = false
-    }
+    },
+    isUrl
   }
 }
 </script>
