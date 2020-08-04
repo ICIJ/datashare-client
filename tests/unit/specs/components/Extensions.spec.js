@@ -46,5 +46,6 @@ describe('Extensions.vue', () => {
       method: 'PUT',
       url: Api.getFullUrl('/api/extensions/install?id=extension_01_id')
     })
+    expect(wrapper.vm.extensions[0].show).toBeTruthy()
   })
 })

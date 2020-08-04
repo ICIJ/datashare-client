@@ -33,35 +33,40 @@
         </div>
       </div>
       <b-card-group deck>
-        <b-card :header="plugin.name" v-for="plugin in plugins" :key="plugin.id" class="plugins__card mb-3" footer-bg-variant="white" footer-border-variant="white">
-          <b-card-text>
-            <div>
-              {{ plugin.description }}
-            </div>
-            <div v-if="plugin.version" class="font-italic mt-2">
-              {{ $t('plugins.version') }}: {{ plugin.version }}
-            </div>
-          </b-card-text>
-          <template v-slot:footer>
-            <div class="text-center">
-              <b-btn :href="plugin.url" target="_blank" :title="$t('plugins.homePage')" v-if="plugin.url">
-                <fa icon="home"></fa>
-              </b-btn>
-              <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')">
-                <fa icon="cloud-upload-alt"></fa>
-              </b-btn>
-              <b-btn class="ml-2" @click="uninstall(plugin.id)" :title="$t('plugins.uninstall')">
-                <fa icon="trash-alt"></fa>
-              </b-btn>
-            </div>
-          </template>
-        </b-card>
+        <b-overlay :show="plugin.show" v-for="plugin in plugins" :key="plugin.id" class="plugins__card mx-3">
+          <b-card :header="plugin.name" footer-bg-variant="white" footer-border-variant="white" class="m-0">
+            <b-card-text>
+              <div>
+                {{ plugin.description }}
+              </div>
+              <div v-if="plugin.version" class="font-italic mt-2">
+                {{ $t('plugins.version') }}: {{ plugin.version }}
+              </div>
+            </b-card-text>
+            <template v-slot:footer>
+              <div class="text-center">
+                <b-btn :href="plugin.url" target="_blank" :title="$t('plugins.homePage')" v-if="plugin.url">
+                  <fa icon="home"></fa>
+                </b-btn>
+                <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')">
+                  <fa icon="cloud-upload-alt"></fa>
+                </b-btn>
+                <b-btn class="ml-2" @click="uninstall(plugin.id)" :title="$t('plugins.uninstall')">
+                  <fa icon="trash-alt"></fa>
+                </b-btn>
+              </div>
+            </template>
+          </b-card>
+        </b-overlay>
       </b-card-group>
     </div>
   </div>
 </template>
 
 <script>
+import find from 'lodash/find'
+import map from 'lodash/map'
+
 import Api from '@/api'
 import SearchFormControl from '@/components/SearchFormControl'
 
@@ -81,6 +86,7 @@ export default {
   },
   async mounted () {
     const plugins = await api.getPlugins()
+    map(plugins, plugin => { plugin.show = false })
     this.$set(this, 'plugins', plugins)
   },
   computed: {
@@ -100,12 +106,15 @@ export default {
       this.$set(this, 'plugins', plugins)
     },
     async installPluginFromId (pluginId) {
+      const plugin = find(this.plugins, { id: pluginId })
       try {
+        plugin.show = true
         await api.installPluginFromId(pluginId)
         this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('plugins.submitError'), { noCloseButton: true, variant: 'danger' })
       }
+      plugin.show = false
     },
     async installFromUrl () {
       try {
@@ -128,11 +137,12 @@ export default {
   }
 }
 </script>
+
 <style lang="scss">
 .plugins__card {
-  max-width: calc(25% - 30px);
-  min-width: calc(25% - 30px);
-  width: calc(25% - 30px);
+  max-width: calc(25% - 2rem);
+  min-width: calc(25% - 2rem);
+  width: calc(25% - 2rem);
 
   .card-header {
     font-weight: bold;

@@ -84,6 +84,7 @@ describe('Plugins.vue', () => {
       method: 'PUT',
       url: Api.getFullUrl('/api/plugins/install?id=plugin_01_id')
     })
+    expect(wrapper.vm.plugins[0].show).toBeTruthy()
   })
 
   it('should call for plugin installation from pluginUrl', async () => {
