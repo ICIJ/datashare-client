@@ -77,7 +77,7 @@ describe('Plugins.vue', () => {
 
   it('should call for plugin installation from pluginId', () => {
     axios.request.mockClear()
-    wrapper.vm.installFromId('plugin_01_id')
+    wrapper.vm.installPluginFromId('plugin_01_id')
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith({

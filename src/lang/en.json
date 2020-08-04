@@ -635,8 +635,10 @@
     "deleteSuccess": "Plugin successfully deleted.",
     "deleteError": "Error while deleting the plugin.",
     "version": "Version",
+    "homePage": "Plugin home page",
+    "install": "Install plugin",
+    "uninstall": "Uninstall plugin",
     "installFromUrl": "Install plugin from URL",
-    "install": "Install",
     "enterCorrectUrl": "Please enter a correct URL."
   },
   "extensions": {

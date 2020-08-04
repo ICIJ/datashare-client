@@ -17,9 +17,9 @@
             </template>
             <div class="input-group mb-3">
               <div class="input-group-prepend">
-          <span class="input-group-text rounded-0 border-0 bg-white">
-            <fa icon="link"></fa>
-          </span>
+                <span class="input-group-text rounded-0 border-0 bg-white">
+                  <fa icon="link"></fa>
+                </span>
               </div>
               <b-form-input type="url" class="b-form-control border-0" required placeholder="URL" v-model="url" :state="isUrl"></b-form-input>
               <b-form-invalid-feedback class="text-secondary mt-2">
@@ -44,13 +44,13 @@
           </b-card-text>
           <template v-slot:footer>
             <div class="text-center">
-              <b-btn :href="plugin.url" target="_blank" title="Home page">
+              <b-btn :href="plugin.url" target="_blank" :title="$t('plugins.homePage')" v-if="plugin.url">
                 <fa icon="home"></fa>
               </b-btn>
-              <b-btn class="ml-2" @click="installFromId(plugin.id)" title="Install plugin">
+              <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')">
                 <fa icon="cloud-upload-alt"></fa>
               </b-btn>
-              <b-btn class="ml-2" @click="uninstall(plugin.id)" title="Uninstall plugin">
+              <b-btn class="ml-2" @click="uninstall(plugin.id)" :title="$t('plugins.uninstall')">
                 <fa icon="trash-alt"></fa>
               </b-btn>
             </div>
@@ -99,7 +99,7 @@ export default {
       const plugins = await api.getPlugins(this.searchTerm)
       this.$set(this, 'plugins', plugins)
     },
-    async installFromId (pluginId) {
+    async installPluginFromId (pluginId) {
       try {
         await api.installPluginFromId(pluginId)
         this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
