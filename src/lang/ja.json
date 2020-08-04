@@ -483,7 +483,9 @@
     "authenticationPlatform": "ログインするには、ICIJの安全な認証プラットフォームを使ってください",
     "account": "Login with Account",
     "supportDesk": "何か必要な場合にはサポートデスクをご利用ください",
-    "askHelp": "ヘルプを求める"
+    "askHelp": "ヘルプを求める",
+    "logout": "You have been logged out from Datashare.",
+    "login": "Login to continue"
   },
   "userHistory": {
     "heading": "あなたの履歴",
@@ -614,6 +616,9 @@
         "day": "Day"
       },
       "document": "no documents | 1 document | %{total} documents"
+    },
+    "duplicates": {
+      "duplicated": "* Duplicated documents are not indexed in Datashare to ease search and avoid creating unnecessary noise."
     }
   },
   "api": {
