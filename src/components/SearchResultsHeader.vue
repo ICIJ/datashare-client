@@ -4,7 +4,7 @@
       <b-btn-group class="flex-grow-1">
         <b-dropdown size="sm" variant="link" class="search-results-header__settings__sort" toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__sort__toggler" menu-class="search-results-header__settings__sort__dropdown">
           <template v-slot:button-content>
-            Sort
+            {{ $t('search.results.sort.sortLabel') }}
           </template>
           <b-dropdown-header>
             {{ $t('search.settings.sortBy') }}
