@@ -56,6 +56,7 @@
       "perPage": "ページごと",
       "sortedByPath": "sorted by path",
       "sort": {
+        "sortLabel": "Sort",
         "sort": "並べ替え",
         "relevance": "関連性",
         "dateNewest": "インデックスの日付(新しい順)",
@@ -635,11 +636,22 @@
     "deleteSuccess": "Plugin successfully deleted.",
     "deleteError": "Error while deleting the plugin.",
     "version": "Version",
+    "homePage": "Plugin home page",
+    "install": "Install plugin",
+    "uninstall": "Uninstall plugin",
     "installFromUrl": "Install plugin from URL",
-    "install": "Install",
     "enterCorrectUrl": "Please enter a correct URL."
   },
   "extensions": {
-    "title": "Extensions"
+    "title": "Extensions",
+    "search": "Search extensions",
+    "submitSuccess": "Extension successfully installed.",
+    "submitError": "Error while installing the extension.",
+    "deleteSuccess": "Extension successfully deleted.",
+    "deleteError": "Error while deleting the extension.",
+    "version": "Version",
+    "homePage": "Extension home page",
+    "install": "Install extension",
+    "uninstall": "Uninstall extension"
   }
 }

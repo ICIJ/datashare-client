@@ -56,6 +56,7 @@
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
       "sort": {
+        "sortLabel": "Sort",
         "sort": "Tri par",
         "relevance": "Pertinence",
         "dateNewest": "Date d'ajout (décroissante)",
@@ -484,8 +485,8 @@
     "account": "Se connecter avec Account",
     "supportDesk": "Si vous avez besoin d'aide, veuillez contacter notre bureau support :",
     "askHelp": "Aide",
-    "logout": "You have been logged out from Datashare.",
-    "login": "Login to continue"
+    "logout": "Vous avez été déconnecté•e de Datashare.",
+    "login": "Identifiez-vous pour continuer"
   },
   "userHistory": {
     "heading": "Votre historique",
@@ -531,7 +532,7 @@
     "author": "Auteur·e",
     "advancedFilters": "Filtres avancés",
     "selectFolder": "Sélectionner un dossier",
-    "dropFilePlaceholder": "Drop file here..."
+    "dropFilePlaceholder": "Déposez le fichier ici..."
   },
   "batchSearchResults": {
     "rank": "Rang",
@@ -568,15 +569,15 @@
     "findNextOccurrenceAlt": "Aller à l'occurrence suivante dans le document"
   },
   "server": {
-    "title": "Settings",
-    "description": "Don't change these settings if you don't know what you're doing."
+    "title": "Paramètres",
+    "description": "Ne modifiez pas ces paramètres si vous ne savez pas ce que vous faites."
   },
   "serverSettings": {
-    "title": "Server Settings",
-    "submit": "Submit",
-    "submitSuccess": "Modifications submitted.",
-    "submitError": "Unable to submit the settings.",
-    "noAccess": "You do not have access to that page in server mode."
+    "title": "Paramètres du serveur",
+    "submit": "Valider",
+    "submitSuccess": "Modifications enregistrées.",
+    "submitError": "Impossible d'enregistrer ces paramètres.",
+    "noAccess": "Vous n'avez pas accès à cette page en mode serveur."
   },
   "human": {
     "number": {
@@ -618,28 +619,39 @@
       "document": "aucun document | 1 document | %{total} documents"
     },
     "duplicates": {
-      "duplicated": "* Duplicated documents are not indexed in Datashare to ease search and avoid creating unnecessary noise."
+      "duplicated": "* Les documents dupliqués ne sont pas indexés dans Datashare pour faciliter la recherche et éviter de créer des documents inutiles."
     }
   },
   "api": {
     "title": "API",
-    "newApiKey": "Create API key",
+    "newApiKey": "Créer une clé API",
     "apiKey": "Clé d'API",
-    "noAccess": "You do not have access to that page in local mode."
+    "noAccess": "Vous n'avez pas accès à cette page en mode local."
   },
   "plugins": {
-    "title": "Plugins",
-    "search": "Search plugins",
-    "submitSuccess": "Plugin successfully installed.",
-    "submitError": "Error while installing the plugin.",
-    "deleteSuccess": "Plugin successfully deleted.",
-    "deleteError": "Error while deleting the plugin.",
+    "title": "Plug-ins",
+    "search": "Rechercher dans les plug-ins",
+    "submitSuccess": "Le plug-in a été installé avec succès.",
+    "submitError": "Erreur lors de l'installation du plug-in.",
+    "deleteSuccess": "Le plug-in a été désinstallé avec succès.",
+    "deleteError": "Erreur lors de la désinstallation du plug-in.",
     "version": "Version",
-    "installFromUrl": "Install plugin from URL",
-    "install": "Install",
-    "enterCorrectUrl": "Please enter a correct URL."
+    "homePage": "Plugin home page",
+    "install": "Install plugin",
+    "uninstall": "Uninstall plugin",
+    "installFromUrl": "Installer le plug-in depuis une URL",
+    "enterCorrectUrl": "Veuillez saisir une URL valide."
   },
   "extensions": {
-    "title": "Extensions"
+    "title": "Extensions",
+    "search": "Search extensions",
+    "submitSuccess": "Extension successfully installed.",
+    "submitError": "Error while installing the extension.",
+    "deleteSuccess": "Extension successfully deleted.",
+    "deleteError": "Error while deleting the extension.",
+    "version": "Version",
+    "homePage": "Extension home page",
+    "install": "Install extension",
+    "uninstall": "Uninstall extension"
   }
 }

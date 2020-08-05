@@ -56,6 +56,7 @@
       "perPage": "por página",
       "sortedByPath": "ordenado por ruta",
       "sort": {
+        "sortLabel": "Sort",
         "sort": "Ordenar por",
         "relevance": "Relevancia",
         "dateNewest": "Fecha (más reciente)",
@@ -484,8 +485,8 @@
     "account": "Ingresar con Account",
     "supportDesk": "Si necesita ayuda, por favor visite nuestro servicio de asistencia:",
     "askHelp": "Pedir ayuda",
-    "logout": "You have been logged out from Datashare.",
-    "login": "Login to continue"
+    "logout": "Se ha cerrado su sesión de Datashare.",
+    "login": "Inicia sesión para continuar"
   },
   "userHistory": {
     "heading": "Tu historial de navegación",
@@ -531,7 +532,7 @@
     "author": "Autor·a",
     "advancedFilters": "Filtros avanzados",
     "selectFolder": "Seleccionar directorio",
-    "dropFilePlaceholder": "Drop file here..."
+    "dropFilePlaceholder": "Soltar archivos aquí..."
   },
   "batchSearchResults": {
     "rank": "Rango",
@@ -568,15 +569,15 @@
     "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento"
   },
   "server": {
-    "title": "Settings",
-    "description": "Don't change these settings if you don't know what you're doing."
+    "title": "Configuración",
+    "description": "No cambie esta configuración si no sabe lo que está haciendo."
   },
   "serverSettings": {
-    "title": "Server Settings",
-    "submit": "Submit",
-    "submitSuccess": "Modifications submitted.",
-    "submitError": "Unable to submit the settings.",
-    "noAccess": "You do not have access to that page in server mode."
+    "title": "Configuración del servidor",
+    "submit": "Guardar",
+    "submitSuccess": "Modificaciones enviadas.",
+    "submitError": "No se puede actualizar la configuración.",
+    "noAccess": "No tienes acceso a esa página en modo servidor."
   },
   "human": {
     "number": {
@@ -618,28 +619,39 @@
       "document": "no hay archivos | 1 archivo | %{total} archivos"
     },
     "duplicates": {
-      "duplicated": "* Duplicated documents are not indexed in Datashare to ease search and avoid creating unnecessary noise."
+      "duplicated": "* Los archivos duplicados no se indexan en Datashare para facilitar la búsqueda y evitar crear archivos innecesarios."
     }
   },
   "api": {
     "title": "API",
-    "newApiKey": "Create API key",
+    "newApiKey": "Crear una clave API",
     "apiKey": "Clave API",
-    "noAccess": "You do not have access to that page in local mode."
+    "noAccess": "No tiene acceso a esa página en modo local."
   },
   "plugins": {
-    "title": "Plugins",
-    "search": "Search plugins",
-    "submitSuccess": "Plugin successfully installed.",
-    "submitError": "Error while installing the plugin.",
-    "deleteSuccess": "Plugin successfully deleted.",
-    "deleteError": "Error while deleting the plugin.",
-    "version": "Version",
-    "installFromUrl": "Install plugin from URL",
-    "install": "Install",
-    "enterCorrectUrl": "Please enter a correct URL."
+    "title": "Plug-ins",
+    "search": "Buscar plug-ins",
+    "submitSuccess": "El plug-in se ha instalado correctamente.",
+    "submitError": "Error mientras se instalaba el plug-in.",
+    "deleteSuccess": "Plug-in eliminado correctamente.",
+    "deleteError": "Error mientras se eliminaba el plug-in.",
+    "version": "Versión",
+    "homePage": "Plugin home page",
+    "install": "Install plugin",
+    "uninstall": "Uninstall plugin",
+    "installFromUrl": "Instalar plug-in desde URL",
+    "enterCorrectUrl": "Por favor introduzca una URL correcta."
   },
   "extensions": {
-    "title": "Extensions"
+    "title": "Extensiones",
+    "search": "Search extensions",
+    "submitSuccess": "Extension successfully installed.",
+    "submitError": "Error while installing the extension.",
+    "deleteSuccess": "Extension successfully deleted.",
+    "deleteError": "Error while deleting the extension.",
+    "version": "Version",
+    "homePage": "Extension home page",
+    "install": "Install extension",
+    "uninstall": "Uninstall extension"
   }
 }
