@@ -56,7 +56,6 @@ describe('SearchResultsHeader.vue', () => {
 
     await store.dispatch('search/query', { query: '*', from: 0, size: 3 })
     wrapper.setProps({ position: 'top' })
-    await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.search-results-header__applied-search-filters')).toHaveLength(1)
   })
@@ -78,16 +77,27 @@ describe('SearchResultsHeader.vue', () => {
   })
 
   it('should display the dropdown to choose the number of results per page', () => {
-    const toggle = wrapper.find('.search-results-header__settings__sort__toggler')
-    const dropdown = wrapper.find('.search-results-header__settings__sort__dropdown')
-    expect(toggle.exists()).toBeTruthy()
-    expect(dropdown.exists()).toBeTruthy()
+    expect(wrapper.find('.search-results-header__settings__sort__toggler').exists()).toBeTruthy()
+    expect(wrapper.find('.search-results-header__settings__sort__dropdown').exists()).toBeTruthy()
   })
 
   it('should change the searchSort and searchSize via the dropdown', () => {
     wrapper.findAll('.search-results-header__settings__sort__dropdown .dropdown-item').at(3).trigger('click')
-    expect(wrapper.vm.searchSort).toBe('sizeLargest')
+    expect(wrapper.vm.sort).toBe('sizeLargest')
     wrapper.findAll('.search-results-header__settings__size__dropdown .dropdown-item').at(3).trigger('click')
-    expect(wrapper.vm.searchSize).toBe(100)
+    expect(wrapper.vm.size).toBe(100)
+  })
+
+  describe('firstDocument', () => {
+    it('should return 1', async () => {
+      await letData(es).have(new IndexedDocument('doc.txt', index).withContent('bar')).commit()
+      await store.dispatch('search/query', 'bar')
+
+      expect(wrapper.vm.firstDocument).toBe(1)
+    })
+
+    it('should return 0', () => {
+      expect(wrapper.vm.firstDocument).toBe(0)
+    })
   })
 })

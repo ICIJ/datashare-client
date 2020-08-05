@@ -1,19 +1,19 @@
 <template>
   <div class="search-results-list">
     <div v-if="hasResults">
-      <search-results-header position="top" bordered class="px-3" />
+      <search-results-header position="top" bordered class="px-3"></search-results-header>
       <div class="search-results-list__items">
         <div v-for="document in response.hits" :key="document.id" class="search-results-list__items__item mw-100">
-          <search-results-list-link class="search-results-list__items__item__link" :document="document" />
+          <search-results-list-link class="search-results-list__items__item__link" :document="document"></search-results-list-link>
           <div>
-            <document-actions :document="document" vertical class="search-results-list__items__item__actions" :is-download-allowed="isDownloadAllowed" tooltips-placement="right" />
+            <document-actions :document="document" vertical class="search-results-list__items__item__actions" :is-download-allowed="isDownloadAllowed" tooltips-placement="right"></document-actions>
           </div>
         </div>
       </div>
-      <search-results-header position="bottom" bordered class="px-3" />
+      <search-results-header position="bottom" bordered class="px-3"></search-results-header>
     </div>
     <div v-else>
-      <search-results-header position="top" bordered class="px-3" />
+      <search-results-header position="top" bordered class="px-3"></search-results-header>
       <div class="search-results-list__header border-0 py-5 d-flex flex-column text-center">
         <div class="search-results-list__header__number-of-results">
           {{ $t('search.results.noResults') }}

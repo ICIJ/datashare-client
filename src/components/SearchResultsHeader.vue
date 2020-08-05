@@ -9,14 +9,14 @@
           <b-dropdown-header>
             {{ $t('search.settings.sortBy') }}
           </b-dropdown-header>
-          <b-dropdown-item v-for="sort in searchSorts" :key="sort" :active="sort === searchSort" @click="selectSearchSort(sort)">
-            {{ $t('search.results.sort.' + sort) }}
+          <b-dropdown-item v-for="selectedSort in sorts" :key="selectedSort" :active="selectedSort === sort" @click="selectSort(selectedSort)">
+            {{ $t('search.results.sort.' + selectedSort) }}
           </b-dropdown-item>
         </b-dropdown>
         <b-dropdown v-if="!noProgress" size="sm" variant="link" class="search-results-header__settings__size mr-2" toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__size__toggler" menu-class="search-results-header__settings__size__dropdown">
           <template v-slot:button-content>
             <span class="search-results-header__settings__size__toggler__slot">
-              {{ searchFrom + 1 }} – {{ lastDocument }}
+              {{ firstDocument }} – {{ lastDocument }}
             </span>
             <span class="search-results-header__settings__size__toggler__hits text-muted">
               {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
@@ -25,10 +25,10 @@
           <b-dropdown-header>
             {{ $t('search.settings.resultsPerPage') }}
           </b-dropdown-header>
-          <b-dropdown-item v-for="size in searchSizes" :key="size" :active="size === searchSize" @click="selectSearchSize(size)">
+          <b-dropdown-item v-for="selectedSize in sizes" :key="selectedSize" :active="selectedSize === size" @click="selectSize(selectedSize)">
             <div class="d-flex align-items-center">
               <span>
-                {{ size }} by page
+                {{ selectedSize }} {{ $t('search.results.perPage') }}
               </span>
             </div>
           </b-dropdown-item>
@@ -43,7 +43,7 @@
         :total="response.total"></pagination>
     </div>
     <div class="search-results-header__applied-search-filters" v-if="position === 'top' && !noFilters">
-      <applied-search-filters />
+      <applied-search-filters></applied-search-filters>
     </div>
   </div>
 </template>
@@ -96,8 +96,8 @@ export default {
   },
   data () {
     return {
-      searchSizes: [10, 25, 50, 100],
-      searchSorts: [
+      sizes: [10, 25, 50, 100],
+      sorts: [
         'relevance',
         'creationDateNewest',
         'creationDateOldest',
@@ -111,17 +111,15 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', {
-      response: 'response',
-      searchSize: 'size',
-      searchSort: 'sort',
-      searchFrom: 'from'
-    }),
+    ...mapState('search', ['from', 'response', 'size', 'sort']),
+    firstDocument () {
+      return this.lastDocument === 0 ? 0 : this.from + 1
+    },
     lastDocument () {
-      return min([this.response.total, this.$store.state.search.from + this.$store.state.search.size])
+      return min([this.response.total, this.from + this.size])
     },
     searchWindowTooLarge () {
-      return (this.response.total + this.$store.state.search.size) >= this.$config.get('search.maxWindowSize', 1e4)
+      return (this.response.total + this.size) >= this.$config.get('search.maxWindowSize', 1e4)
     }
   },
   mounted () {
@@ -134,15 +132,15 @@ export default {
       return { name: 'search', query: cloneDeep(this.$store.getters['search/toRouteQuery']()) }
     },
     isDisplayed () {
-      return this.response.total > this.$store.state.search.size
+      return this.response.total > this.size
     },
-    selectSearchSize (size) {
+    selectSize (size) {
       // Store new search size into store
       this.$store.commit('search/size', size)
       // Change the route
       this.refreshRouteAndSearch()
     },
-    selectSearchSort (sort) {
+    selectSort (sort) {
       // Store new search sort into store
       this.$store.commit('search/sort', sort)
       // Change the route
@@ -178,13 +176,12 @@ export default {
     }
 
     &__settings {
-      font-size: 0.95em;
       color: $text-muted;
       display: inline-flex;
+      font-size: 0.95em;
       width: 100%;
 
       &__size, &__sort {
-
         &__toggler {
           font-size: inherit;
           line-height: inherit;
@@ -199,9 +196,9 @@ export default {
 
       .dropdown-header {
         background: $gray-100;
-        font-weight: bold;
-        color: $body-color;
         border-bottom: 1px solid $border-color;
+        color: $body-color;
+        font-weight: bold;
       }
 
       .dropdown-item, .dropdown-header {
