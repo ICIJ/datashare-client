@@ -629,17 +629,17 @@
     "noAccess": "No tiene acceso a esa página en modo local."
   },
   "plugins": {
-    "title": "Plug-ins",
-    "search": "Buscar plug-ins",
-    "submitSuccess": "El plug-in se ha instalado correctamente.",
-    "submitError": "Error mientras se instalaba el plug-in.",
-    "deleteSuccess": "Plug-in eliminado correctamente.",
-    "deleteError": "Error mientras se eliminaba el plug-in.",
+    "title": "Plugins",
+    "search": "Buscar plugins",
+    "submitSuccess": "El plugin se ha instalado correctamente.",
+    "submitError": "Error mientras se instalaba el plugin.",
+    "deleteSuccess": "Plugin eliminado correctamente.",
+    "deleteError": "Error mientras se eliminaba el plugin.",
     "version": "Versión",
-    "homePage": "Plugin home page",
-    "install": "Install plugin",
-    "uninstall": "Uninstall plugin",
-    "installFromUrl": "Instalar plug-in desde URL",
+    "homePage": "Página de inicio de los plugins",
+    "install": "Instalar plugin",
+    "uninstall": "Desinstalar plugin",
+    "installFromUrl": "Instalar plugin desde URL",
     "enterCorrectUrl": "Por favor introduzca una URL correcta."
   },
   "extensions": {
