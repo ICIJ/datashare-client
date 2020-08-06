@@ -90,8 +90,8 @@ export default class Api {
   getBatchSearch (batchId) {
     return this.sendActionAsText(`/api/batch/search/${batchId}`)
   }
-  getBatchSearches () {
-    return this.sendAction('/api/batch/search')
+  getBatchSearches (from = 0, size = 100, sort = 'batch_date', order = 'asc') {
+    return this.sendActionAsText('/api/batch/search', { method: 'POST', data: { from, size, sort, order } })
   }
   getBatchSearchResults (batchId, from = 0, size = 100, queries = [], sort = 'doc_nb', order = 'desc') {
     return this.sendActionAsText(`/api/batch/search/result/${batchId}`, { method: 'POST', data: { from, size, queries, sort, order } })

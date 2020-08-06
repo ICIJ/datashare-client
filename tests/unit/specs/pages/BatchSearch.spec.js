@@ -64,4 +64,13 @@ describe('BatchSearch.vue', () => {
   it('should display index in the batch search results url', () => {
     expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a').attributes('href')).toContain('/project_01/')
   })
+
+  it('should redirect on sort changed', async () => {
+    jest.spyOn(router, 'push')
+
+    await wrapper.vm.sortChanged({ sortBy: 'nbResults', sortDesc: true })
+
+    expect(router.push).toBeCalled()
+    expect(router.push).toBeCalledWith({ name: 'batch-search', query: { page: 1, sort: 'batch_results', order: 'desc' } })
+  })
 })

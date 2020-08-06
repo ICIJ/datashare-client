@@ -14,7 +14,7 @@ jest.mock('axios', () => {
 })
 
 describe('BatchSearchStore', () => {
-  let store
+  let store = null
 
   beforeAll(() => {
     store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, actions, getters, mutations, state } } })
@@ -41,11 +41,14 @@ describe('BatchSearchStore', () => {
 
     it('should retrieve all the batchSearches', async () => {
       axios.request.mockResolvedValue({ data: ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'] })
+      const data = { from: 0, size: 10, sort: 'batch_date', order: 'asc' }
 
-      await store.dispatch('batchSearch/getBatchSearches')
+      await store.dispatch('batchSearch/getBatchSearches', data)
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
+        data,
+        method: 'POST',
         url: Api.getFullUrl('/api/batch/search')
       }))
       expect(store.state.batchSearch.batchSearches).toHaveLength(3)
@@ -69,11 +72,15 @@ describe('BatchSearchStore', () => {
       data.append('published', false)
       expect(axios.request).toBeCalledTimes(2)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/batch/search/project'),
+        data,
         method: 'POST',
-        data
+        url: Api.getFullUrl('/api/batch/search/project')
       }))
-      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/batch/search') })
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        data: { from: 0, size: 100, sort: 'batch_date', order: 'asc' },
+        method: 'POST',
+        url: Api.getFullUrl('/api/batch/search')
+      }))
     })
 
     it('should retrieve a batchSearch results according to its id', async () => {

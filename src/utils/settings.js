@@ -157,10 +157,15 @@ export default {
   ],
   suggestedFields: ['<implicit>', 'tags', 'contentType', 'path', 'mentionNorm'],
   suggestedImplicitFields: ['mentionNorm', 'tags'],
-  batchSearchResults: {
+  batchSearch: {
+    order: 'asc',
     size: 100,
-    sort: 'doc_nb',
-    order: 'asc'
+    sort: 'batch_date'
+  },
+  batchSearchResults: {
+    order: 'asc',
+    size: 100,
+    sort: 'doc_nb'
   },
   variantsMap: {
     success: 'success',

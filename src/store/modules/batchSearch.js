@@ -44,10 +44,10 @@ export const actions = {
     }
     return commit('batchSearch', batchSearch)
   },
-  async getBatchSearches ({ commit }) {
+  async getBatchSearches ({ commit }, { from = 0, size = 100, sort = 'batch_date', order = 'asc' }) {
     let batchSearches
     try {
-      batchSearches = await api.getBatchSearches()
+      batchSearches = await api.getBatchSearches(from, size, sort, order)
     } catch (_) {
       batchSearches = []
     }
@@ -55,9 +55,9 @@ export const actions = {
   },
   async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published }) {
     await api.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
-    return dispatch('getBatchSearches')
+    return dispatch('getBatchSearches', {})
   },
-  async getBatchSearchResults ({ state, commit }, { batchId, from, size, queries, sort, order }) {
+  async getBatchSearchResults ({ commit }, { batchId, from, size, queries, sort, order }) {
     let results
     try {
       results = await api.getBatchSearchResults(batchId, from, size, queries, sort, order)
