@@ -2,8 +2,10 @@
   <div class="batch-search-results" v-if="Object.keys(batchSearch).length !== 0">
     <page-header icon="layer-group" :title="batchSearch.name" :description="batchSearch.description">
       <template v-slot:preTitle>
-        <router-link :to="{ name: 'batch-search' }">{{ $t('batchSearch.title') }}</router-link>
-        <fa icon="angle-right" class="small ml-2"></fa>
+        <router-link :to="{ name: 'batch-search' }">
+          {{ $t('batchSearch.title') }}
+        </router-link>
+        <fa icon="angle-right" class="small"></fa>
       </template>
       <div class="d-flex my-2 mx-3">
         <div>
@@ -17,7 +19,7 @@
             </b-badge>
           </b-button>
           <b-popover target="batch-search-results-filters-toggle" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
-            <batch-search-results-filters :uuid="uuid" :index="index" hide-border />
+            <batch-search-results-filters :uuid="uuid" :index="index" hide-border></batch-search-results-filters>
           </b-popover>
         </div>
         <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch">
