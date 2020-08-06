@@ -56,7 +56,7 @@
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
       "sort": {
-        "sortLabel": "Sort",
+        "sortLabel": "Trier",
         "sort": "Tri par",
         "relevance": "Pertinence",
         "dateNewest": "Date d'ajout (décroissante)",
@@ -629,29 +629,29 @@
     "noAccess": "Vous n'avez pas accès à cette page en mode local."
   },
   "plugins": {
-    "title": "Plug-ins",
-    "search": "Rechercher dans les plug-ins",
-    "submitSuccess": "Le plug-in a été installé avec succès.",
-    "submitError": "Erreur lors de l'installation du plug-in.",
-    "deleteSuccess": "Le plug-in a été désinstallé avec succès.",
-    "deleteError": "Erreur lors de la désinstallation du plug-in.",
+    "title": "Plugins",
+    "search": "Rechercher dans les plugins",
+    "submitSuccess": "Le plugin a été installé avec succès.",
+    "submitError": "Erreur lors de l'installation du plugin.",
+    "deleteSuccess": "Le plugin a été désinstallé avec succès.",
+    "deleteError": "Erreur lors de la désinstallation du plugin.",
     "version": "Version",
-    "homePage": "Plugin home page",
-    "install": "Install plugin",
-    "uninstall": "Uninstall plugin",
-    "installFromUrl": "Installer le plug-in depuis une URL",
+    "homePage": "Page d'accueil des plugins",
+    "install": "Installer le plugin",
+    "uninstall": "Désinstaller le plugin",
+    "installFromUrl": "Installer le plugin depuis une URL",
     "enterCorrectUrl": "Veuillez saisir une URL valide."
   },
   "extensions": {
     "title": "Extensions",
-    "search": "Search extensions",
-    "submitSuccess": "Extension successfully installed.",
-    "submitError": "Error while installing the extension.",
-    "deleteSuccess": "Extension successfully deleted.",
-    "deleteError": "Error while deleting the extension.",
+    "search": "Rechercher dans les extensions",
+    "submitSuccess": "L'extension a été installée avec succès.",
+    "submitError": "Erreur lors de l'installation de l'extension.",
+    "deleteSuccess": "L'extension a été désinstallée avec succès.",
+    "deleteError": "Erreur lors de la désinstallation de l'extension.",
     "version": "Version",
-    "homePage": "Extension home page",
-    "install": "Install extension",
-    "uninstall": "Uninstall extension"
+    "homePage": "Page d'accueil des extensions",
+    "install": "Installer l'extension",
+    "uninstall": "Désinstaller l'extension"
   }
 }
