@@ -116,7 +116,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
   it('should display simple list if there is only one query', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
-    await store.dispatch('batchSearch/getBatchSearches')
+    await store.dispatch('batchSearch/getBatchSearches', {})
     await store.dispatch('batchSearch/getBatchSearch', '13')
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
 
@@ -127,7 +127,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
   it('should display a selectable dropdown if there are more than one query', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
-    await store.dispatch('batchSearch/getBatchSearches')
+    await store.dispatch('batchSearch/getBatchSearches', {})
     await store.dispatch('batchSearch/getBatchSearch', '12')
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
 
@@ -138,7 +138,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
   it('should add badge with query number of results on list', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
-    await store.dispatch('batchSearch/getBatchSearches')
+    await store.dispatch('batchSearch/getBatchSearches', {})
     await store.dispatch('batchSearch/getBatchSearch', '13')
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
 
@@ -148,7 +148,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
   it('should add badge with query number of results on selectable dropdown', async () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
-    await store.dispatch('batchSearch/getBatchSearches')
+    await store.dispatch('batchSearch/getBatchSearches', {})
     await store.dispatch('batchSearch/getBatchSearch', '12')
     wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
 
@@ -159,7 +159,7 @@ describe('BatchSearchResultsFilters.vue', () => {
   describe('search', () => {
     it('should display the "search" button', async () => {
       await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
-      await store.dispatch('batchSearch/getBatchSearches')
+      await store.dispatch('batchSearch/getBatchSearches', {})
       await store.dispatch('batchSearch/getBatchSearch', '12')
       wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
 
@@ -168,7 +168,7 @@ describe('BatchSearchResultsFilters.vue', () => {
 
     it('should redirect to a search with project and query', async () => {
       await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
-      await store.dispatch('batchSearch/getBatchSearches')
+      await store.dispatch('batchSearch/getBatchSearches', {})
       await store.dispatch('batchSearch/getBatchSearch', '12')
       wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
       const spy = jest.spyOn(wrapper.vm.$router, 'push')
