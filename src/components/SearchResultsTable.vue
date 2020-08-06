@@ -5,13 +5,13 @@
         <div v-if="selected.length" class="d-inline-flex search-results-table__actions mr-2 align-self-start align-items-center">
           <b-list-group horizontal>
             <b-list-group-item class="search-results-table__actions__action py-2" button v-for="action in actions" :key="action.id" @click="onClick(action.id)">
-              <fa :icon="action.icon" :class="action.iconClass" />
+              <fa :icon="action.icon" :class="action.iconClass"></fa>
               {{ action.label }}
             </b-list-group-item>
           </b-list-group>
-          <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" :displayTags="false" :displayForm="true" />
+          <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" :displayTags="false" :displayForm="true"></document-tags-form>
         </div>
-        <search-results-header position="top" class="flex-grow-1 align-self-center" :no-progress="!!selected.length" :no-filters="!!selected.length" />
+        <search-results-header position="top" class="flex-grow-1 align-self-center" :no-progress="!!selected.length" :no-filters="!!selected.length"></search-results-header>
       </div>
       <b-table
         striped
@@ -28,13 +28,13 @@
         thead-tr-class="text-nowrap"
         :sort-by.sync="sortBy"
         :sort-desc.sync="sortDesc">
-        <template v-slot:cell(relevance)="{ item, rowSelected }" >
-          <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon" />
-          <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox" />
+        <template v-slot:cell(relevance)="{ item, rowSelected }">
+          <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon"></fa>
+          <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox"></fa>
         </template>
         <template v-slot:cell(path)="{ item }">
           <router-link :to="{ name: 'document', params: item.routerParams, query: { q: query } }" class="text-truncate search-results-table__items__row__title">
-            <document-sliced-name :document="item" />
+            <document-sliced-name :document="item"></document-sliced-name>
           </router-link>
         </template>
         <template v-slot:cell(highlight)="{ value }">
@@ -44,13 +44,13 @@
           {{ humanSize(value) }}
         </template>
         <template v-slot:cell(actions)="{ item }">
-          <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" tooltips-placement="rightbottom" />
+          <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" tooltips-placement="rightbottom"></document-actions>
         </template>
       </b-table>
-      <search-results-header position="bottom" />
+      <search-results-header position="bottom"></search-results-header>
     </div>
     <div v-else>
-      <search-results-header position="top" class="flex-grow-1 align-self-center" />
+      <search-results-header position="top" class="flex-grow-1 align-self-center"></search-results-header>
       <div class="search-results-table__header border-0 py-5 d-flex flex-column text-center">
         <div class="search-results-table__header__number-of-results">
           {{ $t('search.results.noResults') }}
@@ -223,7 +223,6 @@ export default {
     &__items {
 
       &__row {
-
         &__title:visited:not(.router-link-active) {
           color: mix(#609, white, 50%);
         }
@@ -245,8 +244,8 @@ export default {
         }
 
         td .text-truncate {
-          max-width: 20vw;
           display: block;
+          max-width: 20vw;
 
           .document-sliced-name {
             display: inline;
