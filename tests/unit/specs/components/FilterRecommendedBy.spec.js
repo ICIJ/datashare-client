@@ -29,12 +29,9 @@ describe('FilterRecommendedBy.vue', () => {
       router,
       store,
       wait,
-      propsData: {
-        filter: find(store.getters['search/instantiatedFilters'], {
-          name: 'recommendedBy'
-        })
-      }
+      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'recommendedBy' }) }
     })
+    await wrapper.vm.$nextTick()
   })
 
   afterAll(() => jest.unmock('axios'))
@@ -92,5 +89,25 @@ describe('FilterRecommendedBy.vue', () => {
     expect(store.state.search.documentsRecommended).toEqual([])
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
+  })
+
+  it('should limit displayed users to 8', async () => {
+    axios.request.mockResolvedValue({
+      data: [
+        { id: 'user_01' },
+        { id: 'user_02' },
+        { id: 'user_03' },
+        { id: 'user_04' },
+        { id: 'user_05' },
+        { id: 'user_06' },
+        { id: 'user_07' },
+        { id: 'user_08' },
+        { id: 'user_09' },
+        { id: 'user_10' }
+      ]
+    })
+    await store.dispatch('search/getRecommendationsByProject')
+
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(8)
   })
 })

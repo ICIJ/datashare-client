@@ -22,7 +22,9 @@ import filters from '@/mixins/filters'
  */
 export default {
   name: 'FilterText',
-  components: { FilterBoilerplate },
+  components: {
+    FilterBoilerplate
+  },
   mixins: [filters],
   computed: {
     countAll () {

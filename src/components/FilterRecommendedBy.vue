@@ -1,8 +1,8 @@
 <template>
-  <filter-boilerplate v-bind="propsWithout('hide-show-more')" hide-show-more ref="filter">
+  <filter-boilerplate v-bind="$props" ref="filter">
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="selectUsers">
-        <b-form-checkbox v-for="userId in recommendedByUsers" :value="userId" class="filter__items__item" :key="userId">
+        <b-form-checkbox v-for="userId in sampleRecommendedByUsers" :value="userId" class="filter__items__item" :key="userId">
           <span>{{ userId | displayUser }}</span>
         </b-form-checkbox>
       </b-form-checkbox-group>
@@ -11,12 +11,14 @@
 </template>
 
 <script>
+import slice from 'lodash/slice'
 import { mapState } from 'vuex'
 
 import FilterBoilerplate from '@/components/FilterBoilerplate'
 import displayUser from '@/filters/displayUser'
 import filters from '@/mixins/filters'
 import utils from '@/mixins/utils'
+import settings from '@/utils/settings'
 
 /**
  * A Filter component to list number of document recommended by each user.
@@ -31,7 +33,10 @@ export default {
   },
   mixins: [filters, utils],
   computed: {
-    ...mapState('search', ['recommendedByUsers'])
+    ...mapState('search', ['recommendedByUsers']),
+    sampleRecommendedByUsers () {
+      return slice(this.recommendedByUsers, 0, settings.filterSize)
+    }
   },
   async mounted () {
     await this.$store.dispatch('search/getRecommendationsByProject')

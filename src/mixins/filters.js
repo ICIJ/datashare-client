@@ -7,8 +7,8 @@ import map from 'lodash/map'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
 
-import settings from '@/utils/settings'
 import utils from '@/mixins/utils'
+import settings from '@/utils/settings'
 
 export default {
   mixins: [utils],
