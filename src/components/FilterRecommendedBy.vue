@@ -3,7 +3,9 @@
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="selectUsers">
         <b-form-checkbox v-for="userId in sampleRecommendedByUsers" :value="userId" class="filter__items__item" :key="userId">
-          <span>{{ userId | displayUser }}</span>
+          <span>
+            {{ userId | displayUser }}
+          </span>
         </b-form-checkbox>
       </b-form-checkbox-group>
     </template>
@@ -35,11 +37,13 @@ export default {
   computed: {
     ...mapState('search', ['recommendedByUsers']),
     sampleRecommendedByUsers () {
-      return slice(this.recommendedByUsers, 0, settings.filterSize)
+      return this.asyncItems ? this.recommendedByUsers : slice(this.recommendedByUsers, 0, settings.filterSize)
     }
   },
   async mounted () {
     await this.$store.dispatch('search/getRecommendationsByProject')
+    this.$set(this.root, 'moreToDisplay', this.recommendedByUsers.length > settings.filterSize)
+    this.$set(this.root, 'results', { aggregations: { _id: { buckets: this.recommendedByUsers } } })
     this.root.$on('reset-filter-values', (_, refresh) => this.selectUsers([], refresh))
   },
   methods: {

@@ -199,7 +199,7 @@ export default {
       return this.aggregate()
     },
     async aggregate () {
-      if (this.filter) {
+      if (this.filter && this.filter.fromElasticSearch) {
         const size = this.size
         const prefix = this.filter.prefix ? this.$config.get('dataDir') + '/' : ''
         const alternativeSearch = this.filterQuery !== '' && this.filter.alternativeSearch ? compact(this.filter.alternativeSearch(toLower(this.filterQuery))) : []
@@ -221,6 +221,7 @@ export default {
         this.$wait.end(`items for ${this.filter.name}`)
         return this.results
       } else {
+        this.$wait.end(`items for ${this.filter.name}`)
         return false
       }
     },

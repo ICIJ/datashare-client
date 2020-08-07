@@ -38,7 +38,8 @@ export default [
       name: 'recommendedBy',
       key: '_id',
       icon: 'users',
-      order: 30
+      order: 30,
+      fromElasticSearch: false
     }
   },
   {
