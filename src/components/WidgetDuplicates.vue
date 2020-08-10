@@ -9,7 +9,7 @@
         <div>
           <stacked-bar-chart :data="data" :x-axis-tick-format="humanNumber" :bar-colors="colors" :keys="keys" :groups="groups"></stacked-bar-chart>
           <p class="small text-muted">
-            {{ $t('widget.duplicates.') }}
+            {{ $t('widget.duplicates.duplicated') }}
           </p>
         </div>
       </v-wait>
