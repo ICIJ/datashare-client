@@ -2,7 +2,7 @@
   <div class="search-results-header" :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
     <div class="search-results-header__settings d-flex align-items-center">
       <b-btn-group class="flex-grow-1">
-        <b-dropdown size="sm" variant="link" class="search-results-header__settings__sort" toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__sort__toggler" menu-class="search-results-header__settings__sort__dropdown">
+        <b-dropdown size="sm" variant="link" class="search-results-header__settings__sort" toggle-class="text-decoration-none py-2 px-2 border search-results-header__settings__sort__toggler" menu-class="search-results-header__settings__sort__dropdown">
           <template v-slot:button-content>
             {{ $t('search.results.sort.sortLabel') }}
           </template>
@@ -183,7 +183,7 @@ export default {
 
       &__size, &__sort {
         &__toggler {
-          font-size: inherit;
+          font-size: $font-size-sm;
           line-height: inherit;
         }
       }

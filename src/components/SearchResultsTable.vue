@@ -11,7 +11,7 @@
           </b-list-group>
           <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" :displayTags="false" :displayForm="true"></document-tags-form>
         </div>
-        <search-results-header position="top" class="flex-grow-1 align-self-center" :no-progress="!!selected.length" :no-filters="!!selected.length"></search-results-header>
+        <search-results-header position="top" class="flex-grow-1 align-self-center p-0" :no-progress="!!selected.length" :no-filters="!!selected.length"></search-results-header>
       </div>
       <b-table
         striped
@@ -256,7 +256,7 @@ export default {
 
     &__actions {
       background: $body-bg;
-      font-size: 0.8rem;
+      font-size: $font-size-sm;
 
       &__action.document-tags-form {
         align-self: stretch;
