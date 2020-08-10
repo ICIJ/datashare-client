@@ -164,7 +164,7 @@ export default {
   },
   batchSearchResults: {
     order: 'asc',
-    size: 100,
+    size: 1000,
     sort: 'doc_nb'
   },
   variantsMap: {
