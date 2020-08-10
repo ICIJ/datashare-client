@@ -231,6 +231,9 @@ import settings from '@/utils/settings'
 
 export const auth = new Auth()
 
+/**
+ * This page will list all the results of a batch search.
+ */
 export default {
   name: 'BatchSearchResults',
   components: {
@@ -239,9 +242,15 @@ export default {
     PageHeader
   },
   props: {
+    /**
+     * The unique id of the batch search
+     */
     uuid: {
       type: String
     },
+    /**
+     * The Elasticsearch index of the batch search
+     */
     index: {
       type: String
     }
