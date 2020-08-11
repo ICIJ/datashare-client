@@ -531,8 +531,7 @@
     "learnMore": "En savoir plus",
     "author": "Auteur·e",
     "advancedFilters": "Filtres avancés",
-    "selectFolder": "Sélectionner un dossier",
-    "dropFilePlaceholder": "Déposez le fichier ici..."
+    "selectFolder": "Sélectionner un dossier"
   },
   "batchSearchResults": {
     "rank": "Rang",
