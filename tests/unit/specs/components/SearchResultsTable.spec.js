@@ -48,17 +48,17 @@ describe('SearchResultsTable.vue', () => {
     expect(wrapper.find('.search-results-table__items').attributes('selectmode')).toBe('multi')
   })
 
-  it('should display 2 action buttons', async () => {
+  it('should display 3 action buttons', async () => {
     await wrapper.vm.$set(wrapper.vm, 'selected', [{ id: 'document_01' }, { id: 'document_02' }])
 
-    expect(wrapper.findAll('b-list-group-stub > b-list-group-item-stub')).toHaveLength(2)
+    expect(wrapper.findAll('b-list-group-stub > b-list-group-item-stub')).toHaveLength(3)
   })
 
   it('should set each selected document as starred', async () => {
     wrapper = mount(SearchResultsTable, { i18n, localVue, store, router })
     await wrapper.vm.$set(wrapper.vm, 'selected', [{ id: 'document_01' }, { id: 'document_02' }])
 
-    wrapper.findAll('.list-group-item-action').at(0).trigger('click')
+    wrapper.findAll('.list-group-item-action').at(1).trigger('click')
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -78,5 +78,16 @@ describe('SearchResultsTable.vue', () => {
     const size = wrapper.vm.humanSize(12345678)
 
     expect(size).toBe('11.77 MB')
+  })
+
+  it('should select all documents', async () => {
+    axios.request.mockResolvedValue({ data: [{ id: 'document_01' }, { id: 'document_03' }, { id: 'document_03' }, { id: 'document_04' }] })
+    wrapper = mount(SearchResultsTable, { i18n, localVue, store, router })
+    await wrapper.vm.$set(wrapper.vm, 'selected', [{ id: 'document_01' }])
+    await wrapper.vm.$nextTick()
+
+    await wrapper.findAll('.list-group-item-action').at(0).trigger('click')
+
+    expect(wrapper.vm.selected).toHaveLength(4)
   })
 })

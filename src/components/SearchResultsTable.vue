@@ -14,6 +14,7 @@
         <search-results-header position="top" class="flex-grow-1 align-self-center p-0" :no-progress="!!selected.length" :no-filters="!!selected.length"></search-results-header>
       </div>
       <b-table
+        ref="selectableTable"
         striped
         hover
         selectable
@@ -90,8 +91,15 @@ export default {
   },
   computed: {
     ...mapState('search', ['isDownloadAllowed', 'query', 'response']),
+    isAllSelected () {
+      return this.response.hits.length === this.selected.length
+    },
     actions () {
       return [{
+        id: 'selectAll',
+        label: this.isAllSelected ? this.$t('document.unselectAll') : this.$t('document.selectAll'),
+        icon: this.isAllSelected ? ['far', 'square'] : ['far', 'check-square']
+      }, {
         id: 'star',
         label: this.$t('document.starButton'),
         icon: ['fa', 'star']
@@ -176,11 +184,20 @@ export default {
   },
   methods: {
     onRowSelected (items) {
-      this.selected = items
+      this.$set(this, 'selected', items)
     },
     async onClick (actionId) {
-      this.isBusy = true
+      this.$set(this, 'isBusy', true)
       switch (actionId) {
+        case 'selectAll':
+          if (this.isAllSelected) {
+            this.$refs.selectableTable.clearSelected()
+            this.$bvToast.toast(this.$t('document.unselected'), { noCloseButton: true, variant: 'success' })
+          } else {
+            this.$refs.selectableTable.selectAllRows()
+            this.$bvToast.toast(this.$t('document.selected'), { noCloseButton: true, variant: 'success' })
+          }
+          break
         case 'star':
           await this.$store.dispatch('search/starDocuments', this.selected)
           this.$bvToast.toast(this.$t('document.starred'), { noCloseButton: true, variant: 'success' })
@@ -192,7 +209,7 @@ export default {
         default:
           break
       }
-      this.isBusy = false
+      this.$set(this, 'isBusy', false)
     },
     async itemsProvider ({ sortBy, sortDesc }) {
       // Refresh response only if sortBy or sortDesc are different from the state
