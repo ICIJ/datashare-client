@@ -531,8 +531,7 @@
     "learnMore": "もっと詳しく",
     "author": "作成者",
     "advancedFilters": "高度なフィルタ",
-    "selectFolder": "Select folder",
-    "dropFilePlaceholder": "Drop file here..."
+    "selectFolder": "Select folder"
   },
   "batchSearchResults": {
     "rank": "ランク",
