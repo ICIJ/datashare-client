@@ -6,7 +6,7 @@
           {{ $t('insights.selectProject') }}
         </div>
         <div>
-          <project-selector v-model="project" size="md" class="insights__toolbox__project-selector" />
+          <project-selector v-model="project" size="md" class="insights__toolbox__project-selector"></project-selector>
         </div>
       </div>
     </div>

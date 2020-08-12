@@ -2,7 +2,7 @@
   <widget-documents-by-creation-date :widget="widget" ref="widgetDocumentsByCreationDate">
     <template #selector="{ selectedPath, setSelectedPath }">
       <span v-b-modal.modal-widget-select-path class="mr-3 py-1 px-2 border btn btn-link d-inline-flex" v-if="selectedPath">
-        <tree-breadcrumb datadir-icon="filter" :path="selectedPath" no-datadir @input="treeViewPath = $event" />
+        <tree-breadcrumb datadir-icon="filter" :path="selectedPath" no-datadir @input="treeViewPath = $event"></tree-breadcrumb>
         <span v-if="selectedPath === dataDir">
           {{ $t('widget.creationDate.filterFolder') }}
         </span>

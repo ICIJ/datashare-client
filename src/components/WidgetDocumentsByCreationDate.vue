@@ -17,7 +17,7 @@
       <div class="widget__content__chart align-items-center" v-if="data.length > 0">
         <v-wait :for="loader">
           <div class="widget__content__chart__spinner" slot="waiting">
-            <fa icon="circle-notch" spin size="2x" />
+            <fa icon="circle-notch" spin size="2x"></fa>
           </div>
           <svg :height="height" width="100%" shape-rendering="crispEdges">
             <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
@@ -207,8 +207,9 @@ export default {
       this.chart.select('.widget__content__chart__axis--x')
         .call(d3.axisBottom(this.x))
       // Create/Update the y axis
+      const yAxisTicks = this.y.ticks().filter(tick => Number.isInteger(tick))
       this.chart.select('.widget__content__chart__axis--y')
-        .call(d3.axisLeft(this.y))
+        .call(d3.axisLeft(this.y).tickValues(yAxisTicks).tickFormat(d3.format('d')))
         .selectAll('.tick line')
         .attr('x2', this.width - this.margin.left - this.margin.right)
     },
