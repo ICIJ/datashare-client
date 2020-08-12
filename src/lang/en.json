@@ -619,7 +619,9 @@
         "month": "Month",
         "day": "Day"
       },
-      "document": "no documents | 1 document | %{total} documents"
+      "document": "no documents | 1 document | %{total} documents",
+      "missing1": "No documents have | 1 document has | %{total} documents have",
+      "missing2": "no or wrong creation date."
     },
     "duplicates": {
       "duplicated": "* Duplicated documents are not indexed in Datashare to ease search and avoid creating unnecessary noise."

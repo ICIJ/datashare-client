@@ -42,6 +42,9 @@
               </g>
             </g>
           </svg>
+          <p class="widget__content__missing mt-2 small text-muted" v-if="missing">
+            {{ $tc('widget.creationDate.missing1', missing, { total: $n(missing) }) }} {{ $t('widget.creationDate.missing2') }}
+          </p>
         </v-wait>
       </div>
       <div v-else>
@@ -95,6 +98,7 @@ export default {
       },
       loader: `loading creationDate data ${uniqueId()}`,
       margin: { top: 20, right: 20, bottom: 20, left: 50 },
+      missing: 0,
       mounted: false,
       selectedInterval: 'year',
       selectedPath: null,
@@ -181,6 +185,7 @@ export default {
     },
     async loadData () {
       this.$wait.start(this.loader)
+      this.$set(this, 'missing', 0)
       const options = { size: 1000, interval: this.selectedInterval }
       const filters = []
       if (this.selectedPath) {
@@ -194,6 +199,8 @@ export default {
         if (d.key >= 0 && d.key < new Date().getTime()) {
           d.date = new Date(d.key)
           return d
+        } else {
+          this.$set(this, 'missing', this.missing + d.doc_count)
         }
       })
       this.$set(this, 'data', sortBy(compact(dates), ['key']))

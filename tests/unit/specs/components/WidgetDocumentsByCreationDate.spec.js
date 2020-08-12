@@ -78,4 +78,37 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
       expect(wrapper.vm.data).toHaveLength(1)
     })
   })
+
+  describe('missing data', () => {
+    it('should display no message if no data are missing', async () => {
+      await wrapper.setData({
+        data: [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }],
+        missing: 0
+      })
+
+      expect(wrapper.find('.widget__content__missing').exists()).toBeFalsy()
+    })
+
+    it('should display a message if data are missing', async () => {
+      await wrapper.setData({
+        data: [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }],
+        missing: 2
+      })
+
+      expect(wrapper.find('.widget__content__missing').exists()).toBeTruthy()
+    })
+
+    it('should count missing creation dates while loading data', async () => {
+      await letData(es).have(new IndexedDocument('document_01', project)
+        .withCreationDate('2019-08-19T00:00:00.000Z')).commit()
+      await letData(es).have(new IndexedDocument('document_02', project)
+        .withCreationDate('0000-01-01T00:00:00.000Z')).commit()
+      await letData(es).have(new IndexedDocument('document_03', project)
+        .withCreationDate('1968-01-01T00:00:00.000Z')).commit()
+
+      await wrapper.vm.loadData()
+
+      expect(wrapper.vm.missing).toBe(2)
+    })
+  })
 })
