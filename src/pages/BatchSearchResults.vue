@@ -12,8 +12,8 @@
           <b-button variant="light" class="batch-search-results__action mr-2" id="batch-search-results-filters-toggle" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
             <fa icon="filter"></fa>
             <span class="sr-only">
-                {{ $t('batchSearchResultsFilters.queries.heading') }}
-              </span>
+              {{ $t('batchSearchResultsFilters.queries.heading') }}
+            </span>
             <b-badge variant="secondary" class="batch-search-results__action__counter" v-if="selectedQueries.length">
               {{ selectedQueries.length }}
             </b-badge>

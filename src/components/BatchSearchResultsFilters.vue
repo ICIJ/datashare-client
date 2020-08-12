@@ -98,7 +98,7 @@ export default {
   computed: {
     fuse () {
       const keys = ['label']
-      const options = { distance: 0, shouldSort: false, keys }
+      const options = { shouldSort: false, keys }
       return new Fuse(this.queries, options)
     },
     meta () {

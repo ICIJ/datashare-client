@@ -71,13 +71,12 @@ jest.mock('@/api', () => {
   })
 })
 
-const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
-
 describe('BatchSearchResultsFilters.vue', () => {
+  const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
   const project = toLower('BatchSearchResultsFilters')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
-  let wrapper
+  let wrapper = null
 
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
