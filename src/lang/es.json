@@ -355,15 +355,15 @@
     "preview": "Vista previa",
     "downloadButton": "Descargar",
     "externalWindow": "Abrir en una nueva ventana",
-    "selectAll": "Select all",
-    "unselectAll": "Unselect all",
+    "selectAll": "Seleccionar todo",
+    "unselectAll": "Deseleccionar todo",
     "starButton": "Marcar como favorito",
     "unstarButton": "Eliminar de favoritos",
     "starred": "Documentos han sido agregados como favoritos.",
     "starringError": "No se puede marcar el documento como favorito.",
     "unstarred": "Documentos han sido removidos de favoritos.",
-    "selected": "All the documents of this page have been selected",
-    "unselected": "All the documents of this page have been unselected",
+    "selected": "Todos los documentos de esta página han sido seleccionados",
+    "unselected": "Todos los documentos de esta página han sido deseleccionados",
     "tagged": "Documentos han sido etiquetados.",
     "starFile": "Marcar como favorito",
     "notFound": "Documento no encontrado",
@@ -619,7 +619,9 @@
         "month": "Mes",
         "day": "Día"
       },
-      "document": "no hay archivos | 1 archivo | %{total} archivos"
+      "document": "no hay archivos | 1 archivo | %{total} archivos",
+      "missing1": "Ningún documento tiene | 1 documento tiene | %{total} documentos tienen",
+      "missing2": "no o incorrecta fecha de creación."
     },
     "duplicates": {
       "duplicated": "* Los archivos duplicados no se indexan en Datashare para facilitar la búsqueda y evitar crear archivos innecesarios."
