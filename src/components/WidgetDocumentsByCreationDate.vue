@@ -42,7 +42,7 @@
               </g>
             </g>
           </svg>
-          <p class="widget__content__missing mt-2 small text-muted" v-if="missing">
+          <p class="widget__content__missing mt-2 small text-muted" v-if="missing" :title="missingTooltip">
             {{ $tc('widget.creationDate.missing1', missing, { total: $n(missing) }) }} {{ $t('widget.creationDate.missing2') }}
           </p>
         </v-wait>
@@ -99,6 +99,10 @@ export default {
       loader: `loading creationDate data ${uniqueId()}`,
       margin: { top: 20, right: 20, bottom: 20, left: 50 },
       missing: 0,
+      missingTooltip: 'There are multiple reasons why a document is not here in the barchart:\n' +
+        '    - The document has no creation date at all\n' +
+        '    - The creation date of the document is prior to January 1. 1970\n' +
+        '    - The creation date of the document is posterior to the current date',
       mounted: false,
       selectedInterval: 'year',
       selectedPath: null,
