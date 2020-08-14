@@ -1,21 +1,21 @@
 <template>
   <div class="document-actions" :class="{ 'btn-group-vertical': !noBtnGroup && vertical, 'btn-group': !noBtnGroup && !vertical }">
     <a class="document-actions__star btn" :class="starBtnClassDefinition" href @click.prevent="toggleStarDocument(document.id)" :id="starBtnId">
-      <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fixed-width />
+      <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fixed-width></fa>
       <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">{{ $t('document.starButton') }}</span>
     </a>
     <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
       {{ $t('document.starFile') }}
     </b-tooltip>
     <a class="document-actions__download btn" :class="downloadBtnClassDefinition" :href="document.fullUrl" target="_blank" v-if="canIDownload" :id="downloadBtnId">
-      <fa icon="download" fixed-width />
+      <fa icon="download" fixed-width></fa>
       <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">{{ $t('document.downloadButton') }}</span>
     </a>
     <b-popover :target="downloadBtnId" triggers="hover focus" :placement="tooltipsPlacement" :title="document.contentTypeLabel">
-      <document-type-card :document="document" />
+      <document-type-card :document="document"></document-type-card>
     </b-popover>
     <router-link-popup class="document-actions__popup btn" :class="popupBtnClassDefinition" :to="{ name: 'document-simplified', params: document.routerParams }" :id="popupBtnId">
-      <fa icon="external-link-alt" fixed-width />
+      <fa icon="external-link-alt" fixed-width></fa>
       <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">{{ $t('document.externalWindow') }}</span>
     </router-link-popup>
     <b-tooltip :target="popupBtnId" :placement="tooltipsPlacement">

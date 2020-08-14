@@ -181,7 +181,7 @@ export default {
           // Watch change on the filter store the restart aggregation
           this.$store.watch(this.watchedForUpdate, this.aggregateWithLoading, { deep: true })
         }
-        this.isInitialized = true
+        this.$set(this, 'isInitialized', true)
       }
     },
     asyncFilterSearch () {

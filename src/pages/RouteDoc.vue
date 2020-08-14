@@ -75,10 +75,10 @@ export default {
       h6 { @include font-size($h6-font-size * .8); }
 
       img  {
-        width: auto;
         display: block;
-        max-width: 750px;
         max-height: 60vh;
+        max-width: 750px;
+        width: auto;
 
         @media (max-width: 1370px) {
           max-width: 100%;
@@ -86,20 +86,20 @@ export default {
       }
 
       blockquote {
-        padding: 1rem;
         background-color: $gray-100;
         margin-bottom: $spacer;
+        padding: 1rem;
 
         *:last-of-type {
           margin-bottom: 0;
         }
 
         pre {
-          padding: 0;
-          margin-top: 0;
-          margin-bottom: 0;
           background-color: transparent;
           border: 0;
+          margin-bottom: 0;
+          margin-top: 0;
+          padding: 0;
 
           code {
             @include font-size(inherit);
