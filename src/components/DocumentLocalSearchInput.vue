@@ -117,11 +117,11 @@ export default {
       <label class="sr-only">{{ $t('document.search') }}</label>
       <div class="input-group">
         <input type="search" :value="searchTerm.label" @input="$emit('input', { label: $event.target.value })" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="getKeys('findInDocument')" @shortkey="getAction('findInDocument')" />
-        <div class="document-local-search-input__count input-group-append" v-if="searchTerm.label.length > 0">
-          <span v-if="searchWorkerInProgress" class="input-group-text">
+        <div class="document-local-search-input__count input-group-append w-25" v-if="searchTerm.label.length > 0">
+          <span v-if="searchWorkerInProgress" class="input-group-text w-100 text-center d-inline-block">
             <fa icon="circle-notch" spin></fa>
           </span>
-          <span v-else class="input-group-text">
+          <span v-else class="input-group-text w-100 text-center d-inline-block px-0 text-truncate">
             <span>{{ searchIndex }} {{ $t('document.of') }} {{ searchOccurrences }}</span>
           </span>
         </div>
