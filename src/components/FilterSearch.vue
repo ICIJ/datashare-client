@@ -140,9 +140,7 @@ export default {
       this.$set(this, 'total', data.total)
       this.$set(this, 'totalCount', sumBy(all, 'doc_count'))
       // Did we reach the end?
-      if ($state && all.length < this.size) {
-        $state.complete()
-      }
+      if ($state && all.length < this.size) $state.complete()
       this.$wait.end('items for ' + this.filter.name)
       // Mark this page as loaded
       if ($state) $state.loaded()
@@ -151,7 +149,7 @@ export default {
       this.$set(this, 'offset', 0)
       this.$set(this, 'items', [])
       this.$set(this, 'infiniteId', uniqueId())
-      return this.search()
+      this.search()
     },
     next ($state) {
       this.offset += this.pageSize

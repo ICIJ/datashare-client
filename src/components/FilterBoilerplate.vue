@@ -1,11 +1,11 @@
 <template>
   <div class="filter card" :class="{ 'filter--reversed': isReversed(), 'filter--hide-show-more': hideShowMore, 'filter--hide-search': hideSearch, 'filter--hide-header': hideHeader, 'filter--has-values': hasValues() }">
-    <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }" />
+    <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }"></hook>
     <slot name="header" v-if="!hideHeader">
       <div class="card-header px-2 d-flex filter__header">
         <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate pt-0">
           <span class="filter__items__item__icon pl-0 pr-1" v-if="filter.icon">
-            <fa :icon="filter.icon" fixed-width />
+            <fa :icon="filter.icon" fixed-width></fa>
           </span>
           <template>
             <slot name="title">
@@ -15,27 +15,27 @@
         </h6>
         <span v-if="hasValues() && !collapseItems && !hideExclude && isReady">
           <button class="d-inline-flex btn btn-sm btn-outline-light py-0 mr-2 btn-group filter__header__invert" @click="invert" :class="{ 'active': isReversed() }">
-            <fa icon="eye-slash" class="mr-1 mt-1" />
+            <fa icon="eye-slash" class="mr-1 mt-1"></fa>
             {{ $t('filter.invert') }}
           </button>
         </span>
-        <fa v-if="isReady" :icon="headerIcon" @click="toggleItems" class="float-right" />
-        <fa v-else icon="circle-notch" spin class="float-right" />
+        <fa v-if="isReady" :icon="headerIcon" @click="toggleItems" class="float-right"></fa>
+        <fa v-else icon="circle-notch" spin class="float-right"></fa>
       </div>
     </slot>
-    <hook :name="`filter.${filter.name}.header:after`" :bind="{ filter }" />
+    <hook :name="`filter.${filter.name}.header:after`" :bind="{ filter }"></hook>
     <transition name="slide">
       <div class="list-group list-group-flush filter__items" v-show="isReady && !collapseItems">
-        <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: filterQuery }" />
+        <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: filterQuery }"></hook>
         <slot name="search" v-if="!hideSearch">
           <form @submit.prevent="asyncFilterSearch" v-if="filter.isSearchable">
             <label class="list-group filter__items__search py-2 px-2">
-              <input v-model="filterQuery" type="search" :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'" />
-              <fa icon="search" class="float-right" />
+              <input v-model="filterQuery" type="search" :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'">
+              <fa icon="search" class="float-right"></fa>
             </label>
           </form>
         </slot>
-        <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: filterQuery }" />
+        <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: filterQuery }"></hook>
         <div class="mb-2">
           <slot name="items" v-if="items.length > 0" :items="items" :options="options" :selected="selected" :total-count="totalCount" :filterQuery="filterQuery">
             <b-form-checkbox v-model="isAllSelected" @change.native="resetFilterValues" class="filter__items__all mb-0">
