@@ -23,7 +23,7 @@ import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
 /**
- * A Filter component to list number of document recommended by each user.
+ * A Filter component to list number of documents recommended by each user.
  */
 export default {
   name: 'FilterRecommendedBy',
@@ -42,8 +42,8 @@ export default {
   },
   async mounted () {
     await this.$store.dispatch('search/getRecommendationsByProject')
-    this.$set(this.root, 'moreToDisplay', this.recommendedByUsers.length > settings.filterSize)
-    this.$set(this.root, 'results', { aggregations: { _id: { buckets: this.recommendedByUsers } } })
+    if (this.root && this.root.moreToDisplay) this.$set(this.root, 'moreToDisplay', this.recommendedByUsers.length > settings.filterSize)
+    if (this.root && this.root.results) this.$set(this.root, 'results', { aggregations: { _id: { buckets: this.recommendedByUsers } } })
     this.root.$on('reset-filter-values', (_, refresh) => this.selectUsers([], refresh))
   },
   methods: {

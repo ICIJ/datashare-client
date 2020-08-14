@@ -4,14 +4,13 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Pagination from '@/components/Pagination'
 import { Core } from '@/core'
 
-const { localVue } = Core.init(createLocalVue()).useAll()
-
 describe('Pagination.vue', () => {
+  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
   let wrapper = null
   const template = { name: 'router-name', query: { from: 0, size: 10 } }
 
   beforeEach(() => {
-    wrapper = shallowMount(Pagination, { localVue, propsData: { total: 22, getToTemplate: () => cloneDeep(template) }, mocks: { $t: msg => msg }, sync: false })
+    wrapper = shallowMount(Pagination, { i18n, localVue, propsData: { total: 22, getToTemplate: () => cloneDeep(template) }, sync: false })
   })
 
   describe('should display the pagination, or not', () => {
