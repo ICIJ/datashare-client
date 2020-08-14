@@ -355,11 +355,15 @@
     "preview": "プレビュー",
     "downloadButton": "ダウンロード",
     "externalWindow": "新しいウインドウで開く",
+    "selectAll": "Select all",
+    "unselectAll": "Unselect all",
     "starButton": "星マークをつける",
     "unstarButton": "星マークを外す",
     "starred": "文書に星マークがつきました。",
     "starringError": "文書に星マークを付けられません。",
     "unstarred": "文書から星マークを外しました。",
+    "selected": "All the documents of this page have been selected",
+    "unselected": "All the documents of this page have been unselected",
     "tagged": "文書にタグがつけられました。",
     "starFile": "文書に星マークを付ける",
     "notFound": "ドキュメントが見つかりません。",
@@ -531,8 +535,7 @@
     "learnMore": "もっと詳しく",
     "author": "作成者",
     "advancedFilters": "高度なフィルタ",
-    "selectFolder": "Select folder",
-    "dropFilePlaceholder": "Drop file here..."
+    "selectFolder": "Select folder"
   },
   "batchSearchResults": {
     "rank": "ランク",
@@ -616,7 +619,9 @@
         "month": "Month",
         "day": "Day"
       },
-      "document": "no documents | 1 document | %{total} documents"
+      "document": "no documents | 1 document | %{total} documents",
+      "missing1": "No documents have | 1 document has | %{total} documents have",
+      "missing2": "no or wrong creation date."
     },
     "duplicates": {
       "duplicated": "* Duplicated documents are not indexed in Datashare to ease search and avoid creating unnecessary noise."
