@@ -149,7 +149,7 @@ export default {
       this.$set(this, 'offset', 0)
       this.$set(this, 'items', [])
       this.$set(this, 'infiniteId', uniqueId())
-      this.search()
+      return this.search()
     },
     next ($state) {
       this.offset += this.pageSize
