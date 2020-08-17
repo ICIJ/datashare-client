@@ -81,7 +81,7 @@ describe('BatchSearchResults.vue', () => {
   const project = toLower('BatchSearchResults')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
-  let propsData
+  let propsData = null
   let wrapper = null
 
   beforeAll(() => Murmur.config.merge({ multipleProjects: true }))

@@ -1,4 +1,4 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 
 import Api from '@/api'
@@ -72,7 +72,8 @@ describe('Plugins.vue', () => {
     expect(wrapper.vm.plugins[0].show).toBeTruthy()
   })
 
-  it('should call for plugin installation from pluginUrl', async () => {
+  it('should call for plugin installation from pluginUrl', () => {
+    wrapper = mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
     axios.request.mockClear()
 
     wrapper.vm.installFromUrl()

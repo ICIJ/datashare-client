@@ -1,6 +1,7 @@
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
+import VueRouter from 'vue-router'
 
 import { Core } from '@/core'
 import BatchSearch from '@/pages/BatchSearch'
@@ -30,7 +31,18 @@ jest.mock('@/api', () => {
 })
 
 describe('BatchSearch.vue', () => {
-  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const router = new VueRouter({
+    routes: [
+      {
+        name: 'batch-search',
+        path: 'batch-search'
+      }, {
+        name: 'batch-search.results',
+        path: 'batch-search/:index/:uuid'
+      }
+    ]
+  })
   let wrapper = null
 
   beforeAll(() => {

@@ -29,7 +29,7 @@
               @sort-changed="sortChanged"
               :sort-desc="orderBy"
               striped
-              tbody-tr-class="batch-search__items__item small"
+              tbody-tr-class="batch-search__items__item"
               thead-tr-class="text-nowrap">
               <template v-slot:cell(name)="{ item }">
                 <router-link :to="{ name: 'batch-search.results', params: { index: item.project.name, uuid: item.uuid }, query: { page: 1, sort: sortResults, order: orderResults } }" class="batch-search__items__item__link">
