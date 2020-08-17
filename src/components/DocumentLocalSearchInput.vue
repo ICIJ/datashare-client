@@ -22,6 +22,7 @@ export default {
     },
     /**
      * The position of the current occurrence of the term
+     * @default 0
      */
     searchIndex: {
       type: Number,
@@ -29,6 +30,7 @@ export default {
     },
     /**
      * The total number of occurrences found in the document
+     * @default 0
      */
     searchOccurrences: {
       type: Number,
@@ -44,6 +46,21 @@ export default {
   data () {
     return {
       isActive: false
+    }
+  },
+  computed: {
+    shortkeysActions () {
+      return {
+        activateSearchBar: this.activateSearchBar,
+        deactivateSearchBar: this.deactivateSearchBar,
+        findPreviousOccurrence: this.previous,
+        findPreviousOccurrenceAlt: this.previous,
+        findNextOccurrence: this.next,
+        findNextOccurrenceAlt: this.next
+      }
+    },
+    searchLabel () {
+      return `${this.searchIndex} ${this.$t('document.of')} ${this.searchOccurrences}`
     }
   },
   watch: {
@@ -95,18 +112,6 @@ export default {
         return this.shortkeysActions[srcKey]()
       }
     }
-  },
-  computed: {
-    shortkeysActions () {
-      return {
-        activateSearchBar: this.activateSearchBar,
-        deactivateSearchBar: this.deactivateSearchBar,
-        findPreviousOccurrence: this.previous,
-        findPreviousOccurrenceAlt: this.previous,
-        findNextOccurrence: this.next,
-        findNextOccurrenceAlt: this.next
-      }
-    }
   }
 }
 </script>
@@ -114,15 +119,19 @@ export default {
 <template>
   <div class="document-local-search-input form-inline px-3" :class="{ 'document-local-search-input--active': isActive, 'document-local-search-input--pristine': searchTerm.label.length > 0 }">
     <div class="form-group py-2 mr-2">
-      <label class="sr-only">{{ $t('document.search') }}</label>
+      <label class="sr-only">
+        {{ $t('document.search') }}
+      </label>
       <div class="input-group">
         <input type="search" :value="searchTerm.label" @input="$emit('input', { label: $event.target.value })" :placeholder="$t('document.find')" ref="search" class="form-control document-local-search-input__term" v-shortkey="getKeys('findInDocument')" @shortkey="getAction('findInDocument')" />
         <div class="document-local-search-input__count input-group-append w-25" v-if="searchTerm.label.length > 0">
           <span v-if="searchWorkerInProgress" class="input-group-text w-100 text-center d-inline-block">
             <fa icon="circle-notch" spin></fa>
           </span>
-          <span v-else class="input-group-text w-100 text-center d-inline-block px-0 text-truncate">
-            <span>{{ searchIndex }} {{ $t('document.of') }} {{ searchOccurrences }}</span>
+          <span v-else class="input-group-text w-100 text-center d-inline-block px-0 text-truncate" :title="searchLabel">
+            <span>
+              {{ searchLabel }}
+            </span>
           </span>
         </div>
       </div>
