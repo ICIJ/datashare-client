@@ -4,16 +4,16 @@
     <vue-perfect-scrollbar class="app-sidebar__container flex-grow-1 d-flex flex-column">
       <div class="d-flex align-items-center justify-content-center">
         <router-link class="app-sidebar__container__brand align-items-center flex-grow-1" :to="{ name: 'landing' }">
-          <img src="~images/logo-white.svg" alt="Datashare" class="app-sidebar__container__brand__logo" />
+          <img src="~images/logo-white.svg" alt="Datashare" class="app-sidebar__container__brand__logo">
           <span class="app-sidebar__container__brand__beta">beta</span>
         </router-link>
         <div>
-          <a @click="hideSidebar()" class="app-sidebar__container__toggler">
-            <fa icon="bars" />
+          <a @click="hideSidebar()" class="app-sidebar__container__toggle text-white">
+            <fa icon="bars"></fa>
           </a>
         </div>
       </div>
-      <hook name="app-sidebar.menu:before" />
+      <hook name="app-sidebar.menu:before"></hook>
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <router-link
@@ -21,7 +21,7 @@
             :title="$t('menu.search')"
             :to="{ name: 'search', query }"
             v-b-tooltip.right="{ customClass: tooltipsClass }">
-            <fa icon="search" fixed-width />
+            <fa icon="search" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.search') }}
             </span>
@@ -33,7 +33,7 @@
             :title="$t('menu.batch')"
             :to="{ name: 'batch-search' }"
             v-b-tooltip.right="{ customClass: tooltipsClass }">
-            <fa icon="layer-group" fixed-width />
+            <fa icon="layer-group" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.batch') }}
             </span>
@@ -45,7 +45,7 @@
             :title="$t('menu.analyse')"
             :to="{ name: 'indexing' }"
             v-b-tooltip.right="{ customClass: tooltipsClass }">
-            <fa icon="rocket" fixed-width />
+            <fa icon="rocket" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.analyse') }}
             </span>
@@ -58,7 +58,7 @@
             :title="$t('menu.history')"
             :to="{ name: 'user-history' }"
             v-b-tooltip.right="{ customClass: tooltipsClass }">
-            <fa icon="clock" fixed-width />
+            <fa icon="clock" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.history') }}
             </span>
@@ -70,7 +70,7 @@
             :title="$t('menu.insights')"
             :to="{ name: 'insights' }"
             v-b-tooltip.right="{ customClass: tooltipsClass }">
-            <fa icon="chart-bar" fixed-width />
+            <fa icon="chart-bar" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.insights') }}
             </span>
@@ -83,7 +83,7 @@
               :title="$t('menu.settings')"
               :to="{ name: 'settings' }"
               v-b-tooltip.right="{ customClass: tooltipsClass }">
-              <fa icon="cog" fixed-width />
+              <fa icon="cog" fixed-width></fa>
               <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
                 {{ $t('menu.settings') }}
               </span>
@@ -91,12 +91,12 @@
           </li>
         </template>
       </ul>
-      <hook name="app-sidebar.menu:after" />
-      <hook name="app-sidebar.help:before" />
+      <hook name="app-sidebar.menu:after"></hook>
+      <hook name="app-sidebar.help:before"></hook>
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
           <a :href="faqLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.faq')" v-b-tooltip.right="{ customClass: tooltipsClass }">
-            <fa icon="question" fixed-width />
+            <fa icon="question" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.faq') }}
             </span>
@@ -104,18 +104,18 @@
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--help">
           <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.help')" v-b-tooltip.right="{ customClass: tooltipsClass }">
-            <fa icon="ambulance" fixed-width />
+            <fa icon="ambulance" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.help') }}
             </span>
           </a>
         </li>
       </ul>
-      <hook name="app-sidebar.help:after" />
-      <hook name="app-sidebar.guides:before" />
+      <hook name="app-sidebar.help:after"></hook>
+      <hook name="app-sidebar.guides:before"></hook>
       <div v-if="!reduced && currentRouteDocs.length">
         <h5 class="app-sidebar__container__heading">
-          <fa icon="book" fixed-width />
+          <fa icon="book" fixed-width></fa>
           <span>User guides</span>
         </h5>
         <ul class="app-sidebar__container__menu app-sidebar__container__menu--borderless list-unstyled">
@@ -128,12 +128,12 @@
           </li>
         </ul>
       </div>
-      <hook name="app-sidebar.guides:after" />
-      <hook name="app-sidebar.locales:before" />
+      <hook name="app-sidebar.guides:after"></hook>
+      <hook name="app-sidebar.locales:before"></hook>
       <ul class="app-sidebar__container__menu list-unstyled mb-0">
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--locale">
           <locales-menu class="app-sidebar__container__menu__item__link text-left text-wrap" v-slot="{ currentLocale }">
-            <fa icon="globe" fixed-width />
+            <fa icon="globe" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ currentLocale.label }}
             </span>
@@ -141,20 +141,20 @@
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
           <a :href="logoutLink" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
-            <fa icon="sign-out-alt" fixed-width />
+            <fa icon="sign-out-alt" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.logout') }}
             </span>
           </a>
         </li>
       </ul>
-      <hook name="app-sidebar.locales:after" />
+      <hook name="app-sidebar.locales:after"></hook>
     </vue-perfect-scrollbar>
     <div class="app-sidebar__version">
-      <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" class="d-inline-block" :no-icon="reduced" />
+      <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" class="d-inline-block" :no-icon="reduced"></version-number>
     </div>
     <div class="app-sidebar__data-location" v-if="$config.is('manageDocuments')" v-show="!reduced">
-      <mounted-data-location />
+      <mounted-data-location></mounted-data-location>
     </div>
   </div>
 </template>
@@ -311,7 +311,7 @@ export default {
         }
       }
 
-      &__toggler {
+      &__toggle {
         margin: $spacer;
         height: 40px;
         width: 40px;
