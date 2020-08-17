@@ -98,7 +98,7 @@ export default {
       return [{
         id: 'selectAll',
         label: this.isAllSelected ? this.$t('document.unselectAll') : this.$t('document.selectAll'),
-        icon: ['far', this.isAllSelected ? 'square' : 'check-square']
+        icon: ['far', this.isAllSelected ? 'check-square' : 'square']
       }, {
         id: 'star',
         label: this.$t('document.starButton'),
