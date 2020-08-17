@@ -46,24 +46,24 @@
     </page-header>
     <div class="container py-4">
       <div class="batch-search-results__info d-md-flex align-items-start" v-if="Object.keys(batchSearch).length !== 0">
-        <dl class="row mb-0">
-          <dt class="text-nowrap col-sm-4 text-right" v-if="$config.is('multipleProjects')">
+        <dl class="row m-0 w-50">
+          <dt class="text-nowrap col-sm-6 text-right text-truncate" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.project') }}
           </dt>
-          <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
+          <dd class="col-sm-6 text-truncate" v-if="$config.is('multipleProjects')">
             {{ batchSearch.project.name }}
           </dd>
-          <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
+          <dt class="col-sm-6 text-right text-truncate" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.published') }}
           </dt>
-          <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
+          <dd class="col-sm-6 text-truncate" v-if="$config.is('multipleProjects')">
             <b-form-checkbox v-model="batchSearch.published" switch @change="changePublished" v-if="isMyBatchSearch"></b-form-checkbox>
             <span v-else>{{ batchSearch.published ? $t('indexing.yes') : $t('indexing.no') }}</span>
           </dd>
-          <dt class="text-nowrap col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.state') }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-6 text-truncate">
             <b-badge
               @click.prevent="openErrorMessage"
               :class="{ 'cursor-pointer': isFailed }"
@@ -71,42 +71,42 @@
               {{ capitalize(batchSearch.state) }}
             </b-badge>
           </dd>
-          <dt class="text-nowrap col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.date') }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-6 text-truncate">
             {{ moment(batchSearch.date).locale($i18n.locale).format('LLL') }}
           </dd>
-          <dt class="text-nowrap col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.nbResults') }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-6 text-truncate">
             {{ batchSearch.nbResults }}
           </dd>
-          <dt class="text-nowrap col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.queries') }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-6 text-truncate">
             {{ keys(batchSearch.queries).length }}
           </dd>
         </dl>
-        <dl class="row mb-0">
-          <dt class="text-nowrap col-sm-4 text-right">
+        <dl class="row m-0 w-50">
+          <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.phraseMatch') }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-6 text-truncate">
             {{ batchSearch.phraseMatches ? $t('indexing.yes') : $t('indexing.no') }}
           </dd>
-          <dt class="text-nowrap col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ fuzzinessLabel }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-6 text-truncate">
             {{ batchSearch.fuzziness }}
           </dd>
-          <dt class="text-nowrap col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.fileTypes') }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-6 text-truncate">
             <ul v-if="batchSearch.fileTypes.length" class="list-unstyled list-group list-group-horizontal">
               <li v-for="fileType in batchSearch.fileTypes" :key="fileType" class="mr-2">
                 <content-type-badge :value="fileType"></content-type-badge>
@@ -116,10 +116,10 @@
               {{ $t('indexing.no') }}
             </span>
           </dd>
-          <dt class="text-nowrap col-sm-4 text-right">
+          <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.path') }}
           </dt>
-          <dd class="col-sm-8">
+          <dd class="col-sm-6 text-truncate">
             <ul v-if="batchSearch.paths.length" class="list-unstyled list-group list-group-horizontal">
               <li v-for="path in batchSearch.paths" :key="path" class="mr-2">
                 <b-badge variant="dark">
@@ -131,10 +131,10 @@
               {{ $t('indexing.no') }}
             </span>
           </dd>
-          <dt class="col-sm-4 text-right" v-if="$config.is('multipleProjects')">
+          <dt class="col-sm-6 text-right text-truncate" v-if="$config.is('multipleProjects')">
             {{ $t('batchSearch.author') }}
           </dt>
-          <dd class="col-sm-8" v-if="$config.is('multipleProjects')">
+          <dd class="col-sm-6 text-truncate" v-if="$config.is('multipleProjects')">
             {{ batchSearch.user.id }}
           </dd>
         </dl>
