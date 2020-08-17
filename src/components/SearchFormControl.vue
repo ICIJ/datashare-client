@@ -1,47 +1,55 @@
 <script>
 /**
-   * A search input with pill layout.
-   */
+ * A search input with pill layout.
+ */
 export default {
   name: 'SearchFormControl',
   props: {
     /**
-       * Input value
-       * @model
-       */
+     * Input value
+     * @model
+     */
     value: {
       type: [String, Number]
     },
     /**
-       * Optional placeholder text.
-       */
+     * Optional placeholder text
+     */
     placeholder: {
       type: String
     },
     /**
-       * Text to use in the submit button
-       * @default $t('searchFormControl.submitLabel')
-       */
+     * Text to use in the submit button
+     * @default $t('searchFormControl.submitLabel')
+     */
     submitLabel: {
       type: String
     },
     /**
-       * Fill the submit button with primary color.
-       */
+     * Fill the submit button with primary color
+     */
     fillSubmit: {
       type: Boolean
     },
     /**
-       * Show the text in the submit button (only visible for screen-readers by default).
-       */
+     * Show the text in the submit button (only visible for screen-readers by default)
+     */
     showSubmitLabel: {
       type: Boolean
     },
     /**
-       * Hide the magnifying glass icon
-       */
+     * Hide the magnifying glass icon
+     */
     noIcon: {
       type: Boolean
+    },
+    /**
+     * Set the autofocus on the search bar on load
+     * @default True
+     */
+    autofocus: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -59,10 +67,10 @@ export default {
 <template>
   <b-form @submit="$emit('submit', value)">
     <b-input-group size="sm" class="search-form-control" :class="searchFormClassAttr">
-      <b-form-input :placeholder="placeholder" class="search-form-control__input" :value="value" @input="$emit('input', $event)" />
+      <b-form-input :placeholder="placeholder" class="search-form-control__input" :value="value" @input="$emit('input', $event)" :autofocus="autofocus"></b-form-input>
       <b-input-group-append  class="search-form-control__addon search-form-control__addon--append">
         <b-button variant="light" class="search-form-control__addon__submit" type="submit">
-          <fa icon="search" v-if="!noIcon" />
+          <fa icon="search" v-if="!noIcon"></fa>
           <span :class="{ 'sr-only': !showSubmitLabel }">
             {{ submitLabel || $t('searchFormControl.submitLabel') }}
           </span>
@@ -72,13 +80,13 @@ export default {
   </b-form>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .search-form-control {
     position: relative;
 
     & &__input {
-      border-top-left-radius:  $rounded-pill;
-      border-bottom-left-radius:  $rounded-pill;
+      border-bottom-left-radius: $rounded-pill;
+      border-top-left-radius: $rounded-pill;
     }
 
     &__input:focus {
@@ -97,33 +105,33 @@ export default {
     &__addon {
 
       &:after {
-        content:"";
-        position: absolute;
-        top: 0;
-        left: 0;
-        bottom: 0;
-        right: 0;
         border-radius: $rounded-pill;
-        pointer-events: none;
-        z-index: 0;
-        transition: $input-transition;
+        bottom: 0;
         box-shadow: 0 0 0 $input-btn-focus-width transparent;
+        content: "";
+        left: 0;
+        pointer-events: none;
+        position: absolute;
+        right: 0;
+        top: 0;
+        transition: $input-transition;
+        z-index: 0;
       }
 
       & &__submit:last-of-type {
-        border-left: 0;
-        border-color: $input-border-color;
         background: $input-bg;
-        border-top-right-radius: $rounded-pill;
         border-bottom-right-radius: $rounded-pill;
+        border-color: $input-border-color;
+        border-left: 0;
+        border-top-right-radius: $rounded-pill;
         transition: $input-transition;
       }
     }
 
     &--fill-submit &__addon__submit.btn {
-      color: color-yiq($primary);
-      border-color: $primary;
       @include gradient-bg($primary);
+      border-color: $primary;
+      color: color-yiq($primary);
     }
   }
 </style>
