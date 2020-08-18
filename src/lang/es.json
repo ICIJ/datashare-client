@@ -621,7 +621,8 @@
       },
       "document": "no hay archivos | 1 archivo | %{total} archivos",
       "missing1": "Ningún documento tiene | 1 documento tiene | %{total} documentos tienen",
-      "missing2": "no o incorrecta fecha de creación."
+      "missing2": "no o incorrecta fecha de creación.",
+      "missingTooltip": "There are multiple reasons why a document is not here in the barchart:\n    - The document has no creation date at all\n    - The creation date of the document is prior to January 1. 1970\n    - The creation date of the document is posterior to the current date"
     },
     "duplicates": {
       "duplicated": "* Los archivos duplicados no se indexan en Datashare para facilitar la búsqueda y evitar crear archivos innecesarios."
