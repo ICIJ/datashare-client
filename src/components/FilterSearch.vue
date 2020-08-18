@@ -170,7 +170,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .filter-search {
     &__items {
       .filter__items {

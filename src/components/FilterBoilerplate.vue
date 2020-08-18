@@ -71,7 +71,9 @@
           </slot>
         </div>
         <div class="list-group-item filter__items__display border-top-0" @click="asyncFilterSearch" v-if="shouldDisplayShowMoreAction()">
-          <span>{{ $t('filter.showMore') }}</span>
+          <span>
+            {{ $t('filter.showMore') }}
+          </span>
         </div>
         <div v-if="noResults" class="p-2 text-center text-muted">
           {{ $t('filter.none') }}<br />
@@ -101,7 +103,8 @@ import Hook from '@/components/Hook'
 
 /**
  * A base component to wrap other filter components. Not intended to be used directly.
- * This was created to implement an "extendable" component with template slots because Vue.js doesn't allow to extend a component while redefining only "slots" in its templates.
+ * This was created to implement an "extendable" component with template slots because Vue.js doesn't allow to extend
+ * a component while redefining only "slots" in its templates.
  */
 export default {
   name: 'FilterBoilerplate',
