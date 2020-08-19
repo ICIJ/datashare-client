@@ -249,6 +249,7 @@ export default {
         margin: 0;
 
         a {
+          color: white;
           cursor: pointer;
           display: inline-block;
           font-size: 0.8em;
