@@ -622,7 +622,7 @@
       "document": "aucun document | 1 document | %{total} documents",
       "missing1": "Aucun document n'a | 1 document a | %{total} documents ont",
       "missing2": "pas ou erreur de date de création.",
-      "missingTooltip": "There are multiple reasons why a document is not here in the barchart:\n    - The document has no creation date at all\n    - The creation date of the document is prior to January 1. 1970\n    - The creation date of the document is posterior to the current date"
+      "missingTooltip": "Il y a plusieurs raisons pour lesquelles un document n'apparaît pas dans le diagramme:\n    - Le document n'a pas de date de création\n    - La date de création du document est antérieure au 1er janvier 1970\n    - La date de création du document est postérieure à la date d'aujourd'hui"
     },
     "duplicates": {
       "duplicated": "* Les documents dupliqués ne sont pas indexés dans Datashare pour faciliter la recherche et éviter de créer des documents inutiles."
