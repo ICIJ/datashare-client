@@ -620,8 +620,7 @@
         "day": "Día"
       },
       "document": "no hay archivos | 1 archivo | %{total} archivos",
-      "missing1": "Ningún documento tiene | 1 documento tiene | %{total} documentos tienen",
-      "missing2": "no o incorrecta fecha de creación.",
+      "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| %{total} documents have no or wrong creation date.",
       "missingTooltip": "Hay varias razones por las que un documento no está en el gráfico de barras:\n    - El documento no tiene ninguna fecha de creación\n    - La fecha de creación del documento es anterior al 1 de enero 1970\n    - La fecha de creación del documento es posterior a la fecha de hoy"
     },
     "duplicates": {
