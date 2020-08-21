@@ -162,7 +162,8 @@ export default {
           key: 'creationDateHumanShort',
           sortBy: 'metadata.tika_metadata_creation_date',
           sortable: true,
-          label: this.$t('document.creationDate')
+          label: this.$t('document.creationDate'),
+          class: 'fit'
         },
         {
           key: 'contentLength',
@@ -171,7 +172,8 @@ export default {
           label: this.$t('document.size'),
           formatter (value, name, item) {
             return item.source.contentLength
-          }
+          },
+          class: 'fit'
         },
         {
           key: 'actions',
@@ -238,10 +240,18 @@ export default {
     padding: 0 0 $spacer;
 
     &__items {
+      .table.b-table > thead > tr > th.fit {
+        background-position: right 0.10rem center;
+        padding-right: 0.85em;
+      }
 
       &__row {
         &__title:visited:not(.router-link-active) {
           color: mix(#609, white, 50%);
+        }
+
+        td.fit {
+          padding-right: 0.85em;
         }
 
         table tbody tr:not(.b-table-row-selected):not(:hover) &__checkbox,
