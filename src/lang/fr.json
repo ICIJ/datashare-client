@@ -74,7 +74,7 @@
     "filtersTitle": "Filtres",
     "clearFilters": "Réinitialiser les filtres",
     "clearFiltersDescription": "Réinitialiser les filtres.",
-    "back": "Retour aux résultats de recherche",
+    "back": "Retour à la recherche",
     "try": "Vous devriez essayer de",
     "nav": {
       "share": "Partager un lien vers ce document",
@@ -561,7 +561,7 @@
     "title": "Rechercher dans les raccourcis clavier",
     "goToPreviousDocument": "Aller au document précédent",
     "goToNextDocument": "Aller au document suivant",
-    "backToSearchResults": "Retourner aux résultats de recherche",
+    "backToSearchResults": "Retourner à la recherche",
     "goToPreviousTab": "Aller à l'onglet précédent",
     "goToNextTab": "Aller à l'onglet suivant",
     "activateSearchBar": "Chercher dans le document",
@@ -620,8 +620,7 @@
         "day": "Jour"
       },
       "document": "aucun document | 1 document | %{total} documents",
-      "missing1": "Aucun document n'a | 1 document a | %{total} documents ont",
-      "missing2": "pas ou erreur de date de création.",
+      "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| %{total} documents have no or wrong creation date.",
       "missingTooltip": "Il y a plusieurs raisons pour lesquelles un document n'apparaît pas dans le diagramme:\n    - Le document n'a pas de date de création\n    - La date de création du document est antérieure au 1er janvier 1970\n    - La date de création du document est postérieure à la date d'aujourd'hui"
     },
     "duplicates": {
