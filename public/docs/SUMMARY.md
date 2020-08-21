@@ -31,6 +31,7 @@
 * [Explore a document](all/explore-a-document.md)
 * [Star documents](all/star-documents.md)
 * [Tag documents](all/tag-documents.md)
+* [Recommend documents](all/recommend-documents.md)
 * [Use keyboard shortcuts](all/use-keyboard-shortcuts.md)
 
 ## FAQ
