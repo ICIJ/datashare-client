@@ -86,25 +86,23 @@ Export your spreadsheet in a CSV format:
 
 * Open Datashare and click '**Batch searches**' in the left menu:
 
-![](../.gitbook/assets/batch-searches.png)
+![](../.gitbook/assets/screenshot-2020-08-21-at-15.45.32%20%281%29.png)
 
-* Type a name for your batch search:
+* Type a **name** for your batch search:
 
-![](../.gitbook/assets/screenshot-2019-10-21-at-10.55.21.png)
+![](../.gitbook/assets/screenshot-2020-08-21-at-15.47.29.png)
 
-* Upload your CSV:
+* Upload your **CSV**:
 
-![](../.gitbook/assets/screenshot-2019-10-21-at-10.56.51.png)
+![](../.gitbook/assets/screenshot-2020-08-21-at-15.49.51.png)
 
-![](../.gitbook/assets/screenshot-2019-10-21-at-15.11.33.png)
+* Add a **description** \(optional\):
 
-* Add a description \(optional\):
+![](../.gitbook/assets/screenshot-2020-08-21-at-15.50.59.png)
 
-![](../.gitbook/assets/screenshot-2019-10-21-at-10.56.51%20%281%29.png)
+* Set the **advanced filters** \('Do phrase matches', 'Fuzziness' or 'Proximity searches', 'File types' and 'Path'\) according to your preferences:
 
-* Set the advanced filters \('Do phrase matches', 'Fuzziness' or 'Proximity searches', 'File types' and 'Path'\) according to your preferences:
-
-![](../.gitbook/assets/screenshot-2019-10-21-at-10.59.08.png)
+![](../.gitbook/assets/screenshot-2020-08-21-at-15.51.57.png)
 
 ### What is fuzziness?
 
@@ -138,29 +136,29 @@ When you turn on 'Do phrase matches', you can set, in 'Proximity searches', the 
 
 * Click '**Add**'. Your batch search will appear in the table of batch searches.
 
-![](../.gitbook/assets/screenshot-2019-10-21-at-10.57.56.png)
-
-### 
+![](../.gitbook/assets/screenshot-2020-08-21-at-15.52.58.png)
 
 ## Get your results
 
 * Open your batch search by clicking its name:
 
-![](../.gitbook/assets/screenshot-2019-09-27-at-12.17.28.png)
+![](../.gitbook/assets/screenshot-2020-08-21-at-15.55.14%20%281%29.png)
 
-* You see your results and you can sort them by clicking the column's name. 'Rank' means the order by which each queries would be sorted out if run in Datashare's main search bar. They are thus sorted by relevance score.
+* You see your results and you can **sort them** by clicking the column's name. 'Rank' means the order by which each queries would be sorted out if run in Datashare's main search bar. They are thus sorted by **relevance score by default**.
 
-![](../.gitbook/assets/screenshot-2019-11-04-at-16.37.03.png)
+![](../.gitbook/assets/screenshot-2020-08-21-at-15.56.25.png)
 
-You can click on a document's name and it will open it in a new tab:
+* You can click on a document's name and it will open it in a new tab:
 
-![](../.gitbook/assets/screenshot-2019-11-04-at-16.37.42.png)
+![](../.gitbook/assets/screenshot-2020-08-21-at-16.03.13.png)
 
-* You can filter your results by query in the left panel and read how many documents there are for each query: 
+* You can **filter your results by query** and read how many documents there are for each query: 
 
-![](../.gitbook/assets/screenshot-2019-11-04-at-16.38.43.png)
+![](../.gitbook/assets/screenshot-2020-08-21-at-15.54.33.png)
 
-* You can also download your results in a CSV format:
+![](../.gitbook/assets/screenshot-2020-08-21-at-16.05.57.png)
+
+* You can also **download your results** in a CSV format:
 
 ![](../.gitbook/assets/screenshot-2019-11-04-at-16.39.25.png)
 
