@@ -620,8 +620,7 @@
         "day": "Day"
       },
       "document": "no documents | 1 document | %{total} documents",
-      "missing1": "No documents have | 1 document has | %{total} documents have",
-      "missing2": "no or wrong creation date.",
+      "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| %{total} documents have no or wrong creation date.",
       "missingTooltip": "There are multiple reasons why a document is not here in the barchart:\n    - The document has no creation date at all\n    - The creation date of the document is prior to January 1. 1970\n    - The creation date of the document is posterior to the current date"
     },
     "duplicates": {

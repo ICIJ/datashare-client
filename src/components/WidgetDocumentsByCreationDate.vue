@@ -43,7 +43,7 @@
             </g>
           </svg>
           <p class="widget__content__missing mt-2 small text-muted" v-if="missing" :title="$t('widget.creationDate.missingTooltip')">
-            {{ $tc('widget.creationDate.missing1', missing, { total: $n(missing) }) }} {{ $t('widget.creationDate.missing2') }}
+            {{ $tc('widget.creationDate.missing', missing, { total: $n(missing) }) }}
           </p>
         </v-wait>
       </div>
