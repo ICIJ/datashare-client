@@ -969,7 +969,7 @@
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-common-types/-/fontawesome-common-types-0.2.30.tgz#2f1cc5b46bd76723be41d0013a8450c9ba92b777"
   integrity sha512-TsRwpTuKwFNiPhk1UfKgw7zNPeV5RhNp2Uw3pws+9gDAkPGKrtjR1y2lI3SYn7+YzyfuNknflpBA1LRKjt7hMg==
 
-"@fortawesome/fontawesome-svg-core@^1.2.26", "@fortawesome/fontawesome-svg-core@^1.2.29":
+"@fortawesome/fontawesome-svg-core@^1.2.26", "@fortawesome/fontawesome-svg-core@^1.2.30":
   version "1.2.30"
   resolved "https://registry.yarnpkg.com/@fortawesome/fontawesome-svg-core/-/fontawesome-svg-core-1.2.30.tgz#f56dc6791861fe5d1af04fb8abddb94658c576db"
   integrity sha512-E3sAXATKCSVnT17HYmZjjbcmwihrNOCkoU7dVMlasrcwiJAHxSKeZ+4WN5O+ElgO/FaYgJmASl8p9N7/B/RttA==
@@ -1041,23 +1041,23 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@icij/murmur@2.10.0":
-  version "2.10.0"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-2.10.0.tgz#71288b34449d7d652f7b74a852e4f6e6ba004149"
-  integrity sha512-iJAL+VpoQY20Ta27iByh1PQVLhA5e1JIsSDnBwisl8P6XCvibf6PTiQyftK5+FeOZVlTEUu4FbbiiUYelwToPA==
+"@icij/murmur@^2.13.2":
+  version "2.13.2"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-2.13.2.tgz#10ec47480b19b311194c7ed5c4a8b6dce1884b38"
+  integrity sha512-Lm4KOfOIrt78LOUuerbB4UkgdwE8eqU/bbAir6SieZx84+qelb3OV1zRk2SvJAIFiQ0L3adX3sh5w5/Ijl6Qjw==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
-    "@fortawesome/fontawesome-svg-core" "^1.2.29"
+    "@fortawesome/fontawesome-svg-core" "^1.2.30"
     "@fortawesome/free-brands-svg-icons" "^5.13.1"
     "@fortawesome/free-regular-svg-icons" "^5.13.1"
     "@fortawesome/free-solid-svg-icons" "^5.13.1"
     "@fortawesome/vue-fontawesome" "^0.1.10"
-    bootstrap "^4.5.0"
+    bootstrap "^4.5.2"
     bootstrap-vue "2.15.0"
     clipboard "^2.0.6"
     d3 "^5.16.0"
     jsonp "^0.2.1"
-    lodash "4.17.15"
+    lodash "4.17.20"
     promise-polyfill "^8.1.3"
     vue "^2.5.11"
     vue-headroom "^0.9.0"
@@ -2956,12 +2956,12 @@ bootstrap-vue@2.15.0:
     portal-vue "^2.1.7"
     vue-functional-data-merge "^3.1.0"
 
-bootstrap@>=4.3.1:
+bootstrap@>=4.3.1, bootstrap@^4.5.2:
   version "4.5.2"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.5.2.tgz#a85c4eda59155f0d71186b6e6ad9b875813779ab"
   integrity sha512-vlGn0bcySYl/iV+BGA544JkkZP5LB3jsmkeKLFQakCOwCM3AOk7VkldBz4jrzSe+Z0Ezn99NVXa1o45cQY4R6A==
 
-"bootstrap@>=4.4.1 <5.0.0", "bootstrap@>=4.5.0 <5.0.0", bootstrap@^4.5.0:
+"bootstrap@>=4.4.1 <5.0.0", "bootstrap@>=4.5.0 <5.0.0":
   version "4.5.0"
   resolved "https://registry.yarnpkg.com/bootstrap/-/bootstrap-4.5.0.tgz#97d9dbcb5a8972f8722c9962483543b907d9b9ec"
   integrity sha512-Z93QoXvodoVslA+PWNdk23Hze4RBYIkpb5h8I2HY2Tu2h7A0LpAgLcyrhrSUyo2/Oxm2l1fRZPs1e5hnxnliXA==
@@ -8607,20 +8607,15 @@ lodash.uniq@^4.5.0:
   resolved "https://registry.yarnpkg.com/lodash.uniq/-/lodash.uniq-4.5.0.tgz#d0225373aeb652adc1bc82e4945339a842754773"
   integrity sha1-0CJTc662Uq3BvILklFM5qEJ1R3M=
 
-lodash@4.17.15:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+lodash@4.17.20, lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.3, lodash@^4.17.4:
+  version "4.17.20"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
+  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
 
 lodash@^4.0.0, lodash@^4.17.12, lodash@^4.3.0, lodash@~4.17.10:
   version "4.17.19"
   resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
   integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
-
-lodash@^4.17.11, lodash@^4.17.13, lodash@^4.17.14, lodash@^4.17.15, lodash@^4.17.19, lodash@^4.17.3, lodash@^4.17.4:
-  version "4.17.20"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.20.tgz#b44a9b6297bcb698f1c51a3545a2b3b368d59c52"
-  integrity sha512-PlhdFcillOINfeV7Ni6oF1TAEayyZBoZ8bcshTHqOYJYlrqzRK5hagpagky5o4HfCzzd1TRkXPMFq6cKk9rGmA==
 
 log-symbols@2.2.0, log-symbols@^2.2.0:
   version "2.2.0"
