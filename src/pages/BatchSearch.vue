@@ -60,6 +60,12 @@
               </template>
             </b-table>
           </div>
+          <b-pagination-nav
+            class="mt-2"
+            :link-gen="linkGen"
+            :number-of-pages="numberOfPages"
+            use-router
+            v-if="numberOfPages > 1"></b-pagination-nav>
         </v-wait>
       </div>
     </div>
@@ -111,7 +117,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('batchSearch', { items: 'batchSearches' }),
+    ...mapState('batchSearch', { items: 'batchSearches', total: 'total' }),
     sortResults () {
       return settings.batchSearchResults.sort
     },
@@ -189,6 +195,9 @@ export default {
     },
     orderBy () {
       return this.order === 'desc'
+    },
+    numberOfPages () {
+      return Math.ceil(this.total / this.perPage)
     }
   },
   watch: {

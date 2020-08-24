@@ -40,7 +40,7 @@ describe('BatchSearchStore', () => {
     })
 
     it('should retrieve all the batchSearches', async () => {
-      axios.request.mockResolvedValue({ data: ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'] })
+      axios.request.mockResolvedValue({ data: { batchSearches: ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'], total: 3 } })
       const data = { from: 0, size: 10, sort: 'batch_date', order: 'asc' }
 
       await store.dispatch('batchSearch/getBatchSearches', data)

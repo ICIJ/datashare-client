@@ -9,23 +9,26 @@ import BatchSearch from '@/pages/BatchSearch'
 jest.mock('@/api', () => {
   return jest.fn(() => {
     return {
-      getBatchSearches: jest.fn().mockReturnValue(Promise.resolve([{
-        uuid: 1,
-        project: { name: 'project_01' },
-        name: 'name_01',
-        description: 'description_01',
-        date: '2019-01-01',
-        nbResults: 2,
-        nbQueries: 1
-      }, {
-        uuid: 2,
-        project: { name: 'project_02' },
-        name: 'name_02',
-        description: 'description_02',
-        date: '2019-01-01',
-        nbResults: 3,
-        nbQueries: 2
-      }]))
+      getBatchSearches: jest.fn().mockReturnValue(Promise.resolve({
+        batchSearches: [{
+          uuid: 1,
+          project: { name: 'project_01' },
+          name: 'name_01',
+          description: 'description_01',
+          date: '2019-01-01',
+          nbResults: 2,
+          nbQueries: 1
+        }, {
+          uuid: 2,
+          project: { name: 'project_02' },
+          name: 'name_02',
+          description: 'description_02',
+          date: '2019-01-01',
+          nbResults: 3,
+          nbQueries: 2
+        }],
+        total: 2
+      }))
     }
   })
 })
@@ -84,5 +87,17 @@ describe('BatchSearch.vue', () => {
 
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({ name: 'batch-search', query: { page: 1, sort: 'batch_results', order: 'desc' } })
+  })
+
+  it('should NOT display a pagination', async () => {
+    await wrapper.setData({ perPage: 5 })
+
+    expect(wrapper.find('.pagination.b-pagination').exists()).toBeFalsy()
+  })
+
+  it('should display a pagination', async () => {
+    await wrapper.setData({ perPage: 1 })
+
+    expect(wrapper.find('.pagination.b-pagination').exists()).toBeTruthy()
   })
 })

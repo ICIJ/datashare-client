@@ -10,7 +10,8 @@ export function initialState () {
     batchSearch: {},
     batchSearches: [],
     results: [],
-    selectedQueries: []
+    selectedQueries: [],
+    total: 0
   }
 }
 
@@ -31,6 +32,9 @@ export const mutations = {
   },
   results (state, results) {
     Vue.set(state, 'results', results)
+  },
+  total (state, total) {
+    Vue.set(state, 'total', total)
   }
 }
 
@@ -49,9 +53,13 @@ export const actions = {
     try {
       batchSearches = await api.getBatchSearches(from, size, sort, order)
     } catch (_) {
-      batchSearches = []
+      batchSearches = {
+        batchSearches: [],
+        total: 0
+      }
     }
-    return commit('batchSearches', batchSearches)
+    commit('total', batchSearches.total)
+    return commit('batchSearches', batchSearches.batchSearches)
   },
   async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published }) {
     await api.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
