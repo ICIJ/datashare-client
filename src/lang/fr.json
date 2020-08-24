@@ -620,7 +620,7 @@
         "day": "Jour"
       },
       "document": "aucun document | 1 document | %{total} documents",
-      "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| %{total} documents have no or wrong creation date.",
+      "missing": "Aucun document n'a de date de création manquante ou erronée | 1 document a une date de création manquante ou erronée | %{total} documents ont une date de création manquante ou erronée.",
       "missingTooltip": "Il y a plusieurs raisons pour lesquelles un document n'apparaît pas dans le diagramme:\n    - Le document n'a pas de date de création\n    - La date de création du document est antérieure au 1er janvier 1970\n    - La date de création du document est postérieure à la date d'aujourd'hui"
     },
     "duplicates": {
