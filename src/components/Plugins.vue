@@ -33,7 +33,7 @@
         </div>
       </div>
       <b-card-group deck>
-        <b-overlay :show="plugin.show" v-for="plugin in plugins" :key="plugin.id" class="plugins__card mx-3">
+        <b-overlay :show="plugin.show" v-for="plugin in plugins" :key="plugin.id" class="plugins__card m-3 d-flex">
           <b-card :header="plugin.name" footer-bg-variant="white" footer-border-variant="white" class="m-0">
             <b-card-text>
               <div>

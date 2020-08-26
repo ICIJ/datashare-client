@@ -33,7 +33,7 @@
         </div>
       </div>
       <b-card-group deck>
-        <b-overlay :show="extension.show" v-for="extension in extensions" :key="extension.id" class="extensions__card mx-3">
+        <b-overlay :show="extension.show" v-for="extension in extensions" :key="extension.id" class="extensions__card m-3 d-flex">
           <b-card :header="extension.name" footer-bg-variant="white" footer-border-variant="white" class="m-0">
             <b-card-text>
               <div>
