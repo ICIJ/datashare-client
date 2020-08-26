@@ -245,6 +245,11 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
+  it('should return backend response to installExtensionFromUrl', async () => {
+    json = await api.installExtensionFromUrl()
+    expect(json).toEqual({})
+  })
+
   it('should return backend response to uninstallExtension', async () => {
     json = await api.uninstallExtension()
     expect(json).toEqual({})

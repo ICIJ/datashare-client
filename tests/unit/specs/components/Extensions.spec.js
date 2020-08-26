@@ -1,4 +1,4 @@
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 
 import Api from '@/api'
@@ -57,6 +57,19 @@ describe('Extensions.vue', () => {
       url: Api.getFullUrl('/api/extensions/install?id=extension_01_id')
     })
     expect(wrapper.vm.extensions[0].show).toBeTruthy()
+  })
+
+  it('should call for extension installation from extensionUrl', () => {
+    wrapper = mount(Extensions, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    axios.request.mockClear()
+
+    wrapper.vm.installExtensionFromUrl()
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith({
+      method: 'PUT',
+      url: Api.getFullUrl('/api/extensions/install?url=this.is.an.url')
+    })
   })
 
   it('should call for extension uninstallation', () => {

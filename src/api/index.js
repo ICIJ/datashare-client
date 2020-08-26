@@ -161,6 +161,9 @@ export default class Api {
   installExtensionFromId (extensionId) {
     return this.sendAction(`/api/extensions/install?id=${extensionId}`, { method: 'PUT' })
   }
+  installExtensionFromUrl (extensionUrl) {
+    return this.sendAction(`/api/extensions/install?url=${extensionUrl}`, { method: 'PUT' })
+  }
   uninstallExtension (extensionId) {
     return this.sendAction(`/api/extensions/uninstall?id=${extensionId}`, { method: 'DELETE' })
   }

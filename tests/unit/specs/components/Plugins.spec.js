@@ -76,7 +76,7 @@ describe('Plugins.vue', () => {
     wrapper = mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
     axios.request.mockClear()
 
-    wrapper.vm.installFromUrl()
+    wrapper.vm.installPluginFromUrl()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith({

@@ -5,6 +5,32 @@
         <div class="extensions__search flex-grow-1">
           <search-form-control :placeholder="$t('extensions.search')" v-model="searchTerm" @input="search"></search-form-control>
         </div>
+        <div class="extensions__add ml-2">
+          <b-btn variant="primary" @click="$refs.installExtensionFromUrl.show()">
+            <fa icon="link" class="mr-1"></fa>
+            {{ $t('extensions.installFromUrl') }}
+          </b-btn>
+          <b-modal ref="installExtensionFromUrl" hide-footer id="extensions__add__modal">
+            <template #modal-title>
+              <fa icon="link" class="mr-1"></fa>
+              {{ $t('extensions.installFromUrl') }}
+            </template>
+            <div class="input-group mb-3">
+              <div class="input-group-prepend">
+                <span class="input-group-text rounded-0 border-0 bg-white">
+                  <fa icon="link"></fa>
+                </span>
+              </div>
+              <b-form-input type="url" class="b-form-control border-0" required placeholder="URL" v-model="url" :state="isUrl(url)"></b-form-input>
+              <b-form-invalid-feedback class="text-secondary mt-2">
+                {{ $t('global.enterCorrectUrl') }}
+              </b-form-invalid-feedback>
+            </div>
+            <b-btn variant="primary" class="float-right" @click="installExtensionFromUrl">
+              {{ $t('extensions.install') }}
+            </b-btn>
+          </b-modal>
+        </div>
       </div>
       <b-card-group deck>
         <b-overlay :show="extension.show" v-for="extension in extensions" :key="extension.id" class="extensions__card mx-3">
@@ -43,6 +69,7 @@ import map from 'lodash/map'
 
 import Api from '@/api'
 import SearchFormControl from '@/components/SearchFormControl'
+import { isUrl } from '@/utils/strings'
 
 const api = new Api()
 
@@ -54,7 +81,8 @@ export default {
   data () {
     return {
       extensions: [],
-      searchTerm: ''
+      searchTerm: '',
+      url: ''
     }
   },
   async mounted () {
@@ -78,6 +106,16 @@ export default {
       }
       extension.show = false
     },
+    async installExtensionFromUrl () {
+      try {
+        await api.installExtensionFromUrl(this.url)
+        this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
+      } catch (_) {
+        this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
+      }
+      this.$refs.installExtensionFromUrl.hide()
+      this.$set(this, 'url', '')
+    },
     async uninstallExtension (extensionId) {
       const extension = find(this.extensions, { id: extensionId })
       extension.show = true
@@ -88,7 +126,8 @@ export default {
         this.$bvToast.toast(this.$t('extensions.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
       extension.show = false
-    }
+    },
+    isUrl
   }
 }
 </script>

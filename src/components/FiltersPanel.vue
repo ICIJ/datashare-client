@@ -42,7 +42,6 @@ import forEach from 'lodash/forEach'
 import isArray from 'lodash/isArray'
 import { mapState } from 'vuex'
 
-import Hook from '@/components/Hook'
 import FilterDate from '@/components/FilterDate'
 import FilterDateRange from '@/components/FilterDateRange'
 import FilterNamedEntity from '@/components/FilterNamedEntity'
@@ -52,6 +51,7 @@ import FilterRecommendedBy from '@/components/FilterRecommendedBy'
 import FilterSearch from '@/components/FilterSearch'
 import FilterText from '@/components/FilterText'
 import FilterYesNo from '@/components/FilterYesNo'
+import Hook from '@/components/Hook'
 
 /**
  * A panel displaying all registered filters.

@@ -23,10 +23,10 @@
               </div>
               <b-form-input type="url" class="b-form-control border-0" required placeholder="URL" v-model="url" :state="isUrl(url)"></b-form-input>
               <b-form-invalid-feedback class="text-secondary mt-2">
-                {{ $t('plugins.enterCorrectUrl') }}
+                {{ $t('global.enterCorrectUrl') }}
               </b-form-invalid-feedback>
             </div>
-            <b-btn variant="primary" class="float-right" @click="installFromUrl">
+            <b-btn variant="primary" class="float-right" @click="installPluginFromUrl">
               {{ $t('plugins.install') }}
             </b-btn>
           </b-modal>
@@ -106,7 +106,7 @@ export default {
       }
       plugin.show = false
     },
-    async installFromUrl () {
+    async installPluginFromUrl () {
       try {
         await api.installPluginFromUrl(this.url)
         this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
