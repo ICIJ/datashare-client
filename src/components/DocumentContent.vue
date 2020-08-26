@@ -230,7 +230,7 @@ export default {
     <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
     <hook name="document.content.body:after"></hook>
     <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
-    <hook name="document.content:before"></hook>
+    <hook name="document.content:after"></hook>
   </div>
 </template>
 
