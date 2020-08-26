@@ -46,7 +46,7 @@ const HooksMixin = superclass => class extends superclass {
    * @memberof HooksMixin.prototype
    * @param {String} project - Project to add this hook to
    * @param {Object} options - Hook's options
-   * @param {String} options.name - Name of the hoo
+   * @param {String} options.name - Name of the hook
    * @param {String} options.target - Target of the hook
    * @param {Number} options.order - Priority of the hook
    * @param {Object} options.definition - Options to pass to the hook constructor
