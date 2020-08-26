@@ -135,11 +135,3 @@ Then run Majestic and open [localhost:4000](http://localhost:4000):
 ```
 yarn run test:unit:majestic
 ```
-
-## Internationalisation
-
-To retrieve the list of the keys translated into English but not present in the other languages files :
-
-```
-./bin/compareTranslations.sh
-```
