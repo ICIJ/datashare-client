@@ -1,7 +1,8 @@
 {
   "global": {
     "all": "All",
-    "cancel": "Cancel"
+    "cancel": "Cancel",
+    "enterCorrectUrl": "Please enter a correct URL."
   },
   "aggregations": {
     "more": "さらに調べる",
@@ -644,8 +645,7 @@
     "homePage": "Plugin home page",
     "install": "Install plugin",
     "uninstall": "Uninstall plugin",
-    "installFromUrl": "Install plugin from URL",
-    "enterCorrectUrl": "Please enter a correct URL."
+    "installFromUrl": "Install plugin from URL"
   },
   "extensions": {
     "title": "Extensions",
@@ -657,6 +657,7 @@
     "version": "Version",
     "homePage": "Extension home page",
     "install": "Install extension",
-    "uninstall": "Uninstall extension"
+    "uninstall": "Uninstall extension",
+    "installFromUrl": "Install extension from URL"
   }
 }
