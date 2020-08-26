@@ -1,7 +1,8 @@
 {
   "global": {
     "all": "Tout",
-    "cancel": "Annuler"
+    "cancel": "Annuler",
+    "enterCorrectUrl": "Please enter a correct URL."
   },
   "aggregations": {
     "more": "Explorer plus",
@@ -644,8 +645,7 @@
     "homePage": "Page d'accueil des plugins",
     "install": "Installer le plugin",
     "uninstall": "Désinstaller le plugin",
-    "installFromUrl": "Installer le plugin depuis une URL",
-    "enterCorrectUrl": "Veuillez saisir une URL valide."
+    "installFromUrl": "Installer le plugin depuis une URL"
   },
   "extensions": {
     "title": "Extensions",
@@ -657,6 +657,7 @@
     "version": "Version",
     "homePage": "Page d'accueil des extensions",
     "install": "Installer l'extension",
-    "uninstall": "Désinstaller l'extension"
+    "uninstall": "Désinstaller l'extension",
+    "installFromUrl": "Install extension from URL"
   }
 }
