@@ -123,6 +123,33 @@ describe('DocumentStore', () => {
       }))
     })
 
+    it('should tag multiple documents and not refresh and no document is selected in the store', async () => {
+      await letData(es).have(new IndexedDocument('doc_01', index)).commit()
+      await letData(es).have(new IndexedDocument('doc_02', index)).commit()
+
+      axios.request.mockClear()
+
+      // Retrieve documents
+      await store.dispatch('document/get', { id: 'doc_01', index })
+      const document01 = store.state.document.doc
+      await store.dispatch('document/get', { id: 'doc_02', index })
+      const document02 = store.state.document.doc
+
+      store.commit('document/reset')
+
+      await store.dispatch('document/tag', { documents: [document01, document02], tag: 'tag_01 tag_02 tag_03' })
+
+      expect(axios.request).toBeCalledTimes(1)
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/tag`),
+        method: 'POST',
+        data: {
+          docIds: ['doc_01', 'doc_02'],
+          tags: ['tag_01', 'tag_02', 'tag_03']
+        }
+      }))
+    })
+
     it('should deleteTag from 1 document', async () => {
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await letData(es).have(new IndexedDocument('doc_02', index)).commit()

@@ -4,9 +4,9 @@
       <b-form @submit.prevent="addTag" class="document-tags-form__add">
         <b-input-group size="sm" class="h-100">
           <b-input-group-text slot="prepend">
-            <fa icon="tag" />
+            <fa icon="tag"></fa>
           </b-input-group-text>
-          <b-form-input v-model="tag" @input="searchTags" required :placeholder="$t('document.tagsNew')" :disabled="updatingTags" autocomplete="off" autofocus ref="tag" />
+          <b-form-input v-model="tag" @input="searchTags" required :placeholder="$t('document.tagsNew')" :disabled="updatingTags" autocomplete="off" autofocus ref="tag"></b-form-input>
         </b-input-group>
         <selectable-dropdown :items="existingTags" @input="tag = $event" @click.native="addTag" :hide="!existingTags.length"></selectable-dropdown>
       </b-form>
@@ -14,9 +14,11 @@
     <div class="col-md-8" v-if="displayTags">
       <ul class="document-tags-form__tags list-unstyled mb-0 mt-1">
         <li class="document-tags-form__tags__tag badge badge-pill mr-2 mb-1" :class="[mode === 'light' ? 'border badge-light': 'badge-dark']" v-for="tag in tags" :key="tag.label">
-          <span :title="generateTagTooltip(tag)" v-b-tooltip>{{ tag.label }}</span>
+          <span :title="generateTagTooltip(tag)" v-b-tooltip>
+            {{ tag.label }}
+          </span>
           <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tagConfirmation')" class="document-tags-form__tags__tag__delete btn btn-sm" :class="mode">
-            <fa icon="times" class="fa-fw pl-2" />
+            <fa icon="times" class="fa-fw pl-2"></fa>
           </confirm-button>
         </li>
       </ul>
@@ -38,7 +40,7 @@ import displayUser from '@/filters/displayUser'
 import settings from '@/utils/settings'
 
 /**
- * A small form to add tags to a one or several documents.
+ * A small form to add tags to one or several documents.
  */
 export default {
   name: 'DocumentTagsForm',
