@@ -20,13 +20,12 @@ jest.mock('@/api', () => {
   })
 })
 
-const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('FilterNamedEntity.vue', () => {
+  const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
   const index = toLower('FilterNamedEntity')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
-  let wrapper
+  let wrapper = null
   const id = 'document'
 
   beforeAll(() => {
@@ -44,141 +43,147 @@ describe('FilterNamedEntity.vue', () => {
 
   afterAll(() => jest.unmock('@/api'))
 
-  it('should display empty list', async () => {
-    await wrapper.vm.root.aggregate()
+  describe('Display the list of all available named entities', () => {
+    it('should display empty list', async () => {
+      await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(0)
+      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(0)
+    })
+
+    it('should display 1 named entity', async () => {
+      await letData(es).have(new IndexedDocument(id, index)
+        .withNer('person_01')).commit()
+
+      await wrapper.vm.root.aggregate()
+
+      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
+    })
+
+    it('should display 2 named entities in one document', async () => {
+      await letData(es).have(new IndexedDocument(id, index)
+        .withNer('person_01')
+        .withNer('person_02')).commit()
+
+      await wrapper.vm.root.aggregate()
+
+      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(2)
+    })
+
+    it('should display 1 named entity in 2 documents', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01', 2)
+        .withNer('person_01', 25)).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('person_01')).commit()
+
+      await wrapper.vm.root.aggregate()
+
+      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
+      expect(wrapper.findAll('.list-group-item .filter__items__item__count').at(0).text()).toEqual('2')
+    })
+
+    it('should display 3 named entities in 2 documents in correct order', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01', 2)).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('person_02', 2)
+        .withNer('person_02', 16)
+        .withNer('person_02', 21)
+        .withNer('person_01', 26)
+        .withNer('person_03', 35)).commit()
+
+      await wrapper.vm.root.aggregate()
+
+      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(3)
+      expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(0).text()).toEqual('person_01')
+      expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(1).text()).toEqual('person_02')
+      expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(2).text()).toEqual('person_03')
+    })
   })
 
-  it('should display 1 named entity', async () => {
-    await letData(es).have(new IndexedDocument(id, index)
-      .withNer('person_01')).commit()
+  describe('"Show more" button', () => {
+    it('should display the "Show more" button', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01', 1)
+        .withNer('person_02', 1)
+        .withNer('person_03', 1)
+        .withNer('person_04', 1)
+        .withNer('person_05', 1)
+        .withNer('person_06', 1)
+        .withNer('person_07', 1)
+        .withNer('person_08', 1)
+        .withNer('person_09', 1)).commit()
 
-    await wrapper.vm.root.aggregate()
+      await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
+      expect(wrapper.findAll('.filter__items__display > span')).toHaveLength(1)
+      expect(wrapper.find('.filter__items__display > span').text()).toEqual('Show more')
+    })
+
+    it('should not display the "Show more" button', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01', 2)).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('person_02', 2)
+        .withNer('person_02', 16)
+        .withNer('person_02', 21)
+        .withNer('person_01', 26)
+        .withNer('person_03', 35)).commit()
+
+      await wrapper.vm.root.aggregate()
+
+      expect(wrapper.findAll('.filter__items__display span')).toHaveLength(0)
+    })
   })
 
-  it('should display 2 named entities in one document', async () => {
-    await letData(es).have(new IndexedDocument(id, index)
-      .withNer('person_01')
-      .withNer('person_02')).commit()
+  describe('Filtering on named entities', () => {
+    it('should filter on named entity filter and return no items', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('person_02')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index)
+        .withNer('person_03')).commit()
+      await letData(es).have(new IndexedDocument('document_04', index)
+        .withNer('person_04')).commit()
 
-    await wrapper.vm.root.aggregate()
+      wrapper.vm.root.filterQuery = 'Windows'
+      await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(2)
-  })
+      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(0)
+    })
 
-  it('should display 1 named entity in 2 documents', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withNer('person_01', 2)
-      .withNer('person_01', 25)).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withNer('person_01')).commit()
+    it('should filter on named entity filter and return all items', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('person_02')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index)
+        .withNer('person_03')).commit()
+      await letData(es).have(new IndexedDocument('document_04', index)
+        .withNer('person_04')).commit()
 
-    await wrapper.vm.root.aggregate()
+      wrapper.vm.root.filterQuery = 'person'
+      await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.list-group-item .filter__items__item__count').at(0).text()).toEqual('2')
-  })
+      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(4)
+    })
 
-  it('should display 3 named entities in 2 documents in correct order', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withNer('person_01', 2)).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withNer('person_02', 2)
-      .withNer('person_02', 16)
-      .withNer('person_02', 21)
-      .withNer('person_01', 26)
-      .withNer('person_03', 35)).commit()
+    it('should filter on named entity filter and return only 1 item', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('person_02')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index)
+        .withNer('person_03')).commit()
+      await letData(es).have(new IndexedDocument('document_04', index)
+        .withNer('person_04')).commit()
 
-    await wrapper.vm.root.aggregate()
+      wrapper.vm.root.filterQuery = 'person_01'
+      await wrapper.vm.root.aggregate()
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(3)
-    expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(0).text()).toEqual('person_01')
-    expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(1).text()).toEqual('person_02')
-    expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(2).text()).toEqual('person_03')
-  })
-
-  it('should not display the "Show more" button', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withNer('person_01', 2)).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withNer('person_02', 2)
-      .withNer('person_02', 16)
-      .withNer('person_02', 21)
-      .withNer('person_01', 26)
-      .withNer('person_03', 35)).commit()
-
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.findAll('.filter__items__display span')).toHaveLength(0)
-  })
-
-  it('should display the "Show more" button', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withNer('person_01', 1)
-      .withNer('person_02', 1)
-      .withNer('person_03', 1)
-      .withNer('person_04', 1)
-      .withNer('person_05', 1)
-      .withNer('person_06', 1)
-      .withNer('person_07', 1)
-      .withNer('person_08', 1)
-      .withNer('person_09', 1)).commit()
-
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.findAll('.filter__items__display > span')).toHaveLength(1)
-    expect(wrapper.find('.filter__items__display > span').text()).toEqual('Show more')
-  })
-
-  it('should filter on named entity filter and return no items', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withNer('person_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withNer('person_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withNer('person_03')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withNer('person_04')).commit()
-
-    wrapper.vm.root.filterQuery = 'Windows'
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(0)
-  })
-
-  it('should filter on named entity filter and return all items', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withNer('person_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withNer('person_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withNer('person_03')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withNer('person_04')).commit()
-
-    wrapper.vm.root.filterQuery = 'person'
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(4)
-  })
-
-  it('should filter on named entity filter and return only 1 item', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withNer('person_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withNer('person_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withNer('person_03')).commit()
-    await letData(es).have(new IndexedDocument('document_04', index)
-      .withNer('person_04')).commit()
-
-    wrapper.vm.root.filterQuery = 'person_01'
-    await wrapper.vm.root.aggregate()
-
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
+      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
+    })
   })
 
   describe('Deletion', () => {
