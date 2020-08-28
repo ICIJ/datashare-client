@@ -27,7 +27,7 @@ export default class FilterNamedEntity extends FilterType {
           query: param.values.map(v => `(${v})`).join(' OR ')
         }).query('query_string', {
           default_field: 'category',
-          query: namedEntityCategoryTranslation[param.name]
+          query: namedEntityCategoryTranslation[param.name] || param.name
         })
       })
 
