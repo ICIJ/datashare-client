@@ -248,13 +248,13 @@ You cannot use square brackets [except for searching for ranges](https://icij.gi
 
 ## Delete your batch search
 
-Open your batch search and click 'Delete batch search'. 
+Open your batch search and click the **trash icon**: 
 
-![](../.gitbook/assets/screenshot-2019-09-27-at-12.17.46-copy-2.png)
+![](../.gitbook/assets/screenshot-2020-08-31-at-17.27.40.png)
 
-Then click 'Yes'.
+Then click **'Yes'**:
 
-![](../.gitbook/assets/screenshot-2019-09-27-at-12.18.07.png)
+![](../.gitbook/assets/screenshot-2020-08-31-at-17.29.03.png)
 
 
 
