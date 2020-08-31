@@ -2,9 +2,14 @@
   <filter-boilerplate v-bind="$props" ref="filter">
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="selectUsers">
-        <b-form-checkbox v-for="userId in sampleRecommendedByUsers" :value="userId" class="filter__items__item" :key="userId">
-          <span>
-            {{ userId | displayUser }}
+        <b-form-checkbox v-for="{ user, count } in sampleRecommendedByUsers" :value="user" class="filter__items__item" :key="user">
+          <span class="d-flex">
+            <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
+              {{ user | displayUser }}
+            </span>
+            <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
+              {{ $n(count) }}
+            </span>
           </span>
         </b-form-checkbox>
       </b-form-checkbox-group>
@@ -30,15 +35,15 @@ export default {
   components: {
     FilterBoilerplate
   },
-  filters: {
-    displayUser
-  },
   mixins: [filters, utils],
   computed: {
     ...mapState('search', ['recommendedByUsers']),
     sampleRecommendedByUsers () {
       return this.asyncItems ? this.recommendedByUsers : slice(this.recommendedByUsers, 0, settings.filterSize)
     }
+  },
+  filters: {
+    displayUser
   },
   async mounted () {
     await this.$store.dispatch('search/getRecommendationsByProject')

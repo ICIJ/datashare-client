@@ -828,7 +828,7 @@ describe('SearchStore', () => {
     })
 
     it('should return  users who recommended documents from this project', async () => {
-      axios.request.mockResolvedValue({ data: [{ id: 'user_01' }, { id: 'user_02' }] })
+      axios.request.mockResolvedValue({ data: [{ user: { id: 'user_01' }, count: 1 }, { user: { id: 'user_02' }, count: 1 }] })
       axios.request.mockClear()
 
       await store.dispatch('search/getRecommendationsByProject')
@@ -837,7 +837,7 @@ describe('SearchStore', () => {
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/users/recommendations?project=${project}`)
       }))
-      expect(store.state.search.recommendedByUsers).toEqual(['user_01', 'user_02'])
+      expect(store.state.search.recommendedByUsers).toEqual([{ user: 'user_01', count: 1 }, { user: 'user_02', count: 1 }])
     })
 
     it('should set the list of documents recommended by a list of users', async () => {

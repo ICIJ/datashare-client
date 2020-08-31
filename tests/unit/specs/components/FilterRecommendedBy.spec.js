@@ -11,7 +11,7 @@ Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })
 
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: [{ id: 'user_01' }, { id: 'user_02' }] })
+    request: jest.fn().mockResolvedValue({ data: [{ user: { id: 'user_01' }, count: 1 }, { user: { id: 'user_02' }, count: 3 }] })
   }
 })
 
@@ -55,12 +55,7 @@ describe('FilterRecommendedBy.vue', () => {
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/users/recommendations?project=${project}`)
     }))
-    expect(wrapper.vm.recommendedByUsers).toEqual(['user_01', 'user_02'])
-  })
-
-  it('should display users who recommended documents in this project', () => {
-    expect(wrapper.findAll('.filter__items__item').at(0).text()).toBe('user_01')
-    expect(wrapper.findAll('.filter__items__item').at(1).text()).toBe('user_02')
+    expect(wrapper.vm.recommendedByUsers).toEqual([{ user: 'user_01', count: 1 }, { user: 'user_02', count: 3 }])
   })
 
   it('should retrieve documents recommended by selected users', async () => {
@@ -94,16 +89,16 @@ describe('FilterRecommendedBy.vue', () => {
   it('should limit displayed users to 8', async () => {
     axios.request.mockResolvedValue({
       data: [
-        { id: 'user_01' },
-        { id: 'user_02' },
-        { id: 'user_03' },
-        { id: 'user_04' },
-        { id: 'user_05' },
-        { id: 'user_06' },
-        { id: 'user_07' },
-        { id: 'user_08' },
-        { id: 'user_09' },
-        { id: 'user_10' }
+        { user: { id: 'user_01' }, doc_count: 1 },
+        { user: { id: 'user_02' }, doc_count: 1 },
+        { user: { id: 'user_03' }, doc_count: 1 },
+        { user: { id: 'user_04' }, doc_count: 1 },
+        { user: { id: 'user_05' }, doc_count: 1 },
+        { user: { id: 'user_06' }, doc_count: 1 },
+        { user: { id: 'user_07' }, doc_count: 1 },
+        { user: { id: 'user_08' }, doc_count: 1 },
+        { user: { id: 'user_09' }, doc_count: 1 },
+        { user: { id: 'user_10' }, doc_count: 1 }
       ]
     })
     await store.dispatch('search/getRecommendationsByProject')

@@ -59,13 +59,13 @@ describe('SearchDocumentNavbar.vue', () => {
       await store.dispatch('document/get', { id: 'doc_01', index: project })
     })
 
-    it('should display a "Mark as recommmended" button', () => {
+    it('should display a "Mark as recommended" button', () => {
       expect(wrapper.find('.search-document-navbar__recommended-by').exists()).toBeTruthy()
     })
 
     it('should call batchUpdate api function, MARK document as recommended and update recommendedBy in search store', async () => {
       axios.request.mockClear()
-      axios.request.mockResolvedValue({ data: [{ id: 'Jean-Michel' }] })
+      axios.request.mockResolvedValue({ data: [{ user: { id: 'Jean-Michel' }, count: 1 }] })
       await wrapper.vm.toggleAsRecommended()
 
       expect(axios.request).toBeCalledTimes(2)
@@ -76,7 +76,7 @@ describe('SearchDocumentNavbar.vue', () => {
       }))
       expect(wrapper.vm.isRecommended).toBeTruthy()
       expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/users/recommendations?project=${project}`) })
-      expect(store.state.search.recommendedByUsers).toEqual(['Jean-Michel'])
+      expect(store.state.search.recommendedByUsers).toEqual([{ user: 'Jean-Michel', count: 1 }])
     })
 
     it('should call batchUpdate api function, UNMARK document as recommended and update recommendedBy in search store', async () => {
