@@ -2,7 +2,7 @@
   <div class="document-tags-form row no-gutters">
     <div :class="{ 'col-md-4 mb-3': displayTags }" class="d-flex" v-if="displayForm">
       <b-form @submit.prevent="addTag" class="document-tags-form__add">
-        <b-input-group size="sm" class="h-100">
+        <b-input-group size="sm">
           <b-input-group-text slot="prepend">
             <fa icon="tag"></fa>
           </b-input-group-text>
@@ -92,9 +92,10 @@ export default {
   methods: {
     searchTags: throttle(async function (value = '') {
       if (value.length < 1) return
+      const index = get(this.documents, '0.index', null)
       const include = `.*${value.toLowerCase()}.*`
       const body = bodybuilder().size(0).aggregation('terms', 'tags', { include }).build()
-      const response = await elasticsearch.search({ index: this.document.index, body })
+      const response = await elasticsearch.search({ index, body })
       const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
       this.$set(this, 'existingTags', map(buckets, 'key'))
     }, 200),

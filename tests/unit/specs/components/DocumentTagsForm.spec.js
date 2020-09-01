@@ -175,6 +175,13 @@ describe('DocumentTagsForm.vue', () => {
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
+
+  it('should search for tag suggestions', async () => {
+    wrapper = await createView({ es, project, tags: ['tag_01', 'tag_02'] })
+
+    await wrapper.vm.searchTags('tag')
+    expect(wrapper.vm.existingTags).toEqual(['tag_01', 'tag_02'])
+  })
 })
 
 function delay (t, v) {
