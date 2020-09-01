@@ -158,7 +158,7 @@ export default {
   suggestedFields: ['<implicit>', 'tags', 'contentType', 'path', 'mentionNorm'],
   suggestedImplicitFields: ['mentionNorm', 'tags'],
   batchSearch: {
-    order: 'asc',
+    order: 'desc',
     size: 100,
     sort: 'batch_date'
   },
