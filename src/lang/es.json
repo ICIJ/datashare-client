@@ -2,7 +2,7 @@
   "global": {
     "all": "Todos",
     "cancel": "Cancelar",
-    "enterCorrectUrl": "Please enter a correct URL."
+    "enterCorrectUrl": "Por favor introduzca una URL correcta."
   },
   "aggregations": {
     "more": "Explora más",
@@ -658,6 +658,6 @@
     "homePage": "Página de inicio de las extensiones",
     "install": "Instalar extensión",
     "uninstall": "Desinstalar extensión",
-    "installFromUrl": "Install extension from URL"
+    "installFromUrl": "Instalar extensión desde URL"
   }
 }
