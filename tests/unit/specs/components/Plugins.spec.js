@@ -83,6 +83,7 @@ describe('Plugins.vue', () => {
       method: 'PUT',
       url: Api.getFullUrl('/api/plugins/install?url=this.is.an.url')
     })
+    expect(wrapper.vm.show).toBeTruthy()
   })
 
   it('should call for plugin uninstallation', () => {

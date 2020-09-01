@@ -29,6 +29,7 @@
             <b-btn variant="primary" class="float-right" @click="installExtensionFromUrl">
               {{ $t('extensions.install') }}
             </b-btn>
+            <b-overlay :show="show" no-wrap></b-overlay>
           </b-modal>
         </div>
       </div>
@@ -82,6 +83,7 @@ export default {
     return {
       extensions: [],
       searchTerm: '',
+      show: false,
       url: ''
     }
   },
@@ -107,6 +109,7 @@ export default {
       extension.show = false
     },
     async installExtensionFromUrl () {
+      this.$set(this, 'show', true)
       try {
         await api.installExtensionFromUrl(this.url)
         this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
@@ -114,6 +117,7 @@ export default {
         this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
       }
       this.$refs.installExtensionFromUrl.hide()
+      this.$set(this, 'show', false)
       this.$set(this, 'url', '')
     },
     async uninstallExtension (extensionId) {
