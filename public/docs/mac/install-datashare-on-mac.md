@@ -13,7 +13,7 @@ You have **2 options:**
 
 ### Standard \(High Sierra and more recent versions\)
 
- 0. Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. Go to **Applications** and put '**Datashare**' in the trash.
+Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. Go to **Applications** and put '**Datashare**' in the trash.
 
  1. Let's first install Homebrew, which is needed for installing Tesseract OCR. Open your **Finder**:
 
@@ -41,11 +41,7 @@ You have **2 options:**
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.10.26.png)
 
-6. **Go to this page**: [https://github.com/ICIJ/datashare-installer/releases/](https://github.com/ICIJ/datashare-installer/releases/)
-
-7. In 'Latest release', **click** '**DatashareStandalone.pkg**':
-
-![](../.gitbook/assets/screenshot-2020-04-03-at-17.02.23.png)
+6. **If you haven't already, go to this page**: [datashare.icij.org](https://datashare.icij.org), scroll down and click '**Download for free**'.
 
   8. Go to your '**Downloads**' and double-click '**DatashareStandalone.pkg**':
 
@@ -55,7 +51,7 @@ You have **2 options:**
 
 ![](../.gitbook/assets/screenshot-2020-01-09-at-14.50.18.png)
 
-10. To open 'Dartashare.pkg' despite this, go to your Mac's **System Preferences**:
+10. To open 'Dartashare.pkg', go to your Mac's **System Preferences**:
 
 ![](../.gitbook/assets/screenshot-2020-01-09-at-14.41.59.png)
 
