@@ -2,12 +2,14 @@
   <div class="document-tags-form row no-gutters">
     <div :class="{ 'col-md-4 mb-3': displayTags }" class="d-flex" v-if="displayForm">
       <b-form @submit.prevent="addTag" class="document-tags-form__add">
-        <b-input-group size="sm">
-          <b-input-group-text slot="prepend">
-            <fa icon="tag"></fa>
-          </b-input-group-text>
-          <b-form-input v-model="tag" @input="searchTags" required :placeholder="$t('document.tagsNew')" :disabled="updatingTags" autocomplete="off" autofocus ref="tag"></b-form-input>
-        </b-input-group>
+        <b-overlay :show="!isReady" spinner-small>
+          <b-input-group size="sm">
+            <b-input-group-text slot="prepend">
+              <fa icon="tag"></fa>
+            </b-input-group-text>
+            <b-form-input v-model="tag" @input="searchTags" required :placeholder="$t('document.tagsNew')" autocomplete="off" autofocus ref="tag"></b-form-input>
+          </b-input-group>
+        </b-overlay>
         <selectable-dropdown :items="suggestions" @input="tag = $event" @click.native="addTag" :hide="!suggestions.length"></selectable-dropdown>
       </b-form>
     </div>
@@ -79,9 +81,9 @@ export default {
   },
   data () {
     return {
-      tag: '',
+      isReady: true,
       suggestions: [],
-      updatingTags: false
+      tag: ''
     }
   },
   computed: {
@@ -94,29 +96,29 @@ export default {
       if (value.length < 1) return
       const index = get(this.documents, '0.index', null)
       const include = `.*${value.toLowerCase()}.*`
-      const body = bodybuilder().size(0).aggregation('terms', 'tags', { include }).build()
+      const body = bodybuilder().size(0).agg('terms', 'tags', { include }).build()
       const response = await elasticsearch.search({ index, body })
       const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
       this.$set(this, 'suggestions', map(buckets, 'key'))
     }, 200),
     async addTag () {
-      this.$set(this, 'updatingTags', true)
+      this.$set(this, 'isReady', false)
       await this.$store.dispatch('document/tag', { documents: this.documents, tag: this.tag })
       this.$set(this, 'tag', '')
       this.$set(this, 'suggestions', [])
-      this.$set(this, 'updatingTags', false)
+      this.$set(this, 'isReady', true)
       delay(filterName => this.$root.$emit('filter::refresh', filterName), settings.elasticsearch.waitForAnswer, 'tags')
       if (!this.displayTags) this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })
-      // Focus on the tag
+      // Focus on the tag input
       if (this.$refs && this.$refs.tag && this.$refs.tag.focus) {
         this.$nextTick(() => { this.$refs.tag.focus() })
       }
     },
     async deleteTag (tag) {
-      this.$set(this, 'updatingTags', true)
+      this.$set(this, 'isReady', false)
       await this.$store.dispatch('document/deleteTag', { documents: this.documents, tag })
       this.$root.$emit('filter::delete', 'tags', tag)
-      this.$set(this, 'updatingTags', false)
+      this.$set(this, 'isReady', true)
     },
     generateTagTooltip (tag) {
       return `${this.$t('document.createdBy')} ${displayUser(tag.user.id)} ${this.$t('document.on')} ${moment(tag.creationDate).format('LLL')}`
