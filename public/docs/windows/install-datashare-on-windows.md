@@ -13,19 +13,13 @@ You have **2 options:**
 
 You will need **Windows 7 Service Pack 2** or a newer version.
 
- 0. Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. You can follow these steps: [https://www.laptopmag.com/articles/uninstall-programs-windows-10](https://www.laptopmag.com/articles/uninstall-programs-windows-10)
+Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. You can follow these steps: [https://www.laptopmag.com/articles/uninstall-programs-windows-10](https://www.laptopmag.com/articles/uninstall-programs-windows-10)
 
-1. Download the latest release installer by **going here**:
-
-{% embed url="https://github.com/ICIJ/datashare-installer/releases" %}
-
-And on the latest release \(not necessarily 6.3.1\), **click on 'InstallDatashareStandalone.exe'**:
-
-![](../.gitbook/assets/screenshot-2020-04-30-at-10.51.47.png)
+1. Go to [datashare.icij.org](https://datashare.icij.org), scroll down and click '**Download for free**'.
 
  2. The file '**InstallDatashareStandalone.exe**' was downloaded. **Double click** on the name of the file in order to execute it.
 
- 3. As Datashare is not signed, this popup asks for your permission. Don't click 'Don't run' but click '**More info'**: 
+ 3. As Datashare is not signed, this popup asks for your permission. Don't click 'Don't run' but **click** '**More info'**: 
 
 ![](../.gitbook/assets/virtualbox_windev1808eval_1_19_03_2020_15_45_55.png)
 
