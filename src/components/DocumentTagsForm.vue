@@ -8,7 +8,7 @@
           </b-input-group-text>
           <b-form-input v-model="tag" @input="searchTags" required :placeholder="$t('document.tagsNew')" :disabled="updatingTags" autocomplete="off" autofocus ref="tag"></b-form-input>
         </b-input-group>
-        <selectable-dropdown :items="existingTags" @input="tag = $event" @click.native="addTag" :hide="!existingTags.length"></selectable-dropdown>
+        <selectable-dropdown :items="suggestions" @input="tag = $event" @click.native="addTag" :hide="!suggestions.length"></selectable-dropdown>
       </b-form>
     </div>
     <div class="col-md-8" v-if="displayTags">
@@ -80,7 +80,7 @@ export default {
   data () {
     return {
       tag: '',
-      existingTags: [],
+      suggestions: [],
       updatingTags: false
     }
   },
@@ -97,13 +97,13 @@ export default {
       const body = bodybuilder().size(0).aggregation('terms', 'tags', { include }).build()
       const response = await elasticsearch.search({ index, body })
       const buckets = get(response, 'aggregations.agg_terms_tags.buckets', [])
-      this.$set(this, 'existingTags', map(buckets, 'key'))
+      this.$set(this, 'suggestions', map(buckets, 'key'))
     }, 200),
     async addTag () {
       this.$set(this, 'updatingTags', true)
       await this.$store.dispatch('document/tag', { documents: this.documents, tag: this.tag })
       this.$set(this, 'tag', '')
-      this.$set(this, 'existingTags', [])
+      this.$set(this, 'suggestions', [])
       this.$set(this, 'updatingTags', false)
       delay(filterName => this.$root.$emit('filter::refresh', filterName), settings.elasticsearch.waitForAnswer, 'tags')
       if (!this.displayTags) this.$bvToast.toast(this.$t('document.tagged'), { noCloseButton: true, variant: 'success' })

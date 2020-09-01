@@ -180,7 +180,7 @@ describe('DocumentTagsForm.vue', () => {
     wrapper = await createView({ es, project, tags: ['tag_01', 'tag_02'] })
 
     await wrapper.vm.searchTags('tag')
-    expect(wrapper.vm.existingTags).toEqual(['tag_01', 'tag_02'])
+    expect(wrapper.vm.suggestions).toEqual(['tag_01', 'tag_02'])
   })
 })
 
