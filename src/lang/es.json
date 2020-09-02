@@ -650,7 +650,7 @@
   "extensions": {
     "title": "Extensiones",
     "search": "Buscar en las extensiones",
-    "submitSuccess": "Extensión instalada correctamente.",
+    "submitSuccess": "Extension successfully installed, please restart Datashare.",
     "submitError": "Error mientras se instalaba la extensión.",
     "deleteSuccess": "Extensión desinstalada correctamente.",
     "deleteError": "Error mientras se desinstalaba la extensión.",
