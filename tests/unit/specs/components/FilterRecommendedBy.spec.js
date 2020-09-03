@@ -11,7 +11,7 @@ Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })
 
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: [{ user: { id: 'user_01' }, count: 1 }, { user: { id: 'user_02' }, count: 3 }] })
+    request: jest.fn().mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 3 }] } })
   }
 })
 
@@ -88,18 +88,20 @@ describe('FilterRecommendedBy.vue', () => {
 
   it('should limit displayed users to 8', async () => {
     axios.request.mockResolvedValue({
-      data: [
-        { user: { id: 'user_01' }, doc_count: 1 },
-        { user: { id: 'user_02' }, doc_count: 1 },
-        { user: { id: 'user_03' }, doc_count: 1 },
-        { user: { id: 'user_04' }, doc_count: 1 },
-        { user: { id: 'user_05' }, doc_count: 1 },
-        { user: { id: 'user_06' }, doc_count: 1 },
-        { user: { id: 'user_07' }, doc_count: 1 },
-        { user: { id: 'user_08' }, doc_count: 1 },
-        { user: { id: 'user_09' }, doc_count: 1 },
-        { user: { id: 'user_10' }, doc_count: 1 }
-      ]
+      data: {
+        aggregates: [
+          { item: { id: 'user_01' }, doc_count: 1 },
+          { item: { id: 'user_02' }, doc_count: 1 },
+          { item: { id: 'user_03' }, doc_count: 1 },
+          { item: { id: 'user_04' }, doc_count: 1 },
+          { item: { id: 'user_05' }, doc_count: 1 },
+          { item: { id: 'user_06' }, doc_count: 1 },
+          { item: { id: 'user_07' }, doc_count: 1 },
+          { item: { id: 'user_08' }, doc_count: 1 },
+          { item: { id: 'user_09' }, doc_count: 1 },
+          { item: { id: 'user_10' }, doc_count: 1 }
+        ]
+      }
     })
     await store.dispatch('search/getRecommendationsByProject')
 

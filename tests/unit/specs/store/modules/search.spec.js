@@ -828,7 +828,7 @@ describe('SearchStore', () => {
     })
 
     it('should return  users who recommended documents from this project', async () => {
-      axios.request.mockResolvedValue({ data: [{ user: { id: 'user_01' }, count: 1 }, { user: { id: 'user_02' }, count: 1 }] })
+      axios.request.mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 1 }] } })
       axios.request.mockClear()
 
       await store.dispatch('search/getRecommendationsByProject')

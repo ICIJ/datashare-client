@@ -474,7 +474,7 @@ export const actions = {
     let recommendedByUsers
     try {
       recommendedByUsers = await api.getRecommendationsByProject(state.index)
-      recommendedByUsers = map(recommendedByUsers, item => { return { user: item.user.id, count: item.count } })
+      recommendedByUsers = map(get(recommendedByUsers, 'aggregates', []), user => { return { user: user.item.id, count: user.count } })
     } catch (_) {
       recommendedByUsers = []
     }
