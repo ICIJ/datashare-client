@@ -58,7 +58,8 @@ export function initialState () {
     layout: isNarrowScreen() ? 'table' : 'list',
     isDownloadAllowed: false,
     documentsRecommended: [],
-    recommendedByUsers: []
+    recommendedByUsers: [],
+    recommendedByTotal: 0
   })
 }
 
@@ -333,6 +334,9 @@ export const mutations = {
   },
   recommendedByUsers (state, recommendedByUsers) {
     Vue.set(state, 'recommendedByUsers', recommendedByUsers)
+  },
+  recommendedByTotal (state, recommendedByTotal) {
+    Vue.set(state, 'recommendedByTotal', recommendedByTotal)
   }
 }
 
@@ -472,13 +476,17 @@ export const actions = {
   },
   async getRecommendationsByProject ({ state, commit }) {
     let recommendedByUsers
+    let recommendedByTotal
     try {
-      recommendedByUsers = await api.getRecommendationsByProject(state.index)
-      recommendedByUsers = map(get(recommendedByUsers, 'aggregates', []), user => { return { user: user.item.id, count: user.count } })
+      const recommendations = await api.getRecommendationsByProject(state.index)
+      recommendedByUsers = map(get(recommendations, 'aggregates', []), user => { return { user: user.item.id, count: user.count } })
+      recommendedByTotal = get(recommendations, 'totalCount', 0)
     } catch (_) {
       recommendedByUsers = []
+      recommendedByTotal = 0
     }
     commit('recommendedByUsers', recommendedByUsers)
+    commit('recommendedByTotal', recommendedByTotal)
   },
   async getDocumentsRecommendedBy ({ state, commit }, users) {
     let documentsRecommended

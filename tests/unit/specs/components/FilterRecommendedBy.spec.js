@@ -11,7 +11,7 @@ Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })
 
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 3 }] } })
+    request: jest.fn().mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 3 }], totalCount: 42 } })
   }
 })
 
@@ -56,6 +56,7 @@ describe('FilterRecommendedBy.vue', () => {
       url: Api.getFullUrl(`/api/users/recommendations?project=${project}`)
     }))
     expect(wrapper.vm.recommendedByUsers).toEqual([{ user: 'user_01', count: 1 }, { user: 'user_02', count: 3 }])
+    expect(wrapper.vm.recommendedByTotal).toBe(42)
   })
 
   it('should retrieve documents recommended by selected users', async () => {
