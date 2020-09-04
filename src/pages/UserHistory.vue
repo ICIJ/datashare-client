@@ -1,8 +1,8 @@
 <template>
   <div class="user-history">
     <page-header icon="clock" :title="$t('userHistory.heading')" :description="documents.length ? $t('userHistory.description') : $t('userHistory.empty')">
-      <confirm-button class="btn btn-primary" :confirmed="clear" v-if="documents.length">
-        <fa icon="trash-alt" class="mr-1" />
+      <confirm-button class="btn btn-primary" :confirmed="clear" v-if="documents.length" :label="$t('global.confirmLabel')" :yes="$t('global.yes')" :no="$t('global.no')">
+        <fa icon="trash-alt" class="mr-1"></fa>
         {{ $t('userHistory.clear') }}
       </confirm-button>
     </page-header>

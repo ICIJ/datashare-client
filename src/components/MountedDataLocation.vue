@@ -11,8 +11,8 @@
       :confirmed="deleteAll"
       :description="$t('indexing.deleteIndexDescription')"
       :label="$t('indexing.deleteIndexLabel')"
-      :title="$t('indexing.deleteIndexLabel')"
-      v-b-tooltip>
+      :no="$t('global.no')"
+      :yes="$t('global.yes')">
       <fa icon="trash-alt"></fa>
       <span class="sr-only">
         {{ $t('indexing.deleteIndexLabel') }}

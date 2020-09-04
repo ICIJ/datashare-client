@@ -4,7 +4,8 @@
     "cancel": "Cancel",
     "enterCorrectUrl": "Please enter a correct URL.",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "confirmLabel": "Are you sure?"
   },
   "aggregations": {
     "more": "Explore more",

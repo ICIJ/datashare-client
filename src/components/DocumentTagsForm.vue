@@ -19,7 +19,7 @@
           <span :title="generateTagTooltip(tag)" v-b-tooltip>
             {{ tag.label }}
           </span>
-          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tagConfirmation')" class="document-tags-form__tags__tag__delete btn btn-sm" :class="mode">
+          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tagConfirmation')" :yes="$t('global.yes')" :no="$t('global.no')" class="document-tags-form__tags__tag__delete btn btn-sm" :class="mode">
             <fa icon="times" class="fa-fw pl-2"></fa>
           </confirm-button>
         </li>

@@ -23,7 +23,7 @@
           </b-popover>
         </div>
         <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch">
-          <confirm-button class="btn btn-light mr-2" :confirmed="deleteBatchSearch" v-b-tooltip.hover :title="$t('batchSearch.delete')">
+          <confirm-button class="btn btn-light mr-2" :confirmed="deleteBatchSearch" :label="$t('batchSearch.delete')" :yes="$t('global.yes')" :no="$t('global.no')">
             <fa icon="trash-alt"></fa>
             <span class="sr-only">
               {{ $t('batchSearch.delete') }}

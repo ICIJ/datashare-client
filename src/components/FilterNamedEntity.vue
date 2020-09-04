@@ -18,7 +18,7 @@
             </span>
           </span>
         </b-form-checkbox>
-        <confirm-button v-if="$config.is('manageDocuments')" :confirmed="() => deleteNamedEntitiesByMentionNorm(value)" class="align-self-start btn btn-link btn-sm p-0 mr-2 mt-1 filter__items__item__delete" v-b-tooltip :title="$t('filter.deleteNamedEntity')">
+        <confirm-button v-if="$config.is('manageDocuments')" :confirmed="() => deleteNamedEntitiesByMentionNorm(value)" class="align-self-start btn btn-link btn-sm p-0 mr-2 mt-1 filter__items__item__delete" :label="$t('filter.deleteNamedEntity')" :yes="$t('global.yes')" :no="$t('global.no')">
           <fa icon="trash-alt"></fa>
         </confirm-button>
       </div>
