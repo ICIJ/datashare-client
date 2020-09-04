@@ -609,8 +609,7 @@
       "onDisk": "sur le disque"
     },
     "diskUsage": {
-      "details": "Voir l'utilisation du disque",
-      "hits": "aucun document | 1 document | %{hits} documents"
+      "details": "Voir l'utilisation du disque"
     },
     "creationDate": {
       "filterFolder": "Filtrer par dossier",
@@ -659,5 +658,9 @@
     "install": "Installer l'extension",
     "uninstall": "Désinstaller l'extension",
     "installFromUrl": "Installer une extension depuis une URL"
+  },
+  "treeView": {
+    "hits": "no documents | 1 document | %{hits} documents",
+    "docs": "doc | docs"
   }
 }

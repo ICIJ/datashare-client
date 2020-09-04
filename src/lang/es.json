@@ -609,8 +609,7 @@
       "onDisk": "en el disco"
     },
     "diskUsage": {
-      "details": "Ver el uso del disco",
-      "hits": "no hay archivos | 1 archivo | %{hits} archivos"
+      "details": "Ver el uso del disco"
     },
     "creationDate": {
       "filterFolder": "Filtrar por carpeta",
@@ -659,5 +658,9 @@
     "install": "Instalar extensión",
     "uninstall": "Desinstalar extensión",
     "installFromUrl": "Instalar extensión desde URL"
+  },
+  "treeView": {
+    "hits": "no documents | 1 document | %{hits} documents",
+    "docs": "doc | docs"
   }
 }
