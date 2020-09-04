@@ -8,6 +8,9 @@
             <fa icon="weight"></fa>
             {{ humanSize(total, false, $t('human.size')) }}
           </span>
+          <span :title="$tc('treeView.hits', hits, { hits })" class="ml-2 badge badge-light border text-muted" v-if="count">
+            {{ humanNumber(hits, $t('human.number')) }} {{ $tc('treeView.docs', hits) }}
+          </span>
         </div>
       </transition>
     </div>
@@ -26,16 +29,13 @@
               <div class="font-weight-bold ml-2" :title="$n(directory.contentLength.value)" v-if="size">
                 {{ humanSize(directory.contentLength.value, false, $t('human.size'))  }}
               </div>
-              <span :title="$tc('widget.diskUsage.hits', hits, { hits: $n(directory.doc_count) })" class="ml-2 badge badge-light border text-muted" v-if="count">
-                {{ humanNumber(directory.doc_count) }}
+              <span :title="$tc('treeView.hits', directory.doc_count, { hits: $n(directory.doc_count) })" class="ml-2 badge badge-light border text-muted" v-if="count">
+                {{ humanNumber(directory.doc_count) }} {{ $tc('treeView.docs', directory.doc_count) }}
               </span>
               <span class="tree-view__directories__item__bar" :style="{ width: totalPercentage(directory.contentLength.value) }"></span>
             </li>
             <li v-if="!directories.length" class="list-group-item d-flex flex-row tree-view__directories__item font-italic">
               {{ $t('widget.noFolders') }}
-            </li>
-            <li class="list-group-item tree-view__directories__item tree-view__directories__item--hits" :title="$tc('widget.diskUsage.hits', hits, { hits })" v-if="count">
-              {{ $tc('widget.diskUsage.hits', hits, { hits: humanNumber(hits, $t('human.number')) }) }}
             </li>
           </ul>
         </b-form-checkbox-group>
