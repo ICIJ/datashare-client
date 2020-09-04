@@ -1,6 +1,7 @@
 import { map, toLower } from 'lodash'
-import types from '@/utils/types.json'
+
 import FilterText from './FilterText'
+import types from '@/utils/types.json'
 import { getDocumentTypeLabel } from '@/utils/utils'
 
 export default class FilterContentType extends FilterText {

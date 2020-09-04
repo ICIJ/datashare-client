@@ -2,7 +2,7 @@
   <filter-boilerplate v-bind="$props" class="filter--named-entity" ref="filter">
     <template #title>
       <span class="col-2 filter__items__item__icon pl-0 pr-1" :class="getCategoryClass(filter.category, 'text-')">
-        <fa :icon="getCategoryIcon(filter.category)" fixed-width />
+        <fa :icon="getCategoryIcon(filter.category)" fixed-width></fa>
       </span>
       {{ $t(`filter.${filter.name}`) }}
     </template>
@@ -19,7 +19,7 @@
           </span>
         </b-form-checkbox>
         <confirm-button v-if="$config.is('manageDocuments')" :confirmed="() => deleteNamedEntitiesByMentionNorm(value)" class="align-self-start btn btn-link btn-sm p-0 mr-2 mt-1 filter__items__item__delete" v-b-tooltip :title="$t('filter.deleteNamedEntity')">
-          <fa icon="trash-alt" />
+          <fa icon="trash-alt"></fa>
         </confirm-button>
       </div>
     </template>
@@ -28,19 +28,21 @@
 
 <script>
 import Api from '@/api'
-import filters from '@/mixins/filters'
 import FilterBoilerplate from '@/components/FilterBoilerplate'
+import filters from '@/mixins/filters'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 
 const api = new Api()
 
 /**
- * A Filter component to list named entity for a specific type.
+ * A Filter component to list named entities for a specific type.
  */
 export default {
   name: 'FilterNamedEntity',
-  components: { FilterBoilerplate },
+  components: {
+    FilterBoilerplate
+  },
   mixins: [filters, ner, utils],
   methods: {
     async deleteNamedEntitiesByMentionNorm (mentionNorm) {

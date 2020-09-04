@@ -67,7 +67,7 @@ import Fuse from 'fuse.js'
 import SearchFormControl from '@/components/SearchFormControl'
 
 /**
- * Form to filter a bash search results by query
+ * Form to filter a batch search results by query
  */
 export default {
   name: 'BatchSearchResultsFilters',
