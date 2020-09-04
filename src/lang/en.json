@@ -2,7 +2,9 @@
   "global": {
     "all": "All",
     "cancel": "Cancel",
-    "enterCorrectUrl": "Please enter a correct URL."
+    "enterCorrectUrl": "Please enter a correct URL.",
+    "yes": "Yes",
+    "no": "No"
   },
   "aggregations": {
     "more": "Explore more",
@@ -433,8 +435,6 @@
   "indexing": {
     "title": "Analyze your documents",
     "description": "Please <a href=\"%{howToLink}\" target=\"_blank\">read the documentation</a> about adding documents.",
-    "yes": "Yes",
-    "no": "No",
     "go": "Go",
     "tasks": "Tasks",
     "empty": "You started no tasks yet.",

@@ -56,7 +56,7 @@
                 {{ $n(item.nbResults) }}
               </template>
               <template v-slot:cell(published)="{ item }">
-                {{ item.published ? $t('indexing.yes') : $t('indexing.no') }}
+                {{ item.published ? $t('global.yes') : $t('global.no') }}
               </template>
             </b-table>
           </div>

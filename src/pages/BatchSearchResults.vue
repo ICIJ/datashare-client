@@ -26,8 +26,8 @@
           <confirm-button class="btn btn-light mr-2" :confirmed="deleteBatchSearch" v-b-tooltip.hover :title="$t('batchSearch.delete')">
             <fa icon="trash-alt"></fa>
             <span class="sr-only">
-                {{ $t('batchSearch.delete') }}
-              </span>
+              {{ $t('batchSearch.delete') }}
+            </span>
           </confirm-button>
         </div>
         <div class="batch-search-results__action batch-search-results__download__queries" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
@@ -58,7 +58,9 @@
           </dt>
           <dd class="col-sm-6 text-truncate" v-if="$config.is('multipleProjects')">
             <b-form-checkbox v-model="batchSearch.published" switch @change="changePublished" v-if="isMyBatchSearch"></b-form-checkbox>
-            <span v-else>{{ batchSearch.published ? $t('indexing.yes') : $t('indexing.no') }}</span>
+            <span v-else>
+              {{ batchSearch.published ? $t('global.yes') : $t('global.no') }}
+            </span>
           </dd>
           <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.state') }}
@@ -95,7 +97,7 @@
             {{ $t('batchSearch.phraseMatch') }}
           </dt>
           <dd class="col-sm-6 text-truncate">
-            {{ batchSearch.phraseMatches ? $t('indexing.yes') : $t('indexing.no') }}
+            {{ batchSearch.phraseMatches ? $t('global.yes') : $t('global.no') }}
           </dd>
           <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ fuzzinessLabel }}
