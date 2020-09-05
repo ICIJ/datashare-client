@@ -2,7 +2,10 @@
   "global": {
     "all": "Todos",
     "cancel": "Cancelar",
-    "enterCorrectUrl": "Por favor introduzca una URL correcta."
+    "enterCorrectUrl": "Por favor introduzca una URL correcta.",
+    "yes": "Yes",
+    "no": "No",
+    "confirmLabel": "Are you sure?"
   },
   "aggregations": {
     "more": "Explora más",
@@ -433,8 +436,6 @@
   "indexing": {
     "title": "Analiza tus documentos",
     "description": "Por favor, <a href=\"%{howToLink}\" target=\"_blank\">lea la documentación</a> sobre cómo añadir documentos.",
-    "yes": "Sí",
-    "no": "No",
     "go": "Ir",
     "tasks": "Tareas",
     "empty": "Aún no has iniciado tareas.",
