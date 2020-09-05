@@ -2,7 +2,10 @@
   "global": {
     "all": "Tout",
     "cancel": "Annuler",
-    "enterCorrectUrl": "Veuillez saisir une URL valide."
+    "enterCorrectUrl": "Veuillez saisir une URL valide.",
+    "yes": "Yes",
+    "no": "No",
+    "confirmLabel": "Are you sure?"
   },
   "aggregations": {
     "more": "Explorer plus",
@@ -433,8 +436,6 @@
   "indexing": {
     "title": "Analyser vos documents",
     "description": "<a href=\"%{howToLink}\" target=\"_blank\">Lire la documentation</a> sur comment ajouter des documents.",
-    "yes": "Oui",
-    "no": "Non",
     "go": "Exécuter",
     "tasks": "Tâches",
     "empty": "Vous n'avez pas encore démarré de tâches.",
