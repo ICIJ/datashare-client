@@ -3,9 +3,9 @@
     "all": "Tout",
     "cancel": "Annuler",
     "enterCorrectUrl": "Veuillez saisir une URL valide.",
-    "yes": "Yes",
-    "no": "No",
-    "confirmLabel": "Are you sure?"
+    "yes": "Oui",
+    "no": "Non",
+    "confirmLabel": "Êtes-vous sûr•e ?"
   },
   "aggregations": {
     "more": "Explorer plus",
@@ -650,7 +650,7 @@
   "extensions": {
     "title": "Extensions",
     "search": "Rechercher dans les extensions",
-    "submitSuccess": "Extension successfully installed, please restart Datashare.",
+    "submitSuccess": "Extension installée avec succès, veuillez redémarrer Datashare.",
     "submitError": "Erreur lors de l'installation de l'extension.",
     "deleteSuccess": "L'extension a été désinstallée avec succès.",
     "deleteError": "Erreur lors de la désinstallation de l'extension.",
@@ -661,7 +661,7 @@
     "installFromUrl": "Installer une extension depuis une URL"
   },
   "treeView": {
-    "hits": "no documents | 1 document | %{hits} documents",
+    "hits": "aucun document | 1 document | %{hits} documents",
     "docs": "doc | docs"
   }
 }
