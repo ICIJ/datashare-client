@@ -16,13 +16,13 @@ function srcToGithubWikiPath (src) {
   return `Client-›-${path}-›-${name}`
 }
 
-// Collect hook occurences with `git grep`
-const occurences = execSync('git grep --line --no-color --extended-regexp \'<hook name="(.*:\\w*)"\'').toString()
-// Each line is an occurence, with 3 columns separated by :
-const hooks = compact(occurences.split('\n')).map(occurence => {
-  const path = occurence.split(':')[0]
-  const line = occurence.split(':')[1]
-  const match = occurence.split(':').slice(2).join(':')
+// Collect hook occurrences with `git grep`
+const occurrences = execSync('git grep --line --no-color --extended-regexp \'<hook name="(.*:\\w*)"\'').toString()
+// Each line is an occurrence, with 3 columns separated by :
+const hooks = compact(occurrences.split('\n')).map(occurrence => {
+  const path = occurrence.split(':')[0]
+  const line = occurrence.split(':')[1]
+  const match = occurrence.split(':').slice(2).join(':')
   const hook = (match.match(/\"(.*:\w*)\"/) || [])[1]
   const wikiPath = srcToGithubWikiPath(path)
   const href = new URL(`blob/master/${path}#L${line}`, repository.url)
