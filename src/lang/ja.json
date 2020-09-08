@@ -2,7 +2,10 @@
   "global": {
     "all": "All",
     "cancel": "Cancel",
-    "enterCorrectUrl": "Please enter a correct URL."
+    "enterCorrectUrl": "Please enter a correct URL.",
+    "yes": "Yes",
+    "no": "No",
+    "confirmLabel": "Are you sure?"
   },
   "aggregations": {
     "more": "さらに調べる",
@@ -433,8 +436,6 @@
   "indexing": {
     "title": "文書の分析",
     "description": "<a href=\"%{howToLink}\" target=\"_blank\">文書追加についての書類を読んでください</a>。",
-    "yes": "はい",
-    "no": "いいえ",
     "go": "移動",
     "tasks": "作業",
     "empty": "あなたはまだ何の作業も始めていません",

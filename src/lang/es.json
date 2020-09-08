@@ -2,7 +2,10 @@
   "global": {
     "all": "Todos",
     "cancel": "Cancelar",
-    "enterCorrectUrl": "Por favor introduzca una URL correcta."
+    "enterCorrectUrl": "Por favor introduzca una URL correcta.",
+    "yes": "Sí",
+    "no": "No",
+    "confirmLabel": "¿Estás seguro/a?"
   },
   "aggregations": {
     "more": "Explora más",
@@ -433,8 +436,6 @@
   "indexing": {
     "title": "Analiza tus documentos",
     "description": "Por favor, <a href=\"%{howToLink}\" target=\"_blank\">lea la documentación</a> sobre cómo añadir documentos.",
-    "yes": "Sí",
-    "no": "No",
     "go": "Ir",
     "tasks": "Tareas",
     "empty": "Aún no has iniciado tareas.",
@@ -649,7 +650,7 @@
   "extensions": {
     "title": "Extensiones",
     "search": "Buscar en las extensiones",
-    "submitSuccess": "Extension successfully installed, please restart Datashare.",
+    "submitSuccess": "Extensión instalada con éxito, por favor reinicie Datashare.",
     "submitError": "Error mientras se instalaba la extensión.",
     "deleteSuccess": "Extensión desinstalada correctamente.",
     "deleteError": "Error mientras se desinstalaba la extensión.",
@@ -660,7 +661,7 @@
     "installFromUrl": "Instalar extensión desde URL"
   },
   "treeView": {
-    "hits": "no documents | 1 document | %{hits} documents",
-    "docs": "doc | docs"
+    "hits": "no hay archivos | 1 archivo | %{hits} archivos",
+    "docs": "archivo | archivos"
   }
 }
