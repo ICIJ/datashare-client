@@ -13,13 +13,12 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 jest.mock('@/utils/utils')
 jest.mock('axios')
 
-const { i18n, localVue, store, router } = Core.init(createLocalVue()).useAll()
-
 describe('SearchDocumentNavbar.vue', () => {
+  const { i18n, localVue, store, router } = Core.init(createLocalVue()).useAll()
   const project = toLower('SearchDocumentNavbar')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
-  let wrapper
+  let wrapper = null
 
   beforeAll(() => {
     store.commit('search/index', project)
@@ -65,7 +64,7 @@ describe('SearchDocumentNavbar.vue', () => {
 
     it('should call batchUpdate api function, MARK document as recommended and update recommendedBy in search store', async () => {
       axios.request.mockClear()
-      axios.request.mockResolvedValue({ data: [{ user: { id: 'Jean-Michel' }, count: 1 }] })
+      axios.request.mockResolvedValue({ data: { aggregates: [{ item: { id: 'Jean-Michel' }, count: 1 }] } })
       await wrapper.vm.toggleAsRecommended()
 
       expect(axios.request).toBeCalledTimes(2)

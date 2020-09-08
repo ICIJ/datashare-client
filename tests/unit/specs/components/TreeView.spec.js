@@ -3,6 +3,8 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import TreeView from '@/components/TreeView'
 import { Core } from '@/core'
 
+jest.mock('@/api/elasticsearch')
+
 describe('TreeView.vue', () => {
   const { config, i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = { path: '/home/foo', selectedPaths: ['path_01', 'path_02'], size: true, count: true }
@@ -14,27 +16,28 @@ describe('TreeView.vue', () => {
     wrapper = shallowMount(TreeView, { i18n, localVue, propsData, store, wait })
   })
 
+  afterAll(() => jest.unmock('@/api/elasticsearch'))
+
   it('should be a Vue instance', () => {
     expect(wrapper).toBeTruthy()
   })
 
   it('should display 2 directories', async () => {
     await wrapper.setData({
-      hits: 10,
-      total: 2048,
       directories: [
         { key: 'bar', contentLength: { value: 1024 } },
         { key: 'baz', contentLength: { value: 1024 } }
-      ]
+      ],
+      hits: 10,
+      total: 2048
     })
 
+    expect(wrapper.find('.tree-view__hits').exists()).toBeTruthy()
+    expect(wrapper.find('.tree-view__hits').text()).toBe('10 docs')
     expect(wrapper.findAll('.tree-view__directories__item:not(.tree-view__directories__item--hits)')).toHaveLength(2)
-    expect(wrapper.find('.tree-view__directories__item--hits').exists()).toBeTruthy()
-    expect(wrapper.find('.tree-view__directories__item--hits').text()).toBe('10 documents')
   })
 
   it('should init selected on component creation', () => {
-    wrapper = shallowMount(TreeView, { i18n, localVue, propsData, store, wait })
     expect(wrapper.vm.selected).toEqual(['path_01', 'path_02'])
   })
 

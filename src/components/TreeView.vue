@@ -8,7 +8,7 @@
             <fa icon="weight"></fa>
             {{ humanSize(total, false, $t('human.size')) }}
           </span>
-          <span :title="$tc('treeView.hits', hits, { hits })" class="ml-2 badge badge-light border text-muted" v-if="count">
+          <span :title="$tc('treeView.hits', hits, { hits })" class="tree-view__hits ml-2 badge badge-light border text-muted" v-if="count">
             {{ humanNumber(hits, $t('human.number')) }} {{ $tc('treeView.docs', hits) }}
           </span>
         </div>
