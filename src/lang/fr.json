@@ -5,7 +5,8 @@
     "enterCorrectUrl": "Veuillez saisir une URL valide.",
     "yes": "Oui",
     "no": "Non",
-    "confirmLabel": "Êtes-vous sûr•e ?"
+    "confirmLabel": "Êtes-vous sûr•e ?",
+    "emptyTextTable": "There are no records to show"
   },
   "aggregations": {
     "more": "Explorer plus",
