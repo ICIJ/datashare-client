@@ -20,6 +20,7 @@
           <div class="card small">
             <b-table
               class="m-0"
+              :empty-text="$t('global.emptyTextTable')"
               :fields="fields"
               hover
               :items="items"

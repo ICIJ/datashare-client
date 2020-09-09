@@ -5,7 +5,8 @@
     "enterCorrectUrl": "Please enter a correct URL.",
     "yes": "Yes",
     "no": "No",
-    "confirmLabel": "Are you sure?"
+    "confirmLabel": "Are you sure?",
+    "emptyTextTable": "There are no records to show"
   },
   "aggregations": {
     "more": "Explore more",

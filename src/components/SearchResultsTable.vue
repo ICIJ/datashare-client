@@ -15,6 +15,7 @@
       </div>
       <b-table
         ref="selectableTable"
+        :empty-text="$t('global.emptyTextTable')"
         striped
         hover
         selectable
