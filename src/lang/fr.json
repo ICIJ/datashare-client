@@ -6,7 +6,7 @@
     "yes": "Oui",
     "no": "Non",
     "confirmLabel": "Êtes-vous sûr•e ?",
-    "emptyTextTable": "There are no records to show"
+    "emptyTextTable": "Il n'y a aucun enregistrement à afficher"
   },
   "aggregations": {
     "more": "Explorer plus",
