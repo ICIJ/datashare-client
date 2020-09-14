@@ -6,7 +6,7 @@
     "yes": "Sí",
     "no": "No",
     "confirmLabel": "¿Estás seguro/a?",
-    "emptyTextTable": "There are no records to show"
+    "emptyTextTable": "No hay archivos para mostrar"
   },
   "aggregations": {
     "more": "Explora más",
