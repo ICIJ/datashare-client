@@ -249,7 +249,7 @@ describe('DocumentStore', () => {
     })
 
     it('should retrieve the list of users who recommended it and set it to the store', async () => {
-      const users = [{ id: 'user_01' }, { id: 'user_02' }]
+      const users = { aggregates: [{ item: { id: 'user_01' }, doc_count: 1 }, { item: { id: 'user_02' }, doc_count: 1 }] }
       axios.request.mockReturnValue({ data: users })
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })
@@ -263,7 +263,7 @@ describe('DocumentStore', () => {
     })
 
     it('should sort users by alphabetical order of id', async () => {
-      const users = [{ id: 'user_02' }, { id: 'user_03' }, { id: 'user_01' }]
+      const users = { aggregates: [{ item: { id: 'user_01' }, doc_count: 1 }, { item: { id: 'user_03' }, doc_count: 1 }, { item: { id: 'user_02' }, doc_count: 1 }] }
       axios.request.mockReturnValue({ data: users })
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
       await store.dispatch('document/get', { id: 'doc_01', index })

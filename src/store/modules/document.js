@@ -223,7 +223,7 @@ export const actions = {
   async getRecommendationsByDocuments ({ state, commit }) {
     try {
       const recommendedBy = await api.getRecommendationsByDocuments(state.doc.index, state.doc.id)
-      commit('recommendedBy', map(sortBy(recommendedBy, 'id'), 'id'))
+      commit('recommendedBy', map(sortBy(get(recommendedBy, 'aggregates', []), 'item.id'), 'item.id'))
       const userId = await auth.getUsername()
       const index = state.recommendedBy.indexOf(userId)
       if (index > -1) {
