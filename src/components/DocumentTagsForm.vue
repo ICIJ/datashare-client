@@ -2,15 +2,15 @@
   <div class="document-tags-form row no-gutters">
     <div :class="{ 'col-md-4 mb-3': displayTags }" class="d-flex" v-if="displayForm">
       <b-form @submit.prevent="addTag" class="document-tags-form__add">
-        <b-overlay :show="!isReady" spinner-small>
-          <b-input-group size="sm">
+        <b-overlay :show="!isReady" spinner-small class="h-100">
+          <b-input-group size="sm" class="h-100">
             <b-input-group-text slot="prepend">
               <fa icon="tag"></fa>
             </b-input-group-text>
             <b-form-input v-model="tag" @input="searchTags" required :placeholder="$t('document.tagsNew')" autocomplete="off" autofocus ref="tag"></b-form-input>
           </b-input-group>
         </b-overlay>
-        <selectable-dropdown :items="suggestions" @input="tag = $event" @click.native="addTag" :hide="!suggestions.length"></selectable-dropdown>
+        <selectable-dropdown :items="suggestions" @input="tag = $event" @click.native="addTag" :hide="!suggestions.length" class="document-tags-form__add__suggestions"></selectable-dropdown>
       </b-form>
     </div>
     <div class="col-md-8" v-if="displayTags">
@@ -128,20 +128,20 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .document-tags-form__tags  {
+  .document-tags-form {
     font-size: 1rem;
 
     &__add {
       position: relative;
 
-      .selectable-dropdown.dropdown-menu {
+      &__suggestions.selectable-dropdown.dropdown-menu {
         position: absolute;
         right: 0;
         top: 100%;
       }
     }
 
-    &__tag {
+    &__tags__tag {
       span {
         vertical-align: middle;
       }
