@@ -49,11 +49,14 @@
                 <b-btn :href="plugin.url" target="_blank" :title="$t('plugins.homePage')" v-if="plugin.url">
                   <fa icon="home"></fa>
                 </b-btn>
-                <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')">
-                  <fa icon="cloud-upload-alt"></fa>
-                </b-btn>
-                <b-btn class="ml-2" @click="uninstallPlugin(plugin.id)" :title="$t('plugins.uninstall')">
+                <b-btn class="ml-2" @click="uninstallPlugin(plugin.id)" :title="$t('plugins.uninstall')" v-if="plugin.installed">
                   <fa icon="trash-alt"></fa>
+                </b-btn>
+                <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')" v-if="plugin.installed">
+                  <fa icon="redo"></fa>
+                </b-btn>
+                <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')" v-else>
+                  <fa icon="cloud-upload-alt"></fa>
                 </b-btn>
               </div>
             </template>
@@ -87,14 +90,13 @@ export default {
       url: ''
     }
   },
-  async mounted () {
-    const plugins = await api.getPlugins()
-    map(plugins, plugin => { plugin.show = false })
-    this.$set(this, 'plugins', plugins)
+  mounted () {
+    this.search()
   },
   methods: {
     async search () {
       const plugins = await api.getPlugins(this.searchTerm)
+      map(plugins, plugin => { plugin.show = false })
       this.$set(this, 'plugins', plugins)
     },
     async installPluginFromId (pluginId) {
@@ -102,6 +104,7 @@ export default {
       plugin.show = true
       try {
         await api.installPluginFromId(pluginId)
+        plugin.installed = true
         this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('plugins.submitError'), { noCloseButton: true, variant: 'danger' })
@@ -112,6 +115,7 @@ export default {
       this.$set(this, 'show', true)
       try {
         await api.installPluginFromUrl(this.url)
+        await this.search()
         this.$bvToast.toast(this.$t('plugins.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('plugins.submitError'), { noCloseButton: true, variant: 'danger' })
@@ -125,6 +129,7 @@ export default {
       plugin.show = true
       try {
         await api.uninstallPlugin(pluginId)
+        plugin.installed = false
         this.$bvToast.toast(this.$t('plugins.deleteSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('plugins.deleteError'), { noCloseButton: true, variant: 'danger' })

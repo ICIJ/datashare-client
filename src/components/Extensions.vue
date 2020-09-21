@@ -49,11 +49,14 @@
                 <b-btn :href="extension.url" target="_blank" :title="$t('extensions.homePage')" v-if="extension.url">
                   <fa icon="home"></fa>
                 </b-btn>
-                <b-btn class="ml-2" @click="installExtensionFromId(extension.id)" :title="$t('extensions.install')">
-                  <fa icon="cloud-upload-alt"></fa>
-                </b-btn>
-                <b-btn class="ml-2" @click="uninstallExtension(extension.id)" :title="$t('extensions.uninstall')">
+                <b-btn class="ml-2" @click="uninstallExtension(extension.id)" :title="$t('extensions.uninstall')" v-if="extension.installed">
                   <fa icon="trash-alt"></fa>
+                </b-btn>
+                <b-btn class="ml-2" @click="installExtensionFromId(extension.id)" :title="$t('extensions.install')" v-if="extension.installed">
+                  <fa icon="redo"></fa>
+                </b-btn>
+                <b-btn class="ml-2" @click="installExtensionFromId(extension.id)" :title="$t('extensions.install')" v-else>
+                  <fa icon="cloud-upload-alt"></fa>
                 </b-btn>
               </div>
             </template>
@@ -87,14 +90,13 @@ export default {
       url: ''
     }
   },
-  async mounted () {
-    const extensions = await api.getExtensions()
-    map(extensions, extension => { extension.show = false })
-    this.$set(this, 'extensions', extensions)
+  mounted () {
+    this.search()
   },
   methods: {
     async search () {
       const extensions = await api.getExtensions(this.searchTerm)
+      map(extensions, extension => { extension.show = false })
       this.$set(this, 'extensions', extensions)
     },
     async installExtensionFromId (extensionId) {
@@ -102,6 +104,7 @@ export default {
       extension.show = true
       try {
         await api.installExtensionFromId(extensionId)
+        extension.installed = true
         this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
@@ -112,6 +115,7 @@ export default {
       this.$set(this, 'show', true)
       try {
         await api.installExtensionFromUrl(this.url)
+        await this.search()
         this.$bvToast.toast(this.$t('extensions.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
@@ -125,6 +129,7 @@ export default {
       extension.show = true
       try {
         await api.uninstallExtension(extensionId)
+        extension.installed = false
         this.$bvToast.toast(this.$t('extensions.deleteSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$bvToast.toast(this.$t('extensions.deleteError'), { noCloseButton: true, variant: 'danger' })
