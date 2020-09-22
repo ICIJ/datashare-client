@@ -40,13 +40,13 @@
 
 ## FAQ - General
 
-* [Can I use an external Drive as data source?](faq-general/can-i-use-an-external-drive-as-data-source.md)
 * [Can I use Datashare with no internet connection?](faq-general/can-i-use-datashare-with-no-internet-connection.md)
 * [Can I download a document from Datashare?](faq-general/can-i-download-a-document.md)
 * [Can I remove document\(s\) from Datashare?](faq-general/can-i-remove-a-document-from-datashare.md)
 * [Do you recommend OS or machines for large corpuses?](faq-general/do-you-recommend-os-or-machines-for-large-corpuses.md)
-* [How can I contact ICIJ for help, bug reporting or suggestions?](faq-general/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions.md)
+* [Can I use an external drive as data source?](faq-general/can-i-use-an-external-drive-as-data-source.md)
 * [How can we use Datashare on a collaborative mode on a server?](faq-general/how-can-we-use-datashare-on-a-collaborative-mode-on-a-server.md)
+* [How can I contact ICIJ for help, bug reporting or suggestions?](faq-general/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions.md)
 
 ## FAQ - Errors
 

@@ -1,4 +1,4 @@
-# Can I use an external Drive as data source?
+# Can I use an external drive as data source?
 
 **Warning**: this requires some technological knowledge.
 
