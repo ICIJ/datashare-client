@@ -40,6 +40,7 @@
 
 ## FAQ - General
 
+* [Can I use an external Drive as data source?](faq-general/can-i-use-an-external-drive-as-data-source.md)
 * [Can I use Datashare with no internet connection?](faq-general/can-i-use-datashare-with-no-internet-connection.md)
 * [Can I download a document from Datashare?](faq-general/can-i-download-a-document.md)
 * [Can I remove document\(s\) from Datashare?](faq-general/can-i-remove-a-document-from-datashare.md)
