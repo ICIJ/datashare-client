@@ -26,14 +26,20 @@
         <hook name="document.header.nav:before" />
         <nav class="document__header__nav text-nowrap overflow-auto">
           <ul class="list-inline m-0">
-            <li class="document__header__nav__item list-inline-item" v-for="tab in visibleTabs" :key="tab.name">
-              <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
-                <hook :name="`document.header.nav.${tab.name}:before`" />
-                <fa :icon="tab.icon" v-if="tab.icon" class="mr-2" />
-                {{ $t(tab.label) }}
-                <hook :name="`document.header.nav.${tab.name}:after`" />
-              </a>
-            </li>
+            <hook name="document.header.nav.items:before" tag="li" />
+            <template v-for="tab in visibleTabs">
+              <hook :name="`document.header.nav.items.${tab.name}:before`" :key="tab.name" tag="li" />
+              <li class="document__header__nav__item list-inline-item" :key="tab.name">
+                <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
+                  <hook :name="`document.header.nav.${tab.name}:before`" />
+                  <fa :icon="tab.icon" v-if="tab.icon" class="mr-2" />
+                  {{ $t(tab.label) }}
+                  <hook :name="`document.header.nav.${tab.name}:after`" />
+                </a>
+              </li>
+              <hook :name="`document.header.nav.items.${tab.name}:after`" :key="tab.name" tag="li" />
+            </template>
+            <hook name="document.header.nav.items:after" tag="li" />
           </ul>
         </nav>
         <hook name="document.header.nav:after" />
