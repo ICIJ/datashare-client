@@ -28,7 +28,7 @@
           <ul class="list-inline m-0">
             <hook name="document.header.nav.items:before" tag="li" />
             <template v-for="tab in visibleTabs">
-              <hook :name="`document.header.nav.items.${tab.name}:before`" :key="tab.name" tag="li" />
+              <hook :name="`document.header.nav.items.${tab.name}:before`" :key="`hook.${tab.name}:before`" tag="li" />
               <li class="document__header__nav__item list-inline-item" :key="tab.name">
                 <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
                   <hook :name="`document.header.nav.${tab.name}:before`" />
@@ -37,7 +37,7 @@
                   <hook :name="`document.header.nav.${tab.name}:after`" />
                 </a>
               </li>
-              <hook :name="`document.header.nav.items.${tab.name}:after`" :key="tab.name" tag="li" />
+              <hook :name="`document.header.nav.items.${tab.name}:after`" :key="`hook.${tab.name}:after`" tag="li" />
             </template>
             <hook name="document.header.nav.items:after" tag="li" />
           </ul>
@@ -93,16 +93,28 @@ export default {
   },
   data () {
     return {
-      activeTab: 'extracted-text'
+      activeTab: 'extracted-text',
+      tabsThoughtPipeline: []
+    }
+  },
+  watch: {
+    async doc (doc) {
+      if (doc) {
+        // This apply the document-view-tabs pipeline everytime a document is loaded
+        this.tabsThoughtPipeline = await this.tabsPipeline(this.tabs, doc)
+      }
     }
   },
   computed: {
     ...mapState('document', ['doc', 'parentDocument', 'tags']),
     visibleTabs () {
-      return filter(this.tabs, t => !t.hidden)
+      return filter(this.tabsThoughtPipeline, t => !t.hidden)
+    },
+    tabsPipeline () {
+      return this.$store.getters['pipelines/applyPipelineChainByCategory']('document-view-tabs')
     },
     tabs () {
-      return [
+      return !this.doc ? [] : [
         {
           name: 'extracted-text',
           label: 'document.extractedText',
