@@ -43,17 +43,19 @@ Before we start, please **uninstall any prior standard version of Datashare** if
 
 6. **If you haven't already, go to this page**: [datashare.icij.org](https://datashare.icij.org), scroll down and click '**Download for free**'.
 
-  8. Go to your '**Downloads**' and double-click '**DatashareStandalone.pkg**':
+![](../.gitbook/assets/capture-de-cran-2020-09-24-a-09.59.47.png)
+
+  7. Go to your '**Downloads**' and double-click '**DatashareStandalone.pkg**':
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.34.40.png)
 
-9. You might see this window which says '"Datashare.pkg” can’t be opened because it was not downloaded from the App Store.'. Click '**Ok**'.
+9. You might see this window which says '"DatashareStandalone.pkg” can’t be opened because it was not downloaded from the App Store.'. Click '**Ok**'.
 
-![](../.gitbook/assets/screenshot-2020-01-09-at-14.50.18.png)
+![](../.gitbook/assets/7%20%281%29.png)
 
 10. To open 'Dartashare.pkg', go to your Mac's **System Preferences**:
 
-![](../.gitbook/assets/screenshot-2020-01-09-at-14.41.59.png)
+![](../.gitbook/assets/8%20%281%29.png)
 
 11. Open '**Security & Privacy**':
 
@@ -103,13 +105,21 @@ In the end, you should see this screen:
 
 You need **OS X El Capitan 10.11 or a more recent version.**  
   
-1. Go to **Datashare's website:** [**https://datashare.icij.org/**](https://datashare.icij.org/)**.**
+1. Go to Datashare's website: [**https://datashare.icij.org/**](https://datashare.icij.org/)\*\*\*\*
 
-2. Click the blue button '**DOWNLOAD FOR FREE.'**
+2. Click '**Other platforms and versions'**:
 
-![](../.gitbook/assets/screen-shot-2019-02-01-at-11.29.25-am.png)
+![](../.gitbook/assets/capture-de-cran-2020-09-24-a-10.07.38.png)
 
-3.  On your desktop:
+3. **Turn on** the toggle button '**Use Docker installer**':
+
+![](../.gitbook/assets/capture-de-cran-2020-09-24-a-10.08.06.png)
+
+4. Click on the **latest version on top**:
+
+![](../.gitbook/assets/capture-de-cran-2020-09-24-a-10.11.19.png)
+
+ On your desktop:
 
 * Open '**Finder'** by clicking on the blue smiling icon of your Mac's 'Dock.'
 
