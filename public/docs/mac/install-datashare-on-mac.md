@@ -49,29 +49,29 @@ Before we start, please **uninstall any prior standard version of Datashare** if
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.34.40.png)
 
-9. You might see this window which says '"DatashareStandalone.pkg” can’t be opened because it was not downloaded from the App Store.'. Click '**Ok**'.
+8. You might see this window which says '"DatashareStandalone.pkg” can’t be opened because it was not downloaded from the App Store.'. Click '**Ok**'.
 
 ![](../.gitbook/assets/7%20%281%29.png)
 
-10. To open 'Dartashare.pkg', go to your Mac's **System Preferences**:
+9. To open 'Dartashare.pkg', go to your Mac's **System Preferences**:
 
 ![](../.gitbook/assets/8%20%281%29.png)
 
-11. Open '**Security & Privacy**':
+10. Open '**Security & Privacy**':
 
 ![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.10.png)
 
-12. Click '**Open Anyway**':
+11. Click '**Open Anyway**':
 
 ![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.22.png)
 
-13. Click '**Open**':
+12. Click '**Open**':
 
 ![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.29.png)
 
  
 
-14. Click '**Continue**', '**Install**', enter your password and '**Close**':
+13. Click '**Continue**', '**Install**', enter your password and '**Close**':
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.41.03.png)
 
@@ -89,15 +89,7 @@ In the end, you should see this screen:
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.42.02.png)
 
-15. Then, go in your **Applications**, and double-click on '**Datashare.app**':
-
-![](../.gitbook/assets/screenshot-2020-04-03-at-17.49.29.png)
-
-16. A Terminal windows opens. Wait for it to display 'INFO  Fluent - Server started on port 8080' like this:
-
-![](../.gitbook/assets/screenshot-2020-04-03-at-17.51.46.png)
-
- 17.  Now, **open your browser, and go to the URL**: [http://localhost:8080](http://localhost:8080/#/)/. 
+You can now [open Datashare](https://icij.gitbook.io/datashare/mac/open-datashare-on-mac).
 
 
 
