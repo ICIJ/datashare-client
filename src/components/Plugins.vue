@@ -56,7 +56,7 @@
                   <fa icon="redo"></fa>
                 </b-btn>
                 <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')" v-else>
-                  <fa icon="cloud-upload-alt"></fa>
+                  <fa icon="cloud-download-alt"></fa>
                 </b-btn>
               </div>
             </template>

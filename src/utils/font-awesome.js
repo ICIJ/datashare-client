@@ -29,6 +29,7 @@ export { faCheckSquare as farCheckSquare } from '@fortawesome/free-regular-svg-i
 export { faChevronCircleLeft } from '@fortawesome/free-solid-svg-icons/faChevronCircleLeft'
 export { faChevronLeft } from '@fortawesome/free-solid-svg-icons/faChevronLeft'
 export { faClock } from '@fortawesome/free-solid-svg-icons/faClock'
+export { faCloudDownloadAlt } from '@fortawesome/free-solid-svg-icons/faCloudDownloadAlt'
 export { faCloudUploadAlt } from '@fortawesome/free-solid-svg-icons/faCloudUploadAlt'
 export { faCog } from '@fortawesome/free-solid-svg-icons/faCog'
 export { faDatabase } from '@fortawesome/free-solid-svg-icons/faDatabase'
