@@ -1,5 +1,6 @@
 <template>
   <div class="app d-flex">
+    <hook name="app:before" />
     <div class="app__sidebar">
       <app-sidebar></app-sidebar>
     </div>
@@ -23,6 +24,7 @@
         </b-button>
       </div>
     </b-toast>
+    <hook name="app:after" />
   </div>
 </template>
 
@@ -35,11 +37,13 @@ import AppSidebar from '@/components/AppSidebar'
 import ScrollTracker from '@/components/ScrollTracker'
 import { EventBus } from '@/utils/event-bus'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
+import Hook from '@/components/Hook'
 
 export default {
   name: 'App',
   components: {
     AppSidebar,
+    Hook,
     ScrollTracker,
     VuePerfectScrollbar
   },
