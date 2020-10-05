@@ -98,12 +98,12 @@ export default {
     }
   },
   watch: {
-    async doc (doc) {
-      if (doc) {
-        // This apply the document-view-tabs pipeline everytime a document is loaded
-        this.tabsThoughtPipeline = await this.tabsPipeline(this.tabs, doc)
-      }
+    doc () {
+      return this.setTabs()
     }
+  },
+  mounted () {
+    this.setTabs()
   },
   computed: {
     ...mapState('document', ['doc', 'parentDocument', 'tags']),
@@ -185,6 +185,14 @@ export default {
       }
       this.$wait.end('load document data')
       this.$Progress.finish()
+    },
+    async setTabs () {
+      if (this.doc) {
+        // This apply the document-view-tabs pipeline everytime a document is loaded
+        this.tabsThoughtPipeline = await this.tabsPipeline(this.tabs, this.doc)
+      } else {
+        this.tabsThoughtPipeline = []
+      }
     },
     isTabActive (name) {
       return this.activeTab === name

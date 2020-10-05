@@ -103,7 +103,7 @@
     "sass-resources-loader": "^2.0.1",
     "vue-template-compiler": "^2.6.11",
     "whatwg-fetch": "^3.0.0",
-    "worker-loader": "^2.0.0"
+    "worker-loader": "^3.0.3"
   },
   "eslintConfig": {
     "root": true,

@@ -56,6 +56,9 @@ export default {
     // Apply the transformation pipeline once
     await this.transformContent()
   },
+  beforeDestroy () {
+    this.terminateLocalSearchWorker()
+  },
   watch: {
     localSearchTerm: throttle(async function () {
       await this.transformContent()
@@ -87,11 +90,10 @@ export default {
     },
     createLocalSearchWorker () {
       this.terminateLocalSearchWorker()
-      const localSearchWorker = new LocalSearchWorker()
-      this.$set(this, 'localSearchWorker', localSearchWorker)
+      this.localSearchWorker = new LocalSearchWorker()
     },
     addLocalSearchMarks (content) {
-      if (!this.localSearchTerm.label || this.localSearchTerm.label.length === 0) {
+      if (!this.hasLocalSearchTerms) {
         return content
       }
 
@@ -101,10 +103,8 @@ export default {
       const workerPromise = new Promise(resolve => {
         // We receive a content from the worker
         this.localSearchWorker.addEventListener('message', once(({ data }) => {
-          const localSearchOccurrences = data.localSearchOccurrences
-          this.$set(this, 'localSearchOccurrences', localSearchOccurrences)
-          const localSearchIndex = data.localSearchIndex
-          this.$set(this, 'localSearchIndex', localSearchIndex)
+          this.localSearchOccurrences = data.localSearchOccurrences
+          this.localSearchIndex = data.localSearchIndex
           this.localSearchWorkerInProgress = false
           this.terminateLocalSearchWorker()
           resolve(data.content)
@@ -189,6 +189,9 @@ export default {
         'namedEntities',
         'shouldApplyNamedEntitiesMarks'
       ])
+    },
+    hasLocalSearchTerms () {
+      return this.localSearchTerm.label && this.localSearchTerm.label.length > 0
     }
   }
 }
