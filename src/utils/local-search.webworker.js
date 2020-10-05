@@ -9,8 +9,6 @@ self.addEventListener('message', ({ data }) => {
   }
 })
 
-console.log(self)
-
 export default class LocalSearchWorker extends FakeWorker {
   postMessage (data) {
     if (data.content && data.localSearchTerm) {
