@@ -26,6 +26,8 @@ self.addEventListener('message', ({ data }) => {
  */
 export default class LocalSearchWorker extends FakeWorker {
   postMessage (data) {
-    searchAndReplace(data.content, data.localSearchTerm).then(super.postMessage)
+    // The `postMessage` needs to access the class scope so we use bind to
+    // ensure the promise resolve function won't change it.
+    searchAndReplace(data.content, data.localSearchTerm).then(super.postMessage.bind(this))
   }
 }
