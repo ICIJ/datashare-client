@@ -1,10 +1,11 @@
+import noop from 'lodash/noop'
 import FakeWorker from './fake-worker.js'
 import { addLocalSearchMarks } from './strings.js'
 
-async function searchAndReplace (content, localSearchTerm) {
+function searchAndReplace (content, localSearchTerm, callback = noop) {
   // We ensure the received data is well-formed before performing transformation
   if (content && localSearchTerm) {
-    return addLocalSearchMarks(content, localSearchTerm)
+    callback(addLocalSearchMarks(content, localSearchTerm))
   }
 }
 
@@ -16,7 +17,7 @@ async function searchAndReplace (content, localSearchTerm) {
  * @see https://developer.mozilla.org/fr/docs/Web/API/DedicatedWorkerGlobalScope
  */
 self.addEventListener('message', ({ data }) => {
-  searchAndReplace(data.content, data.localSearchTerm).then(self.postMessage)
+  searchAndReplace(data.content, data.localSearchTerm, self.postMessage)
 })
 
 /**
@@ -27,7 +28,7 @@ self.addEventListener('message', ({ data }) => {
 export default class LocalSearchWorker extends FakeWorker {
   postMessage (data) {
     // The `postMessage` needs to access the class scope so we use bind to
-    // ensure the promise resolve function won't change it.
-    searchAndReplace(data.content, data.localSearchTerm).then(super.postMessage.bind(this))
+    // ensure the callback function won't change it.
+    searchAndReplace(data.content, data.localSearchTerm, super.postMessage.bind(this))
   }
 }
