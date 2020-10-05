@@ -10,7 +10,7 @@ import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 import Hook from '@/components/Hook'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
-import LocalSearchWorker from '@/utils/local-search.webworker'
+import LocalSearchWorker from '@/utils/local-search.worker'
 
 /**
  * Display a document's extract text after applying a series of transformation with a pipeline.

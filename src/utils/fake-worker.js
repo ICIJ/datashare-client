@@ -18,7 +18,7 @@ export default class FakeWorker {
     this.events[name] = this.events[name].filter(registeredFunc => registeredFunc !== func)
   }
   postMessage (data) {
-    this.events['message'].forEach(func => {
+    this.events.message.forEach(func => {
       func({ data })
     })
   }

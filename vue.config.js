@@ -58,6 +58,14 @@ module.exports = {
       .test(/\.worker\.js$/)
       .use('worker-loader')
       .loader('worker-loader')
+      .options({
+        filename: 'js/[name].[hash].js',
+        publicPath: '/'
+      })
+
+    // Exclude Worker files from vue-cli js rule to avoid inconsistancy and caching
+    // @see https://github.com/vuejs/vue-cli/issues/2028#issuecomment-410352587
+    config.module.rule('js').exclude.add(/\.worker\.js$/)
 
     // Aliases configuration
     config.resolve.alias
