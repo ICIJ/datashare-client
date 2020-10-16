@@ -1,15 +1,22 @@
 <template>
-  <b-badge variant="warning" pill class="mr-2 pl-1 applied-search-filters-item" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()">
-    <fa icon="times-circle" />
-    {{ filter.label | displayUser }}
-  </b-badge>
+  <div class="d-inline">
+    <b-badge variant="warning" pill class="mr-2 pl-1 applied-search-filters-item mw-100 text-truncate" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()" :id="id">
+      <fa icon="times-circle"></fa>
+      {{ filter.label | displayUser }}
+    </b-badge>
+    <b-popover :target="id" triggers="hover" placement="bottom">
+      {{ filter.label | displayUser }}
+    </b-popover>
+  </div>
 </template>
 
 <script>
+import uniqueId from 'lodash/uniqueId'
+
 import displayUser from '@/filters/displayUser'
 
 /**
- * One applied search filter item.
+ * The filter applied to the search.
  */
 export default {
   name: 'AppliedSearchFiltersItem',
@@ -23,6 +30,11 @@ export default {
   },
   filters: {
     displayUser
+  },
+  computed: {
+    id () {
+      return uniqueId('applied-search-filters-item')
+    }
   },
   methods: {
     async deleteQueryTerm () {
@@ -38,7 +50,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .applied-search-filters-item {
     cursor: pointer;
 
