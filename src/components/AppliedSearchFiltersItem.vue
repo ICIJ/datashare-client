@@ -1,12 +1,17 @@
 <template>
   <div class="d-inline">
-    <b-badge variant="warning" pill class="mr-2 pl-1 applied-search-filters-item mw-100 text-truncate" :class="filter.negation ? 'strikethrough' : ''" @click.prevent="deleteQueryTerm()" :id="id">
+    <b-badge
+      class="applied-search-filters-item mr-2 pl-1 mw-100 text-truncate"
+      :class="filter.negation ? 'strikethrough' : ''"
+      @click.prevent="deleteQueryTerm()"
+      :id="id"
+      pill
+      :title="label"
+      v-b-tooltip
+      variant="warning">
       <fa icon="times-circle"></fa>
-      {{ filter.label | displayUser }}
+      {{ label }}
     </b-badge>
-    <b-popover :target="id" triggers="hover" placement="bottom">
-      {{ filter.label | displayUser }}
-    </b-popover>
   </div>
 </template>
 
@@ -34,6 +39,9 @@ export default {
   computed: {
     id () {
       return uniqueId('applied-search-filters-item')
+    },
+    label () {
+      return this.$options.filters.displayUser(this.filter.label)
     }
   },
   methods: {
