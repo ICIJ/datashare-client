@@ -30,7 +30,7 @@
         <slot name="search" v-if="!hideSearch">
           <form @submit.prevent="asyncFilterSearch" v-if="filter.isSearchable">
             <label class="list-group filter__items__search py-2 px-2">
-              <input v-model="filterQuery" type="search" :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'">
+              <input v-model="filterQuery" type="search" :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'" class="pl-1">
               <fa icon="search" class="float-right"></fa>
             </label>
           </form>
