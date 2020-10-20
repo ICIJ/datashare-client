@@ -1,18 +1,16 @@
 <template>
-  <div class="d-inline">
-    <b-badge
-      class="applied-search-filters-item mr-2 pl-1 mw-100 text-truncate"
-      :class="filter.negation ? 'strikethrough' : ''"
-      @click.prevent="deleteQueryTerm()"
-      :id="id"
-      pill
-      :title="label"
-      v-b-tooltip
-      variant="warning">
-      <fa icon="times-circle"></fa>
-      {{ label }}
-    </b-badge>
-  </div>
+  <b-badge
+    class="applied-search-filters-item mt-2 mr-2 pl-1 mw-100 text-truncate"
+    :class="filter.negation ? 'strikethrough' : ''"
+    @click.prevent="deleteQueryTerm()"
+    :id="id"
+    pill
+    :title="label"
+    v-b-tooltip
+    variant="warning">
+    <fa icon="times-circle"></fa>
+    {{ label }}
+  </b-badge>
 </template>
 
 <script>
