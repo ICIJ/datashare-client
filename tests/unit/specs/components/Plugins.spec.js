@@ -12,11 +12,15 @@ jest.mock('axios', () => {
         id: 'plugin_01_id',
         name: 'plugin_01_name',
         version: 'plugin_01_version',
+        installed: false,
+        installedVersion: null,
         description: 'plugin_01_description'
       }, {
         id: 'plugin_02_id',
         name: 'plugin_02_name',
         version: 'plugin_02_version',
+        installed: true,
+        installedVersion: 'plugin_02_version',
         description: 'plugin_02_description'
       }]
     })
@@ -48,6 +52,14 @@ describe('Plugins.vue', () => {
 
   it('should display a list of plugins', () => {
     expect(wrapper.findAll('.plugins .plugins__card')).toHaveLength(2)
+  })
+
+  it('should NOT display the version installed if there is none', () => {
+    expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__installed-version')).toHaveLength(0)
+  })
+
+  it('should display the version installed when there is one', () => {
+    expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__installed-version')).toHaveLength(1)
   })
 
   it('should search for matching plugins', async () => {

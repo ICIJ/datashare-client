@@ -43,6 +43,9 @@
               <div v-if="plugin.version" class="font-italic mt-2">
                 {{ $t('plugins.version') }}: {{ plugin.version }}
               </div>
+              <div v-if="plugin.installedVersion" class="plugins__card__installed-version font-italic mt-2">
+                {{ $t('plugins.installedVersion') }}: {{ plugin.installedVersion }}
+              </div>
             </b-card-text>
             <template v-slot:footer>
               <div class="text-center">
@@ -52,10 +55,7 @@
                 <b-btn class="ml-2" @click="uninstallPlugin(plugin.id)" :title="$t('plugins.uninstall')" v-if="plugin.installed">
                   <fa icon="trash-alt"></fa>
                 </b-btn>
-                <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')" v-if="plugin.installed">
-                  <fa icon="redo"></fa>
-                </b-btn>
-                <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')" v-else>
+                <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')" v-if="plugin.version !== plugin.installedVersion">
                   <fa icon="cloud-download-alt"></fa>
                 </b-btn>
               </div>
