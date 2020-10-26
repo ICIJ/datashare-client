@@ -76,32 +76,28 @@ describe('Plugins.vue', () => {
     expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__installed-version')).toHaveLength(1)
   })
 
-  it('should display download button if no installed version', async () => {
-    wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__download-button')).toHaveLength(1)
-  })
+  describe('test related to download buttons', () => {
+    beforeEach(async () => {
+      wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+      await wrapper.vm.$nextTick()
+      await wrapper.vm.$nextTick()
+    })
 
-  it('should display download button if installed version is different from the catalog one', async () => {
-    wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__download-button')).toHaveLength(1)
-  })
+    it('should display download button if no installed version', async () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__download-button')).toHaveLength(1)
+    })
 
-  it('should NOT display download but if installed and not in catalog', async () => {
-    wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__download-button')).toHaveLength(0)
-  })
+    it('should display download button if installed version is different from the catalog one', async () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__download-button')).toHaveLength(1)
+    })
 
-  it('should NOT display download but if installed version is same from the catalog one', async () => {
-    wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    expect(wrapper.findAll('.plugins__card:nth-child(4) .plugins__card__download-button')).toHaveLength(0)
+    it('should NOT display download but if installed and not in catalog', async () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__download-button')).toHaveLength(0)
+    })
+
+    it('should NOT display download but if installed version is same from the catalog one', async () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(4) .plugins__card__download-button')).toHaveLength(0)
+    })
   })
 
   it('should search for matching plugins', async () => {
