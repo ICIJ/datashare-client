@@ -643,6 +643,7 @@
     "deleteSuccess": "Plugin eliminado correctamente.",
     "deleteError": "Error mientras se eliminaba el plugin.",
     "version": "Versión",
+    "installedVersion": "Installed version",
     "homePage": "Página de inicio de los plugins",
     "install": "Instalar plugin",
     "uninstall": "Desinstalar plugin",
