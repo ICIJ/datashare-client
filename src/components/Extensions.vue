@@ -43,6 +43,9 @@
               <div v-if="extension.version" class="font-italic mt-2">
                 {{ $t('extensions.version') }}: {{ extension.version }}
               </div>
+              <div v-if="extension.installedVersion" class="extensions__card__installed-version font-italic mt-2">
+                {{ $t('extensions.installedVersion') }}: {{ extension.installedVersion }}
+              </div>
             </b-card-text>
             <template v-slot:footer>
               <div class="text-center">

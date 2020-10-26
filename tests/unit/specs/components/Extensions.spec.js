@@ -12,11 +12,15 @@ jest.mock('axios', () => {
         id: 'extension_01_id',
         name: 'extension_01_name',
         version: 'extension_01_version',
+        installed: false,
+        installedVersion: null,
         description: 'extension_01_description'
       }, {
         id: 'extension_02_id',
         name: 'extension_02_name',
         version: 'extension_02_version',
+        installed: true,
+        installedVersion: 'extension_02_version',
         description: 'extension_02_description'
       }]
     })
@@ -35,6 +39,14 @@ describe('Extensions.vue', () => {
 
   it('should display a list of extensions', async () => {
     expect(wrapper.findAll('.extensions .extensions__card')).toHaveLength(2)
+  })
+
+  it('should NOT display the version installed if there is none', () => {
+    expect(wrapper.findAll('.extensions__card:nth-child(1) .extensions__card__installed-version')).toHaveLength(0)
+  })
+
+  it('should display the version installed if there is one', () => {
+    expect(wrapper.findAll('.extensions__card:nth-child(2) .extensions__card__installed-version')).toHaveLength(1)
   })
 
   it('should search for matching extensions', async () => {
