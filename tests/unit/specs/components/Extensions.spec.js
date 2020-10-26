@@ -20,8 +20,22 @@ jest.mock('axios', () => {
         name: 'extension_02_name',
         version: 'extension_02_version',
         installed: true,
-        installedVersion: 'extension_02_version',
+        installedVersion: 'extension_02_version-2',
         description: 'extension_02_description'
+      }, {
+        id: 'extension_03_id',
+        name: 'extension_03_name',
+        version: null,
+        installed: true,
+        installedVersion: null,
+        description: 'extension_03_description'
+      }, {
+        id: 'extension_04_id',
+        name: 'extension_04_name',
+        version: 'extension_04_version',
+        installed: true,
+        installedVersion: 'extension_04_version',
+        description: 'extension_04_description'
       }]
     })
   }
@@ -38,7 +52,7 @@ describe('Extensions.vue', () => {
   afterAll(() => jest.unmock('axios'))
 
   it('should display a list of extensions', async () => {
-    expect(wrapper.findAll('.extensions .extensions__card')).toHaveLength(2)
+    expect(wrapper.findAll('.extensions .extensions__card')).toHaveLength(4)
   })
 
   it('should NOT display the version installed if there is none', () => {
@@ -47,6 +61,28 @@ describe('Extensions.vue', () => {
 
   it('should display the version installed if there is one', () => {
     expect(wrapper.findAll('.extensions__card:nth-child(2) .extensions__card__installed-version')).toHaveLength(1)
+  })
+
+  describe('download button', () => {
+    beforeEach(async () => {
+      wrapper = await mount(Extensions, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    })
+
+    it('should be displayed if no installed version', async () => {
+      expect(wrapper.findAll('.extensions__card:nth-child(1) .extensions__card__download-button').exists()).toBeTruthy()
+    })
+
+    it('should be displayed if installed version is different from the catalog one', async () => {
+      expect(wrapper.findAll('.extensions__card:nth-child(2) .extensions__card__download-button').exists()).toBeTruthy()
+    })
+
+    it('should NOT be displayed if installed and not in catalog', async () => {
+      expect(wrapper.findAll('.extensions__card:nth-child(3) .extensions__card__download-button').exists()).toBeFalsy()
+    })
+
+    it('should NOT be displayed if installed version is same as the catalog one', async () => {
+      expect(wrapper.findAll('.extensions__card:nth-child(4) .extensions__card__download-button').exists()).toBeFalsy()
+    })
   })
 
   it('should search for matching extensions', async () => {

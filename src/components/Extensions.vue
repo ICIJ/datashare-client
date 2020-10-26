@@ -55,10 +55,8 @@
                 <b-btn class="ml-2" @click="uninstallExtension(extension.id)" :title="$t('extensions.uninstall')" v-if="extension.installed">
                   <fa icon="trash-alt"></fa>
                 </b-btn>
-                <b-btn class="ml-2" @click="installExtensionFromId(extension.id)" :title="$t('extensions.install')" v-if="extension.installed">
-                  <fa icon="redo"></fa>
-                </b-btn>
-                <b-btn class="ml-2" @click="installExtensionFromId(extension.id)" :title="$t('extensions.install')" v-else>
+                <b-btn class="extensions__card__download-button ml-2" @click="installExtensionFromId(extension.id)" :title="$t('extensions.install')"
+                      v-if="!extension.installed || extension.version !== extension.installedVersion">
                   <fa icon="cloud-upload-alt"></fa>
                 </b-btn>
               </div>
