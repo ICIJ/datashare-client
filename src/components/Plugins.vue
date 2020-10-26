@@ -55,7 +55,8 @@
                 <b-btn class="ml-2" @click="uninstallPlugin(plugin.id)" :title="$t('plugins.uninstall')" v-if="plugin.installed">
                   <fa icon="trash-alt"></fa>
                 </b-btn>
-                <b-btn class="ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')" v-if="plugin.version !== plugin.installedVersion">
+                <b-btn class="plugins__card__download-button ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')"
+                      v-if="!plugin.installed || plugin.version !== plugin.installedVersion">
                   <fa icon="cloud-download-alt"></fa>
                 </b-btn>
               </div>

@@ -20,8 +20,22 @@ jest.mock('axios', () => {
         name: 'plugin_02_name',
         version: 'plugin_02_version',
         installed: true,
-        installedVersion: 'plugin_02_version',
+        installedVersion: 'plugin_02_version-2',
         description: 'plugin_02_description'
+      }, {
+        id: 'plugin_03_id',
+        name: 'plugin_03_name',
+        version: null,
+        installed: true,
+        installedVersion: null,
+        description: 'plugin_03_description'
+      }, {
+        id: 'plugin_04_id',
+        name: 'plugin_04_name',
+        version: 'plugin_04_version',
+        installed: true,
+        installedVersion: 'plugin_04_version',
+        description: 'plugin_04_description'
       }]
     })
   }
@@ -51,7 +65,7 @@ describe('Plugins.vue', () => {
   })
 
   it('should display a list of plugins', () => {
-    expect(wrapper.findAll('.plugins .plugins__card')).toHaveLength(2)
+    expect(wrapper.findAll('.plugins .plugins__card')).toHaveLength(4)
   })
 
   it('should NOT display the version installed if there is none', () => {
@@ -60,6 +74,34 @@ describe('Plugins.vue', () => {
 
   it('should display the version installed when there is one', () => {
     expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__installed-version')).toHaveLength(1)
+  })
+
+  it('should display download button if no installed version', async () => {
+    wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__download-button')).toHaveLength(1)
+  })
+
+  it('should display download button if installed version is different from the catalog one', async () => {
+    wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__download-button')).toHaveLength(1)
+  })
+
+  it('should NOT display download but if installed and not in catalog', async () => {
+    wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__download-button')).toHaveLength(0)
+  })
+
+  it('should NOT display download but if installed version is same from the catalog one', async () => {
+    wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
+    expect(wrapper.findAll('.plugins__card:nth-child(4) .plugins__card__download-button')).toHaveLength(0)
   })
 
   it('should search for matching plugins', async () => {
