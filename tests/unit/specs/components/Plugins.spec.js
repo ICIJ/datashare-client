@@ -81,19 +81,19 @@ describe('Plugins.vue', () => {
       wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
     })
 
-    it('should be displayed if no installed version', async () => {
+    it('should be displayed if no installed version', () => {
       expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__download-button').exists()).toBeTruthy()
     })
 
-    it('should be displayed if installed version is different from the catalog one', async () => {
+    it('should be displayed if installed version is different from the catalog one', () => {
       expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__download-button').exists()).toBeTruthy()
     })
 
-    it('should NOT be displayed if installed and not in catalog', async () => {
+    it('should NOT be displayed if installed and not in catalog', () => {
       expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__download-button').exists()).toBeFalsy()
     })
 
-    it('should NOT be displayed if installed version is same as the catalog one', async () => {
+    it('should NOT be displayed if installed version is same as the catalog one', () => {
       expect(wrapper.findAll('.plugins__card:nth-child(4) .plugins__card__download-button').exists()).toBeFalsy()
     })
   })
