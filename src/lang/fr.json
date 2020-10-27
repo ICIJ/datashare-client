@@ -657,6 +657,7 @@
     "deleteSuccess": "L'extension a été désinstallée avec succès.",
     "deleteError": "Erreur lors de la désinstallation de l'extension.",
     "version": "Version",
+    "installedVersion": "Installed version",
     "homePage": "Page d'accueil des extensions",
     "install": "Installer l'extension",
     "uninstall": "Désinstaller l'extension",
