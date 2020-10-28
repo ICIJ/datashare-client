@@ -19,7 +19,14 @@
           <span :title="generateTagTooltip(tag)" v-b-tooltip>
             {{ tag.label }}
           </span>
-          <confirm-button :confirmed="() => deleteTag(tag)" :label="$t('document.tagConfirmation')" :yes="$t('global.yes')" :no="$t('global.no')" class="document-tags-form__tags__tag__delete btn btn-sm" :class="mode">
+          <confirm-button
+            class="document-tags-form__tags__tag__delete btn btn-sm"
+            :class="mode"
+            :confirmed="() => deleteTag(tag)"
+            v-if="!isCreatedByAdmin(tag)"
+            :label="$t('document.tagConfirmation')"
+            :no="$t('global.no')"
+            :yes="$t('global.yes')">
             <fa icon="times" class="fa-fw pl-2"></fa>
           </confirm-button>
         </li>
@@ -122,6 +129,9 @@ export default {
     },
     generateTagTooltip (tag) {
       return `${this.$t('document.createdBy')} ${displayUser(tag.user.id)} ${this.$t('document.on')} ${moment(tag.creationDate).format('LLL')}`
+    },
+    isCreatedByAdmin (tag) {
+      return tag?.user?.id === 'icij' || false
     }
   }
 }

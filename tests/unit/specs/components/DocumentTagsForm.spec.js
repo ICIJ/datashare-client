@@ -68,6 +68,14 @@ describe('DocumentTagsForm.vue', () => {
     expect(wrapper.findAll('.document-tags-form__tags__tag__delete')).toHaveLength(2)
   })
 
+  it('should display tags, but not delete button if tag was created by "icij" user', async () => {
+    wrapper = await createView({ es, project })
+    await wrapper.vm.tags.push({ label: 'tag_01', user: { id: 'test-user' } }, { label: 'tag_02', user: { id: 'icij' } })
+
+    expect(wrapper.findAll('.document-tags-form__tags__tag')).toHaveLength(2)
+    expect(wrapper.findAll('.document-tags-form__tags__tag__delete')).toHaveLength(1)
+  })
+
   it('should NOT display tags', async () => {
     wrapper = await createView({ es, project, tags: ['tag_01', 'tag_02'], displayTags: false })
 
