@@ -136,7 +136,8 @@ export default {
       return {
         include: this.path + '/.*',
         exclude: this.path + '/.*/.*',
-        order: { contentLength: 'desc' }
+        order: { contentLength: 'desc' },
+        size: 1000
       }
     },
     bodybuilderBase () {

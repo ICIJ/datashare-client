@@ -16,13 +16,12 @@ export default class FilterPath extends FilterDocument {
   }
 
   body (body, options) {
-    // Remove the "size" property of "options" if any, to load all the folders
-    delete options.size
     return body.agg('terms', 'dirname.tree', this.key, {
       order: { _key: 'asc' },
       exclude: Murmur.config.get('dataDir') + '/.*/.*',
       include: Murmur.config.get('dataDir') + '/.*',
-      ...options
+      ...options,
+      size: 1000
     })
   }
 }
