@@ -5,11 +5,12 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
-import { Core } from '@/core'
 import Api from '@/api'
+import { Core } from '@/core'
 import DocumentTagsForm from '@/components/DocumentTagsForm'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import Murmur from '@icij/murmur'
 import settings from '@/utils/settings'
 
 jest.mock('axios')
@@ -69,6 +70,7 @@ describe('DocumentTagsForm.vue', () => {
   })
 
   it('should display tags, but not delete button if tag was created by "icij" user', async () => {
+    Murmur.config.set('userAdmin', 'icij')
     wrapper = await createView({ es, project })
     await wrapper.vm.tags.push({ label: 'tag_01', user: { id: 'test-user' } }, { label: 'tag_02', user: { id: 'icij' } })
 

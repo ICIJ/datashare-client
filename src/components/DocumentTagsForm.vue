@@ -131,7 +131,7 @@ export default {
       return `${this.$t('document.createdBy')} ${displayUser(tag.user.id)} ${this.$t('document.on')} ${moment(tag.creationDate).format('LLL')}`
     },
     isCreatedByAdmin (tag) {
-      return tag?.user?.id === 'icij' || false
+      return tag?.user?.id === this.$config.get('userAdmin') || false
     }
   }
 }
