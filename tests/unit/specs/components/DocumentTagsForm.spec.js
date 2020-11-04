@@ -69,13 +69,22 @@ describe('DocumentTagsForm.vue', () => {
     expect(wrapper.findAll('.document-tags-form__tags__tag__delete')).toHaveLength(2)
   })
 
-  it('should display tags, but not delete button if tag was created by "icij" user', async () => {
+  it('should display tags, but not delete button if tag was created by the admin user', async () => {
     Murmur.config.set('userAdmin', 'icij')
     wrapper = await createView({ es, project })
     await wrapper.vm.tags.push({ label: 'tag_01', user: { id: 'test-user' } }, { label: 'tag_02', user: { id: 'icij' } })
 
     expect(wrapper.findAll('.document-tags-form__tags__tag')).toHaveLength(2)
     expect(wrapper.findAll('.document-tags-form__tags__tag__delete')).toHaveLength(1)
+  })
+
+  it('should display tags normally if no admin user defined', async () => {
+    Murmur.config.set('userAdmin', undefined)
+    wrapper = await createView({ es, project })
+    await wrapper.vm.tags.push({ label: 'tag_01', user: { id: 'test-user' } }, { label: 'tag_02', user: { id: 'admin' } })
+
+    expect(wrapper.findAll('.document-tags-form__tags__tag')).toHaveLength(2)
+    expect(wrapper.findAll('.document-tags-form__tags__tag__delete')).toHaveLength(2)
   })
 
   it('should NOT display tags', async () => {
