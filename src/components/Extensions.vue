@@ -2,11 +2,8 @@
   <div class="extensions h-100">
     <div class="container pt-4">
       <div class="d-flex mb-2">
-        <div class="extensions__search flex-grow-1">
-          <search-form-control :placeholder="$t('extensions.search')" v-model="searchTerm" @input="search"></search-form-control>
-        </div>
         <div class="extensions__add ml-2">
-          <b-btn variant="primary" @click="$refs.installExtensionFromUrl.show()">
+          <b-btn variant="outline-primary" @click="$refs.installExtensionFromUrl.show()">
             <fa icon="link" class="mr-1"></fa>
             {{ $t('extensions.installFromUrl') }}
           </b-btn>
@@ -32,33 +29,55 @@
             <b-overlay :show="show" no-wrap></b-overlay>
           </b-modal>
         </div>
+        <div class="extensions__search ml-auto">
+          <search-form-control :placeholder="$t('extensions.search')" v-model="searchTerm" @input="search"></search-form-control>
+        </div>
       </div>
       <b-card-group deck>
         <b-overlay :show="extension.show" v-for="extension in extensions" :key="extension.id" class="extensions__card m-3 d-flex">
-          <b-card :header="extension.name" footer-bg-variant="white" footer-border-variant="white" class="m-0">
+          <b-card footer-border-variant="white" class="m-0">
             <b-card-text>
-              <div>
-                {{ extension.description }}
-              </div>
-              <div v-if="extension.version" class="font-italic mt-2">
-                {{ $t('extensions.version') }}: {{ extension.version }}
-              </div>
-              <div v-if="extension.installedVersion" class="extensions__card__installed-version font-italic mt-2">
-                {{ $t('extensions.installedVersion') }}: {{ extension.installedVersion }}
+              <div class="d-flex">
+                <div class="flex-grow-1">
+                  <h4>{{ extension.name }}</h4>
+                  <div>
+                    {{ extension.description }}
+                  </div>
+                </div>
+                <div class="d-flex flex-column text-nowrap pl-2">
+                  <b-btn class="mb-2" @click="uninstallExtension(extension.id)" v-if="extension.installed" variant="danger">
+                    <fa icon="trash-alt"></fa>
+                    {{ $t('extensions.uninstall') }}
+                  </b-btn>
+                  <b-btn class="plugins__card__download-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="!extension.installed">
+                    <fa icon="cloud-download-alt"></fa>
+                    {{ $t('extensions.install') }}
+                  </b-btn>
+                  <b-btn class="plugins__card__download-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="extension.installed && extension.version !== extension.installedVersion" size="sm">
+                    <fa icon="sync"></fa>
+                    {{ $t('extensions.update') }}
+                  </b-btn>
+                  <div v-if="extension.installedVersion && extension.installed" class="text-muted text-center">
+                    {{ $t('extensions.installedVersion', { version: extension.installedVersion  }) }}
+                  </div>
+                </div>
               </div>
             </b-card-text>
+
             <template v-slot:footer>
-              <div class="text-center">
-                <b-btn :href="extension.url" target="_blank" :title="$t('extensions.homePage')" v-if="extension.url">
-                  <fa icon="home"></fa>
-                </b-btn>
-                <b-btn class="ml-2" @click="uninstallExtension(extension.id)" :title="$t('extensions.uninstall')" v-if="extension.installed">
-                  <fa icon="trash-alt"></fa>
-                </b-btn>
-                <b-btn class="extensions__card__download-button ml-2" @click="installExtensionFromId(extension.id)" :title="$t('extensions.install')"
-                      v-if="!extension.installed || extension.version !== extension.installedVersion">
-                  <fa icon="cloud-upload-alt"></fa>
-                </b-btn>
+              <div v-if="extension.version" class="text-truncate w-100">
+                <span class="font-weight-bold">
+                  {{ $t('extensions.version') }}:
+                </span>
+                {{ extension.version }}
+              </div>
+              <div v-if="extension.url" class="text-truncate w-100">
+                <span class="font-weight-bold">
+                  {{ $t('extensions.homePage') }}:
+                </span>
+                <a :href="extension.url" target="_blank">
+                  {{ extension.url }}
+                </a>
               </div>
             </template>
           </b-card>
@@ -144,9 +163,9 @@ export default {
 
 <style lang="scss">
 .extensions__card {
-  max-width: calc(25% - 2rem);
-  min-width: calc(25% - 2rem);
-  width: calc(25% - 2rem);
+  max-width: calc(50% - 2rem);
+  min-width: calc(50% - 2rem);
+  width: calc(50% - 2rem);
 
   .card-header {
     font-weight: bold;

@@ -2,11 +2,8 @@
   <div class="plugins h-100">
     <div class="container pt-4">
       <div class="d-flex mb-2">
-        <div class="plugins__search flex-grow-1">
-          <search-form-control :placeholder="$t('plugins.search')" v-model="searchTerm" @input="search"></search-form-control>
-        </div>
         <div class="plugins__add ml-2">
-          <b-btn variant="primary" @click="$refs.installPluginFromUrl.show()">
+          <b-btn variant="outline-primary" @click="$refs.installPluginFromUrl.show()">
             <fa icon="link" class="mr-1"></fa>
             {{ $t('plugins.installFromUrl') }}
           </b-btn>
@@ -32,33 +29,54 @@
             <b-overlay :show="show" no-wrap></b-overlay>
           </b-modal>
         </div>
+        <div class="plugins__search ml-auto">
+          <search-form-control :placeholder="$t('plugins.search')" v-model="searchTerm" @input="search" />
+        </div>
       </div>
       <b-card-group deck>
         <b-overlay :show="plugin.show" v-for="plugin in plugins" :key="plugin.id" class="plugins__card m-3 d-flex">
-          <b-card :header="plugin.name" footer-bg-variant="white" footer-border-variant="white" class="m-0">
+          <b-card footer-border-variant="white" class="m-0">
             <b-card-text>
-              <div>
-                {{ plugin.description }}
-              </div>
-              <div v-if="plugin.version" class="font-italic mt-2">
-                {{ $t('plugins.version') }}: {{ plugin.version }}
-              </div>
-              <div v-if="plugin.installedVersion" class="plugins__card__installed-version font-italic mt-2">
-                {{ $t('plugins.installedVersion') }}: {{ plugin.installedVersion }}
+              <div class="d-flex">
+                <div class="flex-grow-1">
+                  <h4>{{ plugin.name }}</h4>
+                  <div>
+                    {{ plugin.description }}
+                  </div>
+                </div>
+                <div class="d-flex flex-column text-nowrap pl-2">
+                  <b-btn class="mb-2" @click="uninstallPlugin(plugin.id)" v-if="plugin.installed" variant="danger">
+                    <fa icon="trash-alt"></fa>
+                    {{ $t('plugins.uninstall') }}
+                  </b-btn>
+                  <b-btn class="plugins__card__download-button mb-2" @click="installPluginFromId(plugin.id)" variant="primary" v-if="!plugin.installed">
+                    <fa icon="cloud-download-alt"></fa>
+                    {{ $t('plugins.install') }}
+                  </b-btn>
+                  <b-btn class="plugins__card__download-button mb-2" @click="installPluginFromId(plugin.id)" variant="primary" v-if="plugin.installed && plugin.version !== plugin.installedVersion" size="sm">
+                    <fa icon="sync"></fa>
+                    {{ $t('plugins.update') }}
+                  </b-btn>
+                  <div v-if="plugin.installedVersion && plugin.installed" class="text-muted text-center">
+                    {{ $t('plugins.installedVersion', { version: plugin.installedVersion  }) }}
+                  </div>
+                </div>
               </div>
             </b-card-text>
             <template v-slot:footer>
-              <div class="text-center">
-                <b-btn :href="plugin.url" target="_blank" :title="$t('plugins.homePage')" v-if="plugin.url">
-                  <fa icon="home"></fa>
-                </b-btn>
-                <b-btn class="ml-2" @click="uninstallPlugin(plugin.id)" :title="$t('plugins.uninstall')" v-if="plugin.installed">
-                  <fa icon="trash-alt"></fa>
-                </b-btn>
-                <b-btn class="plugins__card__download-button ml-2" @click="installPluginFromId(plugin.id)" :title="$t('plugins.install')"
-                      v-if="!plugin.installed || plugin.version !== plugin.installedVersion">
-                  <fa icon="cloud-download-alt"></fa>
-                </b-btn>
+              <div v-if="plugin.version" class="text-truncate w-100">
+                <span class="font-weight-bold">
+                  {{ $t('plugins.version') }}:
+                </span>
+                {{ plugin.version }}
+              </div>
+              <div v-if="plugin.url" class="text-truncate w-100">
+                <span class="font-weight-bold">
+                  {{ $t('plugins.homePage') }}:
+                </span>
+                <a :href="plugin.url" target="_blank">
+                  {{ plugin.url }}
+                </a>
               </div>
             </template>
           </b-card>
@@ -144,13 +162,9 @@ export default {
 
 <style lang="scss">
 .plugins__card {
-  max-width: calc(25% - 2rem);
-  min-width: calc(25% - 2rem);
+  max-width: calc(50% - 2rem);
+  min-width: calc(50% - 2rem);
   width: calc(25% - 2rem);
-
-  .card-header {
-    font-weight: bold;
-  }
 }
 
 #plugins__add__modal {
