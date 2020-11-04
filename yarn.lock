@@ -1022,10 +1022,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@icij/murmur@^2.13.2":
-  version "2.16.2"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-2.16.2.tgz#a94c65f79500cb23d27e3fa22205c6abc6b5977d"
-  integrity sha512-viwFlMQQJfLtUFN+TOcoGuDxQDGvQ9S73ouhAyp5zwSo/MLsAX8SvSX8u7JtUt+TPqCGc62E7JCnWh1AZe+ESg==
+"@icij/murmur@2.19.0":
+  version "2.19.0"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-2.19.0.tgz#629e92bba3f7d021223f804b5b4ed70388f6af03"
+  integrity sha512-twRm3E97RqipdUqkXd3hBVrJc7hoEWB5wL5mHmmSblaCUfCyuxmTMxOfEQCs9gYjk+wF3cErNRzGiIIbqUtqsQ==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
     "@fortawesome/fontawesome-svg-core" "^1.2.30"
@@ -1040,6 +1040,7 @@
     jsonp "^0.2.1"
     lodash "4.17.20"
     promise-polyfill "^8.1.3"
+    resize-observer-polyfill "^1.5.1"
     vue "^2.5.11"
     vue-headroom "^0.9.0"
     vue-i18n "^8.18.2"

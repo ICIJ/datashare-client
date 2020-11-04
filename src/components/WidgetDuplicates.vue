@@ -7,7 +7,7 @@
       <v-wait for="duplicate-counters" transition="fade">
         <fa icon="circle-notch" spin slot="waiting" size="2x" class="m-auto d-block"></fa>
         <div>
-          <stacked-bar-chart :data="data" :x-axis-tick-format="humanNumber" :bar-colors="colors" :keys="keys" :groups="groups"></stacked-bar-chart>
+          <stacked-bar-chart :data="data" :x-axis-tick-format="humanNumber" label-above :bar-colors="colors" :keys="keys" :groups="groups"></stacked-bar-chart>
           <p class="small text-muted">
             {{ $t('widget.duplicates.duplicated') }}
           </p>
@@ -86,7 +86,7 @@ export default {
   .widget--duplicates {
     width: 100%;
 
-    .stacked-bar-chart__groups__item__label {
+    & /deep/ .stacked-bar-chart__groups__item__label {
       display: none;
     }
   }
