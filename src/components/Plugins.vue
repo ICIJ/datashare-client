@@ -57,7 +57,7 @@
                     <fa icon="sync"></fa>
                     {{ $t('plugins.update') }}
                   </b-btn>
-                  <div v-if="plugin.installedVersion && plugin.installed" class="text-muted text-center">
+                  <div v-if="plugin.installedVersion && plugin.installed" class="text-muted text-center plugins__card__installed-version">
                     {{ $t('plugins.installedVersion', { version: plugin.installedVersion  }) }}
                   </div>
                 </div>

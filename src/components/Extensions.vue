@@ -49,15 +49,15 @@
                     <fa icon="trash-alt"></fa>
                     {{ $t('extensions.uninstall') }}
                   </b-btn>
-                  <b-btn class="plugins__card__download-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="!extension.installed">
+                  <b-btn class="extensions__card__download-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="!extension.installed">
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('extensions.install') }}
                   </b-btn>
-                  <b-btn class="plugins__card__download-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="extension.installed && extension.version !== extension.installedVersion" size="sm">
+                  <b-btn class="extensions__card__download-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="extension.installed && extension.version !== extension.installedVersion" size="sm">
                     <fa icon="sync"></fa>
                     {{ $t('extensions.update') }}
                   </b-btn>
-                  <div v-if="extension.installedVersion && extension.installed" class="text-muted text-center">
+                  <div v-if="extension.installedVersion && extension.installed" class="text-muted text-center extensions__card__installed-version">
                     {{ $t('extensions.installedVersion', { version: extension.installedVersion  }) }}
                   </div>
                 </div>
