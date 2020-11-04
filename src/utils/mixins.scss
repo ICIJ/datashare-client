@@ -21,13 +21,23 @@
     padding: $spacer;
   }
 
-  &.bs-popover-top > .arrow::after,
-  &.bs-popover-auto[x-placement^="top"] > .arrow::after {
+  &.popover.bs-popover-top > .arrow::after,
+  &.popover.bs-popover-auto[x-placement^="top"] > .arrow::after {
     border-top-color: $bg;
   }
 
-  &.bs-popover-bottom > .arrow::after,
-  &.bs-popover-auto[x-placement^="bottom"] > .arrow::after {
+  &.popover.bs-popover-bottom > .arrow::after,
+  &.popover.bs-popover-auto[x-placement^="bottom"] > .arrow::after {
     border-bottom-color: mix($bg, $bg-darker);
+  }
+
+  &.popover.bs-popover-left > .arrow::after,
+  &.popover.bs-popover-auto[x-placement^="left"] > .arrow::after {
+    border-left-color: $bg;
+  }
+
+  &.popover.bs-popover-right > .arrow::after,
+  &.popover.bs-popover-auto[x-placement^="right"] > .arrow::after {
+    border-right-color: $bg;
   }
 }
