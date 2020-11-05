@@ -643,10 +643,11 @@
     "deleteSuccess": "Le plugin a été désinstallé avec succès.",
     "deleteError": "Erreur lors de la désinstallation du plugin.",
     "version": "Version officielle",
-    "installedVersion": "Version installée",
-    "homePage": "Page d'accueil des plugins",
-    "install": "Installer le plugin",
-    "uninstall": "Désinstaller le plugin",
+    "installedVersion": "Version {version}",
+    "homePage": "Page d’accueil",
+    "install": "Installer",
+    "uninstall": "Désinstaller",
+    "update": "Mettre à jour",
     "installFromUrl": "Installer le plugin depuis une URL"
   },
   "extensions": {
@@ -657,10 +658,11 @@
     "deleteSuccess": "L'extension a été désinstallée avec succès.",
     "deleteError": "Erreur lors de la désinstallation de l'extension.",
     "version": "Version officielle",
-    "installedVersion": "Version installée",
-    "homePage": "Page d'accueil des extensions",
-    "install": "Installer l'extension",
-    "uninstall": "Désinstaller l'extension",
+    "installedVersion": "Version {version}",
+    "homePage": "Page d’accueil",
+    "install": "Installer",
+    "uninstall": "Désinstaller",
+    "update": "Mettre à jour",
     "installFromUrl": "Installer une extension depuis une URL"
   },
   "treeView": {
