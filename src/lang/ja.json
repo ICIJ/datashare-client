@@ -643,10 +643,11 @@
     "deleteSuccess": "Plugin successfully deleted.",
     "deleteError": "Error while deleting the plugin.",
     "version": "Official version",
-    "installedVersion": "Installed version",
-    "homePage": "Plugin home page",
-    "install": "Install plugin",
-    "uninstall": "Uninstall plugin",
+    "installedVersion": "Version {version}",
+    "homePage": "Home page",
+    "install": "Install now",
+    "uninstall": "Uninstall",
+    "update": "Update",
     "installFromUrl": "Install plugin from URL"
   },
   "extensions": {
@@ -657,10 +658,11 @@
     "deleteSuccess": "Extension successfully deleted.",
     "deleteError": "Error while deleting the extension.",
     "version": "Official version",
-    "installedVersion": "Installed version",
-    "homePage": "Extension home page",
-    "install": "Install extension",
-    "uninstall": "Uninstall extension",
+    "installedVersion": "Version {version}",
+    "homePage": "Home page",
+    "install": "Install now",
+    "uninstall": "Uninstall",
+    "update": "Update",
     "installFromUrl": "Install extension from URL"
   },
   "treeView": {
