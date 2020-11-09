@@ -12,30 +12,52 @@ jest.mock('axios', () => {
         id: 'plugin_01_id',
         name: 'plugin_01_name',
         version: 'plugin_01_version',
+        description: 'plugin_01_description',
+        url: 'plugin_01_url',
         installed: false,
-        installedVersion: null,
-        description: 'plugin_01_description'
+        deliverableFromRegistry: {
+          id: 'plugin_01_id',
+          name: 'plugin_01_name',
+          version: 'plugin_01_version',
+          description: 'plugin_01_description',
+          url: 'plugin_01_url'
+        }
       }, {
         id: 'plugin_02_id',
-        name: 'plugin_02_name',
-        version: 'plugin_02_version',
+        name: 'plugin_02_id',
+        version: 'plugin_02_version-1',
+        description: null,
+        url: 'plugin_02_url_local',
         installed: true,
-        installedVersion: 'plugin_02_version-2',
-        description: 'plugin_02_description'
+        deliverableFromRegistry: {
+          id: 'plugin_02_id',
+          name: 'plugin_02_name',
+          version: 'plugin_02_version-2',
+          description: 'plugin_02_description',
+          url: 'plugin_02_url'
+        }
       }, {
         id: 'plugin_03_id',
-        name: 'plugin_03_name',
+        name: 'plugin_03_id',
         version: null,
+        description: null,
+        url: 'plugin_03_url_local',
         installed: true,
-        installedVersion: null,
-        description: 'plugin_03_description'
+        deliverableFromRegistry: null
       }, {
         id: 'plugin_04_id',
-        name: 'plugin_04_name',
+        name: 'plugin_04_id',
         version: 'plugin_04_version',
+        description: null,
+        url: 'plugin_04_url_local',
         installed: true,
-        installedVersion: 'plugin_04_version',
-        description: 'plugin_04_description'
+        deliverableFromRegistry: {
+          id: 'plugin_04_id',
+          name: 'plugin_04_name',
+          version: 'plugin_04_version',
+          description: 'plugin_04_description',
+          url: 'plugin_04_url'
+        }
       }]
     })
   }
@@ -68,33 +90,75 @@ describe('Plugins.vue', () => {
     expect(wrapper.findAll('.plugins .plugins__card')).toHaveLength(4)
   })
 
-  it('should NOT display the version installed if there is none', () => {
-    expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__installed-version')).toHaveLength(0)
-  })
-
-  it('should display the version installed when there is one', () => {
-    expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__installed-version')).toHaveLength(1)
-  })
-
-  describe('download button', () => {
+  describe('labels', () => {
     beforeEach(async () => {
       wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
     })
 
-    it('should be displayed if no installed version', () => {
+    it('should NOT display the version if there is none', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__version')).toHaveLength(0)
+    })
+
+    it('should NOT display the version if plugin is not installed', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__version')).toHaveLength(0)
+    })
+
+    it('should display the version if there is one and plugin is installed', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__version')).toHaveLength(1)
+    })
+
+    it('should NOT display the official version if there is none', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__official-version')).toHaveLength(0)
+    })
+
+    it('should display the official version if there is one', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__official-version')).toHaveLength(1)
+    })
+
+    it('should display name from catalog if plugin is installed and from catalog', () => {
+      expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__official-name').html()).toContain('plugin_02_name')
+    })
+
+    it('should display description from catalog if plugin is installed and from catalog', () => {
+      expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__official-description').html()).toContain('plugin_02_description')
+    })
+
+    it('should display url from catalog if plugin is installed and from catalog', () => {
+      expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__official-url').html()).toContain('plugin_02_url')
+    })
+  })
+
+  describe('buttons', () => {
+    beforeEach(async () => {
+      wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
+    })
+
+    it('should display uninstall button if plugin is installed', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__uninstall-button').exists()).toBeTruthy()
+    })
+
+    it('should NOT display uninstall button if plugin is NOT installed', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__uninstall-button').exists()).toBeFalsy()
+    })
+
+    it('should display download button if plugin is NOT installed', () => {
       expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__download-button').exists()).toBeTruthy()
     })
 
-    it('should be displayed if installed version is different from the catalog one', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__download-button').exists()).toBeTruthy()
+    it('should NOT display download button if plugin is installed', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__download-button').exists()).toBeFalsy()
     })
 
-    it('should NOT be displayed if installed and not in catalog', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__download-button').exists()).toBeFalsy()
+    it('should display update button if plugin is installed and different version from catalog', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__update-button').exists()).toBeTruthy()
     })
 
-    it('should NOT be displayed if installed version is same as the catalog one', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(4) .plugins__card__download-button').exists()).toBeFalsy()
+    it('should NOT display update button if plugin is installed and NOT from catalog', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__update-button').exists()).toBeFalsy()
+    })
+
+    it('should NOT display update button if plugin if installed version and same as catalog', () => {
+      expect(wrapper.findAll('.plugins__card:nth-child(4) .plugins__card__update-button').exists()).toBeFalsy()
     })
   })
 

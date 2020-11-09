@@ -38,14 +38,16 @@
           <b-card footer-border-variant="white" class="m-0">
             <b-card-text>
               <div class="d-flex">
-                <div class="flex-grow-1">
+                <div v-if="registryExists(extension)" class="flex-grow-1">
+                  <h4 class="extensions__card__official-name">{{ registryName(extension) }}</h4>
+                  <div class="extensions__card__official-description">{{ registryDescription(extension) }}</div>
+                </div>
+                <div v-else class="flex-grow-1">
                   <h4>{{ extension.name }}</h4>
-                  <div>
-                    {{ extension.description }}
-                  </div>
+                  <div>{{ extension.description }}</div>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
-                  <b-btn class="mb-2" @click="uninstallExtension(extension.id)" v-if="extension.installed" variant="danger">
+                  <b-btn class="extensions__card__uninstall-button mb-2" @click="uninstallExtension(extension.id)" v-if="extension.installed" variant="danger">
                     <fa icon="trash-alt"></fa>
                     {{ $t('extensions.uninstall') }}
                   </b-btn>
@@ -53,31 +55,29 @@
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('extensions.install') }}
                   </b-btn>
-                  <b-btn class="extensions__card__download-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="extension.installed && extension.version !== extension.installedVersion" size="sm">
+                  <b-btn class="extensions__card__update-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="extension.installed && registryExists(extension) && extension.version !== registryVersion(extension)" size="sm">
                     <fa icon="sync"></fa>
                     {{ $t('extensions.update') }}
                   </b-btn>
-                  <div v-if="extension.installedVersion && extension.installed" class="text-muted text-center extensions__card__installed-version">
-                    {{ $t('extensions.installedVersion', { version: extension.installedVersion  }) }}
+                  <div v-if="extension.version && extension.installed" class="extensions__card__version text-muted text-center">
+                    {{ $t('extensions.version', { version: extension.version }) }}
                   </div>
                 </div>
               </div>
             </b-card-text>
-
             <template v-slot:footer>
-              <div v-if="extension.version" class="text-truncate w-100">
+              <div v-if="registryExists(extension)" class="extensions__card__official-version text-truncate w-100">
                 <span class="font-weight-bold">
-                  {{ $t('extensions.version') }}:
+                  {{ $t('extensions.officialVersion') }}:
                 </span>
-                {{ extension.version }}
+                {{ registryVersion(extension) }}
               </div>
-              <div v-if="extension.url" class="text-truncate w-100">
+              <div class="text-truncate w-100">
                 <span class="font-weight-bold">
                   {{ $t('extensions.homePage') }}:
                 </span>
-                <a :href="extension.url" target="_blank">
-                  {{ extension.url }}
-                </a>
+                <a v-if="registryUrl(extension)" class="extensions__card__official-url" :href="registryUrl(extension)" target="_blank"> {{ registryUrl(extension) }} </a>
+                <a v-else :href="extension.url" target="_blank"> {{ extension.url }} </a>
               </div>
             </template>
           </b-card>
@@ -108,6 +108,23 @@ export default {
       searchTerm: '',
       show: false,
       url: ''
+    }
+  },
+  computed: {
+    registryExists: function () {
+      return (extension) => extension?.deliverableFromRegistry
+    },
+    registryName: function () {
+      return (extension) => extension.deliverableFromRegistry?.name
+    },
+    registryDescription: function () {
+      return (extension) => extension.deliverableFromRegistry?.description
+    },
+    registryVersion: function () {
+      return (extension) => extension.deliverableFromRegistry?.version
+    },
+    registryUrl: function () {
+      return (extension) => extension.deliverableFromRegistry?.url
     }
   },
   mounted () {

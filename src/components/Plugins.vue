@@ -38,14 +38,16 @@
           <b-card footer-border-variant="white" class="m-0">
             <b-card-text>
               <div class="d-flex">
-                <div class="flex-grow-1">
+                <div v-if="registryExists(plugin)" class="flex-grow-1">
+                  <h4 class="plugins__card__official-name">{{ registryName(plugin) }}</h4>
+                  <div class="plugins__card__official-description">{{ registryDescription(plugin) }}</div>
+                </div>
+                <div v-else class="flex-grow-1">
                   <h4>{{ plugin.name }}</h4>
-                  <div>
-                    {{ plugin.description }}
-                  </div>
+                  <div>{{ plugin.description }}</div>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
-                  <b-btn class="mb-2" @click="uninstallPlugin(plugin.id)" v-if="plugin.installed" variant="danger">
+                  <b-btn class="plugins__card__uninstall-button mb-2" @click="uninstallPlugin(plugin.id)" v-if="plugin.installed" variant="danger">
                     <fa icon="trash-alt"></fa>
                     {{ $t('plugins.uninstall') }}
                   </b-btn>
@@ -53,30 +55,29 @@
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('plugins.install') }}
                   </b-btn>
-                  <b-btn class="plugins__card__download-button mb-2" @click="installPluginFromId(plugin.id)" variant="primary" v-if="plugin.installed && plugin.version !== plugin.installedVersion" size="sm">
+                  <b-btn class="plugins__card__update-button mb-2" @click="installPluginFromId(plugin.id)" variant="primary" v-if="plugin.installed && registryExists(plugin) && plugin.version !== registryVersion(plugin)" size="sm">
                     <fa icon="sync"></fa>
                     {{ $t('plugins.update') }}
                   </b-btn>
-                  <div v-if="plugin.installedVersion && plugin.installed" class="text-muted text-center plugins__card__installed-version">
-                    {{ $t('plugins.installedVersion', { version: plugin.installedVersion  }) }}
+                  <div v-if="plugin.version && plugin.installed" class="plugins__card__version text-muted text-center">
+                    {{ $t('plugins.version', { version: plugin.version  }) }}
                   </div>
                 </div>
               </div>
             </b-card-text>
             <template v-slot:footer>
-              <div v-if="plugin.version" class="text-truncate w-100">
+              <div v-if="registryExists(plugin)" class="plugins__card__official-version text-truncate w-100">
                 <span class="font-weight-bold">
-                  {{ $t('plugins.version') }}:
+                  {{ $t('plugins.officialVersion') }}:
                 </span>
-                {{ plugin.version }}
+                {{ registryVersion(plugin) }}
               </div>
-              <div v-if="plugin.url" class="text-truncate w-100">
+              <div class="text-truncate w-100">
                 <span class="font-weight-bold">
                   {{ $t('plugins.homePage') }}:
                 </span>
-                <a :href="plugin.url" target="_blank">
-                  {{ plugin.url }}
-                </a>
+                <a v-if="registryUrl(plugin)" class="plugins__card__official-url" :href="registryUrl(plugin)" target="_blank"> {{ registryUrl(plugin) }} </a>
+                <a v-else :href="plugin.url" target="_blank"> {{ plugin.url }} </a>
               </div>
             </template>
           </b-card>
@@ -107,6 +108,23 @@ export default {
       searchTerm: '',
       show: false,
       url: ''
+    }
+  },
+  computed: {
+    registryExists: function () {
+      return (plugin) => plugin?.deliverableFromRegistry
+    },
+    registryName: function () {
+      return (plugin) => plugin.deliverableFromRegistry?.name
+    },
+    registryDescription: function () {
+      return (plugin) => plugin.deliverableFromRegistry?.description
+    },
+    registryVersion: function () {
+      return (plugin) => plugin.deliverableFromRegistry?.version
+    },
+    registryUrl: function () {
+      return (plugin) => plugin.deliverableFromRegistry?.url
     }
   },
   mounted () {
