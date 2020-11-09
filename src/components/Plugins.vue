@@ -43,8 +43,7 @@
                   <div class="plugins__card__official-description">{{ registryDescription(plugin) }}</div>
                 </div>
                 <div v-else class="flex-grow-1">
-                  <h4>{{ plugin.name }}</h4>
-                  <div>{{ plugin.description }}</div>
+                  <h4>{{ startCase(camelCase(plugin.name)) }}</h4>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
                   <b-btn class="plugins__card__uninstall-button mb-2" @click="uninstallPlugin(plugin.id)" v-if="plugin.installed" variant="danger">
@@ -90,6 +89,7 @@
 <script>
 import find from 'lodash/find'
 import map from 'lodash/map'
+import { startCase, camelCase } from 'lodash'
 
 import Api from '@/api'
 import SearchFormControl from '@/components/SearchFormControl'
@@ -173,6 +173,8 @@ export default {
       }
       plugin.show = false
     },
+    startCase,
+    camelCase,
     isUrl
   }
 }

@@ -43,8 +43,7 @@
                   <div class="extensions__card__official-description">{{ registryDescription(extension) }}</div>
                 </div>
                 <div v-else class="flex-grow-1">
-                  <h4>{{ extension.name }}</h4>
-                  <div>{{ extension.description }}</div>
+                  <h4>{{ startCase(camelCase(extension.name)) }}</h4>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
                   <b-btn class="extensions__card__uninstall-button mb-2" @click="uninstallExtension(extension.id)" v-if="extension.installed" variant="danger">
@@ -90,6 +89,7 @@
 <script>
 import find from 'lodash/find'
 import map from 'lodash/map'
+import { startCase, camelCase } from 'lodash'
 
 import Api from '@/api'
 import SearchFormControl from '@/components/SearchFormControl'
@@ -173,6 +173,8 @@ export default {
       }
       extension.show = false
     },
+    startCase,
+    camelCase,
     isUrl
   }
 }
