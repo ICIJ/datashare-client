@@ -38,12 +38,13 @@
           <b-card footer-border-variant="white" class="m-0">
             <b-card-text>
               <div class="d-flex">
-                <div v-if="registryExists(extension)" class="flex-grow-1">
-                  <h4 class="extensions__card__official-name">{{ registryName(extension) }}</h4>
-                  <div class="extensions__card__official-description">{{ registryDescription(extension) }}</div>
-                </div>
-                <div v-else class="flex-grow-1">
-                  <h4>{{ startCase(camelCase(extension.name)) }}</h4>
+                <div class="flex-grow-1">
+                  <h4 class="extensions__card__name">
+                    {{ startCase(camelCase(getExtensionName(extension))) }}
+                  </h4>
+                  <div class="extensions__card__description">
+                    {{ getExtensionDescription(extension) }}
+                  </div>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
                   <b-btn class="extensions__card__uninstall-button mb-2" @click="uninstallExtension(extension.id)" v-if="extension.installed" variant="danger">
@@ -54,7 +55,7 @@
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('extensions.install') }}
                   </b-btn>
-                  <b-btn class="extensions__card__update-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="extension.installed && registryExists(extension) && extension.version !== registryVersion(extension)" size="sm">
+                  <b-btn class="extensions__card__update-button mb-2" @click="installExtensionFromId(extension.id)" variant="primary" v-if="extension.installed && isExtensionFromRegistry(extension) && extension.version !== extension.deliverableFromRegistry.version" size="sm">
                     <fa icon="sync"></fa>
                     {{ $t('extensions.update') }}
                   </b-btn>
@@ -65,18 +66,19 @@
               </div>
             </b-card-text>
             <template v-slot:footer>
-              <div v-if="registryExists(extension)" class="extensions__card__official-version text-truncate w-100">
+              <div v-if="isExtensionFromRegistry(extension)" class="extensions__card__official-version text-truncate w-100">
                 <span class="font-weight-bold">
                   {{ $t('extensions.officialVersion') }}:
                 </span>
-                {{ registryVersion(extension) }}
+                {{ extension.deliverableFromRegistry.version }}
               </div>
               <div class="text-truncate w-100">
                 <span class="font-weight-bold">
                   {{ $t('extensions.homePage') }}:
                 </span>
-                <a v-if="registryUrl(extension)" class="extensions__card__official-url" :href="registryUrl(extension)" target="_blank"> {{ registryUrl(extension) }} </a>
-                <a v-else :href="extension.url" target="_blank"> {{ extension.url }} </a>
+                <a class="extensions__card__url" :href="getExtensionUrl(extension)" target="_blank" v-if="getExtensionUrl(extension)">
+                  {{ getExtensionUrl(extension) }}
+                </a>
               </div>
             </template>
           </b-card>
@@ -87,9 +89,7 @@
 </template>
 
 <script>
-import find from 'lodash/find'
-import map from 'lodash/map'
-import { startCase, camelCase } from 'lodash'
+import { find, get, map, startCase, camelCase } from 'lodash'
 
 import Api from '@/api'
 import SearchFormControl from '@/components/SearchFormControl'
@@ -110,27 +110,22 @@ export default {
       url: ''
     }
   },
-  computed: {
-    registryExists: function () {
-      return (extension) => extension?.deliverableFromRegistry
-    },
-    registryName: function () {
-      return (extension) => extension.deliverableFromRegistry?.name
-    },
-    registryDescription: function () {
-      return (extension) => extension.deliverableFromRegistry?.description
-    },
-    registryVersion: function () {
-      return (extension) => extension.deliverableFromRegistry?.version
-    },
-    registryUrl: function () {
-      return (extension) => extension.deliverableFromRegistry?.url
-    }
-  },
   mounted () {
     this.search()
   },
   methods: {
+    isExtensionFromRegistry (extension) {
+      return get(extension, 'deliverableFromRegistry', false)
+    },
+    getExtensionName (extension) {
+      return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.name : extension.name
+    },
+    getExtensionDescription (extension) {
+      return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.description : extension.description
+    },
+    getExtensionUrl (extension) {
+      return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.url : extension.url
+    },
     async search () {
       const extensions = await api.getExtensions(this.searchTerm)
       map(extensions, extension => { extension.show = false })

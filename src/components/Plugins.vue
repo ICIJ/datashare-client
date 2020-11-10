@@ -38,12 +38,13 @@
           <b-card footer-border-variant="white" class="m-0">
             <b-card-text>
               <div class="d-flex">
-                <div v-if="registryExists(plugin)" class="flex-grow-1">
-                  <h4 class="plugins__card__official-name">{{ registryName(plugin) }}</h4>
-                  <div class="plugins__card__official-description">{{ registryDescription(plugin) }}</div>
-                </div>
-                <div v-else class="flex-grow-1">
-                  <h4>{{ startCase(camelCase(plugin.name)) }}</h4>
+                <div class="flex-grow-1">
+                  <h4 class="plugins__card__name">
+                    {{ startCase(camelCase(getPluginName(plugin))) }}
+                  </h4>
+                  <div class="plugins__card__description">
+                    {{ getPluginDescription(plugin) }}
+                  </div>
                 </div>
                 <div class="d-flex flex-column text-nowrap pl-2">
                   <b-btn class="plugins__card__uninstall-button mb-2" @click="uninstallPlugin(plugin.id)" v-if="plugin.installed" variant="danger">
@@ -54,7 +55,7 @@
                     <fa icon="cloud-download-alt"></fa>
                     {{ $t('plugins.install') }}
                   </b-btn>
-                  <b-btn class="plugins__card__update-button mb-2" @click="installPluginFromId(plugin.id)" variant="primary" v-if="plugin.installed && registryExists(plugin) && plugin.version !== registryVersion(plugin)" size="sm">
+                  <b-btn class="plugins__card__update-button mb-2" @click="installPluginFromId(plugin.id)" variant="primary" v-if="plugin.installed && isPluginFromRegistry(plugin) && plugin.version !== plugin.deliverableFromRegistry.version" size="sm">
                     <fa icon="sync"></fa>
                     {{ $t('plugins.update') }}
                   </b-btn>
@@ -65,18 +66,19 @@
               </div>
             </b-card-text>
             <template v-slot:footer>
-              <div v-if="registryExists(plugin)" class="plugins__card__official-version text-truncate w-100">
+              <div v-if="isPluginFromRegistry(plugin)" class="plugins__card__official-version text-truncate w-100">
                 <span class="font-weight-bold">
                   {{ $t('plugins.officialVersion') }}:
                 </span>
-                {{ registryVersion(plugin) }}
+                {{ plugin.deliverableFromRegistry.version }}
               </div>
               <div class="text-truncate w-100">
                 <span class="font-weight-bold">
                   {{ $t('plugins.homePage') }}:
                 </span>
-                <a v-if="registryUrl(plugin)" class="plugins__card__official-url" :href="registryUrl(plugin)" target="_blank"> {{ registryUrl(plugin) }} </a>
-                <a v-else :href="plugin.url" target="_blank"> {{ plugin.url }} </a>
+                <a class="plugins__card__url" :href="getPluginUrl(plugin)" target="_blank" v-if="getPluginUrl(plugin)">
+                  {{ getPluginUrl(plugin) }}
+                </a>
               </div>
             </template>
           </b-card>
@@ -87,9 +89,7 @@
 </template>
 
 <script>
-import find from 'lodash/find'
-import map from 'lodash/map'
-import { startCase, camelCase } from 'lodash'
+import { find, get, map, startCase, camelCase } from 'lodash'
 
 import Api from '@/api'
 import SearchFormControl from '@/components/SearchFormControl'
@@ -110,27 +110,22 @@ export default {
       url: ''
     }
   },
-  computed: {
-    registryExists: function () {
-      return (plugin) => plugin?.deliverableFromRegistry
-    },
-    registryName: function () {
-      return (plugin) => plugin.deliverableFromRegistry?.name
-    },
-    registryDescription: function () {
-      return (plugin) => plugin.deliverableFromRegistry?.description
-    },
-    registryVersion: function () {
-      return (plugin) => plugin.deliverableFromRegistry?.version
-    },
-    registryUrl: function () {
-      return (plugin) => plugin.deliverableFromRegistry?.url
-    }
-  },
   mounted () {
     this.search()
   },
   methods: {
+    isPluginFromRegistry (plugin) {
+      return get(plugin, 'deliverableFromRegistry', false)
+    },
+    getPluginName (plugin) {
+      return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.name : plugin.name
+    },
+    getPluginDescription (plugin) {
+      return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.description : plugin.description
+    },
+    getPluginUrl (plugin) {
+      return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.url : plugin.url
+    },
     async search () {
       const plugins = await api.getPlugins(this.searchTerm)
       map(plugins, plugin => { plugin.show = false })

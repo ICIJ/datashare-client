@@ -17,46 +17,46 @@ jest.mock('axios', () => {
         installed: false,
         deliverableFromRegistry: {
           id: 'plugin_01_id',
-          name: 'plugin_01_name',
+          name: 'plugin_01_registry_name',
           version: 'plugin_01_version',
-          description: 'plugin_01_description',
-          url: 'plugin_01_url'
+          description: 'plugin_01_registry_description',
+          url: 'plugin_01_registry_url'
         }
       }, {
         id: 'plugin_02_id',
-        name: 'plugin_02_id',
-        version: 'plugin_02_version-1',
-        description: null,
-        url: 'plugin_02_url_local',
+        name: 'plugin_02_name',
+        version: 'plugin_02_version',
+        description: 'plugin_02_description',
+        url: 'plugin_02_url',
         installed: true,
         deliverableFromRegistry: {
           id: 'plugin_02_id',
-          name: 'plugin_02_name',
-          version: 'plugin_02_version-2',
-          description: 'plugin_02_description',
-          url: 'plugin_02_url'
+          name: 'plugin_02_registry_name',
+          version: 'plugin_02_version',
+          description: 'plugin_02_registry_description',
+          url: 'plugin_02_registry_url'
         }
       }, {
         id: 'plugin_03_id',
-        name: 'plugin_03_id',
+        name: 'plugin_03_name',
         version: null,
-        description: null,
-        url: 'plugin_03_url_local',
+        description: 'plugin_03_description',
+        url: 'plugin_03_url',
         installed: true,
         deliverableFromRegistry: null
       }, {
         id: 'plugin_04_id',
-        name: 'plugin_04_id',
+        name: 'plugin_04_name',
         version: 'plugin_04_version',
         description: null,
-        url: 'plugin_04_url_local',
+        url: null,
         installed: true,
         deliverableFromRegistry: {
           id: 'plugin_04_id',
-          name: 'plugin_04_name',
-          version: 'plugin_04_version',
-          description: 'plugin_04_description',
-          url: 'plugin_04_url'
+          name: 'plugin_04_registry_name',
+          version: 'plugin_04_registry_version',
+          description: 'plugin_04_registry_description',
+          url: null
         }
       }]
     })
@@ -90,75 +90,113 @@ describe('Plugins.vue', () => {
     expect(wrapper.findAll('.plugins .plugins__card')).toHaveLength(4)
   })
 
-  describe('labels', () => {
+  describe('plugin card', () => {
     beforeEach(async () => {
       wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
     })
 
-    it('should NOT display the version if there is none', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__version')).toHaveLength(0)
+    describe('plugin name', () => {
+      it('should display name from registry if plugin is NOT installed and from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__name').text()).toBe('plugin_01_registry_name')
+      })
+
+      it('should display name from registry if plugin is installed and from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__name').text()).toBe('plugin_02_registry_name')
+      })
+
+      it('should display plugin name if plugin is installed and NOT from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__name').text()).toBe('plugin_03_name')
+      })
     })
 
-    it('should NOT display the version if plugin is not installed', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__version')).toHaveLength(0)
+    describe('plugin description', () => {
+      it('should display description from registry if plugin is NOT installed and from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__description').text()).toBe('plugin_01_registry_description')
+      })
+
+      it('should display description from registry if plugin is installed and from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__description').text()).toBe('plugin_02_registry_description')
+      })
+
+      it('should display plugin description if plugin is installed and NOT from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__description').text()).toBe('plugin_03_description')
+      })
     })
 
-    it('should display the version if there is one and plugin is installed', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__version')).toHaveLength(1)
+    describe('plugin version', () => {
+      it('should NOT display the installed version if plugin is NOT installed', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__version').exists()).toBeFalsy()
+      })
+
+      it('should display the installed version if plugin is installed and has an installed version', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__version').exists()).toBeTruthy()
+      })
+
+      it('should NOT display the installed version if plugin is installed and has NO installed version', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__version').exists()).toBeFalsy()
+      })
     })
 
-    it('should NOT display the official version if there is none', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__official-version')).toHaveLength(0)
+    describe('plugin official version', () => {
+      it('should display the official version if plugin is from registry and has an official version', () => {
+        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__official-version').exists()).toBeTruthy()
+      })
+
+      it('should NOT display the official version if plugin is installed and NOT from registry', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__official-version').exists()).toBeFalsy()
+      })
     })
 
-    it('should display the official version if there is one', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__official-version')).toHaveLength(1)
+    describe('plugin url', () => {
+      it('should display url from registry if plugin is NOT installed and from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__url').text()).toBe('plugin_01_registry_url')
+      })
+
+      it('should display url from registry if plugin is installed and from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__url').text()).toBe('plugin_02_registry_url')
+      })
+
+      it('should display plugin url if plugin is installed and NOT from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__url').text()).toBe('plugin_03_url')
+      })
+
+      it('should NOT display url if there is none', () => {
+        expect(wrapper.find('.plugins__card:nth-child(4) .plugins__card__url').exists()).toBeFalsy()
+      })
     })
 
-    it('should display name from catalog if plugin is installed and from catalog', () => {
-      expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__official-name').html()).toContain('plugin_02_name')
+    describe('uninstall button', () => {
+      it('should display uninstall button if plugin is installed', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__uninstall-button').exists()).toBeTruthy()
+      })
+
+      it('should NOT display uninstall button if plugin is NOT installed', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__uninstall-button').exists()).toBeFalsy()
+      })
     })
 
-    it('should display description from catalog if plugin is installed and from catalog', () => {
-      expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__official-description').html()).toContain('plugin_02_description')
+    describe('download button', () => {
+      it('should display download button if plugin is NOT installed', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__download-button').exists()).toBeTruthy()
+      })
+
+      it('should NOT display download button if plugin is installed', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__download-button').exists()).toBeFalsy()
+      })
     })
 
-    it('should display url from catalog if plugin is installed and from catalog', () => {
-      expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__official-url').html()).toContain('plugin_02_url')
-    })
-  })
+    describe('update button', () => {
+      it('should NOT display update button if plugin if installed version and same as registry', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__update-button').exists()).toBeFalsy()
+      })
 
-  describe('buttons', () => {
-    beforeEach(async () => {
-      wrapper = await mount(Plugins, { i18n, localVue, data: () => { return { url: 'this.is.an.url' } } })
-    })
+      it('should NOT display update button if plugin is installed and NOT from registry', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__update-button').exists()).toBeFalsy()
+      })
 
-    it('should display uninstall button if plugin is installed', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__uninstall-button').exists()).toBeTruthy()
-    })
-
-    it('should NOT display uninstall button if plugin is NOT installed', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__uninstall-button').exists()).toBeFalsy()
-    })
-
-    it('should display download button if plugin is NOT installed', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(1) .plugins__card__download-button').exists()).toBeTruthy()
-    })
-
-    it('should NOT display download button if plugin is installed', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__download-button').exists()).toBeFalsy()
-    })
-
-    it('should display update button if plugin is installed and different version from catalog', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(2) .plugins__card__update-button').exists()).toBeTruthy()
-    })
-
-    it('should NOT display update button if plugin is installed and NOT from catalog', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(3) .plugins__card__update-button').exists()).toBeFalsy()
-    })
-
-    it('should NOT display update button if plugin if installed version and same as catalog', () => {
-      expect(wrapper.findAll('.plugins__card:nth-child(4) .plugins__card__update-button').exists()).toBeFalsy()
+      it('should display update button if plugin is installed and different version from registry', () => {
+        expect(wrapper.findAll('.plugins__card:nth-child(4) .plugins__card__update-button').exists()).toBeTruthy()
+      })
     })
   })
 
