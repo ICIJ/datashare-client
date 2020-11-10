@@ -97,15 +97,15 @@ describe('Plugins.vue', () => {
 
     describe('plugin name', () => {
       it('should display name from registry if plugin is NOT installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__name').text()).toBe('plugin_01_registry_name')
+        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__name').text()).toBe('Plugin 01 Registry Name')
       })
 
       it('should display name from registry if plugin is installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__name').text()).toBe('plugin_02_registry_name')
+        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__name').text()).toBe('Plugin 02 Registry Name')
       })
 
       it('should display plugin name if plugin is installed and NOT from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__name').text()).toBe('plugin_03_name')
+        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__name').text()).toBe('Plugin 03 Name')
       })
     })
 

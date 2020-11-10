@@ -84,15 +84,15 @@ describe('Extensions.vue', () => {
 
     describe('extension name', () => {
       it('should display name from registry if extension is NOT installed and from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(1) .extensions__card__name').text()).toBe('extension_01_registry_name')
+        expect(wrapper.find('.extensions__card:nth-child(1) .extensions__card__name').text()).toBe('Extension 01 Registry Name')
       })
 
       it('should display name from registry if extension is installed and from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(2) .extensions__card__name').text()).toBe('extension_02_registry_name')
+        expect(wrapper.find('.extensions__card:nth-child(2) .extensions__card__name').text()).toBe('Extension 02 Registry Name')
       })
 
       it('should display extension name if extension is installed and NOT from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(3) .extensions__card__name').text()).toBe('extension_03_name')
+        expect(wrapper.find('.extensions__card:nth-child(3) .extensions__card__name').text()).toBe('Extension 03 Name')
       })
     })
 
