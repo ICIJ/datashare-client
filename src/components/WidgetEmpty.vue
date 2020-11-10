@@ -4,7 +4,7 @@
 
 <script>
 /**
- * A placeholder widget for the insights page. This widget is not intended to be usued directly.
+ * A placeholder widget for the insights page. This widget is not intended to be used directly.
  */
 export default {
   name: 'WidgetEmpty',
