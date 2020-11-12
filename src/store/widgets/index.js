@@ -1,11 +1,12 @@
 export { default as WidgetDiskUsage } from './WidgetDiskUsage'
-export { default as WidgetDuplicates } from './WidgetDuplicates'
 export { default as WidgetDocumentsByCreationDate } from './WidgetDocumentsByCreationDate'
 export { default as WidgetDocumentsByCreationDateByPath } from './WidgetDocumentsByCreationDateByPath'
+export { default as WidgetDuplicates } from './WidgetDuplicates'
 export { default as WidgetEmpty } from './WidgetEmpty'
 export { default as WidgetFileBarometer } from './WidgetFileBarometer'
 export { default as WidgetListGroup } from './WidgetListGroup'
 export { default as WidgetText } from './WidgetText'
+export { default as WidgetTreeMap } from './WidgetTreeMap'
 
 const widgets = [
   {

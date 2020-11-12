@@ -8,6 +8,7 @@ class WidgetText extends WidgetEmpty {
     this.content = content
     this.pipeline = pipeline
   }
+
   get component () {
     return Component
   }
