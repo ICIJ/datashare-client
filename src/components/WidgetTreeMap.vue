@@ -41,7 +41,7 @@ export default {
       const width = document.getElementById(this.id).offsetWidth
       const height = 500
 
-      const root = hierarchy(this.widget.data).sum(d => d.doc_count)
+      const root = hierarchy(this.widget.data).sum(d => d.count_including_children)
       const treemap2 = treemap()
         .size([width, height])
         .padding(2)
@@ -69,14 +69,14 @@ export default {
         .append('text')
         .attr('x', d => d.x0 + 5)
         .attr('y', d => d.y0 + 20)
-        .text(d => d.data.dirname)
+        .text(d => this.widget.transformName(d.data.dirname))
         .attr('font-size', '12px')
         .attr('fill', 'black')
       leaf
         .append('text')
         .attr('x', d => d.x0 + 5)
         .attr('y', d => d.y0 + 30)
-        .text(d => format(',d')(d.data.doc_count) + ' files')
+        .text(d => `${ format(',d')(d.data.count_including_children) } files`)
         .attr('font-size', '10px')
         .attr('fill', '#25252A')
     }
