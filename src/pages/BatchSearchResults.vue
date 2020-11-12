@@ -115,7 +115,7 @@
               </li>
             </ul>
             <span v-else>
-              {{ $t('indexing.no') }}
+              {{ $t('global.no') }}
             </span>
           </dd>
           <dt class="text-nowrap col-sm-6 text-right text-truncate">
@@ -130,7 +130,7 @@
               </li>
             </ul>
             <span v-else>
-              {{ $t('indexing.no') }}
+              {{ $t('global.no') }}
             </span>
           </dd>
           <dt class="col-sm-6 text-right text-truncate" v-if="$config.is('multipleProjects')">
