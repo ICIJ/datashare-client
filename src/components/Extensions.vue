@@ -65,8 +65,8 @@
                 </div>
               </div>
             </b-card-text>
-            <template v-slot:footer>
-              <div v-if="isExtensionFromRegistry(extension)" class="extensions__card__official-version text-truncate w-100">
+            <template v-slot:footer v-if="isExtensionFromRegistry(extension)">
+              <div class="extensions__card__official-version text-truncate w-100">
                 <span class="font-weight-bold">
                   {{ $t('extensions.officialVersion') }}:
                 </span>
@@ -76,8 +76,8 @@
                 <span class="font-weight-bold">
                   {{ $t('extensions.homePage') }}:
                 </span>
-                <a class="extensions__card__url" :href="getExtensionUrl(extension)" target="_blank" v-if="getExtensionUrl(extension)">
-                  {{ getExtensionUrl(extension) }}
+                <a class="extensions__card__homepage" :href="extension.deliverableFromRegistry.homepage" target="_blank" v-if="extension.deliverableFromRegistry.homepage">
+                  {{ extension.deliverableFromRegistry.homepage }}
                 </a>
               </div>
             </template>
@@ -122,9 +122,6 @@ export default {
     },
     getExtensionDescription (extension) {
       return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.description : extension.description
-    },
-    getExtensionUrl (extension) {
-      return this.isExtensionFromRegistry(extension) ? extension.deliverableFromRegistry.url : extension.url
     },
     async search () {
       const extensions = await api.getExtensions(this.searchTerm)

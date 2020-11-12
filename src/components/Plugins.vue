@@ -65,8 +65,8 @@
                 </div>
               </div>
             </b-card-text>
-            <template v-slot:footer>
-              <div v-if="isPluginFromRegistry(plugin)" class="plugins__card__official-version text-truncate w-100">
+            <template v-slot:footer v-if="isPluginFromRegistry(plugin)" >
+              <div class="plugins__card__official-version text-truncate w-100">
                 <span class="font-weight-bold">
                   {{ $t('plugins.officialVersion') }}:
                 </span>
@@ -76,8 +76,8 @@
                 <span class="font-weight-bold">
                   {{ $t('plugins.homePage') }}:
                 </span>
-                <a class="plugins__card__url" :href="getPluginUrl(plugin)" target="_blank" v-if="getPluginUrl(plugin)">
-                  {{ getPluginUrl(plugin) }}
+                <a class="plugins__card__homepage" :href="plugin.deliverableFromRegistry.homepage" target="_blank" v-if="plugin.deliverableFromRegistry.homepage">
+                  {{ plugin.deliverableFromRegistry.homepage }}
                 </a>
               </div>
             </template>
@@ -122,9 +122,6 @@ export default {
     },
     getPluginDescription (plugin) {
       return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.description : plugin.description
-    },
-    getPluginUrl (plugin) {
-      return this.isPluginFromRegistry(plugin) ? plugin.deliverableFromRegistry.url : plugin.url
     },
     async search () {
       const plugins = await api.getPlugins(this.searchTerm)

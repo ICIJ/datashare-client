@@ -20,7 +20,8 @@ jest.mock('axios', () => {
           name: 'plugin_01_registry_name',
           version: 'plugin_01_version',
           description: 'plugin_01_registry_description',
-          url: 'plugin_01_registry_url'
+          url: 'plugin_01_registry_url',
+          homepage: 'plugin_01_registry_homepage'
         }
       }, {
         id: 'plugin_02_id',
@@ -34,7 +35,8 @@ jest.mock('axios', () => {
           name: 'plugin_02_registry_name',
           version: 'plugin_02_version',
           description: 'plugin_02_registry_description',
-          url: 'plugin_02_registry_url'
+          url: 'plugin_02_registry_url',
+          homepage: 'plugin_02_registry_homepage'
         }
       }, {
         id: 'plugin_03_id',
@@ -56,7 +58,8 @@ jest.mock('axios', () => {
           name: 'plugin_04_registry_name',
           version: 'plugin_04_registry_version',
           description: 'plugin_04_registry_description',
-          url: null
+          url: null,
+          homepage: null
         }
       }]
     })
@@ -147,21 +150,21 @@ describe('Plugins.vue', () => {
       })
     })
 
-    describe('plugin url', () => {
-      it('should display url from registry if plugin is NOT installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__url').text()).toBe('plugin_01_registry_url')
+    describe('plugin homepage', () => {
+      it('should display homepage from registry if plugin is NOT installed and from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(1) .plugins__card__homepage').text()).toBe('plugin_01_registry_homepage')
       })
 
-      it('should display url from registry if plugin is installed and from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__url').text()).toBe('plugin_02_registry_url')
+      it('should display homepage from registry if plugin is installed and from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(2) .plugins__card__homepage').text()).toBe('plugin_02_registry_homepage')
       })
 
-      it('should display plugin url if plugin is installed and NOT from registry', () => {
-        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__url').text()).toBe('plugin_03_url')
+      it('should NOT display homepage if plugin is installed and NOT from registry', () => {
+        expect(wrapper.find('.plugins__card:nth-child(3) .plugins__card__homepage').exists()).toBeFalsy()
       })
 
-      it('should NOT display url if there is none', () => {
-        expect(wrapper.find('.plugins__card:nth-child(4) .plugins__card__url').exists()).toBeFalsy()
+      it('should NOT display homepage if there is none', () => {
+        expect(wrapper.find('.plugins__card:nth-child(4) .plugins__card__homepage').exists()).toBeFalsy()
       })
     })
 

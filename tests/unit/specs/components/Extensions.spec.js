@@ -20,7 +20,8 @@ jest.mock('axios', () => {
           name: 'extension_01_registry_name',
           version: 'extension_01_version',
           description: 'extension_01_registry_description',
-          url: 'extension_01_registry_url'
+          url: 'extension_01_registry_url',
+          homepage: 'extension_01_registry_homepage'
         }
       }, {
         id: 'extension_02_id',
@@ -34,7 +35,8 @@ jest.mock('axios', () => {
           name: 'extension_02_registry_name',
           version: 'extension_02_version',
           description: 'extension_02_registry_description',
-          url: 'extension_02_registry_url'
+          url: 'extension_02_registry_url',
+          homepage: 'extension_02_registry_homepage'
         }
       }, {
         id: 'extension_03_id',
@@ -56,7 +58,8 @@ jest.mock('axios', () => {
           name: 'extension_04_registry_name',
           version: 'extension_04_registry_version',
           description: 'extension_04_registry_description',
-          url: null
+          url: null,
+          homepage: null
         }
       }]
     })
@@ -134,21 +137,21 @@ describe('Extensions.vue', () => {
       })
     })
 
-    describe('extension url', () => {
-      it('should display url from registry if extension is NOT installed and from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(1) .extensions__card__url').text()).toBe('extension_01_registry_url')
+    describe('extension homepage', () => {
+      it('should display homepage from registry if extension is NOT installed and from registry', () => {
+        expect(wrapper.find('.extensions__card:nth-child(1) .extensions__card__homepage').text()).toBe('extension_01_registry_homepage')
       })
 
-      it('should display url from registry if extension is installed and from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(2) .extensions__card__url').text()).toBe('extension_02_registry_url')
+      it('should display homepage from registry if extension is installed and from registry', () => {
+        expect(wrapper.find('.extensions__card:nth-child(2) .extensions__card__homepage').text()).toBe('extension_02_registry_homepage')
       })
 
-      it('should display extension url if extension is installed and NOT from registry', () => {
-        expect(wrapper.find('.extensions__card:nth-child(3) .extensions__card__url').text()).toBe('extension_03_url')
+      it('should NOT display homepage if extension is installed and NOT from registry', () => {
+        expect(wrapper.find('.extensions__card:nth-child(3) .extensions__card__homepage').exists()).toBeFalsy()
       })
 
-      it('should NOT display url if there is none', () => {
-        expect(wrapper.find('.extensions__card:nth-child(4) .extensions__card__url').exists()).toBeFalsy()
+      it('should NOT display homepage if there is none', () => {
+        expect(wrapper.find('.extensions__card:nth-child(4) .extensions__card__homepage').exists()).toBeFalsy()
       })
     })
 
