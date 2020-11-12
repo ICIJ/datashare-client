@@ -1,3 +1,4 @@
+import { identity } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { Core } from '@/core'
@@ -29,9 +30,15 @@ describe('WidgetTreeMap.vue', () => {
     expect(wrapper.find('.widget__header').text()).toBe('Hello world')
   })
 
-  it('should display children names in the tree map', () => {
-    const propsData = { widget: { data: { children: [{ dirname: 'AABOL', doc_count: 26 }] } } }
+  it('should display children names in the tree map without transformation', () => {
+    const propsData = { widget: { data: { children: [{ dirname: 'newPart', doc_count: 26 }] }, transformName: identity } }
     shallowMount(WidgetTreeMap, { localVue, store, propsData, data () { return { id: 'widget_tree_map' } } })
-    expect(document.getElementsByTagName('text')[0].innerHTML).toBe('AABOL')
+    expect(document.getElementsByTagName('text')[0].innerHTML).toBe('newPart')
+  })
+
+  it('should display children names in the tree map with transformation', () => {
+    const propsData = { widget: { data: { children: [{ dirname: 'oldPart,newPart', doc_count: 26 }] }, transformName: d => d.replace('oldPart,', '') } }
+    shallowMount(WidgetTreeMap, { localVue, store, propsData, data () { return { id: 'widget_tree_map' } } })
+    expect(document.getElementsByTagName('text')[0].innerHTML).toBe('newPart')
   })
 })

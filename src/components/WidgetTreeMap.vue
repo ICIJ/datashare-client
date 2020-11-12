@@ -42,10 +42,9 @@ export default {
       const height = 500
 
       const root = hierarchy(this.widget.data).sum(d => d.count_including_children)
-      const treemap2 = treemap()
+      treemap()
         .size([width, height])
-        .padding(2)
-      treemap2(root)
+        .padding(2)(root)
 
       const svg = select(`#${this.id}`)
         .append('svg')
