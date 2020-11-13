@@ -13,14 +13,12 @@ jest.mock('axios', () => {
         name: 'extension_01_name',
         version: 'extension_01_version',
         description: 'extension_01_description',
-        url: 'extension_01_url',
         installed: false,
         deliverableFromRegistry: {
           id: 'extension_01_id',
           name: 'extension_01_registry_name',
           version: 'extension_01_version',
           description: 'extension_01_registry_description',
-          url: 'extension_01_registry_url',
           homepage: 'extension_01_registry_homepage'
         }
       }, {
@@ -28,14 +26,12 @@ jest.mock('axios', () => {
         name: 'extension_02_name',
         version: 'extension_02_version',
         description: 'extension_02_description',
-        url: 'extension_02_url',
         installed: true,
         deliverableFromRegistry: {
           id: 'extension_02_id',
           name: 'extension_02_registry_name',
           version: 'extension_02_version',
           description: 'extension_02_registry_description',
-          url: 'extension_02_registry_url',
           homepage: 'extension_02_registry_homepage'
         }
       }, {
@@ -43,7 +39,6 @@ jest.mock('axios', () => {
         name: 'extension_03_name',
         version: null,
         description: 'extension_03_description',
-        url: 'extension_03_url',
         installed: true,
         deliverableFromRegistry: null
       }, {
@@ -51,14 +46,12 @@ jest.mock('axios', () => {
         name: 'extension_04_name',
         version: 'extension_04_version',
         description: null,
-        url: 'extension_04_url',
         installed: true,
         deliverableFromRegistry: {
           id: 'extension_04_id',
           name: 'extension_04_registry_name',
           version: 'extension_04_registry_version',
           description: 'extension_04_registry_description',
-          url: null,
           homepage: null
         }
       }]
