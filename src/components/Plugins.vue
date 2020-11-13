@@ -40,7 +40,7 @@
               <div class="d-flex">
                 <div class="flex-grow-1">
                   <h4 class="plugins__card__name">
-                    {{ startCase(camelCase(getPluginName(plugin))) }}
+                    {{ getPluginName(plugin) | camelCase | startCase }}
                   </h4>
                   <div class="plugins__card__description">
                     {{ getPluginDescription(plugin) }}
@@ -89,7 +89,7 @@
 </template>
 
 <script>
-import { find, get, map, startCase, camelCase } from 'lodash'
+import { camelCase, find, get, map, startCase } from 'lodash'
 
 import Api from '@/api'
 import SearchFormControl from '@/components/SearchFormControl'
@@ -112,6 +112,10 @@ export default {
   },
   mounted () {
     this.search()
+  },
+  filters: {
+    camelCase,
+    startCase
   },
   methods: {
     isPluginFromRegistry (plugin) {
@@ -165,8 +169,6 @@ export default {
       }
       plugin.show = false
     },
-    startCase,
-    camelCase,
     isUrl
   }
 }
