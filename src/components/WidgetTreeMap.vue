@@ -4,13 +4,15 @@
       <h4 v-html="widget.title" class="m-0 h"></h4>
     </div>
     <div class="widget__content lead" :class="{ 'card-body': widget.card }">
-      <div :id="id"></div>
+      <div :id="id">
+        <svg width="100%" height="500"></svg>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import { format, hierarchy, select, treemap } from 'd3'
+import { hierarchy, select, treemap } from 'd3'
 import { uniqueId } from 'lodash'
 
 /**
@@ -32,24 +34,21 @@ export default {
     }
   },
   mounted () {
-    if (!this.widget.data) {
-      const span = document.createElement('span')
-      const text = document.createTextNode('Please select a data file')
-      span.appendChild(text)
-      document.getElementById(this.id).appendChild(span)
-    } else {
+    this.refreshTreeMap({ data: { dirname: '/vault/aladdin' } })
+  },
+  methods: {
+    renderTreeMap (data) {
+      select(`#${this.id} > svg > g`).remove()
+
       const width = document.getElementById(this.id).offsetWidth
       const height = 500
 
-      const root = hierarchy(this.widget.data).sum(d => d.count_including_children)
+      const root = hierarchy(data).sum(d => d.count_including_children)
       treemap()
         .size([width, height])
         .padding(2)(root)
 
-      const svg = select(`#${this.id}`)
-        .append('svg')
-        .attr('width', width)
-        .attr('height', height)
+      const svg = select(`#${this.id} > svg`)
         .append('g')
 
       const leaf = svg.selectAll('g')
@@ -64,20 +63,32 @@ export default {
         .attr('height', d => d.y1 - d.y0)
         .style('fill', '#FA4070')
         .style('fill-opacity', 0.5)
+        .on('click', this.refreshTreeMap)
       leaf
         .append('text')
         .attr('x', d => d.x0 + 5)
         .attr('y', d => d.y0 + 20)
-        .text(d => this.widget.transformName(d.data.dirname))
+        .text(d => this.widget.getTitle(d))
         .attr('font-size', '12px')
         .attr('fill', 'black')
       leaf
         .append('text')
         .attr('x', d => d.x0 + 5)
         .attr('y', d => d.y0 + 30)
-        .text(d => `${ format(',d')(d.data.count_including_children) } files`)
+        .text(d => this.widget.getSubtitle(d))
         .attr('font-size', '10px')
         .attr('fill', '#25252A')
+    },
+    async refreshTreeMap (d) {
+      try {
+        const dataSource = await this.widget.getData(d)
+        this.renderTreeMap(dataSource)
+      } catch (_) {
+        const span = document.createElement('span')
+        const text = document.createTextNode('Please select a data file')
+        span.appendChild(text)
+        document.getElementById(this.id).appendChild(span)
+      }
     }
   }
 }
