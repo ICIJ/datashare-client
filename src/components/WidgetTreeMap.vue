@@ -37,8 +37,11 @@ export default {
     await this.refreshTreeMap(this.widget.baseDirname)
   },
   methods: {
+    cleanTreeMap (path) {
+      return select(path).remove()
+    },
     renderTreeMap (data) {
-      select(`#${this.id} > svg > g`).remove()
+      this.cleanTreeMap(`#${this.id} > svg > g`)
 
       const width = document.getElementById(this.id).offsetWidth
       const height = 500
@@ -84,8 +87,9 @@ export default {
         const dataSource = await this.widget.getData(d)
         this.renderTreeMap(dataSource)
       } catch (_) {
+        this.cleanTreeMap(`#${this.id} > svg`)
         const span = document.createElement('span')
-        const text = document.createTextNode('Please select a data file')
+        const text = document.createTextNode('Please select a correct data file')
         span.appendChild(text)
         document.getElementById(this.id).appendChild(span)
       }
