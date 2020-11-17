@@ -4,6 +4,7 @@
       <h4 v-html="widget.title" class="m-0 h"></h4>
     </div>
     <div class="widget__content lead" :class="{ 'card-body': widget.card }">
+      <tree-breadcrumb :path="currentPath" no-datadir @input="refreshTreeMap($event)" v-if="currentPath"></tree-breadcrumb>
       <div :id="id">
         <svg width="100%" height="500"></svg>
       </div>
@@ -15,11 +16,16 @@
 import { hierarchy, select, treemap } from 'd3'
 import { uniqueId } from 'lodash'
 
+import TreeBreadcrumb from '@/components/TreeBreadcrumb'
+
 /**
  * Widget to display a tree map on the insights page.
  */
 export default {
   name: 'WidgetTreeMap',
+  components: {
+    TreeBreadcrumb
+  },
   props: {
     /**
      * The widget definition object.
@@ -30,7 +36,8 @@ export default {
   },
   data () {
     return {
-      id: uniqueId('widget_tree_map')
+      id: uniqueId('widget_tree_map'),
+      currentPath: null
     }
   },
   async mounted () {
@@ -66,7 +73,7 @@ export default {
         .attr('height', d => d.y1 - d.y0)
         .style('fill', '#FA4070')
         .style('fill-opacity', 0.5)
-        .on('click', this.refreshTreeMap)
+        .on('click', d => this.refreshTreeMap(d.data.dirname))
       leaf
         .append('text')
         .attr('x', d => d.x0 + 5)
@@ -82,11 +89,13 @@ export default {
         .attr('font-size', '10px')
         .attr('fill', '#25252A')
     },
-    async refreshTreeMap (d) {
+    async refreshTreeMap (path) {
       try {
-        const dataSource = await this.widget.getData(d)
+        this.$set(this, 'currentPath', path)
+        const dataSource = await this.widget.getData(path)
         this.renderTreeMap(dataSource)
       } catch (_) {
+        this.$set(this, 'currentPath', null)
         this.cleanTreeMap(`#${this.id} > svg`)
         const span = document.createElement('span')
         const text = document.createTextNode('Please select a correct data file')

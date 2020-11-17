@@ -9,17 +9,13 @@
       ...
     </li>
     <li class="list-inline-item tree-breadcrumb__item" v-for="directory in tree.slice(-maxDirectories)" :key="directory">
-      <a href @click.prevent="$emit('input', directory)">
-        {{ directory | basename }}
-      </a>
+      <a href @click.prevent="$emit('input', directory)">{{ directory | basename }}</a>
     </li>
   </ul>
 </template>
 
 <script>
-import filter from 'lodash/filter'
-import last from 'lodash/last'
-import reduce from 'lodash/reduce'
+import { filter, last, reduce } from 'lodash'
 import { basename } from 'path'
 
 /**
