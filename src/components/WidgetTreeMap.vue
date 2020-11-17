@@ -33,8 +33,8 @@ export default {
       id: uniqueId('widget_tree_map')
     }
   },
-  mounted () {
-    this.refreshTreeMap({ data: { dirname: '/vault/aladdin' } })
+  async mounted () {
+    await this.refreshTreeMap(this.widget.baseDirname)
   },
   methods: {
     renderTreeMap (data) {

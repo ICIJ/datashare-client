@@ -1,4 +1,3 @@
-import { identity } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { Core } from '@/core'
@@ -9,7 +8,7 @@ const { localVue, store } = Core.init(createLocalVue()).useAll()
 describe('WidgetTreeMap.vue', () => {
   beforeEach(() => {
     store.commit('insights/reset')
-    document.body.innerHTML = '<div id="widget_tree_map"></div>'
+    document.body.innerHTML = '<div id="widget_tree_map"><svg></svg></div>'
   })
 
   it('should be a Vue instance', () => {
@@ -30,15 +29,15 @@ describe('WidgetTreeMap.vue', () => {
     expect(wrapper.find('.widget__header').text()).toBe('Hello world')
   })
 
-  it('should display children names in the tree map without transformation', () => {
-    const propsData = { widget: { data: { children: [{ dirname: 'newPart', doc_count: 26 }] }, transformName: identity } }
-    shallowMount(WidgetTreeMap, { localVue, store, propsData, data () { return { id: 'widget_tree_map' } } })
+  it('should display children names in the tree map without transformation', async () => {
+    const propsData = { widget: { baseDirname: '', getData () { return { children: [{ dirname: 'newPart', doc_count: 26 }] } }, getTitle: item => item.data.dirname, getSubtitle: () => {} } }
+    await shallowMount(WidgetTreeMap, { localVue, store, propsData, data () { return { id: 'widget_tree_map' } } })
     expect(document.getElementsByTagName('text')[0].innerHTML).toBe('newPart')
   })
 
-  it('should display children names in the tree map with transformation', () => {
-    const propsData = { widget: { data: { children: [{ dirname: 'oldPart,newPart', doc_count: 26 }] }, transformName: d => d.replace('oldPart,', '') } }
-    shallowMount(WidgetTreeMap, { localVue, store, propsData, data () { return { id: 'widget_tree_map' } } })
+  it('should display children names in the tree map with transformation', async () => {
+    const propsData = { widget: { baseDirname: '', getData () { return { children: [{ dirname: 'oldPart,newPart', doc_count: 26 }] } }, getTitle: item => item.data.dirname.replace('oldPart,', ''), getSubtitle: () => {} } }
+    await shallowMount(WidgetTreeMap, { localVue, store, propsData, data () { return { id: 'widget_tree_map' } } })
     expect(document.getElementsByTagName('text')[0].innerHTML).toBe('newPart')
   })
 })
