@@ -4,7 +4,12 @@
       <h4 v-html="widget.title" class="m-0 h"></h4>
     </div>
     <div class="widget__content lead" :class="{ 'card-body': widget.card }">
-      <tree-breadcrumb :path="currentPath" no-datadir @input="refreshTreeMap($event)" v-if="currentPath"></tree-breadcrumb>
+      <div class="d-flex flex-row">
+        <tree-breadcrumb :path="currentPath" no-datadir @input="refreshTreeMap($event)" v-if="currentPath"></tree-breadcrumb>
+        <router-link :to="{ name: 'search', query: { index: widget.index, 'f[path]': currentPath } }" class="widget__content__search">
+          {{ $t('widget.treemap.seeDocuments') }}
+        </router-link>
+      </div>
       <div :id="id">
         <svg width="100%" height="500"></svg>
       </div>

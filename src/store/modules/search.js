@@ -1,39 +1,18 @@
-import castArray from 'lodash/castArray'
-import cloneDeep from 'lodash/cloneDeep'
-import compact from 'lodash/compact'
-import concat from 'lodash/concat'
-import difference from 'lodash/difference'
-import each from 'lodash/each'
-import endsWith from 'lodash/endsWith'
-import escapeRegExp from 'lodash/escapeRegExp'
-import filterCollection from 'lodash/filter'
-import find from 'lodash/find'
-import findIndex from 'lodash/findIndex'
-import get from 'lodash/get'
-import has from 'lodash/has'
-import includes from 'lodash/includes'
-import isString from 'lodash/isString'
-import join from 'lodash/join'
-import keys from 'lodash/keys'
-import map from 'lodash/map'
-import omit from 'lodash/omit'
-import orderBy from 'lodash/orderBy'
-import range from 'lodash/range'
-import random from 'lodash/random'
-import reduce from 'lodash/reduce'
-import toString from 'lodash/toString'
-import uniq from 'lodash/uniq'
-import values from 'lodash/values'
+import {
+  castArray, cloneDeep, compact, concat, difference, each, endsWith, escapeRegExp,
+  filter as filterCollection, find, findIndex, get, has, includes, isString, join, keys, map, omit,
+  orderBy, range, random, reduce, toString, uniq, values
+} from 'lodash'
 import lucene from 'lucene'
 import Vue from 'vue'
 
 import Api from '@/api'
 import elasticsearch from '@/api/elasticsearch'
 import EsDocList from '@/api/resources/EsDocList'
-import settings from '@/utils/settings'
-import { isNarrowScreen } from '@/utils/screen'
-import * as filterTypes from '@/store/filters'
 import filters from '@/store/filters'
+import * as filterTypes from '@/store/filters'
+import { isNarrowScreen } from '@/utils/screen'
+import settings from '@/utils/settings'
 
 export const api = new Api()
 
