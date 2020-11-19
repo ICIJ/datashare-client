@@ -19,9 +19,10 @@
 
 <script>
 import { hierarchy, select, treemap } from 'd3'
-import { uniqueId } from 'lodash'
+import { get, uniqueId } from 'lodash'
 
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
+import VueScrollTo from 'vue-scrollto'
 
 /**
  * Widget to display a tree map on the insights page.
@@ -47,6 +48,11 @@ export default {
   },
   async mounted () {
     await this.refreshTreeMap(this.widget.baseDirname)
+    const scrollTo = get(this.$route, 'query.scrollTo', false)
+    if (scrollTo === 'WidgetTreeMap') {
+      const target = this.$el.querySelector(`#${ this.id }`)
+      setTimeout(() => VueScrollTo.scrollTo(target, 100, { offset: 620, force: true }), 500)
+    }
   },
   methods: {
     cleanTreeMap (path) {
