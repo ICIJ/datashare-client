@@ -142,11 +142,11 @@ export default {
     })
     this.$root.$on('filter::delete', (filterName, { label: key }) => {
       if (this.isInitialized && this.filter.name === filterName) {
-        const docCount = find(this.items, { key }).doc_count
-        if (docCount === 1) {
+        const item = find(this.items, { key })
+        if (item && item.doc_count === 1) {
           this.items.splice(findIndex(this.items, { key }), 1)
-        } else {
-          find(this.items, { key }).doc_count = docCount - 1
+        } else if (item) {
+          item.doc_count--
         }
       }
     })
