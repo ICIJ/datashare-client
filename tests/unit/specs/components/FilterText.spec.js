@@ -28,7 +28,11 @@ describe('FilterText.vue', () => {
       router,
       store,
       wait,
-      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'contentType' }) }
+      propsData: {
+        filter: find(store.getters['search/instantiatedFilters'], {
+          name: 'contentType'
+        })
+      }
     })
     store.commit('search/setGlobalSearch', true)
     store.commit('search/index', index)
@@ -447,11 +451,11 @@ describe('FilterText.vue', () => {
       .withTags(['tag_03'])).commit()
 
     await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
+    expect(wrapper.vm.root.items).toHaveLength(3)
     wrapper.vm.root.collapseItems = false
-    await wrapper.vm.$root.$emit('filter::delete', 'tags', { label: 'tag_01' })
     await wrapper.vm.$nextTick()
-    expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
+    await wrapper.vm.$root.$emit('filter::delete', 'tags', { label: 'tag_01' })
+    expect(wrapper.vm.root.items).toHaveLength(2)
   })
 
   describe('about the show more button', () => {
