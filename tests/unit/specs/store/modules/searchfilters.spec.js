@@ -1,6 +1,5 @@
 import cloneDeep from 'lodash/cloneDeep'
 import toLower from 'lodash/toLower'
-import Murmur from '@icij/murmur'
 
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -134,40 +133,6 @@ describe('SearchFilters', () => {
       expect(typeof filter).toBe('object')
       expect(filter.key).toBe('byDirname')
       expect(filter.constructor.name).toBe('FilterPath')
-    })
-
-    it('should get no bucket for path aggregation', async () => {
-      Murmur.config.set('dataDir', '/home/user/data')
-
-      const response = await store.dispatch('search/queryFilter', { name: 'path' })
-
-      expect(response.aggregations.byDirname.buckets).toHaveLength(0)
-    })
-
-    it('should return 1 bucket, the correct first level path and the correct number of results', async () => {
-      Murmur.config.set('dataDir', '/home/user/data')
-      await letData(es).have(new IndexedDocument('/home/user/data/is/a/path/test.doc', project)).commit()
-
-      const response = await store.dispatch('search/queryFilter', { name: 'path' })
-
-      expect(response.aggregations.byDirname.buckets).toHaveLength(1)
-      expect(response.aggregations.byDirname.buckets[0].key).toBe('/home/user/data/is')
-      expect(response.aggregations.byDirname.buckets[0].doc_count).toBe(1)
-    })
-
-    it('should return 2 buckets, the correct path and the correct number of results', async () => {
-      Murmur.config.set('dataDir', '/home/user/data')
-      await letData(es).have(new IndexedDocument('/home/user/data/is/a/path/test.doc', project)).commit()
-      await letData(es).have(new IndexedDocument('/home/user/data/is/a/second/path/test.doc', project)).commit()
-      await letData(es).have(new IndexedDocument('/home/user/data/was/a/third/path/test.doc', project)).commit()
-
-      const response = await store.dispatch('search/queryFilter', { name: 'path' })
-
-      expect(response.aggregations.byDirname.buckets).toHaveLength(2)
-      expect(response.aggregations.byDirname.buckets[0].key).toBe('/home/user/data/is')
-      expect(response.aggregations.byDirname.buckets[0].doc_count).toBe(2)
-      expect(response.aggregations.byDirname.buckets[1].key).toBe('/home/user/data/was')
-      expect(response.aggregations.byDirname.buckets[1].doc_count).toBe(1)
     })
   })
 

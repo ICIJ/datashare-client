@@ -106,7 +106,8 @@ export default [
       name: 'path',
       key: 'byDirname',
       icon: 'hdd',
-      order: 100
+      order: 100,
+      fromElasticSearch: false
     }
   },
   {

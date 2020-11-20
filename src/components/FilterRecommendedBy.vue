@@ -57,8 +57,12 @@ export default {
   },
   async mounted () {
     await this.$store.dispatch('search/getRecommendationsByProject')
-    if (this.root && this.root.moreToDisplay) this.$set(this.root, 'moreToDisplay', this.recommendedByUsers.length > settings.filterSize)
-    if (this.root && this.root.results) this.$set(this.root, 'results', { aggregations: { _id: { buckets: this.recommendedByUsers } } })
+    if (this.root && this.root.moreToDisplay) {
+      this.$set(this.root, 'moreToDisplay', this.recommendedByUsers.length > settings.filterSize)
+    }
+    if (this.root && this.root.results) {
+      this.$set(this.root, 'results', { aggregations: { _id: { buckets: this.recommendedByUsers } } })
+    }
     this.root.$on('reset-filter-values', (_, refresh) => this.selectUsers([], refresh))
   },
   methods: {

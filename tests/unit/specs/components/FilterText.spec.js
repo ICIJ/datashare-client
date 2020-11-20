@@ -449,10 +449,8 @@ describe('FilterText.vue', () => {
     await wrapper.vm.root.aggregate()
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
     wrapper.vm.root.collapseItems = false
-
-    await wrapper.vm.$nextTick()
-
     await wrapper.vm.$root.$emit('filter::delete', 'tags', { label: 'tag_01' })
+    await wrapper.vm.$nextTick()
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
   })
 

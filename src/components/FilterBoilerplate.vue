@@ -36,51 +36,51 @@
           </form>
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: filterQuery }"></hook>
-        <div class="mb-2">
-          <slot name="items" v-if="items.length > 0" :items="items" :options="options" :selected="selected" :total-count="totalCount" :filterQuery="filterQuery">
-            <b-form-checkbox v-model="isAllSelected" @change.native="resetFilterValues" class="filter__items__all mb-0">
-              <slot name="all">
-                <span class="d-flex">
-                  <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
-                    {{ labelToHuman('all') }}
-                  </span>
-                  <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
-                    {{ $n(calculatedCount) }}
-                  </span>
+        <slot name="items" v-if="showReultsItems" :items="items" :options="options" :selected="selected" :total-count="totalCount" :filterQuery="filterQuery">
+          <b-form-checkbox v-model="isAllSelected" @change.native="resetFilterValues" class="filter__items__all mb-0">
+            <slot name="all">
+              <span class="d-flex">
+                <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
+                  {{ labelToHuman('all') }}
                 </span>
-              </slot>
-            </b-form-checkbox>
-            <slot name="items-group" :items="items" :options="options" :selected="selected">
-              <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @input="changeSelectedValues">
-                <template v-for="{ value, item, label } of options">
-                  <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
-                    <b-form-checkbox :value="value" class="filter__items__item">
-                      <span class="d-flex">
-                        <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
-                          {{ label }}
-                        </span>
-                        <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
-                          {{ $n(item.doc_count) }}
-                        </span>
-                      </span>
-                    </b-form-checkbox>
-                  </slot>
-                </template>
-              </b-form-checkbox-group>
+                <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
+                  {{ $n(calculatedCount) }}
+                </span>
+              </span>
             </slot>
+          </b-form-checkbox>
+          <slot name="items-group" :items="items" :options="options" :selected="selected">
+            <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @input="changeSelectedValues">
+              <template v-for="{ value, item, label } of options">
+                <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
+                  <b-form-checkbox :value="value" class="filter__items__item">
+                    <span class="d-flex">
+                      <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
+                        {{ label }}
+                      </span>
+                      <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
+                        {{ $n(item.doc_count) }}
+                      </span>
+                    </span>
+                  </b-form-checkbox>
+                </slot>
+              </template>
+            </b-form-checkbox-group>
           </slot>
-        </div>
+        </slot>
         <div class="list-group-item filter__items__display border-top-0" @click="asyncFilterSearch" v-if="shouldDisplayShowMoreAction()">
           <span>
             {{ $t('filter.showMore') }}
           </span>
         </div>
-        <div v-if="noResults" class="p-2 text-center text-muted">
-          {{ $t('filter.none') }}<br />
-        </div>
-        <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
-          <span v-html="$t('filter.noMatches')"></span>
-        </div>
+        <template v-if="fromElasticSearch">
+          <div v-if="noResults" class="p-2 text-center text-muted">
+            {{ $t('filter.none') }}
+          </div>
+          <div v-else-if="noMatches" class="p-2 text-center small text-muted bg-mark">
+            <span v-html="$t('filter.noMatches')"></span>
+          </div>
+        </template>
       </div>
     </transition>
   </div>
@@ -140,13 +140,13 @@ export default {
         this.aggregateWithLoading()
       }
     })
-    this.$root.$on('filter::delete', (filterName, tagToDelete) => {
+    this.$root.$on('filter::delete', (filterName, { label: key }) => {
       if (this.isInitialized && this.filter.name === filterName) {
-        const docCount = find(this.items, { key: tagToDelete.label }).doc_count
+        const docCount = find(this.items, { key }).doc_count
         if (docCount === 1) {
-          this.items.splice(findIndex(this.items, { key: tagToDelete.label }), 1)
+          this.items.splice(findIndex(this.items, { key }), 1)
         } else {
-          find(this.items, { key: tagToDelete.label }).doc_count = docCount - 1
+          find(this.items, { key }).doc_count = docCount - 1
         }
       }
     })
@@ -162,6 +162,9 @@ export default {
     headerIcon () {
       return this.collapseItems ? 'plus' : 'minus'
     },
+    showReultsItems () {
+      return this.isReady && (this.items.length > 0 || !this.fromElasticSearch)
+    },
     hasResults () {
       return this.isReady && this.items.length > 0
     },
@@ -170,6 +173,9 @@ export default {
     },
     noMatches () {
       return this.isReady && this.items.length === 0
+    },
+    fromElasticSearch () {
+      return this.filter && this.filter.fromElasticSearch
     },
     searchWithThrottle () {
       return throttle(this.aggregate, 400)
@@ -202,31 +208,35 @@ export default {
       return this.aggregate()
     },
     async aggregate () {
-      if (this.filter && this.filter.fromElasticSearch) {
-        const size = this.size
-        const prefix = this.filter.prefix ? this.$config.get('dataDir') + '/' : ''
-        const alternativeSearch = this.filterQuery !== '' && this.filter.alternativeSearch ? compact(this.filter.alternativeSearch(toLower(this.filterQuery))) : []
-        const queryTokens = compact(concat(alternativeSearch, this.queryTokens))
-        const include = prefix + `.*(${queryTokens.join('|')}).*`
-        const options = this.filter.isSearchable && queryTokens.length ? { size, include } : { size }
-        let res
-        try {
-          res = await this.$store.dispatch('search/queryFilter', { name: this.filter.name, options })
-        } catch (_) {
-          res = {}
-        }
-        this.$set(this, 'total', res.total)
-        const sumOtherDocCount = get(res, ['aggregations', this.filter.key, 'sum_other_doc_count'], 0)
-        const sumDocCount = sumBy(get(res, this.resultPath, []), 'doc_count')
-        this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)
-        this.$set(this, 'results', this.addInvertedFilters(res))
-        this.$set(this, 'moreToDisplay', sumOtherDocCount > 0)
-        this.$wait.end(`items for ${this.filter.name}`)
-        return this.results
-      } else {
+      /**
+       * Triggered when a filter received instruction to be load data
+       */
+      this.$emit('aggregate', this.filter)
+      // Filter with `fromElasticSearch` set to false implement there own aggregation
+      if (!this.fromElasticSearch) {
         this.$wait.end(`items for ${this.filter.name}`)
         return false
       }
+      const size = this.size
+      const prefix = this.filter.prefix ? this.$config.get('dataDir') + '/' : ''
+      const alternativeSearch = this.filterQuery !== '' && this.filter.alternativeSearch ? compact(this.filter.alternativeSearch(toLower(this.filterQuery))) : []
+      const queryTokens = compact(concat(alternativeSearch, this.queryTokens))
+      const include = prefix + `.*(${queryTokens.join('|')}).*`
+      const options = this.filter.isSearchable && queryTokens.length ? { size, include } : { size }
+      let res
+      try {
+        res = await this.$store.dispatch('search/queryFilter', { name: this.filter.name, options })
+      } catch (_) {
+        res = {}
+      }
+      this.$set(this, 'total', res.total)
+      const sumOtherDocCount = get(res, ['aggregations', this.filter.key, 'sum_other_doc_count'], 0)
+      const sumDocCount = sumBy(get(res, this.resultPath, []), 'doc_count')
+      this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)
+      this.$set(this, 'results', this.addInvertedFilters(res))
+      this.$set(this, 'moreToDisplay', sumOtherDocCount > 0)
+      this.$wait.end(`items for ${this.filter.name}`)
+      return this.results
     },
     addInvertedFilters (response) {
       if (!this.isGlobal && this.filterFilter && this.filterFilter.reverse) {
@@ -292,6 +302,10 @@ export default {
 
     &__items {
       max-height: 500px;
+
+      &__all + .list-group-item:empty {
+        margin-bottom: $spacer * 0.5;
+      }
 
       &.slide-enter-active, &.slide-leave-active {
         transition: .3s max-height;

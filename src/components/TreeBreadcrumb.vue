@@ -3,6 +3,9 @@
     <li class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--root">
       <a href @click.prevent="$emit('input', dataDir)">
         <fa :icon="datadirIcon" fixed-width></fa>
+        <span v-if="noDatadir">
+          Home
+        </span>
       </a>
     </li>
     <li v-if="treeWithoutDataDir.length > maxDirectories" class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--abbr">
@@ -94,7 +97,7 @@ export default {
       }
 
       &:last-child a {
-        color: $body-color;
+        color: inherit;
         font-weight: bold;
       }
     }

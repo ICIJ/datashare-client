@@ -63,7 +63,7 @@ export function datasharePlugin (Client, config, components) {
     return this._search({ index, routing, body })
   }
 
-  Client.prototype._addQueryToFilter = function (query, body, fields = []) {
+  Client.prototype.addQueryToFilter = function (query, body, fields = []) {
     body.query('match_all')
       .addQuery('bool', b => b
         // Add the query string to the body
@@ -86,7 +86,7 @@ export function datasharePlugin (Client, config, components) {
     let body = filter.body(bodybuilder(), options)
     if (!isGlobalSearch) {
       each(filters, filter => filter.addFilter(body))
-      this._addQueryToFilter(query, body, fields)
+      this.addQueryToFilter(query, body, fields)
     }
     body = body.size(0).build()
     return this._search({ index, body })

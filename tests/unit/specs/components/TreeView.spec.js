@@ -32,8 +32,8 @@ describe('TreeView.vue', () => {
       total: 2048
     })
 
-    expect(wrapper.find('.tree-view__hits').exists()).toBeTruthy()
-    expect(wrapper.find('.tree-view__hits').text()).toBe('10 docs')
+    expect(wrapper.find('.tree-view__header__hits').exists()).toBeTruthy()
+    expect(wrapper.find('.tree-view__header__hits').text()).toBe('10 docs')
     expect(wrapper.findAll('.tree-view__directories__item:not(.tree-view__directories__item--hits)')).toHaveLength(2)
   })
 
