@@ -627,6 +627,9 @@
     },
     "duplicates": {
       "duplicated": "* Les documents dupliqués ne sont pas indexés dans Datashare pour faciliter la recherche et éviter de créer des documents inutiles."
+    },
+    "treemap": {
+      "seeDocuments": "See documents in Datashare"
     }
   },
   "api": {
