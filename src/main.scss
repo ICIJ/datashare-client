@@ -12,6 +12,11 @@ html {
   font-size: 14px;
 }
 
+body {
+  max-width: 100vw;
+  overflow-x: hidden;
+}
+
 @keyframes rotateLogo {
 	100% {
 		transform: translate(-50%, -50%) rotate(1turn);
@@ -87,12 +92,12 @@ html {
   padding: $spacer;
 }
 
-
 @each $variant, $value in $theme-colors {
   .popover-magnified-#{$variant} {
     @include popover-magnified-variant($value);
   }
 }
+
 .popover {
 
   .popover-body {
@@ -171,12 +176,4 @@ html {
       border-left-width: 25px;
     }
   }
-}
-
-
-
-
-body {
-  max-width: 100vw;
-  overflow-x: hidden;
 }

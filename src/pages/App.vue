@@ -97,7 +97,7 @@ export default {
     transition: filter 200ms;
 
     .modal-open & {
-      filter: blur(3.24px);
+      filter: grayscale(100%);
     }
 
     @media (max-width: $app-sidebar-float-breakpoint-width) {
@@ -133,10 +133,6 @@ export default {
         position: sticky;
         top: 0;
         width: $app-context-sidebar-width;
-
-        .card {
-          color: $body-color;
-        }
       }
 
       & &__view {
