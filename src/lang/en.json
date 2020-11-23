@@ -347,6 +347,7 @@
     "document": "Document",
     "name": "File name",
     "path": "File path",
+    "dirname": "File directory",
     "id": "File ID",
     "creationDate": "Creation date",
     "size": "File size",
