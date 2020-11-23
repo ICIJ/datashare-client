@@ -121,6 +121,13 @@ export default {
         return this.document.source.path
       }
     },
+    documentDirname () {
+      if (this.$config.get('mountedDataDir')) {
+        return this.document.source.dirname.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
+      } else {
+        return this.document.source.dirname
+      }
+    },
     metaFieldsNames () {
       if (this.metadataVisible) {
         return filter(this.document.metas, name => map(this.canonicalFields, 'name').indexOf(name) === -1)
@@ -148,6 +155,12 @@ export default {
           label: this.$t('document.path'),
           class: 'document__content__path',
           value: this.documentPath
+        },
+        {
+          name: 'dirname',
+          label: this.$t('document.dirname'),
+          class: 'document__content__dirname',
+          value: this.documentDirname
         },
         {
           name: 'metadata.tika_metadata_creation_date',
