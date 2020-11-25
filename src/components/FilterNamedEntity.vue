@@ -14,7 +14,7 @@
               {{ value }}
             </span>
             <span class="filter__items__item__count badge badge-pill badge-light align-self-start" :class="{ hideOnHover : $config.is('manageDocuments') }">
-              {{ $n(item.byDocs.value) }}
+              {{ $n(item.parent_doc_count.value) }}
             </span>
           </span>
         </b-form-checkbox>

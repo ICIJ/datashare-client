@@ -56,7 +56,7 @@ describe('FilterNamedEntity.vue', () => {
     it('should display empty list', async () => {
       await wrapper.vm.root.aggregate({ clearPages: true })
 
-      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(0)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(0)
     })
 
     it('should display 1 named entity', async () => {
@@ -65,7 +65,7 @@ describe('FilterNamedEntity.vue', () => {
 
       await wrapper.vm.root.aggregate({ clearPages: true })
 
-      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
     })
 
     it('should display 2 named entities in one document', async () => {
@@ -75,7 +75,7 @@ describe('FilterNamedEntity.vue', () => {
 
       await wrapper.vm.root.aggregate({ clearPages: true })
 
-      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(2)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
     })
 
     it('should display 1 named entity in 2 documents', async () => {
@@ -87,26 +87,45 @@ describe('FilterNamedEntity.vue', () => {
 
       await wrapper.vm.root.aggregate({ clearPages: true })
 
-      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
-      expect(wrapper.findAll('.list-group-item .filter__items__item__count').at(0).text()).toEqual('2')
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
+      expect(wrapper.findAll('.filter__items__item__count').at(1).text()).toEqual('2')
     })
 
     it('should display 3 named entities in 2 documents in correct order', async () => {
       await letData(es).have(new IndexedDocument('document_01', index)
-        .withNer('person_01', 2)).commit()
+        .withNer('someone_01', 2)).commit()
       await letData(es).have(new IndexedDocument('document_02', index)
-        .withNer('person_02', 2)
-        .withNer('person_02', 16)
-        .withNer('person_02', 21)
-        .withNer('person_01', 26)
-        .withNer('person_03', 35)).commit()
+        .withNer('someone_02', 2)
+        .withNer('someone_02', 16)
+        .withNer('someone_02', 21)
+        .withNer('someone_01', 26)
+        .withNer('someone_03', 35)).commit()
 
       await wrapper.vm.root.aggregate({ clearPages: true })
 
-      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(3)
-      expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(0).text()).toEqual('person_01')
-      expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(1).text()).toEqual('person_02')
-      expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(2).text()).toEqual('person_03')
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
+      expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('someone_01')
+      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('someone_02')
+      expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('someone_03')
+    })
+
+    it('should display 3 named entities in 2 documents alphabeticaly', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('paul', 2)).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('ines', 2)
+        .withNer('ines', 16)
+        .withNer('ines', 21)
+        .withNer('paul', 26)
+        .withNer('anita', 35)).commit()
+
+      wrapper.findComponent({ ref: 'filter' }).setData({ sortBy: '_key', sortByOrder: 'asc' })
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
+      expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('anita')
+      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('ines')
+      expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('paul')
     })
   })
 
@@ -124,7 +143,7 @@ describe('FilterNamedEntity.vue', () => {
       wrapper.vm.root.query = 'Windows'
       await wrapper.vm.root.aggregate({ clearPages: true })
 
-      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(0)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(0)
     })
 
     it('should filter on named entity filter and return all items', async () => {
@@ -140,7 +159,7 @@ describe('FilterNamedEntity.vue', () => {
       wrapper.vm.root.query = 'person'
       await wrapper.vm.root.aggregate({ clearPages: true })
 
-      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(4)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(4)
     })
 
     it('should filter on named entity filter and return only 1 item', async () => {
@@ -156,7 +175,7 @@ describe('FilterNamedEntity.vue', () => {
       wrapper.vm.root.query = 'person_01'
       await wrapper.vm.root.aggregate({ clearPages: true })
 
-      expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
     })
   })
 
@@ -167,7 +186,7 @@ describe('FilterNamedEntity.vue', () => {
 
       await wrapper.vm.root.aggregate({ clearPages: true })
 
-      expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__delete')).toHaveLength(1)
+      expect(wrapper.findAll('.filter__items__item .filter__items__item__delete')).toHaveLength(1)
     })
 
     it('should emit an event filter::hide::named-entities on delete named entity', async () => {
@@ -191,7 +210,7 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/setFilterValue', { name: 'contentType', value: 'type_01' })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
   })
 
   it('should filter items according to the date filter search', async () => {
@@ -206,7 +225,7 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/setFilterValue', { name: 'indexingDate', value })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
   })
 
   it('should filter items according to the content type reverse filter search', async () => {
@@ -224,9 +243,9 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/toggleFilter', 'contentType')
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(0).text()).toContain('person_02')
-    expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(1).text()).toContain('person_03')
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toContain('person_02')
+    expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toContain('person_03')
   })
 
   it('should display the named entities containing the query string, and those linked to documents containing the query string', async () => {
@@ -241,9 +260,9 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/query', 'person_01')
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(0).text()).toContain('person_01')
-    expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(1).text()).toContain('person_02')
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toContain('person_01')
+    expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toContain('person_02')
   })
 
   it('should filter items according to the named entity filter search', async () => {
@@ -257,8 +276,8 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.list-group-item .filter__items__item').at(0).text()).toContain('person_01')
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.filter__items__item').at(0).text()).toContain('person_01')
   })
 
   it('should display the only namedEntityPerson selected', async () => {
@@ -284,8 +303,8 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_02'] })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.list-group-item .filter__items__item').at(0).text()).toContain('person_02')
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.filter__items__item').at(0).text()).toContain('person_02')
   })
 
   it('should filter items of namedEntityPerson according to the namedEntityOrganization selected', async () => {
@@ -311,10 +330,10 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_03'] })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(3)
-    expect(wrapper.findAll('.list-group-item .filter__items__item').at(0).text()).toContain('person_02')
-    expect(wrapper.findAll('.list-group-item .filter__items__item').at(1).text()).toContain('person_03')
-    expect(wrapper.findAll('.list-group-item .filter__items__item').at(2).text()).toContain('person_04')
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
+    expect(wrapper.findAll('.filter__items__item').at(0).text()).toContain('person_02')
+    expect(wrapper.findAll('.filter__items__item').at(1).text()).toContain('person_03')
+    expect(wrapper.findAll('.filter__items__item').at(2).text()).toContain('person_04')
   })
 
   it('should prepend a selected and excluded Named Entity in the items, and show it in the list of filter items', async () => {
@@ -328,9 +347,9 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/setGlobalSearch', true)
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.list-group-item .filter__items__item').at(0).find('.filter__items__item__label').text()).toBe('anne')
-    expect(wrapper.findAll('.list-group-item .filter__items__item').at(1).find('.filter__items__item__label').text()).toBe('bruno')
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
+    expect(wrapper.findAll('.filter__items__item').at(0).find('.filter__items__item__label').text()).toBe('anne')
+    expect(wrapper.findAll('.filter__items__item').at(1).find('.filter__items__item__label').text()).toBe('bruno')
   })
 
   it('should filter filters items on 2 named entities from different categories', async () => {
@@ -347,7 +366,7 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/setFilterValue', { name: 'namedEntityOrganization', value: ['organization_01'] })
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
   })
 
   it('should display the correct number of occurrences if named entity filter is excluded', async () => {
@@ -365,8 +384,8 @@ describe('FilterNamedEntity.vue', () => {
     store.commit('search/toggleFilter', 'namedEntityOrganization')
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.list-group-item .filter__items__item__count').at(0).text()).toContain('1')
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.filter__items__item__count').at(0).text()).toContain('1')
   })
 
   it('should display an "All" item on top of others items, and this item should be active by default', async () => {
@@ -390,9 +409,9 @@ describe('FilterNamedEntity.vue', () => {
     await wrapper.vm.$nextTick()
     await wrapper.vm.root.aggregate({ clearPages: true })
 
-    expect(wrapper.findAll('.list-group-item .filter__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.list-group-item .filter__items__item .filter__items__item__label').at(0).text()).toEqual('person_01')
-    expect(wrapper.findAll('.list-group-item .filter__items__item input').at(0).element.checked).toBeTruthy()
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('person_01')
+    expect(wrapper.findAll('.filter__items__item input').at(0).element.checked).toBeTruthy()
   })
 
   it('should select the "All" item by default if nothing is selected', async () => {
@@ -403,7 +422,7 @@ describe('FilterNamedEntity.vue', () => {
 
     await wrapper.vm.$nextTick()
     await wrapper.vm.root.aggregate({ clearPages: true })
-    await wrapper.findAll('.list-group-item .filter__items__item input').at(0).trigger('click')
+    await wrapper.findAll('.filter__items__item input').at(0).trigger('click')
 
     expect(wrapper.findAll('.filter__items__all input').at(0).element.checked).toBeTruthy()
   })

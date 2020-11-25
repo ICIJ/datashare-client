@@ -187,7 +187,17 @@ export default {
     waitForAnswer: 700,
     requestTimeout: 60000
   },
-  filterSize: 25,
+  filter: {
+    bucketSize: 25,
+    sortBy: '_count',
+    sortByOrder: 'desc',
+    sortByOptions: [
+      { sortBy: '_count', sortByOrder: 'asc' },
+      { sortBy: '_count', sortByOrder: 'desc' },
+      { sortBy: '_key', sortByOrder: 'asc' },
+      { sortBy: '_key', sortByOrder: 'desc' }
+    ]
+  },
   helpLink: 'https://github.com/ICIJ/datashare/wiki/Datashare-Support',
   faqLink: 'https://icij.gitbook.io/datashare/faq/table-of-contents',
   userGuidesLink: 'https://icij.gitbook.io/datashare/',

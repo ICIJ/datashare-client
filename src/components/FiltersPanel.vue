@@ -184,8 +184,7 @@ export default {
         color: $panel-color;
 
         .card-header {
-          position: sticky;
-          top: 0;
+          position: relative;
           z-index: 10;
           border-width: 0;
           background: inherit;

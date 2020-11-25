@@ -167,7 +167,7 @@ export default {
     sortBy: {
       type: String,
       default: 'contentLength',
-      validate: order => includes(['doc_count', '_key', 'contentLength'], order)
+      validate: order => includes(['_count', '_key', 'contentLength'], order)
     },
     /**
      * Order to sort by (asc or desc)
@@ -175,7 +175,7 @@ export default {
     sortByOrder: {
       type: String,
       default: 'desc',
-      validate: order => includes(['asc', 'desc', 'contentLength'], order)
+      validate: order => includes(['asc', 'desc'], order)
     }
   },
   components: {
@@ -194,9 +194,14 @@ export default {
     await this.loadDataWithSpinner({ clearPages: true })
   },
   watch: {
-    async path () {
-      await this.loadDataWithSpinner({ clearPages: true })
-      this.$set(this, 'infiniteScrollId', uniqueId())
+    path () {
+      return this.reloadDataWithSpinner()
+    },
+    sortBy () {
+      return this.reloadDataWithSpinner()
+    },
+    sortByOrder () {
+      return this.reloadDataWithSpinner()
     },
     selectedPaths () {
       this.$set(this, 'selected', this.selectedPaths)
@@ -228,9 +233,6 @@ export default {
       return 50
     },
     order () {
-      if (this.sortBy === 'doc_count') {
-        return
-      }
       return { [this.sortBy]: this.sortByOrder }
     },
     pagesBuckets () {
@@ -307,6 +309,10 @@ export default {
       const method = this.reachedTheEnd ? 'complete' : 'loaded'
       // Call the right method (with "noop" as safety net in case the method can't be found)
       return get($infiniteLoadingState, method, noop)()
+    },
+    async reloadDataWithSpinner () {
+      await this.loadDataWithSpinner({ clearPages: true })
+      this.$set(this, 'infiniteScrollId', uniqueId())
     },
     loadDataWithSpinner: waitFor('loading tree view data', function (...args) {
       return this.loadData(...args)

@@ -36,6 +36,10 @@ export default {
       type: Boolean,
       default: false
     },
+    hideSort: {
+      type: Boolean,
+      default: false
+    },
     showResultsBeforeReady: {
       type: Boolean,
       default: false

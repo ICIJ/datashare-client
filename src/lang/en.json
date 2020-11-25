@@ -138,6 +138,23 @@
     "starred": "Starred",
     "notStarred": "Not starred",
     "recommendedBy": "Recommended by",
+    "sortByDropdown": {
+      "toggler": "Sort",
+      "options": {
+        "_count": {
+          "asc": "Occurences (increasing)",
+          "desc": "Occurences (decreasing)"
+        },
+        "parent_doc_count": {
+          "asc": "Occurences (increasing)",
+          "desc": "Occurences (decreasing)"
+        },
+        "_key": {
+          "asc": "Alphabetical (A to Z)",
+          "desc": "Alphabetical (Z to A)"
+        }
+      }
+    },
     "lang": {
       "all": "All",
       "ABKHAZIAN": "Abkhazian",

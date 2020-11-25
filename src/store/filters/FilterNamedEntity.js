@@ -13,6 +13,14 @@ export default class FilterNamedEntity extends FilterType {
     super(options)
     this.category = options.category || 'PERSON'
     this.component = 'FilterNamedEntity'
+    this.sortBy = 'parent_doc_count'
+    this.sortByOrder = 'desc'
+    this.sortByOptions = [
+      { sortBy: 'parent_doc_count', sortByOrder: 'asc' },
+      { sortBy: 'parent_doc_count', sortByOrder: 'desc' },
+      { sortBy: '_key', sortByOrder: 'asc' },
+      { sortBy: '_key', sortByOrder: 'desc' }
+    ]
   }
 
   isSelfAffected (body) {
@@ -47,37 +55,34 @@ export default class FilterNamedEntity extends FilterType {
     if (this.isSelfAffected(body)) {
       return body.query('terms', 'mentionNorm', param.values)
     } else {
-      return body.query(
-        'has_parent',
-        { parent_type: 'Document' },
-        q => q.query('has_child', 'type', 'NamedEntity', {}, r => r.query('terms', 'mentionNorm', param.values))
-      )
+      return body.query('has_parent', { parent_type: 'Document' }, q => {
+        return q.query('has_child', 'type', 'NamedEntity', {}, r => {
+          return r.query('terms', 'mentionNorm', param.values)
+        })
+      })
     }
   }
 
   addParentExcludeFilter (body, param) {
-    return body.query(
-      'has_parent',
-      { parent_type: 'Document' },
-      q => q.notQuery('has_child', 'type', 'NamedEntity', {}, r => r.query('terms', 'mentionNorm', param.values))
-    )
+    return body.query('has_parent', { parent_type: 'Document' }, q => {
+      return q.notQuery('has_child', 'type', 'NamedEntity', {}, r => {
+        return r.query('terms', 'mentionNorm', param.values)
+      })
+    })
   }
 
-  body (body, options, from = 0, size = 8) {
+  body (body, options, from = 0, size = 50) {
     return body
       .query('term', 'type', 'NamedEntity')
       .filter('term', 'isHidden', 'false')
       .filter('term', 'category', this.category)
-      .agg('terms', 'mentionNorm', this.key, {
-        size: 50,
-        order: [{ byDocs: 'desc' }, { _count: 'desc' }],
-        ...options
-      }, sub => {
+      .agg('terms', 'mentionNorm', this.key, { ...options }, sub => {
         return sub
           .agg('bucket_sort', { size, from }, 'bucket_truncate')
-          .agg('cardinality', 'join#Document', 'byDocs')
-          .agg('terms', 'category', 'byCategories',
-            sub => sub.agg('cardinality', 'join#Document', 'byDocs'))
+          .agg('cardinality', 'join#Document', 'parent_doc_count')
+          .agg('terms', 'category', 'byCategories', sub => {
+            return sub.agg('cardinality', 'join#Document', 'parent_doc_count')
+          })
       })
   }
 }

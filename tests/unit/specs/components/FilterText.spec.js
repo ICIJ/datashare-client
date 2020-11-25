@@ -106,6 +106,25 @@ describe('FilterText.vue', () => {
     expect(wrapper.vm.root.total).toBe(7)
   })
 
+  it('should display 3 items for the contentType filter alphabeticaly', async () => {
+    await letData(es).have(new IndexedDocument('document_01', index)
+      .withContentType('text/javascript')).commit()
+    await letData(es).have(new IndexedDocument('document_05', index)
+      .withContentType('text/html')).commit()
+    await letData(es).have(new IndexedDocument('document_06', index)
+      .withContentType('text/stylesheet')).commit()
+
+    wrapper.findComponent({ ref: 'filter' }).setData({ sortBy: '_key', sortByOrder: 'asc' })
+    await wrapper.vm.root.aggregate({ clearPages: true })
+
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
+
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('HTML document')
+    expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('text/javascript')
+    expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('text/stylesheet')
+  })
+
   it('should display X filter items after applying the relative search', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContent('INDEX').withContentType('text/javascript')).commit()
@@ -381,7 +400,7 @@ describe('FilterText.vue', () => {
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('Anglais')
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('Anglais')
   })
 
   it('should translate any weird language', async () => {
@@ -399,7 +418,7 @@ describe('FilterText.vue', () => {
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('Gallois')
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('Gallois')
   })
 
   it('should display the extraction level filter with correct labels', async () => {
@@ -411,7 +430,7 @@ describe('FilterText.vue', () => {
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('File on disk')
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('File on disk')
   })
 
   it('should display the extraction level filter with correct labels in French', async () => {
@@ -431,7 +450,7 @@ describe('FilterText.vue', () => {
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('Fichier sur le disque')
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('Fichier sur le disque')
   })
 
   it('should reload the filter on event "filter::refresh"', async () => {

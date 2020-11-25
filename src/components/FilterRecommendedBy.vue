@@ -3,6 +3,7 @@
                       v-bind="propsWithout('hide-show-more')"
                       hide-show-more
                       hide-exclude
+                      hide-sort
                       :infinite-scroll="false"
                       @reset-filter-values="resetFilterValues">
     <template #all>
@@ -54,7 +55,7 @@ export default {
   computed: {
     ...mapState('search', ['recommendedByUsers', 'recommendedByTotal']),
     sampleRecommendedByUsers () {
-      return slice(this.recommendedByUsers, 0, settings.filterSize)
+      return slice(this.recommendedByUsers, 0, settings.filter.bucketSize)
     }
   },
   filters: {

@@ -1,8 +1,17 @@
 <template>
   <filter-boilerplate v-bind="$props" ref="filter">
-    <template #items>
+    <template #items="{ sortBy, sortByOrder }">
       <div class="filter__tree-view">
-        <tree-view :project="project" v-model="path" :selectedPaths.sync="selectedPaths" :pre-body-build="preBodyBuild" selectable count no-bars compact />
+        <tree-view v-model="path"
+                  :project="project"
+                  :selectedPaths.sync="selectedPaths"
+                  :pre-body-build="preBodyBuild"
+                  :sort-by="sortBy"
+                  :sort-by-order="sortByOrder"
+                  selectable
+                  count
+                  no-bars
+                  compact />
       </div>
     </template>
   </filter-boilerplate>

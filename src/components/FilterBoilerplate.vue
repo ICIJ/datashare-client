@@ -38,7 +38,7 @@
             :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'" />
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
-        <slot name="items" :items="items" :options="options" :selected="selected" :total-count="totalCount" :query="query">
+        <slot name="items" :items="items" :options="options" :selected="selected" :total-count="totalCount" :query="query" :sort-by="sortBy" :sort-by-order="sortByOrder">
           <b-form-checkbox v-model="isAllSelected" @change.native="resetFilterValues" class="filter__items__all mb-0">
             <slot name="all">
               <span class="d-flex">
@@ -85,6 +85,7 @@
         </infinite-loading>
       </div>
       <div class="filter__footer d-flex" v-if="!hideFooter">
+        <filter-sort-by-dropdown v-if="!hideSort" :sort-by.sync="sortBy" :sort-by-order.sync="sortByOrder" :sort-by-options="sortByOptions" />
         <button @click="invert" v-if="!hideExclude" class="filter__footer__action filter__footer__action--invert btn btn-link btn-sm ml-auto" :class="{ 'active': isReversed() }">
           <fa :icon="isReversed() ? 'eye-slash' : 'eye'" fixed-width class="mr-1"></fa>
           {{ $t('filter.invert') }}
@@ -112,6 +113,7 @@ import toLower from 'lodash/toLower'
 import uniqueId from 'lodash/uniqueId'
 import InfiniteLoading from 'vue-infinite-loading'
 
+import FilterSortByDropdown from '@/components/FilterSortByDropdown'
 import Hook from '@/components/Hook'
 import SearchFormControl from '@/components/SearchFormControl'
 import filters from '@/mixins/filters'
@@ -126,6 +128,7 @@ export default {
   name: 'FilterBoilerplate',
   mixins: [filters],
   components: {
+    FilterSortByDropdown,
     Hook,
     InfiniteLoading,
     SearchFormControl
@@ -134,7 +137,10 @@ export default {
     return {
       infiniteId: uniqueId(),
       collapseItems: this.collapsedIfNoValues && !this.hasValues(),
-      pages: []
+      pages: [],
+      sortBy: get(this, 'filter.sortBy', settings.filter.sortBy),
+      sortByOrder: get(this, 'filter.sortByOrder', settings.filter.sortByOrder),
+      sortByOptions: get(this, 'filter.sortByOptions', settings.filter.sortByOptions)
     }
   },
   watch: {
@@ -143,9 +149,15 @@ export default {
       this.aggregateWithThrottle({ clearPages: true })
     },
     collapseItems () {
-      if (!this.collapseItems) {
-        this.initialize()
-      }
+      this.initialize()
+    },
+    sortBy () {
+      this.$set(this, 'infiniteId', uniqueId())
+      this.aggregateWithThrottle({ clearPages: true })
+    },
+    sortByOrder () {
+      this.$set(this, 'infiniteId', uniqueId())
+      this.aggregateWithThrottle({ clearPages: true })
     }
   },
   mounted () {
@@ -252,7 +264,7 @@ export default {
       return this.offset + this.size
     },
     size () {
-      return settings.filterSize
+      return settings.filter.bucketSize
     },
     hasFilterQuery () {
       // The filter has a query if:
@@ -267,12 +279,15 @@ export default {
     },
     aggregationOptions () {
       // The "size" attribute must be as big as the number of displayed buckets
-      let options = { size: this.nextOffset }
+      let options = { size: this.nextOffset, order: this.order }
       // Merge the options object with the filter's query
       if (this.hasFilterQuery) {
         options = { ...options, include: this.aggregationInclude }
       }
       return options
+    },
+    order () {
+      return { [this.sortBy]: this.sortByOrder }
     }
   },
   methods: {

@@ -10,7 +10,7 @@
                  :model-query="modelQuery"
                  @add-filter-values="onAddedFilterValues"
                  hide-header
-                 hide-footer
+                 hide-show-more
                  v-bind="{ filter }"></component>
     </div>
   </div>

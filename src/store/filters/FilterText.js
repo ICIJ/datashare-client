@@ -16,6 +16,8 @@ export default class FilterText {
     this.alternativeSearch = alternativeSearch
     this.order = order
     this.fromElasticSearch = fromElasticSearch
+    this.sortBy = '_count'
+    this.sortByOrder = 'desc'
   }
 
   itemParam (item) {
@@ -46,7 +48,10 @@ export default class FilterText {
     return body
       .query('match', 'type', 'Document')
       .agg('terms', this.key, this.key, sub => {
-        return sub.agg('bucket_sort', { size, from }, 'bucket_truncate')
+        return sub.agg('bucket_sort', {
+          size,
+          from
+        }, 'bucket_truncate')
       }, options)
   }
 
