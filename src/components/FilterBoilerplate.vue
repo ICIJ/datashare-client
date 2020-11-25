@@ -306,9 +306,11 @@ export default {
        */
       this.$emit('async-search', this.filter, this.query)
     },
-    aggregateWithLoading (...args) {
+    async aggregateWithLoading (...args) {
       this.$wait.start(this.waitIdentifier)
-      return this.aggregate(...args)
+      const page = await this.aggregate(...args)
+      this.$wait.end(this.waitIdentifier)
+      return page
     },
     async aggregate ({ clearPages = false } = {}) {
       /**
@@ -317,7 +319,6 @@ export default {
       this.$emit('aggregate', this.filter)
       // Filter with `fromElasticSearch` set to false implement there own aggregation
       if (!this.fromElasticSearch) {
-        this.$wait.end(this.waitIdentifier)
         return false
       }
       const page = await this.$store.dispatch('search/queryFilter', {
@@ -330,7 +331,6 @@ export default {
         this.pages.splice(0, this.pages.length)
       }
       this.pages.push(page)
-      this.$wait.end(this.waitIdentifier)
       return page
     },
     async nextAggregate ($infiniteLoadingState) {
