@@ -60,6 +60,7 @@
 import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import identity from 'lodash/identity'
+import includes from 'lodash/includes'
 import noop from 'lodash/noop'
 import round from 'lodash/round'
 import uniqueId from 'lodash/uniqueId'
@@ -165,7 +166,16 @@ export default {
      */
     sortBy: {
       type: String,
-      default: 'contentLength'
+      default: 'contentLength',
+      validate: order => includes(['doc_count', '_key', 'contentLength'], order)
+    },
+    /**
+     * Order to sort by (asc or desc)
+     */
+    sortByOrder: {
+      type: String,
+      default: 'desc',
+      validate: order => includes(['asc', 'desc', 'contentLength'], order)
     }
   },
   components: {
@@ -215,7 +225,13 @@ export default {
       return this.offset + this.bucketsSize
     },
     bucketsSize () {
-      return 100
+      return 50
+    },
+    order () {
+      if (this.sortBy === 'doc_count') {
+        return
+      }
+      return { [this.sortBy]: this.sortByOrder }
     },
     pagesBuckets () {
       return this.pages.map(p => get(p, 'aggregations.byDirname.buckets', []))
@@ -233,7 +249,8 @@ export default {
       return {
         include: this.path + '/.*',
         exclude: this.path + '/.*/.*',
-        size: this.nextOffset
+        size: this.nextOffset,
+        order: this.order
       }
     },
     reachedTheEnd () {
@@ -279,10 +296,7 @@ export default {
             .agg('sum', 'contentLength', 'contentLength')
             .agg('bucket_sort', {
               size,
-              from,
-              sort: [
-                { [this.sortBy]: 'desc' }
-              ]
+              from
             }, 'bucket_truncate')
         })
         .agg('sum', 'contentLength', 'totalContentLength')
