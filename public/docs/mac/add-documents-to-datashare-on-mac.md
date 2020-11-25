@@ -19,11 +19,11 @@ description: >-
 
 ![](../.gitbook/assets/add-doc-mac.png)
 
-You can drag and drop it in 'Favorites' on the left of this window to allow quick access to it in the future.
+You can **drag and drop it in 'Favorites'** on the left of this window to allow quick access to it in the future.
 
 ![](../.gitbook/assets/screen-shot-2019-05-21-at-11.40.22-am.png)
 
-4. **Store the documents you want to have in Datashare in this folder**. 
+4. **Copy or place the documents you want to have in Datashare in this folder**. 
 
 5. Once documents are copied in the Datashare folder, **open Datashare**, which you will find in Applications \(see directions above in '[Open Datashare](https://icij.gitbook.io/datashare/mac/open-datashare-on-mac)'\).
 
@@ -33,5 +33,5 @@ You can drag and drop it in 'Favorites' on the left of this window to allow quic
 
 ![](../.gitbook/assets/analyze.png)
 
-You're now ready to [analyze your documents in Datashare](https://icij.gitbook.io/datashare/all/analyze-documents). 
+You can now [analyze your documents in Datashare](https://icij.gitbook.io/datashare/all/analyze-documents). 
 

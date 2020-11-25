@@ -1,10 +1,10 @@
 ---
-description: This will help you add plugins and extensions to local Datashare.
+description: It will help you locally add plugins and extensions to Datashare.
 ---
 
 # Add plugins and extensions
 
-**Plugins** are small programs that you can add to Datashare's **front-end** to get new features \(the front-end is "_the part of the software with which the user interacts directly_" - [source](https://languages.oup.com/)\).
+**Plugins** are small programs that you can add to Datashare's **front-end** to get new features \(the front-end is the interface, "_the part of the software with which the user interacts directly_" - [source](https://languages.oup.com/)\).
 
 **Extensions** are small programs that you can add to Datashare's **back-end** to add new features \(the back-end is "_the part of the software that is not directly accessed by the user, typically responsible for storing and manipulating data_" - [source](https://languages.oup.com/)\).
 

@@ -6,16 +6,14 @@ description: This will help you set up and install Datashare on your computer.
 
 You have **2 options:**
 
-* the simplest, if you have **any Mac**, is to use the **standard** option which installs Datashare without Docker.
+* the simplest, if you have **any Mac**, is to use the **standard** option which installs Datashare without Docker. [Make sure you install Homebrew before by following these steps.](https://icij.gitbook.io/datashare/mac/install-datashare-on-mac#standard-high-sierra-and-more-recent-versions)
 * if you have **OS X El Capitan 10.11** or a more recent version: you can use the version which installs Datashare with Docker; it is a more powerful version.
 
 
 
 ### Standard \(High Sierra and more recent versions\)
 
-Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. Go to **Applications** and put '**Datashare**' in the trash.
-
- 1. Let's first install Homebrew, which is needed for installing Tesseract OCR. Open your **Finder**:
+ 1. Let's first install **Homebrew**, which is needed for installing Tesseract OCR. Open your **Finder**:
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-16.55.39.png)
 
@@ -41,7 +39,7 @@ Before we start, please **uninstall any prior standard version of Datashare** if
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.10.26.png)
 
-6. **If you haven't already, go to this page**: [datashare.icij.org](https://datashare.icij.org), scroll down and click '**Download for free**'.
+6. **Go to this page**: [datashare.icij.org](https://datashare.icij.org), scroll down and click '**Download for free**'.
 
 ![](../.gitbook/assets/capture-de-cran-2020-09-24-a-09.59.47.png)
 
@@ -49,11 +47,11 @@ Before we start, please **uninstall any prior standard version of Datashare** if
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.34.40.png)
 
-8. You might see this window which says '"DatashareStandalone.pkg” can’t be opened because it was not downloaded from the App Store.'. Click '**Ok**'.
+8. You might see this window which says '"DatashareStandalone.pkg” can’t be opened because it was not downloaded from the App Store.' Click '**OK**'.
 
 ![](../.gitbook/assets/7%20%281%29.png)
 
-9. To open 'Dartashare.pkg', go to your Mac's **System Preferences**:
+9. Go to your Mac's **System Preferences**:
 
 ![](../.gitbook/assets/8%20%281%29.png)
 
@@ -67,7 +65,7 @@ Before we start, please **uninstall any prior standard version of Datashare** if
 
 12. Click '**Open**':
 
-![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.29.png)
+![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.29%20%281%29.png)
 
  
 
@@ -111,5 +109,5 @@ You need **OS X El Capitan 10.11 or a more recent version.**
 
 ![](../.gitbook/assets/capture-de-cran-2020-09-24-a-10.11.19.png)
 
- _\(Sept. 24th, 2020: The following steps are currently work in progress due to a technical issue\)_
+ 5. **Follow the steps** starting at point 7 [here](https://icij.gitbook.io/datashare/mac/install-datashare-on-mac#standard-high-sierra-and-more-recent-versions).
 

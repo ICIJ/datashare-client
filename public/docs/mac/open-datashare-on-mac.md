@@ -14,19 +14,15 @@ description: >-
 
 ![](../.gitbook/assets/screen-shot-2019-05-21-at-11.33.00-am.png)
 
-Keep this Terminal window open until Datashare opens. 
+**Keep this Terminal window open as long as you use Datashare.**
 
 3. **Datashare should now automatically open in your default internet browser.**  
   
 If it doesn’t, please type 'localhost:8080' in your browser.  
   
-Datashare **runs in your internet browser**, even though it will work offline with no internet connection. \(See FAQ: [Can I use Datashare with no internet connection?](https://icij.gitbook.io/datashare/faq/can-i-use-datashare-with-no-internet-connection)\)
+Datashare **runs in your internet browser**, even when it works offline with no internet connection. \(See FAQ: [Can I use Datashare with no internet connection?](https://icij.gitbook.io/datashare/faq/can-i-use-datashare-with-no-internet-connection)\)
 
 ![](../.gitbook/assets/screenshot-2019-08-13-at-10.21.55.png)
 
-3. You can now safely close the Terminal window called '**Datashare.command'** which describes the technical operations going on during the opening. 
-
-![](../.gitbook/assets/how-do-i-open-datashare_mac_term.png)
-
-It's now time to [add documents to Datashare](https://icij.gitbook.io/datashare/mac/add-documents-to-datashare-on-mac).
+You can now [add documents to Datashare](https://icij.gitbook.io/datashare/mac/add-documents-to-datashare-on-mac).
 
