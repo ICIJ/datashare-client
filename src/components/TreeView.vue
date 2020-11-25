@@ -281,7 +281,7 @@ export default {
               size,
               from,
               sort: [
-                { [this.sortBy]: { order: 'desc' } }
+                { [this.sortBy]: 'desc' }
               ]
             }, 'bucket_truncate')
         })
