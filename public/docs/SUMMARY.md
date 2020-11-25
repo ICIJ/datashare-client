@@ -33,6 +33,7 @@
 * [Tag documents](all/tag-documents.md)
 * [Recommend documents](all/recommend-documents.md)
 * [Use keyboard shortcuts](all/use-keyboard-shortcuts.md)
+* [Add plugins and extensions](all/plugins-and-extensions.md)
 
 ## FAQ
 
