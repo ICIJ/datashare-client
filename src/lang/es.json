@@ -57,7 +57,7 @@
       "entities": "nb entidades",
       "results": "1 archivo | %{total} archivos",
       "noResults": "No se han encontrado documentos",
-      "on": "el",
+      "on": "sobre",
       "perPage": "por página",
       "sortedByPath": "ordenado por ruta",
       "sort": {
@@ -629,7 +629,7 @@
       "duplicated": "* Los archivos duplicados no se indexan en Datashare para facilitar la búsqueda y evitar crear archivos innecesarios."
     },
     "treemap": {
-      "seeDocuments": "See documents in Datashare"
+      "seeDocuments": "Ver archivos en Datashare"
     }
   },
   "api": {
