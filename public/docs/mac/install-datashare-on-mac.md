@@ -1,5 +1,5 @@
 ---
-description: This will help you set up and install Datashare on your computer.
+description: It will help you set up and install Datashare on your computer.
 ---
 
 # Install Datashare on Mac

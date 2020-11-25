@@ -1,23 +1,23 @@
 ---
-description: Install Datashare will help you set up the software on your computer.
+description: It will help you set up the software on your computer.
 ---
 
 # Install Datashare on Windows
 
 You have **2 options:**
 
-* if you have **Windows 7 Service Pack 2 or newer version**: you can use the **standard** option which installs Datashare without Docker.
-* if you have **Windows 10 Pro**: you can use another option which installs Datashare with Docker; it is a more powerful version.
+* the easiest: if you have **Windows 7 Service Pack 2 or a newer version**: you can use the **standard** option which installs Datashare without Docker.
+* if you have **Windows 10 Pro and want a more powerful version**: you can use another option which installs Datashare with Docker.
 
 ### **Standard \(Windows 7 Service Pack 2 or newer version\)**
-
-You will need **Windows 7 Service Pack 2** or a newer version.
 
 Before we start, please **uninstall any prior standard version of Datashare** if you had already installed it. You can follow these steps: [https://www.laptopmag.com/articles/uninstall-programs-windows-10](https://www.laptopmag.com/articles/uninstall-programs-windows-10)
 
 1. Go to [datashare.icij.org](https://datashare.icij.org), scroll down and click '**Download for free**'.
 
- 2. The file '**InstallDatashareStandalone.exe**' was downloaded. **Double click** on the name of the file in order to execute it.
+![](../.gitbook/assets/capture-de-cran-2020-09-24-a-09.59.47%20%281%29.png)
+
+ 2. The file '**InstallDatashareStandalone.exe**' is now downloaded. **Double click** on the name of the file in order to execute it.
 
  3. As Datashare is not signed, this popup asks for your permission. Don't click 'Don't run' but **click** '**More info'**: 
 
@@ -88,7 +88,9 @@ When it is finished, click '**Close**':
 
 
 
-When you'll see the log '**Server started on port 8080**', you will be able to open your browser and go to the URL [http://localhost:8080](http://localhost:8080/).
+When you'll see the log '**Server started on port 8080**'.
+
+You can now [Open Datashare](https://icij.gitbook.io/datashare/windows/open-datashare-on-windows).
 
 ### **Version with Docker installer \(Windows 10 Pro\)**
 

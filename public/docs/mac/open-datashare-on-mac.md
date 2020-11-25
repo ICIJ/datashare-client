@@ -1,7 +1,7 @@
 ---
 description: >-
-  Open Datashare will help you find the application on your computer and run it
-  locally on your browser.
+  It will help you find the application on your computer and run it locally on
+  your browser.
 ---
 
 # Open Datashare
