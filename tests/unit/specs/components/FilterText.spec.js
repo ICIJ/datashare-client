@@ -29,6 +29,7 @@ describe('FilterText.vue', () => {
       store,
       wait,
       propsData: {
+        infiniteScroll: false,
         filter: find(store.getters['search/instantiatedFilters'], {
           name: 'contentType'
         })
@@ -43,7 +44,7 @@ describe('FilterText.vue', () => {
   afterAll(() => removeCookie(process.env.VUE_APP_DS_COOKIE_NAME))
 
   it('should display no items for the contentType filter', async () => {
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(0)
     expect(wrapper.vm.root.total).toBe(0)
@@ -61,7 +62,7 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_05', index)
       .withContentType('text/html')).commit()
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
     expect(wrapper.vm.root.total).toBe(5)
@@ -77,7 +78,7 @@ describe('FilterText.vue', () => {
 
     store.commit('search/setGlobalSearch', false)
     store.commit('search/setFilterValue', { name: 'language', value: 'ENGLISH' })
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
     expect(wrapper.vm.root.total).toBe(1)
@@ -99,7 +100,7 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_07', index)
       .withContentType('text/stylesheet')).commit()
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
     expect(wrapper.vm.root.total).toBe(7)
@@ -120,16 +121,17 @@ describe('FilterText.vue', () => {
       .withContent('LIST').withContentType('text/stylesheet')).commit()
 
     store.commit('search/query', 'SHOW')
-    await wrapper.vm.root.aggregate()
-    expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
+    store.commit('search/setGlobalSearch', true)
+    await wrapper.vm.root.aggregate({ clearPages: true })
     expect(wrapper.vm.root.total).toBe(6)
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
 
     store.commit('search/setGlobalSearch', false)
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
 
     store.commit('search/query', 'INDEX')
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
   })
 
@@ -141,20 +143,20 @@ describe('FilterText.vue', () => {
 
     store.commit('search/query', 'Lorem')
     store.commit('search/setGlobalSearch', true)
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
     expect(wrapper.vm.root.total).toBe(2)
 
     store.commit('search/setGlobalSearch', false)
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
 
     store.commit('search/setGlobalSearch', true)
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
   })
 
-  it('should display an item for inverted filter', async () => {
+  it('should display an item for excluded filter', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('text/javascript')).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
@@ -165,7 +167,7 @@ describe('FilterText.vue', () => {
     store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
     store.commit('search/excludeFilter', 'contentType')
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter--reversed .filter__items__item .filter__items__item__count').at(0).text()).toBe('2')
     expect(wrapper.vm.root.total).toBe(3)
@@ -183,9 +185,9 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_13', index)
       .withContentType('text/type_13')).commit()
 
-    wrapper.vm.root.filterQuery = 'text/type_0'
+    wrapper.vm.root.query = 'text/type_0'
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.vm.root.items).toHaveLength(3)
     expect(wrapper.vm.root.total).toBe(5)
@@ -205,9 +207,9 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_06', index)
       .withContentType('text/type_03')).commit()
 
-    wrapper.vm.root.filterQuery = 'yolo'
+    wrapper.vm.root.query = 'yolo'
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.vm.root.items).toHaveLength(0)
     expect(wrapper.vm.root.total).toBe(6)
@@ -219,9 +221,9 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_02', index)
       .withContentType('plain/text')).commit()
 
-    wrapper.vm.root.filterQuery = 'TEX'
+    wrapper.vm.root.query = 'TEX'
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.vm.root.items).toHaveLength(2)
     expect(wrapper.vm.root.total).toBe(2)
@@ -237,9 +239,9 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_04', index)
       .withContentType('image/emf')).commit()
 
-    wrapper.vm.root.filterQuery = 'image'
+    wrapper.vm.root.query = 'image'
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.vm.root.items).toHaveLength(2)
     expect(wrapper.vm.root.total).toBe(4)
@@ -253,9 +255,9 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_03', index)
       .withContentType('message/rfc822')).commit()
 
-    wrapper.vm.root.filterQuery = 'Internet'
+    wrapper.vm.root.query = 'Internet'
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.vm.root.items).toHaveLength(1)
     expect(wrapper.vm.root.items[0].doc_count).toBe(2)
@@ -270,9 +272,9 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_03', index)
       .withContentType('message/rfc822')).commit()
 
-    wrapper.vm.root.filterQuery = 'EMAIL'
+    wrapper.vm.root.query = 'EMAIL'
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.vm.root.items).toHaveLength(1)
     expect(wrapper.vm.root.items[0].doc_count).toBe(2)
@@ -284,10 +286,10 @@ describe('FilterText.vue', () => {
     const spyRefreshRoute = jest.spyOn(wrapper.vm.root, 'refreshRoute')
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('type_01')).commit()
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
     await wrapper.find('.filter__items__item:nth-child(1) input').trigger('click')
 
-    expect(wrapper.emitted('add-filter-values')).toHaveLength(1)
+    expect(wrapper.findComponent({ ref: 'filter' }).emitted('add-filter-values')).toHaveLength(1)
     expect(rootWrapper.emitted('filter::add-filter-values')).toHaveLength(1)
     expect(spyRefreshRoute).toBeCalledTimes(1)
   })
@@ -296,7 +298,7 @@ describe('FilterText.vue', () => {
     store.commit('search/from', 25)
     await letData(es).have(new IndexedDocument('document_01', index)
       .withContentType('type_01')).commit()
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
     await wrapper.find('.filter__items__item:nth-child(1) input').trigger('click')
 
     expect(store.state.search.from).toBe(0)
@@ -309,13 +311,13 @@ describe('FilterText.vue', () => {
       .withContentType('text/html')).commit()
     await letData(es).have(new IndexedDocument('document_03', anotherIndex)
       .withContentType('text/javascript')).commit()
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
     expect(wrapper.vm.root.total).toBe(2)
 
     store.commit('search/index', anotherIndex)
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
     expect(wrapper.vm.root.total).toBe(1)
@@ -327,7 +329,7 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_02', index)
       .withContentType('type_02')).commit()
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__all')).toHaveLength(1)
     expect(wrapper.find('.filter__items__all .filter__items__item__label').text()).toBe('All')
@@ -353,11 +355,11 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_06', index)
       .withContentType('type_03')).commit()
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
     await wrapper.find('.filter__items__item:nth-child(2) input').trigger('click')
     await wrapper.find('.filter__items__all input').trigger('click')
 
-    expect(wrapper.emitted('add-filter-values')).toHaveLength(2)
+    expect(wrapper.findComponent({ ref: 'filter' }).emitted('add-filter-values')).toHaveLength(2)
     expect(rootWrapper.emitted('filter::add-filter-values')).toHaveLength(2)
     expect(spyRefreshRoute).toBeCalled()
     expect(spyRefreshRoute).toBeCalledTimes(2)
@@ -376,7 +378,7 @@ describe('FilterText.vue', () => {
     })
     await letData(es).have(new IndexedDocument('document_01', index)
       .withLanguage('ENGLISH')).commit()
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
     expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('Anglais')
@@ -394,7 +396,7 @@ describe('FilterText.vue', () => {
     })
     await letData(es).have(new IndexedDocument('document_01', index)
       .withLanguage('WELSH')).commit()
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
     expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('Gallois')
@@ -406,7 +408,7 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
       .withParent('document_01')).commit()
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
     expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('File on disk')
@@ -426,7 +428,7 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)
       .withParent('document_01')).commit()
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
     expect(wrapper.findAll('.filter__items__item .filter__items__item__label').at(0).text()).toBe('Fichier sur le disque')
@@ -450,63 +452,11 @@ describe('FilterText.vue', () => {
     await letData(es).have(new IndexedDocument('document_03', index)
       .withTags(['tag_03'])).commit()
 
-    await wrapper.vm.root.aggregate()
+    await wrapper.vm.root.aggregate({ clearPages: true })
     expect(wrapper.vm.root.items).toHaveLength(3)
     wrapper.vm.root.collapseItems = false
     await wrapper.vm.$nextTick()
     await wrapper.vm.$root.$emit('filter::delete', 'tags', { label: 'tag_01' })
     expect(wrapper.vm.root.items).toHaveLength(2)
-  })
-
-  describe('about the show more button', () => {
-    it('should not display the more button if less than 8 items in the filter', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index)
-        .withContentType('text/type_01')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index)
-        .withContentType('text/type_02')).commit()
-
-      await wrapper.vm.root.aggregate()
-
-      expect(wrapper.findAll('.filter__items__display > span')).toHaveLength(0)
-    })
-
-    it('should display the more button if more than 8 items in the filter', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index)
-        .withContentType('text/type_01')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index)
-        .withContentType('text/type_02')).commit()
-      await letData(es).have(new IndexedDocument('document_03', index)
-        .withContentType('text/type_03')).commit()
-      await letData(es).have(new IndexedDocument('document_04', index)
-        .withContentType('text/type_04')).commit()
-      await letData(es).have(new IndexedDocument('document_05', index)
-        .withContentType('text/type_05')).commit()
-      await letData(es).have(new IndexedDocument('document_06', index)
-        .withContentType('text/type_06')).commit()
-      await letData(es).have(new IndexedDocument('document_07', index)
-        .withContentType('text/type_07')).commit()
-      await letData(es).have(new IndexedDocument('document_08', index)
-        .withContentType('text/type_08')).commit()
-      await letData(es).have(new IndexedDocument('document_09', index)
-        .withContentType('text/type_09')).commit()
-
-      await wrapper.vm.root.aggregate()
-
-      expect(wrapper.findAll('.filter__items__display > span')).toHaveLength(1)
-    })
-
-    it('should not display the more button if less than 8 items in the filter after filtering', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index)
-        .withContentType('text/type_01')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index)
-        .withContentType('text/type_02')).commit()
-      await letData(es).have(new IndexedDocument('document_03', index)
-        .withContentType('text/type_03')).commit()
-
-      wrapper.vm.root.filterQuery = 'text/type_03'
-      await wrapper.vm.root.aggregate()
-
-      expect(wrapper.findAll('.filter__items__display > span')).toHaveLength(0)
-    })
   })
 })

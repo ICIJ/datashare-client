@@ -68,7 +68,7 @@ describe('FilterDateRange.vue', () => {
     expect(existingFilter.values).toEqual([expectedStart, expectedEnd])
   })
 
-  it('should reset selectedDate on event "reset-filter-values"', () => {
+  it.only('should reset selectedDate on event "reset-filter-values"', () => {
     const start = new Date('2018-08-19')
     const end = new Date('2018-08-20')
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start, end })
@@ -82,7 +82,7 @@ describe('FilterDateRange.vue', () => {
     store.commit('search/setFilterValue', { name, value: [new Date('2018-01-01').getTime(), new Date('2018-12-31').getTime()] })
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start: new Date('2019-08-19'), end: new Date('2019-08-22') })
 
-    wrapper.vm.selectedValuesFromStore()
+    wrapper.vm.setSelectedValuesFromStore()
     wrapper.vm.$emit('selected-values-from-store')
 
     expect(wrapper.vm.selectedDate).toEqual({ start: new Date('2018-01-01'), end: new Date('2018-12-31') })

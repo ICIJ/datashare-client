@@ -94,7 +94,7 @@ describe('FilterYesNo.vue', () => {
     expect(wrapper.vm.starredDocuments).toEqual(['document'])
   })
 
-  it('should hide the "Show more" button', async () => {
+  it('should hide the "Expand" button', async () => {
     await letData(es).have(new IndexedDocument('doc_04', index)).commit()
 
     await wrapper.vm.root.aggregate()
@@ -123,6 +123,6 @@ describe('FilterYesNo.vue', () => {
     store.commit('search/addFilterValue', { name: 'starred', value: true })
     wrapper.vm.root.collapseItems = false
 
-    expect(wrapper.findAll('.filter__header__invert')).toHaveLength(0)
+    expect(wrapper.findAll('.filter__footer__action--invert')).toHaveLength(0)
   })
 })

@@ -187,7 +187,7 @@ export default {
     waitForAnswer: 700,
     requestTimeout: 60000
   },
-  filterSize: 8,
+  filterSize: 25,
   helpLink: 'https://github.com/ICIJ/datashare/wiki/Datashare-Support',
   faqLink: 'https://icij.gitbook.io/datashare/faq/table-of-contents',
   userGuidesLink: 'https://icij.gitbook.io/datashare/',

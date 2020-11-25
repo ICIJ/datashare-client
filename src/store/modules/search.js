@@ -351,7 +351,9 @@ export const actions = {
       getters.instantiatedFilters,
       state.globalSearch,
       params.options,
-      getters.getFields()
+      getters.getFields(),
+      params.from,
+      params.size
     ).then(raw => new EsDocList(raw))
   },
   setFilterValue ({ commit, dispatch }, filter) {

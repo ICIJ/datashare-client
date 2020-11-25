@@ -1,9 +1,17 @@
 <template>
-  <div class="filter card" :class="{ 'filter--reversed': isReversed(), 'filter--hide-show-more': hideShowMore, 'filter--hide-search': hideSearch, 'filter--hide-header': hideHeader, 'filter--has-values': hasValues() }">
+  <div class="filter card"
+      :class="{
+        'filter--reversed': isReversed(),
+        'filter--hide-show-more': hideShowMore,
+        'filter--hide-search': hideSearch,
+        'filter--hide-header': hideHeader,
+        'filter--has-values': hasValues(),
+        'filter--dark': dark
+      }">
     <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }"></hook>
     <slot name="header" v-if="!hideHeader">
-      <div class="card-header px-2 d-flex filter__header">
-        <h6 @click="toggleItems" class="flex-fill flex-shrink-1 text-truncate pt-0">
+      <div class="card-header px-2 d-flex filter__header" @click="toggleItems">
+        <h6 class="flex-fill flex-shrink-1 text-truncate pt-0">
           <span class="filter__items__item__icon pl-0 pr-1" v-if="filter.icon">
             <fa :icon="filter.icon" fixed-width></fa>
           </span>
@@ -13,30 +21,24 @@
             </slot>
           </template>
         </h6>
-        <span v-if="hasValues() && !collapseItems && !hideExclude && isReady">
-          <button class="d-inline-flex btn btn-sm btn-outline-light py-0 mr-2 btn-group filter__header__invert" @click="invert" :class="{ 'active': isReversed() }">
-            <fa icon="eye-slash" class="mr-1 mt-1"></fa>
-            {{ $t('filter.invert') }}
-          </button>
-        </span>
-        <fa v-if="isReady" :icon="headerIcon" @click="toggleItems" class="float-right"></fa>
-        <fa v-else icon="circle-notch" spin class="float-right"></fa>
+        <fa v-if="isReady" :icon="headerIcon" class="float-right filter__header__icon" />
+        <fa v-else icon="circle-notch" spin class="float-right" />
       </div>
     </slot>
     <hook :name="`filter.${filter.name}.header:after`" :bind="{ filter }"></hook>
-    <transition name="slide">
-      <div class="list-group list-group-flush filter__items" v-show="isReady && !collapseItems">
-        <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: filterQuery }"></hook>
-        <slot name="search" v-if="!hideSearch">
-          <form @submit.prevent="asyncFilterSearch" v-if="filter.isSearchable">
-            <label class="list-group filter__items__search py-2 px-2">
-              <input v-model="filterQuery" type="search" :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'" class="pl-1">
-              <fa icon="search" class="float-right"></fa>
-            </label>
-          </form>
+    <b-collapse :visible="showResults">
+      <div class="list-group list-group-flush filter__items">
+        <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }"></hook>
+        <slot name="search" v-if="!hideSearch && filter.isSearchable">
+          <search-form-control
+            class="filter__items__search"
+            v-model="query"
+            @submit="openFilterSearch"
+            :rounded="false"
+            :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'" />
         </slot>
-        <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: filterQuery }"></hook>
-        <slot name="items" v-if="showReultsItems" :items="items" :options="options" :selected="selected" :total-count="totalCount" :filterQuery="filterQuery">
+        <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
+        <slot name="items" :items="items" :options="options" :selected="selected" :total-count="totalCount" :query="query">
           <b-form-checkbox v-model="isAllSelected" @change.native="resetFilterValues" class="filter__items__all mb-0">
             <slot name="all">
               <span class="d-flex">
@@ -44,7 +46,7 @@
                   {{ labelToHuman('all') }}
                 </span>
                 <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
-                  {{ $n(calculatedCount) }}
+                  {{ $n(total) }}
                 </span>
               </span>
             </slot>
@@ -68,11 +70,6 @@
             </b-form-checkbox-group>
           </slot>
         </slot>
-        <div class="list-group-item filter__items__display border-top-0" @click="asyncFilterSearch" v-if="shouldDisplayShowMoreAction()">
-          <span>
-            {{ $t('filter.showMore') }}
-          </span>
-        </div>
         <template v-if="fromElasticSearch">
           <div v-if="noResults" class="p-2 text-center text-muted">
             {{ $t('filter.none') }}
@@ -81,25 +78,44 @@
             <span v-html="$t('filter.noMatches')"></span>
           </div>
         </template>
+        <infinite-loading @infinite="nextAggregate" :identifier="infiniteId" v-if="useInfiniteScroll">
+          <span slot="spinner" />
+          <span slot="no-more" />
+          <span slot="no-results" />
+        </infinite-loading>
       </div>
-    </transition>
+      <div class="filter__footer d-flex" v-if="!hideFooter">
+        <button @click="invert" v-if="!hideExclude" class="filter__footer__action filter__footer__action--invert btn btn-link btn-sm ml-auto" :class="{ 'active': isReversed() }">
+          <fa :icon="isReversed() ? 'eye-slash' : 'eye'" fixed-width class="mr-1"></fa>
+          {{ $t('filter.invert') }}
+        </button>
+        <button @click="openFilterSearch" v-if="shouldDisplayShowMore" class="filter__footer__action filter__footer__action--expand btn btn-link btn-sm">
+          <fa icon="expand-alt" fixed-width class="mr-1" />
+          {{ $t('filter.showMore') }}
+        </button>
+      </div>
+    </b-collapse>
   </div>
 </template>
 
 <script>
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
-import each from 'lodash/each'
-import find from 'lodash/find'
+import flatten from 'lodash/flatten'
 import findIndex from 'lodash/findIndex'
 import get from 'lodash/get'
-import join from 'lodash/join'
+import noop from 'lodash/noop'
+import setWith from 'lodash/setWith'
 import sumBy from 'lodash/sumBy'
 import throttle from 'lodash/throttle'
 import toLower from 'lodash/toLower'
+import uniqueId from 'lodash/uniqueId'
+import InfiniteLoading from 'vue-infinite-loading'
 
-import filters from '@/mixins/filters'
 import Hook from '@/components/Hook'
+import SearchFormControl from '@/components/SearchFormControl'
+import filters from '@/mixins/filters'
+import settings from '@/utils/settings'
 
 /**
  * A base component to wrap other filter components. Not intended to be used directly.
@@ -110,20 +126,21 @@ export default {
   name: 'FilterBoilerplate',
   mixins: [filters],
   components: {
-    Hook
+    Hook,
+    InfiniteLoading,
+    SearchFormControl
   },
   data () {
     return {
-      collapseItems: !this.asyncItems,
-      filterQuery: '',
-      isInitialized: !!this.asyncItems,
-      moreToDisplay: false,
-      results: []
+      infiniteId: uniqueId(),
+      collapseItems: this.collapsedIfNoValues && !this.hasValues(),
+      pages: []
     }
   },
   watch: {
-    filterQuery () {
-      this.searchWithThrottle()
+    query () {
+      this.$set(this, 'infiniteId', uniqueId())
+      this.aggregateWithThrottle({ clearPages: true })
     },
     collapseItems () {
       if (!this.collapseItems) {
@@ -132,38 +149,83 @@ export default {
     }
   },
   mounted () {
-    // Default collapse state depends of the selected values
-    this.collapseItems = !this.asyncItems && !this.hasValues()
     // Listen for event to refresh the filter
     this.$root.$on('filter::refresh', filterName => {
-      if (this.isInitialized && this.filter.name === filterName) {
-        this.aggregateWithLoading()
-      }
+      this.aggregateWithLoading()
     })
+    // Listen for deletion of a filter value
     this.$root.$on('filter::delete', (filterName, { label: key }) => {
-      if (this.isInitialized && this.filter.name === filterName) {
-        const item = find(this.items, { key })
-        if (item && item.doc_count === 1) {
-          this.items.splice(findIndex(this.items, { key }), 1)
-        } else if (item) {
-          item.doc_count--
-        }
+      // No need to update this filter when it doesn't match
+      // with the event's filter
+      if (this.filter.name !== filterName) {
+        return
       }
+      // Collects all indexes of the deleted item in the components loaded pages
+      const itemIndexes = this.pages.map(page => {
+        return findIndex(this.getPageItems(page), { key })
+      })
+      // Iterate on the list of indexes for each page
+      itemIndexes.forEach((itemIndex, pageIndex) => {
+        // The item wasn't found in this page
+        if (itemIndex === -1) {
+          return
+        }
+        // Get the item object merge pageIndex, with this.pageItemsPath and
+        // itemIndex. The value of this.pageItemsPath is an array so it needs
+        // to be deconstructed into another array to merge it with the two indexes
+        const item = get(this.pages, [pageIndex, ...this.pageItemsPath, itemIndex])
+        // The item still have more than one occurence, we just need to
+        // update the doc count
+        if (item.doc_count > 1) {
+          item.doc_count--
+        // The item as only one occurence, meaning it must be
+        // deleted from the page's items.
+        } else {
+          get(this.pages, [pageIndex, ...this.pageItemsPath]).splice(itemIndex, 1)
+        }
+      })
     })
+    // Initialize the filter for the first time
     this.initialize()
   },
   computed: {
     items () {
-      return this.asyncItems || get(this.results, this.resultPath, [])
+      return flatten(this.pages.map(this.getPageItems))
+    },
+    itemsWithExcludedValues () {
+      const pages = concat([this.excludedItemsPage], this.pages)
+      return flatten(pages.map(this.getPageItems))
+    },
+    lastPage () {
+      return this.pages[this.pages.length - 1]
+    },
+    lastPageItems () {
+      return get(this.lastPage, this.pageItemsPath, [])
+    },
+    excludedItemsPage () {
+      if (!this.isGlobal && this.filterFromStore && this.filterFromStore.reverse) {
+        const values = this.filterFromStore.values.map(key => ({ key, doc_count: 0 }))
+        return setWith({}, this.pageItemsPath.join('.'), values, Object)
+      }
+      return []
     },
     calculatedCount () {
-      return this.asyncTotalCount || this.totalCount
+      return this.totalCount || 0
+    },
+    totalCount () {
+      return sumBy(this.items, 'doc_count')
+    },
+    total () {
+      return get(this, 'lastPage.total', 0)
     },
     headerIcon () {
       return this.collapseItems ? 'plus' : 'minus'
     },
-    showReultsItems () {
-      return this.isReady && (this.items.length > 0 || !this.fromElasticSearch)
+    showResults () {
+      return (this.isReady || this.offset > 0) && !this.collapseItems
+    },
+    shouldDisplayShowMore () {
+      return !this.hideShowMore
     },
     hasResults () {
       return this.isReady && this.items.length > 0
@@ -174,83 +236,115 @@ export default {
     noMatches () {
       return this.isReady && this.items.length === 0
     },
-    fromElasticSearch () {
-      return this.filter && this.filter.fromElasticSearch
+    useInfiniteScroll () {
+      return this.infiniteScroll && this.offset > 0 && this.items.length >= this.size
     },
-    searchWithThrottle () {
-      return throttle(this.aggregate, 400)
+    fromElasticSearch () {
+      return get(this, 'filter.fromElasticSearch', false)
+    },
+    aggregateWithThrottle () {
+      return throttle(this.aggregateWithLoading, 700)
+    },
+    offset () {
+      return get(this, 'items.length', 0)
+    },
+    nextOffset () {
+      return this.offset + this.size
+    },
+    size () {
+      return settings.filterSize
+    },
+    hasFilterQuery () {
+      // The filter has a query if:
+      //   * it is searchable
+      //   * the query is not empty
+      //   * it has an "alternativeSearch" function to generate query tokens
+      return this.filter.isSearchable && this.query !== '' && this.filter.alternativeSearch
+    },
+    aggregationInclude () {
+      const alternativeSearch = compact(this.filter.alternativeSearch(toLower(this.query)))
+      return '.*(' + concat(alternativeSearch, this.queryTokens).join('|') + ').*'
+    },
+    aggregationOptions () {
+      // The "size" attribute must be as big as the number of displayed buckets
+      let options = { size: this.nextOffset }
+      // Merge the options object with the filter's query
+      if (this.hasFilterQuery) {
+        options = { ...options, include: this.aggregationInclude }
+      }
+      return options
     }
   },
   methods: {
     initialize () {
-      if (!this.isInitialized && !this.collapseItems) {
+      if (!this.collapseItems && this.offset === 0) {
         // Are we using an "offline" components?
-        if (!this.asyncItems) {
-          this.aggregateWithLoading()
-          // Watch change on the filter store the restart aggregation
-          this.$store.watch(this.watchedForUpdate, this.aggregateWithLoading, { deep: true })
-        }
-        this.$set(this, 'isInitialized', true)
+        this.aggregateWithLoading()
+        // This watcher on the store is very important: watchedForUpdate is a
+        // method that returns values that should trigger a refresh on the
+        // filter.
+        //
+        // When filters are not "contextualized", only the current
+        // project will be returned in the list of watched values.
+        //
+        // When they are contextualized, every filter with selected values will
+        // be present in the list of watched values.
+        this.$store.watch(this.watchedForUpdate, () => {
+          // It's important to clear pages to ensure the filter is loading
+          // pages from the start and not adding new pages.
+          this.aggregateWithLoading({ clearPages: true })
+        }, { deep: true })
       }
     },
-    asyncFilterSearch () {
+    openFilterSearch () {
       /**
        * Triggered at the root level when user starts to search in the filter values.
        */
-      this.$root.$emit('filter::async-search', this.filter, this.filterQuery)
+      this.$root.$emit('filter::async-search', this.filter, this.query)
       /**
        * Triggered when user starts to search in the filter values.
        */
-      this.$emit('async-search', this.filter, this.filterQuery)
+      this.$emit('async-search', this.filter, this.query)
     },
-    aggregateWithLoading () {
-      this.$wait.start(`items for ${this.filter.name}`)
-      return this.aggregate()
+    aggregateWithLoading (...args) {
+      this.$wait.start(this.waitIdentifier)
+      return this.aggregate(...args)
     },
-    async aggregate () {
+    async aggregate ({ clearPages = false } = {}) {
       /**
        * Triggered when a filter received instruction to be load data
        */
       this.$emit('aggregate', this.filter)
       // Filter with `fromElasticSearch` set to false implement there own aggregation
       if (!this.fromElasticSearch) {
-        this.$wait.end(`items for ${this.filter.name}`)
+        this.$wait.end(this.waitIdentifier)
         return false
       }
-      const size = this.size
-      const prefix = this.filter.prefix ? this.$config.get('dataDir') + '/' : ''
-      const alternativeSearch = this.filterQuery !== '' && this.filter.alternativeSearch ? compact(this.filter.alternativeSearch(toLower(this.filterQuery))) : []
-      const queryTokens = compact(concat(alternativeSearch, this.queryTokens))
-      const include = prefix + `.*(${queryTokens.join('|')}).*`
-      const options = this.filter.isSearchable && queryTokens.length ? { size, include } : { size }
-      let res
-      try {
-        res = await this.$store.dispatch('search/queryFilter', { name: this.filter.name, options })
-      } catch (_) {
-        res = {}
+      const page = await this.$store.dispatch('search/queryFilter', {
+        name: this.filter.name,
+        size: this.size,
+        from: clearPages ? 0 : this.offset,
+        options: this.aggregationOptions
+      })
+      if (clearPages) {
+        this.pages.splice(0, this.pages.length)
       }
-      this.$set(this, 'total', res.total)
-      const sumOtherDocCount = get(res, ['aggregations', this.filter.key, 'sum_other_doc_count'], 0)
-      const sumDocCount = sumBy(get(res, this.resultPath, []), 'doc_count')
-      this.$set(this, 'totalCount', sumOtherDocCount + sumDocCount)
-      this.$set(this, 'results', this.addInvertedFilters(res))
-      this.$set(this, 'moreToDisplay', sumOtherDocCount > 0)
-      this.$wait.end(`items for ${this.filter.name}`)
-      return this.results
+      this.pages.push(page)
+      this.$wait.end(this.waitIdentifier)
+      return page
     },
-    addInvertedFilters (response) {
-      if (!this.isGlobal && this.filterFilter && this.filterFilter.reverse) {
-        each(this.filterFilter.values, key => {
-          response.prepend(join(this.resultPath, '.'), { key })
-        })
-      }
-      return response
+    async nextAggregate ($infiniteLoadingState) {
+      await this.aggregateWithLoading()
+      // Did we reach the end?
+      const method = this.lastPageItems.length < this.size ? 'complete' : 'loaded'
+      // Call the right method (with "noop" as safety net in case the method can't be found)
+      return get($infiniteLoadingState, method, noop)()
     },
     toggleItems () {
       this.collapseItems = !this.collapseItems
     },
-    shouldDisplayShowMoreAction () {
-      return !this.hideShowMore && this.moreToDisplay
+    getPageItems (page) {
+      return get(page, this.pageItemsPath, [])
     }
   }
 }
@@ -264,10 +358,8 @@ export default {
     }
 
     &__header {
-
-      &__invert.btn {
-        position: relative;
-        top: -0.3rem;
+      &__icon {
+        cursor: pointer;
       }
     }
 
@@ -301,35 +393,66 @@ export default {
     }
 
     &__items {
-      max-height: 500px;
+      max-height: 300px;
+      overflow: auto;
+      font-size: 0.8rem;
+
+      .list-group-item {
+        color: inherit;
+        background: inherit;
+      }
 
       &__all + .list-group-item:empty {
         margin-bottom: $spacer * 0.5;
-      }
-
-      &.slide-enter-active, &.slide-leave-active {
-        transition: .3s max-height;
-        overflow: hidden;
-      }
-
-      &.slide-enter, &.slide-leave-to {
-        max-height: 0;
       }
 
       &__item .custom-checkbox {
         margin-bottom: 0;
       }
 
-      & &__search {
+      &__search {
         margin: 0 0.5rem;
       }
 
+      .filter--dark &__search {
+        color: $light;
+
+        .search-form-control__input,
+        .search-form-control__addon__submit:last-of-type {
+          color: inherit;
+          background: #000;
+        }
+
+        .search-form-control__input:not(:focus),
+        .search-form-control__addon__submit:last-of-type {
+          border-color: #000;
+        }
+      }
+
       & &__display {
+        cursor: pointer;
         margin: 0;
         padding: 0 2.25rem 0.5rem;
         text-align: center;
         font-size: 0.8rem;
         font-weight: bolder;
+      }
+    }
+
+    &__footer {
+
+      .filter--has-values & {
+        background: $tertiary;
+        color: #000;
+      }
+
+      &__action {
+        color: inherit;
+        padding: 0.25rem 0.5rem;
+
+        &:hover, &:active {
+          color: inherit;
+        }
       }
     }
   }

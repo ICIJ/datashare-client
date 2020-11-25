@@ -58,7 +58,8 @@ export default [
       name: 'creationDate',
       key: 'metadata.tika_metadata_creation_date',
       icon: 'calendar-alt',
-      order: 50
+      order: 50,
+      fromElasticSearch: false
     }
   },
   {

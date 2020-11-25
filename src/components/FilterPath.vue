@@ -51,7 +51,7 @@ export default {
     },
     selectedPaths: {
       get () {
-        return this.filterFilter.values
+        return this.filterFromStore.values
       },
       set (key) {
         this.setValue({ key })

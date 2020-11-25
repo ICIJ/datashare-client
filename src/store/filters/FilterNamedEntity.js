@@ -63,7 +63,7 @@ export default class FilterNamedEntity extends FilterType {
     )
   }
 
-  body (body, options) {
+  body (body, options, from = 0, size = 8) {
     return body
       .query('term', 'type', 'NamedEntity')
       .filter('term', 'isHidden', 'false')
@@ -74,6 +74,7 @@ export default class FilterNamedEntity extends FilterType {
         ...options
       }, sub => {
         return sub
+          .agg('bucket_sort', { size, from }, 'bucket_truncate')
           .agg('cardinality', 'join#Document', 'byDocs')
           .agg('terms', 'category', 'byCategories',
             sub => sub.agg('cardinality', 'join#Document', 'byDocs'))

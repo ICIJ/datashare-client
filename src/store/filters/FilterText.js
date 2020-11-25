@@ -42,8 +42,12 @@ export default class FilterText {
     return body.notFilter('terms', this.key, param.values)
   }
 
-  body (body, options) {
-    return body.query('match', 'type', 'Document').agg('terms', this.key, this.key, options)
+  body (body, options, from = 0, size = 8) {
+    return body
+      .query('match', 'type', 'Document')
+      .agg('terms', this.key, this.key, sub => {
+        return sub.agg('bucket_sort', { size, from }, 'bucket_truncate')
+      }, options)
   }
 
   addFilter (body) {
@@ -69,7 +73,10 @@ export default class FilterText {
   }
 
   isNamedEntityAggregation (body) {
-    return some(['"must":{"term":{"type":"NamedEntity"}}', '"must":[{"term":{"type":"NamedEntity"}}'], str => includes(JSON.stringify(body.build()), str))
+    return some([
+      '"must":{"term":{"type":"NamedEntity"}}',
+      '"must":[{"term":{"type":"NamedEntity"}}'
+    ], str => includes(JSON.stringify(body.build()), str))
   }
 
   applyTo (body) {

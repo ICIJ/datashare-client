@@ -4,11 +4,11 @@ import flatten from 'lodash/flatten'
 import get from 'lodash/get'
 import last from 'lodash/last'
 import map from 'lodash/map'
+import noop from 'lodash/noop'
 import pick from 'lodash/pick'
 import reduce from 'lodash/reduce'
 
 import utils from '@/mixins/utils'
-import settings from '@/utils/settings'
 
 export default {
   mixins: [utils],
@@ -32,64 +32,98 @@ export default {
       type: Boolean,
       default: false
     },
-    asyncItems: {
-      type: Array,
-      default: null
+    hideFooter: {
+      type: Boolean,
+      default: false
     },
-    asyncTotal: {
-      type: Number,
-      default: 0
+    showResultsBeforeReady: {
+      type: Boolean,
+      default: false
     },
-    asyncTotalCount: {
-      type: Number,
-      default: 0
+    /**
+     * Search query on the filter
+     */
+    modelQuery: {
+      type: String,
+      default: ''
+    },
+    /**
+     * Etheir or not the items should be collapsed when no values are selected
+     */
+    collapsedIfNoValues: {
+      type: Boolean,
+      default: true
+    },
+    /**
+     * Either or not results should be loaded on scroll
+     */
+    infiniteScroll: {
+      type: Boolean,
+      default: true
+    },
+    /**
+     * Display the filter on dark background
+     */
+    dark: {
+      type: Boolean,
+      default: true
     }
   },
   data () {
     return {
-      offset: 0,
-      pageSize: settings.filterSize,
-      total: 0,
-      totalCount: 0,
-      selected: [],
-      isAllSelected: true
+      selected: get(this, `$store.state.search.values.${this.filter.name}`, []),
+      isAllSelected: true,
+      query: this.modelQuery,
+      mounted: false
     }
   },
-  mounted () {
-    this.selectedValuesFromStore()
-    if (this.root.$on) {
-      this.root.$on('add-filter-values', value => this.$emit('add-filter-values', value))
+  watch: {
+    modelQuery () {
+      this.query = this.modelQuery
+    },
+    query () {
+      if (this.query !== this.modelQuery) {
+        this.$emit('update:modelQuery', this.query)
+      }
     }
+  },
+  async mounted () {
+    await this.$nextTick()
+    this.mounted = true
+    this.bindOnRoot('add-filter-values', value => this.$emit('add-filter-values', value))
     this.$root.$on('filter::search::update', filterName => {
       if (this.filter && this.filter.name === filterName) {
-        this.selectedValuesFromStore()
+        this.setSelectedValuesFromStore()
       }
     })
   },
   computed: {
     root () {
-      return get(this, '$refs.filter', {})
+      return this.mounted ? get(this, '$refs.filter', {}) : {}
+    },
+    waitIdentifier () {
+      return `items for ${this.filter.name} on ${this.$options.name}`
     },
     isReady () {
-      return !this.$wait.is('items for ' + this.filter.name)
+      return !this.$wait.is(this.waitIdentifier)
     },
     isGlobal () {
       return this.$store.state.search.globalSearch
     },
-    filterFilter () {
+    filterFromStore () {
       return this.$store.getters['search/getFilter']({ name: this.filter.name })
     },
-    size () {
-      return this.offset + this.pageSize
+    selectedValuesFromStore () {
+      return get(this, `$store.state.search.values.${this.filter.name}`, [])
     },
-    resultPath () {
+    pageItemsPath () {
       return ['aggregations', this.filter.key, 'buckets']
     },
     queryTokens () {
-      return [escapeRegExp(this.filterQuery.toLowerCase())]
+      return [escapeRegExp(this.query.toLowerCase())]
     },
     options () {
-      return map(this.items, item => {
+      return map(this.itemsWithExcludedValues, item => {
         return {
           item,
           value: item.key,
@@ -99,6 +133,13 @@ export default {
     }
   },
   methods: {
+    async bindOnRoot (...args) {
+      if (!this.mounted) {
+        await this.$nextTick()
+      }
+      // Bind the function with safety net in case no "root" is mounted yet
+      get(this, 'root.$on', noop).call(this, ...args)
+    },
     refreshRouteAndSearch () {
       this.refreshRoute()
       this.refreshSearch()
@@ -136,11 +177,6 @@ export default {
       this.$store.commit('search/setFilterValue', this.filter.itemParam(item))
       this.refreshRouteAndSearch()
     },
-    toggleValue (item) {
-      this.hasValue(item) ? this.removeValue(item) : this.addValue(item)
-      this.isAllSelected = !this.$store.getters['search/hasFilterValues'](this.filter.name)
-      this.$emit('add-filter-values', this.filter, this.selected.selected)
-    },
     invert () {
       this.$store.commit('search/toggleFilter', this.filter.name)
       this.refreshRouteAndSearch()
@@ -151,13 +187,14 @@ export default {
     isReversed () {
       return this.$store.getters['search/isFilterReversed'](this.filter.name)
     },
-    watchedForUpdate (state) {
-      if (!state.search.globalSearch) {
+    watchedForUpdate () {
+      const { search } = this.$store.state
+      if (!search.globalSearch) {
         // This will allow to watch change on the search only when
         // the aggregation is not global (ie. relative to the search).
-        return pick(state.search, ['index', 'query', 'values'])
+        return pick(search, ['index', 'query', 'values'])
       } else {
-        return pick(state.search, ['index'])
+        return pick(search, ['index'])
       }
     },
     labelToHuman (label) {
@@ -174,12 +211,10 @@ export default {
     translationKeyToHuman (label = '') {
       return last(String(label).split('.'))
     },
-    selectedValuesFromStore () {
-      if (this.filter) {
-        this.$set(this, 'selected', this.$store.state.search.values[this.filter.name] || [])
-        this.isAllSelected = this.selected.length === 0
-        this.$emit('selected-values-from-store')
-      }
+    setSelectedValuesFromStore () {
+      this.selected = this.selectedValuesFromStore
+      this.isAllSelected = this.selected.length === 0
+      this.$emit('selected-values-from-store')
     },
     resetFilterValues (refresh = true) {
       this.$set(this, 'isAllSelected', true)

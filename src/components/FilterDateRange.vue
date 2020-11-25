@@ -1,5 +1,8 @@
 <template>
-  <filter-boilerplate v-bind="$props" hide-show-more ref="filter">
+  <filter-boilerplate ref="filter"
+                      v-bind="$props"
+                      hide-show-more
+                      @reset-filter-values="reset">
     <template #items>
       <div class="m-2">
         <vc-date-picker
@@ -61,8 +64,7 @@ export default {
       return this.$i18n.locale
     }
   },
-  mounted () {
-    this.root.$on('reset-filter-values', this.reset)
+  async mounted () {
     this.$on('selected-values-from-store', this.updateFromStore)
     this.updateFromStore()
   },

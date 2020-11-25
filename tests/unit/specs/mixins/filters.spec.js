@@ -32,10 +32,10 @@ describe('filters mixin', () => {
     })
 
     it('should refresh the filter on "filter::search::update" event emitted', () => {
-      jest.spyOn(wrapper.vm, 'selectedValuesFromStore')
+      jest.spyOn(wrapper.vm, 'setSelectedValuesFromStore')
       wrapper.vm.$root.$emit('filter::search::update', 'creationDate')
 
-      expect(wrapper.vm.selectedValuesFromStore).toBeCalledTimes(1)
+      expect(wrapper.vm.setSelectedValuesFromStore).toBeCalledTimes(1)
     })
 
     it('should refresh the route', () => {
@@ -46,11 +46,10 @@ describe('filters mixin', () => {
       expect(router.push).toBeCalled()
     })
 
-    it('should emit an event "selected-values-from-store" on selectedValuesFromStore', () => {
+    it('should emit an event "selected-values-from-store" on setSelectedValuesFromStore', async () => {
       wrapper = shallowMount(FilterBoilerplate, { localVue, i18n, router, store, wait, mixins: [filters], propsData: { filter } })
-      wrapper.vm.selectedValuesFromStore()
-
-      expect(wrapper.emitted('selected-values-from-store')).toHaveLength(2)
+      wrapper.vm.setSelectedValuesFromStore()
+      expect(wrapper.emitted('selected-values-from-store')).toHaveLength(1)
     })
   })
 

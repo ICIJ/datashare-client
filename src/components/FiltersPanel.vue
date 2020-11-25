@@ -31,15 +31,16 @@
       <hook name="filters-panel.filters:after" />
       <hook name="filters-panel:after" />
     </div>
-    <b-modal hide-footer lazy ref="asyncFilterSearch" :title="selectedFilter ? $t('filter.' + selectedFilter.name) : null">
-      <filter-search :filter="selectedFilter" :query="filterQuery" />
+    <b-modal hide-footer lazy ref="openFilterSearch" :title="expandedFilter ? $t('filter.' + expandedFilter.name) : null">
+      <filter-search v-if="expandedFilter" :filter="expandedFilter" :model-query="query" />
     </b-modal>
   </div>
 </template>
 
 <script>
-import forEach from 'lodash/forEach'
+import get from 'lodash/get'
 import isArray from 'lodash/isArray'
+import noop from 'lodash/noop'
 import { mapState } from 'vuex'
 
 import FilterDate from '@/components/FilterDate'
@@ -71,16 +72,16 @@ export default {
     Hook
   },
   mounted () {
-    this.$root.$on('filter::async-search', this.asyncFilterSearch)
+    this.$root.$on('filter::async-search', this.openFilterSearch)
     this.$root.$on('filter::add-filter-values', this.setFilterValue)
-    this.$root.$on('filter::search::reset-filters', refresh => this.resetFilterValues(refresh))
+    this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
     this.$root.$on('index::delete::all', this.refreshEachFilter)
     this.$root.$on('filter::search::add-filter-values', this.updateFilterSelectedValues)
   },
   data () {
     return {
-      selectedFilter: null,
-      filterQuery: null
+      expandedFilter: null,
+      query: null
     }
   },
   computed: {
@@ -102,41 +103,44 @@ export default {
     }
   },
   methods: {
-    asyncFilterSearch (selectedFilter, filterQuery) {
-      if (this.$refs.asyncFilterSearch) {
-        this.$set(this, 'selectedFilter', selectedFilter)
-        this.$set(this, 'filterQuery', filterQuery)
-        this.$refs.asyncFilterSearch.show()
+    openFilterSearch (expandedFilter, query) {
+      if (this.$refs.openFilterSearch) {
+        this.$set(this, 'expandedFilter', expandedFilter)
+        this.$set(this, 'query', query)
+        this.$refs.openFilterSearch.show()
       }
     },
     setFilterValue ({ name }, value) {
       this.$store.commit('search/setFilterValue', { name, value })
     },
-    updateFilterSelectedValues (component) {
-      const filter = this.$refs[component.name][0]
-      if (filter) {
-        filter.root.selectedValuesFromStore()
-        filter.selectedValuesFromStore()
-      }
+    updateFilterSelectedValues ({ component }) {
+      // Call the "setSelectedValuesFromStore" on the filter component and
+      // its parent (in root) which is usualy "FilterBoilerplate"
+      ['root.setSelectedValuesFromStore', 'setSelectedValuesFromStore'].forEach(fn => {
+        get(this, ['$refs', component.name, 0, fn], noop)()
+      })
+    },
+    hideFilters () {
+      this.$store.commit('search/toggleFilters')
+    },
+    isFilterComponent (component) {
+      return isArray(component) && !!get(component, '0.root', false)
     },
     resetFilterValues (refresh = true) {
-      forEach(this.$refs, component => {
-        if (isArray(component) && component[0] && component[0].root) {
+      Object.values(this.$refs).forEach(component => {
+        if (this.isFilterComponent(component)) {
           const filter = component[0]
-          filter.root.filterQuery = ''
-          filter.root.resetFilterValues(refresh)
+          filter.root.query = ''
+          filter.resetFilterValues(refresh)
           if (filter.resetNamedEntityValues) {
             filter.resetNamedEntityValues()
           }
         }
       })
     },
-    hideFilters () {
-      this.$store.commit('search/toggleFilters')
-    },
     refreshEachFilter () {
-      forEach(this.$refs, component => {
-        if (isArray(component) && component[0] && component[0].root) {
+      Object.values(this.$refs).forEach(component => {
+        if (this.isFilterComponent(component)) {
           component[0].root.aggregateWithLoading()
         }
       })
@@ -177,6 +181,7 @@ export default {
         margin: $spacer 0 0 $spacer;
         border-width: 0;
         background: $card-bg;
+        color: $panel-color;
 
         .card-header {
           position: sticky;
@@ -203,43 +208,6 @@ export default {
           font-size: 0.8rem;
           color: $panel-color;
           padding:0;
-        }
-
-        .list-group-item {
-          background: $card-bg;
-        }
-
-        & > .list-group {
-
-          .filter__items {
-
-            &__search {
-              display: flex;
-              flex-direction: row;
-              position: relative;
-              background: darken($card-bg, 5);
-              border: 0;
-
-              > input {
-                color: $panel-color;
-                border: none;
-                width: 90%;
-                background: transparent;
-              }
-
-              > svg {
-                margin: auto;
-              }
-            }
-
-            &__display {
-              cursor: pointer;
-            }
-
-            &__item {
-              background: inherit;
-            }
-          }
         }
       }
     }

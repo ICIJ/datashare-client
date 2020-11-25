@@ -18,17 +18,13 @@
 </template>
 
 <script>
-import map from 'lodash/map'
-
 import ProjectSelector from '@/components/ProjectSelector'
-import filters from '@/mixins/filters'
 
 /**
  * A Filter component to list projects.
  */
 export default {
   name: 'FilterProject',
-  mixins: [filters],
   components: {
     ProjectSelector
   },
@@ -57,7 +53,7 @@ export default {
   async created () {
     const defaultProjects = [this.$config.get('defaultProject')]
     const projects = this.$config.get('datashare_projects', defaultProjects)
-    this.$set(this, 'projects', map(projects, value => ({ value, text: value })))
+    this.$set(this, 'projects', projects)
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')
     await this.$store.dispatch('search/getRecommendationsByProject')
@@ -75,6 +71,18 @@ export default {
     },
     toggleItems () {
       this.collapseItems = !this.collapseItems
+    },
+    refreshRouteAndSearch () {
+      this.refreshRoute()
+      this.refreshSearch()
+    },
+    refreshRoute () {
+      const name = 'search'
+      const query = this.$store.getters['search/toRouteQuery']()
+      this.$router.push({ name, query }).catch(() => {})
+    },
+    refreshSearch () {
+      this.$store.dispatch('search/query')
     }
   }
 }

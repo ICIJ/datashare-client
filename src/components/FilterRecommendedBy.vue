@@ -1,5 +1,10 @@
 <template>
-  <filter-boilerplate v-bind="$props" ref="filter">
+  <filter-boilerplate ref="filter"
+                      v-bind="propsWithout('hide-show-more')"
+                      hide-show-more
+                      hide-exclude
+                      :infinite-scroll="false"
+                      @reset-filter-values="resetFilterValues">
     <template #all>
       <span class="d-flex">
         <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
@@ -49,7 +54,7 @@ export default {
   computed: {
     ...mapState('search', ['recommendedByUsers', 'recommendedByTotal']),
     sampleRecommendedByUsers () {
-      return this.asyncItems ? this.recommendedByUsers : slice(this.recommendedByUsers, 0, settings.filterSize)
+      return slice(this.recommendedByUsers, 0, settings.filterSize)
     }
   },
   filters: {
@@ -57,15 +62,20 @@ export default {
   },
   async mounted () {
     await this.$store.dispatch('search/getRecommendationsByProject')
-    if (this.root && this.root.moreToDisplay) {
-      this.$set(this.root, 'moreToDisplay', this.recommendedByUsers.length > settings.filterSize)
-    }
     if (this.root && this.root.results) {
-      this.$set(this.root, 'results', { aggregations: { _id: { buckets: this.recommendedByUsers } } })
+      this.$set(this.root, 'results', {
+        aggregations: {
+          _id: {
+            buckets: this.recommendedByUsers
+          }
+        }
+      })
     }
-    this.root.$on('reset-filter-values', (_, refresh) => this.selectUsers([], refresh))
   },
   methods: {
+    resetFilterValues (_, refresh) {
+      return this.selectUsers([], refresh)
+    },
     async selectUsers (users = [], refresh = true) {
       await this.$store.dispatch('search/getDocumentsRecommendedBy', users)
       this.$set(this, 'selected', users)

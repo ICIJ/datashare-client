@@ -80,10 +80,10 @@ export function datasharePlugin (Client, config, components) {
       )
   }
 
-  Client.prototype.searchFilter = function (index, filter, query = '*', filters = [], isGlobalSearch = false, options = {}, fields = []) {
+  Client.prototype.searchFilter = function (index, filter, query = '*', filters = [], isGlobalSearch = false, options = {}, fields = [], from = 0, size = 8) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
-    let body = filter.body(bodybuilder(), options)
+    let body = filter.body(bodybuilder(), options, from, size)
     if (!isGlobalSearch) {
       each(filters, filter => filter.addFilter(body))
       this.addQueryToFilter(query, body, fields)

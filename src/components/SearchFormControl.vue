@@ -50,6 +50,13 @@ export default {
     autofocus: {
       type: Boolean,
       default: true
+    },
+    /**
+     * Round the border of the input
+     */
+    rounded: {
+      type: Boolean,
+      default: true
     }
   },
   computed: {
@@ -57,7 +64,8 @@ export default {
       return {
         'search-form-control--fill-submit': this.fillSubmit,
         'search-form-control--show-submit-label': this.showSubmitLabel,
-        'search-form-control--no-icon': this.noIcon
+        'search-form-control--no-icon': this.noIcon,
+        'search-form-control--rounded': this.rounded
       }
     }
   }
@@ -84,11 +92,6 @@ export default {
   .search-form-control {
     position: relative;
 
-    & &__input {
-      border-bottom-left-radius: $rounded-pill;
-      border-top-left-radius: $rounded-pill;
-    }
-
     &__input:focus {
       border-right: 0;
       box-shadow: none;
@@ -100,12 +103,21 @@ export default {
 
     &__input:focus + &__addon:after {
       box-shadow: $input-focus-box-shadow;
+      border-radius: $input-border-radius;
+    }
+
+    &--rounded &__input {
+      border-bottom-left-radius: $rounded-pill;
+      border-top-left-radius: $rounded-pill;
+    }
+
+    &--rounded &__input:focus + &__addon:after {
+      border-radius: $rounded-pill;
     }
 
     &__addon {
 
       &:after {
-        border-radius: $rounded-pill;
         bottom: 0;
         box-shadow: 0 0 0 $input-btn-focus-width transparent;
         content: "";
@@ -120,11 +132,20 @@ export default {
 
       & &__submit:last-of-type {
         background: $input-bg;
-        border-bottom-right-radius: $rounded-pill;
         border-color: $input-border-color;
         border-left: 0;
-        border-top-right-radius: $rounded-pill;
         transition: $input-transition;
+      }
+    }
+
+    &--rounded &__addon {
+      &:after {
+        border-radius: $rounded-pill;
+      }
+
+      &__submit:last-of-type {
+        border-bottom-right-radius: $rounded-pill;
+        border-top-right-radius: $rounded-pill;
       }
     }
 

@@ -1,4 +1,5 @@
 import find from 'lodash/find'
+import range from 'lodash/range'
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
@@ -87,25 +88,16 @@ describe('FilterRecommendedBy.vue', () => {
     expect(wrapper.vm.root.isAllSelected).toBeTruthy()
   })
 
-  it('should limit displayed users to 8', async () => {
+  it('should limit displayed users to 25', async () => {
     axios.request.mockResolvedValue({
       data: {
-        aggregates: [
-          { item: { id: 'user_01' }, doc_count: 1 },
-          { item: { id: 'user_02' }, doc_count: 1 },
-          { item: { id: 'user_03' }, doc_count: 1 },
-          { item: { id: 'user_04' }, doc_count: 1 },
-          { item: { id: 'user_05' }, doc_count: 1 },
-          { item: { id: 'user_06' }, doc_count: 1 },
-          { item: { id: 'user_07' }, doc_count: 1 },
-          { item: { id: 'user_08' }, doc_count: 1 },
-          { item: { id: 'user_09' }, doc_count: 1 },
-          { item: { id: 'user_10' }, doc_count: 1 }
-        ]
+        aggregates: range(30).map(idx => {
+          return { item: { id: `user_${idx}` }, doc_count: 1 }
+        })
       }
     })
     await store.dispatch('search/getRecommendationsByProject')
 
-    expect(wrapper.findAll('.filter__items__item')).toHaveLength(8)
+    expect(wrapper.findAll('.filter__items__item')).toHaveLength(25)
   })
 })

@@ -189,7 +189,9 @@ export default {
     updateScrollBars () {
       const refs = [this.$refs.searchBodyScrollbar]
       compact(refs).map(ref => {
-        if (ref && ref.ps) return ref.ps.update()
+        if (ref && ref.ps) {
+          return ref.ps.update()
+        }
       })
     }
   }

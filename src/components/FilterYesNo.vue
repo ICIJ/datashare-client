@@ -1,5 +1,10 @@
 <template>
-  <filter-boilerplate v-bind="propsWithout('hide-show-more')" hide-show-more hide-exclude ref="filter">
+  <filter-boilerplate ref="filter"
+                      v-bind="propsWithout('hide-show-more')"
+                      hide-show-more
+                      hide-exclude
+                      :infinite-scroll="false"
+                      @reset-filter-values="resetFilterValues">
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="changeYesNoValue">
         <b-form-checkbox v-for="{ value, html } in options" :value="value" class="filter__items__item" :key="value">
@@ -46,17 +51,19 @@ export default {
             ${this.labelToHuman('filter.notStarred')}
           </span>
           <span class="filter__items__item__count badge badge-pill badge-light float-right my-1">
-            ${this.$n(this.root.calculatedCount - this.starredDocuments.length)}
+            ${this.$n(this.root.total - this.starredDocuments.length)}
           </span>
         `
       }]
     }
   },
-  mounted () {
+  async mounted () {
     this.$store.dispatch('search/getStarredDocuments')
-    this.root.$on('reset-filter-values', (_, refresh) => this.changeYesNoValue([], refresh))
   },
   methods: {
+    resetFilterValues (_, refresh) {
+      return this.changeYesNoValue([], refresh)
+    },
     changeYesNoValue (item = [], refresh = true) {
       switch (item.length) {
         case 0:
