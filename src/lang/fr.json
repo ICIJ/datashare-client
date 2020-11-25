@@ -57,7 +57,7 @@
       "entities": "nb entités",
       "results": "1 document | %{total} documents",
       "noResults": "Aucun document",
-      "on": "le",
+      "on": "sur",
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
       "sort": {
@@ -629,7 +629,7 @@
       "duplicated": "* Les documents dupliqués ne sont pas indexés dans Datashare pour faciliter la recherche et éviter de créer des documents inutiles."
     },
     "treemap": {
-      "seeDocuments": "See documents in Datashare"
+      "seeDocuments": "Voir les documents dans Datashare"
     }
   },
   "api": {
