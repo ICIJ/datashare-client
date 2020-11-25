@@ -1,23 +1,18 @@
 <template>
-  <filter-boilerplate v-bind="$props" ref="filter" @aggregate="generateKey">
+  <filter-boilerplate v-bind="$props" ref="filter">
     <template #items>
-      <vue-perfect-scrollbar class="filter__path__scrollbar" :key="key" v-if="key">
+      <div class="filter__path__scrollbar">
         <tree-view :project="project" v-model="path" :selectedPaths.sync="selectedPaths" :pre-body-build="preBodyBuild" selectable count no-bars compact />
-      </vue-perfect-scrollbar>
+      </div>
     </template>
   </filter-boilerplate>
 </template>
 
 <script>
-import uniqueId from 'lodash/uniqueId'
-import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-
 import elasticsearch from '@/api/elasticsearch'
 import FilterBoilerplate from '@/components/FilterBoilerplate'
 import TreeView from '@/components/TreeView'
 import filters from '@/mixins/filters'
-
-const FILTER_PATH_KEY_PREFIX = 'filter-path-'
 
 /**
  * A Filter component to list unique directory paths.
@@ -27,8 +22,7 @@ export default {
   mixins: [filters],
   components: {
     FilterBoilerplate,
-    TreeView,
-    VuePerfectScrollbar
+    TreeView
   },
   data () {
     return {
@@ -73,9 +67,6 @@ export default {
         elasticsearch.addQueryToFilter(this.$store.state.search.query || '*', body)
       }
       return body
-    },
-    generateKey () {
-      this.key = uniqueId(FILTER_PATH_KEY_PREFIX)
     }
   }
 }

@@ -45,6 +45,11 @@
               {{ $t('widget.noFolders') }}
             </li>
           </ul>
+          <infinite-loading @infinite="nextLoadData" v-if="useInfiniteScroll" :identifier="infiniteScrollId">
+            <span slot="spinner" />
+            <span slot="no-more" />
+            <span slot="no-results" />
+          </infinite-loading>
         </b-form-checkbox-group>
       </div>
     </v-wait>
@@ -52,11 +57,16 @@
 </template>
 
 <script>
+import flatten from 'lodash/flatten'
+import get from 'lodash/get'
 import identity from 'lodash/identity'
+import noop from 'lodash/noop'
 import round from 'lodash/round'
+import uniqueId from 'lodash/uniqueId'
 import bodybuilder from 'bodybuilder'
 import { basename } from 'path'
 import { waitFor } from 'vue-wait'
+import InfiniteLoading from 'vue-infinite-loading'
 
 import elasticsearch from '@/api/elasticsearch'
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
@@ -136,54 +146,101 @@ export default {
       type: Boolean,
       default: false
     },
+    /**
+     * Function to apply to the elasticsearch body before it's build
+     */
     preBodyBuild: {
       type: Function,
       default: identity
+    },
+    /**
+     * Either or not results should be loaded on scroll
+     */
+    infiniteScroll: {
+      type: Boolean,
+      default: true
+    },
+    /**
+     * Key to sort the directories
+     */
+    sortBy: {
+      type: String,
+      default: 'contentLength'
     }
   },
   components: {
+    InfiniteLoading,
     TreeBreadcrumb
   },
   data () {
     return {
-      directories: [],
-      hits: 0,
+      pages: [],
       selected: [],
-      total: -1
+      infiniteScrollId: uniqueId()
     }
   },
   async created () {
     this.$set(this, 'selected', this.selectedPaths)
-    Object.assign(this, await this.loadData())
+    await this.loadDataWithSpinner({ clearPages: true })
   },
   watch: {
     async path () {
-      Object.assign(this, await this.loadData())
+      await this.loadDataWithSpinner({ clearPages: true })
+      this.$set(this, 'infiniteScrollId', uniqueId())
     },
     selectedPaths () {
       this.$set(this, 'selected', this.selectedPaths)
+    },
+    directories () {
+      /**
+       * Called when more directories are loaded
+       */
+      this.$emit('update:directories', this.directories)
     }
   },
   filters: {
     basename
   },
   computed: {
-    sumOptions () {
+    lastPage () {
+      return this.pages[this.pages.length - 1]
+    },
+    lastPageDirectories () {
+      return get(this.lastPage, 'aggregations.byDirname.buckets', [])
+    },
+    offset () {
+      return get(this, 'directories.length', 0)
+    },
+    nextOffset () {
+      return this.offset + this.bucketsSize
+    },
+    bucketsSize () {
+      return 100
+    },
+    pagesBuckets () {
+      return this.pages.map(p => get(p, 'aggregations.byDirname.buckets', []))
+    },
+    directories () {
+      return flatten(this.pagesBuckets)
+    },
+    hits () {
+      return get(this, 'lastPage.hits.total', 0)
+    },
+    total () {
+      return get(this, 'lastPage.aggregations.totalContentLength.value', -1)
+    },
+    aggregationOptions () {
       return {
         include: this.path + '/.*',
         exclude: this.path + '/.*/.*',
-        order: { contentLength: 'desc' },
-        size: 1000
+        size: this.nextOffset
       }
     },
-    bodybuilderBase () {
-      return bodybuilder()
-        .size(0)
-        .andQuery('match', 'type', 'Document')
-        .andQuery('match', 'extractionLevel', 0)
-        .andFilter('term', 'dirname.tree', this.path)
-        .agg('terms', 'dirname.tree', this.sumOptions, 'byDirname', b => b.agg('sum', 'contentLength', 'contentLength'))
-        .aggregation('sum', 'contentLength', 'totalContentLength')
+    reachedTheEnd () {
+      return this.lastPageDirectories.length < this.bucketsSize
+    },
+    useInfiniteScroll () {
+      return this.infiniteScroll && this.offset > 0 && !this.reachedTheEnd
     }
   },
   methods: {
@@ -211,18 +268,49 @@ export default {
         return '0%'
       }
     },
-    loadData: waitFor('loading tree view data', async function () {
-      const body = this.preBodyBuild(this.bodybuilderBase).build()
-      const res = await elasticsearch.search({ index: this.project, body, size: 0 })
-      const directories = res?.aggregations?.byDirname?.buckets || []
-      const hits = res?.hits?.total || 0
-      const total = res?.aggregations?.totalContentLength?.value || 0
-      /**
-       * Called when directories are loaded
-       */
-      this.$emit('update:directories', directories)
-      return { directories, hits, total }
-    })
+    bodybuilderBase ({ from = 0, size = 100 } = {}) {
+      return bodybuilder()
+        .size(0)
+        .andQuery('match', 'type', 'Document')
+        .andQuery('match', 'extractionLevel', 0)
+        .andFilter('term', 'dirname.tree', this.path)
+        .agg('terms', 'dirname.tree', this.aggregationOptions, 'byDirname', b => {
+          return b
+            .agg('sum', 'contentLength', 'contentLength')
+            .agg('bucket_sort', {
+              size,
+              from,
+              sort: [
+                { [this.sortBy]: { order: 'desc' } }
+              ]
+            }, 'bucket_truncate')
+        })
+        .agg('sum', 'contentLength', 'totalContentLength')
+    },
+    async nextLoadData ($infiniteLoadingState) {
+      await this.loadData()
+      // Did we reach the end?
+      const method = this.reachedTheEnd ? 'complete' : 'loaded'
+      // Call the right method (with "noop" as safety net in case the method can't be found)
+      return get($infiniteLoadingState, method, noop)()
+    },
+    loadDataWithSpinner: waitFor('loading tree view data', function (...args) {
+      return this.loadData(...args)
+    }),
+    async loadData ({ clearPages = false } = {}) {
+      const index = this.project
+      const from = clearPages ? 0 : this.offset
+      const size = this.bucketsSize
+      const body = this.preBodyBuild(this.bodybuilderBase({ from, size })).build()
+      const res = await elasticsearch.search({ index, body, size: 0 })
+      // Clear the list of pages (to start over!)
+      if (clearPages) this.clearPages()
+      // Add the result as a page
+      this.pages.push(res)
+    },
+    clearPages () {
+      return this.pages.splice(0, this.pages.length)
+    }
   }
 }
 </script>

@@ -7,7 +7,13 @@ jest.mock('@/api/elasticsearch')
 
 describe('TreeView.vue', () => {
   const { config, i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-  const propsData = { path: '/home/foo', selectedPaths: ['path_01', 'path_02'], size: true, count: true }
+  const propsData = {
+    path: '/home/foo',
+    selectedPaths: ['path_01', 'path_02'],
+    size: true,
+    count: true,
+    infiniteScroll: false
+  }
   let wrapper = null
 
   beforeAll(() => config.set('dataDir', '/home/foo'))
@@ -24,12 +30,24 @@ describe('TreeView.vue', () => {
 
   it('should display 2 directories', async () => {
     await wrapper.setData({
-      directories: [
-        { key: 'bar', contentLength: { value: 1024 } },
-        { key: 'baz', contentLength: { value: 1024 } }
-      ],
-      hits: 10,
-      total: 2048
+      pages: [
+        {
+          hits: {
+            total: 10
+          },
+          aggregations: {
+            byDirname: {
+              buckets: [
+                { key: 'bar', contentLength: { value: 1024 } },
+                { key: 'baz', contentLength: { value: 1024 } }
+              ]
+            },
+            totalContentLength: {
+              value: 2048
+            }
+          }
+        }
+      ]
     })
 
     expect(wrapper.find('.tree-view__header__hits').exists()).toBeTruthy()
@@ -46,9 +64,23 @@ describe('TreeView.vue', () => {
       selectable: true
     })
     await wrapper.setData({
-      directories: [
-        { key: 'bar', contentLength: { value: 1024 } },
-        { key: 'baz', contentLength: { value: 1024 } }
+      pages: [
+        {
+          hits: {
+            total: 10
+          },
+          aggregations: {
+            byDirname: {
+              buckets: [
+                { key: 'bar', contentLength: { value: 1024 } },
+                { key: 'baz', contentLength: { value: 1024 } }
+              ]
+            },
+            totalContentLength: {
+              value: 2048
+            }
+          }
+        }
       ]
     })
     expect(wrapper.findAll('b-form-checkbox-stub')).toHaveLength(2)
@@ -59,9 +91,17 @@ describe('TreeView.vue', () => {
       selectable: false
     })
     await wrapper.setData({
-      directories: [
-        { key: 'bar', contentLength: { value: 1024 } },
-        { key: 'baz', contentLength: { value: 1024 } }
+      pages: [
+        {
+          aggregations: {
+            byDirname: {
+              buckets: [
+                { key: 'bar', contentLength: { value: 1024 } },
+                { key: 'baz', contentLength: { value: 1024 } }
+              ]
+            }
+          }
+        }
       ]
     })
     expect(wrapper.findAll('b-form-checkbox-stub')).toHaveLength(0)
