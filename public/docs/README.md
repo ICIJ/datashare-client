@@ -26,6 +26,7 @@ Next steps
 * [Tag documents](https://icij.gitbook.io/datashare/all/tag-documents)
 * [Recommend documents](https://icij.gitbook.io/datashare/all/recommend-documents)
 * [Use keyboard shortcuts](https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts)
+* [Add plugins and extensions](https://icij.gitbook.io/datashare/all/plugins-and-extensions)
 
 Frequently Asked Questions - **General**
 
