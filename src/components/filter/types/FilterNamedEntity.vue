@@ -34,8 +34,8 @@
 
 <script>
 import Api from '@/api'
+import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
-import filters from '@/mixins/filters'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 
@@ -46,10 +46,11 @@ const api = new Api()
  */
 export default {
   name: 'FilterNamedEntity',
+  extends: FilterAbstract,
   components: {
     FilterBoilerplate
   },
-  mixins: [filters, ner, utils],
+  mixins: [ner, utils],
   methods: {
     async deleteNamedEntitiesByMentionNorm (mentionNorm) {
       await api.deleteNamedEntitiesByMentionNorm(this.$store.state.search.index, mentionNorm)

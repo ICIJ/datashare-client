@@ -1,7 +1,7 @@
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import { Core } from '@/core'
-import FilterSortByDropdown from '@/components/filter/types/FilterSortByDropdown'
+import FilterSortByDropdown from '@/components/filter/FilterSortByDropdown'
 
 const { localVue, i18n } = Core.init(createLocalVue()).useAll()
 

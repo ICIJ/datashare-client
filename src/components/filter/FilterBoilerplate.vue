@@ -113,7 +113,7 @@ import toLower from 'lodash/toLower'
 import uniqueId from 'lodash/uniqueId'
 import InfiniteLoading from 'vue-infinite-loading'
 
-import FilterSortByDropdown from '@/components/filter/types/FilterSortByDropdown'
+import FilterSortByDropdown from '@/components/filter/FilterSortByDropdown'
 import Hook from '@/components/Hook'
 import SearchFormControl from '@/components/SearchFormControl'
 import filters from '@/mixins/filters'

@@ -19,8 +19,8 @@
 <script>
 import { mapState } from 'vuex'
 
+import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
-import filters from '@/mixins/filters'
 import utils from '@/mixins/utils'
 
 /**
@@ -28,10 +28,11 @@ import utils from '@/mixins/utils'
  */
 export default {
   name: 'FilterYesNo',
+  extends: FilterAbstract,
   components: {
     FilterBoilerplate
   },
-  mixins: [filters, utils],
+  mixins: [utils],
   computed: {
     ...mapState('search', ['starredDocuments']),
     options () {

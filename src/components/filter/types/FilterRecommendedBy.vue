@@ -37,9 +37,9 @@
 import slice from 'lodash/slice'
 import { mapState } from 'vuex'
 
+import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import displayUser from '@/filters/displayUser'
-import filters from '@/mixins/filters'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
@@ -48,10 +48,11 @@ import settings from '@/utils/settings'
  */
 export default {
   name: 'FilterRecommendedBy',
+  extends: FilterAbstract,
   components: {
     FilterBoilerplate
   },
-  mixins: [filters, utils],
+  mixins: [utils],
   computed: {
     ...mapState('search', ['recommendedByUsers', 'recommendedByTotal']),
     sampleRecommendedByUsers () {

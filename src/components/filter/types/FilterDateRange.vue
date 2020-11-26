@@ -28,8 +28,9 @@
 </template>
 
 <script>
-import filters from '@/mixins/filters'
+import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
+
 import max from 'lodash/max'
 import min from 'lodash/min'
 
@@ -38,10 +39,10 @@ import min from 'lodash/min'
  */
 export default {
   name: 'FilterDateRange',
+  extends: FilterAbstract,
   components: {
     FilterBoilerplate
   },
-  mixins: [filters],
   data () {
     return {
       totalCount: 0,

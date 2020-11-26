@@ -19,16 +19,16 @@
 
 <script>
 import elasticsearch from '@/api/elasticsearch'
+import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import TreeView from '@/components/TreeView'
-import filters from '@/mixins/filters'
 
 /**
  * A Filter component to list unique directory paths.
  */
 export default {
   name: 'FilterPath',
-  mixins: [filters],
+  extends: FilterAbstract,
   components: {
     FilterBoilerplate,
     TreeView

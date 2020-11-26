@@ -3,7 +3,7 @@ import toLower from 'lodash/toLower'
 import '@testing-library/jest-dom'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import FilterSearch from '@/components/filter/types/FilterSearch'
+import FilterSearch from '@/components/filter/FilterSearch'
 import FilterText from '@/components/filter/types/FilterText'
 
 import { Core } from '@/core'
