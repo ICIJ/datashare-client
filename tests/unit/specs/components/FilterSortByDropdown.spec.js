@@ -24,14 +24,14 @@ describe('FilterSortByDropdown', () => {
     const wrapper = mount(FilterSortByDropdown, { localVue, i18n, propsData })
     expect(wrapper.vm.sortBy).toBe('_count')
     expect(wrapper.vm.sortByOrder).toBe('desc')
-    expect(wrapper.find('.dropdown-item.active').text()).toBe('Occurences (decreasing)')
+    expect(wrapper.find('.dropdown-item.active').text()).toBe('Occurrences (decreasing)')
   })
 
   it('should switch "_count" and "asc" order', async () => {
     const wrapper = mount(FilterSortByDropdown, { localVue, i18n, propsData })
     wrapper.setProps({ sortBy: '_count', sortByOrder: 'asc' })
     await wrapper.vm.$nextTick()
-    expect(wrapper.find('.dropdown-item.active').text()).toBe('Occurences (increasing)')
+    expect(wrapper.find('.dropdown-item.active').text()).toBe('Occurrences (increasing)')
   })
 
   it('should emit update:sortBy and update:sortByOrder when clicking on a new option', async () => {
