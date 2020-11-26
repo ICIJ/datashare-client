@@ -5,7 +5,7 @@ import VueRouter from 'vue-router'
 
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import FilterDateRange from '@/components/FilterDateRange'
+import FilterDateRange from '@/components/filter/types/FilterDateRange'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()

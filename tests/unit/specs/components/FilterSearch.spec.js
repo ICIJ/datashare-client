@@ -3,8 +3,8 @@ import toLower from 'lodash/toLower'
 import '@testing-library/jest-dom'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import FilterSearch from '@/components/FilterSearch'
-import FilterText from '@/components/FilterText'
+import FilterSearch from '@/components/filter/types/FilterSearch'
+import FilterText from '@/components/filter/types/FilterText'
 
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'

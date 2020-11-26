@@ -6,7 +6,7 @@ import VueRouter from 'vue-router'
 
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import FilterNamedEntity from '@/components/FilterNamedEntity'
+import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import mixin from '@/mixins/filters'
 

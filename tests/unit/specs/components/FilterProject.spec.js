@@ -6,7 +6,7 @@ import axios from 'axios'
 import VueRouter from 'vue-router'
 
 import Api from '@/api'
-import FilterProject from '@/components/FilterProject'
+import FilterProject from '@/components/filter/types/FilterProject'
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 

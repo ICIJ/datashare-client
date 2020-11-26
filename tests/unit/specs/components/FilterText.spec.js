@@ -6,7 +6,7 @@ import VueI18n from 'vue-i18n'
 
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import FilterText from '@/components/FilterText'
+import FilterText from '@/components/filter/types/FilterText'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import messagesFr from '@/lang/fr'
 

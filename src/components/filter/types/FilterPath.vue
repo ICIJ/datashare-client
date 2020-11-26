@@ -19,7 +19,7 @@
 
 <script>
 import elasticsearch from '@/api/elasticsearch'
-import FilterBoilerplate from '@/components/FilterBoilerplate'
+import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import TreeView from '@/components/TreeView'
 import filters from '@/mixins/filters'
 

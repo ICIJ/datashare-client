@@ -37,7 +37,7 @@
 import slice from 'lodash/slice'
 import { mapState } from 'vuex'
 
-import FilterBoilerplate from '@/components/FilterBoilerplate'
+import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import displayUser from '@/filters/displayUser'
 import filters from '@/mixins/filters'
 import utils from '@/mixins/utils'

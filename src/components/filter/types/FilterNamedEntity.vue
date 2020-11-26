@@ -34,7 +34,7 @@
 
 <script>
 import Api from '@/api'
-import FilterBoilerplate from '@/components/FilterBoilerplate'
+import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import filters from '@/mixins/filters'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'

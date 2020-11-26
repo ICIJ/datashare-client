@@ -17,13 +17,13 @@
 </template>
 
 <script>
-import FilterDate from '@/components/FilterDate'
-import FilterDateRange from '@/components/FilterDateRange'
-import FilterNamedEntity from '@/components/FilterNamedEntity'
-import FilterPath from '@/components/FilterPath'
-import FilterRecommendedBy from '@/components/FilterRecommendedBy'
-import FilterText from '@/components/FilterText'
-import FilterYesNo from '@/components/FilterYesNo'
+import FilterDate from '@/components/filter/types/FilterDate'
+import FilterDateRange from '@/components/filter/types/FilterDateRange'
+import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
+import FilterPath from '@/components/filter/types/FilterPath'
+import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
+import FilterText from '@/components/filter/types/FilterText'
+import FilterYesNo from '@/components/filter/types/FilterYesNo'
 
 /**
  * A panel to search into a specific filter.

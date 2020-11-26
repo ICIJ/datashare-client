@@ -2,7 +2,7 @@ import { Core } from '@/core'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Vuex from 'vuex'
 
-import FilterBoilerplate from '@/components/FilterBoilerplate'
+import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import filters from '@/mixins/filters'
 import App from '@/pages/App'
 

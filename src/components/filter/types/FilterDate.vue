@@ -4,7 +4,7 @@
 
 <script>
 import filters from '@/mixins/filters'
-import FilterBoilerplate from '@/components/FilterBoilerplate'
+import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 /**
  * A Filter component to list unique date values by month.
  */

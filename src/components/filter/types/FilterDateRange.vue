@@ -29,7 +29,7 @@
 
 <script>
 import filters from '@/mixins/filters'
-import FilterBoilerplate from '@/components/FilterBoilerplate'
+import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import max from 'lodash/max'
 import min from 'lodash/min'
 

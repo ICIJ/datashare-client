@@ -5,7 +5,7 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import FilterYesNo from '@/components/FilterYesNo'
+import FilterYesNo from '@/components/filter/types/FilterYesNo'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const { i18n, localVue, store, router, wait } = Core.init(createLocalVue()).useAll()

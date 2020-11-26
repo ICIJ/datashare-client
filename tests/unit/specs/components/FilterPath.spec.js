@@ -2,7 +2,7 @@ import find from 'lodash/find'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import FilterPath from '@/components/FilterPath'
+import FilterPath from '@/components/filter/types/FilterPath'
 import { Core } from '@/core'
 
 const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()

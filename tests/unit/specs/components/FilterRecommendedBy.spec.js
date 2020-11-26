@@ -5,7 +5,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 
 import Api from '@/api'
-import FilterRecommendedBy from '@/components/FilterRecommendedBy'
+import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
 import { Core } from '@/core'
 
 Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })

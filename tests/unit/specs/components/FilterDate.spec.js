@@ -2,7 +2,7 @@ import find from 'lodash/find'
 import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 
-import FilterDate from '@/components/FilterDate'
+import FilterDate from '@/components/filter/types/FilterDate'
 import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
