@@ -133,11 +133,28 @@
     "creationDate": "Dates de création",
     "projects": "Projets",
     "deleteNamedEntity": "Supprimer cette Entité Nommée",
-    "showMore": "Voir plus",
+    "showMore": "Expand",
     "missing": "Date manquante",
     "starred": "Favoris",
     "notStarred": "Non favoris",
     "recommendedBy": "Recommandé par",
+    "sortByDropdown": {
+      "toggler": "Sort",
+      "options": {
+        "_count": {
+          "asc": "Occurences (increasing)",
+          "desc": "Occurences (decreasing)"
+        },
+        "parent_doc_count": {
+          "asc": "Occurences (increasing)",
+          "desc": "Occurences (decreasing)"
+        },
+        "_key": {
+          "asc": "Alphabetical (A to Z)",
+          "desc": "Alphabetical (Z to A)"
+        }
+      }
+    },
     "lang": {
       "all": "Tous",
       "ABKHAZIAN": "Abkhaze",
@@ -347,6 +364,7 @@
     "document": "Document",
     "name": "Nom du fichier",
     "path": "Chemin du fichier",
+    "dirname": "File directory",
     "id": "Identifiant du fichier",
     "creationDate": "Date de création",
     "size": "Taille du ficher",
