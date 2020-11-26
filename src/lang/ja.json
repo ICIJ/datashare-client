@@ -133,11 +133,28 @@
     "creationDate": "作成日付",
     "projects": "プロジェクト",
     "deleteNamedEntity": "この固有表現を削除",
-    "showMore": "もっと表示",
+    "showMore": "Expand",
     "missing": "日付がありません",
     "starred": "スター付き",
     "notStarred": "スターなし",
     "recommendedBy": "Recommended by",
+    "sortByDropdown": {
+      "toggler": "Sort",
+      "options": {
+        "_count": {
+          "asc": "Occurences (increasing)",
+          "desc": "Occurences (decreasing)"
+        },
+        "parent_doc_count": {
+          "asc": "Occurences (increasing)",
+          "desc": "Occurences (decreasing)"
+        },
+        "_key": {
+          "asc": "Alphabetical (A to Z)",
+          "desc": "Alphabetical (Z to A)"
+        }
+      }
+    },
     "lang": {
       "all": "すべて",
       "ABKHAZIAN": "アブハズ語",
@@ -347,6 +364,7 @@
     "document": "Document",
     "name": "ファイル名",
     "path": "ファイルパス",
+    "dirname": "File directory",
     "id": "ファイルID",
     "creationDate": "作成日時",
     "size": "ファイルサイズ",
