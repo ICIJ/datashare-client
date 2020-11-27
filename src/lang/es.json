@@ -142,12 +142,12 @@
       "toggler": "Sort",
       "options": {
         "_count": {
-          "asc": "Occurences (increasing)",
-          "desc": "Occurences (decreasing)"
+          "asc": "Occurrences (increasing)",
+          "desc": "Occurrences (decreasing)"
         },
         "parent_doc_count": {
-          "asc": "Occurences (increasing)",
-          "desc": "Occurences (decreasing)"
+          "asc": "Occurrences (increasing)",
+          "desc": "Occurrences (decreasing)"
         },
         "_key": {
           "asc": "Alphabetical (A to Z)",
