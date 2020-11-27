@@ -57,6 +57,14 @@ export default {
     ...mapState('search', ['recommendedByUsers', 'recommendedByTotal']),
     sampleRecommendedByUsers () {
       return slice(this.recommendedByUsers, 0, settings.filter.bucketSize)
+    },
+    selected: {
+      get () {
+        return this.getFilterValuesByName(this.filter.name)
+      },
+      set (values) {
+        this.selectUsers(values)
+      }
     }
   },
   filters: {
@@ -64,26 +72,18 @@ export default {
   },
   async mounted () {
     await this.$store.dispatch('search/getRecommendationsByProject')
-    if (this.root && this.root.results) {
-      this.$set(this.root, 'results', {
-        aggregations: {
-          _id: {
-            buckets: this.recommendedByUsers
-          }
-        }
-      })
-    }
   },
   methods: {
     resetFilterValues (_, refresh) {
       return this.selectUsers([], refresh)
     },
     async selectUsers (users = [], refresh = true) {
+      this.setFilterValue(this.filter, { key: users })
       await this.$store.dispatch('search/getDocumentsRecommendedBy', users)
-      this.$set(this, 'selected', users)
-      this.root.isAllSelected = users.length === 0
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
-      if (refresh) this.refreshRouteAndSearch()
+      if (refresh) {
+        this.refreshRouteAndSearch()
+      }
     }
   }
 }

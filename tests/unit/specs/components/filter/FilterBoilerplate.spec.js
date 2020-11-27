@@ -1,0 +1,59 @@
+import { Core } from '@/core'
+import { createLocalVue, shallowMount } from '@vue/test-utils'
+
+import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
+import filters from '@/mixins/filters'
+
+// Mock the refreshRouteAndSearch method to avoid unecessary route update
+filters.methods.refreshRouteAndSearch = jest.fn()
+
+describe('FilterBoilerplate.vue', () => {
+  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
+  const filter = store.getters['search/getFilter']({ name: 'contentType' })
+  let wrapper = null
+
+  beforeEach(() => {
+    wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter } })
+  })
+
+  it('should commit a setFilterValue and then refresh the route and the search', () => {
+    wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter } })
+    jest.spyOn(wrapper.vm, 'refreshRouteAndSearch')
+    wrapper.vm.setValue(['42'])
+    expect(wrapper.vm.refreshRouteAndSearch).toBeCalled()
+  })
+
+  it('should refresh the route', () => {
+    jest.spyOn(router, 'push')
+    wrapper.vm.refreshRoute()
+    expect(router.push).toBeCalled()
+  })
+
+  describe('on resetFilterValues', () => {
+    beforeEach(() => {
+      wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter } })
+    })
+
+    it('should empty "selected" value', () => {
+      wrapper.vm.$set(wrapper.vm, 'selected', ['item'])
+      wrapper.vm.resetFilterValues()
+      expect(wrapper.vm.selected).toHaveLength(0)
+    })
+
+    it('should reset the exclude value to "false"', () => {
+      wrapper.vm.$store.commit('search/toggleFilter', filter.name)
+
+      wrapper.vm.resetFilterValues()
+
+      expect(wrapper.vm.isReversed()).toBeFalsy()
+    })
+
+    it('should emit an event "reset-filter-values"', () => {
+      wrapper._emitted['reset-filter-values'] = []
+
+      wrapper.vm.resetFilterValues()
+
+      expect(wrapper.emitted('reset-filter-values')).toHaveLength(1)
+    })
+  })
+})

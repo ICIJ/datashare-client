@@ -1,4 +1,3 @@
-import find from 'lodash/find'
 import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 
@@ -7,17 +6,26 @@ import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+import filters from '@/mixins/filters'
+
+// Mock all api calls
+jest.mock('@/api')
+// Mock the refreshRouteAndSearch method to avoid unecessary route update
+filters.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterDate.vue', () => {
+  const { i18n, localVue, store, wait, router } = Core.init(createLocalVue()).useAll()
   const index = toLower('FilterDate')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
+  const filter = store.getters['search/getFilter']({ name: 'indexingDate' })
+  const propsData = { filter }
+
   let wrapper
 
   beforeEach(() => {
     store.commit('search/index', index)
-    wrapper = mount(FilterDate, { i18n, localVue, store, wait, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'indexingDate' }) } })
+    wrapper = mount(FilterDate, { i18n, localVue, router, store, wait, propsData })
   })
 
   afterEach(() => store.commit('search/reset'))

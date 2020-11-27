@@ -1,4 +1,3 @@
-import find from 'lodash/find'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
 
@@ -8,6 +7,7 @@ import { Core } from '@/core'
 const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
 
 describe('FilterPath.vue', () => {
+  const filter = store.getters['search/getFilter']({ name: 'path' })
   let wrapper
 
   beforeEach(() => {
@@ -21,9 +21,8 @@ describe('FilterPath.vue', () => {
       store,
       wait,
       propsData: {
-        filter: find(store.getters['search/instantiatedFilters'], {
-          name: 'path'
-        })
+        filter,
+        infiniteScroll: false
       }
     })
   })

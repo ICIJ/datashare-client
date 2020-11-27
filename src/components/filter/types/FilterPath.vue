@@ -54,10 +54,11 @@ export default {
     },
     selectedPaths: {
       get () {
-        return this.filterFromStore.values
+        return this.getFilterByName(this.filter.name).values
       },
       set (key) {
-        this.setValue({ key })
+        this.setFilterValue(this.filter, { key })
+        this.refreshRouteAndSearch()
       }
     },
     project () {

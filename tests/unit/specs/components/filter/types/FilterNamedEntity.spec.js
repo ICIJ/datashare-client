@@ -20,13 +20,18 @@ jest.mock('@/api', () => {
   })
 })
 
+// Mock the refreshRouteAndSearch method to avoid unecessary route update
+mixin.methods.refreshRouteAndSearch = jest.fn()
+
 describe('FilterNamedEntity.vue', () => {
   const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
   const index = toLower('FilterNamedEntity')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
-  let wrapper = null
   const id = 'document'
+  const filter = store.getters['search/getFilter']({ name: 'namedEntityPerson' })
+  const propsData = { filter, infiniteScroll: false }
+  let wrapper = null
 
   beforeAll(() => {
     Murmur.config.set('manageDocuments', true)
@@ -35,16 +40,7 @@ describe('FilterNamedEntity.vue', () => {
   })
 
   beforeEach(() => {
-    wrapper = mount(FilterNamedEntity, {
-      localVue,
-      i18n,
-      store,
-      wait,
-      propsData: {
-        filter: store.getters['search/getFilter']({ name: 'namedEntityPerson' }),
-        infiniteScroll: false
-      }
-    })
+    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, wait, propsData })
     store.commit('search/setGlobalSearch', false)
   })
 

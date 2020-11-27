@@ -1,7 +1,6 @@
-import find from 'lodash/find'
 import range from 'lodash/range'
 import toLower from 'lodash/toLower'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import axios from 'axios'
 
 import Api from '@/api'
@@ -12,46 +11,43 @@ Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })
 
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 3 }], totalCount: 42 } })
+    request: jest.fn().mockResolvedValue({
+      data: {
+        totalCount: 42,
+        aggregates: [
+          { item: { id: 'user_01' }, count: 1 },
+          { item: { id: 'user_02' }, count: 3 }
+        ]
+      }
+    })
   }
 })
+
+// Mock the refreshRouteAndSearch method to avoid unecessary route update
+FilterRecommendedBy.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterRecommendedBy.vue', () => {
   const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
   const project = toLower('FilterRecommendedBy')
+  const filter = store.getters['search/getFilter']({ name: 'recommendedBy' })
+  const propsData = { filter }
   let wrapper = null
 
   beforeAll(() => store.commit('search/index', project))
 
   beforeEach(async () => {
-    wrapper = await shallowMount(FilterRecommendedBy, {
-      i18n,
-      localVue,
-      router,
-      store,
-      wait,
-      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'recommendedBy' }) }
-    })
+    axios.request.mockClear()
+    wrapper = await shallowMount(FilterRecommendedBy, { i18n, localVue, router, store, wait, propsData })
     await wrapper.vm.$nextTick()
   })
 
   afterAll(() => jest.unmock('axios'))
 
   it('should build a recommendedBy filter', () => {
-    expect(wrapper.find('filter-boilerplate-stub').exists()).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'filter' }).exists()).toBeTruthy()
   })
 
   it('should load users who recommended documents in this project', () => {
-    axios.request.mockClear()
-    wrapper = shallowMount(FilterRecommendedBy, {
-      i18n,
-      localVue,
-      router,
-      store,
-      wait,
-      propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'recommendedBy' }) }
-    })
-
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/users/recommendations?project=${project}`)
@@ -64,7 +60,6 @@ describe('FilterRecommendedBy.vue', () => {
     const documents = ['document_01', 'document_02', 'document_03']
     axios.request.mockResolvedValue({ data: documents })
     axios.request.mockClear()
-
     await wrapper.vm.selectUsers(['user_01', 'user_02'])
 
     expect(axios.request).toBeCalledTimes(1)
@@ -73,19 +68,21 @@ describe('FilterRecommendedBy.vue', () => {
     }))
     expect(store.state.search.documentsRecommended).toEqual(documents)
     expect(wrapper.vm.selected).toEqual(['user_01', 'user_02'])
-    expect(wrapper.vm.root.isAllSelected).toBeFalsy()
+    expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeFalsy()
   })
 
   it('should select no users', async () => {
+    wrapper = await mount(FilterRecommendedBy, { i18n, localVue, router, store, wait, propsData })
     axios.request.mockResolvedValue({ data: [] })
     axios.request.mockClear()
 
     await wrapper.vm.selectUsers([])
+    await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(0)
     expect(store.state.search.documentsRecommended).toEqual([])
     expect(wrapper.vm.selected).toEqual([])
-    expect(wrapper.vm.root.isAllSelected).toBeTruthy()
+    expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeTruthy()
   })
 
   it('should limit displayed users to 25', async () => {

@@ -2,8 +2,7 @@
   <filter-boilerplate ref="filter"
                       v-bind="$props"
                       hide-show-more
-                      hide-sort
-                      @reset-filter-values="reset">
+                      hide-sort>
     <template #items>
       <div class="m-2">
         <vc-date-picker
@@ -11,7 +10,7 @@
           mode="range"
           v-model="selectedDate"
           show-caps
-          @input="onInput"
+          :model-config="{ type: 'number' }"
           :attributes="attributes"
           :locale="locale"
           :key="locale">
@@ -43,12 +42,6 @@ export default {
   components: {
     FilterBoilerplate
   },
-  data () {
-    return {
-      totalCount: 0,
-      selectedDate: null
-    }
-  },
   computed: {
     attributes () {
       return [
@@ -64,34 +57,24 @@ export default {
     },
     locale () {
       return this.$i18n.locale
-    }
-  },
-  async mounted () {
-    this.$on('selected-values-from-store', this.updateFromStore)
-    this.updateFromStore()
-  },
-  methods: {
-    onInput () {
-      if (this.selectedDate === null) {
-        this.$set(this, 'selected', [])
-      } else {
-        const start = Date.parse(this.selectedDate.start) - this.selectedDate.start.getTimezoneOffset() * 60 * 1000
-        const end = Date.parse(this.selectedDate.end) - this.selectedDate.end.getTimezoneOffset() * 60 * 1000 + 24 * 60 * 60 * 1000 - 1
-        this.$set(this, 'selected', [start, end])
-      }
-      this.setValue({ key: this.selected })
     },
-    reset () {
-      this.$set(this, 'selectedDate', null)
-    },
-    updateFromStore () {
-      if (this.selected.length === 2) {
-        this.$set(this, 'selectedDate', {
-          start: new Date(parseInt(min(this.selected))),
-          end: new Date(parseInt(max(this.selected)))
-        })
-      } else {
-        this.$set(this, 'selectedDate', null)
+    selectedDate: {
+      get () {
+        const values = this.getFilterValuesByName(this.filter.name) || []
+        if (values.length < 2) {
+          return null
+        }
+        const start = min(values)
+        const end = max(values)
+        return { start, end }
+      },
+      set (range) {
+        if (range === null) {
+          return this.setFilterValue(this.filter, { key: [] })
+        }
+        const start = range.start - range.start.getTimezoneOffset() * 60 * 1000
+        const end = range.end - range.end.getTimezoneOffset() * 60 * 1000 + 24 * 60 * 60 * 1000 - 1
+        this.setFilterValue(this.filter, { key: [start, end] })
       }
     }
   }

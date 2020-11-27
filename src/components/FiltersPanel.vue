@@ -40,7 +40,6 @@
 <script>
 import get from 'lodash/get'
 import isArray from 'lodash/isArray'
-import noop from 'lodash/noop'
 import { mapState } from 'vuex'
 
 import FilterDate from '@/components/filter/types/FilterDate'
@@ -76,7 +75,6 @@ export default {
     this.$root.$on('filter::add-filter-values', this.setFilterValue)
     this.$root.$on('filter::search::reset-filters', this.resetFilterValues)
     this.$root.$on('index::delete::all', this.refreshEachFilter)
-    this.$root.$on('filter::search::add-filter-values', this.updateFilterSelectedValues)
   },
   data () {
     return {
@@ -112,13 +110,6 @@ export default {
     },
     setFilterValue ({ name }, value) {
       this.$store.commit('search/setFilterValue', { name, value })
-    },
-    updateFilterSelectedValues ({ component }) {
-      // Call the "setSelectedValuesFromStore" on the filter component and
-      // its parent (in root) which is usualy "FilterBoilerplate"
-      ['root.setSelectedValuesFromStore', 'setSelectedValuesFromStore'].forEach(fn => {
-        get(this, ['$refs', component.name, 0, fn], noop)()
-      })
     },
     hideFilters () {
       this.$store.commit('search/toggleFilters')

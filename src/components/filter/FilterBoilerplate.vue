@@ -39,7 +39,7 @@
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
         <slot name="items" :items="items" :options="options" :selected="selected" :total-count="totalCount" :query="query" :sort-by="sortBy" :sort-by-order="sortByOrder">
-          <b-form-checkbox v-model="isAllSelected" @change.native="resetFilterValues" class="filter__items__all mb-0">
+          <b-form-checkbox v-model="isAllSelected" class="filter__items__all mb-0">
             <slot name="all">
               <span class="d-flex">
                 <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
@@ -102,10 +102,13 @@
 <script>
 import compact from 'lodash/compact'
 import concat from 'lodash/concat'
-import flatten from 'lodash/flatten'
+import escapeRegExp from 'lodash/escapeRegExp'
 import findIndex from 'lodash/findIndex'
+import flatten from 'lodash/flatten'
 import get from 'lodash/get'
+import map from 'lodash/map'
 import noop from 'lodash/noop'
+import pick from 'lodash/pick'
 import setWith from 'lodash/setWith'
 import sumBy from 'lodash/sumBy'
 import throttle from 'lodash/throttle'
@@ -133,20 +136,90 @@ export default {
     InfiniteLoading,
     SearchFormControl
   },
+  props: {
+    filter: {
+      type: Object
+    },
+    hideHeader: {
+      type: Boolean,
+      default: false
+    },
+    hideSearch: {
+      type: Boolean,
+      default: false
+    },
+    hideShowMore: {
+      type: Boolean,
+      default: false
+    },
+    hideExclude: {
+      type: Boolean,
+      default: false
+    },
+    hideFooter: {
+      type: Boolean,
+      default: false
+    },
+    hideSort: {
+      type: Boolean,
+      default: false
+    },
+    showResultsBeforeReady: {
+      type: Boolean,
+      default: false
+    },
+    /**
+     * Search query on the filter
+     */
+    modelQuery: {
+      type: String,
+      default: ''
+    },
+    /**
+     * Etheir or not the items should be collapsed when no values are selected
+     */
+    collapsedIfNoValues: {
+      type: Boolean,
+      default: true
+    },
+    /**
+     * Either or not results should be loaded on scroll
+     */
+    infiniteScroll: {
+      type: Boolean,
+      default: true
+    },
+    /**
+     * Display the filter on dark background
+     */
+    dark: {
+      type: Boolean,
+      default: true
+    }
+  },
   data () {
     return {
-      infiniteId: uniqueId(),
       collapseItems: this.collapsedIfNoValues && !this.hasValues(),
+      infiniteId: uniqueId(),
+      mounted: false,
       pages: [],
+      query: this.modelQuery,
       sortBy: get(this, 'filter.sortBy', settings.filter.sortBy),
       sortByOrder: get(this, 'filter.sortByOrder', settings.filter.sortByOrder),
       sortByOptions: get(this, 'filter.sortByOptions', settings.filter.sortByOptions)
     }
   },
   watch: {
+    modelQuery () {
+      this.query = this.modelQuery
+    },
     query () {
       this.$set(this, 'infiniteId', uniqueId())
       this.aggregateWithThrottle({ clearPages: true })
+      // Emit an event to update the model value only if it changed
+      if (this.query !== this.modelQuery) {
+        this.$emit('update:modelQuery', this.query)
+      }
     },
     collapseItems () {
       this.initialize()
@@ -160,7 +233,9 @@ export default {
       this.aggregateWithThrottle({ clearPages: true })
     }
   },
-  mounted () {
+  async mounted () {
+    await this.$nextTick()
+    this.mounted = true
     // Listen for event to refresh the filter
     this.$root.$on('filter::refresh', filterName => {
       this.aggregateWithLoading()
@@ -201,6 +276,33 @@ export default {
     this.initialize()
   },
   computed: {
+    waitIdentifier () {
+      return `items for ${this.filter.name} on ${this.$options.name}`
+    },
+    isReady () {
+      return !this.$wait.is(this.waitIdentifier)
+    },
+    isGlobal () {
+      return this.$store.state.search.globalSearch
+    },
+    getFilter () {
+      return this.getFilterByName(this.filter.name)
+    },
+    pageItemsPath () {
+      return ['aggregations', this.filter.key, 'buckets']
+    },
+    queryTokens () {
+      return [escapeRegExp(this.query.toLowerCase())]
+    },
+    options () {
+      return map(this.itemsWithExcludedValues, item => {
+        return {
+          item,
+          value: item.key,
+          label: this.labelToHuman(this.filter.itemLabel(item))
+        }
+      })
+    },
     items () {
       return flatten(this.pages.map(this.getPageItems))
     },
@@ -215,8 +317,8 @@ export default {
       return get(this.lastPage, this.pageItemsPath, [])
     },
     excludedItemsPage () {
-      if (!this.isGlobal && this.filterFromStore && this.filterFromStore.reverse) {
-        const values = this.filterFromStore.values.map(key => ({ key, doc_count: 0 }))
+      if (!this.isGlobal && this.getFilter && this.getFilter.reverse) {
+        const values = this.getFilter.values.map(key => ({ key, doc_count: 0 }))
         return setWith({}, this.pageItemsPath.join('.'), values, Object)
       }
       return []
@@ -288,6 +390,24 @@ export default {
     },
     order () {
       return { [this.sortBy]: this.sortByOrder }
+    },
+    selected: {
+      get () {
+        return this.getFilterValuesByName(this.filter.name)
+      },
+      set (key) {
+        this.setFilterValue(this.filter, { key })
+      }
+    },
+    isAllSelected: {
+      get () {
+        return this.selected.length === 0
+      },
+      set (checked) {
+        if (checked) {
+          this.selected.splice(0, this.selected.length)
+        }
+      }
     }
   },
   methods: {
@@ -360,6 +480,52 @@ export default {
     },
     getPageItems (page) {
       return get(page, this.pageItemsPath, [])
+    },
+    hasValue (item) {
+      return this.$store.getters['search/hasFilterValue'](this.filter.itemParam(item))
+    },
+    removeValue (item) {
+      this.$store.commit('search/removeFilterValue', this.filter.itemParam(item))
+      this.refreshRouteAndSearch()
+    },
+    addValue (item) {
+      this.$store.commit('search/addFilterValue', this.filter.itemParam(item))
+      this.refreshRouteAndSearch()
+    },
+    setValue (item) {
+      this.setFilterValue(this.filter, item)
+      this.refreshRouteAndSearch()
+    },
+    invert () {
+      this.$store.commit('search/toggleFilter', this.filter.name)
+      this.refreshRouteAndSearch()
+    },
+    hasValues () {
+      return this.$store.getters['search/hasFilterValues'](this.filter.name)
+    },
+    isReversed () {
+      return this.$store.getters['search/isFilterReversed'](this.filter.name)
+    },
+    watchedForUpdate () {
+      const { search } = this.$store.state
+      if (!search.globalSearch) {
+        // This will allow to watch change on the search only when
+        // the aggregation is not global (ie. relative to the search).
+        return pick(search, ['index', 'query', 'values'])
+      } else {
+        return pick(search, ['index'])
+      }
+    },
+    resetFilterValues (refresh = true) {
+      this.selected = []
+      this.$store.commit('search/includeFilter', this.filter.name)
+      this.$emit('reset-filter-values', this.filter, refresh)
+    },
+    changeSelectedValues () {
+      this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
+      this.$store.commit('search/from', 0)
+      this.$emit('add-filter-values', this.filter, this.selected)
+      this.refreshRouteAndSearch()
     }
   }
 }
