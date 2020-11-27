@@ -57,13 +57,7 @@
 </template>
 
 <script>
-import flatten from 'lodash/flatten'
-import get from 'lodash/get'
-import identity from 'lodash/identity'
-import includes from 'lodash/includes'
-import noop from 'lodash/noop'
-import round from 'lodash/round'
-import uniqueId from 'lodash/uniqueId'
+import { flatten, get, identity, includes, noop, round, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { basename } from 'path'
 import { waitFor } from 'vue-wait'
@@ -267,7 +261,7 @@ export default {
     humanNumber,
     selectPaths (paths) {
       /**
-       * The selectedPaths are updated (depracated event).
+       * The selectedPaths are updated (deprecated event).
        *
        * @event checked
        */

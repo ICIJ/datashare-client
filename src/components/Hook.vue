@@ -1,12 +1,12 @@
 <script>
 /**
- * Create a Hook slot. Hooks are registred on-the-fly by plugins to insert arbitrary components.
+ * Create a Hook slot. Hooks are registered on-the-fly by plugins to insert arbitrary components.
  */
 export default {
   name: 'Hook',
   props: {
     /**
-     * Name of the hook (targetted by plugins).
+     * Name of the hook (targeted by plugins).
      */
     name: {
       type: String
