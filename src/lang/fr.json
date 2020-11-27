@@ -133,25 +133,25 @@
     "creationDate": "Dates de création",
     "projects": "Projets",
     "deleteNamedEntity": "Supprimer cette Entité Nommée",
-    "showMore": "Expand",
+    "showMore": "Agrandir",
     "missing": "Date manquante",
     "starred": "Favoris",
     "notStarred": "Non favoris",
     "recommendedBy": "Recommandé par",
     "sortByDropdown": {
-      "toggler": "Sort",
+      "toggler": "Trier par",
       "options": {
         "_count": {
-          "asc": "Occurences (increasing)",
-          "desc": "Occurences (decreasing)"
+          "asc": "Occurrences (increasing)",
+          "desc": "Occurrences (decreasing)"
         },
         "parent_doc_count": {
-          "asc": "Occurences (increasing)",
-          "desc": "Occurences (decreasing)"
+          "asc": "Occurrences (increasing)",
+          "desc": "Occurrences (decreasing)"
         },
         "_key": {
-          "asc": "Alphabetical (A to Z)",
-          "desc": "Alphabetical (Z to A)"
+          "asc": "Ordre alphab. : A à Z",
+          "desc": "Ordre alphab. : Z à A"
         }
       }
     },
@@ -364,7 +364,7 @@
     "document": "Document",
     "name": "Nom du fichier",
     "path": "Chemin du fichier",
-    "dirname": "File directory",
+    "dirname": "Dossier du fichier",
     "id": "Identifiant du fichier",
     "creationDate": "Date de création",
     "size": "Taille du ficher",
