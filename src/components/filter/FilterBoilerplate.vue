@@ -564,7 +564,7 @@ export default {
     }
 
     &.filter--reversed {
-      input:checked + label {
+      .filter__items__item:not(.filter__items__all) input:checked + label {
         text-decoration: line-through;
       }
     }
