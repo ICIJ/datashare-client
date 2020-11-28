@@ -39,7 +39,7 @@
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
         <slot name="items" :items="items" :options="options" :selected="selected" :total-count="totalCount" :query="query" :sort-by="sortBy" :sort-by-order="sortByOrder">
-          <b-form-checkbox v-model="isAllSelected" class="filter__items__all mb-0">
+          <b-form-checkbox v-model="isAllSelected" class="filter__items__all mb-0" :disabled="isAllSelected">
             <slot name="all">
               <span class="d-flex">
                 <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">

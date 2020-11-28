@@ -1,5 +1,5 @@
 import { Core } from '@/core'
-import { createLocalVue, shallowMount } from '@vue/test-utils'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import filters from '@/mixins/filters'
@@ -54,6 +54,23 @@ describe('FilterBoilerplate.vue', () => {
       wrapper.vm.resetFilterValues()
 
       expect(wrapper.emitted('reset-filter-values')).toHaveLength(1)
+    })
+
+    it('should maintain the checkbox checked when clicking two times on "all"', () => {
+      wrapper = mount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter } })
+      wrapper.find('.filter__items__all input').trigger('click')
+      expect(wrapper.find('.filter__items__all input').element.checked).toBeTruthy()
+      expect(wrapper.vm.isAllSelected).toBeTruthy()
+      wrapper.find('.filter__items__all input').trigger('click')
+      expect(wrapper.find('.filter__items__all input').element.checked).toBeTruthy()
+      expect(wrapper.vm.isAllSelected).toBeTruthy()
+    })
+
+    it('should disable the checkbox to select "all" when already selected', () => {
+      wrapper = mount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter } })
+      wrapper.vm.isAllSelected = true
+      expect(wrapper.find('.filter__items__all input').element.checked).toBeTruthy()
+      expect(wrapper.find('.filter__items__all input').element.disabled).toBeTruthy()
     })
   })
 })
