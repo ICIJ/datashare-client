@@ -92,6 +92,7 @@ export default {
     },
     contextualizeModel: {
       set (toggle) {
+        // eslint-disable-next-line vue/custom-event-name-casing
         this.$root.$emit('bv::hide::tooltip')
         this.$store.commit('search/setGlobalSearch', !toggle)
       },
@@ -122,7 +123,7 @@ export default {
         if (this.isFilterComponent(component)) {
           const filter = component[0]
           filter.root.query = ''
-          filter.resetFilterValues(refresh)
+          filter.root.resetFilterValues(refresh)
           if (filter.resetNamedEntityValues) {
             filter.resetNamedEntityValues()
           }
