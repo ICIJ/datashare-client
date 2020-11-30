@@ -1,8 +1,10 @@
 <template>
-  <div class="legacy-spreadsheet-viewer d-flex flex-grow-1">
+  <div class="legacy-spreadsheet-viewer d-flex flex-grow-1 my-2">
     <template v-if="doc.active">
       <div class="legacy-spreadsheet-viewer__header">
-        <div class="text-center mb-4">{{ Object.keys(doc.sheets).indexOf(doc.active) + 1 }} / {{ Object.keys(doc.sheets).length }}</div>
+        <div class="text-center mb-4">
+          {{ Object.keys(doc.sheets).indexOf(doc.active) + 1 }} / {{ Object.keys(doc.sheets).length }}
+        </div>
         <div v-for="page in Object.keys(doc.sheets).length" :key="page" @click="doc.active = Object.keys(doc.sheets)[page - 1]" class="mr-2 my-2 d-flex legacy-spreadsheet-viewer__header__thumbnails">
           <span class="d-flex align-items-center">{{ page }}</span>
           <div class="small ml-1 img-thumbnail text-truncate" v-html="displaySheet(Object.keys(doc.sheets)[page - 1])" />
@@ -65,8 +67,7 @@ export default {
       })
     },
     xlsx () {
-      return this.getSource(this.document)
-        .then(r => r.arrayBuffer())
+      return this.getSource(this.document, { responseType: 'arraybuffer' })
         .then(arrayBuffer => {
           let arr = ''
           const data = new Uint8Array(arrayBuffer)
