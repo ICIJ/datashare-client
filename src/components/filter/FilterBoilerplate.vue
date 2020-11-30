@@ -78,7 +78,7 @@
             <span v-html="$t('filter.noMatches')"></span>
           </div>
         </template>
-        <infinite-loading @infinite="nextAggregate" :identifier="infiniteId" v-if="useInfiniteScroll">
+        <infinite-loading @infinite="nextAggregate" :identifier="infiniteId" :distance="200" v-if="useInfiniteScroll">
           <span slot="spinner" />
           <span slot="no-more" />
           <span slot="no-results" />
