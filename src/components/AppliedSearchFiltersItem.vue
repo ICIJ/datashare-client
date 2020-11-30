@@ -1,6 +1,6 @@
 <template>
   <b-badge
-    class="applied-search-filters-item mt-2 mr-2 pl-1 mw-100 text-truncate"
+    class="applied-search-filters-item my-1 mr-2 pl-1 mw-100 text-truncate"
     :class="filter.negation ? 'strikethrough' : ''"
     @click.prevent="deleteQueryTerm()"
     :id="id"

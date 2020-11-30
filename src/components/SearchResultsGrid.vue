@@ -1,7 +1,7 @@
 <template>
   <div class="search-results-grid">
     <div v-if="hasResults">
-      <search-results-header position="top" class="border-bottom mb-3" />
+      <search-results-header position="top" class="border-bottom p-0 mb-3" />
       <div class="search-results-grid__items">
         <div v-for="document in response.hits" :key="document.id" class="search-results-grid__items__item d-flex flex-column border rounded">
           <document-actions :document="document" class="search-results-grid__items__item__actions m-2" :is-download-allowed="isDownloadAllowed" />
