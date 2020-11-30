@@ -13,9 +13,9 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
-
 describe('AppSidebar.vue', () => {
+  const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
+
   beforeEach(() => getOS.mockReset())
 
   afterAll(() => jest.unmock('@/utils/utils'))

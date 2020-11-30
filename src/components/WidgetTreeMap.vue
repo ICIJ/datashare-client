@@ -88,6 +88,7 @@ export default {
         .style('fill', '#FA4070')
         .style('fill-opacity', 0.5)
         .on('click', d => this.refreshTreeMap(d.data.key))
+        .on('mouseover', (_, index, nodes) => select(nodes[index]).style('cursor', 'pointer'))
       leaf
         .append('text')
         .attr('x', d => d.x0 + 5)
@@ -96,6 +97,7 @@ export default {
         .attr('font-size', '12px')
         .attr('fill', 'black')
         .on('click', d => this.refreshTreeMap(d.data.key))
+        .on('mouseover', (_, index, nodes) => select(nodes[index]).style('cursor', 'pointer'))
       leaf
         .append('text')
         .attr('x', d => d.x0 + 5)
@@ -104,6 +106,7 @@ export default {
         .attr('font-size', '10px')
         .attr('fill', '#25252A')
         .on('click', d => this.refreshTreeMap(d.data.key))
+        .on('mouseover', (_, index, nodes) => select(nodes[index]).style('cursor', 'pointer'))
     },
     async getData (path) {
       const aggregationOptions = {
