@@ -3,7 +3,9 @@
     <li class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--root">
       <a href @click.prevent="$emit('input', dataDir)">
         <fa :icon="datadirIcon" fixed-width></fa>
-        <span v-if="noDatadir" class="ml-1">Home</span>
+        <span v-if="datadirLabel" class="ml-1">
+          {{ $t('treeView.datadir') }}
+        </span>
       </a>
     </li>
     <li v-if="treeWithoutDataDir.length > maxDirectories" class="list-inline-item tree-breadcrumb__item tree-breadcrumb__item--abbr">
@@ -55,6 +57,13 @@ export default {
     datadirIcon: {
       type: [String, Object, Array],
       default: 'folder'
+    },
+    /**
+     * Use a label next to the datadir icon
+     */
+    datadirLabel: {
+      type: Boolean,
+      default: false
     }
   },
   filters: {

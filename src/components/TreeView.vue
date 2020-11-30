@@ -2,7 +2,7 @@
   <div class="tree-view" :class="{ 'tree-view--compact': compact }">
     <b-collapse :visible="!noHeader">
       <div class="tree-view__header d-flex flex-row text-nowrap">
-        <tree-breadcrumb :path="path" @input="$emit('input', $event)" :max-directories="compact ? 2 : 5" no-datadir />
+        <tree-breadcrumb :path="path" @input="$emit('input', $event)" :max-directories="compact ? 2 : 5" no-datadir datadir-label />
         <transition name="fade">
           <div v-if="!$wait.waiting('loading tree view data')">
             <span v-if="size" class="tree-view__header__size">

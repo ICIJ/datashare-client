@@ -688,6 +688,7 @@
   },
   "treeView": {
     "hits": "no documents | 1 document | %{hits} documents",
-    "docs": "doc | docs"
+    "docs": "doc | docs",
+    "datadir": "Home"
   }
 }
