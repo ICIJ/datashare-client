@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import PDFJS from 'pdfjs-dist'
+import * as PDFJS from 'pdfjs-dist'
 import min from 'lodash/min'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
@@ -80,7 +80,7 @@ export default {
       } else {
         return this.getSource(this.document, { responseType: 'arraybuffer' })
           .then(data => {
-            PDFJS.GlobalWorkerOptions.workerSrc = require('!!file-loader!node_modules/pdfjs-dist/build/pdf.worker.js').default
+            PDFJS.GlobalWorkerOptions.workerSrc = require('!!file-loader!pdfjs-dist/build/pdf.worker.js').default
             const loadingTask = PDFJS.getDocument({ data })
             return loadingTask.promise
           })
