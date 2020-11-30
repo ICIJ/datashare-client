@@ -24,7 +24,7 @@
         <b-form-checkbox-group v-model="selected" @input="selectPaths">
           <ul class="list-group list-group-flush tree-view__directories">
             <li v-for="directory in directories" :key="directory.key" class="list-group-item d-flex flex-row align-items-center tree-view__directories__item">
-              <b-form-checkbox :value="directory.key" v-if="selectable" class="mx-0" />
+              <b-form-checkbox :value="directory.key" v-if="selectable" class="tree-view__directories__item__checkbox" />
               <a class="flex-grow-1" href @click.prevent="$emit('input', directory.key)">
                 {{ directory.key | basename }}
               </a>
@@ -374,7 +374,7 @@ export default {
         color: inherit;
 
         .tree-view--compact & {
-          padding: 0.5rem;
+          padding: $spacer * 0.5;
         }
       }
 
@@ -383,8 +383,18 @@ export default {
         &__item {
           position: relative;
 
+          .tree-view & &__checkbox {
+            margin: 0;
+            margin-right: $spacer * 0.5;
+          }
+
+          .tree-view--compact & &__checkbox {
+            margin: 0;
+            margin-right: $spacer * 0.25;
+          }
+
           .tree-view--compact & {
-            padding: 0 0.5rem;
+            padding: $spacer * 0.25 $spacer * 0.5;
 
             &--no-folders {
               padding: 0.5rem;
