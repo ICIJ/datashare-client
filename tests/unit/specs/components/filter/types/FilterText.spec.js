@@ -356,7 +356,7 @@ describe('FilterText.vue', () => {
     expect(wrapper.findComponent({ ref: 'filter' }).vm.total).toBe(2)
   })
 
-  it('should trigger a click on "All" item, fire 2 events, unselect others items and refresh the route', async () => {
+  it('should trigger a click on "All" item, fire an event, unselect others items and refresh the route', async () => {
     const rootWrapper = createWrapper(wrapper.vm.$root)
     const spyRefreshRoute = jest.spyOn(wrapper.findComponent({ ref: 'filter' }).vm, 'refreshRoute')
 

@@ -405,7 +405,7 @@ export default {
       },
       set (checked) {
         if (checked) {
-          this.selected.splice(0, this.selected.length)
+          this.$set(this, 'selected', [])
         }
       }
     }
@@ -517,11 +517,11 @@ export default {
       }
     },
     resetFilterValues (refresh = true) {
-      this.selected = []
+      this.$set(this, 'selected', [])
       this.$store.commit('search/includeFilter', this.filter.name)
       this.$emit('reset-filter-values', this.filter, refresh)
     },
-    changeSelectedValues () {
+    changeSelectedValues ($ev) {
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
       this.$store.commit('search/from', 0)
       this.$emit('add-filter-values', this.filter, this.selected)
