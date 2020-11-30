@@ -61,7 +61,7 @@
     "vue-wait": "^1.4.8",
     "vuex": "^3.6.0",
     "vuex-map-fields": "^1.4.1",
-    "vuex-persistedstate": "^2.5.4",
+    "vuex-persistedstate": "^4.0.0-beta.1",
     "xlsx": "^0.15.5",
     "xss": "^1.0.6"
   },

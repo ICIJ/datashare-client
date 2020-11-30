@@ -13433,10 +13433,10 @@ vuex-map-fields@^1.4.1:
   resolved "https://registry.yarnpkg.com/vuex-map-fields/-/vuex-map-fields-1.4.1.tgz#3f22f0c3d39e25968d3a74fc2b43738c23c4ae4d"
   integrity sha512-jvIcpvoIPqwvJCOfRkPU9Rj0EbjWuk7GlNC5LXU9mCXVGZph6bWGHZssnoUzpLMxJtXQEHoVyZkKf7YQV+/bnQ==
 
-vuex-persistedstate@^2.5.4:
-  version "2.7.1"
-  resolved "https://registry.yarnpkg.com/vuex-persistedstate/-/vuex-persistedstate-2.7.1.tgz#25ced829ea5789a2ed7d71a1ba057eb01a5235ad"
-  integrity sha512-Ktvp6Bt6ApYj35MuxTClu+9Lpukcgl3Z/0o4PU12+Z4jU6lyOMzos0k6zGT5xrukAkGM1VV3EYNwz1TnHPhgFA==
+vuex-persistedstate@^4.0.0-beta.1:
+  version "4.0.0-beta.1"
+  resolved "https://registry.yarnpkg.com/vuex-persistedstate/-/vuex-persistedstate-4.0.0-beta.1.tgz#f84cda8d1dd1bb5eb19f4e64753f78b2569f605f"
+  integrity sha512-G3d7i6vnSelrYWfCfSKi52e4ZlHlm99yAaMAHYQrCPAPKwYofTxo1QqLtndzvoZpFd/gx2IsAKSeaFjjpuVLYA==
   dependencies:
     deepmerge "^4.2.2"
     shvl "^2.0.0"
