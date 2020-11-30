@@ -170,6 +170,13 @@ export default {
       type: String,
       default: 'desc',
       validate: order => includes(['asc', 'desc'], order)
+    },
+    /**
+     * If the true, the document count and size of each directory will include
+     * child documents.
+     */
+    includeChildrenDocuments: {
+      type: Boolean
     }
   },
   components: {
@@ -282,10 +289,13 @@ export default {
       }
     },
     bodybuilderBase ({ from = 0, size = 100 } = {}) {
-      return bodybuilder()
-        .size(0)
+      const body = bodybuilder().size(0)
+      // Only the extraction level is an optional query
+      if (!this.includeChildrenDocuments) {
+        body.andQuery('match', 'extractionLevel', 0)
+      }
+      return body
         .andQuery('match', 'type', 'Document')
-        .andQuery('match', 'extractionLevel', 0)
         .andFilter('term', 'dirname.tree', this.path)
         .agg('terms', 'dirname.tree', this.aggregationOptions, 'byDirname', b => {
           return b

@@ -10,6 +10,7 @@
                   :sort-by-order="sortByOrder"
                   selectable
                   count
+                  include-children-documents
                   no-bars
                   compact />
       </div>
