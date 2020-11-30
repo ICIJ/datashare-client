@@ -142,7 +142,7 @@
       "toggler": "Trier par",
       "options": {
         "_count": {
-          "asc": "Occurrences (increasing)",
+          "asc": "Occurences (croissant)",
           "desc": "Occurrences (decreasing)"
         },
         "parent_doc_count": {
