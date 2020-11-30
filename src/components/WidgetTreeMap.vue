@@ -18,9 +18,12 @@
 </template>
 
 <script>
-import { hierarchy, select, treemap } from 'd3'
 import { get, uniqueId } from 'lodash'
+import bodybuilder from 'bodybuilder'
+import { format, hierarchy, select, treemap } from 'd3'
+import { basename } from 'path'
 
+import elasticsearch from '@/api/elasticsearch'
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
 import VueScrollTo from 'vue-scrollto'
 
@@ -47,7 +50,7 @@ export default {
     }
   },
   async mounted () {
-    await this.refreshTreeMap(this.widget.baseDirname)
+    await this.refreshTreeMap(this.$config.get('dataDir'))
     const scrollTo = get(this.$route, 'query.scrollTo', false)
     if (scrollTo === 'WidgetTreeMap') {
       const target = this.$el.querySelector(`#${ this.id }`)
@@ -64,7 +67,7 @@ export default {
       const width = document.getElementById(this.id).offsetWidth
       const height = 500
 
-      const root = hierarchy(data).sum(d => d.count_including_children)
+      const root = hierarchy(data).sum(d => d.doc_count)
       treemap()
         .size([width, height])
         .padding(2)(root)
@@ -84,27 +87,47 @@ export default {
         .attr('height', d => d.y1 - d.y0)
         .style('fill', '#FA4070')
         .style('fill-opacity', 0.5)
-        .on('click', d => this.refreshTreeMap(d.data.dirname))
+        .on('click', d => this.refreshTreeMap(d.data.key))
       leaf
         .append('text')
         .attr('x', d => d.x0 + 5)
         .attr('y', d => d.y0 + 20)
-        .text(d => this.widget.getTitle(d))
+        .text(d => basename(d.data.key))
         .attr('font-size', '12px')
         .attr('fill', 'black')
+        .on('click', d => this.refreshTreeMap(d.data.key))
       leaf
         .append('text')
         .attr('x', d => d.x0 + 5)
         .attr('y', d => d.y0 + 30)
-        .text(d => this.widget.getSubtitle(d))
+        .text(d => `${ format(',d')(d.data.doc_count) } files`)
         .attr('font-size', '10px')
         .attr('fill', '#25252A')
+        .on('click', d => this.refreshTreeMap(d.data.key))
+    },
+    async getData (path) {
+      const aggregationOptions = {
+        include: path + '/.*',
+        exclude: path + '/.*/.*',
+        size: 10
+      }
+      const body = bodybuilder()
+        .size(0)
+        .andQuery('match', 'type', 'Document')
+        .andQuery('match', 'extractionLevel', 0)
+        .andFilter('term', 'dirname.tree', path)
+        .agg('terms', 'dirname.tree', aggregationOptions, 'byDirname', sub => {
+          return sub.agg('bucket_sort', { size: 50, from: 0 }, 'bucket_truncate')
+        })
+        .build()
+      const result = await elasticsearch.search({ index: this.widget.index, body, size: 0 })
+      return get(result, 'aggregations.byDirname.buckets', [])
     },
     async refreshTreeMap (path) {
       try {
         this.$set(this, 'currentPath', path)
-        const dataSource = await this.widget.getData(path)
-        this.renderTreeMap(dataSource)
+        const children = await this.getData(path)
+        this.renderTreeMap({ children })
       } catch (_) {
         this.$set(this, 'currentPath', null)
         this.cleanTreeMap(`#${this.id} > svg`)
