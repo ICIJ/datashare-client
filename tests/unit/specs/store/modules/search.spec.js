@@ -754,7 +754,10 @@ describe('SearchStore', () => {
   })
 
   it('should find document on querying the NamedEntity', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project).withNer('test')).commit()
+    const document = new IndexedDocument('doc_01', project)
+    document.withNer('test')
+    document.withContent('this is the doc_01 and a mention of "test"')
+    await letData(es).have(document).commit()
 
     await store.dispatch('search/query', 'test')
 
@@ -762,16 +765,27 @@ describe('SearchStore', () => {
     expect(store.state.search.response.hits[0].basename).toBe('doc_01')
   })
 
+  it('should not find document on querying the NamedEntity if it isnt in its content', async () => {
+    const document = new IndexedDocument('doc_01', project)
+    document.withNer('test')
+    document.withContent('this is the doc_01 and no mention of the Named-Entity-Who-Must-Not-Be-Named')
+    await letData(es).have(document).commit()
+
+    await store.dispatch('search/query', 'test')
+
+    expect(store.state.search.response.hits).toHaveLength(0)
+  })
+
   it('should find document on querying the NamedEntity with a complex query', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', project).withContent('test').withNer('ner_01')).commit()
-    await letData(es).have(new IndexedDocument('doc_02', project).withNer('ner_02')).commit()
-    await letData(es).have(new IndexedDocument('doc_03', project).withNer('test')).commit()
+    await letData(es).have(new IndexedDocument('doc_01', project).withContent('test of ner_01').withNer('ner_01')).commit()
+    await letData(es).have(new IndexedDocument('doc_02', project).withContent('test of ner_02').withNer('ner_02')).commit()
+    await letData(es).have(new IndexedDocument('doc_03', project).withContent('no content').withNer('test')).commit()
 
     await store.dispatch('search/query', '(test AND ner_*) OR test')
 
     expect(store.state.search.response.hits).toHaveLength(2)
-    expect(store.state.search.response.hits[0].basename).toBe('doc_03')
-    expect(store.state.search.response.hits[1].basename).toBe('doc_01')
+    expect(store.state.search.response.hits[0].basename).toBe('doc_01')
+    expect(store.state.search.response.hits[1].basename).toBe('doc_02')
   })
 
   it('should set this value to the filter', () => {

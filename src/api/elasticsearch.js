@@ -72,11 +72,6 @@ export function datasharePlugin (Client, config, components) {
           fields: fields.length ? fields : undefined,
           default_field: fields.length ? undefined : '*'
         })
-        .orQuery('has_parent', 'parent_type', 'Document', {
-          inner_hits: {
-            size: 30
-          }
-        }, sub => sub.query('match', 'content', query))
       )
   }
 
@@ -107,12 +102,6 @@ export function datasharePlugin (Client, config, components) {
           fields: fields.length ? fields : undefined,
           default_field: fields.length ? undefined : '*'
         })
-        .orQuery('has_child', 'type', 'NamedEntity',
-          sub => sub.query('query_string', {
-            query: query,
-            default_field: 'mentionNorm'
-          })
-        )
       )
   }
 

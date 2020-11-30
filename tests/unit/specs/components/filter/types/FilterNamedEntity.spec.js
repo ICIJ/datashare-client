@@ -244,23 +244,6 @@ describe('FilterNamedEntity.vue', () => {
     expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toContain('person_03')
   })
 
-  it('should display the named entities containing the query string, and those linked to documents containing the query string', async () => {
-    await letData(es).have(new IndexedDocument('document_01', index)
-      .withNer('person_01')).commit()
-    await letData(es).have(new IndexedDocument('document_02', index)
-      .withContent('person_01')
-      .withNer('person_02')).commit()
-    await letData(es).have(new IndexedDocument('document_03', index)
-      .withNer('person_03')).commit()
-
-    store.commit('search/query', 'person_01')
-    await wrapper.vm.root.aggregate({ clearPages: true })
-
-    expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
-    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toContain('person_01')
-    expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toContain('person_02')
-  })
-
   it('should filter items according to the named entity filter search', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
       .withNer('person_01')).commit()

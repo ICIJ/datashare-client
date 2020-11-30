@@ -67,23 +67,15 @@ describe('elasticsearch', () => {
             match_all: {}
           }, {
             bool: {
-              should: [{
-                query_string: {
-                  query: '*',
-                  fields: undefined,
-                  default_field: '*'
-                }
-              }, {
-                has_child: {
-                  type: 'NamedEntity',
-                  query: {
-                    query_string: {
-                      query: '*',
-                      default_field: 'mentionNorm'
-                    }
+              should: [
+                {
+                  query_string: {
+                    query: '*',
+                    fields: undefined,
+                    default_field: '*'
                   }
                 }
-              }]
+              ]
             }
           }]
         }
@@ -105,22 +97,14 @@ describe('elasticsearch', () => {
             match_all: {}
           }, {
             bool: {
-              should: [{
-                query_string: {
-                  query: 'path:/home/datashare/path/*',
-                  default_field: '*'
-                }
-              }, {
-                has_child: {
-                  type: 'NamedEntity',
-                  query: {
-                    query_string: {
-                      query: 'path:/home/datashare/path/*',
-                      default_field: 'mentionNorm'
-                    }
+              should: [
+                {
+                  query_string: {
+                    query: 'path:/home/datashare/path/*',
+                    default_field: '*'
                   }
                 }
-              }]
+              ]
             }
           }]
         }
@@ -186,22 +170,25 @@ describe('elasticsearch', () => {
     expect(response.hits.hits).toHaveLength(12)
   })
 
-  it('should return all the named entities', async () => {
+  it('should return only one named entity', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
-      .withContent('this is a document')
+      .withContent('this is a document mentioning ne_01')
       .withNer('ne_01')
     ).commit()
+
     await letData(es).have(new IndexedDocument('document_02', index)
+      .withContent('this is a document')
       .withNer('document')
     ).commit()
+
     await letData(es).have(new IndexedDocument('document_03', index)
-      .withContent('nothing to write')
+      .withContent('this is another document')
       .withNer('another')
     ).commit()
-    const filter = new FilterNamedEntity({ name: 'namedEntityPerson', key: 'byMentions', category: 'PERSON' })
 
+    const filter = new FilterNamedEntity({ name: 'namedEntityPerson', key: 'byMentions', category: 'PERSON' })
     const response = await elasticsearch.searchFilter(index, filter, 'document')
 
-    expect(response.aggregations.byMentions.buckets).toHaveLength(2)
+    expect(response.aggregations.byMentions.buckets).toHaveLength(1)
   })
 })
