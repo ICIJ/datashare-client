@@ -19,7 +19,13 @@ describe('WidgetTreeMap.vue', () => {
 
   beforeEach(() => {
     store.commit('insights/reset')
-    wrapper = shallowMount(WidgetTreeMap, { i18n, localVue, store, propsData: { widget: {} }, data () { return { id: 'widget_tree_map' } } })
+    wrapper = shallowMount(WidgetTreeMap, {
+      i18n,
+      localVue,
+      store,
+      propsData: { widget: {} },
+      data () { return { id: 'widget_tree_map' } }
+    })
   })
 
   afterAll(() => jest.unmock('@/api/elasticsearch'))
@@ -34,7 +40,13 @@ describe('WidgetTreeMap.vue', () => {
 
   it('should contain a "hello world" title', () => {
     const propsData = { widget: { title: 'Hello world' } }
-    wrapper = shallowMount(WidgetTreeMap, { i18n, localVue, store, propsData, data () { return { id: 'widget_tree_map' } } })
+    wrapper = shallowMount(WidgetTreeMap, {
+      i18n,
+      localVue,
+      store,
+      propsData,
+      data () { return { id: 'widget_tree_map' } }
+    })
     expect(wrapper.find('.widget__header').text()).toBe('Hello world')
   })
 

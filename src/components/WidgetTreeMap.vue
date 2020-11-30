@@ -5,20 +5,26 @@
     </div>
     <div class="widget__content lead" :class="{ 'card-body': widget.card }">
       <div class="d-flex flex-row">
-        <tree-breadcrumb :path="currentPath" no-datadir @input="refreshTreeMap($event)" v-if="currentPath"></tree-breadcrumb>
-        <router-link :to="{ name: 'search', query: { index: widget.index, 'f[path]': currentPath } }" class="widget__content__search">
+        <tree-breadcrumb
+          :path="currentPath"
+          no-datadir
+          @input="update($event)"
+          v-if="currentPath"
+        ></tree-breadcrumb>
+        <router-link
+          :to="{ name: 'search', query: { index: widget.index, 'f[path]': currentPath } }"
+          class="widget__content__search"
+        >
           {{ $t('widget.treemap.seeDocuments') }}
         </router-link>
       </div>
-      <div :id="id">
-        <svg width="100%" height="500"></svg>
-      </div>
+      <div :id="id"></div>
     </div>
   </div>
 </template>
 
 <script>
-import { get, uniqueId } from 'lodash'
+import { get, isNull, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { format, hierarchy, select, treemap } from 'd3'
 import { basename } from 'path'
@@ -45,34 +51,32 @@ export default {
   },
   data () {
     return {
-      id: uniqueId('widget_tree_map'),
-      currentPath: null
+      currentPath: null,
+      height: 500,
+      id: uniqueId('widget_tree_map')
     }
   },
   async mounted () {
-    await this.refreshTreeMap(this.$config.get('dataDir'))
-    const scrollTo = get(this.$route, 'query.scrollTo', false)
-    if (scrollTo === 'WidgetTreeMap') {
-      const target = this.$el.querySelector(`#${ this.id }`)
-      setTimeout(() => VueScrollTo.scrollTo(target, 100, { offset: 620, force: true }), 500)
-    }
+    await this.update(this.$config.get('dataDir'))
+    this.scrollToWidget()
   },
   methods: {
-    cleanTreeMap (path) {
-      return select(path).remove()
+    scrollToWidget () {
+      const scrollTo = get(this.$route, 'query.scrollTo', false)
+      if (scrollTo === 'WidgetTreeMap') {
+        const target = this.$el.querySelector(`#${ this.id }`)
+        setTimeout(() => VueScrollTo.scrollTo(target, 100, { offset: 620, force: true }), 500)
+      }
     },
     renderTreeMap (data) {
-      this.cleanTreeMap(`#${this.id} > svg > g`)
-
       const width = document.getElementById(this.id).offsetWidth
-      const height = 500
 
       const root = hierarchy(data).sum(d => d.doc_count)
       treemap()
-        .size([width, height])
+        .size([width, this.height])
         .padding(2)(root)
 
-      const svg = select(`#${this.id} > svg`)
+      const svg = select(`#${ this.id } > svg`)
         .append('g')
 
       const leaf = svg.selectAll('g')
@@ -87,7 +91,7 @@ export default {
         .attr('height', d => d.y1 - d.y0)
         .style('fill', '#FA4070')
         .style('fill-opacity', 0.5)
-        .on('click', d => this.refreshTreeMap(d.data.key))
+        .on('click', d => this.update(d.data.key))
         .on('mouseover', (_, index, nodes) => select(nodes[index]).style('cursor', 'pointer'))
       leaf
         .append('text')
@@ -96,7 +100,7 @@ export default {
         .text(d => basename(d.data.key))
         .attr('font-size', '12px')
         .attr('fill', 'black')
-        .on('click', d => this.refreshTreeMap(d.data.key))
+        .on('click', d => this.update(d.data.key))
         .on('mouseover', (_, index, nodes) => select(nodes[index]).style('cursor', 'pointer'))
       leaf
         .append('text')
@@ -105,7 +109,7 @@ export default {
         .text(d => `${ format(',d')(d.data.doc_count) } files`)
         .attr('font-size', '10px')
         .attr('fill', '#25252A')
-        .on('click', d => this.refreshTreeMap(d.data.key))
+        .on('click', d => this.update(d.data.key))
         .on('mouseover', (_, index, nodes) => select(nodes[index]).style('cursor', 'pointer'))
     },
     async getData (path) {
@@ -119,25 +123,41 @@ export default {
         .andQuery('match', 'type', 'Document')
         .andQuery('match', 'extractionLevel', 0)
         .andFilter('term', 'dirname.tree', path)
-        .agg('terms', 'dirname.tree', aggregationOptions, 'byDirname', sub => {
-          return sub.agg('bucket_sort', { size: 50, from: 0 }, 'bucket_truncate')
-        })
+        .agg('terms', 'dirname.tree', aggregationOptions, 'byDirname',
+          sub => sub.agg('bucket_sort', { size: 50, from: 0 }, 'bucket_truncate'))
         .build()
       const result = await elasticsearch.search({ index: this.widget.index, body, size: 0 })
       return get(result, 'aggregations.byDirname.buckets', [])
     },
-    async refreshTreeMap (path) {
+    async update (path = null) {
+      let children = null
       try {
-        this.$set(this, 'currentPath', path)
-        const children = await this.getData(path)
-        this.renderTreeMap({ children })
-      } catch (_) {
-        this.$set(this, 'currentPath', null)
-        this.cleanTreeMap(`#${this.id} > svg`)
+        children = await this.getData(path)
+      } catch (_) {}
+      // Error while downloading data or no more data to display
+      if (isNull(children) || children.length === 0) {
+        const currentPath = isNull(children) ? null : path
+        const message = isNull(children) ? 'Please select a correct data file' : 'No folders'
+        this.$set(this, 'currentPath', currentPath)
+        select(`#${ this.id } > svg`).remove()
         const span = document.createElement('span')
-        const text = document.createTextNode('Please select a correct data file')
+        span.setAttribute('class', 'error')
+        const text = document.createTextNode(message)
         span.appendChild(text)
         document.getElementById(this.id).appendChild(span)
+      // Still data to display
+      } else {
+        this.$set(this, 'currentPath', path)
+        select(`#${ this.id } > .error`).remove()
+        if (select(`#${ this.id } > svg`).size() === 0) {
+          select(`#${ this.id }`)
+            .append('svg')
+            .attr('width', '100%')
+            .attr('height', this.height)
+        } else {
+          select(`#${ this.id } > svg > g`).remove()
+        }
+        this.renderTreeMap({ children })
       }
     }
   }
