@@ -76,7 +76,7 @@
             </span>
           </router-link>
         </li>
-        <template v-if="!isServer">
+        <template>
           <li class="app-sidebar__container__menu__item">
             <router-link
               class="app-sidebar__container__menu__item__link"
