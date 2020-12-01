@@ -142,12 +142,12 @@
       "toggler": "Trier par",
       "options": {
         "_count": {
-          "asc": "Occurences (croissant)",
-          "desc": "Occurrences (decreasing)"
+          "asc": "Occurrences (- au +)",
+          "desc": "Occurrences (+ au -)"
         },
         "parent_doc_count": {
-          "asc": "Occurrences (increasing)",
-          "desc": "Occurrences (decreasing)"
+          "asc": "Occurrences (- au +)",
+          "desc": "Occurrences (+ au -)"
         },
         "_key": {
           "asc": "Ordre alphab. : A à Z",
@@ -688,6 +688,7 @@
   },
   "treeView": {
     "hits": "aucun document | 1 document | %{hits} documents",
-    "docs": "doc | docs"
+    "docs": "doc | docs",
+    "datadir": "Home"
   }
 }

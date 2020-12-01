@@ -133,25 +133,25 @@
     "creationDate": "Fechas de creación",
     "projects": "Proyectos",
     "deleteNamedEntity": "Eliminar esta Entidad Identificada",
-    "showMore": "Expand",
+    "showMore": "Ampliar",
     "missing": "Fecha faltante",
     "starred": "Favoritos",
     "notStarred": "No favoritos",
     "recommendedBy": "Recomendado por",
     "sortByDropdown": {
-      "toggler": "Sort",
+      "toggler": "Ordenar",
       "options": {
         "_count": {
-          "asc": "Occurrences (increasing)",
-          "desc": "Occurrences (decreasing)"
+          "asc": "Ocurrencias (aumentando)",
+          "desc": "Ocurrencias (decreciente)"
         },
         "parent_doc_count": {
-          "asc": "Occurrences (increasing)",
-          "desc": "Occurrences (decreasing)"
+          "asc": "Ocurrencias (aumentando)",
+          "desc": "Ocurrencias (decreciente)"
         },
         "_key": {
-          "asc": "Alphabetical (A to Z)",
-          "desc": "Alphabetical (Z to A)"
+          "asc": "Alfabéticamente (A a la Z)",
+          "desc": "Alfabéticamente (Z a la A)"
         }
       }
     },
@@ -364,7 +364,7 @@
     "document": "Archivo",
     "name": "Nombre del archivo",
     "path": "Ruta del archivo",
-    "dirname": "File directory",
+    "dirname": "Directorio de archivos",
     "id": "ID de archivo",
     "creationDate": "Fecha de creación",
     "size": "Tamaño del archivo",
@@ -688,6 +688,7 @@
   },
   "treeView": {
     "hits": "no hay archivos | 1 archivo | %{hits} archivos",
-    "docs": "archivo | archivos"
+    "docs": "archivo | archivos",
+    "datadir": "Home"
   }
 }
