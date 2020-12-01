@@ -92,7 +92,11 @@ describe('BatchSearchResults.vue', () => {
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
     propsData = { uuid: '12', project }
     wrapper = shallowMount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
-    await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: project, uuid: '12' }, query: { page: 1 } }).catch(() => {})
+    await wrapper.vm.$router.push({
+      name: 'batch-search.results',
+      params: { index: project, uuid: '12' },
+      query: { page: 1 }
+    }).catch(() => {})
     await wrapper.vm.fetch()
   })
 
@@ -102,7 +106,7 @@ describe('BatchSearchResults.vue', () => {
     auth.reset()
   })
 
-  afterAll(() => jest.restoreAllMocks())
+  afterAll(() => jest.unmock('@/api'))
 
   it('should display a button to delete the batchSearch', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
@@ -138,7 +142,7 @@ describe('BatchSearchResults.vue', () => {
   it('should display 11 info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
     expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(11)
-    expect(wrapper.findAll('.batch-search-results__info dd').at(10).text()).toEqual('test')
+    expect(wrapper.findAll('.batch-search-results__info dd').at(10).text()).toBe('test')
   })
 
   it('should display the list of the queries of this batch search', () => {
@@ -146,13 +150,17 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('b-table-stub').attributes('items').split(',')).toHaveLength(3)
   })
 
-  it('should redirect on sort changed', async () => {
+  it('should redirect on sort changed', () => {
     jest.spyOn(router, 'push')
 
-    await wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
+    wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
 
     expect(router.push).toBeCalled()
-    expect(router.push).toBeCalledWith({ name: 'batch-search.results', params: { index: project, uuid: '12' }, query: { page: 1, queries: [], sort: 'content_type', order: 'desc' } })
+    expect(router.push).toBeCalledWith({
+      name: 'batch-search.results',
+      params: { index: project, uuid: '12' },
+      query: { page: 1, queries: [], sort: 'content_type', order: 'desc' }
+    })
   })
 
   it('should redirect on batchSearch deletion', async () => {
@@ -195,10 +203,32 @@ describe('BatchSearchResults.vue', () => {
 
   it('should redirect to document including the search query', async () => {
     wrapper = mount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
-    await wrapper.vm.$router.push({ name: 'batch-search.results', params: { index: project, uuid: '12' }, query: { page: 1 } }).catch(() => {})
+    await wrapper.vm.$router.push({
+      name: 'batch-search.results',
+      params: { index: project, uuid: '12' },
+      query: { page: 1 }
+    }).catch(() => {})
+
     await wrapper.vm.fetch()
 
     expect(wrapper.findAll('.batch-search-results__queries__query')).toHaveLength(3)
-    expect(wrapper.find('.batch-search-results__queries__query__link').attributes('href')).toBe(`#/d/${project}/42/42?q=query_01`)
+    expect(wrapper.find('.batch-search-results__queries__query__link').attributes('href'))
+      .toBe(`#/d/${project}/42/42?q=query_01`)
+  })
+
+  it('should cast queries param into array on beforeRouteEnter and beforeRouteUpdate', async () => {
+    wrapper = await shallowMount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
+    const toObject = {
+      name: 'batch-search.results',
+      params: { index: project, uuid: '12' },
+      query: { page: 1, queries: 'simple_text' }
+    }
+
+    BatchSearchResults.beforeRouteEnter.call(wrapper.vm, toObject, undefined, func => func(wrapper.vm))
+    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.queries).toEqual(['simple_text'])
+
+    BatchSearchResults.beforeRouteUpdate.call(wrapper.vm, toObject, undefined, jest.fn())
+    expect(wrapper.vm.queries).toEqual(['simple_text'])
   })
 })

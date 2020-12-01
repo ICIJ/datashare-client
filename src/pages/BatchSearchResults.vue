@@ -211,12 +211,7 @@
 </template>
 
 <script>
-import find from 'lodash/find'
-import get from 'lodash/get'
-import isEqual from 'lodash/isEqual'
-import indexOf from 'lodash/indexOf'
-import keys from 'lodash/keys'
-import sumBy from 'lodash/sumBy'
+import { castArray, find, get, indexOf, isEqual, keys, sumBy } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
@@ -371,14 +366,14 @@ export default {
     next(vm => {
       vm.$set(vm, 'published', vm.batchSearch.published)
       vm.$set(vm, 'page', parseInt(get(to, 'query.page', vm.page)))
-      vm.$set(vm, 'queries', get(to, 'query.queries', vm.queries))
+      vm.$set(vm, 'queries', castArray(get(to, 'query.queries', vm.queries)))
       vm.$set(vm, 'sort', get(to, 'query.sort', vm.sort))
       vm.$set(vm, 'order', get(to, 'query.order', vm.order))
     })
   },
   beforeRouteUpdate (to, from, next) {
     this.$set(this, 'page', parseInt(get(to, 'query.page', this.page)))
-    this.$set(this, 'queries', get(to, 'query.queries', this.queries))
+    this.$set(this, 'queries', castArray(get(to, 'query.queries', this.queries)))
     this.$set(this, 'sort', get(to, 'query.sort', this.sort))
     this.$set(this, 'order', get(to, 'query.order', this.order))
     next()
