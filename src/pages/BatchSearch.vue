@@ -41,12 +41,17 @@
                 {{ $tc('batchSearch.query', item.nbQueries) }}
               </template>
               <template v-slot:cell(state)="{ item }">
-                <b-badge
-                  :class="{ 'cursor-pointer': item.state === 'FAILURE' }"
-                  @click.prevent="openErrorMessage(item)"
-                  :variant="item.state | toVariant">
-                  {{ capitalize(item.state) }}
-                </b-badge>
+                <span v-if="isFailed(item)">
+                  <b-badge
+                    class="cursor-pointer"
+                    @click.prevent="openErrorMessage(item)"
+                    :variant="item.state | toVariant">
+                    {{ $t(`batchSearch.state${ startCase(lowerCase(item.state)) }`) }}
+                  </b-badge>
+                </span>
+                <span v-else :class="`text-${ $options.filters.toVariant(item.state) }`">
+                  {{ $t(`batchSearch.state${ startCase(lowerCase(item.state)) }`) }}
+                </span>
               </template>
               <template v-slot:cell(date)="{ item }">
                 <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
@@ -80,11 +85,7 @@
 </template>
 
 <script>
-import capitalize from 'lodash/capitalize'
-import compact from 'lodash/compact'
-import find from 'lodash/find'
-import get from 'lodash/get'
-import keys from 'lodash/keys'
+import { compact, find, get, keys, lowerCase, startCase } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
@@ -229,11 +230,11 @@ export default {
     this.fetch()
   },
   methods: {
-    capitalize,
-    keys,
-    moment,
+    isFailed (item) {
+      return item.state === 'FAILURE'
+    },
     openErrorMessage (item) {
-      if (item.state === 'FAILURE') {
+      if (this.isFailed(item)) {
         this.errorMessage = item.errorMessage
         this.$bvModal.show('error-modal')
       }
@@ -260,7 +261,11 @@ export default {
     },
     linkGen (page) {
       return this.generateLinkToBatchSearch(page)
-    }
+    },
+    keys,
+    lowerCase,
+    moment,
+    startCase
   }
 }
 </script>

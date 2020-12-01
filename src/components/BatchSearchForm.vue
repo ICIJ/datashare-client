@@ -358,13 +358,13 @@ export default {
             await this.$store.dispatch('indexing/runBatchSearch')
             this.$root.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
           } catch (_) {
-            this.$root.$bvToast.toast(this.$t('batchSearch.failure'), { noCloseButton: true, variant: 'danger' })
+            this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
           }
         } else {
           this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
         }
       } catch (_) {
-        this.$root.$bvToast.toast(this.$t('batchSearch.submitFailure'), { noCloseButton: true, variant: 'danger' })
+        this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
       } finally {
         /**
          * The form has been submitted

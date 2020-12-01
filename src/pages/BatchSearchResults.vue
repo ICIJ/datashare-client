@@ -2,9 +2,7 @@
   <div class="batch-search-results" v-if="Object.keys(batchSearch).length !== 0">
     <page-header icon="layer-group" :title="batchSearch.name" :description="batchSearch.description">
       <template v-slot:preTitle>
-        <router-link :to="{ name: 'batch-search' }">
-          {{ $t('batchSearch.title') }}
-        </router-link>
+        <router-link :to="{ name: 'batch-search' }" class="mx-1">{{ $t('batchSearch.title') }}</router-link>
         <fa icon="angle-right" class="small"></fa>
       </template>
       <div class="d-flex my-2 mx-3">
@@ -70,7 +68,7 @@
               @click.prevent="openErrorMessage"
               :class="{ 'cursor-pointer': isFailed }"
               :variant="batchSearch.state | toVariant">
-              {{ capitalize(batchSearch.state) }}
+              {{ batchSearch.state }}
             </b-badge>
           </dd>
           <dt class="text-nowrap col-sm-6 text-right text-truncate">
@@ -213,7 +211,6 @@
 </template>
 
 <script>
-import capitalize from 'lodash/capitalize'
 import find from 'lodash/find'
 import get from 'lodash/get'
 import isEqual from 'lodash/isEqual'
@@ -447,7 +444,6 @@ export default {
         this.$bvModal.show('error-modal')
       }
     },
-    capitalize,
     keys,
     moment
   }
