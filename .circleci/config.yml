@@ -94,6 +94,9 @@ jobs:
           name: Restore app bundle (repo + dependencies) from the `build` job
           key: doc-cache-{{ .Environment.CIRCLE_SHA1 }}
       - run:
+           name: Ensure rsync is installed
+           command: (sudo apt update || /bin/true) && sudo apt install rsync
+      - run:
            name: Prepare SSH directory
            command: |
              mkdir -p ~/.ssh
@@ -115,7 +118,7 @@ jobs:
             git clone git@github.com:ICIJ/datashare.wiki.git ~/datashare-wiki
       - run:
           name: Copy generated doc inside the Wiki with a flatten structure
-          command: cp -Rf ~/datashare-client/public/docs/client/*.md ~/datashare-wiki
+          command: rsync --del -r ~/datashare-client/public/docs/client/*.md ~/datashare-wiki/client
       - run:
           name: Add/Commit changes to the Wiki (if any)
           command: |

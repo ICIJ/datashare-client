@@ -38,7 +38,7 @@ const components = {
     return glob.sync(joinToDoc('Client-›-Components-›-Widget*.md'))
   },
   get filters () {
-    return glob.sync(joinToDoc('Client-›-Components-›-Filter!(s)*.md'))
+    return glob.sync(joinToDoc('Client-›-Components-›-Filter-›-Types-›-Filter*.md'))
   },
   get pages () {
     return glob.sync(joinToDoc('Client-›-Pages-›-*.md'))
