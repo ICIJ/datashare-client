@@ -559,7 +559,12 @@
     "learnMore": "Learn more",
     "author": "Author",
     "advancedFilters": "Advanced filters",
-    "selectFolder": "Select folder"
+    "selectFolder": "Select folder",
+    "errorPopover": {
+      "title": "Error in queries",
+      "message": "You have an error on your query \"{query}\".",
+      "readMore": "Please click to read more."
+    }
   },
   "batchSearchResults": {
     "rank": "Rank",

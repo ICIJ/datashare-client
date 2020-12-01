@@ -72,12 +72,15 @@ describe('BatchSearch.vue', () => {
   })
 
   it('should display the number of queries per batchSearch', () => {
-    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="5"]').text()).toBe('1 query')
-    expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="5"]').text()).toBe('2 queries')
+    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="5"]')
+      .text()).toBe('1 query')
+    expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="5"]')
+      .text()).toBe('2 queries')
   })
 
   it('should display index in the batch search results url', () => {
-    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a').attributes('href')).toContain('/project_01/')
+    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a')
+      .attributes('href')).toContain('/project_01/')
   })
 
   it('should redirect on sort changed', async () => {
@@ -86,7 +89,10 @@ describe('BatchSearch.vue', () => {
     await wrapper.vm.sortChanged({ sortBy: 'nbResults', sortDesc: true })
 
     expect(router.push).toBeCalled()
-    expect(router.push).toBeCalledWith({ name: 'batch-search', query: { page: 1, sort: 'batch_results', order: 'desc' } })
+    expect(router.push).toBeCalledWith({
+      name: 'batch-search',
+      query: { page: 1, sort: 'batch_results', order: 'desc' }
+    })
   })
 
   it('should NOT display a pagination', async () => {

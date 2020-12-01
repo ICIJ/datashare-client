@@ -2,11 +2,11 @@
   <div class="batch-search h-100">
     <page-header icon="layer-group" :title="$t('batchSearch.title')" :description="$t('batchSearch.lead')">
       <b-btn @click="$refs['batch-search-form'].show()" variant="primary">
-        <fa icon="plus" class="mr-1" />
+        <fa icon="plus" class="mr-1"></fa>
         {{ $t('batchSearch.heading') }}
       </b-btn>
       <b-modal ref="batch-search-form" hide-footer :title="$t('batchSearch.heading')" size="md" body-class="p-0">
-        <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()" />
+        <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()"></batch-search-form>
       </b-modal>
     </page-header>
     <div class="container pt-4">
@@ -33,7 +33,13 @@
               tbody-tr-class="batch-search__items__item"
               thead-tr-class="text-nowrap">
               <template v-slot:cell(name)="{ item }">
-                <router-link :to="{ name: 'batch-search.results', params: { index: item.project.name, uuid: item.uuid }, query: { page: 1, sort: sortResults, order: orderResults } }" class="batch-search__items__item__link">
+                <router-link
+                  :to="{
+                    name: 'batch-search.results',
+                    params: { index: item.project.name, uuid: item.uuid },
+                    query: { page: 1, sort: sortResults, order: orderResults }
+                  }"
+                  class="batch-search__items__item__link">
                   {{ item.name }}
                 </router-link>
               </template>
@@ -45,9 +51,17 @@
                   <b-badge
                     class="cursor-pointer"
                     @click.prevent="openErrorMessage(item)"
+                    :id="item.uuid"
                     :variant="item.state | toVariant">
                     {{ $t(`batchSearch.state${ startCase(lowerCase(item.state)) }`) }}
                   </b-badge>
+                  <b-popover :target="item.uuid" triggers="hover" placement="bottom">
+                    <template #title>
+                      {{ $t('batchSearch.errorPopover.title') }}
+                    </template>
+                    {{ $t('batchSearch.errorPopover.message', { query: item.errorQuery }) }}<br>
+                    {{ $t('batchSearch.errorPopover.readMore') }}
+                  </b-popover>
                 </span>
                 <span v-else :class="`text-${ $options.filters.toVariant(item.state) }`">
                   {{ $t(`batchSearch.state${ startCase(lowerCase(item.state)) }`) }}
@@ -255,7 +269,8 @@ export default {
       this.$Progress.start()
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
-      await this.$store.dispatch('batchSearch/getBatchSearches', { from, size, sort: this.sort, order: this.order })
+      await this.$store.dispatch('batchSearch/getBatchSearches',
+        { from, size, sort: this.sort, order: this.order })
       this.$Progress.finish()
       this.$wait.end('load batchSearches')
     },
@@ -270,7 +285,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .batch-search {
 
     &__items {

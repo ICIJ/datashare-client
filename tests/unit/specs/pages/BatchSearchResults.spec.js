@@ -84,7 +84,7 @@ describe('BatchSearchResults.vue', () => {
   let propsData = null
   let wrapper = null
 
-  beforeAll(() => Murmur.config.merge({ multipleProjects: true }))
+  beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()

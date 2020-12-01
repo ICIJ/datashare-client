@@ -45,16 +45,16 @@
     <div class="container py-4">
       <div class="batch-search-results__info d-md-flex align-items-start" v-if="Object.keys(batchSearch).length !== 0">
         <dl class="row m-0 w-50">
-          <dt class="text-nowrap col-sm-6 text-right text-truncate" v-if="$config.is('multipleProjects')">
+          <dt class="text-nowrap col-sm-6 text-right text-truncate" v-if="isServer">
             {{ $t('batchSearch.project') }}
           </dt>
-          <dd class="col-sm-6 text-truncate" v-if="$config.is('multipleProjects')">
+          <dd class="col-sm-6 text-truncate" v-if="isServer">
             {{ batchSearch.project.name }}
           </dd>
-          <dt class="col-sm-6 text-right text-truncate" v-if="$config.is('multipleProjects')">
+          <dt class="col-sm-6 text-right text-truncate" v-if="isServer">
             {{ $t('batchSearch.published') }}
           </dt>
-          <dd class="col-sm-6 text-truncate" v-if="$config.is('multipleProjects')">
+          <dd class="col-sm-6 text-truncate" v-if="isServer">
             <b-form-checkbox v-model="batchSearch.published" switch @change="changePublished" v-if="isMyBatchSearch"></b-form-checkbox>
             <span v-else>
               {{ batchSearch.published ? $t('global.yes') : $t('global.no') }}
@@ -64,12 +64,25 @@
             {{ $t('batchSearch.state') }}
           </dt>
           <dd class="col-sm-6 text-truncate">
-            <b-badge
-              @click.prevent="openErrorMessage"
-              :class="{ 'cursor-pointer': isFailed }"
-              :variant="batchSearch.state | toVariant">
-              {{ batchSearch.state }}
-            </b-badge>
+            <span v-if="isFailed">
+              <b-badge
+                class="cursor-pointer"
+                @click.prevent="openErrorMessage"
+                :id="batchSearch.uuid"
+                :variant="batchSearch.state | toVariant">
+                {{ $t(`batchSearch.state${ startCase(lowerCase(batchSearch.state)) }`) }}
+              </b-badge>
+              <b-popover :target="batchSearch.uuid" triggers="hover" placement="bottom">
+                <template #title>
+                  {{ $t('batchSearch.errorPopover.title') }}
+                </template>
+                {{ $t('batchSearch.errorPopover.message', { query: batchSearch.errorQuery }) }}<br>
+                {{ $t('batchSearch.errorPopover.readMore') }}
+              </b-popover>
+            </span>
+            <span v-else :class="`text-${ $options.filters.toVariant(batchSearch.state) }`">
+              {{ $t(`batchSearch.state${ startCase(lowerCase(batchSearch.state)) }`) }}
+            </span>
           </dd>
           <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.date') }}
@@ -131,10 +144,10 @@
               {{ $t('global.no') }}
             </span>
           </dd>
-          <dt class="col-sm-6 text-right text-truncate" v-if="$config.is('multipleProjects')">
+          <dt class="col-sm-6 text-right text-truncate" v-if="isServer">
             {{ $t('batchSearch.author') }}
           </dt>
-          <dd class="col-sm-6 text-truncate" v-if="$config.is('multipleProjects')">
+          <dd class="col-sm-6 text-truncate" v-if="isServer">
             {{ batchSearch.user.id }}
           </dd>
         </dl>
@@ -211,7 +224,7 @@
 </template>
 
 <script>
-import { castArray, find, get, indexOf, isEqual, keys, sumBy } from 'lodash'
+import { castArray, find, get, indexOf, isEqual, keys, lowerCase, startCase, sumBy } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
@@ -222,6 +235,7 @@ import ContentTypeBadge from '@/components/ContentTypeBadge'
 import PageHeader from '@/components/PageHeader'
 import humanSize from '@/filters/humanSize'
 import toVariant from '@/filters/toVariant'
+import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
 export const auth = new Auth()
@@ -236,6 +250,7 @@ export default {
     ContentTypeBadge,
     PageHeader
   },
+  mixins: [utils],
   props: {
     /**
      * The unique id of the batch search
@@ -440,7 +455,9 @@ export default {
       }
     },
     keys,
-    moment
+    lowerCase,
+    moment,
+    startCase
   }
 }
 </script>
