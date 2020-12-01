@@ -12,7 +12,7 @@
                   count
                   include-children-documents
                   no-bars
-                  compact />
+                  compact></tree-view>
       </div>
     </template>
   </filter-boilerplate>
@@ -20,8 +20,8 @@
 
 <script>
 import elasticsearch from '@/api/elasticsearch'
-import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
+import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import TreeView from '@/components/TreeView'
 
 /**
@@ -36,17 +36,17 @@ export default {
   },
   data () {
     return {
-      path: null,
-      key: null
+      key: null,
+      path: null
     }
   },
   created () {
-    this.path = this.dataDir
+    this.$set(this, 'path', this.dataDir)
   },
   watch: {
     project () {
-      this.path = this.dataDir
-      this.selectedPaths = []
+      this.$set(this, 'path', this.dataDir)
+      this.$set(this, 'selectedPaths', [])
     }
   },
   computed: {
@@ -59,6 +59,7 @@ export default {
       },
       set (key) {
         this.setFilterValue(this.filter, { key })
+        this.$store.commit('search/from', 0)
         this.refreshRouteAndSearch()
       }
     },

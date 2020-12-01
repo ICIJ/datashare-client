@@ -8,7 +8,7 @@ const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useA
 
 describe('FilterPath.vue', () => {
   const filter = store.getters['search/getFilter']({ name: 'path' })
-  let wrapper
+  let wrapper = null
 
   beforeEach(() => {
     store.commit('search/index', 'FilterPathProject')
@@ -27,32 +27,38 @@ describe('FilterPath.vue', () => {
     })
   })
 
-  it('must be created with dataDir as path', () => {
+  it('should be created with dataDir as path', () => {
     expect(wrapper.vm.path).toBe('/data')
   })
 
-  it('must reinitialize dataDir as path when project change', async () => {
+  it('should reinitialize dataDir as path when project change', async () => {
     wrapper.vm.path = '/data/foo'
-    store.commit('search/index', 'OtherProject')
-    await wrapper.vm.$nextTick()
+    await store.commit('search/index', 'OtherProject')
+
     expect(wrapper.vm.path).toBe('/data')
   })
 
-  it('must list selected paths according to the filter', async () => {
+  it('should list selected paths according to the filter', async () => {
     const key = ['/data/foo', '/data/bar']
-    store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
-    await wrapper.vm.$nextTick()
+    await store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
+
     expect(wrapper.vm.selectedPaths).toContain('/data/foo')
     expect(wrapper.vm.selectedPaths).toContain('/data/bar')
   })
 
-  it('must reset the list selected paths when project change ', async () => {
+  it('should reset the selected paths when project change', async () => {
     const key = ['/data/foo', '/data/bar']
-    store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
-    await wrapper.vm.$nextTick()
+    await store.commit('search/setFilterValue', wrapper.vm.filter.itemParam({ key }))
     expect(wrapper.vm.selectedPaths).toHaveLength(2)
-    store.commit('search/index', 'OtherProject')
-    await wrapper.vm.$nextTick()
+
+    await store.commit('search/index', 'OtherProject')
     expect(wrapper.vm.selectedPaths).toHaveLength(0)
+  })
+
+  it('should reset search from to 0 when selectedPaths change', () => {
+    store.commit('search/from', 25)
+    wrapper.vm.$set(wrapper.vm, 'selectedPaths', ['path'])
+
+    expect(store.state.search.from).toBe(0)
   })
 })
