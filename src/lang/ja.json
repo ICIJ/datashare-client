@@ -528,9 +528,9 @@
     "filePlaceholder": "ファイルを選択",
     "submit": "追加",
     "success": "あなたのまとめ検索（バッチサーチ）を現在処理中です",
-    "failure": "何か問題があり、あなたのまとめ検索を開始できません",
+    "error": "Something went wrong, unable to start your batch search.",
     "submitSuccess": "Your batch search has been added.",
-    "submitFailure": "Something went wrong, unable to add your batch search.",
+    "submitError": "Something went wrong, unable to add your batch search.",
     "project": "プロジェクト",
     "name": "名称",
     "description": "詳細",
@@ -542,6 +542,9 @@
     "path": "パス",
     "queries": "検索語",
     "state": "状況",
+    "stateFailure": "See error message",
+    "stateSuccess": "Success",
+    "stateQueued": "Queued",
     "date": "日付",
     "nbResults": "結果の数",
     "query": "検索語なし | 検索語１語 | 検索語{count} 語",
@@ -556,7 +559,12 @@
     "learnMore": "もっと詳しく",
     "author": "作成者",
     "advancedFilters": "高度なフィルタ",
-    "selectFolder": "Select folder"
+    "selectFolder": "Select folder",
+    "errorPopover": {
+      "title": "Error in queries",
+      "message": "You have an error on your query \"{query}\".",
+      "readMore": "Please click to read more."
+    }
   },
   "batchSearchResults": {
     "rank": "ランク",
