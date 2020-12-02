@@ -528,9 +528,9 @@
     "filePlaceholder": "Selecciona un archivo...",
     "submit": "Añadir",
     "success": "Tu búsqueda masiva está ejecutándose.",
-    "failure": "Error, no se puede iniciar la búsqueda masiva.",
+    "error": "Something went wrong, unable to start your batch search.",
     "submitSuccess": "La búsqueda masiva ha sido añadida.",
-    "submitFailure": "Error, no se puede añadir la búsqueda masiva.",
+    "submitError": "Something went wrong, unable to add your batch search.",
     "project": "Proyecto",
     "name": "Nombre",
     "description": "Descripción",
@@ -542,6 +542,9 @@
     "path": "Ruta",
     "queries": "Consultas",
     "state": "Estado",
+    "stateFailure": "See error message",
+    "stateSuccess": "Success",
+    "stateQueued": "Queued",
     "date": "Fecha",
     "nbResults": "Número de resultados",
     "query": "no hay consultas | 1 consulta | {count} consultas",
@@ -556,7 +559,12 @@
     "learnMore": "Leer más",
     "author": "Autor·a",
     "advancedFilters": "Filtros avanzados",
-    "selectFolder": "Seleccionar directorio"
+    "selectFolder": "Seleccionar directorio",
+    "errorPopover": {
+      "title": "Error in queries",
+      "message": "You have an error on your query \"{query}\".",
+      "readMore": "Please click to read more."
+    }
   },
   "batchSearchResults": {
     "rank": "Rango",
