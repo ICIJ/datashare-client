@@ -1,5 +1,4 @@
-import get from 'lodash/get'
-import last from 'lodash/last'
+import { get, last } from 'lodash'
 import utils from '@/mixins/utils'
 
 export default {

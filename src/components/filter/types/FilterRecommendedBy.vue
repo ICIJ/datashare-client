@@ -37,8 +37,8 @@
 import slice from 'lodash/slice'
 import { mapState } from 'vuex'
 
-import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
+import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import displayUser from '@/filters/displayUser'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
@@ -80,6 +80,7 @@ export default {
     async selectUsers (users = [], refresh = true) {
       this.setFilterValue(this.filter, { key: users })
       await this.$store.dispatch('search/getDocumentsRecommendedBy', users)
+      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
       if (refresh) {
         this.refreshRouteAndSearch()

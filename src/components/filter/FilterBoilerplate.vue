@@ -261,11 +261,11 @@ export default {
         // itemIndex. The value of this.pageItemsPath is an array so it needs
         // to be deconstructed into another array to merge it with the two indexes
         const item = get(this.pages, [pageIndex, ...this.pageItemsPath, itemIndex])
-        // The item still have more than one occurence, we just need to
+        // The item still have more than one occurrence, we just need to
         // update the doc count
         if (item.doc_count > 1) {
           item.doc_count--
-        // The item as only one occurence, meaning it must be
+        // The item as only one occurrence, meaning it must be
         // deleted from the page's items.
         } else {
           get(this.pages, [pageIndex, ...this.pageItemsPath]).splice(itemIndex, 1)
@@ -435,6 +435,7 @@ export default {
       /**
        * Triggered at the root level when user starts to search in the filter values.
        */
+      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('filter::async-search', this.filter, this.query)
       /**
        * Triggered when user starts to search in the filter values.
@@ -522,6 +523,7 @@ export default {
       this.$emit('reset-filter-values', this.filter, refresh)
     },
     changeSelectedValues ($ev) {
+      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
       this.$store.commit('search/from', 0)
       this.$emit('add-filter-values', this.filter, this.selected)

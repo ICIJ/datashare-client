@@ -42,13 +42,12 @@ export default {
   name: 'SearchResultsGrid',
   components: {
     DocumentActions,
-    DocumentThumbnail,
     DocumentSlicedName,
+    DocumentThumbnail,
     SearchResultsHeader
   },
   computed: {
-    ...mapState('search', ['query', 'response']),
-    ...mapState('search', ['isDownloadAllowed']),
+    ...mapState('search', ['isDownloadAllowed', 'query', 'response']),
     hasResults () {
       return this.response.hits.length > 0
     },
@@ -59,7 +58,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .search-results-grid {
     padding: 0 0 $spacer;
 
