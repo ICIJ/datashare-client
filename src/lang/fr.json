@@ -528,9 +528,9 @@
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
-    "failure": "Il y a eu une erreur, votre recherche en lot n'a pas démarré.",
+    "error": "Something went wrong, unable to start your batch search.",
     "submitSuccess": "Votre recherche en lot a été ajoutée.",
-    "submitFailure": "Erreur, votre recherche en lot n'a pas été ajoutée.",
+    "submitError": "Something went wrong, unable to add your batch search.",
     "project": "Projet",
     "name": "Nom",
     "description": "Description",
@@ -542,6 +542,9 @@
     "path": "Chemin",
     "queries": "Recherches",
     "state": "Status",
+    "stateFailure": "See error message",
+    "stateSuccess": "Success",
+    "stateQueued": "Queued",
     "date": "Date",
     "nbResults": "Nombre de résultats",
     "query": "pas de recherche | 1 recherche | {count} recherches",
@@ -556,7 +559,12 @@
     "learnMore": "En savoir plus",
     "author": "Auteur·e",
     "advancedFilters": "Filtres avancés",
-    "selectFolder": "Sélectionner un dossier"
+    "selectFolder": "Sélectionner un dossier",
+    "errorPopover": {
+      "title": "Error in queries",
+      "message": "You have an error on your query \"{query}\".",
+      "readMore": "Please click to read more."
+    }
   },
   "batchSearchResults": {
     "rank": "Rang",
