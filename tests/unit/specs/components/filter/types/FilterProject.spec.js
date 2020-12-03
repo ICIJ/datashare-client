@@ -16,13 +16,11 @@ jest.mock('axios', () => {
   }
 })
 
-const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-
-localVue.mixin({ created () {} })
-const mergeCreatedStrategy = localVue.config.optionMergeStrategies.created
-localVue.config.optionMergeStrategies.created = (parent, _) => mergeCreatedStrategy(parent)
-
 describe('FilterProject.vue', () => {
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  localVue.mixin({ created () {} })
+  const mergeCreatedStrategy = localVue.config.optionMergeStrategies.created
+  localVue.config.optionMergeStrategies.created = (parent, _) => mergeCreatedStrategy(parent)
   const project = toLower('FilterProject')
   const anotherProject = toLower('AnotherFilterProject')
   esConnectionHelper([project, anotherProject])
@@ -30,7 +28,6 @@ describe('FilterProject.vue', () => {
 
   beforeAll(() => {
     Murmur.config.merge({ datashare_projects: JSON.stringify([project, anotherProject]) })
-    Murmur.config.merge({ multipleProjects: true })
     store.commit('search/index', project)
   })
 
@@ -41,7 +38,6 @@ describe('FilterProject.vue', () => {
   afterAll(() => jest.unmock('axios'))
 
   it('should not display a dropdown if we aren\'t in server mode', () => {
-    Murmur.config.merge({ multipleProjects: false })
     wrapper = shallowMount(FilterProject, { i18n, localVue, store, wait, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) } })
 
     expect(wrapper.findAll('option')).toHaveLength(0)

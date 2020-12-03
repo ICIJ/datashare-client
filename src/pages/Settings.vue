@@ -34,20 +34,17 @@ import Extensions from '@/components/Extensions'
 import PageHeader from '@/components/PageHeader'
 import Plugins from '@/components/Plugins'
 import ServerSettings from '@/components/ServerSettings'
+import utils from '@/mixins/utils'
 
 export default {
   name: 'Settings',
+  mixins: [utils],
   components: {
     Api,
     Extensions,
     PageHeader,
     Plugins,
     ServerSettings
-  },
-  computed: {
-    isServer () {
-      return this.$config && this.$config.get('mode') === 'SERVER'
-    }
   }
 }
 </script>

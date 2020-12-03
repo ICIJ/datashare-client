@@ -224,7 +224,7 @@ describe('BatchSearchResults.vue', () => {
       query: { page: 1, queries: 'simple_text' }
     }
 
-    BatchSearchResults.beforeRouteEnter.call(wrapper.vm, toObject, undefined, func => func(wrapper.vm))
+    BatchSearchResults.beforeRouteEnter.call(wrapper.vm, toObject, undefined, fn => fn(wrapper.vm))
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.queries).toEqual(['simple_text'])
 

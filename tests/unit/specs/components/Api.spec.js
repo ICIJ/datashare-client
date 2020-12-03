@@ -22,7 +22,7 @@ describe('Api.vue', () => {
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
   beforeEach(() => {
-    Murmur.config.merge({ multipleProjects: true })
+    Murmur.config.merge({ mode: 'SERVER' })
     wrapper = shallowMount(ApiPage, { i18n, localVue, router, store })
   })
 

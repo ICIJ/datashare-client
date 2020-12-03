@@ -66,9 +66,9 @@ describe('ServerSettings.vue', () => {
     axios.request.mockResolvedValue({ data: {} })
   })
 
-  it('should display an alert', async () => {
-    Murmur.config.merge({ multipleProjects: true })
-    wrapper = await shallowMount(ServerSettings, { i18n, localVue, store, wait })
+  it('should display an alert', () => {
+    Murmur.config.merge({ mode: 'SERVER' })
+    wrapper = shallowMount(ServerSettings, { i18n, localVue, store, wait })
 
     expect(wrapper.find('b-alert-stub').exists()).toBeTruthy()
   })

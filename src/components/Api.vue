@@ -1,6 +1,6 @@
 <template>
   <div class="api h-100">
-    <div v-if="!!$config.is('multipleProjects')">
+    <div v-if="isServer">
       <div class="api__create-key">
         <b-button @click="getApiKey" variant="primary" v-if="!apiKey">
           <fa icon="plus" class="mr-1"></fa>
@@ -38,12 +38,14 @@
 <script>
 import Api from '@/api'
 import Auth from '@/api/resources/Auth'
+import utils from '@/mixins/utils'
 
 const api = new Api()
 const auth = new Auth()
 
 export default {
   name: 'Api',
+  mixins: [utils],
   data () {
     return {
       apiKey: null

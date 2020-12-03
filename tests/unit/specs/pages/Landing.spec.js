@@ -4,13 +4,12 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { Core } from '@/core'
 import Landing from '@/pages/Landing'
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-
 describe('Landing.vue', () => {
-  let wrapper
+  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+  let wrapper = null
 
   beforeEach(() => {
-    Murmur.config.merge({ multipleProjects: true })
+    Murmur.config.merge({ mode: 'SERVER' })
     Murmur.config.merge({ datashare_projects: ['project'] })
     wrapper = shallowMount(Landing, { i18n, localVue, store })
   })

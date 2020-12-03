@@ -1,6 +1,6 @@
 <template>
   <div class="insights">
-    <div class="bg-secondary text-white insights__toolbox position-sticky sticky-top mb-4" v-if="$config.is('multipleProjects')">
+    <div class="bg-secondary text-white insights__toolbox position-sticky sticky-top mb-4" v-if="isServer">
       <div class="container py-2 d-flex align-items-center">
         <div class="pr-2">
           {{ $t('insights.selectProject') }}
@@ -26,11 +26,13 @@
 import { mapGetters } from 'vuex'
 
 import ProjectSelector from '@/components/ProjectSelector'
+import utils from '@/mixins/utils'
 
 export default {
   components: {
     ProjectSelector
   },
+  mixins: [utils],
   computed: {
     ...mapGetters('insights', ['instantiatedWidgets']),
     project: {

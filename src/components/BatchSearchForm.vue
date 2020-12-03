@@ -47,7 +47,7 @@
           <b-form-group
             label-size="sm"
             :label="`${$t('batchSearch.project')} *`"
-            v-if="$config.is('multipleProjects')">
+            v-if="isServer">
             <b-form-select
               v-model="project"
               :options="projects"
@@ -56,7 +56,7 @@
           <b-form-group
             label-size="sm"
             :description="$t('batchSearch.publishedDescription')"
-            v-if="$config.is('multipleProjects')"
+            v-if="isServer"
             class="published">
             <b-form-checkbox
               v-model="published"
@@ -187,24 +187,15 @@
 </template>
 
 <script>
-import compact from 'lodash/compact'
-import concat from 'lodash/concat'
-import each from 'lodash/each'
-import filter from 'lodash/filter'
-import flatten from 'lodash/flatten'
-import get from 'lodash/get'
-import has from 'lodash/has'
-import includes from 'lodash/includes'
-import isEmpty from 'lodash/isEmpty'
-import map from 'lodash/map'
-import range from 'lodash/range'
-import uniq from 'lodash/uniq'
+import { compact, concat, each, filter, flatten, get, has, includes, isEmpty, map, range, uniq } from 'lodash'
+// In order to be mocked in the test class
 import throttle from 'lodash/throttle'
 import bodybuilder from 'bodybuilder'
 import Fuse from 'fuse.js'
 
 import elasticsearch from '@/api/elasticsearch'
 import TreeView from '@/components/TreeView'
+import utils from '@/mixins/utils'
 import types from '@/utils/types.json'
 
 /**
@@ -212,6 +203,7 @@ import types from '@/utils/types.json'
  */
 export default {
   name: 'BatchSearchForm',
+  mixins: [utils],
   components: {
     TreeView
   },

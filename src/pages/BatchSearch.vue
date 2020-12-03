@@ -105,10 +105,12 @@ import { mapState } from 'vuex'
 import BatchSearchForm from '@/components/BatchSearchForm'
 import PageHeader from '@/components/PageHeader'
 import toVariant from '@/filters/toVariant'
+import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
 export default {
   name: 'BatchSearches',
+  mixins: [utils],
   components: {
     BatchSearchForm,
     PageHeader
@@ -138,7 +140,7 @@ export default {
       return settings.batchSearchResults.order
     },
     projectNameField () {
-      return this.$config.is('multipleProjects') ? {
+      return this.isServer ? {
         key: 'project.name',
         label: this.$t('batchSearch.project'),
         sortable: true,
@@ -146,7 +148,7 @@ export default {
       } : null
     },
     authorField () {
-      return this.$config.is('multipleProjects') ? {
+      return this.isServer ? {
         key: 'user.id',
         label: this.$t('batchSearch.author'),
         sortable: true,
@@ -154,7 +156,7 @@ export default {
       } : null
     },
     publishedField () {
-      return this.$config.is('multipleProjects') ? {
+      return this.isServer ? {
         key: 'published',
         label: this.$t('batchSearch.published'),
         sortable: true,

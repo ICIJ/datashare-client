@@ -19,12 +19,14 @@
 
 <script>
 import ProjectSelector from '@/components/ProjectSelector'
+import utils from '@/mixins/utils'
 
 /**
  * A Filter component to list projects.
  */
 export default {
   name: 'FilterProject',
+  mixins: [utils],
   components: {
     ProjectSelector
   },
@@ -47,7 +49,7 @@ export default {
       return this.collapseItems ? 'plus' : 'minus'
     },
     showSelector () {
-      return this.$config.is('multipleProjects') || this.projects.length > 1
+      return this.isServer || this.projects.length > 1
     }
   },
   async created () {
@@ -63,6 +65,7 @@ export default {
       this.$store.commit('search/index', project)
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
+      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('filter::search::reset-filters', false)
       await this.$store.dispatch('search/getStarredDocuments')
       await this.$store.dispatch('search/getIsDownloadAllowed')

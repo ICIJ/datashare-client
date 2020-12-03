@@ -1,25 +1,25 @@
 <template>
   <div class="landing d-flex justify-content-center align-item-center flex-column">
-    <hook name="landing.form:before" />
+    <hook name="landing.form:before"></hook>
     <div class="landing__form py-5">
-      <hook name="landing.form.heading:before" />
+      <hook name="landing.form.heading:before"></hook>
       <h1 class="landing__form__heading text-special">
-        <img src="~images/logo-color.svg" alt="Datashare" />
+        <img src="~images/logo-color.svg" alt="Datashare">
       </h1>
-      <hook name="landing.form.heading:after" />
-      <search-bar class="landing__form__search-bar py-3" size="md" />
-      <hook name="landing.form.project:before" />
-      <div class="mt-5 text-white" v-if="$config.is('multipleProjects')">
+      <hook name="landing.form.heading:after"></hook>
+      <search-bar class="landing__form__search-bar py-3" size="md"></search-bar>
+      <hook name="landing.form.project:before"></hook>
+      <div class="mt-5 text-white" v-if="isServer">
         <div class="landing__form__projects">
           <h2 class="text-uppercase h5">
             {{ $t('filter.projects') }}
           </h2>
-          <project-cards class="mt-3" />
+          <project-cards class="mt-3"></project-cards>
         </div>
       </div>
-      <hook name="landing.form.project:after" />
+      <hook name="landing.form.project:after"></hook>
     </div>
-    <hook name="landing.form:after" />
+    <hook name="landing.form:after"></hook>
   </div>
 </template>
 
@@ -27,9 +27,11 @@
 import Hook from '@/components/Hook'
 import ProjectCards from '@/components/ProjectCards'
 import SearchBar from '@/components/SearchBar'
+import utils from '@/mixins/utils'
 
 export default {
   name: 'Landing',
+  mixins: [utils],
   components: {
     Hook,
     ProjectCards,

@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!$config.is('multipleProjects')">
+    <div v-if="!isServer">
       <div class="container my-4">
         <v-wait for="load server settings">
           <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
@@ -47,10 +47,13 @@
 <script>
 import cloneDeep from 'lodash/cloneDeep'
 
+import utils from '@/mixins/utils'
+
 const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth', 'CORS']
 
 export default {
   name: 'ServerSettings',
+  mixins: [utils],
   filters: {
     sentenceCase (str) {
       const result = str.replace(/([A-Z])/g, ' $1')

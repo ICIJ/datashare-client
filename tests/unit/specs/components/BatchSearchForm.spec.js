@@ -86,7 +86,7 @@ describe('BatchSearchForm.vue', () => {
   })
 
   it('should display "Published" button on server', () => {
-    Murmur.config.merge({ multipleProjects: true })
+    Murmur.config.merge({ mode: 'SERVER' })
     wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store, wait })
 
     expect(wrapper.find('.card .published').exists()).toBeTruthy()
