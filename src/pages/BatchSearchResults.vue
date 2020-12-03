@@ -64,25 +64,25 @@
             {{ $t('batchSearch.state') }}
           </dt>
           <dd class="col-sm-6 text-truncate">
-            <span v-if="isFailed">
-              <b-badge
-                class="cursor-pointer"
-                @click.prevent="openErrorMessage"
-                :id="batchSearch.uuid"
-                :variant="batchSearch.state | toVariant">
-                {{ $t(`batchSearch.state${ startCase(lowerCase(batchSearch.state)) }`) }}
-              </b-badge>
-              <b-popover :target="batchSearch.uuid" triggers="hover" placement="bottom">
-                <template #title>
-                  {{ $t('batchSearch.errorPopover.title') }}
-                </template>
-                {{ $t('batchSearch.errorPopover.message', { query: batchSearch.errorQuery }) }}<br>
-                {{ $t('batchSearch.errorPopover.readMore') }}
-              </b-popover>
+            <span :class="`text-${ toVariant(lowerCase(batchSearch.state)) }`">
+              <fa :icon="getStateIcon(lowerCase(batchSearch.state))"></fa>
+              {{ capitalize(batchSearch.state) }}
             </span>
-            <span v-else :class="`text-${ $options.filters.toVariant(batchSearch.state) }`">
-              {{ $t(`batchSearch.state${ startCase(lowerCase(batchSearch.state)) }`) }}
-            </span>
+            <b-badge
+              class="cursor-pointer ml-1"
+              @click.prevent="openErrorMessage"
+              :id="batchSearch.uuid"
+              v-if="isFailed"
+              variant="danger">
+              {{ $t('batchSearch.seeError') }}
+            </b-badge>
+            <b-popover :target="batchSearch.uuid" triggers="hover" placement="bottom">
+              <template #title>
+                {{ $t('batchSearch.errorPopover.title') }}
+              </template>
+              {{ $t('batchSearch.errorPopover.message', { query: batchSearch.errorQuery }) }}<br>
+              {{ $t('batchSearch.errorPopover.readMore') }}
+            </b-popover>
           </dd>
           <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.date') }}
@@ -217,14 +217,14 @@
     <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
       <div v-html="$t('batchSearchResults.errorMessage')"></div>
       <div class="code mt-3 px-3 py-1 text-monospace text-break">
-        {{ this.batchSearch.errorMessage }}
+        {{ batchSearch.errorMessage }}
       </div>
     </b-modal>
   </div>
 </template>
 
 <script>
-import { castArray, find, get, indexOf, isEqual, keys, lowerCase, startCase, sumBy } from 'lodash'
+import { capitalize, castArray, find, get, indexOf, isEqual, keys, lowerCase, sumBy } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
@@ -266,8 +266,7 @@ export default {
     }
   },
   filters: {
-    humanSize,
-    toVariant
+    humanSize
   },
   data () {
     return {
@@ -454,10 +453,20 @@ export default {
         this.$bvModal.show('error-modal')
       }
     },
+    getStateIcon (state) {
+      const icons = {
+        failure: 'times-circle',
+        queued: 'clock',
+        running: 'circle-notch',
+        success: 'glass-cheers'
+      }
+      return get(icons, state, 'ban')
+    },
+    capitalize,
     keys,
     lowerCase,
     moment,
-    startCase
+    toVariant
   }
 }
 </script>

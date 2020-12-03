@@ -11,21 +11,23 @@ jest.mock('@/api', () => {
     return {
       getBatchSearches: jest.fn().mockReturnValue(Promise.resolve({
         batchSearches: [{
-          uuid: 1,
+          uuid: '1',
           project: { name: 'project_01' },
           name: 'name_01',
           description: 'description_01',
           date: '2019-01-01',
           nbResults: 2,
-          nbQueries: 1
+          nbQueries: 1,
+          state: 'SUCCESS'
         }, {
-          uuid: 2,
+          uuid: '2',
           project: { name: 'project_02' },
           name: 'name_02',
           description: 'description_02',
           date: '2019-01-01',
           nbResults: 3,
-          nbQueries: 2
+          nbQueries: 2,
+          state: 'FAILURE'
         }],
         total: 2
       }))
@@ -71,16 +73,23 @@ describe('BatchSearch.vue', () => {
     expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(9)
   })
 
+  it('should display index in the batch search results url', () => {
+    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a')
+      .attributes('href')).toContain('/project_01/')
+  })
+
+  it('should display badge if batchSearch state is fail, but no badge if state is not fail', () => {
+    expect(wrapper.findAll('.batch-search__items__item:nth-child(1) > td[aria-colindex="6"] span'))
+      .toHaveLength(1)
+    expect(wrapper.findAll('.batch-search__items__item:nth-child(2) > td[aria-colindex="6"] span'))
+      .toHaveLength(2)
+  })
+
   it('should display the number of queries per batchSearch', () => {
     expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="5"]')
       .text()).toBe('1 query')
     expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="5"]')
       .text()).toBe('2 queries')
-  })
-
-  it('should display index in the batch search results url', () => {
-    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a')
-      .attributes('href')).toContain('/project_01/')
   })
 
   it('should redirect on sort changed', async () => {
@@ -105,5 +114,26 @@ describe('BatchSearch.vue', () => {
     await wrapper.setData({ perPage: 1 })
 
     expect(wrapper.find('.pagination.b-pagination').exists()).toBeTruthy()
+  })
+
+  describe('getStateIcon', () => {
+    it('should return an icon for each batchSearch state', () => {
+      const iconFailure = wrapper.vm.getStateIcon('failure')
+      expect(iconFailure).toBe('times-circle')
+
+      const iconQueued = wrapper.vm.getStateIcon('queued')
+      expect(iconQueued).toBe('clock')
+
+      const iconRunning = wrapper.vm.getStateIcon('running')
+      expect(iconRunning).toBe('circle-notch')
+
+      const iconSuccess = wrapper.vm.getStateIcon('success')
+      expect(iconSuccess).toBe('glass-cheers')
+    })
+
+    it('should return a default icon if the batchSearch state is unknown', () => {
+      const iconUnknown = wrapper.vm.getStateIcon('unknown')
+      expect(iconUnknown).toBe('ban')
+    })
   })
 })

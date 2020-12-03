@@ -23,7 +23,7 @@
               :empty-text="$t('global.emptyTextTable')"
               :fields="fields"
               hover
-              :items="items"
+              :items="batchSearches"
               no-sort-reset
               responsive
               :sort-by="sortBy"
@@ -47,25 +47,25 @@
                 {{ $tc('batchSearch.query', item.nbQueries) }}
               </template>
               <template v-slot:cell(state)="{ item }">
-                <span v-if="isFailed(item)">
-                  <b-badge
-                    class="cursor-pointer"
-                    @click.prevent="openErrorMessage(item)"
-                    :id="item.uuid"
-                    :variant="item.state | toVariant">
-                    {{ $t(`batchSearch.state${ startCase(lowerCase(item.state)) }`) }}
-                  </b-badge>
-                  <b-popover :target="item.uuid" triggers="hover" placement="bottom">
-                    <template #title>
-                      {{ $t('batchSearch.errorPopover.title') }}
-                    </template>
-                    {{ $t('batchSearch.errorPopover.message', { query: item.errorQuery }) }}<br>
-                    {{ $t('batchSearch.errorPopover.readMore') }}
-                  </b-popover>
+                <span :class="`text-${ toVariant(lowerCase(item.state)) }`">
+                  <fa :icon="getStateIcon(lowerCase(item.state))"></fa>
+                  {{ capitalize(item.state) }}
                 </span>
-                <span v-else :class="`text-${ $options.filters.toVariant(item.state) }`">
-                  {{ $t(`batchSearch.state${ startCase(lowerCase(item.state)) }`) }}
-                </span>
+                <b-badge
+                  class="cursor-pointer ml-1"
+                  @click.prevent="openErrorMessage(item)"
+                  :id="item.uuid"
+                  v-if="isFailed(item)"
+                  variant="danger">
+                  {{ $t('batchSearch.seeError') }}
+                </b-badge>
+                <b-popover :target="item.uuid" triggers="hover" placement="bottom">
+                  <template #title>
+                    {{ $t('batchSearch.errorPopover.title') }}
+                  </template>
+                  {{ $t('batchSearch.errorPopover.message', { query: item.errorQuery }) }}<br>
+                  {{ $t('batchSearch.errorPopover.readMore') }}
+                </b-popover>
               </template>
               <template v-slot:cell(date)="{ item }">
                 <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { compact, find, get, keys, lowerCase, startCase } from 'lodash'
+import { capitalize, compact, find, get, lowerCase } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
@@ -113,9 +113,6 @@ export default {
   components: {
     BatchSearchForm,
     PageHeader
-  },
-  filters: {
-    toVariant
   },
   data () {
     return {
@@ -133,7 +130,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('batchSearch', { items: 'batchSearches', total: 'total' }),
+    ...mapState('batchSearch', ['batchSearches', 'total']),
     sortResults () {
       return settings.batchSearchResults.sort
     },
@@ -277,10 +274,19 @@ export default {
     linkGen (page) {
       return this.generateLinkToBatchSearch(page)
     },
-    keys,
+    getStateIcon (state) {
+      const icons = {
+        failure: 'times-circle',
+        queued: 'clock',
+        running: 'circle-notch',
+        success: 'glass-cheers'
+      }
+      return get(icons, state, 'ban')
+    },
+    capitalize,
     lowerCase,
     moment,
-    startCase
+    toVariant
   }
 }
 </script>

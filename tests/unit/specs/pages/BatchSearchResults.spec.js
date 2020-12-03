@@ -231,4 +231,25 @@ describe('BatchSearchResults.vue', () => {
     BatchSearchResults.beforeRouteUpdate.call(wrapper.vm, toObject, undefined, jest.fn())
     expect(wrapper.vm.queries).toEqual(['simple_text'])
   })
+
+  describe('getStateIcon', () => {
+    it('should return an icon for each batchSearch state', () => {
+      const iconFailure = wrapper.vm.getStateIcon('failure')
+      expect(iconFailure).toBe('times-circle')
+
+      const iconQueued = wrapper.vm.getStateIcon('queued')
+      expect(iconQueued).toBe('clock')
+
+      const iconRunning = wrapper.vm.getStateIcon('running')
+      expect(iconRunning).toBe('circle-notch')
+
+      const iconSuccess = wrapper.vm.getStateIcon('success')
+      expect(iconSuccess).toBe('glass-cheers')
+    })
+
+    it('should return a default icon if the batchSearch state is unknown', () => {
+      const iconUnknown = wrapper.vm.getStateIcon('unknown')
+      expect(iconUnknown).toBe('ban')
+    })
+  })
 })
