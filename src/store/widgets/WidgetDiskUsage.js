@@ -1,4 +1,4 @@
-import Component from '@/components/WidgetDiskUsage'
+import Component from '@/components/widget/WidgetDiskUsage'
 import WidgetEmpty from './WidgetEmpty'
 
 /**

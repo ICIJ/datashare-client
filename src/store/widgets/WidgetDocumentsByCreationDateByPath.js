@@ -1,4 +1,4 @@
-import Component from '@/components/WidgetDocumentsByCreationDateByPath'
+import Component from '@/components/widget/WidgetDocumentsByCreationDateByPath'
 import WidgetDocumentsByCreationDate from './WidgetDocumentsByCreationDate'
 
 /**

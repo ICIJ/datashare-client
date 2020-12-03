@@ -1,6 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import WidgetListGroup from '@/components/WidgetListGroup'
+import WidgetListGroup from '@/components/widget/WidgetListGroup'
 import { Core } from '@/core'
 
 describe('WidgetListGroup.vue', () => {

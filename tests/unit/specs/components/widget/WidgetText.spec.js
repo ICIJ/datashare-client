@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { Core } from '@/core'
-import WidgetText from '@/components/WidgetText'
+import WidgetText from '@/components/widget/WidgetText'
 
 const { localVue, store } = Core.init(createLocalVue()).useAll()
 

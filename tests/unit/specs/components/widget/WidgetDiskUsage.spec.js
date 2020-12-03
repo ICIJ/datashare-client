@@ -2,7 +2,7 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
-import WidgetDiskUsage from '@/components/WidgetDiskUsage'
+import WidgetDiskUsage from '@/components/widget/WidgetDiskUsage'
 import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'

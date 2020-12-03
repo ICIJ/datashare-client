@@ -1,7 +1,7 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import WidgetDocumentsByCreationDate from '@/components/WidgetDocumentsByCreationDate'
+import WidgetDocumentsByCreationDate from '@/components/widget/WidgetDocumentsByCreationDate'
 import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'

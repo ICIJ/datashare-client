@@ -1,4 +1,4 @@
-import Component from '@/components/WidgetTreeMap'
+import Component from '@/components/widget/WidgetTreeMap'
 import WidgetEmpty from './WidgetEmpty'
 
 /**

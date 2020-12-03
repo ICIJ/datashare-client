@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { Core } from '@/core'
-import WidgetTreeMap from '@/components/WidgetTreeMap'
+import WidgetTreeMap from '@/components/widget/WidgetTreeMap'
 
 jest.mock('@/api/elasticsearch', () => {
   return {

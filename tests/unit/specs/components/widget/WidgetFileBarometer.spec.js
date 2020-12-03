@@ -1,7 +1,7 @@
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import WidgetFileBarometer from '@/components/WidgetFileBarometer'
+import WidgetFileBarometer from '@/components/widget/WidgetFileBarometer'
 import { Core } from '@/core'
 import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'

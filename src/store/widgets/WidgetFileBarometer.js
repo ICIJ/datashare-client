@@ -1,4 +1,4 @@
-import Component from '@/components/WidgetFileBarometer'
+import Component from '@/components/widget/WidgetFileBarometer'
 import WidgetEmpty from './WidgetEmpty'
 
 /**

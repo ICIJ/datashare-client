@@ -2,7 +2,7 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, mount } from '@vue/test-utils'
 import Murmur from '@icij/murmur'
 
-import WidgetDocumentsByCreationDateByPath from '@/components/WidgetDocumentsByCreationDateByPath'
+import WidgetDocumentsByCreationDateByPath from '@/components/widget/WidgetDocumentsByCreationDateByPath'
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 

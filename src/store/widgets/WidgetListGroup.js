@@ -1,4 +1,4 @@
-import Component from '@/components/WidgetListGroup'
+import Component from '@/components/widget/WidgetListGroup'
 import WidgetEmpty from './WidgetEmpty'
 
 /**

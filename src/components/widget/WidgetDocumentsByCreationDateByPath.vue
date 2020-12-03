@@ -29,7 +29,7 @@ import { mapState } from 'vuex'
 
 import TreeBreadcrumb from '@/components/TreeBreadcrumb'
 import TreeView from '@/components/TreeView'
-import WidgetDocumentsByCreationDate from '@/components/WidgetDocumentsByCreationDate'
+import WidgetDocumentsByCreationDate from '@/components/widget/WidgetDocumentsByCreationDate'
 
 /**
  * Widget to display number of files by creation date by path
