@@ -104,9 +104,9 @@ import { mapState } from 'vuex'
 
 import BatchSearchForm from '@/components/BatchSearchForm'
 import PageHeader from '@/components/PageHeader'
-import toVariant from '@/filters/toVariant'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
+import { toVariant } from '@/utils/utils'
 
 export default {
   name: 'BatchSearches',

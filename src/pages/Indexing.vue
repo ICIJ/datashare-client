@@ -92,9 +92,8 @@ import { mapState } from 'vuex'
 import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import PageHeader from '@/components/PageHeader'
-import toVariant from '@/filters/toVariant'
 import settings from '@/utils/settings'
-import { getOS } from '@/utils/utils'
+import { getOS, toVariant } from '@/utils/utils'
 
 export default {
   name: 'indexing',

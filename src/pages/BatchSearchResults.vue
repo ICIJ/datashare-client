@@ -233,9 +233,9 @@ import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import PageHeader from '@/components/PageHeader'
 import humanSize from '@/filters/humanSize'
-import toVariant from '@/filters/toVariant'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
+import { toVariant } from '@/utils/utils'
 
 export const auth = new Auth()
 

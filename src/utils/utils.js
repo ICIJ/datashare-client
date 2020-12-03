@@ -1,20 +1,8 @@
-import get from 'lodash/get'
-import lowerCase from 'lodash/lowerCase'
+import { get, lowerCase } from 'lodash'
 
+import settings from '@/utils/settings'
+import { slugger } from '@/utils/strings'
 import types from '@/utils/types.json'
-
-function getOS () {
-  let OSName
-  if (window.navigator.platform.includes('Mac')) OSName = 'mac'
-  else if (window.navigator.platform.includes('Win')) OSName = 'windows'
-  else if (window.navigator.platform.includes('Linux')) OSName = 'linux'
-  else OSName = 'other'
-  return OSName
-}
-
-function getShortkeyOS () {
-  return getOS() === 'mac' ? 'mac' : 'default'
-}
 
 function getDocumentTypeLabel (key) {
   if (key === undefined) return ''
@@ -39,9 +27,25 @@ function getExtractionLevelTranslationKey (key) {
   return `filter.level.${get(levels, key, key)}`
 }
 
+function getOS () {
+  let OSName = 'other'
+  if (window.navigator.platform.includes('Mac')) OSName = 'mac'
+  else if (window.navigator.platform.includes('Win')) OSName = 'windows'
+  else if (window.navigator.platform.includes('Linux')) OSName = 'linux'
+  return OSName
+}
+
+function getShortkeyOS () {
+  return getOS() === 'mac' ? 'mac' : 'default'
+}
+
 function objectIncludes (object, text) {
   if (typeof object === 'string') return lowerCase(object).includes(lowerCase(text))
   return Object.values(object).some(object => objectIncludes(object, text))
+}
+
+function toVariant (string = '', defaultVariant = 'darker') {
+  return settings.variantsMap[slugger(string)] || defaultVariant
 }
 
 export {
@@ -49,5 +53,6 @@ export {
   getExtractionLevelTranslationKey,
   getOS,
   getShortkeyOS,
-  objectIncludes
+  objectIncludes,
+  toVariant
 }
