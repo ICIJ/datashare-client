@@ -76,13 +76,6 @@
               variant="danger">
               {{ $t('batchSearch.seeError') }}
             </b-badge>
-            <b-popover :target="batchSearch.uuid" triggers="hover" placement="bottom">
-              <template #title>
-                {{ $t('batchSearch.errorPopover.title') }}
-              </template>
-              {{ $t('batchSearch.errorPopover.message', { query: batchSearch.errorQuery }) }}<br>
-              {{ $t('batchSearch.errorPopover.readMore') }}
-            </b-popover>
           </dd>
           <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.date') }}
@@ -214,10 +207,16 @@
           v-if="numberOfPages > 1"></b-pagination-nav>
       </v-wait>
     </div>
-    <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
-      <div v-html="$t('batchSearchResults.errorMessage')"></div>
-      <div class="code mt-3 px-3 py-1 text-monospace text-break">
-        {{ batchSearch.errorMessage }}
+    <b-modal id="error-modal" :title="$t('batchSearch.errorTitle')" ok-only body-class="py-0">
+      <div v-if="batchSearch.errorQuery" class="font-size-large pb-2 font-weight-bolder">
+        <fa icon="exclamation-triangle" class="mr-1"></fa>
+        {{ $t('batchSearch.errorQuery', { query: batchSearch.errorQuery }) }}
+      </div>
+      <div v-if="batchSearch.errorMessage">
+        <div v-html="$t('batchSearch.errorMessage')"></div>
+        <div class="code mt-3 px-3 py-1 text-monospace text-break">
+          {{ batchSearch.errorMessage }}
+        </div>
       </div>
     </b-modal>
   </div>
@@ -505,6 +504,10 @@ export default {
 .code {
   background-color: black;
   color: white;
+}
+
+.font-size-large {
+  font-size: $font-size-lg;
 }
 
 .cursor-pointer {

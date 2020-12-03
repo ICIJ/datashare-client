@@ -73,7 +73,7 @@ describe('BatchSearch.vue', () => {
     expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(9)
   })
 
-  it('should display index in the batch search results url', () => {
+  it('should display project name in the batch search results url', () => {
     expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a')
       .attributes('href')).toContain('/project_01/')
   })

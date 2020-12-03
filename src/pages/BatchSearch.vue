@@ -59,13 +59,6 @@
                   variant="danger">
                   {{ $t('batchSearch.seeError') }}
                 </b-badge>
-                <b-popover :target="item.uuid" triggers="hover" placement="bottom">
-                  <template #title>
-                    {{ $t('batchSearch.errorPopover.title') }}
-                  </template>
-                  {{ $t('batchSearch.errorPopover.message', { query: item.errorQuery }) }}<br>
-                  {{ $t('batchSearch.errorPopover.readMore') }}
-                </b-popover>
               </template>
               <template v-slot:cell(date)="{ item }">
                 <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
@@ -89,10 +82,16 @@
         </v-wait>
       </div>
     </div>
-    <b-modal id="error-modal" :title="$t('batchSearchResults.errorTitle')" ok-only>
-      <div v-html="$t('batchSearchResults.errorMessage')"></div>
-      <div class="batch-search__modal mt-3 px-3 py-1 text-monospace text-break">
-        {{ this.errorMessage }}
+    <b-modal id="error-modal" :title="$t('batchSearch.errorTitle')" ok-only body-class="py-0">
+      <div v-if="errorQuery" class="font-size-large pb-2 font-weight-bolder">
+        <fa icon="exclamation-triangle" class="mr-1"></fa>
+        {{ $t('batchSearch.errorQuery', { query: errorQuery }) }}
+      </div>
+      <div v-if="errorMessage">
+        <div v-html="$t('batchSearch.errorMessage')"></div>
+        <div class="batch-search__modal mt-3 px-3 py-1 text-monospace text-break">
+          {{ errorMessage }}
+        </div>
       </div>
     </b-modal>
   </div>
@@ -116,7 +115,8 @@ export default {
   },
   data () {
     return {
-      errorMessage: '',
+      errorMessage: null,
+      errorQuery: null,
       order: settings.batchSearch.order,
       page: 1,
       perPage: settings.batchSearch.size,
@@ -246,7 +246,8 @@ export default {
     },
     openErrorMessage (item) {
       if (this.isFailed(item)) {
-        this.errorMessage = item.errorMessage
+        this.$set(this, 'errorMessage', item.errorMessage)
+        this.$set(this, 'errorQuery', item.errorQuery)
         this.$bvModal.show('error-modal')
       }
     },
@@ -291,7 +292,7 @@ export default {
 }
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
   .batch-search {
 
     &__items {
@@ -317,6 +318,10 @@ export default {
     &__modal {
       background-color: black;
       color: white;
+
+      .font-size-large {
+        font-size: $font-size-lg;
+      }
     }
   }
 
