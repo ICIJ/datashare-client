@@ -542,9 +542,7 @@
     "path": "パス",
     "queries": "検索語",
     "state": "状況",
-    "stateFailure": "See error message",
-    "stateSuccess": "Success",
-    "stateQueued": "Queued",
+    "seeError": "See error",
     "date": "日付",
     "nbResults": "結果の数",
     "query": "検索語なし | 検索語１語 | 検索語{count} 語",
@@ -560,11 +558,9 @@
     "author": "作成者",
     "advancedFilters": "高度なフィルタ",
     "selectFolder": "Select folder",
-    "errorPopover": {
-      "title": "Error in queries",
-      "message": "You have an error on your query \"{query}\".",
-      "readMore": "Please click to read more."
-    }
+    "errorTitle": "Error in query",
+    "errorQuery": "You have an error on your query \"{query}\".",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Please refer to this Help page where most common errors are described.</a>"
   },
   "batchSearchResults": {
     "rank": "ランク",
@@ -576,9 +572,7 @@
     "downloadResults": "ダウンロード結果",
     "downloadQueries": "Download queries",
     "downloadTooltip": "Download as CSV",
-    "empty": "検索結果がありません",
-    "errorTitle": "エラー",
-    "errorMessage": "システムは問題を検出しました。あなたのCSVファイルの中で構文エラーがあるか、またはその他のエラーの可能性があります。 <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">このヘルプページを参照してください。よくあるエラーの説明があります。</a>"
+    "empty": "検索結果がありません"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "Filter queries...",

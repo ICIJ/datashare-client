@@ -542,9 +542,7 @@
     "path": "Chemin",
     "queries": "Recherches",
     "state": "Status",
-    "stateFailure": "See error message",
-    "stateSuccess": "Success",
-    "stateQueued": "Queued",
+    "seeError": "See error",
     "date": "Date",
     "nbResults": "Nombre de résultats",
     "query": "pas de recherche | 1 recherche | {count} recherches",
@@ -560,11 +558,9 @@
     "author": "Auteur·e",
     "advancedFilters": "Filtres avancés",
     "selectFolder": "Sélectionner un dossier",
-    "errorPopover": {
-      "title": "Error in queries",
-      "message": "You have an error on your query \"{query}\".",
-      "readMore": "Please click to read more."
-    }
+    "errorTitle": "Error in query",
+    "errorQuery": "You have an error on your query \"{query}\".",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Please refer to this Help page where most common errors are described.</a>"
   },
   "batchSearchResults": {
     "rank": "Rang",
@@ -576,9 +572,7 @@
     "downloadResults": "Télécharger les résultats",
     "downloadQueries": "Télécharger les requêtes",
     "downloadTooltip": "Télécharger au format CSV",
-    "empty": "Pas de résultat",
-    "errorTitle": "Erreur",
-    "errorMessage": "Le système a rencontré un problème. Il peut s'agir d'une erreur de syntaxe que vous avez commise dans votre CSV ou d'une autre erreur. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Veuillez vous référer à cette page d'aide où les erreurs les plus courantes sont expliquées.</a>"
+    "empty": "Pas de résultat"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "Filtrer par requêtes...",
