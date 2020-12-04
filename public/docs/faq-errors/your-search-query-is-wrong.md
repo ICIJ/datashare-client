@@ -46,7 +46,7 @@ You cannot start a query with OR all uppercase. [OR is reserved as a search oper
 
 ### **The query starts with or contains tilde** \(~\) <a id="querie-s-start-s-with-or-contain-tilde"></a>
 
-‌You cannot start a query with tilde \(~\) or write one which contains tilde. Tilde is reserved as a search operator for [fuzziness](https://icij.gitbook.io/datashare/faq/what-is-fuzziness) or [proximity searches](https://icij.gitbook.io/datashare/faq/what-is-proximity-search).
+‌You cannot start a query with tilde \(~\) or write one which contains tilde. Tilde is reserved as a search operator for [fuzziness](https://icij.gitbook.io/datashare/faq-definitions/what-is-fuzziness) or [proximity searches](https://icij.gitbook.io/datashare/faq-definitions/what-are-proximity-searches).
 
 ![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsX4JZonoD94VtqwHu3%2F-LsX7NMNxxM8MCBAJMe0%2FScreenshot%202019-10-31%20at%2015.03.59.png?alt=media&token=4001cf1d-8c3f-4bd2-80ec-bfc1ac836b8f)![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsX4JZonoD94VtqwHu3%2F-LsX77gU4JGqHeuvxo0T%2FScreenshot%202019-10-31%20at%2014.59.36.png?alt=media&token=ccb8d6a0-54a2-4289-8b33-df155c5acece)![](https://blobscdn.gitbook.com/v0/b/gitbook-28427.appspot.com/o/assets%2F-LWCyd3pDXO_H4jk9DgG%2F-LsX4JZonoD94VtqwHu3%2F-LsX7BTzS63DgDW0Nyq2%2FScreenshot%202019-10-31%20at%2015.02.40.png?alt=media&token=30e9de1d-97b3-496b-b596-c83eb14e509f)
 

@@ -30,7 +30,7 @@ You will gain room to better explore your documents:
 
 ![](../.gitbook/assets/operators.png)
 
-* **If you get a message "Your search query is wrong",  it is probably because you are misusing one or some reserved characters \(like ^ " ? \( \[ \* OR AND etc\).** [**Please refer to this page**](https://icij.gitbook.io/datashare/faq/your-search-query-is-wrong)**.**
+* **If you get a message "Your search query is wrong",  it is probably because you are misusing one or some reserved characters \(like ^ " ? \( \[ \* OR AND etc\).** [**Please refer to this page**](https://icij.gitbook.io/datashare/faq-errors/your-search-query-is-wrong)**.**
 
 ![](../.gitbook/assets/screenshot-2019-12-03-at-10.31.31%20%281%29.png)
 

@@ -224,7 +224,7 @@ You cannot type a query with only one double quote, neither in Datashare's main 
 
 ### **- Querie\(s\) start\(s\) with or contain tilde** \(~\) inside a term
 
-You cannot start a query with tilde \(~\) or make one contain a tilde, neither in Datashare's main search bar nor in your CSV. Tilde is reserved as a search operator for [fuzziness](https://icij.gitbook.io/datashare/faq/what-is-fuzziness) or [proximity searches](https://icij.gitbook.io/datashare/faq/what-is-proximity-search).
+You cannot start a query with tilde \(~\) or make one contain a tilde, neither in Datashare's main search bar nor in your CSV. Tilde is reserved as a search operator for [fuzziness](https://icij.gitbook.io/datashare/faq-definitions/what-is-fuzziness) or [proximity searches](https://icij.gitbook.io/datashare/faq-definitions/what-are-proximity-searches).
 
 ![](../.gitbook/assets/screenshot-2019-10-31-at-15.03.59.png)
 

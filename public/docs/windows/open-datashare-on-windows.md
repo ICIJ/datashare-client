@@ -18,7 +18,7 @@ description: >-
 
 If it does not open automatically in your browser, type localhost:8080/\#/ in your internet browser.
 
-Datashare **runs in your internet browser**, even though it will work offline with no internet connection. ****\(see FAQ: [Can I use Datashare with no internet connection?](https://icij.gitbook.io/datashare/faq/can-i-use-datashare-with-no-internet-connection)\)
+Datashare **runs in your internet browser**, even though it will work offline with no internet connection. ****\(see FAQ: [Can I use Datashare with no internet connection?](https://icij.gitbook.io/datashare/faq-general/can-i-use-datashare-with-no-internet-connection)\)
 
 ![](../.gitbook/assets/screenshot-2019-08-13-at-10.21.55.png)
 
