@@ -15,13 +15,13 @@ Frequently Asked Questions - **Errors**
 * ['Your search query is wrong.' What should I do?](https://icij.gitbook.io/datashare/faq-errors/your-search-query-is-wrong)
 * [List of common errors leading to "failure" in Batch Searches](../faq-errors/list-of-common-errors-leading-to-failure-in-batch-searches.md)
 * [What if Datashare says 'No documents found'?](https://icij.gitbook.io/datashare/faq-errors/it-says-no-documents-found)
-* [Nothing works, everything crashes. What can I do?](https://icij.gitbook.io/datashare/faq/nothing-works-everything-crashes.-what-can-i-do)
-* ['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](https://icij.gitbook.io/datashare/faq/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do)
-* [What if tasks are 'running' but not completing?](https://icij.gitbook.io/datashare/faq/tasks-are-running-but-not-completing)
-* [What if a 'Preview' of my documents is 'not available'?](https://icij.gitbook.io/datashare/faq/i-dont-see-any-preview-of-my-document.)
-* [What do I do if Datashare opens a blank screen in my browser?](https://icij.gitbook.io/datashare/faq/datashare-opens-a-blank-screen-in-my-browser.)
-* [I see people, organizations and locations in the filters but not in the documents](https://icij.gitbook.io/datashare/faq/i-see-people-organizations-and-locations-in-the-filters-but-not-in-the-documents)
-* [What does 'Windows named pipe error' mean?](https://icij.gitbook.io/datashare/faq/i-read-windows-named-pipe-error-...)
+* [Nothing works, everything crashes. What can I do?](https://icij.gitbook.io/datashare/faq-errors/nothing-works-everything-crashes.-what-can-i-do)
+* ['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](https://icij.gitbook.io/datashare/faq-errors/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do)
+* [What if tasks are 'running' but not completing?](https://icij.gitbook.io/datashare/faq-errors/tasks-are-running-but-not-completing)
+* [What if a 'Preview' of my documents is 'not available'?](https://icij.gitbook.io/datashare/faq-errors/i-dont-see-any-preview-of-my-document.)
+* [What do I do if Datashare opens a blank screen in my browser?](https://icij.gitbook.io/datashare/faq-errors/datashare-opens-a-blank-screen-in-my-browser.)
+* [I see people, organizations and locations in the filters but not in the documents](https://icij.gitbook.io/datashare/faq-errors/i-see-people-organizations-and-locations-in-the-filters-but-not-in-the-documents)
+* [What does 'Windows named pipe error' mean?](https://icij.gitbook.io/datashare/faq-errors/i-read-windows-named-pipe-error-...)
 
 Frequently Asked Questions - **Definitions**
 
