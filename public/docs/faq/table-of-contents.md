@@ -25,10 +25,10 @@ Frequently Asked Questions - **Errors**
 
 Frequently Asked Questions - **Definitions**
 
-* [What is a named entity?](https://icij.gitbook.io/datashare/faq/what-is-a-named-entity)
-* [What are NLP pipelines?](https://icij.gitbook.io/datashare/faq/what-are-nlp-pipelines)
-* [What is fuzziness?](https://icij.gitbook.io/datashare/faq/what-is-fuzziness)
-* [What are proximity searches?](https://icij.gitbook.io/datashare/faq/what-is-proximity-search)
+* [What is a named entity?](https://icij.gitbook.io/datashare/faq-definitions/what-is-a-named-entity)
+* [What are NLP pipelines?](https://icij.gitbook.io/datashare/faq-definitions/what-are-nlp-pipelines)
+* [What is fuzziness?](https://icij.gitbook.io/datashare/faq-definitions/what-is-fuzziness)
+* [What are proximity searches?](https://icij.gitbook.io/datashare/faq-definitions/what-are-proximity-searches)
 
 
 
