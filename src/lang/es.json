@@ -558,11 +558,9 @@
     "author": "Autor·a",
     "advancedFilters": "Filtros avanzados",
     "selectFolder": "Seleccionar directorio",
-    "errorPopover": {
-      "title": "Error in queries",
-      "message": "You have an error on your query \"{query}\".",
-      "readMore": "Please click to read more."
-    }
+    "errorTitle": "Error in query",
+    "errorQuery": "You have an error on your query \"{query}\".",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Please refer to this Help page where most common errors are described.</a>"
   },
   "batchSearchResults": {
     "rank": "Rango",
@@ -574,9 +572,7 @@
     "downloadResults": "Descargar los resultados",
     "downloadQueries": "Descargar consultas",
     "downloadTooltip": "Descargar como CSV",
-    "empty": "Sin resultados",
-    "errorTitle": "Error",
-    "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas cometido en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>"
+    "empty": "Sin resultados"
   },
   "batchSearchResultsFilters": {
     "filterQueries": "Filtrar por consultas...",
