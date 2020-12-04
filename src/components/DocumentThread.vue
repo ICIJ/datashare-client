@@ -143,7 +143,7 @@ export default {
         .orQuery('regexp', 'contentType', 'message/.*')
       )
       // Similar subject
-      body.query('match', 'metadata.tika_metadata_subject', `.*${ this.document.cleanSubject }.*`)
+      body.query('query_string', { default_field: 'metadata.tika_metadata_subject', query: `.*\"${ this.document.cleanSubject }\".*` })
       // Collect all field data
       return reduce(this.threadQueryFields, (body, path, field) => {
         const value = this.document[field]
