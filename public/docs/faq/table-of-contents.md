@@ -2,19 +2,19 @@
 
 Frequently Asked Questions - **General**
 
-* [Can I use Datashare with no internet connection?](https://icij.gitbook.io/datashare/faq/can-i-use-datashare-with-no-internet-connection)
-* [Can I download a document from Datashare?](https://icij.gitbook.io/datashare/faq/can-i-download-a-document)
-* [Can I remove document\(s\) from Datashare?](https://icij.gitbook.io/datashare/faq/can-i-remove-a-document-from-datashare)
+* [Can I use Datashare with no internet connection?](https://icij.gitbook.io/datashare/faq-general/can-i-use-datashare-with-no-internet-connection)
+* [Can I download a document from Datashare?](https://icij.gitbook.io/datashare/faq-general/can-i-download-a-document)
+* [Can I remove document\(s\) from Datashare?](https://icij.gitbook.io/datashare/faq-general/can-i-remove-a-document-from-datashare)
 * [Do you recommend OS or machines for large corpuses?](https://icij.gitbook.io/datashare/faq-general/do-you-recommend-os-or-machines-for-large-corpuses)
 * [Can I use an external drive as data source?](https://icij.gitbook.io/datashare/faq-general/can-i-use-an-external-drive-as-data-source)
 * [How can we use Datashare on a collaborative mode on a server?](https://icij.gitbook.io/datashare/faq-general/how-can-we-use-datashare-on-a-collaborative-mode-on-a-server)
-* [How can I contact ICIJ for help, bug reporting or suggestions?](https://icij.gitbook.io/datashare/faq/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions)
+* [How can I contact ICIJ for help, bug reporting or suggestions?](https://icij.gitbook.io/datashare/faq-general/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions)
 
 Frequently Asked Questions - **Errors**
 
-* ['Your search query is wrong.' What should I do?](https://icij.gitbook.io/datashare/faq/your-search-query-is-wrong)
+* ['Your search query is wrong.' What should I do?](https://icij.gitbook.io/datashare/faq-errors/your-search-query-is-wrong)
 * [List of common errors leading to "failure" in Batch Searches](../faq-errors/list-of-common-errors-leading-to-failure-in-batch-searches.md)
-* [What if Datashare says 'No documents found'?](https://icij.gitbook.io/datashare/faq/it-says-no-documents-found)
+* [What if Datashare says 'No documents found'?](https://icij.gitbook.io/datashare/faq-errors/it-says-no-documents-found)
 * [Nothing works, everything crashes. What can I do?](https://icij.gitbook.io/datashare/faq/nothing-works-everything-crashes.-what-can-i-do)
 * ['You are not allowed to use Docker, you must be in the "docker-users" group'. What should I do?](https://icij.gitbook.io/datashare/faq/you-are-not-allowed-to-use-docker-you-must-be-in-the-docker-users-group-.-what-should-i-do)
 * [What if tasks are 'running' but not completing?](https://icij.gitbook.io/datashare/faq/tasks-are-running-but-not-completing)
