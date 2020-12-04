@@ -8,5 +8,5 @@ When reporting a bug, please share:
 * the problem, with screenshots if possible
 * the actions that led to the problem
 
-Advanced users can post an issue with their logs on Datashare's GitHub : **https://github.com/ICIJ/datashare/issues**
+Advanced users can post an issue with their logs on Datashare's GitHub : [**https://github.com/ICIJ/datashare/issues**](https://github.com/ICIJ/datashare/issues)\*\*\*\*
 
