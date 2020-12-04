@@ -1,7 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep'
-import find from 'lodash/find'
-import omit from 'lodash/omit'
-import toLower from 'lodash/toLower'
+import { cloneDeep, find, omit, toLower } from 'lodash'
 import axios from 'axios'
 
 import Api from '@/api'
@@ -37,7 +34,7 @@ describe('SearchStore', () => {
     const filters = store.getters['search/instantiatedFilters']
 
     expect(filters).toHaveLength(12)
-    expect(find(filters, { name: 'contentType' }).order).toEqual(40)
+    expect(find(filters, { name: 'contentType' }).order).toBe(40)
   })
 
   it('should reset to initial state', async () => {
@@ -310,14 +307,14 @@ describe('SearchStore', () => {
 
   it('should return 0 documents in total', async () => {
     await store.dispatch('search/query', '*')
-    expect(store.state.search.response.total).toEqual(0)
+    expect(store.state.search.response.total).toBe(0)
   })
 
   it('should return 5 documents in total', async () => {
     await letData(es).have(new IndexedDocuments().setBaseName('doc').withContent('this is a document').withIndex(project).count(5)).commit()
 
     await store.dispatch('search/query', { query: 'document', from: 0, size: 2 })
-    expect(store.state.search.response.total).toEqual(5)
+    expect(store.state.search.response.total).toBe(5)
     store.commit('search/size', 25)
   })
 
@@ -348,7 +345,7 @@ describe('SearchStore', () => {
   it('should change the state after `toggleFilters` mutation', () => {
     const showFilters = store.state.search.showFilters
     store.commit('search/toggleFilters')
-    expect(store.state.search.showFilters).toEqual(!showFilters)
+    expect(store.state.search.showFilters).toBe(!showFilters)
   })
 
   describe('updateFromRouteQuery should restore search state from url', () => {
@@ -419,7 +416,7 @@ describe('SearchStore', () => {
     store.commit('search/query', '*')
     await store.dispatch('search/deleteQueryTerm', 'term')
 
-    expect(store.state.search.query).toEqual('*')
+    expect(store.state.search.query).toBe('*')
   })
 
   it('should delete the term from the query', async () => {
@@ -602,7 +599,7 @@ describe('SearchStore', () => {
     })
 
     it('should return a metadata of 1 if there is a match between the query and the document metadata', async () => {
-      await letData(es).have(new IndexedDocument(id, project).withMetadata('metadata metadata metadata')).commit()
+      await letData(es).have(new IndexedDocument(id, project).withOtherMetadata('metadata metadata metadata')).commit()
       await store.dispatch('document/get', { id, index: project })
       await store.dispatch('search/query', 'metadata')
 

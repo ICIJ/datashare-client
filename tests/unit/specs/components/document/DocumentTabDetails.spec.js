@@ -9,14 +9,13 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 jest.mock('axios')
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-
 describe('DocumentTabDetails.vue', () => {
+  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
   const index = toLower('DocumentTabDetails')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   const id = 'document'
-  let wrapper
+  let wrapper = null
 
   afterEach(() => {
     store.commit('document/reset')

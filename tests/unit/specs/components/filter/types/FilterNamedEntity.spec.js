@@ -20,7 +20,7 @@ jest.mock('@/api', () => {
   })
 })
 
-// Mock the refreshRouteAndSearch method to avoid unecessary route update
+// Mock the refreshRouteAndSearch method to avoid unnecessary route update
 mixin.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterNamedEntity.vue', () => {

@@ -1,6 +1,4 @@
-import find from 'lodash/find'
-import isArray from 'lodash/isArray'
-import uniqueId from 'lodash/uniqueId'
+import { find, isArray, isObject, uniqueId } from 'lodash'
 import { dirname } from 'path'
 
 import EsDocList from '@/api/resources/EsDocList'
@@ -45,10 +43,6 @@ class IndexedDocuments {
   }
   withIndexingDate (indexingDate) {
     this.extractionDate = indexingDate
-    return this
-  }
-  withExtractionLevel (extractionLevel) {
-    this.extractionLevel = extractionLevel
     return this
   }
   count (numberOfDocuments) {
@@ -104,8 +98,13 @@ class IndexedDocument {
     this.metadata.tika_metadata_creation_date = creationDate
     return this
   }
+  withOtherMetadata (otherMetadata) {
+    this.metadata.tika_metadata_another_metadata = otherMetadata
+    return this
+  }
   withMetadata (metadata) {
-    this.metadata.tika_metadata_another_metadata = metadata
+    const md = isObject(metadata) ? metadata : {}
+    this.metadata = { ...md, ...this.metadata }
     return this
   }
   withLanguage (language) {
@@ -127,10 +126,6 @@ class IndexedDocument {
   }
   withTags (tags) {
     this.tags = tags
-    return this
-  }
-  withExtractionLevel (extractionLevel) {
-    this.extractionLevel = extractionLevel
     return this
   }
   hasParent () {

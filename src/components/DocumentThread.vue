@@ -84,8 +84,7 @@
 </style>
 
 <script>
-import findIndex from 'lodash/findIndex'
-import reduce from 'lodash/reduce'
+import { findIndex, reduce } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import elasticsearch from '@/api/elasticsearch'
@@ -119,7 +118,9 @@ export default {
   },
   data () {
     return {
-      thread: { hits: [] },
+      thread: {
+        hits: []
+      },
       threadQueryFields: {
         threadIndex: 'metadata.tika_metadata_message_raw_header_thread_index',
         messageId: 'metadata.tika_metadata_message_raw_header_message_id'
@@ -136,8 +137,13 @@ export default {
       body.query('match', 'type', 'Document')
       // Select only the Documents at the same extraction level
       body.query('match', 'extractionLevel', this.document.extractionLevel)
+      // Select emails only
+      body.query('bool', b => b
+        .orQuery('match', 'contentType', 'application/vnd.ms-outlook')
+        .orQuery('regexp', 'contentType', 'message/.*')
+      )
       // Similar subject
-      body.query('match', 'metadata.tika_metadata_subject', `.*${this.document.cleanSubject}.*`)
+      body.query('match', 'metadata.tika_metadata_subject', `.*${ this.document.cleanSubject }.*`)
       // Collect all field data
       return reduce(this.threadQueryFields, (body, path, field) => {
         const value = this.document[field]
@@ -161,6 +167,7 @@ export default {
       const offset = -parseInt(this.$root.$el.style.getPropertyValue('--search-document-navbar-height'))
       // Use the scroll-tracker component
       const $container = this.$el.closest('.overflow-auto')
+      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('scroll-tracker:request', element, offset, $container)
     },
     async init () {
@@ -187,7 +194,7 @@ export default {
           return new EsDocList(raw)
         }
         return EsDocList.none()
-      } catch (e) {
+      } catch (_) {
         return EsDocList.none()
       }
     }

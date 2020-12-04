@@ -10,7 +10,7 @@ const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 
 async function createView (es, project, content = '', query = '', metadata = '', tags = []) {
   const id = 'document'
-  await letData(es).have(new IndexedDocument(id, project).withContent(content).withMetadata(metadata).withTags(tags)).commit()
+  await letData(es).have(new IndexedDocument(id, project).withContent(content).withOtherMetadata(metadata).withTags(tags)).commit()
   await store.dispatch('document/get', { id, index: project })
   store.commit('search/query', query)
   return shallowMount(DocumentGlobalSearchTermsTags, {
