@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="d-flex align-items-center">
     <span :class="`text-${ toVariant(lowerCase(batchSearch.state)) }`">
       <fa :icon="getStateIcon"></fa>
       {{ capitalize(batchSearch.state) }}
