@@ -64,18 +64,7 @@
             {{ $t('batchSearch.state') }}
           </dt>
           <dd class="col-sm-6 text-truncate">
-            <span :class="`text-${ toVariant(lowerCase(batchSearch.state)) }`">
-              <fa :icon="getStateIcon(lowerCase(batchSearch.state))"></fa>
-              {{ capitalize(batchSearch.state) }}
-            </span>
-            <b-badge
-              class="cursor-pointer ml-1"
-              @click.prevent="openErrorMessage"
-              :id="batchSearch.uuid"
-              v-if="isFailed"
-              variant="danger">
-              {{ $t('batchSearch.seeError') }}
-            </b-badge>
+            <batch-search-status :batch-search="batchSearch"></batch-search-status>
           </dd>
           <dt class="text-nowrap col-sm-6 text-right text-truncate">
             {{ $t('batchSearch.date') }}
@@ -207,29 +196,18 @@
           v-if="numberOfPages > 1"></b-pagination-nav>
       </v-wait>
     </div>
-    <b-modal id="error-modal" :title="$t('batchSearch.errorTitle')" ok-only body-class="py-0">
-      <div v-if="batchSearch.errorQuery" class="font-size-large pb-2 font-weight-bolder">
-        <fa icon="exclamation-triangle" class="mr-1"></fa>
-        {{ $t('batchSearch.errorQuery', { query: batchSearch.errorQuery }) }}
-      </div>
-      <div v-if="batchSearch.errorMessage">
-        <div v-html="$t('batchSearch.errorMessage')"></div>
-        <div class="code mt-3 px-3 py-1 text-monospace text-break">
-          {{ batchSearch.errorMessage }}
-        </div>
-      </div>
-    </b-modal>
   </div>
 </template>
 
 <script>
-import { capitalize, castArray, find, get, indexOf, isEqual, keys, lowerCase, sumBy } from 'lodash'
+import { castArray, find, get, indexOf, isEqual, keys, sumBy } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
 import Api from '@/api'
 import Auth from '@/api/resources/Auth'
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
+import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import PageHeader from '@/components/PageHeader'
 import humanSize from '@/filters/humanSize'
@@ -246,6 +224,7 @@ export default {
   name: 'BatchSearchResults',
   components: {
     BatchSearchResultsFilters,
+    BatchSearchStatus,
     ContentTypeBadge,
     PageHeader
   },
@@ -370,9 +349,6 @@ export default {
         })
       }
       return Math.ceil(total / this.perPage)
-    },
-    isFailed () {
-      return this.batchSearch.state === 'FAILURE'
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -447,23 +423,7 @@ export default {
     changePublished (published) {
       this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
     },
-    openErrorMessage () {
-      if (this.isFailed) {
-        this.$bvModal.show('error-modal')
-      }
-    },
-    getStateIcon (state) {
-      const icons = {
-        failure: 'times-circle',
-        queued: 'clock',
-        running: 'circle-notch',
-        success: 'glass-cheers'
-      }
-      return get(icons, state, 'ban')
-    },
-    capitalize,
     keys,
-    lowerCase,
     moment,
     toVariant
   }

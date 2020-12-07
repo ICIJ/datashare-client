@@ -47,18 +47,7 @@
                 {{ $tc('batchSearch.query', item.nbQueries) }}
               </template>
               <template v-slot:cell(state)="{ item }">
-                <span :class="`text-${ toVariant(lowerCase(item.state)) }`">
-                  <fa :icon="getStateIcon(lowerCase(item.state))"></fa>
-                  {{ capitalize(item.state) }}
-                </span>
-                <b-badge
-                  class="cursor-pointer ml-1"
-                  @click.prevent="openErrorMessage(item)"
-                  :id="item.uuid"
-                  v-if="isFailed(item)"
-                  variant="danger">
-                  {{ $t('batchSearch.seeError') }}
-                </b-badge>
+                <batch-search-status :batch-search="item"></batch-search-status>
               </template>
               <template v-slot:cell(date)="{ item }">
                 <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
@@ -82,43 +71,30 @@
         </v-wait>
       </div>
     </div>
-    <b-modal id="error-modal" :title="$t('batchSearch.errorTitle')" ok-only body-class="py-0">
-      <div v-if="errorQuery" class="font-size-large pb-2 font-weight-bolder">
-        <fa icon="exclamation-triangle" class="mr-1"></fa>
-        {{ $t('batchSearch.errorQuery', { query: errorQuery }) }}
-      </div>
-      <div v-if="errorMessage">
-        <div v-html="$t('batchSearch.errorMessage')"></div>
-        <div class="batch-search__modal mt-3 px-3 py-1 text-monospace text-break">
-          {{ errorMessage }}
-        </div>
-      </div>
-    </b-modal>
   </div>
 </template>
 
 <script>
-import { capitalize, compact, find, get, lowerCase } from 'lodash'
+import { compact, find, get } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
 import BatchSearchForm from '@/components/BatchSearchForm'
+import BatchSearchStatus from '@/components/BatchSearchStatus'
 import PageHeader from '@/components/PageHeader'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
-import { toVariant } from '@/utils/utils'
 
 export default {
   name: 'BatchSearches',
   mixins: [utils],
   components: {
     BatchSearchForm,
+    BatchSearchStatus,
     PageHeader
   },
   data () {
     return {
-      errorMessage: null,
-      errorQuery: null,
       order: settings.batchSearch.order,
       page: 1,
       perPage: settings.batchSearch.size,
@@ -243,16 +219,6 @@ export default {
     this.fetch()
   },
   methods: {
-    isFailed (item) {
-      return item.state === 'FAILURE'
-    },
-    openErrorMessage (item) {
-      if (this.isFailed(item)) {
-        this.$set(this, 'errorMessage', item.errorMessage)
-        this.$set(this, 'errorQuery', item.errorQuery)
-        this.$bvModal.show('error-modal')
-      }
-    },
     generateLinkToBatchSearch (page = this.page, sort = this.sort, order = this.order) {
       return {
         name: 'batch-search',
@@ -277,26 +243,13 @@ export default {
     linkGen (page) {
       return this.generateLinkToBatchSearch(page)
     },
-    getStateIcon (state) {
-      const icons = {
-        failure: 'times-circle',
-        queued: 'clock',
-        running: 'circle-notch',
-        success: 'glass-cheers'
-      }
-      return get(icons, state, 'ban')
-    },
-    capitalize,
-    lowerCase,
-    moment,
-    toVariant
+    moment
   }
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .batch-search {
-
     &__items {
       border-radius: $card-border-radius 0 0 0;
       margin-top: $spacer;
@@ -316,18 +269,5 @@ export default {
         padding: $spacer * 3 0;
       }
     }
-
-    &__modal {
-      background-color: black;
-      color: white;
-
-      .font-size-large {
-        font-size: $font-size-lg;
-      }
-    }
-  }
-
-  .cursor-pointer {
-    cursor: pointer;
   }
 </style>

@@ -266,7 +266,7 @@ describe('BatchSearchForm.vue', () => {
     })
   })
 
-  describe('setPaths method', () => {
+  describe('setPaths', () => {
     it('should set paths from selected ones', () => {
       wrapper.vm.$set(wrapper.vm, 'paths', ['path_01', 'path_02'])
       wrapper.vm.$set(wrapper.vm, 'selectedPaths', ['path_02', 'path_03'])
