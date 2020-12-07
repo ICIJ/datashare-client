@@ -12,7 +12,7 @@
     <div class="container pt-4">
       <div class="batch-search__items">
         <v-wait for="load batchSearches">
-          <div slot="waiting">
+          <div slot="waiting" class="card py-2">
             <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
             <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
             <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
@@ -263,10 +263,6 @@ export default {
           border-top: 0;
           white-space: nowrap;
         }
-      }
-
-      &__explanation {
-        padding: $spacer * 3 0;
       }
     }
   }

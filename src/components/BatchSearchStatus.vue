@@ -1,25 +1,30 @@
 <template>
-  <div class="d-flex align-items-center">
+  <div class="batch-search-status d-flex align-items-center">
     <span :class="`text-${ toVariant(lowerCase(batchSearch.state)) }`">
       <fa :icon="getStateIcon"></fa>
       {{ capitalize(batchSearch.state) }}
     </span>
     <b-badge
-      class="cursor-pointer ml-1"
+      class="batch-search-status__badge ml-1"
       @click.prevent="$refs.batchSearchErrorModal.show()"
       :id="batchSearch.uuid"
       v-if="isFailed"
       variant="danger">
       {{ $t('batchSearch.seeError') }}
     </b-badge>
-    <b-modal :title="$t('batchSearch.errorTitle')" ok-only body-class="py-0" v-if="isFailed" ref="batchSearchErrorModal">
-      <div v-if="batchSearch.errorQuery" class="font-size-large pb-2 font-weight-bolder">
+    <b-modal
+      body-class="batch-search-status__modal py-0"
+      ok-only
+      ref="batchSearchErrorModal"
+      :title="$t('batchSearch.errorTitle')"
+      v-if="isFailed">
+      <div v-if="batchSearch.errorQuery" class="batch-search-status__modal__error-query pb-2 font-weight-bolder">
         <fa icon="exclamation-triangle" class="mr-1"></fa>
-        {{ $t('batchSearch.errorQuery', { query: batchSearch.errorQuery }) }}
+        <span v-html="$t('batchSearch.errorQuery', { query: batchSearch.errorQuery })"></span>
       </div>
       <div v-if="batchSearch.errorMessage">
         <div v-html="$t('batchSearch.errorMessage')"></div>
-        <div class="code mt-3 px-3 py-1 text-monospace text-break">
+        <div class="batch-search-status__modal__error-message mt-3 px-3 py-1 text-monospace text-break">
           {{ batchSearch.errorMessage }}
         </div>
       </div>
@@ -62,16 +67,28 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-  .code {
-    background-color: black;
-    color: white;
-  }
+  .batch-search-status {
+    &__badge {
+      cursor: pointer;
+    }
 
-  .font-size-large {
-    font-size: $font-size-lg;
-  }
+    &__modal {
+      &__error-query {
+        font-size: $font-size-lg;
 
-  .cursor-pointer {
-    cursor: pointer;
+        /deep/ code {
+          background-color: $light;
+          border: 1px gray solid;
+          border-radius: 3px;
+          margin-right: .2rem;
+          padding: 0 2px;
+        }
+      }
+
+      &__error-message {
+        background-color: black;
+        color: white;
+      }
+    }
   }
 </style>

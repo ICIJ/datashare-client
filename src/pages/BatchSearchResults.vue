@@ -460,17 +460,4 @@ export default {
     }
   }
 }
-
-.code {
-  background-color: black;
-  color: white;
-}
-
-.font-size-large {
-  font-size: $font-size-lg;
-}
-
-.cursor-pointer {
-  cursor: pointer;
-}
 </style>
