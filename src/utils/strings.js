@@ -1,9 +1,4 @@
-import escapeRegExp from 'lodash/escapeRegExp'
-import identity from 'lodash/identity'
-import map from 'lodash/map'
-import sortBy from 'lodash/sortBy'
-import takeRight from 'lodash/takeRight'
-import zip from 'lodash/zip'
+import { escapeRegExp, identity, map, sortBy, takeRight, zip } from 'lodash'
 
 export function slugger (value = '') {
   return value
@@ -55,7 +50,7 @@ export function sliceIndexes (str, indexes) {
   return result
 }
 
-export function highlight (str = '', marks = [], markFun = (m => `<mark>${m.content}</mark>`), restFun = identity, contentFun = (m => m.content)) {
+export function highlight (str = '', marks = [], markFun = m => `<mark>${m.content}</mark>`, restFun = identity, contentFun = m => m.content) {
   const sortedMarks = sortBy(marks, m => m.index)
   const docContentSlices = sliceIndexes(str, map(sortedMarks, m => m.index))
   const docContentMarked = map(zip(takeRight(docContentSlices, sortedMarks.length), sortedMarks), ([slice = '', mark]) => {

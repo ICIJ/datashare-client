@@ -24,7 +24,7 @@ describe('DocumentStore', () => {
 
   afterEach(() => store.commit('document/reset'))
 
-  afterAll(() => axios.request.mockClear())
+  afterAll(() => jest.unmock('axios'))
 
   it('should define a store module', () => {
     expect(store.state.document).not.toBeUndefined()

@@ -34,55 +34,6 @@
   </v-wait>
 </template>
 
-<style lang="scss">
-  .document-thread {
-    background: black;
-    margin:$spacer;
-
-    &__list {
-      border: 1px solid $border-color;
-      border-bottom: 0;
-      background: white;
-      padding: 0;
-      margin: 0;
-
-      &__email {
-        border-bottom: 1px solid $border-color;
-
-        & > a {
-          color: $body-color;
-
-          &:hover {
-            text-decoration: none;
-          }
-        }
-
-        &--active {
-          position: relative;
-
-          &:before {
-            content: "";
-            border-left: 2px solid $secondary;
-            position: absolute;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            box-shadow: 0 0 10px 0 $secondary;
-          }
-        }
-
-        &__to {
-          .list-inline-item:not(:last-of-type):after {
-            content:",";
-            float: right;
-            clear: right;
-          }
-        }
-      }
-    }
-  }
-</style>
-
 <script>
 import { findIndex, reduce } from 'lodash'
 import bodybuilder from 'bodybuilder'
@@ -210,3 +161,52 @@ export default {
   }
 }
 </script>
+
+<style lang="scss" scoped>
+.document-thread {
+  background: black;
+  margin:$spacer;
+
+  &__list {
+    background: white;
+    border: 1px solid $border-color;
+    border-bottom: 0;
+    margin: 0;
+    padding: 0;
+
+    &__email {
+      border-bottom: 1px solid $border-color;
+
+      & > a {
+        color: $body-color;
+
+        &:hover {
+          text-decoration: none;
+        }
+      }
+
+      &--active {
+        position: relative;
+
+        &:before {
+          border-left: 2px solid $secondary;
+          bottom: 0;
+          box-shadow: 0 0 10px 0 $secondary;
+          content: "";
+          left: 0;
+          position: absolute;
+          top: 0;
+        }
+      }
+
+      &__to {
+        .list-inline-item:not(:last-of-type):after {
+          clear: right;
+          content:",";
+          float: right;
+        }
+      }
+    }
+  }
+}
+</style>

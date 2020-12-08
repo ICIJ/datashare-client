@@ -1,7 +1,4 @@
-import join from 'lodash/join'
-import map from 'lodash/map'
-import replace from 'lodash/replace'
-import toLower from 'lodash/toLower'
+import { join, map, replace, toLower } from 'lodash'
 import axios from 'axios'
 
 import { EventBus } from '@/utils/event-bus'
@@ -172,6 +169,7 @@ export default class Api {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })
       return r ? r.data : null
     } catch (error) {
+      // eslint-disable-next-line vue/custom-event-name-casing
       EventBus.$emit('http::error', error)
       throw error
     }
