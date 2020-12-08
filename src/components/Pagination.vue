@@ -7,7 +7,7 @@
       v-b-tooltip="{ id, placement, trigger: 'hover' }"
       v-show="!noFirstPageLink"
       :title="$t('pagination.firstPage')">
-      <fa icon="angle-double-left" />
+      <fa icon="angle-double-left"></fa>
     </router-link>
     <router-link
       :to="previousPageLinkParameters()"
@@ -15,7 +15,7 @@
       class="pagination__link pagination__previous-page px-2"
       v-b-tooltip="{ id, placement, trigger: 'hover' }"
       :title="$t('pagination.previousPage')">
-      <fa icon="angle-left" />
+      <fa icon="angle-left"></fa>
     </router-link>
     <router-link
       :to="nextPageLinkParameters()"
@@ -23,7 +23,7 @@
       class="pagination__link pagination__next-page px-2"
       v-b-tooltip="{ id, placement, trigger: 'hover' }"
       :title="$t('pagination.nextPage')">
-      <fa icon="angle-right" />
+      <fa icon="angle-right"></fa>
     </router-link>
     <router-link
       :to="lastPageLinkParameters()"
@@ -32,17 +32,13 @@
       v-b-tooltip="{ id, placement, trigger: 'hover' }"
       v-show="!noLastPageLink"
       :title="$t('pagination.lastPage')">
-      <fa icon="angle-double-right" />
+      <fa icon="angle-double-right"></fa>
     </router-link>
   </div>
 </template>
 
 <script>
-import floor from 'lodash/floor'
-import get from 'lodash/get'
-import max from 'lodash/max'
-import noop from 'lodash/noop'
-import uniqueId from 'lodash/uniqueId'
+import { floor, get, max, noop, uniqueId } from 'lodash'
 
 /**
  * Pagination links (previous, next, first and last) for the global search.
@@ -164,9 +160,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .pagination {
-
     &__link,
     &__link:hover {
       color: $text-muted;
