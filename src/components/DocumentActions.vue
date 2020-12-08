@@ -1,6 +1,13 @@
 <template>
-  <div class="document-actions" :class="{ 'btn-group-vertical': !noBtnGroup && vertical, 'btn-group': !noBtnGroup && !vertical }">
-    <a class="document-actions__star btn" :class="starBtnClassDefinition" href @click.prevent="toggleStarDocument(document.id)" :id="starBtnId">
+  <div
+    class="document-actions"
+    :class="{ 'btn-group-vertical': !noBtnGroup && vertical, 'btn-group': !noBtnGroup && !vertical }">
+    <a
+      class="document-actions__star btn"
+      :class="starBtnClassDefinition"
+      @click.prevent="toggleStarDocument(document.id)"
+      href
+      :id="starBtnId">
       <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fixed-width></fa>
       <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">
         {{ $t('document.starButton') }}
@@ -9,16 +16,30 @@
     <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
       {{ $t('document.starFile') }}
     </b-tooltip>
-    <a class="document-actions__download btn" :class="downloadBtnClassDefinition" :href="document.fullUrl" v-if="canIDownload" :id="downloadBtnId">
+    <a
+      class="document-actions__download btn"
+      :class="downloadBtnClassDefinition"
+      :href="document.fullUrl"
+      :id="downloadBtnId"
+      target="_blank"
+      v-if="canIDownload">
       <fa icon="download" fixed-width></fa>
       <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
         {{ $t('document.downloadButton') }}
       </span>
     </a>
-    <b-popover :target="downloadBtnId" triggers="hover focus" :placement="tooltipsPlacement" :title="document.contentTypeLabel">
+    <b-popover
+      :placement="tooltipsPlacement"
+      :target="downloadBtnId"
+      :title="document.contentTypeLabel"
+      triggers="hover focus">
       <document-type-card :document="document"></document-type-card>
     </b-popover>
-    <router-link-popup class="document-actions__popup btn" :class="popupBtnClassDefinition" :to="{ name: 'document-simplified', params: document.routerParams }" :id="popupBtnId">
+    <router-link-popup
+      class="document-actions__popup btn"
+      :class="popupBtnClassDefinition"
+      :id="popupBtnId"
+      :to="{ name: 'document-simplified', params: document.routerParams }">
       <fa icon="external-link-alt" fixed-width></fa>
       <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">
         {{ $t('document.externalWindow') }}
@@ -173,7 +194,9 @@ export default {
       } catch (_) {
         this.$bvToast.toast(this.$t('document.starringError'), { noCloseButton: true, variant: 'danger' })
       }
+      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('bv::hide::tooltip')
+      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('filter::starred::refresh')
     }
   }
