@@ -167,6 +167,8 @@ When you turn on 'Do phrase matches', you can set, in 'Proximity searches', the 
 
 ![](../.gitbook/assets/screenshot-2020-08-21-at-15.54.33.png)
 
+You can **search for specific queries**:
+
 ![](../.gitbook/assets/screenshot-2020-08-21-at-16.05.57.png)
 
 * You can also **download your results** in a CSV format:
@@ -175,9 +177,19 @@ When you turn on 'Do phrase matches', you can set, in 'Proximity searches', the 
 
 ## I get a "failure". What does that mean?
 
-Failures in batch searches can be due to several causes. Click the 'Failure' label and you will see an error window. 
+Failures in batch searches can be due to several causes. 
 
-![](../.gitbook/assets/screenshot-2019-11-08-at-14.42.36.png)
+Click the **'See error' button** to open the error window:
+
+![](../.gitbook/assets/screenshot-2020-12-09-at-17.28.52.png)
+
+The **first query containing an error makes the batch search fail and stop.** You can check this first query in the error window:
+
+![](../.gitbook/assets/screenshot-2020-12-09-at-17.30.14.png)
+
+In the case above, the slash \(/\) used between 'Heroin' and 'Opiates' is a reserved character that was not escaped by a backslash so Datashare detected this query containing a syntax error and didn't go further.
+
+
 
 ### elasticsearch: Name does not resolve
 
