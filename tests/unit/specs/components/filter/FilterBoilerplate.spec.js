@@ -4,7 +4,7 @@ import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import filters from '@/mixins/filters'
 
-// Mock the refreshRouteAndSearch method to avoid unecessary route update
+// Mock the refreshRouteAndSearch method to avoid unnecessary route update
 filters.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterBoilerplate.vue', () => {
@@ -72,5 +72,15 @@ describe('FilterBoilerplate.vue', () => {
       expect(wrapper.find('.filter__items__all input').element.checked).toBeTruthy()
       expect(wrapper.find('.filter__items__all input').element.disabled).toBeTruthy()
     })
+  })
+
+  it('should cast items into string', () => {
+    const computed = { itemsWithExcludedValues () { return [{ key: 0, doc_count: 12 }, { key: 1, doc_count: 15 }] } }
+    wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter }, computed })
+
+    expect(wrapper.vm.options).toEqual([
+      { item: { key: 0, doc_count: 12 }, value: '0', label: '0' },
+      { item: { key: 1, doc_count: 15 }, value: '1', label: '1' }
+    ])
   })
 })

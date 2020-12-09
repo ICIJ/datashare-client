@@ -116,9 +116,9 @@ import toLower from 'lodash/toLower'
 import uniqueId from 'lodash/uniqueId'
 import InfiniteLoading from 'vue-infinite-loading'
 
-import FilterSortByDropdown from '@/components/filter/FilterSortByDropdown'
 import Hook from '@/components/Hook'
 import SearchFormControl from '@/components/SearchFormControl'
+import FilterSortByDropdown from '@/components/filter/FilterSortByDropdown'
 import filters from '@/mixins/filters'
 import settings from '@/utils/settings'
 
@@ -298,7 +298,7 @@ export default {
       return map(this.itemsWithExcludedValues, item => {
         return {
           item,
-          value: item.key,
+          value: item.key.toString(),
           label: this.labelToHuman(this.filter.itemLabel(item))
         }
       })
