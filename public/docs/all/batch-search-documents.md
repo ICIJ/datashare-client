@@ -7,10 +7,10 @@ description: 'It allows to get the results of each query of a list, but all at o
 If you want to search a list of queries in Datashare, instead of doing each of them one by one, you can upload the list directly in Datashare.   
 To do so, you will:
 
-* create a list of terms that you want to search in the first column of a spreadsheet
-* export the spreadsheet as a CSV \(a special format available in any spreadsheet software\)
-* upload this CSV in the Batch Search form in Datashare
-* see the results for each query in Datashare - or in a CSV. 
+* Create a list of terms that you want to search in the first column of a spreadsheet
+* Export the spreadsheet as a CSV \(a special format available in any spreadsheet software\)
+* Upload this CSV in the "new Batch Search" form in Datashare
+* Get the results for each query in Datashare - or in a CSV. 
 
 ## Prepare your batch search
 
@@ -38,7 +38,7 @@ To delete line break\(s\) in your spreadsheet, you can use the "**Find and repla
 
 ![](../.gitbook/assets/screenshot-2019-11-04-at-16.12.23.png)
 
-...the CSV \(which stand for 'Comma-separated values'\) will keep these blank cells. It will separate them with semicolons. You will thus have semicolons in your batch search results \(_see screenshot below_\). To avoid that, **you need to remove blank cells in your spreadsheet before exporting it as a CSV**.
+...the CSV \(which stand for 'Comma-separated values'\) will keep these blank cells. It will separate them with semicolons \(the 'commas'\). You will thus have semicolons in your batch search results _\(see screenshot below\)_. To avoid that, **you need to remove blank cells in your spreadsheet before exporting it as a CSV**.
 
 ![Remove blank cells in your spreadsheet in order to avoid this.](../.gitbook/assets/screenshot-2019-09-27-at-10.51.29.png)
 
@@ -46,9 +46,11 @@ To delete line break\(s\) in your spreadsheet, you can use the "**Find and repla
 
 ![](../.gitbook/assets/screenshot-2019-11-04-at-16.20.29.png)
 
-### Beware of errors in your CSV
+### Use operators in your CSV
 
-[**Search operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****AND NOT \* ? ! + - etc. **work in batch searches. Please beware that OR doesn't work when 'do phrase matches' is turned on.** 
+[**The operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****AND NOT \* ? ! + - **do work in batch searches - as they do in the regular search bar.** 
+
+**Please beware that OR doesn't work when 'do phrase matches' is turned on - in that case, Datashare will search for the term 'or' if OR is in your queries.**
 
 Reserved characters, when misused, can lead to [**failures**](https://icij.gitbook.io/datashare/all/batch-search-documents#i-get-a-failure-what-does-that-mean) **because of syntax errors.**
 
@@ -61,18 +63,18 @@ Reserved characters, when misused, can lead to [**failures**](https://icij.gitbo
 
 * **When 'do phrase matches' is turned off**:
 
-  * By default, **any space in your query is considered as a 'OR'**. If you write 'Hello world' in one cell, the search engine will look for documents which contain either 'hello' or 'world' or the two words.
+  * By default, **any space in your query is considered as a 'OR'**. If you write 'Hello world' in one cell, the search engine will look for documents which contain either 'hello' or 'world' or the two words in the documents.
   * If you write 'Hello AND world NOT car' in one cell, the search engine will look for documents which contain 'hello' and 'world' but not 'car'.
 
 * Searches are **not case sensitive**: if you search 'HeLlo', it will look for all occurrences of 'Hello', 'hello', 'hEllo', 'heLLo', etc. in the documents.
 
 ### Export your CSV encoded in UTF-8
 
-Export your spreadsheet in a CSV format:
+Export your spreadsheet in a CSV format like this:
 
 ![](../.gitbook/assets/screenshot-2019-09-25-at-16.10.06.png)
 
-**Important: Use the UTF-8 encoding.**
+**Important: Use the** [**UTF-8 encoding**](https://en.wikipedia.org/wiki/UTF-8)**.**
 
 * **LibreOffice Calc**: it uses UTF-8 by default. If not, go to LibreOffice menu &gt; Preferences &gt; Load/Save &gt; HTML Compatibility and make sur the character set is 'Unicode \(UTF-8\)':
 
@@ -80,11 +82,11 @@ Export your spreadsheet in a CSV format:
 
 * **Microsoft Excel**: if it is not set by default, select "CSV UTF-8" as one of the formats, [as explained here](https://answers.microsoft.com/en-us/msoffice/forum/msoffice_excel-mso_win10-mso_365hp/save-as-csv-with-utf-8-encoding/ff94943c-db5b-42c3-8905-f86d3d8d52c2).
 * **Google Sheets**: it uses UTF-8 by default. Just click "Export to" and "CSV".
-* **Other spreadsheet softwares:** please refer to your software's user guide.
+* **Other spreadsheet softwares:** please refer to each software's user guide.
 
 ## Launch your batch search
 
-* Open Datashare and click '**Batch searches**' in the left menu:
+* Open Datashare, click '**Batch searches**' in the left menu and click '**New batch search**' on the top right:
 
 ![](../.gitbook/assets/screenshot-2020-08-21-at-15.45.32%20%281%29.png)
 
@@ -103,6 +105,15 @@ Export your spreadsheet in a CSV format:
 * Set the **advanced filters** \('Do phrase matches', 'Fuzziness' or 'Proximity searches', 'File types' and 'Path'\) according to your preferences:
 
 ![](../.gitbook/assets/screenshot-2020-08-21-at-15.51.57.png)
+
+### What is 'Do phrase matches'?
+
+'Do phrase matches' is the equivalent of double quotes: it looks for documents containing an **exact sentence or phrase** rather than looking for a set of words in random order. If you turn it on, all queries will be search for their exact mention in documents.
+
+It is recommended, for usability purposes:
+
+* to use “Do phrase match” if you know that **all of your queries** should be searched with phrase match. But note that if you use operators in one or several of your queries, the search engine will not apply neither 'do phrase matches', 'fuzziness' nor 'proximity searches' in this or these query\(ies\) only. 'Do phrase matches', 'fuzziness' and 'proximity searches' will still apply to your other operator-free queries.
+* to use double quotes in the queries of the batch searches of which you want some queries to be found with phrase match but other without. In other words, in that case, you turn the “Do phrase match” button off but you write in double quotes, in your CSV, the specific queries that you want to search exactly. The rest will be search without phrase match.
 
 ### What is fuzziness?
 
