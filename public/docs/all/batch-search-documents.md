@@ -159,7 +159,7 @@ When you turn on 'Do phrase matches', you can set, in 'Proximity searches', the 
 
 ![](../.gitbook/assets/screenshot-2020-08-21-at-15.56.25.png)
 
-* You can click on a document's name and it will open it in a new tab:
+* You can **click on a document's name** and it will open it in a new tab:
 
 ![](../.gitbook/assets/screenshot-2020-08-21-at-16.03.13.png)
 
@@ -189,7 +189,7 @@ Check this first failure-generating query in the error window:
 
 ![](../.gitbook/assets/screenshot-2020-12-09-at-17.30.14.png)
 
-In the case above, the slash \(/\) used between 'Heroin' and 'Opiates' is a reserved character that was not escaped by a backslash so Datashare interpreted this query as a syntax error, failed and didn't go further so the batch search stopped. 
+In the case above, the slash \(/\) used between 'Heroin' and 'Opiates' is a [reserved character that was not escaped by a backslash](https://icij.gitbook.io/datashare/all/batch-search-documents#the-query-uses-square-brackets) so Datashare interpreted this query as a syntax error, failed and didn't go further so the batch search stopped. 
 
 We recommend to remove the slash, as well as any reserved characters, and re-run the batch search again.
 
