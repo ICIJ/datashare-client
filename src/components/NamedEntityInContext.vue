@@ -60,7 +60,7 @@ export default {
   },
   computed: {
     extract () {
-      const substring = this.document.source.content.substring(this.extractOffsetStart, this.extractOffsetEnd)
+      const substring = this.document.content.substring(this.extractOffsetStart, this.extractOffsetEnd)
       return [this.extractPrefix, trim(substring), this.extractSuffix].join('')
     },
     extractOffsetStart () {
@@ -74,7 +74,7 @@ export default {
       return this.extractOffsetStart > 0 ? '...' : ''
     },
     extractSuffix () {
-      return this.extractOffsetEnd < this.document.source.content.length ? '...' : ''
+      return this.extractOffsetEnd < this.document.content.length ? '...' : ''
     }
   }
 }

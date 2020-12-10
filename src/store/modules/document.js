@@ -74,6 +74,16 @@ export const mutations = {
       Vue.set(state, 'doc', null)
     }
   },
+  content (state, content = null) {
+    if (state.doc) {
+      state.doc.content = content
+    }
+  },
+  translations (state, translations = []) {
+    if (state.doc) {
+      state.doc.translations = translations
+    }
+  },
   tags (state, tags = []) {
     Vue.set(state, 'tags', tags)
   },
@@ -88,7 +98,7 @@ export const mutations = {
   parentDocument (state, raw) {
     if (raw !== null) {
       Vue.set(state, 'parentDocument', EsDocList.instantiate(raw))
-      state.doc.setParent(raw)
+      state.doc.parent = raw
     } else {
       Vue.set(state, 'parentDocument', null)
     }
@@ -124,30 +134,35 @@ export const mutations = {
 }
 
 export const actions = {
-  async get ({ commit, state, dispatch }, idAndRouting) {
-    commit('idAndRouting', idAndRouting)
+  async get ({ commit, state }, idAndRouting) {
     try {
-      const doc = await elasticsearch.getEsDoc(idAndRouting.index, idAndRouting.id, idAndRouting.routing)
+      const { id, index, routing } = idAndRouting
+      const doc = await elasticsearch.getDocumentWithoutContent(index, id, routing)
+      commit('idAndRouting', idAndRouting)
       commit('doc', doc)
     } catch (_) {
       commit('doc', null)
     }
     return state.doc
   },
-  async refresh ({ commit, state }) {
-    try {
-      const doc = await elasticsearch.getEsDoc(state.doc.index, state.idAndRouting.id, state.idAndRouting.routing)
-      commit('doc', doc)
-    } catch (_) {
-      commit('doc', null)
+  async getContent ({ commit, state }) {
+    if (state.doc !== null) {
+      const { id, routing } = state.idAndRouting
+      const { index } = state.doc
+      const doc = await elasticsearch.getDocumentWithContent(index, id, routing)
+      const content = get(doc, '_source.content')
+      const translations = get(doc, '_source.content_translated')
+      commit('content', content)
+      commit('translations', translations)
+      return content
     }
-    return state.doc
   },
   async getParent ({ commit, state }) {
     if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
-      const currentDoc = state.doc.raw._source
       try {
-        const doc = await elasticsearch.getEsDoc(state.doc.index, currentDoc.parentDocument, currentDoc.rootDocument)
+        const { index } = state.doc
+        const { parentDocument: id, rootDocument: routing } = state.doc.raw._source
+        const doc = await elasticsearch.getDocumentWithoutContent(index, id, routing)
         commit('parentDocument', doc)
       } catch (_) {
         commit('parentDocument', null)
@@ -157,7 +172,7 @@ export const actions = {
   },
   async getNamedEntitiesTotal ({ state }) {
     const index = state.doc.index
-    const { id, routing } = state.idAndRouting
+    const { id, routing } = state.doc
     const raw = await elasticsearch.getDocumentNamedEntities(index, id, routing, 0, 0)
     return (new EsDocList(raw)).total
   },
@@ -178,7 +193,7 @@ export const actions = {
     try {
       const from = getters.countNamedEntitiesInCategory(category)
       const index = state.doc.index
-      const { id, routing } = state.idAndRouting
+      const { id, routing } = state.doc
       const raw = await elasticsearch.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
       const page = new EsDocList(raw)
       return commit('namedEntitiesPageInCategory', { category, page })

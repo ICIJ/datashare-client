@@ -39,6 +39,7 @@ describe('DocumentContent.vue', () => {
         .withNer('ner_02', 17, 'LOCATION'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
@@ -64,6 +65,7 @@ describe('DocumentContent.vue', () => {
         .withContent('this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
@@ -84,6 +86,7 @@ describe('DocumentContent.vue', () => {
         .withContent('this is a <mark>document</mark>'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
@@ -107,6 +110,7 @@ describe('DocumentContent.vue', () => {
         .withNer('ner', 2, 'PERSON'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       const wrapper = shallowMount(DocumentContent, {
         localVue,
@@ -125,6 +129,7 @@ describe('DocumentContent.vue', () => {
         .withContent('content'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
@@ -144,6 +149,7 @@ describe('DocumentContent.vue', () => {
         .withNer('ner', 2, 'PERSON'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       await store.dispatch('document/getFirstPageForNamedEntityInCategory', 'PERSON')
       store.commit('document/toggleShowNamedEntities', true)
       const wrapper = await shallowMount(DocumentContent, {
@@ -166,6 +172,7 @@ describe('DocumentContent.vue', () => {
         .withNer('tent', 3, 'PERSON'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       store.commit('document/toggleShowNamedEntities', false)
       const wrapper = shallowMount(DocumentContent, {
@@ -189,6 +196,7 @@ describe('DocumentContent.vue', () => {
         .withNer('ner', 0))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
@@ -209,6 +217,7 @@ describe('DocumentContent.vue', () => {
         .withContent('this is a full full content'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
@@ -229,6 +238,7 @@ describe('DocumentContent.vue', () => {
         .withContent('this is a full FulL content fuLL'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
@@ -249,6 +259,7 @@ describe('DocumentContent.vue', () => {
         .withContent('this is a full full content'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,
@@ -289,6 +300,7 @@ describe('DocumentContent.vue', () => {
         .withContent('this is a test.\nFor testing purpose.'))
         .commit()
       await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
       const wrapper = shallowMount(DocumentContent, {
         localVue,
         store,

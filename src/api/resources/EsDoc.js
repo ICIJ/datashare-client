@@ -1,6 +1,7 @@
 import cloneDeep from 'lodash/cloneDeep'
 import extend from 'lodash/extend'
 import get from 'lodash/get'
+import set from 'lodash/set'
 
 const _raw = '_RAW'
 
@@ -15,12 +16,17 @@ export default class EsDoc {
       id: raw._id || raw._id,
       routing: raw._routing || raw._id,
       version: raw._version,
-      type: raw._type,
-      source: raw._source || {}
+      type: raw._type
     })
   }
   get (path, defaultValue) {
     return get(this.raw, path, defaultValue)
+  }
+  set (path, value) {
+    return set(this.raw, path, value)
+  }
+  get source () {
+    return this.get('_source', {})
   }
   get raw () {
     return this[_raw]

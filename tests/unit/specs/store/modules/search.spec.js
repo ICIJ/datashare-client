@@ -577,6 +577,7 @@ describe('SearchStore', () => {
     it('should return an empty array if no query term', async () => {
       await letData(es).have(new IndexedDocument(id, project)).commit()
       await store.dispatch('document/get', { id, index: project })
+      await store.dispatch('document/getContent')
       await store.dispatch('search/query', '*')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([])
@@ -585,6 +586,7 @@ describe('SearchStore', () => {
     it('should return an empty result if no match between the query and the document', async () => {
       await letData(es).have(new IndexedDocument(id, project)).commit()
       await store.dispatch('document/get', { id, index: project })
+      await store.dispatch('document/getContent')
       await store.dispatch('search/query', 'test')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'test', metadata: 0, negation: false, tags: 0, regex: false }])
@@ -593,6 +595,7 @@ describe('SearchStore', () => {
     it('should return a content of 1 if there is a match between the query and the document content', async () => {
       await letData(es).have(new IndexedDocument(id, project).withContent('specific term specific')).commit()
       await store.dispatch('document/get', { id, index: project })
+      await store.dispatch('document/getContent')
       await store.dispatch('search/query', 'specific')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 2, field: '', label: 'specific', metadata: 0, negation: false, tags: 0, regex: false }])
@@ -601,6 +604,7 @@ describe('SearchStore', () => {
     it('should return a metadata of 1 if there is a match between the query and the document metadata', async () => {
       await letData(es).have(new IndexedDocument(id, project).withOtherMetadata('metadata metadata metadata')).commit()
       await store.dispatch('document/get', { id, index: project })
+      await store.dispatch('document/getContent')
       await store.dispatch('search/query', 'metadata')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'metadata', metadata: 3, negation: false, tags: 0, regex: false }])
@@ -609,6 +613,7 @@ describe('SearchStore', () => {
     it('should return a tags of 1 if there is a match between the query and the document tags', async () => {
       await letData(es).have(new IndexedDocument(id, project).withTags(['tags'])).commit()
       await store.dispatch('document/get', { id, index: project })
+      await store.dispatch('document/getContent')
       await store.dispatch('search/query', 'tags')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 0, field: '', label: 'tags', metadata: 0, negation: false, tags: 1, regex: false }])
@@ -617,6 +622,7 @@ describe('SearchStore', () => {
     it('should apply regex to count occurrences', async () => {
       await letData(es).have(new IndexedDocument(id, project).withContent('this is a test like another')).commit()
       await store.dispatch('document/get', { id, index: project })
+      await store.dispatch('document/getContent')
       await store.dispatch('search/query', '/.*test.*/')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 1, field: '', label: '.*test.*', metadata: 0, negation: false, tags: 0, regex: true }])
@@ -625,6 +631,7 @@ describe('SearchStore', () => {
     it('should find phrase match across carriage return', async () => {
       await letData(es).have(new IndexedDocument(id, project).withContent('content content Emmanuel\nMacron content')).commit()
       await store.dispatch('document/get', { id, index: project })
+      await store.dispatch('document/getContent', { id, index: project })
       await store.dispatch('search/query', '"Emmanuel Macron"')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc)).toEqual([{ content: 1, field: '', label: 'Emmanuel Macron', metadata: 0, negation: false, tags: 0, regex: false }])

@@ -11,19 +11,24 @@ import settings from '@/utils/settings'
 // Custom API for datashare
 // @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/extending_core_components.html
 export function datasharePlugin (Client, config, components) {
-  Client.prototype.getEsDoc = function (index, id, routing = null) {
-    return this.get({
-      index,
-      type: 'doc',
-      id,
-      routing
-    }).then(
-      data => data,
-      error => {
-        EventBus.$emit('http::error', error)
-        throw error
-      }
-    )
+  Client.prototype.getDocument = async function (index, id, routing = null, params = {}) {
+    try {
+      const type = 'doc'
+      return await this.get({ index, type, id, routing, ...params })
+    } catch (error) {
+      EventBus.$emit('http::error', error)
+      throw error
+    }
+  }
+
+  Client.prototype.getDocumentWithoutContent = async function (index, id, routing = null) {
+    const sourceExclude = 'content,content_translated'
+    return this.getDocument(index, id, routing, { _source_exclude: sourceExclude })
+  }
+
+  Client.prototype.getDocumentWithContent = async function (index, id, routing = null) {
+    const source = 'content,content_translated'
+    return this.getDocument(index, id, routing, { _source: source })
   }
 
   Client.prototype._search = function (params) {
@@ -119,7 +124,7 @@ export function datasharePlugin (Client, config, components) {
     // Select only the Documents and not the NamedEntities
     body.query('match', 'type', 'Document')
     // Add an option to exclude the content
-    body.rawOption('_source', { includes: ['*'], excludes: ['content'] })
+    body.rawOption('_source', { includes: ['*'], excludes: ['content', 'content_translated'] })
     // Add an option to highlight fragments in the results
     body.rawOption('highlight', {
       fields: {

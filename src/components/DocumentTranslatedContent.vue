@@ -1,14 +1,14 @@
 <template>
   <div class="document-translated-content" :class="{ 'document-translated-content--original': showOriginal }">
-    <template v-if="document.hasTranslationsIn(language)">
+    <template v-if="hasTranslations">
       <div class="document-translated-content__translation m-3">
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />
-          <abbr :title="$t(`filter.lang.${document.source.language}`)" v-if="document.translationIn(language).source_language === document.source.language">
+          <abbr :title="$t(`filter.lang.${document.source.language}`)" v-if="translation.source_language === document.source.language">
             {{ $t('documentTranslatedContent.detected') }}
           </abbr>
           <span v-else>
-            {{ $t(`filter.lang.${document.translationIn(language).source_language}`) }}
+            {{ $t(`filter.lang.${translation.source_language}`) }}
           </span>
           <fa icon="angle-right" class="mx-2" />
           <strong>{{ $t(`filter.lang.${language}`) }}</strong>
@@ -16,7 +16,7 @@
             {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
           </button>
         </div>
-        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :translated-content="translatedContent" />
+        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :content-translation="contentTranslation" />
       </div>
     </template>
     <template v-else>
@@ -26,6 +26,8 @@
 </template>
 
 <script>
+import find from 'lodash/find'
+import elasticsearch from '@/api/elasticsearch'
 import DocumentContent from '@/components/DocumentContent'
 
 /**
@@ -47,20 +49,37 @@ export default {
   data () {
     return {
       language: 'ENGLISH',
-      showOriginal: false
+      showOriginal: false,
+      translations: []
     }
+  },
+  async mounted () {
+    await this.loadAvailableTranslations()
   },
   methods: {
     toggleOriginalContent () {
       this.showOriginal = !this.showOriginal
+    },
+    async loadAvailableTranslations () {
+      const _source = 'content_translated.source_language,content_translated.target_language'
+      const { index, id, routing } = this.document
+      const type = 'doc'
+      const data = await elasticsearch.getSource({ type, index, id, routing, _source })
+      this.$set(this, 'translations', data.content_translated)
     }
   },
   computed: {
-    translatedContent () {
+    contentTranslation () {
       if (!this.showOriginal) {
-        return this.document.translatedContentIn(this.language)
+        return this.language
       }
       return null
+    },
+    hasTranslations () {
+      return !!this.translation
+    },
+    translation () {
+      return find(this.translations, { target_language: this.language })
     }
   }
 }

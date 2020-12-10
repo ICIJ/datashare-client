@@ -144,16 +144,6 @@ export default {
           }
         },
         {
-          name: 'translations',
-          label: 'document.translations',
-          component: () => import('@/components/document/DocumentTabTranslations'),
-          hidden: !this.doc.hasTranslations,
-          icon: 'globe',
-          props: {
-            document: this.doc
-          }
-        },
-        {
           name: 'named-entities',
           label: 'document.namedEntities',
           hidden: this.$config.isnt('manageDocuments') && !this.doc.hasNerTags,

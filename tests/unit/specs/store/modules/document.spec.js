@@ -45,14 +45,14 @@ describe('DocumentStore', () => {
   })
 
   it('should get the parent document', async () => {
-    const parentId = uniqueId('parent-')
-    const childId = uniqueId('child-')
-    await letData(es).have(new IndexedDocument(parentId, index)).commit()
-    await letData(es).have(new IndexedDocument(childId, index).withParent(parentId)).commit()
-    await store.dispatch('document/get', { id: childId, routing: parentId, index })
+    const routing = uniqueId('parent-')
+    const id = uniqueId('child-')
+    await letData(es).have(new IndexedDocument(routing, index)).commit()
+    await letData(es).have(new IndexedDocument(id, index).withParent(routing)).commit()
+    await store.dispatch('document/get', { id, routing, index })
     await store.dispatch('document/getParent')
 
-    expect(store.state.document.parentDocument.id).toBe(parentId)
+    expect(store.state.document.parentDocument.id).toBe(routing)
   })
 
   it('should get the document\'s named entities', async () => {

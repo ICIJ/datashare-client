@@ -27,10 +27,7 @@ const _separator = '/'
 export default class Document extends EsDoc {
   constructor (raw, parent = null) {
     super(raw)
-    this.setParent(parent)
-  }
-  setParent (parent) {
-    this[_parent] = parent ? new Document(parent) : null
+    this.parent = parent
   }
   nl2br (str) {
     return trim(str).split('\n').map(row => `<p>${row}</p>`).join('')
@@ -58,6 +55,15 @@ export default class Document extends EsDoc {
   }
   shortMetaName (name) {
     return name.replace('tika_metadata_', '')
+  }
+  set parent (parent) {
+    this[_parent] = parent ? new Document(parent) : null
+  }
+  get content () {
+    return this.get('_source.content')
+  }
+  set content (content) {
+    this.set('_source.content', content)
   }
   get metas () {
     return keys(this.source.metadata || {})
@@ -167,6 +173,9 @@ export default class Document extends EsDoc {
   get hasContentTypeWarning () {
     return !!get(types, [this.contentType, 'warning'], false)
   }
+  get hasContent () {
+    return this.get('_source.content', null) !== null
+  }
   get creationDate () {
     const creationDate = this.source.metadata.tika_metadata_creation_date
     if (creationDate && !isNaN(Date.parse(creationDate))) {
@@ -220,7 +229,11 @@ export default class Document extends EsDoc {
     return this.get('_source.metadata.tika_metadata_message_to', null)
   }
   get excerpt () {
-    return truncate(trim(this.source.content), { length: 280 })
+    const content = this.get('_source.content', '')
+    return truncate(trim(content), { length: 280 })
+  }
+  set translations (translations = []) {
+    this.set('_source.content_translated', translations)
   }
   get translations () {
     const translations = this.get('_source.content_translated', [])

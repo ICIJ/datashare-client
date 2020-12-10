@@ -118,7 +118,8 @@
       "import/no-webpack-loader-syntax": "off",
       "no-useless-escape": "off",
       "lines-between-class-members": "off",
-      "template-curly-spacing": "off"
+      "template-curly-spacing": "off",
+      "vue/custom-event-name-casing": "off"
     },
     "parserOptions": {
       "parser": "babel-eslint"

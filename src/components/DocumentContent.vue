@@ -32,10 +32,11 @@ export default {
       type: Object
     },
     /**
-     * The active content translation
+     * The language to translate the content to
      */
-    translatedContent: {
-      type: String
+    contentTranslation: {
+      type: String,
+      default: null
     }
   },
   data () {
@@ -70,7 +71,7 @@ export default {
       }
       await this.transformContent()
     },
-    async translatedContent () {
+    async contentTranslation () {
       await this.transformContent()
     },
     // Watch for changes on the pipeline
@@ -79,6 +80,12 @@ export default {
     }
   },
   methods: {
+    async loadContent () {
+      if (!this.document.hasContent && !this.translatedContent) {
+        await this.$store.dispatch('document/getContent')
+      }
+      return this.content
+    },
     async transformContent () {
       const transformedContent = await this.applyContentPipeline()
       this.$set(this, 'transformedContent', transformedContent)
@@ -117,8 +124,9 @@ export default {
 
       return workerPromise
     },
-    applyContentPipeline () {
-      return this.contentPipeline(this.content, this.contentPipelineParams)
+    async applyContentPipeline () {
+      const content = await this.loadContent()
+      return this.contentPipeline(content, this.contentPipelineParams)
     },
     findNextLocalSearchTerm () {
       const localSearchIndex = Math.min(this.localSearchOccurrences, this.localSearchIndex + 1)
@@ -170,8 +178,14 @@ export default {
     shouldApplyNamedEntitiesMarks () {
       return !this.translatedContent && this.showNamedEntities
     },
+    translatedContent () {
+      if (this.contentTranslation !== null) {
+        return this.document.translatedContentIn(this.contentTranslation)
+      }
+      return null
+    },
     content () {
-      return this.translatedContent || this.document.source.content || ''
+      return this.translatedContent || this.document.content || ''
     },
     contentPipeline () {
       return this.getPipelineChain('extracted-text', ...[
