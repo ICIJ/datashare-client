@@ -9,7 +9,7 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "node --max_old_space_size=4096 node_modules/@vue/cli-service/bin/vue-cli-service.js build",
-    "test:unit": "vue-cli-service test:unit --testPathPattern=/unit/ --maxWorkers=3",
+    "test:unit": "vue-cli-service test:unit --testPathPattern=/unit/ --maxWorkers=2",
     "test:unit:watch": "vue-cli-service test:unit --testPathPattern=/unit/ --watch",
     "test:e2e": "vue-cli-service test:e2e",
     "lint": "vue-cli-service lint",
