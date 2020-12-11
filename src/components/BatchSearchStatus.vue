@@ -36,9 +36,15 @@
 import { capitalize, get, isEqual, lowerCase } from 'lodash'
 import { toVariant } from '@/utils/utils'
 
+/**
+ * A badge to display batch search status.
+ */
 export default {
   name: 'BatchSearchStatus',
   props: {
+    /**
+     * The batch search meta data
+     */
     batchSearch: {
       type: Object
     }

@@ -97,6 +97,9 @@ import { isUrl } from '@/utils/strings'
 
 const api = new Api()
 
+/**
+ * A list of available plugins.
+ */
 export default {
   name: 'Plugins',
   components: {

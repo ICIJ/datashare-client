@@ -50,7 +50,9 @@ import cloneDeep from 'lodash/cloneDeep'
 import utils from '@/mixins/utils'
 
 const KNOWN_ACRONYMS = ['URI', 'URL', 'NLP', 'OCR', 'TCP', 'API', 'TTL', 'OAuth', 'CORS']
-
+/**
+ * A list of settings for the backend (only available in local mode).
+ */
 export default {
   name: 'ServerSettings',
   mixins: [utils],

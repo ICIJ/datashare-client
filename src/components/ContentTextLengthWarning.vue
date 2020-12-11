@@ -21,7 +21,7 @@ import { mapState } from 'vuex'
  * A simple block displaying a warning about the length of the text content.
  */
 export default {
-  name: 'contentTextLengthWarning',
+  name: 'ContentTextLengthWarning',
   computed: {
     ...mapState('document', ['showContentTextLengthWarning'])
   },

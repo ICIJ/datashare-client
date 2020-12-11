@@ -96,7 +96,9 @@ import SearchFormControl from '@/components/SearchFormControl'
 import { isUrl } from '@/utils/strings'
 
 const api = new Api()
-
+/**
+ * A list of available extensions.
+ */
 export default {
   name: 'Extensions',
   components: {

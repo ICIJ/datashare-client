@@ -43,6 +43,9 @@ import utils from '@/mixins/utils'
 const api = new Api()
 const auth = new Auth()
 
+/**
+ * A page to manage user's API keys.
+ */
 export default {
   name: 'Api',
   mixins: [utils],
