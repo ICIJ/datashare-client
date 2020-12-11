@@ -193,8 +193,14 @@ export default class Document extends EsDoc {
   get extractionLevel () {
     return this.get('_source.extractionLevel', 0)
   }
+  get contentTextLength () {
+    return this.get('_source.contentTextLength', 0)
+  }
+  get contentLength () {
+    return this.get('_source.contentLength', 0)
+  }
   get humanSize () {
-    return humanSize(this.source.contentLength, true)
+    return humanSize(this.contentLength, true)
   }
   get index () {
     return this.raw._index
@@ -229,8 +235,8 @@ export default class Document extends EsDoc {
     return this.get('_source.metadata.tika_metadata_message_to', null)
   }
   get excerpt () {
-    const content = this.get('_source.content', '')
-    return truncate(trim(content), { length: 280 })
+    const content = this.get('highlight.content[0]', '')
+    return trim(content)
   }
   set translations (translations = []) {
     this.set('_source.content_translated', translations)
@@ -268,6 +274,10 @@ export default class Document extends EsDoc {
   }
   get hasNerTags () {
     return this.get('_source.nerTags', []).length > 0
+  }
+  get hasBigContentTextLength () {
+    // 15,000 characters
+    return this.contentTextLength > 1.5e4
   }
   static get esName () {
     return 'Document'

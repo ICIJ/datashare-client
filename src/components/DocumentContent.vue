@@ -4,6 +4,7 @@ import pick from 'lodash/pick'
 import throttle from 'lodash/throttle'
 import { mapGetters, mapState } from 'vuex'
 
+import ContentTextLengthWarning from '@/components/ContentTextLengthWarning'
 import DocumentAttachments from '@/components/DocumentAttachments'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
@@ -18,6 +19,7 @@ import LocalSearchWorker from '@/utils/local-search.worker'
 export default {
   name: 'DocumentContent',
   components: {
+    ContentTextLengthWarning,
     DocumentAttachments,
     DocumentGlobalSearchTermsTags,
     DocumentLocalSearchInput,
@@ -69,19 +71,21 @@ export default {
       if (value && this.hasNamedEntities) {
         await this.$store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       }
-      await this.transformContent()
+      return await this.transformContent()
     },
-    async contentTranslation () {
-      await this.transformContent()
+    contentTranslation () {
+      return this.transformContent()
     },
-    // Watch for changes on the pipeline
     contentPipelineFunctions () {
+      return this.transformContent()
+    },
+    showContentTextLengthWarning () {
       this.transformContent()
     }
   },
   methods: {
     async loadContent () {
-      if (!this.document.hasContent && !this.translatedContent) {
+      if (!this.showContentTextLengthWarning && !this.document.hasContent) {
         await this.$store.dispatch('document/getContent')
       }
       return this.content
@@ -152,7 +156,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('document', ['isLoadingNamedEntities']),
+    ...mapState('document', ['isLoadingNamedEntities', 'showContentTextLengthWarning']),
     ...mapGetters('document', ['namedEntities']),
     ...mapGetters('pipelines', {
       getPipelineChain: 'applyPipelineChainByCategory',
@@ -184,8 +188,13 @@ export default {
       }
       return null
     },
-    content () {
-      return this.translatedContent || this.document.content || ''
+    content: {
+      // Document's content is not a reactive property yet so we cannot use
+      // vue caching mecanism here.
+      cache: false,
+      get () {
+        return this.translatedContent || this.document.content || ''
+      }
     },
     contentPipeline () {
       return this.getPipelineChain('extracted-text', ...[
@@ -214,45 +223,49 @@ export default {
 <template>
   <div class="document-content">
     <hook name="document.content:before"></hook>
-    <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
-      <hook name="document.content.toolbox:before"></hook>
-      <document-global-search-terms-tags
-        :document="document"
-        @select="localSearchTerm = $event"
-        class="p-3 w-100"></document-global-search-terms-tags>
-      <document-local-search-input class="ml-auto"
-        v-model="localSearchTerm"
-        v-bind:activated.sync="hasStickyToolbox"
-        @next="findNextLocalSearchTerm"
-        @previous="findPreviousLocalSearchTerm"
-        :search-occurrences="localSearchOccurrences"
-        :search-index="localSearchIndex"
-        :search-worker-in-progress="localSearchWorkerInProgress"></document-local-search-input>
-      <hook name="document.content.toolbox:after"></hook>
-    </div>
-    <div class="d-flex flex-row justify-content-end align-items-center px-3">
-      <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
-      <div class="document-content__ner-toggler py-1 ml-3 font-weight-bold" id="ner-toggler" v-if="showNamedEntitiesToggle">
-        <div class="custom-control custom-switch">
-          <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler" :disabled="isLoadingNamedEntities">
-          <label class="custom-control-label font-weight-bold" for="input-ner-toggler" id="label-ner-toggler">
-            {{ $t('document.showNamedEntities') }}
-          </label>
-        </div>
-        <b-tooltip target="ner-toggler" :title="$t('document.highlightsCaution')"></b-tooltip>
+    <content-text-length-warning v-if="showContentTextLengthWarning" />
+    <template v-else>
+      <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
+        <hook name="document.content.toolbox:before"></hook>
+        <document-global-search-terms-tags
+          :document="document"
+          @select="localSearchTerm = $event"
+          class="p-3 w-100"></document-global-search-terms-tags>
+        <document-local-search-input class="ml-auto"
+          v-model="localSearchTerm"
+          v-bind:activated.sync="hasStickyToolbox"
+          @next="findNextLocalSearchTerm"
+          @previous="findPreviousLocalSearchTerm"
+          :search-occurrences="localSearchOccurrences"
+          :search-index="localSearchIndex"
+          :search-worker-in-progress="localSearchWorkerInProgress"></document-local-search-input>
+        <hook name="document.content.toolbox:after"></hook>
       </div>
-      <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
-    </div>
-    <hook name="document.content.body:before"></hook>
-    <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
-    <hook name="document.content.body:after"></hook>
-    <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
+      <div class="d-flex flex-row justify-content-end align-items-center px-3">
+        <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
+        <div class="document-content__ner-toggler py-1 ml-3 font-weight-bold" id="ner-toggler" v-if="showNamedEntitiesToggle">
+          <div class="custom-control custom-switch">
+            <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler" :disabled="isLoadingNamedEntities">
+            <label class="custom-control-label font-weight-bold" for="input-ner-toggler" id="label-ner-toggler">
+              {{ $t('document.showNamedEntities') }}
+            </label>
+          </div>
+          <b-tooltip target="ner-toggler" :title="$t('document.highlightsCaution')"></b-tooltip>
+        </div>
+        <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
+      </div>
+      <hook name="document.content.body:before"></hook>
+      <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
+      <hook name="document.content.body:after"></hook>
+      <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
+    </template>
     <hook name="document.content:after"></hook>
   </div>
 </template>
 
 <style lang="scss">
   .document-content {
+
     &__toolbox {
       background: $lighter;
       box-shadow: 0 -1 * $spacer 0 0 white;
@@ -267,7 +280,6 @@ export default {
         position: sticky;
       }
     }
-
     &__ner-toggler {
       & > .custom-control.custom-switch {
         display: inline-block;

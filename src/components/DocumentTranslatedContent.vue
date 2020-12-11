@@ -1,6 +1,6 @@
 <template>
   <div class="document-translated-content" :class="{ 'document-translated-content--original': showOriginal }">
-    <template v-if="hasTranslations">
+    <template v-if="hasTranslations && !showContentTextLengthWarning">
       <div class="document-translated-content__translation m-3">
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />
@@ -26,6 +26,7 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
 import find from 'lodash/find'
 import elasticsearch from '@/api/elasticsearch'
 import DocumentContent from '@/components/DocumentContent'
@@ -69,6 +70,7 @@ export default {
     }
   },
   computed: {
+    ...mapState('document', ['showContentTextLengthWarning']),
     contentTranslation () {
       if (!this.showOriginal) {
         return this.language

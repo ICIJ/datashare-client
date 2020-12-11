@@ -26,7 +26,7 @@
             </div>
           </router-link>
           <div v-if="isActive(email)">
-            <document-translated-content class="document-thread__list__email__content" :document="email" :named-entities="namedEntities" />
+            <document-translated-content class="document-thread__list__email__content" :document="activeDocument" :named-entities="namedEntities" />
           </div>
         </li>
       </ul>
@@ -79,11 +79,29 @@ export default {
     }
   },
   computed: {
+    activeDocument: {
+      // Document's content is not a reactive property yet, so we cannot use
+      // vue caching mecanism to ensure the activeDocument computed property is
+      // refreshed after the content was updated.
+      cache: false,
+      get () {
+        return this.document
+      }
+    },
     activeDocumentIndex () {
       return findIndex(this.thread.hits, this.isActive)
     },
     threadBody () {
       const body = bodybuilder()
+      // Creation date is the date when the email was sent
+      body.sort('metadata.tika_metadata_meta_creation_date', 'asc')
+      body.rawOption('highlight', {
+        fields: {
+          content: {
+            no_match_size: 280
+          }
+        }
+      })
       // Select only the Documents and not the NamedEntities
       body.query('match', 'type', 'Document')
       // Select only the Documents at the same extraction level
@@ -138,9 +156,10 @@ export default {
       try {
         if (this.threadBody) {
           const raw = await elasticsearch.search({
+            _source_exclude: 'content,content_translated',
             index: this.document.index,
             type: 'doc',
-            body: this.threadBody.sort('metadata.tika_metadata_meta_creation_date', 'asc').build()
+            body: this.threadBody.build()
           })
           return new EsDocList(raw)
         }
@@ -157,6 +176,11 @@ export default {
     this.init().then(next)
   },
   mounted () {
+    this.$store.subscribe(({ type, payload }) => {
+      if (type === 'document/content') {
+        this.thread.hits[this.activeDocumentIndex].content = payload
+      }
+    })
     this.init()
   }
 }

@@ -1,0 +1,46 @@
+<template>
+  <div class="content-text-length-warning">
+    <h4 class="content-text-length-warning__heading">
+      This document is huge
+    </h4>
+    <div class="content-text-length-warning__body">
+      <p>
+        It looks like this document is very long. Opening it <strong>might crash your Web Browser</strong>.
+      </p>
+      <button class="btn bg-white text-dark" @click="ignoreContentTextLengthWarning">
+        Open Anyway
+      </button>
+    </div>
+  </div>
+</template>
+
+<script>
+import { mapState } from 'vuex'
+
+/**
+ * A simple block displaying a warning about the length of the text content.
+ */
+export default {
+  name: 'contentTextLengthWarning',
+  computed: {
+    ...mapState('document', ['showContentTextLengthWarning'])
+  },
+  methods: {
+    ignoreContentTextLengthWarning () {
+      this.$store.commit('document/ignoreContentTextLengthWarning')
+      /**
+       * Called the user choose to ignore the warning
+       */
+      this.$emit('ignore')
+    }
+  }
+}
+</script>
+
+<style lang="scss">
+  .content-text-length-warning {
+    margin: $spacer;
+    padding: $spacer;
+    @include gradient-y(mix($secondary, #fff, 5%), mix($secondary, #fff, 15%));
+  }
+</style>

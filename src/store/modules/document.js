@@ -32,6 +32,7 @@ export function initialState () {
     },
     parentDocument: null,
     showNamedEntities: false,
+    showContentTextLengthWarning: false,
     tags: [],
     isRecommended: false,
     recommendedBy: []
@@ -70,9 +71,15 @@ export const mutations = {
   doc (state, raw) {
     if (raw !== null) {
       Vue.set(state, 'doc', EsDocList.instantiate(raw))
+      // The warning on content text length is only shown if the
+      // document is bigger than 20,000 characters
+      Vue.set(state, 'showContentTextLengthWarning', state.doc.hasBigContentTextLength)
     } else {
       Vue.set(state, 'doc', null)
     }
+  },
+  ignoreContentTextLengthWarning (state) {
+    Vue.set(state, 'showContentTextLengthWarning', false)
   },
   content (state, content = null) {
     if (state.doc) {

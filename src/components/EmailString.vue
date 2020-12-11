@@ -60,11 +60,11 @@ export default {
       return this.nameWithoutEmail || this.email
     },
     nameWithoutEmail () {
-      const matches = this.email.match(EMAIL_REGEX)
+      const matches = String(this.email).match(EMAIL_REGEX)
       return matches ? trim(matches[1]) : null
     },
     emailWithoutName () {
-      const matches = this.email.match(EMAIL_REGEX)
+      const matches = String(this.email).match(EMAIL_REGEX)
       return matches ? trim(matches[2]) : null
     },
     index () {
