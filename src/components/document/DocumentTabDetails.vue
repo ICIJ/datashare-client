@@ -185,7 +185,7 @@ export default {
           label: this.$t('document.size'),
           class: 'document__content__content-length',
           value: this.document.humanSize,
-          rawValue: this.document.source.contentLength
+          rawValue: this.document.contentLength
         },
         {
           name: 'language',

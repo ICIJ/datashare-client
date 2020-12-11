@@ -197,7 +197,7 @@ export default class Document extends EsDoc {
     return this.get('_source.contentTextLength', 0)
   }
   get contentLength () {
-    return this.get('_source.contentLength', 0)
+    return this.get('_source.contentLength')
   }
   get humanSize () {
     return humanSize(this.contentLength, true)
