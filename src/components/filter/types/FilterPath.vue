@@ -1,8 +1,8 @@
 <template>
-  <filter-boilerplate v-bind="$props" ref="filter">
+  <filter-boilerplate v-bind="$props" ref="filter" @aggregate="$refs.treeView.reloadDataWithSpinner()">
     <template #items="{ sortBy, sortByOrder }">
       <div class="filter__tree-view">
-        <tree-view v-model="path"
+        <tree-view v-model="path" ref="treeView"
                   :project="project"
                   :selectedPaths.sync="selectedPaths"
                   :pre-body-build="preBodyBuild"

@@ -237,9 +237,7 @@ export default {
     await this.$nextTick()
     this.mounted = true
     // Listen for event to refresh the filter
-    this.$root.$on('filter::refresh', filterName => {
-      this.aggregateWithLoading()
-    })
+    this.$root.$on('filter::refresh', () => this.aggregateWithLoading())
     // Listen for deletion of a filter value
     this.$root.$on('filter::delete', (filterName, { label: key }) => {
       // No need to update this filter when it doesn't match
