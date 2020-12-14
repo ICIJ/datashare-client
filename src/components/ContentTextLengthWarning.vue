@@ -5,6 +5,7 @@
     </h4>
     <div class="content-text-length-warning__body">
       <p v-html="$t('contentTextLengthWarning.description')"></p>
+      <p v-html="$t('contentTextLengthWarning.download')"></p>
       <button class="btn bg-white text-dark" @click="ignoreContentTextLengthWarning">
         {{ $t('contentTextLengthWarning.open') }}
       </button>

@@ -15,7 +15,8 @@
   },
   "contentTextLengthWarning": {
     "title": "This document is huge",
-    "description": "It looks like this document is very long. Opening it <strong>might crash your Web Browser</strong>.",
+    "description": "Opening it <strong>might crash your Web Browser</strong>.",
+    "download": "The search within this document can be long. Please consider downloading it if your environment is secure.",
     "open": "Open Anyway"
   },
   "error": {
