@@ -1,14 +1,12 @@
 <template>
   <div class="content-text-length-warning">
     <h4 class="content-text-length-warning__heading">
-      This document is huge
+      {{ $t('contentTextLengthWarning.title') }}
     </h4>
     <div class="content-text-length-warning__body">
-      <p>
-        It looks like this document is very long. Opening it <strong>might crash your Web Browser</strong>.
-      </p>
+      <p v-html="$t('contentTextLengthWarning.description')"></p>
       <button class="btn bg-white text-dark" @click="ignoreContentTextLengthWarning">
-        Open Anyway
+        {{ $t('contentTextLengthWarning.open') }}
       </button>
     </div>
   </div>

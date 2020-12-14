@@ -13,6 +13,11 @@
     "placeholder": "Search for people, organizations, locations...",
     "relative": "Relative to the search"
   },
+  "contentTextLengthWarning": {
+    "title": "This document is huge",
+    "description": "It looks like this document is very long. Opening it <strong>might crash your Web Browser</strong>.",
+    "open": "Open Anyway"
+  },
   "error": {
     "title": "Something's wrong here",
     "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",
