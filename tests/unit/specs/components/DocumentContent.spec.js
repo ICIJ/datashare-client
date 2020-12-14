@@ -2,6 +2,7 @@ import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { Core } from '@/core'
+import ContentTextLengthWarning from '@/components/ContentTextLengthWarning'
 import DocumentContent from '@/components/DocumentContent'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { getOS } from '@/utils/utils'
@@ -314,6 +315,112 @@ describe('DocumentContent.vue', () => {
       await wrapper.vm.transformContent()
 
       expect(wrapper.vm.localSearchOccurrences).toEqual(1)
+    })
+  })
+
+  describe('content text length warning', () => {
+    it('should not show a warning', async () => {
+      // Create a document with a small content text length
+      const indexedDocument = new IndexedDocument(id, index)
+      indexedDocument.withContent('this is a content')
+      indexedDocument.setContentTextLength(20)
+
+      // Save and get the document from Elasticsearch
+      await letData(es).have(indexedDocument).commit()
+      await store.dispatch('document/get', { id, index })
+
+      // Build the wrapper with the created document
+      const document = store.state.document.doc
+      const mocks = { $t: msg => msg }
+      const propsData = { document }
+      const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+
+      expect(wrapper.findComponent(ContentTextLengthWarning).exists()).toBeFalsy()
+    })
+
+    it('should not show a warning', async () => {
+      // Create a document with a big content text length
+      const indexedDocument = new IndexedDocument(id, index)
+      indexedDocument.withContent('this is a content')
+      indexedDocument.setContentTextLength(2e4)
+
+      // Save and get the document from Elasticsearch
+      await letData(es).have(indexedDocument).commit()
+      await store.dispatch('document/get', { id, index })
+
+      // Build the wrapper with the created document
+      const document = store.state.document.doc
+      const mocks = { $t: msg => msg }
+      const propsData = { document }
+      const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+
+      expect(wrapper.findComponent(ContentTextLengthWarning).exists()).toBeTruthy()
+    })
+  })
+
+  describe('document content lazy loading', () => {
+    it('should load the document', async () => {
+      // Create a document with a small content text length
+      const indexedDocument = new IndexedDocument(id, index)
+      indexedDocument.withContent('this is a content')
+      indexedDocument.setContentTextLength(20)
+
+      // Save and get the document from Elasticsearch
+      await letData(es).have(indexedDocument).commit()
+      await store.dispatch('document/get', { id, index })
+
+      // Build the wrapper with the created document
+      const document = store.state.document.doc
+      const mocks = { $t: msg => msg }
+      const propsData = { document }
+      const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+
+      expect(document.content).toBeFalsy()
+      await wrapper.vm.loadContent()
+      expect(document.content).toBe('this is a content')
+    })
+
+    it('should not load the document', async () => {
+      // Create a document with a huge content text length
+      const indexedDocument = new IndexedDocument(id, index)
+      indexedDocument.withContent('this is a content')
+      indexedDocument.setContentTextLength(2e4)
+
+      // Save and get the document from Elasticsearch
+      await letData(es).have(indexedDocument).commit()
+      await store.dispatch('document/get', { id, index })
+
+      // Build the wrapper with the created document
+      const document = store.state.document.doc
+      const mocks = { $t: msg => msg }
+      const propsData = { document }
+      const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+
+      expect(document.content).toBeFalsy()
+      await wrapper.vm.loadContent()
+      expect(document.content).toBeFalsy()
+    })
+
+    it('should load if the warning is ignored', async () => {
+      // Create a document with a huge content text length
+      const indexedDocument = new IndexedDocument(id, index)
+      indexedDocument.withContent('this is a content')
+      indexedDocument.setContentTextLength(2e4)
+
+      // Save and get the document from Elasticsearch
+      await letData(es).have(indexedDocument).commit()
+      await store.dispatch('document/get', { id, index })
+
+      // Build the wrapper with the created document
+      const document = store.state.document.doc
+      const mocks = { $t: msg => msg }
+      const propsData = { document }
+      const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+
+      expect(document.content).toBeFalsy()
+      await store.commit('document/ignoreContentTextLengthWarning')
+      await wrapper.vm.loadContent()
+      expect(document.content).toBe('this is a content')
     })
   })
 })

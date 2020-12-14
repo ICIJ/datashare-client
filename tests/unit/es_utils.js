@@ -74,8 +74,13 @@ class IndexedDocument {
     this.index = index
     this.extractionLevel = 0
   }
+  setContentTextLength (length) {
+    this.contentTextLength = length
+    return this
+  }
   withContent (content) {
     this.content = content
+    this.contentTextLength = content.length
     return this
   }
   withContentLength (contentLength) {
