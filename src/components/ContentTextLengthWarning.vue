@@ -28,7 +28,7 @@ export default {
     ignoreContentTextLengthWarning () {
       this.$store.commit('document/ignoreContentTextLengthWarning')
       /**
-       * Called the user choose to ignore the warning
+       * Called when the user choose to ignore the warning
        */
       this.$emit('ignore')
     }
