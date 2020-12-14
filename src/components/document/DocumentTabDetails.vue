@@ -1,6 +1,6 @@
 <template>
   <div class="container-fluid py-3 document__content">
-    <div class="document__content__tags">
+    <div class="document__content__tags mb-3">
       <h5>
         {{ $t('document.tags') }}
       </h5>
@@ -8,6 +8,25 @@
         {{ $t('document.tagsVisibility') }}
       </p>
       <document-tags-form :document="document" :tags="tags" :displayTags="true" :displayForm="true" />
+    </div>
+    <div class="document__content__shortcuts mb-3">
+      <h5 class="mb-3">
+        {{ $t('document.shortcuts') }}
+      </h5>
+      <ul class="list-inline">
+        <li class="document__content__shortcuts__children mr-4 list-inline-item mb-3">
+          <router-link :to="searchChildrenDocumentParams" class="btn btn-primary btn-sm">
+            <fa icon="paperclip" class="mr-2" />
+            {{ $t('document.searchChildrenDocument') }}
+          </router-link>
+        </li>
+        <li class="document__content__shortcuts__folder list-inline-item mb-3">
+          <router-link :to="searchDirnameDocumentParams" class="btn btn-primary btn-sm">
+            <fa icon="folder-open" class="mr-2" />
+            {{ $t('document.searchDirnameDocument') }}
+          </router-link>
+        </li>
+      </ul>
     </div>
     <div class="document__content__details">
       <h5>
@@ -17,9 +36,6 @@
         {{ $t('document.detailsInfo') }}
       </p>
       <div class="row document__content__details__children mx-2">
-        <router-link :to="{ name: 'search', query: { q: `_routing:${document.id}`, index } }">
-          {{ $t('document.searchChildrenDocument') }}
-        </router-link>
       </div>
       <div class="row document__content__details__item" v-for="field in filteredCanonicalFields" :key="field.name">
         <div class="col-sm-4 pr-0 font-weight-bold d-flex justify-content-between">
@@ -230,6 +246,16 @@ export default {
     },
     filteredCanonicalFields () {
       return filter(this.canonicalFields, field => field.value)
+    },
+    searchChildrenDocumentParams () {
+      const q = `_routing:${this.document.id}`
+      const query = { q, index: this.index }
+      return { name: 'search', query }
+    },
+    searchDirnameDocumentParams () {
+      const q = `dirname:"${this.documentDirname}"`
+      const query = { q, index: this.index }
+      return { name: 'search', query }
     }
   },
   async created () {

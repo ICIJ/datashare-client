@@ -67,7 +67,15 @@ describe('DocumentTabDetails.vue', () => {
     await store.dispatch('document/get', { id, index })
     wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
 
-    expect(wrapper.find('.document__content__details__children').exists()).toBeTruthy()
+    expect(wrapper.find('.document__content__shortcuts__children').exists()).toBeTruthy()
+  })
+
+  it('should display a link to the search in the folder of the document', async () => {
+    await letData(es).have(new IndexedDocument(id, index)).commit()
+    await store.dispatch('document/get', { id, index })
+    wrapper = shallowMount(DocumentTabDetails, { i18n, localVue, store, propsData: { document: store.state.document.doc } })
+
+    expect(wrapper.find('.document__content__shortcuts__folder').exists()).toBeTruthy()
   })
 
   it('should display an "Unknown" file size', async () => {
