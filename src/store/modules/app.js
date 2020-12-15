@@ -1,10 +1,8 @@
 import Vue from 'vue'
-import { isNarrowScreen } from '@/utils/screen'
 
 export const state = () => ({
   sidebar: {
-    // Quick and dirty responsive default value
-    reduced: isNarrowScreen()
+    reduced: true
   }
 })
 
