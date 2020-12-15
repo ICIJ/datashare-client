@@ -13,6 +13,12 @@
     "placeholder": "Búsqueda de personas, organizaciones, localizaciones...",
     "relative": "Relacionado a la búsqueda"
   },
+  "contentTextLengthWarning": {
+    "title": "This document is huge",
+    "description": "Opening it <strong>might crash your Web Browser</strong>.",
+    "download": "The search within this document can be long. Please consider downloading it if your environment is secure.",
+    "open": "Open Anyway"
+  },
   "error": {
     "title": "Hay algo mal",
     "description": "Ha ocurrido un error. Por favor, inténtelo de nuevo más tarde o póngase en contacto con su administrador si el problema persiste.",
@@ -419,7 +425,9 @@
     "parent": "Archivo de base",
     "inMetadata": "en los metadatos",
     "inTags": "en etiquetas",
+    "shortcuts": "Shortcuts",
     "searchChildrenDocument": "Mostrar documentos relacionados",
+    "searchDirnameDocument": "See folder's documents",
     "tagConfirmation": "Estás seguro de borrar estas etiquetas?",
     "createdBy": "Creado por",
     "on": "el",
@@ -528,9 +536,9 @@
     "filePlaceholder": "Selecciona un archivo...",
     "submit": "Añadir",
     "success": "Tu búsqueda masiva está ejecutándose.",
-    "error": "Something went wrong, unable to start your batch search.",
+    "error": "Error, no se puede iniciar la búsqueda masiva.",
     "submitSuccess": "La búsqueda masiva ha sido añadida.",
-    "submitError": "Something went wrong, unable to add your batch search.",
+    "submitError": "Error, no se puede añadir la búsqueda masiva.",
     "project": "Proyecto",
     "name": "Nombre",
     "description": "Descripción",
@@ -542,7 +550,7 @@
     "path": "Ruta",
     "queries": "Consultas",
     "state": "Estado",
-    "seeError": "See error",
+    "seeError": "Ver error",
     "date": "Fecha",
     "nbResults": "Número de resultados",
     "query": "no hay consultas | 1 consulta | {count} consultas",
@@ -558,9 +566,9 @@
     "author": "Autor·a",
     "advancedFilters": "Filtros avanzados",
     "selectFolder": "Seleccionar directorio",
-    "errorTitle": "Error in query",
-    "errorQuery": "You have an error on your query <code>%{query}</code>.",
-    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Please refer to this Help page where most common errors are described.</a>"
+    "errorTitle": "Error en la consulta",
+    "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
+    "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas hecho en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>"
   },
   "batchSearchResults": {
     "rank": "Rango",
@@ -691,6 +699,6 @@
   "treeView": {
     "hits": "no hay archivos | 1 archivo | %{hits} archivos",
     "docs": "archivo | archivos",
-    "datadir": "Home"
+    "datadir": "Inicio"
   }
 }
