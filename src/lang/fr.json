@@ -13,6 +13,12 @@
     "placeholder": "Rechercher des personnes, organisations, lieux",
     "relative": "Relatifs à la recherche"
   },
+  "contentTextLengthWarning": {
+    "title": "This document is huge",
+    "description": "Opening it <strong>might crash your Web Browser</strong>.",
+    "download": "The search within this document can be long. Please consider downloading it if your environment is secure.",
+    "open": "Open Anyway"
+  },
   "error": {
     "title": "Quelque chose ne va pas",
     "description": "Une erreur s'est produite. Merci de réessayer plus tard ou contacter votre administrateur•rice si le problème persiste.",
@@ -419,7 +425,9 @@
     "parent": "Parent",
     "inMetadata": "dans les métadonnées",
     "inTags": "dans les tags",
+    "shortcuts": "Shortcuts",
     "searchChildrenDocument": "Voir les documents 'enfants'",
+    "searchDirnameDocument": "See folder's documents",
     "tagConfirmation": "Êtes-vous sûr•e de supprimer ce tag ?",
     "createdBy": "Créé par",
     "on": "le",
@@ -528,9 +536,9 @@
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
-    "error": "Something went wrong, unable to start your batch search.",
+    "error": "Il y a eu une erreur, votre recherche en lot n'a pas pu être effectuée.",
     "submitSuccess": "Votre recherche en lot a été ajoutée.",
-    "submitError": "Something went wrong, unable to add your batch search.",
+    "submitError": "Il ya eu une erreur, votre recherche en lot n'a pas été ajoutée.",
     "project": "Projet",
     "name": "Nom",
     "description": "Description",
@@ -542,7 +550,7 @@
     "path": "Chemin",
     "queries": "Recherches",
     "state": "Status",
-    "seeError": "See error",
+    "seeError": "Voir l'erreur",
     "date": "Date",
     "nbResults": "Nombre de résultats",
     "query": "pas de recherche | 1 recherche | {count} recherches",
@@ -558,9 +566,9 @@
     "author": "Auteur·e",
     "advancedFilters": "Filtres avancés",
     "selectFolder": "Sélectionner un dossier",
-    "errorTitle": "Error in query",
-    "errorQuery": "You have an error on your query <code>%{query}</code>.",
-    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Please refer to this Help page where most common errors are described.</a>"
+    "errorTitle": "Erreur dans la requête",
+    "errorQuery": "Vous avez une erreur sur votre requête <code>%{query}</code>.",
+    "errorMessage": "Le système a rencontré un problème. Il peut s'agir d'une erreur de syntaxe que vous avez faite dans votre CSV ou d'une autre erreur. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Veuillez vous référer à cette page d'aide où les erreurs les plus courantes sont expliquées.</a>"
   },
   "batchSearchResults": {
     "rank": "Rang",
@@ -691,6 +699,6 @@
   "treeView": {
     "hits": "aucun document | 1 document | %{hits} documents",
     "docs": "doc | docs",
-    "datadir": "Home"
+    "datadir": "Accueil"
   }
 }

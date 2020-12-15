@@ -13,6 +13,12 @@
     "placeholder": "人物、組織、地名を検索",
     "relative": "検索結果と関連"
   },
+  "contentTextLengthWarning": {
+    "title": "This document is huge",
+    "description": "Opening it <strong>might crash your Web Browser</strong>.",
+    "download": "The search within this document can be long. Please consider downloading it if your environment is secure.",
+    "open": "Open Anyway"
+  },
   "error": {
     "title": "Something's wrong here",
     "description": "An error has occurred. Please try again later or contact your administrator if the problem persists.",
@@ -419,7 +425,9 @@
     "parent": "親",
     "inMetadata": "メタデータに",
     "inTags": "タグに",
+    "shortcuts": "Shortcuts",
     "searchChildrenDocument": "子文書を見る",
+    "searchDirnameDocument": "See folder's documents",
     "tagConfirmation": "本当にこのタグを削除していいですか?",
     "createdBy": "作成したのは",
     "on": "に",
