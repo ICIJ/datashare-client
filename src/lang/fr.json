@@ -13,6 +13,12 @@
     "placeholder": "Rechercher des personnes, organisations, lieux",
     "relative": "Relatifs à la recherche"
   },
+  "contentTextLengthWarning": {
+    "title": "This document is huge",
+    "description": "Opening it <strong>might crash your Web Browser</strong>.",
+    "download": "The search within this document can be long. Please consider downloading it if your environment is secure.",
+    "open": "Open Anyway"
+  },
   "error": {
     "title": "Quelque chose ne va pas",
     "description": "Une erreur s'est produite. Merci de réessayer plus tard ou contacter votre administrateur•rice si le problème persiste.",
@@ -419,7 +425,9 @@
     "parent": "Parent",
     "inMetadata": "dans les métadonnées",
     "inTags": "dans les tags",
+    "shortcuts": "Shortcuts",
     "searchChildrenDocument": "Voir les documents 'enfants'",
+    "searchDirnameDocument": "See folder's documents",
     "tagConfirmation": "Êtes-vous sûr•e de supprimer ce tag ?",
     "createdBy": "Créé par",
     "on": "le",
