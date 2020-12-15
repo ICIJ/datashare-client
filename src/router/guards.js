@@ -27,8 +27,9 @@ export default ({ router, auth, store, config, i18n }) => {
   }
 
   function checkUserProjects (to, from, next) {
+    const projects = config.get('datashare_projects', [])
     // No project given for this user
-    if (!config.get('datashare_projects', []).length && ['error', 'login'].indexOf(to.name) === -1) {
+    if (!projects.length && ['error', 'login'].indexOf(to.name) === -1) {
       const description = i18n.t('error.noProjects')
       next({ name: 'error', params: { description } })
     } else {
@@ -36,7 +37,13 @@ export default ({ router, auth, store, config, i18n }) => {
     }
   }
 
+  function reduceAppSideBar (to, from, next) {
+    store.dispatch('app/toggleSidebar', true)
+    next()
+  }
+
   router.beforeEach(setProjectFromParams)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
+  router.beforeEach(reduceAppSideBar)
 }

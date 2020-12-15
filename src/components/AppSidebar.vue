@@ -20,7 +20,7 @@
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.search')"
             :to="{ name: 'search', query }"
-            v-b-tooltip.right="{ customClass: tooltipsClass }">
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="search" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.searchShort' : 'menu.search') }}
@@ -32,7 +32,7 @@
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.batch')"
             :to="{ name: 'batch-search' }"
-            v-b-tooltip.right="{ customClass: tooltipsClass }">
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="layer-group" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.batchShort' : 'menu.batch') }}
@@ -44,7 +44,7 @@
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.analyse')"
             :to="{ name: 'indexing' }"
-            v-b-tooltip.right="{ customClass: tooltipsClass }">
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="rocket" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.analyseShort' : 'menu.analyse') }}
@@ -57,7 +57,7 @@
             @click.prevent="$root.$emit('history::toggle')"
             :title="$t('menu.history')"
             :to="{ name: 'user-history' }"
-            v-b-tooltip.right="{ customClass: tooltipsClass }">
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="clock" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.historyShort' : 'menu.history') }}
@@ -69,7 +69,7 @@
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.insights')"
             :to="{ name: 'insights' }"
-            v-b-tooltip.right="{ customClass: tooltipsClass }">
+            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="chart-bar" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.insightsShort' : 'menu.insights') }}
@@ -82,7 +82,7 @@
               class="app-sidebar__container__menu__item__link"
               :title="$t('menu.settings')"
               :to="{ name: 'settings' }"
-              v-b-tooltip.right="{ customClass: tooltipsClass }">
+              v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
               <fa icon="cog" fixed-width></fa>
               <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
                 {{ $t(reduced ? 'menu.settingsShort' : 'menu.settings') }}
@@ -95,7 +95,7 @@
       <hook name="app-sidebar.help:before"></hook>
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
-          <a :href="faqLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.faq')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a :href="faqLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.faq')" v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="question" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.faqShort' : 'menu.faq') }}
@@ -103,7 +103,7 @@
           </a>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--help">
-          <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.help')" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.help')" v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="ambulance" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.helpShort' : 'menu.help') }}
@@ -140,7 +140,7 @@
           </locales-menu>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
-          <a :href="logoutLink" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
+          <a :href="logoutLink" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="sign-out-alt" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.logoutShort') }}
@@ -170,7 +170,6 @@ import VersionNumber from '@/components/VersionNumber'
 import docs from '@/mixins/docs'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
-import { isNarrowScreen } from '@/utils/screen'
 
 /**
  * The global app sidebar.
@@ -212,7 +211,7 @@ export default {
   },
   watch: {
     $route () {
-      this.reduced = isNarrowScreen() || this.reduced
+      this.$root.$emit('bv::hide::tooltip', 'app-sidebar-link-label')
     }
   },
   mounted () {
