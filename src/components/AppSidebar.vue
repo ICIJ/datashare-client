@@ -143,7 +143,7 @@
           <a :href="logoutLink" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="sign-out-alt" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t('menu.logout') }}
+              {{ $t('menu.logoutShort') }}
             </span>
           </a>
         </li>
