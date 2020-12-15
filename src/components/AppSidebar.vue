@@ -23,7 +23,7 @@
             v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="search" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t('menu.search') }}
+              {{ $t(reduced ? 'menu.searchShort' : 'menu.search') }}
             </span>
           </router-link>
         </li>
@@ -35,7 +35,7 @@
             v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="layer-group" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t('menu.batch') }}
+              {{ $t(reduced ? 'menu.batchShort' : 'menu.batch') }}
             </span>
           </router-link>
         </li>
@@ -47,7 +47,7 @@
             v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="rocket" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t('menu.analyse') }}
+              {{ $t(reduced ? 'menu.analyseShort' : 'menu.analyse') }}
             </span>
           </router-link>
         </li>
@@ -60,7 +60,7 @@
             v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="clock" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t('menu.history') }}
+              {{ $t(reduced ? 'menu.historyShort' : 'menu.history') }}
             </span>
           </router-link>
         </li>
@@ -72,7 +72,7 @@
             v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="chart-bar" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t('menu.insights') }}
+              {{ $t(reduced ? 'menu.insightsShort' : 'menu.insights') }}
             </span>
           </router-link>
         </li>
@@ -85,7 +85,7 @@
               v-b-tooltip.right="{ customClass: tooltipsClass }">
               <fa icon="cog" fixed-width></fa>
               <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-                {{ $t('menu.settings') }}
+                {{ $t(reduced ? 'menu.settingsShort' : 'menu.settings') }}
               </span>
             </router-link>
           </li>
@@ -98,7 +98,7 @@
           <a :href="faqLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.faq')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="question" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t('menu.faq') }}
+              {{ $t(reduced ? 'menu.faqShort' : 'menu.faq') }}
             </span>
           </a>
         </li>
@@ -106,7 +106,7 @@
           <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.help')" v-b-tooltip.right="{ customClass: tooltipsClass }">
             <fa icon="ambulance" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t('menu.help') }}
+              {{ $t(reduced ? 'menu.helpShort' : 'menu.help') }}
             </span>
           </a>
         </li>
@@ -132,7 +132,7 @@
       <hook name="app-sidebar.locales:before"></hook>
       <ul class="app-sidebar__container__menu list-unstyled mb-0">
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--locale">
-          <locales-menu class="app-sidebar__container__menu__item__link text-left text-wrap" v-slot="{ currentLocale }">
+          <locales-menu class="app-sidebar__container__menu__item__link text-wrap" v-slot="{ currentLocale }">
             <fa icon="globe" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ currentLocale.label }}
@@ -243,33 +243,29 @@ export default {
     min-width: 60px;
     max-width: $app-sidebar-width;
     width: $app-sidebar-width;
-    position: sticky;
-    top: 0;
     z-index: $zindex-sticky;
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    box-shadow: 0 0 $app-sidebar-width / 2 0 #000;
 
     &--reduced {
       width: $app-sidebar-reduced-width;
+      box-shadow: none;
     }
 
-    @media (max-width: $app-sidebar-float-breakpoint-width) {
+    &__backdrop {
+      z-index: -1;
       position: fixed;
+      top: 0;
       left: 0;
       bottom: 0;
-    }
+      right: 0;
+      background: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
 
-    @media (max-width: $app-sidebar-float-breakpoint-width) {
-      &:not(&--reduced) {
-        box-shadow: 0 0 2rem 1rem darken($app-sidebar-bg, 10);
-
-        .app-sidebar__backdrop {
-          z-index: -1;
-          position: fixed;
-          top: 0;
-          left: 0;
-          bottom: 0;
-          right: 0;
-          background: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
-        }
+      .app-sidebar--reduced & {
+        display: none;
       }
     }
 
@@ -385,13 +381,20 @@ export default {
           }
 
           &__link, &__link.btn {
-            margin: $spacer * 0.5 $spacer;
-            padding: $spacer * 0.75;
+            margin: $spacer-xs $spacer;
+            padding: $spacer-sm;
             color: $app-sidebar-link-color;
             display: flex;
             border-radius: $border-radius;
             font-size: $font-size-sm;
             font-weight: bold;
+
+            .app-sidebar--reduced & {
+              flex-direction: column;
+              text-align: center;
+              margin: $spacer-xs;
+              padding: $spacer-sm $spacer-xs $spacer-xs;
+            }
 
             &.router-link-active, &:hover, &:active {
               background: mix($app-sidebar-color, $app-sidebar-bg, 5%);
@@ -453,15 +456,21 @@ export default {
 
             & .svg-inline--fa {
               font-size: 1.2rem;
+
               .app-sidebar:not(.app-sidebar--reduced) & {
                 margin-right: $spacer;
+              }
+
+              .app-sidebar--reduced & {
+                margin: 0 auto $spacer-xs;
+                display: block;
               }
             }
 
             &__label {
 
               .app-sidebar--reduced & {
-                display: none;
+                font-size: 0.7rem;
               }
             }
           }
@@ -473,6 +482,16 @@ export default {
       z-index: 100;
       position: relative;
       text-align: left;
+
+      &:before {
+        content: "";
+        position: absolute;
+        bottom: 100%;
+        left: 0;
+        right: 0;
+        height: $spacer;
+        pointer-events: none;
+      }
 
       .app-sidebar--reduced & {
         text-align: center;

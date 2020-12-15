@@ -95,15 +95,10 @@ export default {
     background: $app-sidebar-bg;
     min-height: 100vh;
     transition: filter 200ms;
+    margin-left: $app-sidebar-reduced-width;
 
     .modal-open & {
       filter: grayscale(100%);
-    }
-
-    @media (max-width: $app-sidebar-float-breakpoint-width) {
-      &__main {
-        margin-left: $app-sidebar-reduced-width;
-      }
     }
 
     &__main {

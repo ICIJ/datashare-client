@@ -99,6 +99,12 @@ $nav-tabs-link-active-bg: white;
 @import './functions.scss';
 @import './mixins.scss';
 
+$spacer-xs: $spacer * 0.5;
+$spacer-sm: $spacer * 0.75;
+$spacer-lg: $spacer * 1.5;
+$spacer-xl: $spacer * 2;
+$spacer-xxl: $spacer * 4;
+
 $app-bg: #31313a;
 $app-border-radius: 1rem;
 
@@ -109,8 +115,7 @@ $app-sidebar-bg: darken(#31313a, 10%);
 $app-sidebar-color: #fff;
 $app-sidebar-border-color: mix($app-sidebar-color, $app-sidebar-bg, 5%);
 $app-sidebar-width: 290px;
-$app-sidebar-reduced-width: 70px;
-$app-sidebar-float-breakpoint-width:  1200px;
+$app-sidebar-reduced-width: 90px;
 $app-sidebar-link-color: mix($app-sidebar-bg, $app-sidebar-color, 40%);
 
 $app-context-sidebar-bg: mix(white, $app-sidebar-bg, 5%);
