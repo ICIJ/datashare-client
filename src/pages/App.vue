@@ -97,10 +97,6 @@ export default {
     transition: filter 200ms;
     margin-left: $app-sidebar-reduced-width;
 
-    .modal-open & {
-      filter: grayscale(100%);
-    }
-
     &__main {
       background: $body-bg;
       box-shadow: $box-shadow-lg;
