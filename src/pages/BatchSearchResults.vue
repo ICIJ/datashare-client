@@ -161,12 +161,12 @@
               <template v-slot:cell(documentNumber)="{ item }">
                 {{ item.documentNumber + 1 }}
               </template>
-              <template v-slot:cell(documentName)="{ item }">
+              <template v-slot:cell(documentPath)="{ item }">
                 <router-link
                   class="batch-search-results__queries__query__link"
                   target="_blank"
                   :to="{ name: 'document', params: { index: $route.params.index, id: item.documentId, routing: item.rootId }, query: { q: item.query } }">
-                  {{ item.documentName }}
+                  {{ item.documentPath }}
                 </router-link>
               </template>
               <template v-slot:cell(creationDate)="{ item }">
@@ -175,7 +175,7 @@
                 </span>
               </template>
               <template v-slot:cell(contentType)="{ item }">
-                <content-type-badge :value="item.contentType" :document-name="item.documentName"></content-type-badge>
+                <content-type-badge :value="item.contentType" :document-name="item.documentPath"></content-type-badge>
               </template>
               <template v-slot:cell(contentLength)="{ item }">
                 {{ getDocumentSize(item.contentLength, '-') }}
@@ -262,10 +262,10 @@ export default {
           name: 'query'
         },
         {
-          key: 'documentName',
-          label: this.$t('batchSearchResults.documentName'),
+          key: 'documentPath',
+          label: this.$t('batchSearchResults.documentPath'),
           sortable: true,
-          name: 'doc_name'
+          name: 'doc_path'
         },
         {
           key: 'creationDate',

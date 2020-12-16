@@ -368,10 +368,10 @@
   },
   "document": {
     "document": "Document",
-    "name": "File name",
-    "path": "File path",
-    "dirname": "File directory",
-    "id": "File ID",
+    "name": "Document name",
+    "path": "Document path",
+    "dirname": "Document directory",
+    "id": "Document ID",
     "creationDate": "Creation date",
     "size": "File size",
     "contentLanguage": "Content language",
@@ -584,7 +584,7 @@
   "batchSearchResults": {
     "rank": "Rank",
     "query": "Query",
-    "documentName": "Document Name",
+    "documentPath": "Document Path",
     "creationDate": "Creation Date",
     "contentType": "Content Type",
     "size": "Size",
