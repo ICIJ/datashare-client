@@ -32,6 +32,7 @@ export function initialState () {
     },
     parentDocument: null,
     showNamedEntities: false,
+    contentLoaded: false,
     showContentTextLengthWarning: false,
     tags: [],
     isRecommended: false,
@@ -71,6 +72,7 @@ export const mutations = {
   doc (state, raw) {
     if (raw !== null) {
       Vue.set(state, 'doc', EsDocList.instantiate(raw))
+      Vue.set(state, 'contentLoaded', state.doc.hasContent)
       // The warning on content text length is only shown if the
       // document is bigger than 20,000 characters
       Vue.set(state, 'showContentTextLengthWarning', state.doc.hasBigContentTextLength)
@@ -84,6 +86,7 @@ export const mutations = {
   content (state, content = null) {
     if (state.doc) {
       state.doc.content = content
+      state.contentLoaded = true
     }
   },
   translations (state, translations = []) {

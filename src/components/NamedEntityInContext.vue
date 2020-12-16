@@ -1,15 +1,20 @@
 <template>
-  <div class="named-entity-in-context" v-once>
-    <div class="named-entity-in-context__extract" v-html="nl2br(highlight(extract))" v-if="namedEntity.offset > -1" />
-    <div class="named-entity-in-context__meta" v-else>
+  <b-overlay class="named-entity-in-context" :show="$wait.is(waitIdentifier)" opacity="0" spinner-small>
+    <div v-if="extractNotAvailable" class="named-entity-in-context__no-extract">
+      {{ $t('Entities preview not available, the document is too big.') }}
+    </div>
+    <div v-else-if="namedEntity.offset > -1" class="named-entity-in-context__extract" v-html="extractInContext" />
+    <div v-else class="named-entity-in-context__meta" >
       {{ $t('namedEntityInContext.meta') }}
     </div>
-  </div>
+  </b-overlay>
 </template>
 
 <script>
+import toString from 'lodash/toString'
 import trim from 'lodash/trim'
 import VueScrollTo from 'vue-scrollto'
+import { mapState } from 'vuex'
 
 /**
  * Display a named entity in context.
@@ -37,31 +42,43 @@ export default {
       default: 560
     }
   },
-  mounted () {
-    this.$nextTick(this.scrollToFirstMark)
+  async mounted () {
+    await this.loadContent()
+    await this.$nextTick(this.scrollToFirstMark)
   },
   methods: {
-    nl2br (str) {
-      return this.document.nl2br(str)
+    async loadContent () {
+      if (!this.showContentTextLengthWarning && !this.contentLoaded) {
+        this.$wait.start(this.waitIdentifier)
+        await this.$store.dispatch('document/getContent')
+        this.$wait.end(this.waitIdentifier)
+      }
     },
     highlight (str) {
       return str.split(this.namedEntity.mention).join(`<mark>${this.namedEntity.mention}</mark>`)
     },
     scrollToFirstMark () {
-      const container = this.$el.querySelector('.named-entity-in-context__extract')
-      const target = this.$el.querySelector('.named-entity-in-context__extract mark')
+      const container = this.$el.querySelector('.named-entity-in-context__extract') || this.$el
+      const target = container.querySelector('mark')
 
-      if (container) {
+      if (target) {
         container.style.overflow = 'auto'
-        VueScrollTo.scrollTo(target, 0, { container, offset: -75, force: true })
+        VueScrollTo.scrollTo(target, 500, { container, offset: -75, force: true })
         container.style.overflow = 'hidden'
       }
     }
   },
   computed: {
+    ...mapState('document', ['contentLoaded', 'showContentTextLengthWarning']),
+    content () {
+      return toString(this.contentLoaded ? this.document.content : '')
+    },
     extract () {
-      const substring = this.document.content.substring(this.extractOffsetStart, this.extractOffsetEnd)
+      const substring = this.content.substring(this.extractOffsetStart, this.extractOffsetEnd)
       return [this.extractPrefix, trim(substring), this.extractSuffix].join('')
+    },
+    extractInContext () {
+      return this.document.nl2br(this.highlight(this.extract))
     },
     extractOffsetStart () {
       return Math.max(0, this.namedEntity.offset - Math.floor(this.extractLength / 2))
@@ -74,7 +91,13 @@ export default {
       return this.extractOffsetStart > 0 ? '...' : ''
     },
     extractSuffix () {
-      return this.extractOffsetEnd < this.document.content.length ? '...' : ''
+      return this.extractOffsetEnd < this.content.length ? '...' : ''
+    },
+    extractNotAvailable () {
+      return this.showContentTextLengthWarning
+    },
+    waitIdentifier () {
+      return 'load document content for named entity in context'
     }
   }
 }
@@ -86,11 +109,20 @@ export default {
     position: relative;
     width: 440px;
     max-width: 90vw;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &__no-extract, &__extract {
+      text-align: center;
+      padding: $spacer;
+      font-style: italic;
+    }
 
     &__extract {
-      max-height: 150px;
-      overflow: auto;
       padding: $gradient-height 0;
+      height: 150px;
 
       mark {
         font-weight: bold;
@@ -102,6 +134,7 @@ export default {
         left: 0;
         right: 0;
         height: $gradient-height;
+        z-index: 10;
       }
 
       &:before {
