@@ -379,6 +379,7 @@
     "contentEncoding": "Content encoding",
     "tabDetails": "Tags & Details",
     "namedEntities": "Named Entities",
+    "namedEntityFilter": "Filter named entities",
     "extractedText": "Extracted text",
     "translations": "Translations",
     "preview": "Preview",
@@ -452,7 +453,8 @@
   },
   "namedEntityInContext": {
     "title": "Extracted using <code>%{extractor}</code> in <code>%{extractorLanguage}</code>",
-    "meta": "This was extracted from metadata."
+    "meta": "This was extracted from metadata.",
+    "none": "Entities preview not available, the document is too big."
   },
   "email": {
     "detail": "See detail",

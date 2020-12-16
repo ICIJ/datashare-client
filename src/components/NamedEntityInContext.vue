@@ -1,7 +1,7 @@
 <template>
   <b-overlay class="named-entity-in-context" :show="$wait.is(waitIdentifier)" opacity="0" spinner-small>
     <div v-if="extractNotAvailable" class="named-entity-in-context__no-extract">
-      {{ $t('Entities preview not available, the document is too big.') }}
+      {{ $t('namedEntityInContext.none') }}
     </div>
     <div v-else-if="namedEntity.offset > -1" class="named-entity-in-context__extract" v-html="extractInContext" />
     <div v-else class="named-entity-in-context__meta" >

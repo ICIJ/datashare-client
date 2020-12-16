@@ -3,7 +3,7 @@
     <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
     <div class="p-3">
       <div class="document__named-entities__toolbox">
-        <search-form-control v-model="filterToken" :loading="$wait.is('load named entities')" class="document__named-entities__toolbox__filter" :placeholder="$t('Filter named entities')"/>
+        <search-form-control v-model="filterToken" :loading="$wait.is('load named entities')" class="document__named-entities__toolbox__filter" :placeholder="$t('document.namedEntityFilter')"/>
       </div>
       <div v-if="$config.is('manageDocuments') && !document.hasNerTags" class="document__named-entities document__named-entities--not--searched">
         <div v-html="$t('document.namedEntitiesNotSearched', { indexing_link: '#/indexing' })"></div>
