@@ -69,10 +69,14 @@ export default {
 
       &__search-bar {
         margin: 0;
+        position: relative;
+        z-index: 100;
       }
 
       &__no-projects {
         font-size: $font-size-lg;
+        position: relative;
+        z-index: 50;
       }
     }
   }
