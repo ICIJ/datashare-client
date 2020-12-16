@@ -1,6 +1,10 @@
 <template>
-  <span class="document-sliced-name w-100" :class="{ 'document-sliced-name--sliced': document.slicedName.length > 1 }">
-    <span v-for="(slice, index) in document.slicedName" :key="index" class="document-sliced-name__item w-100" :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }">
+  <span class="document-sliced-name w-100" :class="{ 'document-sliced-name--sliced': slices.length > 1 }">
+    <span
+      v-for="(slice, index) in slices"
+      :key="index"
+      class="document-sliced-name__item w-100"
+      :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }">
       <span v-if="isMiddleSlice(slice)">
         ...
       </span>
@@ -12,7 +16,10 @@
           {{ contentType }}
         </span>
       </span>
-      <router-link v-else-if="hasInteractiveRoot()" :to="{ name: 'document', params: rootParams }" class="document-sliced-name__item__root">
+      <router-link
+        v-else-if="hasInteractiveRoot()"
+        class="document-sliced-name__item__root"
+        :to="{ name: 'document', params: rootParams }">
         {{ slice }}
       </router-link>
       <span v-else class="document-sliced-name__item__single w-100 d-inline-block text-truncate" :title="slice">

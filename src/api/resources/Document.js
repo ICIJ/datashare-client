@@ -238,7 +238,7 @@ export default class Document extends EsDoc {
     const content = this.get('highlight.content[0]', '')
     return trim(content)
   }
-  set translations (translations = []) {
+  set translations (translations) {
     this.set('_source.content_translated', translations)
   }
   get translations () {

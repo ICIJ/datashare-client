@@ -17,7 +17,6 @@ describe('FilterBoilerplate.vue', () => {
   })
 
   it('should commit a setFilterValue and then refresh the route and the search', () => {
-    wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter } })
     jest.spyOn(wrapper.vm, 'refreshRouteAndSearch')
     wrapper.vm.setValue(['42'])
     expect(wrapper.vm.refreshRouteAndSearch).toBeCalled()
@@ -30,10 +29,6 @@ describe('FilterBoilerplate.vue', () => {
   })
 
   describe('on resetFilterValues', () => {
-    beforeEach(() => {
-      wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter } })
-    })
-
     it('should empty "selected" value', () => {
       wrapper.vm.$set(wrapper.vm, 'selected', ['item'])
       wrapper.vm.resetFilterValues()

@@ -100,20 +100,9 @@
 </template>
 
 <script>
-import compact from 'lodash/compact'
-import concat from 'lodash/concat'
-import escapeRegExp from 'lodash/escapeRegExp'
-import findIndex from 'lodash/findIndex'
-import flatten from 'lodash/flatten'
-import get from 'lodash/get'
-import map from 'lodash/map'
-import noop from 'lodash/noop'
-import pick from 'lodash/pick'
-import setWith from 'lodash/setWith'
-import sumBy from 'lodash/sumBy'
-import throttle from 'lodash/throttle'
-import toLower from 'lodash/toLower'
-import uniqueId from 'lodash/uniqueId'
+import {
+  compact, concat, escapeRegExp, findIndex, flatten, get, map, noop, pick, setWith, sumBy, throttle, toLower, uniqueId
+} from 'lodash'
 import InfiniteLoading from 'vue-infinite-loading'
 
 import Hook from '@/components/Hook'

@@ -6,11 +6,11 @@
 </template>
 
 <script>
-import ResetFiltersButton from '@/components/ResetFiltersButton'
+import { map, parseInt } from 'lodash'
+
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
+import ResetFiltersButton from '@/components/ResetFiltersButton'
 import { FilterDate } from '@/store/filters'
-import map from 'lodash/map'
-import parseInt from 'lodash/parseInt'
 
 /**
  * A list of applied search filters.
@@ -18,8 +18,8 @@ import parseInt from 'lodash/parseInt'
 export default {
   name: 'AppliedSearchFilters',
   components: {
-    ResetFiltersButton,
-    AppliedSearchFiltersItem
+    AppliedSearchFiltersItem,
+    ResetFiltersButton
   },
   computed: {
     filters () {

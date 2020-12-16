@@ -2,15 +2,11 @@
   <filter-boilerplate
     @add-filter-values="value => $emit('add-filter-values', value)"
     ref="filter"
-    v-bind="$props" />
+    v-bind="$props"></filter-boilerplate>
 </template>
 
 <script>
-import camelCase from 'lodash/camelCase'
-import flatten from 'lodash/flatten'
-import get from 'lodash/get'
-import noop from 'lodash/noop'
-import reduce from 'lodash/reduce'
+import { camelCase, flatten, get, noop, reduce } from 'lodash'
 
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import filters from '@/mixins/filters'
