@@ -54,13 +54,21 @@ export function datasharePlugin (Client, config, components) {
     return this._search({ index, routing, body })
   }
 
-  Client.prototype.getDocumentNamedEntitiesInCategory = async function (index, docId, routing = null, from = 0, size = 200, category = null) {
+  Client.prototype.getDocumentNamedEntitiesInCategory = async function (index, docId, routing = null, from = 0, size = 200, category = null, filterToken = null) {
     const body = bodybuilder()
       .size(size)
       .from(from)
       .query('parent_id', {
         type: 'NamedEntity',
         id: docId
+      })
+      .addQuery('bool', bool => {
+        if (filterToken) {
+          const fields = ['mentionNorm', 'mention']
+          const query = `*${filterToken}*`
+          bool.orQuery('query_string', { fields, query })
+        }
+        return bool
       })
       .filter('term', 'isHidden', 'false')
       .filter('term', 'category', category)

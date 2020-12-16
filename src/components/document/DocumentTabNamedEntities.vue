@@ -1,7 +1,10 @@
 <template>
-  <v-wait for="load named entities">
+  <v-wait for="load first page of named entities">
     <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
     <div class="p-3">
+      <div class="document__named-entities__toolbox">
+        <search-form-control v-model="filterToken" :loading="$wait.is('load named entities')" class="document__named-entities__toolbox__filter" :placeholder="$t('Filter named entities')"/>
+      </div>
       <div v-if="$config.is('manageDocuments') && !document.hasNerTags" class="document__named-entities document__named-entities--not--searched">
         <div v-html="$t('document.namedEntitiesNotSearched', { indexing_link: '#/indexing' })"></div>
       </div>
@@ -48,9 +51,11 @@
 import capitalize from 'lodash/capitalize'
 import get from 'lodash/get'
 import sumBy from 'lodash/sumBy'
+import throttle from 'lodash/throttle'
 import { mapState } from 'vuex'
 
 import NamedEntityInContext from '@/components/NamedEntityInContext'
+import SearchFormControl from '@/components/SearchFormControl'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 
@@ -67,9 +72,24 @@ export default {
       type: Object
     }
   },
+  data () {
+    return {
+      filterToken: null
+    }
+  },
   mixins: [ner, utils],
   components: {
-    NamedEntityInContext
+    NamedEntityInContext,
+    SearchFormControl
+  },
+  watch: {
+    filterToken (filterToken) {
+      // No throttle when the filter token is empty
+      if (!filterToken) {
+        return this.getFirstPageInAllCategories()
+      }
+      return this.getFirstPageInAllCategoriesWithThrottle()
+    }
   },
   computed: {
     ...mapState('document', ['isLoadingNamedEntities', 'namedEntitiesPaginatedByCategories']),
@@ -78,12 +98,13 @@ export default {
     },
     categories () {
       return this.$store.getters['document/categories']
+    },
+    getFirstPageInAllCategoriesWithThrottle () {
+      return throttle(this.getFirstPageInAllCategories, 1000)
     }
   },
-  async mounted () {
-    this.$wait.start('load named entities')
-    await this.$store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-    this.$wait.end('load named entities')
+  mounted () {
+    this.getFirstPageInAllCategories('load first page of named entities')
   },
   methods: {
     getCategoryTotal (category) {
@@ -99,9 +120,16 @@ export default {
       // Don't load named entities if they are already loading
       if (!this.isLoadingNamedEntities) {
         this.$wait.start(`load_more_data_${category}`)
-        await this.$store.dispatch('document/getNextPageForNamedEntityInCategory', category)
+        const filterToken = this.filterToken
+        await this.$store.dispatch('document/getNextPageForNamedEntityInCategory', { category, filterToken })
         this.$wait.end(`load_more_data_${category}`)
       }
+    },
+    async getFirstPageInAllCategories (waitIdentifier = 'load named entities') {
+      this.$wait.start(waitIdentifier)
+      const filterToken = this.filterToken
+      await this.$store.dispatch('document/getFirstPageForNamedEntityInAllCategories', { filterToken })
+      this.$wait.end(waitIdentifier)
     },
     capitalize
   }
@@ -110,6 +138,20 @@ export default {
 
 <style lang="scss">
   .document__named-entities {
+
+    &__toolbox {
+      background: $lighter;
+      padding: $spacer-xs $spacer;
+      margin: 0 0 $spacer;
+      display: flex;
+
+      &__filter {
+        max-width: 300px;
+        width: 100%;
+        margin-left: auto;
+      }
+    }
+
     &__more {
       background: $light;
       display: inline-block;

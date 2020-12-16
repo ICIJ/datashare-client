@@ -45,7 +45,6 @@ export default {
     },
     /**
      * Set the autofocus on the search bar on load
-     * @default True
      */
     autofocus: {
       type: Boolean,
@@ -57,6 +56,13 @@ export default {
     rounded: {
       type: Boolean,
       default: true
+    },
+    /**
+     * Change the state of the input to "loading" (with a spinner)
+     */
+    loading: {
+      type: Boolean,
+      default: false
     }
   },
   computed: {
@@ -65,7 +71,8 @@ export default {
         'search-form-control--fill-submit': this.fillSubmit,
         'search-form-control--show-submit-label': this.showSubmitLabel,
         'search-form-control--no-icon': this.noIcon,
-        'search-form-control--rounded': this.rounded
+        'search-form-control--rounded': this.rounded,
+        'search-form-control--loading': this.loading
       }
     }
   }
@@ -78,7 +85,10 @@ export default {
       <b-form-input :placeholder="placeholder" class="search-form-control__input" :value="value" @input="$emit('input', $event)" :autofocus="autofocus"></b-form-input>
       <b-input-group-append  class="search-form-control__addon search-form-control__addon--append">
         <b-button variant="light" class="search-form-control__addon__submit" type="submit">
-          <fa icon="search" v-if="!noIcon"></fa>
+          <template v-if="!noIcon">
+            <fa v-if="loading" icon="circle-notch" spin fixed-width />
+            <fa v-else icon="search" fixed-width />
+          </template>
           <span :class="{ 'sr-only': !showSubmitLabel }">
             {{ submitLabel || $t('searchFormControl.submitLabel') }}
           </span>

@@ -105,6 +105,9 @@ export const mutations = {
       state.namedEntitiesPaginatedByCategories[category].push(page)
     }
   },
+  namedEntitiesPagesInCategory (state, { category, pages = [] } = {}) {
+    state.namedEntitiesPaginatedByCategories[category] = pages
+  },
   parentDocument (state, raw) {
     if (raw !== null) {
       Vue.set(state, 'parentDocument', EsDocList.instantiate(raw))
@@ -186,27 +189,28 @@ export const actions = {
     const raw = await elasticsearch.getDocumentNamedEntities(index, id, routing, 0, 0)
     return (new EsDocList(raw)).total
   },
-  async getFirstPageForNamedEntityInCategory ({ state, dispatch }, category) {
-    // Count the number of loaded pages
-    const namedEntitiesPagesCount = get(state, ['namedEntitiesPaginatedByCategories', category, 'length'], 0)
-    // Zero named entities load for this category
-    if (namedEntitiesPagesCount === 0) {
-      return dispatch('getNextPageForNamedEntityInCategory', category)
-    }
+  getFirstPageForNamedEntityInCategory ({ dispatch, commit }, { category, filterToken = null } = {}) {
+    commit('namedEntitiesPagesInCategory', { category, pages: [] })
+    return dispatch('getNextPageForNamedEntityInCategory', { category, filterToken })
   },
-  async getFirstPageForNamedEntityInAllCategories ({ dispatch, getters }) {
+  async getFirstPageForNamedEntityInAllCategories ({ dispatch, getters }, { filterToken = null } = {}) {
     for (const category of getters.categories) {
-      await dispatch('getFirstPageForNamedEntityInCategory', category)
+      await dispatch('getFirstPageForNamedEntityInCategory', { filterToken, category })
     }
   },
-  async getNextPageForNamedEntityInCategory ({ state, getters, commit, dispatch }, category) {
+  async getNextPageForNamedEntityInCategory ({ state, getters, commit }, { category, filterToken = null } = {}) {
     try {
       const from = getters.countNamedEntitiesInCategory(category)
       const index = state.doc.index
       const { id, routing } = state.doc
-      const raw = await elasticsearch.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category)
+      const raw = await elasticsearch.getDocumentNamedEntitiesInCategory(index, id, routing, from, 50, category, filterToken)
       const page = new EsDocList(raw)
-      return commit('namedEntitiesPageInCategory', { category, page })
+      if (from === 0) {
+        const pages = [page]
+        return commit('namedEntitiesPagesInCategory', { category, pages })
+      } else {
+        return commit('namedEntitiesPageInCategory', { category, page })
+      }
     } catch (_) {
       return null
     }

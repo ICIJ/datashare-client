@@ -280,6 +280,7 @@ export default {
         position: sticky;
       }
     }
+
     &__ner-toggler {
       & > .custom-control.custom-switch {
         display: inline-block;

@@ -25,7 +25,7 @@ describe('NamedEntityInContext.vue', () => {
       .commit()
     const document = await store.dispatch('document/get', { id, index })
     await store.dispatch('document/getContent')
-    await store.dispatch('document/getFirstPageForNamedEntityInCategory', category)
+    await store.dispatch('document/getFirstPageForNamedEntityInCategory', { category })
     const namedEntities = store.state.document.namedEntitiesPaginatedByCategories
     const namedEntity = namedEntities[category][0].hits[namedEntityIndex]
     return { document, namedEntity, extractLength }

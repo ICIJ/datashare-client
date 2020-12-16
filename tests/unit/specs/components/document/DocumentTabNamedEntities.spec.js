@@ -41,6 +41,25 @@ describe('DocumentTabNamedEntities.vue', () => {
     expect(pills.at(2).classes()).toContain('border-category-location')
   })
 
+  it('should display filtered named entities', async () => {
+    await letData(es).have(new IndexedDocument(id, index)
+      .withPipeline('DUCKNLP')
+      .withNer('riri', 0, 'PERSON')
+      .withNer('fifi', 0, 'PERSON')
+      .withNer('loulou', 0, 'PERSON'))
+      .commit()
+    document = await store.dispatch('document/get', { id, index })
+    await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+    wrapper = shallowMount(DocumentTabNamedEntities, { i18n, localVue, store, wait, propsData: { document }, sync: false })
+    wrapper.setData({ filterToken: 'lou' })
+    await wrapper.vm.getFirstPageInAllCategories()
+
+    const pills = wrapper.findAll('b-badge-stub')
+    expect(pills).toHaveLength(1)
+    expect(pills.at(0).find('b-badge-stub > span').text()).toBe('loulou')
+    expect(pills.at(0).classes()).toContain('border-category-person')
+  })
+
   it('should display a specific error message if no names finding task has been run on that document', async () => {
     await letData(es).have(new IndexedDocument(id, index)).commit()
     document = await store.dispatch('document/get', { id, index })
