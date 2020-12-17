@@ -22,7 +22,8 @@ jest.mock('axios', () => {
 })
 
 describe('DocumentView.vue', () => {
-  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
+  const core = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, router, store, wait } = core
   const project = toLower('DocumentView')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
@@ -86,7 +87,7 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(4)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(3).text()).toContain('Named Entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(3).attributes('title')).toContain('Named Entities')
   })
 
   it('should NOT display the named entities tab', async () => {
@@ -96,14 +97,16 @@ describe('DocumentView.vue', () => {
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(3)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(2).text()).not.toContain('Named Entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(2).attributes('title')).not.toContain('Named Entities')
   })
 
   describe('navigate through tabs as loop', () => {
     beforeEach(async () => {
-      wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index: project } })
+      const propsData = { id, index: project }
+      wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
       await wrapper.vm.getDoc()
     })
+
     it('should set the previous tab as active', () => {
       wrapper.vm.$set(wrapper.vm, 'activeTab', 'preview')
       wrapper.vm.goToPreviousTab()
@@ -128,6 +131,44 @@ describe('DocumentView.vue', () => {
       wrapper.vm.goToNextTab()
 
       expect(wrapper.vm.activeTab).toBe('extracted-text')
+    })
+  })
+
+  describe('transform the tabs array through a pipeline', () => {
+    const temporaryPipelineName = 'document-view-tabs-add-tmp-tab'
+
+    beforeEach(async () => {
+      core.registerPipeline({
+        name: temporaryPipelineName,
+        category: 'document-view-tabs',
+        type (tabs, document) {
+          const tab = { name: 'tmp', label: 'Temporary' }
+          return [...tabs, tab]
+        }
+      })
+      const propsData = { id, index: project }
+      wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
+      await wrapper.vm.getDoc()
+    })
+
+    afterEach(() => {
+      core.unregisterPipeline(temporaryPipelineName)
+    })
+
+    it('should add a tab using the `document-view-tabs` pipeline', async () => {
+      const lastTab = wrapper.vm.tabsThoughtPipeline[wrapper.vm.tabsThoughtPipeline.length - 1]
+      expect(lastTab.label).toBe('Temporary')
+    })
+
+    it('should add a tab with a `labelComponent` property', async () => {
+      const lastTab = wrapper.vm.tabsThoughtPipeline[wrapper.vm.tabsThoughtPipeline.length - 1]
+      expect(lastTab.labelComponent).toHaveProperty('template')
+    })
+
+    it('should add a tab with a `labelComponent` within the label in its template', async () => {
+      const lastTab = wrapper.vm.tabsThoughtPipeline[wrapper.vm.tabsThoughtPipeline.length - 1]
+      const lastTabWrapper = shallowMount(lastTab.labelComponent, { i18n, localVue })
+      expect(lastTabWrapper.text()).toBe('Temporary')
     })
   })
 })

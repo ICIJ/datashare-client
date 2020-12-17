@@ -29,11 +29,12 @@
             <hook name="document.header.nav.items:before" tag="li" />
             <template v-for="tab in visibleTabs">
               <hook :name="`document.header.nav.items.${tab.name}:before`" :key="`hook.${tab.name}:before`" tag="li" />
-              <li class="document__header__nav__item list-inline-item" :key="tab.name">
+              <li class="document__header__nav__item list-inline-item" :key="tab.name" :title="$t(tab.label)">
                 <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
                   <hook :name="`document.header.nav.${tab.name}:before`" />
                   <fa :icon="tab.icon" v-if="tab.icon" class="mr-2" />
-                  {{ $t(tab.label) }}
+                  <component v-if="tab.labelComponent" :is="tab.labelComponent" />
+                  <template v-else>{{ $t(tab.label) }}</template>
                   <hook :name="`document.header.nav.${tab.name}:after`" />
                 </a>
               </li>
