@@ -368,10 +368,10 @@
   },
   "document": {
     "document": "Document",
-    "name": "ファイル名",
-    "path": "ファイルパス",
-    "dirname": "File directory",
-    "id": "ファイルID",
+    "name": "Document name",
+    "path": "Document path",
+    "dirname": "Document directory",
+    "id": "Document ID",
     "creationDate": "作成日時",
     "size": "ファイルサイズ",
     "contentLanguage": "内容の言語",
@@ -379,6 +379,7 @@
     "contentEncoding": "内容のエンコーディング",
     "tabDetails": "タグと詳細",
     "namedEntities": "固有表現",
+    "namedEntityFilter": "Filter named entities",
     "extractedText": "抽出テキスト",
     "translations": "翻訳",
     "preview": "プレビュー",
@@ -452,7 +453,8 @@
   },
   "namedEntityInContext": {
     "title": "<code>%{extractorLanguage}</code> の<code>%{extractor}</code> を使って抽出",
-    "meta": "これはメタデータから抽出されました"
+    "meta": "これはメタデータから抽出されました",
+    "none": "Entities preview not available, the document is too big."
   },
   "email": {
     "detail": "詳細を見る",
@@ -582,7 +584,7 @@
   "batchSearchResults": {
     "rank": "ランク",
     "query": "検索語",
-    "documentName": "文書名",
+    "documentPath": "Document Path",
     "creationDate": "作成日",
     "contentType": "コンテンツの種類",
     "size": "サイズ",
