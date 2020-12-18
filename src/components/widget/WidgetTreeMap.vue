@@ -116,7 +116,7 @@ export default {
       const aggregationOptions = {
         include: path + '/.*',
         exclude: path + '/.*/.*',
-        size: 10
+        size: 29
       }
       const body = bodybuilder()
         .size(0)
@@ -127,12 +127,17 @@ export default {
           sub => sub.agg('bucket_sort', { size: 50, from: 0 }, 'bucket_truncate'))
         .build()
       const result = await elasticsearch.search({ index: this.widget.index, body, size: 0 })
-      return get(result, 'aggregations.byDirname.buckets', [])
+      const children = get(result, 'aggregations.byDirname.buckets', [])
+      const others = get(result, 'aggregations.byDirname.sum_other_doc_count', [])
+      return { children, others }
     },
     async update (path = null) {
       let children = null
+      let others = null
       try {
-        children = await this.getData(path)
+        const response = await this.getData(path)
+        children = response.children
+        others = response.others
       } catch (_) {}
       // Error while downloading data or no more data to display
       if (isNull(children) || children.length === 0) {
@@ -157,6 +162,7 @@ export default {
         } else {
           select(`#${ this.id } > svg > g`).remove()
         }
+        children.push({ key: this.$t('widget.treemap.others'), doc_count: others })
         this.renderTreeMap({ children })
       }
     }
