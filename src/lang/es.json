@@ -368,10 +368,10 @@
   },
   "document": {
     "document": "Archivo",
-    "name": "Nombre del archivo",
-    "path": "Ruta del archivo",
-    "dirname": "Directorio de archivos",
-    "id": "ID de archivo",
+    "name": "Document name",
+    "path": "Document path",
+    "dirname": "Document directory",
+    "id": "Document ID",
     "creationDate": "Fecha de creación",
     "size": "Tamaño del archivo",
     "contentLanguage": "Idioma del contenido",
@@ -379,6 +379,7 @@
     "contentEncoding": "Codificación de contenido",
     "tabDetails": "Etiquetas y Detalles",
     "namedEntities": "Entidades Identificadas",
+    "namedEntityFilter": "Filter named entities",
     "extractedText": "Texto Extraído",
     "translations": "Traducciones",
     "preview": "Vista previa",
@@ -452,7 +453,8 @@
   },
   "namedEntityInContext": {
     "title": "Extraído usando <code>%{extractor}</code> en <code>%{extractorLanguage}</code>",
-    "meta": "Esto fue extraído de los metadatos."
+    "meta": "Esto fue extraído de los metadatos.",
+    "none": "Entities preview not available, the document is too big."
   },
   "email": {
     "detail": "Más detalles",
@@ -582,7 +584,7 @@
   "batchSearchResults": {
     "rank": "Rango",
     "query": "Consulta",
-    "documentName": "Nombre del documento",
+    "documentPath": "Document Path",
     "creationDate": "Fecha de creación",
     "contentType": "Tipo de contenido",
     "size": "Tamaño",
