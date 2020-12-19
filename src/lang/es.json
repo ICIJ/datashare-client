@@ -668,7 +668,8 @@
       "duplicated": "* Los archivos duplicados no se indexan en Datashare para facilitar la búsqueda y evitar crear archivos innecesarios."
     },
     "treemap": {
-      "seeDocuments": "Ver archivos en Datashare"
+      "seeDocuments": "Ver archivos en Datashare",
+      "others": "Others"
     }
   },
   "api": {
