@@ -195,12 +195,13 @@ export default {
       query: this.modelQuery,
       sortBy: get(this, 'filter.sortBy', settings.filter.sortBy),
       sortByOrder: get(this, 'filter.sortByOrder', settings.filter.sortByOrder),
-      sortByOptions: get(this, 'filter.sortByOptions', settings.filter.sortByOptions)
+      sortByOptions: get(this, 'filter.sortByOptions', settings.filter.sortByOptions),
+      unwatch: () => {}
     }
   },
   watch: {
     modelQuery () {
-      this.query = this.modelQuery
+      this.$set(this, 'query', this.modelQuery)
     },
     query () {
       this.$set(this, 'infiniteId', uniqueId())
@@ -411,11 +412,12 @@ export default {
         //
         // When they are contextualized, every filter with selected values will
         // be present in the list of watched values.
-        this.$store.watch(this.watchedForUpdate, () => {
+        const unwatch = this.$store.watch(this.watchedForUpdate, () => {
           // It's important to clear pages to ensure the filter is loading
           // pages from the start and not adding new pages.
           this.aggregateWithLoading({ clearPages: true })
         }, { deep: true })
+        this.$set(this, 'unwatch', unwatch)
       }
     },
     openFilterSearch () {
@@ -516,6 +518,9 @@ export default {
       this.$emit('add-filter-values', this.filter, this.selected)
       this.refreshRouteAndSearch()
     }
+  },
+  beforeDestroy () {
+    this.unwatch()
   }
 }
 </script>
