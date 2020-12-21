@@ -423,4 +423,27 @@ describe('DocumentContent.vue', () => {
       expect(document.content).toBe('this is a content')
     })
   })
+
+  it('should emit an event "document::content-loaded" when document is loaded', async () => {
+    // Create a document with a small content text length
+    const indexedDocument = new IndexedDocument(id, index)
+    indexedDocument.withContent('this is a content')
+    indexedDocument.setContentTextLength(20)
+
+    // Save and get the document from Elasticsearch
+    await letData(es).have(indexedDocument).commit()
+    await store.dispatch('document/get', { id, index })
+
+    // Build the wrapper with the created document
+    const document = store.state.document.doc
+    const mocks = { $t: msg => msg }
+    const propsData = { document }
+    const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+
+    const mockCallback = jest.fn()
+    wrapper.vm.$root.$on('document::content-loaded', mockCallback)
+    expect(mockCallback).not.toBeCalled()
+    await wrapper.vm.loadContent()
+    expect(mockCallback).toBeCalled()
+  })
 })

@@ -88,6 +88,7 @@ export default {
       if (!this.showContentTextLengthWarning && !this.document.hasContent) {
         await this.$store.dispatch('document/getContent')
       }
+      this.$root.$emit('document::content-loaded')
       return this.content
     },
     async transformContent () {

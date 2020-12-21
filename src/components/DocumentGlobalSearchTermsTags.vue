@@ -17,13 +17,18 @@ export default {
       type: Object
     }
   },
+  data () {
+    return {
+      terms: []
+    }
+  },
+  mounted () {
+    this.$root.$on('document::content-loaded', this.getTerms)
+  },
   computed: {
     ...mapGetters('search', {
       globalSearchTermsInDocument: 'retrieveContentQueryTermsInDocument'
-    }),
-    terms () {
-      return this.globalSearchTermsInDocument(this.document)
-    }
+    })
   },
   methods: {
     getTermIndexClass (index, term) {
@@ -31,6 +36,10 @@ export default {
         'document-global-search-terms-tags__item--negation': term.negation,
         [`document-global-search-terms-tags__item--index-${index}`]: true
       }
+    },
+    getTerms () {
+      const terms = this.globalSearchTermsInDocument(this.document)
+      this.$set(this, 'terms', terms)
     }
   }
 }
@@ -62,7 +71,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .document-global-search-terms-tags {
 
     &__item {
