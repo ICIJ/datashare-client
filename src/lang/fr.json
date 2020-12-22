@@ -14,10 +14,10 @@
     "relative": "Relatifs à la recherche"
   },
   "contentTextLengthWarning": {
-    "title": "This document is huge",
-    "description": "Opening it <strong>might crash your Web Browser</strong>.",
-    "download": "The search within this document can be long. Please consider downloading it if your environment is secure.",
-    "open": "Open Anyway"
+    "title": "Ce document est volumineux",
+    "description": "L'ouvrir <strong>pourrait bloquer votre navigateur Web</strong>.",
+    "download": "La recherche dans ce document peut être longue. Envisagez de le télécharger si votre environnement est sécurisé.",
+    "open": "Ouvrir quand même"
   },
   "error": {
     "title": "Quelque chose ne va pas",
@@ -368,10 +368,10 @@
   },
   "document": {
     "document": "Document",
-    "name": "Document name",
-    "path": "Document path",
-    "dirname": "Document directory",
-    "id": "Document ID",
+    "name": "Nom du document",
+    "path": "Chemin du document",
+    "dirname": "Dossier du document",
+    "id": "ID du document",
     "creationDate": "Date de création",
     "size": "Taille du ficher",
     "contentLanguage": "Langue",
@@ -379,7 +379,7 @@
     "contentEncoding": "Encodage",
     "tabDetails": "Tags & Détails",
     "namedEntities": "Entités nommées",
-    "namedEntityFilter": "Filter named entities",
+    "namedEntityFilter": "Filtrer les entités nommées",
     "extractedText": "Texte extrait",
     "translations": "Traductions",
     "preview": "Prévisualisation",
@@ -426,9 +426,9 @@
     "parent": "Parent",
     "inMetadata": "dans les métadonnées",
     "inTags": "dans les tags",
-    "shortcuts": "Shortcuts",
+    "shortcuts": "Raccourcis",
     "searchChildrenDocument": "Voir les documents 'enfants'",
-    "searchDirnameDocument": "See folder's documents",
+    "searchDirnameDocument": "Voir les documents 'enfants'",
     "tagConfirmation": "Êtes-vous sûr•e de supprimer ce tag ?",
     "createdBy": "Créé par",
     "on": "le",
@@ -454,7 +454,7 @@
   "namedEntityInContext": {
     "title": "Extrait en utilisant <code>%{extractor}</code> en <code>%{extractorLanguage}</code>",
     "meta": "Extrait des métadonnées.",
-    "none": "Entities preview not available, the document is too big."
+    "none": "Aperçu des entités non disponible, le document est trop grand."
   },
   "email": {
     "detail": "Voir les détails",
@@ -495,21 +495,21 @@
   },
   "menu": {
     "help": "Demander de l'aide",
-    "helpShort": "Help",
+    "helpShort": "Aide",
     "analyse": "Analyser vos documents",
-    "analyseShort": "Analyze",
+    "analyseShort": "Analyser",
     "batch": "Recherches en lot",
-    "batchShort": "Batch searches",
+    "batchShort": "Recherches en lot",
     "search": "Rechercher dans les documents",
-    "searchShort": "Search",
+    "searchShort": "Rechercher",
     "history": "Votre historique",
-    "historyShort": "History",
+    "historyShort": "Historique",
     "insights": "Aperçu",
-    "insightsShort": "Insights",
+    "insightsShort": "Aperçu",
     "settings": "Paramètres",
-    "settingsShort": "Settings",
+    "settingsShort": "Réglages",
     "logout": "Déconnexion",
-    "logoutShort": "Logout",
+    "logoutShort": "Se déconnecter",
     "addDocuments": "Comment ajouter des documents",
     "faq": "FAQ",
     "faqShort": "FAQ",
@@ -584,7 +584,7 @@
   "batchSearchResults": {
     "rank": "Rang",
     "query": "Recherche",
-    "documentPath": "Document Path",
+    "documentPath": "Chemin du document",
     "creationDate": "Date de création",
     "contentType": "Type de contenu",
     "size": "Taille",
@@ -669,7 +669,7 @@
     },
     "treemap": {
       "seeDocuments": "Voir les documents dans Datashare",
-      "others": "Others"
+      "others": "Autres"
     }
   },
   "api": {
