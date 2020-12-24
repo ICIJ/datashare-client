@@ -50,6 +50,7 @@ Frequently Asked Questions - **Errors**
 * [What do I do if Datashare opens a blank screen in my browser?](https://icij.gitbook.io/datashare/faq-errors/datashare-opens-a-blank-screen-in-my-browser.)
 * [I see people, organizations and locations in the filters but not in the documents](https://icij.gitbook.io/datashare/faq-errors/i-see-people-organizations-and-locations-in-the-filters-but-not-in-the-documents)
 * [What does 'Windows named pipe error' mean?](https://icij.gitbook.io/datashare/faq-errors/i-read-windows-named-pipe-error-...)
+* [Datashare doesn't open. What should I do?](https://icij.gitbook.io/datashare/faq-errors/datashare-doesnt-open.-what-should-i-do)
 
 Frequently Asked Questions - **Definitions**
 
