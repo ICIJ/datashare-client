@@ -61,6 +61,7 @@
 * [What do I do if Datashare opens a blank screen in my browser?](faq-errors/datashare-opens-a-blank-screen-in-my-browser..md)
 * [I see people, organizations and locations in the filters but not in the documents](faq-errors/i-see-people-organizations-and-locations-in-the-filters-but-not-in-the-documents.md)
 * [What does 'Windows named pipe error' mean?](faq-errors/i-read-windows-named-pipe-error-....md)
+* [Datashare doesn't open. What should I do?](faq-errors/datashare-doesnt-open.-what-should-i-do.md)
 
 ## FAQ - Definitions
 
