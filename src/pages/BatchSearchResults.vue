@@ -166,7 +166,9 @@
                   class="batch-search-results__queries__query__link"
                   target="_blank"
                   :to="{ name: 'document', params: { index: $route.params.index, id: item.documentId, routing: item.rootId }, query: { q: item.query } }">
+                  <span class="d-inline-block text-truncate" style="max-width: 400px;">
                   {{ item.documentPath }}
+                  </span>
                 </router-link>
               </template>
               <template v-slot:cell(creationDate)="{ item }">
