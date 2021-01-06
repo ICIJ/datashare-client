@@ -1,6 +1,12 @@
 <template>
-  <button class="btn" :class="componentClasses" @click="resetFiltersAndQuery" v-show="!autoHiding || hasFilters" :title="$t('search.clearFiltersDescription')" v-b-tooltip :disabled="!hasFilters">
-    <fa :icon="icon" v-if="!noIcon" />
+  <button class="btn"
+          :class="componentClasses"
+          @click="resetFiltersAndQuery"
+          v-show="!autoHiding || hasFiltersOrQuery"
+          :title="$t('search.clearFiltersDescription')"
+          v-b-tooltip
+          :disabled="!hasFiltersOrQuery">
+    <fa :icon="icon" v-if="!noIcon"></fa>
     <slot>
       {{ $t('search.clearFilters') }}
     </slot>
@@ -17,9 +23,10 @@ export default {
   name: 'ResetFiltersButton',
   props: {
     /**
-     * Bootsrap variant class of the button.
+     * Bootstrap variant class of the button.
      *
-     * @values primary, secondary, success, danger, warning, info, light, dark, outline-primary, outline-secondary, outline-success, outline-danger, outline-warning, outline-info, outline-light, outline-dark
+     * @values primary, secondary, success, danger, warning, info, light, dark, outline-primary, outline-secondary,
+     *         outline-success, outline-danger, outline-warning, outline-info, outline-light, outline-dark
      */
     variant: {
       default: 'outline-secondary',
