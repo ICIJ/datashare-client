@@ -83,8 +83,8 @@
       }
     },
     "filtersTitle": "フィルター",
-    "clearFilters": "フィルターを全て解除",
-    "clearFiltersDescription": "選択したフィルターを検索から削除",
+    "clearFilters": "Clear all",
+    "clearFiltersDescription": "Clear query and selected filters from the search.",
     "back": "検索結果に戻る",
     "try": "こちらをお試し下さい",
     "nav": {
