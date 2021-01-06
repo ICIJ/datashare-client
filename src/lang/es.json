@@ -83,8 +83,8 @@
       }
     },
     "filtersTitle": "Filtros",
-    "clearFilters": "Limpiar todos los filtros",
-    "clearFiltersDescription": "Remover los filtros seleccionados de la búsqueda.",
+    "clearFilters": "Clear all",
+    "clearFiltersDescription": "Clear query and selected filters from the search.",
     "back": "Regresar a resultados de búsqueda",
     "try": "Usted puede intentar a",
     "nav": {
