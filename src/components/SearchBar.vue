@@ -8,10 +8,10 @@
           class="form-control search-bar__input"
           @blur="focused = false ; hideSuggestionsAfterDelay()"
           @input="searchTerms()"
-          @focus="focused = true ; searchTerms()" />
+          @focus="focused = true ; searchTerms()">
         <div class="input-group-append">
           <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }" v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" :title="$t('search.tips')" v-b-tooltip.bottomleft>
-            <fa icon="question-circle" />
+            <fa icon="question-circle"></fa>
           </router-link>
           <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
             <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key">
@@ -47,22 +47,13 @@
 </template>
 
 <script>
-import castArray from 'lodash/castArray'
-import concat from 'lodash/concat'
-import escapeRegExp from 'lodash/escapeRegExp'
-import each from 'lodash/each'
-import get from 'lodash/get'
-import last from 'lodash/last'
-import orderBy from 'lodash/orderBy'
-import some from 'lodash/some'
-import throttle from 'lodash/throttle'
-import uniqueId from 'lodash/uniqueId'
+import { castArray, concat, escapeRegExp, each, get, last, orderBy, some, throttle, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import lucene from 'lucene'
 
 import elasticsearch from '@/api/elasticsearch'
-import settings from '@/utils/settings'
 import ShortkeysModal from '@/components/ShortkeysModal'
+import settings from '@/utils/settings'
 
 function escapeLuceneChars (str) {
   const escapable = [' ', '+', '-', '&&', '||', '!', '(', ')', '{', '}', '[', ']', '^', '~', '?', ':', '\\', '/']
@@ -116,12 +107,12 @@ export default {
   },
   data () {
     return {
-      showTips: false,
-      query: this.$store.state.search.query,
       field: this.$store.state.search.field,
+      focused: false,
       operatorLinks: settings.documentationLinks.operators.default,
-      suggestions: [],
-      focused: false
+      query: this.$store.state.search.query,
+      showTips: false,
+      suggestions: []
     }
   },
   mounted () {
@@ -245,21 +236,20 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .search-bar {
 
     .input-group {
-      white-space: nowrap;
-      flex-wrap: nowrap;
       filter: drop-shadow(0 0.3em .6em rgba(black, 0));
+      flex-wrap: nowrap;
       transition: transform 0.2s;
+      white-space: nowrap;
     }
 
     &--focused.search-bar--animated {
-
       .input-group {
-        transform: translateY(-0.25em);
         filter: drop-shadow(0 0.3em .6em rgba(black, .2));
+        transform: translateY(-0.25em);
       }
     }
 
@@ -273,8 +263,8 @@ export default {
 
       &:focus ~ .input-group-append .search-bar__field .btn,
       &:focus ~ .input-group-append .search-bar__tips-addon {
-        border-top-color: $input-focus-border-color;
         border-bottom-color: $input-focus-border-color;
+        border-top-color: $input-focus-border-color;
       }
 
       &:focus {
@@ -283,25 +273,25 @@ export default {
     }
 
     &__field {
-      border-left: dashed 1px  $input-border-color;
       background: $input-bg;
+      border-left: dashed 1px  $input-border-color;
       font-size: inherit;
 
       &--selected:after {
-        content:"";
-        position: absolute;
-        top: 1px;
-        right: 1px;
-        left: 0;
         bottom: 1px;
         border: 2px solid $tertiary;
+        content: "";
+        left: 0;
+        position: absolute;
+        right: 1px;
+        top: 1px;
       }
 
-      .btn {
-        color: $text-muted;
+      /deep/ .btn {
         border: 1px solid $input-border-color;
         border-left: 0;
         box-shadow: $input-box-shadow;
+        color: $text-muted;
 
         .input-group-lg & {
           font-size: 1.25rem;
@@ -310,14 +300,13 @@ export default {
     }
 
     &__tips-addon.input-group-text {
-      color: $text-muted;
+      background: white;
       border-left: 0;
       border-right: 0;
       box-shadow: $input-box-shadow;
-      background: white;
-      transition: $input-transition, color .15s ease-in-out;
       color: transparent;
       pointer-events: none;
+      transition: $input-transition, color .15s ease-in-out;
     }
 
     &__tips-addon--active.input-group-text {
@@ -329,22 +318,21 @@ export default {
     &__field .btn.dropdown-toggle:hover,
     &__field .btn.dropdown-toggle:active {
       background: transparent;
-      box-shadow: $input-box-shadow;
-      border:1px solid $input-border-color;
+      border: 1px solid $input-border-color;
       border-left: 0;
+      box-shadow: $input-box-shadow;
     }
 
     & &__suggestions.dropdown-menu {
-      position: absolute !important;
-      top: 100%;
       left: 0;
+      position: absolute !important;
       right: 0;
+      top: 100%;
     }
 
     &__suggestions {
-
-      margin-top: $dropdown-spacer;
       box-shadow: $dropdown-box-shadow;
+      margin-top: $dropdown-spacer;
 
       & .dropdown-item {
         cursor: pointer;
@@ -356,16 +344,17 @@ export default {
     }
 
     &__tips {
-      display: block;
-      padding: $spacer / 2 0 0;
-      font-size: 0.9rem;
-      z-index: 100;
       border-radius: 0 0 $input-border-radius $input-border-radius;
+      display: block;
+      font-size: 0.9rem;
+      padding: $spacer / 2 0 0;
+      z-index: 100;
+
     }
 
     & .input-group > .input-group-append > &__submit.btn {
-      border-top-right-radius: 1.5em;
       border-bottom-right-radius: 1.5em;
+      border-top-right-radius: 1.5em;
     }
   }
 </style>

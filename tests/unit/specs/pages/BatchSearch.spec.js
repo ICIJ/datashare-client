@@ -65,6 +65,10 @@ describe('BatchSearch.vue', () => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
   })
 
+  it('should display a search bar', () => {
+    expect(wrapper.find('.batch-search__search-bar').exists()).toBeTruthy()
+  })
+
   it('should list the batchSearches', () => {
     expect(wrapper.findAll('.batch-search__items__item')).toHaveLength(2)
   })
@@ -100,7 +104,21 @@ describe('BatchSearch.vue', () => {
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({
       name: 'batch-search',
-      query: { page: 1, sort: 'batch_results', order: 'desc' }
+      query: { page: 1, sort: 'batch_results', order: 'desc', query: '' }
+    })
+  })
+
+  it('should redirect on search', async () => {
+    const query = 'this is my query'
+    jest.spyOn(router, 'push')
+    wrapper.vm.$set(wrapper.vm, 'query', query)
+
+    await wrapper.vm.searchBatchsearches()
+
+    expect(router.push).toBeCalled()
+    expect(router.push).toBeCalledWith({
+      name: 'batch-search',
+      query: { page: 1, sort: 'batch_date', order: 'desc', query }
     })
   })
 

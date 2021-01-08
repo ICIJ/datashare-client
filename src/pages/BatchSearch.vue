@@ -10,6 +10,21 @@
       </b-modal>
     </page-header>
     <div class="container pt-4">
+      <form class="batch-search__search-bar container-fluid p-0" v-if="hasFeature('BATCHSEARCH_SEARCH_BAR')">
+        <div class="d-flex align-items-center">
+          <div class="input-group">
+            <input
+              v-model="query"
+              :placeholder="$t('batchSearch.placeholder')"
+              class="form-control search-bar__input">
+            <div class="input-group-append">
+              <button type="submit" class="btn btn-dark" @click="searchBatchsearches">
+                {{ $t('search.buttonLabel') }}
+              </button>
+            </div>
+          </div>
+        </div>
+      </form>
       <div class="batch-search__items">
         <v-wait for="load batchSearches">
           <div slot="waiting" class="card py-2">
@@ -82,12 +97,13 @@ import { mapState } from 'vuex'
 import BatchSearchForm from '@/components/BatchSearchForm'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import PageHeader from '@/components/PageHeader'
+import features from '@/mixins/features'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
 export default {
   name: 'BatchSearches',
-  mixins: [utils],
+  mixins: [features, utils],
   components: {
     BatchSearchForm,
     BatchSearchStatus,
@@ -98,6 +114,7 @@ export default {
       order: settings.batchSearch.order,
       page: 1,
       perPage: settings.batchSearch.size,
+      query: '',
       rows: [
         {
           height: '1em',
@@ -207,22 +224,24 @@ export default {
       vm.$set(vm, 'page', parseInt(get(to, 'query.page', vm.page)))
       vm.$set(vm, 'sort', get(to, 'query.sort', vm.sort))
       vm.$set(vm, 'order', get(to, 'query.order', vm.order))
+      vm.$set(vm, 'query', get(to, 'query.query', vm.query))
     })
   },
   beforeRouteUpdate (to, from, next) {
     this.$set(this, 'page', parseInt(get(to, 'query.page', this.page)))
     this.$set(this, 'sort', get(to, 'query.sort', this.sort))
     this.$set(this, 'order', get(to, 'query.order', this.order))
+    this.$set(this, 'query', get(to, 'query.query', this.query))
     next()
   },
   async mounted () {
     this.fetch()
   },
   methods: {
-    generateLinkToBatchSearch (page = this.page, sort = this.sort, order = this.order) {
+    generateLinkToBatchSearch (page = this.page, sort = this.sort, order = this.order, query = this.query) {
       return {
         name: 'batch-search',
-        query: { page, sort, order }
+        query: { page, sort, order, query }
       }
     },
     async sortChanged (ctx) {
@@ -242,6 +261,9 @@ export default {
     },
     linkGen (page) {
       return this.generateLinkToBatchSearch(page)
+    },
+    searchBatchsearches () {
+      this.$router.push(this.generateLinkToBatchSearch())
     },
     moment
   }
