@@ -579,7 +579,8 @@
     "selectFolder": "Seleccionar directorio",
     "errorTitle": "Error en la consulta",
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
-    "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas hecho en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>"
+    "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas hecho en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>",
+    "placeholder": "Search in batch searches..."
   },
   "batchSearchResults": {
     "rank": "Rango",
