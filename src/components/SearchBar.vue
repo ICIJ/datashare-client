@@ -7,8 +7,8 @@
           :placeholder="$t('search.placeholder')"
           class="form-control search-bar__input"
           @blur="focused = false ; hideSuggestionsAfterDelay()"
-          @input="searchTerms()"
-          @focus="focused = true ; searchTerms()">
+          @input="searchTerms"
+          @focus="focused = true ; searchTerms">
         <div class="input-group-append">
           <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }" v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" :title="$t('search.tips')" v-b-tooltip.bottomleft>
             <fa icon="question-circle"></fa>
@@ -118,10 +118,10 @@ export default {
   mounted () {
     this.$store.subscribe(mutation => {
       if (mutation.type === 'search/query') {
-        this.query = mutation.payload
+        this.$set(this, 'query', mutation.payload)
       }
       if (mutation.type === 'search/reset') {
-        this.field = this.$store.state.search.field
+        this.$set(this, 'field', this.$store.state.search.field)
       }
     })
   },
@@ -192,25 +192,25 @@ export default {
       }
     },
     selectTerm (term) {
-      this.query = term ? this.injectTermInQuery(term.key, null, false) : this.query
+      this.$set(this, 'query', term ? this.injectTermInQuery(term.key, null, false) : this.query)
     },
     searchTerms: throttle(async function () {
       try {
-        this.activeSuggestionIndex = -1
+        this.$set(this, 'activeSuggestionIndex', -1)
         if (this.suggestionsAllowed) {
           const { suggestions, query } = await this.suggestTerms(this.termCandidates())
           // Is the query still valid
-          this.suggestions = query === this.query ? suggestions : []
+          this.$set(this, 'suggestions', query === this.query ? suggestions : [])
           this.$refs.suggestions.activeItemIndexes = []
         } else {
-          this.suggestions = []
+          this.$set(this, 'suggestions', [])
         }
       } catch (_) {
         this.hideSuggestions()
       }
     }, 200),
     hideSuggestions () {
-      this.suggestions = []
+      this.$set(this, 'suggestions', [])
     },
     hideSuggestionsAfterDelay () {
       setTimeout(() => {
@@ -230,7 +230,7 @@ export default {
   },
   watch: {
     query (value) {
-      this.showTips = value !== ''
+      this.$set(this, 'showTips', value !== '')
     }
   }
 }
@@ -349,7 +349,6 @@ export default {
       font-size: 0.9rem;
       padding: $spacer / 2 0 0;
       z-index: 100;
-
     }
 
     & .input-group > .input-group-append > &__submit.btn {

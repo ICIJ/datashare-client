@@ -43,7 +43,8 @@
       "recipients": "Recipients",
       "content": "Content",
       "path": "Path",
-      "thread": "Thread ID"
+      "thread": "Thread ID",
+      "description": "Description"
     },
     "placeholder": "Search in documents...",
     "buttonLabel": "Search",

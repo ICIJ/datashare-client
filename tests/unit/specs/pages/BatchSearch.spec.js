@@ -104,7 +104,7 @@ describe('BatchSearch.vue', () => {
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({
       name: 'batch-search',
-      query: { page: 1, sort: 'batch_results', order: 'desc', query: '' }
+      query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all' }
     })
   })
 
@@ -118,7 +118,7 @@ describe('BatchSearch.vue', () => {
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({
       name: 'batch-search',
-      query: { page: 1, sort: 'batch_date', order: 'desc', query }
+      query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all' }
     })
   })
 

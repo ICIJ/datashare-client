@@ -11,13 +11,18 @@
     </page-header>
     <div class="container pt-4">
       <form class="batch-search__search-bar container-fluid p-0" v-if="hasFeature('BATCHSEARCH_SEARCH_BAR')">
-        <div class="d-flex align-items-center">
+        <div class="d-flex align-items-left w-50">
           <div class="input-group">
             <input
               v-model="query"
               :placeholder="$t('batchSearch.placeholder')"
-              class="form-control search-bar__input">
-            <div class="input-group-append">
+              class="batch-search__search-bar__input form-control">
+            <div class="batch-search__search-bar__button input-group-append">
+              <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="batch-search__search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
+                <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key">
+                  {{ $t('search.field.' + key) }}
+                </b-dropdown-item>
+              </b-dropdown>
               <button type="submit" class="btn btn-dark" @click="searchBatchsearches">
                 {{ $t('search.buttonLabel') }}
               </button>
@@ -111,6 +116,8 @@ export default {
   },
   data () {
     return {
+      field: 'all',
+      fieldOptions: ['all', 'title', 'description', 'author'],
       order: settings.batchSearch.order,
       page: 1,
       perPage: settings.batchSearch.size,
@@ -225,6 +232,7 @@ export default {
       vm.$set(vm, 'sort', get(to, 'query.sort', vm.sort))
       vm.$set(vm, 'order', get(to, 'query.order', vm.order))
       vm.$set(vm, 'query', get(to, 'query.query', vm.query))
+      vm.$set(vm, 'field', get(to, 'query.field', vm.field))
     })
   },
   beforeRouteUpdate (to, from, next) {
@@ -232,22 +240,23 @@ export default {
     this.$set(this, 'sort', get(to, 'query.sort', this.sort))
     this.$set(this, 'order', get(to, 'query.order', this.order))
     this.$set(this, 'query', get(to, 'query.query', this.query))
+    this.$set(this, 'field', get(to, 'query.field', this.field))
     next()
   },
   async mounted () {
     this.fetch()
   },
   methods: {
-    generateLinkToBatchSearch (page = this.page, sort = this.sort, order = this.order, query = this.query) {
+    generateLinkToBatchSearch (page = this.page, sort = this.sort, order = this.order, query = this.query, field = this.field) {
       return {
         name: 'batch-search',
-        query: { page, sort, order, query }
+        query: { page, sort, order, query, field }
       }
     },
-    async sortChanged (ctx) {
+    sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
       const order = ctx.sortDesc ? 'desc' : 'asc'
-      this.$router.push(this.generateLinkToBatchSearch(this.page, sort, order))
+      return this.$router.push(this.generateLinkToBatchSearch(this.page, sort, order))
     },
     async fetch () {
       this.$wait.start('load batchSearches')
@@ -263,7 +272,7 @@ export default {
       return this.generateLinkToBatchSearch(page)
     },
     searchBatchsearches () {
-      this.$router.push(this.generateLinkToBatchSearch())
+      return this.$router.push(this.generateLinkToBatchSearch())
     },
     moment
   }
@@ -272,6 +281,40 @@ export default {
 
 <style lang="scss" scoped>
   .batch-search {
+    &__search-bar {
+      &__input,
+      &__button .btn {
+        border-radius: 1.5em 0 0 1.5rem;
+      }
+
+      &__field {
+        background: $input-bg;
+        border-left: dashed 1px  $input-border-color;
+        font-size: inherit;
+
+        &--selected:after {
+          bottom: 1px;
+          border: 2px solid $tertiary;
+          content: "";
+          left: 0;
+          position: absolute;
+          right: 1px;
+          top: 1px;
+        }
+
+        /deep/ .btn {
+          border: 1px solid $input-border-color;
+          border-left: 0;
+          box-shadow: $input-box-shadow;
+          color: $text-muted;
+
+          .input-group-lg & {
+            font-size: 1.25rem;
+          }
+        }
+      }
+    }
+
     &__items {
       border-radius: $card-border-radius 0 0 0;
       margin-top: $spacer;
