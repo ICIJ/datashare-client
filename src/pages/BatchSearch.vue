@@ -282,9 +282,12 @@ export default {
 <style lang="scss" scoped>
   .batch-search {
     &__search-bar {
-      &__input,
-      &__button .btn {
+      &__input {
         border-radius: 1.5em 0 0 1.5rem;
+      }
+
+      &__button .btn {
+        border-radius: 0 1.5em 1.5rem 0;
       }
 
       &__field {
