@@ -43,7 +43,8 @@
       "recipients": "受領者",
       "content": "内容",
       "path": "パス",
-      "thread": "スレッドID"
+      "thread": "スレッドID",
+      "description": "Description"
     },
     "placeholder": "文書内の検索",
     "buttonLabel": "検索",
