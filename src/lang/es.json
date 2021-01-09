@@ -43,7 +43,8 @@
       "recipients": "Destinatarios",
       "content": "Contenido",
       "path": "Ruta",
-      "thread": "ID del hilo"
+      "thread": "ID del hilo",
+      "description": "Description"
     },
     "placeholder": "Buscar en documentos...",
     "buttonLabel": "Buscar",
