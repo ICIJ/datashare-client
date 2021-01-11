@@ -43,7 +43,8 @@
       "recipients": "Destinataires",
       "content": "Contenu",
       "path": "Chemin",
-      "thread": "ID du fil de discussion"
+      "thread": "ID du fil de discussion",
+      "description": "Description"
     },
     "placeholder": "Rechercher dans les documents...",
     "buttonLabel": "Rechercher",
