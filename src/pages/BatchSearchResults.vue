@@ -166,7 +166,7 @@
                   class="batch-search-results__queries__query__link"
                   target="_blank"
                   :to="{ name: 'document', params: { index: $route.params.index, id: item.documentId, routing: item.rootId }, query: { q: item.query } }">
-                  <span class="d-inline-block text-truncate" style="max-width: 400px;" v-b-tooltip.hover :title="item.documentPath">
+                  <span class="batch-search-results__queries__query__link__path" v-b-tooltip.hover :title="item.documentPath">
                     {{ item.documentPath }}
                   </span>
                 </router-link>
@@ -459,6 +459,14 @@ export default {
           background-color: $lighter;
         }
       }
+    }
+
+    & &__query__link__path {
+      max-width: 400px;
+      display: block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
   }
 }
