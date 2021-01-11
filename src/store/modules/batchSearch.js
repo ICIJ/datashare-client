@@ -40,7 +40,7 @@ export const mutations = {
 
 export const actions = {
   async getBatchSearch ({ commit }, batchId) {
-    let batchSearch
+    let batchSearch = {}
     try {
       batchSearch = await api.getBatchSearch(batchId)
     } catch (_) {
@@ -48,10 +48,10 @@ export const actions = {
     }
     return commit('batchSearch', batchSearch)
   },
-  async getBatchSearches ({ commit }, { from = 0, size = 100, sort = 'batch_date', order = 'asc' }) {
-    let batchSearches
+  async getBatchSearches ({ commit }, { from = 0, size = 100, sort = 'batch_date', order = 'asc', query = '*', field = 'all' }) {
+    let batchSearches = []
     try {
-      batchSearches = await api.getBatchSearches(from, size, sort, order)
+      batchSearches = await api.getBatchSearches(from, size, sort, order, query, field)
     } catch (_) {
       batchSearches = {
         batchSearches: [],
@@ -66,7 +66,7 @@ export const actions = {
     return dispatch('getBatchSearches', {})
   },
   async getBatchSearchResults ({ commit }, { batchId, from, size, queries, sort, order }) {
-    let results
+    let results = []
     try {
       results = await api.getBatchSearchResults(batchId, from, size, queries, sort, order)
     } catch (_) {

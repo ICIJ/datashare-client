@@ -264,7 +264,7 @@ export default {
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
       await this.$store.dispatch('batchSearch/getBatchSearches',
-        { from, size, sort: this.sort, order: this.order })
+        { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field })
       this.$Progress.finish()
       this.$wait.end('load batchSearches')
     },
