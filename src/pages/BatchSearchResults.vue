@@ -461,8 +461,14 @@ export default {
       }
     }
 
-    & &__query__link__path {
-      max-width: 400px;
+    &__query__link {
+      &:visited {
+        color: mix(#609, white, 50%);
+      }
+
+      &__path {
+        max-width: 400px;
+      }
     }
   }
 }
