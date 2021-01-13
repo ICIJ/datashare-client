@@ -14,8 +14,6 @@ jest.mock('@/utils/utils', () => {
   }
 })
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
-
 window.HTMLElement.prototype.scrollIntoView = jest.fn()
 
 describe('DocumentContent.vue', () => {
@@ -23,6 +21,7 @@ describe('DocumentContent.vue', () => {
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   const id = 'document'
+  const { localVue, store } = Core.init(createLocalVue()).useAll()
 
   beforeEach(() => getOS.mockReset())
 
@@ -319,7 +318,7 @@ describe('DocumentContent.vue', () => {
   })
 
   describe('content text length warning', () => {
-    it('should not show a warning', async () => {
+    it('should NOT show a warning', async () => {
       // Create a document with a small content text length
       const indexedDocument = new IndexedDocument(id, index)
       indexedDocument.withContent('this is a content')
@@ -338,11 +337,11 @@ describe('DocumentContent.vue', () => {
       expect(wrapper.findComponent(ContentTextLengthWarning).exists()).toBeFalsy()
     })
 
-    it('should not show a warning', async () => {
+    it('should show a warning', async () => {
       // Create a document with a big content text length
       const indexedDocument = new IndexedDocument(id, index)
       indexedDocument.withContent('this is a content')
-      indexedDocument.setContentTextLength(2e4)
+      indexedDocument.setContentTextLength(2e5)
 
       // Save and get the document from Elasticsearch
       await letData(es).have(indexedDocument).commit()
@@ -384,7 +383,7 @@ describe('DocumentContent.vue', () => {
       // Create a document with a huge content text length
       const indexedDocument = new IndexedDocument(id, index)
       indexedDocument.withContent('this is a content')
-      indexedDocument.setContentTextLength(2e4)
+      indexedDocument.setContentTextLength(2e5)
 
       // Save and get the document from Elasticsearch
       await letData(es).have(indexedDocument).commit()
