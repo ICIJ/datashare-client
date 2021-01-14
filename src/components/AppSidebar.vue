@@ -113,18 +113,46 @@
       </ul>
       <hook name="app-sidebar.help:after"></hook>
       <hook name="app-sidebar.guides:before"></hook>
-      <div v-if="!reduced && currentRouteDocs.length">
-        <h5 class="app-sidebar__container__heading">
-          <fa icon="book" fixed-width></fa>
-          <span>User guides</span>
-        </h5>
-        <ul class="app-sidebar__container__menu app-sidebar__container__menu--borderless list-unstyled">
-          <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" v-bind:key="meta.resourcePath">
-            <router-link :to="{ name: 'docs', params: meta }" class="app-sidebar__container__menu__item__link app-sidebar__container__menu__item__link--tree">
+      <div v-if="currentRouteDocs.length">
+        <div v-if="!reduced">
+          <h5 class="app-sidebar__container__heading">
+            <fa icon="book" fixed-width></fa>
+            <span class="flex-grow-1 app-sidebar__container__heading__label">
+              User guides
+            </span>
+          </h5>
+          <ul class="app-sidebar__container__menu app-sidebar__container__menu--borderless list-unstyled">
+            <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" v-bind:key="meta.resourcePath">
+              <router-link :to="{ name: 'docs', params: meta }" class="app-sidebar__container__menu__item__link app-sidebar__container__menu__item__link--tree">
+                <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
+                  {{ meta.title }}
+                </span>
+              </router-link>
+            </li>
+          </ul>
+        </div>
+        <ul v-else class="app-sidebar__container__menu list-unstyled">
+          <li class="app-sidebar__container__menu__item"  :data-badge="currentRouteDocs.length">
+            <b-button class="app-sidebar__container__menu__item__link"
+                      variant="none"
+                      href="#"
+                      :data-badge="currentRouteDocs.length"
+                      id="app-menu-user-guide">
+              <fa icon="book" fixed-width></fa>
               <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-                {{ meta.title }}
+                User guides
               </span>
-            </router-link>
+              <b-popover target="app-menu-user-guide"
+                         custom-class="popover-body-p-0"
+                         triggers="click blur"
+                         @show="$root.$emit('bv::hide::tooltip')">
+                <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
+                  <router-link class="dropdown-item" v-for="meta in currentRouteDocs" v-bind:key="meta.resourcePath" :to="{ name: 'docs', params: meta }">
+                    {{ meta.title }}
+                  </router-link>
+                </div>
+              </b-popover>
+            </b-button>
           </li>
         </ul>
       </div>
@@ -334,6 +362,13 @@ export default {
         font-size: $font-size-sm;
         font-weight: bold;
 
+        .app-sidebar--reduced & {
+          margin: $spacer-xs $spacer-xs 0;
+          flex-direction: column;
+          text-align: center;
+          padding: $spacer-lg $spacer-xs $spacer;
+        }
+
         &:not(&--borderless):before {
           content:"";
           border-top: $app-sidebar-border-color 1px solid;
@@ -348,6 +383,18 @@ export default {
 
           .app-sidebar:not(.app-sidebar--reduced) & {
             margin-right: $spacer;
+          }
+
+          .app-sidebar--reduced & {
+            margin: 0 auto $spacer-xs;
+            display: block;
+          }
+        }
+
+        &__label {
+
+          .app-sidebar--reduced & {
+            font-size: 0.7rem;
           }
         }
       }
@@ -413,6 +460,19 @@ export default {
 
             &.router-link-active .svg-inline--fa {
               color: $secondary;
+            }
+
+            &[data-badge]:after {
+              content: attr(data-badge);
+              position: absolute;
+              left: calc(50% + 0.5em);
+              top: 0.25em;
+              background: $secondary;
+              color: white;
+              font-size: 0.75em;
+              font-weight: $badge-font-weight;
+              padding: $badge-padding-y $badge-padding-x;
+              border-radius: $badge-border-radius;
             }
 
             &--disabled,

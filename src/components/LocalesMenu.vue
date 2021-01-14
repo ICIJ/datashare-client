@@ -1,13 +1,13 @@
 <template>
-  <b-button class="shadow-none locales-menu" :id="uniqueId" href="#" variant="none">
+  <b-button class="locales-menu" :id="uniqueId" href="#" variant="none">
     <span class="locales-menu__button">
       <slot v-bind="{ currentLocale, locales }">
         <fa icon="globe" class="mr-1" />
         {{ currentLocale.label }}
       </slot>
     </span>
-    <b-popover :target="uniqueId" triggers="click blur" custom-class="locales-menu__list" ref="popover">
-      <div class="dropdown-menu show position-static border-0 px-2 bg-none">
+    <b-popover :target="uniqueId" triggers="click blur" custom-class="locales-menu__list popover-body-p-0" ref="popover">
+      <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
         <a href="#" class="dropdown-item" v-for="locale in locales" :key="locale.key" @click.prevent="chooseLocale(locale.key)" :class="{ active: locale === currentLocale }">
           {{ locale.label }}
         </a>
@@ -86,26 +86,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss" scoped>
-  .locales-menu {
-
-    &__list {
-
-      .popover-body {
-        padding: 0;
-
-        .dropdown-menu {
-          background: inherit;
-          color: inherit;
-
-          .dropdown-item:not(.active) {
-            color: inherit;
-            background: transparent;
-          }
-        }
-      }
-
-    }
-  }
-</style>

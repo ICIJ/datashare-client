@@ -102,6 +102,21 @@ body {
 
   .popover-body {
 
+    & > .dropdown-menu {
+      background: inherit;
+      color: inherit;
+      float: none;
+
+      .dropdown-item:not(.active) {
+        color: inherit;
+        background: transparent;
+
+        &:hover {
+          background: rgba(white, 0.1);
+        }
+      }
+    }
+
     .text-muted {
       color: mix($popover-body-color, $popover-bg, 60) !important;
     }
