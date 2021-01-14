@@ -1,3 +1,3 @@
-export default function (userId) {
-  return userId === 'local' ? 'you' : userId
+export default function (userId, currentUserId = 'local') {
+  return userId === currentUserId ? 'you' : userId
 }

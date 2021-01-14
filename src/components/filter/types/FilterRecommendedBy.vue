@@ -18,10 +18,10 @@
     </template>
     <template #items-group>
       <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @change="selectUsers">
-        <b-form-checkbox v-for="{ user, count } in sampleRecommendedByUsers" :value="user" class="filter__items__item" :key="user">
+        <b-form-checkbox v-for="{ user, count } in recommendedByUsersSorted" :value="user" class="filter__items__item" :key="user">
           <span class="d-flex">
             <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
-              {{ user | displayUser }}
+              {{ user | displayUser(currentUserId) }}
             </span>
             <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
               {{ $n(count) }}
@@ -34,14 +34,13 @@
 </template>
 
 <script>
-import slice from 'lodash/slice'
+import sortBy from 'lodash/sortBy'
 import { mapState } from 'vuex'
 
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import displayUser from '@/filters/displayUser'
 import utils from '@/mixins/utils'
-import settings from '@/utils/settings'
 
 /**
  * A Filter component to list number of documents recommended by each user.
@@ -55,8 +54,14 @@ export default {
   mixins: [utils],
   computed: {
     ...mapState('search', ['recommendedByUsers', 'recommendedByTotal']),
-    sampleRecommendedByUsers () {
-      return slice(this.recommendedByUsers, 0, settings.filter.bucketSize)
+    recommendedByUsersSorted () {
+      // Sort by count (decreasing) and ensure the current user is first
+      return sortBy(this.recommendedByUsers, ({ user, count }) => {
+        return user === this.currentUserId ? -1e9 : -count
+      })
+    },
+    currentUserId () {
+      return this.$config ? this.$config.get('uid', 'local') : 'local'
     },
     selected: {
       get () {

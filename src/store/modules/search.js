@@ -457,18 +457,17 @@ export const actions = {
     }
   },
   async getRecommendationsByProject ({ state, commit }) {
-    let recommendedByUsers
-    let recommendedByTotal
     try {
       const recommendations = await api.getRecommendationsByProject(state.index)
-      recommendedByUsers = map(get(recommendations, 'aggregates', []), user => { return { user: user.item.id, count: user.count } })
-      recommendedByTotal = get(recommendations, 'totalCount', 0)
+      const total = get(recommendations, 'totalCount', 0)
+      const aggregates = get(recommendations, 'aggregates', [])
+      const byUsers = aggregates.map(({ count, ...user }) => ({ user: user.item.id, count }))
+      commit('recommendedByUsers', byUsers)
+      commit('recommendedByTotal', total)
     } catch (_) {
-      recommendedByUsers = []
-      recommendedByTotal = 0
+      commit('recommendedByUsers', [])
+      commit('recommendedByTotal', 0)
     }
-    commit('recommendedByUsers', recommendedByUsers)
-    commit('recommendedByTotal', recommendedByTotal)
   },
   async getDocumentsRecommendedBy ({ state, commit }, users) {
     let documentsRecommended

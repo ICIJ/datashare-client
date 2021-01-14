@@ -1,4 +1,3 @@
-import range from 'lodash/range'
 import toLower from 'lodash/toLower'
 import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
 import axios from 'axios'
@@ -7,14 +6,13 @@ import Api from '@/api'
 import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
 import { Core } from '@/core'
 
-Api.prototype.getUser = jest.fn().mockResolvedValue({ uid: 'test-user' })
-
 jest.mock('axios', () => {
   return {
     request: jest.fn().mockResolvedValue({
       data: {
         totalCount: 42,
         aggregates: [
+          { item: { id: 'user_00' }, count: 2 },
           { item: { id: 'user_01' }, count: 1 },
           { item: { id: 'user_02' }, count: 3 }
         ]
@@ -31,13 +29,14 @@ describe('FilterRecommendedBy.vue', () => {
   const project = toLower('FilterRecommendedBy')
   const filter = store.getters['search/getFilter']({ name: 'recommendedBy' })
   const propsData = { filter }
+  const computed = { currentUserId: () => 'user_01' }
   let wrapper = null
 
   beforeAll(() => store.commit('search/index', project))
 
   beforeEach(async () => {
     axios.request.mockClear()
-    wrapper = await shallowMount(FilterRecommendedBy, { i18n, localVue, router, store, wait, propsData })
+    wrapper = await shallowMount(FilterRecommendedBy, { i18n, localVue, router, store, wait, propsData, computed })
     await wrapper.vm.$nextTick()
   })
 
@@ -52,8 +51,23 @@ describe('FilterRecommendedBy.vue', () => {
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/users/recommendations?project=${project}`)
     }))
-    expect(wrapper.vm.recommendedByUsers).toEqual([{ user: 'user_01', count: 1 }, { user: 'user_02', count: 3 }])
+    expect(wrapper.vm.recommendedByUsers).toEqual([
+      { user: 'user_00', count: 2 },
+      { user: 'user_01', count: 1 },
+      { user: 'user_02', count: 3 }
+    ])
     expect(wrapper.vm.recommendedByTotal).toBe(42)
+  })
+
+  it('should sort options to have the current user first', () => {
+    expect(wrapper.findAll('.filter__items__item__label').at(0).text()).toBe('All')
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('you')
+  })
+
+  it('should sort options by decreasing order', () => {
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('you')
+    expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toBe('user_02')
+    expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toBe('user_00')
   })
 
   it('should retrieve documents recommended by selected users', async () => {
@@ -83,18 +97,5 @@ describe('FilterRecommendedBy.vue', () => {
     expect(store.state.search.documentsRecommended).toEqual([])
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeTruthy()
-  })
-
-  it('should limit displayed users to 25', async () => {
-    axios.request.mockResolvedValue({
-      data: {
-        aggregates: range(30).map(idx => {
-          return { item: { id: `user_${idx}` }, doc_count: 1 }
-        })
-      }
-    })
-    await store.dispatch('search/getRecommendationsByProject')
-
-    expect(wrapper.findAll('.filter__items__item')).toHaveLength(25)
   })
 })
