@@ -224,6 +224,9 @@ export default {
     },
     order () {
       this.fetch()
+    },
+    query () {
+      this.fetch()
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -272,8 +275,7 @@ export default {
       return this.generateLinkToBatchSearch(page)
     },
     searchBatchsearches () {
-      this.$router.push(this.generateLinkToBatchSearch())
-      return this.fetch()
+      return this.$router.push(this.generateLinkToBatchSearch())
     },
     moment
   }

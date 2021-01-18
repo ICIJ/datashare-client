@@ -55,9 +55,8 @@ describe('BatchSearch.vue', () => {
     Murmur.config.merge({ mode: 'SERVER' })
   })
 
-  beforeEach(async () => {
+  beforeEach(() => {
     wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-    await wrapper.vm.$nextTick()
   })
 
   afterAll(() => {
@@ -120,6 +119,16 @@ describe('BatchSearch.vue', () => {
       name: 'batch-search',
       query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all' }
     })
+  })
+
+  it('should execute "fetch" on query change', async () => {
+    const fetchSpy = jest.spyOn(wrapper.vm, 'fetch')
+    expect(fetchSpy).not.toBeCalled()
+
+    wrapper.vm.query = 'new search'
+    await wrapper.vm.$nextTick()
+
+    expect(fetchSpy).toBeCalled()
   })
 
   it('should NOT display a pagination', async () => {
