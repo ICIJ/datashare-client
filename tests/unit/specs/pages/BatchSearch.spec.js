@@ -55,8 +55,9 @@ describe('BatchSearch.vue', () => {
     Murmur.config.merge({ mode: 'SERVER' })
   })
 
-  beforeEach(() => {
+  beforeEach(async () => {
     wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
+    await wrapper.vm.$nextTick()
   })
 
   afterAll(() => {
