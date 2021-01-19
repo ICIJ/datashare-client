@@ -84,8 +84,8 @@
       }
     },
     "filtersTitle": "Filtres",
-    "clearFilters": "Clear all",
-    "clearFiltersDescription": "Clear query and selected filters from the search.",
+    "clearFilters": "Réinitialiser tout",
+    "clearFiltersDescription": "Réinitialiser les requêtes et les filtres.",
     "back": "Retour à la recherche",
     "try": "Vous devriez essayer de",
     "nav": {
@@ -581,7 +581,7 @@
     "errorTitle": "Erreur dans la requête",
     "errorQuery": "Vous avez une erreur sur votre requête <code>%{query}</code>.",
     "errorMessage": "Le système a rencontré un problème. Il peut s'agir d'une erreur de syntaxe que vous avez faite dans votre CSV ou d'une autre erreur. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Veuillez vous référer à cette page d'aide où les erreurs les plus courantes sont expliquées.</a>",
-    "placeholder": "Search in batch searches..."
+    "placeholder": "Rechercher dans les recherches en lot..."
   },
   "batchSearchResults": {
     "rank": "Rang",
