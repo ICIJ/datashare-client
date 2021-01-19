@@ -19,7 +19,7 @@
               class="batch-search__search-bar__input form-control">
             <div class="batch-search__search-bar__button input-group-append">
               <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="batch-search__search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
-                <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key">
+                <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key" class="batch-search__search-bar__field__items">
                   {{ $t('search.field.' + key) }}
                 </b-dropdown-item>
               </b-dropdown>
@@ -117,7 +117,6 @@ export default {
   data () {
     return {
       field: 'all',
-      fieldOptions: ['all', 'title', 'description', 'author'],
       order: settings.batchSearch.order,
       page: 1,
       perPage: settings.batchSearch.size,
@@ -162,6 +161,10 @@ export default {
         sortable: true,
         name: 'published'
       } : null
+    },
+    fieldOptions () {
+      return this.isServer ? ['all', 'title', 'description', 'author']
+        : ['all', 'title', 'description']
     },
     fields () {
       return compact([

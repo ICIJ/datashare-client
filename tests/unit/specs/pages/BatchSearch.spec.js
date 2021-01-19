@@ -50,97 +50,124 @@ describe('BatchSearch.vue', () => {
   })
   let wrapper = null
 
-  beforeAll(() => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-    Murmur.config.merge({ mode: 'SERVER' })
-  })
+  describe('SERVER mode', () => {
+    beforeAll(() => {
+      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+      Murmur.config.merge({ mode: 'SERVER' })
+    })
 
-  beforeEach(async () => {
-    wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-    await wrapper.vm.$nextTick()
-  })
+    beforeEach(async () => {
+      wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
+      await wrapper.vm.$nextTick()
+    })
 
-  afterAll(() => {
-    jest.unmock('@/api')
-    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-  })
+    afterAll(() => {
+      jest.unmock('@/api')
+      removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    })
 
-  it('should display a search bar', () => {
-    expect(wrapper.find('.batch-search__search-bar').exists()).toBeTruthy()
-  })
+    it('should display a search bar', () => {
+      expect(wrapper.find('.batch-search__search-bar').exists()).toBeTruthy()
+    })
 
-  it('should list the batchSearches', () => {
-    expect(wrapper.findAll('.batch-search__items__item')).toHaveLength(2)
-  })
+    it('should list the batchSearches', () => {
+      expect(wrapper.findAll('.batch-search__items__item')).toHaveLength(2)
+    })
 
-  it('should display 9 columns of info per row', () => {
-    expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(9)
-  })
+    it('should have author field in server mode in fieldOptions', () => {
+      expect(wrapper.find('.batch-search__search-bar__field__items:nth-child(4)').text()).toContain('Author')
+    })
 
-  it('should display project name in the batch search results url', () => {
-    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a')
-      .attributes('href')).toContain('/project_01/')
-  })
+    it('should display 9 columns of info per row', () => {
+      expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(9)
+    })
 
-  it('should display badge if batchSearch state is fail, but no badge if state is not fail', () => {
-    expect(wrapper.findAll('.batch-search__items__item:nth-child(1) > td[aria-colindex="6"] span'))
-      .toHaveLength(1)
-    expect(wrapper.findAll('.batch-search__items__item:nth-child(2) > td[aria-colindex="6"] span'))
-      .toHaveLength(2)
-  })
+    it('should display project name in the batch search results url', () => {
+      expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a')
+        .attributes('href')).toContain('/project_01/')
+    })
 
-  it('should display the number of queries per batchSearch', () => {
-    expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="5"]')
-      .text()).toBe('1 query')
-    expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="5"]')
-      .text()).toBe('2 queries')
-  })
+    it('should display badge if batchSearch state is fail, but no badge if state is not fail', () => {
+      expect(wrapper.findAll('.batch-search__items__item:nth-child(1) > td[aria-colindex="6"] span'))
+        .toHaveLength(1)
+      expect(wrapper.findAll('.batch-search__items__item:nth-child(2) > td[aria-colindex="6"] span'))
+        .toHaveLength(2)
+    })
 
-  it('should redirect on sort changed', async () => {
-    jest.spyOn(router, 'push')
+    it('should display the number of queries per batchSearch', () => {
+      expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="5"]')
+        .text()).toBe('1 query')
+      expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="5"]')
+        .text()).toBe('2 queries')
+    })
 
-    await wrapper.vm.sortChanged({ sortBy: 'nbResults', sortDesc: true })
+    it('should redirect on sort changed', async () => {
+      jest.spyOn(router, 'push')
 
-    expect(router.push).toBeCalled()
-    expect(router.push).toBeCalledWith({
-      name: 'batch-search',
-      query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all' }
+      await wrapper.vm.sortChanged({ sortBy: 'nbResults', sortDesc: true })
+
+      expect(router.push).toBeCalled()
+      expect(router.push).toBeCalledWith({
+        name: 'batch-search',
+        query: { page: 1, sort: 'batch_results', order: 'desc', query: '', field: 'all' }
+      })
+    })
+
+    it('should redirect on search', async () => {
+      const query = 'this is my query'
+      jest.spyOn(router, 'push')
+      wrapper.vm.$set(wrapper.vm, 'query', query)
+
+      await wrapper.vm.searchBatchsearches()
+
+      expect(router.push).toBeCalled()
+      expect(router.push).toBeCalledWith({
+        name: 'batch-search',
+        query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all' }
+      })
+    })
+
+    it('should execute "fetch" on query change', async () => {
+      const fetchSpy = jest.spyOn(wrapper.vm, 'fetch')
+      expect(fetchSpy).not.toBeCalled()
+
+      wrapper.vm.query = 'new search'
+      await wrapper.vm.$nextTick()
+
+      expect(fetchSpy).toBeCalled()
+    })
+
+    it('should NOT display a pagination', async () => {
+      await wrapper.setData({ perPage: 5 })
+
+      expect(wrapper.find('.pagination.b-pagination').exists()).toBeFalsy()
+    })
+
+    it('should display a pagination', async () => {
+      await wrapper.setData({ perPage: 1 })
+
+      expect(wrapper.find('.pagination.b-pagination').exists()).toBeTruthy()
     })
   })
 
-  it('should redirect on search', async () => {
-    const query = 'this is my query'
-    jest.spyOn(router, 'push')
-    wrapper.vm.$set(wrapper.vm, 'query', query)
-
-    await wrapper.vm.searchBatchsearches()
-
-    expect(router.push).toBeCalled()
-    expect(router.push).toBeCalledWith({
-      name: 'batch-search',
-      query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all' }
+  describe('LOCAL mode', () => {
+    beforeAll(() => {
+      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
+      Murmur.config.merge({ mode: 'LOCAL' })
     })
-  })
 
-  it('should execute "fetch" on query change', async () => {
-    const fetchSpy = jest.spyOn(wrapper.vm, 'fetch')
-    expect(fetchSpy).not.toBeCalled()
+    beforeEach(async () => {
+      wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
+      await wrapper.vm.$nextTick()
+    })
 
-    wrapper.vm.query = 'new search'
-    await wrapper.vm.$nextTick()
+    afterAll(() => {
+      jest.unmock('@/api')
+      removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+    })
 
-    expect(fetchSpy).toBeCalled()
-  })
-
-  it('should NOT display a pagination', async () => {
-    await wrapper.setData({ perPage: 5 })
-
-    expect(wrapper.find('.pagination.b-pagination').exists()).toBeFalsy()
-  })
-
-  it('should display a pagination', async () => {
-    await wrapper.setData({ perPage: 1 })
-
-    expect(wrapper.find('.pagination.b-pagination').exists()).toBeTruthy()
+    it('should NOT have author field in local mode in fieldOptions', () => {
+      expect(wrapper.findAll('.batch-search__search-bar__field__items')).toHaveLength(3)
+    })
   })
 })
