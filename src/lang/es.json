@@ -44,7 +44,7 @@
       "content": "Contenido",
       "path": "Ruta",
       "thread": "ID del hilo",
-      "description": "Description"
+      "description": "Descripción"
     },
     "placeholder": "Buscar en documentos...",
     "buttonLabel": "Buscar",
@@ -84,8 +84,8 @@
       }
     },
     "filtersTitle": "Filtros",
-    "clearFilters": "Clear all",
-    "clearFiltersDescription": "Clear query and selected filters from the search.",
+    "clearFilters": "Limpiar todo",
+    "clearFiltersDescription": "Limpiar la consulta y los filtros seleccionados de la búsqueda.",
     "back": "Regresar a resultados de búsqueda",
     "try": "Usted puede intentar a",
     "nav": {
@@ -581,7 +581,7 @@
     "errorTitle": "Error en la consulta",
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
     "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas hecho en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>",
-    "placeholder": "Search in batch searches..."
+    "placeholder": "Buscar en las búsquedas masivas..."
   },
   "batchSearchResults": {
     "rank": "Rango",
