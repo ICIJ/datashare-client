@@ -116,7 +116,7 @@ describe('BatchSearch.vue', () => {
     it('should redirect on search', async () => {
       const query = 'this is my query'
       jest.spyOn(router, 'push')
-      wrapper.vm.$set(wrapper.vm, 'query', query)
+      wrapper.vm.$set(wrapper.vm, 'search', query)
 
       await wrapper.vm.searchBatchsearches()
 
@@ -168,6 +168,14 @@ describe('BatchSearch.vue', () => {
 
     it('should NOT have author field in local mode in fieldOptions', () => {
       expect(wrapper.findAll('.batch-search__search-bar__field__items')).toHaveLength(3)
+    })
+
+    it('should NOT display project name in the batch search results url', () => {
+      expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a').exists()).toBeFalsy()
+    })
+
+    it('should display 6 columns of info per row', () => {
+      expect(wrapper.find('.batch-search__search-bar__field__items:nth-child(4)').exists()).toBeFalsy()
     })
   })
 })

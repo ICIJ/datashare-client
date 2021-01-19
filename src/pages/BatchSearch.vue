@@ -14,7 +14,7 @@
         <div class="d-flex align-items-left w-50">
           <div class="input-group">
             <input
-              v-model="query"
+              v-model="search"
               :placeholder="$t('batchSearch.placeholder')"
               class="batch-search__search-bar__input form-control">
             <div class="batch-search__search-bar__button input-group-append">
@@ -121,6 +121,7 @@ export default {
       page: 1,
       perPage: settings.batchSearch.size,
       query: '',
+      search: '',
       rows: [
         {
           height: '1em',
@@ -278,6 +279,7 @@ export default {
       return this.generateLinkToBatchSearch(page)
     },
     searchBatchsearches () {
+      this.query = this.search
       return this.$router.push(this.generateLinkToBatchSearch())
     },
     moment
