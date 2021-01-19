@@ -164,8 +164,11 @@ export default {
       } : null
     },
     fieldOptions () {
-      return this.isServer ? ['all', 'title', 'description', 'author']
-        : ['all', 'title', 'description']
+      const options = ['all', 'title', 'description']
+      if (this.isServer) {
+        options.push('author')
+      }
+      return options
     },
     fields () {
       return compact([

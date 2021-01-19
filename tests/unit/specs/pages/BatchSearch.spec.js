@@ -50,21 +50,20 @@ describe('BatchSearch.vue', () => {
   })
   let wrapper = null
 
+  beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
+
+  beforeEach(async () => {
+    wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
+    await wrapper.vm.$nextTick()
+  })
+
+  afterAll(() => {
+    jest.unmock('@/api')
+    removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
+  })
+
   describe('SERVER mode', () => {
-    beforeAll(() => {
-      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-      Murmur.config.merge({ mode: 'SERVER' })
-    })
-
-    beforeEach(async () => {
-      wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-      await wrapper.vm.$nextTick()
-    })
-
-    afterAll(() => {
-      jest.unmock('@/api')
-      removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    })
+    beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
 
     it('should display a search bar', () => {
       expect(wrapper.find('.batch-search__search-bar').exists()).toBeTruthy()
@@ -151,20 +150,7 @@ describe('BatchSearch.vue', () => {
   })
 
   describe('LOCAL mode', () => {
-    beforeAll(() => {
-      setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify)
-      Murmur.config.merge({ mode: 'LOCAL' })
-    })
-
-    beforeEach(async () => {
-      wrapper = mount(BatchSearch, { i18n, localVue, router, store, wait })
-      await wrapper.vm.$nextTick()
-    })
-
-    afterAll(() => {
-      jest.unmock('@/api')
-      removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    })
+    beforeAll(() => Murmur.config.merge({ mode: 'LOCAL' }))
 
     it('should NOT have author field in local mode in fieldOptions', () => {
       expect(wrapper.findAll('.batch-search__search-bar__field__items')).toHaveLength(3)
