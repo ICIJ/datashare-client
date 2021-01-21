@@ -177,7 +177,7 @@ class Core extends Behaviors {
         this.store.commit('search/index', config.defaultProject)
       }
       // Check if "Download" functionality is available for the selected project
-      // Because otherwise, if the FilterPanel is closed, it is never caller
+      // Because otherwise, if the FilterPanel is closed, it is never called
       await this.store.dispatch('search/getIsDownloadAllowed')
       // Old a promise that is resolved when the core is configured
       return this.ready && this._readyResolve(this)
