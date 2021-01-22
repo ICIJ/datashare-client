@@ -1,14 +1,13 @@
-import noop from 'lodash/noop'
-import toLower from 'lodash/toLower'
-import { createLocalVue, mount } from '@vue/test-utils'
+import { noop, toLower } from 'lodash'
 import Murmur from '@icij/murmur'
+import { createLocalVue, mount } from '@vue/test-utils'
 import VueRouter from 'vue-router'
 
-import { Core } from '@/core'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import { Core } from '@/core'
 import mixin from '@/mixins/filters'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('@/api', () => {
   const { jsonResp } = require('tests/unit/tests_utils')
