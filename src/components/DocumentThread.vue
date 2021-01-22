@@ -156,9 +156,8 @@ export default {
       try {
         if (this.threadBody) {
           const raw = await elasticsearch.search({
-            _source_exclude: 'content,content_translated',
+            _source_excludes: 'content,content_translated',
             index: this.document.index,
-            type: 'doc',
             body: this.threadBody.build()
           })
           return new EsDocList(raw)
