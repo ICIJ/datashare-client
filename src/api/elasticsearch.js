@@ -13,8 +13,7 @@ import settings from '@/utils/settings'
 export function datasharePlugin (Client, config, components) {
   Client.prototype.getDocument = async function (index, id, routing = null, params = {}) {
     try {
-      const type = 'doc'
-      return await this.get({ index, type, id, routing, ...params })
+      return await this.get({ index, id, routing, ...params })
     } catch (error) {
       EventBus.$emit('http::error', error)
       throw error
@@ -32,7 +31,7 @@ export function datasharePlugin (Client, config, components) {
   }
 
   Client.prototype._search = function (params) {
-    return this.search({ type: 'doc', ...params }).then(
+    return this.search({ ...params }).then(
       data => data,
       error => {
         EventBus.$emit('http::error', error)
