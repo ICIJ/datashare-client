@@ -19,7 +19,7 @@
               {{ firstDocument }} – {{ lastDocument }}
             </span>
             <span class="search-results-header__settings__size__toggler__hits text-muted">
-              {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.get('hits.total')) }) }}
+              {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.total) }) }}
             </span>
           </template>
           <b-dropdown-header>
