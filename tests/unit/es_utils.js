@@ -8,15 +8,16 @@ function letData (index) {
 }
 
 class IndexedNe {
-  constructor (mention, offset = 1, category = 'ORGANIZATION', isHidden = false) {
+  constructor (mention, offset = 1, category = 'PERSON', isHidden = false, path = '') {
     this.mention = mention
     this.offset = offset
     this.category = category
     this.isHidden = isHidden
+    this.path = path
     return this
   }
   get id () {
-    return this.mention + this.offset
+    return this.path + this.mention + this.offset
   }
 }
 
@@ -117,7 +118,7 @@ class IndexedDocument {
     return this
   }
   withNer (mention, offset = 1, category = 'PERSON', isHidden = false) {
-    this.nerList.push(new IndexedNe(mention, offset, category, isHidden))
+    this.nerList.push(new IndexedNe(mention, offset, category, isHidden, this.path))
     return this
   }
   withParent (parentId) {
@@ -160,7 +161,6 @@ class IndexBuilder {
   async update (ner) {
     await this.index.update({
       index: process.env.VUE_APP_ES_INDEX,
-      type: 'doc',
       refresh: true,
       id: ner.id,
       body: {
@@ -183,7 +183,6 @@ class IndexBuilder {
       const index = this.document.index
       const createRequest = {
         index: index,
-        type: 'doc',
         refresh: true,
         id: docId,
         body: this._omit(this.document, ['nerList'])
@@ -197,7 +196,6 @@ class IndexBuilder {
         const ner = this.document.nerList[i]
         await this.index.create({
           index: index,
-          type: 'doc',
           refresh: true,
           id: ner.id,
           routing: docId,
@@ -229,7 +227,7 @@ class IndexBuilder {
   }
   get committedDocuments () {
     const promises = this.committedDocumentIds.map(async id => {
-      const raw = await this.index.get({ index: this.document.index, type: 'doc', id })
+      const raw = await this.index.get({ index: this.document.index, id })
       return EsDocList.instantiate(raw)
     })
     return Promise.all(promises)
@@ -237,7 +235,7 @@ class IndexBuilder {
   get lastCommittedDocument () {
     return Promise.resolve().then(async () => {
       const id = this.committedDocumentIds.slice(-1).pop()
-      const raw = await this.index.get({ index: this.document.index, type: 'doc', id })
+      const raw = await this.index.get({ index: this.document.index, id })
       return EsDocList.instantiate(raw)
     })
   }
