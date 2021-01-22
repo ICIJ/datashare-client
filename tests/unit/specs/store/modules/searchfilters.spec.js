@@ -1,9 +1,8 @@
-import cloneDeep from 'lodash/cloneDeep'
-import toLower from 'lodash/toLower'
+import { cloneDeep, toLower } from 'lodash'
 
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import store from '@/store'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 describe('SearchFilters', () => {
   const project = toLower('SearchFilters')
@@ -226,7 +225,7 @@ describe('SearchFilters', () => {
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[0].doc_count).toBe(1)
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[1].key).toBe(1522540800000)
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[1].doc_count).toBe(1)
-      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].key).toBe(-62167219200000)
+      expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].key).toBe(-62135596800000)
       expect(response.aggregations['metadata.tika_metadata_creation_date'].buckets[2].doc_count).toBe(2)
     })
 
