@@ -57,7 +57,7 @@ export default {
       const index = this.$store.state.insights.project
       const body = { query: { query_string: { query } } }
       const res = await elasticsearch.search({ index, body, size: 0 })
-      return res?.hits?.total || 0
+      return res?.hits?.total?.value || 0
     },
     countTotal () {
       const q = 'type:Document'
