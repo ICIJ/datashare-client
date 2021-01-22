@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import WidgetFileBarometer from '@/components/widget/WidgetFileBarometer'
@@ -12,7 +12,7 @@ describe('WidgetFileBarometer.vue', () => {
   const project = toLower('WidgetFileBarometer')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
-  let wrapper
+  let wrapper = null
 
   beforeEach(() => {
     store.commit('insights/reset')
