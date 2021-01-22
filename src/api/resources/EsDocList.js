@@ -1,13 +1,7 @@
+import { find, get, isEmpty, map, orderBy, remove, set, uniqBy } from 'lodash'
+
 import Document from '@/api/resources/Document'
 import NamedEntity from '@/api/resources/NamedEntity'
-import isEmpty from 'lodash/isEmpty'
-import find from 'lodash/find'
-import get from 'lodash/get'
-import map from 'lodash/map'
-import remove from 'lodash/remove'
-import set from 'lodash/set'
-import orderBy from 'lodash/orderBy'
-import uniqBy from 'lodash/uniqBy'
 
 const _raw = '_RAW'
 
@@ -50,7 +44,7 @@ export default class EsDocList {
     return this[_raw].aggregations || {}
   }
   get total () {
-    return this[_raw].hits.total
+    return this[_raw].hits.total.value
   }
   static instantiate (hit) {
     const Type = find(EsDocList.types, Type => Type.match(hit))
@@ -60,7 +54,7 @@ export default class EsDocList {
     return new EsDocList(EsDocList.emptyRaw)
   }
   static get emptyRaw () {
-    return { hits: { hits: [], total: 0 } }
+    return { hits: { hits: [], total: { value: 0, relation: 'eq' } } }
   }
   static get types () {
     return [Document, NamedEntity]
