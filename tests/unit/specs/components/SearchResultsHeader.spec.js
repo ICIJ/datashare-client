@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import SearchResultsHeader from '@/components/SearchResultsHeader'
