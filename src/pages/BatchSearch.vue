@@ -10,7 +10,7 @@
       </b-modal>
     </page-header>
     <div class="container pt-4">
-      <form class="batch-search__search-bar container-fluid p-0" v-if="hasFeature('BATCHSEARCH_SEARCH_BAR')">
+      <form class="batch-search__search-bar container-fluid p-0">
         <div class="d-flex align-items-left w-50">
           <div class="input-group">
             <input
@@ -102,13 +102,12 @@ import { mapState } from 'vuex'
 import BatchSearchForm from '@/components/BatchSearchForm'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import PageHeader from '@/components/PageHeader'
-import features from '@/mixins/features'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
 export default {
   name: 'BatchSearches',
-  mixins: [features, utils],
+  mixins: [utils],
   components: {
     BatchSearchForm,
     BatchSearchStatus,
