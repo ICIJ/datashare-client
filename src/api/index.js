@@ -64,7 +64,7 @@ export default class Api {
     return this.sendActionAsText(`/api/${project}/documents/tag/${documentId}?routing=${routingId}`, { method: 'PUT', data })
   }
   untagDocument (project, documentId, routingId, data) {
-    return this.sendActionAsText(`/api/${project}/documents/untag//${documentId}?routing=${routingId}`, { method: 'PUT', data })
+    return this.sendActionAsText(`/api/${project}/documents/untag/${documentId}?routing=${routingId}`, { method: 'PUT', data })
   }
   tagDocuments (project, docIds, tags) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/tag`, { method: 'POST', data: { docIds, tags } })
