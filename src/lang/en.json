@@ -378,6 +378,7 @@
     "contentLanguage": "Content language",
     "contentType": "Content type",
     "contentEncoding": "Content encoding",
+    "contentTextLength": "Content text length",
     "tabDetails": "Tags & Details",
     "namedEntities": "Named Entities",
     "namedEntityFilter": "Filter named entities",
