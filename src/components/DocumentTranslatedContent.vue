@@ -64,8 +64,7 @@ export default {
     async loadAvailableTranslations () {
       const _source = 'content_translated.source_language,content_translated.target_language'
       const { index, id, routing } = this.document
-      const type = 'doc'
-      const data = await elasticsearch.getSource({ type, index, id, routing, _source })
+      const data = await elasticsearch.getSource({ index, id, routing, _source })
       this.$set(this, 'translations', data.content_translated)
     }
   },
