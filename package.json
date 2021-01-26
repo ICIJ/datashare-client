@@ -119,7 +119,8 @@
       "no-useless-escape": "off",
       "lines-between-class-members": "off",
       "template-curly-spacing": "off",
-      "vue/custom-event-name-casing": "off"
+      "vue/custom-event-name-casing": "off",
+      "indent": ["error", 4, { "ignoredNodes": ["TemplateLiteral"] }]
     },
     "parserOptions": {
       "parser": "babel-eslint"
