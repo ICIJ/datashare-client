@@ -378,6 +378,7 @@
     "contentLanguage": "内容の言語",
     "contentType": "内容のタイプ",
     "contentEncoding": "内容のエンコーディング",
+    "contentTextLength": "Content text length",
     "tabDetails": "タグと詳細",
     "namedEntities": "固有表現",
     "namedEntityFilter": "Filter named entities",
