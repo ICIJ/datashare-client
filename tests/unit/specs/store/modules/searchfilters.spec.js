@@ -14,7 +14,7 @@ describe('SearchFilters', () => {
   afterEach(() => store.commit('search/reset'))
 
   describe('Common filter', () => {
-    it('should reset the store state', async () => {
+    it('should reset the store state', () => {
       const initialFilters = cloneDeep(store.state.search.filters)
       store.commit('search/removeFilter', 'contentType')
       expect(store.state.search.filters).toHaveLength(initialFilters.length - 1)
