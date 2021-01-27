@@ -593,7 +593,8 @@
     "size": "サイズ",
     "downloadResults": "ダウンロード結果",
     "downloadQueries": "Download queries",
-    "downloadTooltip": "Download as CSV",
+    "downloadQueriesTooltip": "Download as CSV",
+    "rerun": "Rerun Batch search",
     "empty": "検索結果がありません"
   },
   "batchSearchResultsFilters": {

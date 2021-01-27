@@ -593,7 +593,8 @@
     "size": "Taille",
     "downloadResults": "Télécharger les résultats",
     "downloadQueries": "Télécharger les requêtes",
-    "downloadTooltip": "Télécharger au format CSV",
+    "downloadQueriesTooltip": "Download as CSV",
+    "rerun": "Rerun Batch search",
     "empty": "Pas de résultat"
   },
   "batchSearchResultsFilters": {
