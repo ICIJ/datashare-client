@@ -256,7 +256,13 @@ export default {
     this.fetch()
   },
   methods: {
-    generateLinkToBatchSearch (page = this.page, sort = this.sort, order = this.order, query = this.query, field = this.field) {
+    generateLinkToBatchSearch ({
+      page = this.page,
+      sort = this.sort,
+      order = this.order,
+      query = this.query,
+      field = this.field
+    }) {
       return {
         name: 'batch-search',
         query: { page, sort, order, query, field }
@@ -265,24 +271,25 @@ export default {
     sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
       const order = ctx.sortDesc ? 'desc' : 'asc'
-      return this.$router.push(this.generateLinkToBatchSearch(this.page, sort, order))
+      const params = { page: this.page, sort, order }
+      return this.$router.push(this.generateLinkToBatchSearch(params))
     },
     async fetch () {
       this.$wait.start('load batchSearches')
       this.$Progress.start()
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
-      await this.$store.dispatch('batchSearch/getBatchSearches',
-        { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field })
+      const params = { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field }
+      await this.$store.dispatch('batchSearch/getBatchSearches', params)
       this.$Progress.finish()
       this.$wait.end('load batchSearches')
     },
     linkGen (page) {
-      return this.generateLinkToBatchSearch(page)
+      return this.generateLinkToBatchSearch({ page })
     },
     searchBatchsearches () {
-      this.$set(this, 'query', this.search)
-      return this.$router.push(this.generateLinkToBatchSearch(1))
+      const params = { page: 1, query: this.search }
+      return this.$router.push(this.generateLinkToBatchSearch(params))
     },
     moment
   }

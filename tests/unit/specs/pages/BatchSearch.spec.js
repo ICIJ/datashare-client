@@ -112,15 +112,14 @@ describe('BatchSearch.vue', () => {
       })
     })
 
-    it('should redirect on search', async () => {
-      const query = 'this is my query'
+    it('should redirect to the batch search page with the new query and the first page', () => {
+      const query = 'this is my new query'
       jest.spyOn(router, 'push')
       wrapper.vm.$set(wrapper.vm, 'page', 2)
       wrapper.vm.$set(wrapper.vm, 'search', query)
 
-      await wrapper.vm.searchBatchsearches()
+      wrapper.vm.searchBatchsearches()
 
-      expect(router.push).toBeCalled()
       expect(router.push).toBeCalledWith({
         name: 'batch-search',
         query: { page: 1, sort: 'batch_date', order: 'desc', query, field: 'all' }
