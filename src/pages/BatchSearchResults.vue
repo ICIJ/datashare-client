@@ -7,7 +7,7 @@
       </template>
       <div class="d-flex my-2 mx-3">
         <div>
-          <b-button variant="light" class="batch-search-results__action mr-2" id="batch-search-results-filters-toggle" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
+          <b-button variant="light" class="batch-search-results__action" id="batch-search-results-filters-toggle" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
             <fa icon="filter"></fa>
             <span class="sr-only">
               {{ $t('batchSearchResultsFilters.queries.heading') }}
@@ -21,23 +21,29 @@
           </b-popover>
         </div>
         <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch">
-          <confirm-button class="btn btn-light mr-2" :confirmed="deleteBatchSearch" :label="$t('batchSearch.delete')" :yes="$t('global.yes')" :no="$t('global.no')">
+          <confirm-button class="btn btn-light ml-2" :confirmed="deleteBatchSearch" :label="$t('batchSearch.delete')" :yes="$t('global.yes')" :no="$t('global.no')">
             <fa icon="trash-alt"></fa>
             <span class="sr-only">
               {{ $t('batchSearch.delete') }}
             </span>
           </confirm-button>
         </div>
-        <div class="batch-search-results__action batch-search-results__download__queries" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')">
-          <a :href="apiFullUrl('/api/batch/search/' + uuid + '/queries?format=csv')" class="btn btn-light mr-2">
+        <div class="batch-search-results__action batch-search-results__download-queries" v-b-tooltip.hover :title="$t('batchSearchResults.downloadQueriesTooltip')">
+          <a :href="apiFullUrl('/api/batch/search/' + uuid + '/queries?format=csv')" class="btn btn-light ml-2">
             <fa icon="download"></fa>
             {{ $t('batchSearchResults.downloadQueries') }}
           </a>
         </div>
-        <div class="batch-search-results__action batch-search-results__download__results float-right" v-b-tooltip.hover :title="$t('batchSearchResults.downloadTooltip')" v-if="results.length">
-          <a :href="apiFullUrl('/api/batch/search/result/csv/' + uuid)" class="btn btn-primary" >
+        <div class="batch-search-results__action batch-search-results__download-results float-right" v-b-tooltip.hover :title="$t('batchSearchResults.downloadQueriesTooltip')" v-if="results.length">
+          <a :href="apiFullUrl('/api/batch/search/result/csv/' + uuid)" class="btn btn-primary ml-2">
             <fa icon="download"></fa>
             {{ $t('batchSearchResults.downloadResults') }}
+          </a>
+        </div>
+        <div class="batch-search-results__action batch-search-results__rerun float-right" v-if="isMyBatchSearch && isBatchsearchEnded && hasFeature('RERUN_BATCHSEARCH')">
+          <a :href="apiFullUrl('/api/batch/search/copy/' + uuid)" class="btn btn-light ml-2">
+            <fa icon="redo"></fa>
+            {{ $t('batchSearchResults.rerun') }}
           </a>
         </div>
       </div>
@@ -213,6 +219,7 @@ import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import PageHeader from '@/components/PageHeader'
 import humanSize from '@/filters/humanSize'
+import features from '@/mixins/features'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 import { toVariant } from '@/utils/utils'
@@ -230,7 +237,7 @@ export default {
     ContentTypeBadge,
     PageHeader
   },
-  mixins: [utils],
+  mixins: [features, utils],
   props: {
     /**
      * The unique id of the batch search
@@ -340,7 +347,7 @@ export default {
       return this.order === 'desc'
     },
     numberOfPages () {
-      let total
+      let total = null
       if (this.selectedQueries.length === 0) {
         total = this.batchSearch.nbResults
       } else {
@@ -351,6 +358,9 @@ export default {
         })
       }
       return Math.ceil(total / this.perPage)
+    },
+    isBatchsearchEnded () {
+      return this.batchSearch.state === 'FAILURE' || this.batchSearch.state === 'SUCCESS'
     }
   },
   beforeRouteEnter (to, from, next) {

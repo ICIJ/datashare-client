@@ -110,15 +110,12 @@ describe('BatchSearchResults.vue', () => {
 
   it('should display a button to delete the batchSearch', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
-
     await wrapper.vm.checkIsMyBatchSearch()
 
     expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
   })
 
   it('should NOT display a button to delete the batchSearch if it is not mine', async () => {
-    wrapper = shallowMount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
-
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()
 
@@ -126,17 +123,56 @@ describe('BatchSearchResults.vue', () => {
   })
 
   it('should display a button to download queries', () => {
-    expect(wrapper.find('.batch-search-results__download__queries').exists()).toBeTruthy()
+    expect(wrapper.find('.batch-search-results__download-queries').exists()).toBeTruthy()
   })
 
   it('should display a button to download results', () => {
-    expect(wrapper.find('.batch-search-results__download__results').exists()).toBeTruthy()
+    expect(wrapper.find('.batch-search-results__download-results').exists()).toBeTruthy()
   })
 
   it('should NOT display a button to download results if there are no results', async () => {
     await store.commit('batchSearch/results', [])
 
-    expect(wrapper.find('.batch-search-results__download__results').exists()).toBeFalsy()
+    expect(wrapper.find('.batch-search-results__download-results').exists()).toBeFalsy()
+  })
+
+  it('should display a button to rerun the BS', async () => {
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
+    await wrapper.vm.checkIsMyBatchSearch()
+
+    expect(wrapper.find('.batch-search-results__rerun').exists()).toBeTruthy()
+  })
+
+  it('should NOT display a button to rerun the BS if it is not mine', async () => {
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
+    await wrapper.vm.checkIsMyBatchSearch()
+
+    expect(wrapper.find('.batch-search-results__rerun').exists()).toBeFalsy()
+  })
+
+  it('should NOT display a button to rerun the BS if BS status is failure', () => {
+    const batchSearch = {
+      uuid: '155',
+      project: { name: 'ProjectName' },
+      description: 'This is the description of the batch search',
+      state: 'QUEUED',
+      date: '2019-07-18T14:45:34.869+0000',
+      nbResults: 333,
+      phraseMatch: 1,
+      fuzziness: 1,
+      fileTypes: [],
+      paths: [],
+      published: true,
+      queries: {
+        query_01: 6,
+        query_02: 6,
+        query_03: 6
+      },
+      user: { id: 'test' }
+    }
+    store.commit('batchSearch/batchSearch', batchSearch)
+
+    expect(wrapper.find('.batch-search-results__rerun').exists()).toBeFalsy()
   })
 
   it('should display 11 info about the BatchSearch', () => {
