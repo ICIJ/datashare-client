@@ -288,7 +288,8 @@ export default {
       return this.generateLinkToBatchSearch({ page })
     },
     searchBatchsearches () {
-      const params = { page: 1, query: this.search }
+      this.$set(this, 'query', this.search)
+      const params = { page: 1, query: this.query }
       return this.$router.push(this.generateLinkToBatchSearch(params))
     },
     moment
