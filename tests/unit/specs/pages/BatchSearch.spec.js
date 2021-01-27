@@ -115,6 +115,7 @@ describe('BatchSearch.vue', () => {
     it('should redirect on search', async () => {
       const query = 'this is my query'
       jest.spyOn(router, 'push')
+      wrapper.vm.$set(wrapper.vm, 'page', 2)
       wrapper.vm.$set(wrapper.vm, 'search', query)
 
       await wrapper.vm.searchBatchsearches()

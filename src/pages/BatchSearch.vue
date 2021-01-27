@@ -282,7 +282,7 @@ export default {
     },
     searchBatchsearches () {
       this.$set(this, 'query', this.search)
-      return this.$router.push(this.generateLinkToBatchSearch())
+      return this.$router.push(this.generateLinkToBatchSearch(1))
     },
     moment
   }
