@@ -143,8 +143,14 @@ export default class Document extends EsDoc {
   get url () {
     return `/api/${this.index}/documents/src/${this.id}?routing=${this.routing}`
   }
+  get parentUrl () {
+    return `/api/${this.index}/documents/src/${this.routing}?routing=${this.routing}`
+  }
   get fullUrl () {
     return Api.getFullUrl(this.url)
+  }
+  get fullParentUrl () {
+    return Api.getFullUrl(this.parentUrl)
   }
   get contentType () {
     return this.source.contentType || 'unknown'

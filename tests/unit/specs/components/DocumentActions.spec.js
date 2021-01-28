@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
@@ -13,19 +13,20 @@ jest.mock('axios', () => {
   }
 })
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-
 describe('DocumentActions.vue', () => {
+  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
   const project = toLower('DocumentActions')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
-  let document, wrapper
+  let document = null
+  let wrapper = null
 
   beforeAll(() => Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
     store.commit('search/starredDocuments', [])
-    document = await letData(es).have(new IndexedDocument('document', project)).commit()
+    const indexedDocument = await letData(es).have(new IndexedDocument('document', project)).commit()
+    document = indexedDocument.document
     wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document }, sync: false })
   })
 
@@ -69,12 +70,30 @@ describe('DocumentActions.vue', () => {
     expect(mockCallback.mock.calls).toHaveLength(1)
   })
 
-  it('should not display "Download" button if download is not allowed', () => {
+  it('should NOT display "Download" button if download is not allowed', () => {
     expect(wrapper.find('.document-actions__download').exists()).toBeFalsy()
   })
 
   it('should display "Download" button if download is allowed', () => {
     wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document, isDownloadAllowed: true }, sync: false })
+
     expect(wrapper.find('.document-actions__download').exists()).toBeTruthy()
+  })
+
+  it('should NOT display "Download Parent" button if document has no parent', () => {
+    wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document, isDownloadAllowed: true }, sync: false })
+
+    expect(wrapper.vm.hasParent).toBeFalsy()
+    expect(wrapper.find('.document-actions__download-parent').exists()).toBeFalsy()
+  })
+
+  it('should display "Download Parent" button if document has a parent', async () => {
+    await letData(es).have(new IndexedDocument('parent_document', project)).commit()
+    const indexedDocument = await letData(es).have(new IndexedDocument('document', project).withParent('parent_document')).commit()
+    document = indexedDocument.document
+    wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document, isDownloadAllowed: true }, sync: false })
+
+    expect(wrapper.vm.hasParent).toBeTruthy()
+    expect(wrapper.find('.document-actions__download-parent').exists()).toBeTruthy()
   })
 })

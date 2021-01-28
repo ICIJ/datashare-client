@@ -110,4 +110,16 @@ describe('Document', () => {
 
     expect(doc.humanSize).toBe('unknown')
   })
+
+  it('should generate the document url', () => {
+    const doc = new Document({ _id: '42', _index: 'project', _routing: '12' })
+
+    expect(doc.fullUrl).toBe('http://localhost:9009/api/project/documents/src/42?routing=12')
+  })
+
+  it('should generate the document parent url', () => {
+    const doc = new Document({ _id: '42', _index: 'project', _routing: '12' })
+
+    expect(doc.fullParentUrl).toBe('http://localhost:9009/api/project/documents/src/12?routing=12')
+  })
 })

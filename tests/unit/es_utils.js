@@ -123,6 +123,7 @@ class IndexedDocument {
   withParent (parentId) {
     this.parentDocument = parentId
     this.extractionLevel = 1
+    this.source = { rootDocument: parentId }
     return this
   }
   withPipeline (pipeline) {

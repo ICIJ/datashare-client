@@ -28,6 +28,17 @@
         {{ $t('document.downloadButton') }}
       </span>
     </a>
+    <a
+      class="document-actions__download-parent btn"
+      :class="downloadBtnClassDefinition"
+      :href="document.fullParentUrl"
+      target="_blank"
+      v-if="canIDownload && hasParent">
+      <fa icon="download" fixed-width></fa>
+      <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
+        {{ $t('document.downloadParentButton') }}
+      </span>
+    </a>
     <b-popover
       :placement="tooltipsPlacement"
       :target="downloadBtnId"
@@ -52,7 +63,7 @@
 </template>
 
 <script>
-import uniqueId from 'lodash/uniqueId'
+import { uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentTypeCard from '@/components/DocumentTypeCard'
@@ -149,7 +160,7 @@ export default {
       type: Boolean
     },
     /**
-     * Disable the use of button group arround each button
+     * Disable the use of button group around each button
      */
     noBtnGroup: {
       type: Boolean
@@ -178,6 +189,9 @@ export default {
     },
     canIDownload () {
       return this.hasFeature('DOWNLOAD_ALLOWED') ? this.isDownloadAllowed : true
+    },
+    hasParent () {
+      return this.document?.source?.rootDocument !== this.document?.id
     }
   },
   methods: {
@@ -194,9 +208,7 @@ export default {
       } catch (_) {
         this.$bvToast.toast(this.$t('document.starringError'), { noCloseButton: true, variant: 'danger' })
       }
-      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('bv::hide::tooltip')
-      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('filter::starred::refresh')
     }
   }
