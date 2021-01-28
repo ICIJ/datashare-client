@@ -386,6 +386,7 @@
     "translations": "翻訳",
     "preview": "プレビュー",
     "downloadButton": "ダウンロード",
+    "downloadParentButton": "Download Parent",
     "externalWindow": "新しいウインドウで開く",
     "selectAll": "Select all",
     "unselectAll": "Unselect all",
