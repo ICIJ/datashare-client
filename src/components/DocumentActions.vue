@@ -32,6 +32,7 @@
       class="document-actions__download-parent btn"
       :class="downloadBtnClassDefinition"
       :href="document.fullParentUrl"
+      :id="downloadParentBtnId"
       target="_blank"
       v-if="canIDownload && hasParent">
       <fa icon="download" fixed-width></fa>
@@ -45,6 +46,14 @@
       :title="document.contentTypeLabel"
       triggers="hover focus">
       <document-type-card :document="document"></document-type-card>
+    </b-popover>
+    <b-popover
+      :placement="tooltipsPlacement"
+      :target="downloadParentBtnId"
+      :title="document.parent.contentTypeLabel"
+      triggers="hover focus"
+      v-if="hasParent">
+      <document-type-card :document="document.parent"></document-type-card>
     </b-popover>
     <router-link-popup
       class="document-actions__popup btn"
@@ -184,6 +193,9 @@ export default {
     downloadBtnId () {
       return uniqueId('document-actions-download-button-')
     },
+    downloadParentBtnId () {
+      return uniqueId('document-actions-download-parent-button-')
+    },
     popupBtnId () {
       return uniqueId('document-actions-popup-button-')
     },
@@ -191,7 +203,7 @@ export default {
       return this.hasFeature('DOWNLOAD_ALLOWED') ? this.isDownloadAllowed : true
     },
     hasParent () {
-      return this.document?.source?.rootDocument !== this.document?.id
+      return this.document.parent
     }
   },
   methods: {
