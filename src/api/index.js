@@ -93,6 +93,9 @@ export default class Api {
   getBatchSearchResults (batchId, from = 0, size = 100, queries = [], sort = 'doc_nb', order = 'desc') {
     return this.sendActionAsText(`/api/batch/search/result/${batchId}`, { method: 'POST', data: { from, size, queries, sort, order } })
   }
+  copyBatchSearch (batchId) {
+    return this.sendActionAsText(`/api/batch/search/copy/${batchId}`, { method: 'POST' })
+  }
   deleteBatchSearch (batchId) {
     return this.sendActionAsText(`/api/batch/search/${batchId}`, { method: 'DELETE' })
   }

@@ -150,6 +150,21 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__rerun').exists()).toBeFalsy()
   })
 
+  it('should display an enabled button to rerun the BS if is NOT already runned', async () => {
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
+    await wrapper.vm.checkIsMyBatchSearch()
+
+    expect(wrapper.find('.batch-search-results__rerun__button').attributes('disabled')).toBeFalsy()
+  })
+
+  it('should display an disabled button to rerun the BS if is already runned', async () => {
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
+    await wrapper.vm.checkIsMyBatchSearch()
+
+    await wrapper.vm.copyBatchSearch(['uuid'])
+    expect(wrapper.find('.batch-search-results__rerun__button').attributes('disabled')).toBeTruthy()
+  })
+
   it('should NOT display a button to rerun the BS if BS status is failure', () => {
     const batchSearch = {
       uuid: '155',

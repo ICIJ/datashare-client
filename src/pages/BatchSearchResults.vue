@@ -41,10 +41,10 @@
           </a>
         </div>
         <div class="batch-search-results__action batch-search-results__rerun float-right" v-if="isMyBatchSearch && isBatchsearchEnded && hasFeature('RERUN_BATCHSEARCH')">
-          <a :href="apiFullUrl('/api/batch/search/copy/' + uuid)" class="btn btn-light ml-2">
+          <b-btn class="batch-search-results__rerun__button btn btn-light ml-2" @click="copyBatchSearch(uuid)" :disabled="rerunned">
             <fa icon="redo"></fa>
             {{ $t('batchSearchResults.rerun') }}
-          </a>
+          </b-btn>
         </div>
       </div>
     </page-header>
@@ -225,6 +225,7 @@ import settings from '@/utils/settings'
 import { toVariant } from '@/utils/utils'
 
 export const auth = new Auth()
+export const api = new Api()
 
 /**
  * This page will list all the results of a batch search.
@@ -306,7 +307,8 @@ export default {
       sort: settings.batchSearchResults.sort,
       order: settings.batchSearchResults.order,
       published: false,
-      isMyBatchSearch: false
+      isMyBatchSearch: false,
+      rerunned: false
     }
   },
   watch: {
@@ -427,6 +429,26 @@ export default {
       this.$router.push({ name: 'batch-search' })
       this.$root.$bvToast.toast(isDeleted ? this.$t('batchSearch.deleted') : this.$t('batchSearch.notDeleted'),
         { noCloseButton: true, variant: isDeleted ? 'success' : 'warning' })
+    },
+    async copyBatchSearch (batchId) {
+      try {
+        this.$set(this, 'rerunned', true)
+        await api.copyBatchSearch(batchId)
+        if (this.$config.is('manageDocuments')) {
+          try {
+            await this.$store.dispatch('indexing/runBatchSearch')
+            this.$root.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
+          } catch (_) {
+            this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
+          }
+        } else {
+          this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
+        }
+      } catch (_) {
+        this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
+      } finally {
+        this.$router.push({ name: 'batch-search' })
+      }
     },
     getDocumentSize (value) {
       const size = humanSize(value)
