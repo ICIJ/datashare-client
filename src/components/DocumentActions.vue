@@ -34,7 +34,7 @@
       :href="document.fullParentUrl"
       :id="downloadParentBtnId"
       target="_blank"
-      v-if="canIDownload && hasParent">
+      v-if="canIDownload && hasParent && hasFeature('DOWNLOAD_PARENT')">
       <fa icon="download" fixed-width></fa>
       <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
         {{ $t('document.downloadParentButton') }}
