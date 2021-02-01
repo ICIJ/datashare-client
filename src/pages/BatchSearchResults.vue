@@ -40,7 +40,7 @@
             {{ $t('batchSearchResults.downloadResults') }}
           </a>
         </div>
-        <div class="batch-search-results__action batch-search-results__rerun float-right" v-if="isMyBatchSearch && isBatchsearchEnded && hasFeature('RERUN_BATCHSEARCH')">
+        <div class="batch-search-results__action batch-search-results__rerun float-right" v-if="isMyBatchSearch && isBatchsearchEnded">
           <b-btn class="batch-search-results__rerun__button btn btn-light ml-2" @click="copyBatchSearch(uuid)" :disabled="rerunned">
             <fa icon="redo"></fa>
             {{ $t('batchSearchResults.rerun') }}
@@ -219,7 +219,6 @@ import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import PageHeader from '@/components/PageHeader'
 import humanSize from '@/filters/humanSize'
-import features from '@/mixins/features'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 import { toVariant } from '@/utils/utils'
@@ -238,7 +237,7 @@ export default {
     ContentTypeBadge,
     PageHeader
   },
-  mixins: [features, utils],
+  mixins: [utils],
   props: {
     /**
      * The unique id of the batch search
