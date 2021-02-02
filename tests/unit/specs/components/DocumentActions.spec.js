@@ -89,7 +89,7 @@ describe('DocumentActions.vue', () => {
 
   it('should display "Download Parent" button if document has a parent', async () => {
     await letData(es).have(new IndexedDocument('parent_document', project)).commit()
-    const indexedDocument = await letData(es).have(new IndexedDocument('document', project).withParent('parent_document')).commit()
+    const indexedDocument = await letData(es).have(new IndexedDocument('another_document', project).withParent('parent_document')).commit()
     document = indexedDocument.document
     wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document, isDownloadAllowed: true }, sync: false })
 
