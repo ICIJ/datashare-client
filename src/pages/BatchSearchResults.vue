@@ -41,7 +41,7 @@
           </a>
         </div>
         <div class="batch-search-results__action batch-search-results__rerun float-right" v-if="isMyBatchSearch && isBatchsearchEnded">
-          <b-btn class="batch-search-results__rerun__button btn btn-light ml-2" @click="copyBatchSearch(uuid)" :disabled="rerunned">
+          <b-btn class="btn-light ml-2" @click="copyBatchSearch()" :disabled="isRerun">
             <fa icon="redo"></fa>
             {{ $t('batchSearchResults.rerun') }}
           </b-btn>
@@ -301,13 +301,13 @@ export default {
           boxes: [['10%', '80%']]
         }
       ],
-      page: 1,
-      queries: [],
-      sort: settings.batchSearchResults.sort,
-      order: settings.batchSearchResults.order,
-      published: false,
       isMyBatchSearch: false,
-      rerunned: false
+      isRerun: false,
+      order: settings.batchSearchResults.order,
+      page: 1,
+      published: false,
+      queries: [],
+      sort: settings.batchSearchResults.sort
     }
   },
   watch: {
@@ -429,11 +429,11 @@ export default {
       this.$root.$bvToast.toast(isDeleted ? this.$t('batchSearch.deleted') : this.$t('batchSearch.notDeleted'),
         { noCloseButton: true, variant: isDeleted ? 'success' : 'warning' })
     },
-    async copyBatchSearch (batchId) {
+    async copyBatchSearch () {
       try {
-        this.$set(this, 'rerunned', true)
-        await api.copyBatchSearch(batchId)
-        if (this.$config.is('manageDocuments')) {
+        await api.copyBatchSearch(this.uuid)
+        this.$set(this, 'isRerun', true)
+        if (this.isServer) {
           try {
             await this.$store.dispatch('indexing/runBatchSearch')
             this.$root.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })

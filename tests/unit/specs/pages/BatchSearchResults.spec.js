@@ -60,7 +60,8 @@ jest.mock('@/api', () => {
           query_03: 6
         },
         user: { id: 'test' }
-      })
+      }),
+      copyBatchSearch: jest.fn()
     }
   })
 })
@@ -150,19 +151,19 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__rerun').exists()).toBeFalsy()
   })
 
-  it('should display an enabled button to rerun the BS if is NOT already runned', async () => {
+  it('should display an enabled button to rerun the BS if is NOT already run', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()
 
-    expect(wrapper.find('.batch-search-results__rerun__button').attributes('disabled')).toBeFalsy()
+    expect(wrapper.find('.batch-search-results__rerun .btn-light').attributes('disabled')).toBeFalsy()
   })
 
-  it('should display an disabled button to rerun the BS if is already runned', async () => {
+  it('should display an disabled button to rerun the BS if is already run', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()
 
-    await wrapper.vm.copyBatchSearch(['uuid'])
-    expect(wrapper.find('.batch-search-results__rerun__button').attributes('disabled')).toBeTruthy()
+    await wrapper.vm.copyBatchSearch()
+    expect(wrapper.find('.batch-search-results__rerun .btn-light').attributes('disabled')).toBeTruthy()
   })
 
   it('should NOT display a button to rerun the BS if BS status is failure', () => {
@@ -188,6 +189,16 @@ describe('BatchSearchResults.vue', () => {
     store.commit('batchSearch/batchSearch', batchSearch)
 
     expect(wrapper.find('.batch-search-results__rerun').exists()).toBeFalsy()
+  })
+
+  it('should call the API to rerun the BS on click on the button', async () => {
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
+    const copyBatchSearchMock = jest.spyOn(wrapper.vm, 'copyBatchSearch')
+    await wrapper.vm.checkIsMyBatchSearch()
+
+    wrapper.find('.batch-search-results__rerun .btn-light').trigger('click')
+
+    expect(copyBatchSearchMock).toBeCalledTimes(1)
   })
 
   it('should display 11 info about the BatchSearch', () => {
