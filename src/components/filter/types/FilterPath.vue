@@ -86,12 +86,10 @@ export default {
 
 <style lang="scss" scoped>
   .filter {
-
     &__tree-view /deep/ .tree-view {
-
       &__header {
-        border-radius: $border-radius-sm;
         background: $light;
+        border-radius: $border-radius-sm;
         color: $body-color;
         margin: 0.5rem;
 

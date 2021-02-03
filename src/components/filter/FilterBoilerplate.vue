@@ -527,7 +527,6 @@ export default {
 
 <style lang="scss">
   .filter {
-
     .content-placeholder .content-placeholder__wrapper__row__box {
       background: darken($app-context-sidebar-bg, 5%);
     }
@@ -568,13 +567,13 @@ export default {
     }
 
     &__items {
+      font-size: 0.8rem;
       max-height: 300px;
       overflow: auto;
-      font-size: 0.8rem;
 
       .list-group-item {
-        color: inherit;
         background: inherit;
+        color: inherit;
       }
 
       &__all + .list-group-item:empty {
@@ -594,8 +593,8 @@ export default {
 
         .search-form-control__input,
         .search-form-control__addon__submit:last-of-type {
-          color: inherit;
           background: #000;
+          color: inherit;
         }
 
         .search-form-control__input:not(:focus),
@@ -606,16 +605,15 @@ export default {
 
       & &__display {
         cursor: pointer;
+        font-size: 0.8rem;
+        font-weight: bolder;
         margin: 0;
         padding: 0 2.25rem 0.5rem;
         text-align: center;
-        font-size: 0.8rem;
-        font-weight: bolder;
       }
     }
 
     &__footer {
-
       .filter--has-values & {
         background: $tertiary;
         color: #000;
