@@ -1,7 +1,4 @@
-import indexOf from 'lodash/indexOf'
-import orderBy from 'lodash/orderBy'
-import toLower from 'lodash/toLower'
-import uniqueId from 'lodash/uniqueId'
+import { indexOf, orderBy, toLower, uniqueId } from 'lodash'
 import axios from 'axios'
 
 import Api from '@/api'

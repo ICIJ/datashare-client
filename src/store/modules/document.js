@@ -1,19 +1,9 @@
-import compact from 'lodash/compact'
-import concat from 'lodash/concat'
-import findIndex from 'lodash/findIndex'
-import flattenDeep from 'lodash/flattenDeep'
-import get from 'lodash/get'
-import keys from 'lodash/keys'
-import map from 'lodash/map'
-import sortBy from 'lodash/sortBy'
-import sumBy from 'lodash/sumBy'
-import uniqBy from 'lodash/uniqBy'
-import values from 'lodash/values'
+import { compact, concat, findIndex, flattenDeep, get, keys, map, sortBy, sumBy, uniqBy, values } from 'lodash'
 import Vue from 'vue'
 
-import Auth from '@/api/resources/Auth'
 import Api from '@/api'
 import elasticsearch from '@/api/elasticsearch'
+import Auth from '@/api/resources/Auth'
 import EsDocList from '@/api/resources/EsDocList'
 
 export const api = new Api()
@@ -21,22 +11,22 @@ export const auth = new Auth()
 
 export function initialState () {
   return {
-    idAndRouting: null,
+    isContentLoaded: false,
     doc: null,
+    idAndRouting: null,
     isLoadingNamedEntities: false,
+    isRecommended: false,
     namedEntitiesPaginatedByCategories: {
-      PERSON: [],
-      ORGANIZATION: [],
+      EMAIL: [],
       LOCATION: [],
-      EMAIL: []
+      ORGANIZATION: [],
+      PERSON: []
     },
     parentDocument: null,
-    showNamedEntities: false,
-    contentLoaded: false,
+    recommendedBy: [],
     showContentTextLengthWarning: false,
-    tags: [],
-    isRecommended: false,
-    recommendedBy: []
+    showNamedEntities: false,
+    tags: []
   }
 }
 
@@ -72,7 +62,7 @@ export const mutations = {
   doc (state, raw) {
     if (raw !== null) {
       Vue.set(state, 'doc', EsDocList.instantiate(raw))
-      Vue.set(state, 'contentLoaded', state.doc.hasContent)
+      Vue.set(state, 'isContentLoaded', state.doc.hasContent)
       Vue.set(state, 'showContentTextLengthWarning', state.doc.hasBigContentTextLength)
     } else {
       Vue.set(state, 'doc', null)
@@ -83,13 +73,13 @@ export const mutations = {
   },
   content (state, content = null) {
     if (state.doc) {
-      state.doc.content = content
-      state.contentLoaded = true
+      Vue.set(state.doc, 'content', content)
+      Vue.set(state, 'isContentLoaded', true)
     }
   },
   translations (state, translations = []) {
     if (state.doc) {
-      state.doc.translations = translations
+      Vue.set(state.doc, 'translations', translations)
     }
   },
   tags (state, tags = []) {

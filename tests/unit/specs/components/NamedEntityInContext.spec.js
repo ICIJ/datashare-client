@@ -1,10 +1,10 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
-import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import NamedEntityInContext from '@/components/NamedEntityInContext'
 
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import NamedEntityInContext from '@/components/NamedEntityInContext'
 import { Core } from '@/core'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
 

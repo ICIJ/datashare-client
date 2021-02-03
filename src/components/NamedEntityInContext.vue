@@ -11,8 +11,7 @@
 </template>
 
 <script>
-import toString from 'lodash/toString'
-import trim from 'lodash/trim'
+import { toString, trim } from 'lodash'
 import VueScrollTo from 'vue-scrollto'
 import { mapState } from 'vuex'
 
@@ -48,7 +47,7 @@ export default {
   },
   methods: {
     async loadContent () {
-      if (!this.showContentTextLengthWarning && !this.contentLoaded) {
+      if (!this.showContentTextLengthWarning && !this.isContentLoaded) {
         this.$wait.start(this.waitIdentifier)
         await this.$store.dispatch('document/getContent')
         this.$wait.end(this.waitIdentifier)
@@ -69,9 +68,9 @@ export default {
     }
   },
   computed: {
-    ...mapState('document', ['contentLoaded', 'showContentTextLengthWarning']),
+    ...mapState('document', ['isContentLoaded', 'showContentTextLengthWarning']),
     content () {
-      return toString(this.contentLoaded ? this.document.content : '')
+      return toString(this.isContentLoaded ? this.document.content : '')
     },
     extract () {
       const substring = this.content.substring(this.extractOffsetStart, this.extractOffsetEnd)
