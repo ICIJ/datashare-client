@@ -9,8 +9,7 @@
 
 <script>
 import { getCookie } from 'tiny-cookie'
-import kebabCase from 'lodash/kebabCase'
-import startCase from 'lodash/startCase'
+import { kebabCase, startCase } from 'lodash'
 
 /**
  * The document's thumbnail (using the preview) server
@@ -43,14 +42,14 @@ export default {
      * Crop the image to have fixed squared size
      */
     crop: {
-      type: Boolean,
+      type: Boolean
     },
     /**
      * Load the thumbnail only when it enters the viewport
      */
     lazy: {
-      type: Boolean,
-    },
+      type: Boolean
+    }
   },
   data () {
     return {

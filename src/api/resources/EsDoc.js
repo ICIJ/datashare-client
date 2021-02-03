@@ -1,7 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep'
-import extend from 'lodash/extend'
-import get from 'lodash/get'
-import set from 'lodash/set'
+import { cloneDeep, extend, get, set } from 'lodash'
 
 const _raw = '_RAW'
 
