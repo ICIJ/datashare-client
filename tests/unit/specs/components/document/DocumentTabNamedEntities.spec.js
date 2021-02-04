@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
@@ -7,14 +7,14 @@ import { Core } from '@/core'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
-const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
-
 describe('DocumentTabNamedEntities.vue', () => {
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const index = toLower('DocumentTabNamedEntities')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   const id = 'document'
-  let document, wrapper
+  let document = null
+  let wrapper = null
 
   beforeAll(() => Murmur.config.set('manageDocuments', true))
 

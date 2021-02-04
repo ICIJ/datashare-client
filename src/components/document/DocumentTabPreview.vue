@@ -1,7 +1,7 @@
 <template>
   <div class="d-flex flex-grow-1 document__preview">
     <template v-if="!disabled && previewComponent">
-      <component :is="importPreviewComponent" :document="document" />
+      <component :is="importPreviewComponent" :document="document"></component>
     </template>
     <template v-else>
       <div class="p-3">
@@ -42,14 +42,6 @@ export default {
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
         'application/vnd.openxmlformats-officedocument.presentationml.presentation',
         'text/html'
-      ],
-      spreadsheetTypes: [
-        'application/vnd.oasis.opendocument.spreadsheet',
-        'application/vnd.oasis.opendocument.spreadsheet-template',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-        'application/vnd.ms-excel',
-        'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
-        'text/csv'
       ]
     }
   },
@@ -65,39 +57,24 @@ export default {
     isPaginated () {
       return this.paginatedTypes.indexOf(this.document.contentType) > -1
     },
-    isPdf () {
-      return this.document.contentType === 'application/pdf'
-    },
-    isTiff () {
-      return this.document.contentType === 'image/tiff'
-    },
-    isSpreadsheet () {
-      return this.spreadsheetTypes.indexOf(this.document.contentType) > -1
-    },
-    isImage () {
-      return this.document.contentType.indexOf('image/') === 0
-    },
-    isJson () {
-      return this.document.contentType.indexOf('application/json') === 0
-    },
     previewComponent () {
       switch (true) {
-        case this.isPaginatedViewerActivated && this.isPaginated:
-          return 'PaginatedViewer'
-        case this.isPdf:
-          return 'PdfViewer'
-        case this.isTiff:
-          return 'TiffViewer'
-        case this.isSpreadsheet && this.hasFeature('SERVER_RENDERING_SPREADSHEET'):
-          return 'SpreadsheetViewer'
-        case this.isSpreadsheet:
-          return 'LegacySpreadsheetViewer'
-        case this.isImage:
-          return 'ImageViewer'
-        case this.isJson:
-          return 'JsonViewer'
-        default:
-          return null
+      case this.isPaginatedViewerActivated && this.isPaginated:
+        return 'PaginatedViewer'
+      case this.document.isPdf:
+        return 'PdfViewer'
+      case this.document.isTiff:
+        return 'TiffViewer'
+      case this.document.isSpreadsheet && this.hasFeature('SERVER_RENDERING_SPREADSHEET'):
+        return 'SpreadsheetViewer'
+      case this.document.isSpreadsheet:
+        return 'LegacySpreadsheetViewer'
+      case this.document.isImage:
+        return 'ImageViewer'
+      case this.isJson:
+        return 'JsonViewer'
+      default:
+        return null
       }
     }
   }

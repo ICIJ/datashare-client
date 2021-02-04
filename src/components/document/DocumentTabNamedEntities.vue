@@ -1,32 +1,38 @@
 <template>
   <v-wait for="load first page of named entities">
-    <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
+    <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
     <div class="p-3">
       <div class="document__named-entities__toolbox">
-        <search-form-control v-model="filterToken" :loading="$wait.is('load named entities')" class="document__named-entities__toolbox__filter" :placeholder="$t('document.namedEntityFilter')"/>
+        <search-form-control v-model="filterToken"
+                             :loading="$wait.is('load named entities')"
+                             class="document__named-entities__toolbox__filter"
+                             :placeholder="$t('document.namedEntityFilter')"></search-form-control>
       </div>
-      <div v-if="$config.is('manageDocuments') && !document.hasNerTags" class="document__named-entities document__named-entities--not--searched">
+      <div v-if="$config.is('manageDocuments') && !document.hasNerTags"
+           class="document__named-entities document__named-entities--not--searched">
         <div v-html="$t('document.namedEntitiesNotSearched', { indexing_link: '#/indexing' })"></div>
       </div>
-      <div v-else-if="!hasNamedEntities && !isLoadingNamedEntities" class="document__named-entities document__named-entities--not--found">
+      <div v-else-if="!hasNamedEntities && !isLoadingNamedEntities"
+           class="document__named-entities document__named-entities--not--found">
         {{ $t('document.namedEntitiesNotFound') }}
       </div>
       <div v-else-if="!isLoadingNamedEntities" class="document__named-entities">
         <div v-for="(pages, category) in namedEntitiesPaginatedByCategories" :key="category" class="mb-4">
           <div class="mb-2" :class="getCategoryClass(category, 'text-')" v-if="categoryIsNotEmpty(category)">
-            <fa :icon="getCategoryIcon(category)" />
+            <fa :icon="getCategoryIcon(category)"></fa>
             {{ $t('filter.namedEntity' + capitalize(category)) }}
             <i>({{ getCategoryTotal(category) }})</i>
           </div>
           <span v-for="(page, index) in pages" :key="index">
             <span v-for="(ne, index) in page.hits" :key="index" class="d-inline mr-2">
-              <b-badge pill variant="light" class="p-0 text-uppercase text-black border" :class="getCategoryClass(category, 'border-')" :id="`named-entity-${ne.id}`">
+              <b-badge pill variant="light" class="p-0 text-uppercase text-black border"
+                       :class="getCategoryClass(category, 'border-')" :id="`named-entity-${ne.id}`">
                 <span class="p-1 d-inline-block">
                   {{ ne.source.mentionNorm }}
                 </span>
               </b-badge>
               <b-popover :target="`named-entity-${ne.id}`" triggers="hover" placement="top">
-                <named-entity-in-context :document="document" :named-entity="ne" />
+                <named-entity-in-context :document="document" :named-entity="ne"></named-entity-in-context>
                 <template #title>
                   <div class="text-muted" v-html="$t('namedEntityInContext.title', ne.source)"></div>
                 </template>
@@ -34,7 +40,7 @@
             </span>
           </span>
           <v-wait :for="`load_more_data_${category}`">
-            <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting" />
+            <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
             <div v-if="categoryHasNextPage(category)">
               <a class="document__named-entities__more small" href="#" @click.prevent="getNextPageInCategory(category)">
                 {{ $t('document.namedEntitiesShowMore.showMore' + capitalize(category)) }}
@@ -48,10 +54,7 @@
 </template>
 
 <script>
-import capitalize from 'lodash/capitalize'
-import get from 'lodash/get'
-import sumBy from 'lodash/sumBy'
-import throttle from 'lodash/throttle'
+import { capitalize, get, sumBy, throttle } from 'lodash'
 import { mapState } from 'vuex'
 
 import NamedEntityInContext from '@/components/NamedEntityInContext'
@@ -136,19 +139,18 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .document__named-entities {
-
     &__toolbox {
       background: $lighter;
-      padding: $spacer-xs $spacer;
-      margin: 0 0 $spacer;
       display: flex;
+      margin: 0 0 $spacer;
+      padding: $spacer-xs $spacer;
 
       &__filter {
+        margin-left: auto;
         max-width: 300px;
         width: 100%;
-        margin-left: auto;
       }
     }
 

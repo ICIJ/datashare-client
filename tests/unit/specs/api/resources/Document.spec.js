@@ -3,18 +3,35 @@ import Document from '@/api/resources/Document'
 describe('Document', () => {
   it('should display tags', () => {
     const doc = new Document({ _source: { tags: ['tag_01', 'tag_02'] } })
+
     expect(doc.tags).toEqual(['tag_01', 'tag_02'])
   })
 
   describe('check if a document is a tweet', () => {
     it('should be a tweet', () => {
       const doc = new Document({ _source: { contentType: 'application/json; twint' } })
+
       expect(doc.isTweet).toBeTruthy()
     })
 
     it('should NOT be a tweet', () => {
       const doc = new Document({ _source: { contentType: 'everything else' } })
+
       expect(doc.isTweet).toBeFalsy()
+    })
+  })
+
+  describe('check if document is of JSON type', () => {
+    it('should be a JSON file', () => {
+      const doc = new Document({ _source: { contentType: 'application/json' } })
+
+      expect(doc.isJson).toBeTruthy()
+    })
+
+    it('should NOT be a JSON file', () => {
+      const doc = new Document({ _source: { contentType: 'application/pdf' } })
+
+      expect(doc.isJson).toBeFalsy()
     })
   })
 

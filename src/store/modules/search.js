@@ -18,27 +18,27 @@ export const api = new Api()
 
 export function initialState () {
   return cloneDeep({
-    query: '',
-    from: 0,
-    size: 25,
-    globalSearch: true,
-    filters,
-    values: {},
-    reversed: [],
-    sort: settings.defaultSearchSort,
-    field: settings.defaultSearchField,
-    response: EsDocList.none(),
-    isReady: true,
+    documentsRecommended: [],
     error: null,
+    field: settings.defaultSearchField,
+    filters,
+    from: 0,
+    globalSearch: true,
     index: '',
-    showFilters: true,
-    starredDocuments: [],
+    isDownloadAllowed: false,
+    isReady: true,
     // Different default layout for narrow screen
     layout: isNarrowScreen() ? 'table' : 'list',
-    isDownloadAllowed: false,
-    documentsRecommended: [],
+    query: '',
+    recommendedByTotal: 0,
     recommendedByUsers: [],
-    recommendedByTotal: 0
+    response: EsDocList.none(),
+    reversed: [],
+    showFilters: true,
+    size: 25,
+    sort: settings.defaultSearchSort,
+    starredDocuments: [],
+    values: {}
   })
 }
 
@@ -46,7 +46,7 @@ export const state = initialState()
 
 export const getters = {
   instantiateFilter (state) {
-    return ({ type = 'FilterText', options } = { }) => {
+    return ({ type = 'FilterText', options } = {}) => {
       const Type = filterTypes[type]
       const filter = new Type(options)
       // Bind current state to be able to retrieve its values
@@ -187,11 +187,11 @@ export const mutations = {
       }
     })
   },
-  resetFilters (state, name) {
+  resetFilters (state) {
     const { filters } = initialState()
     Vue.set(state, 'filters', filters)
   },
-  resetFiltersAndValues (state, name) {
+  resetFiltersAndValues (state) {
     const { filters } = initialState()
     Vue.set(state, 'filters', filters)
     Vue.set(state, 'values', {})

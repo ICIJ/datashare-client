@@ -1,16 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep'
-import compact from 'lodash/compact'
-import endsWith from 'lodash/endsWith'
-import find from 'lodash/find'
-import filter from 'lodash/filter'
-import get from 'lodash/get'
-import keys from 'lodash/keys'
-import last from 'lodash/last'
-import pick from 'lodash/pick'
-import some from 'lodash/some'
-import startsWith from 'lodash/startsWith'
-import trim from 'lodash/trim'
-import truncate from 'lodash/truncate'
+import { compact, endsWith, find, filter, get, keys, last, pick, startsWith, trim, truncate } from 'lodash'
 import Murmur from '@icij/murmur'
 import moment from 'moment'
 import { extname } from 'path'
@@ -31,9 +19,6 @@ export default class Document extends EsDoc {
   }
   nl2br (str) {
     return trim(str).split('\n').map(row => `<p>${row}</p>`).join('')
-  }
-  hasTranslationsIn (targetLanguage) {
-    return some(this.translations, { target_language: targetLanguage })
   }
   translationIn (targetLanguage) {
     return find(this.translations, { target_language: targetLanguage })
@@ -251,12 +236,6 @@ export default class Document extends EsDoc {
     const translations = this.get('_source.content_translated', [])
     return filter(translations, t => t.content !== '')
   }
-  get translationsHtml () {
-    return cloneDeep(this.translations).map(translation => {
-      translation.content = this.nl2br(translation.content)
-      return translation
-    })
-  }
   get isEmail () {
     return this.contentType.indexOf('message/') === 0 || this.contentType === 'application/vnd.ms-outlook'
   }
@@ -270,10 +249,21 @@ export default class Document extends EsDoc {
     return this.contentType === 'image/tiff'
   }
   get isSpreadsheet () {
-    return ['application/vnd.openxmlformats-officedocument.spreadsheetml.sheet', 'text/csv'].indexOf(this.contentType) > -1
+    const spreadsheetTypes = [
+      'application/vnd.oasis.opendocument.spreadsheet',
+      'application/vnd.oasis.opendocument.spreadsheet-template',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+      'application/vnd.ms-excel',
+      'application/vnd.openxmlformats-officedocument.spreadsheetml.template',
+      'text/csv'
+    ]
+    return spreadsheetTypes.indexOf(this.contentType) > -1
   }
   get isImage () {
     return this.contentType.indexOf('image/') === 0
+  }
+  get isJson () {
+    return this.contentType.indexOf('application/json') === 0
   }
   get hasTranslations () {
     return this.translations.length > 0

@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -6,9 +6,8 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import DocumentTabPreview from '@/components/document/DocumentTabPreview'
 import { Core } from '@/core'
 
-const { localVue } = Core.init(createLocalVue()).useAll()
-
 describe('DocumentTabPreview.vue', () => {
+  const { localVue } = Core.init(createLocalVue()).useAll()
   const index = toLower('DocumentTabPreview')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
