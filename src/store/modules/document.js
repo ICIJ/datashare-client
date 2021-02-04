@@ -17,10 +17,10 @@ export function initialState () {
     isLoadingNamedEntities: false,
     isRecommended: false,
     namedEntitiesPaginatedByCategories: {
-      EMAIL: [],
-      LOCATION: [],
+      PERSON: [],
       ORGANIZATION: [],
-      PERSON: []
+      LOCATION: [],
+      EMAIL: []
     },
     parentDocument: null,
     recommendedBy: [],
