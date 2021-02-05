@@ -92,7 +92,7 @@ export function datasharePlugin (Client, config, components) {
       each(filters, filter => filter.addFilter(body))
       this.addQueryToFilter(query, body, fields)
     }
-    body = body.size(0).build()
+    body = body.size(0).rawOption('track_total_hits', true).build()
     return this._search({ index, body })
   }
 
@@ -146,7 +146,7 @@ export function datasharePlugin (Client, config, components) {
   Client.prototype.searchDocs = function (index, query = '*', filters = [], from = 0, size = 25, sort = 'relevance', fields = []) {
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
-    const body = this._buildBody(from, size, filters, query, sort, fields).build()
+    const body = this._buildBody(from, size, filters, query, sort, fields).rawOption('track_total_hits', true).build()
     return this._search({ index, body })
   }
 }

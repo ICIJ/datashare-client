@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import bodybuilder from 'bodybuilder'
 
 import elasticsearch from '@/api/elasticsearch'
@@ -13,14 +13,14 @@ describe('elasticsearch', () => {
   const es = esConnectionHelper.es
 
   it('should return backend response to a POST request for searchDocs', async () => {
-    const spy = jest.spyOn(elasticsearch, 'search').mockImplementation(() => Promise.resolve({ foo: 'bar' }))
+    const spy = jest.spyOn(elasticsearch, 'search').mockResolvedValue({ foo: 'bar' })
     const response = await elasticsearch.searchDocs(index, '*')
     expect(response).toEqual({ foo: 'bar' })
     spy.mockRestore()
   })
 
   it('should emit an error if the backend response is an error', async () => {
-    const spy = jest.spyOn(elasticsearch, 'search').mockImplementation(() => Promise.reject(new Error('this is an error')))
+    const spy = jest.spyOn(elasticsearch, 'search').mockRejectedValue(new Error('this is an error'))
     const mockCallback = jest.fn()
     EventBus.$on('http::error', mockCallback)
 
@@ -32,7 +32,8 @@ describe('elasticsearch', () => {
   })
 
   it('should build an ES query with filters', async () => {
-    const filters = [new FilterText({ name: 'contentType', key: 'contentType', isSearchable: true })]
+    const filters = [new FilterText(
+      { name: 'contentType', key: 'contentType', isSearchable: true })]
     filters[0].values = ['value_01', 'value_02', 'value_03']
     const body = bodybuilder().from(0).size(25)
 
