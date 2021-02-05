@@ -45,6 +45,7 @@ jest.mock('@/api', () => {
       getBatchSearch: jest.fn().mockResolvedValue({
         uuid: '12',
         project: { name: 'ProjectName' },
+        name: 'BatchSearch Test',
         description: 'This is the description of the batch search',
         state: 'SUCCESS',
         date: '2019-07-18T14:45:34.869+0000',
@@ -61,8 +62,7 @@ jest.mock('@/api', () => {
         },
         user: { id: 'test' }
       }),
-      copyBatchSearch: jest.fn(),
-      deleteBatchSearch: jest.fn()
+      copyBatchSearch: jest.fn()
     }
   })
 })
@@ -214,6 +214,14 @@ describe('BatchSearchResults.vue', () => {
 
     expect(store.dispatch).toBeCalled()
     expect(store.dispatch).toBeCalledWith('batchSearch/deleteBatchSearch', { batchId: '12' })
+  })
+
+  it('should display default values for name and description on BS rerun form', async () => {
+    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
+    await wrapper.vm.checkIsMyBatchSearch()
+
+    expect(wrapper.vm.name).toEqual('BatchSearch Test')
+    expect(wrapper.vm.description).toEqual('This is the description of the batch search')
   })
 
   it('should display 11 info about the BatchSearch', () => {

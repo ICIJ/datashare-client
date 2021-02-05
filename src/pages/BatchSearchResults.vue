@@ -437,6 +437,8 @@ export default {
       this.$Progress.start()
       await this.$store.dispatch('batchSearch/getBatchSearch', this.uuid)
       await this.checkIsMyBatchSearch()
+      this.$set(this, 'name', this.batchSearch.name)
+      this.$set(this, 'description', this.batchSearch.description)
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
       await this.$store.dispatch('batchSearch/getBatchSearchResults',
