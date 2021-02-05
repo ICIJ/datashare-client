@@ -596,6 +596,8 @@
     "downloadQueries": "Download queries",
     "downloadQueriesTooltip": "Download as CSV",
     "rerun": "Rerun Batch search",
+    "deleteAfterRerun": "Delete current batch search after rerun",
+    "submit": "Submit",
     "empty": "検索結果がありません"
   },
   "batchSearchResultsFilters": {
