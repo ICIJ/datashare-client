@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import uniqueId from 'lodash/uniqueId'
+import { uniqueId } from 'lodash'
 
 import TreeView from '@/components/TreeView'
 
