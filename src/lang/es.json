@@ -596,6 +596,8 @@
     "downloadQueries": "Descargar consultas",
     "downloadQueriesTooltip": "Download as CSV",
     "rerun": "Rerun Batch search",
+    "deleteAfterRerun": "Delete current batch search after rerun",
+    "submit": "Submit",
     "empty": "Sin resultados"
   },
   "batchSearchResultsFilters": {
