@@ -29,14 +29,14 @@ describe('LegacySpreadsheetViewer.vue', () => {
   })
 
   it('should display an error message if the document does not exist', async () => {
-    wrapper.setProps({ document: { url: 'nodoc.xlsx' } })
+    await wrapper.setProps({ document: { url: 'nodoc.xlsx' } })
     await wrapper.vm.getWorkbook()
 
     expect(wrapper.find('.legacy-spreadsheet-viewer .alert').text()).toBe('document.error_not_found')
   })
 
   it('should load a csv content file', async () => {
-    wrapper.setProps({ document: { url: 'spreadsheet.csv' } })
+    await wrapper.setProps({ document: { url: 'spreadsheet.csv' } })
     await wrapper.vm.getWorkbook()
 
     expect(wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table').element).toBeTruthy()
@@ -48,7 +48,7 @@ describe('LegacySpreadsheetViewer.vue', () => {
   })
 
   it('should load a xlsx content file', async () => {
-    wrapper.setProps({ document: { url: 'spreadsheet.xlsx' } })
+    await wrapper.setProps({ document: { url: 'spreadsheet.xlsx' } })
     await wrapper.vm.getWorkbook()
 
     expect(wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__preview__content > div table').element).toBeTruthy()
@@ -69,7 +69,7 @@ describe('LegacySpreadsheetViewer.vue', () => {
   })
 
   it('should display a thumbnail by page', async () => {
-    wrapper.setProps({ document: { url: 'spreadsheet.xlsx' } })
+    await wrapper.setProps({ document: { url: 'spreadsheet.xlsx' } })
     await wrapper.vm.getWorkbook()
 
     expect(wrapper.find('.legacy-spreadsheet-viewer .legacy-spreadsheet-viewer__header .legacy-spreadsheet-viewer__header__thumbnails').exists()).toBeTruthy()

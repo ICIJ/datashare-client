@@ -23,7 +23,7 @@ describe('PdfViewer.vue', () => {
   afterAll(() => jest.unmock('@/api'))
 
   it('should display an error message if the document does not exist', async () => {
-    wrapper.setProps({ document: { url: 'nodoc.pdf' } })
+    await wrapper.setProps({ document: { url: 'nodoc.pdf' } })
 
     await wrapper.vm.loadPage(1)
 
