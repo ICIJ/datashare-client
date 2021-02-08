@@ -192,18 +192,18 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__rerun').exists()).toBeFalsy()
   })
 
-  it('should call the API to rerun the BS on click on submit button', async () => {
+  it('should call "copyBatchSearch" method on click on submit button', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     const copyBatchSearchMock = jest.spyOn(wrapper.vm, 'copyBatchSearch')
     await wrapper.vm.checkIsMyBatchSearch()
     wrapper.vm.$set(wrapper.vm, 'name', 'Test')
 
-    wrapper.find('.card-footer .d-flex b-button-stub').trigger('submit')
+    wrapper.find('.card-footer .d-flex b-btn-stub').trigger('submit')
 
     expect(copyBatchSearchMock).toBeCalledTimes(1)
   })
 
-  it('should call the API to delete the BS on click on submit button when delete is checked', async () => {
+  it('should call the API to delete the BS on call of "copyBatchSearch" method', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     jest.spyOn(store, 'dispatch')
     await wrapper.vm.checkIsMyBatchSearch()
@@ -216,12 +216,11 @@ describe('BatchSearchResults.vue', () => {
     expect(store.dispatch).toBeCalledWith('batchSearch/deleteBatchSearch', { batchId: '12' })
   })
 
-  it('should display default values for name and description on BS rerun form', async () => {
+  it('should display default values for name and description on BS rerun form', () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
-    await wrapper.vm.checkIsMyBatchSearch()
 
-    expect(wrapper.vm.name).toEqual('BatchSearch Test')
-    expect(wrapper.vm.description).toEqual('This is the description of the batch search')
+    expect(wrapper.vm.name).toBe('BatchSearch Test')
+    expect(wrapper.vm.description).toBe('This is the description of the batch search')
   })
 
   it('should display 11 info about the BatchSearch', () => {

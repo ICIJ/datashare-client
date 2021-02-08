@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import FilterSearch from '@/components/filter/FilterSearch'
@@ -10,7 +10,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 // Mock all api calls
 jest.mock('@/api')
-// Mock the refreshRouteAndSearch method to avoid unecessary route update
+// Mock the refreshRouteAndSearch method to avoid unnecessary route update
 filters.methods.refreshRoute = jest.fn()
 
 describe('FilterSearch.vue', () => {

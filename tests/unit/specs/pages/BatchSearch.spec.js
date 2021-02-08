@@ -130,8 +130,7 @@ describe('BatchSearch.vue', () => {
       const fetchSpy = jest.spyOn(wrapper.vm, 'fetch')
       expect(fetchSpy).not.toBeCalled()
 
-      wrapper.vm.query = 'new search'
-      await wrapper.vm.$nextTick()
+      await wrapper.vm.$set(wrapper.vm, 'query', 'new search')
 
       expect(fetchSpy).toBeCalled()
     })

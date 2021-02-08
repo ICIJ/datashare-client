@@ -7,7 +7,7 @@
       </template>
       <div class="d-flex my-2 mx-3">
         <div>
-          <b-button variant="light" class="batch-search-results__action" id="batch-search-results-filters-toggle" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
+          <b-btn variant="light" class="batch-search-results__action" id="batch-search-results-filters-toggle" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
             <fa icon="filter"></fa>
             <span class="sr-only">
               {{ $t('batchSearchResultsFilters.queries.heading') }}
@@ -15,12 +15,12 @@
             <b-badge variant="secondary" class="batch-search-results__action__counter" v-if="selectedQueries.length">
               {{ selectedQueries.length }}
             </b-badge>
-          </b-button>
+          </b-btn>
           <b-popover target="batch-search-results-filters-toggle" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
             <batch-search-results-filters :uuid="uuid" :index="index" hide-border></batch-search-results-filters>
           </b-popover>
         </div>
-        <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch">
+        <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch" v-b-tooltip.hover :title="$t('batchSearch.delete')">
           <confirm-button class="btn btn-light ml-2" :confirmed="deleteBatchSearch" :label="$t('batchSearch.delete')" :yes="$t('global.yes')" :no="$t('global.no')">
             <fa icon="trash-alt"></fa>
             <span class="sr-only">
@@ -47,38 +47,38 @@
           </b-btn>
           <b-modal ref="batch-search-copy-form" hide-footer :title="$t('batchSearchResults.rerun')" size="md" body-class="p-0">
             <b-form @submit.prevent="copyBatchSearch">
-              <div class="card w-100" :class="{ 'border-0': hideBorder }">
+              <div class="card w-100">
                 <div class="card-body pb-1">
-                    <b-form-group
+                  <b-form-group
                     label-size="sm"
-                    :label="`${$t('batchSearch.name')} *`">
-                      <b-form-input
-                        v-model="name"
-                        type="text"
-                        required></b-form-input>
-                    </b-form-group>
-                    <b-form-group
-                    label-size="sm"
-                    :label="$t('batchSearch.description')">
-                      <b-form-textarea
-                        v-model="description"
-                        rows="2"
-                        max-rows="6"></b-form-textarea>
+                    :label="`${ $t('batchSearch.name') } *`">
+                    <b-form-input
+                      v-model="name"
+                      type="text"
+                      required></b-form-input>
                   </b-form-group>
                   <b-form-group
-                      label-size="sm">
-                      <b-form-checkbox
-                        v-model="deleteAfterRerun"
-                        switch>
-                        {{ $t('batchSearchResults.deleteAfterRerun') }}
-                      </b-form-checkbox>
+                  label-size="sm"
+                  :label="$t('batchSearch.description')">
+                    <b-form-textarea
+                      v-model="description"
+                      rows="2"
+                      max-rows="6"></b-form-textarea>
+                  </b-form-group>
+                  <b-form-group
+                    label-size="sm">
+                    <b-form-checkbox
+                      v-model="deleteAfterRerun"
+                      switch>
+                      {{ $t('batchSearchResults.deleteAfterRerun') }}
+                    </b-form-checkbox>
                   </b-form-group>
                 </div>
                 <div class="card-footer">
                   <div class="d-flex justify-content-end align-items-center">
-                    <b-button type="submit" variant="primary">
+                    <b-btn type="submit" variant="primary">
                       {{ $t('global.submit') }}
-                    </b-button>
+                    </b-btn>
                   </div>
                 </div>
               </div>
@@ -262,8 +262,8 @@ import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 import { toVariant } from '@/utils/utils'
 
-export const auth = new Auth()
 export const api = new Api()
+export const auth = new Auth()
 
 /**
  * This page will list all the results of a batch search.
@@ -296,6 +296,8 @@ export default {
   },
   data () {
     return {
+      deleteAfterRerun: false,
+      description: '',
       fields: [
         {
           key: 'documentNumber',
@@ -334,21 +336,19 @@ export default {
           name: 'content_length'
         }
       ],
+      isMyBatchSearch: false,
+      isRerun: false,
+      name: '',
+      order: settings.batchSearchResults.order,
+      page: 1,
+      published: false,
+      queries: [],
       rows: [
         {
           height: '1em',
           boxes: [['10%', '80%']]
         }
       ],
-      isMyBatchSearch: false,
-      name: '',
-      description: '',
-      isRerun: false,
-      deleteAfterRerun: false,
-      order: settings.batchSearchResults.order,
-      page: 1,
-      published: false,
-      queries: [],
       sort: settings.batchSearchResults.sort
     }
   },
@@ -437,8 +437,8 @@ export default {
       this.$Progress.start()
       await this.$store.dispatch('batchSearch/getBatchSearch', this.uuid)
       await this.checkIsMyBatchSearch()
-      this.$set(this, 'name', this.batchSearch.name)
       this.$set(this, 'description', this.batchSearch.description)
+      this.$set(this, 'name', this.batchSearch.name)
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
       await this.$store.dispatch('batchSearch/getBatchSearchResults',
@@ -481,17 +481,14 @@ export default {
           try {
             await this.$store.dispatch('indexing/runBatchSearch')
             this.$root.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
-            if (this.deleteAfterRerun) {
-              await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
-            }
           } catch (_) {
             this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
           }
         } else {
           this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
-          if (this.deleteAfterRerun) {
-            await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
-          }
+        }
+        if (this.deleteAfterRerun) {
+          await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
         }
       } catch (_) {
         this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
