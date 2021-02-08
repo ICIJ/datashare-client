@@ -28,7 +28,7 @@
             <b-row>
               <b-col offset-xs="0" offset-sm="4" offset-lg="3">
                 <b-button type="submit" variant="primary">
-                  {{ $t('serverSettings.submit') }}
+                  {{ $t('global.submit') }}
                 </b-button>
               </b-col>
             </b-row>
