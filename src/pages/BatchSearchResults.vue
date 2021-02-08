@@ -28,24 +28,12 @@
             </span>
           </confirm-button>
         </div>
-        <div class="batch-search-results__action batch-search-results__download-queries" v-b-tooltip.hover :title="$t('batchSearchResults.downloadQueriesTooltip')">
-          <a :href="apiFullUrl('/api/batch/search/' + uuid + '/queries?format=csv')" class="btn btn-light ml-2">
-            <fa icon="download"></fa>
-            {{ $t('batchSearchResults.downloadQueries') }}
-          </a>
-        </div>
-        <div class="batch-search-results__action batch-search-results__download-results float-right" v-b-tooltip.hover :title="$t('batchSearchResults.downloadQueriesTooltip')" v-if="results.length">
-          <a :href="apiFullUrl('/api/batch/search/result/csv/' + uuid)" class="btn btn-primary ml-2">
-            <fa icon="download"></fa>
-            {{ $t('batchSearchResults.downloadResults') }}
-          </a>
-        </div>
-        <div class="batch-search-results__action batch-search-results__rerun float-right" v-if="isMyBatchSearch && isBatchsearchEnded">
-          <b-btn class="btn-light ml-2" @click="$refs['batch-search-copy-form'].show()" :disabled="isRerun">
+        <div class="batch-search-results__action batch-search-results__relaunch float-right" v-if="isMyBatchSearch && isBatchsearchEnded">
+          <b-btn class="btn-light ml-2" @click="$refs['batch-search-copy-form'].show()" :disabled="isRelaunch">
             <fa icon="redo"></fa>
-            {{ $t('batchSearchResults.rerun') }}
+            {{ $t('batchSearchResults.relaunch') }}
           </b-btn>
-          <b-modal ref="batch-search-copy-form" hide-footer :title="$t('batchSearchResults.rerun')" size="md" body-class="p-0">
+          <b-modal ref="batch-search-copy-form" hide-footer :title="$t('batchSearchResults.relaunchTitle')" size="md" body-class="p-0">
             <b-form @submit.prevent="copyBatchSearch">
               <div class="card w-100">
                 <div class="card-body pb-1">
@@ -68,9 +56,9 @@
                   <b-form-group
                     label-size="sm">
                     <b-form-checkbox
-                      v-model="deleteAfterRerun"
+                      v-model="deleteAfterRelaunch"
                       switch>
-                      {{ $t('batchSearchResults.deleteAfterRerun') }}
+                      {{ $t('batchSearchResults.deleteAfterRelaunch') }}
                     </b-form-checkbox>
                   </b-form-group>
                 </div>
@@ -84,6 +72,18 @@
               </div>
             </b-form>
           </b-modal>
+        </div>
+        <div class="batch-search-results__action batch-search-results__download-queries" v-b-tooltip.hover :title="$t('batchSearchResults.downloadQueriesTooltip')">
+          <a :href="apiFullUrl('/api/batch/search/' + uuid + '/queries?format=csv')" class="btn btn-light ml-2">
+            <fa icon="download"></fa>
+            {{ $t('batchSearchResults.downloadQueries') }}
+          </a>
+        </div>
+        <div class="batch-search-results__action batch-search-results__download-results float-right" v-b-tooltip.hover :title="$t('batchSearchResults.downloadQueriesTooltip')" v-if="results.length">
+          <a :href="apiFullUrl('/api/batch/search/result/csv/' + uuid)" class="btn btn-primary ml-2">
+            <fa icon="download"></fa>
+            {{ $t('batchSearchResults.downloadResults') }}
+          </a>
         </div>
       </div>
     </page-header>
@@ -296,7 +296,7 @@ export default {
   },
   data () {
     return {
-      deleteAfterRerun: false,
+      deleteAfterRelaunch: false,
       description: '',
       fields: [
         {
@@ -337,7 +337,7 @@ export default {
         }
       ],
       isMyBatchSearch: false,
-      isRerun: false,
+      isRelaunch: false,
       name: '',
       order: settings.batchSearchResults.order,
       page: 1,
@@ -476,7 +476,7 @@ export default {
     async copyBatchSearch () {
       try {
         await api.copyBatchSearch(this.uuid, this.name, this.description)
-        this.$set(this, 'isRerun', true)
+        this.$set(this, 'isRelaunch', true)
         if (!this.isServer) {
           try {
             await this.$store.dispatch('indexing/runBatchSearch')
@@ -487,7 +487,7 @@ export default {
         } else {
           this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
         }
-        if (this.deleteAfterRerun) {
+        if (this.deleteAfterRelaunch) {
           await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
         }
       } catch (_) {

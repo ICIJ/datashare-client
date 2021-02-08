@@ -596,8 +596,9 @@
     "downloadResults": "Download results",
     "downloadQueries": "Download queries",
     "downloadQueriesTooltip": "Download as CSV",
-    "rerun": "Rerun batch search",
-    "deleteAfterRerun" : "Delete current batch search after rerun",
+    "relaunch": "Relaunch",
+    "relaunchTitle": "Relaunch batch search",
+    "deleteAfterRelaunch" : "Delete current batch search after relaunch",
     "empty": "No results"
   },
   "batchSearchResultsFilters": {

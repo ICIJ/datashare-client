@@ -138,36 +138,36 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.find('.batch-search-results__download-results').exists()).toBeFalsy()
   })
 
-  it('should display a button to rerun the BS', async () => {
+  it('should display a button to relaunch the BS', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()
 
-    expect(wrapper.find('.batch-search-results__rerun').exists()).toBeTruthy()
+    expect(wrapper.find('.batch-search-results__relaunch').exists()).toBeTruthy()
   })
 
-  it('should NOT display a button to rerun the BS if it is not mine', async () => {
+  it('should NOT display a button to relaunch the BS if it is not mine', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()
 
-    expect(wrapper.find('.batch-search-results__rerun').exists()).toBeFalsy()
+    expect(wrapper.find('.batch-search-results__relaunch').exists()).toBeFalsy()
   })
 
-  it('should display an enabled button to rerun the BS if is NOT already run', async () => {
+  it('should display an enabled button to relaunch the BS if is NOT already run', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()
 
-    expect(wrapper.find('.batch-search-results__rerun .btn-light').attributes('disabled')).toBeFalsy()
+    expect(wrapper.find('.batch-search-results__relaunch .btn-light').attributes('disabled')).toBeFalsy()
   })
 
-  it('should display an disabled button to rerun the BS if is already run', async () => {
+  it('should display an disabled button to relaunch the BS if is already run', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
     await wrapper.vm.checkIsMyBatchSearch()
 
     await wrapper.vm.copyBatchSearch()
-    expect(wrapper.find('.batch-search-results__rerun .btn-light').attributes('disabled')).toBeTruthy()
+    expect(wrapper.find('.batch-search-results__relaunch .btn-light').attributes('disabled')).toBeTruthy()
   })
 
-  it('should NOT display a button to rerun the BS if BS status is failure', () => {
+  it('should NOT display a button to relaunch the BS if BS status is failure', () => {
     const batchSearch = {
       uuid: '155',
       project: { name: 'ProjectName' },
@@ -189,7 +189,7 @@ describe('BatchSearchResults.vue', () => {
     }
     store.commit('batchSearch/batchSearch', batchSearch)
 
-    expect(wrapper.find('.batch-search-results__rerun').exists()).toBeFalsy()
+    expect(wrapper.find('.batch-search-results__relaunch').exists()).toBeFalsy()
   })
 
   it('should call "copyBatchSearch" method on click on submit button', async () => {
@@ -208,7 +208,7 @@ describe('BatchSearchResults.vue', () => {
     jest.spyOn(store, 'dispatch')
     await wrapper.vm.checkIsMyBatchSearch()
     wrapper.vm.$set(wrapper.vm, 'name', 'Test')
-    wrapper.vm.$set(wrapper.vm, 'deleteAfterRerun', true)
+    wrapper.vm.$set(wrapper.vm, 'deleteAfterRelaunch', true)
 
     await wrapper.vm.copyBatchSearch()
 
@@ -216,7 +216,7 @@ describe('BatchSearchResults.vue', () => {
     expect(store.dispatch).toBeCalledWith('batchSearch/deleteBatchSearch', { batchId: '12' })
   })
 
-  it('should display default values for name and description on BS rerun form', () => {
+  it('should display default values for name and description on BS relaunch form', () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
 
     expect(wrapper.vm.name).toBe('BatchSearch Test')
