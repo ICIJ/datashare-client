@@ -173,7 +173,38 @@ You can **search for specific queries**:
 
 * You can also **download your results** in a CSV format:
 
-![](../.gitbook/assets/screenshot-2019-11-04-at-16.39.25.png)
+![](../.gitbook/assets/screenshot-2021-02-09-at-15.17.38.png)
+
+## Relaunch your batch search
+
+If you add more and more files in Datashare, you might want to relaunch existing batch search on your new documents too. 
+
+Notes: 
+
+* In the server collaborative mode, you can only relaunch your own batch searches, not others'. 
+* The relaunched batch search will apply to your whole corpus, newly indexed documents _and_ previously indexed documents \(not only the newly indexed ones\).
+
+ 1. To do so, open the batch search that you'd like to relaunch and click 'Relaunch':
+
+![](../.gitbook/assets/screenshot-2021-02-09-at-15.05.22.png)
+
+ 2. Edit the name and the description of your batch search if needed:
+
+![](../.gitbook/assets/screenshot-2021-02-09-at-15.05.46%20%281%29.png)
+
+ 3. You can choose to delete the current batch search after relaunching it:
+
+Note: if you're worried about losing your previous results because of an error, we recommend to keep your current batch search \(turn off this toggle button\) and delete it only after the relaunch is a success.
+
+![](../.gitbook/assets/screenshot-2021-02-09-at-15.06.07.png)
+
+ 4. Click 'Submit':
+
+![](../.gitbook/assets/screenshot-2021-02-09-at-15.06.23.png)
+
+You can see your relaunched batch search running in the batch search's list:
+
+![](../.gitbook/assets/screenshot-2021-02-09-at-15.07.07.png)
 
 ## I get a "failure". What does that mean?
 
