@@ -93,7 +93,7 @@
                     :hide-exclude="hideExclude"
                     :hide-show-more="hideShowMore"
                     @open-filter-search="openFilterSearch"
-                    @invert="invert" />
+                    @toggle-filter="toggleFilter" />
     </b-collapse>
   </div>
 </template>
@@ -484,7 +484,7 @@ export default {
       this.setFilterValue(this.filter, item)
       this.refreshRouteAndSearch()
     },
-    invert () {
+    toggleFilter () {
       this.$store.commit('search/toggleFilter', this.filter.name)
       this.refreshRouteAndSearch()
     },

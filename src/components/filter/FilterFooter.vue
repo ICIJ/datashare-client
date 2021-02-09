@@ -9,7 +9,7 @@
     <button v-if="!hideExclude"
             class="filter__footer__action filter__footer__action--invert btn btn-link btn-sm ml-auto"
             :class="{ 'active': isReversed }"
-            @click="invert">
+            @click="toggleFilter">
       <fa :icon="isReversed ? 'eye-slash' : 'eye'" fixed-width class="mr-1" />
       {{ $t('filter.invert') }}
     </button>
@@ -75,11 +75,11 @@ export default {
        */
       this.$emit('open-filter-search', this.filter, this.query)
     },
-    invert () {
+    toggleFilter () {
       /**
        * Triggered when the filter is "inverted" (excluding selected values).
        */
-      this.$emit('invert', this.filter)
+      this.$emit('toggle-filter', this.filter)
     }
   }
 }
