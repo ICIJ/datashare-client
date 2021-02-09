@@ -1,11 +1,11 @@
 <template>
   <div class="filter card"
       :class="{
-        'filter--reversed': isReversed(),
+        'filter--reversed': isReversed,
         'filter--hide-show-more': hideShowMore,
         'filter--hide-search': hideSearch,
         'filter--hide-header': hideHeader,
-        'filter--has-values': hasValues(),
+        'filter--has-values': hasValues,
         'filter--dark': dark
       }">
     <hook :name="`filter.${filter.name}.header:before`" :bind="{ filter }"></hook>
@@ -187,7 +187,7 @@ export default {
   },
   data () {
     return {
-      collapseItems: this.collapsedIfNoValues && !this.hasValues(),
+      collapseItems: this.collapsedIfNoValues && !this.hasValues,
       infiniteId: uniqueId(),
       mounted: false,
       pages: [],
@@ -390,6 +390,15 @@ export default {
           this.$set(this, 'selected', [])
         }
       }
+    },
+    isReversed () {
+      return this.$store.getters['search/isFilterReversed'](this.filter.name)
+    },
+    hasValues: {
+      cache: false,
+      get () {
+        return this.$store.getters['search/hasFilterValues'](this.filter.name)
+      }
     }
   },
   methods: {
@@ -487,12 +496,6 @@ export default {
     toggleFilter () {
       this.$store.commit('search/toggleFilter', this.filter.name)
       this.refreshRouteAndSearch()
-    },
-    hasValues () {
-      return this.$store.getters['search/hasFilterValues'](this.filter.name)
-    },
-    isReversed () {
-      return this.$store.getters['search/isFilterReversed'](this.filter.name)
     },
     watchedForUpdate () {
       const { search } = this.$store.state
