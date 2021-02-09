@@ -5,6 +5,7 @@
     "enterCorrectUrl": "Veuillez saisir une URL valide.",
     "yes": "Oui",
     "no": "Non",
+    "submit": "Submit",
     "confirmLabel": "Êtes-vous sûr•e ?",
     "emptyTextTable": "Il n'y a rien à afficher"
   },
@@ -595,9 +596,9 @@
     "downloadResults": "Télécharger les résultats",
     "downloadQueries": "Télécharger les requêtes",
     "downloadQueriesTooltip": "Download as CSV",
-    "rerun": "Rerun batch search",
-    "deleteAfterRerun": "Delete current batch search after rerun",
-    "submit": "Submit",
+    "relaunch": "Relaunch",
+    "relaunchTitle": "Relaunch batch search",
+    "deleteAfterRelaunch": "Delete current batch search after relaunch",
     "empty": "Pas de résultat"
   },
   "batchSearchResultsFilters": {
@@ -626,7 +627,6 @@
   },
   "serverSettings": {
     "title": "Paramètres du serveur",
-    "submit": "Valider",
     "submitSuccess": "Modifications enregistrées.",
     "submitError": "Impossible d'enregistrer ces paramètres.",
     "noAccess": "Vous n'avez pas accès à cette page en mode serveur."
