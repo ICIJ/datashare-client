@@ -12,9 +12,9 @@ export default {
       type: String
     },
     /**
-     * Specify the HTML tag to render instead of the default tag.
+     * Specify the HTML tag to render the debug tag instead of the default tag.
      */
-    tag: {
+    debugTag: {
       type: String,
       default: 'span'
     },
@@ -26,31 +26,55 @@ export default {
       default: () => {}
     }
   },
-  computed: {
-    hookedComponents () {
-      return this.$store.getters['hooks/filterHookedComponentsByTarget'](this.name)
-    },
-    isDebug () {
-      return this.$config.is('hooksDebug')
+  functional: true,
+  render (createElement, context) {
+    function filterHookedComponentsByTarget (targetName) {
+      const { $store } = context.parent
+      return $store.getters['hooks/filterHookedComponentsByTarget'](targetName)
     }
+
+    function hookedComponents () {
+      return filterHookedComponentsByTarget(context.props.name)
+    }
+
+    function renderedComponents () {
+      return hookedComponents().map(({ component }) => {
+        return createElement(component, { props: context.props.bind })
+      })
+    }
+
+    function isDebug () {
+      return context.parent.$config.is('hooksDebug')
+    }
+
+    function debugTag () {
+      return createElement(context.props.debugTag, {
+        class: ['hook-debug'],
+        attrs: {
+          'aria-hook': context.props.name,
+          'aria-count': hookedComponents().length
+        }
+      })
+    }
+
+    function renderedComponentsWithDebug () {
+      return [debugTag(), ...renderedComponents()]
+    }
+
+    // Add the debug tag only if debug mode is activated
+    return isDebug() ? renderedComponentsWithDebug() : renderedComponents()
   }
 }
 </script>
 
-<template>
-  <component :is="tag" class="hook" :class="{ 'hook--debug': isDebug }" :aria-hook="name" :aria-count="hookedComponents.length">
-    <component :is="hooked.component" v-bind="bind" v-for="(hooked, index) in hookedComponents" :key="index" />
-  </component>
-</template>
-
 <style lang="scss">
-  .hook {
-    // Hides empty hook (excepted in debug mode)
-    &:not(.hook--debug):empty {
-      display: none;
-    }
+  .hook-debug {
+    position: relative;
+    white-space: nowrap;
+    height: 0;
+    width: 0;
 
-    &--debug:before {
+    &:before {
       content: attr(aria-hook) " → " attr(aria-count);
       font-size: 0.8rem;
       font-weight: bold;
