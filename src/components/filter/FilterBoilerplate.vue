@@ -84,17 +84,16 @@
           <span slot="no-results" />
         </infinite-loading>
       </div>
-      <div class="filter__footer d-flex" v-if="!hideFooter">
-        <filter-sort-by-dropdown v-if="!hideSort" :sort-by.sync="sortBy" :sort-by-order.sync="sortByOrder" :sort-by-options="sortByOptions" />
-        <button @click="invert" v-if="!hideExclude" class="filter__footer__action filter__footer__action--invert btn btn-link btn-sm ml-auto" :class="{ 'active': isReversed() }">
-          <fa :icon="isReversed() ? 'eye-slash' : 'eye'" fixed-width class="mr-1"></fa>
-          {{ $t('filter.invert') }}
-        </button>
-        <button @click="openFilterSearch" v-if="shouldDisplayShowMore" class="filter__footer__action filter__footer__action--expand btn btn-link btn-sm">
-          <fa icon="expand-alt" fixed-width class="mr-1" />
-          {{ $t('filter.showMore') }}
-        </button>
-      </div>
+      <filter-footer v-if="!hideFooter"
+                    :filter="filter"
+                    :sort-by.sync="sortBy"
+                    :sort-by-order.sync="sortByOrder"
+                    :sort-by-options.sync="sortByOptions"
+                    :hide-sort="hideSort"
+                    :hide-exclude="hideExclude"
+                    :hide-show-more="hideShowMore"
+                    @open-filter-search="openFilterSearch"
+                    @invert="invert" />
     </b-collapse>
   </div>
 </template>
@@ -105,9 +104,9 @@ import {
 } from 'lodash'
 import InfiniteLoading from 'vue-infinite-loading'
 
+import FilterFooter from '@/components/filter/FilterFooter'
 import Hook from '@/components/Hook'
 import SearchFormControl from '@/components/SearchFormControl'
-import FilterSortByDropdown from '@/components/filter/FilterSortByDropdown'
 import filters from '@/mixins/filters'
 import settings from '@/utils/settings'
 
@@ -120,7 +119,7 @@ export default {
   name: 'FilterBoilerplate',
   mixins: [filters],
   components: {
-    FilterSortByDropdown,
+    FilterFooter,
     Hook,
     InfiniteLoading,
     SearchFormControl
@@ -215,12 +214,10 @@ export default {
       this.initialize()
     },
     sortBy () {
-      this.$set(this, 'infiniteId', uniqueId())
-      this.aggregateWithThrottle({ clearPages: true })
+      this.clearInfiniteScroll()
     },
     sortByOrder () {
-      this.$set(this, 'infiniteId', uniqueId())
-      this.aggregateWithThrottle({ clearPages: true })
+      this.clearInfiniteScroll()
     }
   },
   async mounted () {
@@ -326,9 +323,6 @@ export default {
     showResults () {
       return (this.isReady || this.offset > 0) && !this.collapseItems
     },
-    shouldDisplayShowMore () {
-      return !this.hideShowMore
-    },
     hasResults () {
       return this.isReady && this.items.length > 0
     },
@@ -419,6 +413,10 @@ export default {
         }, { deep: true })
         this.$set(this, 'unwatch', unwatch)
       }
+    },
+    clearInfiniteScroll () {
+      this.$set(this, 'infiniteId', uniqueId())
+      this.aggregateWithThrottle({ clearPages: true })
     },
     openFilterSearch () {
       /**
