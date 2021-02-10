@@ -62,6 +62,7 @@
 * [I see people, organizations and locations in the filters but not in the documents](faq-errors/i-see-people-organizations-and-locations-in-the-filters-but-not-in-the-documents.md)
 * [What does 'Windows named pipe error' mean?](faq-errors/i-read-windows-named-pipe-error-....md)
 * [Datashare doesn't open. What should I do?](faq-errors/datashare-doesnt-open.-what-should-i-do.md)
+* [I upgraded to version 9 of Datashare and it fails.](faq-errors/i-upgraded-to-version-9-of-datashare-and-it-fails..md)
 
 ## FAQ - Definitions
 
