@@ -22,7 +22,7 @@
                      v-model="isContextualized"
                      size="sm"
                      class="filter__footer__action filter__footer__action--contextualize">
-      Contextualize
+      {{ $t('filter.contextualize') }}
     </b-form-checkbox>
   </div>
 </template>
