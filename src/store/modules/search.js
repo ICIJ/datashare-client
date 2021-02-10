@@ -23,7 +23,6 @@ export function initialState () {
     field: settings.defaultSearchField,
     filters,
     from: 0,
-    globalSearch: true,
     index: '',
     isDownloadAllowed: false,
     isReady: true,
@@ -34,6 +33,7 @@ export function initialState () {
     recommendedByUsers: [],
     response: EsDocList.none(),
     reversed: [],
+    contextualized: [],
     showFilters: true,
     size: 25,
     sort: settings.defaultSearchSort,
@@ -65,12 +65,20 @@ export const getters = {
     return () => find(settings.searchFields, { key: state.field }).fields
   },
   hasFilterValue (state, getters) {
-    return item => !!find(getters.instantiatedFilters,
-      filter => filter.name === item.name && filter.values.indexOf(item.value) > -1)
+    return item => !!find(getters.instantiatedFilters, ({ name, values }) => {
+      return name === item.name && values.indexOf(item.value) > -1
+    })
   },
   hasFilterValues (state, getters) {
     return name => !!find(getters.instantiatedFilters,
       filter => filter.name === name && filter.values.length > 0)
+  },
+  isFilterContextualized (state, getters) {
+    return name => {
+      return !!find(getters.instantiatedFilters, filter => {
+        return filter.name === name && filter.contextualized
+      })
+    }
   },
   isFilterReversed (state, getters) {
     return name => {
@@ -206,9 +214,6 @@ export const mutations = {
     Vue.set(state, 'field', settings.defaultSearchField)
     Vue.set(state, 'from', 0)
   },
-  setGlobalSearch (state, globalSearch) {
-    Vue.set(state, 'globalSearch', globalSearch)
-  },
   query (state, query) {
     Vue.set(state, 'query', query)
   },
@@ -285,6 +290,22 @@ export const mutations = {
       }
     }
   },
+  contextualizeFilter (state, name) {
+    if (state.contextualized.indexOf(name) === -1) {
+      state.contextualized.push(name)
+    }
+  },
+  decontextualizeFilter (state, name) {
+    Vue.delete(state.contextualized, state.contextualized.indexOf(name))
+  },
+  toggleContextualizedFilter (state, name) {
+    const index = state.contextualized.indexOf(name)
+    if (index === -1) {
+      state.contextualized.push(name)
+    } else {
+      Vue.delete(state.contextualized, index)
+    }
+  },
   excludeFilter (state, name) {
     if (state.reversed.indexOf(name) === -1) {
       state.reversed.push(name)
@@ -294,10 +315,11 @@ export const mutations = {
     Vue.delete(state.reversed, state.reversed.indexOf(name))
   },
   toggleFilter (state, name) {
-    if (state.reversed.indexOf(name) > -1) {
-      Vue.delete(state.reversed, state.reversed.indexOf(name))
-    } else {
+    const index = state.reversed.indexOf(name)
+    if (index === -1) {
       state.reversed.push(name)
+    } else if (index > -1) {
+      Vue.delete(state.reversed, index)
     }
   },
   toggleFilters (state, toggler = !state.showFilters) {
@@ -350,7 +372,7 @@ export const actions = {
       getters.getFilter({ name: params.name }),
       state.query,
       getters.instantiatedFilters,
-      state.globalSearch,
+      !getters.isFilterContextualized(params.name),
       params.options,
       getters.getFields(),
       params.from,

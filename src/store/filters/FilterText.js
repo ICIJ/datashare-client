@@ -107,4 +107,8 @@ export default class FilterText {
   get reverse () {
     return get(this, ['state', 'reversed'], []).indexOf(this.name) > -1
   }
+
+  get contextualized () {
+    return get(this, ['state', 'contextualized'], []).indexOf(this.name) > -1
+  }
 }

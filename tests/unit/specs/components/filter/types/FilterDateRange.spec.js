@@ -20,7 +20,7 @@ describe('FilterDateRange.vue', () => {
   let wrapper = null
 
   beforeEach(() => {
-    store.commit('search/setGlobalSearch', true)
+    store.commit('search/decontextualizeFilter', name)
     store.commit('search/index', index)
     wrapper = mount(FilterDateRange, {
       localVue,

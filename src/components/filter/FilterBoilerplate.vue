@@ -93,7 +93,8 @@
                     :hide-exclude="hideExclude"
                     :hide-show-more="hideShowMore"
                     @open-filter-search="openFilterSearch"
-                    @toggle-filter="toggleFilter" />
+                    @toggle-filter="toggleFilter"
+                    @contextualize-filter="toggleContextualizeFilter" />
     </b-collapse>
   </div>
 </template>
@@ -268,7 +269,7 @@ export default {
       return !this.$wait.is(this.waitIdentifier)
     },
     isGlobal () {
-      return this.$store.state.search.globalSearch
+      return !this.filter.contextualized
     },
     getFilter () {
       return this.getFilterByName(this.filter.name)
@@ -494,12 +495,14 @@ export default {
       this.refreshRouteAndSearch()
     },
     toggleFilter () {
-      this.$store.commit('search/toggleFilter', this.filter.name)
       this.refreshRouteAndSearch()
+    },
+    toggleContextualizeFilter () {
+      this.clearInfiniteScroll()
     },
     watchedForUpdate () {
       const { search } = this.$store.state
-      if (!search.globalSearch) {
+      if (this.filter.contextualized) {
         // This will allow to watch change on the search only when
         // the aggregation is not global (ie. relative to the search).
         return pick(search, ['index', 'query', 'values'])
@@ -611,22 +614,6 @@ export default {
         margin: 0;
         padding: 0 2.25rem 0.5rem;
         text-align: center;
-      }
-    }
-
-    &__footer {
-      .filter--has-values & {
-        background: $tertiary;
-        color: #000;
-      }
-
-      &__action {
-        color: inherit;
-        padding: 0.25rem 0.5rem;
-
-        &:hover, &:active {
-          color: inherit;
-        }
       }
     }
   }

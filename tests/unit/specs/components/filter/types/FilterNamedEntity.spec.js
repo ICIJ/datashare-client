@@ -28,7 +28,8 @@ describe('FilterNamedEntity.vue', () => {
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   const id = 'document'
-  const filter = store.getters['search/getFilter']({ name: 'namedEntityPerson' })
+  const name = 'namedEntityPerson'
+  const filter = store.getters['search/getFilter']({ name })
   const propsData = { filter, infiniteScroll: false }
   let wrapper = null
 
@@ -40,7 +41,7 @@ describe('FilterNamedEntity.vue', () => {
 
   beforeEach(() => {
     wrapper = mount(FilterNamedEntity, { localVue, i18n, store, wait, propsData })
-    store.commit('search/setGlobalSearch', false)
+    store.commit('search/contextualizeFilter', name)
   })
 
   afterEach(() => store.commit('search/reset'))
@@ -322,7 +323,7 @@ describe('FilterNamedEntity.vue', () => {
 
     store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['anne'] })
     store.commit('search/toggleFilter', 'namedEntityPerson')
-    store.commit('search/setGlobalSearch', true)
+    store.commit('search/decontextualizeFilter', 'namedEntityPerson')
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)

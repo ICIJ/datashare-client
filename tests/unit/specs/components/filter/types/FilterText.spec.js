@@ -17,7 +17,8 @@ describe('FilterText.vue', () => {
   const anotherIndex = toLower('AnotherFilterText')
   esConnectionHelper([index, anotherIndex])
   const es = esConnectionHelper.es
-  const filter = store.getters['search/getFilter']({ name: 'contentType' })
+  const name = 'contentType'
+  const filter = store.getters['search/getFilter']({ name })
   let wrapper = null
 
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
@@ -34,7 +35,7 @@ describe('FilterText.vue', () => {
         infiniteScroll: false
       }
     })
-    store.commit('search/setGlobalSearch', true)
+    store.commit('search/decontextualizeFilter', name)
     store.commit('search/index', index)
   })
 
@@ -75,7 +76,7 @@ describe('FilterText.vue', () => {
       .withContentType('type_02')
       .withLanguage('FRENCH')).commit()
 
-    store.commit('search/setGlobalSearch', false)
+    store.commit('search/contextualizeFilter', name)
     store.commit('search/setFilterValue', { name: 'language', value: 'ENGLISH' })
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
 
@@ -139,12 +140,12 @@ describe('FilterText.vue', () => {
       .withContent('LIST').withContentType('text/stylesheet')).commit()
 
     store.commit('search/query', 'SHOW')
-    store.commit('search/setGlobalSearch', true)
+    store.commit('search/decontextualizeFilter', name)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findComponent({ ref: 'filter' }).vm.total).toBe(6)
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
 
-    store.commit('search/setGlobalSearch', false)
+    store.commit('search/contextualizeFilter', name)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
 
@@ -160,16 +161,16 @@ describe('FilterText.vue', () => {
       .withContent('Ipsum').withContentType('text/html')).commit()
 
     store.commit('search/query', 'Lorem')
-    store.commit('search/setGlobalSearch', true)
+    store.commit('search/decontextualizeFilter', name)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
     expect(wrapper.findComponent({ ref: 'filter' }).vm.total).toBe(2)
 
-    store.commit('search/setGlobalSearch', false)
+    store.commit('search/contextualizeFilter', name)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
 
-    store.commit('search/setGlobalSearch', true)
+    store.commit('search/decontextualizeFilter', name)
     await wrapper.findComponent({ ref: 'filter' }).vm.aggregate({ clearPages: true })
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
   })

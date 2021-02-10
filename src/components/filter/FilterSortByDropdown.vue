@@ -1,7 +1,7 @@
 <template>
   <b-dropdown dropup no-caret size="sm" variant="link" toggle-class="filter__footer__action filter__footer__action--sort">
     <template v-slot:button-content>
-      <fa icon="caret-up" fixed-width class="mr-1"></fa>
+      <fa icon="caret-up" fixed-width />
       {{ $t('filter.sortByDropdown.toggler') }}
     </template>
     <b-dropdown-item v-for="({ sortBy, sortByOrder, label }, $index) in sortByOptionsWithLabels"

@@ -65,14 +65,6 @@ describe('ResetFiltersButton.vue', function () {
     expect(store.state.search.index).toBe('my-index')
   })
 
-  it('should not change the globalSearch setting on filters reset', () => {
-    store.commit('search/setGlobalSearch', false)
-
-    wrapper.vm.resetFiltersAndQuery()
-
-    expect(store.state.search.globalSearch).toBeFalsy()
-  })
-
   it('should not change the starredDocuments on filters reset', () => {
     store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
 

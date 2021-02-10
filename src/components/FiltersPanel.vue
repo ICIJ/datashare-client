@@ -15,14 +15,6 @@
             </span>
           </button>
         </div>
-        <ul class="nav flex-column">
-          <li class="nav-item pt-1">
-            <b-form-checkbox class="filters-panel__sticky__toolbar__item" switch id="input-contextualize-filters" v-model="contextualizeModel">
-              {{ $t('search.contextualizeFiltersLabel') }}
-            </b-form-checkbox>
-            <b-tooltip placement="bottom" target="input-contextualize-filters" :title="$t('search.contextualizeFiltersDescription')" />
-          </li>
-        </ul>
         <hook name="filters-panel.toolbar:after" />
       </div>
       <hook name="filters-panel.filters:before" />
@@ -88,16 +80,6 @@ export default {
       cache: false,
       get () {
         return this.$store.getters['search/instantiatedFilters']
-      }
-    },
-    contextualizeModel: {
-      set (toggle) {
-        // eslint-disable-next-line vue/custom-event-name-casing
-        this.$root.$emit('bv::hide::tooltip')
-        this.$store.commit('search/setGlobalSearch', !toggle)
-      },
-      get () {
-        return !this.$store.state.search.globalSearch
       }
     }
   },

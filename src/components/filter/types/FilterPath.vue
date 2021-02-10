@@ -68,11 +68,14 @@ export default {
     },
     instantiatedFilters () {
       return this.$store.getters['search/instantiatedFilters']
+    },
+    isContextualized () {
+      return this.$store.getters['search/isFilterContextualized'](this.filter.name)
     }
   },
   methods: {
     preBodyBuild (body) {
-      if (!this.$store.state.search.globalSearch) {
+      if (this.isContextualized) {
         // Add every filter to the search body
         this.instantiatedFilters.forEach(filter => filter.addFilter(body))
         // Add query to the search body

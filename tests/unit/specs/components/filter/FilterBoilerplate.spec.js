@@ -9,11 +9,13 @@ filters.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterBoilerplate.vue', () => {
   const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
-  const filter = store.getters['search/getFilter']({ name: 'contentType' })
+  const name = 'contentType'
+  const filter = store.getters['search/getFilter']({ name })
+  const propsData = { filter }
   let wrapper = null
 
   beforeEach(() => {
-    wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData: { filter } })
+    wrapper = shallowMount(FilterBoilerplate, { i18n, localVue, router, store, wait, propsData })
   })
 
   it('should commit a setFilterValue and then refresh the route and the search', () => {

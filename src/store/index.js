@@ -39,9 +39,9 @@ export default new Vuex.Store({
       paths: [
         'search.query',
         'search.size',
-        'search.globalSearch',
         'search.values',
         'search.reversed',
+        'search.contextualized',
         'search.sort',
         'search.field',
         'search.index',
