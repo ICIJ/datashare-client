@@ -127,6 +127,11 @@ class IndexedDocument {
     this.parent = new IndexedDocument(parentId)
     return this
   }
+  withRootDocument (rootId) {
+    this.rootDocumentObject = new IndexedDocument(rootId)
+    this.rootDocument = rootId
+    return this
+  }
   withPipeline (pipeline) {
     this.nerTags.push(pipeline)
     return this

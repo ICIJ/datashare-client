@@ -29,15 +29,15 @@
       </span>
     </a>
     <a
-      class="document-actions__download-parent btn"
+      class="document-actions__download-root btn"
       :class="downloadBtnClassDefinition"
-      :href="document.fullParentUrl"
-      :id="downloadParentBtnId"
+      :href="document.fullRootDocumentUrl"
+      :id="downloadRootBtnId"
       target="_blank"
-      v-if="canIDownload && hasParent && hasFeature('DOWNLOAD_PARENT')">
+      v-if="canIDownload && hasRootDocument">
       <fa icon="download" fixed-width></fa>
       <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
-        {{ $t('document.downloadParentButton') }}
+        {{ $t('document.downloadRootDocumentButton') }}
       </span>
     </a>
     <b-popover
@@ -49,11 +49,11 @@
     </b-popover>
     <b-popover
       :placement="tooltipsPlacement"
-      :target="downloadParentBtnId"
-      :title="document.parent.contentTypeLabel"
+      :target="downloadRootBtnId"
+      :title="document.rootDocumentContentTypeLabel"
       triggers="hover focus"
-      v-if="hasParent">
-      <document-type-card :document="document.parent"></document-type-card>
+      v-if="hasRootDocument">
+      <document-type-card :document="document.rootDocumentObject"></document-type-card>
     </b-popover>
     <router-link-popup
       class="document-actions__popup btn"
@@ -193,8 +193,8 @@ export default {
     downloadBtnId () {
       return uniqueId('document-actions-download-button-')
     },
-    downloadParentBtnId () {
-      return uniqueId('document-actions-download-parent-button-')
+    downloadRootBtnId () {
+      return uniqueId('document-actions-download-root-button-')
     },
     popupBtnId () {
       return uniqueId('document-actions-popup-button-')
@@ -202,8 +202,8 @@ export default {
     canIDownload () {
       return this.hasFeature('DOWNLOAD_ALLOWED') ? this.isDownloadAllowed : true
     },
-    hasParent () {
-      return this.document.parent
+    hasRootDocument () {
+      return this.document.rootDocumentObject
     }
   },
   methods: {

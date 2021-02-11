@@ -1,9 +1,10 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 
 import Api from '@/api'
+import elasticsearch from '@/api/elasticsearch'
 import { Core } from '@/core'
 import DocumentView from '@/pages/DocumentView'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
@@ -28,9 +29,15 @@ describe('DocumentView.vue', () => {
   esConnectionHelper(project)
   const es = esConnectionHelper.es
   const id = 'document'
+  const parentId = 'parent_document'
+  const propsData = { index: project, id, routing: parentId }
   let wrapper = null
 
-  beforeEach(() => letData(es).have(new IndexedDocument(id, project)).commit())
+  beforeEach(async () => {
+    await letData(es).have(new IndexedDocument(parentId, project)).commit()
+    await letData(es).have(new IndexedDocument(id, project).withParent(parentId)).commit()
+    store.commit('document/doc', { _id: id, _index: project, _source: { extractionLevel: 1 } })
+  })
 
   afterEach(() => {
     store.commit('document/reset')
@@ -41,31 +48,49 @@ describe('DocumentView.vue', () => {
   afterAll(() => jest.unmock('axios'))
 
   it('should display an error message if document is not found', async () => {
-    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id: 'notfound', index: project } })
+    const propsData = { id: 'notfound', index: project }
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
+
     await wrapper.vm.getDoc()
 
     expect(wrapper.find('span').text()).toBe('Document not found')
   })
 
-  it('should call to the API to retrieve tags', async () => {
-    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index: project } })
+  it('should call the elasticsearch to retrieve document parent', async () => {
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
+    const spyElasticsearchGet = jest.spyOn(elasticsearch, 'get')
+
     await wrapper.vm.getDoc()
 
-    expect(axios.request).toBeCalledTimes(2)
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${project}/documents/tags/${id}`) })
+    expect(spyElasticsearchGet).toBeCalledTimes(3)
+    expect(spyElasticsearchGet).toBeCalledWith(expect.objectContaining(
+      { index: project, id: parentId, routing: null }))
   })
 
-  it('should call to the API to retrieve document recommendations', async () => {
-    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index: project } })
+  it('should call the API to retrieve document tags', async () => {
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
+
     await wrapper.vm.getDoc()
 
     expect(axios.request).toBeCalledTimes(2)
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/users/recommendationsby?project=${project}&docIds=${id}`) })
+    expect(axios.request).toBeCalledWith(
+      { url: Api.getFullUrl(`/api/${project}/documents/tags/${id}`) })
+  })
+
+  it('should call the API to retrieve document recommendations', async () => {
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
+
+    await wrapper.vm.getDoc()
+
+    expect(axios.request).toBeCalledTimes(2)
+    expect(axios.request).toBeCalledWith(
+      { url: Api.getFullUrl(`/api/users/recommendationsby?project=${project}&docIds=${id}`) })
   })
 
   it('should display a document', async () => {
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
-    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index: project } })
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
+
     await wrapper.vm.getDoc()
 
     expect(wrapper.find('.document__header').element).toBeTruthy()
@@ -73,7 +98,7 @@ describe('DocumentView.vue', () => {
 
   it('should display tags', async () => {
     Murmur.config.merge({ dataDir: null, mountedDataDir: null })
-    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index: project } })
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
 
     await wrapper.vm.getDoc()
 
@@ -82,27 +107,28 @@ describe('DocumentView.vue', () => {
 
   it('should display the named entities tab', async () => {
     Murmur.config.merge({ dataDir: null, mountedDataDir: null, manageDocuments: true })
-    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index: project } })
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
 
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(4)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(3).attributes('title')).toContain('Named Entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(3).attributes('title'))
+      .toContain('Named Entities')
   })
 
   it('should NOT display the named entities tab', async () => {
     Murmur.config.merge({ manageDocuments: false })
-    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData: { id, index: project } })
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
 
     await wrapper.vm.getDoc()
 
     expect(wrapper.findAll('.document .document__header__nav__item')).toHaveLength(3)
-    expect(wrapper.findAll('.document .document__header__nav__item').at(2).attributes('title')).not.toContain('Named Entities')
+    expect(wrapper.findAll('.document .document__header__nav__item').at(2).attributes('title'))
+      .not.toContain('Named Entities')
   })
 
   describe('navigate through tabs as loop', () => {
     beforeEach(async () => {
-      const propsData = { id, index: project }
       wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
       await wrapper.vm.getDoc()
     })
@@ -146,7 +172,6 @@ describe('DocumentView.vue', () => {
           return [...tabs, tab]
         }
       })
-      const propsData = { id, index: project }
       wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
       await wrapper.vm.getDoc()
     })
@@ -155,17 +180,17 @@ describe('DocumentView.vue', () => {
       core.unregisterPipeline(temporaryPipelineName)
     })
 
-    it('should add a tab using the `document-view-tabs` pipeline', async () => {
+    it('should add a tab using the `document-view-tabs` pipeline', () => {
       const lastTab = wrapper.vm.tabsThoughtPipeline[wrapper.vm.tabsThoughtPipeline.length - 1]
       expect(lastTab.label).toBe('Temporary')
     })
 
-    it('should add a tab with a `labelComponent` property', async () => {
+    it('should add a tab with a `labelComponent` property', () => {
       const lastTab = wrapper.vm.tabsThoughtPipeline[wrapper.vm.tabsThoughtPipeline.length - 1]
       expect(lastTab.labelComponent).toHaveProperty('template')
     })
 
-    it('should add a tab with a `labelComponent` within the label in its template', async () => {
+    it('should add a tab with a `labelComponent` within the label in its template', () => {
       const lastTab = wrapper.vm.tabsThoughtPipeline[wrapper.vm.tabsThoughtPipeline.length - 1]
       const lastTabWrapper = shallowMount(lastTab.labelComponent, { i18n, localVue })
       expect(lastTabWrapper.text()).toBe('Temporary')

@@ -1,4 +1,4 @@
-import { compact, endsWith, find, filter, get, keys, last, pick, startsWith, trim, truncate } from 'lodash'
+import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim, truncate } from 'lodash'
 import Murmur from '@icij/murmur'
 import moment from 'moment'
 import { extname } from 'path'
@@ -10,12 +10,14 @@ import { findContentTypeIcon } from '@/utils/font-awesome-files'
 import types from '@/utils/types.json'
 
 const _parent = '_PARENT'
+const _rootDocumentOject = '_ROOTDOCUMENTOBJECT'
 const _separator = '/'
 
 export default class Document extends EsDoc {
-  constructor (raw, parent = null) {
+  constructor (raw, parent = null, rootDocument = null) {
     super(raw)
     this.parent = parent
+    this.rootDocumentObject = rootDocument
   }
   nl2br (str) {
     return trim(str).split('\n').map(row => `<p>${row}</p>`).join('')
@@ -44,6 +46,15 @@ export default class Document extends EsDoc {
   set parent (parent) {
     this[_parent] = parent ? new Document(parent) : null
   }
+  get parent () {
+    return this[_parent]
+  }
+  set rootDocumentObject (rootDocumentObject) {
+    this[_rootDocumentOject] = rootDocumentObject ? new Document(rootDocumentObject) : null
+  }
+  get rootDocumentObject () {
+    return this[_rootDocumentOject]
+  }
   get content () {
     return this.get('_source.content')
   }
@@ -52,9 +63,6 @@ export default class Document extends EsDoc {
   }
   get metas () {
     return keys(this.source.metadata || {})
-  }
-  get parent () {
-    return this[_parent]
   }
   get shortId () {
     return this.id.slice(0, 10)
@@ -128,14 +136,14 @@ export default class Document extends EsDoc {
   get url () {
     return `/api/${this.index}/documents/src/${this.id}?routing=${this.routing}`
   }
-  get parentUrl () {
+  get rootDocumentUrl () {
     return `/api/${this.index}/documents/src/${this.routing}?routing=${this.routing}`
   }
   get fullUrl () {
     return Api.getFullUrl(this.url)
   }
-  get fullParentUrl () {
-    return Api.getFullUrl(this.parentUrl)
+  get fullRootDocumentUrl () {
+    return Api.getFullUrl(this.rootDocumentUrl)
   }
   get contentType () {
     return this.source.contentType || 'unknown'
@@ -151,6 +159,12 @@ export default class Document extends EsDoc {
   }
   get contentTypeIcon () {
     return findContentTypeIcon(this.contentType)
+  }
+  get rootDocumentContentType () {
+    return this.rootDocumentObject ? this.rootDocumentObject.source.contentType : 'unknown'
+  }
+  get rootDocumentContentTypeLabel () {
+    return get(types, [this.rootDocumentContentType, 'label'], null)
   }
   get standardExtension () {
     return get(types, [this.contentType, 'extensions', 0], null)

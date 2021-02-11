@@ -83,17 +83,18 @@ describe('DocumentActions.vue', () => {
   it('should NOT display "Download Parent" button if document has no parent', () => {
     wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document, isDownloadAllowed: true }, sync: false })
 
-    expect(wrapper.vm.hasParent).toBeFalsy()
+    expect(wrapper.vm.hasRootDocument).toBeFalsy()
     expect(wrapper.find('.document-actions__download-parent').exists()).toBeFalsy()
   })
 
   it('should display "Download Parent" button if document has a parent', async () => {
     await letData(es).have(new IndexedDocument('parent_document', project)).commit()
-    const indexedDocument = await letData(es).have(new IndexedDocument('another_document', project).withParent('parent_document')).commit()
+    const indexedDocument = await letData(es).have(new IndexedDocument('another_document', project)
+      .withParent('parent_document').withRootDocument('parent_document')).commit()
     document = indexedDocument.document
     wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document, isDownloadAllowed: true }, sync: false })
 
-    expect(wrapper.vm.hasParent).toBeTruthy()
-    expect(wrapper.find('.document-actions__download-parent').exists()).toBeTruthy()
+    expect(wrapper.vm.hasRootDocument).toBeTruthy()
+    expect(wrapper.find('.document-actions__download-root').exists()).toBeTruthy()
   })
 })

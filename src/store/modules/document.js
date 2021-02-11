@@ -11,9 +11,9 @@ export const auth = new Auth()
 
 export function initialState () {
   return {
-    isContentLoaded: false,
     doc: null,
     idAndRouting: null,
+    isContentLoaded: false,
     isLoadingNamedEntities: false,
     isRecommended: false,
     namedEntitiesPaginatedByCategories: {
@@ -105,6 +105,15 @@ export const mutations = {
     }
     return state.parentDocument
   },
+  rootDocument (state, raw) {
+    if (raw !== null) {
+      Vue.set(state, 'rootDocument', EsDocList.instantiate(raw))
+      state.doc.rootDocument = raw
+    } else {
+      Vue.set(state, 'rootDocument', null)
+    }
+    return state.rootDocument
+  },
   toggleShowNamedEntities (state, toggle = null) {
     Vue.set(state, 'showNamedEntities', (toggle !== null ? toggle : !state.showNamedEntities))
   },
@@ -167,6 +176,19 @@ export const actions = {
         commit('parentDocument', doc)
       } catch (_) {
         commit('parentDocument', null)
+      }
+    }
+    return state.parentDocument
+  },
+  async getRootDocument ({ commit, state }) {
+    if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
+      try {
+        const { index } = state.doc
+        const { rootDocument: id } = state.doc.raw._source
+        const doc = await elasticsearch.getDocumentWithoutContent(index, id, id)
+        commit('rootDocument', doc)
+      } catch (_) {
+        commit('rootDocument', null)
       }
     }
     return state.parentDocument

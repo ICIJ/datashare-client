@@ -166,6 +166,7 @@ export default {
       this.$Progress.start()
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
+      await this.$store.dispatch('document/getRootDocument')
       await this.$store.dispatch('document/getTags')
       await this.$store.dispatch('document/getRecommendationsByDocuments')
       if (this.doc) {
@@ -201,12 +202,12 @@ export default {
     },
     shortKeyAction (event) {
       switch (event.srcKey) {
-        case 'goToPreviousTab':
-          this.goToPreviousTab()
-          break
-        case 'goToNextTab':
-          this.goToNextTab()
-          break
+      case 'goToPreviousTab':
+        this.goToPreviousTab()
+        break
+      case 'goToNextTab':
+        this.goToNextTab()
+        break
       }
     },
     goToPreviousTab () {
