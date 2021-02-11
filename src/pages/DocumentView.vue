@@ -166,7 +166,7 @@ export default {
       this.$Progress.start()
       await this.$store.dispatch('document/get', params)
       await this.$store.dispatch('document/getParent')
-      await this.$store.dispatch('document/getRootDocument')
+      await this.$store.dispatch('document/getRoot')
       await this.$store.dispatch('document/getTags')
       await this.$store.dispatch('document/getRecommendationsByDocuments')
       if (this.doc) {

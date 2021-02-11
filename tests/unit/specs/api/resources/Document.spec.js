@@ -137,6 +137,6 @@ describe('Document', () => {
   it('should generate the document parent url', () => {
     const doc = new Document({ _id: '42', _index: 'project', _routing: '12' })
 
-    expect(doc.fullRootDocumentUrl).toBe('http://localhost:9009/api/project/documents/src/12?routing=12')
+    expect(doc.fullRootUrl).toBe('http://localhost:9009/api/project/documents/src/12?routing=12')
   })
 })

@@ -10,14 +10,14 @@ import { findContentTypeIcon } from '@/utils/font-awesome-files'
 import types from '@/utils/types.json'
 
 const _parent = '_PARENT'
-const _rootDocumentOject = '_ROOTDOCUMENTOBJECT'
+const _root = '_ROOT'
 const _separator = '/'
 
 export default class Document extends EsDoc {
-  constructor (raw, parent = null, rootDocument = null) {
+  constructor (raw, parent = null, root = null) {
     super(raw)
     this.parent = parent
-    this.rootDocumentObject = rootDocument
+    this.root = root
   }
   nl2br (str) {
     return trim(str).split('\n').map(row => `<p>${row}</p>`).join('')
@@ -49,11 +49,11 @@ export default class Document extends EsDoc {
   get parent () {
     return this[_parent]
   }
-  set rootDocumentObject (rootDocumentObject) {
-    this[_rootDocumentOject] = rootDocumentObject ? new Document(rootDocumentObject) : null
+  set root (root) {
+    this[_root] = root ? new Document(root) : null
   }
-  get rootDocumentObject () {
-    return this[_rootDocumentOject]
+  get root () {
+    return this[_root]
   }
   get content () {
     return this.get('_source.content')
@@ -136,14 +136,14 @@ export default class Document extends EsDoc {
   get url () {
     return `/api/${this.index}/documents/src/${this.id}?routing=${this.routing}`
   }
-  get rootDocumentUrl () {
-    return `/api/${this.index}/documents/src/${this.routing}?routing=${this.routing}`
-  }
   get fullUrl () {
     return Api.getFullUrl(this.url)
   }
-  get fullRootDocumentUrl () {
-    return Api.getFullUrl(this.rootDocumentUrl)
+  get rootUrl () {
+    return `/api/${this.index}/documents/src/${this.routing}?routing=${this.routing}`
+  }
+  get fullRootUrl () {
+    return Api.getFullUrl(this.rootUrl)
   }
   get contentType () {
     return this.source.contentType || 'unknown'
@@ -160,11 +160,11 @@ export default class Document extends EsDoc {
   get contentTypeIcon () {
     return findContentTypeIcon(this.contentType)
   }
-  get rootDocumentContentType () {
-    return this.rootDocumentObject ? this.rootDocumentObject.source.contentType : 'unknown'
+  get rootContentType () {
+    return this.root ? this.root.source.contentType : 'unknown'
   }
-  get rootDocumentContentTypeLabel () {
-    return get(types, [this.rootDocumentContentType, 'label'], null)
+  get rootContentTypeLabel () {
+    return get(types, [this.rootContentType, 'label'], null)
   }
   get standardExtension () {
     return get(types, [this.contentType, 'extensions', 0], null)

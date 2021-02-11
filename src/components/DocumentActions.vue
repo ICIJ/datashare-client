@@ -31,13 +31,13 @@
     <a
       class="document-actions__download-root btn"
       :class="downloadBtnClassDefinition"
-      :href="document.fullRootDocumentUrl"
+      :href="document.fullRootUrl"
       :id="downloadRootBtnId"
       target="_blank"
-      v-if="canIDownload && hasRootDocument">
+      v-if="canIDownload && hasRoot">
       <fa icon="download" fixed-width></fa>
       <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
-        {{ $t('document.downloadRootDocumentButton') }}
+        {{ $t('document.downloadRootButton') }}
       </span>
     </a>
     <b-popover
@@ -50,10 +50,10 @@
     <b-popover
       :placement="tooltipsPlacement"
       :target="downloadRootBtnId"
-      :title="document.rootDocumentContentTypeLabel"
+      :title="document.rootContentTypeLabel"
       triggers="hover focus"
-      v-if="hasRootDocument">
-      <document-type-card :document="document.rootDocumentObject"></document-type-card>
+      v-if="hasRoot">
+      <document-type-card :document="document.root"></document-type-card>
     </b-popover>
     <router-link-popup
       class="document-actions__popup btn"
@@ -202,8 +202,8 @@ export default {
     canIDownload () {
       return this.hasFeature('DOWNLOAD_ALLOWED') ? this.isDownloadAllowed : true
     },
-    hasRootDocument () {
-      return this.document.rootDocumentObject
+    hasRoot () {
+      return this.document.root
     }
   },
   methods: {

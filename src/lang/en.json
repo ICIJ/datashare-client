@@ -388,7 +388,7 @@
     "translations": "Translations",
     "preview": "Preview",
     "downloadButton": "Download",
-    "downloadRootDocumentButton": "Download Parent",
+    "downloadRootButton": "Download Parent",
     "externalWindow": "Open in a new window",
     "selectAll": "Select all",
     "unselectAll": "Unselect all",

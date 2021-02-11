@@ -24,6 +24,7 @@ export function initialState () {
     },
     parentDocument: null,
     recommendedBy: [],
+    rootDocument: null,
     showContentTextLengthWarning: false,
     showNamedEntities: false,
     tags: []
@@ -108,7 +109,7 @@ export const mutations = {
   rootDocument (state, raw) {
     if (raw !== null) {
       Vue.set(state, 'rootDocument', EsDocList.instantiate(raw))
-      state.doc.rootDocument = raw
+      state.doc.root = raw
     } else {
       Vue.set(state, 'rootDocument', null)
     }
@@ -180,7 +181,7 @@ export const actions = {
     }
     return state.parentDocument
   },
-  async getRootDocument ({ commit, state }) {
+  async getRoot ({ commit, state }) {
     if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
       try {
         const { index } = state.doc
@@ -191,7 +192,7 @@ export const actions = {
         commit('rootDocument', null)
       }
     }
-    return state.parentDocument
+    return state.rootDocument
   },
   async getNamedEntitiesTotal ({ state }) {
     const index = state.doc.index

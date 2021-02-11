@@ -127,9 +127,9 @@ class IndexedDocument {
     this.parent = new IndexedDocument(parentId)
     return this
   }
-  withRootDocument (rootId) {
-    this.rootDocumentObject = new IndexedDocument(rootId)
+  withRoot (rootId) {
     this.rootDocument = rootId
+    this.root = new IndexedDocument(rootId)
     return this
   }
   withPipeline (pipeline) {
