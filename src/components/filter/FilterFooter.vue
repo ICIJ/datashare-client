@@ -1,5 +1,5 @@
 <template>
-  <div class="filter__footer d-flex align-items-center text-nowrap px-1">
+  <div class="filter__footer d-flex align-items-center text-nowrap p-1">
     <filter-sort-by-dropdown v-if="!hideSort"
                             :sort-by="sortBy"
                             :sort-by-order="sortByOrder"
@@ -12,10 +12,11 @@
       <fa icon="expand-alt" fixed-width />
       {{ $t('filter.showMore') }}
     </button>
+    <span class="mx-auto"></span>
     <b-form-checkbox v-if="!hideExclude"
                      v-model="isReversed"
                      size="sm"
-                     class="filter__footer__action filter__footer__action--invert ml-auto">
+                     class="filter__footer__action filter__footer__action--invert">
       {{ $t('filter.invert') }}
     </b-form-checkbox>
     <b-form-checkbox v-if="!hideContextualize"

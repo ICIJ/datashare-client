@@ -3,6 +3,7 @@
                       v-bind="propsWithout('hide-show-more')"
                       hide-show-more
                       hide-exclude
+                      hide-contextualize
                       hide-sort
                       :infinite-scroll="false"
                       @reset-filter-values="resetFilterValues">

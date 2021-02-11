@@ -2,6 +2,7 @@
   <filter-boilerplate ref="filter"
                       v-bind="$props"
                       hide-show-more
+                      hide-contextualize
                       hide-sort>
     <template #items>
       <div class="m-2">

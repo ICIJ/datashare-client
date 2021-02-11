@@ -91,6 +91,7 @@
                     :sort-by-options.sync="sortByOptions"
                     :hide-sort="hideSort"
                     :hide-exclude="hideExclude"
+                    :hide-contextualize="hideContextualize"
                     :hide-show-more="hideShowMore"
                     @open-filter-search="openFilterSearch"
                     @toggle-filter="toggleFilter"
@@ -142,6 +143,10 @@ export default {
       default: false
     },
     hideExclude: {
+      type: Boolean,
+      default: false
+    },
+    hideContextualize: {
       type: Boolean,
       default: false
     },
