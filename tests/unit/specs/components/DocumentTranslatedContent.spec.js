@@ -1,14 +1,13 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import { Core } from '@/core'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
-const { localVue, store } = Core.init(createLocalVue()).useAll()
-
 describe('DocumentTranslatedContent.vue', () => {
+  const { localVue, store } = Core.init(createLocalVue()).useAll()
   const index = toLower('DocumentTabDetails')
-  let wrapper
+  let wrapper = null
 
   it('should show no translations', async () => {
     store.commit('document/doc', {
