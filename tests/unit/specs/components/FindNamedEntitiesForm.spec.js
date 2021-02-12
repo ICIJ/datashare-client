@@ -77,6 +77,7 @@ describe('FindNamedEntitiesForm.vue', () => {
     await wrapper.vm.submitFindNamedEntities()
     await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
+    // await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.pipeline).toBe('CORENLP')
   })

@@ -47,6 +47,7 @@ describe('LocalesMenu', () => {
       expect(wrapper.find('.locales-menu__button').text()).toBe('English')
 
       await wrapper.findAll('.dropdown-item').at(1).trigger('click')
+      await wrapper.vm.$nextTick()
 
       expect(wrapper.find('.locales-menu__button').text()).toBe('Français')
       expect(localStorage.getItem('locale')).toBe('fr')
@@ -56,6 +57,7 @@ describe('LocalesMenu', () => {
       expect(wrapper.find('.locales-menu__button').text()).toBe('English')
 
       await wrapper.findAll('.dropdown-item').at(2).trigger('click')
+      await wrapper.vm.$nextTick()
 
       expect(wrapper.find('.locales-menu__button').text()).toBe('Español')
       expect(localStorage.getItem('locale')).toBe('es')
@@ -65,6 +67,7 @@ describe('LocalesMenu', () => {
       expect(wrapper.find('.locales-menu__button').text()).toBe('English')
 
       await wrapper.findAll('.dropdown-item').at(3).trigger('click')
+      await wrapper.vm.$nextTick()
 
       expect(wrapper.find('.locales-menu__button').text()).toBe('日本語')
       expect(localStorage.getItem('locale')).toBe('ja')

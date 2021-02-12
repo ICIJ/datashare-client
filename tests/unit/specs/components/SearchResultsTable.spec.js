@@ -85,6 +85,7 @@ describe('SearchResultsTable.vue', () => {
     wrapper = mount(SearchResultsTable, { i18n, localVue, store, router })
     await wrapper.vm.$set(wrapper.vm, 'selected', [{ id: 'document_01' }])
     await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
 
     await wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 

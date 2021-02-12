@@ -178,7 +178,8 @@ export const getters = {
         text = text.replace(/\n/g, ' ').replace(/\s\s+/g, ' ')
         getters.retrieveContentQueryTermsInContent(text, field)
       })
-      return orderBy(getters.retrieveContentQueryTerms, ['content'], ['desc']).sort(a => a.content === 0 && a.metadata > 0)
+      return orderBy(getters.retrieveContentQueryTerms,
+        ['content', 'metadata', 'tags'], ['desc', 'desc', 'desc'])
     }
   },
   sortBy (state) {
