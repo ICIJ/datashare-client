@@ -4,8 +4,6 @@ import { createLocalVue } from '@vue/test-utils'
 
 import { createCore } from '@/core'
 
-const { localVue } = createLocalVue()
-
 jest.mock('axios', () => {
   return {
     get: jest.fn().mockResolvedValue({ data: {} }),
@@ -14,7 +12,9 @@ jest.mock('axios', () => {
 })
 
 describe('main', () => {
-  let core, vm
+  const { localVue } = createLocalVue()
+  let core = null
+  let vm = null
 
   beforeEach(async () => {
     const app = document.createElement('div')

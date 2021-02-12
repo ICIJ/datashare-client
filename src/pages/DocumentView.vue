@@ -1,6 +1,6 @@
 <template>
   <v-wait for="load document data">
-    <content-placeholder class="document py-2 px-3" slot="waiting" />
+    <content-placeholder class="document py-2 px-3" slot="waiting"></content-placeholder>
     <div
       class="d-flex flex-column document"
       :class="{ 'document--simplified': $route.name === 'document-simplified' }"
@@ -8,43 +8,43 @@
       v-shortkey="getKeys('tabNavigation')"
       @shortkey="getAction('tabNavigation')">
       <div class="document__header">
-        <hook name="document.header:before" />
+        <hook name="document.header:before"></hook>
         <h3 class="document__header__name">
-          <hook name="document.header.name:before" />
-          <document-sliced-name interactive-root :document="doc" />
-          <hook name="document.header.name:after" />
+          <hook name="document.header.name:before"></hook>
+          <document-sliced-name interactive-root :document="doc"></document-sliced-name>
+          <hook name="document.header.name:after"></hook>
         </h3>
-        <hook name="document.header.tags:before" />
+        <hook name="document.header.tags:before"></hook>
         <document-tags-form
           class="px-3 mx-0"
           :displayForm="false"
           :displayTags="true"
           :document="doc"
           mode="dark"
-          :tags="tags" />
-        <hook name="document.header.tags:after" />
-        <hook name="document.header.nav:before" />
+          :tags="tags"></document-tags-form>
+        <hook name="document.header.tags:after"></hook>
+        <hook name="document.header.nav:before"></hook>
         <nav class="document__header__nav text-nowrap overflow-auto">
           <ul class="list-inline m-0">
-            <hook name="document.header.nav.items:before" tag="li" />
+            <hook name="document.header.nav.items:before" tag="li"></hook>
             <template v-for="tab in visibleTabs">
-              <hook :name="`document.header.nav.items.${tab.name}:before`" :key="`hook.${tab.name}:before`" tag="li" />
+              <hook :name="`document.header.nav.items.${tab.name}:before`" :key="`hook.${tab.name}:before`" tag="li"></hook>
               <li class="document__header__nav__item list-inline-item" :key="tab.name" :title="$t(tab.label)">
                 <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
-                  <hook :name="`document.header.nav.${tab.name}:before`" />
-                  <fa :icon="tab.icon" v-if="tab.icon" class="mr-2" />
-                  <component v-if="tab.labelComponent" :is="tab.labelComponent" />
+                  <hook :name="`document.header.nav.${tab.name}:before`"></hook>
+                  <fa :icon="tab.icon" v-if="tab.icon" class="mr-2"></fa>
+                  <component v-if="tab.labelComponent" :is="tab.labelComponent"></component>
                   <template v-else>{{ $t(tab.label) }}</template>
-                  <hook :name="`document.header.nav.${tab.name}:after`" />
+                  <hook :name="`document.header.nav.${tab.name}:after`"></hook>
                 </a>
               </li>
-              <hook :name="`document.header.nav.items.${tab.name}:after`" :key="`hook.${tab.name}:after`" tag="li" />
+              <hook :name="`document.header.nav.items.${tab.name}:after`" :key="`hook.${tab.name}:after`" tag="li"></hook>
             </template>
-            <hook name="document.header.nav.items:after" tag="li" />
+            <hook name="document.header.nav.items:after" tag="li"></hook>
           </ul>
         </nav>
-        <hook name="document.header.nav:after" />
-        <hook name="document.header:after" />
+        <hook name="document.header.nav:after"></hook>
+        <hook name="document.header:after"></hook>
       </div>
       <div class="d-flex flex-grow-1 flex-column tab-content document__content">
         <div
@@ -57,15 +57,14 @@
       </div>
     </div>
     <div v-else class="nodocument">
-      <fa icon="exclamation-triangle" />
+      <fa icon="exclamation-triangle"></fa>
       <span>{{ $t('document.notFound') }}</span>
     </div>
   </v-wait>
 </template>
 
 <script>
-import filter from 'lodash/filter'
-import findIndex from 'lodash/findIndex'
+import { filter, findIndex } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentSlicedName from '@/components/DocumentSlicedName'
@@ -306,7 +305,6 @@ export default {
   }
 
   &__content {
-
     .tab-content > &__pane--preview.active {
       display: flex;
     }

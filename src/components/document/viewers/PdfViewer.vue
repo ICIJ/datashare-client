@@ -33,8 +33,9 @@
 </template>
 
 <script>
+import { min } from 'lodash'
 import * as PDFJS from 'pdfjs-dist'
-import min from 'lodash/min'
+
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 /**

@@ -2,13 +2,14 @@
   <b-button class="locales-menu" :id="uniqueId" href="#" variant="none">
     <span class="locales-menu__button">
       <slot v-bind="{ currentLocale, locales }">
-        <fa icon="globe" class="mr-1" />
+        <fa icon="globe" class="mr-1"></fa>
         {{ currentLocale.label }}
       </slot>
     </span>
     <b-popover :target="uniqueId" triggers="click blur" custom-class="locales-menu__list popover-body-p-0" ref="popover">
       <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
-        <a href="#" class="dropdown-item" v-for="locale in locales" :key="locale.key" @click.prevent="chooseLocale(locale.key)" :class="{ active: locale === currentLocale }">
+        <a href="#" class="dropdown-item" v-for="locale in locales" :key="locale.key"
+           @click.prevent="chooseLocale(locale.key)" :class="{ active: locale === currentLocale }">
           {{ locale.label }}
         </a>
       </div>
@@ -17,8 +18,7 @@
 </template>
 
 <script>
-import uniqueId from 'lodash/uniqueId'
-import find from 'lodash/find'
+import { uniqueId, find } from 'lodash'
 
 import settings from '@/utils/settings'
 

@@ -8,7 +8,7 @@
       <span v-if="isMiddleSlice(slice)">
         ...
       </span>
-      <span v-else-if="hasContentSlice(slice)" class="d-inline-flex flex-row  align-items-end">
+      <span v-else-if="hasContentSlice(slice)" class="d-inline-flex flex-row align-items-end">
         <span class="document-sliced-name__item__short-id">
           {{ slice }}
         </span>
