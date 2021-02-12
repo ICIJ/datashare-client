@@ -49,19 +49,6 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
       expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(3).text()).toBe('0')
     })
 
-    it('should display query terms in metadata with specific message and in last position', async () => {
-      wrapper = await createView(es, project, 'message', 'bruno and message', 'bruno message')
-      await wrapper.vm.getTerms()
-
-      expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(3)
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('message')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toBe('1')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(1).text()).toBe('and')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(1).text()).toBe('0')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(2).text()).toBe('bruno')
-      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(2).text()).toBe('in metadata')
-    })
-
     it('should display query terms in tags with specific message and in last position', async () => {
       wrapper = await createView(es, project, 'message', 'message tag_01', '', ['tag_01', 'tag_02'])
       await wrapper.vm.getTerms()

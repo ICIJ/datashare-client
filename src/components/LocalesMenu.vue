@@ -59,8 +59,8 @@ export default {
     }
   },
   methods: {
-    chooseLocale (locale) {
-      this.loadLocale(locale)
+    async chooseLocale (locale) {
+      await this.loadLocale(locale)
       if (this.$refs.popover) {
         this.$refs.popover.$emit('close')
       }

@@ -696,6 +696,30 @@ describe('SearchStore', () => {
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc))
         .toEqual([{ content: 1, field: '', label: 'Emmanuel Macron', metadata: 0, negation: false, tags: 0, regex: false }])
     })
+
+    it('should sort query terms according to where and how many it is found', async () => {
+      await letData(es).have(new IndexedDocument(id, project)
+        .withContent('term_00 term_00 term_01 term_04 term_05 term_07')
+        .withOtherMetadata('term_02 term_04 term_06 term_07')
+        .withTags(['term_03', 'term_05', 'term_06', 'term_07'])
+      ).commit()
+      await store.dispatch('document/get', { id, index: project })
+      await store.dispatch('document/getContent', { id, index: project })
+      await store.dispatch('search/query', 'term_00 term_01 term_02 term_03 term_04 term_05 term_06 term_07 term_08')
+
+      expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc))
+        .toEqual([
+          { content: 2, field: '', label: 'term_00', metadata: 0, negation: false, tags: 0, regex: false },
+          { content: 1, field: '', label: 'term_07', metadata: 1, negation: false, tags: 1, regex: false },
+          { content: 1, field: '', label: 'term_04', metadata: 1, negation: false, tags: 0, regex: false },
+          { content: 1, field: '', label: 'term_05', metadata: 0, negation: false, tags: 1, regex: false },
+          { content: 1, field: '', label: 'term_01', metadata: 0, negation: false, tags: 0, regex: false },
+          { content: 0, field: '', label: 'term_06', metadata: 1, negation: false, tags: 1, regex: false },
+          { content: 0, field: '', label: 'term_02', metadata: 1, negation: false, tags: 0, regex: false },
+          { content: 0, field: '', label: 'term_03', metadata: 0, negation: false, tags: 1, regex: false },
+          { content: 0, field: '', label: 'term_08', metadata: 0, negation: false, tags: 0, regex: false }
+        ])
+    })
   })
 
   describe('deleteQueryTerm', () => {

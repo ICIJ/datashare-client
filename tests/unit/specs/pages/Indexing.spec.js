@@ -98,6 +98,7 @@ describe('Indexing.vue', () => {
 
     await wrapper.find('.btn-stop-pending-tasks').trigger('click')
     await wrapper.vm.$nextTick()
+    await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -112,6 +113,7 @@ describe('Indexing.vue', () => {
     expect(wrapper.vm.tasks).toHaveLength(1)
 
     await wrapper.find('.btn-delete-done-tasks').trigger('click')
+    await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)
@@ -137,6 +139,7 @@ describe('Indexing.vue', () => {
     expect(wrapper.findAll('.btn-stop-task')).toHaveLength(1)
 
     await wrapper.find('.btn-stop-task').trigger('click')
+    await wrapper.vm.$nextTick()
     await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(1)
