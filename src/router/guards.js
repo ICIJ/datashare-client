@@ -17,7 +17,12 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
         next()
       // The user is authenticated
       } else if (await auth.getUsername()) {
-        next({ path: await store.dispatch('app/popRedirectAfterLogin') })
+        const path = await store.dispatch('app/popRedirectAfterLogin')
+        if (to.path !== path && path !== null) {
+          next({ path })
+        } else {
+          next()
+        }
       // The user isn't authenticated
       } else {
         store.commit('app/setRedirectAfterLogin', to.path)

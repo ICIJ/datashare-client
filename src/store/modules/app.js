@@ -11,8 +11,10 @@ export const mutations = {
   sidebarReduced (state, reduced) {
     Vue.set(state.sidebar, 'reduced', reduced)
   },
-  setRedirectAfterLogin (state, route = null) {
-    Vue.set(state, 'redirectAfterLogin', route)
+  setRedirectAfterLogin (state, path = null) {
+    if (!path || !path.startsWith('/login')) {
+      Vue.set(state, 'redirectAfterLogin', path)
+    }
   }
 }
 

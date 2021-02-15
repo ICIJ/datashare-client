@@ -47,6 +47,7 @@ describe('guards', () => {
   it('should not redirect to /login when we have the right cookie', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'yolo' }, JSON.stringify)
     await wrapper.vm.$router.push({ name: 'landing' }).catch(jest.fn())
+    await wrapper.vm.$nextTick()
     expect(wrapper.vm.$route.path).not.toBe('/login')
   })
 })
