@@ -25,6 +25,7 @@ export const router = {
           name: 'search',
           path: '',
           meta: {
+            title: ({ i18n }) => i18n.t('search.title'),
             docs: [
               'all/search-documents.md',
               'all/filter-documents.md',
@@ -44,6 +45,7 @@ export const router = {
               component: () => import('@/pages/DocumentView'),
               props: true,
               meta: {
+                title: ({ i18n }) => i18n.t('document.title'),
                 docs: [
                   'all/star-documents.md',
                   'all/tag-documents.md',
@@ -58,6 +60,7 @@ export const router = {
           path: 'indexing',
           component: () => import('@/pages/Indexing'),
           meta: {
+            title: ({ i18n }) => i18n.t('indexing.title'),
             docs: [
               '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
               'all/analyze-documents.md?mode=LOCAL'
@@ -71,6 +74,7 @@ export const router = {
             default: () => import('@/pages/BatchSearch')
           },
           meta: {
+            title: ({ i18n }) => i18n.t('batchSearch.title'),
             docs: [
               'all/batch-search-documents.md'
             ]
@@ -85,12 +89,18 @@ export const router = {
           props: {
             default: true,
             sidebar: true
+          },
+          meta: {
+            title: ({ i18n }) => i18n.t('batchSearchResults.title')
           }
         },
         {
           name: 'user-history',
           path: 'user-history',
-          component: () => import('@/pages/UserHistory')
+          component: () => import('@/pages/UserHistory'),
+          meta: {
+            title: ({ i18n }) => i18n.t('userHistory.heading')
+          }
         },
         {
           name: 'docs',
@@ -98,6 +108,9 @@ export const router = {
           components: {
             default: () => import('@/pages/RouteDoc'),
             sidebar: () => import('@/components/RouteDocsLinks')
+          },
+          meta: {
+            title: ({ i18n }) => i18n.t('document.title')
           },
           props: {
             default: true,
@@ -107,11 +120,17 @@ export const router = {
         {
           name: 'settings',
           path: '/settings',
+          meta: {
+            title: ({ i18n }) => i18n.t('server.title')
+          },
           component: () => import('@/pages/Settings')
         },
         {
           name: 'insights',
           path: '/insights',
+          meta: {
+            title: ({ i18n }) => i18n.t('insights.title')
+          },
           component: () => import('@/pages/Insights')
         }
       ]
@@ -119,6 +138,9 @@ export const router = {
     {
       name: 'document-simplified',
       path: '/ds/:index/:id/:routing?',
+      meta: {
+        title: 'Document'
+      },
       component: () => import('@/pages/DocumentView')
     },
     {
@@ -126,7 +148,8 @@ export const router = {
       name: 'login',
       component: () => import('@/pages/Login'),
       meta: {
-        skipsAuth: true
+        skipsAuth: true,
+        title: 'Login'
       }
     },
     {
@@ -135,7 +158,8 @@ export const router = {
       component: () => import('@/pages/Error'),
       props: true,
       meta: {
-        skipsAuth: true
+        skipsAuth: true,
+        title: 'Something went wrong'
       }
     }
   ]

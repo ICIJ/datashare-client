@@ -1,4 +1,5 @@
 import get from 'lodash/get'
+import isFunction from 'lodash/isFunction'
 
 export default ({ router, auth, store, config, i18n }) => {
   function setProjectFromParams (to, from, next) {
@@ -42,8 +43,18 @@ export default ({ router, auth, store, config, i18n }) => {
     next()
   }
 
+  async function setPageTitle ({ meta }, from, next) {
+    if (document && document.title) {
+      const params = { router, auth, store, config, i18n }
+      const title = isFunction(meta.title) ? await meta.title(params) : meta.title
+      document.title = title ? `${title} - Datashare` : 'Datashare'
+    }
+    next()
+  }
+
   router.beforeEach(setProjectFromParams)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
   router.beforeEach(reduceAppSideBar)
+  router.beforeEach(setPageTitle)
 }
