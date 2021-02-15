@@ -200,7 +200,7 @@ export default {
       return uniqueId('document-actions-popup-button-')
     },
     canIDownload () {
-      return this.hasFeature('DOWNLOAD_ALLOWED') ? this.isDownloadAllowed : true
+      return this.isDownloadAllowed
     },
     hasRoot () {
       return this.document.root
