@@ -37,6 +37,7 @@ export default new Vuex.Store({
   plugins: [
     createPersistedState({
       paths: [
+        'app.redirectAfterLogin',
         'search.query',
         'search.size',
         'search.values',
@@ -51,7 +52,7 @@ export default new Vuex.Store({
       ],
       filter (mutation) {
         // Only for some mutations
-        return some(['search/', 'userHistory/'], k => mutation.type.indexOf(k) === 0)
+        return some(['search/', 'userHistory/', 'app/'], k => mutation.type.indexOf(k) === 0)
       },
       rehydrated (store) {
         // This a temporary retro-compatibility fix to ensure persisted

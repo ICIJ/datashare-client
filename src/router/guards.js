@@ -1,7 +1,7 @@
 import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
 
-export default ({ router, auth, store, config, i18n }) => {
+export default ({ router, auth, store, config, i18n, setPageTitle }) => {
   function setProjectFromParams (to, from, next) {
     // Read the current index from the params
     if (to.params.index && store.state.search.index !== to.params.index) {
@@ -17,9 +17,10 @@ export default ({ router, auth, store, config, i18n }) => {
         next()
       // The user is authenticated
       } else if (await auth.getUsername()) {
-        next()
+        next({ path: await store.dispatch('app/popRedirectAfterLogin') })
       // The user isn't authenticated
       } else {
+        store.commit('app/setRedirectAfterLogin', to.path)
         next({ name: 'login' })
       }
     } catch (error) {
@@ -43,12 +44,10 @@ export default ({ router, auth, store, config, i18n }) => {
     next()
   }
 
-  async function setPageTitle ({ meta }, from, next) {
-    if (document && document.title) {
-      const params = { router, auth, store, config, i18n }
-      const title = isFunction(meta.title) ? await meta.title(params) : meta.title
-      document.title = title ? `${title} - Datashare` : 'Datashare'
-    }
+  async function setPageTitleFromMeta ({ meta }, from, next) {
+    const params = { router, auth, store, config, i18n }
+    const title = isFunction(meta.title) ? await meta.title(params) : meta.title
+    setPageTitle(title)
     next()
   }
 
@@ -56,5 +55,5 @@ export default ({ router, auth, store, config, i18n }) => {
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
   router.beforeEach(reduceAppSideBar)
-  router.beforeEach(setPageTitle)
+  router.beforeEach(setPageTitleFromMeta)
 }

@@ -28,7 +28,10 @@
 </template>
 
 <script>
+import Auth from '@/api/resources/Auth'
 import settings from '@/utils/settings'
+
+export const auth = new Auth()
 
 export default {
   name: 'Login',
@@ -39,6 +42,12 @@ export default {
     helpLink () {
       return this.$config.get('helpLink', settings.helpLink)
     }
+  },
+  async beforeRouteEnter (to, from, next) {
+    if (await auth.getUsername()) {
+      return next('/')
+    }
+    return next()
   }
 }
 </script>

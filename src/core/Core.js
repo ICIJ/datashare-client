@@ -236,6 +236,16 @@ class Core extends Behaviors {
     return this.api.getUser()
   }
   /**
+   * Append the given title to the page title
+   * @param {String} title - Title to append to the page
+   * @param {String} [suffix=Datashare] - Suffix to the title
+   */
+  setPageTitle (title = null, suffix = 'Datashare') {
+    if (document && document.title) {
+      document.title = title ? `${title} - ${suffix}` : suffix
+    }
+  }
+  /**
    * Get a promise that is resolved when the application is ready
    * @fullfil {Object} The actual application core instance.
    * @type {Promise<Object>}
