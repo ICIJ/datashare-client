@@ -26,6 +26,7 @@
     "noProjects": "Vous n'avez pas encore de projet. Veuillez contacter votre administrateur•rice."
   },
   "search": {
+    "title": "Search",
     "errors": {
       "badRequest": "Votre recherche contient une erreur",
       "internalError": "Le serveur a rencontré un problème",
@@ -370,6 +371,7 @@
     "selectDateRange": "Sélectionner une période"
   },
   "document": {
+    "title": "Document",
     "document": "Document",
     "name": "Nom du document",
     "path": "Chemin du document",
@@ -388,7 +390,7 @@
     "translations": "Traductions",
     "preview": "Prévisualisation",
     "downloadButton": "Télécharger",
-    "downloadRootButton": "Download Parent",
+    "downloadRootButton": "Download parent",
     "externalWindow": "Ouvrir dans une nouvelle fenêtre",
     "selectAll": "Tout sélectionner",
     "unselectAll": "Désélectionner tout",
@@ -588,6 +590,7 @@
     "placeholder": "Rechercher dans les recherches en lot..."
   },
   "batchSearchResults": {
+    "title": "Batch Search Results",
     "rank": "Rang",
     "query": "Recherche",
     "documentPath": "Chemin du document",
@@ -647,6 +650,7 @@
     }
   },
   "insights": {
+    "title": "Insights",
     "selectProject": "Sélectionner un projet"
   },
   "widget": {
