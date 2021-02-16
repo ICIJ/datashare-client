@@ -26,6 +26,7 @@
     "noProjects": "You have no projects yet. Please contact your administrator."
   },
   "search": {
+    "title": "Search",
     "errors": {
       "badRequest": "検索ワードが正しくありません",
       "internalError": "サーバーに問題が発生しました",
@@ -370,6 +371,7 @@
     "selectDateRange": "日付範囲を選択"
   },
   "document": {
+    "title": "Document",
     "document": "Document",
     "name": "Document name",
     "path": "Document path",
@@ -388,7 +390,7 @@
     "translations": "翻訳",
     "preview": "プレビュー",
     "downloadButton": "ダウンロード",
-    "downloadRootButton": "Download Parent",
+    "downloadRootButton": "Download parent",
     "externalWindow": "新しいウインドウで開く",
     "selectAll": "Select all",
     "unselectAll": "Unselect all",
@@ -588,6 +590,7 @@
     "placeholder": "Search in batch searches..."
   },
   "batchSearchResults": {
+    "title": "Batch Search Results",
     "rank": "ランク",
     "query": "検索語",
     "documentPath": "Document Path",
@@ -647,6 +650,7 @@
     }
   },
   "insights": {
+    "title": "Insights",
     "selectProject": "Select a project"
   },
   "widget": {
