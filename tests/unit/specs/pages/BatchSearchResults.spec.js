@@ -75,8 +75,8 @@ describe('BatchSearchResults.vue', () => {
         name: 'batch-search.results',
         path: 'batch-search/:index/:uuid'
       }, {
-        name: 'document',
-        path: '/d/:index/:id/:routing?'
+        name: 'document-standalone',
+        path: '/ds/:index/:id/:routing?'
       }
     ]
   })
@@ -297,7 +297,7 @@ describe('BatchSearchResults.vue', () => {
 
     expect(wrapper.findAll('.batch-search-results__queries__query')).toHaveLength(3)
     expect(wrapper.find('.batch-search-results__queries__query__link').attributes('href'))
-      .toBe(`#/d/${project}/42/42?q=query_01`)
+      .toBe(`#/ds/${project}/42/42?q=query_01`)
   })
 
   it('should cast queries param into array on beforeRouteEnter and beforeRouteUpdate', async () => {

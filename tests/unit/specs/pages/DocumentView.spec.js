@@ -59,32 +59,24 @@ describe('DocumentView.vue', () => {
   it('should call the elasticsearch to retrieve document parent', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
     const spyElasticsearchGet = jest.spyOn(elasticsearch, 'get')
-
     await wrapper.vm.getDoc()
-
-    expect(spyElasticsearchGet).toBeCalledTimes(3)
-    expect(spyElasticsearchGet).toBeCalledWith(expect.objectContaining(
-      { index: project, id: parentId, routing: null }))
+    const payload = { index: project, id: parentId, routing: null }
+    expect(spyElasticsearchGet).toBeCalledWith(expect.objectContaining(payload))
   })
 
   it('should call the API to retrieve document tags', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
-
     await wrapper.vm.getDoc()
-
-    expect(axios.request).toBeCalledTimes(2)
-    expect(axios.request).toBeCalledWith(
-      { url: Api.getFullUrl(`/api/${project}/documents/tags/${id}`) })
+    const url = Api.getFullUrl(`/api/${project}/documents/tags/${id}`)
+    expect(axios.request).toBeCalledWith({ url })
   })
 
   it('should call the API to retrieve document recommendations', async () => {
     wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
 
     await wrapper.vm.getDoc()
-
-    expect(axios.request).toBeCalledTimes(2)
-    expect(axios.request).toBeCalledWith(
-      { url: Api.getFullUrl(`/api/users/recommendationsby?project=${project}&docIds=${id}`) })
+    const url = Api.getFullUrl(`/api/users/recommendationsby?project=${project}&docIds=${id}`)
+    expect(axios.request).toBeCalledWith({ url })
   })
 
   it('should display a document', async () => {

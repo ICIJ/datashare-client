@@ -59,7 +59,7 @@
       class="document-actions__popup btn"
       :class="popupBtnClassDefinition"
       :id="popupBtnId"
-      :to="{ name: 'document-simplified', params: document.routerParams }">
+      :to="{ name: 'document-modal', params: document.routerParams }">
       <fa icon="external-link-alt" fixed-width></fa>
       <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">
         {{ $t('document.externalWindow') }}

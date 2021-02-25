@@ -208,9 +208,10 @@
               </template>
               <template v-slot:cell(documentPath)="{ item }">
                 <router-link
+                  @click.native="openDocumentModal($event, item)"
                   class="batch-search-results__queries__query__link"
                   target="_blank"
-                  :to="{ name: 'document', params: { index: $route.params.index, id: item.documentId, routing: item.rootId }, query: { q: item.query } }">
+                  :to="{ name: 'document-standalone', params: { index: $route.params.index, id: item.documentId, routing: item.rootId }, query: { q: item.query } }">
                   <span class="batch-search-results__queries__query__link__path d-inline-block text-truncate" v-b-tooltip.hover :title="item.documentPath">
                     {{ item.documentPath }}
                   </span>
@@ -243,6 +244,19 @@
           v-if="numberOfPages > 1"></b-pagination-nav>
       </v-wait>
     </div>
+    <b-modal id="document-modal" size="xl" lazy hide-header hide-footer body-class="p-0 overflow-hidden rounded">
+      <document-navbar :index="$route.params.index" :id="documentInModal.id" :routing="documentInModal.routing">
+        <template #back>
+          <a @click="$bvModal.hide('document-modal')" role="button" class="small text-white">
+            <fa icon="chevron-circle-left" />
+            <span class="ml-2">
+              {{ $t('Back to results') }}
+            </span>
+          </a>
+        </template>
+      </document-navbar>
+      <document-view :index="$route.params.index" :id="documentInModal.id" :routing="documentInModal.routing" />
+    </b-modal>
   </div>
 </template>
 
@@ -256,6 +270,8 @@ import Auth from '@/api/resources/Auth'
 import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
+import DocumentNavbar from '@/components/document/DocumentNavbar'
+import DocumentView from '@/pages/DocumentView'
 import PageHeader from '@/components/PageHeader'
 import humanSize from '@/filters/humanSize'
 import utils from '@/mixins/utils'
@@ -274,6 +290,8 @@ export default {
     BatchSearchResultsFilters,
     BatchSearchStatus,
     ContentTypeBadge,
+    DocumentNavbar,
+    DocumentView,
     PageHeader
   },
   mixins: [utils],
@@ -298,6 +316,7 @@ export default {
     return {
       deleteAfterRelaunch: false,
       description: '',
+      documentInModal: {},
       fields: [
         {
           key: 'documentNumber',
@@ -502,6 +521,11 @@ export default {
     },
     changePublished (published) {
       this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
+    },
+    openDocumentModal (event, { documentId: id, rootId: routing }) {
+      event.preventDefault()
+      this.$set(this, 'documentInModal', { id, routing })
+      this.$bvModal.show('document-modal')
     },
     keys,
     moment,
