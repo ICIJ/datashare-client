@@ -3,7 +3,10 @@
     <content-placeholder class="document py-2 px-3" slot="waiting"></content-placeholder>
     <div
       class="d-flex flex-column document"
-      :class="{ 'document--simplified': $route.name === 'document-simplified' }"
+      :class="{
+        'document--standalone': $route.name === 'document-standalone',
+        'document--modal': $route.name === 'document-modal'
+      }"
       v-if="doc"
       v-shortkey="getKeys('tabNavigation')"
       @shortkey="getAction('tabNavigation')">
@@ -102,8 +105,11 @@ export default {
       return this.setTabs()
     }
   },
-  mounted () {
-    this.setTabs()
+  async mounted () {
+    if (!this.$wait.is('load document data')) {
+      await this.getDoc()
+    }
+    await this.setTabs()
   },
   computed: {
     ...mapState('document', ['doc', 'parentDocument', 'tags']),
@@ -235,7 +241,7 @@ export default {
   background: white;
   margin: 0;
 
-  &--simplified {
+  &--standalone, &--modal {
     min-height: 100vh;
   }
 

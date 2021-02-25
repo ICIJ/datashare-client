@@ -132,16 +132,26 @@ export const router = {
             title: ({ i18n }) => i18n.t('insights.title')
           },
           component: () => import('@/pages/Insights')
+        },
+        {
+          name: 'document-standalone',
+          path: '/ds/:index/:id/:routing?',
+          meta: {
+            title: 'Document'
+          },
+          props: true,
+          component: () => import('@/pages/DocumentStandalone')
         }
       ]
     },
     {
-      name: 'document-simplified',
-      path: '/ds/:index/:id/:routing?',
+      name: 'document-modal',
+      path: '/dm/:index/:id/:routing',
       meta: {
         title: 'Document'
       },
-      component: () => import('@/pages/DocumentView')
+      props: true,
+      component: () => import('@/pages/DocumentModal')
     },
     {
       path: '/login',
