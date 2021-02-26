@@ -724,5 +724,17 @@
     "hits": "aucun document | 1 document | %{hits} documents",
     "docs": "doc | docs",
     "datadir": "Accueil"
+  },
+  "quickItemNav": {
+    "previous": {
+      "label": "Previous",
+      "tooltipMac": "Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)",
+      "tooltipOthers": "Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
+    },
+    "next": {
+      "label": "Next",
+      "tooltipMac": "Next document (<kbd>⌘</kbd> + <kbd>→</kbd>)",
+      "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
+    }
   }
 }
