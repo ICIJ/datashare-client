@@ -3,9 +3,21 @@ import { getShortkeyOS } from '@/utils/utils'
 import isFunction from 'lodash/isFunction'
 
 export default {
+  props: {
+    /**
+     * Name of the scope for the shortkey settings.
+     * @default Name of the current component
+     */
+    shortkeyScope: {
+      type: String,
+      default () {
+        return this.$options.name
+      }
+    }
+  },
   methods: {
     getShortkey (name) {
-      return shortkeys[this.$options.name][name]
+      return shortkeys[this.shortkeyScope][name]
     },
     getKeys (name) {
       const shortkey = this.getShortkey(name)

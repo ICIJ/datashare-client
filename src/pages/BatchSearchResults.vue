@@ -206,9 +206,9 @@
               <template v-slot:cell(documentNumber)="{ item }">
                 {{ item.documentNumber + 1 }}
               </template>
-              <template v-slot:cell(documentPath)="{ item }">
+              <template v-slot:cell(documentPath)="{ item, index }">
                 <router-link
-                  @click.native="openDocumentModal($event, item)"
+                  @click.native="openDocumentModal($event, index)"
                   class="batch-search-results__queries__query__link"
                   target="_blank"
                   :to="{ name: 'document-standalone', params: { index: $route.params.index, id: item.documentId, routing: item.rootId }, query: { q: item.query } }">
@@ -245,17 +245,22 @@
       </v-wait>
     </div>
     <b-modal id="document-modal" size="xl" lazy hide-header hide-footer body-class="p-0 overflow-hidden rounded">
-      <document-navbar :index="$route.params.index" :id="documentInModal.id" :routing="documentInModal.routing">
-        <template #back>
-          <a @click="$bvModal.hide('document-modal')" role="button" class="small text-white">
-            <fa icon="chevron-circle-left" />
-            <span class="ml-2">
-              {{ $t('Back to results') }}
-            </span>
-          </a>
-        </template>
-      </document-navbar>
-      <document-view :index="$route.params.index" :id="documentInModal.id" :routing="documentInModal.routing" />
+      <div  v-if="documentInModal" :key="documentInModalIndex">
+        <document-navbar :index="documentInModal.index" :id="documentInModal.id" :routing="documentInModal.routing">
+          <template #back>
+            <a @click="$bvModal.hide('document-modal')" role="button" class="small text-white">
+              <fa icon="chevron-circle-left" />
+              <span class="ml-2">
+                {{ $t('Back to results') }}
+              </span>
+            </a>
+          </template>
+          <template #nav>
+            <quick-item-nav v-model="documentInModalIndex" :total-items="totalItems" />
+          </template>
+        </document-navbar>
+        <document-view :index="documentInModal.index" :id="documentInModal.id" :routing="documentInModal.routing" />
+      </div>
     </b-modal>
   </div>
 </template>
@@ -273,6 +278,7 @@ import ContentTypeBadge from '@/components/ContentTypeBadge'
 import DocumentNavbar from '@/components/document/DocumentNavbar'
 import DocumentView from '@/pages/DocumentView'
 import PageHeader from '@/components/PageHeader'
+import QuickItemNav from '@/components/QuickItemNav'
 import humanSize from '@/filters/humanSize'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
@@ -292,7 +298,8 @@ export default {
     ContentTypeBadge,
     DocumentNavbar,
     DocumentView,
-    PageHeader
+    PageHeader,
+    QuickItemNav
   },
   mixins: [utils],
   props: {
@@ -316,7 +323,7 @@ export default {
     return {
       deleteAfterRelaunch: false,
       description: '',
-      documentInModal: {},
+      documentInModalPageIndex: null,
       fields: [
         {
           key: 'documentNumber',
@@ -408,21 +415,51 @@ export default {
     orderBy () {
       return this.order === 'desc'
     },
-    numberOfPages () {
-      let total = null
+    totalItems () {
       if (this.selectedQueries.length === 0) {
-        total = this.batchSearch.nbResults
+        return this.batchSearch.nbResults
       } else {
-        total = sumBy(keys(this.batchSearch.queries), query => {
+        return sumBy(keys(this.batchSearch.queries), query => {
           if (indexOf(this.selectedQueries, query) > -1) {
             return this.batchSearch.queries[query]
           }
         })
       }
-      return Math.ceil(total / this.perPage)
+    },
+    numberOfPages () {
+      return Math.ceil(this.totalItems / this.perPage)
     },
     isBatchsearchEnded () {
       return this.batchSearch.state === 'FAILURE' || this.batchSearch.state === 'SUCCESS'
+    },
+    hasDocumentInModal () {
+      const pageIndex = this.documentInModalPageIndex
+      return pageIndex !== null && this.results[pageIndex]
+    },
+    documentInModal () {
+      if (!this.hasDocumentInModal) {
+        return null
+      }
+      const document = this.results[this.documentInModalPageIndex]
+      const { documentId: id, rootId: routing, query: q } = document
+      const { index } = this.$route.params
+      return { index, id, routing, q }
+    },
+    documentInModalIndex: {
+      get () {
+        return this.pageOffset + this.documentInModalPageIndex
+      },
+      async set (index) {
+        if (index >= this.pageOffset + this.perPage) {
+          this.page++
+        } else if (index < this.pageOffset) {
+          this.page--
+        }
+        this.documentInModalPageIndex = index - this.pageOffset
+      }
+    },
+    pageOffset () {
+      return (this.page - 1) * this.perPage
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -458,10 +495,14 @@ export default {
       await this.checkIsMyBatchSearch()
       this.$set(this, 'description', this.batchSearch.description)
       this.$set(this, 'name', this.batchSearch.name)
-      const from = (this.page - 1) * this.perPage
+      const from = this.pageOffset
       const size = this.perPage
-      await this.$store.dispatch('batchSearch/getBatchSearchResults',
-        { batchId: this.uuid, from, size, queries: this.queries, sort: this.sort, order: this.order })
+      const batchId = this.uuid
+      const queries = this.queries
+      const sort = this.sort
+      const order = this.order
+      const params = { batchId, from, size, queries, sort, order }
+      await this.$store.dispatch('batchSearch/getBatchSearchResults', params)
       this.$Progress.finish()
       this.$wait.end('load batchSearch results')
     },
@@ -522,9 +563,9 @@ export default {
     changePublished (published) {
       this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
     },
-    openDocumentModal (event, { documentId: id, rootId: routing }) {
+    openDocumentModal (event, pageIndex) {
       event.preventDefault()
-      this.$set(this, 'documentInModal', { id, routing })
+      this.$set(this, 'documentInModalPageIndex', pageIndex)
       this.$bvModal.show('document-modal')
     },
     keys,

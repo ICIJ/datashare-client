@@ -1,4 +1,24 @@
 {
+  "QuickItemNav": {
+    "goToPreviousItem": {
+      "keys": {
+        "mac": ["meta", "arrowleft"],
+        "default": ["ctrl", "arrowleft"]
+      },
+      "action": "goToPreviousItem",
+      "icon": "caret-left",
+      "label": "shortkeys.goToPreviousItem"
+    },
+    "goToNextItem": {
+      "keys": {
+        "mac": ["meta", "arrowright"],
+        "default": ["ctrl", "arrowright"]
+      },
+      "action": "goToNextItem",
+      "icon": "caret-right",
+      "label": "shortkeys.goToNextItem"
+    }
+  },
   "SearchDocumentNavbar": {
     "goToPreviousDocument": {
       "keys": {

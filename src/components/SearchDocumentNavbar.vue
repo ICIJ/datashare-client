@@ -18,37 +18,22 @@
       </router-link>
     </template>
     <template #nav>
-      <span class="document-navbar__nav" v-if="documentIndex > -1">
-        <button @click="goToPreviousDocument" v-shortkey="getKeys('goToPreviousDocument')" @shortkey="getAction('goToPreviousDocument')" :disabled="!hasPreviousDocument" class="btn btn-sm btn-link text-white py-0" id="previous-document-button">
-          <fa icon="angle-left" class="mr-1"></fa>
-          <span class="d-sm-none d-md-inline">
-            {{ $t('search.nav.previous.label') }}
-          </span>
-        </button>
-        <b-tooltip target="previous-document-button" triggers="hover">
-          <span v-html="previousTooltip"></span>
-        </b-tooltip>
-        <button @click="goToNextDocument" v-shortkey="getKeys('goToNextDocument')" @shortkey="getAction('goToNextDocument')" :disabled="!hasNextDocument" class="btn btn-sm btn-link text-white py-0" id="next-document-button">
-          <span class="d-sm-none d-md-inline">
-            {{ $t('search.nav.next.label') }}
-          </span>
-          <fa icon="angle-right" class="ml-1"></fa>
-        </button>
-        <b-tooltip target="next-document-button" triggers="hover">
-          <span v-html="nextTooltip"></span>
-        </b-tooltip>
-      </span>
+      <quick-item-nav v-if="documentIndex > -1"
+                      :has-previous-item="hasPreviousDocument"
+                      :has-next-item="hasNextDocument"
+                      @previous="goToPreviousDocument"
+                      @next="goToNextDocument" />
     </template>
   </document-navbar>
 </template>
 
 <script>
-import { getShortkeyOS } from '@/utils/utils'
 import findIndex from 'lodash/findIndex'
 import first from 'lodash/first'
 import last from 'lodash/last'
 
 import DocumentNavbar from '@/components/document/DocumentNavbar'
+import QuickItemNav from '@/components/QuickItemNav'
 import shortkeys from '@/mixins/shortkeys'
 
 /**
@@ -58,7 +43,8 @@ export default {
   name: 'SearchDocumentNavbar',
   mixins: [shortkeys],
   components: {
-    DocumentNavbar
+    DocumentNavbar,
+    QuickItemNav
   },
   props: {
     /**
@@ -152,12 +138,6 @@ export default {
     },
     nextDocument () {
       return this.response.hits[this.documentIndex + 1]
-    },
-    previousTooltip () {
-      return getShortkeyOS() === 'mac' ? this.$t('search.nav.previous.tooltipMac') : this.$t('search.nav.previous.tooltipOthers')
-    },
-    nextTooltip () {
-      return getShortkeyOS() === 'mac' ? this.$t('search.nav.next.tooltipMac') : this.$t('search.nav.next.tooltipOthers')
     }
   }
 }

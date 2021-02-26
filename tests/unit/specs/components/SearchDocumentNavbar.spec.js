@@ -4,7 +4,6 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 
 import SearchDocumentNavbar from '@/components/SearchDocumentNavbar'
 import { Core } from '@/core'
-import { getShortkeyOS } from '@/utils/utils'
 
 jest.mock('@/utils/utils')
 jest.mock('axios')
@@ -26,23 +25,10 @@ describe('SearchDocumentNavbar.vue', () => {
 
   afterAll(() => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    jest.unmock('@/utils/utils')
     jest.unmock('axios')
   })
 
   it('should display a "Back to the search results" link', () => {
     expect(wrapper.find('.document-navbar__back').exists()).toBeTruthy()
-  })
-
-  it('should return the tooltip for mac', () => {
-    getShortkeyOS.mockReturnValueOnce('mac')
-
-    expect(wrapper.vm.previousTooltip).toBe('Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)')
-  })
-
-  it('should return the tooltip for NOT mac', () => {
-    getShortkeyOS.mockReturnValueOnce('default')
-
-    expect(wrapper.vm.previousTooltip).toBe('Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)')
   })
 })
