@@ -724,5 +724,17 @@
     "hits": "no hay archivos | 1 archivo | %{hits} archivos",
     "docs": "archivo | archivos",
     "datadir": "Inicio"
+  },
+  "quickItemNav": {
+    "previous": {
+      "label": "Previous",
+      "tooltipMac": "Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)",
+      "tooltipOthers": "Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
+    },
+    "next": {
+      "label": "Next",
+      "tooltipMac": "Next document (<kbd>⌘</kbd> + <kbd>→</kbd>)",
+      "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
+    }
   }
 }
