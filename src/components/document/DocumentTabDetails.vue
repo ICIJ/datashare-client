@@ -49,14 +49,14 @@
           </div>
         </div>
         <div class="col-sm-8">
-          <div class="w-100 text-truncate" :class="field.class">
+          <div class="w-100" :class="field.class">
             <component :is="field.component || 'div'" :title="field.value">
               <span v-if="field.value === 'unknown'">
                 {{ $t('document.unknown') }}
               </span>
-              <span v-else>
+              <active-text-truncate v-else>
                 {{ field.value }}
-              </span>
+              </active-text-truncate>
             </component>
           </div>
         </div>
@@ -73,9 +73,9 @@
           </div>
         </div>
         <div class="col-sm-8">
-          <div class="w-100 text-truncate">
+          <active-text-truncate>
             {{ document.meta(name) }}
-          </div>
+          </active-text-truncate>
         </div>
       </div>
       <div class="text-center mt-4">
@@ -98,176 +98,176 @@ import { getDocumentTypeLabel, getExtractionLevelTranslationKey } from '@/utils/
  * A panel displaying details and metadata about an indexed document.
  */
 export default {
-    name: 'DocumentTabDetails',
-    props: {
+  name: 'DocumentTabDetails',
+  props: {
     /**
      * The selected document
      */
-        document: {
-            type: Object
-        },
-        /**
+    document: {
+      type: Object
+    },
+    /**
      * The parent document (if any)
      */
-        parentDocument: {
-            type: Object
-        }
-    },
-    components: {
-        DocumentTagsForm
-    },
-    filters: {
-        startCase
-    },
-    data () {
-        return {
-            index: this.$store.state.search.index,
-            metadataVisible: false
-        }
-    },
-    computed: {
-        ...mapState('document', ['tags']),
-        documentPath () {
-            if (this.$config.get('mountedDataDir')) {
-                return this.document.source.path.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
-            } else {
-                return this.document.source.path
-            }
-        },
-        documentDirname () {
-            if (this.$config.get('mountedDataDir')) {
-                return this.document.source.dirname.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
-            } else {
-                return this.document.source.dirname
-            }
-        },
-        metaFieldsNames () {
-            if (this.metadataVisible) {
-                return filter(this.document.metas, name => map(this.canonicalFields, 'name').indexOf(name) === -1)
-            } else {
-                return []
-            }
-        },
-        canonicalFields () {
-            return [
-                {
-                    name: '_id',
-                    label: this.$t('document.id'),
-                    class: 'document__content__id',
-                    value: this.document.id,
-                    component: 'code'
-                },
-                {
-                    name: 'name',
-                    label: this.$t('document.name'),
-                    class: 'document__content__basename',
-                    value: this.document.basename
-                },
-                {
-                    name: 'path',
-                    label: this.$t('document.path'),
-                    class: 'document__content__path',
-                    value: this.documentPath
-                },
-                {
-                    name: 'dirname',
-                    label: this.$t('document.dirname'),
-                    class: 'document__content__dirname',
-                    value: this.documentDirname
-                },
-                {
-                    name: 'metadata.tika_metadata_creation_date',
-                    label: this.$t('document.creationDate'),
-                    class: 'document__content__creation-date',
-                    value: this.document.meta('creation_date')
-                },
-                {
-                    name: 'metadata.tika_metadata_author',
-                    label: this.$t('document.author'),
-                    class: 'document__content__author',
-                    value: this.document.meta('author')
-                },
-                {
-                    name: 'extractionDate',
-                    label: this.$t('document.extractionDate'),
-                    class: 'document__content__extraction-date',
-                    value: this.document.source.extractionDate
-                },
-                {
-                    name: 'contentLength',
-                    label: this.$t('document.size'),
-                    class: 'document__content__content-length',
-                    value: this.document.humanSize,
-                    rawValue: this.document.contentLength
-                },
-                {
-                    name: 'language',
-                    label: this.$t('document.contentLanguage'),
-                    class: 'document__content__language',
-                    value: this.$t(`filter.lang.${this.document.source.language}`),
-                    rawValue: this.document.source.language
-                },
-                {
-                    name: 'contentType',
-                    label: this.$t('document.contentType'),
-                    class: 'document__content__content-type',
-                    value: this.getDocumentTypeLabel(this.document.source.contentType),
-                    rawValue: this.document.source.contentType
-                },
-                {
-                    name: 'contentEncoding',
-                    label: this.$t('document.contentEncoding'),
-                    class: 'document__content__content-encoding',
-                    value: this.document.source.contentEncoding
-                },
-                {
-                    name: 'extractionLevel',
-                    label: this.$t('filter.extractionLevel'),
-                    class: 'document__content__tree-level',
-                    value: this.$t(this.getExtractionLevelTranslationKey(this.document.source.extractionLevel)),
-                    rawValue: this.document.source.extractionLevel
-                },
-                {
-                    name: 'metadata.tika_metadata_message_raw_header_thread_index',
-                    label: this.$t('document.threadIndex'),
-                    class: 'document__content__thread',
-                    value: this.document.threadIndex
-                },
-                {
-                    name: 'parentDocument',
-                    label: this.$t('document.parent'),
-                    class: 'document__content__parent',
-                    value: get(this, 'parentDocument.basename', null)
-                },
-                {
-                    name: 'contentTextLength',
-                    label: this.$t('document.contentTextLength'),
-                    class: 'document__content__content-text-length',
-                    value: this.document.source.contentTextLength
-                }
-            ]
-        },
-        filteredCanonicalFields () {
-            return filter(this.canonicalFields, field => field.value)
-        },
-        searchChildrenDocumentParams () {
-            const q = `_routing:${this.document.id}`
-            const query = { q, index: this.index }
-            return { name: 'search', query }
-        },
-        searchDirnameDocumentParams () {
-            const q = `dirname:"${this.documentDirname}"`
-            const query = { q, index: this.index }
-            return { name: 'search', query }
-        }
-    },
-    async created () {
-        await this.$store.dispatch('document/getTags')
-    },
-    methods: {
-        getDocumentTypeLabel,
-        getExtractionLevelTranslationKey
+    parentDocument: {
+      type: Object
     }
+  },
+  components: {
+    DocumentTagsForm
+  },
+  filters: {
+    startCase
+  },
+  data () {
+    return {
+      index: this.$store.state.search.index,
+      metadataVisible: false
+    }
+  },
+  computed: {
+    ...mapState('document', ['tags']),
+    documentPath () {
+      if (this.$config.get('mountedDataDir')) {
+        return this.document.source.path.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
+      } else {
+        return this.document.source.path
+      }
+    },
+    documentDirname () {
+      if (this.$config.get('mountedDataDir')) {
+        return this.document.source.dirname.replace(this.$config.get('dataDir'), this.$config.get('mountedDataDir'))
+      } else {
+        return this.document.source.dirname
+      }
+    },
+    metaFieldsNames () {
+      if (this.metadataVisible) {
+        return filter(this.document.metas, name => map(this.canonicalFields, 'name').indexOf(name) === -1)
+      } else {
+        return []
+      }
+    },
+    canonicalFields () {
+      return [
+        {
+          name: '_id',
+          label: this.$t('document.id'),
+          class: 'document__content__id',
+          value: this.document.id,
+          component: 'code'
+        },
+        {
+          name: 'name',
+          label: this.$t('document.name'),
+          class: 'document__content__basename',
+          value: this.document.basename
+        },
+        {
+          name: 'path',
+          label: this.$t('document.path'),
+          class: 'document__content__path',
+          value: this.documentPath
+        },
+        {
+          name: 'dirname',
+          label: this.$t('document.dirname'),
+          class: 'document__content__dirname',
+          value: this.documentDirname
+        },
+        {
+          name: 'metadata.tika_metadata_creation_date',
+          label: this.$t('document.creationDate'),
+          class: 'document__content__creation-date',
+          value: this.document.meta('creation_date')
+        },
+        {
+          name: 'metadata.tika_metadata_author',
+          label: this.$t('document.author'),
+          class: 'document__content__author',
+          value: this.document.meta('author')
+        },
+        {
+          name: 'extractionDate',
+          label: this.$t('document.extractionDate'),
+          class: 'document__content__extraction-date',
+          value: this.document.source.extractionDate
+        },
+        {
+          name: 'contentLength',
+          label: this.$t('document.size'),
+          class: 'document__content__content-length',
+          value: this.document.humanSize,
+          rawValue: this.document.contentLength
+        },
+        {
+          name: 'language',
+          label: this.$t('document.contentLanguage'),
+          class: 'document__content__language',
+          value: this.$t(`filter.lang.${this.document.source.language}`),
+          rawValue: this.document.source.language
+        },
+        {
+          name: 'contentType',
+          label: this.$t('document.contentType'),
+          class: 'document__content__content-type',
+          value: this.getDocumentTypeLabel(this.document.source.contentType),
+          rawValue: this.document.source.contentType
+        },
+        {
+          name: 'contentEncoding',
+          label: this.$t('document.contentEncoding'),
+          class: 'document__content__content-encoding',
+          value: this.document.source.contentEncoding
+        },
+        {
+          name: 'extractionLevel',
+          label: this.$t('filter.extractionLevel'),
+          class: 'document__content__tree-level',
+          value: this.$t(this.getExtractionLevelTranslationKey(this.document.source.extractionLevel)),
+          rawValue: this.document.source.extractionLevel
+        },
+        {
+          name: 'metadata.tika_metadata_message_raw_header_thread_index',
+          label: this.$t('document.threadIndex'),
+          class: 'document__content__thread',
+          value: this.document.threadIndex
+        },
+        {
+          name: 'parentDocument',
+          label: this.$t('document.parent'),
+          class: 'document__content__parent',
+          value: get(this, 'parentDocument.basename', null)
+        },
+        {
+          name: 'contentTextLength',
+          label: this.$t('document.contentTextLength'),
+          class: 'document__content__content-text-length',
+          value: this.document.source.contentTextLength
+        }
+      ]
+    },
+    filteredCanonicalFields () {
+      return filter(this.canonicalFields, field => field.value)
+    },
+    searchChildrenDocumentParams () {
+      const q = `_routing:${this.document.id}`
+      const query = { q, index: this.index }
+      return { name: 'search', query }
+    },
+    searchDirnameDocumentParams () {
+      const q = `dirname:"${this.documentDirname}"`
+      const query = { q, index: this.index }
+      return { name: 'search', query }
+    }
+  },
+  async created () {
+    await this.$store.dispatch('document/getTags')
+  },
+  methods: {
+    getDocumentTypeLabel,
+    getExtractionLevelTranslationKey
+  }
 }
 </script>
 

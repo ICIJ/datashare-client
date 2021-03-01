@@ -5,10 +5,10 @@
       <span class="search-results-list-link__basename">
         <document-sliced-name :document="document" />
       </span>
-      <span class="search-results-list-link__location">
+      <active-text-truncate class="search-results-list-link__location">
         <fa icon="folder" class="mr-1" />
         {{ location }}
-      </span>
+      </active-text-truncate>
       <div class="search-results-list-link__fragments" v-if="document.highlight" v-html="document.highlight.content.join(' [...] ')"></div>
     </div>
   </router-link>
@@ -126,10 +126,6 @@ export default {
 
     &__location {
       display: block;
-      white-space: nowrap;
-      width: 100%;
-      overflow: hidden;
-      text-overflow: ellipsis;
       color: $text-muted;
       font-size: $font-size-sm;
     }

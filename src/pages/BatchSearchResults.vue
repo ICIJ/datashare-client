@@ -212,9 +212,9 @@
                   class="batch-search-results__queries__query__link"
                   target="_blank"
                   :to="{ name: 'document-standalone', params: { index: $route.params.index, id: item.documentId, routing: item.rootId }, query: { q: item.query } }">
-                  <span class="batch-search-results__queries__query__link__path d-inline-block text-truncate" v-b-tooltip.hover :title="item.documentPath">
+                  <active-text-truncate class="batch-search-results__queries__query__link__path" v-b-tooltip.hover :title="item.documentPath">
                     {{ item.documentPath }}
-                  </span>
+                  </active-text-truncate>
                 </router-link>
               </template>
               <template v-slot:cell(creationDate)="{ item }">
@@ -610,7 +610,8 @@ export default {
       }
 
       &__path {
-        max-width: 400px;
+        max-width: 30vw;
+        display: block;
       }
     }
   }
