@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import { Core } from '@/core'
@@ -21,7 +21,7 @@ describe('DocumentContent.vue', () => {
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   const id = 'document'
-  const { localVue, store } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
 
   beforeEach(() => getOS.mockReset())
 
@@ -43,12 +43,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       await wrapper.vm.transformContent()
@@ -69,12 +69,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       await wrapper.vm.transformContent()
@@ -90,12 +90,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       await wrapper.vm.transformContent()
@@ -113,12 +113,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/getContent')
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       expect(wrapper.exists('.document-content__ner-toggler')).toBeTruthy()
@@ -131,12 +131,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       await wrapper.vm.transformContent()
@@ -153,12 +153,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/getFirstPageForNamedEntityInCategory', { category: 'PERSON' })
       store.commit('document/toggleShowNamedEntities', true)
       const wrapper = await shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       expect(store.state.document.showNamedEntities).toBeTruthy()
@@ -176,12 +176,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       store.commit('document/toggleShowNamedEntities', false)
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       await wrapper.vm.$nextTick()
@@ -200,12 +200,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       await wrapper.vm.$nextTick()
@@ -219,12 +219,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
@@ -240,12 +240,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
@@ -261,12 +261,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'full' })
@@ -302,12 +302,12 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
       const wrapper = shallowMount(DocumentContent, {
+        i18n,
         localVue,
         store,
         propsData: {
           document: store.state.document.doc
-        },
-        mocks: { $t: msg => msg }
+        }
       })
 
       wrapper.vm.$set(wrapper.vm, 'localSearchTerm', { label: 'test.*', regex: true })
@@ -330,9 +330,8 @@ describe('DocumentContent.vue', () => {
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
-      const mocks = { $t: msg => msg }
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
 
       expect(wrapper.findComponent(ContentTextLengthWarning).exists()).toBeFalsy()
     })
@@ -349,9 +348,8 @@ describe('DocumentContent.vue', () => {
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
-      const mocks = { $t: msg => msg }
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
 
       expect(wrapper.findComponent(ContentTextLengthWarning).exists()).toBeTruthy()
     })
@@ -370,9 +368,8 @@ describe('DocumentContent.vue', () => {
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
-      const mocks = { $t: msg => msg }
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
 
       expect(document.content).toBeFalsy()
       await wrapper.vm.loadContent()
@@ -391,9 +388,8 @@ describe('DocumentContent.vue', () => {
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
-      const mocks = { $t: msg => msg }
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
 
       expect(document.content).toBeFalsy()
       await wrapper.vm.loadContent()
@@ -412,9 +408,8 @@ describe('DocumentContent.vue', () => {
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
-      const mocks = { $t: msg => msg }
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
 
       expect(document.content).toBeFalsy()
       await store.commit('document/ignoreContentTextLengthWarning')
@@ -435,9 +430,8 @@ describe('DocumentContent.vue', () => {
 
     // Build the wrapper with the created document
     const document = store.state.document.doc
-    const mocks = { $t: msg => msg }
     const propsData = { document }
-    const wrapper = shallowMount(DocumentContent, { localVue, store, propsData, mocks })
+    const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
 
     const mockCallback = jest.fn()
     wrapper.vm.$root.$on('document::content-loaded', mockCallback)

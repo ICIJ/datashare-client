@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import find from 'lodash/find'
+import { find } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
