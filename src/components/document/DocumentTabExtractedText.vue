@@ -5,7 +5,7 @@
       <document-thread :document="document"></document-thread>
     </template>
     <template v-else>
-      <document-translated-content :document="document"></document-translated-content>
+      <document-translated-content :document="document" :q="q"></document-translated-content>
     </template>
   </div>
 </template>
@@ -26,6 +26,13 @@ export default {
      */
     document: {
       type: Object
+    },
+    /**
+     * Local search query inside the extracted text.
+     */
+    q: {
+      type: String,
+      default: ''
     }
   },
   components: {

@@ -92,6 +92,13 @@ export default {
     },
     index: {
       type: String
+    },
+    /**
+     * Local search query inside the extracted text.
+     */
+    q: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -127,7 +134,8 @@ export default {
           component: () => import('@/components/document/DocumentTabExtractedText'),
           icon: 'align-left',
           props: {
-            document: this.doc
+            document: this.doc,
+            q: this.q
           }
         },
         {

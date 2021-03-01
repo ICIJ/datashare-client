@@ -16,11 +16,11 @@
             {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
           </button>
         </div>
-        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :content-translation="contentTranslation" />
+        <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :q="q" :content-translation="contentTranslation" />
       </div>
     </template>
     <template v-else>
-      <document-content ref="content" class="document-translated-content__original" :document="document" />
+      <document-content ref="content" class="document-translated-content__original" :document="document" :q="q" />
     </template>
   </div>
 </template>
@@ -42,6 +42,13 @@ export default {
      */
     document: {
       type: Object
+    },
+    /**
+     * Local search query inside the extracted text.
+     */
+    q: {
+      type: String,
+      default: ''
     }
   },
   components: {

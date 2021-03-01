@@ -39,6 +39,13 @@ export default {
     contentTranslation: {
       type: String,
       default: null
+    },
+    /**
+     * Local search query inside the extracted text.
+     */
+    q: {
+      type: String,
+      default: ''
     }
   },
   data () {
@@ -47,7 +54,7 @@ export default {
       hasStickyToolbox: false,
       localSearchIndex: 0,
       localSearchOccurrences: 0,
-      localSearchTerm: { label: '' },
+      localSearchTerm: { label: this.q },
       localSearchWorker: null,
       localSearchWorkerInProgress: false,
       transformedContent: ''
@@ -58,6 +65,11 @@ export default {
     this.hasNamedEntities = !!this.namedEntities.length || !!await this.getNamedEntitiesTotal()
     // Apply the transformation pipeline once
     await this.transformContent()
+    // Initial local query, we need to jump to the result
+    if (this.q) {
+      this.hasStickyToolbox = true
+      this.$nextTick(this.jumpToActiveLocalSearchTerm)
+    }
   },
   beforeDestroy () {
     this.terminateLocalSearchWorker()

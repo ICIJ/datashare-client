@@ -24,6 +24,13 @@ export default {
     },
     index: {
       type: String
+    },
+    /**
+     * Local search query inside the extracted text.
+     */
+    q: {
+      type: String,
+      default: ''
     }
   }
 }

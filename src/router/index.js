@@ -139,7 +139,9 @@ export const router = {
           meta: {
             title: 'Document'
           },
-          props: true,
+          props (route) {
+            return { ...route.params, ...route.query }
+          },
           component: () => import('@/pages/DocumentStandalone')
         }
       ]
@@ -150,7 +152,9 @@ export const router = {
       meta: {
         title: 'Document'
       },
-      props: true,
+      props (route) {
+        return { ...route.params, ...route.query }
+      },
       component: () => import('@/pages/DocumentModal')
     },
     {

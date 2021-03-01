@@ -244,7 +244,7 @@
           v-if="numberOfPages > 1"></b-pagination-nav>
       </v-wait>
     </div>
-    <b-modal id="document-modal" size="xl" lazy hide-header hide-footer body-class="p-0 overflow-hidden rounded">
+    <b-modal id="document-modal" size="xl" lazy hide-header hide-footer body-class="p-0">
       <div  v-if="documentInModal" :key="documentInModalIndex">
         <document-navbar :index="documentInModal.index" :id="documentInModal.id" :routing="documentInModal.routing">
           <template #back>
@@ -259,7 +259,7 @@
             <quick-item-nav v-model="documentInModalIndex" :total-items="totalItems" />
           </template>
         </document-navbar>
-        <document-view :index="documentInModal.index" :id="documentInModal.id" :routing="documentInModal.routing" />
+        <document-view :index="documentInModal.index" :id="documentInModal.id" :routing="documentInModal.routing" :q="documentInModal.q" />
       </div>
     </b-modal>
   </div>
