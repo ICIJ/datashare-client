@@ -40,9 +40,7 @@
 </template>
 
 <script>
-import lowerCase from 'lodash/lowerCase'
-import noop from 'lodash/noop'
-import startCase from 'lodash/startCase'
+import { lowerCase, noop, startCase } from 'lodash'
 import { createHelpers } from 'vuex-map-fields'
 
 import utils from '@/mixins/utils'
@@ -83,10 +81,10 @@ export default {
     ])
   },
   methods: {
-    submitFindNamedEntities () {
-      this.finally(this.$store.dispatch('indexing/submitFindNamedEntities').then(() => {
-        this.$store.commit('indexing/resetFindNamedEntitiesForm')
-      }))
+    async submitFindNamedEntities () {
+      await this.$store.dispatch('indexing/submitFindNamedEntities')
+      this.$store.commit('indexing/resetFindNamedEntitiesForm')
+      this.finally()
     }
   },
   async mounted () {
@@ -99,7 +97,7 @@ export default {
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .find-named-entities-form {
     background: darken($primary, 20);
     color: white;

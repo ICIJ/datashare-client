@@ -1,5 +1,5 @@
-import toLower from 'lodash/toLower'
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import { toLower } from 'lodash'
+import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 import VueRouter from 'vue-router'
 
@@ -15,19 +15,15 @@ jest.mock('axios', () => {
   }
 })
 
-const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
-const router = new VueRouter()
-
 describe('SearchResultsTable.vue', () => {
+  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+  const router = new VueRouter()
   const project = toLower('SearchResultsTable')
   esConnectionHelper(project)
   const es = esConnectionHelper.es
-  let wrapper
+  let wrapper = null
 
-  beforeAll(() => {
-    jest.unmock('axios')
-    store.commit('search/index', project)
-  })
+  beforeAll(() => store.commit('search/index', project))
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocuments()
@@ -83,9 +79,9 @@ describe('SearchResultsTable.vue', () => {
   it('should select all documents', async () => {
     axios.request.mockResolvedValue({ data: [{ id: 'document_01' }, { id: 'document_03' }, { id: 'document_03' }, { id: 'document_04' }] })
     wrapper = mount(SearchResultsTable, { i18n, localVue, store, router })
-    await wrapper.vm.$set(wrapper.vm, 'selected', [{ id: 'document_01' }])
+    await wrapper.setData({ selected: [{ id: 'document_01' }] })
     await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
+    expect(wrapper.vm.selected).toHaveLength(1)
 
     await wrapper.findAll('.list-group-item-action').at(0).trigger('click')
 
