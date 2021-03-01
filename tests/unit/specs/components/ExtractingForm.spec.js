@@ -12,13 +12,12 @@ jest.mock('axios', () => {
   }
 })
 
-const { localVue, router, store } = Core.init(createLocalVue()).useAll()
-
 describe('ExtractingForm.vue', () => {
-  let wrapper
+  const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
+  let wrapper = null
 
   beforeEach(() => {
-    wrapper = shallowMount(ExtractingForm, { localVue, router, store, mocks: { $t: msg => msg } })
+    wrapper = shallowMount(ExtractingForm, { i18n, localVue, router, store })
     axios.request.mockClear()
   })
 
@@ -41,7 +40,7 @@ describe('ExtractingForm.vue', () => {
   })
 
   it('should call extract action with OCR option', () => {
-    wrapper.vm.ocr = true
+    wrapper.vm.$set(wrapper.vm, 'ocr', true)
     wrapper.vm.submitExtract()
 
     expect(axios.request).toBeCalledTimes(1)
@@ -58,7 +57,7 @@ describe('ExtractingForm.vue', () => {
   })
 
   it('should reset the modal params on submitting the form', async () => {
-    wrapper.vm.ocr = true
+    wrapper.vm.$set(wrapper.vm, 'ocr', true)
     await wrapper.vm.submitExtract()
 
     expect(wrapper.vm.ocr).toBeFalsy()

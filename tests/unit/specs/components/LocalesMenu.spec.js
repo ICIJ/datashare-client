@@ -1,7 +1,8 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
+import flushPromises from 'flush-promises'
 
-import { Core } from '@/core'
 import LocalesMenu from '@/components/LocalesMenu'
+import { Core } from '@/core'
 
 describe('LocalesMenu', () => {
   const { localVue, i18n } = Core.init(createLocalVue()).useAll()
@@ -46,8 +47,8 @@ describe('LocalesMenu', () => {
     it('should switch from English to French interface language', async () => {
       expect(wrapper.find('.locales-menu__button').text()).toBe('English')
 
-      await wrapper.findAll('.dropdown-item').at(1).trigger('click')
-      await wrapper.vm.$nextTick()
+      wrapper.findAll('.dropdown-item').at(1).trigger('click')
+      await flushPromises()
 
       expect(wrapper.find('.locales-menu__button').text()).toBe('Français')
       expect(localStorage.getItem('locale')).toBe('fr')
@@ -56,8 +57,8 @@ describe('LocalesMenu', () => {
     it('should switch from English to Spanish interface language', async () => {
       expect(wrapper.find('.locales-menu__button').text()).toBe('English')
 
-      await wrapper.findAll('.dropdown-item').at(2).trigger('click')
-      await wrapper.vm.$nextTick()
+      wrapper.findAll('.dropdown-item').at(2).trigger('click')
+      await flushPromises()
 
       expect(wrapper.find('.locales-menu__button').text()).toBe('Español')
       expect(localStorage.getItem('locale')).toBe('es')
@@ -66,8 +67,8 @@ describe('LocalesMenu', () => {
     it('should switch from English to Japan interface language', async () => {
       expect(wrapper.find('.locales-menu__button').text()).toBe('English')
 
-      await wrapper.findAll('.dropdown-item').at(3).trigger('click')
-      await wrapper.vm.$nextTick()
+      wrapper.findAll('.dropdown-item').at(3).trigger('click')
+      await flushPromises()
 
       expect(wrapper.find('.locales-menu__button').text()).toBe('日本語')
       expect(localStorage.getItem('locale')).toBe('ja')

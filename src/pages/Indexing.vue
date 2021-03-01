@@ -4,29 +4,29 @@
       <div>
         <div class="text-right">
           <button class="btn btn-primary mr-2 btn-extract" type="button" @click="openExtractingForm">
-            <fa icon="rocket" class="mr-2" />
+            <fa icon="rocket" class="mr-2"></fa>
             {{ $t('indexing.extractText') }}
           </button>
           <span class="span-find-named-entities" v-b-tooltip.hover :title="findNamedEntitiesTooltip">
             <button class="btn btn-primary btn-find-named-entites mr-2" type="button"
                     :disabled="isPendingTasks" @click="openFindNamedEntitiesForm">
-              <fa icon="user-tag" class="mr-2" />
+              <fa icon="user-tag" class="mr-2"></fa>
               {{ $t('indexing.findNamedEntities') }}
             </button>
           </span>
         </div>
         <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
           <template #modal-title>
-            <fa icon="rocket" class="mr-1" />
+            <fa icon="rocket" class="mr-1"></fa>
             {{ $t('indexing.extractText') }}
           </template>
-          <extracting-form id="extracting-form" :finally="closeExtractingForm" />
+          <extracting-form id="extracting-form" :finally="closeExtractingForm"></extracting-form>
         </b-modal>
         <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md">
           <template #modal-title>
             {{ $t('indexing.findNamedEntities') }}
           </template>
-          <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm" />
+          <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm"></find-named-entities-form>
         </b-modal>
       </div>
     </page-header>
@@ -38,7 +38,7 @@
           </h3>
         </div>
         <v-wait for="load indexing tasks">
-          <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-3" />
+          <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-3"></fa>
           <ul class="list-group list-group-flush" v-if="tasks.length">
             <li v-for="task in tasks" :key="task.name" class="indexing__tasks list-group-item d-flex">
               <div class="col">
@@ -59,7 +59,7 @@
               <div class="col-md-auto p-0 my-auto">
                 <button class="btn btn-link btn-stop-task" :title="$t('indexing.stopTask')"
                         @click="task.state === 'RUNNING' ? stopTask(task.name) : ''" :disabled="task.state !== 'RUNNING'">
-                  <fa icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '']" />
+                  <fa icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '']"></fa>
                 </button>
               </div>
             </li>
@@ -75,7 +75,7 @@
           </button>
           <button class="btn btn-primary btn-delete-done-tasks"
                   type="button" :disabled="!isDoneTasks" @click="deleteDoneTasks">
-            <fa icon="trash-alt" class="mr-1" />
+            <fa icon="trash-alt" class="mr-1"></fa>
             {{ $t('indexing.deleteDoneTasks') }}
           </button>
         </div>
@@ -85,8 +85,7 @@
 </template>
 
 <script>
-import filter from 'lodash/filter'
-import last from 'lodash/last'
+import { filter, last } from 'lodash'
 import { mapState } from 'vuex'
 
 import ExtractingForm from '@/components/ExtractingForm'
@@ -168,15 +167,15 @@ export default {
     getProgress (value, state) {
       let res
       switch (value) {
-        case -2.0 :
-        case 1.0 :
-          res = (state === 'RUNNING') ? 99 : 100
-          break
-        case -1.0 :
-          res = 0
-          break
-        default :
-          res = Math.min(Math.round(value * 100), 99)
+      case -2.0 :
+      case 1.0 :
+        res = (state === 'RUNNING') ? 99 : 100
+        break
+      case -1.0 :
+        res = 0
+        break
+      default :
+        res = Math.min(Math.round(value * 100), 99)
       }
       return res
     }

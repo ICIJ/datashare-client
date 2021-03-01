@@ -70,7 +70,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .extracting-form {
     background: darken($primary, 20);
     color: white;

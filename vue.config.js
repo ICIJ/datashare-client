@@ -63,7 +63,7 @@ module.exports = {
         publicPath: '/'
       })
 
-    // Exclude Worker files from vue-cli js rule to avoid inconsistancy and caching
+    // Exclude Worker files from vue-cli js rule to avoid inconsistency and caching
     // @see https://github.com/vuejs/vue-cli/issues/2028#issuecomment-410352587
     config.module.rule('js').exclude.add(/\.worker\.js$/)
 

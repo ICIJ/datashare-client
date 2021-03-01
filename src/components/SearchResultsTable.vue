@@ -63,7 +63,7 @@
 </template>
 
 <script>
-import find from 'lodash/find'
+import { find } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
@@ -192,25 +192,25 @@ export default {
     async onClick (actionId) {
       this.$set(this, 'isBusy', true)
       switch (actionId) {
-        case 'selectAll':
-          if (this.isAllSelected) {
-            this.$refs.selectableTable.clearSelected()
-            this.$bvToast.toast(this.$t('document.unselected'), { noCloseButton: true, variant: 'success' })
-          } else {
-            this.$refs.selectableTable.selectAllRows()
-            this.$bvToast.toast(this.$t('document.selected'), { noCloseButton: true, variant: 'success' })
-          }
-          break
-        case 'star':
-          await this.$store.dispatch('search/starDocuments', this.selected)
-          this.$bvToast.toast(this.$t('document.starred'), { noCloseButton: true, variant: 'success' })
-          break
-        case 'unstar':
-          await this.$store.dispatch('search/unstarDocuments', this.selected)
-          this.$bvToast.toast(this.$t('document.unstarred'), { noCloseButton: true, variant: 'success' })
-          break
-        default:
-          break
+      case 'selectAll':
+        if (this.isAllSelected) {
+          this.$refs.selectableTable.clearSelected()
+          this.$bvToast.toast(this.$t('document.unselected'), { noCloseButton: true, variant: 'success' })
+        } else {
+          this.$refs.selectableTable.selectAllRows()
+          this.$bvToast.toast(this.$t('document.selected'), { noCloseButton: true, variant: 'success' })
+        }
+        break
+      case 'star':
+        await this.$store.dispatch('search/starDocuments', this.selected)
+        this.$bvToast.toast(this.$t('document.starred'), { noCloseButton: true, variant: 'success' })
+        break
+      case 'unstar':
+        await this.$store.dispatch('search/unstarDocuments', this.selected)
+        this.$bvToast.toast(this.$t('document.unstarred'), { noCloseButton: true, variant: 'success' })
+        break
+      default:
+        break
       }
       this.$set(this, 'isBusy', false)
     },
