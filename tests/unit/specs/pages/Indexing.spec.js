@@ -1,5 +1,6 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
+import flushPromises from 'flush-promises'
 
 import Api from '@/api'
 import { Core } from '@/core'
@@ -96,9 +97,8 @@ describe('Indexing.vue', () => {
 
     expect(wrapper.vm.tasks).toHaveLength(1)
 
-    await wrapper.find('.btn-stop-pending-tasks').trigger('click')
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
+    wrapper.find('.btn-stop-pending-tasks').trigger('click')
+    await flushPromises()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -112,9 +112,8 @@ describe('Indexing.vue', () => {
     await store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     expect(wrapper.vm.tasks).toHaveLength(1)
 
-    await wrapper.find('.btn-delete-done-tasks').trigger('click')
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
+    wrapper.find('.btn-delete-done-tasks').trigger('click')
+    await flushPromises()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -138,9 +137,8 @@ describe('Indexing.vue', () => {
 
     expect(wrapper.findAll('.btn-stop-task')).toHaveLength(1)
 
-    await wrapper.find('.btn-stop-task').trigger('click')
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
+    wrapper.find('.btn-stop-task').trigger('click')
+    await flushPromises()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({

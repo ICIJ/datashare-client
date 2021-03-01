@@ -75,9 +75,6 @@ describe('FindNamedEntitiesForm.vue', () => {
   it('should reset the modal params on submitting the form', async () => {
     wrapper.vm.$set(wrapper.vm, 'pipeline', 'ANOTHERNLP')
     await wrapper.vm.submitFindNamedEntities()
-    await wrapper.vm.$nextTick()
-    await wrapper.vm.$nextTick()
-    // await wrapper.vm.$nextTick()
 
     expect(wrapper.vm.pipeline).toBe('CORENLP')
   })
