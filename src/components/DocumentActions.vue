@@ -77,7 +77,6 @@ import { mapState } from 'vuex'
 
 import DocumentTypeCard from '@/components/DocumentTypeCard'
 import RouterLinkPopup from '@/components/RouterLinkPopup'
-import features from '@/mixins/features'
 
 /**
  * A list actions to apply to a document
@@ -88,7 +87,6 @@ export default {
     DocumentTypeCard,
     RouterLinkPopup
   },
-  mixins: [features],
   props: {
     /**
      * The selected document
