@@ -19,7 +19,7 @@ jobs:
   # This job will build the client environment with the correct dependencies
   build:
     docker:
-      - image: circleci/node:10.15.2
+      - image: circleci/node:14.15.5
     working_directory: ~/datashare-client
     steps:
       - checkout
@@ -43,7 +43,7 @@ jobs:
   # This job will run unit tests for the client
   test:
     docker:
-      - image: circleci/node:10.15.2
+      - image: circleci/node:14.15.5
       - image: docker.elastic.co/elasticsearch/elasticsearch:7.9.1
         environment:
           - "ES_JAVA_OPTS=-Xms256m -Xmx256m"
@@ -69,7 +69,7 @@ jobs:
   # This job will generate the API documentation
   generate_doc:
     docker:
-      - image: circleci/node:10.15.2
+      - image: circleci/node:14.15.5
     working_directory: ~/datashare-client
     steps:
       - restore_cache:
@@ -87,7 +87,7 @@ jobs:
   # This job wll publish the doc to Datashare central Wiki
   publish_doc:
     docker:
-      - image: circleci/node:10.15.2
+      - image: circleci/node:14.15.5
     working_directory: ~/datashare-client
     steps:
       - restore_cache:
