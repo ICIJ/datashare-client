@@ -16,8 +16,16 @@ describe('Indexing.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   let wrapper = null
 
-  beforeEach(() => {
-    wrapper = shallowMount(Indexing, { i18n, localVue, store, wait })
+  beforeAll(async () => {
+    // This intend to wait for the end of the mont of the component
+    // And stop the polling part when available
+    wrapper = await shallowMount(Indexing, { i18n, localVue, store, wait })
+    await wrapper.vm.$nextTick()
+    await flushPromises()
+    await wrapper.vm.stopPolling()
+    // eslint-disable-next-line promise/param-names
+    await new Promise(r => setTimeout(r, 3000))
+    await flushPromises()
   })
 
   beforeEach(() => {
@@ -29,6 +37,8 @@ describe('Indexing.vue', () => {
 
   it('should start polling tasks on mount and stop polling tasks on beforeRouteLeave', async () => {
     wrapper = await shallowMount(Indexing, { i18n, localVue, store, wait })
+    await wrapper.vm.$nextTick()
+    await flushPromises()
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({

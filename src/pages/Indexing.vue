@@ -128,7 +128,7 @@ export default {
     this.$wait.end('load indexing tasks')
   },
   beforeRouteLeave (to, from, next) {
-    this.$store.commit('indexing/stopPolling')
+    this.stopPolling()
     next()
   },
   methods: {
@@ -178,6 +178,9 @@ export default {
         res = Math.min(Math.round(value * 100), 99)
       }
       return res
+    },
+    async stopPolling () {
+      await this.$store.commit('indexing/stopPolling')
     }
   }
 }
