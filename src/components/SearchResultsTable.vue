@@ -35,8 +35,8 @@
           <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox"></fa>
         </template>
         <template v-slot:cell(path)="{ item }">
-          <router-link :to="{ name: 'document', params: item.routerParams, query: { q: query } }" class="text-truncate search-results-table__items__row__title">
-            <document-sliced-name :document="item"></document-sliced-name>
+          <router-link :to="{ name: 'document', params: item.routerParams, query: { q: query } }" class="search-results-table__items__row__title">
+            <document-sliced-name :document="item" active-text-truncate></document-sliced-name>
           </router-link>
         </template>
         <template v-slot:cell(highlight)="{ value }">
@@ -192,25 +192,25 @@ export default {
     async onClick (actionId) {
       this.$set(this, 'isBusy', true)
       switch (actionId) {
-        case 'selectAll':
-          if (this.isAllSelected) {
-            this.$refs.selectableTable.clearSelected()
-            this.$bvToast.toast(this.$t('document.unselected'), { noCloseButton: true, variant: 'success' })
-          } else {
-            this.$refs.selectableTable.selectAllRows()
-            this.$bvToast.toast(this.$t('document.selected'), { noCloseButton: true, variant: 'success' })
-          }
-          break
-        case 'star':
-          await this.$store.dispatch('search/starDocuments', this.selected)
-          this.$bvToast.toast(this.$t('document.starred'), { noCloseButton: true, variant: 'success' })
-          break
-        case 'unstar':
-          await this.$store.dispatch('search/unstarDocuments', this.selected)
-          this.$bvToast.toast(this.$t('document.unstarred'), { noCloseButton: true, variant: 'success' })
-          break
-        default:
-          break
+      case 'selectAll':
+        if (this.isAllSelected) {
+          this.$refs.selectableTable.clearSelected()
+          this.$bvToast.toast(this.$t('document.unselected'), { noCloseButton: true, variant: 'success' })
+        } else {
+          this.$refs.selectableTable.selectAllRows()
+          this.$bvToast.toast(this.$t('document.selected'), { noCloseButton: true, variant: 'success' })
+        }
+        break
+      case 'star':
+        await this.$store.dispatch('search/starDocuments', this.selected)
+        this.$bvToast.toast(this.$t('document.starred'), { noCloseButton: true, variant: 'success' })
+        break
+      case 'unstar':
+        await this.$store.dispatch('search/unstarDocuments', this.selected)
+        this.$bvToast.toast(this.$t('document.unstarred'), { noCloseButton: true, variant: 'success' })
+        break
+      default:
+        break
       }
       this.$set(this, 'isBusy', false)
     },
@@ -276,7 +276,7 @@ export default {
           max-width: 20vw;
 
           .document-sliced-name {
-            display: inline;
+            display: inline-block;
           }
         }
       }

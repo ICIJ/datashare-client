@@ -44,6 +44,11 @@ export default {
     border-radius: $border-radius-lg;
     box-shadow: $box-shadow-sm;
 
+    @media (max-width: #{1140px + $app-sidebar-reduced-width}) {
+      margin: 0 auto;
+      border: 0;
+    }
+
     .document-navbar {
       border-radius: $border-radius-lg $border-radius-lg 0 0;
     }

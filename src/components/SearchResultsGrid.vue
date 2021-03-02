@@ -8,8 +8,8 @@
           <router-link class="flex-grow-1 search-results-grid__items__item__thumbnail" :to="{ name: 'document', params: document.routerParams, query: { q: query } }">
             <document-thumbnail :document="document" size="md"></document-thumbnail>
           </router-link>
-          <router-link class="search-results-grid__items__item__title py-2 px-3 small text-truncate" :to="{ name: 'document', params: document.routerParams }">
-            <document-sliced-name :document="document" class="d-inline"></document-sliced-name>
+          <router-link class="search-results-grid__items__item__title py-2 px-3 small" :to="{ name: 'document', params: document.routerParams }">
+            <document-sliced-name :document="document" active-text-truncate></document-sliced-name>
           </router-link>
         </div>
       </div>
