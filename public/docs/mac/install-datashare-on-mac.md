@@ -13,7 +13,7 @@ You have **2 options:**
 
 ### Standard \(High Sierra and more recent versions\)
 
- 1. Let's first install **Homebrew**, which is needed for installing Tesseract OCR. Open your **Finder**:
+ 1. Let's first install **Homebrew**, which is needed for installing Tesseract OCR. You can find Homebrew's instructions [here](https://brew.sh/) or follow the next steps. Open your **Finder**:
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-16.55.39.png)
 
