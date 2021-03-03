@@ -3,8 +3,17 @@ import IdentityPipeline from './IdentityPipeline'
 
 class SanitizeHtml extends IdentityPipeline {
   apply (content) {
-    const whiteList = { mark: ['style', 'class', 'title'], p: true }
-    return xss(content, { stripIgnoreTag: true, whiteList })
+    function process (whiteList) {
+      return xss(content, { stripIgnoreTag: true, whiteList })
+    }
+
+    try {
+      const whiteList = { mark: ['style', 'class', 'title'], p: true }
+      return process(whiteList)
+    } catch (_) {
+      const whiteList = { mark: ['style', 'class', 'title'] }
+      return process(whiteList)
+    }
   }
 }
 
