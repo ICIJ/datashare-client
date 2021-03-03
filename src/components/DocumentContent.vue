@@ -1,7 +1,5 @@
 <script>
-import once from 'lodash/once'
-import pick from 'lodash/pick'
-import throttle from 'lodash/throttle'
+import { once, pick, throttle } from 'lodash'
 import { mapGetters, mapState } from 'vuex'
 
 import ContentTextLengthWarning from '@/components/ContentTextLengthWarning'
@@ -203,7 +201,7 @@ export default {
     },
     content: {
       // Document's content is not a reactive property yet so we cannot use
-      // vue caching mecanism here.
+      // vue caching mechanism here.
       cache: false,
       get () {
         return this.translatedContent || this.document.content || ''
@@ -236,7 +234,7 @@ export default {
 <template>
   <div class="document-content">
     <hook name="document.content:before"></hook>
-    <content-text-length-warning v-if="showContentTextLengthWarning" />
+    <content-text-length-warning v-if="showContentTextLengthWarning"></content-text-length-warning>
     <template v-else>
       <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
         <hook name="document.content.toolbox:before"></hook>
@@ -278,7 +276,6 @@ export default {
 
 <style lang="scss">
   .document-content {
-
     &__toolbox {
       background: $lighter;
       box-shadow: 0 -1 * $spacer 0 0 white;
