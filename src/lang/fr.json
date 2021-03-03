@@ -26,7 +26,7 @@
     "noProjects": "Vous n'avez pas encore de projet. Veuillez contacter votre administrateur•rice."
   },
   "search": {
-    "title": "Search",
+    "title": "Rechercher",
     "errors": {
       "badRequest": "Votre recherche contient une erreur",
       "internalError": "Le serveur a rencontré un problème",
@@ -130,7 +130,7 @@
     "noResults": "Pas de résultat",
     "noSubdirectories": "Pas de sous-dossier",
     "invert": "Exclure",
-    "contextualize": "Contextualize",
+    "contextualize": "Contextualiser",
     "contentType": "Types de fichiers",
     "language": "Langues",
     "namedEntityPerson": "Personnes",
@@ -390,7 +390,7 @@
     "translations": "Traductions",
     "preview": "Prévisualisation",
     "downloadButton": "Télécharger",
-    "downloadRootButton": "Download parent",
+    "downloadRootButton": "Télécharger le parent",
     "externalWindow": "Ouvrir dans une nouvelle fenêtre",
     "selectAll": "Tout sélectionner",
     "unselectAll": "Désélectionner tout",
@@ -590,7 +590,7 @@
     "placeholder": "Rechercher dans les recherches en lot..."
   },
   "batchSearchResults": {
-    "title": "Batch Search Results",
+    "title": "Résultats de recherche en lot",
     "rank": "Rang",
     "query": "Recherche",
     "documentPath": "Chemin du document",
@@ -650,7 +650,7 @@
     }
   },
   "insights": {
-    "title": "Insights",
+    "title": "Aperçu",
     "selectProject": "Sélectionner un projet"
   },
   "widget": {
@@ -727,14 +727,14 @@
   },
   "quickItemNav": {
     "previous": {
-      "label": "Previous",
-      "tooltipMac": "Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)",
-      "tooltipOthers": "Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
+      "label": "Précédent",
+      "tooltipMac": "Document précédent (<kbd>⌘</kbd> + <kbd>←</kbd>)",
+      "tooltipOthers": "Document précédent (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
     },
     "next": {
-      "label": "Next",
-      "tooltipMac": "Next document (<kbd>⌘</kbd> + <kbd>→</kbd>)",
-      "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
+      "label": "Suivant",
+      "tooltipMac": "Document suivant (<kbd>⌘</kbd> + <kbd>→</kbd>)",
+      "tooltipOthers": "Document suivant (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
     }
   }
 }
