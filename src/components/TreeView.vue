@@ -237,7 +237,14 @@ export default {
       return { [this.sortBy]: this.sortByOrder }
     },
     pagesBuckets () {
-      return this.pages.map(p => get(p, 'aggregations.byDirname.buckets', []))
+      return this.pages.map(p => {
+        const folders = get(p, 'aggregations.byDirname.buckets', [])
+        folders.map(t => {
+          t.key = t.key + '/'
+          return t
+        })
+        return folders
+      })
     },
     directories () {
       return flatten(this.pagesBuckets)
