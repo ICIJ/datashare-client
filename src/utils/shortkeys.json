@@ -73,6 +73,14 @@
         "goToNextTab": "shortkeys.goToNextTab"
       },
       "link": "https://icij.gitbook.io/datashare/all/use-keyboard-shortcuts#navigate-a-documents-tabs"
+    },
+    "openAnyway": {
+      "keys": {
+        "mac": ["o"],
+        "default": ["o"]
+      },
+      "action": "openAnyway",
+      "label": "shortkeys.openAnyway"
     }
   },
   "DocumentLocalSearchInput": {
