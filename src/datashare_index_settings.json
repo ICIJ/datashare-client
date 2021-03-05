@@ -3,7 +3,8 @@
   "analysis": {
     "analyzer": {
       "path_analyzer": {
-        "tokenizer": "path_tokenizer"
+        "tokenizer": "path_tokenizer",
+        "filter": ["lowercase"]
       }
     },
     "tokenizer": {
