@@ -254,9 +254,11 @@ export default {
       </div>
       <div class="d-flex flex-row justify-content-end align-items-center px-3">
         <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
-        <div class="document-content__ner-toggler py-1 ml-3 font-weight-bold" id="ner-toggler" v-if="showNamedEntitiesToggle">
+        <div class="document-content__ner-toggler py-1 ml-3 font-weight-bold" id="ner-toggler"
+             v-if="showNamedEntitiesToggle">
           <div class="custom-control custom-switch">
-            <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler" :disabled="isLoadingNamedEntities">
+            <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler"
+                   :disabled="isLoadingNamedEntities">
             <label class="custom-control-label font-weight-bold" for="input-ner-toggler" id="label-ner-toggler">
               {{ $t('document.showNamedEntities') }}
             </label>

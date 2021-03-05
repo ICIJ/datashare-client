@@ -1,6 +1,7 @@
 <template>
   <span class="shortkeys-modal">
-    <b-button class="text-dark" variant="transparent" size="md" v-b-modal.shortkeys :title="$t('shortkeys.title')" v-b-tooltip.hover.bottomleft>
+    <b-button class="text-dark" variant="transparent" size="md" v-b-modal.shortkeys :title="$t('shortkeys.title')"
+              v-b-tooltip.hover.bottomleft>
       <fa icon="keyboard" />
       <span class="sr-only">
         {{ $t('shortkeys.title') }}
@@ -10,13 +11,15 @@
       <div v-for="(shortkey, index) in shortkeys" :key="index" class="shortkeys-modal__shortkey mb-1">
         <b-link :href="shortkey.link" target="_blank" class="shortkeys-modal__shortkey__link row no-gutters w-100 mb-1">
           <div class="col-sm-1 pr-2">
-            <fa :icon="shortkey.icon" v-if="shortkey.icon" fixed-width />
+            <fa :icon="shortkey.icon" v-if="shortkey.icon" fixed-width></fa>
           </div>
           <div class="col-sm-7 pr-2">
             {{ getLabel(shortkey) }}
           </div>
           <div class="col-sm-4 small">
-            <kbd>{{ shortkey.keys[getShortkeyOS] | shortkey }}</kbd>
+            <kbd>
+              {{ shortkey.keys[getShortkeyOS] | shortkey }}
+            </kbd>
           </div>
         </b-link>
       </div>
@@ -25,13 +28,10 @@
 </template>
 
 <script>
+import { capitalize, get, isArray, join, map } from 'lodash'
+
 import shortkeys from '@/utils/shortkeys.json'
 import { getShortkeyOS } from '@/utils/utils'
-import capitalize from 'lodash/capitalize'
-import get from 'lodash/get'
-import isArray from 'lodash/isArray'
-import join from 'lodash/join'
-import map from 'lodash/map'
 
 /**
  * A button to display global shortcuts in a modal.
@@ -58,7 +58,7 @@ export default {
         if (isArray(shortkey.keys.default)) {
           this.shortkeys.push(shortkey)
         } else {
-          map(shortkey.keys.default, (tmp, action) => {
+          map(shortkey.keys.default, (_, action) => {
             const newShortkey = { action, keys: { default: shortkey.keys.default[action], mac: shortkey.keys.mac[action] }, link: shortkey.link }
             const label = get(shortkey, ['label', action], false)
             if (label) newShortkey.label = label
@@ -79,7 +79,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .shortkeys-modal__shortkey {
     border-bottom: 1px solid lighten($text-muted, 40);
 

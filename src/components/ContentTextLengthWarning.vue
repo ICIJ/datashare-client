@@ -6,7 +6,8 @@
     <div class="content-text-length-warning__body">
       <p v-html="$t('contentTextLengthWarning.description')"></p>
       <p v-html="$t('contentTextLengthWarning.download')"></p>
-      <button class="content-text-length-warning__body__button btn bg-white text-dark" v-shortkey="['o']" @shortkey="ignoreContentTextLengthWarning" @click="ignoreContentTextLengthWarning">
+      <button class="content-text-length-warning__body__button btn bg-white text-dark" v-shortkey="['o']"
+              @shortkey="ignoreContentTextLengthWarning" @click="ignoreContentTextLengthWarning">
         {{ $t('contentTextLengthWarning.open') }}
       </button>
     </div>

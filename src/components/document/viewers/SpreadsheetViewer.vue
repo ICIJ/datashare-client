@@ -11,9 +11,11 @@
         <b-form-checkbox v-model="fieldsInFirstItem" switch class="ml-3">
           {{ $t('document.spreadsheet.fieldsInFirstItem') }}
         </b-form-checkbox>
-        <div class="spreadsheet-viewer__content__toolbox__filter pl-3 text-right flex-grow-1" :class="{ 'spreadsheet-viewer__content__toolbox__filter--filtered': filter }">
+        <div class="spreadsheet-viewer__content__toolbox__filter pl-3 text-right flex-grow-1"
+             :class="{ 'spreadsheet-viewer__content__toolbox__filter--filtered': filter }">
           <div class="input-group justify-content-end">
-            <input type="search" class="form-control" @input="debounceFilterInput" :placeholder="$t('document.spreadsheet.findInSpreadsheet')" v-shortkey.focus="getShortcut"/>
+            <input type="search" class="form-control" @input="debounceFilterInput"
+                   :placeholder="$t('document.spreadsheet.findInSpreadsheet')" v-shortkey.focus="getShortcut">
             <div class="input-group-append" v-if="filter">
               <div class="input-group-text">
                 {{ $tc('document.spreadsheet.filtered.rows', filteredItems.length) }}
@@ -23,10 +25,12 @@
         </div>
       </div>
       <div class="spreadsheet-viewer__content__table mx-3 small flex-grow-1" :style="tableVars">
-        <dynamic-scroller :items="scrollerItems" :min-item-size="54" class="spreadsheet-viewer__content__table__scroller border-left border mb-3">
+        <dynamic-scroller :items="scrollerItems" :min-item-size="54"
+                          class="spreadsheet-viewer__content__table__scroller border-left border mb-3">
           <template #before v-if="fieldsInFirstItem">
             <div class="spreadsheet-viewer__content__table__item row no-gutters border-bottom">
-              <div v-for="field in fields" class="spreadsheet-viewer__content__table__item__col col border-right overflow-hidden" :key="field">
+              <div v-for="field in fields"
+                   class="spreadsheet-viewer__content__table__item__col col border-right overflow-hidden" :key="field">
                 <div class="p-2">
                   {{ field }}
                 </div>
@@ -36,7 +40,8 @@
           <template v-slot="{ item, index, active }">
             <dynamic-scroller-item :item="item" :active="active" :data-index="index" :size-dependencies="item.cols">
               <div class="spreadsheet-viewer__content__table__item row no-gutters border-bottom">
-                <div v-for="(col, i) in item.cols" class="spreadsheet-viewer__content__table__item__col col border-right overflow-hidden" :key="i">
+                <div v-for="(col, i) in item.cols"
+                     class="spreadsheet-viewer__content__table__item__col col border-right overflow-hidden" :key="i">
                   <div class="p-2">
                     {{ col }}
                   </div>
@@ -47,21 +52,14 @@
         </dynamic-scroller>
       </div>
       <b-tabs v-model="activeSheetIndex" pills class=" mx-3 mb-3" v-if="nonEmptySheets.length > 1">
-        <b-tab :title="sheet" v-for="(sheet, i) in nonEmptySheets" :key="i" />
+        <b-tab :title="sheet" v-for="(sheet, i) in nonEmptySheets" :key="i"></b-tab>
       </b-tabs>
     </div>
   </div>
 </template>
 
 <script>
-import debounce from 'lodash/debounce'
-import filter from 'lodash/filter'
-import first from 'lodash/first'
-import get from 'lodash/get'
-import kebabCase from 'lodash/kebabCase'
-import range from 'lodash/range'
-import sortBy from 'lodash/sortBy'
-import startCase from 'lodash/startCase'
+import { debounce, filter, first, get, kebabCase, range, sortBy, startCase } from 'lodash'
 import Fuse from 'fuse.js'
 import { getCookie } from 'tiny-cookie'
 import { DynamicScroller, DynamicScrollerItem } from 'vue-virtual-scroller'
