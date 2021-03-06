@@ -18,7 +18,7 @@
     "title": "Ce document est volumineux",
     "description": "L'ouvrir <strong>pourrait bloquer votre navigateur Web</strong>.",
     "download": "La recherche dans ce document peut être longue. Envisagez de le télécharger si votre environnement est sécurisé.",
-    "open": "Ouvrir quand même"
+    "open": "Open anyway"
   },
   "error": {
     "title": "Quelque chose ne va pas",
@@ -623,7 +623,8 @@
     "findPreviousOccurrence": "Aller à l'occurrence précédente dans le document",
     "findPreviousOccurrenceAlt": "Aller à l'occurrence précédente dans le document",
     "findNextOccurrence": "Aller à l'occurrence suivante dans le document",
-    "findNextOccurrenceAlt": "Aller à l'occurrence suivante dans le document"
+    "findNextOccurrenceAlt": "Aller à l'occurrence suivante dans le document",
+    "openAnyway": "Open anyway"
   },
   "server": {
     "title": "Paramètres",
