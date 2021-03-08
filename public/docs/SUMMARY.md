@@ -48,6 +48,7 @@
 * [Can I use an external drive as data source?](faq-general/can-i-use-an-external-drive-as-data-source.md)
 * [How can we use Datashare on a collaborative mode on a server?](faq-general/how-can-we-use-datashare-on-a-collaborative-mode-on-a-server.md)
 * [How can I contact ICIJ for help, bug reporting or suggestions?](faq-general/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions.md)
+* [Advanced: how can I do bulk actions with Tarentula?](faq-general/advanced-how-can-i-do-bulk-actions-with-tarentula.md)
 
 ## FAQ - Errors
 
