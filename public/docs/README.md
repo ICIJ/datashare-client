@@ -37,6 +37,7 @@ Frequently Asked Questions - **General**
 * [Can I use an external drive as data source?](https://icij.gitbook.io/datashare/faq-general/can-i-use-an-external-drive-as-data-source)
 * [How can we use Datashare on a collaborative mode on a server?](https://icij.gitbook.io/datashare/faq-general/how-can-we-use-datashare-on-a-collaborative-mode-on-a-server)
 * [How can I contact ICIJ for help, bug reporting or suggestions?](https://icij.gitbook.io/datashare/faq-general/how-can-i-contact-icij-for-help-bug-reporting-or-suggestions)
+* Advanced: how can I make bulk actions with Tarentula?
 
 Frequently Asked Questions - **Errors**
 
