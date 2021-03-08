@@ -18,7 +18,7 @@
     "title": "This document is huge",
     "description": "Opening it <strong>might crash your Web Browser</strong>.",
     "download": "The search within this document can be long. Please consider downloading it if your environment is secure.",
-    "open": "Open Anyway"
+    "open": "Open anyway"
   },
   "error": {
     "title": "Something's wrong here",
@@ -623,7 +623,8 @@
     "findPreviousOccurrence": "検索結果のうち直前の語に移動",
     "findPreviousOccurrenceAlt": "検索結果のうち直前の語に移動",
     "findNextOccurrence": "検索結果のうち次の語に移動",
-    "findNextOccurrenceAlt": "検索結果のうち次の語に移動"
+    "findNextOccurrenceAlt": "検索結果のうち次の語に移動",
+    "openAnyway": "Open anyway"
   },
   "server": {
     "title": "Settings",

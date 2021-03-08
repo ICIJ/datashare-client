@@ -18,7 +18,7 @@
     "title": "Este archivo es voluminoso",
     "description": "Abrirlo <strong>podría fallar su navegador web</strong>.",
     "download": "La búsqueda dentro de este documento puede ser larga. Considere descargarle si su entorno está seguro.",
-    "open": "Abrir de todos modos"
+    "open": "Open anyway"
   },
   "error": {
     "title": "Hay algo mal",
@@ -623,7 +623,8 @@
     "findPreviousOccurrence": "Encontrar la ocurrencia previa en el documento",
     "findPreviousOccurrenceAlt": "Encontrar la ocurrencia previa en el documento",
     "findNextOccurrence": "Encontrar la próxima ocurrencia en el documento",
-    "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento"
+    "findNextOccurrenceAlt": "Encontrar la siguiente ocurrencia en el documento",
+    "openAnyway": "Open anyway"
   },
   "server": {
     "title": "Configuración",
