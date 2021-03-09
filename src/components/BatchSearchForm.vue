@@ -284,7 +284,7 @@ export default {
     }
   },
   created () {
-    const projects = [...this.$config.get('datashare_projects', [])].sort()
+    const projects = [...this.$config.get('groups_by_applications.datashare', [])].sort()
     this.$set(this, 'projects', map(projects, value => { return { value, text: value } }))
     this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
   },

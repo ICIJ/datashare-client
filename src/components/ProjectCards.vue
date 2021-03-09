@@ -56,7 +56,7 @@ export default {
     startCase
   },
   created () {
-    const projects = [...this.$config.get('datashare_projects', [])].sort()
+    const projects = [...this.$config.get('groups_by_applications.datashare', [])].sort()
     this.$set(this, 'projects', projects)
   }
 }

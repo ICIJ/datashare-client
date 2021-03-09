@@ -54,7 +54,7 @@ export default {
   },
   async created () {
     const defaultProjects = [this.$config.get('defaultProject')]
-    const projects = this.$config.get('datashare_projects', defaultProjects)
+    const projects = this.$config.get('groups_by_applications.datashare', defaultProjects)
     this.$set(this, 'projects', projects)
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')

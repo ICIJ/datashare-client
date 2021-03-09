@@ -33,7 +33,7 @@ export default {
   computed: {
     projects () {
       const defaultProjects = [this.$config.get('defaultProject')]
-      const projects = [...this.$config.get('datashare_projects', defaultProjects)].sort()
+      const projects = [...this.$config.get('groups_by_applications.datashare', defaultProjects)].sort()
       return map(projects.sort(), value => ({ value, text: value }))
     },
     selectedProject: {
