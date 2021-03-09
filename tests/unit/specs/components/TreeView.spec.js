@@ -1,11 +1,16 @@
+import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import TreeView from '@/components/TreeView'
+import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
+import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import { Core } from '@/core'
 
-jest.mock('@/api/elasticsearch')
-
 describe('TreeView.vue', () => {
+  const index = toLower('TreeView')
+  esConnectionHelper(index)
+  const es = esConnectionHelper.es
+
   const { config, i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = {
     path: '/home/foo',
@@ -16,42 +21,24 @@ describe('TreeView.vue', () => {
   }
   let wrapper = null
 
-  beforeAll(() => config.set('dataDir', '/home/foo'))
+  beforeAll(() => {
+    store.commit('search/index', index)
+    config.set('dataDir', '/home/foo')
+  })
 
   beforeEach(() => {
     wrapper = shallowMount(TreeView, { i18n, localVue, propsData, store, wait })
   })
-
-  afterAll(() => jest.unmock('@/api/elasticsearch'))
 
   it('should be a Vue instance', () => {
     expect(wrapper).toBeTruthy()
   })
 
   it('should display 2 directories', async () => {
-    await wrapper.setData({
-      pages: [
-        {
-          hits: {
-            total: 10
-          },
-          aggregations: {
-            byDirname: {
-              buckets: [
-                { key: 'bar', contentLength: { value: 1024 } },
-                { key: 'baz', contentLength: { value: 1024 } }
-              ]
-            },
-            totalContentLength: {
-              value: 2048
-            }
-          }
-        }
-      ]
-    })
+    await letData(es).have(new IndexedDocument('/home/foo/bar/doc_01', index).withContentLength('1024')).commit()
 
     expect(wrapper.find('.tree-view__header__hits').exists()).toBeTruthy()
-    expect(wrapper.find('.tree-view__header__hits').text()).toBe('10 docs')
+    expect(wrapper.find('.tree-view__header__hits').text()).toBe('1 docs')
     expect(wrapper.findAll('.tree-view__directories__item:not(.tree-view__directories__item--hits)')).toHaveLength(2)
   })
 
