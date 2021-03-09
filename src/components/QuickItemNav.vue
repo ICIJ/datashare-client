@@ -1,6 +1,6 @@
 <script>
-import { getShortkeyOS } from '@/utils/utils'
 import shortkeys from '@/mixins/shortkeys'
+import { getShortkeyOS } from '@/utils/utils'
 
 /**
  * A simple component to display a next/previous pair of buttons to navigate
