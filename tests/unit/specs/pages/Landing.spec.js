@@ -10,7 +10,7 @@ describe('Landing.vue', () => {
 
   beforeEach(() => {
     Murmur.config.merge({ mode: 'SERVER' })
-    Murmur.config.merge({ datashare_projects: ['project'] })
+    Murmur.config.merge({ groups_by_applications: { datashare: ['project'] } })
     wrapper = shallowMount(Landing, { i18n, localVue, store })
   })
 

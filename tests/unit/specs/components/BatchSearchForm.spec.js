@@ -21,7 +21,7 @@ describe('BatchSearchForm.vue', () => {
   const store = new Vuex.Store({ modules: { batchSearch: { namespaced: true, state, actions }, search: { namespaced: true, actions: { queryFilter: jest.fn() } } } })
   let wrapper = null
 
-  beforeAll(() => Murmur.config.merge({ datashare_projects: [project], dataDir: '/root/project' }))
+  beforeAll(() => Murmur.config.merge({ groups_by_applications: { datashare: [project] }, dataDir: '/root/project' }))
 
   beforeEach(() => {
     wrapper = shallowMount(BatchSearchForm, { i18n, localVue, store, wait })

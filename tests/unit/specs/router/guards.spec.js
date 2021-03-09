@@ -15,7 +15,7 @@ describe('guards', () => {
   let wrapper
 
   beforeAll(() => {
-    config.set('datashare_projects', ['local-datashare'])
+    config.set('groups_by_applications.datashare', ['local-datashare'])
     wrapper = shallowMount({ template: '<router-view />' }, { localVue, router })
   })
 

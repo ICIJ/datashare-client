@@ -27,7 +27,7 @@ describe('FilterProject.vue', () => {
   let wrapper = null
 
   beforeAll(() => {
-    Murmur.config.merge({ datashare_projects: JSON.stringify([project, anotherProject]) })
+    Murmur.config.merge({ groups_by_applications: { datashare: JSON.stringify([project, anotherProject]) } })
     store.commit('search/index', project)
   })
 
