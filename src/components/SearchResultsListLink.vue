@@ -2,7 +2,7 @@
   <router-link :to="{ name: 'document', params, query: { q: query } }" class="search-results-list-link d-flex align-self-stretch flex-nowrap">
     <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy />
     <div class="search-results-list-link__wrapper">
-      <span class="search-results-list-link__basename">
+      <span class="search-results-list-link__basename d-block">
         <document-sliced-name :document="document" />
       </span>
       <active-text-truncate class="search-results-list-link__location">
