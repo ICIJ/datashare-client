@@ -18,6 +18,8 @@
 </template>
 
 <script>
+import uniq from 'lodash/uniq'
+
 import ProjectSelector from '@/components/ProjectSelector'
 import utils from '@/mixins/utils'
 
@@ -54,8 +56,11 @@ export default {
   },
   async created () {
     const defaultProjects = [this.$config.get('defaultProject')]
+    // @depracated this load the list from a depracated list of project for retro-compatibility
+    const legacyProjects = this.$config.get('datashare_projects', defaultProjects)
     const projects = this.$config.get('groups_by_applications.datashare', defaultProjects)
-    this.$set(this, 'projects', projects)
+    const sortedProjects = uniq([...projects, ...legacyProjects]).sort()
+    this.$set(this, 'projects', sortedProjects)
     await this.$store.dispatch('search/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')
     await this.$store.dispatch('search/getRecommendationsByProject')

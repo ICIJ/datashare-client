@@ -5,7 +5,7 @@
 <script>
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
-import map from 'lodash/map'
+import uniq from 'lodash/uniq'
 
 /**
  * A single-project selector input.
@@ -33,8 +33,11 @@ export default {
   computed: {
     projects () {
       const defaultProjects = [this.$config.get('defaultProject')]
-      const projects = [...this.$config.get('groups_by_applications.datashare', defaultProjects)].sort()
-      return map(projects.sort(), value => ({ value, text: value }))
+      // @depracated this load the list from a depracated list of project for retro-compatibility
+      const legacyProjects = this.$config.get('datashare_projects', defaultProjects)
+      const projects = this.$config.get('groups_by_applications.datashare', defaultProjects)
+      const sortedProjects = uniq([...projects, ...legacyProjects]).sort()
+      return sortedProjects.map(value => ({ value, text: value }))
     },
     selectedProject: {
       get () {

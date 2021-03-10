@@ -56,8 +56,11 @@ export default {
     startCase
   },
   created () {
-    const projects = [...this.$config.get('groups_by_applications.datashare', [])].sort()
-    this.$set(this, 'projects', projects)
+    // @depracated this load the list from a depracated list of project for retro-compatibility
+    const legacyProjects = this.$config.get('datashare_projects', [])
+    const projects = this.$config.get('groups_by_applications.datashare', [])
+    const sortedProjects = [...projects, ...legacyProjects].sort()
+    this.$set(this, 'projects', sortedProjects)
   }
 }
 </script>
