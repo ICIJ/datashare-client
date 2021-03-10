@@ -3,6 +3,7 @@
 </template>
 
 <script>
+import compact from 'lodash/compact'
 import get from 'lodash/get'
 import isEmpty from 'lodash/isEmpty'
 import uniq from 'lodash/uniq'
@@ -36,7 +37,7 @@ export default {
       // @depracated this load the list from a depracated list of project for retro-compatibility
       const legacyProjects = this.$config.get('datashare_projects', defaultProjects)
       const projects = this.$config.get('groups_by_applications.datashare', defaultProjects)
-      const sortedProjects = uniq([...projects, ...legacyProjects]).sort()
+      const sortedProjects = compact(uniq([...projects, ...legacyProjects]).sort())
       return sortedProjects.map(value => ({ value, text: value }))
     },
     selectedProject: {
