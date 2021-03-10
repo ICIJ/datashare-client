@@ -243,7 +243,7 @@ export default {
       return flatten(this.pagesBuckets)
     },
     hits () {
-      return get(this, 'lastPage.hits.total', 0)
+      return get(this, 'lastPage.hits.total.value', 0)
     },
     total () {
       return get(this, 'lastPage.aggregations.totalContentLength.value', -1)

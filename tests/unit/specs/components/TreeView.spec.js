@@ -3,7 +3,7 @@ import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import TreeView from '@/components/TreeView'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
+import { IndexedDocuments, letData } from 'tests/unit/es_utils'
 import { Core } from '@/core'
 
 describe('TreeView.vue', () => {
@@ -13,6 +13,7 @@ describe('TreeView.vue', () => {
 
   const { config, i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = {
+    project: index,
     path: '/home/foo',
     selectedPaths: ['path_01', 'path_02'],
     size: true,
@@ -35,11 +36,13 @@ describe('TreeView.vue', () => {
   })
 
   it('should display 2 directories', async () => {
-    await letData(es).have(new IndexedDocument('/home/foo/bar/doc_01', index).withContentLength('1024')).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('/home/foo/bar/doc_01').withIndex(index).count(5)).commit()
+    await letData(es).have(new IndexedDocuments().setBaseName('/home/foo/baz/doc_02').withIndex(index).count(5)).commit()
+    await wrapper.vm.loadData()
 
     expect(wrapper.find('.tree-view__header__hits').exists()).toBeTruthy()
-    // expect(wrapper.find('.tree-view__header__hits').html()).toBe('1 docs')
-    // expect(wrapper.findAll('.tree-view__directories__item:not(.tree-view__directories__item--hits)')).toHaveLength(2)
+    expect(wrapper.find('.tree-view__header__hits').text()).toBe('10 docs')
+    expect(wrapper.findAll('.tree-view__directories__item:not(.tree-view__directories__item--hits)')).toHaveLength(2)
   })
 
   it('should init selected on component creation', () => {
