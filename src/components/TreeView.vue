@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { flatten, get, identity, includes, noop, round, uniqueId } from 'lodash'
+import { flatten, get, identity, includes, noop, round, uniq, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { basename } from 'path'
 import { waitFor } from 'vue-wait'
@@ -250,8 +250,8 @@ export default {
     },
     aggregationOptions () {
       return {
-        include: this.path + '/.*',
-        exclude: this.path + '/.*/.*',
+        include: this.suffixPathTokens('/.*').join('|'),
+        exclude: this.suffixPathTokens('/.*/.*').join('|'),
         size: this.nextOffset,
         order: this.order
       }
@@ -261,11 +261,23 @@ export default {
     },
     useInfiniteScroll () {
       return this.infiniteScroll && this.offset > 0 && !this.reachedTheEnd
+    },
+    pathTokens () {
+      /**
+       * @deprecated Since 9.4.2, the dirname field is tokenized using the
+       * "lowercase" filter. To ensure retro-compatibility, we apply lookup for
+       * the path in both lowercase and orignal value for this field (if they
+       * are different).
+       */
+      return uniq([this.path, this.path.toLowerCase()])
     }
   },
   methods: {
     humanSize,
     humanNumber,
+    suffixPathTokens (suffix = '') {
+      return this.pathTokens.map(token => `${token}${suffix}`)
+    },
     selectPaths (paths) {
       /**
        * The selectedPaths are updated (deprecated event).
@@ -294,9 +306,10 @@ export default {
       if (!this.includeChildrenDocuments) {
         body.andQuery('match', 'extractionLevel', 0)
       }
+      // Add all path tokens in a "should" statement
+      this.pathTokens.forEach(t => body.orQuery('term', 'dirname.tree', t))
       return body
         .andQuery('match', 'type', 'Document')
-        .andFilter('term', 'dirname.tree', this.path)
         .agg('terms', 'dirname.tree', this.aggregationOptions, 'byDirname', b => {
           return b
             .agg('sum', 'contentLength', 'contentLength')
