@@ -34,7 +34,7 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
   }
 
   function checkUserProjects (to, from, next) {
-    // @depracated this load the list from a depracated list of project for retro-compatibility
+    // @deprecated this load the list from a deprecated list of project for retro-compatibility
     const legacyProjects = config.get('datashare_projects', [])
     const projects = config.get('groups_by_applications.datashare', [])
     const allProjects = [...projects, ...legacyProjects]
