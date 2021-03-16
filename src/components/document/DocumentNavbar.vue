@@ -40,6 +40,7 @@
           card
           no-fade
           :title="doc.slicedNameToString"
+          :value=1
           :link="documentLink"></advanced-link-form>
       </b-popover>
       <b-tooltip target="popover-document-share" triggers="hover">

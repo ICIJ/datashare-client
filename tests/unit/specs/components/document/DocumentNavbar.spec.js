@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import axios from 'axios'
 import { removeCookie, setCookie } from 'tiny-cookie'
