@@ -328,7 +328,7 @@ export default {
         {
           key: 'documentNumber',
           label: this.$t('batchSearchResults.rank'),
-          sortable: true,
+          sortable: false,
           name: 'doc_nb'
         },
         {
