@@ -1,7 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
-import { Core } from '@/core'
 import ShortkeysModal from '@/components/ShortkeysModal'
+import { Core } from '@/core'
 
 jest.mock('@/utils/shortkeys.json', () => {
   return {
@@ -12,14 +12,16 @@ jest.mock('@/utils/shortkeys.json', () => {
           default: ['ctrl', 'key_01']
         },
         action: 'action_01',
-        icon: 'icon_01'
+        icon: 'icon_01',
+        page: ''
       },
       actionToExecute2: {
         keys: {
           mac: ['meta', 'key_02'],
           default: ['ctrl', 'key_02']
         },
-        action: 'action_02'
+        action: 'action_02',
+        page: ''
       }
     },
     Component2: {
@@ -41,30 +43,45 @@ jest.mock('@/utils/shortkeys.json', () => {
         },
         label: {
           action_03: 'This is a translation'
-        }
+        },
+        page: ''
+      }
+    },
+    Component3: {
+      actionToExecute5: {
+        keys: {
+          default: ['key_05']
+        },
+        action: 'action_05',
+        icon: 'icon_05',
+        page: 'page_05'
       }
     }
   }
 })
 
-const { localVue } = Core.init(createLocalVue()).useAll()
-
 describe('ShortkeysModal', () => {
-  let label, wrapper
+  const { localVue, i18n } = Core.init(createLocalVue()).useAll()
+  let label = null
+  let wrapper = null
 
   beforeEach(() => {
-    wrapper = shallowMount(ShortkeysModal, { localVue, mocks: { $t: msg => msg, $te: () => true } })
+    wrapper = shallowMount(ShortkeysModal, { i18n, localVue })
   })
 
   it('should display the shortkeys modal', () => {
     expect(wrapper.findAll('.shortkeys-modal').exists()).toBeTruthy()
   })
 
+  it('should filter shortkeys that are not for the current page', () => {
+    expect(wrapper.vm.shortkeys).toHaveLength(4)
+  })
+
   it('should extract shortkeys keys and action on component creation', () => {
     expect(wrapper.vm.shortkeys).toHaveLength(4)
     expect(wrapper.vm.shortkeys).toEqual([
-      { keys: { mac: ['meta', 'key_01'], default: ['ctrl', 'key_01'] }, action: 'action_01', icon: 'icon_01' },
-      { keys: { mac: ['meta', 'key_02'], default: ['ctrl', 'key_02'] }, action: 'action_02' },
+      { keys: { mac: ['meta', 'key_01'], default: ['ctrl', 'key_01'] }, action: 'action_01', icon: 'icon_01', page: '' },
+      { keys: { mac: ['meta', 'key_02'], default: ['ctrl', 'key_02'] }, action: 'action_02', page: '' },
       { keys: { mac: ['meta', 'key_03'], default: ['ctrl', 'key_03'] }, action: 'action_03', icon: 'icon_03', label: 'This is a translation' },
       { keys: { mac: ['meta', 'key_04'], default: ['ctrl', 'key_04'] }, action: 'action_04', icon: 'icon_04' }
     ])

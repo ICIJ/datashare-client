@@ -52,8 +52,11 @@ export default {
     getShortkeyOS
   },
   created () {
+    const currentPage = get(this, '$route.name', '')
     map(shortkeys, action => {
       map(action, shortkey => {
+        // Filter only shortkeys of the current page
+        if (shortkey.page !== currentPage) return
         // Check if multiple keys
         if (isArray(shortkey.keys.default)) {
           this.shortkeys.push(shortkey)
