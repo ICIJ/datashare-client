@@ -255,6 +255,13 @@ describe('Datashare backend client', () => {
     expect(json).toEqual({})
   })
 
+  it('should send a post JSON for copyBatchSearch', async () => {
+    json = await api.copyBatchSearch('12', 'copyName', 'copyDescription')
+    const data = { description: 'copyDescription', name: 'copyName' }
+    expect(json).toEqual({})
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/batch/search/copy/12'), method: 'POST', data, responseType: 'text', headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
+  })
+
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
     axios.request.mockReturnValue(Promise.reject(error))
