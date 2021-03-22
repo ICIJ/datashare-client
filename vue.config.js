@@ -81,7 +81,11 @@ module.exports = {
   },
   devServer: {
     port: 9009,
-    proxy: 'http://localhost:8080'
+    proxy: {
+      '^/': {
+        target: 'http://localhost:8888'
+      }
+    }
   },
   configureWebpack: {
     optimization: {
