@@ -40,7 +40,7 @@
     "field": {
       "all": "All fields",
       "tags": "Tags",
-      "title": "Title",
+      "title": "Name",
       "author": "Author",
       "recipients": "Recipients",
       "content": "Content",
