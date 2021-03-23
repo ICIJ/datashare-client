@@ -81,7 +81,7 @@ export default {
   computed: {
     activeDocument: {
       // Document's content is not a reactive property yet, so we cannot use
-      // vue caching mecanism to ensure the activeDocument computed property is
+      // vue caching mechanism to ensure the activeDocument computed property is
       // refreshed after the content was updated.
       cache: false,
       get () {
