@@ -1,5 +1,4 @@
-import identity from 'lodash/identity'
-import template from 'lodash/template'
+import { identity, template } from 'lodash'
 import { highlight } from '@/utils/strings'
 
 import IdentityPipeline from './IdentityPipeline'

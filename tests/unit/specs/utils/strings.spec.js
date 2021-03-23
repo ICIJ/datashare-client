@@ -1,4 +1,4 @@
-import escape from 'lodash/escape'
+import { escape } from 'lodash'
 
 import { addLocalSearchMarks, highlight, isUrl, sliceIndexes } from '@/utils/strings'
 

@@ -3,10 +3,7 @@
 </template>
 
 <script>
-import compact from 'lodash/compact'
-import get from 'lodash/get'
-import isEmpty from 'lodash/isEmpty'
-import uniq from 'lodash/uniq'
+import { compact, get, isEmpty, uniq } from 'lodash'
 
 /**
  * A single-project selector input.

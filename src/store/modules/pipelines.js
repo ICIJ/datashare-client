@@ -1,12 +1,4 @@
-import cloneDeep from 'lodash/cloneDeep'
-import compact from 'lodash/compact'
-import concat from 'lodash/concat'
-import filter from 'lodash/filter'
-import find from 'lodash/find'
-import findIndex from 'lodash/findIndex'
-import isFunction from 'lodash/isFunction'
-import orderBy from 'lodash/orderBy'
-import uniqueId from 'lodash/uniqueId'
+import { cloneDeep, compact, concat, filter, find, findIndex, isFunction, orderBy, uniqueId } from 'lodash'
 
 import pipelines from '@/store/pipelines'
 import * as pipelineTypes from '@/store/pipelines'

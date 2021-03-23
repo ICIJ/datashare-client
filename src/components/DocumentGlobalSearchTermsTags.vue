@@ -73,7 +73,6 @@ export default {
 
 <style lang="scss" scoped>
   .document-global-search-terms-tags {
-
     &__item {
       border-bottom: 3px solid transparent;
       cursor: pointer;
@@ -83,22 +82,22 @@ export default {
       }
 
       & &__count {
-        position: relative;
-        top: -0.1rem;
+        border-radius: 0.3rem;
         display: inline-block;
-        height: 1.2rem;
-        line-height: 1.2rem;
         font-size: 0.8rem;
         font-weight: bold;
-        padding: 0 0.2rem;
+        height: 1.2rem;
+        line-height: 1.2rem;
         min-width: 1.2rem;
-        border-radius: 0.3rem;
+        padding: 0 0.2rem;
+        position: relative;
         text-align: center;
+        top: -0.1rem;
       }
 
       & &__metadata {
-        font-weight: normal;
         font-style: italic;
+        font-weight: normal;
       }
 
       &--negation {

@@ -4,9 +4,16 @@
       <search-results-header position="top" bordered class="px-3"></search-results-header>
       <div class="search-results-list__items">
         <div v-for="document in response.hits" :key="document.id" class="search-results-list__items__item mw-100">
-          <search-results-list-link class="search-results-list__items__item__link" :document="document"></search-results-list-link>
+          <search-results-list-link
+            class="search-results-list__items__item__link"
+            :document="document"></search-results-list-link>
           <div>
-            <document-actions :document="document" vertical class="search-results-list__items__item__actions" :is-download-allowed="isDownloadAllowed" tooltips-placement="right"></document-actions>
+            <document-actions
+              class="search-results-list__items__item__actions"
+              :document="document"
+              :is-download-allowed="isDownloadAllowed"
+              tooltips-placement="right"
+              vertical></document-actions>
           </div>
         </div>
       </div>

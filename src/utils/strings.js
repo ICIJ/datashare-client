@@ -50,12 +50,17 @@ export function sliceIndexes (str, indexes) {
   return result
 }
 
-export function highlight (str = '', marks = [], markFun = m => `<mark>${m.content}</mark>`, restFun = identity, contentFun = m => m.content) {
+export function highlight (
+  str = '',
+  marks = [],
+  markFun = m => `<mark>${m.content}</mark>`,
+  restFun = identity,
+  contentFun = m => m.content
+) {
   const sortedMarks = sortBy(marks, m => m.index)
   const docContentSlices = sliceIndexes(str, map(sortedMarks, m => m.index))
-  const docContentMarked = map(zip(takeRight(docContentSlices, sortedMarks.length), sortedMarks), ([slice = '', mark]) => {
-    return markFun(mark) + restFun(slice.substring(contentFun(mark).length))
-  })
+  const docContentMarked = map(zip(takeRight(docContentSlices, sortedMarks.length), sortedMarks),
+    ([slice = '', mark]) => markFun(mark) + restFun(slice.substring(contentFun(mark).length)))
   return docContentSlices[0] + docContentMarked.join('')
 }
 

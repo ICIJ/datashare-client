@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import FilterDate from '@/components/filter/types/FilterDate'
@@ -10,7 +10,7 @@ import filters from '@/mixins/filters'
 
 // Mock all api calls
 jest.mock('@/api')
-// Mock the refreshRouteAndSearch method to avoid unecessary route update
+// Mock the refreshRouteAndSearch method to avoid unnecessary route update
 filters.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterDate.vue', () => {
@@ -21,7 +21,7 @@ describe('FilterDate.vue', () => {
   const filter = store.getters['search/getFilter']({ name: 'indexingDate' })
   const propsData = { filter }
 
-  let wrapper
+  let wrapper = null
 
   beforeEach(() => {
     store.commit('search/index', index)
