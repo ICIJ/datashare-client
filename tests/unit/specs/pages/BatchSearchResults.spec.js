@@ -1,14 +1,14 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
+import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
 
+import Api from '@/api'
 import { Core } from '@/core'
 import BatchSearchResults, { auth } from '@/pages/BatchSearchResults'
-import Murmur from '@icij/murmur'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import Api from '@/api'
 
 Api.getFullUrl = jest.fn() // mock static function
 
@@ -93,7 +93,7 @@ describe('BatchSearchResults.vue', () => {
     await letData(es).have(new IndexedDocument('43', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
     propsData = { uuid: '12', project }
-    wrapper = shallowMount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
+    wrapper = shallowMount(BatchSearchResults, { i18n, localVue, propsData, router, store, wait })
     await wrapper.vm.$router.push({
       name: 'batch-search.results',
       params: { index: project, uuid: '12' },
@@ -244,6 +244,20 @@ describe('BatchSearchResults.vue', () => {
       name: 'batch-search.results',
       params: { index: project, uuid: '12' },
       query: { page: 1, queries: [], sort: 'content_type', order: 'desc' }
+    })
+  })
+
+  it('should redirect on sort change but keep the selectedQueries selected', () => {
+    jest.spyOn(router, 'push')
+    store.commit('batchSearch/selectedQueries', [{ id: 'query_01', label: 'query_01' }])
+
+    wrapper.vm.sortChanged({ sortBy: 'contentType', sortDesc: true })
+
+    expect(router.push).toBeCalled()
+    expect(router.push).toBeCalledWith({
+      name: 'batch-search.results',
+      params: { index: project, uuid: '12' },
+      query: { page: 1, queries: ['query_01'], sort: 'content_type', order: 'desc', queries_sort: undefined }
     })
   })
 

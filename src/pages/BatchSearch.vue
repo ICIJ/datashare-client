@@ -45,7 +45,7 @@
               hover
               :items="batchSearches"
               no-sort-reset
-              responsive
+              :responsive="true"
               :sort-by="sortBy"
               @sort-changed="sortChanged"
               :sort-desc="orderBy"

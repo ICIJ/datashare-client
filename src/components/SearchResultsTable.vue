@@ -19,7 +19,7 @@
         striped
         hover
         selectable
-        responsive
+        :responsive="true"
         @row-selected="onRowSelected"
         :items="itemsProvider"
         :fields="fields"

@@ -196,7 +196,7 @@
               no-local-sorting
               no-sort-reset
               :per-page="perPage"
-              responsive
+              :responsive="true"
               show-empty
               striped
               :sort-by="sortBy"
@@ -276,11 +276,11 @@ import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import DocumentNavbar from '@/components/document/DocumentNavbar'
-import DocumentView from '@/pages/DocumentView'
 import PageHeader from '@/components/PageHeader'
 import QuickItemNav from '@/components/QuickItemNav'
 import humanSize from '@/filters/humanSize'
 import utils from '@/mixins/utils'
+import DocumentView from '@/pages/DocumentView'
 import settings from '@/utils/settings'
 import { toVariant } from '@/utils/utils'
 
@@ -509,7 +509,7 @@ export default {
     async sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
       const order = ctx.sortDesc ? 'desc' : 'asc'
-      this.$router.push(this.generateLinkToBatchSearchResults(this.page, this.queries, sort, order))
+      this.$router.push(this.generateLinkToBatchSearchResults(this.page, this.selectedQueries, sort, order))
     },
     filter () {
       this.$router.push(this.generateLinkToBatchSearchResults(1, this.selectedQueries))
