@@ -4,30 +4,34 @@
       {{ $t('document.fetching') }}
     </div>
     <div class="paginated-viewer d-flex flex-grow-1" v-if="meta.previewable">
-      <div id="paginated-viewer__header" class="bg-light py-2 paginated-viewer__header">
-        <div id="paginated-viewer__thumbnails" class="paginated-viewer__thumbnails">
-          <div class="text-center m-2 d-flex align-items-center viewer__thumbnails__header">
-            <select class="form-control form-control-sm" v-model.number="active">
-              <option v-for="page in pagesRange" :key="page" :value="page">
-                {{ page + 1 }}
-              </option>
-            </select>
-            <span class="w-100">
-              / {{ meta.pages }}
+      <div class="paginated-viewer__thumbnails">
+        <div class="text-center p-2 d-flex align-items-center paginated-viewer__thumbnails__select">
+          <select class="form-control form-control-sm" v-model.number="active" @change="scrollToPageAndThumbnail(active)">
+            <option v-for="page in pagesRange" :key="page" :value="page">
+              {{ page + 1 }}
+            </option>
+          </select>
+          <span class="w-100">
+            / {{ meta.pages }}
+          </span>
+        </div>
+        <div class="paginated-viewer__thumbnails__items">
+          <div v-for="page in pagesRange"
+              @click="setActiveAndScrollToPage(page)"
+               class="paginated-viewer__thumbnails__items__item m-2"
+              :class="{ 'paginated-viewer__thumbnails__items__item--active': active === page }"
+              :key="`thumbnail-${page}`">
+            <document-thumbnail :document="document" size="150" :ratio="ratio" :page="page" lazy class="border-0" />
+            <span class="paginated-viewer__thumbnails__items__item__page">
+              {{ page + 1 }}
             </span>
-          </div>
-          <div class="paginated-viewer__thumbnails__items bg-light">
-            <div v-for="page in pagesRange" :key="page" @click="active = page" class="m-2 paginated-viewer__thumbnails__items__item" :class="{ 'paginated-viewer__thumbnails__item--active': active === page }">
-              <document-thumbnail :document="document" size="150" :page="page" lazy class="w-100 border-0" />
-              <span class="paginated-viewer__thumbnails__items__item__page">
-                {{ page + 1 }}
-              </span>
-            </div>
           </div>
         </div>
       </div>
-      <div class="paginated-viewer__preview p-3 text-center">
-        <document-thumbnail :document="document" size="1200" :page="active" :key="active" class="w-auto d-inline-block border" />
+      <div class="paginated-viewer__preview flex-grow-1 p-2">
+        <div v-for="page in pagesRange" :key="page" class="paginated-viewer__preview__page m-3" :data-page="page + 1">
+          <document-thumbnail @enter="setActiveAndScrollToThumbnail(page)" :document="document" :size="1200" :ratio="ratio" :page="page" lazy />
+        </div>
       </div>
     </div>
     <div class="p-3" v-else>
@@ -37,11 +41,9 @@
 </template>
 
 <script>
-import kebabCase from 'lodash/kebabCase'
 import range from 'lodash/range'
-import startCase from 'lodash/startCase'
 import axios from 'axios'
-import { getCookie } from 'tiny-cookie'
+import preview from '@/mixins/preview'
 
 import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
 
@@ -50,6 +52,7 @@ import DocumentThumbnail from '@/components/DocumentThumbnail.vue'
  */
 export default {
   name: 'PaginatedViewer',
+  mixins: [preview],
   props: {
     /**
      * The selected document
@@ -66,22 +69,75 @@ export default {
       active: 0,
       meta: {
         pages: 1
+      },
+      size: {
+        width: 0,
+        height: 0
       }
     }
   },
   async mounted () {
-    this.$wait.start('load data paginated viewer')
-    this.$Progress.start()
-    this.meta = (await axios({ url: this.metaUrl, ...this.metaOptions })).data
-    this.$Progress.finish()
-    this.$wait.end('load data paginated viewer')
+    this.waitFor(async () => {
+      this.$set(this, 'meta', await this.fetchMeta())
+      this.$set(this, 'size', await this.fetchSize())
+    })
+  },
+  methods: {
+    async waitFor (callback) {
+      this.$wait.start('load data paginated viewer')
+      this.$Progress.start()
+      await callback()
+      this.$Progress.finish()
+      this.$wait.end('load data paginated viewer')
+    },
+    async fetchSize () {
+      const url = this.getPreviewUrl(this.document, { size: 150 })
+      const base64 = await this.fetchPreviewAsBase64(url)
+      return new Promise((resolve, reject) => {
+        const image = new Image()
+        image.onerror = reject
+        image.onload = () => resolve({ width: image.width, height: image.height })
+        image.src = base64
+      })
+    },
+    async fetchMeta () {
+      const url = this.getPreviewMetaUrl(this.document)
+      const { data } = await axios({ url, ...this.metaOptions })
+      return data
+    },
+    setActiveAndScrollToThumbnail (page) {
+      this.active = page
+      this.scrollToThumbnail(page)
+    },
+    setActiveAndScrollToPage (page) {
+      this.active = page
+      this.scrollToPage(page)
+    },
+    scrollToThumbnail (page) {
+      const thumbnails = this.$el.querySelectorAll('.paginated-viewer__thumbnails__items__item')
+      const target = thumbnails[page]
+      target.scrollIntoView({ behavior: 'smooth', block: 'nearest' })
+    },
+    scrollToPage (page) {
+      const previews = this.$el.querySelectorAll('.paginated-viewer__preview__page')
+      const target = previews[page]
+      target.scrollIntoView({ behavior: 'instant', block: 'nearest' })
+    },
+    scrollToPageAndThumbnail (page) {
+      this.scrollToPage(page)
+      this.scrollToThumbnail(page)
+    }
   },
   computed: {
+    ratio () {
+      try {
+        return this.size.height / this.size.width
+      } catch (_) {
+        return 1
+      }
+    },
     pagesRange () {
       return range(this.meta.pages)
-    },
-    metaUrl () {
-      return `${this.$config.get('previewHost')}/api/v1/thumbnail/${this.document.index}/${this.document.id}.json?routing=${this.document.routing}`
     },
     metaOptions () {
       return {
@@ -91,14 +147,6 @@ export default {
           [this.sessionIdHeaderName]: this.sessionIdHeaderValue
         }
       }
-    },
-    sessionIdHeaderValue () {
-      return getCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    },
-    sessionIdHeaderName () {
-      let dsCookieName = kebabCase(process.env.VUE_APP_DS_COOKIE_NAME)
-      dsCookieName = dsCookieName.split('-').map(startCase).join('-')
-      return `x-${dsCookieName}`
     }
   }
 }
@@ -106,26 +154,31 @@ export default {
 
 <style lang="scss">
   .paginated-viewer {
-    &__header {
-      width: 200px;
-    }
 
     &__thumbnails {
-      min-height: 100%;
-      position: relative;
+      width: 150px;
+      position: sticky;
+      top: 0;
+      display: flex;
+      flex-direction: column;
+      background: $light;
+      max-height: calc(100vh - var(--search-document-navbar-height));
+
+      .document-standalone & {
+        max-height: 100vh;
+      }
 
       &__items {
-        height: calc(100% - 35px);
-        overflow-y: auto;
-        position: absolute;
-        width: 100%;
+        height: 100%;
+        overflow: auto;
 
         &__item {
           border: 1px solid $border-color;
           cursor: pointer;
           position: relative;
 
-          img {
+          .document-thumbnail__image {
+            max-width: 100%;
             width: 100%;
           }
 
@@ -160,11 +213,33 @@ export default {
     }
 
     &__preview {
-      width: 100%;
+      text-align: center;
 
-      img {
-        max-width: 100%;
+      &__page {
+        position: relative;
+
+        &:after {
+          content: attr(data-page);
+          background: $light;
+          border: 1px solid $border-color;
+          bottom: 0;
+          font-size: 0.8rem;
+          font-weight: bold;
+          padding: 0.2em 0.4em;
+          position: absolute;
+          right: 0;
+        }
+
+        .document-thumbnail {
+          background: transparent;
+
+          &__image, &:before {
+            border: $border-color 1px solid;
+            background: $body-bg;
+          }
+        }
       }
+
     }
   }
 </style>
