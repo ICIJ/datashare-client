@@ -40,7 +40,7 @@
     "field": {
       "all": "Tous les champs",
       "tags": "Tags",
-      "title": "Titre",
+      "title": "Name",
       "author": "Auteur·e",
       "recipients": "Destinataires",
       "content": "Contenu",

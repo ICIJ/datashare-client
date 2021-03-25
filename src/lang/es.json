@@ -40,7 +40,7 @@
     "field": {
       "all": "Todos los campos",
       "tags": "Etiquetas",
-      "title": "Título",
+      "title": "Name",
       "author": "Autor",
       "recipients": "Destinatarios",
       "content": "Contenido",

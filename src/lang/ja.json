@@ -40,7 +40,7 @@
     "field": {
       "all": "すべてのフィールド",
       "tags": "タグ",
-      "title": "タイトル",
+      "title": "Name",
       "author": "筆者",
       "recipients": "受領者",
       "content": "内容",
