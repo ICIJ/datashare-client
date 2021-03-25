@@ -446,6 +446,10 @@
         "rows": "Pas de correspondance | Une ligne | {count} lignes"
       }
     },
+    "pdf": {
+      "preview": "Preview of the PDF active page",
+      "thumbnail": "Thumbnail of the PDF page"
+    },
     "attachments": {
       "heading": "Pas de pièces jointes | Une pièce jointe | {total} pièces jointes",
       "more": "Plus de pièces jointes..."
