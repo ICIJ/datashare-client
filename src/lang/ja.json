@@ -446,6 +446,10 @@
         "rows": "No matches | One row | {count} rows"
       }
     },
+    "pdf": {
+      "preview": "Preview of the PDF active page",
+      "thumbnail": "Thumbnail of the PDF page"
+    },
     "attachments": {
       "heading": "添付なし | １件の添付 | {total} 件の添付",
       "more": "I need context"
