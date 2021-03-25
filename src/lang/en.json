@@ -446,6 +446,10 @@
         "rows": "No matches | One row | {count} rows"
       }
     },
+    "pdf": {
+      "preview": "Preview of the PDF active page",
+      "thumbnail": "Thumbnail of the PDF page"
+    },
     "attachments": {
       "heading": "No attachments | One attachment | {total} attachments",
       "more": "More attachments..."

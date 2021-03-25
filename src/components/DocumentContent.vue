@@ -276,7 +276,7 @@ export default {
   </div>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .document-content {
     &__toolbox {
       background: $lighter;

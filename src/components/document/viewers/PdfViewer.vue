@@ -13,15 +13,23 @@
               / {{ doc.pages.length }}
             </span>
           </div>
-          <div v-for="page in numberOfThumbnails" :key="page" @click="doc.active = page" class="my-2 pdf-viewer__thumbnails__item" :class="{ 'pdf-viewer__thumbnails__item--active': doc.active === page }">
-            <img :src="loadThumbnail(page)" alt="thumbnail of the PDF page">
-            <span class="pdf-viewer__thumbnails__item__page">{{ page }}</span>
+          <div v-for="page in numberOfThumbnails"
+               :key="page"
+               @click="doc.active = page"
+               class="my-2 pdf-viewer__thumbnails__item"
+               :class="{ 'pdf-viewer__thumbnails__item--active': doc.active === page }">
+            <img :src="loadThumbnail(page)" :alt="$t('document.pdf.thumbnail')">
+            <span class="pdf-viewer__thumbnails__item__page">
+              {{ page }}
+            </span>
           </div>
         </div>
       </div>
       <div class="pdf-viewer__preview w-100 p-3">
         <div v-if="loadPage(doc.active)">
-          <img class="pdf-viewer__preview__canvas img-responsive img-thumbnail" :src="loadPage(doc.active)" alt="preview of the PDF active page">
+          <img class="pdf-viewer__preview__canvas img-responsive img-thumbnail"
+               :src="loadPage(doc.active)"
+               :alt="$t('document.pdf.preview')">
         </div>
       </div>
     </template>
@@ -54,14 +62,14 @@ export default {
   mixins: [datashareSourceMixin],
   data () {
     return {
-      message: this.$t('document.generatingPreview'),
-      pdf: null,
       doc: {
         active: 0,
         pages: [],
         thumbs: []
       },
-      numberOfThumbnails: 0
+      message: this.$t('document.generatingPreview'),
+      numberOfThumbnails: 0,
+      pdf: null
     }
   },
   mounted () {
@@ -148,7 +156,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .pdf-viewer {
     min-height: 100%;
     position: relative;

@@ -22,7 +22,7 @@
           </template>
           <extracting-form id="extracting-form" :finally="closeExtractingForm"></extracting-form>
         </b-modal>
-        <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md">
+        <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md" body-bg-variant="darker">
           <template #modal-title>
             {{ $t('indexing.findNamedEntities') }}
           </template>
@@ -185,12 +185,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-  .indexing {
-    &__form-modal .modal-body {
-      background: darken($primary, 20);
-      color: white;
-    }
-  }
-</style>

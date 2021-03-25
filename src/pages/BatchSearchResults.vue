@@ -610,8 +610,8 @@ export default {
       }
 
       &__path {
-        max-width: 30vw;
         display: block;
+        max-width: 30vw;
       }
     }
   }

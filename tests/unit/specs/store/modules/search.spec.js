@@ -657,14 +657,14 @@ describe('SearchStore', () => {
         .toEqual([{ content: 2, field: '', label: 'specific', metadata: 0, negation: false, tags: 0, regex: false }])
     })
 
-    it('should return a metadata of 1 if there is a match between the query and the document metadata', async () => {
-      await letData(es).have(new IndexedDocument(id, project).withOtherMetadata('metadata metadata metadata')).commit()
+    it('should return a metadata of 3 if there is a match between the query and the document metadata', async () => {
+      await letData(es).have(new IndexedDocument(id, project).withOtherMetadata('term term term')).commit()
       await store.dispatch('document/get', { id, index: project })
       await store.dispatch('document/getContent')
-      await store.dispatch('search/query', 'metadata')
+      await store.dispatch('search/query', 'term')
 
       expect(store.getters['search/retrieveContentQueryTermsInDocument'](store.state.document.doc))
-        .toEqual([{ content: 0, field: '', label: 'metadata', metadata: 3, negation: false, tags: 0, regex: false }])
+        .toEqual([{ content: 0, field: '', label: 'term', metadata: 3, negation: false, tags: 0, regex: false }])
     })
 
     it('should return a tags of 1 if there is a match between the query and the document tags', async () => {
