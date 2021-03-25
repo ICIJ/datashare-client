@@ -46,6 +46,14 @@ To delete line break\(s\) in your spreadsheet, you can use the "**Find and repla
 
 ![](../.gitbook/assets/screenshot-2019-11-04-at-16.20.29.png)
 
+### Want to search only on some documents?
+
+In the [new Batch Search's form &gt; Advanced Filters](https://icij.gitbook.io/datashare/all/batch-search-documents#launch-your-batch-search), you will be able to select some file types and some paths if you want to search only in some documents. 
+
+But you can also use [fields directly in your queries in the CSV](https://icij.gitbook.io/datashare/all/search-with-operators#advanced-searches-using-metadata-fields). 
+
+For instance, if you want to search only in some documents with certain tag\(s\), you can write your queries like this: "Paris AND \(tags:London OR tags:Madrid NOT tags:Cotonou\)". 
+
 ### Use operators in your CSV
 
 [**The operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****AND NOT \* ? ! + - **do work in batch searches - as they do in the regular search bar.** 
