@@ -7,7 +7,11 @@
       </template>
       <div class="d-flex my-2 mx-3">
         <div>
-          <b-btn variant="light" class="batch-search-results__action" id="batch-search-results-filters-toggle" v-b-tooltip.hover :title="$t('batchSearchResultsFilters.queries.heading')">
+          <b-btn class="batch-search-results__action"
+                 id="batch-search-results-filters-toggle"
+                 :title="$t('batchSearchResultsFilters.queries.heading')"
+                 v-b-tooltip.hover
+                 variant="light">
             <fa icon="filter"></fa>
             <span class="sr-only">
               {{ $t('batchSearchResultsFilters.queries.heading') }}
@@ -16,48 +20,51 @@
               {{ selectedQueries.length }}
             </b-badge>
           </b-btn>
-          <b-popover target="batch-search-results-filters-toggle" triggers="focus" placement="bottom" lazy custom-class="popover-body-p-0">
+          <b-popover custom-class="popover-body-p-0"
+                     lazy
+                     placement="bottom"
+                     target="batch-search-results-filters-toggle"
+                     triggers="focus">
             <batch-search-results-filters :uuid="uuid" :index="index" hide-border></batch-search-results-filters>
           </b-popover>
         </div>
-        <div class="batch-search-results__action batch-search-results__delete" v-if="isMyBatchSearch" v-b-tooltip.hover :title="$t('batchSearch.delete')">
-          <confirm-button class="btn btn-light ml-2" :confirmed="deleteBatchSearch" :label="$t('batchSearch.delete')" :yes="$t('global.yes')" :no="$t('global.no')">
+        <div class="batch-search-results__action batch-search-results__delete"
+             v-b-tooltip.hover
+             v-if="isMyBatchSearch"
+             :title="$t('batchSearch.delete')">
+          <confirm-button class="btn btn-light ml-2"
+                          :confirmed="deleteBatchSearch"
+                          :label="$t('batchSearch.delete')"
+                          :no="$t('global.no')"
+                          :yes="$t('global.yes')">
             <fa icon="trash-alt"></fa>
             <span class="sr-only">
               {{ $t('batchSearch.delete') }}
             </span>
           </confirm-button>
         </div>
-        <div class="batch-search-results__action batch-search-results__relaunch float-right" v-if="isMyBatchSearch && isBatchsearchEnded">
+        <div class="batch-search-results__action batch-search-results__relaunch float-right"
+             v-if="isMyBatchSearch && isBatchsearchEnded">
           <b-btn class="btn-light ml-2" @click="$refs['batch-search-copy-form'].show()" :disabled="isRelaunch">
             <fa icon="redo"></fa>
             {{ $t('batchSearchResults.relaunch') }}
           </b-btn>
-          <b-modal ref="batch-search-copy-form" hide-footer :title="$t('batchSearchResults.relaunchTitle')" size="md" body-class="p-0">
+          <b-modal body-class="p-0"
+                   hide-footer
+                   ref="batch-search-copy-form"
+                   size="md"
+                   :title="$t('batchSearchResults.relaunchTitle')">
             <b-form @submit.prevent="copyBatchSearch">
               <div class="card w-100">
                 <div class="card-body pb-1">
-                  <b-form-group
-                    label-size="sm"
-                    :label="`${ $t('batchSearch.name') } *`">
-                    <b-form-input
-                      v-model="name"
-                      type="text"
-                      required></b-form-input>
+                  <b-form-group label-size="sm" :label="`${ $t('batchSearch.name') } *`">
+                    <b-form-input v-model="name" type="text" required></b-form-input>
                   </b-form-group>
-                  <b-form-group
-                  label-size="sm"
-                  :label="$t('batchSearch.description')">
-                    <b-form-textarea
-                      v-model="description"
-                      rows="2"
-                      max-rows="6"></b-form-textarea>
+                  <b-form-group label-size="sm" :label="$t('batchSearch.description')">
+                    <b-form-textarea v-model="description" rows="2" max-rows="6"></b-form-textarea>
                   </b-form-group>
-                  <b-form-group
-                    label-size="sm">
-                    <b-form-checkbox
-                      v-model="deleteAfterRelaunch"
-                      switch>
+                  <b-form-group label-size="sm">
+                    <b-form-checkbox v-model="deleteAfterRelaunch" switch>
                       {{ $t('batchSearchResults.deleteAfterRelaunch') }}
                     </b-form-checkbox>
                   </b-form-group>
@@ -73,13 +80,18 @@
             </b-form>
           </b-modal>
         </div>
-        <div class="batch-search-results__action batch-search-results__download-queries" v-b-tooltip.hover :title="$t('batchSearchResults.downloadQueriesTooltip')">
+        <div class="batch-search-results__action batch-search-results__download-queries"
+             :title="$t('batchSearchResults.downloadQueriesTooltip')"
+             v-b-tooltip.hover>
           <a :href="apiFullUrl('/api/batch/search/' + uuid + '/queries?format=csv')" class="btn btn-light ml-2">
             <fa icon="download"></fa>
             {{ $t('batchSearchResults.downloadQueries') }}
           </a>
         </div>
-        <div class="batch-search-results__action batch-search-results__download-results float-right" v-b-tooltip.hover :title="$t('batchSearchResults.downloadQueriesTooltip')" v-if="results.length">
+        <div class="batch-search-results__action batch-search-results__download-results float-right"
+             :title="$t('batchSearchResults.downloadQueriesTooltip')"
+             v-b-tooltip.hover
+             v-if="results.length">
           <a :href="apiFullUrl('/api/batch/search/result/csv/' + uuid)" class="btn btn-primary ml-2">
             <fa icon="download"></fa>
             {{ $t('batchSearchResults.downloadResults') }}
@@ -100,7 +112,10 @@
             {{ $t('batchSearch.published') }}
           </dt>
           <dd class="col-sm-6 text-truncate" v-if="isServer">
-            <b-form-checkbox v-model="batchSearch.published" switch @change="changePublished" v-if="isMyBatchSearch"></b-form-checkbox>
+            <b-form-checkbox @change="changePublished"
+                             switch
+                             v-if="isMyBatchSearch"
+                             v-model="batchSearch.published"></b-form-checkbox>
             <span v-else>
               {{ batchSearch.published ? $t('global.yes') : $t('global.no') }}
             </span>
@@ -207,12 +222,15 @@
                 {{ item.documentNumber + 1 }}
               </template>
               <template v-slot:cell(documentPath)="{ item, index }">
-                <router-link
-                  @click.native="openDocumentModal($event, index)"
-                  class="batch-search-results__queries__query__link"
-                  target="_blank"
-                  :to="{ name: 'document-standalone', params: { index: $route.params.index, id: item.documentId, routing: item.rootId }, query: { q: item.query } }">
-                  <active-text-truncate class="batch-search-results__queries__query__link__path" v-b-tooltip.hover :title="item.documentPath">
+                <router-link class="batch-search-results__queries__query__link"
+                             @click.native="openDocumentModal($event, index)"
+                             target="_blank"
+                             :to="{
+                               name: 'document-standalone',
+                               params: { index: $route.params.index, id: item.documentId, routing: item.rootId },
+                               query: { q: item.query } }">
+                  <active-text-truncate class="batch-search-results__queries__query__link__path"
+                                        v-b-tooltip.hover :title="item.documentPath">
                     {{ item.documentPath }}
                   </active-text-truncate>
                 </router-link>
@@ -236,12 +254,11 @@
             </b-table>
           </div>
         </div>
-        <b-pagination-nav
-          class="mt-2"
-          :link-gen="linkGen"
-          :number-of-pages="numberOfPages"
-          use-router
-          v-if="numberOfPages > 1"></b-pagination-nav>
+        <b-pagination-nav class="mt-2"
+                          :link-gen="linkGen"
+                          :number-of-pages="numberOfPages"
+                          use-router
+                          v-if="numberOfPages > 1"></b-pagination-nav>
       </v-wait>
     </div>
     <b-modal id="document-modal" size="xl" lazy hide-header hide-footer body-class="p-0">
@@ -249,17 +266,20 @@
         <document-navbar :index="documentInModal.index" :id="documentInModal.id" :routing="documentInModal.routing">
           <template #back>
             <a @click="$bvModal.hide('document-modal')" role="button" class="small text-white">
-              <fa icon="chevron-circle-left" />
+              <fa icon="chevron-circle-left"></fa>
               <span class="ml-2">
                 {{ $t('Back to results') }}
               </span>
             </a>
           </template>
           <template #nav>
-            <quick-item-nav v-model="documentInModalIndex" :total-items="totalItems" />
+            <quick-item-nav v-model="documentInModalIndex" :total-items="totalItems"></quick-item-nav>
           </template>
         </document-navbar>
-        <document-view :index="documentInModal.index" :id="documentInModal.id" :routing="documentInModal.routing" :q="documentInModal.q" />
+        <document-view :id="documentInModal.id"
+                       :index="documentInModal.index"
+                       :q="documentInModal.q"
+                       :routing="documentInModal.routing"></document-view>
       </div>
     </b-modal>
   </div>
@@ -469,6 +489,7 @@ export default {
       vm.$set(vm, 'queries', castArray(get(to, 'query.queries', vm.queries)))
       vm.$set(vm, 'sort', get(to, 'query.sort', vm.sort))
       vm.$set(vm, 'order', get(to, 'query.order', vm.order))
+      vm.$store.commit('batchSearch/selectedQueries', castArray(get(to, 'query.queries', vm.queries)))
     })
   },
   beforeRouteUpdate (to, from, next) {
@@ -476,6 +497,7 @@ export default {
     this.$set(this, 'queries', castArray(get(to, 'query.queries', this.queries)))
     this.$set(this, 'sort', get(to, 'query.sort', this.sort))
     this.$set(this, 'order', get(to, 'query.order', this.order))
+    this.$store.commit('batchSearch/selectedQueries', castArray(get(to, 'query.queries', this.queries)))
     next()
   },
   beforeRouteLeave (to, from, next) {

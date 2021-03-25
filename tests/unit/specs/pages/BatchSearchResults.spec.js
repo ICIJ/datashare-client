@@ -329,4 +329,21 @@ describe('BatchSearchResults.vue', () => {
     BatchSearchResults.beforeRouteUpdate.call(wrapper.vm, toObject, undefined, jest.fn())
     expect(wrapper.vm.queries).toEqual(['simple_text'])
   })
+
+  it('should set "selectedQueries" according to the url params on beforeRouteEnter and beforeRouteUpdate', async () => {
+    wrapper = await shallowMount(BatchSearchResults, { i18n, localVue, propsData, router, store, wait })
+    const to = {
+      name: 'batch-search.results',
+      params: { index: project, uuid: '12' },
+      query: { page: 1, queries: 'simple_text' }
+    }
+
+    BatchSearchResults.beforeRouteEnter.call(wrapper.vm, to, undefined, fn => fn(wrapper.vm))
+    expect(wrapper.vm.$store.state.batchSearch.selectedQueries).toEqual(['simple_text'])
+
+    wrapper.vm.$store.commit('batchSearch/selectedQueries', [])
+
+    BatchSearchResults.beforeRouteUpdate.call(wrapper.vm, to, undefined, jest.fn())
+    expect(wrapper.vm.$store.state.batchSearch.selectedQueries).toEqual(['simple_text'])
+  })
 })
