@@ -136,7 +136,6 @@ export default {
       const offset = -parseInt(this.$root.$el.style.getPropertyValue('--search-document-navbar-height'))
       // Use the scroll-tracker component
       const $container = this.$el.closest('.overflow-auto')
-      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('scroll-tracker:request', element, offset, $container)
     },
     async init () {

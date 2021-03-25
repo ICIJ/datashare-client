@@ -13,8 +13,8 @@ html {
 }
 
 body {
-  max-width: 100vw;
   overflow-x: hidden;
+  max-width: 100vw;
 }
 
 @keyframes rotateLogo {
@@ -24,61 +24,61 @@ body {
 }
 
 .splashscreen {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
-  display: flex;
   align-items: center;
-  justify-content: center;
   background: theme-color('dark');
+  bottom: 0;
   color: white;
+  display: flex;
+  justify-content: center;
+  left: 0;
+  position: fixed;
+  right: 0;
+  top: 0;
 
   &__panel {
-    text-align: center;
-    max-width: 330px;
-    margin: $spacer;
     font-weight: bolder;
+    margin: $spacer;
+    max-width: 330px;
+    text-align: center;
 
     &__spinner {
-      margin-bottom: $spacer;
-      position: relative;
-      height: 130px;
-      width: 130px;
-      display: flex;
       border-radius: $spacer;
+      display: flex;
+      height: 130px;
+      margin-bottom: $spacer;
       overflow: hidden;
+      position: relative;
+      width: 130px;
 
       &:before {
-        content: "";
-        position: absolute;
-        top: 50%;
-        left: 50%;
-        height: 200%;
-        width: 200%;
-        transform: translate(-50%, -50%);
-        z-index: -1;
-        border-radius: inherit;
-        background-repeat: no-repeat;
-        background-size: 50% 50%, 50% 50%;
-        background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+        animation: rotateLogo 4s linear infinite;
         background-image: linear-gradient(#48C2FC, #48C2FC),
                           linear-gradient($secondary, $secondary),
                           linear-gradient(#48C2FC, #48C2FC),
                           linear-gradient($secondary, $secondary);
-        animation: rotateLogo 4s linear infinite;
+        background-position: 0 0, 100% 0, 100% 100%, 0 100%;
+        background-repeat: no-repeat;
+        background-size: 50% 50%, 50% 50%;
+        border-radius: inherit;
+        content: "";
+        height: 200%;
+        left: 50%;
+        position: absolute;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 200%;
+        z-index: -1;
       }
 
       &:after {
+        background: white url('~images/logo-color-symbol.svg') no-repeat center center;
+        background-size: 80% 80%;
+        border-radius: inherit;
         content: "";
         display: block;
-        margin: auto;
-        background:white url('~images/logo-color-symbol.svg') no-repeat center center;
-        background-size: 80% 80%;
         height: 95%;
+        margin: auto;
         width: 95%;
-        border-radius: inherit;
       }
     }
   }
@@ -99,17 +99,15 @@ body {
 }
 
 .popover {
-
   .popover-body {
-
     & > .dropdown-menu {
       background: inherit;
       color: inherit;
       float: none;
 
       .dropdown-item:not(.active) {
-        color: inherit;
         background: transparent;
+        color: inherit;
 
         &:hover {
           background: rgba(white, 0.1);
@@ -146,7 +144,6 @@ body {
   }
 
   &.popover-body-p-0 {
-
     .popover-body {
       padding: 0;
     }
@@ -158,10 +155,9 @@ body {
   }
 
   &.popover-body-overflow-hidden .popover-body {
-    overflow: hidden;
     border-radius: inherit;
+    overflow: hidden;
   }
-
 
   &.bs-popover-bottom > .arrow::after,
   &.bs-popover-auto[x-placement^="bottom"] > .arrow::after {
@@ -173,13 +169,11 @@ body {
 #b-toaster-top-left.b-toaster .b-toaster-slot,
 #b-toaster-bottom-right.b-toaster .b-toaster-slot,
 #b-toaster-bottom-left.b-toaster .b-toaster-slot {
-
   &, .b-toast, .b-toast .toast {
     max-width: 460px;
   }
 
   .b-toast {
-
     .toast {
       font-size: 1rem;
     }

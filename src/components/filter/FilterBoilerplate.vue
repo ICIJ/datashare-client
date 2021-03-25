@@ -437,7 +437,6 @@ export default {
       /**
        * Triggered at the root level when user starts to search in the filter values.
        */
-      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('filter::async-search', this.filter, this.query)
       /**
        * Triggered when user starts to search in the filter values.
@@ -521,7 +520,6 @@ export default {
       this.$emit('reset-filter-values', this.filter, refresh)
     },
     changeSelectedValues ($ev) {
-      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
       this.$store.commit('search/from', 0)
       this.$emit('add-filter-values', this.filter, this.selected)

@@ -70,7 +70,6 @@ export default {
       this.$store.commit('search/index', project)
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
-      // eslint-disable-next-line vue/custom-event-name-casing
       this.$root.$emit('filter::search::reset-filters', false)
       await this.$store.dispatch('search/getStarredDocuments')
       await this.$store.dispatch('search/getIsDownloadAllowed')

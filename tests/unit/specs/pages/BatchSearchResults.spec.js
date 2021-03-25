@@ -326,6 +326,8 @@ describe('BatchSearchResults.vue', () => {
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.queries).toEqual(['simple_text'])
 
+    wrapper.vm.$store.commit('batchSearch/selectedQueries', [])
+
     BatchSearchResults.beforeRouteUpdate.call(wrapper.vm, toObject, undefined, jest.fn())
     expect(wrapper.vm.queries).toEqual(['simple_text'])
   })

@@ -1,4 +1,4 @@
-import toLower from 'lodash/toLower'
+import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 import { removeCookie, setCookie } from 'tiny-cookie'
 
@@ -38,12 +38,10 @@ jest.mock('@/api', () => {
       // Mock user session
       getUser: jest.fn().mockResolvedValue({ uid: 'doe' }),
       // Mock request to get one specific batch search
-      getBatchSearch: jest.fn(uuid => {
-        return Promise.resolve(batchSearches[uuid])
-      }),
+      getBatchSearch: uuid => Promise.resolve(batchSearches[uuid]),
       // Mock request to get all batch search
-      getBatchSearches: jest.fn().mockReturnValue(Promise.resolve(Object.values(batchSearches))),
-      getBatchSearchResults: jest.fn().mockReturnValue(Promise.resolve([
+      getBatchSearches: jest.fn().mockReturnValue(Object.values(batchSearches)),
+      getBatchSearchResults: jest.fn().mockReturnValue([
         {
           creationDate: '2011-10-11T04:12:49.000+0000',
           documentId: 42,
@@ -66,7 +64,7 @@ jest.mock('@/api', () => {
           query: 'query_02',
           rootId: 44
         }
-      ]))
+      ])
     }
   })
 })

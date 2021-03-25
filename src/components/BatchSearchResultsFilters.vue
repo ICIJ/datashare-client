@@ -21,7 +21,9 @@
         </b-dropdown>
       </h6>
       <div class="batch-search-results-filters__queries__search text-dark">
-        <search-form-control :placeholder="$t('batchSearchResultsFilters.filterQueries')" v-model="queriesFilter"></search-form-control>
+        <search-form-control
+          :placeholder="$t('batchSearchResultsFilters.filterQueries')"
+          v-model="queriesFilter"></search-form-control>
       </div>
       <div class="small">
         <selectable-dropdown
@@ -55,13 +57,7 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep'
-import compact from 'lodash/compact'
-import find from 'lodash/find'
-import get from 'lodash/get'
-import isEqual from 'lodash/isEqual'
-import map from 'lodash/map'
-import orderBy from 'lodash/orderBy'
+import { cloneDeep, compact, find, get, isEqual, map, orderBy } from 'lodash'
 import Fuse from 'fuse.js'
 
 import SearchFormControl from '@/components/SearchFormControl'
@@ -90,9 +86,9 @@ export default {
   },
   data () {
     return {
+      queriesFilter: null,
       sortField: 'count',
-      sortFields: ['default', 'count'],
-      queriesFilter: null
+      sortFields: ['default', 'count']
     }
   },
   computed: {
@@ -169,22 +165,21 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .batch-search-results-filters {
     max-width: 90vw;
     width: 300px;
 
     &__queries {
-
       &__search {
-        padding: $card-spacer-y $card-spacer-x;
         background-color: $card-cap-bg;
+        padding: $card-spacer-y $card-spacer-x;
       }
 
       &__sort {
         z-index: 1001;
 
-        .btn.dropdown-toggle {
+        /deep/ .btn.dropdown-toggle {
           color: white;
           text-decoration: none;
         }

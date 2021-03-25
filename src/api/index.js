@@ -172,7 +172,6 @@ export default class Api {
       const r = await axios.request({ url: Api.getFullUrl(url), ...config })
       return r ? r.data : null
     } catch (error) {
-      // eslint-disable-next-line vue/custom-event-name-casing
       EventBus.$emit('http::error', error)
       throw error
     }
