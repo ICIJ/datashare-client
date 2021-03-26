@@ -1,9 +1,9 @@
 <template>
-  <div class="spreadsheet-viewer w-100">
-    <div v-if="!isReady" class="p-3 text-muted">
+  <v-wait for="load spreadsheet" class="w-100">
+    <div slot="waiting" class="p-3 text-muted">
       {{ $t('document.fetching') }}
     </div>
-    <div v-else-if="!isPreviewable" class="p-3">
+    <div v-if="!isPreviewable" class="p-3">
       {{ $t('document.notAvailable') }}
     </div>
     <div v-else class="spreadsheet-viewer__content d-flex flex-column h-100">
@@ -55,7 +55,7 @@
         <b-tab :title="sheet" v-for="(sheet, i) in nonEmptySheets" :key="i"></b-tab>
       </b-tabs>
     </div>
-  </div>
+  </v-wait>
 </template>
 
 <script>
@@ -90,17 +90,18 @@ export default {
       activeSheetIndex: 0,
       fieldsInFirstItem: false,
       filter: '',
-      isReady: false,
       meta: null
     }
   },
   async mounted () {
+    this.$wait.start('load spreadsheet')
     this.$Progress.start()
     const response = await fetch(this.contentUrl, this.contentOptions)
-    this.meta = await response.json()
-    this.activeSheetIndex = 0
-    this.isReady = true
+    const meta = await response.json()
+    this.$set(this, 'meta', meta)
+    this.$set(this, 'activeSheetIndex', 0)
     this.$Progress.finish()
+    this.$wait.end('load spreadsheet')
   },
   methods: {
     debounceFilterInput: debounce(function ({ target: { value } }) {
