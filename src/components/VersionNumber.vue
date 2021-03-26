@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="version-number d-inline-block" ref="appFooterVersion">
-      <fa icon="bolt" class="mr-1" v-if="!noIcon" />
+      <fa icon="bolt" class="mr-1" v-if="!noIcon"></fa>
       {{ label }} {{ serverVersion }}
     </div>
     <b-tooltip :target="() => this.$refs.appFooterVersion" :placement="tooltipPlacement">
       <div class="version-number__tooltip">
         <div class="d-flex text-left align-items-center version-number__tooltip__client">
           <div class="text-muted w-100">
-            <fa icon="desktop" />
+            <fa icon="desktop"></fa>
             {{ $t('footer.clientVersion') }}
           </div>
           <div class="m-1 text-monospace version-number__tooltip__client__value">
@@ -17,7 +17,7 @@
         </div>
         <div class="d-flex text-left align-items-center version-number__tooltip__server">
           <div class="text-muted w-100">
-            <fa icon="server" />
+            <fa icon="server"></fa>
             {{ $t('footer.serverVersion') }}
           </div>
           <div class="m-1 text-monospace version-number__tooltip__server__value">

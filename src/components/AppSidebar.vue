@@ -259,37 +259,37 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   $item-tree-color: rgba($app-sidebar-color, .5);
   $item-tree-width: 2px;
 
   .app-sidebar {
-    height: 100vh;
-    color: $app-sidebar-color;
     background: $app-sidebar-bg;
-    min-width: 60px;
-    max-width: $app-sidebar-width;
-    width: $app-sidebar-width;
-    z-index: $zindex-sticky;
-    position: fixed;
-    top: 0;
-    left: 0;
     bottom: 0;
     box-shadow: 0 0 $app-sidebar-width / 2 0 #000;
+    color: $app-sidebar-color;
+    height: 100vh;
+    left: 0;
+    max-width: $app-sidebar-width;
+    min-width: 60px;
+    position: fixed;
+    top: 0;
+    width: $app-sidebar-width;
+    z-index: $zindex-sticky;
 
     &--reduced {
-      width: $app-sidebar-reduced-width;
       box-shadow: none;
+      width: $app-sidebar-reduced-width;
     }
 
     &__backdrop {
-      z-index: -1;
-      position: fixed;
-      top: 0;
-      left: 0;
-      bottom: 0;
-      right: 0;
       background: rgba($modal-backdrop-bg, $modal-backdrop-opacity);
+      bottom: 0;
+      left: 0;
+      position: fixed;
+      right: 0;
+      top: 0;
+      z-index: -1;
 
       .app-sidebar--reduced & {
         display: none;
@@ -297,17 +297,16 @@ export default {
     }
 
     &__container {
-
       &__brand, &__brand:hover, &__brand:focus, &__brand {
         color: inherit;
+        display: flex;
+        font-size: 1.5rem;
+        justify-content: flex-start;
+        max-width: $app-context-sidebar-width;
         padding: $spacer;
         pointer-events: auto;
-        max-width: $app-context-sidebar-width;
-        width: 100%;
-        font-size: 1.5rem;
         text-decoration: none;
-        justify-content: flex-start;
-        display: flex;
+        width: 100%;
 
         .app-sidebar--reduced & {
           display: none;
@@ -319,15 +318,15 @@ export default {
       }
 
       &__brand__beta {
-        font-size: .6em;
         background: $saddle-red;
-        padding: .05em .2em;
-        display: inline-block;
-        height: auto;
         color: $app-sidebar-color;
-        position: relative;
-        top: -0.5em;
+        display: inline-block;
+        font-size: .6em;
+        height: auto;
         margin-left: 0.5em;
+        padding: .05em .2em;
+        position: relative;
+        top: -0.5em;+
 
         .app-sidebar--reduced & {
           display: none;

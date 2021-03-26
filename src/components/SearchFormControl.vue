@@ -82,12 +82,16 @@ export default {
 <template>
   <b-form @submit="$emit('submit', value)">
     <b-input-group size="sm" class="search-form-control" :class="searchFormClassAttr">
-      <b-form-input :placeholder="placeholder" class="search-form-control__input" :value="value" @input="$emit('input', $event)" :autofocus="autofocus"></b-form-input>
+      <b-form-input :autofocus="autofocus"
+                    class="search-form-control__input"
+                    @input="$emit('input', $event)"
+                    :placeholder="placeholder"
+                    :value="value"></b-form-input>
       <b-input-group-append  class="search-form-control__addon search-form-control__addon--append">
         <b-button variant="light" class="search-form-control__addon__submit" type="submit">
           <template v-if="!noIcon">
-            <fa v-if="loading" icon="circle-notch" spin fixed-width />
-            <fa v-else icon="search" fixed-width />
+            <fa v-if="loading" icon="circle-notch" spin fixed-width></fa>
+            <fa v-else icon="search" fixed-width></fa>
           </template>
           <span :class="{ 'sr-only': !showSubmitLabel }">
             {{ submitLabel || $t('searchFormControl.submitLabel') }}

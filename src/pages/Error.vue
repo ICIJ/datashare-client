@@ -69,8 +69,11 @@ export default {
 <template>
   <div class="error d-flex flex-column">
     <div class="error__header p-3 text-right" v-if="showHeader">
-      <a :href="logoutLink" class="btn btn-outline-light btn-sm" :title="$t('menu.connectedAs', { username })" v-b-tooltip.html>
-        <fa icon="sign-out-alt" fixed-width />
+      <a class="btn btn-outline-light btn-sm"
+         :href="logoutLink"
+         :title="$t('menu.connectedAs', { username })"
+         v-b-tooltip.html>
+        <fa icon="sign-out-alt" fixed-width></fa>
         {{ $t('menu.logout') }}
       </a>
     </div>
@@ -79,10 +82,12 @@ export default {
         <h1 class="mb-3 error__container__heading">
           <span class="error__container__heading__code mr-3">
             <font-awesome-layers class="fa-sm error__container__heading__code__icon">
-              <fa icon="circle" />
-              <fa icon="sad-tear" class="text-secondary" transform="shrink-6" />
+              <fa icon="circle"></fa>
+              <fa icon="sad-tear" class="text-secondary" transform="shrink-6"></fa>
             </font-awesome-layers>
-            <span class="px-2 error__container__heading__code__value">{{ code }}</span>
+            <span class="px-2 error__container__heading__code__value">
+              {{ code }}
+            </span>
           </span>
           {{ titleAsString || $t('error.title') }}
         </h1>
@@ -92,30 +97,30 @@ export default {
         <ul class="error__container__links list-inline text-capitalize">
           <li class="list-inline-item error__container__links__item">
             <a :href="faqLink" target="_blank">
-              <fa icon="question" fixed-width class="error__container__links__item__icon mr-1" />
+              <fa icon="question" fixed-width class="error__container__links__item__icon mr-1"></fa>
               {{ $t('menu.faq') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
             <a :href="userGuidesLink" target="_blank">
-              <fa icon="book" fixed-width class="error__container__links__item__icon mr-1" />
+              <fa icon="book" fixed-width class="error__container__links__item__icon mr-1"></fa>
               {{ $t('menu.userGuides') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
             <a :href="devWikiLink" target="_blank">
-              <fa icon="server" fixed-width class="error__container__links__item__icon mr-1" />
+              <fa icon="server" fixed-width class="error__container__links__item__icon mr-1"></fa>
               {{ $t('menu.devWiki') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
             <a :href="helpLink" target="_blank">
-              <fa icon="ambulance" fixed-width class="error__container__links__item__icon mr-1" />
+              <fa icon="ambulance" fixed-width class="error__container__links__item__icon mr-1"></fa>
               {{ $t('menu.help') }}
             </a>
           </li>
           <li class="list-inline-item error__container__links__item">
-            <version-number tooltip-placement="top" class="d-inline" />
+            <version-number tooltip-placement="top" class="d-inline"></version-number>
           </li>
         </ul>
       </div>

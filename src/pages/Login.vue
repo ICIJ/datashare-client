@@ -8,16 +8,18 @@
       <div class="login__card__body">
         <ul class="list-group">
           <li class="list-group-item bg-light">
-            <p>{{ $t('login.authenticationPlatform') }}</p>
+            <p>
+              {{ $t('login.authenticationPlatform') }}
+            </p>
             <a class="btn btn-dark btn-lg" :href="signinUrl">
-              <fa icon="user-shield" class="mr-2" />
+              <fa icon="user-shield" class="mr-2"></fa>
               {{ $t('login.account') }}
             </a>
           </li>
           <li class="list-group-item">
             <p>{{ $t('login.supportDesk') }}</p>
             <a class="btn btn-outline-secondary btn-lg" :href="helpLink" target="_blank" :title="$t('login.askHelp')">
-              <fa icon="ambulance" class="mr-2" />
+              <fa icon="ambulance" class="mr-2"></fa>
               {{ $t('login.askHelp') }}
             </a>
           </li>
@@ -48,15 +50,15 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .login {
+    background: theme-color('dark');
     min-height: 100vh;
     padding: 10vh;
-    background: theme-color('dark');
 
     &__card {
-      max-width: 660px;
       margin:0 auto;
+      max-width: 660px;
 
       &__heading h2 {
         font-size: 2.5rem;

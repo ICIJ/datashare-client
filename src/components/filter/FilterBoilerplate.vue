@@ -21,8 +21,8 @@
             </slot>
           </template>
         </h6>
-        <fa v-if="isReady" :icon="headerIcon" class="float-right filter__header__icon" />
-        <fa v-else icon="circle-notch" spin class="float-right" />
+        <fa v-if="isReady" :icon="headerIcon" class="float-right filter__header__icon"></fa>
+        <fa v-else icon="circle-notch" spin class="float-right"></fa>
       </div>
     </slot>
     <hook :name="`filter.${filter.name}.header:after`" :bind="{ filter }"></hook>
@@ -35,7 +35,7 @@
             v-model="query"
             @submit="openFilterSearch"
             :rounded="false"
-            :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'" />
+            :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'"></search-form-control>
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
         <slot name="items" :items="items" :options="options" :selected="selected" :total-count="totalCount" :query="query" :sort-by="sortBy" :sort-by-order="sortByOrder">
@@ -52,7 +52,10 @@
             </slot>
           </b-form-checkbox>
           <slot name="items-group" :items="items" :options="options" :selected="selected">
-            <b-form-checkbox-group stacked v-model="selected" class="list-group-item p-0 border-0" @input="changeSelectedValues">
+            <b-form-checkbox-group class="list-group-item p-0 border-0"
+                                   @input="changeSelectedValues"
+                                   stacked
+                                   v-model="selected">
               <template v-for="{ value, item, label } of options">
                 <slot name="item" :item="item" :label="label" :value="value" :selected="selected">
                   <b-form-checkbox :value="value" class="filter__items__item">
@@ -79,23 +82,23 @@
           </div>
         </template>
         <infinite-loading @infinite="nextAggregate" :identifier="infiniteId" :distance="200" v-if="useInfiniteScroll">
-          <span slot="spinner" />
-          <span slot="no-more" />
-          <span slot="no-results" />
+          <span slot="spinner"></span>
+          <span slot="no-more"></span>
+          <span slot="no-results"></span>
         </infinite-loading>
       </div>
-      <filter-footer v-if="!hideFooter"
-                    :filter="filter"
-                    :sort-by.sync="sortBy"
-                    :sort-by-order.sync="sortByOrder"
-                    :sort-by-options.sync="sortByOptions"
-                    :hide-sort="hideSort"
-                    :hide-exclude="hideExclude"
-                    :hide-contextualize="hideContextualize"
-                    :hide-show-more="hideShowMore"
-                    @open-filter-search="openFilterSearch"
-                    @toggle-filter="toggleFilter"
-                    @contextualize-filter="toggleContextualizeFilter" />
+      <filter-footer @contextualize-filter="toggleContextualizeFilter"
+                     :filter="filter"
+                     :hide-contextualize="hideContextualize"
+                     :hide-exclude="hideExclude"
+                     :hide-show-more="hideShowMore"
+                     :hide-sort="hideSort"
+                     @open-filter-search="openFilterSearch"
+                     :sort-by-options.sync="sortByOptions"
+                     :sort-by-order.sync="sortByOrder"
+                     :sort-by.sync="sortBy"
+                     @toggle-filter="toggleFilter"
+                     v-if="!hideFooter"></filter-footer>
     </b-collapse>
   </div>
 </template>

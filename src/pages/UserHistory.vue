@@ -10,13 +10,13 @@
       <ul class="list-unstyled user-history__list card mb-4" v-if="documents.length">
         <li v-for="(document, i) in documents" :key="i" class="user-history__list__item">
           <router-link :to="{ name: 'document', params: document.routerParams }" class="p-2 d-block d-flex">
-            <document-thumbnail :document="document" size="40" crop lazy class="mr-2 user-history__list__item__preview" />
+            <document-thumbnail :document="document" size="40" crop lazy class="mr-2 user-history__list__item__preview"></document-thumbnail>
             <div>
               <div class="font-weight-bold">
-                <document-sliced-name :document="document" />
+                <document-sliced-name :document="document"></document-sliced-name>
               </div>
               <div class="user-history__list__item__location ml-auto small">
-                <fa icon="folder" class="mr-1" />
+                <fa icon="folder" class="mr-1"></fa>
                 {{ document.location }}
               </div>
             </div>

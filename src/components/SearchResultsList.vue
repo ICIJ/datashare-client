@@ -60,26 +60,26 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .search-results-list {
     background: white;
     border-radius: $card-border-radius;
 
     &__toolbar {
+      background: $tertiary;
+      color: white;
       font-size: 0.85rem;
       line-height: $line-height-base * (1 - (85 - 95) / 95);
       padding: 0.5rem 0;
-      color: white;
-      background: $tertiary;
 
       &.slide-up-enter-active, &.slide-up-leave-active {
         transition: .3s;
       }
 
       &.slide-up-enter, &.slide-up-leave-to {
-        opacity: 0;
         // Works with only one row
         margin-top: calc(#{-1em * $line-height-base} - #{$spacer * 1});
+        opacity: 0;
       }
 
       .nav-link {
@@ -88,30 +88,29 @@ export default {
     }
 
     &__items {
-
       &__item {
-        max-width: 100%;
-        overflow: hidden;
+        direction: row;
         display: flex;
         flex-wrap: nowrap;
-        direction: row;
+        max-width: 100%;
+        overflow: hidden;
 
         &:hover, &:hover &__link {
-          text-decoration: none;
           background: mix($secondary, white, 5%);
+          text-decoration: none;
         }
 
         &__actions {
           margin: $spacer;
           visibility: hidden;
 
-          .btn {
-            transition: none;
+          /deep/ .btn {
             font-size: 0.9rem;
             padding: $spacer * 0.10 $spacer * 0.25;
+            transition: none;
           }
 
-          .document-actions__star {
+          /deep/ .document-actions__star {
             &.starred {
               border-color: transparent;
               box-shadow: none;
@@ -123,7 +122,7 @@ export default {
         &:hover &__actions {
           visibility: visible;
 
-          .btn {
+          /deep/ .btn {
             background: white;
             border-color: $primary;
           }

@@ -21,7 +21,12 @@
                class="paginated-viewer__thumbnails__items__item m-2"
               :class="{ 'paginated-viewer__thumbnails__items__item--active': active === page }"
               :key="`thumbnail-${page}`">
-            <document-thumbnail :document="document" size="150" :ratio="ratio" :page="page" lazy class="border-0" />
+            <document-thumbnail class="border-0"
+                                :document="document"
+                                lazy
+                                :page="page"
+                                :ratio="ratio"
+                                size="150"></document-thumbnail>
             <span class="paginated-viewer__thumbnails__items__item__page">
               {{ page + 1 }}
             </span>
@@ -30,7 +35,12 @@
       </div>
       <div class="paginated-viewer__preview flex-grow-1 p-2">
         <div v-for="page in pagesRange" :key="page" class="paginated-viewer__preview__page m-3" :data-page="page + 1">
-          <document-thumbnail @enter="setActiveAndScrollToThumbnail(page)" :document="document" :size="1200" :ratio="ratio" :page="page" lazy />
+          <document-thumbnail :document="document"
+                              @enter="setActiveAndScrollToThumbnail(page)"
+                              lazy
+                              :page="page"
+                              :ratio="ratio"
+                              :size="1200"></document-thumbnail>
         </div>
       </div>
     </div>
@@ -41,7 +51,7 @@
 </template>
 
 <script>
-import range from 'lodash/range'
+import { range } from 'lodash'
 import axios from 'axios'
 import preview from '@/mixins/preview'
 

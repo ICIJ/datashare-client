@@ -244,7 +244,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .document {
   background: white;
   margin: 0;

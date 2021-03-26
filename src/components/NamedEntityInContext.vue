@@ -3,7 +3,7 @@
     <div v-if="extractNotAvailable" class="named-entity-in-context__no-extract">
       {{ $t('namedEntityInContext.none') }}
     </div>
-    <div v-else-if="namedEntity.offset > -1" class="named-entity-in-context__extract" v-html="extractInContext" />
+    <div v-else-if="namedEntity.offset > -1" class="named-entity-in-context__extract" v-html="extractInContext"></div>
     <div v-else class="named-entity-in-context__meta" >
       {{ $t('namedEntityInContext.meta') }}
     </div>

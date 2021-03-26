@@ -1,6 +1,6 @@
 <template>
   <div class="app d-flex">
-    <hook name="app:before" />
+    <hook name="app:before"></hook>
     <div class="app__sidebar">
       <app-sidebar></app-sidebar>
     </div>
@@ -24,20 +24,18 @@
         </b-button>
       </div>
     </b-toast>
-    <hook name="app:after" />
+    <hook name="app:after"></hook>
   </div>
 </template>
 
 <script>
-import compact from 'lodash/compact'
-import get from 'lodash/get'
-import some from 'lodash/some'
+import { compact, get, some } from 'lodash'
 
 import AppSidebar from '@/components/AppSidebar'
+import Hook from '@/components/Hook'
 import ScrollTracker from '@/components/ScrollTracker'
 import { EventBus } from '@/utils/event-bus'
 import VuePerfectScrollbar from 'vue-perfect-scrollbar'
-import Hook from '@/components/Hook'
 
 export default {
   name: 'App',
@@ -86,7 +84,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .app {
     // In CSS variables so they can be updated
     --app-nav-height: #{$app-nav-height};
@@ -130,6 +128,5 @@ export default {
         background: $body-bg;
       }
     }
-
   }
 </style>

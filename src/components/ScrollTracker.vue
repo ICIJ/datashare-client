@@ -88,35 +88,35 @@ export default {
 <template>
   <transition name="fade">
     <a class="scroll-tracker" tabindex="0" v-show="visible" @click="scrollToTarget">
-      <fa :icon="icon" />
+      <fa :icon="icon"></fa>
     </a>
   </transition>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
   $scroll-tracker-size: 8rem;
 
   a.scroll-tracker {
-    position: fixed;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    margin: $spacer 0;
-    z-index: $zindex-tooltip;
-    display: block;
-    width: $scroll-tracker-size;
-    height: $scroll-tracker-size;
-    line-height: $scroll-tracker-size;
-    font-size: $scroll-tracker-size * 0.6;
-    text-align: center;
     background: rgba(theme-color('dark'), 0.9);
-    color: white;
     border-radius: $scroll-tracker-size * 0.1;
+    bottom: 0;
+    color: white;
     cursor: pointer;
+    display: block;
+    font-size: $scroll-tracker-size * 0.6;
+    height: $scroll-tracker-size;
+    left: 50%;
+    line-height: $scroll-tracker-size;
+    margin: $spacer 0;
+    position: fixed;
+    text-align: center;
+    transform: translateX(-50%);
+    width: $scroll-tracker-size;
+    z-index: $zindex-tooltip;
 
     &:hover, &:active {
-      color: white;
       background: theme-color('darker');
+      color: white;
     }
 
     &.fade-enter-active, &.fade-leave-active {

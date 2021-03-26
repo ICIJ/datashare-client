@@ -2,7 +2,7 @@
   <div class="tree-view" :class="{ 'tree-view--compact': compact }">
     <b-collapse :visible="!noHeader">
       <div class="tree-view__header d-flex flex-row text-nowrap">
-        <tree-breadcrumb :path="path" @input="$emit('input', $event)" :max-directories="compact ? 2 : 5" no-datadir datadir-label />
+        <tree-breadcrumb :path="path" @input="$emit('input', $event)" :max-directories="compact ? 2 : 5" no-datadir datadir-label></tree-breadcrumb>
         <transition name="fade">
           <div v-if="!$wait.waiting('loading tree view data')">
             <span v-if="size" class="tree-view__header__size">
@@ -24,7 +24,7 @@
         <b-form-checkbox-group v-model="selected" @input="selectPaths">
           <ul class="list-group list-group-flush tree-view__directories">
             <li v-for="directory in directories" :key="directory.key" class="list-group-item d-flex flex-row align-items-center tree-view__directories__item">
-              <b-form-checkbox :value="directory.key" v-if="selectable" class="tree-view__directories__item__checkbox" />
+              <b-form-checkbox :value="directory.key" v-if="selectable" class="tree-view__directories__item__checkbox"></b-form-checkbox>
               <a class="flex-grow-1" href @click.prevent="$emit('input', directory.key)">
                 {{ directory.key | basename }}
               </a>
@@ -46,9 +46,9 @@
             </li>
           </ul>
           <infinite-loading @infinite="nextLoadData" v-if="useInfiniteScroll" :identifier="infiniteScrollId">
-            <span slot="spinner" />
-            <span slot="no-more" />
-            <span slot="no-results" />
+            <span slot="spinner"></span>
+            <span slot="no-more"></span>
+            <span slot="no-results"></span>
           </infinite-loading>
         </b-form-checkbox-group>
       </div>
