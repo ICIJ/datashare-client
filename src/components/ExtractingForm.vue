@@ -35,8 +35,8 @@
 </template>
 
 <script>
+import { noop } from 'lodash'
 import { createHelpers } from 'vuex-map-fields'
-import noop from 'lodash/noop'
 
 const { mapFields } = createHelpers({
   getterType: 'indexing/getField',

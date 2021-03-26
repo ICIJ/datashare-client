@@ -75,7 +75,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .search-results-list-link {
     display: block;
 
@@ -88,17 +88,17 @@ export default {
     &.router-link-active:focus,
     &:active,
     &:focus {
-      position: relative;
       outline: 0;
+      position: relative;
 
       &:before {
-        content: "";
         border-left: 2px solid $secondary;
-        position: absolute;
-        top: 0;
-        left: 0;
         bottom: 0;
         box-shadow: 0 0 10px 0 $secondary;
+        content: "";
+        left: 0;
+        position: absolute;
+        top: 0;
       }
     }
 
@@ -125,15 +125,15 @@ export default {
     }
 
     &__location {
-      display: block;
       color: $text-muted;
+      display: block;
       font-size: $font-size-sm;
     }
 
     &__fragments {
-      margin-top: $spacer * 0.5;
-      font-size: $font-size-sm;
       color: $body-color;
+      font-size: $font-size-sm;
+      margin-top: $spacer * 0.5;
     }
 
   }

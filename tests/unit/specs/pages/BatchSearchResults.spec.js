@@ -205,15 +205,15 @@ describe('BatchSearchResults.vue', () => {
 
   it('should call the API to delete the BS on call of "copyBatchSearch" method', async () => {
     setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
-    jest.spyOn(store, 'dispatch')
+    const storeDispatchMock = jest.spyOn(store, 'dispatch')
     await wrapper.vm.checkIsMyBatchSearch()
     wrapper.vm.$set(wrapper.vm, 'name', 'Test')
     wrapper.vm.$set(wrapper.vm, 'deleteAfterRelaunch', true)
 
     await wrapper.vm.copyBatchSearch()
 
-    expect(store.dispatch).toBeCalled()
-    expect(store.dispatch).toBeCalledWith('batchSearch/deleteBatchSearch', { batchId: '12' })
+    expect(storeDispatchMock).toBeCalled()
+    expect(storeDispatchMock).toBeCalledWith('batchSearch/deleteBatchSearch', { batchId: '12' })
   })
 
   it('should display default values for name and description on BS relaunch form', () => {

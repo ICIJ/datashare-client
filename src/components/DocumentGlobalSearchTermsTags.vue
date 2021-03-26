@@ -26,9 +26,7 @@ export default {
     this.$root.$on('document::content-loaded', this.getTerms)
   },
   computed: {
-    ...mapGetters('search', {
-      globalSearchTermsInDocument: 'retrieveContentQueryTermsInDocument'
-    })
+    ...mapGetters('search', ['retrieveContentQueryTermsInDocument'])
   },
   methods: {
     getTermIndexClass (index, term) {
@@ -38,7 +36,7 @@ export default {
       }
     },
     getTerms () {
-      const terms = this.globalSearchTermsInDocument(this.document)
+      const terms = this.retrieveContentQueryTermsInDocument(this.document)
       this.$set(this, 'terms', terms)
     }
   }
@@ -52,17 +50,26 @@ export default {
     </div>
     <ul class="list-inline m-0">
       <li v-for="(term, index) in terms" :key="term.label" class="list-inline-item">
-        <mark class="document-global-search-terms-tags__item" :style="getTermIndexBorderColor(index)" :class="getTermIndexClass(index, term)" @click="$emit('select', term)">
+        <mark class="document-global-search-terms-tags__item"
+              :class="getTermIndexClass(index, term)"
+              @click="$emit('select', term)"
+              :style="getTermIndexBorderColor(index)">
           <span class="document-global-search-terms-tags__item__label">
             {{ term.label }}
           </span>
-          <span v-if="term.content === 0 && term.metadata > 0" class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0" :style="getTermIndexBackgroundColor(index)">
+          <span class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0"
+                :style="getTermIndexBackgroundColor(index)"
+                v-if="term.content === 0 && term.metadata > 0">
             {{ $t('document.inMetadata') }}
           </span>
-          <span v-else-if="term.content === 0 && term.tags > 0" class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0" :style="getTermIndexBackgroundColor(index)">
+          <span class="document-global-search-terms-tags__item__count document-global-search-terms-tags__item__metadata py-0"
+                :style="getTermIndexBackgroundColor(index)"
+                v-else-if="term.content === 0 && term.tags > 0">
             {{ $t('document.inTags') }}
           </span>
-          <span v-else class="document-global-search-terms-tags__item__count py-0" :style="getTermIndexBackgroundColor(index)">
+          <span class="document-global-search-terms-tags__item__count py-0"
+                :style="getTermIndexBackgroundColor(index)"
+                v-else>
             {{ term.content }}
           </span>
         </mark>

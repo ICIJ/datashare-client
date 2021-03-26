@@ -5,7 +5,7 @@ import { Core } from '@/core'
 import DocumentTranslatedContent from '@/components/DocumentTranslatedContent'
 
 describe('DocumentTranslatedContent.vue', () => {
-  const { localVue, store } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
   const index = toLower('DocumentTabDetails')
   let wrapper = null
 
@@ -20,8 +20,10 @@ describe('DocumentTranslatedContent.vue', () => {
       }
     })
     const document = store.state.document.doc
-    wrapper = mount(DocumentTranslatedContent, { localVue, store, propsData: { document }, mocks: { $t: msg => msg } })
+    wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, propsData: { document } })
+
     await wrapper.vm.$refs.content.transformContent()
+
     expect(wrapper.find('.document-translated-content__original .document-content__body').text()).toBe('Premier')
   })
 
@@ -38,8 +40,10 @@ describe('DocumentTranslatedContent.vue', () => {
       }
     })
     const document = store.state.document.doc
-    wrapper = mount(DocumentTranslatedContent, { localVue, store, propsData: { document }, mocks: { $t: msg => msg } })
+    wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, propsData: { document } })
+
     await wrapper.vm.$refs.content.transformContent()
+
     expect(wrapper.find('.document-translated-content__original .document-content__body').text()).toBe('Premier')
   })
 
@@ -55,10 +59,11 @@ describe('DocumentTranslatedContent.vue', () => {
         language: 'FRENCH'
       }
     })
-
     const document = store.state.document.doc
-    wrapper = mount(DocumentTranslatedContent, { localVue, store, propsData: { document }, mocks: { $t: msg => msg } })
+    wrapper = mount(DocumentTranslatedContent, { i18n, localVue, store, propsData: { document } })
+
     await wrapper.vm.$refs.content.transformContent()
+
     expect(wrapper.find('.document-translated-content__original .document-content__body').text()).toBe('Premier')
   })
 })

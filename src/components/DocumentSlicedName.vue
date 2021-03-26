@@ -1,11 +1,11 @@
 <template>
   <component :is="baseComponent" v-bind="baseComponentProps">
-    <span class="document-sliced-name" :class="{ 'document-sliced-name--sliced': isSliced, 'document-sliced-name--truncate': hasActiveTextTruncate }">
-      <span
-        v-for="(slice, index) in slices"
-        :key="index"
-        class="document-sliced-name__item"
-        :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }">
+    <span class="document-sliced-name"
+          :class="{ 'document-sliced-name--sliced': isSliced, 'document-sliced-name--truncate': hasActiveTextTruncate }">
+      <span class="document-sliced-name__item"
+            :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }"
+            :key="index"
+            v-for="(slice, index) in slices">
         <span v-if="isMiddleSlice(slice)">
           …
         </span>
@@ -17,10 +17,9 @@
             {{ contentType }}
           </span>
         </span>
-        <router-link
-          v-else-if="hasInteractiveRoot()"
-          class="document-sliced-name__item__root"
-          :to="{ name: 'document', params: rootParams }">
+        <router-link class="document-sliced-name__item__root"
+                     :to="{ name: 'document', params: rootParams }"
+                     v-else-if="hasInteractiveRoot()">
           {{ slice }}
         </router-link>
         <span v-else class="document-sliced-name__item__single" :title="slice">
@@ -32,10 +31,10 @@
 </template>
 
 <script>
+import { get, isString } from 'lodash'
 import { ActiveTextTruncate } from '@icij/murmur'
+
 import types from '@/utils/types.json'
-import get from 'lodash/get'
-import isString from 'lodash/isString'
 
 /**
  * Display a document name in a sliced manner (to include parents).
@@ -108,20 +107,20 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .document-sliced-name {
-    padding: 0.1em 0;
-    display: inline-flex;
     align-items: center;
+    display: inline-flex;
     flex-wrap: wrap;
+    padding: 0.1em 0;
 
     &--truncate {
       flex-wrap: nowrap;
     }
 
     &__item {
-      display: inline-flex;
       align-items: center;
+      display: inline-flex;
 
       // Slice separator
       &:not(:last-child):after {

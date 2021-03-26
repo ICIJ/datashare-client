@@ -3,30 +3,44 @@
     <fa icon="circle-notch" spin size="2x" class="d-flex mx-auto mt-5" slot="waiting"></fa>
     <div class="document-thread p-0" v-if="document">
       <ul class="list-unstyled document-thread__list m-0">
-        <li v-for="email in thread.hits" :key="email.id" class="document-thread__list__email" :class="{ 'document-thread__list__email--active': isActive(email) }">
+        <li class="document-thread__list__email"
+            :class="{ 'document-thread__list__email--active': isActive(email) }"
+            :key="email.id"
+            v-for="email in thread.hits">
           <router-link :to="{ name: 'document', params: email.routerParams }" class="px-3 py-2 d-block" v-once>
             <div class="d-flex text-nowrap">
               <div class="w-100">
-                <email-string class="document-thread__list__email__from mr-3" :email="email.messageFrom" tag="strong" />
+                <email-string class="document-thread__list__email__from mr-3"
+                              :email="email.messageFrom"
+                              tag="strong"></email-string>
               </div>
-              <abbr class="document-thread__list__email__date align-self-end small" :title="email.creationDateHuman" v-if="email.creationDate" v-b-tooltip>
+              <abbr class="document-thread__list__email__date align-self-end small"
+                    :title="email.creationDateHuman"
+                    v-b-tooltip
+                    v-if="email.creationDate">
                 {{ $d(email.creationDate) }}
               </abbr>
             </div>
             <div class="d-flex">
-            <span class="document-thread__list__email__to text-muted mr-3" v-if="isActive(email) && email.messageTo">
-              {{ $t('email.to') }}
-              <ul class="list-inline d-inline">
-                <email-string v-for="to in email.messageTo.split(',')" :email="to" :key="to" tag="li" class="list-inline-item" />
-              </ul>
-            </span>
+              <span class="document-thread__list__email__to text-muted mr-3" v-if="isActive(email) && email.messageTo">
+                {{ $t('email.to') }}
+                <ul class="list-inline d-inline">
+                  <email-string class="list-inline-item"
+                                :email="to"
+                                :key="to"
+                                tag="li"
+                                v-for="to in email.messageTo.split(',')"></email-string>
+                </ul>
+              </span>
               <span class="document-thread__list__email__excerpt text-muted w-100" v-else>
-              {{ email.excerpt }}
-            </span>
+                {{ email.excerpt }}
+              </span>
             </div>
           </router-link>
           <div v-if="isActive(email)">
-            <document-translated-content class="document-thread__list__email__content" :document="activeDocument" :named-entities="namedEntities" />
+            <document-translated-content class="document-thread__list__email__content"
+                                         :document="activeDocument"
+                                         :named-entities="namedEntities"></document-translated-content>
           </div>
         </li>
       </ul>

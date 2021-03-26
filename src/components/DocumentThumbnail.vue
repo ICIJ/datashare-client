@@ -1,11 +1,11 @@
 <template>
   <div class="document-thumbnail" :class="thumbnailClass" :style="thumbnailStyle">
-    <img v-if="isActivated"
-        :alt="thumbnailAlt"
-        :src="thumbnailSrc"
-        class="document-thumbnail__image" />
+    <img :alt="thumbnailAlt"
+         class="document-thumbnail__image"
+         :src="thumbnailSrc"
+         v-if="isActivated">
     <span class="document-thumbnail__placeholder" v-if="!loaded">
-      <fa :icon="document.contentTypeIcon" />
+      <fa :icon="document.contentTypeIcon"></fa>
     </span>
   </div>
 </template>
@@ -142,7 +142,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .document-thumbnail {
     $heights: (xs: 80px, sm: 310px, md: 540px, lg: 720px, xl: 960px);
 
@@ -150,16 +150,16 @@ export default {
       --height-#{$name}: #{$value};
     }
 
-    min-width: 80px;
-    max-width: 100%;
-    position: relative;
-    overflow: hidden;
     background: $body-bg;
     color: mix($body-bg, $text-muted, 70%);
+    max-width: 100%;
+    min-width: 80px;
+    overflow: hidden;
+    position: relative;
 
     &--crop {
-      width: 80px;
       height: 80px;
+      width: 80px;
     }
 
     &--loaded:not(&--errored) &__image {
@@ -167,12 +167,11 @@ export default {
     }
 
     &--estimated-size:not(&--loaded):not(&--errored) {
-
       &:before {
         content: "";
         display: inline-block;
-        padding-top: calc(100% * var(--estimated-ratio));
         max-width: calc(var(--estimated-height) / var(--estimated-ratio));
+        padding-top: calc(100% * var(--estimated-ratio));
         width: 100%;
       }
 
@@ -190,25 +189,25 @@ export default {
 
     &__image {
       display: inline-block;
-      max-width: 100%;
       margin: auto;
+      max-width: 100%;
       opacity: 0;
       transition: opacity 300ms;
     }
 
     &--crop &__image {
-      position: absolute;
+      left: 50%;
       min-height: 100%;
       min-width: 100%;
+      position: absolute;
       top: 50%;
-      left: 50%;
       transform: translate(-50%, -50%);
     }
 
     &__placeholder {
+      left: 50%;
       position: absolute;
       top: 50%;
-      left: 50%;
       transform: translate(-50%, -50%);
     }
   }

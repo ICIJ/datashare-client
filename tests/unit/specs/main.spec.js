@@ -21,7 +21,8 @@ describe('main', () => {
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
     core = createCore(localVue)
-    vm = await core.ready.then(() => core.mount())
+    vm = await core.ready
+    vm = vm.mount()
   })
 
   it('should instantiate Vue', () => {
@@ -35,8 +36,9 @@ describe('main', () => {
     const app = document.createElement('div')
     app.setAttribute('id', 'app')
     document.body.appendChild(app)
-    const core = createCore(localVue)
-    const vm = await core.ready.then(() => core.mount())
+    core = createCore(localVue)
+    vm = await core.ready
+    vm = await vm.mount()
     expect(vm.$config).toBeDefined()
     expect(vm.$config.get('userProjects')).toEqual(['first-index'])
     expect(vm.$config.get('key')).toBe('value')

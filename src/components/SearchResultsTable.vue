@@ -23,7 +23,7 @@
         @row-selected="onRowSelected"
         :items="itemsProvider"
         :fields="fields"
-        :busy="isBusy"
+        :busy="$wait.waiting('load results table')"
         class="bg-white border-bottom m-0 small search-results-table__items"
         selected-variant="tertiary"
         tbody-tr-class="search-results-table__items__row"
@@ -86,7 +86,6 @@ export default {
   },
   data () {
     return {
-      isBusy: false,
       selected: []
     }
   },
@@ -190,7 +189,7 @@ export default {
       this.$set(this, 'selected', items)
     },
     async onClick (actionId) {
-      this.$set(this, 'isBusy', true)
+      this.$wait.start('load results table')
       switch (actionId) {
       case 'selectAll':
         if (this.isAllSelected) {
@@ -212,7 +211,7 @@ export default {
       default:
         break
       }
-      this.$set(this, 'isBusy', false)
+      this.$wait.end('load results table')
     },
     async itemsProvider ({ sortBy, sortDesc }) {
       // Refresh response only if sortBy or sortDesc are different from the state

@@ -15,18 +15,27 @@
             </button>
           </span>
         </div>
-        <b-modal ref="extractingForm" hide-footer modal-class="indexing__form-modal extracting__form" size="md">
+        <b-modal body-bg-variant="darker"
+                 hide-footer
+                 modal-class="indexing__form-modal extracting__form"
+                 ref="extractingForm"
+                 size="md">
           <template #modal-title>
             <fa icon="rocket" class="mr-1"></fa>
             {{ $t('indexing.extractText') }}
           </template>
           <extracting-form id="extracting-form" :finally="closeExtractingForm"></extracting-form>
         </b-modal>
-        <b-modal ref="findNamedEntitiesForm" hide-footer modal-class="indexing__form-modal find-named-entities__form" size="md" body-bg-variant="darker">
+        <b-modal body-bg-variant="darker"
+                 hide-footer
+                 modal-class="indexing__form-modal find-named-entities__form"
+                 ref="findNamedEntitiesForm"
+                 size="md">
           <template #modal-title>
             {{ $t('indexing.findNamedEntities') }}
           </template>
-          <find-named-entities-form id="find-named-entities-form" :finally="closeFindNamedEntitiesForm"></find-named-entities-form>
+          <find-named-entities-form :finally="closeFindNamedEntitiesForm"
+                                    id="find-named-entities-form"></find-named-entities-form>
         </b-modal>
       </div>
     </page-header>
@@ -49,16 +58,21 @@
                   </span>
                 </div>
                 <div class="indexing__tasks__progress progress">
-                  <div class="progress-bar" :class="taskStateToClass(task.state)" role="progressbar"
-                       :style="'width: ' + getProgress(task.progress, task.state) + '%'" :aria-valuenow="getProgress(task.progress, task.state)"
-                       aria-valuemin="0" aria-valuemax="100">
+                  <div aria-valuemax="100"
+                       aria-valuemin="0"
+                       :aria-valuenow="getProgress(task.progress, task.state)"
+                       class="progress-bar"
+                       :class="taskStateToClass(task.state)" role="progressbar"
+                       :style="'width: ' + getProgress(task.progress, task.state) + '%'">
                     {{ getProgress(task.progress, task.state) }}%
                   </div>
                 </div>
               </div>
               <div class="col-md-auto p-0 my-auto">
-                <button class="btn btn-link btn-stop-task" :title="$t('indexing.stopTask')"
-                        @click="task.state === 'RUNNING' ? stopTask(task.name) : ''" :disabled="task.state !== 'RUNNING'">
+                <button class="btn btn-link btn-stop-task"
+                        @click="task.state === 'RUNNING' ? stopTask(task.name) : ''"
+                        :disabled="task.state !== 'RUNNING'"
+                        :title="$t('indexing.stopTask')">
                   <fa icon="times-circle" :class="[task.state !== 'RUNNING' ? 'muted' : '']"></fa>
                 </button>
               </div>

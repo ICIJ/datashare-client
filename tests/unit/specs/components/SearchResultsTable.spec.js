@@ -16,7 +16,7 @@ jest.mock('axios', () => {
 })
 
 describe('SearchResultsTable.vue', () => {
-  const { i18n, localVue, store } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter()
   const project = toLower('SearchResultsTable')
   esConnectionHelper(project)
@@ -31,7 +31,7 @@ describe('SearchResultsTable.vue', () => {
       .withIndex(project)
       .count(4)).commit()
     await store.dispatch('search/query', { query: '*', from: 0, size: 25 })
-    wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store })
+    wrapper = shallowMount(SearchResultsTable, { i18n, localVue, store, wait })
   })
 
   afterAll(() => jest.unmock('axios'))
@@ -51,7 +51,7 @@ describe('SearchResultsTable.vue', () => {
   })
 
   it('should set each selected document as starred', async () => {
-    wrapper = mount(SearchResultsTable, { i18n, localVue, store, router })
+    wrapper = mount(SearchResultsTable, { i18n, localVue, router, store, wait })
     await wrapper.vm.$set(wrapper.vm, 'selected', [{ id: 'document_01' }, { id: 'document_02' }])
 
     wrapper.findAll('.list-group-item-action').at(1).trigger('click')
@@ -78,7 +78,7 @@ describe('SearchResultsTable.vue', () => {
 
   it('should select all documents', async () => {
     axios.request.mockResolvedValue({ data: [{ id: 'document_01' }, { id: 'document_03' }, { id: 'document_03' }, { id: 'document_04' }] })
-    wrapper = mount(SearchResultsTable, { i18n, localVue, store, router })
+    wrapper = mount(SearchResultsTable, { i18n, localVue, router, store, wait })
     await wrapper.setData({ selected: [{ id: 'document_01' }] })
     await wrapper.vm.$nextTick()
     expect(wrapper.vm.selected).toHaveLength(1)
