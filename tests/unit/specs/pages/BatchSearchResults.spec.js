@@ -341,11 +341,11 @@ describe('BatchSearchResults.vue', () => {
     }
 
     BatchSearchResults.beforeRouteEnter.call(wrapper.vm, to, undefined, fn => fn(wrapper.vm))
-    expect(wrapper.vm.$store.state.batchSearch.selectedQueries).toEqual(['simple_text'])
+    expect(wrapper.vm.$store.state.batchSearch.selectedQueries).toEqual([{ label: 'simple_text' }])
 
     wrapper.vm.$store.commit('batchSearch/selectedQueries', [])
 
     BatchSearchResults.beforeRouteUpdate.call(wrapper.vm, to, undefined, jest.fn())
-    expect(wrapper.vm.$store.state.batchSearch.selectedQueries).toEqual(['simple_text'])
+    expect(wrapper.vm.$store.state.batchSearch.selectedQueries).toEqual([{ label: 'simple_text' }])
   })
 })

@@ -489,7 +489,9 @@ export default {
       vm.$set(vm, 'queries', castArray(get(to, 'query.queries', vm.queries)))
       vm.$set(vm, 'sort', get(to, 'query.sort', vm.sort))
       vm.$set(vm, 'order', get(to, 'query.order', vm.order))
-      vm.$store.commit('batchSearch/selectedQueries', castArray(get(to, 'query.queries', vm.queries)))
+      const queries = castArray(get(to, 'query.queries', vm.queries))
+      const selectedQueries = queries.map(query => { return { label: query } })
+      vm.$store.commit('batchSearch/selectedQueries', selectedQueries)
     })
   },
   beforeRouteUpdate (to, from, next) {
@@ -497,7 +499,9 @@ export default {
     this.$set(this, 'queries', castArray(get(to, 'query.queries', this.queries)))
     this.$set(this, 'sort', get(to, 'query.sort', this.sort))
     this.$set(this, 'order', get(to, 'query.order', this.order))
-    this.$store.commit('batchSearch/selectedQueries', castArray(get(to, 'query.queries', this.queries)))
+    const queries = castArray(get(to, 'query.queries', this.queries))
+    const selectedQueries = queries.map(query => { return { label: query } })
+    this.$store.commit('batchSearch/selectedQueries', selectedQueries)
     next()
   },
   beforeRouteLeave (to, from, next) {

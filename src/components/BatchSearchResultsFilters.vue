@@ -57,7 +57,7 @@
 </template>
 
 <script>
-import { cloneDeep, compact, find, get, isEqual, map, orderBy } from 'lodash'
+import { castArray, cloneDeep, compact, find, get, isEqual, map, orderBy } from 'lodash'
 import Fuse from 'fuse.js'
 
 import SearchFormControl from '@/components/SearchFormControl'
@@ -158,7 +158,7 @@ export default {
       } else {
         this.$set(this, 'sortField', 'count')
       }
-      const queries = get(this, ['$route', 'query', 'queries'], [])
+      const queries = castArray(get(this, ['$route', 'query', 'queries'], []))
       this.selectedQueries = queries.map(label => find(this.queries, { label }))
     }
   }
