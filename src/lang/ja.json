@@ -27,6 +27,11 @@
   },
   "search": {
     "title": "Search",
+    "layout": {
+      "grid": "View in grid",
+      "list": "View in list",
+      "table": "View in table"
+    },
     "errors": {
       "badRequest": "検索ワードが正しくありません",
       "internalError": "サーバーに問題が発生しました",

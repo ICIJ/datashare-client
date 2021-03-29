@@ -27,6 +27,11 @@
   },
   "search": {
     "title": "Rechercher",
+    "layout": {
+      "grid": "View in grid",
+      "list": "View in list",
+      "table": "View in table"
+    },
     "errors": {
       "badRequest": "Votre recherche contient une erreur",
       "internalError": "Le serveur a rencontré un problème",
