@@ -30,15 +30,21 @@
       <div class="list-group list-group-flush filter__items">
         <hook :name="`filter.${filter.name}.search:before`" :bind="{ filter, query: query }"></hook>
         <slot name="search" v-if="!hideSearch && filter.isSearchable">
-          <search-form-control
-            class="filter__items__search"
-            v-model="query"
-            @submit="openFilterSearch"
-            :rounded="false"
-            :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'"></search-form-control>
+          <search-form-control class="filter__items__search"
+                               :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'"
+                               :rounded="false"
+                               @submit="openFilterSearch"
+                               v-model="query"></search-form-control>
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>
-        <slot name="items" :items="items" :options="options" :selected="selected" :total-count="totalCount" :query="query" :sort-by="sortBy" :sort-by-order="sortByOrder">
+        <slot :items="items"
+              name="items"
+              :options="options"
+              :query="query"
+              :selected="selected"
+              :sort-by="sortBy"
+              :sort-by-order="sortByOrder"
+              :total-count="totalCount">
           <b-form-checkbox v-model="isAllSelected" class="filter__items__all mb-0" :disabled="isAllSelected">
             <slot name="all">
               <span class="d-flex">

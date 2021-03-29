@@ -39,7 +39,8 @@
             </span>
           </router-link>
         </li>
-        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents" v-if="$config.is('manageDocuments')">
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents"
+            v-if="!isServer">
           <router-link
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.analyse')"
@@ -95,7 +96,10 @@
       <hook name="app-sidebar.help:before"></hook>
       <ul class="app-sidebar__container__menu list-unstyled">
         <li class="app-sidebar__container__menu__item">
-          <a :href="faqLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.faq')" v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
+          <a class="app-sidebar__container__menu__item__link"
+             :href="faqLink"
+             target="_blank"
+             :title="$t('menu.faq')" v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="question" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.faqShort' : 'menu.faq') }}
@@ -103,7 +107,11 @@
           </a>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--help">
-          <a :href="helpLink" target="_blank" class="app-sidebar__container__menu__item__link" :title="$t('menu.help')" v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
+          <a class="app-sidebar__container__menu__item__link"
+             :href="helpLink"
+             target="_blank"
+             :title="$t('menu.help')"
+             v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="ambulance" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t(reduced ? 'menu.helpShort' : 'menu.help') }}
@@ -118,12 +126,13 @@
           <h5 class="app-sidebar__container__heading">
             <fa icon="book" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__heading__label">
-              User guides
+              {{ $t(reduced ? 'menu.userGuidesShort' : 'menu.userGuides') }}
             </span>
           </h5>
           <ul class="app-sidebar__container__menu app-sidebar__container__menu--borderless list-unstyled">
-            <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" v-bind:key="meta.resourcePath">
-              <router-link :to="{ name: 'docs', params: meta }" class="app-sidebar__container__menu__item__link app-sidebar__container__menu__item__link--tree">
+            <li class="app-sidebar__container__menu__item" v-for="meta in currentRouteDocs" :key="meta.resourcePath">
+              <router-link class="app-sidebar__container__menu__item__link app-sidebar__container__menu__item__link--tree"
+                           :to="{ name: 'docs', params: meta }">
                 <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
                   {{ meta.title }}
                 </span>
@@ -134,20 +143,23 @@
         <ul v-else class="app-sidebar__container__menu list-unstyled">
           <li class="app-sidebar__container__menu__item"  :data-badge="currentRouteDocs.length">
             <b-button class="app-sidebar__container__menu__item__link"
-                      variant="none"
-                      href="#"
                       :data-badge="currentRouteDocs.length"
-                      id="app-menu-user-guide">
+                      href="#"
+                      id="app-menu-user-guide"
+                      variant="none">
               <fa icon="book" fixed-width></fa>
               <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-                User guides
+                {{ $t(reduced ? 'menu.userGuidesShort' : 'menu.userGuides') }}
               </span>
               <b-popover target="app-menu-user-guide"
                          custom-class="popover-body-p-0"
                          triggers="click blur"
                          @show="$root.$emit('bv::hide::tooltip')">
                 <div class="dropdown-menu show position-static border-0 px-2 bg-transparent">
-                  <router-link class="dropdown-item" v-for="meta in currentRouteDocs" v-bind:key="meta.resourcePath" :to="{ name: 'docs', params: meta }">
+                  <router-link class="dropdown-item"
+                               :key="meta.resourcePath"
+                               :to="{ name: 'docs', params: meta }"
+                               v-for="meta in currentRouteDocs">
                     {{ meta.title }}
                   </router-link>
                 </div>
@@ -168,7 +180,10 @@
           </locales-menu>
         </li>
         <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--logout" v-if="isServer">
-          <a :href="logoutLink" class="app-sidebar__container__menu__item__link" title="Logout" v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
+          <a class="app-sidebar__container__menu__item__link"
+             :href="logoutLink"
+             title="Logout"
+             v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="sign-out-alt" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
               {{ $t('menu.logoutShort') }}
@@ -179,9 +194,12 @@
       <hook name="app-sidebar.locales:after"></hook>
     </vue-perfect-scrollbar>
     <div class="app-sidebar__version">
-      <version-number :tooltip-placement="reduced ? 'righttop' : 'top'" :label="reduced ? '' : 'Version'" class="d-inline-block" :no-icon="reduced"></version-number>
+      <version-number class="d-inline-block"
+                      :label="reduced ? '' : 'Version'"
+                      :no-icon="reduced"
+                      :tooltip-placement="reduced ? 'righttop' : 'top'"></version-number>
     </div>
-    <div class="app-sidebar__data-location" v-if="$config.is('manageDocuments')" v-show="!reduced">
+    <div class="app-sidebar__data-location" v-if="!isServer" v-show="!reduced">
       <mounted-data-location></mounted-data-location>
     </div>
   </div>

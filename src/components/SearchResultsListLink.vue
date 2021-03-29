@@ -1,15 +1,17 @@
 <template>
-  <router-link :to="{ name: 'document', params, query: { q: query } }" class="search-results-list-link d-flex align-self-stretch flex-nowrap">
-    <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy />
+  <router-link class="search-results-list-link d-flex align-self-stretch flex-nowrap"
+               :to="{ name: 'document', params, query: { q: query } }">
+    <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy></document-thumbnail>
     <div class="search-results-list-link__wrapper">
       <span class="search-results-list-link__basename d-block">
-        <document-sliced-name :document="document" />
+        <document-sliced-name :document="document"></document-sliced-name>
       </span>
       <active-text-truncate class="search-results-list-link__location">
-        <fa icon="folder" class="mr-1" />
+        <fa icon="folder" class="mr-1"></fa>
         {{ location }}
       </active-text-truncate>
-      <div class="search-results-list-link__fragments" v-if="document.highlight" v-html="document.highlight.content.join(' [...] ')"></div>
+      <div class="search-results-list-link__fragments"
+           v-if="document.highlight" v-html="document.highlight.content.join(' [...] ')"></div>
     </div>
   </router-link>
 </template>
@@ -74,7 +76,6 @@ export default {
   }
 }
 </script>
-
 <style lang="scss" scoped>
   .search-results-list-link {
     display: block;

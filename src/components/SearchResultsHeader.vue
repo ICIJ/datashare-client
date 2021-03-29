@@ -1,19 +1,32 @@
 <template>
-  <div class="search-results-header" :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
+  <div class="search-results-header"
+       :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
     <div class="search-results-header__settings d-flex align-items-center">
       <b-btn-group class="flex-grow-1">
-        <b-dropdown size="sm" variant="link" class="search-results-header__settings__sort" toggle-class="text-decoration-none py-2 px-2 border search-results-header__settings__sort__toggler" menu-class="search-results-header__settings__sort__dropdown">
+        <b-dropdown class="search-results-header__settings__sort"
+                    menu-class="search-results-header__settings__sort__dropdown"
+                    toggle-class="text-decoration-none py-2 px-2 border search-results-header__settings__sort__toggler"
+                    size="sm"
+                    variant="link">
           <template v-slot:button-content>
             {{ $t('search.results.sort.sortLabel') }}
           </template>
           <b-dropdown-header>
             {{ $t('search.settings.sortBy') }}
           </b-dropdown-header>
-          <b-dropdown-item v-for="selectedSort in sorts" :key="selectedSort" :active="selectedSort === sort" @click="selectSort(selectedSort)">
+          <b-dropdown-item :active="selectedSort === sort"
+                           @click="selectSort(selectedSort)"
+                           :key="selectedSort"
+                           v-for="selectedSort in sorts">
             {{ $t('search.results.sort.' + selectedSort) }}
           </b-dropdown-item>
         </b-dropdown>
-        <b-dropdown v-if="!noProgress" size="sm" variant="link" class="search-results-header__settings__size mr-2" toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__size__toggler" menu-class="search-results-header__settings__size__dropdown">
+        <b-dropdown class="search-results-header__settings__size mr-2"
+                    menu-class="search-results-header__settings__size__dropdown"
+                    size="sm"
+                    toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__size__toggler"
+                    v-if="!noProgress"
+                    variant="link">
           <template v-slot:button-content>
             <span class="search-results-header__settings__size__toggler__slot">
               {{ firstDocument }} – {{ lastDocument }}
@@ -25,7 +38,10 @@
           <b-dropdown-header>
             {{ $t('search.settings.resultsPerPage') }}
           </b-dropdown-header>
-          <b-dropdown-item v-for="selectedSize in sizes" :key="selectedSize" :active="selectedSize === size" @click="selectSize(selectedSize)">
+          <b-dropdown-item :active="selectedSize === size"
+                           @click="selectSize(selectedSize)"
+                           :key="selectedSize"
+                           v-for="selectedSize in sizes">
             <div class="d-flex align-items-center">
               <span>
                 {{ selectedSize }} {{ $t('search.results.perPage') }}
@@ -49,12 +65,11 @@
 </template>
 
 <script>
-import cloneDeep from 'lodash/cloneDeep'
-import min from 'lodash/min'
+import { cloneDeep, min } from 'lodash'
 import { mapState } from 'vuex'
 
-import Pagination from '@/components/Pagination'
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
+import Pagination from '@/components/Pagination'
 
 /**
  * Search results header displaying sorting and page length options.
@@ -62,8 +77,8 @@ import AppliedSearchFilters from '@/components/AppliedSearchFilters'
 export default {
   name: 'SearchResultsHeader',
   components: {
-    Pagination,
-    AppliedSearchFilters
+    AppliedSearchFilters,
+    Pagination
   },
   props: {
     /**
@@ -162,7 +177,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .search-results-header {
     padding: 0.5 * $spacer 0;
 
