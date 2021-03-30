@@ -530,6 +530,7 @@
     "faq": "よくある質問",
     "faqShort": "FAQ",
     "userGuides": "ユーザーガイド",
+    "userGuidesShort": "User guides",
     "devWiki": "Developper wiki",
     "connectedAs": "You're connected as <strong>{username}</strong>"
   },

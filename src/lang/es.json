@@ -530,6 +530,7 @@
     "faq": "Preguntas frecuentes (FAQ)",
     "faqShort": "FAQ",
     "userGuides": "Guía del Usuario",
+    "userGuidesShort": "User guides",
     "devWiki": "Wiki de desarrolladores",
     "connectedAs": "Estás conectado como <strong>{username}</strong>"
   },
