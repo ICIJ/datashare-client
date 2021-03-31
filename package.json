@@ -28,7 +28,6 @@
     "@fortawesome/free-solid-svg-icons": "^5.15.1",
     "@fortawesome/vue-fontawesome": "^2.0.0",
     "@icij/murmur": "2.21.2",
-    "@testing-library/jest-dom": "^5.11.6",
     "axios": "^0.21.1",
     "bodybuilder": "^2.2.25",
     "bootstrap": ">=4.5.3",

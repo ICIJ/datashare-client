@@ -1,4 +1,3 @@
-import '@testing-library/jest-dom'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import FiltersPanel from '@/components/FiltersPanel'
@@ -13,13 +12,13 @@ describe('FiltersPanel.vue', () => {
   })
 
   it('should display the aggregation panel by default', () => {
-    expect(wrapper.find('.filters-panel').element).toBeVisible()
+    expect(wrapper.find('.filters-panel').isVisible()).toBeTruthy()
   })
 
   it('should hide the aggregation panel on click on `Hide filters`', async () => {
     await wrapper.find('.filters-panel__sticky__toolbar__toggler').trigger('click')
 
-    expect(wrapper.find('.filters-panel').element).not.toBeVisible()
+    expect(wrapper.find('.filters-panel').isVisible()).toBeFalsy()
   })
 
   it('should not reset the starredDocuments on filters reset', () => {
