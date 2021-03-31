@@ -1,37 +1,36 @@
 <template>
   <div class="filters-panel" v-show="showFilters">
     <div class="filters-panel__sticky w-100">
-      <hook name="filters-panel:before" />
+      <hook name="filters-panel:before"></hook>
       <div class="filters-panel__sticky__toolbar">
-        <hook name="filters-panel.toolbar:before" />
+        <hook name="filters-panel.toolbar:before"></hook>
         <div class="d-flex align-items-center">
           <h5 class="flex-grow-1 my-0 h6 text-uppercase text-muted">
             {{ $t('search.filtersTitle') }}
           </h5>
           <button class="filters-panel__sticky__toolbar__toggler btn btn-link" @click="hideFilters" :title="$t('search.hideFilters')" v-b-tooltip>
-            <fa icon="arrow-left" class="text-light" />
+            <fa icon="arrow-left" class="text-light"></fa>
             <span class="sr-only">
               {{ $t('search.hideFilters') }}
             </span>
           </button>
         </div>
-        <hook name="filters-panel.toolbar:after" />
+        <hook name="filters-panel.toolbar:after"></hook>
       </div>
-      <hook name="filters-panel.filters:before" />
-      <filter-project />
+      <hook name="filters-panel.filters:before"></hook>
+      <filter-project></filter-project>
       <component v-for="filter in filters" :ref="filter.name" :key="filter.name" :is="filter.component" v-bind="{ filter }"></component>
-      <hook name="filters-panel.filters:after" />
-      <hook name="filters-panel:after" />
+      <hook name="filters-panel.filters:after"></hook>
+      <hook name="filters-panel:after"></hook>
     </div>
     <b-modal hide-footer lazy ref="openFilterSearch" :title="expandedFilter ? $t('filter.' + expandedFilter.name) : null">
-      <filter-search v-if="expandedFilter" :filter="expandedFilter" :model-query="query" />
+      <filter-search v-if="expandedFilter" :filter="expandedFilter" :model-query="query"></filter-search>
     </b-modal>
   </div>
 </template>
 
 <script>
-import get from 'lodash/get'
-import isArray from 'lodash/isArray'
+import { get, isArray } from 'lodash'
 import { mapState } from 'vuex'
 
 import FilterDate from '@/components/filter/types/FilterDate'
@@ -124,18 +123,18 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .filters-panel {
     $card-bg: darken($app-context-sidebar-bg, 5%);
     $panel-color: $app-sidebar-color;
 
+    align-items: flex-start;
     background: $app-context-sidebar-bg;
     color: $panel-color;
     display: flex;
-    align-items: flex-start;
+    min-height: 100vh;
     padding-bottom: $spacer;
     padding-right: $spacer;
-    min-height: 100vh;
 
     &__sticky {
       width: 100%;
@@ -151,35 +150,35 @@ export default {
         }
       }
 
-      & > .card {
-        margin: $spacer 0 0 $spacer;
-        border-width: 0;
+      & /deep/ .card {
         background: $card-bg;
+        border-width: 0;
         color: $panel-color;
+        margin: $spacer 0 0 $spacer;
 
         .card-header {
-          position: relative;
-          z-index: 10;
-          border-width: 0;
           background: inherit;
           border-radius: $card-border-radius;
+          border-width: 0;
           color: rgba($panel-color, 0.6);
+          position: relative;
+          z-index: 10;
 
           & > h6 {
+            background: transparent;
+            color: rgba($panel-color, 0.6);
+            cursor: pointer;
+            font-size: 0.9rem;
             font-weight: bolder;
             margin-bottom: 0;
             padding-top: $spacer * .25;
-            background: transparent;
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: rgba($panel-color, 0.6);
           }
         }
 
         & > .list-group,
         & > .card-body {
-          font-size: 0.8rem;
           color: $panel-color;
+          font-size: 0.8rem;
           padding:0;
         }
       }
