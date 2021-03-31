@@ -18,7 +18,7 @@
     "title": "Ce document est volumineux",
     "description": "L'ouvrir <strong>pourrait bloquer votre navigateur Web</strong>.",
     "download": "La recherche dans ce document peut être longue. Envisagez de le télécharger si votre environnement est sécurisé.",
-    "open": "Open anyway"
+    "open": "Ouvrir quand même"
   },
   "error": {
     "title": "Quelque chose ne va pas",
@@ -28,9 +28,9 @@
   "search": {
     "title": "Rechercher",
     "layout": {
-      "grid": "View in grid",
-      "list": "View in list",
-      "table": "View in table"
+      "grid": "Vue grille",
+      "list": "Vue liste",
+      "table": "Vue tableau"
     },
     "errors": {
       "badRequest": "Votre recherche contient une erreur",
@@ -45,7 +45,7 @@
     "field": {
       "all": "Tous les champs",
       "tags": "Tags",
-      "title": "Name",
+      "title": "Nom",
       "author": "Auteur·e",
       "recipients": "Destinataires",
       "content": "Contenu",
@@ -452,8 +452,8 @@
       }
     },
     "pdf": {
-      "preview": "Preview of the PDF active page",
-      "thumbnail": "Thumbnail of the PDF page"
+      "preview": "Aperçu de la page active PDF",
+      "thumbnail": "Vignette de la page PDF"
     },
     "attachments": {
       "heading": "Pas de pièces jointes | Une pièce jointe | {total} pièces jointes",
@@ -530,7 +530,7 @@
     "faq": "FAQ",
     "faqShort": "FAQ",
     "userGuides": "Guides d'utilisateurs",
-    "userGuidesShort": "User guides",
+    "userGuidesShort": "Guide d'utilisation",
     "devWiki": "Wiki pour développeur•se•s",
     "connectedAs": "Vous êtes connecté•e en tant que <strong>{username}</strong>"
   },
@@ -634,7 +634,7 @@
     "findPreviousOccurrenceAlt": "Aller à l'occurrence précédente dans le document",
     "findNextOccurrence": "Aller à l'occurrence suivante dans le document",
     "findNextOccurrenceAlt": "Aller à l'occurrence suivante dans le document",
-    "openAnyway": "Open anyway"
+    "openAnyway": "Ouvrir quand même"
   },
   "server": {
     "title": "Paramètres",
