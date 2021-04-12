@@ -1,3 +1,4 @@
+import trimEnd from 'lodash/trimEnd'
 import uniq from 'lodash/uniq'
 import FilterDocument from './FilterDocument'
 
@@ -18,7 +19,7 @@ export default class FilterPath extends FilterDocument {
          * are different).
          */
         uniq([dirname, dirname.toLowerCase()]).forEach(token => {
-          sub[func]('prefix', { 'dirname.tree': token.endsWith('/') ? token : token + '/' })
+          sub[func]('term', 'dirname.tree', trimEnd(token, '/'))
         })
       })
       return sub
