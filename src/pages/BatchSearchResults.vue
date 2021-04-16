@@ -254,11 +254,10 @@
             </b-table>
           </div>
         </div>
-        <b-pagination-nav class="mt-2"
-                          :link-gen="linkGen"
-                          :number-of-pages="numberOfPages"
-                          use-router
-                          v-if="numberOfPages > 1"></b-pagination-nav>
+
+        <div class="batch-search-results__pagination pt-2">
+          <custom-pagination v-model="currentPage" :per-page="perPage" :total-rows="totalItems" />
+        </div>
       </v-wait>
     </div>
     <b-modal id="document-modal" size="xl" lazy hide-header hide-footer body-class="p-0">
@@ -387,6 +386,7 @@ export default {
       name: '',
       order: settings.batchSearchResults.order,
       page: 1,
+      currentPage: 1,
       published: false,
       queries: [],
       rows: [
@@ -399,6 +399,10 @@ export default {
     }
   },
   watch: {
+    currentPage (pageNumber) {
+      this.page = pageNumber
+      this.$router.push(this.generateLinkToBatchSearchResults(pageNumber, this.selectedQueries))
+    },
     page () {
       this.fetch()
     },
@@ -603,6 +607,10 @@ export default {
 
 <style lang="scss" scoped>
 .batch-search-results {
+  &__pagination {
+    max-width: 40%;
+  }
+
   &__action {
     position: relative;
 
