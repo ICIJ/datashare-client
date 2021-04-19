@@ -386,7 +386,6 @@ export default {
       name: '',
       order: settings.batchSearchResults.order,
       page: 1,
-      currentPage: 1,
       published: false,
       queries: [],
       rows: [
@@ -399,10 +398,6 @@ export default {
     }
   },
   watch: {
-    currentPage (pageNumber) {
-      this.page = pageNumber
-      this.$router.push(this.generateLinkToBatchSearchResults(pageNumber, this.selectedQueries))
-    },
     page () {
       this.fetch()
     },
@@ -424,6 +419,15 @@ export default {
   },
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results']),
+    currentPage: {
+      get () {
+        return this.page
+      },
+      set (pageNumber) {
+        this.page = pageNumber
+        this.$router.push(this.generateLinkToBatchSearchResults(pageNumber, this.selectedQueries))
+      }
+    },
     selectedQueries () {
       return get(this, '$store.state.batchSearch.selectedQueries', [])
     },
