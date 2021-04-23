@@ -3,7 +3,7 @@
     <div v-if="hasResults">
       <search-results-header position="top" bordered class="px-3"></search-results-header>
       <div class="search-results-list__items">
-        <div v-for="document in response.hits" :key="document.id" class="search-results-list__items__item mw-100">
+        <div v-for="document in response.hits" :key="document.id" :data-document-id="document.id" class="search-results-list__items__item mw-100">
           <search-results-list-link
             class="search-results-list__items__item__link"
             :document="document"></search-results-list-link>
@@ -47,6 +47,19 @@ export default {
     DocumentActions,
     SearchResultsHeader,
     SearchResultsListLink
+  },
+  watch: {
+    $route (to, from) {
+      const documentId = to.params.id
+      const searchListItems = [...this.$el.querySelectorAll('.search-results-list__items__item')]
+
+      let target = searchListItems.filter((item) => {
+        return item.dataset.documentId === documentId
+      })
+      target = target[0]
+
+      target.scrollIntoView({ behavior: 'instant', block: 'nearest' })
+    }
   },
   computed: {
     ...mapState('search', ['query', 'response', 'isDownloadAllowed']),
