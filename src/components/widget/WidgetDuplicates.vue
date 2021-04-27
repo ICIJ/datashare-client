@@ -8,7 +8,7 @@
         <fa icon="circle-notch" spin slot="waiting" size="2x" class="m-auto d-block"></fa>
         <div>
           <stacked-bar-chart :data="data" :x-axis-tick-format="humanNumber" label-above :bar-colors="colors" :keys="keys" :groups="groups"></stacked-bar-chart>
-          <p class="small text-muted">
+          <p class="small text-muted mb-0">
             {{ $t('widget.duplicates.duplicated') }}
           </p>
         </div>
@@ -18,6 +18,7 @@
 </template>
 
 <script>
+import get from 'lodash/get'
 import { waitFor } from 'vue-wait'
 
 import elasticsearch from '@/api/elasticsearch'
@@ -60,7 +61,7 @@ export default {
       const index = this.$store.state.insights.project
       const body = { query: { query_string: { query } } }
       const res = await elasticsearch.search({ index, body, size: 0 })
-      return res?.hits?.total || 0
+      return get(res, 'hits.total.value', 0)
     },
     countTotal () {
       const q = 'type:Document'
@@ -73,9 +74,7 @@ export default {
     loadData: waitFor('duplicate-counters', async function () {
       const documents = await this.countTotal()
       const duplicates = await this.countDuplicates()
-      this.$set(this, 'data', [
-        { documents, duplicates }
-      ])
+      this.$set(this, 'data', [{ documents, duplicates }])
     }),
     humanNumber
   }
