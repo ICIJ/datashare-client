@@ -293,7 +293,7 @@ describe('BatchSearchResults.vue', () => {
     })
 
     it('should filter results and adapt number of pages', () => {
-      store.commit('batchSearch/selectedQueries', ['query_01'])
+      store.commit('batchSearch/selectedQueries', [{ count: 1, label: 'query_01' }])
 
       expect(wrapper.vm.numberOfPages).toBe(1)
     })
