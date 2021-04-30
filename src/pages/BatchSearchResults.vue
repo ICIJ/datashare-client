@@ -272,7 +272,11 @@
             </a>
           </template>
           <template #nav>
-            <quick-item-nav v-model="documentInModalIndex" :total-items="totalItems"></quick-item-nav>
+            <quick-item-nav
+              v-model="documentInModalIndex"
+              :total-items="totalItems"
+              >
+            </quick-item-nav>
           </template>
         </document-navbar>
         <document-view :id="documentInModal.id"
@@ -285,7 +289,7 @@
 </template>
 
 <script>
-import { castArray, find, get, indexOf, isEqual, keys, sumBy } from 'lodash'
+import { castArray, find, get, isEqual, keys, sumBy } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
@@ -447,8 +451,10 @@ export default {
       if (this.selectedQueries.length === 0) {
         return this.batchSearch.nbResults
       } else {
-        return sumBy(keys(this.batchSearch.queries), query => {
-          if (indexOf(this.selectedQueries, query) > -1) {
+        const queryKeys = keys(this.batchSearch.queries)
+        return sumBy(queryKeys, query => {
+          const findQuery = find(this.selectedQueries, ['label', query])
+          if (findQuery) {
             return this.batchSearch.queries[query]
           }
         })
