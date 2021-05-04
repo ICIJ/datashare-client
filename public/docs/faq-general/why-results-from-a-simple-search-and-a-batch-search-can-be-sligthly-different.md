@@ -6,16 +6,16 @@ Why?
 
 For technical reasons, Datashare processes both queries in 2 different ways:
 
- **1. Search bar \(a simple search processed in the browser\):**
+ **a. Search bar \(a simple search processed in the browser\):**
 
 The search query sent to Elasticsearch is processed in your browser by Datashare's client. It is then sent to Elasticsearch through Datashare server which forwards your query.
 
- **2. Batch search \(several searches processed by the server\):**
+ **b. Batch search \(several searches processed by the server\):**
 
-a. Datashare's server processes each of the batch search's queries  
-b. Each query is sent to Elasticsearch. The results are saved into a database  
-c. When the batch search is finished, you get the results from Datashare  
-D. Datashare sends back the results stored into the database/  
+1. Datashare's server processes each of the batch search's queries  
+2. Each query is sent to Elasticsearch. The results are saved into a database  
+3. When the batch search is finished, you get the results from Datashare  
+4. Datashare sends back the results stored into the database/  
   
 Datashare's team attempts to make both results be similar, but slight differences can happen between the two queries.
 
