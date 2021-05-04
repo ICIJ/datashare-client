@@ -1,4 +1,4 @@
-# Why results from a simple search and a batch search can be sligthly different?
+# Why results from a simple search and a batch search can be slightly different?
 
 If you search "Shakespeare" in the search bar and if you run a query containing "Shakespeare" in a batch search, you can get slightly different documents between the two results.
 
