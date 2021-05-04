@@ -560,7 +560,7 @@
     "title": "Recherches en lot",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
-    "fileDescription": "Exportez votre feuille de calcul en format CSV. Seul le format CSV est accepté. La première colonne doit contenir les termes à rechercher. N'allez pas à la ligne au sein d'une cellule. Vous pouvez utiliser les opérateurs (AND NOT * ? + - etc). Utilisez 'espace' au lieu de OU ou | | quand vous avez coché 'Rechercher les termes exacts'. Pour rechercher avec des Regex, les mettre entre 2 slashes.",
+    "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. Only CSV format accepted. CSV file should not contain more than 60,000 queries. The first and only column should contain the terms to search. No line break(s) in cells. You can use operators (AND NOT * ? ! + - etc). Use 'space' instead of OR or | | with 'do phrase matches'. You can use Regex only between 2 slashes.",
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
