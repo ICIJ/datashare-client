@@ -275,14 +275,18 @@
             <quick-item-nav
               v-model="documentInModalIndex"
               :total-items="totalItems"
+              @previous="handlePrevNextRoute"
+              @next="handlePrevNextRoute"
               >
             </quick-item-nav>
           </template>
         </document-navbar>
-        <document-view :id="documentInModal.id"
-                       :index="documentInModal.index"
-                       :q="documentInModal.q"
-                       :routing="documentInModal.routing"></document-view>
+        <v-wait for="load batchSearch results">
+          <document-view :id="documentInModal.id"
+                         :index="documentInModal.index"
+                         :q="documentInModal.q"
+                         :routing="documentInModal.routing"></document-view>
+        </v-wait>
       </div>
     </b-modal>
   </div>
@@ -524,6 +528,11 @@ export default {
     next()
   },
   methods: {
+    handlePrevNextRoute () {
+      if (this.isFirstDocument || this.isLastDocument) {
+        this.$router.push(this.generateLinkToBatchSearchResults(this.currentPage, this.selectedQueries))
+      }
+    },
     async checkIsMyBatchSearch () {
       const username = await auth.getUsername()
       this.isMyBatchSearch = username === get(this, 'batchSearch.user.id', '')
