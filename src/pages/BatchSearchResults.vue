@@ -498,6 +498,13 @@ export default {
     },
     pageOffset () {
       return (this.page - 1) * this.perPage
+    },
+    isFirstDocument () {
+      return this.documentInModalPageIndex === 0
+    },
+    isLastDocument () {
+      const totalResultsIndices = this.results.length - 1
+      return this.documentInModalPageIndex === totalResultsIndices
     }
   },
   beforeRouteEnter (to, from, next) {
