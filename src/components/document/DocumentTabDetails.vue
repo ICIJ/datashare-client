@@ -158,7 +158,7 @@ export default {
           component: 'code'
         },
         {
-          name: 'name',
+          name: 'metadata.tika_metadata_resourcename',
           label: this.$t('document.name'),
           class: 'document__content__basename',
           value: this.document.basename
