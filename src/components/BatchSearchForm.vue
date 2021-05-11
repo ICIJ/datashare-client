@@ -350,13 +350,13 @@ export default {
             await this.$store.dispatch('indexing/runBatchSearch')
             this.$root.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
           } catch (_) {
-            this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
+            this.manageError(_.response.status, true)
           }
         } else {
           this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
         }
       } catch (_) {
-        this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
+        this.manageError(_.response.status, false)
       } finally {
         /**
          * The form has been submitted
@@ -389,6 +389,14 @@ export default {
         return arr
       })
       return uniq(flatten(tree))
+    },
+    manageError (errorCode, manageDocuments) {
+      if (errorCode === 413) {
+        this.$root.$bvToast.toast(this.$t('batchSearch.submitQueryLimitError'), { noCloseButton: true, variant: 'danger' })
+      } else {
+        manageDocuments ? this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
+          : this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
+      }
     }
   }
 }
