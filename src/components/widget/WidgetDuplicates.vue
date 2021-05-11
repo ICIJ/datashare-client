@@ -59,7 +59,7 @@ export default {
   methods: {
     async count (query) {
       const index = this.$store.state.insights.project
-      const body = { query: { query_string: { query } } }
+      const body = { track_total_hits: true, query: { query_string: { query } } }
       const res = await elasticsearch.search({ index, body, size: 0 })
       return get(res, 'hits.total.value', 0)
     },
