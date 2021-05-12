@@ -567,6 +567,7 @@
     "error": "Error, no se puede iniciar la búsqueda masiva.",
     "submitSuccess": "La búsqueda masiva ha sido añadida.",
     "submitError": "Error, no se puede añadir la búsqueda masiva.",
+    "submitQueryLimitError": "Error in CSV, your CSV exceed 60.000 queries.",
     "project": "Proyecto",
     "name": "Nombre",
     "description": "Descripción",
