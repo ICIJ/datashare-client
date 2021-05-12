@@ -567,6 +567,7 @@
     "error": "Il y a eu une erreur, votre recherche en lot n'a pas pu être effectuée.",
     "submitSuccess": "Votre recherche en lot a été ajoutée.",
     "submitError": "Il ya eu une erreur, votre recherche en lot n'a pas été ajoutée.",
+    "submitQueryLimitError": "Error in CSV, your CSV exceed 60.000 queries.",
     "project": "Projet",
     "name": "Nom",
     "description": "Description",
