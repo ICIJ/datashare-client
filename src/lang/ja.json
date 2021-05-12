@@ -567,6 +567,7 @@
     "error": "Something went wrong, unable to start your batch search.",
     "submitSuccess": "Your batch search has been added.",
     "submitError": "Something went wrong, unable to add your batch search.",
+    "submitQueryLimitError": "Error in CSV, your CSV exceed 60.000 queries.",
     "project": "プロジェクト",
     "name": "名称",
     "description": "詳細",
