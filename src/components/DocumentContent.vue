@@ -55,7 +55,8 @@ export default {
       localSearchTerm: { label: this.q },
       localSearchWorker: null,
       localSearchWorkerInProgress: false,
-      transformedContent: ''
+      transformedContent: '',
+      rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN']
     }
   },
   async mounted () {
@@ -103,6 +104,10 @@ export default {
     },
     async transformContent () {
       const transformedContent = await this.applyContentPipeline()
+      const body = this.$el.querySelector('.document-content__body')
+      if (this.rightToLeftLanguages.includes(this.document.source.language)) {
+        body.classList.add('document-content__body--rtl')
+      }
       this.$set(this, 'transformedContent', transformedContent)
     },
     terminateLocalSearchWorker () {
@@ -291,6 +296,11 @@ export default {
       &--sticky {
         position: sticky;
       }
+    }
+
+    &__body--rtl {
+      direction: rtl;
+      text-align: right;
     }
 
     &__ner-toggler {

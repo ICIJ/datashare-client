@@ -101,6 +101,49 @@ describe('DocumentContent.vue', () => {
       await wrapper.vm.transformContent()
       expect(wrapper.find('.document-content__body p').html()).toEqual('<p>this is a <mark>document</mark></p>')
     })
+
+    it('should display the text right to left depending on the language', async () => {
+      await letData(es).have(new IndexedDocument(id, index)
+        .withContent('المنال ويتلذذ بالآلام، الألم هو الألم ولكن نتيجة لظروف ما قد تكمن السعاده فيما نتحمله من كد وأسي.')
+        .withLanguage('ARABIC'))
+        .commit()
+      await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+      await store.commit('document/toggleShowNamedEntities', true)
+      const wrapper = shallowMount(DocumentContent, {
+        i18n,
+        localVue,
+        store,
+        propsData: {
+          document: store.state.document.doc
+        }
+      })
+
+      await wrapper.vm.transformContent()
+      expect(wrapper.find('.document-content__body').html()).toContain('--rtl')
+    })
+
+    it('should NOT display the text right to left depending on the language', async () => {
+      await letData(es).have(new IndexedDocument(id, index)
+        .withContent('This text must be displayed in left to right.'))
+        .commit()
+      await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
+      await store.commit('document/toggleShowNamedEntities', true)
+      const wrapper = shallowMount(DocumentContent, {
+        i18n,
+        localVue,
+        store,
+        propsData: {
+          document: store.state.document.doc
+        }
+      })
+
+      await wrapper.vm.transformContent()
+      expect(wrapper.find('.document-content__body').html()).not.toContain('--rtl')
+    })
   })
 
   describe('the "Show named entities" toggle', () => {
