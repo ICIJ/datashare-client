@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { compact, get, isEmpty, uniq } from 'lodash'
+import { compact, get, isEmpty, uniq, includes } from 'lodash'
 
 /**
  * A single-project selector input.
@@ -28,6 +28,14 @@ export default {
       default: 'md'
     }
   },
+  methods: {
+    verifyDefaultSelectedProject () {
+      const projectToVerify = this.value
+      const projects = this.$config.get('groups_by_applications.datashare', [])
+
+      return includes(projects, projectToVerify) ? projectToVerify : projects[0]
+    }
+  },
   computed: {
     projects () {
       const defaultProjects = [this.$config.get('defaultProject')]
@@ -39,7 +47,7 @@ export default {
     },
     selectedProject: {
       get () {
-        return isEmpty(this.value) ? get(this.projects, [0, 'value'], '') : this.value
+        return isEmpty(this.value) ? get(this.projects, [0, 'value'], '') : this.verifyDefaultSelectedProject()
       },
       set (value) {
         this.$emit('input', value)

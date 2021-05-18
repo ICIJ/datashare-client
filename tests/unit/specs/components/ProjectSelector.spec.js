@@ -24,4 +24,11 @@ describe('ProjectSelector.vue', () => {
 
     expect(wrapper.vm.selectedProject).toEqual('first-index')
   })
+
+  it('should set default project to first project if value is not in user project list', () => {
+    Murmur.config.merge({ groups_by_applications: { datashare: ['first-index', 'second-index'] } })
+    wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { value: 'default-index' }, stubs: { 'b-form-select': false } })
+
+    expect(wrapper.vm.selectedProject).toEqual('first-index')
+  })
 })
