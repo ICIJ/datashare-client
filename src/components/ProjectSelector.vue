@@ -3,7 +3,7 @@
 </template>
 
 <script>
-import { compact, get, isEmpty, uniq, includes } from 'lodash'
+import { compact, get, isEmpty, uniq, includes, remove } from 'lodash'
 
 /**
  * A single-project selector input.
@@ -42,7 +42,12 @@ export default {
       // @depracated this load the list from a depracated list of project for retro-compatibility
       const legacyProjects = this.$config.get('datashare_projects', defaultProjects)
       const projects = this.$config.get('groups_by_applications.datashare', defaultProjects)
-      const sortedProjects = compact(uniq([...projects, ...legacyProjects]).sort())
+      let sortedProjects = compact(uniq([...projects, ...legacyProjects]).sort())
+      if (!includes(projects, defaultProjects)) {
+        sortedProjects = remove(sortedProjects, (project) => {
+          return includes(projects, project)
+        })
+      }
       return sortedProjects.map(value => ({ value, text: value }))
     },
     selectedProject: {

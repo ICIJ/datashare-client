@@ -13,6 +13,18 @@ describe('ProjectSelector.vue', () => {
     wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { value: 'first-index' }, stubs: { 'b-form-select': false } })
 
     expect(wrapper.vm.projects).toHaveLength(3)
+    // expect(wrapper.vm.projects).toEqual(expect.arrayContaining([{ value: 'default', text: 'default' }]))
+
+    expect(wrapper.vm.projects).toEqual(expect.arrayContaining([{ value: 'first-index', text: 'first-index' }]))
+    expect(wrapper.vm.projects).toEqual(expect.arrayContaining([{ value: 'second-index', text: 'second-index' }]))
+    expect(wrapper.vm.projects).toEqual(expect.arrayContaining([{ value: 'third-index', text: 'third-index' }]))
+  })
+
+  it('should include projects only for which the user is a member', () => {
+    Murmur.config.merge({ groups_by_applications: { datashare: ['first-index', 'second-index', 'third-index'] }, defaultProject: ['default'] })
+    wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { value: 'first-index' }, stubs: { 'b-form-select': false } })
+
+    expect(wrapper.vm.projects).toHaveLength(3)
     expect(wrapper.vm.projects).toEqual(expect.arrayContaining([{ value: 'first-index', text: 'first-index' }]))
     expect(wrapper.vm.projects).toEqual(expect.arrayContaining([{ value: 'second-index', text: 'second-index' }]))
     expect(wrapper.vm.projects).toEqual(expect.arrayContaining([{ value: 'third-index', text: 'third-index' }]))
