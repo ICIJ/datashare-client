@@ -162,19 +162,19 @@ class Core extends Behaviors {
       // Override Murmur default value for content-placeholder
       this.config.set('content-placeholder.rows', settings.contentPlaceholder.rows)
       // Get the config object
-      const config = await this.api.getSettings()
+      const serverSettings = await this.api.getSettings()
       // Load the user
       this.config.merge(await this.getUser())
       // Murmur exposes a config attribute which share a Config object
       // with the current vue instance.
-      this.config.merge(mode(config.mode))
+      this.config.merge(mode(serverSettings.mode))
       // The backend can yet override some configuration
-      this.config.merge(config)
+      this.config.merge(serverSettings)
       // Create the default project for the current user or redirect to login
       await this.createDefaultProject()
       // Set the default project
       if (this.store.state.search.index === '') {
-        this.store.commit('search/index', config.defaultProject)
+        this.store.commit('search/index', this.getDefaultProject())
       }
       // Check if "Download" functionality is available for the selected project
       // Because otherwise, if the FilterPanel is closed, it is never called
@@ -185,6 +185,14 @@ class Core extends Behaviors {
       return this.ready && this._readyReject(error)
     }
   }
+
+  getDefaultProject () {
+    const userProjects = this.config.get('groups_by_applications.datashare', [])
+    if (userProjects.length === 0) return ''
+    const defaultProject = this.config.get('defaultProject', '')
+    return userProjects.indexOf(defaultProject) === -1 ? userProjects[0] : defaultProject
+  }
+
   /**
    * Mount the instance's vue application
    * @param {String} [selector=#app] - Query selector to the mounting point
