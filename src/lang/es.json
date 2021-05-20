@@ -560,7 +560,7 @@
     "title": "Búsquedas masivas",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
-    "fileDescription": "Exportar su hoja de cálculo como CSV usando la codificación UTF-8. Sólo el formato CSV es aceptado. El archivo CSV no debe contener más de 60 000 líneas. La primera y única columna debe contener los términos a buscar. No hay saltos de línea en las celdas. Puede utilizar operadores (Y NO * ? ! + - etc). Use 'espacio' en lugar de OR o | | con 'hacer frase coincidente'. Puede usar Regex sólo entre 2 barras.",
+    "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>You can use operators (AND NOT * ? ! + - etc).</li> <li>Use 'space' instead of OR or | | with 'do phrase matches'.</li> <li>You can use Regex only between 2 slashes.</li></ul>",
     "filePlaceholder": "Selecciona un archivo...",
     "submit": "Añadir",
     "success": "Tu búsqueda masiva está ejecutándose.",
