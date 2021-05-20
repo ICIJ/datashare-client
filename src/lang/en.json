@@ -560,7 +560,7 @@
     "title": "Batch searches",
     "heading": "New batch search",
     "fileLabel": "CSV file",
-    "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. Only CSV format accepted. CSV file should not contain more than 60,000 queries. The first and only column should contain the terms to search. No line break(s) in cells. You can use operators (AND NOT * ? ! + - etc). Use 'space' instead of OR or | | with 'do phrase matches'. You can use Regex only between 2 slashes.",
+    "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>You can use operators (AND NOT * ? ! + - etc).</li> <li>Use 'space' instead of OR or | | with 'do phrase matches'.</li> <li>You can use Regex only between 2 slashes.</li></ul>",
     "filePlaceholder": "Choose a file...",
     "submit": "Add",
     "success": "Your batch search is now running.",

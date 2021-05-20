@@ -17,8 +17,10 @@
           <b-form-group
             label-size="sm"
             class="mb-0"
-            :label="`${$t('batchSearch.fileLabel')} *`"
-            :description="$t('batchSearch.fileDescription')">
+            :label="`${$t('batchSearch.fileLabel')} *`">
+            <template slot="description">
+              <div v-html="$t('batchSearch.fileDescription')"></div>
+            </template>
             <b-form-file
               v-model="csvFile"
               :placeholder="$t('batchSearch.filePlaceholder')"
