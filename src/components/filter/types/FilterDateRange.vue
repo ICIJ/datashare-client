@@ -73,9 +73,12 @@ export default {
         if (range === null) {
           return this.setFilterValue(this.filter, { key: [] })
         }
-        const start = range.start - range.start.getTimezoneOffset() * 60 * 1000
-        const end = range.end - range.end.getTimezoneOffset() * 60 * 1000 + 24 * 60 * 60 * 1000 - 1
+        let start = Number.isInteger(range.start) ? new Date(range.start) : range.start
+        let end = Number.isInteger(range.end) ? new Date(range.end) : range.end
+        start = start - start.getTimezoneOffset() * 60 * 1000
+        end = end - end.getTimezoneOffset() * 60 * 1000 + 24 * 60
         this.setFilterValue(this.filter, { key: [start, end] })
+        this.refreshRouteAndSearch()
       }
     }
   }

@@ -283,6 +283,9 @@ export default {
     },
     showAdvancedFilters () {
       this.retrieveFileTypes()
+    },
+    csvFile () {
+      console.log(this.verifyQueryLimit(this.csvFile))
     }
   },
   created () {
@@ -291,6 +294,23 @@ export default {
     this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
   },
   methods: {
+    verifyQueryLimit (csv) {
+      let csvQueries
+      const reader = new FileReader()
+      reader.readAsBinaryString(csv)
+      reader.onload = (event) => {
+        csvQueries = this.parseCsvQueries(event.target.result)
+        return csvQueries.length >= 3
+      }
+    },
+    parseCsvQueries (queries) {
+      const csvData = []
+      const lbreak = queries.split('\n')
+      lbreak.forEach(res => {
+        csvData.push(res.split(','))
+      })
+      return csvData
+    },
     selectFileType (fileType) {
       this.$set(this, 'selectedFileType', fileType || this.selectedFileType)
     },

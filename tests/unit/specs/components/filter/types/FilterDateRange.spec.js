@@ -52,7 +52,7 @@ describe('FilterDateRange.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start, end })
 
     const expectedStart = Date.parse(start) - start.getTimezoneOffset() * 60 * 1000
-    const expectedEnd = Date.parse(end) - end.getTimezoneOffset() * 60 * 1000 + 24 * 60 * 60 * 1000 - 1
+    const expectedEnd = Date.parse(end) - end.getTimezoneOffset() * 60 * 1000 + 24 * 60
 
     const existingFilter = find(store.getters['search/instantiatedFilters'], { name })
     expect(existingFilter.values).toEqual([expectedStart, expectedEnd])
@@ -68,7 +68,7 @@ describe('FilterDateRange.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'selectedDate', { start: start2, end: end2 })
 
     const expectedStart = Date.parse(start2) - start2.getTimezoneOffset() * 60 * 1000
-    const expectedEnd = Date.parse(end2) - end2.getTimezoneOffset() * 60 * 1000 + 24 * 60 * 60 * 1000 - 1
+    const expectedEnd = Date.parse(end2) - end2.getTimezoneOffset() * 60 * 1000 + 24 * 60
 
     const existingFilter = find(store.getters['search/instantiatedFilters'], { name })
     expect(existingFilter.values).toEqual([expectedStart, expectedEnd])
