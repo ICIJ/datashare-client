@@ -881,7 +881,7 @@ describe('SearchStore', () => {
     store.commit('search/setFilterValue', { name, value: '12' })
     store.commit('search/setFilterValue', { name, value: '42' })
 
-    expect(find(store.getters['search/instantiatedFilters'], { name }).values).toEqual(['42'])
+    expect(find(store.getters['search/instantiatedFilters'], { name }).values).toEqual([42])
   })
 
   it('should star a batch of documents', async () => {
