@@ -16,16 +16,8 @@ export default class FilterDateRange extends FilterDate {
     }
   }
   queryBuilder (body, param, func) {
-    const values = []
-
-    param.values.forEach(value => {
-      if (isInteger(value)) {
-        values.push(value)
-      }
-    })
-
     return body.query('bool', sub => {
-      sub[func]('range', this.key, { gte: new Date(min(values)), lte: new Date(max(values)) })
+      sub[func]('range', this.key, { gte: new Date(min(param.values)), lte: new Date(max(param.values)) })
       return sub
     })
   }

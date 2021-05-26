@@ -29,14 +29,7 @@ export default {
         filters.push(term)
       })
       map(this.$store.getters['search/instantiatedFilters'], filter => {
-        const integers = []
-        if (filter.name === 'creationDate') {
-          filter.values.forEach((value) => {
-            integers.push(parseInt(value))
-          })
-        }
-        const values = (integers.length !== 0) ? [...new Set(integers)] : filter.values
-        map(values, value => {
+        map(filter.values, value => {
           let label = filter.itemLabel ? filter.itemLabel({ key: value, key_as_string: value }) : value
           label = this.$te(label) ? this.$t(label) : label
           if (filter.component === new FilterDate().component && parseInt(label)) {
