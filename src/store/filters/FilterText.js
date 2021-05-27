@@ -97,15 +97,7 @@ export default class FilterText {
   }
 
   get values () {
-    let values = this[_VALUES] || get(this, ['state', 'values', this.name], [])
-    if (this.name === 'creationDate') {
-      const integers = []
-      values.forEach((value) => {
-        integers.push(parseInt(value))
-      })
-      values = [...new Set(integers)]
-    }
-    return values
+    return this[_VALUES] || get(this, ['state', 'values', this.name], [])
   }
 
   set values (values) {

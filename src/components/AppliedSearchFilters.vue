@@ -6,7 +6,7 @@
 </template>
 
 <script>
-import { map, parseInt } from 'lodash'
+import { parseInt } from 'lodash'
 
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
@@ -24,12 +24,12 @@ export default {
   computed: {
     filters () {
       const filters = []
-      map(this.$store.getters['search/retrieveQueryTerms'], term => {
+      this.$store.getters['search/retrieveQueryTerms'].forEach(term => {
         term.value = term.label
         filters.push(term)
       })
-      map(this.$store.getters['search/instantiatedFilters'], filter => {
-        map(filter.values, value => {
+      this.$store.getters['search/instantiatedFilters'].forEach(filter => {
+        filter.values.forEach(value => {
           let label = filter.itemLabel ? filter.itemLabel({ key: value, key_as_string: value }) : value
           label = this.$te(label) ? this.$t(label) : label
           if (filter.component === new FilterDate().component && parseInt(label)) {
