@@ -10,7 +10,7 @@
       </b-modal>
     </page-header>
     <div class="container pt-4">
-      <form class="batch-search__search-bar container-fluid p-0">
+      <form class="batch-search__search-bar container-fluid p-0" @submit.prevent="searchBatchsearches">
         <div class="d-flex align-items-left w-50">
           <div class="input-group">
             <input
@@ -23,7 +23,7 @@
                   {{ $t('search.field.' + key) }}
                 </b-dropdown-item>
               </b-dropdown>
-              <button type="submit" class="btn btn-dark" @click="searchBatchsearches">
+              <button type="submit" class="btn btn-dark">
                 {{ $t('search.buttonLabel') }}
               </button>
             </div>

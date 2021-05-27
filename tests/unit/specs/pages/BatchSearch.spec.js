@@ -62,7 +62,7 @@ describe('BatchSearch.vue', () => {
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
   })
 
-  describe('SERVER mode', () => {
+  describe('common functions', () => {
     beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
 
     it('should display a search bar', () => {
@@ -71,19 +71,6 @@ describe('BatchSearch.vue', () => {
 
     it('should list the batchSearches', () => {
       expect(wrapper.findAll('.batch-search__items__item')).toHaveLength(2)
-    })
-
-    it('should have author field in server mode in fieldOptions', () => {
-      expect(wrapper.find('.batch-search__search-bar__field__items:nth-child(4)').text()).toContain('Author')
-    })
-
-    it('should display 9 columns of info per row', () => {
-      expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(9)
-    })
-
-    it('should display project name in the batch search results url', () => {
-      expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a')
-        .attributes('href')).toContain('/project_01/')
     })
 
     it('should display badge if batchSearch state is fail, but no badge if state is not fail', () => {
@@ -145,6 +132,32 @@ describe('BatchSearch.vue', () => {
       await wrapper.setData({ perPage: 1 })
 
       expect(wrapper.find('.pagination.b-pagination').exists()).toBeTruthy()
+    })
+
+    it('should execute "searchBatchsearches" on submit one time', async () => {
+      const searchSpy = jest.spyOn(wrapper.vm, 'searchBatchsearches')
+      expect(searchSpy).not.toBeCalled()
+
+      await wrapper.find('.btn-dark').trigger('submit')
+
+      expect(searchSpy).toBeCalledTimes(1)
+    })
+  })
+
+  describe('SERVER mode', () => {
+    beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
+
+    it('should have author field in server mode in fieldOptions', () => {
+      expect(wrapper.find('.batch-search__search-bar__field__items:nth-child(4)').text()).toContain('Author')
+    })
+
+    it('should display 9 columns of info per row', () => {
+      expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(9)
+    })
+
+    it('should display project name in the batch search results url', () => {
+      expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a')
+        .attributes('href')).toContain('/project_01/')
     })
   })
 
