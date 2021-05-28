@@ -6,7 +6,7 @@
         <slot name="selector" :selectedPath="selectedPath" :setSelectedPath="setSelectedPath"></slot>
         <div class="btn-group">
           <span v-for="(value, interval) in intervals" :key="interval" class="btn btn-link border py-1 px-2" :class="{ 'active': selectedInterval === interval }">
-            <span class="widget__header__selectors__selector" @click="selectInterval(interval)">
+            <span class="widget__header__selectors__selector" @click="setSelectedInterval(interval)">
               {{ $t('widget.creationDate.intervals.' + interval) }}
             </span>
           </span>
@@ -19,32 +19,28 @@
           <div class="widget__content__chart__spinner" slot="waiting">
             <fa icon="circle-notch" spin size="2x"></fa>
           </div>
-          <svg :height="height" width="100%" shape-rendering="crispEdges">
-            <g :style="{ transform: `translate(${margin.left}px, ${margin.top}px)` }">
-              <g class="widget__content__chart__axis widget__content__chart__axis--x" :style="{ transform: `translate(0px, ${this.innerHeight}px)` }"></g>
-              <g class="widget__content__chart__axis widget__content__chart__axis--y"></g>
-              <g class="widget__content__chart__bars">
-                <g class="widget__content__chart__bars__item" v-for="(bar, index) in bars" :key="index" :transform="`translate(${bar.x}, ${bar.y})`">
-                  <rect class="widget__content__chart__bars__item__bar" @mouseover="shownTooltip = index" @mouseleave="shownTooltip = -1" :height="bar.height" :width="bar.width"></rect>
-                </g>
-                <g class="widget__content__chart__tooltips">
-                  <foreignObject :x="bar.flipX ? -200 : bar.width" :y="bar.flipY ? 0 : -100" width="200" height="100" class="widget__content__chart__tooltips__item" :class="tooltipClasses(index, bar)" v-for="(bar, index) in bars" :key="index" :transform="`translate(${bar.x}, ${bar.y})`">
-                    <div class="widget__content__chart__tooltips__item__wrapper" xmlns="http://www.w3.org/1999/xhtml">
-                      <span>
-                        <h6 class="mb-0">
-                          {{ intervalFormatFn(bar.date) }}
-                        </h6>
-                        {{ $tc('widget.creationDate.document', bar.doc_count, { total: $n(bar.doc_count) }) }}
-                      </span>
-                    </div>
-                  </foreignObject>
-                </g>
-              </g>
-            </g>
-          </svg>
-          <p class="widget__content__missing mt-2 small text-muted" v-if="missing" :title="$t('widget.creationDate.missingTooltip')">
-            {{ $tc('widget.creationDate.missing', missing, { total: $n(missing) }) }}
-          </p>
+          <column-chart :data="slicedDataForMurmur" :max-value="maxValue" :x-axis-tick-format="xAxisTickFormat">
+            <template #tooltip="{ datum: { date, value: total } }">
+              <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
+              <p class="m-0">{{ $tc('widget.creationDate.document', total,  { total }) }}</p>
+            </template>
+          </column-chart>
+          <div v-if="isDatesRangeSliced" class="widget__content__chart__range">
+            <div class="widget__content__chart__range__selection border border-primary" :style="datesRangeSelectionStyle">
+              <b-button pill variant="outline-dark" @click="previousDatesRangeSlice" v-if="hasPreviousDatesRangeSlice" class="widget__content__chart__range__selection__previous bg-white">
+                <fa icon="angle-left" />
+              </b-button>
+              <b-button pill variant="outline-dark" @click="nextDatesRangeSlice" v-if="hasNextDatesRangeSlice" class="widget__content__chart__range__selection__next bg-white">
+                <fa icon="angle-right" />
+              </b-button>
+            </div>
+            <column-chart :data="dataForMurmur" :fixed-height="100" no-tooltips no-x-axis no-y-axis />
+          </div>
+          <div class="d-flex align-items-center mt-2">
+            <p class="widget__content__missing small my-0 text-muted" v-if="missing" :title="$t('widget.creationDate.missingTooltip')">
+              {{ $tc('widget.creationDate.missing', missing, { total: $n(missing) }) }}
+            </p>
+          </div>
         </v-wait>
       </div>
       <div v-else>
@@ -57,13 +53,11 @@
 <script>
 import compact from 'lodash/compact'
 import get from 'lodash/get'
-import keys from 'lodash/keys'
-import map from 'lodash/map'
+import isFunction from 'lodash/isFunction'
+import reduce from 'lodash/reduce'
 import sortBy from 'lodash/sortBy'
-import startCase from 'lodash/startCase'
 import uniqueId from 'lodash/uniqueId'
 import * as d3 from 'd3'
-import ResizeObserver from 'resize-observer-polyfill'
 import { mapState } from 'vuex'
 
 /**
@@ -84,26 +78,28 @@ export default {
       data: [],
       intervals: {
         year: {
-          format: '%Y',
-          time: d3.timeYear
+          xAxisFormat: '%Y',
+          tooltipFormat: '%Y',
+          time: d3.timeYear,
+          bins: d3.timeYears
         },
         month: {
-          format: '%b %y',
-          time: d3.timeMonth
-        },
-        day: {
-          format: '%b %d, %y',
-          time: d3.timeDay
+          xAxisFormat: (date) => {
+            if (date.getMonth() === 0) {
+              return d3.timeFormat('%Y')(date)
+            }
+          },
+          tooltipFormat: '%B, %Y',
+          time: d3.timeMonth,
+          bins: d3.timeMonths
         }
       },
       loader: `loading creationDate data ${uniqueId()}`,
-      margin: { top: 20, right: 20, bottom: 20, left: 50 },
-      missing: 0,
       mounted: false,
+      missing: 0,
+      sliceStart: 0,
       selectedInterval: 'year',
-      selectedPath: null,
-      shownTooltip: -1,
-      width: 0
+      selectedPath: null
     }
   },
   watch: {
@@ -113,133 +109,168 @@ export default {
       this.init()
     }
   },
-  filters: {
-    startCase
-  },
   mounted () {
     this.$set(this, 'selectedPath', this.dataDir)
     this.$nextTick(() => this.init())
   },
   computed: {
     ...mapState('insights', ['project']),
+    chartWidth () {
+      if (this.mounted) {
+        return this.$el.querySelector('.widget__content__chart')?.offsetWidth || 0
+      }
+      return 0
+    },
+    maxTicks () {
+      return Math.floor(this.chartWidth / 15)
+    },
+    maxValue () {
+      return d3.max(this.data, ({ doc_count: value = 0 }) => value)
+    },
     dataDir () {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     },
-    container () {
-      return this.mounted ? this.$el.querySelector('.widget__content__chart') : null
+    selectedIntervalFormat () {
+      return this.intervals[this.selectedInterval].xAxisFormat
     },
-    chart () {
-      return this.mounted ? d3.select(this.container).select('svg') : null
+    selectedTooltipFormat () {
+      return this.intervals[this.selectedInterval].tooltipFormat
     },
-    height () {
-      return this.width / 2
-    },
-    innerHeight () {
-      return this.height - this.margin.top - this.margin.bottom
-    },
-    innerWidth () {
-      return this.width - this.margin.left - this.margin.right
-    },
-    x () {
-      return d3.scaleTime()
-        .domain([d3.min(this.data, d => d.date), d3.max(this.data, d => d.date)])
-        .range([50, this.innerWidth - 50])
-        .nice()
-    },
-    y () {
-      return d3.scaleLinear()
-        .domain([0, d3.max(this.data, d => d.doc_count)])
-        .range([this.innerHeight, 0])
-    },
-    intervalFormatFn () {
-      return d3.timeFormat(this.intervals[this.selectedInterval].format)
-    },
-    intervalTime () {
+    selectedIntervalTime () {
       return this.intervals[this.selectedInterval].time
     },
-    barWidth () {
-      const width = Math.ceil(this.innerWidth / this.x.ticks(this.intervalTime.every(1)).length)
-      return Math.ceil(width - width * 0.3)
+    selectedIntervalBins () {
+      return this.intervals[this.selectedInterval].bins
     },
-    bars () {
-      return this.data.map(d => {
-        const x = this.x(d.date) - this.barWidth / 2
-        const y = this.y(d.doc_count)
-        return {
-          ...d,
-          x,
-          y,
-          flipX: x > this.innerWidth / 2,
-          flipY: y < this.innerHeight / 2,
-          width: this.barWidth,
-          height: this.innerHeight - this.y(d.doc_count)
-        }
+    binByDate () {
+      return reduce(this.datesHistogram, (res, bin) => {
+        const key = bin.x0.getTime()
+        res[key] = bin
+        return res
+      }, {})
+    },
+    datesExtent () {
+      return d3.extent(this.data, d => d.date)
+    },
+    datesScale () {
+      return d3.scaleTime().domain(this.datesExtent).rangeRound([0, this.chartWidth])
+    },
+    datesHistogram () {
+      const minTime = this.selectedIntervalTime.offset(this.datesExtent[0], -1)
+      const maxTime = this.selectedIntervalTime.offset(this.datesExtent[1], 1)
+      const bins = this.selectedIntervalBins(minTime, maxTime)
+      // set the parameters for the histogram
+      const histogram = d3.histogram()
+        .value(d => d.date)
+        .domain(this.datesScale.domain())
+        .thresholds(this.datesScale.ticks(bins.length))
+      return histogram(this.data)
+    },
+    slicedDatesHistogram () {
+      return this.datesHistogram.slice(this.datesRangeSliceStart, this.datesRangeSliceEnd)
+    },
+    maxSliceStart () {
+      return Math.max(0, this.datesHistogram.length - this.maxTicks)
+    },
+    datesRangeSliceStart () {
+      return Math.min(this.sliceStart, this.maxSliceStart)
+    },
+    datesRangeSliceEnd () {
+      return this.datesRangeSliceStart + this.maxTicks
+    },
+    hasNextDatesRangeSlice () {
+      return this.datesRangeSliceStart < this.maxSliceStart
+    },
+    hasPreviousDatesRangeSlice () {
+      return this.datesRangeSliceStart > 0
+    },
+    isDatesRangeSliced () {
+      return this.datesHistogram.length > this.maxTicks
+    },
+    dataForMurmur () {
+      return this.datesHistogram.map(bin => {
+        return { date: bin.x0, value: d3.sum(bin, d => d.doc_count) }
       })
+    },
+    slicedDataForMurmur () {
+      return this.slicedDatesHistogram.map(bin => {
+        return { date: bin.x0, value: d3.sum(bin, d => d.doc_count) }
+      })
+    },
+    datesRangeSelectionStyle () {
+      const ticks = this.datesHistogram.length
+      const left = `${this.datesRangeSliceStart / ticks * 100}%`
+      const right = `${(ticks - this.datesRangeSliceEnd) / ticks * 100}%`
+      return { right, left }
     }
   },
   methods: {
-    setSelectedPath (path) {
-      this.$set(this, 'mounted', false)
-      this.$set(this, 'selectedPath', path)
-      this.init()
+    async init () {
+      await this.loadData()
+      this.mounted = true
     },
-    async loadData () {
-      this.$wait.start(this.loader)
-      this.$set(this, 'missing', 0)
-      const options = { size: 1000, interval: this.selectedInterval }
-      const filters = []
+    getQueryFilters () {
       if (this.selectedPath) {
         const filter = this.$store.getters['insights/getFilter']({ name: 'path' })
         filter.values = [this.selectedPath]
-        filters.push(filter)
+        return [filter]
       }
+      return []
+    },
+    isBucketKeyOutOfRange (key) {
+      return key >= 0 && key < new Date().getTime()
+    },
+    async loadData () {
+      this.$wait.start(this.loader)
+      this.missing = 0
+      const options = { size: 1000, interval: this.selectedInterval }
+      const filters = this.getQueryFilters()
       const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options, filters })
       const aggregation = get(response, ['aggregations', 'metadata.tika_metadata_creation_date', 'buckets'])
-      const dates = map(aggregation, d => {
-        if (d.key >= 0 && d.key < new Date().getTime()) {
+      const dates = aggregation.map(d => {
+        if (this.isBucketKeyOutOfRange(d.key)) {
           d.date = new Date(d.key)
           return d
         } else {
-          this.$set(this, 'missing', this.missing + d.doc_count)
+          this.missing += d.doc_count
+          return null
         }
       })
       this.$set(this, 'data', sortBy(compact(dates), ['key']))
       this.$wait.end(this.loader)
     },
-    buildChart () {
-      // Refresh the width so all computed properties that are dependent of
-      // this value are refreshed (including scale functions)
-      this.$set(this, 'width', this.container.offsetWidth)
-      // Create/Update the x axis
-      this.chart.select('.widget__content__chart__axis--x')
-        .call(d3.axisBottom(this.x))
-      // Create/Update the y axis
-      const yAxisTicks = this.y.ticks().filter(tick => Number.isInteger(tick))
-      this.chart.select('.widget__content__chart__axis--y')
-        .call(d3.axisLeft(this.y).tickValues(yAxisTicks).tickFormat(d3.format('d')))
-        .selectAll('.tick line')
-        .attr('x2', this.width - this.margin.left - this.margin.right)
+    setSelectedPath (path) {
+      this.mounted = false
+      this.sliceStart = 0
+      this.selectedPath = path
+      this.init()
     },
-    async init () {
-      await this.loadData()
-      this.$set(this, 'mounted', true)
-      // Build the chart when its container is resized
-      const observer = new ResizeObserver(this.buildChart)
-      observer.observe(this.container)
+    setSelectedInterval (value) {
+      this.mounted = false
+      this.sliceStart = 0
+      this.selectedInterval = value
+      this.init()
     },
-    async selectInterval (value) {
-      this.$set(this, 'mounted', false)
-      this.$set(this, 'selectedInterval', value)
-      await this.init()
+    nextDatesRangeSlice () {
+      const step = Math.round(this.slicedDatesHistogram.length * 0.1)
+      this.sliceStart = Math.min(this.sliceStart + step, this.maxSliceStart)
     },
-    tooltipClasses (index, { flipX, flipY }) {
-      return {
-        'widget__content__chart__tooltips__item--flip-x': flipX,
-        'widget__content__chart__tooltips__item--flip-y': flipY,
-        'widget__content__chart__tooltips__item--visible': this.shownTooltip === index
+    previousDatesRangeSlice () {
+      const step = Math.round(this.slicedDatesHistogram.length * 0.1)
+      this.sliceStart = Math.max(this.sliceStart - step, 0)
+    },
+    tooltipFormat (date) {
+      if (isFunction(this.selectedTooltipFormat)) {
+        return this.selectedTooltipFormat(date)
       }
+      return d3.timeFormat(this.selectedTooltipFormat)(date)
     },
-    keys
+    xAxisTickFormat (date) {
+      if (isFunction(this.selectedIntervalFormat)) {
+        return this.selectedIntervalFormat(date)
+      }
+      return d3.timeFormat(this.selectedIntervalFormat)(date)
+    }
   }
 }
 </script>
@@ -253,10 +284,8 @@ export default {
     }
 
     &__content {
+
       &__chart {
-        padding-top: 50%;
-        position: relative;
-        width: 100%;
 
         &__spinner {
           align-items: center;
@@ -273,97 +302,35 @@ export default {
           }
         }
 
-        svg:not(.svg-inline--fa) {
-          font-family: $font-family-base;
-          left: 0;
-          position: absolute;
-          top: 0;
-        }
+        &__range {
+          position: relative;
 
-        &__bars {
-          &__item {
-            &__bar {
-              fill: $primary;
+          &__selection {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            background: rgba($gray-300, 0.5);
+
+            &__previous, &__next {
+              position: absolute;
+              top: 50%;
+              width: 2.5rem;
+              height: 2.5rem;
+              line-height: 2.5rem;
+              padding: 0;
+              background: white;
             }
 
-            &__bar:hover {
-              fill: $secondary;
+            &__previous {
+              left: 0;
+              transform: translate(-50%, -50%);
             }
 
-            &__bar:hover + &__tooltip {
-              display: flex;
+            &__next {
+              right: 0;
+              transform: translate(50%, -50%);
             }
-          }
-        }
-
-        &__tooltips {
-          &__item {
-            display: none;
-
-            &--visible {
-              display: block;
-            }
-
-            &--flip-x &__wrapper {
-              justify-content: flex-end;
-            }
-
-            &--flip-x &__wrapper:after {
-              border-left-color: rgba($tooltip-bg, $tooltip-opacity);
-              transform: translateX(-$tooltip-arrow-width / 2);
-            }
-
-            &:not(&--flip-x)  &__wrapper:after {
-              border-right-color: rgba($tooltip-bg, $tooltip-opacity);
-            }
-
-            &--flip-y &__wrapper {
-              align-items: flex-start;
-            }
-
-            &--flip-y &__wrapper:after {
-              border-top-color: rgba($tooltip-bg, $tooltip-opacity);
-            }
-
-            &:not(&--flip-y)  &__wrapper:after {
-              border-bottom-color: rgba($tooltip-bg, $tooltip-opacity);
-            }
-
-            &__wrapper {
-              display: flex;
-              text-align: center;
-              flex-direction: row;
-              align-items: flex-end;
-              justify-content: flex-start;
-              height: 100%;
-              pointer-events: none;
-              position: relative;
-
-              &:after {
-                content: "";
-                border: ($tooltip-arrow-width / 2) solid transparent;
-                position: absolute;
-                transform: translateX($tooltip-arrow-width / 2);
-              }
-
-              & > span {
-                background: rgba($tooltip-bg, $tooltip-opacity);
-                color: $tooltip-color;
-                margin: 0 $tooltip-arrow-width;
-                padding: .2rem .4rem;
-              }
-            }
-          }
-        }
-
-        &__axis {
-          .tick line {
-            color: $gray-300;
-          }
-
-          .domain,
-          &--x .tick line {
-            display: none;
           }
         }
       }

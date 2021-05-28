@@ -25,15 +25,6 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
     expect(wrapper).toBeTruthy()
   })
 
-  it('should display a barchart with 2 bars', async () => {
-    await wrapper.setData({
-      data: [{ date: new Date('2012-02'), doc_count: 2 }, { date: new Date('2012-03'), doc_count: 4 }]
-    })
-
-    expect(wrapper.findAll('svg')).toHaveLength(1)
-    expect(wrapper.findAll('svg rect')).toHaveLength(2)
-  })
-
   it('should filter data where creation date < 1970', async () => {
     await letData(es).have(new IndexedDocument('document_01', project)
       .withCreationDate('2019-08-19T00:00:00.000Z')).commit()
@@ -56,8 +47,8 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
   })
 
   describe('selectedInterval value and selectors', () => {
-    it('should display 3 selectors', () => {
-      expect(wrapper.findAll('.widget__header__selectors__selector')).toHaveLength(3)
+    it('should display 2 selectors', () => {
+      expect(wrapper.findAll('.widget__header__selectors__selector')).toHaveLength(2)
     })
 
     it('selectedInterval default value should be year', () => {
@@ -72,10 +63,10 @@ describe('WidgetDocumentsByCreationDate.vue', () => {
       await letData(es).have(new IndexedDocument('document_03', project)
         .withCreationDate('2019-06-01T00:00:00.000Z')).commit()
 
-      await wrapper.vm.selectInterval('year')
+      await wrapper.vm.setSelectedInterval('year')
 
       expect(wrapper.vm.selectedInterval).toBe('year')
-      expect(wrapper.vm.data).toHaveLength(1)
+      expect(wrapper.vm.data).toHaveLength(0)
     })
   })
 
