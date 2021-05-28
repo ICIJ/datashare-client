@@ -13,11 +13,11 @@
         </span>
       </div>
       <div class="find-named-entities-form__body form-group mb-4 pl-4">
-        <div class="custom-control custom-radio" v-for="pip in pipelines" :key="pip">
+        <div class="custom-control custom-radio" v-for="(translationReference, pip) in pipelines" :key="pip">
           <input class="custom-control-input" type="radio" :id="pip" :value="pip" v-model="pipeline">
           <label class="custom-control-label" :for="pip">
-            {{ pip | lowerCase | startCase }}
-            <div class="font-italic small" v-if="pip === 'CORENLP'">
+            {{ $t(`${translationReference}`) }}
+            <div class="font-italic small" v-if="pip === 'corenlp'">
               {{ $t('indexing.default') }}
             </div>
           </label>
@@ -40,7 +40,7 @@
 </template>
 
 <script>
-import { lowerCase, noop, startCase } from 'lodash'
+import { lowerCase, noop, startCase, map } from 'lodash'
 import { createHelpers } from 'vuex-map-fields'
 
 import utils from '@/mixins/utils'
@@ -85,12 +85,20 @@ export default {
       await this.$store.dispatch('indexing/submitFindNamedEntities')
       this.$store.commit('indexing/resetFindNamedEntitiesForm')
       this.finally()
+    },
+    handlePipelinesTranslation (pipelines) {
+      const translationsMap = {}
+      pipelines.forEach((pip) => {
+        translationsMap[pip] = `indexing.pipelineOptions.${pip}`
+      })
+      return translationsMap
     }
   },
   async mounted () {
     this.$wait.start('load ner pipelines')
-    const pipelines = await this.$store.dispatch('indexing/getNerPipelines')
-    this.$set(this, 'pipelines', pipelines)
+    let pipelines = await this.$store.dispatch('indexing/getNerPipelines')
+    pipelines = map(pipelines, lowerCase)
+    this.$set(this, 'pipelines', this.handlePipelinesTranslation(pipelines))
     this.$wait.end('load ner pipelines')
   }
 }
