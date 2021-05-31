@@ -496,7 +496,7 @@
     "pipelines": "Canales",
     "pipelineOptions": {
       "corenlp": "Encuentra nombres de personas, organizaciones y lugares con Corenlp",
-      "email": "Find email addresses"
+      "email": "Encontra direcciones de correo electrónico"
     },
     "corenlp": "Core NLP",
     "opennlp": "Open NLP",
