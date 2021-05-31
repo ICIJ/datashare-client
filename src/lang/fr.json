@@ -491,12 +491,12 @@
     "extractOnlyNewHelp": "Si oui, Datashare extraira seulement le texte des fichiers qui ne sont pas déjà dans Datashare.",
     "findNamedEntities": "Trouver des personnes, des organisations, des lieux et des adresses e-mail",
     "findNamedEntitiesHeader": "Que souhaitez-vous faire ?",
-    "findNamedEntitiesSubheader": "Datashare uses Natural Language Processing models.",
+    "findNamedEntitiesSubheader": "Datashare utilise des modèles de Traitement du Language Naturel (Natural Language Processing).",
     "findNamedEntitiesTooltip": "Les textes doivent être extraits avant de chercher les entités nommées",
     "pipelines": "Algo(s)",
     "pipelineOptions": {
-      "corenlp": "Find people, organizations and locations with Corenlp",
-      "email": "Find email addresses"
+      "corenlp": "Trouver des noms de personnes, organisations et localisations avec Corenlp",
+      "email": "Trouver des adresses email"
     },
     "corenlp": "Core NLP",
     "opennlp": "Open NLP",
