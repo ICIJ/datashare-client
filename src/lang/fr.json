@@ -564,7 +564,7 @@
     "title": "Recherches en lot",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
-    "fileDescription": "Exporter votre feuille de calcul au format CSV en utilisant l'encodage UTF-8. <ul><li>Seul le format CSV est accepté.</li> <li>Le fichier CSV ne doit pas contenir plus de 60 000 requêtes.</li> <li>La première et seule colonne doit contenir les termes à rechercher.</li> <li>Pas de saut de ligne dans les cellules.</li> <li>Vous pouvez utiliser les opérateurs (ET PAS * ? ! + - etc).</li> <li>Utilisez 'espace' au lieu de OU ou | | avec 'do phrase matches'.</li> <li>Vous pouvez utiliser les Regex uniquement entre 2 slashs.</li></ul>",
+    "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>Without 'do phrase match' only, you can use AND OR NOT * ? ! + - and other search operators and use Regex between 2 slashes</li></ul>",
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
