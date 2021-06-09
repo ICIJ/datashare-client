@@ -56,25 +56,11 @@ For instance, if you want to search only in some documents with certain tag\(s\)
 
 ### Use operators in your CSV
 
-[**The operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****AND NOT \* ? ! + - **do work in batch searches - as they do in the regular search bar.** 
-
-**Please beware that OR doesn't work when 'do phrase matches' is turned on - in that case, Datashare will search for the term 'or' if OR is in your queries.**
+[**The operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****AND NOT \* ? ! + - **do work in batch searches - as they do in the regular search bar only if "Do phrase match" is off.** 
 
 Reserved characters, when misused, can lead to [**failures**](https://icij.gitbook.io/datashare/all/batch-search-documents#i-get-a-failure-what-does-that-mean) **because of syntax errors.**
 
-* **When 'do phrase matches' is turned on**:
-  * If you write operators in one of your query , the search engine will not apply neither 'do phrase matches', 'fuzziness' nor 'proximity searches' in this query only. It will apply in other operator-free queries though.
-
-
-
-![](../.gitbook/assets/screenshot-2019-11-04-at-16.15.24.png)
-
-* **When 'do phrase matches' is turned off**:
-
-  * By default, **any space in your query is considered as a 'OR'**. If you write 'Hello world' in one cell, the search engine will look for documents which contain either 'hello' or 'world' or the two words in the documents.
-  * If you write 'Hello AND world NOT car' in one cell, the search engine will look for documents which contain 'hello' and 'world' but not 'car'.
-
-* Searches are **not case sensitive**: if you search 'HeLlo', it will look for all occurrences of 'Hello', 'hello', 'hEllo', 'heLLo', etc. in the documents.
+Please also note that searches are **not case sensitive**: if you search 'HeLlo', it will look for all occurrences of 'Hello', 'hello', 'hEllo', 'heLLo', etc. in the documents.
 
 ### Export your CSV encoded in UTF-8
 
@@ -116,12 +102,7 @@ Export your spreadsheet in a CSV format like this:
 
 ### What is 'Do phrase matches'?
 
-'Do phrase matches' is the equivalent of double quotes: it looks for documents containing an **exact sentence or phrase** rather than looking for a set of words in random order. If you turn it on, all queries will be search for their exact mention in documents.
-
-It is recommended, for usability purposes:
-
-* to use “Do phrase match” if you know that **all of your queries** should be searched with phrase match. But note that if you use operators in one or several of your queries, the search engine will not apply neither 'do phrase matches', 'fuzziness' nor 'proximity searches' in this or these query\(ies\) only. 'Do phrase matches', 'fuzziness' and 'proximity searches' will still apply to your other operator-free queries.
-* to use double quotes in the queries of the batch searches of which you want some queries to be found with phrase match but other without. In other words, in that case, you turn the “Do phrase match” button off but you write in double quotes, in your CSV, the specific queries that you want to search exactly. The rest will be search without phrase match.
+'Do phrase matches' is the equivalent of double quotes: it looks for documents containing an **exact sentence or phrase**. If you turn it on, all queries will be search for their exact mention in documents as if Datashare added double quotes around each query.
 
 ### What is fuzziness?
 
