@@ -56,7 +56,7 @@ For instance, if you want to search only in some documents with certain tag\(s\)
 
 ### Use operators in your CSV
 
-[**The operators**](https://icij.gitbook.io/datashare/all/search-with-operators) ****AND NOT \* ? ! + - **do work in batch searches - as they do in the regular search bar only if "Do phrase match" is off.** 
+[The operators](https://icij.gitbook.io/datashare/all/search-with-operators) AND NOT \* ? ! + - do work in batch searches \(as they do in the regular search bar\) **but only if "Do phrase match" in Advanced filters is turned off.** 
 
 Reserved characters, when misused, can lead to [**failures**](https://icij.gitbook.io/datashare/all/batch-search-documents#i-get-a-failure-what-does-that-mean) **because of syntax errors.**
 
