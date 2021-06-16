@@ -678,7 +678,8 @@
       "onDisk": "on disk"
     },
     "diskUsage": {
-      "details": "See disk usage"
+      "details": "See disk usage",
+      "warning": "The number of documents only counts parent documents here (files on disk), not attachments (embedded documents)."
     },
     "creationDate": {
       "filterFolder": "Filter by folder",

@@ -13,7 +13,15 @@
       </p>
     </v-wait>
     <b-modal id="modal-disk-usage-details" lazy scrollable hide-header hide-footer body-class="p-0" size="lg">
-      <tree-view v-model="path" :project="project" count size></tree-view>
+      <tree-view v-model="path" :project="project" count size>
+        <template #above>
+          <b-collapse :visible="path === dataDir">
+            <div class="my-2 mx-3 alert alert-warning p-2">
+              {{ $t('widget.diskUsage.warning') }}
+            </div>
+          </b-collapse>
+        </template>
+      </tree-view>
     </b-modal>
   </div>
 </template>

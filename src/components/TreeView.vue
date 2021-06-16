@@ -21,6 +21,8 @@
         <fa icon="circle-notch" spin size="2x"></fa>
       </div>
       <div>
+        <!-- @slot Area to insert content above the tree view -->
+        <slot name="above"></slot>
         <b-form-checkbox-group v-model="selected">
           <ul class="list-group list-group-flush tree-view__directories">
             <li v-if="hits && selectable" class="list-group-item d-flex flex-row align-items-center text-muted tree-view__directories__item">
@@ -65,6 +67,8 @@
             <span slot="no-results"></span>
           </infinite-loading>
         </b-form-checkbox-group>
+        <!-- @slot Area to insert content bellow the tree view -->
+        <slot name="bellow"></slot>
       </div>
     </v-wait>
   </div>
