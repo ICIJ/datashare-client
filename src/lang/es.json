@@ -564,7 +564,7 @@
     "title": "Búsquedas masivas",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
-    "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>Without 'do phrase match' only, you can use AND OR NOT * ? ! + - and other search operators and use Regex between 2 slashes</li></ul>",
+    "fileDescription": "Exportar su hoja de cálculo como CSV usando la codificación UTF-8. <ul><li>Solo el formato CSV aceptado.</li> <li>El archivo CSV no debe contener más de 60 000 consultas.</li> <li>La primera y única columna debe contener los términos a buscar.</li> <li>No saltos de línea en las células.</li> <li>Solamente cuando 'Hacer la frase coincide exactamente' no esta marcado, puede utilizar operadores (AND OR NOT * ? ! + - etc), y las Regex entre 2 barras.</li></ul>",
     "filePlaceholder": "Selecciona un archivo...",
     "submit": "Añadir",
     "success": "Tu búsqueda masiva está ejecutándose.",
@@ -678,7 +678,8 @@
       "onDisk": "en el disco"
     },
     "diskUsage": {
-      "details": "Ver el uso del disco"
+      "details": "Ver el uso del disco",
+      "warning": "El número de documentos sólo cuenta documentos padre aquí (archivos en disco), no archivos adjuntos (documentos incrustados)."
     },
     "creationDate": {
       "filterFolder": "Filtrar por carpeta",
@@ -739,7 +740,9 @@
   "treeView": {
     "hits": "no hay archivos | 1 archivo | %{hits} archivos",
     "docs": "archivo | archivos",
-    "datadir": "Inicio"
+    "datadir": "Inicio",
+    "all": "Todos",
+    "includingIndividualDocuments": "incluyendo documentos individuales"
   },
   "quickItemNav": {
     "previous": {
