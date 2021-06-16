@@ -8,11 +8,13 @@ You can sort documents by:
 * **size** of the documents
 * **path** of the documents
 
-![](../.gitbook/assets/search.png)
+![](../.gitbook/assets/screenshot-2021-06-16-at-11.32.33.png)
 
-![](../.gitbook/assets/screenshot-2019-11-04-at-18.30.20.png)
+![](../.gitbook/assets/screenshot-2021-06-16-at-11.34.12.png)
 
 You can also decide **the number of documents displayed by page** \(10, 25, 50 or 100\):
 
-![](../.gitbook/assets/search%20%281%29.png)
+![](../.gitbook/assets/screenshot-2021-06-16-at-11.35.05.png)
+
+![](../.gitbook/assets/screenshot-2021-06-16-at-11.34.49.png)
 
