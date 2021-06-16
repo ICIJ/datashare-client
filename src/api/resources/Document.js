@@ -1,4 +1,4 @@
-import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim, truncate } from 'lodash'
+import { compact, endsWith, filter, find, get, keys, last, pick, startsWith, trim } from 'lodash'
 import Murmur from '@icij/murmur'
 import moment from 'moment'
 import { extname } from 'path'
@@ -100,6 +100,13 @@ export default class Document extends EsDoc {
   }
   get title () {
     const titles = [this.shortId, this.basename]
+    if (this.extractionLevel > 0) {
+      titles.push(this.resourceName)
+    }
+    return last(compact(titles))
+  }
+  get subject () {
+    const titles = [this.title]
     if (this.isEmail) {
       titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
       titles.push(trim(this.get('_source.metadata.tika_metadata_subject', '')))
@@ -107,13 +114,10 @@ export default class Document extends EsDoc {
     if (this.isTweet) {
       titles.push(trim(this.get('_source.metadata.tika_metadata_dc_title', '')))
     }
-    if (this.extractionLevel > 0) {
-      titles.push(this.resourceName)
-    }
     return last(compact(titles))
   }
   get cleanSubject () {
-    return this.title.replace(/((.{1,4})\s?:\s?)*(.+)/i, '$3')
+    return this.subject.replace(/((.{1,4})\s?:\s?)*(.+)/i, '$3')
   }
   get slicedName () {
     if (this.extractionLevel === 0) {
@@ -124,8 +128,7 @@ export default class Document extends EsDoc {
     // - root title (if available)
     // - distance with the top parent
     // - the document title
-    const root = this.parent ? truncate(this.parent.title, { length: 30 }) : this.basename
-    return [root].concat([distance].slice(0, distance)).concat(this.title)
+    return [this.basename].concat([distance].slice(0, distance)).concat(this.title)
   }
   get slicedNameToString () {
     return this.slicedName.join(' › ')

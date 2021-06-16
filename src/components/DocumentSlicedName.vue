@@ -109,25 +109,25 @@ export default {
 
 <style lang="scss" scoped>
   .document-sliced-name {
-    align-items: center;
-    display: inline-flex;
-    flex-wrap: wrap;
+    display: inline-block;
     padding: 0.1em 0;
 
     &--truncate {
-      flex-wrap: nowrap;
+      white-space: nowrap;
     }
 
     &__item {
-      align-items: center;
-      display: inline-flex;
+      display: inline;
 
       // Slice separator
       &:not(:last-child):after {
         content: "❭";
         font-size: 0.5em;
+        transform: translateY(-0.25em);
+        line-height: 1em;
         opacity: 0.5;
         padding: 0 0.5em;
+        display: inline-block;
       }
 
       &__content-type {

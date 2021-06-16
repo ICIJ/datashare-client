@@ -3,18 +3,18 @@
     <content-placeholder class="document py-2 px-3" slot="waiting"></content-placeholder>
     <div
       class="d-flex flex-column document"
-      :class="{
-        'document--standalone': $route.name === 'document-standalone',
-        'document--modal': $route.name === 'document-modal'
-      }"
+      :class="{ 'document--standalone': isStandalone, 'document--modal': isModal }"
       v-if="doc"
       v-shortkey="getKeys('tabNavigation')"
       @shortkey="getAction('tabNavigation')">
       <div class="document__header">
         <hook name="document.header:before"></hook>
-        <h3 class="document__header__name">
+        <h3 class="document__header__name" :class="{ 'document__header__name--has-subject': hasSubject }">
           <hook name="document.header.name:before"></hook>
           <document-sliced-name interactive-root :document="doc"></document-sliced-name>
+          <div class="document__header__name__subject" v-if="hasSubject">
+            {{ doc.subject }}
+          </div>
           <hook name="document.header.name:after"></hook>
         </h3>
         <hook name="document.header.tags:before"></hook>
@@ -171,6 +171,15 @@ export default {
     },
     indexActiveTab () {
       return findIndex(this.visibleTabs, tab => tab.name === this.activeTab)
+    },
+    hasSubject () {
+      return this.doc.subject !== this.doc.title
+    },
+    isStandalone () {
+      return this.$route.name === 'document-standalone'
+    },
+    isModal () {
+      return this.$route.name === 'document-modal'
     }
   },
   methods: {
@@ -270,6 +279,10 @@ export default {
 
       a, a:hover {
         color: white;
+      }
+
+      &--has-subject /deep/ .document-sliced-name {
+        font-size: 1rem;
       }
     }
 
