@@ -21,8 +21,22 @@
         <fa icon="circle-notch" spin size="2x"></fa>
       </div>
       <div>
-        <b-form-checkbox-group v-model="selected" @input="selectPaths">
+        <b-form-checkbox-group v-model="selected">
           <ul class="list-group list-group-flush tree-view__directories">
+            <li v-if="hits && selectable" class="list-group-item d-flex flex-row align-items-center text-muted tree-view__directories__item">
+              <b-form-checkbox :value="path" class="tree-view__directories__item__checkbox" :id="allDirectoriesInputId" />
+              <label class="flex-grow-1 m-0 text-light" :for="allDirectoriesInputId">
+                {{ $t('treeView.all') }} <em class="text-muted">({{ $t('treeView.includingIndividualDocuments') }})</em>
+              </label>
+              <div class="ml-2 badge badge-light badge-pill" :title="$n(hits)">
+                <span v-if="compact">
+                  {{ $n(hits) }}
+                </span>
+                <span v-else>
+                  {{ humanNumber(hits) }} {{ $tc('treeView.docs', hits) }}
+                </span>
+              </div>
+            </li>
             <li v-for="directory in directories" :key="directory.key" class="list-group-item d-flex flex-row align-items-center tree-view__directories__item">
               <b-form-checkbox :value="directory.key" v-if="selectable" class="tree-view__directories__item__checkbox"></b-form-checkbox>
               <a class="flex-grow-1" href @click.prevent="$emit('input', directory.key)">
@@ -41,7 +55,7 @@
               </span>
               <span class="tree-view__directories__item__bar" v-if="!noBars" :style="{ width: totalPercentage(directory.contentLength.value) }"></span>
             </li>
-            <li v-if="!directories.length" class="list-group-item tree-view__directories__item tree-view__directories__item--no-folders text-muted text-center">
+            <li v-if="!selectable && !directories.length" class="list-group-item tree-view__directories__item tree-view__directories__item--no-folders text-muted text-center">
               {{ $t('widget.noFolders') }}
             </li>
           </ul>
@@ -57,7 +71,7 @@
 </template>
 
 <script>
-import { flatten, get, identity, includes, noop, round, uniq, uniqueId } from 'lodash'
+import { difference, filter, flatten, get, identity, includes, noop, round, uniq, uniqueId } from 'lodash'
 import bodybuilder from 'bodybuilder'
 import { basename } from 'path'
 import { waitFor } from 'vue-wait'
@@ -186,12 +200,11 @@ export default {
   data () {
     return {
       pages: [],
-      selected: [],
-      infiniteScrollId: uniqueId()
+      infiniteScrollId: uniqueId('infinite-scroll-'),
+      allDirectoriesInputId: uniqueId('all-directories-input-')
     }
   },
   async created () {
-    this.$set(this, 'selected', this.selectedPaths)
     await this.loadDataWithSpinner({ clearPages: true })
   },
   watch: {
@@ -203,9 +216,6 @@ export default {
     },
     sortByOrder () {
       return this.reloadDataWithSpinner()
-    },
-    selectedPaths () {
-      this.$set(this, 'selected', this.selectedPaths)
     },
     directories () {
       /**
@@ -270,6 +280,23 @@ export default {
        * are different).
        */
       return uniq([this.path, this.path.toLowerCase()])
+    },
+    selected: {
+      get () {
+        return this.selectedPaths
+      },
+      set (paths) {
+        const diff = difference(paths, this.selectedPaths)
+        // True if the current path just has been selected.
+        // This is equivalent to select "all.
+        if (diff.includes(this.path)) {
+          paths = this.pathsWihtoutSiblings(paths)
+        // True if a sibling directory is selected, not the current path
+        } else if (diff.length && paths.includes(this.path)) {
+          paths = this.pathsWithoutCurrent(paths)
+        }
+        return this.selectPaths(paths)
+      }
     }
   },
   methods: {
@@ -293,6 +320,16 @@ export default {
        */
       this.$emit('update:selectedPaths', paths)
     },
+    pathsWihtoutSiblings (paths) {
+      return filter(paths, path => {
+        return path === this.path || !path.startsWith(this.path)
+      })
+    },
+    pathsWithoutCurrent (paths) {
+      return filter(paths, path => {
+        return path && path !== this.path
+      })
+    },
     totalPercentage (value) {
       if (this.total > 0) {
         return round(value / this.total * 100, 2) + '%'
@@ -306,9 +343,12 @@ export default {
       if (!this.includeChildrenDocuments) {
         body.andQuery('match', 'extractionLevel', 0)
       }
-      // Add all path tokens in a "should" statement
-      this.pathTokens.forEach(t => body.orQuery('term', 'dirname.tree', t))
       return body
+        .andQuery('bool', bool => {
+          // Add all path tokens in a "should" statement
+          this.pathTokens.forEach(t => bool.orQuery('term', 'dirname.tree', t))
+          return bool
+        })
         .andQuery('match', 'type', 'Document')
         .agg('terms', 'dirname.tree', this.aggregationOptions, 'byDirname', b => {
           return b

@@ -739,7 +739,9 @@
   "treeView": {
     "hits": "no documents | 1 document | %{hits} documents",
     "docs": "doc | docs",
-    "datadir": "Home"
+    "datadir": "Home",
+    "all": "All",
+    "includingIndividualDocuments": "including individual documents"
   },
   "quickItemNav": {
     "previous": {

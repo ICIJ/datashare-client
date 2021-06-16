@@ -1,3 +1,4 @@
+import compact from 'lodash/compact'
 import trimEnd from 'lodash/trimEnd'
 import uniq from 'lodash/uniq'
 import FilterDocument from './FilterDocument'
@@ -11,7 +12,7 @@ export default class FilterPath extends FilterDocument {
 
   queryBuilder (body, param, func) {
     return body.query('bool', sub => {
-      param.values.forEach(dirname => {
+      compact(param.values).forEach(dirname => {
         /**
          * @deprecated Since 9.4.2, the dirname field is tokenized using the
          * "lowercase" filter. To ensure retro-compatibility, we apply the
