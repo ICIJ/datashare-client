@@ -57,7 +57,7 @@ describe('Document', () => {
           }
         }
       })
-      expect(doc.title).toBe('This is a nice title')
+      expect(doc.subject).toBe('This is a nice title')
     })
 
     it('should return the subject if it is an email', () => {
@@ -72,7 +72,7 @@ describe('Document', () => {
           }
         }
       })
-      expect(doc.title).toBe('This is an even better title')
+      expect(doc.subject).toBe('This is an even better title')
     })
 
     it('should return the dc_title if it is a tweet', () => {
@@ -86,7 +86,7 @@ describe('Document', () => {
           }
         }
       })
-      expect(doc.title).toBe('This is a nice tweet title')
+      expect(doc.subject).toBe('This is a nice tweet title')
     })
 
     it('should return the resourceName if extractionLevel is superior to 0', () => {
