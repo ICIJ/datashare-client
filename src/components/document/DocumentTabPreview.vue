@@ -59,6 +59,8 @@ export default {
     },
     previewComponent () {
       switch (true) {
+      case this.document.isJson:
+        return 'JsonViewer'
       case this.isPaginatedViewerActivated && this.isPaginated:
         return 'PaginatedViewer'
       case this.document.isPdf:
@@ -71,8 +73,6 @@ export default {
         return 'LegacySpreadsheetViewer'
       case this.document.isImage:
         return 'ImageViewer'
-      case this.isJson:
-        return 'JsonViewer'
       default:
         return null
       }
