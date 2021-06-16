@@ -72,8 +72,7 @@ describe('elasticsearch', () => {
                 {
                   query_string: {
                     query: '*',
-                    fields: undefined,
-                    default_field: '*'
+                    fields: undefined
                   }
                 }
               ]
@@ -101,8 +100,7 @@ describe('elasticsearch', () => {
               should: [
                 {
                   query_string: {
-                    query: 'path:/home/datashare/path/*',
-                    default_field: '*'
+                    query: 'path:/home/datashare/path/*'
                   }
                 }
               ]
