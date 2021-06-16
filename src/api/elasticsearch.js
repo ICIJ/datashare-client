@@ -78,8 +78,7 @@ export function datasharePlugin (Client, config, components) {
         // Add the query string to the body
         .orQuery('query_string', {
           query,
-          fields: fields.length ? fields : undefined,
-          default_field: fields.length ? undefined : '*'
+          fields: fields.length ? fields : undefined
         })
       )
   }
@@ -108,8 +107,7 @@ export function datasharePlugin (Client, config, components) {
       .addQuery('bool', b => b
         .orQuery('query_string', {
           query,
-          fields: fields.length ? fields : undefined,
-          default_field: fields.length ? undefined : '*'
+          fields: fields.length ? fields : undefined
         })
       )
   }
