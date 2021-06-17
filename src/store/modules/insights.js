@@ -4,8 +4,6 @@ import findIndex from 'lodash/findIndex'
 import sortBy from 'lodash/sortBy'
 import Vue from 'vue'
 
-import elasticsearch from '@/api/elasticsearch'
-import FilterPath from '@/store/filters/FilterPath'
 import widgets from '@/store/widgets'
 import * as widgetTypes from '@/store/widgets'
 
@@ -41,16 +39,8 @@ const mutations = {
 }
 
 export const getters = {
-  getFilter (state, getters) {
-    return predicate => find(getters.instantiatedFilters, predicate)
-  },
   getWidget (state, getters) {
     return predicate => find(state.widgets, predicate)
-  },
-  instantiatedFilters (state) {
-    const filter = new FilterPath({ name: 'path', key: 'byDirname', icon: 'hdd' })
-    filter.bindState(state)
-    return [filter]
   },
   instantiateWidget (state) {
     return ({ type = 'WidgetEmpty', ...options } = {}) => {
@@ -68,18 +58,4 @@ export const getters = {
   }
 }
 
-const actions = {
-  queryFilter ({ state, getters, rootGetters }, { name, options, filters }) {
-    return elasticsearch.searchFilter(
-      state.project,
-      rootGetters['search/getFilter']({ name }),
-      '*',
-      filters,
-      false,
-      options,
-      []
-    )
-  }
-}
-
-export default { state, getters, mutations, actions, namespaced: true }
+export default { state, getters, mutations, namespaced: true }

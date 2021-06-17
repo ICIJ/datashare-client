@@ -51,14 +51,15 @@
 </template>
 
 <script>
-import compact from 'lodash/compact'
+import bodybuilder from 'bodybuilder'
 import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
-import reduce from 'lodash/reduce'
-import sortBy from 'lodash/sortBy'
 import uniqueId from 'lodash/uniqueId'
 import * as d3 from 'd3'
 import { mapState } from 'vuex'
+
+import FilterDate from '@/store/filters/FilterDate'
+import elasticsearch from '@/api/elasticsearch'
 
 /**
  * Widget to display the number of file by creation date on the insights page.
@@ -94,7 +95,6 @@ export default {
           bins: d3.timeMonths
         }
       },
-      loader: `loading creationDate data ${uniqueId()}`,
       mounted: false,
       missing: 0,
       sliceStart: 0,
@@ -122,7 +122,7 @@ export default {
       return 0
     },
     maxTicks () {
-      return Math.floor(this.chartWidth / 25)
+      return Math.floor(this.chartWidth / 35)
     },
     maxValue () {
       return d3.max(this.data, ({ doc_count: value = 0 }) => value)
@@ -143,7 +143,7 @@ export default {
       return this.intervals[this.selectedInterval].bins
     },
     binByDate () {
-      return reduce(this.datesHistogram, (res, bin) => {
+      return this.datesHistogram.reduce((res, bin) => {
         const key = bin.x0.getTime()
         res[key] = bin
         return res
@@ -202,6 +202,19 @@ export default {
       const left = `${this.datesRangeSliceStart / ticks * 100}%`
       const right = `${(ticks - this.datesRangeSliceEnd) / ticks * 100}%`
       return { right, left }
+    },
+    aggDateHistogramOptions () {
+      return {
+        ...FilterDate.getIntervalOptions(this.selectedInterval),
+        order: { _key: 'asc' },
+        min_doc_count: 1
+      }
+    },
+    selectedPathTokens () {
+      return this.selectedPath !== this.dataDir ? [this.selectedPath] : []
+    },
+    loader () {
+      return uniqueId('loading-creation-date-buckets')
     }
   },
   methods: {
@@ -209,34 +222,41 @@ export default {
       await this.loadData()
       this.mounted = true
     },
-    getQueryFilters () {
-      if (this.selectedPath !== this.dataDir) {
-        const filter = this.$store.getters['insights/getFilter']({ name: 'path' })
-        filter.values = [this.selectedPath]
-        return [filter]
-      }
-      return []
-    },
     isBucketKeyInRange (key) {
       return key > 0 && key < new Date().getTime()
+    },
+    bodybuilderBase ({ size = 1000, from = 0 } = {}) {
+      const field = 'metadata.tika_metadata_creation_date'
+      return bodybuilder()
+        .size(0)
+        .andQuery('bool', bool => {
+          // Add all path tokens in a "should" statement
+          this.selectedPathTokens.forEach(t => {
+            bool.orQuery('term', 'dirname.tree', t)
+          })
+          return bool
+        })
+        .andQuery('match', 'type', 'Document')
+        .agg('date_histogram', field, 'agg_by_creation_date', sub => {
+          return sub.agg('bucket_sort', { size, from }, 'bucket_sort_truncate')
+        }, this.aggDateHistogramOptions)
     },
     async loadData () {
       this.$wait.start(this.loader)
       this.missing = 0
-      const options = { size: 1000, interval: this.selectedInterval }
-      const filters = this.getQueryFilters()
-      const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options, filters })
-      const aggregation = get(response, ['aggregations', 'metadata.tika_metadata_creation_date', 'buckets'])
-      const dates = aggregation.map(d => {
-        if (this.isBucketKeyInRange(d.key)) {
-          d.date = new Date(d.key)
-          return d
+      const body = this.bodybuilderBase().build()
+      const res = await elasticsearch.search({ index: this.project, size: 0, body })
+      const aggregation = get(res, 'aggregations.agg_by_creation_date.buckets', [])
+      const data = aggregation.reduce((buckets, bucket) => {
+        if (this.isBucketKeyInRange(bucket.key)) {
+          bucket.date = new Date(bucket.key)
+          buckets.push(bucket)
         } else {
-          this.missing += d.doc_count
-          return null
+          this.missing += bucket.doc_count
         }
-      })
-      this.$set(this, 'data', sortBy(compact(dates), ['key']))
+        return buckets
+      }, [])
+      this.$set(this, 'data', data)
       this.$wait.end(this.loader)
     },
     setSelectedPath (path) {
