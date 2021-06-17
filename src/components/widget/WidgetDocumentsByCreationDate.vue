@@ -14,38 +14,38 @@
       </div>
     </div>
     <div class="widget__content" :class="{ 'card-body': widget.card }">
-      <div class="widget__content__chart align-items-center" v-if="data.length > 0">
-        <v-wait :for="loader">
-          <div class="widget__content__chart__spinner" slot="waiting">
-            <fa icon="circle-notch" spin size="2x"></fa>
-          </div>
-          <column-chart :data="slicedDataForMurmur" :max-value="maxValue" :x-axis-tick-format="xAxisTickFormat">
-            <template #tooltip="{ datum: { date, value: total } }">
-              <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
-              <p class="m-0">{{ $tc('widget.creationDate.document', total,  { total }) }}</p>
-            </template>
-          </column-chart>
-          <div v-if="isDatesRangeSliced" class="widget__content__chart__range">
-            <div class="widget__content__chart__range__selection border border-primary" :style="datesRangeSelectionStyle">
-              <b-button pill variant="outline-dark" @click="previousDatesRangeSlice" v-if="hasPreviousDatesRangeSlice" class="widget__content__chart__range__selection__previous bg-white">
-                <fa icon="angle-left" />
-              </b-button>
-              <b-button pill variant="outline-dark" @click="nextDatesRangeSlice" v-if="hasNextDatesRangeSlice" class="widget__content__chart__range__selection__next bg-white">
-                <fa icon="angle-right" />
-              </b-button>
+      <v-wait :for="loader">
+        <div class="widget__content__spinner" slot="waiting">
+          <fa icon="circle-notch" spin size="2x"></fa>
+        </div>
+        <div class="widget__content__chart align-items-center" v-if="data.length > 0">
+            <column-chart :data="slicedDataForMurmur" :max-value="maxValue" :x-axis-tick-format="xAxisTickFormat">
+              <template #tooltip="{ datum: { date, value: total } }">
+                <h5 class="m-0">{{ tooltipFormat(date) }}</h5>
+                <p class="m-0">{{ $tc('widget.creationDate.document', total,  { total }) }}</p>
+              </template>
+            </column-chart>
+            <div v-if="isDatesRangeSliced" class="widget__content__chart__range">
+              <div class="widget__content__chart__range__selection border border-primary" :style="datesRangeSelectionStyle">
+                <b-button pill variant="outline-dark" @click="previousDatesRangeSlice" v-if="hasPreviousDatesRangeSlice" class="widget__content__chart__range__selection__previous bg-white">
+                  <fa icon="angle-left" />
+                </b-button>
+                <b-button pill variant="outline-dark" @click="nextDatesRangeSlice" v-if="hasNextDatesRangeSlice" class="widget__content__chart__range__selection__next bg-white">
+                  <fa icon="angle-right" />
+                </b-button>
+              </div>
+              <column-chart :data="dataForMurmur" :fixed-height="100" no-tooltips no-x-axis no-y-axis />
             </div>
-            <column-chart :data="dataForMurmur" :fixed-height="100" no-tooltips no-x-axis no-y-axis />
-          </div>
-          <div class="d-flex align-items-center mt-2">
-            <p class="widget__content__missing small my-0 text-muted" v-if="missing" :title="$t('widget.creationDate.missingTooltip')">
-              {{ $tc('widget.creationDate.missing', missing, { total: $n(missing) }) }}
-            </p>
-          </div>
-        </v-wait>
-      </div>
-      <div v-else>
-        {{ $t('widget.noData') }}
-      </div>
+            <div class="d-flex align-items-center mt-2">
+              <p class="widget__content__missing small my-0 text-muted" v-if="missing" :title="$t('widget.creationDate.missingTooltip')">
+                {{ $tc('widget.creationDate.missing', missing, { total: $n(missing) }) }}
+              </p>
+            </div>
+        </div>
+        <div v-else class="text-muted text-center">
+          {{ $t('widget.noData') }}
+        </div>
+      </v-wait>
     </div>
   </div>
 </template>
@@ -122,7 +122,7 @@ export default {
       return 0
     },
     maxTicks () {
-      return Math.floor(this.chartWidth / 15)
+      return Math.floor(this.chartWidth / 25)
     },
     maxValue () {
       return d3.max(this.data, ({ doc_count: value = 0 }) => value)
@@ -210,15 +210,15 @@ export default {
       this.mounted = true
     },
     getQueryFilters () {
-      if (this.selectedPath) {
+      if (this.selectedPath !== this.dataDir) {
         const filter = this.$store.getters['insights/getFilter']({ name: 'path' })
         filter.values = [this.selectedPath]
         return [filter]
       }
       return []
     },
-    isBucketKeyOutOfRange (key) {
-      return key >= 0 && key < new Date().getTime()
+    isBucketKeyInRange (key) {
+      return key > 0 && key < new Date().getTime()
     },
     async loadData () {
       this.$wait.start(this.loader)
@@ -228,7 +228,7 @@ export default {
       const response = await this.$store.dispatch('insights/queryFilter', { name: 'creationDate', options, filters })
       const aggregation = get(response, ['aggregations', 'metadata.tika_metadata_creation_date', 'buckets'])
       const dates = aggregation.map(d => {
-        if (this.isBucketKeyOutOfRange(d.key)) {
+        if (this.isBucketKeyInRange(d.key)) {
           d.date = new Date(d.key)
           return d
         } else {
@@ -285,22 +285,20 @@ export default {
 
     &__content {
 
+      &__spinner {
+        align-items: center;
+        display: flex;
+        height: 100%;
+        justify-content: center;
+        left: 0;
+        position: absolute;
+        top: 0;
+        width: 100%;
+        z-index: $zindex-modal;
+        background: $card-bg;
+      }
+
       &__chart {
-
-        &__spinner {
-          align-items: center;
-          display: flex;
-          height: 100%;
-          justify-content: center;
-          left: 0;
-          position: absolute;
-          top: 0;
-          width: 100%;
-
-          .card & {
-            background: $card-bg;
-          }
-        }
 
         &__range {
           position: relative;
