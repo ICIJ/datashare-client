@@ -34,7 +34,7 @@
                   <fa icon="angle-right" />
                 </b-button>
               </div>
-              <column-chart :data="dataForMurmur" :fixed-height="100" no-tooltips no-x-axis no-y-axis />
+              <column-chart @click.native="jumpToSelectionRange" :data="dataForMurmur" :fixed-height="100" no-tooltips no-x-axis no-y-axis />
             </div>
             <div class="d-flex align-items-center mt-2">
               <p class="widget__content__missing small my-0 text-muted" v-if="missing" :title="$t('widget.creationDate.missingTooltip')">
@@ -117,7 +117,7 @@ export default {
     ...mapState('insights', ['project']),
     chartWidth () {
       if (this.mounted) {
-        return this.$el.querySelector('.widget__content__chart')?.offsetWidth || 0
+        return this.$el.querySelector('.widget__content__chart').offsetWidth || 0
       }
       return 0
     },
@@ -290,6 +290,13 @@ export default {
         return this.selectedIntervalFormat(date)
       }
       return d3.timeFormat(this.selectedIntervalFormat)(date)
+    },
+    jumpToSelectionRange ({ target, clientX }) {
+      const { width } = target.getBBox()
+      const { left } = target.getBoundingClientRect()
+      const x = (clientX - left) / width
+      const sliceStart = Math.round(this.maxSliceStart * x)
+      this.sliceStart = Math.min(sliceStart, this.maxSliceStart)
     }
   }
 }
@@ -304,6 +311,7 @@ export default {
     }
 
     &__content {
+      position: relative;
 
       &__spinner {
         align-items: center;
@@ -316,6 +324,7 @@ export default {
         width: 100%;
         z-index: $zindex-modal;
         background: $card-bg;
+        padding: $spacer;
       }
 
       &__chart {
@@ -329,8 +338,10 @@ export default {
             bottom: 0;
             left: 0;
             background: rgba($gray-300, 0.5);
+            pointer-events: none;
 
             &__previous, &__next {
+              pointer-events: all;
               position: absolute;
               top: 50%;
               width: 2.5rem;
