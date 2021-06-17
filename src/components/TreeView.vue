@@ -342,7 +342,7 @@ export default {
       }
     },
     bodybuilderBase ({ from = 0, size = 100 } = {}) {
-      const body = bodybuilder().size(0)
+      const body = bodybuilder().size(0).rawOption('track_total_hits', true)
       // Only the extraction level is an optional query
       if (!this.includeChildrenDocuments) {
         body.andQuery('match', 'extractionLevel', 0)
