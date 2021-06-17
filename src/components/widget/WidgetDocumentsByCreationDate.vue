@@ -221,6 +221,7 @@ export default {
     async init () {
       await this.loadData()
       this.mounted = true
+      this.sliceStart = this.maxSliceStart
     },
     isBucketKeyInRange (key) {
       return key > 0 && key < new Date().getTime()
@@ -261,13 +262,11 @@ export default {
     },
     setSelectedPath (path) {
       this.mounted = false
-      this.sliceStart = 0
       this.selectedPath = path
       this.init()
     },
     setSelectedInterval (value) {
       this.mounted = false
-      this.sliceStart = 0
       this.selectedInterval = value
       this.init()
     },
@@ -295,7 +294,7 @@ export default {
       const { width } = target.getBBox()
       const { left } = target.getBoundingClientRect()
       const x = (clientX - left) / width
-      const sliceStart = Math.round(this.maxSliceStart * x)
+      const sliceStart = Math.round(this.datesHistogram.length * x)
       this.sliceStart = Math.min(sliceStart, this.maxSliceStart)
     }
   }
