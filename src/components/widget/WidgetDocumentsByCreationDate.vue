@@ -117,7 +117,7 @@ export default {
     ...mapState('insights', ['project']),
     chartWidth () {
       if (this.mounted) {
-        return this.$el.querySelector('.widget__content__chart').offsetWidth || 0
+        return this.$el.querySelector('.widget__content__chart')?.offsetWidth || 0
       }
       return 0
     },
