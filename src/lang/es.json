@@ -601,7 +601,7 @@
     "selectFolder": "Seleccionar directorio",
     "errorTitle": "Error en la consulta",
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
-    "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas hecho en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
     "placeholder": "Buscar en las búsquedas masivas..."
   },
   "batchSearchResults": {
