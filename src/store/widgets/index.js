@@ -2,6 +2,7 @@ export { default as WidgetDiskUsage } from './WidgetDiskUsage'
 export { default as WidgetDocumentsByCreationDateByPath } from './WidgetDocumentsByCreationDateByPath'
 export { default as WidgetDuplicates } from './WidgetDuplicates'
 export { default as WidgetEmpty } from './WidgetEmpty'
+export { default as WidgetEntities } from './WidgetEntities'
 export { default as WidgetFileBarometer } from './WidgetFileBarometer'
 export { default as WidgetListGroup } from './WidgetListGroup'
 export { default as WidgetText } from './WidgetText'
@@ -29,6 +30,13 @@ const widgets = [
     card: true,
     cols: 3,
     type: 'WidgetDiskUsage'
+  },
+  {
+    name: 'entities',
+    order: 35,
+    card: true,
+    cols: 12,
+    type: 'WidgetEntities'
   },
   {
     name: 'documents-by-creation-date',

@@ -1,6 +1,6 @@
 <template>
   <div class="widget widget--file-barometer d-flex align-items-center text-center">
-    <v-wait for="counters" class="flex-grow-1" transition="fade">
+    <v-wait for="barometer counters" class="flex-grow-1" transition="fade">
       <fa icon="circle-notch" spin slot="waiting" size="2x" />
       <p :class="{ 'card-body': widget.card }">
         <fa icon="hdd" class="widget__icon" size="2x" />
@@ -67,7 +67,7 @@ export default {
       const q = 'type:Document AND extractionLevel:0'
       return this.count(q)
     },
-    loadData: waitFor('counters', async function () {
+    loadData: waitFor('barometer counters', async function () {
       const total = await this.countTotal()
       this.$set(this, 'total', total)
       const onDisk = await this.countOnDisk()

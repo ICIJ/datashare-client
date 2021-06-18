@@ -310,18 +310,9 @@ export default {
     }
 
     &__content {
-      position: relative;
 
       &__spinner {
-        align-items: center;
-        display: flex;
-        height: 100%;
-        justify-content: center;
-        left: 0;
-        position: absolute;
-        top: 0;
-        width: 100%;
-        z-index: $zindex-modal;
+        text-align: center;
         background: $card-bg;
         padding: $spacer;
       }
