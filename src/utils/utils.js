@@ -1,4 +1,4 @@
-import { get, lowerCase } from 'lodash'
+import { get } from 'lodash'
 
 import settings from '@/utils/settings'
 import { slugger } from '@/utils/strings'
@@ -40,12 +40,14 @@ function getShortkeyOS () {
 }
 
 function objectIncludes (object, text) {
-  if (typeof object === 'string') return lowerCase(object).includes(lowerCase(text))
+  if (typeof object === 'string') {
+    return object.toLowerCase().includes(text.toLowerCase())
+  }
   return Object.values(object).some(object => objectIncludes(object, text))
 }
 
 function toVariant (string = '', defaultVariant = 'darker') {
-  return settings.variantsMap[slugger(string)] || defaultVariant
+  return settings.variantsMap[slugger(string).toLowerCase()] || defaultVariant
 }
 
 export {

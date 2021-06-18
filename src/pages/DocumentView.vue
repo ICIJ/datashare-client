@@ -50,13 +50,14 @@
         <hook name="document.header:after"></hook>
       </div>
       <div class="d-flex flex-grow-1 flex-column tab-content document__content">
-        <div
+        <component
           class="document__content__pane tab-pane flex-grow-1 w-100"
           :class="tabClass(tab.name)"
           :key="tab.name"
-          v-for="tab in visibleTabs">
-          <component v-if="isTabActive(tab.name)" :is="tab.component" v-bind="tab.props"></component>
-        </div>
+          :is="getComponentIfActive(tab)"
+          v-for="tab in visibleTabs"
+          v-bind="getPropsIfActive(tab)">
+        </component>
       </div>
     </div>
     <div v-else class="nodocument">
@@ -239,6 +240,18 @@ export default {
     goToNextTab () {
       const indexNextActiveTab = this.indexActiveTab === this.visibleTabs.length - 1 ? 0 : this.indexActiveTab + 1
       this.$set(this, 'activeTab', this.visibleTabs[indexNextActiveTab].name)
+    },
+    getComponentIfActive ({ component, name }) {
+      if (this.isTabActive(name)) {
+        return component
+      }
+      return 'div'
+    },
+    getPropsIfActive ({ name, props }) {
+      if (this.isTabActive(name)) {
+        return props
+      }
+      return {}
     }
   },
   beforeRouteEnter (to, _from, next) {
@@ -332,6 +345,11 @@ export default {
   }
 
   &__content {
+
+    &__pane {
+      max-width: 100%;
+    }
+
     .tab-content > &__pane--preview.active {
       display: flex;
     }

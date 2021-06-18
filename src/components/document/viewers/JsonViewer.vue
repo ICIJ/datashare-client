@@ -1,10 +1,11 @@
 <template>
-  <div class="json-viewer w-100 m-3"></div>
+  <div v-if="source" class="json-viewer p-3">
+    <json-formatter :json="source" class="json-viewer__formatter" />
+  </div>
 </template>
 
 <script>
-import JSONFormatter from 'json-formatter-js'
-
+import JsonFormatter from '@/components/JsonFormatter'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 /**
@@ -13,6 +14,9 @@ import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 export default {
   name: 'JsonViewer',
   mixins: [datashareSourceMixin],
+  components: {
+    JsonFormatter
+  },
   props: {
     /**
      * The selected document
@@ -23,22 +27,21 @@ export default {
   },
   data () {
     return {
-      formatter: null
+      source: null
     }
   },
   async mounted () {
-    const source = await this.getSource(this.document)
-    const depth = 1
-    const config = { hoverPreviewEnabled: true }
-    const formatter = new JSONFormatter(source, depth, config)
-    this.$el.appendChild(formatter.render())
+    this.source = await this.getSource(this.document)
   }
 }
 </script>
 
 <style lang="scss">
   .json-viewer {
-    & > * {
+    max-width: 100%;
+    overflow: auto;
+
+    &__formatter > * {
       bottom: $spacer;
       left: $spacer;
       right: $spacer;
