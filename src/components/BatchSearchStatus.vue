@@ -58,9 +58,6 @@ export default {
       type: Object
     }
   },
-  mounted () {
-    console.log(this.batchSearch)
-  },
   computed: {
     isFailed () {
       return this.batchSearch.state.toLowerCase() === 'failure'
