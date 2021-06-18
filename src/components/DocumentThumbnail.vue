@@ -109,9 +109,21 @@ export default {
         if (!this.loaded && !this.errored) {
           this.$set(this, 'thumbnailSrc', await this.fetchAsBase64())
           this.$set(this, 'loaded', true)
+          /**
+           * The thumbnail is loaded
+           *
+           * @event enter
+           */
+          this.$emit('loaded')
         }
       } catch (_) {
         this.$set(this, 'errored', true)
+        /**
+         * The thumbnail could not be loaded
+         *
+         * @event enter
+         */
+        this.$emit('errored')
       }
     },
     bindObserver () {

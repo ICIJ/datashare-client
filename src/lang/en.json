@@ -409,7 +409,7 @@
     "tagged": "Documents have been tagged.",
     "starFile": "Star document",
     "notFound": "Document not found",
-    "notAvailable": "Preview is available for some formats only.",
+    "notAvailable": "Preview is not available for this document.",
     "namedEntitiesNotFound": "No named entities found",
     "namedEntitiesNotSearched": "<p>Document not analyzed.</p><p class=\"text-muted small\">To search named entities, go to <a class=\"font-weight-bold\" href=\"%{indexing_link}\">@:menu.analyse</a> and start a new task \"@:indexing.findNamedEntities\".</p>",
     "generatingPreview": "Generating preview...",

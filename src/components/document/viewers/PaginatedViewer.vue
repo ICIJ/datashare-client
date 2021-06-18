@@ -1,9 +1,9 @@
 <template>
-  <v-wait for="load data paginated viewer" class="w-100 d-flex flex-column">
+  <v-wait :for="loader" class="w-100 d-flex flex-column">
     <div class="p-3 w-100 text-muted" slot="waiting">
       {{ $t('document.fetching') }}
     </div>
-    <div class="paginated-viewer d-flex flex-grow-1" v-if="meta.previewable">
+    <div class="paginated-viewer d-flex flex-grow-1" v-if="isPreviewable">
       <div class="paginated-viewer__thumbnails">
         <div class="text-center p-2 d-flex align-items-center paginated-viewer__thumbnails__select">
           <select class="form-control form-control-sm" v-model.number="active" @change="scrollToPageAndThumbnail(active)">
@@ -23,7 +23,6 @@
               :key="`thumbnail-${page}`">
             <document-thumbnail class="border-0"
                                 :document="document"
-                                lazy
                                 :page="page"
                                 :ratio="ratio"
                                 size="150"></document-thumbnail>
@@ -37,6 +36,7 @@
         <div v-for="page in pagesRange" :key="page" class="paginated-viewer__preview__page m-3" :data-page="page + 1">
           <document-thumbnail :document="document"
                               @enter="setActiveAndScrollToThumbnail(page)"
+                              @errored.once="errored = true"
                               lazy
                               :page="page"
                               :ratio="ratio"
@@ -51,7 +51,7 @@
 </template>
 
 <script>
-import { range } from 'lodash'
+import { get, range, uniqueId } from 'lodash'
 import axios from 'axios'
 import preview from '@/mixins/preview'
 
@@ -77,6 +77,7 @@ export default {
   data () {
     return {
       active: 0,
+      errored: false,
       meta: {
         pages: 1
       },
@@ -94,11 +95,14 @@ export default {
   },
   methods: {
     async waitFor (callback) {
-      this.$wait.start('load data paginated viewer')
-      this.$Progress.start()
-      await callback()
-      this.$Progress.finish()
-      this.$wait.end('load data paginated viewer')
+      try {
+        this.$wait.start(this.loader)
+        this.$Progress.start()
+        await callback()
+      } finally {
+        this.$Progress.finish()
+        this.$wait.end(this.loader)
+      }
     },
     async fetchSize () {
       const url = this.getPreviewUrl(this.document, { size: 150 })
@@ -157,6 +161,12 @@ export default {
           [this.sessionIdHeaderName]: this.sessionIdHeaderValue
         }
       }
+    },
+    loader () {
+      return uniqueId('paginated-viewer-load-data-')
+    },
+    isPreviewable () {
+      return get(this, 'meta.previewable', false) && !this.errored
     }
   }
 }
