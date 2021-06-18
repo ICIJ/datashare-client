@@ -1,6 +1,7 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 
 import JsonViewer from '@/components/document/viewers/JsonViewer'
+import JsonFormatter from '@/components/JsonFormatter'
 import { Core } from '@/core'
 
 jest.mock('axios', () => {
@@ -15,16 +16,13 @@ describe('JsonViewer.vue', () => {
   let wrapper
 
   beforeEach(async () => {
-    wrapper = await shallowMount(JsonViewer, { localVue, propsData: { document: { url: 'document.json' } } })
+    wrapper = shallowMount(JsonViewer, { localVue, propsData: { document: { url: 'document.json' } } })
+    await wrapper.vm.$nextTick()
   })
 
   afterAll(() => jest.unmock('axios'))
 
-  it('should render an array of 1 element', () => {
-    expect(wrapper.find('.json-formatter-row:nth-child(1) .json-formatter-value').text()).toBe('Array[2]')
-  })
-
-  it('should render an open row', async () => {
-    expect(wrapper.find('.json-formatter-row.json-formatter-open').exists()).toBeTruthy()
+  it('should render the JSON in a JsonFormatter component', () => {
+    expect(wrapper.findComponent(JsonFormatter).exists()).toBeTruthy()
   })
 })
