@@ -119,6 +119,12 @@ export default class Api {
   getUser () {
     return this.sendAction('/api/users/me')
   }
+  getUserHistory () {
+    return this.sendAction('/api/users/me/history')
+  }
+  addHistoryEvent (project, type, name, uri) {
+    return this.sendActionAsText('/api/users/me/history', { method: 'PUT', data: { project, type, name, uri } })
+  }
   setMarkAsRecommended (project, docIds) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/recommend`, { method: 'POST', data: docIds })
   }

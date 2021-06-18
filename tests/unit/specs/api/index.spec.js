@@ -262,6 +262,18 @@ describe('Datashare backend client', () => {
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/batch/search/copy/12'), method: 'POST', data, responseType: 'text', headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
   })
 
+  it('should return backend response to getUserHistory', async () => {
+    json = await api.getUserHistory()
+    expect(json).toEqual({})
+  })
+
+  it('should send a put JSON for addHistoryEvent', async () => {
+    json = await api.addHistoryEvent('project', 'DOCUMENT', 'docName', 'docUri')
+    const data = { project: 'project', type: 'DOCUMENT', name: 'docName', uri: 'docUri' }
+    expect(json).toEqual({})
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me/history'), method: 'PUT', data, responseType: 'text', headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
+  })
+
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
     axios.request.mockReturnValue(Promise.reject(error))
