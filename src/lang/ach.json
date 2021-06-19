@@ -409,7 +409,7 @@
     "tagged": "crwdns1104:0crwdne1104:0",
     "starFile": "crwdns1942:0crwdne1942:0",
     "notFound": "crwdns1944:0crwdne1944:0",
-    "notAvailable": "crwdns1946:0crwdne1946:0",
+    "notAvailable": "crwdns2434:0crwdne2434:0",
     "namedEntitiesNotFound": "crwdns1948:0crwdne1948:0",
     "namedEntitiesNotSearched": "crwdns1950:0%{indexing_link}crwdne1950:0",
     "generatingPreview": "crwdns1952:0crwdne1952:0",
@@ -695,6 +695,12 @@
     },
     "duplicates": {
       "duplicated": "crwdns2132:0crwdne2132:0"
+    },
+    "entities": {
+      "people": "crwdns2436:0{count}crwdne2436:0",
+      "locations": "crwdns2438:0{count}crwdne2438:0",
+      "organizations": "crwdns2440:0{count}crwdne2440:0",
+      "emails": "crwdns2442:0{count}crwdne2442:0"
     },
     "treemap": {
       "seeDocuments": "crwdns2230:0crwdne2230:0",
