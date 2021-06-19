@@ -409,7 +409,7 @@
     "tagged": "Les documents ont été tagués.",
     "starFile": "Mettre en favoris le document",
     "notFound": "Document non trouvé",
-    "notAvailable": "La prévisualisation est disponible seulement pour certains formats de documents.",
+    "notAvailable": "Preview is not available for this document.",
     "namedEntitiesNotFound": "Pas d'entités nommées trouvées",
     "namedEntitiesNotSearched": "<p>Document non analysé.</p><p class=\\\"text-muted small\\\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> et lancez une nouvelle tâche \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Génération d'une prévisualisation...",
@@ -695,6 +695,12 @@
     },
     "duplicates": {
       "duplicated": "* Les documents dupliqués ne sont pas indexés dans Datashare pour faciliter la recherche et éviter de créer des documents inutiles."
+    },
+    "entities": {
+      "people": "0 people | one person | <strong>{count}</strong> people",
+      "locations": "0 locations | one location | <strong>{count}</strong> locations",
+      "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
+      "emails": "0 email addresses | one email address | <strong>{count}</strong> email addresses"
     },
     "treemap": {
       "seeDocuments": "Voir les documents dans Datashare",
