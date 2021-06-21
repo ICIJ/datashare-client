@@ -409,7 +409,7 @@
     "tagged": "Les documents ont été tagués.",
     "starFile": "Mettre en favoris le document",
     "notFound": "Document non trouvé",
-    "notAvailable": "Preview is not available for this document.",
+    "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
     "namedEntitiesNotFound": "Pas d'entités nommées trouvées",
     "namedEntitiesNotSearched": "<p>Document non analysé.</p><p class=\\\"text-muted small\\\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> et lancez une nouvelle tâche \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Génération d'une prévisualisation...",
