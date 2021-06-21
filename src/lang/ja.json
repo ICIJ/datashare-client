@@ -409,7 +409,7 @@
     "tagged": "文書にタグがつけられました。",
     "starFile": "文書に星マークを付ける",
     "notFound": "ドキュメントが見つかりません。",
-    "notAvailable": "プレビューができるのは一部のフォーマットのみです。",
+    "notAvailable": "Preview is not available for this document.",
     "namedEntitiesNotFound": "固有表現が見つかりません",
     "namedEntitiesNotSearched": "<p>文書は解析されていません。</p><p class=\\\"text-muted small\\\">固有表現を検索するには、 <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> に行き、新たなタスクを開始してください \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "プレビューを生成しています…",
@@ -601,7 +601,7 @@
     "selectFolder": "Select folder",
     "errorTitle": "Error in query",
     "errorQuery": "You have an error on your query <code>%{query}</code>.",
-    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Please refer to this Help page where most common errors are described.</a>",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
     "placeholder": "Search in batch searches..."
   },
   "batchSearchResults": {
@@ -678,7 +678,8 @@
       "onDisk": "on disk"
     },
     "diskUsage": {
-      "details": "See disk usage"
+      "details": "See disk usage",
+      "warning": "The number of documents only counts parent documents here (files on disk), not attachments (embedded documents)."
     },
     "creationDate": {
       "filterFolder": "Filter by folder",
@@ -694,6 +695,12 @@
     },
     "duplicates": {
       "duplicated": "* Duplicated documents are not indexed in Datashare to ease search and avoid creating unnecessary noise."
+    },
+    "entities": {
+      "people": "0 people | one person | <strong>{count}</strong> people",
+      "locations": "0 locations | one location | <strong>{count}</strong> locations",
+      "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
+      "emails": "0 email addresses | one email address | <strong>{count}</strong> email addresses"
     },
     "treemap": {
       "seeDocuments": "See documents in Datashare",
@@ -739,7 +746,9 @@
   "treeView": {
     "hits": "no documents | 1 document | %{hits} documents",
     "docs": "doc | docs",
-    "datadir": "Home"
+    "datadir": "Home",
+    "all": "All",
+    "includingIndividualDocuments": "including individual documents"
   },
   "quickItemNav": {
     "previous": {

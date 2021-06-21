@@ -409,7 +409,7 @@
     "tagged": "Documentos han sido etiquetados.",
     "starFile": "Marcar como favorito",
     "notFound": "Documento no encontrado",
-    "notAvailable": "La previsualización está disponible para algunos formatos solamente.",
+    "notAvailable": "Preview is not available for this document.",
     "namedEntitiesNotFound": "No se han encontrado entidades identificadas",
     "namedEntitiesNotSearched": "<p>Documento no analizado.</p><p class=\\\"text-muted small\\\">Para buscar entidades identificadas, vaya a <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> y comience una nueva tarea \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Generando visualización previa...",
@@ -564,7 +564,7 @@
     "title": "Búsquedas masivas",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
-    "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>Without 'do phrase match' only, you can use AND OR NOT * ? ! + - and other search operators and use Regex between 2 slashes</li></ul>",
+    "fileDescription": "Exportar su hoja de cálculo como CSV usando la codificación UTF-8. <ul><li>Solo el formato CSV aceptado.</li> <li>El archivo CSV no debe contener más de 60 000 consultas.</li> <li>La primera y única columna debe contener los términos a buscar.</li> <li>No saltos de línea en las células.</li> <li>Solamente cuando 'Hacer la frase coincide exactamente' no esta marcado, puede utilizar operadores (AND OR NOT * ? ! + - etc), y las Regex entre 2 barras.</li></ul>",
     "filePlaceholder": "Selecciona un archivo...",
     "submit": "Añadir",
     "success": "Tu búsqueda masiva está ejecutándose.",
@@ -601,7 +601,7 @@
     "selectFolder": "Seleccionar directorio",
     "errorTitle": "Error en la consulta",
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
-    "errorMessage": "El sistema encontró un problema. Puede ser un error de sintaxis que hayas hecho en tu CSV u otro error. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Por favor, consulte esta página de ayuda donde se describen los errores más comunes.</a>",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
     "placeholder": "Buscar en las búsquedas masivas..."
   },
   "batchSearchResults": {
@@ -678,7 +678,8 @@
       "onDisk": "en el disco"
     },
     "diskUsage": {
-      "details": "Ver el uso del disco"
+      "details": "Ver el uso del disco",
+      "warning": "El número de documentos sólo cuenta documentos padre aquí (archivos en disco), no archivos adjuntos (documentos incrustados)."
     },
     "creationDate": {
       "filterFolder": "Filtrar por carpeta",
@@ -694,6 +695,12 @@
     },
     "duplicates": {
       "duplicated": "* Los archivos duplicados no se indexan en Datashare para facilitar la búsqueda y evitar crear archivos innecesarios."
+    },
+    "entities": {
+      "people": "0 people | one person | <strong>{count}</strong> people",
+      "locations": "0 locations | one location | <strong>{count}</strong> locations",
+      "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
+      "emails": "0 email addresses | one email address | <strong>{count}</strong> email addresses"
     },
     "treemap": {
       "seeDocuments": "Ver archivos en Datashare",
@@ -739,7 +746,9 @@
   "treeView": {
     "hits": "no hay archivos | 1 archivo | %{hits} archivos",
     "docs": "archivo | archivos",
-    "datadir": "Inicio"
+    "datadir": "Inicio",
+    "all": "Todos",
+    "includingIndividualDocuments": "incluyendo documentos individuales"
   },
   "quickItemNav": {
     "previous": {

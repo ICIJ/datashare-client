@@ -409,7 +409,7 @@
     "tagged": "Les documents ont été tagués.",
     "starFile": "Mettre en favoris le document",
     "notFound": "Document non trouvé",
-    "notAvailable": "La prévisualisation est disponible seulement pour certains formats de documents.",
+    "notAvailable": "L'aperçu n'est pas disponible pour ce document.",
     "namedEntitiesNotFound": "Pas d'entités nommées trouvées",
     "namedEntitiesNotSearched": "<p>Document non analysé.</p><p class=\\\"text-muted small\\\">Afin de lancer la recherche d'entités nommées, allez dans <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> et lancez une nouvelle tâche \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Génération d'une prévisualisation...",
@@ -564,7 +564,7 @@
     "title": "Recherches en lot",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
-    "fileDescription": "Exportez votre feuille de calcul au format CSV en utilisant l'encodage UTF-8. <ul><li>Seul le format CSV est accepté.</li> <li>Le fichier CSV ne doit pas contenir plus de 60 000 requêtes.</li> <li>La première et seule colonne doit contenir les termes à rechercher.</li> <li>Pas de saut de ligne dans les cellules.</li> <li>Sans 'do phrase match' uniquement, vous pouvez utiliser AND OR NOT * ? + - et les autres opérateurs et utiliser une Regex entre 2 slashes</li></ul>",
+    "fileDescription": "Exportez votre feuille de calcul au format CSV en utilisant l'encodage UTF-8. <ul><li>Seul le format CSV est accepté.</li> <li>Le fichier CSV ne doit pas contenir plus de 60 000 requêtes.</li> <li>La première et seule colonne doit contenir les termes à rechercher.</li> <li>Pas de saut de ligne dans les cellules.</li> <li>Uniquement quand 'Rechercher les termes exacts' n'est pas coché, vous pouvez utiliser AND OR NOT * ? + - et les autres opérateurs de recherche dans votre CSV, et utiliser une Regex entre 2 slashes</li></ul>",
     "filePlaceholder": "Choisir un fichier...",
     "submit": "Ajouter",
     "success": "Votre recherche en lot est en cours d'exécution.",
@@ -601,7 +601,7 @@
     "selectFolder": "Sélectionner un dossier",
     "errorTitle": "Erreur dans la requête",
     "errorQuery": "Vous avez une erreur sur votre requête <code>%{query}</code>.",
-    "errorMessage": "Le système a rencontré un problème. Il peut s'agir d'une erreur de syntaxe que vous avez faite dans votre CSV ou d'une autre erreur. <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">Veuillez vous référer à cette page d'aide où les erreurs les plus courantes sont expliquées.</a>",
+    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
     "placeholder": "Rechercher dans les recherches en lot..."
   },
   "batchSearchResults": {
@@ -678,7 +678,8 @@
       "onDisk": "sur le disque"
     },
     "diskUsage": {
-      "details": "Voir l'utilisation du disque"
+      "details": "Voir l'utilisation du disque",
+      "warning": "Le nombre de documents ne compte que les documents parents (fichiers sur disque), et non les pièces jointes (documents attachés ou enfants)."
     },
     "creationDate": {
       "filterFolder": "Filtrer par dossier",
@@ -694,6 +695,12 @@
     },
     "duplicates": {
       "duplicated": "* Les documents dupliqués ne sont pas indexés dans Datashare pour faciliter la recherche et éviter de créer des documents inutiles."
+    },
+    "entities": {
+      "people": "0 people | one person | <strong>{count}</strong> people",
+      "locations": "0 locations | one location | <strong>{count}</strong> locations",
+      "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
+      "emails": "0 email addresses | one email address | <strong>{count}</strong> email addresses"
     },
     "treemap": {
       "seeDocuments": "Voir les documents dans Datashare",
@@ -739,7 +746,9 @@
   "treeView": {
     "hits": "aucun document | 1 document | %{hits} documents",
     "docs": "doc | docs",
-    "datadir": "Accueil"
+    "datadir": "Accueil",
+    "all": "Tout",
+    "includingIndividualDocuments": "y compris les documents hors sous-dossiers"
   },
   "quickItemNav": {
     "previous": {
