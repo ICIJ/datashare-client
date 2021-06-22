@@ -1,8 +1,8 @@
 import { castArray, join, map, noop } from 'lodash'
 import elasticsearch from 'elasticsearch-browser'
 
-import esMapping from '@/datashare_index_mappings.json'
-import esSettings from '@/datashare_index_settings.json'
+import esMapping from './datashare_index_mappings.json'
+import esSettings from './datashare_index_settings.json'
 
 const es = new elasticsearch.Client({ host: process.env.VUE_APP_ES_HOST })
 
