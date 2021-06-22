@@ -48,13 +48,13 @@ export default {
       }
     }
   },
-  async created () {
-    this.$wait.start(this.loader)
-    this.entities.emails = await this.countFor('EMAIL')
-    this.entities.locations = await this.countFor('LOCATION')
-    this.entities.organizations = await this.countFor('ORGANIZATION')
-    this.entities.people = await this.countFor('PERSON')
-    this.$wait.end(this.loader)
+  created () {
+    return this.loadData()
+  },
+  watch: {
+    project () {
+      return this.loadData()
+    }
   },
   computed: {
     total () {
@@ -71,11 +71,22 @@ export default {
     },
     loader () {
       return uniqueId('loading-entities-count-')
+    },
+    project () {
+      return this.$store.state.insights.project
     }
   },
   methods: {
+    async loadData () {
+      this.$wait.start(this.loader)
+      this.entities.emails = await this.countFor('EMAIL')
+      this.entities.locations = await this.countFor('LOCATION')
+      this.entities.organizations = await this.countFor('ORGANIZATION')
+      this.entities.people = await this.countFor('PERSON')
+      this.$wait.end(this.loader)
+    },
     async countFor (category) {
-      const index = this.$store.state.insights.project
+      const index = this.project
       const body = this.bodybuilderFor(category).build()
       const { count = 0 } = await elasticsearch.count({ index, body })
       return count
