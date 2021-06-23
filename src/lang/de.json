@@ -96,82 +96,82 @@
     "back": "Zurück zu den Suchergebnissen",
     "try": "Sie können folgendes versuchen: ",
     "nav": {
-      "share": "Share a link to this document",
+      "share": "Link zu diesem Dokument teilen",
       "previous": {
-        "label": "Previous",
-        "tooltipMac": "Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)",
-        "tooltipOthers": "Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
+        "label": "Zurück",
+        "tooltipMac": "Vorheriges Dokument (<kbd>⌘</kbd> + <kbd>←</kbd>)",
+        "tooltipOthers": "Vorheriges Dokument (<kbd>Strg</kbd> + <kbd>←</kbd>)"
       },
       "next": {
-        "label": "Next",
-        "tooltipMac": "Next document (<kbd>⌘</kbd> + <kbd>→</kbd>)",
-        "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
+        "label": "Weiter",
+        "tooltipMac": "Nächstes Dokument (<kbd>⌘</kbd> + <kbd>←</kbd>)",
+        "tooltipOthers": "Nächstes Dokument (<kbd>Strg</kbd> + <kbd>←</kbd>)"
       },
       "document": {
-        "extensionWarning": "This document has the wrong file extension for its type. You might need to add the extension <code>%{extension}</code> before you can open it."
+        "extensionWarning": "Dieses Dokument hat die falsche Dateierweiterung für seinen Typ. Möglicherweise müssen Sie die Erweiterung <code>%{extension}</code> hinzufügen, bevor Sie es öffnen können."
       },
-      "markAsRecommended": "Mark as recommended",
-      "unmarkAsRecommended": "Unmark as recommended",
-      "markAsRecommendedBy": "Marked as recommended by nobody | Marked as recommended by 1 user: | Marked as recommended by {count} users:"
+      "markAsRecommended": "Als \"empfohlen\" markieren",
+      "unmarkAsRecommended": "Nicht als \"empfohlen\" markieren",
+      "markAsRecommendedBy": "Als empfohlen markiert von niemand | Als empfohlen von einem Benutzer: | Als empfohlen von {count} Benutzern markiert:"
     }
   },
   "searchFormControl": {
-    "submitLabel": "Search"
+    "submitLabel": "Suche"
   },
   "pagination": {
-    "firstPage": "Go to first page",
-    "previousPage": "Go to previous page",
-    "nextPage": "Go to next page",
-    "lastPage": "Go to last page"
+    "firstPage": "Zur ersten Seite gehen",
+    "previousPage": "Zur vorherigen Seite gehen",
+    "nextPage": "Gehe zur nächsten Seite",
+    "lastPage": "Gehe zur letzten Seite"
   },
   "documentTranslatedContent": {
-    "detected": "Detected language",
-    "viewOriginal": "View original text",
-    "viewTranslated": "View translated text"
+    "detected": "Erkannte Sprache",
+    "viewOriginal": "Ausgangstext anzeigen",
+    "viewTranslated": "Übersetzten Text anzeigen"
   },
   "filter": {
-    "none": "No values",
-    "noMatches": "No matches.<br />Hit <kbd>Enter</kbd> to search in every documents",
-    "noResults": "No results",
-    "noSubdirectories": "No subdirectories",
-    "invert": "Exclude",
-    "contextualize": "Contextualize",
-    "contentType": "File types",
-    "language": "Languages",
-    "namedEntityPerson": "People",
-    "namedEntityLocation": "Locations",
-    "namedEntityOrganization": "Organizations",
-    "namedEntityEmail": "Emails",
-    "path": "Paths",
-    "indexingDate": "Indexing dates",
-    "extractionLevel": "Extraction levels",
-    "creationDate": "Creation dates",
-    "projects": "Projects",
-    "deleteNamedEntity": "Delete this Named Entity",
-    "showMore": "Expand",
-    "missing": "Missing date",
-    "starred": "Starred",
-    "notStarred": "Not starred",
-    "recommendedBy": "Recommended by",
+    "none": "Keine Werte",
+    "noMatches": "Keine Übereinstimmungen.<br />Drücken Sie <kbd>Enter</kbd>, um in allen Dokumenten zu suchen",
+    "noResults": "Keine Ergebnisse",
+    "noSubdirectories": "Keine Unterverzeichnisse",
+    "invert": "Ausschließen",
+    "contextualize": "In Kontext setzen",
+    "contentType": "Dateitypen",
+    "language": "Sprachen",
+    "namedEntityPerson": "Personen",
+    "namedEntityLocation": "Orte",
+    "namedEntityOrganization": "Organisationen",
+    "namedEntityEmail": "E-Mails",
+    "path": "Pfade",
+    "indexingDate": "Indizierungsdatum",
+    "extractionLevel": "Extraktionsstufen",
+    "creationDate": "Erstellungsdatum",
+    "projects": "Projekte",
+    "deleteNamedEntity": "Diese Named Entity löschen",
+    "showMore": "Erweitern",
+    "missing": "Fehlendes Datum",
+    "starred": "Favorit",
+    "notStarred": "Kein Favorit",
+    "recommendedBy": "Empfohlen von",
     "sortByDropdown": {
-      "toggler": "Sort",
+      "toggler": "Sortieren",
       "options": {
         "_count": {
-          "asc": "Occurrences (increasing)",
-          "desc": "Occurrences (decreasing)"
+          "asc": "Vorkommen (aufsteigend)",
+          "desc": "Vorkommen (absteigend)"
         },
         "parent_doc_count": {
-          "asc": "Occurrences (increasing)",
-          "desc": "Occurrences (decreasing)"
+          "asc": "Vorkommen (aufsteigend)",
+          "desc": "Vorkommen (absteigend)"
         },
         "_key": {
-          "asc": "Alphabetical (A to Z)",
-          "desc": "Alphabetical (Z to A)"
+          "asc": "Alphabetisch (A-Z)",
+          "desc": "Alphabetisch (Z-A)"
         }
       }
     },
     "lang": {
-      "all": "All",
+      "all": "Alle",
       "ABKHAZIAN": "Abchasisch",
       "AFAR": "Afar",
       "AFRIKAANS": "Afrikaans",
