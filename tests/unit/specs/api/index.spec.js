@@ -274,6 +274,11 @@ describe('Datashare backend client', () => {
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me/history'), method: 'PUT', data, responseType: 'text', headers: { 'Content-Type': 'text/plain;charset=UTF-8' } })
   })
 
+  it('should return a backend response to deleteUserHistory', async () => {
+    json = await api.deleteUserHistory()
+    expect(json).toEqual({})
+  })
+
   it('should emit an error if the backend response has a bad status', async () => {
     const error = new Error('Forbidden')
     axios.request.mockReturnValue(Promise.reject(error))
