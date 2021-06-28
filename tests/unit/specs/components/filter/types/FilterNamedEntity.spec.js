@@ -84,7 +84,6 @@ describe('FilterNamedEntity.vue', () => {
       await wrapper.vm.root.aggregate({ clearPages: true })
 
       expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
-      expect(wrapper.findAll('.filter__items__item__count').at(1).text()).toEqual('2')
     })
 
     it('should display 3 named entities in 2 documents in correct order', async () => {
@@ -101,8 +100,8 @@ describe('FilterNamedEntity.vue', () => {
 
       expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
       expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('someone_01')
-      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('someone_02')
-      expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('someone_03')
+      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('someone_03')
+      expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('someone_02')
     })
 
     it('should display 3 named entities in 2 documents alphabeticaly', async () => {
@@ -364,7 +363,6 @@ describe('FilterNamedEntity.vue', () => {
     await wrapper.vm.root.aggregate({ clearPages: true })
 
     expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
-    expect(wrapper.findAll('.filter__items__item__count').at(0).text()).toContain('1')
   })
 
   it('should display an "All" item on top of others items, and this item should be active by default', async () => {
