@@ -409,7 +409,7 @@
     "tagged": "Documentos han sido etiquetados.",
     "starFile": "Marcar como favorito",
     "notFound": "Documento no encontrado",
-    "notAvailable": "Preview is not available for this document.",
+    "notAvailable": "La vista previa no está disponible para este archivo.",
     "namedEntitiesNotFound": "No se han encontrado entidades identificadas",
     "namedEntitiesNotSearched": "<p>Documento no analizado.</p><p class=\\\"text-muted small\\\">Para buscar entidades identificadas, vaya a <a class=\\\"font-weight-bold\\\" href=\\\"%{indexing_link}\\\">@:menu.analyse</a> y comience una nueva tarea \\\"@:indexing.findNamedEntities\\\".</p>",
     "generatingPreview": "Generando visualización previa...",
@@ -601,7 +601,7 @@
     "selectFolder": "Seleccionar directorio",
     "errorTitle": "Error en la consulta",
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
-    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
+    "errorMessage": "El sistema encontró un error. Puede ser un error de sintaxis que hayas escribido en tu CSV u otro error. Por favor, consulte esta <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">página de ayuda</a> donde se describen los errores más comunes.",
     "placeholder": "Buscar en las búsquedas masivas..."
   },
   "batchSearchResults": {
@@ -697,10 +697,10 @@
       "duplicated": "* Los archivos duplicados no se indexan en Datashare para facilitar la búsqueda y evitar crear archivos innecesarios."
     },
     "entities": {
-      "people": "0 people | one person | <strong>{count}</strong> people",
-      "locations": "0 locations | one location | <strong>{count}</strong> locations",
-      "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
-      "emails": "0 email addresses | one email address | <strong>{count}</strong> email addresses"
+      "people": "0 persona | una persona | <strong>{count}</strong> personas",
+      "locations": "0 ubicación | una ubicación | <strong>{count}</strong> ubicaciones",
+      "organizations": "0 organización | una organización | <strong>{count}</strong> organizaciones",
+      "emails": "0 dirección de correo electrónico | una dirección de correo electrónico | <strong>{count}</strong> direcciones de correo electrónico"
     },
     "treemap": {
       "seeDocuments": "Ver archivos en Datashare",

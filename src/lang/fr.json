@@ -601,7 +601,7 @@
     "selectFolder": "Sélectionner un dossier",
     "errorTitle": "Erreur dans la requête",
     "errorQuery": "Vous avez une erreur sur votre requête <code>%{query}</code>.",
-    "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
+    "errorMessage": "Le système a rencontré une erreur. Il peut s'agir d'une erreur de syntaxe que vous avez écrite dans votre CSV ou d'une autre erreur. Veuillez vous référer à <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">cette page d'aide</a> où les erreurs les plus courantes sont expliquées.",
     "placeholder": "Rechercher dans les recherches en lot..."
   },
   "batchSearchResults": {
@@ -697,10 +697,10 @@
       "duplicated": "* Les documents dupliqués ne sont pas indexés dans Datashare pour faciliter la recherche et éviter de créer des documents inutiles."
     },
     "entities": {
-      "people": "0 people | one person | <strong>{count}</strong> people",
-      "locations": "0 locations | one location | <strong>{count}</strong> locations",
-      "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
-      "emails": "0 email addresses | one email address | <strong>{count}</strong> email addresses"
+      "people": "0 personne | une personne | <strong>{count}</strong> personnes",
+      "locations": "0 lieu | un lieu | <strong>{count}</strong> lieux",
+      "organizations": "0 organisation | une organisation | <strong>{count}</strong>organisations",
+      "emails": "0 adresse e-mail | une adresse e-mail | <strong>{count}</strong> adresses e-mail"
     },
     "treemap": {
       "seeDocuments": "Voir les documents dans Datashare",
