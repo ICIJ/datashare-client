@@ -13,11 +13,11 @@ export default class FilterNamedEntity extends FilterType {
     super(options)
     this.category = options.category || 'PERSON'
     this.component = 'FilterNamedEntity'
-    this.sortBy = 'parent_doc_count'
+    this.sortBy = '_count'
     this.sortByOrder = 'desc'
     this.sortByOptions = [
-      { sortBy: 'parent_doc_count', sortByOrder: 'asc' },
-      { sortBy: 'parent_doc_count', sortByOrder: 'desc' },
+      { sortBy: '_count', sortByOrder: 'asc' },
+      { sortBy: '_count', sortByOrder: 'desc' },
       { sortBy: '_key', sortByOrder: 'asc' },
       { sortBy: '_key', sortByOrder: 'desc' }
     ]
@@ -77,12 +77,7 @@ export default class FilterNamedEntity extends FilterType {
       .filter('term', 'isHidden', 'false')
       .filter('term', 'category', this.category)
       .agg('terms', 'mentionNorm', this.key, { ...options }, sub => {
-        return sub
-          .agg('bucket_sort', { size, from }, 'bucket_truncate')
-          .agg('cardinality', 'join#Document', 'parent_doc_count')
-          .agg('terms', 'category', 'byCategories', sub => {
-            return sub.agg('cardinality', 'join#Document', 'parent_doc_count')
-          })
+        return sub.agg('bucket_sort', { size, from }, 'bucket_truncate')
       })
   }
 }

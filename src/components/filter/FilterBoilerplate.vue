@@ -33,7 +33,7 @@
           <search-form-control class="filter__items__search"
                                :placeholder="$t('search.searchIn') + ' ' + $t('filter.' + filter.name) + '...'"
                                :rounded="false"
-                               @submit="openFilterSearch"
+                               @submit.prevent="openFilterSearch"
                                v-model="query"></search-form-control>
         </slot>
         <hook :name="`filter.${filter.name}.search:after`" :bind="{ filter, query: query }"></hook>

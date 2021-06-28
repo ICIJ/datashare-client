@@ -63,6 +63,7 @@ export { faLongArrowAltLeft } from '@fortawesome/free-solid-svg-icons/faLongArro
 export { faLongArrowAltRight } from '@fortawesome/free-solid-svg-icons/faLongArrowAltRight'
 export { faMapMarkerAlt } from '@fortawesome/free-solid-svg-icons/faMapMarkerAlt'
 export { faMinus } from '@fortawesome/free-solid-svg-icons/faMinus'
+export { faMinusCircle } from '@fortawesome/free-solid-svg-icons/faMinusCircle'
 export { faPaperclip } from '@fortawesome/free-solid-svg-icons/faPaperclip'
 export { faPlug } from '@fortawesome/free-solid-svg-icons/faPlug'
 export { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
