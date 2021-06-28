@@ -1,199 +1,128 @@
 <template>
-  <div class="batch-search-results" v-if="Object.keys(batchSearch).length !== 0">
-    <page-header icon="layer-group" :title="batchSearch.name" :description="batchSearch.description">
-      <template v-slot:preTitle>
-        <router-link :to="{ name: 'batch-search' }" class="mx-1">{{ $t('batchSearch.title') }}</router-link>
-        <fa icon="angle-right" class="small"></fa>
-      </template>
-      <div class="d-flex my-2 mx-3">
-        <div>
-          <b-btn class="batch-search-results__action"
-                 id="batch-search-results-filters-toggle"
-                 :title="$t('batchSearchResultsFilters.queries.heading')"
-                 v-b-tooltip.hover
-                 variant="light">
-            <fa icon="filter"></fa>
-            <span class="sr-only">
-              {{ $t('batchSearchResultsFilters.queries.heading') }}
-            </span>
-            <b-badge variant="secondary" class="batch-search-results__action__counter" v-if="selectedQueries.length">
-              {{ selectedQueries.length }}
-            </b-badge>
-          </b-btn>
-          <b-popover custom-class="popover-body-p-0"
-                     lazy
-                     placement="bottom"
-                     target="batch-search-results-filters-toggle"
-                     triggers="focus">
-            <batch-search-results-filters :uuid="uuid" :index="index" hide-border></batch-search-results-filters>
-          </b-popover>
+  <div class="batch-search-results" v-if="isLoaded">
+    <div class="my-4 container">
+      <div class="mx-1 mb-2">
+        <router-link :to="{ name: 'batch-search' }">
+          <fa icon="angle-left" class="mr-1" fixed-width />
+          {{ $t('batchSearch.title') }}
+        </router-link>
+      </div>
+      <div class="card">
+        <div class="card-body d-flex align-items-center">
+          <h5 class="m-0 flex-grow-1">
+            {{ batchSearch.name }}
+          </h5>
+          <batch-search-actions :batch-search="batchSearch" />
         </div>
-        <div class="batch-search-results__action batch-search-results__delete"
-             v-b-tooltip.hover
-             v-if="isMyBatchSearch"
-             :title="$t('batchSearch.delete')">
-          <confirm-button class="btn btn-light ml-2"
-                          :confirmed="deleteBatchSearch"
-                          :label="$t('batchSearch.delete')"
-                          :no="$t('global.no')"
-                          :yes="$t('global.yes')">
-            <fa icon="trash-alt"></fa>
-            <span class="sr-only">
-              {{ $t('batchSearch.delete') }}
-            </span>
-          </confirm-button>
-        </div>
-        <div class="batch-search-results__action batch-search-results__relaunch float-right"
-             v-if="isMyBatchSearch && isBatchsearchEnded">
-          <b-btn class="btn-light ml-2" @click="$refs['batch-search-copy-form'].show()" :disabled="isRelaunch">
-            <fa icon="redo"></fa>
-            {{ $t('batchSearchResults.relaunch') }}
-          </b-btn>
-          <b-modal body-class="p-0"
-                   hide-footer
-                   ref="batch-search-copy-form"
-                   size="md"
-                   :title="$t('batchSearchResults.relaunchTitle')">
-            <b-form @submit.prevent="copyBatchSearch">
-              <div class="card w-100">
-                <div class="card-body pb-1">
-                  <b-form-group label-size="sm" :label="`${ $t('batchSearch.name') } *`">
-                    <b-form-input v-model="name" type="text" required></b-form-input>
-                  </b-form-group>
-                  <b-form-group label-size="sm" :label="$t('batchSearch.description')">
-                    <b-form-textarea v-model="description" rows="2" max-rows="6"></b-form-textarea>
-                  </b-form-group>
-                  <b-form-group label-size="sm">
-                    <b-form-checkbox v-model="deleteAfterRelaunch" switch>
-                      {{ $t('batchSearchResults.deleteAfterRelaunch') }}
-                    </b-form-checkbox>
-                  </b-form-group>
-                </div>
-                <div class="card-footer">
-                  <div class="d-flex justify-content-end align-items-center">
-                    <b-btn type="submit" variant="primary">
-                      {{ $t('global.submit') }}
-                    </b-btn>
-                  </div>
-                </div>
-              </div>
-            </b-form>
-          </b-modal>
-        </div>
-        <div class="batch-search-results__action batch-search-results__download-queries"
-             :title="$t('batchSearchResults.downloadQueriesTooltip')"
-             v-b-tooltip.hover>
-          <a :href="apiFullUrl('/api/batch/search/' + uuid + '/queries?format=csv')" class="btn btn-light ml-2">
-            <fa icon="download"></fa>
-            {{ $t('batchSearchResults.downloadQueries') }}
-          </a>
-        </div>
-        <div class="batch-search-results__action batch-search-results__download-results float-right"
-             :title="$t('batchSearchResults.downloadQueriesTooltip')"
-             v-b-tooltip.hover
-             v-if="results.length">
-          <a :href="apiFullUrl('/api/batch/search/result/csv/' + uuid)" class="btn btn-primary ml-2">
-            <fa icon="download"></fa>
-            {{ $t('batchSearchResults.downloadResults') }}
-          </a>
+        <div class="card-footer p-0 overflow-hidden">
+          <p v-if="batchSearch.description" class="p-3 m-0 border-bottom">
+            {{ batchSearch.description }}
+          </p>
+          <dl class="batch-search-results__info">
+            <div v-if="isServer">
+              <dt>
+                {{ $t('batchSearch.project') }}
+              </dt>
+              <dd>
+                {{ batchSearch.project.name }}
+              </dd>
+            </div>
+            <div v-if="isServer && isMyBatchSearch">
+              <dt>
+                {{ $t('batchSearch.published') }}
+              </dt>
+              <dd>
+                <b-form-checkbox @change="changePublished" switch v-model="batchSearch.published" />
+              </dd>
+            </div>
+            <div>
+              <dt>
+                {{ $t('batchSearch.state') }}
+              </dt>
+              <dd>
+                <batch-search-status :batch-search="batchSearch" />
+              </dd>
+            </div>
+            <div>
+              <dt>
+                {{ $t('batchSearch.date') }}
+              </dt>
+              <dd>
+                {{ moment(batchSearch.date).locale($i18n.locale).format('LLL') }}
+              </dd>
+            </div>
+            <div>
+              <dt>
+                {{ $t('batchSearch.nbResults') }}
+              </dt>
+              <dd :title="batchSearch.nbResults">
+                {{ batchSearch.nbResults | humanNumber }}
+              </dd>
+            </div>
+            <div>
+              <dt>
+                {{ $t('batchSearch.queries') }}
+              </dt>
+              <dd :title="batchSearch.nbQueries">
+                {{ batchSearch.nbQueries | humanNumber }}
+              </dd>
+            </div>
+            <div v-if="batchSearch.phraseMatches">
+              <dt>
+                {{ $t('batchSearch.phraseMatch') }}
+              </dt>
+              <dd>
+                {{ $t('global.yes') }}
+              </dd>
+            </div>
+            <div v-if="batchSearch.fuzziness > 0">
+              <dt>
+                {{ fuzzinessLabel }}
+              </dt>
+              <dd>
+                {{ batchSearch.fuzziness }}
+              </dd>
+            </div>
+            <div v-if="batchSearch.fileTypes.length">
+              <dt>
+                {{ $t('batchSearch.fileTypes') }}
+              </dt>
+              <dd>
+                <ul class="list-unstyled list-group list-group-horizontal mt-1">
+                  <li v-for="fileType in batchSearch.fileTypes" :key="fileType" class="mr-2">
+                    <content-type-badge :value="fileType" />
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div v-if="batchSearch.paths.length">
+              <dt>
+                {{ $t('batchSearch.path') }}
+              </dt>
+              <dd>
+                <ul class="list-unstyled list-group list-group-horizontal">
+                  <li v-for="path in batchSearch.paths" :key="path" class="mr-2">
+                    <b-badge variant="dark">
+                      {{ path }}
+                    </b-badge>
+                  </li>
+                </ul>
+              </dd>
+            </div>
+            <div v-if="isServer">
+              <dt>
+                {{ $t('batchSearch.author') }}
+              </dt>
+              <dd>
+                {{ batchSearch.user.id }}
+              </dd>
+            </div>
+          </dl>
         </div>
       </div>
-    </page-header>
-    <div class="container py-4">
-      <div class="batch-search-results__info d-md-flex align-items-start" v-if="Object.keys(batchSearch).length !== 0">
-        <dl class="row m-0 w-50">
-          <dt class="text-nowrap col-sm-6 text-right text-truncate" v-if="isServer">
-            {{ $t('batchSearch.project') }}
-          </dt>
-          <dd class="col-sm-6 text-truncate" v-if="isServer">
-            {{ batchSearch.project.name }}
-          </dd>
-          <dt class="col-sm-6 text-right text-truncate" v-if="isServer">
-            {{ $t('batchSearch.published') }}
-          </dt>
-          <dd class="col-sm-6 text-truncate" v-if="isServer">
-            <b-form-checkbox @change="changePublished"
-                             switch
-                             v-if="isMyBatchSearch"
-                             v-model="batchSearch.published"></b-form-checkbox>
-            <span v-else>
-              {{ batchSearch.published ? $t('global.yes') : $t('global.no') }}
-            </span>
-          </dd>
-          <dt class="text-nowrap col-sm-6 text-right text-truncate">
-            {{ $t('batchSearch.state') }}
-          </dt>
-          <dd class="col-sm-6 text-truncate">
-            <batch-search-status :batch-search="batchSearch"></batch-search-status>
-          </dd>
-          <dt class="text-nowrap col-sm-6 text-right text-truncate">
-            {{ $t('batchSearch.date') }}
-          </dt>
-          <dd class="col-sm-6 text-truncate">
-            {{ moment(batchSearch.date).locale($i18n.locale).format('LLL') }}
-          </dd>
-          <dt class="text-nowrap col-sm-6 text-right text-truncate">
-            {{ $t('batchSearch.nbResults') }}
-          </dt>
-          <dd class="col-sm-6 text-truncate">
-            {{ batchSearch.nbResults }}
-          </dd>
-          <dt class="text-nowrap col-sm-6 text-right text-truncate">
-            {{ $t('batchSearch.queries') }}
-          </dt>
-          <dd class="col-sm-6 text-truncate">
-            {{ keys(batchSearch.queries).length }}
-          </dd>
-        </dl>
-        <dl class="row m-0 w-50">
-          <dt class="text-nowrap col-sm-6 text-right text-truncate">
-            {{ $t('batchSearch.phraseMatch') }}
-          </dt>
-          <dd class="col-sm-6 text-truncate">
-            {{ batchSearch.phraseMatches ? $t('global.yes') : $t('global.no') }}
-          </dd>
-          <dt class="text-nowrap col-sm-6 text-right text-truncate">
-            {{ fuzzinessLabel }}
-          </dt>
-          <dd class="col-sm-6 text-truncate">
-            {{ batchSearch.fuzziness }}
-          </dd>
-          <dt class="text-nowrap col-sm-6 text-right text-truncate">
-            {{ $t('batchSearch.fileTypes') }}
-          </dt>
-          <dd class="col-sm-6 text-truncate">
-            <ul v-if="batchSearch.fileTypes.length" class="list-unstyled list-group list-group-horizontal">
-              <li v-for="fileType in batchSearch.fileTypes" :key="fileType" class="mr-2">
-                <content-type-badge :value="fileType"></content-type-badge>
-              </li>
-            </ul>
-            <span v-else>
-              {{ $t('global.no') }}
-            </span>
-          </dd>
-          <dt class="text-nowrap col-sm-6 text-right text-truncate">
-            {{ $t('batchSearch.path') }}
-          </dt>
-          <dd class="col-sm-6 text-truncate">
-            <ul v-if="batchSearch.paths.length" class="list-unstyled list-group list-group-horizontal">
-              <li v-for="path in batchSearch.paths" :key="path" class="mr-2">
-                <b-badge variant="dark">
-                  {{ path }}
-                </b-badge>
-              </li>
-            </ul>
-            <span v-else>
-              {{ $t('global.no') }}
-            </span>
-          </dd>
-          <dt class="col-sm-6 text-right text-truncate" v-if="isServer">
-            {{ $t('batchSearch.author') }}
-          </dt>
-          <dd class="col-sm-6 text-truncate" v-if="isServer">
-            {{ batchSearch.user.id }}
-          </dd>
-        </dl>
-      </div>
+    </div>
+
+    <div class="container">
       <v-wait for="load batchSearch results">
         <div slot="waiting" class="card py-2">
           <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
@@ -201,9 +130,8 @@
           <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
         </div>
         <div class="batch-search-results__queries">
-          <div class="card small">
+          <div class="card">
             <b-table
-              class="m-0"
               :empty-text="$t('global.emptyTextTable')"
               :fields="fields"
               hover
@@ -223,7 +151,7 @@
               </template>
               <template v-slot:cell(documentPath)="{ item, index }">
                 <router-link class="batch-search-results__queries__query__link"
-                             @click.native="openDocumentModal($event, index)"
+                             @click.native.prevent="openDocumentModal(index)"
                              target="_blank"
                              :to="{
                                name: 'document-standalone',
@@ -254,8 +182,7 @@
             </b-table>
           </div>
         </div>
-
-        <div class="batch-search-results__pagination pt-2">
+        <div class="batch-search-results__pagination pt-2" v-if="totalItems > perPage">
           <custom-pagination v-model="currentPage" :per-page="perPage" :total-rows="totalItems" />
         </div>
       </v-wait>
@@ -276,8 +203,7 @@
               v-model="documentInModalIndex"
               :total-items="totalItems"
               @previous="handlePrevNextRoute"
-              @next="handlePrevNextRoute"
-              >
+              @next="handlePrevNextRoute">
             </quick-item-nav>
           </template>
         </document-navbar>
@@ -285,7 +211,7 @@
           <document-view :id="documentInModal.id"
                          :index="documentInModal.index"
                          :q="documentInModal.q"
-                         :routing="documentInModal.routing"></document-view>
+                         :routing="documentInModal.routing" />
         </v-wait>
       </div>
     </b-modal>
@@ -293,26 +219,20 @@
 </template>
 
 <script>
-import { castArray, find, get, isEqual, keys, sumBy } from 'lodash'
+import { castArray, find, get, isEqual, sumBy } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
-import Api from '@/api'
-import Auth from '@/api/resources/Auth'
-import BatchSearchResultsFilters from '@/components/BatchSearchResultsFilters'
+import BatchSearchActions from '@/components/BatchSearchActions'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import DocumentNavbar from '@/components/document/DocumentNavbar'
-import PageHeader from '@/components/PageHeader'
 import QuickItemNav from '@/components/QuickItemNav'
 import humanSize from '@/filters/humanSize'
+import humanNumber from '@/filters/humanNumber'
 import utils from '@/mixins/utils'
 import DocumentView from '@/pages/DocumentView'
 import settings from '@/utils/settings'
-import { toVariant } from '@/utils/utils'
-
-export const api = new Api()
-export const auth = new Auth()
 
 /**
  * This page will list all the results of a batch search.
@@ -320,12 +240,11 @@ export const auth = new Auth()
 export default {
   name: 'BatchSearchResults',
   components: {
-    BatchSearchResultsFilters,
+    BatchSearchActions,
     BatchSearchStatus,
     ContentTypeBadge,
     DocumentNavbar,
     DocumentView,
-    PageHeader,
     QuickItemNav
   },
   mixins: [utils],
@@ -344,12 +263,11 @@ export default {
     }
   },
   filters: {
-    humanSize
+    humanSize,
+    humanNumber
   },
   data () {
     return {
-      deleteAfterRelaunch: false,
-      description: '',
       documentInModalPageIndex: null,
       fields: [
         {
@@ -390,8 +308,6 @@ export default {
         }
       ],
       isMyBatchSearch: false,
-      isRelaunch: false,
-      name: '',
       order: settings.batchSearchResults.order,
       page: 1,
       published: false,
@@ -422,11 +338,16 @@ export default {
       this.fetch()
     }
   },
-  mounted () {
-    this.fetch()
+  async created () {
+    const username = await this.$core.auth.getUsername()
+    this.isMyBatchSearch = username === get(this, 'batchSearch.user.id')
+    await this.fetch()
   },
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results']),
+    isLoaded () {
+      return !!Object.keys(this.batchSearch).length
+    },
     currentPage: {
       get () {
         return this.page
@@ -440,7 +361,10 @@ export default {
       return get(this, '$store.state.batchSearch.selectedQueries', [])
     },
     fuzzinessLabel () {
-      return this.batchSearch.phraseMatches ? this.$t('batchSearch.proximitySearches') : this.$t('batchSearch.fuzziness')
+      if (this.batchSearch.phraseMatches) {
+        return this.$t('batchSearch.proximitySearches')
+      }
+      return this.$t('batchSearch.fuzziness')
     },
     perPage () {
       return settings.batchSearchResults.size
@@ -455,7 +379,7 @@ export default {
       if (this.selectedQueries.length === 0) {
         return this.batchSearch.nbResults
       } else {
-        const queryKeys = keys(this.batchSearch.queries)
+        const queryKeys = Object.keys(this.batchSearch.queries)
         return sumBy(queryKeys, query => {
           const findQuery = find(this.selectedQueries, ['label', query])
           if (findQuery) {
@@ -466,9 +390,6 @@ export default {
     },
     numberOfPages () {
       return Math.ceil(this.totalItems / this.perPage)
-    },
-    isBatchsearchEnded () {
-      return this.batchSearch.state === 'FAILURE' || this.batchSearch.state === 'SUCCESS'
     },
     hasDocumentInModal () {
       const pageIndex = this.documentInModalPageIndex
@@ -540,23 +461,11 @@ export default {
         this.$router.push(this.generateLinkToBatchSearchResults(this.currentPage, this.selectedQueries))
       }
     },
-    async checkIsMyBatchSearch () {
-      const username = await auth.getUsername()
-      this.isMyBatchSearch = username === get(this, 'batchSearch.user.id', '')
-    },
     async fetch () {
       this.$wait.start('load batchSearch results')
       this.$Progress.start()
       await this.$store.dispatch('batchSearch/getBatchSearch', this.uuid)
-      await this.checkIsMyBatchSearch()
-      this.$set(this, 'description', this.batchSearch.description)
-      this.$set(this, 'name', this.batchSearch.name)
-      const from = this.pageOffset
-      const size = this.perPage
-      const batchId = this.uuid
-      const queries = this.queries
-      const sort = this.sort
-      const order = this.order
+      const { order, sort, queries, uuid: batchId, perPage: size, pageOffset: from } = this
       const params = { batchId, from, size, queries, sort, order }
       await this.$store.dispatch('batchSearch/getBatchSearchResults', params)
       this.$Progress.finish()
@@ -573,43 +482,20 @@ export default {
     linkGen (page) {
       return this.generateLinkToBatchSearchResults(page, this.selectedQueries)
     },
-    apiFullUrl (url) {
-      return Api.getFullUrl(url)
-    },
     generateLinkToBatchSearchResults (page = this.page, queries = this.queries, sort = this.sort, order = this.order) {
       return {
         name: 'batch-search.results',
-        params: { index: this.$route.params.index, uuid: this.$route.params.uuid },
-        query: { page, queries: queries.map(query => query.label), sort, order, queries_sort: this.$route.query.queries_sort || undefined }
-      }
-    },
-    async deleteBatchSearch () {
-      const isDeleted = await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
-      this.$router.push({ name: 'batch-search' })
-      this.$root.$bvToast.toast(isDeleted ? this.$t('batchSearch.deleted') : this.$t('batchSearch.notDeleted'),
-        { noCloseButton: true, variant: isDeleted ? 'success' : 'warning' })
-    },
-    async copyBatchSearch () {
-      try {
-        await api.copyBatchSearch(this.uuid, this.name, this.description)
-        this.$set(this, 'isRelaunch', true)
-        if (!this.isServer) {
-          try {
-            await this.$store.dispatch('indexing/runBatchSearch')
-            this.$root.$bvToast.toast(this.$t('batchSearch.success'), { noCloseButton: true, variant: 'success' })
-          } catch (_) {
-            this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
-          }
-        } else {
-          this.$root.$bvToast.toast(this.$t('batchSearch.submitSuccess'), { noCloseButton: true, variant: 'success' })
+        params: {
+          index: this.index,
+          uuid: this.uuid
+        },
+        query: {
+          page,
+          queries: queries.map(query => query.label),
+          sort,
+          order,
+          queries_sort: this.$route.query.queries_sort || undefined
         }
-        if (this.deleteAfterRelaunch) {
-          await this.$store.dispatch('batchSearch/deleteBatchSearch', { batchId: this.uuid })
-        }
-      } catch (_) {
-        this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
-      } finally {
-        this.$router.push({ name: 'batch-search' })
       }
     },
     getDocumentSize (value) {
@@ -619,47 +505,69 @@ export default {
     changePublished (published) {
       this.$store.dispatch('batchSearch/updateBatchSearch', { batchId: this.uuid, published })
     },
-    openDocumentModal (event, pageIndex) {
-      event.preventDefault()
+    openDocumentModal (pageIndex) {
       this.$set(this, 'documentInModalPageIndex', pageIndex)
       this.$bvModal.show('document-modal')
     },
-    keys,
-    moment,
-    toVariant
+    moment
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .batch-search-results {
+
+  &__info {
+    display: grid;
+    overflow: hidden;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    grid-gap: 0px;
+    margin:0 -1px -1px;
+    border-left: 1px solid $border-color;
+
+    & > div {
+      padding: $spacer $spacer  $spacer;
+      border: 1px solid $border-color;
+      border-left: 0;
+      border-top: 0;
+
+      dt {
+        text-overflow: ellipsis;
+        font-weight: normal;
+        color: $text-muted;
+      }
+
+      dd {
+        font-size: 1rem;
+        font-weight: bolder;
+      }
+    }
+
+  }
+
   &__pagination {
     max-width: 40%;
   }
 
-  &__action {
-    position: relative;
-
-    & &__counter {
-      margin: 0;
-      position: absolute;
-      right: 0;
-      top: 0;
-      transform: translate(50%, -50%);
-      z-index: 100;
-    }
-  }
-
   &__queries {
-    table {
+
+    & /deep/ .table-responsive {
+      margin: 0;
+    }
+
+    & /deep/ table {
       margin: 0;
 
-      thead tr th {
+      thead tr {
         border-top: 0;
-        white-space: nowrap;
 
-        &[aria-sort]:hover {
-          background-color: $lighter;
+        th {
+          border-top: 0;
+          white-space: nowrap;
+
+          &[aria-sort]:hover {
+            background-color: $lighter;
+          }
         }
       }
     }

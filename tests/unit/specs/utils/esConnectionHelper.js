@@ -6,9 +6,9 @@ import esSettings from './datashare_index_settings.json'
 
 const es = new elasticsearch.Client({ host: process.env.VUE_APP_ES_HOST })
 
-const esConnectionHelper = function (indexName = '') {
+const esConnectionHelper = function (indexOrIndices = []) {
   jest.setTimeout(1e4)
-  const indices = castArray(indexName)
+  const indices = castArray(indexOrIndices)
 
   beforeAll(async () => {
     await Promise.all(
@@ -29,6 +29,8 @@ const esConnectionHelper = function (indexName = '') {
   afterAll(async () => {
     await es.indices.delete({ index: join(indices), ignoreUnavailable: true })
   })
+
+  return indices
 }
 
 esConnectionHelper.es = es

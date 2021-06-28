@@ -28,17 +28,6 @@ describe('AppSidebar.vue', () => {
 
   afterAll(() => jest.unmock('@/utils/utils'))
 
-  describe('the link to the analyse page', () => {
-    it('should NOT be displayed if in SERVER mode', () => {
-      wrapper = setServerMode()
-      expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').exists()).toBeFalsy()
-    })
-
-    it('should be displayed if NOT in SERVER mode', () => {
-      expect(wrapper.findAll('.app-sidebar__container__menu__item--documents').exists()).toBeTruthy()
-    })
-  })
-
   describe('the help link', () => {
     it('should be a github link if NOT in SERVER mode', () => {
       expect(wrapper.find('.app-sidebar__container__menu__item--help a').attributes('href')).toEqual(expect.stringContaining('github.com'))

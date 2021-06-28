@@ -1,35 +1,35 @@
 <template>
   <div class="batch-search h-100">
-    <page-header icon="layer-group" :title="$t('batchSearch.title')" :description="$t('batchSearch.lead')">
-      <b-btn @click="$refs['batch-search-form'].show()" variant="primary">
-        <fa icon="plus" class="mr-1"></fa>
-        {{ $t('batchSearch.heading') }}
-      </b-btn>
-      <b-modal ref="batch-search-form" hide-footer :title="$t('batchSearch.heading')" size="md" body-class="p-0">
-        <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()"></batch-search-form>
-      </b-modal>
-    </page-header>
     <div class="container pt-4">
-      <form class="batch-search__search-bar container-fluid p-0" @submit.prevent="searchBatchsearches">
-        <div class="d-flex align-items-left w-50">
-          <div class="input-group">
-            <input
-              v-model="search"
-              :placeholder="$t('batchSearch.placeholder')"
-              class="batch-search__search-bar__input form-control">
-            <div class="batch-search__search-bar__button input-group-append">
-              <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="batch-search__search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
-                <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key" class="batch-search__search-bar__field__items">
-                  {{ $t('search.field.' + key) }}
-                </b-dropdown-item>
-              </b-dropdown>
-              <button type="submit" class="btn btn-dark">
-                {{ $t('search.buttonLabel') }}
-              </button>
+      <div class="container-fluid p-0">
+        <b-btn @click="$refs['batch-search-form'].show()" variant="primary" class="float-right">
+          <fa icon="plus" class="mr-1"></fa>
+          {{ $t('batchSearch.heading') }}
+        </b-btn>
+        <form class="batch-search__search-bar " @submit.prevent="searchBatchsearches">
+          <div class="d-flex align-items-left w-50">
+            <div class="input-group">
+              <input
+                v-model="search"
+                :placeholder="$t('batchSearch.placeholder')"
+                class="batch-search__search-bar__input form-control">
+              <div class="batch-search__search-bar__button input-group-append">
+                <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="batch-search__search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
+                  <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key" class="batch-search__search-bar__field__items">
+                    {{ $t('search.field.' + key) }}
+                  </b-dropdown-item>
+                </b-dropdown>
+                <button type="submit" class="btn btn-dark">
+                  {{ $t('search.buttonLabel') }}
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      </form>
+        </form>
+        <b-modal ref="batch-search-form" hide-footer :title="$t('batchSearch.heading')" size="md" body-class="p-0">
+          <batch-search-form hide-title hide-border @submit="$refs['batch-search-form'].hide()"></batch-search-form>
+        </b-modal>
+      </div>
       <div class="batch-search__items">
         <v-wait for="load batchSearches">
           <div slot="waiting" class="card py-2">
@@ -37,9 +37,8 @@
             <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
             <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
           </div>
-          <div class="card small">
+          <div class="card">
             <b-table
-              class="m-0"
               :empty-text="$t('global.emptyTextTable')"
               :fields="fields"
               hover
@@ -62,12 +61,15 @@
                   class="batch-search__items__item__link">
                   {{ item.name }}
                 </router-link>
+                <p class="m-0 text-muted small">
+                  {{ item.description }}
+                </p>
               </template>
               <template v-slot:cell(queries)="{ item }">
-                {{ $tc('batchSearch.query', item.nbQueries) }}
+                {{ $n(item.nbQueries) }}
               </template>
               <template v-slot:cell(state)="{ item }">
-                <batch-search-status :batch-search="item"></batch-search-status>
+                <batch-search-status :batch-search="item" />
               </template>
               <template v-slot:cell(date)="{ item }">
                 <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
@@ -101,7 +103,6 @@ import { mapState } from 'vuex'
 
 import BatchSearchForm from '@/components/BatchSearchForm'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
-import PageHeader from '@/components/PageHeader'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
@@ -110,8 +111,7 @@ export default {
   mixins: [utils],
   components: {
     BatchSearchForm,
-    BatchSearchStatus,
-    PageHeader
+    BatchSearchStatus
   },
   data () {
     return {
@@ -179,12 +179,6 @@ export default {
           name: 'name'
         },
         this.authorField,
-        {
-          key: 'description',
-          label: this.$t('batchSearch.description'),
-          sortable: false,
-          name: 'description'
-        },
         {
           key: 'queries',
           label: this.$t('batchSearch.queries'),
@@ -342,7 +336,11 @@ export default {
       overflow: hidden;
       position: static;
 
-      table {
+      & /deep/ .table-responsive {
+        margin: 0;
+      }
+
+      & /deep/ table {
         margin: 0;
 
         thead th {

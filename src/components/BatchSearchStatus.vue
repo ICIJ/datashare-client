@@ -1,8 +1,10 @@
 <template>
   <div class="batch-search-status d-flex align-items-center">
-    <span :class="`text-${toVariant(batchSearch.state)}`" class="text-nowrap">
-      <fa :icon="getStateIcon"></fa>
-      {{ capitalize(batchSearch.state) }}
+    <span :class="batchSearch.state | toVariant('dark', 'text-')" class="text-nowrap">
+      <fa :icon="getStateIcon" :spin="isSpinning" />
+      <template v-if="!noLabel">
+        {{ batchSearch.state | capitalize }}
+      </template>
     </span>
     <template v-if="isFailed">
       <b-badge
@@ -56,11 +58,26 @@ export default {
      */
     batchSearch: {
       type: Object
+    },
+    /**
+     * Hide the label
+     */
+    noLabel: {
+      type: Boolean
+    },
+    /**
+     * Hide the error badge
+     */
+    noError: {
+      type: Boolean
     }
   },
   computed: {
     isFailed () {
       return this.batchSearch.state.toLowerCase() === 'failure'
+    },
+    isSpinning () {
+      return this.batchSearch.state.toLowerCase() === 'running'
     },
     getStateIcon () {
       const state = this.batchSearch.state.toLowerCase()
@@ -83,7 +100,7 @@ export default {
       }
     }
   },
-  methods: {
+  filters: {
     capitalize,
     toVariant
   }

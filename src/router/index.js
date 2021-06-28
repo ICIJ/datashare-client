@@ -56,43 +56,78 @@ export const router = {
           ]
         },
         {
-          name: 'indexing',
-          path: 'indexing',
-          component: () => import('@/pages/Indexing'),
-          meta: {
-            title: ({ i18n }) => i18n.t('indexing.title'),
-            docs: [
-              '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
-              'all/analyze-documents.md?mode=LOCAL'
-            ]
-          }
-        },
-        {
-          name: 'batch-search',
           path: 'batch-search',
-          components: {
-            default: () => import('@/pages/BatchSearch')
-          },
-          meta: {
-            title: ({ i18n }) => i18n.t('batchSearch.title'),
-            docs: [
-              'all/batch-search-documents.md'
-            ]
+          redirect: {
+            name: 'batch-search'
           }
         },
         {
-          name: 'batch-search.results',
-          path: 'batch-search/:index/:uuid',
-          components: {
-            default: () => import('@/pages/BatchSearchResults')
-          },
-          props: {
-            default: true,
-            sidebar: true
-          },
-          meta: {
-            title: ({ i18n }) => i18n.t('batchSearchResults.title')
+          path: 'indexing',
+          redirect: {
+            name: 'indexing'
           }
+        },
+        {
+          path: 'batch-search/:index/:uuid',
+          redirect: {
+            name: 'batch-search.results'
+          }
+        },
+        {
+          name: 'tasks',
+          path: 'tasks',
+          component: () => import('@/pages/Tasks'),
+          meta: {
+            title: ({ i18n }) => i18n.t('tasks.title')
+          },
+          children: [
+            {
+              name: 'indexing',
+              path: 'indexing',
+              component: () => import('@/pages/Indexing'),
+              meta: {
+                title: ({ i18n }) => i18n.t('indexing.title'),
+                docs: [
+                  '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
+                  'all/analyze-documents.md?mode=LOCAL'
+                ]
+              }
+            },
+            {
+              name: 'batch-download',
+              path: 'batch-download',
+              component: {
+                template: '<div class="container p-4 text-muted text-center">{{ $t("batchDownload.warning") }}</div>'
+              }
+            },
+            {
+              name: 'batch-search',
+              path: 'batch-search',
+              components: {
+                default: () => import('@/pages/BatchSearch')
+              },
+              meta: {
+                title: ({ i18n }) => i18n.t('batchSearch.title'),
+                docs: [
+                  'all/batch-search-documents.md'
+                ]
+              }
+            },
+            {
+              name: 'batch-search.results',
+              path: 'batch-search/:index/:uuid',
+              components: {
+                default: () => import('@/pages/BatchSearchResults')
+              },
+              props: {
+                default: true,
+                sidebar: true
+              },
+              meta: {
+                title: ({ i18n }) => i18n.t('batchSearchResults.title')
+              }
+            }
+          ]
         },
         {
           name: 'user-history',

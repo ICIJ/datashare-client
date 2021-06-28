@@ -27,28 +27,16 @@
             </span>
           </router-link>
         </li>
-        <li class="app-sidebar__container__menu__item">
-          <router-link
-            class="app-sidebar__container__menu__item__link"
-            :title="$t('menu.batch')"
-            :to="{ name: 'batch-search' }"
-            v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
-            <fa icon="layer-group" fixed-width></fa>
-            <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t(reduced ? 'menu.batchShort' : 'menu.batch') }}
-            </span>
-          </router-link>
-        </li>
-        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--documents"
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--tasks"
             v-if="!isServer">
           <router-link
             class="app-sidebar__container__menu__item__link"
-            :title="$t('menu.analyse')"
-            :to="{ name: 'indexing' }"
+            :title="$t('menu.tasks')"
+            :to="{ name: 'tasks' }"
             v-b-tooltip.right="{ customClass: tooltipsClass, id: 'app-sidebar-link-label' }">
             <fa icon="rocket" fixed-width></fa>
             <span class="flex-grow-1 app-sidebar__container__menu__item__link__label">
-              {{ $t(reduced ? 'menu.analyseShort' : 'menu.analyse') }}
+              {{ $t(reduced ? 'menu.tasksShort' : 'menu.tasks') }}
             </span>
           </router-link>
         </li>

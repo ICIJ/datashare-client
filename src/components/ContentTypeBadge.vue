@@ -1,47 +1,47 @@
 <script>
-  import { get } from 'lodash'
-  import types from '@/utils/types'
-  import { findContentTypeIcon } from '@/utils/font-awesome-files'
+import { get } from 'lodash'
+import types from '@/utils/types'
+import { findContentTypeIcon } from '@/utils/font-awesome-files'
 
-  /**
+/**
    * A small badge to display content type nicely.
    */
-  export default {
-    name: 'ContentTypeBadge',
-    props: {
-      /**
+export default {
+  name: 'ContentTypeBadge',
+  props: {
+    /**
        * Content type to display
        */
-      value: {
-        type: String
-      },
-      /**
+    value: {
+      type: String
+    },
+    /**
        * Document name to extract the extension in case the content type is not reconized.
        */
-      documentName: {
-        type: String,
-        default: null
-      }
+    documentName: {
+      type: String,
+      default: null
+    }
+  },
+  computed: {
+    icon () {
+      return findContentTypeIcon(this.value)
     },
-    computed: {
-      icon () {
-        return findContentTypeIcon(this.value)
-      },
-      extension () {
-        return get(types, [this.value, 'extensions', 0], this.extensionFallback)
-      },
-      extensionFallback () {
-        if (this.documentName) {
-          return '.' + this.documentName.split('.').pop()
-        }
-        return null
-      },
-      title () {
-        const descriptions = get(types, [this.value, 'description'], {})
-        return descriptions[this.$i18n.locale] || descriptions['en']
+    extension () {
+      return get(types, [this.value, 'extensions', 0], this.extensionFallback)
+    },
+    extensionFallback () {
+      if (this.documentName) {
+        return '.' + this.documentName.split('.').pop()
       }
+      return '.' + this.value.split('/').pop()
+    },
+    title () {
+      const descriptions = get(types, [this.value, 'description'], {})
+      return descriptions[this.$i18n.locale] || descriptions.en
     }
   }
+}
 </script>
 
 <template>

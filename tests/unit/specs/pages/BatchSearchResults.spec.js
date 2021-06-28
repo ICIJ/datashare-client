@@ -1,12 +1,11 @@
-import { toLower } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount, shallowMount } from '@vue/test-utils'
-import { removeCookie, setCookie } from 'tiny-cookie'
+import { removeCookie } from 'tiny-cookie'
 import VueRouter from 'vue-router'
 
 import Api from '@/api'
 import { Core } from '@/core'
-import BatchSearchResults, { auth } from '@/pages/BatchSearchResults'
+import BatchSearchResults from '@/pages/BatchSearchResults'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
@@ -44,7 +43,9 @@ jest.mock('@/api', () => {
       ]),
       getBatchSearch: jest.fn().mockResolvedValue({
         uuid: '12',
-        project: { name: 'ProjectName' },
+        project: {
+          name: 'batchsearchresults'
+        },
         name: 'BatchSearch Test',
         description: 'This is the description of the batch search',
         state: 'SUCCESS',
@@ -60,7 +61,9 @@ jest.mock('@/api', () => {
           query_02: 6,
           query_03: 6
         },
-        user: { id: 'test' }
+        user: {
+          id: 'test'
+        }
       }),
       copyBatchSearch: jest.fn()
     }
@@ -68,6 +71,7 @@ jest.mock('@/api', () => {
 })
 
 describe('BatchSearchResults.vue', () => {
+  let wrapper = null
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const router = new VueRouter({
     routes: [
@@ -80,153 +84,35 @@ describe('BatchSearchResults.vue', () => {
       }
     ]
   })
-  const project = toLower('BatchSearchResults')
+  const project = 'batchsearchresults'
+  const propsData = { uuid: '12', project }
   esConnectionHelper(project)
-  const es = esConnectionHelper.es
-  let propsData = null
-  let wrapper = null
 
   beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
 
   beforeEach(async () => {
+    const es = esConnectionHelper.es
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('43', project).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
-    propsData = { uuid: '12', project }
     wrapper = shallowMount(BatchSearchResults, { i18n, localVue, propsData, router, store, wait })
-    await wrapper.vm.$router.push({
-      name: 'batch-search.results',
-      params: { index: project, uuid: '12' },
-      query: { page: 1 }
-    }).catch(() => {})
     await wrapper.vm.fetch()
   })
 
   afterEach(() => {
     store.commit('batchSearch/reset')
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
-    auth.reset()
   })
 
   afterAll(() => jest.unmock('@/api'))
 
-  it('should display a button to delete the batchSearch', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
-    await wrapper.vm.checkIsMyBatchSearch()
-
-    expect(wrapper.find('.batch-search-results__delete').exists()).toBeTruthy()
-  })
-
-  it('should NOT display a button to delete the batchSearch if it is not mine', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
-    await wrapper.vm.checkIsMyBatchSearch()
-
-    expect(wrapper.find('.batch-search-results__delete').exists()).toBeFalsy()
-  })
-
-  it('should display a button to download queries', () => {
-    expect(wrapper.find('.batch-search-results__download-queries').exists()).toBeTruthy()
-  })
-
-  it('should display a button to download results', () => {
-    expect(wrapper.find('.batch-search-results__download-results').exists()).toBeTruthy()
-  })
-
-  it('should NOT display a button to download results if there are no results', async () => {
-    await store.commit('batchSearch/results', [])
-
-    expect(wrapper.find('.batch-search-results__download-results').exists()).toBeFalsy()
-  })
-
-  it('should display a button to relaunch the BS', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
-    await wrapper.vm.checkIsMyBatchSearch()
-
-    expect(wrapper.find('.batch-search-results__relaunch').exists()).toBeTruthy()
-  })
-
-  it('should NOT display a button to relaunch the BS if it is not mine', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'other' }, JSON.stringify)
-    await wrapper.vm.checkIsMyBatchSearch()
-
-    expect(wrapper.find('.batch-search-results__relaunch').exists()).toBeFalsy()
-  })
-
-  it('should display an enabled button to relaunch the BS if is NOT already run', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
-    await wrapper.vm.checkIsMyBatchSearch()
-
-    expect(wrapper.find('.batch-search-results__relaunch .btn-light').attributes('disabled')).toBeFalsy()
-  })
-
-  it('should display an disabled button to relaunch the BS if is already run', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
-    await wrapper.vm.checkIsMyBatchSearch()
-
-    await wrapper.vm.copyBatchSearch()
-    expect(wrapper.find('.batch-search-results__relaunch .btn-light').attributes('disabled')).toBeTruthy()
-  })
-
-  it('should NOT display a button to relaunch the BS if BS status is failure', () => {
-    const batchSearch = {
-      uuid: '155',
-      project: { name: 'ProjectName' },
-      description: 'This is the description of the batch search',
-      state: 'QUEUED',
-      date: '2019-07-18T14:45:34.869+0000',
-      nbResults: 333,
-      phraseMatch: 1,
-      fuzziness: 1,
-      fileTypes: [],
-      paths: [],
-      published: true,
-      queries: {
-        query_01: 6,
-        query_02: 6,
-        query_03: 6
-      },
-      user: { id: 'test' }
-    }
-    store.commit('batchSearch/batchSearch', batchSearch)
-
-    expect(wrapper.find('.batch-search-results__relaunch').exists()).toBeFalsy()
-  })
-
-  it('should call "copyBatchSearch" method on click on submit button', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
-    const copyBatchSearchMock = jest.spyOn(wrapper.vm, 'copyBatchSearch')
-    await wrapper.vm.checkIsMyBatchSearch()
-    wrapper.vm.$set(wrapper.vm, 'name', 'Test')
-
-    wrapper.find('.card-footer .d-flex b-btn-stub').trigger('submit')
-
-    expect(copyBatchSearchMock).toBeCalledTimes(1)
-  })
-
-  it('should call the API to delete the BS on call of "copyBatchSearch" method', async () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
-    const storeDispatchMock = jest.spyOn(store, 'dispatch')
-    await wrapper.vm.checkIsMyBatchSearch()
-    wrapper.vm.$set(wrapper.vm, 'name', 'Test')
-    wrapper.vm.$set(wrapper.vm, 'deleteAfterRelaunch', true)
-
-    await wrapper.vm.copyBatchSearch()
-
-    expect(storeDispatchMock).toBeCalled()
-    expect(storeDispatchMock).toBeCalledWith('batchSearch/deleteBatchSearch', { batchId: '12' })
-  })
-
-  it('should display default values for name and description on BS relaunch form', () => {
-    setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'test' }, JSON.stringify)
-
-    expect(wrapper.vm.name).toBe('BatchSearch Test')
-    expect(wrapper.vm.description).toBe('This is the description of the batch search')
-  })
-
-  it('should display 11 info about the BatchSearch', () => {
+  it('should display 7 info about the BatchSearch', () => {
     expect(wrapper.find('.batch-search-results__info').exists()).toBeTruthy()
-    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(11)
-    expect(wrapper.findAll('.batch-search-results__info dd').at(10).text()).toBe('test')
+    expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(7)
+  })
+
+  it('should display the author of the BatchSearch in the last info item', () => {
+    expect(wrapper.find('.batch-search-results__info *:last-child dd').text()).toBe('test')
   })
 
   it('should display the list of the queries of this batch search', () => {
@@ -242,7 +128,7 @@ describe('BatchSearchResults.vue', () => {
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({
       name: 'batch-search.results',
-      params: { index: project, uuid: '12' },
+      params: { index: project.name, uuid: '12' },
       query: { page: 1, queries: [], sort: 'content_type', order: 'desc' }
     })
   })
@@ -256,18 +142,9 @@ describe('BatchSearchResults.vue', () => {
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({
       name: 'batch-search.results',
-      params: { index: project, uuid: '12' },
+      params: { index: project.name, uuid: '12' },
       query: { page: 1, queries: ['query_01'], sort: 'content_type', order: 'desc', queries_sort: undefined }
     })
-  })
-
-  it('should redirect on batchSearch deletion', async () => {
-    jest.spyOn(router, 'push')
-
-    await wrapper.vm.deleteBatchSearch()
-
-    expect(router.push).toBeCalled()
-    expect(router.push).toBeCalledWith({ name: 'batch-search' })
   })
 
   it('should return empty string if the document size is 0', () => {

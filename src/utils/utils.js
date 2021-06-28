@@ -46,8 +46,8 @@ function objectIncludes (object, text) {
   return Object.values(object).some(object => objectIncludes(object, text))
 }
 
-function toVariant (string = '', defaultVariant = 'darker') {
-  return settings.variantsMap[slugger(string).toLowerCase()] || defaultVariant
+function toVariant (string = '', defaultVariant = 'darker', prefix = '') {
+  return prefix + settings.variantsMap[slugger(string).toLowerCase()] || defaultVariant
 }
 
 export {

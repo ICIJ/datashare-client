@@ -1,7 +1,7 @@
 <template>
   <div class="indexing">
-    <page-header icon="rocket" :title="$t('indexing.title')" :description="$t('indexing.description', { howToLink })">
-      <div>
+    <div class="mt-4 container">
+      <div class="mb-3">
         <div class="text-right">
           <button class="btn btn-primary mr-2 btn-extract" type="button" @click="openExtractingForm">
             <fa icon="rocket" class="mr-2"></fa>
@@ -38,8 +38,6 @@
                                     id="find-named-entities-form"></find-named-entities-form>
         </b-modal>
       </div>
-    </page-header>
-    <div class="mt-4 container">
       <div class="card">
         <div class="card-header">
           <h3 class="h5 m-0">
@@ -104,7 +102,6 @@ import { mapState } from 'vuex'
 
 import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
-import PageHeader from '@/components/PageHeader'
 import settings from '@/utils/settings'
 import { getOS, toVariant } from '@/utils/utils'
 
@@ -112,8 +109,7 @@ export default {
   name: 'indexing',
   components: {
     ExtractingForm,
-    FindNamedEntitiesForm,
-    PageHeader
+    FindNamedEntitiesForm
   },
   computed: {
     ...mapState('indexing', ['tasks']),
