@@ -520,6 +520,8 @@
     "analyseShort": "Analyze",
     "batch": "まとめて検索（バッチサーチ）",
     "batchShort": "Batch searches",
+    "tasks": "Tasks",
+    "tasksShort": "Tasks",
     "search": "ドキュメントの検索",
     "searchShort": "Search",
     "history": "あなたの履歴",
@@ -558,6 +560,10 @@
     "description": "あなたがデータシェアを使ってこのコンピュータで開いた最新５００の文書",
     "empty": "履歴がありません",
     "clear": "履歴のクリア"
+  },
+  "tasks": {
+    "title": "Tasks",
+    "description": "Some tasks must be run in the background. Use this panel to manage them."
   },
   "batchSearch": {
     "lead": "複数の言葉や文書を一度に検索",
@@ -664,6 +670,10 @@
       "GB": "% GB",
       "TB": "% T"
     }
+  },
+  "batchDownload": {
+    "title": "Batch downloads",
+    "warning": "This feature is currently being developped by the Datashare team."
   },
   "insights": {
     "title": "Insights",
