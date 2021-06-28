@@ -27,8 +27,7 @@
             </span>
           </router-link>
         </li>
-        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--tasks"
-            v-if="!isServer">
+        <li class="app-sidebar__container__menu__item app-sidebar__container__menu__item--tasks">
           <router-link
             class="app-sidebar__container__menu__item__link"
             :title="$t('menu.tasks')"
