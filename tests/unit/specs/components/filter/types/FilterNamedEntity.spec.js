@@ -90,18 +90,18 @@ describe('FilterNamedEntity.vue', () => {
       await letData(es).have(new IndexedDocument('document_01', index)
         .withNer('someone_01', 2)).commit()
       await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('someone_01', 26)
         .withNer('someone_02', 2)
         .withNer('someone_02', 16)
         .withNer('someone_02', 21)
-        .withNer('someone_01', 26)
         .withNer('someone_03', 35)).commit()
 
       await wrapper.vm.root.aggregate({ clearPages: true })
 
       expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
-      expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('someone_02')
-      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('someone_03')
-      expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('someone_01')
+      expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('someone_02')
+      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('someone_01')
+      expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('someone_03')
     })
 
     it('should display 3 named entities in 2 documents alphabeticaly', async () => {
