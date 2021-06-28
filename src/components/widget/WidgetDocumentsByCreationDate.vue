@@ -246,7 +246,8 @@ export default {
       this.$wait.start(this.loader)
       this.missing = 0
       const body = this.bodybuilderBase().build()
-      const res = await elasticsearch.search({ index: this.project, size: 0, body })
+      const preference = 'widget-documents-by-creation-date'
+      const res = await elasticsearch.search({ index: this.project, size: 0, body, preference })
       const aggregation = get(res, 'aggregations.agg_by_creation_date.buckets', [])
       const data = aggregation.reduce((buckets, bucket) => {
         if (this.isBucketKeyInRange(bucket.key)) {

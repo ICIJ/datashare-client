@@ -144,7 +144,8 @@ export default {
       each(fields, field => {
         body.aggregation('terms', field, { include }, field)
       })
-      const response = await elasticsearch.search({ index, body: body.build() })
+      const preference = 'search-bar-suggestions'
+      const response = await elasticsearch.search({ index, body: body.build(), preference })
       let suggestions = []
       each(fields, field => {
         suggestions = concat(suggestions, get(response, `aggregations.${field}.buckets`, []))
@@ -225,7 +226,7 @@ export default {
     suggestionsAllowed () {
       const terms = this.termCandidates().map(t => t.term)
       const lastTerm = last(terms) || ''
-      return ['all', settings.suggestedImplicitFields].indexOf(this.field) > -1 && lastTerm.length > 1
+      return ['all', settings.suggestedImplicitFields].indexOf(this.field) > -1 && lastTerm.length > 4
     }
   },
   watch: {

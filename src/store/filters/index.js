@@ -19,7 +19,8 @@ export default [
       name: 'starred',
       key: '_id',
       icon: 'star',
-      order: 10
+      order: 10,
+      preference: 'filter-starred'
     }
   },
   {
@@ -29,7 +30,8 @@ export default [
       key: 'tags',
       icon: 'tags',
       isSearchable: true,
-      order: 20
+      order: 20,
+      preference: 'filter-tags'
     }
   },
   {
@@ -49,7 +51,8 @@ export default [
       key: 'contentType',
       icon: 'file',
       isSearchable: true,
-      order: 40
+      order: 40,
+      preference: 'filter-content-type'
     }
   },
   {
@@ -68,7 +71,8 @@ export default [
       name: 'language',
       key: 'language',
       icon: 'language',
-      order: 60
+      order: 60,
+      preference: 'filter-language'
     }
   },
   {
@@ -78,7 +82,8 @@ export default [
       key: 'byMentions',
       isSearchable: true,
       category: namedEntityCategoryTranslation.namedEntityPerson,
-      order: 70
+      order: 70,
+      preference: 'filter-named-entity-person'
     }
   },
   {
@@ -88,7 +93,8 @@ export default [
       key: 'byMentions',
       isSearchable: true,
       category: namedEntityCategoryTranslation.namedEntityOrganization,
-      order: 80
+      order: 80,
+      preference: 'filter-named-entity-organization'
     }
   },
   {
@@ -98,7 +104,8 @@ export default [
       key: 'byMentions',
       isSearchable: true,
       category: namedEntityCategoryTranslation.namedEntityLocation,
-      order: 90
+      order: 90,
+      preference: 'filter-named-entity-location'
     }
   },
   {
@@ -108,7 +115,8 @@ export default [
       key: 'byDirname',
       icon: 'hdd',
       order: 100,
-      fromElasticSearch: false
+      fromElasticSearch: false,
+      preference: 'filter-path'
     }
   },
   {
@@ -117,7 +125,8 @@ export default [
       name: 'extractionLevel',
       key: 'extractionLevel',
       icon: 'paperclip',
-      order: 110
+      order: 110,
+      preference: 'filter-extraction-level'
     }
   },
   {

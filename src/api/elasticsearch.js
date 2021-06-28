@@ -84,6 +84,7 @@ export function datasharePlugin (Client, config, components) {
   }
 
   Client.prototype.searchFilter = function (index, filter, query = '*', filters = [], isGlobalSearch = false, options = {}, fields = [], from = 0, size = 8) {
+    const { preference } = filter
     // Avoid searching for nothing
     query = ['', null, undefined].indexOf(query) === -1 ? query : '*'
     let body = filter.body(bodybuilder(), options, from, size)
@@ -92,7 +93,7 @@ export function datasharePlugin (Client, config, components) {
       this.addQueryToFilter(query, body, fields)
     }
     body = body.size(0).rawOption('track_total_hits', true).build()
-    return this._search({ index, body })
+    return this._search({ index, body, preference })
   }
 
   Client.prototype._addFiltersToBody = function (filters, body) {

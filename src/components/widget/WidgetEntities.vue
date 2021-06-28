@@ -88,7 +88,8 @@ export default {
     async countFor (category) {
       const index = this.project
       const body = this.bodybuilderFor(category).build()
-      const { count = 0 } = await elasticsearch.count({ index, body })
+      const preference = 'widget-entities'
+      const { count = 0 } = await elasticsearch.count({ index, body, preference })
       return count
     },
     bodybuilderFor (category) {

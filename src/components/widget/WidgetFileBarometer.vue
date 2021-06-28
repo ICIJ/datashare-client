@@ -56,7 +56,8 @@ export default {
     async count (query) {
       const index = this.$store.state.insights.project
       const body = { track_total_hits: true, query: { query_string: { query } } }
-      const res = await elasticsearch.search({ index, body, size: 0 })
+      const preference = 'widget-file-barometer'
+      const res = await elasticsearch.search({ index, body, preference, size: 0 })
       return res?.hits?.total?.value || 0
     },
     countTotal () {

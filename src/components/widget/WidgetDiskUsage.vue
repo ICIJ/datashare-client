@@ -84,7 +84,8 @@ export default {
         .size(0)
         .aggregation('sum', 'contentLength')
         .build()
-      const res = await elasticsearch.search({ index, body, size: 0 })
+      const preference = 'widget-disk-usage'
+      const res = await elasticsearch.search({ index, body, preference, size: 0 })
       // eslint-disable-next-line camelcase
       return res?.aggregations?.agg_sum_contentLength?.value || 0
     },

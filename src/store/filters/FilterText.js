@@ -7,7 +7,7 @@ const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
 const _STATE = typeof Symbol === 'function' ? Symbol('_state') : '_state'
 
 export default class FilterText {
-  constructor ({ name, key, icon = null, isSearchable = false, alternativeSearch = () => {}, order = null, fromElasticSearch = true } = { }) {
+  constructor ({ name, key, icon = null, isSearchable = false, alternativeSearch = () => {}, order = null, fromElasticSearch = true, preference = '_local' } = { }) {
     this.name = name
     this.key = key
     this.icon = icon
@@ -16,6 +16,7 @@ export default class FilterText {
     this.alternativeSearch = alternativeSearch
     this.order = order
     this.fromElasticSearch = fromElasticSearch
+    this.preference = preference
     this.sortBy = '_count'
     this.sortByOrder = 'desc'
   }
