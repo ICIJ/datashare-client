@@ -520,6 +520,8 @@
     "analyseShort": "Analyser",
     "batch": "Recherches en lot",
     "batchShort": "Recherches en lot",
+    "tasks": "Tasks",
+    "tasksShort": "Tasks",
     "search": "Rechercher dans les documents",
     "searchShort": "Rechercher",
     "history": "Votre historique",
@@ -558,6 +560,10 @@
     "description": "Les 500 derniers documents ouverts avec Datashare sur cet ordinateur.",
     "empty": "Votre historique est vide",
     "clear": "Vider l'historique"
+  },
+  "tasks": {
+    "title": "Tasks",
+    "description": "Some tasks must be run in the background. Use this panel to manage them."
   },
   "batchSearch": {
     "lead": "Rechercher plusieurs termes dans plusieurs documents en même temps.",
@@ -664,6 +670,10 @@
       "GB": "% GB",
       "TB": "% T"
     }
+  },
+  "batchDownload": {
+    "title": "Batch downloads",
+    "warning": "This feature is currently being developped by the Datashare team."
   },
   "insights": {
     "title": "Aperçu",
