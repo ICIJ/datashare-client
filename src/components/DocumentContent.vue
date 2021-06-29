@@ -309,8 +309,8 @@ export default {
       }
     }
 
-    .local-search-term {
-      background: #F1C40F;
+    & /deep/ .local-search-term {
+      background: $mark-bg;
       color: black;
       padding: 0;
 
@@ -322,6 +322,8 @@ export default {
       > .global-search-term {
         background: transparent;
         color: inherit;
+        border-bottom: 2px solid transparent;
+        padding: 0;
       }
     }
   }

@@ -30,7 +30,7 @@ $theme-colors: (
   dark: darken($primary, 10),
   darker: darken($primary, 20),
   darkest: darken($primary, 30),
-  mark: #fcf8e3,
+  mark: #fff5bd,
   category-ban: $secondary,
   category-person: #ff6699,
   category-organization: darken($warning, 5),
@@ -65,6 +65,8 @@ $popover-border-color: $popover-bg;
 $popover-body-color: white;
 $popover-header-bg: #31313a;
 $popover-header-color: white;
+
+$mark-bg: map-get($theme-colors, 'mark');
 
 $modal-content-border-width: 0;
 $modal-content-box-shadow-xs: 0 1px 3px 0 rgba(black, .15);
