@@ -4,17 +4,17 @@
       <template #tabs>
         <b-tab :active="defaultTab == 0">
           <template #title>
-            <fa icon="download" fixed-width class="mr-1" />
-            {{ $t('batchDownload.title') }}
-          </template>
-        </b-tab>
-        <b-tab :active="defaultTab == 1">
-          <template #title>
             <fa icon="layer-group" fixed-width class="mr-1" />
             {{ $t('batchSearch.title') }}
           </template>
         </b-tab>
-        <b-tab :active="defaultTab == 2">
+        <b-tab :active="defaultTab == 1">
+          <template #title>
+            <fa icon="download" fixed-width class="mr-1" />
+            {{ $t('batchDownload.title') }}
+          </template>
+        </b-tab>
+        <b-tab :active="defaultTab == 2" v-if="!isServer">
           <template #title>
             <fa icon="search-plus" fixed-width class="mr-1" />
             {{ $t('indexing.title') }}
@@ -28,16 +28,18 @@
 
 <script>
 import { findIndex } from 'lodash'
+import utils from '@/mixins/utils'
 import PageHeader from '@/components/PageHeader'
 
 export default {
   name: 'Tasks',
+  mixins: [utils],
   components: {
     PageHeader
   },
   data () {
     return {
-      defaultTab: 1
+      defaultTab: 0
     }
   },
   computed: {
@@ -53,7 +55,7 @@ export default {
       }
     },
     tabRoutes () {
-      return ['batch-download', 'batch-search', 'indexing']
+      return ['batch-search', 'batch-download', 'indexing']
     }
   },
   beforeRouteEnter (to, from, next) {
