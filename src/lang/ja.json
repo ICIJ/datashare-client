@@ -495,13 +495,13 @@
     "findNamedEntitiesTooltip": "固有表現を探す前に、テキストを抽出しなければなりません",
     "pipelines": "パイプライン（固有表現処理プロセス）",
     "pipelineOptions": {
-      "corenlp": "Find people, organizations and locations with Corenlp",
+      "corenlp": "Find people, organizations and locations with CoreNLP",
       "email": "Find email addresses"
     },
-    "corenlp": "Core NLP",
-    "opennlp": "Open NLP",
-    "mitie": "Mitie",
-    "ixapipe": "Ixaパイプ",
+    "corenlp": "CoreNLP",
+    "opennlp": "OpenNLP",
+    "mitie": "MITIE",
+    "ixapipe": "IXA Pipe",
     "email": "メール抽出",
     "default": "デフォルトで--大半の文書において、機能する可能性が最も高い",
     "syncModels": "もし、現在インターネット接続がないオフライン状態で作業している場合、このボックスにチェックを入れてください",
