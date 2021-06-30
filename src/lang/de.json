@@ -495,7 +495,7 @@
     "findNamedEntitiesTooltip": "Die Texte müssen extrahiert werden, bevor Named Entities gefunden werden können",
     "pipelines": "Pipelines",
     "pipelineOptions": {
-      "corenlp": "Find people, organizations and locations with CoreNLP",
+      "corenlp": "Leute, Organisationen und Standorte mit CoreNLP finden",
       "email": "E-Mail-Adressen finden"
     },
     "corenlp": "CoreNLP",
