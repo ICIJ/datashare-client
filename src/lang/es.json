@@ -495,7 +495,7 @@
     "findNamedEntitiesTooltip": "Los textos deben ser extraídos antes de iniciar el proceso para encontrar entidades identificadas",
     "pipelines": "Canales",
     "pipelineOptions": {
-      "corenlp": "Find people, organizations and locations with CoreNLP",
+      "corenlp": "Encuentra nombres de personas, organizaciones y lugares con CoreNLP",
       "email": "Encontra direcciones de correo electrónico"
     },
     "corenlp": "CoreNLP",
@@ -520,8 +520,8 @@
     "analyseShort": "Analizar",
     "batch": "Búsquedas masivas",
     "batchShort": "Búsquedas masivas",
-    "tasks": "Tasks",
-    "tasksShort": "Tasks",
+    "tasks": "Tareas",
+    "tasksShort": "Tareas",
     "search": "Buscar en documentos",
     "searchShort": "Buscar",
     "history": "Tu historial",
@@ -562,8 +562,8 @@
     "clear": "Borrar historia"
   },
   "tasks": {
-    "title": "Tasks",
-    "description": "Some tasks must be run in the background. Use this panel to manage them."
+    "title": "Tareas",
+    "description": "Algunas tareas deben ejecutarse en segundo plano. Utilice este página para administrarlas."
   },
   "batchSearch": {
     "lead": "Buscar múltiples términos y documentos a la vez.",
@@ -672,8 +672,8 @@
     }
   },
   "batchDownload": {
-    "title": "Batch downloads",
-    "warning": "This feature is currently being developped by the Datashare team."
+    "title": "Descarga en lotes",
+    "warning": "Esta página está siendo desarrollada actualmente por el equipo de Datashare."
   },
   "insights": {
     "title": "Estadísticas",
