@@ -495,13 +495,13 @@
     "findNamedEntitiesTooltip": "Les textes doivent être extraits avant de chercher les entités nommées",
     "pipelines": "Algo(s)",
     "pipelineOptions": {
-      "corenlp": "Find people, organizations and locations with CoreNLP",
+      "corenlp": "Trouver des noms de personnes, d'organisations et de localités avec CoreNLP",
       "email": "Trouver des adresses email"
     },
     "corenlp": "CoreNLP",
     "opennlp": "OpenNLP",
     "mitie": "MITIE",
-    "ixapipe": "IXA Pipe",
+    "ixapipe": "Ixa Pipe",
     "email": "Extraction d'adresses emails",
     "default": "Par défaut - Meilleure probabilité de fonctionner pour tous les documents",
     "syncModels": "Veuillez cocher cette case si vous travaillez actuellement hors ligne.",
@@ -520,8 +520,8 @@
     "analyseShort": "Analyser",
     "batch": "Recherches en lot",
     "batchShort": "Recherches en lot",
-    "tasks": "Tasks",
-    "tasksShort": "Tasks",
+    "tasks": "Tâches",
+    "tasksShort": "Tâches",
     "search": "Rechercher dans les documents",
     "searchShort": "Rechercher",
     "history": "Votre historique",
@@ -562,8 +562,8 @@
     "clear": "Vider l'historique"
   },
   "tasks": {
-    "title": "Tasks",
-    "description": "Some tasks must be run in the background. Use this panel to manage them."
+    "title": "Tâches",
+    "description": "Certaines tâches doivent être exécutées en arrière-plan. Utilisez cette page pour les gérer."
   },
   "batchSearch": {
     "lead": "Rechercher plusieurs termes dans plusieurs documents en même temps.",
@@ -672,8 +672,8 @@
     }
   },
   "batchDownload": {
-    "title": "Batch downloads",
-    "warning": "This feature is currently being developped by the Datashare team."
+    "title": "Téléchargements en lot",
+    "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare."
   },
   "insights": {
     "title": "Aperçu",
