@@ -6,12 +6,15 @@
       </span>
       {{ $t(`filter.${filter.name}`) }}
     </template>
-    <template #item="{ value }">
+    <template #item="{ item, value }">
       <div class="d-flex filter__items__item">
         <b-form-checkbox :value="value" class="flex-grow-1 w-100">
           <span class="d-flex">
             <span class="filter__items__item__label px-1 flex-grow-1">
               {{ value }}
+            </span>
+            <span class="filter__items__item__count badge badge-pill badge-light align-self-start" :class="{ hideOnHover : $config.is('manageDocuments') }">
+              {{ $n(item.doc_count) }}
             </span>
           </span>
         </b-form-checkbox>

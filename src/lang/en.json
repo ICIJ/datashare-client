@@ -391,6 +391,7 @@
     "tabDetails": "Tags & Details",
     "namedEntities": "Named Entities",
     "namedEntityFilter": "Filter named entities",
+    "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
     "extractedText": "Extracted text",
     "translations": "Translations",
     "preview": "Preview",

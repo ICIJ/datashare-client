@@ -1,4 +1,4 @@
-import { identity, template } from 'lodash'
+import { reduce, template } from 'lodash'
 import { highlight } from '@/utils/strings'
 
 import IdentityPipeline from './IdentityPipeline'
@@ -6,14 +6,18 @@ import IdentityPipeline from './IdentityPipeline'
 class AddNamedEntitiesPipeline extends IdentityPipeline {
   apply (content, { namedEntities, shouldApplyNamedEntitiesMarks }) {
     if (shouldApplyNamedEntitiesMarks) {
-      return highlight(content, namedEntities, this.buildNamedEntityMark.bind(this), identity, m => m.source.mention)
+      const marks = reduce(namedEntities, (all, { offsets, source: { mention, extractor, category } }) => {
+        offsets.forEach(index => {
+          all.push({ content: mention, index, category, extractor })
+        })
+        return all
+      }, [])
+      return highlight(content, marks, this.buildNamedEntityMark.bind(this))
     }
     return content
   }
-  buildNamedEntityMark (ne) {
-    const extractor = ne.source.extractor
-    const mention = ne.source.mention
-    const classNames = this.getCategoryClass(ne.source.category, 'ner--')
+  buildNamedEntityMark ({ extractor, category, content: mention }) {
+    const classNames = this.getCategoryClass(category, 'ner--')
     return this.namedEntityMarkTemplate({ classNames, extractor, mention })
   }
   getCategoryClass (category = 'muted', prefix = '') {

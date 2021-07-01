@@ -1,4 +1,4 @@
-import { find, isArray, isObject, uniqueId } from 'lodash'
+import { castArray, find, isArray, isObject, uniqueId } from 'lodash'
 import { dirname } from 'path'
 
 import EsDocList from '@/api/resources/EsDocList'
@@ -7,10 +7,10 @@ function letData (index) {
   return new IndexBuilder(index)
 }
 
-class IndexedNe {
+class IndexedNamedEntity {
   constructor (mention, offset = 1, category = 'PERSON', isHidden = false, path = '') {
     this.mention = mention
-    this.offset = offset
+    this.offsets = castArray(offset)
     this.category = category
     this.isHidden = isHidden
     this.path = path
@@ -118,7 +118,7 @@ class IndexedDocument {
     return this
   }
   withNer (mention, offset = 1, category = 'PERSON', isHidden = false) {
-    this.nerList.push(new IndexedNe(mention, offset, category, isHidden, this.path))
+    this.nerList.push(new IndexedNamedEntity(mention, offset, category, isHidden, this.path))
     return this
   }
   withParent (parentId) {
@@ -207,7 +207,7 @@ class IndexBuilder {
           body: {
             mention: ner.mention,
             mentionNorm: ner.mention,
-            offset: ner.offset,
+            offsets: ner.offsets,
             category: ner.category,
             isHidden: ner.isHidden,
             type: 'NamedEntity',
@@ -246,4 +246,4 @@ class IndexBuilder {
   }
 }
 
-export { letData, IndexBuilder, IndexedDocuments, IndexedDocument, IndexedNe }
+export { letData, IndexBuilder, IndexedDocuments, IndexedDocument, IndexedNamedEntity }

@@ -34,7 +34,12 @@
               <b-popover :target="`named-entity-${ne.id}`" triggers="hover" placement="top">
                 <named-entity-in-context :document="document" :named-entity="ne"></named-entity-in-context>
                 <template #title>
-                  <div class="text-muted" v-html="$t('namedEntityInContext.title', ne.source)"></div>
+                  <div class="d-flex">
+                    <div class="text-muted" v-html="$t('namedEntityInContext.title', ne.source)"></div>
+                    <div class="ml-auto pl-2" v-if="ne.offsets.length > 1">
+                      {{ $tc('document.namedEntitiesOccurences', ne.offsets.length, { count: ne.offsets.length }) }}
+                    </div>
+                  </div>
                 </template>
               </b-popover>
             </span>

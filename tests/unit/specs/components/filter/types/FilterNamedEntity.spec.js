@@ -76,8 +76,7 @@ describe('FilterNamedEntity.vue', () => {
 
     it('should display 1 named entity in 2 documents', async () => {
       await letData(es).have(new IndexedDocument('document_01', index)
-        .withNer('person_01', 2)
-        .withNer('person_01', 25)).commit()
+        .withNer('person_01', [2, 25])).commit()
       await letData(es).have(new IndexedDocument('document_02', index)
         .withNer('person_01')).commit()
 
@@ -91,16 +90,14 @@ describe('FilterNamedEntity.vue', () => {
         .withNer('someone_01', 2)).commit()
       await letData(es).have(new IndexedDocument('document_02', index)
         .withNer('someone_01', 26)
-        .withNer('someone_02', 2)
-        .withNer('someone_02', 16)
-        .withNer('someone_02', 21)
+        .withNer('someone_02', [2, 16, 21])
         .withNer('someone_03', 35)).commit()
 
       await wrapper.vm.root.aggregate({ clearPages: true })
 
       expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
-      expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('someone_02')
-      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('someone_01')
+      expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('someone_01')
+      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('someone_02')
       expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('someone_03')
     })
 
@@ -108,9 +105,7 @@ describe('FilterNamedEntity.vue', () => {
       await letData(es).have(new IndexedDocument('document_01', index)
         .withNer('paul', 2)).commit()
       await letData(es).have(new IndexedDocument('document_02', index)
-        .withNer('ines', 2)
-        .withNer('ines', 16)
-        .withNer('ines', 21)
+        .withNer('ines', [2, 16, 21])
         .withNer('paul', 26)
         .withNer('anita', 35)).commit()
 

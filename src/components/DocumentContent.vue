@@ -309,6 +309,10 @@ export default {
       }
     }
 
+    & /deep/ mark {
+      padding: 0;
+    }
+
     & /deep/ .local-search-term {
       background: $mark-bg;
       color: black;

@@ -3,7 +3,7 @@
     <div v-if="extractNotAvailable" class="named-entity-in-context__no-extract">
       {{ $t('namedEntityInContext.none') }}
     </div>
-    <div v-else-if="namedEntity.offset > -1" class="named-entity-in-context__extract" v-html="extractInContext"></div>
+    <div v-else-if="isInContext" class="named-entity-in-context__extract" v-html="extractInContext"></div>
     <div v-else class="named-entity-in-context__meta" >
       {{ $t('namedEntityInContext.meta') }}
     </div>
@@ -11,7 +11,7 @@
 </template>
 
 <script>
-import { toString, trim } from 'lodash'
+import { toString, trim, without } from 'lodash'
 import VueScrollTo from 'vue-scrollto'
 import { mapState } from 'vuex'
 
@@ -72,6 +72,9 @@ export default {
     content () {
       return toString(this.isContentLoaded ? this.document.content : '')
     },
+    isInContext () {
+      return !!without(this.namedEntity.offsets, -1).length
+    },
     extract () {
       const substring = this.content.substring(this.extractOffsetStart, this.extractOffsetEnd)
       return [this.extractPrefix, trim(substring), this.extractSuffix].join('')
@@ -80,11 +83,13 @@ export default {
       return this.document.nl2br(this.highlight(this.extract))
     },
     extractOffsetStart () {
-      return Math.max(0, this.namedEntity.offset - Math.floor(this.extractLength / 2))
+      const firstOffset = this.namedEntity.offsets[0]
+      return Math.max(0, firstOffset - Math.floor(this.extractLength / 2))
     },
     extractOffsetEnd () {
+      const firstOffset = this.namedEntity.offsets[0]
       const extraLength = Math.max(0, Math.floor(this.extractLength / 2) - this.extractOffsetStart)
-      return this.namedEntity.offset + extraLength + Math.floor(this.extractLength / 2)
+      return firstOffset + extraLength + Math.floor(this.extractLength / 2)
     },
     extractPrefix () {
       return this.extractOffsetStart > 0 ? '...' : ''
