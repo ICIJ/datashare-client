@@ -391,6 +391,7 @@
     "tabDetails": "crwdns1926:0crwdne1926:0",
     "namedEntities": "crwdns1928:0crwdne1928:0",
     "namedEntityFilter": "crwdns2316:0crwdne2316:0",
+    "namedEntitiesOccurences": "crwdns2466:0{count}crwdne2466:0",
     "extractedText": "crwdns1930:0crwdne1930:0",
     "translations": "crwdns832:0crwdne832:0",
     "preview": "crwdns834:0crwdne834:0",
