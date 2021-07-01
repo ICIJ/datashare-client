@@ -391,6 +391,7 @@
     "tabDetails": "タグと詳細",
     "namedEntities": "固有表現",
     "namedEntityFilter": "Filter named entities",
+    "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
     "extractedText": "抽出テキスト",
     "translations": "翻訳",
     "preview": "プレビュー",
