@@ -1,20 +1,22 @@
 import { reduce, template } from 'lodash'
-import { highlight } from '@/utils/strings'
-
+import { Highlight } from '@/utils/highlight'
 import IdentityPipeline from './IdentityPipeline'
 
 class AddNamedEntitiesPipeline extends IdentityPipeline {
   apply (content, { namedEntities, shouldApplyNamedEntitiesMarks }) {
     if (shouldApplyNamedEntitiesMarks) {
       const marks = reduce(namedEntities, (all, { offsets, source: { mention, extractor, category } }) => {
-        offsets.forEach(index => {
-          if (index > -1) {
-            all.push({ content: mention, index, category, extractor })
+        const length = mention.length
+        offsets.forEach(start => {
+          if (start > -1) {
+            all.push({ start, length, category, extractor })
           }
         })
         return all
       }, [])
-      return highlight(content, marks, this.buildNamedEntityMark.bind(this))
+      // This is a function called on each highlighted text
+      const each = this.buildNamedEntityMark.bind(this)
+      return Highlight.create({ content, each }).ranges(marks)
     }
     return content
   }

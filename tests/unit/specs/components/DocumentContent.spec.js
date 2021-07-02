@@ -35,8 +35,9 @@ describe('DocumentContent.vue', () => {
   describe('the extracted text content', () => {
     it('should mark named entities in the extracted text tab', async () => {
       await letData(es).have(new IndexedDocument(id, index)
+        .withContent('a ner_01 not a ner_02')
         .withNer('ner_01', 2, 'PERSON')
-        .withNer('ner_02', 17, 'LOCATION'))
+        .withNer('ner_02', 15, 'LOCATION'))
         .commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')

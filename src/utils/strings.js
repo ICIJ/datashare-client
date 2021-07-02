@@ -1,4 +1,4 @@
-import { escapeRegExp, identity, map, sortBy, takeRight, zip } from 'lodash'
+import { escapeRegExp } from 'lodash'
 
 export function slugger (value = '') {
   return value
@@ -32,36 +32,6 @@ export function addLocalSearchMarks (content = '<div></div>', localSearchTerm = 
   } catch (error) {
     return { content, localSearchIndex, localSearchOccurrences }
   }
-}
-
-export function sliceIndexes (str, indexes) {
-  if (str.length === 0) return []
-  const orderedIndexes = Array.from(new Set(indexes)).sort((a, b) => a - b)
-  const result = []
-  let currentIndex = 0
-  for (const index of orderedIndexes) {
-    if (index >= 0 && index < str.length) {
-      const items = str.substring(currentIndex, index)
-      result.push(items)
-      currentIndex = index
-    }
-  }
-  result.push(str.substring(currentIndex))
-  return result
-}
-
-export function highlight (
-  str = '',
-  marks = [],
-  markFun = m => `<mark>${m.content}</mark>`,
-  restFun = identity,
-  contentFun = m => m.content
-) {
-  const sortedMarks = sortBy(marks, m => m.index)
-  const docContentSlices = sliceIndexes(str, map(sortedMarks, m => m.index))
-  const docContentMarked = map(zip(takeRight(docContentSlices, sortedMarks.length), sortedMarks),
-    ([slice = '', mark]) => markFun(mark) + restFun(slice.substring(contentFun(mark).length)))
-  return docContentSlices[0] + docContentMarked.join('')
 }
 
 export function isUrl (url = '') {

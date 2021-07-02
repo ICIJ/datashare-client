@@ -15,6 +15,8 @@ import { toString, trim, without } from 'lodash'
 import VueScrollTo from 'vue-scrollto'
 import { mapState } from 'vuex'
 
+import { Highlight } from '@/utils/highlight'
+
 /**
  * Display a named entity in context.
  */
@@ -53,8 +55,11 @@ export default {
         this.$wait.end(this.waitIdentifier)
       }
     },
-    highlight (str) {
-      return str.split(this.namedEntity.mention).join(`<mark>${this.namedEntity.mention}</mark>`)
+    highlight (content) {
+      const length = this.namedEntity.mention.length
+      const start = this.extractPrefix.length + this.firstOffset - this.extractOffsetStart
+      const ranges = [{ start, length }]
+      return Highlight.create({ content }).ranges(ranges)
     },
     scrollToFirstMark () {
       const container = this.$el.querySelector('.named-entity-in-context__extract') || this.$el
@@ -83,13 +88,11 @@ export default {
       return this.document.nl2br(this.highlight(this.extract))
     },
     extractOffsetStart () {
-      const firstOffset = this.namedEntity.offsets[0]
-      return Math.max(0, firstOffset - Math.floor(this.extractLength / 2))
+      return Math.max(0, this.firstOffset - Math.floor(this.extractLength / 2))
     },
     extractOffsetEnd () {
-      const firstOffset = this.namedEntity.offsets[0]
       const extraLength = Math.max(0, Math.floor(this.extractLength / 2) - this.extractOffsetStart)
-      return firstOffset + extraLength + Math.floor(this.extractLength / 2)
+      return this.firstOffset + extraLength + Math.floor(this.extractLength / 2)
     },
     extractPrefix () {
       return this.extractOffsetStart > 0 ? '...' : ''
@@ -99,6 +102,9 @@ export default {
     },
     extractNotAvailable () {
       return this.showContentTextLengthWarning
+    },
+    firstOffset () {
+      return without(this.namedEntity.offsets, -1)[0]
     },
     waitIdentifier () {
       return 'load document content for named entity in context'
