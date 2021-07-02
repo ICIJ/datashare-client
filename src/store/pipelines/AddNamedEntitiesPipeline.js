@@ -8,7 +8,9 @@ class AddNamedEntitiesPipeline extends IdentityPipeline {
     if (shouldApplyNamedEntitiesMarks) {
       const marks = reduce(namedEntities, (all, { offsets, source: { mention, extractor, category } }) => {
         offsets.forEach(index => {
-          all.push({ content: mention, index, category, extractor })
+          if (index > -1) {
+            all.push({ content: mention, index, category, extractor })
+          }
         })
         return all
       }, [])
