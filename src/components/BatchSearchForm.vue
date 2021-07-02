@@ -415,9 +415,10 @@ export default {
     manageError (errorCode, manageDocuments) {
       if (errorCode === 413) {
         this.$root.$bvToast.toast(this.$t('batchSearch.submitQueryLimitError'), { noCloseButton: true, variant: 'danger' })
+      } else if (manageDocuments) {
+        this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
       } else {
-        manageDocuments ? this.$root.$bvToast.toast(this.$t('batchSearch.error'), { noCloseButton: true, variant: 'danger' })
-          : this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
+        this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
       }
     }
   }
