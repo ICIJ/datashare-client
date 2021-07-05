@@ -162,7 +162,7 @@ export const getters = {
   },
   retrieveContentQueryTermsInContent (state, getters) {
     return (text, field) => getters.retrieveContentQueryTerms.map(term => {
-      const regex = new RegExp(term.regex ? term.label : escapeRegExp(term.label), 'gi')
+      const regex = new RegExp(term.regex ? term.label : escapeRegExp(term.label).replace(' ', '\\s'), 'gi')
       term[field] = (text.match(regex) || []).length
       return term
     })
