@@ -1,5 +1,5 @@
 <template>
-  <div class="api h-100">
+  <div class="api h-100 container pt-4">
     <div v-if="isServer">
       <div class="api__create-key">
         <b-button @click="getApiKey" variant="primary" v-if="!apiKey">
