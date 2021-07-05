@@ -119,6 +119,15 @@ describe('DocumentView.vue', () => {
       .not.toContain('Named Entities')
   })
 
+  it('should call the API to add document to history', async () => {
+    wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })
+
+    await wrapper.vm.getDoc()
+
+    const url = Api.getFullUrl('/api/users/me/history')
+    expect(axios.request).toBeCalledWith(expect.objectContaining({ url }))
+  })
+
   describe('navigate through tabs as loop', () => {
     beforeEach(async () => {
       wrapper = shallowMount(DocumentView, { i18n, localVue, router, store, wait, propsData })

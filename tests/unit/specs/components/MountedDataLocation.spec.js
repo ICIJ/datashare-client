@@ -34,13 +34,12 @@ describe('MountedDataLocation', () => {
     expect(mockCallback).toBeCalledTimes(1)
   })
 
-  it('should reset batchSearches and userHistory when calling the deleteAll method', async () => {
+  it('should reset batchSearches when calling the deleteAll method', async () => {
     store.commit('batchSearch/batchSearches', ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'])
     store.commit('userHistory/addDocument', { _id: 12, _version: 'local' })
 
     await wrapper.vm.deleteAll()
 
     expect(store.state.batchSearch.batchSearches).toEqual([])
-    expect(store.state.userHistory.rawDocuments).toEqual([])
   })
 })

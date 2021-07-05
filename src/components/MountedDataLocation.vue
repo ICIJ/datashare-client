@@ -55,7 +55,6 @@ export default {
       try {
         await this.$store.dispatch('indexing/deleteAll')
         await this.$store.dispatch('batchSearch/deleteBatchSearches')
-        this.$store.commit('userHistory/clear')
         this.$root.$emit('index::delete::all')
         this.$bvToast.toast(this.$t('indexing.deleteSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {

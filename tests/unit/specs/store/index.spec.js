@@ -32,8 +32,4 @@ describe('store', () => {
   it('should define a treeView module', () => {
     expect(store.state.treeView).toBeDefined()
   })
-
-  it('should define a userHistory module', () => {
-    expect(store.state.userHistory).toBeDefined()
-  })
 })

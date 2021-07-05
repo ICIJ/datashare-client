@@ -41,6 +41,18 @@
       </div>
       <div class="px-0" v-if="settings">
         <shortkeys-modal class="d-none d-md-inline"></shortkeys-modal>
+        <b-btn class="text-dark" variant="transparent" size="md" :title="$t('userHistory.saveSearch')"
+              v-b-tooltip.hover.bottomleft @click="$refs['user-history-save-search-form'].show()">
+          <fa icon="save"/>
+          <b-modal body-class="p-0"
+               hide-footer
+               ref="user-history-save-search-form"
+               size="md"
+               :title="$t('userHistory.saveSearch')">
+            <user-history-save-search-form :index="this.$store.state.search.index" :uri="this.uri"
+                @submit="$refs['user-history-save-search-form'].hide()"/>
+          </b-modal>
+        </b-btn>
       </div>
     </div>
   </form>
@@ -53,6 +65,7 @@ import lucene from 'lucene'
 
 import elasticsearch from '@/api/elasticsearch'
 import ShortkeysModal from '@/components/ShortkeysModal'
+import UserHistorySaveSearchForm from '@/components/UserHistorySaveSearchForm'
 import settings from '@/utils/settings'
 
 function escapeLuceneChars (str) {
@@ -103,7 +116,8 @@ export default {
     }
   },
   components: {
-    ShortkeysModal
+    ShortkeysModal,
+    UserHistorySaveSearchForm
   },
   data () {
     return {
@@ -227,6 +241,9 @@ export default {
       const terms = this.termCandidates().map(t => t.term)
       const lastTerm = last(terms) || ''
       return ['all', settings.suggestedImplicitFields].indexOf(this.field) > -1 && lastTerm.length > 4
+    },
+    uri () {
+      return window.location.hash.substr(2)
     }
   },
   watch: {

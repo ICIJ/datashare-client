@@ -1,52 +1,88 @@
 <template>
-  <div class="user-history">
-    <page-header icon="clock" :title="$t('userHistory.heading')" :description="documents.length ? $t('userHistory.description') : $t('userHistory.empty')">
-      <confirm-button class="btn btn-primary" :confirmed="clear" v-if="documents.length" :label="$t('global.confirmLabel')" :yes="$t('global.yes')" :no="$t('global.no')">
+  <div>
+     <page-header icon="clock" :title="$t('userHistory.heading')" :description="events.length ? $t('userHistory.description') : $t('userHistory.empty')" :tab.sync="tab">
+      <template #tabs>
+        <b-tab :active="defaultTab == 0">
+          <template #title>
+            <fa icon="file" fixed-width class="mr-1" />
+            {{ $t('userHistory.document') }}
+          </template>
+        </b-tab>
+        <b-tab :active="defaultTab == 1">
+          <template #title>
+            <fa icon="search" fixed-width class="mr-1" />
+            {{ $t('userHistory.search') }}
+          </template>
+        </b-tab>
+      </template>
+      <confirm-button class="btn btn-primary" :confirmed="deleteUserHistory" v-if="events.length" :label="$t('global.confirmLabel')" :yes="$t('global.yes')" :no="$t('global.no')">
         <fa icon="trash-alt" class="mr-1"></fa>
         {{ $t('userHistory.clear') }}
       </confirm-button>
     </page-header>
-    <div class="container mt-4">
-      <ul class="list-unstyled user-history__list card mb-4" v-if="documents.length">
-        <li v-for="(document, i) in documents" :key="i" class="user-history__list__item">
-          <router-link :to="{ name: 'document', params: document.routerParams }" class="p-2 d-block d-flex">
-            <document-thumbnail :document="document" size="40" crop lazy class="mr-2 user-history__list__item__preview"></document-thumbnail>
-            <div>
-              <div class="font-weight-bold">
-                <document-sliced-name :document="document"></document-sliced-name>
-              </div>
-              <div class="user-history__list__item__location ml-auto small">
-                <fa icon="folder" class="mr-1"></fa>
-                {{ document.location }}
-              </div>
-            </div>
-          </router-link>
-        </li>
-      </ul>
-    </div>
+    <router-view :events="filteredEvents" />
   </div>
 </template>
 
 <script>
-import reverse from 'lodash/reverse'
-import DocumentSlicedName from '@/components/DocumentSlicedName'
-import DocumentThumbnail from '@/components/DocumentThumbnail'
+import Api from '@/api'
+import { findIndex } from 'lodash'
 import PageHeader from '@/components/PageHeader'
 
 export default {
   components: {
-    DocumentSlicedName,
-    DocumentThumbnail,
     PageHeader
   },
-  computed: {
-    documents () {
-      return reverse(this.$store.getters['userHistory/getDocuments']().slice(-100))
+  data () {
+    return {
+      events: [],
+      defaultTab: 0
     }
   },
+  computed: {
+    api () {
+      return new Api()
+    },
+    tab: {
+      get () {
+        return findIndex(this.tabRoutes, name => {
+          return this.$route.name.startsWith(name)
+        })
+      },
+      set (value) {
+        const name = this.tabRoutes[value]
+        this.$router.push({ name })
+      }
+    },
+    tabRoutes () {
+      return ['document-history', 'search-history']
+    },
+    filteredEvents () {
+      return this.events.filter(event => {
+        return this.$route.name.startsWith(event.type.toLowerCase())
+      })
+    }
+  },
+  beforeRouteEnter (to, from, next) {
+    return next(vm => {
+      const defaultTab = vm.tabRoutes.indexOf(to.name)
+      if (defaultTab > -1) {
+        vm.defaultTab = defaultTab
+      }
+    })
+  },
+  async created () {
+    await this.getUserHistory()
+  },
   methods: {
-    clear () {
-      this.$store.commit('userHistory/clear')
+    async getUserHistory () {
+      const events = await this.api.getUserHistory()
+      this.$set(this, 'events', events)
+    },
+    async deleteUserHistory () {
+      await this.api.deleteUserHistory(this.$route.path.split('/').pop())
+      const events = this.events.filter(event => !this.filteredEvents.includes(event))
+      this.$set(this, 'events', events)
     }
   }
 }
@@ -64,32 +100,6 @@ export default {
       background: inherit;
       position: sticky;
       top:0;
-    }
-
-    &__list {
-
-      &__item {
-
-        &:nth-child(odd) {
-          background: rgba(black, .05)
-        }
-
-        a:hover {
-          text-decoration: none;
-          background: $secondary;
-          color: white;
-        }
-
-        &__location {
-          color: $text-muted;
-        }
-
-        & &__preview.document-thumbnail--crop {
-          width: 40px;
-          min-width: 40px;
-          height: 40px;
-        }
-      }
     }
   }
 </style>

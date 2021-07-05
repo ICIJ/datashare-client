@@ -72,6 +72,7 @@ export { faQuestionCircle } from '@fortawesome/free-solid-svg-icons/faQuestionCi
 export { faRedo } from '@fortawesome/free-solid-svg-icons/faRedo'
 export { faRocket } from '@fortawesome/free-solid-svg-icons/faRocket'
 export { faSadTear } from '@fortawesome/free-solid-svg-icons/faSadTear'
+export { faSave } from '@fortawesome/free-solid-svg-icons/faSave'
 export { faSearch } from '@fortawesome/free-solid-svg-icons/faSearch'
 export { faSearchPlus } from '@fortawesome/free-solid-svg-icons/faSearchPlus'
 export { faShareAlt } from '@fortawesome/free-solid-svg-icons/faShareAlt'

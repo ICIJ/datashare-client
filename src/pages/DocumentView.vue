@@ -68,6 +68,7 @@
 </template>
 
 <script>
+import Api from '@/api'
 import { filter, findIndex } from 'lodash'
 import { mapState } from 'vuex'
 
@@ -181,6 +182,9 @@ export default {
     },
     isModal () {
       return this.$route.name === 'document-modal'
+    },
+    api () {
+      return new Api()
     }
   },
   methods: {
@@ -193,7 +197,7 @@ export default {
       await this.$store.dispatch('document/getTags')
       await this.$store.dispatch('document/getRecommendationsByDocuments')
       if (this.doc) {
-        await this.$store.commit('userHistory/addDocument', this.doc)
+        await this.api.addHistoryEvent(this.doc.index, 'DOCUMENT', this.doc.slicedNameToString, window.location.hash.substr(2))
         const container = this.$el.closest('.ps-container')
         this.$root.$emit('scroll-tracker:request', this.$el, 0, container)
         this.$root.$emit('document::content::changed')

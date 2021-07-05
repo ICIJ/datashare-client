@@ -135,7 +135,25 @@ export const router = {
           component: () => import('@/pages/UserHistory'),
           meta: {
             title: ({ i18n }) => i18n.t('userHistory.heading')
-          }
+          },
+          children: [
+            {
+              name: 'document-history',
+              path: 'document',
+              component: () => import('@/pages/UserHistoryDocument'),
+              meta: {
+                title: ({ i18n }) => i18n.t('userHistory.heading')
+              }
+            },
+            {
+              name: 'search-history',
+              path: 'search',
+              component: () => import('@/pages/UserHistorySearch'),
+              meta: {
+                title: ({ i18n }) => i18n.t('userHistory.heading')
+              }
+            }
+          ]
         },
         {
           name: 'docs',
