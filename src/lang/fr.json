@@ -391,6 +391,7 @@
     "tabDetails": "Tags & Détails",
     "namedEntities": "Entités nommées",
     "namedEntityFilter": "Filtrer les entités nommées",
+    "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
     "extractedText": "Texte extrait",
     "translations": "Traductions",
     "preview": "Prévisualisation",
@@ -495,12 +496,12 @@
     "findNamedEntitiesTooltip": "Les textes doivent être extraits avant de chercher les entités nommées",
     "pipelines": "Algo(s)",
     "pipelineOptions": {
-      "corenlp": "Trouver des noms de personnes, organisations et localisations avec Corenlp",
+      "corenlp": "Trouver des noms de personnes, d'organisations et de localités avec CoreNLP",
       "email": "Trouver des adresses email"
     },
-    "corenlp": "Core NLP",
-    "opennlp": "Open NLP",
-    "mitie": "Mitie",
+    "corenlp": "CoreNLP",
+    "opennlp": "OpenNLP",
+    "mitie": "MITIE",
     "ixapipe": "Ixa Pipe",
     "email": "Extraction d'adresses emails",
     "default": "Par défaut - Meilleure probabilité de fonctionner pour tous les documents",
@@ -520,6 +521,8 @@
     "analyseShort": "Analyser",
     "batch": "Recherches en lot",
     "batchShort": "Recherches en lot",
+    "tasks": "Tâches",
+    "tasksShort": "Tâches",
     "search": "Rechercher dans les documents",
     "searchShort": "Rechercher",
     "history": "Votre historique",
@@ -558,6 +561,10 @@
     "description": "Les 500 derniers documents ouverts avec Datashare sur cet ordinateur.",
     "empty": "Votre historique est vide",
     "clear": "Vider l'historique"
+  },
+  "tasks": {
+    "title": "Tâches",
+    "description": "Certaines tâches doivent être exécutées en arrière-plan. Utilisez cette page pour les gérer."
   },
   "batchSearch": {
     "lead": "Rechercher plusieurs termes dans plusieurs documents en même temps.",
@@ -664,6 +671,10 @@
       "GB": "% GB",
       "TB": "% T"
     }
+  },
+  "batchDownload": {
+    "title": "Téléchargements en lot",
+    "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare."
   },
   "insights": {
     "title": "Aperçu",

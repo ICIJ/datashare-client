@@ -361,16 +361,16 @@
     "level": {
       "all": "Alle",
       "level00": "Auf Festplatte speichern",
-      "level01": "1st",
-      "level02": "2nd",
-      "level03": "3rd",
-      "level04": "4th",
-      "level05": "5th",
-      "level06": "6th",
-      "level07": "7th",
-      "level08": "8th",
-      "level09": "9th",
-      "level10": "10th"
+      "level01": "1",
+      "level02": "2",
+      "level03": "3",
+      "level04": "4",
+      "level05": "5",
+      "level06": "6",
+      "level07": "7",
+      "level08": "8",
+      "level09": "9",
+      "level10": "10"
     },
     "tags": "Tags",
     "selectDateRange": "Datumsbereich auswählen"
@@ -391,6 +391,7 @@
     "tabDetails": "Tags und Details",
     "namedEntities": "Named Entities",
     "namedEntityFilter": "Named Entities filtern",
+    "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
     "extractedText": "Extrahierter Text",
     "translations": "Übersetzungen",
     "preview": "Vorschau",
@@ -492,50 +493,52 @@
     "findNamedEntities": "Leute, Organisationen, Standorte und E-Mail-Adressen finden",
     "findNamedEntitiesHeader": "Was möchten Sie tun?",
     "findNamedEntitiesSubheader": "Datashare verwendet Modelle zur Verarbeitung natürlicher Sprachen.",
-    "findNamedEntitiesTooltip": "Texts must be extracted before finding named entities",
+    "findNamedEntitiesTooltip": "Die Texte müssen extrahiert werden, bevor Named Entities gefunden werden können",
     "pipelines": "Pipelines",
     "pipelineOptions": {
-      "corenlp": "Find people, organizations and locations with Corenlp",
-      "email": "Find email addresses"
+      "corenlp": "Leute, Organisationen und Standorte mit CoreNLP finden",
+      "email": "E-Mail-Adressen finden"
     },
-    "corenlp": "Core NLP",
-    "opennlp": "Open NLP",
-    "mitie": "Mitie",
-    "ixapipe": "Ixa Pipe",
-    "email": "Email extraction",
-    "default": "By default - Offers the highest probability of working in most documents",
-    "syncModels": "Please check this box if you are currently working offline with no internet connection.",
-    "stopTask": "Stop this task",
-    "stopPendingTasks": "Stop all pending tasks",
-    "deleteDoneTasks": "Clear done tasks",
-    "deleteIndexLabel": "Remove all your documents from Datashare",
-    "deleteIndexDescription": "To be 100% safe, please remove your documents from the Datashare folder on your computer – don't forget to empty your trash bin of all Datashare documents! Make sure you have a copy of them in another secure place beforehand.",
-    "deleteSuccess": "Your documents are now removed from Datashare.",
-    "deleteFailure": "Something went wrong, unable to remove your documents."
+    "corenlp": "CoreNLP",
+    "opennlp": "OpenNLP",
+    "mitie": "MITIE",
+    "ixapipe": "IXA Pipe",
+    "email": "E-Mail-Extraktion",
+    "default": "Standardmäßig - Bietet die höchste Wahrscheinlichkeit in den meisten Dokumenten zu funktionieren",
+    "syncModels": "Bitte aktivieren Sie dieses Kästchen, wenn Sie derzeit offline ohne Internetverbindung arbeiten.",
+    "stopTask": "Diese Aufgabe beenden",
+    "stopPendingTasks": "Alle ausstehenden Aufgaben beenden",
+    "deleteDoneTasks": "Erledigte Aufgaben löschen",
+    "deleteIndexLabel": "Alle Ihre Dokumente aus Datashare entfernen",
+    "deleteIndexDescription": "Um wirklich sicher zu sein, entfernen Sie bitte Ihre Dokumente aus dem Datashare-Ordner auf Ihrem Computer. Vergessen Sie nicht, den Papierkorb zu leeren, damit die Datashare-Dokumente gelöscht werden! Vergewissern Sie sich zuvor, dass Sie eine Kopie davon an einem anderen sicheren Ort haben.",
+    "deleteSuccess": "Ihre Dokumente wurden aus Datashare entfernt.",
+    "deleteFailure": "Ein Problem ist aufgetreten. Die Dokumente konnten nicht entfernt werden."
   },
   "menu": {
-    "help": "Ask for help",
-    "helpShort": "Help",
-    "analyse": "Analyze your documents",
-    "analyseShort": "Analyze",
-    "batch": "Batch searches",
-    "batchShort": "Batch searches",
-    "search": "Search in documents",
-    "searchShort": "Search",
-    "history": "Your history",
-    "historyShort": "History",
-    "insights": "Insights",
-    "insightsShort": "Insights",
-    "settings": "Settings",
-    "settingsShort": "Settings",
-    "logout": "Logout",
-    "logoutShort": "Logout",
-    "addDocuments": "How to add documents",
+    "help": "Hilfsanfrage",
+    "helpShort": "Hilfe",
+    "analyse": "Dokumente analysieren",
+    "analyseShort": "Analysieren",
+    "batch": "Batch-Suche",
+    "batchShort": "Batch-Suchen",
+    "tasks": "Aufgaben",
+    "tasksShort": "Aufgaben",
+    "search": "In Dokumenten suchen",
+    "searchShort": "Suche",
+    "history": "Ihr Verlauf",
+    "historyShort": "Verlauf",
+    "insights": "Einblicke",
+    "insightsShort": "Einblicke",
+    "settings": "Einstellungen",
+    "settingsShort": "Einstellungen",
+    "logout": "Abmelden",
+    "logoutShort": "Abmelden",
+    "addDocuments": "Wie fügt man Dokumente hinzu",
     "faq": "FAQ",
     "faqShort": "FAQ",
-    "userGuides": "User guides",
-    "userGuidesShort": "User guides",
-    "devWiki": "Developper wiki",
+    "userGuides": "Benutzeranleitung",
+    "userGuidesShort": "Benutzeranleitung",
+    "devWiki": "Entwickler-Wiki",
     "connectedAs": "Sie sind als <strong>{username}</strong> angemeldet"
   },
   "footer": {
@@ -546,10 +549,10 @@
   "login": {
     "welcome": "Willkommen bei Datashare",
     "sumUp": "<a href=\"https://icij.org\">ICIJ</a> Such- und Entdeckungsplattform.",
-    "authenticationPlatform": "To log in, use ICIJ secure authentication platform:",
-    "account": "Login with Account",
-    "supportDesk": "If you need any help, please visit our support desk:",
-    "askHelp": "Ask for help",
+    "authenticationPlatform": "Um sich anzumelden, verwenden Sie die sichere ICIJ-Authentifizierungsplattform:",
+    "account": "Mit Konto anmelden",
+    "supportDesk": "Falls Sie Hilfe benötigen, wenden Sie sich bitte an den Support-Bereich:",
+    "askHelp": "Hilfsanfrage",
     "logout": "Sie wurden aus Datashare abgemeldet.",
     "login": "Anmelden, um fortzufahren"
   },
@@ -558,6 +561,10 @@
     "description": "Die letzten 500 Dokumente von diesem Computer, die Sie mit Datashare geöffnet haben.",
     "empty": "Ihr Verlauf ist leer",
     "clear": "Verlauf löschen"
+  },
+  "tasks": {
+    "title": "Aufgaben",
+    "description": "Einige Aufgaben müssen im Hintergrund ausgeführt werden. Benutzen Sie dieses Panel, um sie zu verwalten."
   },
   "batchSearch": {
     "lead": "Mehrere Begriffe und Dokumente auf einmal suchen.",
@@ -606,50 +613,50 @@
   },
   "batchSearchResults": {
     "title": "Ergebnisse der Batch-Suche",
-    "rank": "Rank",
-    "query": "Query",
-    "documentPath": "Document Path",
-    "creationDate": "Creation Date",
-    "contentType": "Content Type",
-    "size": "Size",
-    "downloadResults": "Download results",
-    "downloadQueries": "Download queries",
-    "downloadQueriesTooltip": "Download as CSV",
-    "relaunch": "Relaunch",
-    "relaunchTitle": "Relaunch batch search",
-    "deleteAfterRelaunch": "Delete current batch search after relaunch",
-    "empty": "No results"
+    "rank": "Rang",
+    "query": "Abfrage",
+    "documentPath": "Dokumentenpfad",
+    "creationDate": "Erstellungsdatum",
+    "contentType": "Inhaltstyp",
+    "size": "Größe",
+    "downloadResults": "Ergebnisse herunterladen",
+    "downloadQueries": "Abfragen herunterladen",
+    "downloadQueriesTooltip": "Als CSV herunterladen",
+    "relaunch": "Neustart",
+    "relaunchTitle": "Batch-Suche neu starten",
+    "deleteAfterRelaunch": "Aktuelle Batch-Suche nach Neustart löschen",
+    "empty": "Keine Ergebnisse"
   },
   "batchSearchResultsFilters": {
-    "filterQueries": "Filter queries...",
+    "filterQueries": "Abfragen filtern...",
     "queries": {
-      "heading": "Filter by queries"
+      "heading": "Filter nach Abfragen"
     }
   },
   "shortkeys": {
-    "title": "Search shortcuts",
-    "goToPreviousDocument": "Go to the previous document",
-    "goToNextDocument": "Go to the next document",
-    "backToSearchResults": "Go back to the search results",
-    "goToPreviousTab": "Go to previous document tab",
-    "goToNextTab": "Go to next document tab",
-    "activateSearchBar": "Find in document",
-    "deactivateSearchBar": "Close search in document",
-    "findPreviousOccurrence": "Find the previous occurrence in the document",
-    "findPreviousOccurrenceAlt": "Find the previous occurrence in the document",
-    "findNextOccurrence": "Find the next occurrence in the document",
-    "findNextOccurrenceAlt": "Find the next occurrence in the document",
-    "openAnyway": "Open anyway"
+    "title": "Tastaturkürzel",
+    "goToPreviousDocument": "Zurück zum vorherigen Dokument",
+    "goToNextDocument": "Weiter zum nächsten Dokument",
+    "backToSearchResults": "Zurück zu den Suchergebnissen",
+    "goToPreviousTab": "Zum vorherigen Dokumenten-Tab gehen",
+    "goToNextTab": "Zum nächstenDokumenten-Tab gehen",
+    "activateSearchBar": "In Dokument suchen",
+    "deactivateSearchBar": "Suche im Dokument schließen",
+    "findPreviousOccurrence": "Das vorherige Vorkommen im Dokument finden",
+    "findPreviousOccurrenceAlt": "Das vorherige Vorkommen im Dokument finden",
+    "findNextOccurrence": "Das nächsten Vorkommen im Dokument finden",
+    "findNextOccurrenceAlt": "Das nächsten Vorkommen im Dokument finden",
+    "openAnyway": "Trotzdem öffnen"
   },
   "server": {
-    "title": "Settings",
-    "description": "Don't change these settings if you don't know what you're doing."
+    "title": "Einstellungen",
+    "description": "Ändern Sie diese Einstellungen nicht, wenn Sie sich nicht sicher sind."
   },
   "serverSettings": {
-    "title": "Server Settings",
-    "submitSuccess": "Modifications submitted.",
-    "submitError": "Unable to submit the settings.",
-    "noAccess": "You do not have access to that page in server mode."
+    "title": "Server-Einstellungen",
+    "submitSuccess": "Modifikationen übertragen.",
+    "submitError": "Einstellungen konnten nicht übertragen werden.",
+    "noAccess": "Sie haben keinen Zugriff auf diese Seite im Servermodus."
   },
   "human": {
     "number": {
@@ -665,101 +672,105 @@
       "TB": "% T"
     }
   },
+  "batchDownload": {
+    "title": "Batch-Downloads",
+    "warning": "Diese Funktion wird derzeit vom Datashare-Team entwickelt."
+  },
   "insights": {
-    "title": "Insights",
-    "selectProject": "Select a project"
+    "title": "Einblicke",
+    "selectProject": "Projekt auswählen"
   },
   "widget": {
-    "noData": "No data",
-    "noFolders": "No folders",
+    "noData": "Keine Daten",
+    "noFolders": "Keine Ordner",
     "barometer": {
-      "document": "no documents | 1 document | %{total} documents",
-      "amongWhich": "among which",
-      "onDisk": "on disk"
+      "document": "keine Dokumente | 1 Dokument | %{total} Dokumente",
+      "amongWhich": "davon sind",
+      "onDisk": "auf der Festplatte"
     },
     "diskUsage": {
-      "details": "See disk usage",
-      "warning": "The number of documents only counts parent documents here (files on disk), not attachments (embedded documents)."
+      "details": "Festplattenverbrauch ansehen",
+      "warning": "Die Anzahl der Dokumente zählt hier nur übergeordnete Dokumente (Dateien auf der Festplatte), nicht Anhänge (eingebettete Dokumente)."
     },
     "creationDate": {
-      "filterFolder": "Filter by folder",
-      "selectFolder": "Select folder",
+      "filterFolder": "Nach Ordner filtern",
+      "selectFolder": "Ordner auswählen",
       "intervals": {
-        "year": "Year",
-        "month": "Month",
-        "day": "Day"
+        "year": "Jahr",
+        "month": "Monat",
+        "day": "Tag"
       },
-      "document": "no documents | 1 document | %{total} documents",
-      "missing": "No documents have no or wrong creation date.| 1 document has no or wrong creation date.| %{total} documents have no or wrong creation date.",
-      "missingTooltip": "There are multiple reasons why a document is not here in the barchart:\n    - The document has no creation date at all\n    - The creation date of the document is prior to January 1. 1970\n    - The creation date of the document is posterior to the current date"
+      "document": "keine Dokumente | 1 Dokument | %{total} Dokumente",
+      "missing": "Keine Dokumente haben kein oder ein falsches Erstellungsdatum.| 1 Dokument hat kein oder ein falsches Erstellungsdatum.| %{total} Dokumente haben kein oder ein falsches Erstellungsdatum.",
+      "missingTooltip": "Es gibt mehrere Gründe, warum ein Dokument nicht im Balkendiagramm vorhanden ist:\n    - Das Dokument hat kein Erstellungsdatum\n    - Das Erstellungsdatum des Dokuments liegt vor dem 1. Januar 1970\n    - Das Erstellungsdatum des Dokuments liegt nach dem aktuellen Datum"
     },
     "duplicates": {
-      "duplicated": "* Duplicated documents are not indexed in Datashare to ease search and avoid creating unnecessary noise."
+      "duplicated": "* Duplizierte Dokumente werden nicht in Datashare indiziert, um die Suche zu erleichtern und unnötige Überlappungen zu vermeiden."
     },
     "entities": {
-      "people": "0 people | one person | <strong>{count}</strong> people",
-      "locations": "0 locations | one location | <strong>{count}</strong> locations",
-      "organizations": "0 organizations | one organization | <strong>{count}</strong> organizations",
-      "emails": "0 email addresses | one email address | <strong>{count}</strong> email addresses"
+      "people": "Keine Personen | eine Person | <strong>{count}</strong> Personen",
+      "locations": "keine Orte | ein Ort | <strong>{count}</strong> Orte",
+      "organizations": "keine Organisationen | eine Organisation | <strong>{count}</strong> Organisationen",
+      "emails": "keine E-Mail-Adressen | eine E-Mail-Adresse | <strong>{count}</strong> E-Mail-Adressen"
     },
     "treemap": {
-      "seeDocuments": "See documents in Datashare",
-      "others": "Others"
+      "seeDocuments": "Dokumente in Datashare ansehen",
+      "others": "Andere"
     }
   },
   "api": {
     "title": "API",
-    "newApiKey": "Create API key",
-    "apiKey": "API key",
-    "noAccess": "You do not have access to that page in local mode."
+    "newApiKey": "API-Schlüssel anlegen",
+    "apiKey": "API-Schlüssel",
+    "noAccess": "Sie haben keinen Zugriff auf diese Seite im lokalen Modus."
   },
   "plugins": {
-    "title": "Plugins",
-    "search": "Search plugins",
-    "submitSuccess": "Plugin successfully installed.",
-    "submitError": "Error while installing the plugin.",
-    "deleteSuccess": "Plugin successfully deleted.",
-    "deleteError": "Error while deleting the plugin.",
+    "title": "Plug-ins",
+    "search": "Plugins durchsuchen",
+    "submitSuccess": "Das Plugin wurde erfolgreich installiert.",
+    "submitError": "Fehler beim Installieren des Plugins.",
+    "deleteSuccess": "Plugin erfolgreich gelöscht.",
+    "deleteError": "Fehler beim Löschen des Plugins.",
     "version": "Version {version}",
-    "officialVersion": "Official version",
-    "homePage": "Home page",
-    "install": "Install now",
-    "uninstall": "Uninstall",
-    "update": "Update",
-    "installFromUrl": "Install plugin from URL"
+    "officialVersion": "Offizielle Version",
+    "homePage": "Startseite",
+    "install": "Jetzt installieren",
+    "uninstall": "Deinstallieren",
+    "update": "Aktualisieren",
+    "installFromUrl": "Plugin über URL installieren"
   },
   "extensions": {
-    "title": "Extensions",
-    "search": "Search extensions",
-    "submitSuccess": "Extension successfully installed, please restart Datashare.",
-    "submitError": "Error while installing the extension.",
-    "deleteSuccess": "Extension successfully deleted.",
-    "deleteError": "Error while deleting the extension.",
+    "title": "Erweiterungen",
+    "search": "Erweiterungen suchen",
+    "submitSuccess": "Erweiterung erfolgreich installiert. Bitte Datashare neu starten.",
+    "submitError": "Fehler beim Installieren der Erweiterung.",
+    "deleteSuccess": "Erweiterung erfolgreich gelöscht.",
+    "deleteError": "Fehler beim Löschen der Erweiterung.",
     "version": "Version {version}",
-    "officialVersion": "Official version",
-    "homePage": "Home page",
-    "install": "Install now",
-    "uninstall": "Uninstall",
-    "update": "Update",
-    "installFromUrl": "Install extension from URL"
+    "officialVersion": "Offizielle Version",
+    "homePage": "Startseite",
+    "install": "Jetzt installieren",
+    "uninstall": "Deinstallieren",
+    "update": "Akutalisieren",
+    "installFromUrl": "Erweiterung über URL installieren"
   },
   "treeView": {
-    "hits": "no documents | 1 document | %{hits} documents",
-    "docs": "doc | docs",
-    "datadir": "Home",
-    "all": "All",
-    "includingIndividualDocuments": "including individual documents"
+    "hits": "keine Dokumente | 1 Dokument | %{hits} Dokumente",
+    "docs": "Dok | Doks",
+    "datadir": "Startseite",
+    "all": "Alle",
+    "includingIndividualDocuments": "einschließlich individueller Dokumente"
   },
   "quickItemNav": {
     "previous": {
-      "label": "Previous",
-      "tooltipMac": "Previous document (<kbd>⌘</kbd> + <kbd>←</kbd>)",
-      "tooltipOthers": "Previous document (<kbd>ctrl</kbd> + <kbd>←</kbd>)"
+      "label": "Zurück",
+      "tooltipMac": "Vorheriges Dokument (<kbd>⌘</kbd> + <kbd>←</kbd>)",
+      "tooltipOthers": "Vorheriges Dokument (<kbd>Strg</kbd> + <kbd>←</kbd>)"
     },
     "next": {
-      "label": "Next",
-      "tooltipMac": "Next document (<kbd>⌘</kbd> + <kbd>→</kbd>)",
-      "tooltipOthers": "Next document (<kbd>ctrl</kbd> + <kbd>→</kbd>)"
+      "label": "Weiter",
+      "tooltipMac": "Nächstes Dokument (<kbd>⌘</kbd> + <kbd>←</kbd>)",
+      "tooltipOthers": "Nächstes Dokument (<kbd>Strg</kbd> + <kbd>←</kbd>)"
     }
   }
 }

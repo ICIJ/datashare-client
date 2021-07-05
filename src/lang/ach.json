@@ -391,6 +391,7 @@
     "tabDetails": "crwdns1926:0crwdne1926:0",
     "namedEntities": "crwdns1928:0crwdne1928:0",
     "namedEntityFilter": "crwdns2316:0crwdne2316:0",
+    "namedEntitiesOccurences": "crwdns2466:0{count}crwdne2466:0",
     "extractedText": "crwdns1930:0crwdne1930:0",
     "translations": "crwdns832:0crwdne832:0",
     "preview": "crwdns834:0crwdne834:0",
@@ -495,13 +496,13 @@
     "findNamedEntitiesTooltip": "crwdns1896:0crwdne1896:0",
     "pipelines": "crwdns938:0crwdne938:0",
     "pipelineOptions": {
-      "corenlp": "crwdns2420:0crwdne2420:0",
+      "corenlp": "crwdns2456:0crwdne2456:0",
       "email": "crwdns2422:0crwdne2422:0"
     },
-    "corenlp": "crwdns940:0crwdne940:0",
-    "opennlp": "crwdns942:0crwdne942:0",
-    "mitie": "crwdns944:0crwdne944:0",
-    "ixapipe": "crwdns946:0crwdne946:0",
+    "corenlp": "crwdns2458:0crwdne2458:0",
+    "opennlp": "crwdns2460:0crwdne2460:0",
+    "mitie": "crwdns2462:0crwdne2462:0",
+    "ixapipe": "crwdns2464:0crwdne2464:0",
     "email": "crwdns948:0crwdne948:0",
     "default": "crwdns950:0crwdne950:0",
     "syncModels": "crwdns1898:0crwdne1898:0",
@@ -520,6 +521,8 @@
     "analyseShort": "crwdns2300:0crwdne2300:0",
     "batch": "crwdns968:0crwdne968:0",
     "batchShort": "crwdns2302:0crwdne2302:0",
+    "tasks": "crwdns2444:0crwdne2444:0",
+    "tasksShort": "crwdns2446:0crwdne2446:0",
     "search": "crwdns970:0crwdne970:0",
     "searchShort": "crwdns2304:0crwdne2304:0",
     "history": "crwdns972:0crwdne972:0",
@@ -558,6 +561,10 @@
     "description": "crwdns1000:0crwdne1000:0",
     "empty": "crwdns1002:0crwdne1002:0",
     "clear": "crwdns1004:0crwdne1004:0"
+  },
+  "tasks": {
+    "title": "crwdns2448:0crwdne2448:0",
+    "description": "crwdns2450:0crwdne2450:0"
   },
   "batchSearch": {
     "lead": "crwdns1006:0crwdne1006:0",
@@ -664,6 +671,10 @@
       "GB": "crwdns2010:0crwdne2010:0",
       "TB": "crwdns2012:0crwdne2012:0"
     }
+  },
+  "batchDownload": {
+    "title": "crwdns2452:0crwdne2452:0",
+    "warning": "crwdns2454:0crwdne2454:0"
   },
   "insights": {
     "title": "crwdns2376:0crwdne2376:0",

@@ -391,6 +391,7 @@
     "tabDetails": "Etiquetas y Detalles",
     "namedEntities": "Entidades Identificadas",
     "namedEntityFilter": "Filtrar entidades identificadas",
+    "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
     "extractedText": "Texto Extraído",
     "translations": "Traducciones",
     "preview": "Vista previa",
@@ -495,13 +496,13 @@
     "findNamedEntitiesTooltip": "Los textos deben ser extraídos antes de iniciar el proceso para encontrar entidades identificadas",
     "pipelines": "Canales",
     "pipelineOptions": {
-      "corenlp": "Encuentra nombres de personas, organizaciones y lugares con Corenlp",
+      "corenlp": "Encuentra nombres de personas, organizaciones y lugares con CoreNLP",
       "email": "Encontra direcciones de correo electrónico"
     },
-    "corenlp": "Core NLP",
-    "opennlp": "Open NLP",
-    "mitie": "Mitie",
-    "ixapipe": "Ixa Pipe",
+    "corenlp": "CoreNLP",
+    "opennlp": "OpenNLP",
+    "mitie": "MITIE",
+    "ixapipe": "IXA Pipe",
     "email": "Extracción de correos electrónicos",
     "default": "Por defecto - Ofrece la mayor probabilidad de trabajar en la mayoría de los documentos",
     "syncModels": "Por favor marque esta casilla si actualmente está trabajando sin conexión a Internet.",
@@ -520,6 +521,8 @@
     "analyseShort": "Analizar",
     "batch": "Búsquedas masivas",
     "batchShort": "Búsquedas masivas",
+    "tasks": "Tareas",
+    "tasksShort": "Tareas",
     "search": "Buscar en documentos",
     "searchShort": "Buscar",
     "history": "Tu historial",
@@ -558,6 +561,10 @@
     "description": "Los últimos 500 documentos que abriste con Datashare desde esta computadora",
     "empty": "Tu historia está vacía",
     "clear": "Borrar historia"
+  },
+  "tasks": {
+    "title": "Tareas",
+    "description": "Algunas tareas deben ejecutarse en segundo plano. Utilice este página para administrarlas."
   },
   "batchSearch": {
     "lead": "Buscar múltiples términos y documentos a la vez.",
@@ -664,6 +671,10 @@
       "GB": "% GB",
       "TB": "% T"
     }
+  },
+  "batchDownload": {
+    "title": "Descarga en lotes",
+    "warning": "Esta página está siendo desarrollada actualmente por el equipo de Datashare."
   },
   "insights": {
     "title": "Estadísticas",

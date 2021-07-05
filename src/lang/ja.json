@@ -391,6 +391,7 @@
     "tabDetails": "タグと詳細",
     "namedEntities": "固有表現",
     "namedEntityFilter": "Filter named entities",
+    "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
     "extractedText": "抽出テキスト",
     "translations": "翻訳",
     "preview": "プレビュー",
@@ -495,13 +496,13 @@
     "findNamedEntitiesTooltip": "固有表現を探す前に、テキストを抽出しなければなりません",
     "pipelines": "パイプライン（固有表現処理プロセス）",
     "pipelineOptions": {
-      "corenlp": "Find people, organizations and locations with Corenlp",
+      "corenlp": "Find people, organizations and locations with CoreNLP",
       "email": "Find email addresses"
     },
-    "corenlp": "Core NLP",
-    "opennlp": "Open NLP",
-    "mitie": "Mitie",
-    "ixapipe": "Ixaパイプ",
+    "corenlp": "CoreNLP",
+    "opennlp": "OpenNLP",
+    "mitie": "MITIE",
+    "ixapipe": "IXA Pipe",
     "email": "メール抽出",
     "default": "デフォルトで--大半の文書において、機能する可能性が最も高い",
     "syncModels": "もし、現在インターネット接続がないオフライン状態で作業している場合、このボックスにチェックを入れてください",
@@ -520,6 +521,8 @@
     "analyseShort": "Analyze",
     "batch": "まとめて検索（バッチサーチ）",
     "batchShort": "Batch searches",
+    "tasks": "Tasks",
+    "tasksShort": "Tasks",
     "search": "ドキュメントの検索",
     "searchShort": "Search",
     "history": "あなたの履歴",
@@ -558,6 +561,10 @@
     "description": "あなたがデータシェアを使ってこのコンピュータで開いた最新５００の文書",
     "empty": "履歴がありません",
     "clear": "履歴のクリア"
+  },
+  "tasks": {
+    "title": "Tasks",
+    "description": "Some tasks must be run in the background. Use this panel to manage them."
   },
   "batchSearch": {
     "lead": "複数の言葉や文書を一度に検索",
@@ -664,6 +671,10 @@
       "GB": "% GB",
       "TB": "% T"
     }
+  },
+  "batchDownload": {
+    "title": "Batch downloads",
+    "warning": "This feature is currently being developped by the Datashare team."
   },
   "insights": {
     "title": "Insights",
