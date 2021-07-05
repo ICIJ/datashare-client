@@ -45,9 +45,11 @@ export default {
   computed: {
     tab: {
       get () {
-        return findIndex(this.tabRoutes, name => {
+        const index = findIndex(this.tabRoutes, name => {
           return this.$route.name.startsWith(name)
         })
+        // Use the defaultTab value when the current route doesn't match with any tab
+        return index > -1 ? index : this.defaultTab
       },
       set (value) {
         const name = this.tabRoutes[value]
