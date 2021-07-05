@@ -339,9 +339,8 @@ export default {
     }
   },
   async created () {
-    const username = await this.$core.auth.getUsername()
-    this.isMyBatchSearch = username === get(this, 'batchSearch.user.id')
     await this.fetch()
+    await this.setIsMyBatchSearch()
   },
   computed: {
     ...mapState('batchSearch', ['batchSearch', 'results']),
@@ -470,6 +469,10 @@ export default {
       await this.$store.dispatch('batchSearch/getBatchSearchResults', params)
       this.$Progress.finish()
       this.$wait.end('load batchSearch results')
+    },
+    async setIsMyBatchSearch () {
+      const username = await this.$core.auth.getUsername()
+      this.isMyBatchSearch = username === get(this, 'batchSearch.user.id')
     },
     async sortChanged (ctx) {
       const sort = find(this.fields, item => item.key === ctx.sortBy).name
