@@ -17,7 +17,7 @@ class IndexedNamedEntity {
     return this
   }
   get id () {
-    return this.path + this.mention + this.offset
+    return this.path + this.mention + this.offsets
   }
 }
 
