@@ -2,7 +2,7 @@
   <div class="batch-search-results" v-if="isLoaded">
     <div class="my-4 container">
       <div class="mx-1 mb-2">
-        <router-link :to="{ name: 'batch-search' }">
+        <router-link :to="generateTo">
           <fa icon="angle-left" class="mr-1" fixed-width />
           {{ $t('batchSearch.title') }}
         </router-link>
@@ -358,6 +358,14 @@ export default {
     },
     selectedQueries () {
       return get(this, '$store.state.batchSearch.selectedQueries', [])
+    },
+    generateTo () {
+      const baseTo = { name: 'batch-search' }
+      const searchQueryExists = this.$route.query.query
+      return {
+        ...baseTo,
+        ...(searchQueryExists && { query: { query: this.$route.query.query } })
+      }
     },
     fuzzinessLabel () {
       if (this.batchSearch.phraseMatches) {

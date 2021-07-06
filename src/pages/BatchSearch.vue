@@ -53,11 +53,7 @@
               thead-tr-class="text-nowrap">
               <template v-slot:cell(name)="{ item }">
                 <router-link
-                  :to="{
-                    name: 'batch-search.results',
-                    params: { index: item.project.name, uuid: item.uuid },
-                    query: { page: 1, sort: sortResults, order: orderResults }
-                  }"
+                  :to="generateTo(item)"
                   class="batch-search__items__item__link">
                   {{ item.name }}
                 </router-link>
@@ -250,6 +246,14 @@ export default {
     this.fetch()
   },
   methods: {
+    generateTo (item) {
+      const baseTo = { name: 'batch-search.results', params: { index: item.project.name, uuid: item.uuid }, query: { page: 1, sort: this.sortResults, order: this.orderResults } }
+      const searchQueryExists = this.query
+      return {
+        ...baseTo,
+        ...(searchQueryExists && { query: { query: this.query } })
+      }
+    },
     generateLinkToBatchSearch ({
       page = this.page,
       sort = this.sort,
