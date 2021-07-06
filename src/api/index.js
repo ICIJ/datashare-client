@@ -146,6 +146,9 @@ export default class Api {
   getNerPipelines () {
     return this.sendAction('/api/ner/pipelines')
   }
+  getApiKey (userId) {
+    return this.sendActionAsText(`/api/key/${userId}`, { method: 'GET' })
+  }
   createApiKey (userId) {
     return this.sendActionAsText(`/api/key/${userId}`, { method: 'PUT' })
   }
