@@ -223,6 +223,9 @@ export default {
     },
     query () {
       this.fetch()
+    },
+    search () {
+      this.fetch()
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -232,6 +235,7 @@ export default {
       vm.$set(vm, 'order', get(to, 'query.order', vm.order))
       vm.$set(vm, 'query', get(to, 'query.query', vm.query))
       vm.$set(vm, 'field', get(to, 'query.field', vm.field))
+      vm.$set(vm, 'search', get(to, 'query.query', vm.search))
     })
   },
   beforeRouteUpdate (to, from, next) {
@@ -240,6 +244,7 @@ export default {
     this.$set(this, 'order', get(to, 'query.order', this.order))
     this.$set(this, 'query', get(to, 'query.query', this.query))
     this.$set(this, 'field', get(to, 'query.field', this.field))
+    this.$set(this, 'search', get(to, 'query.query', this.search))
     next()
   },
   async mounted () {
