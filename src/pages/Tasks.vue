@@ -2,19 +2,19 @@
   <div class="task">
     <page-header icon="rocket" :title="$t('tasks.title')" :description="$t('tasks.description')" :tab.sync="tab">
       <template #tabs>
-        <b-tab :active="defaultTab == 0">
+        <b-tab :active="defaultTab === 0">
           <template #title>
             <fa icon="layer-group" fixed-width class="mr-1" />
             {{ $t('batchSearch.title') }}
           </template>
         </b-tab>
-        <b-tab :active="defaultTab == 1">
+        <b-tab :active="defaultTab === 1">
           <template #title>
             <fa icon="download" fixed-width class="mr-1" />
             {{ $t('batchDownload.title') }}
           </template>
         </b-tab>
-        <b-tab :active="defaultTab == 2" v-if="!isServer">
+        <b-tab :active="defaultTab === 2" v-if="!isServer">
           <template #title>
             <fa icon="search-plus" fixed-width class="mr-1" />
             {{ $t('indexing.title') }}
@@ -65,6 +65,8 @@ export default {
       const defaultTab = vm.tabRoutes.indexOf(to.name)
       if (defaultTab > -1) {
         vm.defaultTab = defaultTab
+      } else {
+        vm.$router.push({ name: 'batch-search' })
       }
     })
   }
