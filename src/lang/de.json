@@ -558,9 +558,15 @@
   },
   "userHistory": {
     "heading": "Ihr Verlauf",
-    "description": "Die letzten 500 Dokumente von diesem Computer, die Sie mit Datashare geöffnet haben.",
+    "description": "The last 500 events on Datashare.",
     "empty": "Ihr Verlauf ist leer",
-    "clear": "Verlauf löschen"
+    "clear": "Verlauf löschen",
+    "document": "Document",
+    "search": "Search",
+    "name": "Name",
+    "saveSearch": "Save this search",
+    "submitSuccess": "Your search has been added.",
+    "submitError": "Something went wrong, unable to add your search."
   },
   "tasks": {
     "title": "Aufgaben",
