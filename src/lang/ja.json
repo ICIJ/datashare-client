@@ -558,9 +558,15 @@
   },
   "userHistory": {
     "heading": "あなたの履歴",
-    "description": "あなたがデータシェアを使ってこのコンピュータで開いた最新５００の文書",
+    "description": "The last 500 events on Datashare.",
     "empty": "履歴がありません",
-    "clear": "履歴のクリア"
+    "clear": "履歴のクリア",
+    "document": "Document",
+    "search": "Search",
+    "name": "Name",
+    "saveSearch": "Save this search",
+    "submitSuccess": "Your search has been added.",
+    "submitError": "Something went wrong, unable to add your search."
   },
   "tasks": {
     "title": "Tasks",
