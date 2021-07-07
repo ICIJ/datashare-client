@@ -10,6 +10,9 @@ export default class Api {
   runBatchSearch () {
     return this.sendAction('/api/task/batchSearch', { method: 'POST' })
   }
+  runBatchDownload (options) {
+    return this.sendAction('/api/task/batchDownload', { method: 'POST', data: { options } })
+  }
   findNames (pipeline, options) {
     return this.sendActionAsText(`/api/task/findNames/${pipeline}`, { method: 'POST', data: { options } })
   }

@@ -74,6 +74,7 @@
       "on": "on",
       "perPage": "per page",
       "sortedByPath": "sorted by path",
+      "batchDownload": "Download results",
       "sort": {
         "sortLabel": "Sort",
         "sort": "Sort by",

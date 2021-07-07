@@ -471,6 +471,9 @@ export const actions = {
     const starredDocuments = await api.getStarredDocuments(state.index)
     commit('starredDocuments', starredDocuments)
   },
+  async runBatchDownload ({ state, commit }) {
+    return api.runBatchDownload({ project: this.state.index, queryString: this.state.query })
+  },
   async getIsDownloadAllowed ({ state, commit }) {
     try {
       await api.isDownloadAllowed(state.index)

@@ -50,6 +50,10 @@
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
+      <button v-if="response.total > 0 && hasFeature('BATCH_DOWNLOAD')" class="btn mr-2 search-results-header__settings__btn-download text-nowrap ml-auto" type="button" @click="batchDownload">
+        <fa icon="download" class="mr-2"></fa>
+        <template v-if="!noLabels">{{ $t('search.results.batchDownload') }}</template>
+      </button>
       <pagination
         class="search-results-header__settings__pagination justify-content-end text-right mr-3"
         :get-to-template="getToTemplate"
@@ -70,6 +74,7 @@ import { mapState } from 'vuex'
 
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
 import Pagination from '@/components/Pagination'
+import features from '@/mixins/features'
 
 /**
  * Search results header displaying sorting and page length options.
@@ -80,6 +85,7 @@ export default {
     AppliedSearchFilters,
     Pagination
   },
+  mixins: [features],
   props: {
     /**
      * Position of the header.
@@ -107,6 +113,13 @@ export default {
      */
     noFilters: {
       type: Boolean
+    },
+    /**
+     * Hide labels when size is too narrow
+     */
+    noLabels: {
+      type: Boolean,
+      default: false
     }
   },
   data () {
@@ -172,6 +185,9 @@ export default {
     },
     refreshSearch () {
       this.$store.dispatch('search/query')
+    },
+    batchDownload () {
+      this.$store.dispatch('search/runBatchDownload')
     }
   }
 }

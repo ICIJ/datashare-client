@@ -88,6 +88,39 @@ describe('SearchResultsHeader.vue', () => {
     expect(wrapper.vm.size).toBe(100)
   })
 
+  it('should not show the download results button when there is no results', () => {
+    expect(wrapper.find('.search-results-header__settings__btn-download').exists()).toBeFalsy()
+  })
+
+  it('should show the download results button if results are less than the limit', async () => {
+    await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
+    await store.dispatch('search/query', 'bar')
+    expect(wrapper.find('.search-results-header__settings__btn-download').exists()).toBeTruthy()
+  })
+
+  it('should show labels by default', async () => {
+    await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
+    await store.dispatch('search/query', 'bar')
+    expect(wrapper.find('.search-results-header__settings__btn-download').text()).toBe('Download results')
+  })
+
+  it('should not show labels when noLabels property is set', async () => {
+    wrapper.setProps({ noLabels: true })
+    await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
+    await store.dispatch('search/query', 'bar')
+
+    expect(wrapper.find('.search-results-header__settings__btn-download').text()).toHaveLength(0)
+  })
+
+  it('should call batch download service when the button is clicked', async () => {
+    await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
+    await store.dispatch('search/query', 'bar')
+
+    await wrapper.find('.search-results-header__settings__btn-download').trigger('click')
+
+    // expect(axios.request).toBeCalledWith({ url: 'http://localhost:9009/api/task/' })
+  })
+
   describe('firstDocument', () => {
     it('should return 1', async () => {
       await letData(es).have(new IndexedDocument('doc.txt', index).withContent('bar')).commit()
