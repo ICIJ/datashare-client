@@ -728,7 +728,19 @@
     "title": "crwdns2072:0crwdne2072:0",
     "newApiKey": "crwdns2088:0crwdne2088:0",
     "apiKey": "crwdns2078:0crwdne2078:0",
-    "noAccess": "crwdns2124:0crwdne2124:0"
+    "noAccess": "crwdns2124:0crwdne2124:0",
+    "key": {
+      "why": "crwdns2482:0%Ecrwdnd2482:0%80crwdnd2482:0%Bcrwdne2482:0",
+      "created": "crwdns2484:0crwdne2484:0",
+      "warning": "crwdns2486:0crwdne2486:0",
+      "unavailable": "crwdns2488:0crwdne2488:0",
+      "regenerate": "crwdns2490:0crwdne2490:0",
+      "description": "crwdns2492:0%Ecrwdnd2492:0%80crwdnd2492:0%Bcrwdne2492:0",
+      "delete": {
+        "button": "crwdns2494:0crwdne2494:0",
+        "description": "crwdns2496:0crwdne2496:0"
+      }
+    }
   },
   "plugins": {
     "title": "crwdns2082:0crwdne2082:0",
