@@ -1,10 +1,11 @@
 <template>
   <b-form @submit.prevent="saveSearch">
-    <div class="card w-100">
+    <div class="w-100 border-top">
       <div class="card-body pb-1">
         <b-form-group label-size="sm" :label="`${ $t('userHistory.name') } *`">
           <b-form-input v-model="name" type="text" required />
         </b-form-group>
+        <p v-html="$t('userHistorySaveSearchForm.description', { searchHistoryPath })"></p>
       </div>
       <div class="card-footer">
         <div class="d-flex justify-content-end align-items-center">
@@ -54,6 +55,10 @@ export default {
   computed: {
     api () {
       return new Api()
+    },
+    searchHistoryPath () {
+      const { route: { path } } = this.$router.resolve({ name: 'search-history' })
+      return `/#${path}`
     }
   }
 }

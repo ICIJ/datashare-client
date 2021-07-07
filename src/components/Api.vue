@@ -46,14 +46,16 @@
         {{ $t('api.noAccess') }}
       </b-alert>
     </div>
-    <b-modal size="md" :title="$t('api.key.created')" :visible="hasApiKey" lazy ok-only footer-class="card-footer" @hidden="apiKey = null">
-      <p>
-        {{ $t('api.key.warning') }}
-      </p>
-      <div class="input-group input-group-sm">
-        <input class="form-control text-monospace" :value="apiKey">
-        <div class="input-group-append">
-          <haptic-copy :text="apiKey" class="btn-outline-primary" label="Copy" />
+    <b-modal size="md" :title="$t('api.key.created')" :visible="hasApiKey" lazy ok-only body-class="p-0" footer-class="card-footer" @hidden="apiKey = null">
+      <div class="card-body border-top border-bottom">
+        <p>
+          {{ $t('api.key.warning') }}
+        </p>
+        <div class="input-group input-group-sm">
+          <input class="form-control text-monospace" :value="apiKey">
+          <div class="input-group-append">
+            <haptic-copy :text="apiKey" class="btn-outline-primary" label="Copy" />
+          </div>
         </div>
       </div>
     </b-modal>

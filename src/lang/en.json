@@ -568,6 +568,9 @@
     "submitSuccess": "Your search has been added.",
     "submitError": "Something went wrong, unable to add your search."
   },
+  "userHistorySaveSearchForm": {
+    "description": "You can retreived all your saved searches in <a href=\"{searchHistoryPath}\">History › Search</a>."
+  },
   "tasks": {
     "title": "Tasks",
     "description": "Some tasks must be run in the background. Use this panel to manage them."

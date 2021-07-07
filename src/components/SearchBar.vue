@@ -49,8 +49,9 @@
                ref="user-history-save-search-form"
                size="md"
                :title="$t('userHistory.saveSearch')">
-            <user-history-save-search-form :index="this.$store.state.search.index" :uri="this.uri"
-                @submit="$refs['user-history-save-search-form'].hide()"/>
+            <user-history-save-search-form :index="$store.state.search.index"
+                                           :uri="uri"
+                                           @submit="$refs['user-history-save-search-form'].hide()"/>
           </b-modal>
         </b-btn>
       </div>
