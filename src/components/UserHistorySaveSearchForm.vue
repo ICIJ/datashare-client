@@ -41,7 +41,6 @@ export default {
   },
   methods: {
     async saveSearch () {
-      console.log('URI : ' + window.location.hash.substr(2))
       try {
         await this.api.addHistoryEvent(this.index, 'SEARCH', this.name, window.location.hash.substr(2))
         this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), { noCloseButton: true, variant: 'success' })
