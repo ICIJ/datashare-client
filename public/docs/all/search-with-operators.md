@@ -8,9 +8,9 @@ description: >-
 
 ### Double quotes for e**xact phrase**
 
-To have all documents mentioning an exact phrase, you can use double quotes.
+To have all documents mentioning an exact phrase, you can use double quotes. **Use straight double quotes \("example"\), not curly double quotes \(“example”\).**
 
-> Example: “Alicia Martinez’s bank account in Portugal”
+> Example: "Alicia Martinez’s bank account in Portugal"
 
 
 
@@ -50,7 +50,7 @@ To have all documents NOT mentioning some queried terms, you can use 'NOT' befor
 
 Parentheses should be used whenever multiple operators are used together and you want to give priority to some. 
 
-> Example: \(\(Alicia AND Martinez\) OR \(Delaware AND Pekin\) OR Grey\) AND NOT "parking lot""
+> Example: \(\(Alicia AND Martinez\) OR \(Delaware AND Pekin\) OR Grey\) AND NOT "parking lot"
 
 You can also combine these with 'regular expressions' Regex between two slashes \([see below](https://icij.gitbook.io/datashare/all/search-with-operators#regular-expressions-regex)\).
 
@@ -90,9 +90,9 @@ When you type an exact phrase \(in double quotes\) and use fuzziness, then the m
 
 Examples:
 
-> “the cat is blue” -&gt; “the small cat is blue” \(1 insertion = fuzziness is 1\)
+> "the cat is blue" -&gt; "the small cat is blue" \(1 insertion = fuzziness is 1\)
 
-> “the cat is blue” -&gt; “the small is cat blue” \(1 insertion + 2 transpositions = fuzziness is 3\)
+> "the cat is blue" -&gt; "the small is cat blue" \(1 insertion + 2 transpositions = fuzziness is 3\)
 
 "_While a phrase query \(eg "john smith"\) expects all of the terms in exactly the same order, a proximity query allows the specified words to be further apart or in a different order. A proximity search allows us to specify a maximum edit distance of words in a phrase._" \(source: [Elastic](https://www.elastic.co/guide/en/elasticsearch/reference/7.0/query-dsl-query-string-query.html#_fuzziness)\).
 
