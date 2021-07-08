@@ -42,7 +42,7 @@ export default {
   methods: {
     async saveSearch () {
       try {
-        await this.api.addHistoryEvent(this.index, 'SEARCH', this.name, window.location.hash.substr(2))
+        await this.api.addHistoryEvent(this.index, 'SEARCH', this.name, this.uriFromStore)
         this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), { noCloseButton: true, variant: 'success' })
       } catch (_) {
         this.$root.$bvToast.toast(this.$t('userHistory.submitError'), { noCloseButton: true, variant: 'danger' })
@@ -52,6 +52,12 @@ export default {
     }
   },
   computed: {
+    uriFromStore () {
+      const from = 0
+      const query = { ...this.$store.getters['search/toRouteQuery'](), from }
+      const { route: { fullPath } } = this.$router.resolve({ name: 'search', query })
+      return fullPath
+    },
     api () {
       return new Api()
     },

@@ -160,8 +160,6 @@ export default {
       this.thread.removeDuplicates()
       this.thread.orderBy('creationDate', ['asc'])
       this.$wait.end('load thread')
-      // Add the document to the user's history
-      await this.$store.commit('userHistory/addDocument', this.document)
       // Scroll to the active email
       await this.scrollToActive()
     },
