@@ -197,7 +197,7 @@ export default {
       await this.$store.dispatch('document/getTags')
       await this.$store.dispatch('document/getRecommendationsByDocuments')
       if (this.doc) {
-        await this.api.addHistoryEvent(this.doc.index, 'DOCUMENT', this.doc.slicedNameToString, window.location.hash.substr(2))
+        await this.api.addHistoryEvent(this.doc.index, 'DOCUMENT', this.doc.slicedNameToString, this.doc.route)
         const container = this.$el.closest('.ps-container')
         this.$root.$emit('scroll-tracker:request', this.$el, 0, container)
         this.$root.$emit('document::content::changed')

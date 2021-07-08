@@ -3,13 +3,13 @@
     <div class="container mt-4">
       <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
         <li v-for="event in events" :key="event.id" class="user-history__list__item">
-          <router-link :to="{ path: `/${event.uri}` }" class="p-2 d-block d-flex">
+          <router-link :to="{ path: event.uri }" class="p-2 d-block d-flex">
             <document-thumbnail :document="eventAsDocument(event)" size="40" crop lazy class="mr-2 user-history__list__item__preview"></document-thumbnail>
             <div>
               <div class="user-history__list__item__name font-weight-bold">
                 {{ event.name }}
               </div>
-              <div class="user-history__list__item__uri ml-auto small">
+              <div class="user-history__list__item__uri small">
                 <fa icon="link" class="mr-1"></fa>
                 {{ event.uri }}
               </div>
@@ -17,6 +17,9 @@
           </router-link>
         </li>
       </ul>
+      <div class="text-muted text-center" v-else>
+        {{  $t('userHistory.empty') }}
+      </div>
     </div>
   </div>
 </template>
@@ -48,7 +51,7 @@ export default {
   computed: {
     documentPathRegexp () {
       const routes = this.$router.getRoutes()
-      const { path } = find(routes, { name: 'document' }) || { }
+      const { path } = find(routes, { name: 'document-standalone' }) || { }
       return pathToRegexp(path)
     }
   }

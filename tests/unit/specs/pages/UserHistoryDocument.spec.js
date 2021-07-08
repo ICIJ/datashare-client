@@ -52,7 +52,7 @@ describe('UserHistoryDocument.vue', () => {
   })
 
   it('should convert an event uri to a Document instance', async () => {
-    const uri = 'd/local-datashare/foo/bar'
+    const uri = '/ds/local-datashare/foo/bar'
     const document = wrapper.vm.eventAsDocument({ uri })
     expect(document).toBeInstanceOf(Document)
     expect(document.index).toBe('local-datashare')
@@ -61,7 +61,7 @@ describe('UserHistoryDocument.vue', () => {
   })
 
   it('should convert an event uri to a Document instance, ignore query params', async () => {
-    const uri = 'd/local-datashare/foo/bar?q=baz'
+    const uri = '/ds/local-datashare/foo/bar?q=baz'
     const document = wrapper.vm.eventAsDocument({ uri })
     expect(document).toBeInstanceOf(Document)
     expect(document.index).toBe('local-datashare')

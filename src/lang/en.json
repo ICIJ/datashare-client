@@ -558,7 +558,7 @@
   },
   "userHistory": {
     "heading": "Your history",
-    "description": "The last 500 events on Datashare.",
+    "description": "On this page you can retreive the documents you opened and the search you saved.",
     "empty": "Your history is empty",
     "clear": "Clear history",
     "document": "Document",

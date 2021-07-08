@@ -136,6 +136,9 @@ export default class Document extends EsDoc {
   get highlight () {
     return this.raw.highlight
   }
+  get route () {
+    return `/ds/${this.index}/${this.id}/${this.routing}`
+  }
   get url () {
     return `/api/${this.index}/documents/src/${this.id}?routing=${this.routing}`
   }

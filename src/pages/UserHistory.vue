@@ -1,6 +1,6 @@
 <template>
   <div>
-     <page-header icon="clock" :title="$t('userHistory.heading')" :description="events.length ? $t('userHistory.description') : $t('userHistory.empty')" :tab.sync="tab">
+     <page-header icon="clock" :title="$t('userHistory.heading')" :description="$t('userHistory.description')" :tab.sync="tab">
       <template #tabs>
         <b-tab :active="defaultTab == 0">
           <template #title>

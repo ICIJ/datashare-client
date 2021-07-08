@@ -18,6 +18,9 @@
           </router-link>
         </li>
       </ul>
+      <div class="text-muted text-center" v-else>
+        {{  $t('userHistory.empty') }}
+      </div>
     </div>
   </div>
 </template>
