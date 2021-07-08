@@ -17,7 +17,7 @@ jest.mock('@/api', () => {
 
 describe('UserHistorySaveSearchForm.vue', () => {
   let wrapper
-  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = {
     index: 'project',
     uri: 'uri'
@@ -26,7 +26,7 @@ describe('UserHistorySaveSearchForm.vue', () => {
   beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
 
   beforeEach(async () => {
-    wrapper = shallowMount(UserHistorySaveSearchForm, { i18n, localVue, propsData, store, wait })
+    wrapper = shallowMount(UserHistorySaveSearchForm, { i18n, localVue, propsData, router, store, wait })
   })
 
   afterAll(() => jest.unmock('@/api'))

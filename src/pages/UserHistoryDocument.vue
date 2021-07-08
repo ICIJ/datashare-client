@@ -4,7 +4,7 @@
       <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
         <li v-for="event in events" :key="event.id" class="user-history__list__item">
           <router-link :to="{ path: `/${event.uri}` }" class="p-2 d-block d-flex">
-            <document-thumbnail :document="event" size="40" crop lazy class="mr-2 user-history__list__item__preview"></document-thumbnail>
+            <document-thumbnail :document="eventAsDocument(event)" size="40" crop lazy class="mr-2 user-history__list__item__preview"></document-thumbnail>
             <div>
               <div class="user-history__list__item__name font-weight-bold">
                 {{ event.name }}
@@ -22,15 +22,34 @@
 </template>
 
 <script>
+import { find, trimStart } from 'lodash'
+import { pathToRegexp } from 'path-to-regexp'
 import DocumentThumbnail from '@/components/DocumentThumbnail'
+import Document from '@/api/resources/Document'
 
 export default {
+  name: 'UserHistorySaveSearchForm',
   components: {
     DocumentThumbnail
   },
   props: {
     events: {
       type: Array
+    }
+  },
+  methods: {
+    eventAsDocument ({ uri }) {
+      // Ensure the URI starts with a / and doesn't contain query params
+      const path = `/${trimStart(uri.split('?').shift(0), '/')}`
+      const [, _index, _id, _routing] = this.documentPathRegexp.exec(path) || []
+      return new Document({ _index, _id, _routing })
+    }
+  },
+  computed: {
+    documentPathRegexp () {
+      const routes = this.$router.getRoutes()
+      const { path } = find(routes, { name: 'document' }) || { }
+      return pathToRegexp(path)
     }
   }
 }
