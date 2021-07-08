@@ -54,6 +54,7 @@
 ## FAQ - Errors
 
 * ['Your search query is wrong.' What should I do?](faq-errors/your-search-query-is-wrong.md)
+* [Searching with double quotes doesn't work](faq-errors/searching-with-double-quotes-doesnt-work.md)
 * [List of common errors leading to "failure" in Batch Searches](faq-errors/list-of-common-errors-leading-to-failure-in-batch-searches.md)
 * [What if Datashare says 'No documents found'?](faq-errors/it-says-no-documents-found.md)
 * [Nothing works, everything crashes. What can I do?](faq-errors/nothing-works-everything-crashes.-what-can-i-do.md)
