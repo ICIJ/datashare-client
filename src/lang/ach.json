@@ -558,7 +558,7 @@
   },
   "userHistory": {
     "heading": "crwdns998:0crwdne998:0",
-    "description": "crwdns2468:0crwdne2468:0",
+    "description": "crwdns2498:0crwdne2498:0",
     "empty": "crwdns1002:0crwdne1002:0",
     "clear": "crwdns1004:0crwdne1004:0",
     "document": "crwdns2470:0crwdne2470:0",
@@ -567,6 +567,9 @@
     "saveSearch": "crwdns2476:0crwdne2476:0",
     "submitSuccess": "crwdns2478:0crwdne2478:0",
     "submitError": "crwdns2480:0crwdne2480:0"
+  },
+  "userHistorySaveSearchForm": {
+    "description": "crwdns2500:0{searchHistoryPath}crwdne2500:0"
   },
   "tasks": {
     "title": "crwdns2448:0crwdne2448:0",
