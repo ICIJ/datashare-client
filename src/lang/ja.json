@@ -558,7 +558,7 @@
   },
   "userHistory": {
     "heading": "あなたの履歴",
-    "description": "The last 500 events on Datashare.",
+    "description": "On this page you can retreive the documents you opened and the search you saved.",
     "empty": "履歴がありません",
     "clear": "履歴のクリア",
     "document": "Document",
@@ -567,6 +567,9 @@
     "saveSearch": "Save this search",
     "submitSuccess": "Your search has been added.",
     "submitError": "Something went wrong, unable to add your search."
+  },
+  "userHistorySaveSearchForm": {
+    "description": "You can retreived all your saved searches in <a href=\"{searchHistoryPath}\">History › Search</a>."
   },
   "tasks": {
     "title": "Tasks",
