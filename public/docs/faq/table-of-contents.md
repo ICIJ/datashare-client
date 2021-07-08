@@ -14,6 +14,7 @@ Frequently Asked Questions - **General**
 Frequently Asked Questions - **Errors**
 
 * ['Your search query is wrong.' What should I do?](https://icij.gitbook.io/datashare/faq-errors/your-search-query-is-wrong)
+* [Searching with double quotes doesn't work](https://icij.gitbook.io/datashare/faq-errors/searching-with-double-quotes-doesnt-work)
 * [List of common errors leading to "failure" in Batch Searches](../faq-errors/list-of-common-errors-leading-to-failure-in-batch-searches.md)
 * [What if Datashare says 'No documents found'?](https://icij.gitbook.io/datashare/faq-errors/it-says-no-documents-found)
 * [Nothing works, everything crashes. What can I do?](https://icij.gitbook.io/datashare/faq-errors/nothing-works-everything-crashes.-what-can-i-do)
