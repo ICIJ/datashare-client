@@ -558,7 +558,7 @@
   },
   "userHistory": {
     "heading": "Votre historique",
-    "description": "On this page you can retreive the documents you opened and the search you saved.",
+    "description": "Sur cette page, vous pouvez retrouver les documents que vous avez consultés et les recherches que vous avez sauvegardées.",
     "empty": "Votre historique est vide",
     "clear": "Vider l'historique",
     "document": "Document",
@@ -569,7 +569,7 @@
     "submitError": "Erreur, votre recherche n'a pas pu être ajoutée."
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retreived all your saved searches in <a href=\"{searchHistoryPath}\">History › Search</a>."
+    "description": "Vous pouvez consulter toutes vos recherches sauvegardées dans <a href=\"{searchHistoryPath}\">Historique › Recherches </a>."
   },
   "tasks": {
     "title": "Tâches",
@@ -733,15 +733,15 @@
     "apiKey": "Clé d'API",
     "noAccess": "Vous n'avez pas accès à cette page en mode local.",
     "key": {
-      "why": "Creating a key will let you interact with Datashare <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
-      "created": "API key created",
-      "warning": "Please copy this key in a safe place, you won't be able to access it again on Datashare.",
-      "unavailable": "You can only access a key when creating it",
-      "regenerate": "Regenerate",
-      "description": "Key you have created that can be used to access the <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">Datashare API</a>.",
+      "why": "Créer une clé vous permettra de mener des actions avec Datashare <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">à travers l'API</a>, en utilisant des outils tels que <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> ou vos propres scripts.",
+      "created": "La clé API a été créée",
+      "warning": "Veuillez copier cette clé dans un endroit sûr, vous ne pourrez plus la consulter ensuite sur Datashare.",
+      "unavailable": "Vous ne pouvez consulter une clé qu'au moment de sa création",
+      "regenerate": "Regénérer",
+      "description": "Clé que vous avez créée qui peut être utilisée pour accéder à <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">l'API Datashare</a>.",
       "delete": {
-        "button": "Delete",
-        "description": "Any applications or scripts using this key will no longer be able to access the Datashare API. You cannot undo this action."
+        "button": "Supprimer",
+        "description": "Les applications ou scripts utilisant cette clé ne seront plus en mesure d'accéder à l'API Datashare. Vous ne pourrez pas annuler cette action."
       }
     }
   },
