@@ -1,7 +1,6 @@
 import { noop, toLower } from 'lodash'
 import Murmur from '@icij/murmur'
 import { createLocalVue, mount } from '@vue/test-utils'
-import VueRouter from 'vue-router'
 
 import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
 import { Core } from '@/core'
@@ -41,153 +40,11 @@ describe('FilterNamedEntity.vue', () => {
 
   beforeEach(() => {
     wrapper = mount(FilterNamedEntity, { localVue, i18n, store, wait, propsData })
+    store.commit('search/reset')
     store.commit('search/contextualizeFilter', name)
   })
 
-  afterEach(() => store.commit('search/reset'))
-
   afterAll(() => jest.unmock('@/api'))
-
-  describe('Display the list of all available named entities', () => {
-    it('should display empty list', async () => {
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item')).toHaveLength(0)
-    })
-
-    it('should display 1 named entity', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withNer('person_01')).commit()
-
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
-    })
-
-    it('should display 2 named entities in one document', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withNer('person_01')
-        .withNer('person_02')).commit()
-
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
-    })
-
-    it('should display 1 named entity in 2 documents', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index)
-        .withNer('person_01', [2, 25])).commit()
-      await letData(es).have(new IndexedDocument('document_02', index)
-        .withNer('person_01')).commit()
-
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
-    })
-
-    it('should display 3 named entities in 2 documents in correct order', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index)
-        .withNer('someone_01', 2)).commit()
-      await letData(es).have(new IndexedDocument('document_02', index)
-        .withNer('someone_01', 26)
-        .withNer('someone_02', [2, 16, 21])
-        .withNer('someone_03', 35)).commit()
-
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
-      expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('someone_01')
-      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('someone_02')
-      expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('someone_03')
-    })
-
-    it('should display 3 named entities in 2 documents alphabeticaly', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index)
-        .withNer('paul', 2)).commit()
-      await letData(es).have(new IndexedDocument('document_02', index)
-        .withNer('ines', [2, 16, 21])
-        .withNer('paul', 26)
-        .withNer('anita', 35)).commit()
-
-      wrapper.findComponent({ ref: 'filter' }).setData({ sortBy: '_key', sortByOrder: 'asc' })
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
-      expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('anita')
-      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('ines')
-      expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('paul')
-    })
-  })
-
-  describe('Filtering on named entities', () => {
-    it('should filter on named entity filter and return no items', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index)
-        .withNer('person_01')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index)
-        .withNer('person_02')).commit()
-      await letData(es).have(new IndexedDocument('document_03', index)
-        .withNer('person_03')).commit()
-      await letData(es).have(new IndexedDocument('document_04', index)
-        .withNer('person_04')).commit()
-
-      wrapper.vm.root.query = 'Windows'
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item')).toHaveLength(0)
-    })
-
-    it('should filter on named entity filter and return all items', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index)
-        .withNer('person_01')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index)
-        .withNer('person_02')).commit()
-      await letData(es).have(new IndexedDocument('document_03', index)
-        .withNer('person_03')).commit()
-      await letData(es).have(new IndexedDocument('document_04', index)
-        .withNer('person_04')).commit()
-
-      wrapper.vm.root.query = 'person'
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item')).toHaveLength(4)
-    })
-
-    it('should filter on named entity filter and return only 1 item', async () => {
-      await letData(es).have(new IndexedDocument('document_01', index)
-        .withNer('person_01')).commit()
-      await letData(es).have(new IndexedDocument('document_02', index)
-        .withNer('person_02')).commit()
-      await letData(es).have(new IndexedDocument('document_03', index)
-        .withNer('person_03')).commit()
-      await letData(es).have(new IndexedDocument('document_04', index)
-        .withNer('person_04')).commit()
-
-      wrapper.vm.root.query = 'person_01'
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
-    })
-  })
-
-  describe('Deletion', () => {
-    it('should display the "delete" button', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withNer('person_01')).commit()
-
-      await wrapper.vm.root.aggregate({ clearPages: true })
-
-      expect(wrapper.findAll('.filter__items__item .filter__items__item__delete')).toHaveLength(1)
-    })
-
-    it('should emit an event filter::hide::named-entities on delete named entity', async () => {
-      const mockCallback = jest.fn()
-      wrapper.vm.$root.$on('filter::hide::named-entities', mockCallback)
-
-      await wrapper.vm.deleteNamedEntitiesByMentionNorm('ner_01')
-
-      expect(mockCallback.mock.calls).toHaveLength(1)
-    })
-  })
 
   it('should filter items according to the content type filter search', async () => {
     await letData(es).have(new IndexedDocument('document_01', index)
@@ -376,8 +233,6 @@ describe('FilterNamedEntity.vue', () => {
   it('should load and checked the filter values stored in store', async () => {
     await letData(es).have(new IndexedDocument(id, index).withNer('person_01')).commit()
     store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
-
-    wrapper = mount(FilterNamedEntity, { localVue, i18n, store, wait, propsData: { filter: store.getters['search/getFilter']({ name: 'namedEntityPerson' }) } })
     await wrapper.vm.$nextTick()
     await wrapper.vm.root.aggregate({ clearPages: true })
 
@@ -388,14 +243,151 @@ describe('FilterNamedEntity.vue', () => {
 
   it('should select the "All" item by default if nothing is selected', async () => {
     await letData(es).have(new IndexedDocument(id, index).withNer('person_01')).commit()
-
     store.commit('search/setFilterValue', { name: 'namedEntityPerson', value: ['person_01'] })
-    wrapper = mount(FilterNamedEntity, { localVue, i18n, wait, router: new VueRouter(), store, propsData: { filter: store.getters['search/getFilter']({ name: 'namedEntityPerson' }) } })
-
     await wrapper.vm.$nextTick()
     await wrapper.vm.root.aggregate({ clearPages: true })
     await wrapper.findAll('.filter__items__item input').at(0).trigger('click')
-
     expect(wrapper.findAll('.filter__items__all input').at(0).element.checked).toBeTruthy()
+  })
+
+  describe('Display the list of all available named entities', () => {
+    it('should display empty list', async () => {
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(0)
+    })
+
+    it('should display 1 named entity', async () => {
+      await letData(es).have(new IndexedDocument(id, index)
+        .withNer('person_01')).commit()
+
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
+    })
+
+    it('should display 2 named entities in one document', async () => {
+      await letData(es).have(new IndexedDocument(id, index)
+        .withNer('person_01')
+        .withNer('person_02')).commit()
+
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(2)
+    })
+
+    it('should display 1 named entity in 2 documents', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01', [2, 25])).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('person_01')).commit()
+
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
+    })
+
+    it('should display 3 named entities in 2 documents in correct order', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('someone_01', 2)).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('someone_01', 26)
+        .withNer('someone_02', [2, 16, 21])
+        .withNer('someone_03', 35)).commit()
+
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
+      expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('someone_01')
+      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('someone_02')
+      expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('someone_03')
+    })
+
+    it('should display 3 named entities in 2 documents alphabeticaly', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('paul', 2)).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('ines', [2, 16, 21])
+        .withNer('paul', 26)
+        .withNer('anita', 35)).commit()
+
+      wrapper.findComponent({ ref: 'filter' }).setData({ sortBy: '_key', sortByOrder: 'asc' })
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(3)
+      expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toEqual('anita')
+      expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toEqual('ines')
+      expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toEqual('paul')
+    })
+  })
+
+  describe('Filtering on named entities', () => {
+    it('should filter on named entity filter and return no items', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('person_02')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index)
+        .withNer('person_03')).commit()
+      await letData(es).have(new IndexedDocument('document_04', index)
+        .withNer('person_04')).commit()
+
+      wrapper.vm.root.query = 'Windows'
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(0)
+    })
+
+    it('should filter on named entity filter and return all items', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('person_02')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index)
+        .withNer('person_03')).commit()
+      await letData(es).have(new IndexedDocument('document_04', index)
+        .withNer('person_04')).commit()
+
+      wrapper.vm.root.query = 'person'
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(4)
+    })
+
+    it('should filter on named entity filter and return only 1 item', async () => {
+      await letData(es).have(new IndexedDocument('document_01', index)
+        .withNer('person_01')).commit()
+      await letData(es).have(new IndexedDocument('document_02', index)
+        .withNer('person_02')).commit()
+      await letData(es).have(new IndexedDocument('document_03', index)
+        .withNer('person_03')).commit()
+      await letData(es).have(new IndexedDocument('document_04', index)
+        .withNer('person_04')).commit()
+
+      wrapper.vm.root.query = 'person_01'
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item')).toHaveLength(1)
+    })
+  })
+
+  describe('Deletion', () => {
+    it('should display the "delete" button', async () => {
+      await letData(es).have(new IndexedDocument(id, index)
+        .withNer('person_01')).commit()
+
+      await wrapper.vm.root.aggregate({ clearPages: true })
+
+      expect(wrapper.findAll('.filter__items__item .filter__items__item__delete')).toHaveLength(1)
+    })
+
+    it('should emit an event filter::hide::named-entities on delete named entity', async () => {
+      const mockCallback = jest.fn()
+      wrapper.vm.$root.$on('filter::hide::named-entities', mockCallback)
+
+      await wrapper.vm.deleteNamedEntitiesByMentionNorm('ner_01')
+
+      expect(mockCallback.mock.calls).toHaveLength(1)
+    })
   })
 })
