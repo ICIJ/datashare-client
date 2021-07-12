@@ -36,7 +36,6 @@ describe('MountedDataLocation', () => {
 
   it('should reset batchSearches when calling the deleteAll method', async () => {
     store.commit('batchSearch/batchSearches', ['batchSearch_01', 'batchSearch_02', 'batchSearch_03'])
-    store.commit('userHistory/addDocument', { _id: 12, _version: 'local' })
 
     await wrapper.vm.deleteAll()
 
