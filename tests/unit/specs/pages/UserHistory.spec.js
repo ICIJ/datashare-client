@@ -41,7 +41,7 @@ jest.mock('axios', () => {
 })
 
 describe('UserHistory.vue', () => {
-  const { i18n, localVue } = Core.init(createLocalVue()).useAll()
+  const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   let wrapper = null
   const router = new VueRouter({
     routes: [
@@ -62,22 +62,23 @@ describe('UserHistory.vue', () => {
 
   it('should load the history page', async () => {
     await router.replace({ name: 'user-history' })
-    wrapper = await shallowMount(UserHistory, { i18n, localVue, router })
+    wrapper = await shallowMount(UserHistory, { i18n, localVue, router, store, wait })
     expect(wrapper.find('page-header-stub').exists()).toBeTruthy()
   })
 
   it('should call get user history when page is loaded', async () => {
     await router.replace({ name: 'document-history' })
-    wrapper = await shallowMount(UserHistory, { i18n, localVue, router })
-
+    wrapper = await shallowMount(UserHistory, { i18n, localVue, router, store, wait })
+    await wrapper.vm.$nextTick()
     expect(axios.request).toBeCalledTimes(2)
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me/history?type=document') })
   })
 
   it('should call delete user history api function is calledt', async () => {
-    wrapper = await shallowMount(UserHistory, { i18n, localVue, router })
+    wrapper = await shallowMount(UserHistory, { i18n, localVue, router, store, wait })
 
-    wrapper.vm.deleteUserHistory()
+    await wrapper.vm.deleteUserHistory()
+    await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(2)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
