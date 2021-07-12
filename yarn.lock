@@ -5244,10 +5244,10 @@ ejs@^2.6.1, ejs@^2.7.4:
   resolved "https://registry.yarnpkg.com/ejs/-/ejs-2.7.4.tgz"
   integrity sha512-7vmuyh5+kuUyJKePhQfRQBhXV5Ce+RnaeeQArKu1EAMpL3WbgMt5WG6uQZpEVvYSSsxMXRKOewtDk9RaTKXRlA==
 
-elasticsearch-browser@16.1.1:
-  version "16.1.1"
-  resolved "https://registry.yarnpkg.com/elasticsearch-browser/-/elasticsearch-browser-16.1.1.tgz"
-  integrity sha512-mtHNplnxeNTk3WPBA4ZnENDKuzhP0D7voLVtms0jVX5AxrstzqNeGAZEkbddpCLCfh3yAzGmTzeEY54F/biz+g==
+elasticsearch-browser@16.7.1:
+  version "16.7.1"
+  resolved "https://registry.yarnpkg.com/elasticsearch-browser/-/elasticsearch-browser-16.7.1.tgz#0bc11efbf64f07e76baa5183e0c8f7b66386e6a4"
+  integrity sha512-3aajCu13z/BjMRn8M3y5hr5TAL2oPu5sEDcl9gBWdZsIhNi860AloDYawZeL9Pv5tmNwYrqXqrI+d32rYy6W1A==
 
 electron-to-chromium@^1.3.649:
   version "1.3.695"

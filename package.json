@@ -33,7 +33,7 @@
     "bootstrap": ">=4.5.3",
     "bootstrap-vue": "2.21.2",
     "d3": "^5.15.0",
-    "elasticsearch-browser": "16.1.1",
+    "elasticsearch-browser": "16.7.1",
     "es6-promise": "^4.2.8",
     "fuse.js": "^3.4.5",
     "json-formatter-js": "^2.2.1",
