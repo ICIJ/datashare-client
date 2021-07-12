@@ -36,9 +36,8 @@ export default {
   data () {
     return {
       events: [],
-      document: [],
-      search: [],
-      defaultTab: 0
+      defaultTab: 0,
+      defaultType: 'document'
     }
   },
   computed: {
@@ -78,14 +77,22 @@ export default {
   },
   methods: {
     async getUserHistory () {
-      const type = this.$route.path.split('/').pop()
+      const type = this.getTypeOfCurrentPage()
       const events = await this.api.getUserHistory(type)
       this.$set(this, 'events', events)
     },
     async deleteUserHistory () {
-      const type = this.$route.path.split('/').pop()
+      const type = this.getTypeOfCurrentPage()
       await this.api.deleteUserHistory(type)
       this.$set(this, 'events', [])
+    },
+    getTypeOfCurrentPage () {
+      const type = this.$route.path.split('/').pop()
+      if (this.tabRoutes.some(tab => tab.startsWith(type))) {
+        return type
+      } else {
+        return this.defaultType
+      }
     }
   }
 }
