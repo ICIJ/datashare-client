@@ -20,7 +20,7 @@
         {{ $t('userHistory.clear') }}
       </confirm-button>
     </page-header>
-    <router-view :events="filteredEvents" />
+    <router-view :events="this.events" />
   </div>
 </template>
 
@@ -36,6 +36,8 @@ export default {
   data () {
     return {
       events: [],
+      document: [],
+      search: [],
       defaultTab: 0
     }
   },
@@ -56,11 +58,6 @@ export default {
     },
     tabRoutes () {
       return ['document-history', 'search-history']
-    },
-    filteredEvents () {
-      return this.events.filter(event => {
-        return this.$route.name.startsWith(event.type.toLowerCase())
-      })
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -74,15 +71,21 @@ export default {
   async created () {
     await this.getUserHistory()
   },
+  watch: {
+    $route () {
+      this.getUserHistory()
+    }
+  },
   methods: {
     async getUserHistory () {
-      const events = await this.api.getUserHistory()
+      const type = this.$route.path.split('/').pop()
+      const events = await this.api.getUserHistory(type)
       this.$set(this, 'events', events)
     },
     async deleteUserHistory () {
-      await this.api.deleteUserHistory(this.$route.path.split('/').pop())
-      const events = this.events.filter(event => !this.filteredEvents.includes(event))
-      this.$set(this, 'events', events)
+      const type = this.$route.path.split('/').pop()
+      await this.api.deleteUserHistory(type)
+      this.$set(this, 'events', [])
     }
   }
 }

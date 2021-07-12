@@ -70,25 +70,11 @@ describe('UserHistory.vue', () => {
     await router.replace({ name: 'document-history' })
     wrapper = await shallowMount(UserHistory, { i18n, localVue, router })
 
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me/history') })
-  })
-
-  it('should call delete user history api function is called with search', async () => {
-    await router.replace({ name: 'search-history' })
-    wrapper = await shallowMount(UserHistory, { i18n, localVue, router })
-
-    wrapper.vm.deleteUserHistory()
-
     expect(axios.request).toBeCalledTimes(2)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/users/me/history?type=search'),
-      method: 'DELETE'
-    }))
+    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me/history?type=document') })
   })
 
-  it('should call delete user history api function is called with document', async () => {
-    await router.replace({ name: 'document-history' })
+  it('should call delete user history api function is calledt', async () => {
     wrapper = await shallowMount(UserHistory, { i18n, localVue, router })
 
     wrapper.vm.deleteUserHistory()
