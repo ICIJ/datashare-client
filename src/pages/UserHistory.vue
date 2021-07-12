@@ -15,18 +15,27 @@
           </template>
         </b-tab>
       </template>
-      <confirm-button class="btn btn-primary" :confirmed="deleteUserHistory" v-if="events.length" :label="$t('global.confirmLabel')" :yes="$t('global.yes')" :no="$t('global.no')">
-        <fa icon="trash-alt" class="mr-1"></fa>
-        {{ $t('userHistory.clear') }}
-      </confirm-button>
+      <template v-if="events.length && !$wait.is(loader)">
+        <confirm-button class="btn btn-primary" :confirmed="deleteUserHistory" :label="$t('global.confirmLabel')" :yes="$t('global.yes')" :no="$t('global.no')">
+          <fa icon="trash-alt" class="mr-1"></fa>
+          {{ $t('userHistory.clear') }}
+        </confirm-button>
+      </template>
     </page-header>
-    <router-view :events="this.events" />
+    <v-wait :for="loader">
+      <template #waiting>
+        <div class="p-4 text-center">
+          <fa icon="circle-notch" spin size="2x"></fa>
+        </div>
+      </template>
+      <router-view :events="this.events" />
+    </v-wait>
   </div>
 </template>
 
 <script>
 import Api from '@/api'
-import { findIndex } from 'lodash'
+import { findIndex, uniqueId } from 'lodash'
 import PageHeader from '@/components/PageHeader'
 
 export default {
@@ -57,6 +66,9 @@ export default {
     },
     tabRoutes () {
       return ['document-history', 'search-history']
+    },
+    loader () {
+      return uniqueId('user-history-load-events-')
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -67,15 +79,20 @@ export default {
       }
     })
   },
-  async created () {
-    await this.getUserHistory()
+  created () {
+    this.getUserHistoryWithSpinner()
   },
   watch: {
     $route () {
-      this.getUserHistory()
+      this.getUserHistoryWithSpinner()
     }
   },
   methods: {
+    async getUserHistoryWithSpinner () {
+      this.$wait.start(this.loader)
+      await this.getUserHistory()
+      this.$wait.end(this.loader)
+    },
     async getUserHistory () {
       const type = this.getTypeOfCurrentPage()
       const events = await this.api.getUserHistory(type)
