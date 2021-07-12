@@ -1,3 +1,6 @@
+// BootstrapVue recommends using this
+import 'mutationobserver-shim'
+
 import compose from 'lodash/fp/compose'
 import Murmur from '@icij/murmur'
 import BootstrapVue from 'bootstrap-vue'
