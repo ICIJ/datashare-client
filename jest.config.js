@@ -29,6 +29,7 @@ module.exports = {
     'src/**/*.(js|vue)'
   ],
   testURL: 'http://localhost:9009/',
+  testTimeout: 20000,
   setupFiles: [
     'jest-canvas-mock'
   ]
