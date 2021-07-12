@@ -41,7 +41,6 @@
     "lucene": "^2.1.0",
     "moment": "^2.29.1",
     "mutationobserver-shim": "^0.3.7",
-    "p-queue": "^6.6.2",
     "path-to-regexp": "^6.2.0",
     "pdfjs-dist": "^2.5.207",
     "release": "^6.1.0",
