@@ -280,8 +280,8 @@ export default {
     &__input.form-control {
       border-right: 0;
 
-      &:focus ~ .input-group-append .search-bar__field .btn,
-      &:focus ~ .input-group-append .search-bar__tips-addon {
+      &:focus + .input-group-append .search-bar__field /deep/ .btn,
+      &:focus + .input-group-append .search-bar__tips-addon {
         border-bottom-color: $input-focus-border-color;
         border-top-color: $input-focus-border-color;
       }
