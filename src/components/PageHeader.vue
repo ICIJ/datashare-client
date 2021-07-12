@@ -92,7 +92,12 @@ export default {
 
         .nav-tabs {
           @include make-container();
-          @include make-container-max-widths($max-widths: $container-max-widths, $breakpoints: $grid-breakpoints);
+          @each $breakpoint, $container-max-width in  $container-max-widths {
+            @include media-breakpoint-up($breakpoint, $grid-breakpoints) {
+              max-width: $container-max-width;
+            }
+          }
+
           border: 0;
           padding: 0;
 
