@@ -22,9 +22,14 @@ describe('BatchSearchCopyForm.vue', () => {
   const { i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const routes = [
     {
+      name: 'batch-search',
+      path: '/batch-search'
+    },
+    {
       name: 'batch-search.results',
-      path: 'batch-search/:index/:uuid'
-    }, {
+      path: '/batch-search/:index/:uuid'
+    },
+    {
       name: 'document-standalone',
       path: '/ds/:index/:id/:routing?'
     }
