@@ -1,4 +1,4 @@
-const GitRevisionPlugin = require('git-revision-webpack-plugin')
+const { GitRevisionPlugin } = require('git-revision-webpack-plugin')
 const { join } = require('path')
 const { setCookie } = require('tiny-cookie')
 const marked = require('marked')
