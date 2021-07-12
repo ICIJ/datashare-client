@@ -1181,10 +1181,10 @@
   dependencies:
     "@hapi/hoek" "^8.3.0"
 
-"@icij/murmur@2.25.0":
-  version "2.25.0"
-  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-2.25.0.tgz#bf7cd90ff7d0f31c34986385111804b0043bd871"
-  integrity sha512-RRebldaf9VM0r38fk4nUDBJj+8ACA9n6V1tZqciU9jjZZJpVWs1YVoYblHvZinCHSD+zfI0wjSKyhLfMPfP3nQ==
+"@icij/murmur@2.26.0":
+  version "2.26.0"
+  resolved "https://registry.yarnpkg.com/@icij/murmur/-/murmur-2.26.0.tgz#672f30707efa595e89b487b6d0077698abb86894"
+  integrity sha512-1e3Ei7zEz5zQiNXEoyL+JmR5gbuwsp8shem1+R+pTCeaaSY/9FlbzuPgkUFmuroMZWI356m7pkPUbvj5cNgtlg==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.4"
     "@fortawesome/fontawesome-svg-core" "^1.2.35"
@@ -1193,14 +1193,15 @@
     "@fortawesome/free-solid-svg-icons" "^5.15.3"
     "@fortawesome/vue-fontawesome" "^2.0.2"
     bootstrap "^4.5.3"
-    bootstrap-vue "2.19.0"
+    bootstrap-vue "2.21.2"
     clipboard "^2.0.8"
     d3 "^5.16.0"
     jsonp "^0.2.1"
     lodash "4.17.21"
+    mutationobserver-shim "^0.3.7"
     promise-polyfill "^8.2.0"
     resize-observer-polyfill "^1.5.1"
-    vue "^2.5.11"
+    vue "^2.6.12"
     vue-headroom "^0.10.1"
     vue-i18n "^8.22.2"
 
@@ -3103,10 +3104,10 @@ boolbase@^1.0.0, boolbase@~1.0.0:
   resolved "https://registry.yarnpkg.com/boolbase/-/boolbase-1.0.0.tgz"
   integrity sha1-aN/1++YMUes3cl6p4+0xDcwed24=
 
-bootstrap-vue@2.19.0:
-  version "2.19.0"
-  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.19.0.tgz"
-  integrity sha512-IjAXUSrRU5Qu9x3uwUcoj6LtysKbCVeWoJOsODyI/WokStUr95M+tTIajXUjIrB/Nsk0fS+RNvZnm2sWeNFrhg==
+bootstrap-vue@2.21.2:
+  version "2.21.2"
+  resolved "https://registry.yarnpkg.com/bootstrap-vue/-/bootstrap-vue-2.21.2.tgz#ec38f66c3a2205becccddb6158a991d96509ed0b"
+  integrity sha512-0Exe+4MZysqhZNXIKf4TzkvXaupxh9EHsoCRez0o5Dc0J7rlafayOEwql63qXv74CgZO8E4U8ugRNJko1vMvNw==
   dependencies:
     "@nuxt/opencollective" "^0.3.2"
     bootstrap ">=4.5.3 <5.0.0"
@@ -13633,12 +13634,7 @@ vue-wait@^1.4.8:
   resolved "https://registry.yarnpkg.com/vue-wait/-/vue-wait-1.4.8.tgz"
   integrity sha512-R76ZfqyUqUu/xWFnY6fUV1nDYEublac+cTIeHdZ/+F+XhpxK/kDqIyZPZkNcahXPWs0ZUfLAPWyc/IbxPod6Vg==
 
-vue@^2.5.11:
-  version "2.6.12"
-  resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.12.tgz"
-  integrity sha512-uhmLFETqPPNyuLLbsKz6ioJ4q7AZHzD8ZVFNATNyICSZouqP2Sz0rotWQC8UNBF6VGSCs5abnKJoStA6JbCbfg==
-
-vue@^2.6.14:
+vue@^2.6.12, vue@^2.6.14:
   version "2.6.14"
   resolved "https://registry.yarnpkg.com/vue/-/vue-2.6.14.tgz#e51aa5250250d569a3fbad3a8a5a687d6036e235"
   integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
