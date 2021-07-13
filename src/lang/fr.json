@@ -74,6 +74,7 @@
       "on": "sur",
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
+      "batchDownload": "Download results",
       "sort": {
         "sortLabel": "Trier",
         "sort": "Tri par",
@@ -558,18 +559,18 @@
   },
   "userHistory": {
     "heading": "Votre historique",
-    "description": "Sur cette page, vous pouvez retrouver les documents que vous avez consultés et les recherches que vous avez sauvegardées.",
+    "description": "On this page you can retreive the documents you opened and the searches you saved.",
     "empty": "Votre historique est vide",
     "clear": "Vider l'historique",
-    "document": "Document",
-    "search": "Recherche",
+    "document": "Documents",
+    "search": "Searches",
     "name": "Nom",
     "saveSearch": "Sauvergarder cette recherche",
     "submitSuccess": "Votre recherche a été sauvegardée.",
     "submitError": "Erreur, votre recherche n'a pas pu être ajoutée."
   },
   "userHistorySaveSearchForm": {
-    "description": "Vous pouvez consulter toutes vos recherches sauvegardées dans <a href=\"{searchHistoryPath}\">Historique › Recherches </a>."
+    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Tâches",
