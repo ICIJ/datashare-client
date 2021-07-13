@@ -74,6 +74,7 @@
       "on": "を表示。総数は",
       "perPage": "ページごと",
       "sortedByPath": "sorted by path",
+      "batchDownload": "Download results",
       "sort": {
         "sortLabel": "Sort",
         "sort": "並べ替え",
@@ -558,18 +559,18 @@
   },
   "userHistory": {
     "heading": "あなたの履歴",
-    "description": "On this page you can retreive the documents you opened and the search you saved.",
+    "description": "On this page you can retreive the documents you opened and the searches you saved.",
     "empty": "履歴がありません",
     "clear": "履歴のクリア",
-    "document": "Document",
-    "search": "Search",
+    "document": "Documents",
+    "search": "Searches",
     "name": "Name",
     "saveSearch": "Save this search",
     "submitSuccess": "Your search has been added.",
     "submitError": "Something went wrong, unable to add your search."
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retreived all your saved searches in <a href=\"{searchHistoryPath}\">History › Search</a>."
+    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Tasks",
