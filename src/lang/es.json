@@ -74,6 +74,7 @@
       "on": "sobre",
       "perPage": "por página",
       "sortedByPath": "ordenado por ruta",
+      "batchDownload": "Download results",
       "sort": {
         "sortLabel": "Ordenar",
         "sort": "Ordenar por",
@@ -558,18 +559,18 @@
   },
   "userHistory": {
     "heading": "Tu historial de navegación",
-    "description": "On this page you can retreive the documents you opened and the search you saved.",
+    "description": "On this page you can retreive the documents you opened and the searches you saved.",
     "empty": "Tu historia está vacía",
     "clear": "Borrar historia",
-    "document": "Document",
-    "search": "Search",
+    "document": "Documents",
+    "search": "Searches",
     "name": "Name",
     "saveSearch": "Save this search",
     "submitSuccess": "Your search has been added.",
     "submitError": "Something went wrong, unable to add your search."
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retreived all your saved searches in <a href=\"{searchHistoryPath}\">History › Search</a>."
+    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Tareas",
