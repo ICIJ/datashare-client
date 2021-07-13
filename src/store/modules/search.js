@@ -472,7 +472,7 @@ export const actions = {
     commit('starredDocuments', starredDocuments)
   },
   async runBatchDownload ({ state, commit }) {
-    return api.runBatchDownload({ project: this.state.index, queryString: this.state.query })
+    return api.runBatchDownload({ project: state.index, queryString: state.query })
   },
   async getIsDownloadAllowed ({ state, commit }) {
     try {

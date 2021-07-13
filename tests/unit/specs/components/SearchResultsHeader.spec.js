@@ -6,6 +6,9 @@ import { Core } from '@/core'
 import { IndexedDocument, IndexedDocuments, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
+import axios from 'axios'
+import Api from '@/api'
+
 jest.mock('axios', () => {
   return {
     request: jest.fn().mockResolvedValue({ data: {} })
@@ -113,12 +116,25 @@ describe('SearchResultsHeader.vue', () => {
   })
 
   it('should call batch download service when the button is clicked', async () => {
-    await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
-    await store.dispatch('search/query', 'bar')
+    const project = toLower('SearchResultsHeader')
+    const query = 'bar'
+
+    wrapper.setProps({ index: project })
+
+    axios.request.mockClear()
+
+    await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent(query)).commit()
+    await store.dispatch('search/query', query)
+
+    wrapper.vm.tag = 'tag_02'
 
     await wrapper.find('.search-results-header__settings__btn-download').trigger('click')
 
-    // expect(axios.request).toBeCalledWith({ url: 'http://localhost:9009/api/task/' })
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/task/batchDownload'),
+      method: 'POST',
+      data: { options: { project: project, queryString: query } }
+    }))
   })
 
   describe('firstDocument', () => {
