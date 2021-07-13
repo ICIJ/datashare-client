@@ -74,6 +74,7 @@
       "on": "sur",
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
+      "batchDownload": "Download results",
       "sort": {
         "sortLabel": "Trier",
         "sort": "Tri par",
@@ -391,7 +392,7 @@
     "tabDetails": "Tags & Détails",
     "namedEntities": "Entités nommées",
     "namedEntityFilter": "Filtrer les entités nommées",
-    "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
+    "namedEntitiesOccurences": "aucune occurrence | une occurrence | {count} occurrences",
     "extractedText": "Texte extrait",
     "translations": "Traductions",
     "preview": "Prévisualisation",
@@ -558,9 +559,18 @@
   },
   "userHistory": {
     "heading": "Votre historique",
-    "description": "Les 500 derniers documents ouverts avec Datashare sur cet ordinateur.",
+    "description": "On this page you can retreive the documents you opened and the searches you saved.",
     "empty": "Votre historique est vide",
-    "clear": "Vider l'historique"
+    "clear": "Vider l'historique",
+    "document": "Documents",
+    "search": "Searches",
+    "name": "Nom",
+    "saveSearch": "Sauvergarder cette recherche",
+    "submitSuccess": "Votre recherche a été sauvegardée.",
+    "submitError": "Erreur, votre recherche n'a pas pu être ajoutée."
+  },
+  "userHistorySaveSearchForm": {
+    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Tâches",
@@ -722,7 +732,19 @@
     "title": "API",
     "newApiKey": "Créer une clé API",
     "apiKey": "Clé d'API",
-    "noAccess": "Vous n'avez pas accès à cette page en mode local."
+    "noAccess": "Vous n'avez pas accès à cette page en mode local.",
+    "key": {
+      "why": "Créer une clé vous permettra de mener des actions avec Datashare <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">à travers l'API</a>, en utilisant des outils tels que <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> ou vos propres scripts.",
+      "created": "La clé API a été créée",
+      "warning": "Veuillez copier cette clé dans un endroit sûr, vous ne pourrez plus la consulter ensuite sur Datashare.",
+      "unavailable": "Vous ne pouvez consulter une clé qu'au moment de sa création",
+      "regenerate": "Regénérer",
+      "description": "Clé que vous avez créée qui peut être utilisée pour accéder à <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">l'API Datashare</a>.",
+      "delete": {
+        "button": "Supprimer",
+        "description": "Les applications ou scripts utilisant cette clé ne seront plus en mesure d'accéder à l'API Datashare. Vous ne pourrez pas annuler cette action."
+      }
+    }
   },
   "plugins": {
     "title": "Plugins",

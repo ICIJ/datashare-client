@@ -74,6 +74,7 @@
       "on": "を表示。総数は",
       "perPage": "ページごと",
       "sortedByPath": "sorted by path",
+      "batchDownload": "Download results",
       "sort": {
         "sortLabel": "Sort",
         "sort": "並べ替え",
@@ -558,9 +559,18 @@
   },
   "userHistory": {
     "heading": "あなたの履歴",
-    "description": "あなたがデータシェアを使ってこのコンピュータで開いた最新５００の文書",
+    "description": "On this page you can retreive the documents you opened and the searches you saved.",
     "empty": "履歴がありません",
-    "clear": "履歴のクリア"
+    "clear": "履歴のクリア",
+    "document": "Documents",
+    "search": "Searches",
+    "name": "Name",
+    "saveSearch": "Save this search",
+    "submitSuccess": "Your search has been added.",
+    "submitError": "Something went wrong, unable to add your search."
+  },
+  "userHistorySaveSearchForm": {
+    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Tasks",
@@ -722,7 +732,19 @@
     "title": "API",
     "newApiKey": "Create API key",
     "apiKey": "API key",
-    "noAccess": "You do not have access to that page in local mode."
+    "noAccess": "You do not have access to that page in local mode.",
+    "key": {
+      "why": "Creating a key will let you interact with Datashare <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
+      "created": "API key created",
+      "warning": "Please copy this key in a safe place, you won't be able to access it again on Datashare.",
+      "unavailable": "You can only access a key when creating it",
+      "regenerate": "Regenerate",
+      "description": "Key you have created that can be used to access the <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">Datashare API</a>.",
+      "delete": {
+        "button": "Delete",
+        "description": "Any applications or scripts using this key will no longer be able to access the Datashare API. You cannot undo this action."
+      }
+    }
   },
   "plugins": {
     "title": "Plugins",

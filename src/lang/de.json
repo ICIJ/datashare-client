@@ -74,6 +74,7 @@
       "on": "von ",
       "perPage": "pro Seite",
       "sortedByPath": "nach Pfad sortiert",
+      "batchDownload": "Download results",
       "sort": {
         "sortLabel": "Sortieren",
         "sort": "Sortieren nach",
@@ -558,9 +559,18 @@
   },
   "userHistory": {
     "heading": "Ihr Verlauf",
-    "description": "Die letzten 500 Dokumente von diesem Computer, die Sie mit Datashare geöffnet haben.",
+    "description": "On this page you can retreive the documents you opened and the searches you saved.",
     "empty": "Ihr Verlauf ist leer",
-    "clear": "Verlauf löschen"
+    "clear": "Verlauf löschen",
+    "document": "Documents",
+    "search": "Searches",
+    "name": "Name",
+    "saveSearch": "Save this search",
+    "submitSuccess": "Your search has been added.",
+    "submitError": "Something went wrong, unable to add your search."
+  },
+  "userHistorySaveSearchForm": {
+    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
   },
   "tasks": {
     "title": "Aufgaben",
@@ -722,7 +732,19 @@
     "title": "API",
     "newApiKey": "API-Schlüssel anlegen",
     "apiKey": "API-Schlüssel",
-    "noAccess": "Sie haben keinen Zugriff auf diese Seite im lokalen Modus."
+    "noAccess": "Sie haben keinen Zugriff auf diese Seite im lokalen Modus.",
+    "key": {
+      "why": "Creating a key will let you interact with Datashare <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
+      "created": "API key created",
+      "warning": "Please copy this key in a safe place, you won't be able to access it again on Datashare.",
+      "unavailable": "You can only access a key when creating it",
+      "regenerate": "Regenerate",
+      "description": "Key you have created that can be used to access the <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">Datashare API</a>.",
+      "delete": {
+        "button": "Delete",
+        "description": "Any applications or scripts using this key will no longer be able to access the Datashare API. You cannot undo this action."
+      }
+    }
   },
   "plugins": {
     "title": "Plug-ins",

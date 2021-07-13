@@ -74,6 +74,7 @@
       "on": "crwdns302:0crwdne302:0",
       "perPage": "crwdns304:0crwdne304:0",
       "sortedByPath": "crwdns1347:0crwdne1347:0",
+      "batchDownload": "crwdns2502:0crwdne2502:0",
       "sort": {
         "sortLabel": "crwdns2158:0crwdne2158:0",
         "sort": "crwdns306:0crwdne306:0",
@@ -558,9 +559,18 @@
   },
   "userHistory": {
     "heading": "crwdns998:0crwdne998:0",
-    "description": "crwdns1000:0crwdne1000:0",
+    "description": "crwdns2504:0crwdne2504:0",
     "empty": "crwdns1002:0crwdne1002:0",
-    "clear": "crwdns1004:0crwdne1004:0"
+    "clear": "crwdns1004:0crwdne1004:0",
+    "document": "crwdns2506:0crwdne2506:0",
+    "search": "crwdns2508:0crwdne2508:0",
+    "name": "crwdns2474:0crwdne2474:0",
+    "saveSearch": "crwdns2476:0crwdne2476:0",
+    "submitSuccess": "crwdns2478:0crwdne2478:0",
+    "submitError": "crwdns2480:0crwdne2480:0"
+  },
+  "userHistorySaveSearchForm": {
+    "description": "crwdns2510:0{searchHistoryPath}crwdne2510:0"
   },
   "tasks": {
     "title": "crwdns2448:0crwdne2448:0",
@@ -722,7 +732,19 @@
     "title": "crwdns2072:0crwdne2072:0",
     "newApiKey": "crwdns2088:0crwdne2088:0",
     "apiKey": "crwdns2078:0crwdne2078:0",
-    "noAccess": "crwdns2124:0crwdne2124:0"
+    "noAccess": "crwdns2124:0crwdne2124:0",
+    "key": {
+      "why": "crwdns2482:0%Ecrwdnd2482:0%80crwdnd2482:0%Bcrwdne2482:0",
+      "created": "crwdns2484:0crwdne2484:0",
+      "warning": "crwdns2486:0crwdne2486:0",
+      "unavailable": "crwdns2488:0crwdne2488:0",
+      "regenerate": "crwdns2490:0crwdne2490:0",
+      "description": "crwdns2492:0%Ecrwdnd2492:0%80crwdnd2492:0%Bcrwdne2492:0",
+      "delete": {
+        "button": "crwdns2494:0crwdne2494:0",
+        "description": "crwdns2496:0crwdne2496:0"
+      }
+    }
   },
   "plugins": {
     "title": "crwdns2082:0crwdne2082:0",
