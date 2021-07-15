@@ -53,7 +53,10 @@ export default {
       },
       set (value) {
         const name = this.tabRoutes[value]
-        this.$router.push({ name })
+        // Change tab only if the route changed
+        if (name !== this.$route.name) {
+          this.$router.push({ name })
+        }
       }
     },
     tabRoutes () {
@@ -65,7 +68,7 @@ export default {
       const defaultTab = vm.tabRoutes.indexOf(to.name)
       if (defaultTab > -1) {
         vm.defaultTab = defaultTab
-      } else {
+      } else if (vm.$route.name !== 'batch-search') {
         vm.$router.push({ name: 'batch-search' })
       }
     })

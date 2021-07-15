@@ -77,6 +77,9 @@ export const router = {
           name: 'tasks',
           path: 'tasks',
           component: () => import('@/pages/Tasks'),
+          redirect: {
+            name: 'batch-search'
+          },
           meta: {
             title: ({ i18n }) => i18n.t('tasks.title')
           },
@@ -133,6 +136,9 @@ export const router = {
           name: 'user-history',
           path: 'user-history',
           component: () => import('@/pages/UserHistory'),
+          redirect: {
+            name: 'document-history'
+          },
           meta: {
             title: ({ i18n }) => i18n.t('userHistory.heading')
           },

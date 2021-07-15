@@ -61,7 +61,10 @@ export default {
       },
       set (value) {
         const name = this.tabRoutes[value]
-        this.$router.push({ name })
+        // Change tab only if the route changed
+        if (name !== this.$route.name) {
+          this.$router.push({ name })
+        }
       }
     },
     tabRoutes () {
@@ -76,6 +79,8 @@ export default {
       const defaultTab = vm.tabRoutes.indexOf(to.name)
       if (defaultTab > -1) {
         vm.defaultTab = defaultTab
+      } else if (vm.$route.name !== 'document-history') {
+        vm.$router.push({ name: 'document-history' })
       }
     })
   },
