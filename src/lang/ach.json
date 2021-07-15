@@ -684,7 +684,8 @@
   },
   "batchDownload": {
     "title": "crwdns2452:0crwdne2452:0",
-    "warning": "crwdns2454:0crwdne2454:0"
+    "warning": "crwdns2454:0crwdne2454:0",
+    "inProgress": "crwdns2512:0crwdne2512:0"
   },
   "insights": {
     "title": "crwdns2376:0crwdne2376:0",
