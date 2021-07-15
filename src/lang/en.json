@@ -684,7 +684,8 @@
   },
   "batchDownload": {
     "title": "Batch downloads",
-    "warning": "This feature is currently being developped by the Datashare team."
+    "warning": "This feature is currently being developped by the Datashare team.",
+    "inProgress": "Track your batch downloads"
   },
   "insights": {
     "title": "Insights",

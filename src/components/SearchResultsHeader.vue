@@ -188,6 +188,12 @@ export default {
     },
     batchDownload () {
       this.$store.dispatch('search/runBatchDownload')
+      const link = { name: 'batch-download' }
+      this.$root.$bvToast.toast(this.$t('batchDownload.inProgress'), {
+        variant: 'primary',
+        to: link,
+        title: this.$t('batchDownload.title')
+      })
     }
   }
 }
