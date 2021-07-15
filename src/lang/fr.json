@@ -684,7 +684,8 @@
   },
   "batchDownload": {
     "title": "Téléchargements en lot",
-    "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare."
+    "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
+    "inProgress": "Track your batch downloads"
   },
   "insights": {
     "title": "Aperçu",
