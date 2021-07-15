@@ -9,9 +9,9 @@
               {{ action.label }}
             </b-list-group-item>
           </b-list-group>
-          <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" :displayTags="false" :displayForm="true"></document-tags-form>
+          <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" display-form />
         </div>
-        <search-results-header position="top" class="flex-grow-1 align-self-center p-0" :no-progress="!!selected.length" :no-filters="!!selected.length"></search-results-header>
+        <search-results-header position="top" class="flex-grow-1 align-self-center" :no-progress="!!selected.length" :no-filters="!!selected.length" />
       </div>
       <b-table
         ref="selectableTable"
@@ -19,7 +19,7 @@
         striped
         hover
         selectable
-        :responsive="true"
+        responsive
         @row-selected="onRowSelected"
         :items="itemsProvider"
         :fields="fields"
@@ -36,7 +36,7 @@
         </template>
         <template v-slot:cell(path)="{ item }">
           <router-link :to="{ name: 'document', params: item.routerParams, query: { q: query } }" class="search-results-table__items__row__title">
-            <document-sliced-name :document="item" active-text-truncate></document-sliced-name>
+            <document-sliced-name :document="item" active-text-truncate />
           </router-link>
         </template>
         <template v-slot:cell(highlight)="{ value }">
@@ -49,10 +49,10 @@
           <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" tooltips-placement="rightbottom"></document-actions>
         </template>
       </b-table>
-      <search-results-header position="bottom"></search-results-header>
+      <search-results-header position="bottom" />
     </div>
     <div v-else>
-      <search-results-header position="top" class="flex-grow-1 align-self-center"></search-results-header>
+      <search-results-header position="top" class="flex-grow-1 align-self-center" />
       <div class="search-results-table__header border-0 py-5 d-flex flex-column text-center">
         <div class="search-results-table__header__number-of-results">
           {{ $t('search.results.noResults') }}

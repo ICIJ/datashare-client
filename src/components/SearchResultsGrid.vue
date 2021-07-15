@@ -1,22 +1,22 @@
 <template>
   <div class="search-results-grid">
     <div v-if="hasResults">
-      <search-results-header position="top" class="p-0 mb-3"></search-results-header>
+      <search-results-header position="top" class="p-0 mb-3" />
       <div class="search-results-grid__items">
         <div v-for="document in response.hits" :key="document.id" class="search-results-grid__items__item d-flex flex-column border rounded">
-          <document-actions :document="document" class="search-results-grid__items__item__actions m-2" :is-download-allowed="isDownloadAllowed"></document-actions>
+          <document-actions :document="document" class="search-results-grid__items__item__actions m-2" :is-download-allowed="isDownloadAllowed" />
           <router-link class="flex-grow-1 search-results-grid__items__item__thumbnail" :to="{ name: 'document', params: document.routerParams, query: { q: query } }">
-            <document-thumbnail :document="document" size="md"></document-thumbnail>
+            <document-thumbnail :document="document" size="md" />
           </router-link>
           <router-link class="search-results-grid__items__item__title py-2 px-3 small" :to="{ name: 'document', params: document.routerParams }">
-            <document-sliced-name :document="document" active-text-truncate></document-sliced-name>
+            <document-sliced-name :document="document" active-text-truncate />
           </router-link>
         </div>
       </div>
-      <search-results-header position="bottom" class="border-top mt-3"></search-results-header>
+      <search-results-header position="bottom" class="border-top mt-3" />
     </div>
     <div v-else>
-      <search-results-header position="top" bordered class="border-bottom mb-3"></search-results-header>
+      <search-results-header position="top" bordered class="border-bottom mb-3" />
       <div class="search-results-grid__header border-0 py-5 d-flex flex-column text-center">
         <div class="search-results-grid__header__number-of-results">
           {{ $t('search.results.noResults') }}

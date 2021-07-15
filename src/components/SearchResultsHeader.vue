@@ -50,10 +50,12 @@
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
-      <button v-if="response.total > 0 && hasFeature('BATCH_DOWNLOAD')" class="btn mr-2 search-results-header__settings__btn-download text-nowrap ml-auto" type="button" @click="batchDownload">
-        <fa icon="download" class="mr-2"></fa>
-        <template v-if="!noLabels">{{ $t('search.results.batchDownload') }}</template>
-      </button>
+      <b-btn variant="link" v-if="response.total > 0 && hasFeature('BATCH_DOWNLOAD')" class="search-results-header__settings__btn-download text-nowrap ml-auto" @click="batchDownload">
+        <fa icon="download"></fa>
+        <span v-if="!noLabels" class="ml-2">
+          {{ $t('search.results.batchDownload') }}
+        </span>
+      </b-btn>
       <pagination
         class="search-results-header__settings__pagination justify-content-end text-right mr-3"
         :get-to-template="getToTemplate"
