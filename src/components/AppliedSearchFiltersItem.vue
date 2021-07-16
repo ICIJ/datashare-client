@@ -8,7 +8,7 @@
     :title="label"
     v-b-tooltip
     variant="warning">
-    <fa icon="times-circle"></fa>
+    <fa icon="times-circle" v-if="!isReadOnly"></fa>
     {{ label }}
   </b-badge>
 </template>
@@ -29,6 +29,9 @@ export default {
      */
     filter: {
       type: Object
+    },
+    isReadOnly: {
+      type: Boolean
     }
   },
   filters: {

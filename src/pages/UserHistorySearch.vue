@@ -8,11 +8,9 @@
               <div class="user-history__list__item__name font-weight-bold">
                 {{ event.name }}
               </div>
-              <div class="user-history__list__item__query ml-auto small">
-                <div v-for="obj in objectFromURI(event.uri)" :key="obj[0]" style="display:inline">
-                  {{ obj[0] }}
-                  {{ obj[1] }}
-                </div>
+              <div class="user-history__list__item__query ">
+                <applied-search-filters-item v-for="(filter, index) in createFiltersFromURI(event.uri)" :key="index"
+                  :filter="filter" :isReadOnly="true"></applied-search-filters-item>
               </div>
             </div>
           </router-link>
@@ -26,15 +24,35 @@
 </template>
 
 <script>
+import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
+
 export default {
+  name: 'UserHistorySearch',
+  components: {
+    AppliedSearchFiltersItem
+  },
   props: {
     events: {
       type: Array
     }
   },
   methods: {
-    objectFromURI (uri) {
-      return new URLSearchParams(uri).entries()
+    createFiltersFromURI (uri) {
+      const filters = []
+      const notUsed = ['from', 'size', 'sort', 'field']
+      const fields = new URLSearchParams(uri)
+      for (const obj of Array.from(fields.entries()).filter(entry => !notUsed.includes(entry[0]))) {
+        const key = obj[0]
+        let val = obj[1]
+        if (key === 'f[creationDate]') {
+          val = new Date(parseInt(val)).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+        }
+        if (val === '') {
+          val = '*'
+        }
+        filters.push({ name: key, label: val, value: val })
+      }
+      return filters
     }
   }
 }

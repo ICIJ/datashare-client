@@ -49,4 +49,14 @@ describe('UserHistorySearch.vue', () => {
   it('should display a list of search', async () => {
     expect(wrapper.findAll('.user-history__list__item')).toHaveLength(2)
   })
+
+  it('should convert an uri to filters', async () => {
+    const uri = '/?q=foo%20AND%20bar&from=0&size=25&sort=relevance&index=project&custom=baz'
+    const filters = wrapper.vm.createFiltersFromURI(uri)
+
+    expect(filters).toHaveLength(3)
+    expect(filters[0]).toHaveProperty('value', 'foo AND bar')
+    expect(filters[1]).toHaveProperty('value', 'project')
+    expect(filters[2]).toHaveProperty('value', 'baz')
+  })
 })
