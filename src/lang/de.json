@@ -304,6 +304,7 @@
       "PORTUGUESE": "Portugiesisch",
       "QUECHUA": "Quechua",
       "ROMANSH": "Rätoromanisch",
+      "ROMANIAN": "Romanian",
       "RUNDI": "Rundi",
       "MOLDAVIAN": "Moldavisch",
       "RUSSIAN": "Russisch",
@@ -684,8 +685,9 @@
   },
   "batchDownload": {
     "title": "Batch-Downloads",
+    "created": "Your download is being prepared",
     "warning": "Diese Funktion wird derzeit vom Datashare-Team entwickelt.",
-    "inProgress": "Track your batch downloads"
+    "inProgress": "See all pending downloads"
   },
   "insights": {
     "title": "Einblicke",
