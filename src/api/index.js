@@ -131,6 +131,9 @@ export default class Api {
   deleteUserHistory (type) {
     return this.sendAction(`/api/users/me/history?type=${type}`, { method: 'DELETE' })
   }
+  deleteUserEvent (id) {
+    return this.sendAction(`/api/users/me/history/event?id=${id}`, { method: 'DELETE' })
+  }
   setMarkAsRecommended (project, docIds) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/recommend`, { method: 'POST', data: docIds })
   }
