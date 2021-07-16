@@ -304,6 +304,7 @@
       "PORTUGUESE": "crwdns1653:0crwdne1653:0",
       "QUECHUA": "crwdns1655:0crwdne1655:0",
       "ROMANSH": "crwdns1657:0crwdne1657:0",
+      "ROMANIAN": "crwdns2514:0crwdne2514:0",
       "RUNDI": "crwdns1659:0crwdne1659:0",
       "MOLDAVIAN": "crwdns1661:0crwdne1661:0",
       "RUSSIAN": "crwdns1663:0crwdne1663:0",
@@ -684,8 +685,9 @@
   },
   "batchDownload": {
     "title": "crwdns2452:0crwdne2452:0",
+    "created": "crwdns2520:0crwdne2520:0",
     "warning": "crwdns2454:0crwdne2454:0",
-    "inProgress": "crwdns2512:0crwdne2512:0"
+    "inProgress": "crwdns2518:0crwdne2518:0"
   },
   "insights": {
     "title": "crwdns2376:0crwdne2376:0",
