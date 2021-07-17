@@ -486,7 +486,7 @@
     "description": "Por favor, <a href=\"%{howToLink}\" target=\"_blank\">lea la documentación</a> sobre cómo añadir documentos.",
     "go": "Ir",
     "tasks": "Tareas",
-    "empty": "Aún no has iniciado ninguna tarea.",
+    "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
     "extractText": "Extraer texto",
     "extractWithOcrLabel": "¿Deseas extraer también el texto de imágenes y archivos PDF?",
     "extractWithOcrHelp": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
@@ -580,6 +580,7 @@
   "batchSearch": {
     "lead": "Buscar múltiples términos y documentos a la vez.",
     "title": "Búsquedas masivas",
+    "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
     "fileDescription": "Exportar su hoja de cálculo como CSV usando la codificación UTF-8. <ul><li>Solo el formato CSV aceptado.</li> <li>El archivo CSV no debe contener más de 60 000 consultas.</li> <li>La primera y única columna debe contener los términos a buscar.</li> <li>No saltos de línea en las células.</li> <li>Solamente cuando 'Hacer la frase coincide exactamente' no esta marcado, puede utilizar operadores (AND OR NOT * ? ! + - etc), y las Regex entre 2 barras.</li></ul>",
