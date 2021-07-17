@@ -486,7 +486,7 @@
     "description": "<a href=\"%{howToLink}\" target=\"_blank\">文書追加についての書類を読んでください</a>。",
     "go": "移動",
     "tasks": "作業",
-    "empty": "You have not yet started any tasks.",
+    "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
     "extractText": "テキストを抽出",
     "extractWithOcrLabel": "画像やPDFからもテキストを抽出しますか？",
     "extractWithOcrHelp": "その場合、データシェアはOCR（光学的文字認識）を作動させます。これは時間が最大10倍かかります",
@@ -580,6 +580,7 @@
   "batchSearch": {
     "lead": "複数の言葉や文書を一度に検索",
     "title": "まとめて検索（バッチサーチ）",
+    "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
     "heading": "新たなまとめ検索（バッチサーチ）",
     "fileLabel": "CSVファイル",
     "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>Without 'do phrase match' only, you can use AND OR NOT * ? ! + - and other search operators and use Regex between 2 slashes</li></ul>",
