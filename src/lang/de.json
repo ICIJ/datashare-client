@@ -486,7 +486,7 @@
     "description": "Bitte <a href=\"%{howToLink}\" target=\"_blank\">lesen Sie die Dokumentation</a> zum Hinzufügen von Dokumenten.",
     "go": "Los",
     "tasks": "Aufgaben",
-    "empty": "Sie haben noch keine Aufgaben gestartet.",
+    "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
     "extractText": "Text extrahieren",
     "extractWithOcrLabel": "Möchten Sie Text auch aus Bildern und PDFs extrahieren?",
     "extractWithOcrHelp": "Wenn ja, führt Datashare OCR (Optische Zeichenerkennung) durch. Dies kann bis zu zehn Mal länger dauern.",
@@ -580,6 +580,7 @@
   "batchSearch": {
     "lead": "Mehrere Begriffe und Dokumente auf einmal suchen.",
     "title": "Batch-Suche",
+    "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
     "heading": "Neue Batch-Suche",
     "fileLabel": "CSV-Datei",
     "fileDescription": "Exportieren Sie Ihre Tabelle als CSV mit UTF-8-Kodierung. <ul><li>Nur CSV-Format akzeptiert.</li> <li>CSV-Datei sollte nicht mehr als 60.000 Abfragen enthalten.</li> <li>Die erste und einzige Spalte sollte die Suchbegriffe enthalten.</li> <li>Keine Zeilenumbrüche(n) in Zellen.</li> <li>Ohne 'do phrase match' können Sie die Operatoren AND OR NOT * ? ! + - und weitere Suchoperatoren, sowie reguläre Ausdrücke (RegEx) zwischen zwei Schrägstrichen benutzen</li></ul>",
