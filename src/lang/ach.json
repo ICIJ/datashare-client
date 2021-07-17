@@ -486,7 +486,7 @@
     "description": "crwdns912:0%{howToLink}crwdne912:0",
     "go": "crwdns918:0crwdne918:0",
     "tasks": "crwdns920:0crwdne920:0",
-    "empty": "crwdns2414:0crwdne2414:0",
+    "empty": "crwdns2522:0%{howToLink}crwdne2522:0",
     "extractText": "crwdns1880:0crwdne1880:0",
     "extractWithOcrLabel": "crwdns1882:0crwdne1882:0",
     "extractWithOcrHelp": "crwdns1884:0crwdne1884:0",
@@ -580,6 +580,7 @@
   "batchSearch": {
     "lead": "crwdns1006:0crwdne1006:0",
     "title": "crwdns1008:0crwdne1008:0",
+    "empty": "crwdns2524:0%{howToLink}crwdne2524:0",
     "heading": "crwdns1234:0crwdne1234:0",
     "fileLabel": "crwdns1236:0crwdne1236:0",
     "fileDescription": "crwdns2424:0crwdne2424:0",
