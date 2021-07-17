@@ -179,7 +179,7 @@ export default {
     sortBy: {
       type: String,
       default: 'contentLength',
-      validate: order => includes(['_count', '_key', 'contentLength'], order)
+      validator: order => includes(['_count', '_key', 'contentLength'], order)
     },
     /**
      * Order to sort by (asc or desc)
@@ -187,7 +187,7 @@ export default {
     sortByOrder: {
       type: String,
       default: 'desc',
-      validate: order => includes(['asc', 'desc'], order)
+      validator: order => includes(['asc', 'desc'], order)
     },
     /**
      * If the true, the document count and size of each directory will include
