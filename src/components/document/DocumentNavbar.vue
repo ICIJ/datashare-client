@@ -21,9 +21,9 @@
           <div>
             {{ $tc('search.nav.markAsRecommendedBy',  recommendedBy.length, { count: recommendedBy.length }) }}
           </div>
-          <ul class="mb-0 pl-3">
+          <ul class="mb-0 list-unstyled">
             <li v-for="user in recommendedBy" :key="user">
-              {{ user }}
+              <user-display :username="user" />
             </li>
           </ul>
         </b-popover>
@@ -63,6 +63,7 @@
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
+import UserDisplay from '@/components/UserDisplay'
 import utils from '@/mixins/utils'
 
 /**
@@ -72,7 +73,8 @@ export default {
   name: 'SearchDocumentNavbar',
   mixins: [utils],
   components: {
-    DocumentActions
+    DocumentActions,
+    UserDisplay
   },
   computed: {
     ...mapState('document', ['doc', 'isRecommended', 'recommendedBy']),

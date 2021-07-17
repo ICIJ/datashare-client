@@ -1,5 +1,5 @@
 import toLower from 'lodash/toLower'
-import { createLocalVue, shallowMount, mount } from '@vue/test-utils'
+import { createLocalVue, mount } from '@vue/test-utils'
 import axios from 'axios'
 
 import Api from '@/api'
@@ -36,7 +36,7 @@ describe('FilterRecommendedBy.vue', () => {
 
   beforeEach(async () => {
     axios.request.mockClear()
-    wrapper = await shallowMount(FilterRecommendedBy, { i18n, localVue, router, store, wait, propsData, computed })
+    wrapper = await mount(FilterRecommendedBy, { i18n, localVue, router, store, wait, propsData, computed })
     await wrapper.vm.$nextTick()
   })
 
@@ -76,7 +76,6 @@ describe('FilterRecommendedBy.vue', () => {
     axios.request.mockClear()
     await wrapper.vm.selectUsers(['user_01', 'user_02'])
 
-    expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl(`/api/${project}/documents/recommendations?userids=user_01,user_02`)
     }))

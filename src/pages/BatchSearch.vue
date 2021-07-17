@@ -75,6 +75,10 @@
                 {{ moment(item.date).locale($i18n.locale).format('LL') }}
               </span>
             </template>
+            <!-- eslint-disable-next-line vue/valid-v-slot -->
+            <template v-slot:cell(user.id)="{ item }">
+              <user-display :username="item.user.id" v-if="item.user" />
+            </template>
             <template v-slot:cell(nbResults)="{ item }">
               <span class="batch-search__items__item__results">
                 {{ $n(item.nbResults) }}
@@ -103,6 +107,7 @@ import { mapState } from 'vuex'
 
 import BatchSearchForm from '@/components/BatchSearchForm'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
+import UserDisplay from '@/components/UserDisplay'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
@@ -111,7 +116,8 @@ export default {
   mixins: [utils],
   components: {
     BatchSearchForm,
-    BatchSearchStatus
+    BatchSearchStatus,
+    UserDisplay
   },
   data () {
     return {
