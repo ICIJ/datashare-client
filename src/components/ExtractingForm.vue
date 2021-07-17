@@ -26,9 +26,9 @@
     </div>
     <div class="extracting-form__footer mt-4 row no-gutters">
       <div class="col text-right">
-        <button class="btn btn-primary font-weight-bold" type="submit">
+        <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
           {{ $t('indexing.go') }}
-        </button>
+        </b-btn>
       </div>
     </div>
   </form>
@@ -57,14 +57,23 @@ export default {
       default: noop
     }
   },
+  data () {
+    return {
+      disabled: false
+    }
+  },
   computed: {
     ...mapFields(['form.filter', 'form.ocr'])
   },
   methods: {
     async submitExtract () {
-      await this.$store.dispatch('indexing/submitExtract')
-      this.$store.commit('indexing/resetExtractForm')
-      this.finally()
+      this.disabled = true
+      try {
+        await this.$store.dispatch('indexing/submitExtract')
+      } finally {
+        this.$store.commit('indexing/resetExtractForm')
+        this.finally()
+      }
     }
   }
 }

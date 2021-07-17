@@ -74,10 +74,8 @@ describe('BatchSearch.vue', () => {
     })
 
     it('should display the number of queries per batchSearch', () => {
-      expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="4"]')
-        .text()).toBe('1')
-      expect(wrapper.find('.batch-search__items__item:nth-child(2) td[aria-colindex="4"]')
-        .text()).toBe('2')
+      expect(wrapper.findAll('.batch-search__items__item__queries').at(0).text()).toBe('1')
+      expect(wrapper.findAll('.batch-search__items__item__queries').at(1).text()).toBe('2')
     })
 
     it('should redirect on sort changed', async () => {
@@ -141,16 +139,18 @@ describe('BatchSearch.vue', () => {
     beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
 
     it('should have author field in server mode in fieldOptions', () => {
-      expect(wrapper.find('.batch-search__search-bar__field__items:nth-child(4)').text()).toContain('Author')
+      const field = wrapper.find('.batch-search__search-bar__field__items:nth-child(4)')
+      expect(field.text()).toContain('Author')
     })
 
     it('should display 8 columns of info per row', () => {
-      expect(wrapper.findAll('.batch-search__items__item:nth-child(1) td')).toHaveLength(8)
+      const columns = wrapper.findAll('.batch-search__items__item:nth-child(1) td')
+      expect(columns).toHaveLength(8)
     })
 
     it('should display project name in the batch search results url', () => {
-      expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a')
-        .attributes('href')).toContain('/project_01/')
+      const link = wrapper.findAll('.batch-search__items__item__link').at(0)
+      expect(link.attributes('href')).toContain('/project_01/')
     })
   })
 
@@ -162,7 +162,7 @@ describe('BatchSearch.vue', () => {
     })
 
     it('should NOT display project name in the batch search results url', () => {
-      expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="2"] a').exists()).toBeFalsy()
+      expect(wrapper.find('.batch-search__items__item:nth-child(1) td[aria-colindex="3"] a').exists()).toBeFalsy()
     })
 
     it('should display 6 columns of info per row', () => {

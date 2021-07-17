@@ -1,5 +1,6 @@
-import { remove } from 'lodash'
+import { filter, random, remove } from 'lodash'
 import { getField, updateField } from 'vuex-map-fields'
+import Vue from 'vue'
 
 import Api from '@/api'
 
@@ -21,7 +22,12 @@ export function initialState () {
 export const state = initialState()
 
 export const getters = {
-  getField
+  getField,
+  getPendingTasks (state) {
+    return () => {
+      return filter(state.tasks, { state: 'RUNNING' })
+    }
+  }
 }
 
 export const mutations = {
@@ -41,13 +47,13 @@ export const mutations = {
     remove(state.tasks, item => item.state === 'DONE')
   },
   updateTasks (state, raw) {
-    state.tasks = raw
+    Vue.set(state, 'tasks', raw)
   },
   setPollHandle (state, pollHandle) {
     state.pollHandle = pollHandle
   },
-  stopPolling (state) {
-    clearInterval(state.pollHandle)
+  stopPollingTasks (state) {
+    clearTimeout(state.pollHandle)
     state.pollHandle = null
   },
   resetExtractForm (state) {
@@ -95,9 +101,20 @@ export const actions = {
       commit('updateTasks', [])
     }
   },
-  startPollTasks ({ commit, dispatch }) {
-    const pollHandle = setInterval(() => dispatch('getTasks'), 2000)
+  startPollingTasks ({ commit, dispatch, getters }) {
+    dispatch('stopPollingTasks')
+    const timeout = random(1000, 4000)
+    const pollHandle = setTimeout(async () => {
+      await dispatch('getTasks')
+      // Continue only if they are pending tasks
+      if (getters.getPendingTasks().length) {
+        dispatch('startPollingTasks')
+      }
+    }, timeout)
     commit('setPollHandle', pollHandle)
+  },
+  stopPollingTasks ({ commit, dispatch }) {
+    commit('stopPollingTasks')
   },
   deleteAll ({ rootState }) {
     return api.deleteAll(rootState.search.index)

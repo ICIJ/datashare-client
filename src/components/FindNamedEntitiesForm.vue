@@ -1,6 +1,6 @@
 <template>
   <v-wait for="load ner pipelines">
-    <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto mt-5"></fa>
+    <fa icon="circle-notch" slot="waiting" spin size="2x" class="d-flex mx-auto my-5 text-light" />
     <form class="find-named-entities-form" id="find-named-entities-form" @submit.prevent="submitFindNamedEntities">
       <div class="find-named-entities-form__header mb-4">
         <h4>
@@ -30,9 +30,9 @@
       </div>
       <div class="find-named-entities-form__footer mt-4 row no-gutters">
         <div class="col text-right">
-          <button class="btn btn-primary font-weight-bold" type="submit">
+          <b-btn variant="primary" class="font-weight-bold" type="submit" :disabled="disabled">
             {{ $t('indexing.go') }}
-          </button>
+          </b-btn>
         </div>
       </div>
     </form>
@@ -71,7 +71,8 @@ export default {
   },
   data () {
     return {
-      pipelines: []
+      pipelines: [],
+      disabled: false
     }
   },
   computed: {
@@ -82,9 +83,13 @@ export default {
   },
   methods: {
     async submitFindNamedEntities () {
-      await this.$store.dispatch('indexing/submitFindNamedEntities')
-      this.$store.commit('indexing/resetFindNamedEntitiesForm')
-      this.finally()
+      this.disabled = true
+      try {
+        await this.$store.dispatch('indexing/submitFindNamedEntities')
+      } finally {
+        this.$store.commit('indexing/resetFindNamedEntitiesForm')
+        this.finally()
+      }
     },
     handlePipelinesTranslation (pipelines) {
       const translationsMap = {}

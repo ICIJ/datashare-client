@@ -1,28 +1,8 @@
 <template>
-  <div class="batch-search-status d-flex align-items-center">
-    <span :class="batchSearch.state | toVariant('dark', 'text-')" class="text-nowrap">
-      <fa :icon="getStateIcon" :spin="isSpinning" />
-      <template v-if="!noLabel">
-        {{ batchSearch.state | capitalize }}
-      </template>
-    </span>
-    <template v-if="isFailed">
-      <b-badge
-        class="batch-search-status__badge ml-1"
-        @click.prevent="$refs.batchSearchErrorModal.show()"
-        variant="danger"
-        v-b-tooltip
-        :id="batchSearch.uuid"
-        :title="$t('batchSearch.errorTitle')">
-        {{ $t('batchSearch.seeError') }}
-      </b-badge>
-      <b-modal
-        body-class="batch-search-status__modal py-0"
-        ok-only
-        ref="batchSearchErrorModal"
-        size="lg"
-        hide-header>
-        <div v-if="batchSearch.errorQuery" class="batch-search-status__modal__error-query mt-4 mb-2 font-weight-bolder">
+  <div class="batch-search-status">
+    <ellipse-status :status="batchSearch.state" :no-badge="noLabel" horizontal>
+      <template #error v-if="isFailed">
+        <div v-if="batchSearch.errorQuery" class="batch-search-status__modal__error-query mb-2 font-weight-bolder">
           <span v-html="$t('batchSearch.errorQuery', { query: batchSearch.errorQuery })"></span>
         </div>
         <div v-if="batchSearch.errorMessage">
@@ -34,14 +14,16 @@
           </template>
           <div class="mt-2" v-html="$t('batchSearch.errorMessage')"></div>
         </div>
-      </b-modal>
-    </template>
+      </template>
+    </ellipse-status>
   </div>
 </template>
 
 <script>
 import { capitalize, get } from 'lodash'
 import { toVariant } from '@/utils/utils'
+
+import EllipseStatus from '@/components/EllipseStatus'
 import JsonFormatter from '@/components/JsonFormatter'
 
 /**
@@ -50,6 +32,7 @@ import JsonFormatter from '@/components/JsonFormatter'
 export default {
   name: 'BatchSearchStatus',
   components: {
+    EllipseStatus,
     JsonFormatter
   },
   props: {
@@ -63,12 +46,6 @@ export default {
      * Hide the label
      */
     noLabel: {
-      type: Boolean
-    },
-    /**
-     * Hide the error badge
-     */
-    noError: {
       type: Boolean
     }
   },

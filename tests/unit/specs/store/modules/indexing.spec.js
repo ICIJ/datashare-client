@@ -100,7 +100,7 @@ describe('IndexingStore', () => {
   })
 
   it('should stop polling jobs', () => {
-    store.commit('indexing/stopPolling')
+    store.commit('indexing/stopPollingTasks')
 
     expect(store.state.indexing.pollHandle).toBeNull()
   })

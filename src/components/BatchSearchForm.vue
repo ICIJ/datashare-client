@@ -283,9 +283,6 @@ export default {
     },
     showAdvancedFilters () {
       this.retrieveFileTypes()
-    },
-    csvFile () {
-      console.log(this.verifyQueryLimit(this.csvFile))
     }
   },
   created () {

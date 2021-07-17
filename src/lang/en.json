@@ -486,7 +486,7 @@
     "description": "Please <a href=\"%{howToLink}\" target=\"_blank\">read the documentation</a> about adding documents.",
     "go": "Go",
     "tasks": "Tasks",
-    "empty": "You have not yet started any tasks.",
+    "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
     "extractText": "Extract text",
     "extractWithOcrLabel": "Do you want to extract text also from images and PDFs?",
     "extractWithOcrHelp": "If yes, Datashare will run OCR (Optical Character Recognition). It can take up to 10 times longer.",
@@ -580,6 +580,7 @@
   "batchSearch": {
     "lead": "Search multiple terms and documents at once.",
     "title": "Batch searches",
+    "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
     "heading": "New batch search",
     "fileLabel": "CSV file",
     "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>Without 'do phrase match' only, you can use AND OR NOT * ? ! + - and other search operators and use Regex between 2 slashes</li></ul>",

@@ -13416,6 +13416,11 @@ vm-browserify@^1.0.1:
   resolved "https://registry.yarnpkg.com/vm-browserify/-/vm-browserify-1.1.2.tgz"
   integrity sha512-2ham8XPWTONajOR0ohOKOHXkm3+gaBmGut3SRuu75xLd/RRaY6vqgh8NBYYk7+RW3u5AtzPQZG8F10LHkl0lAQ==
 
+vue-ellipse-progress@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/vue-ellipse-progress/-/vue-ellipse-progress-1.3.0.tgz#d9426ceacf575150be223843d81650a7cb39222b"
+  integrity sha512-3vdpaOaxRpVRG5Qne8Hjb4HG+P2fxCo6t3SqyQOznMsZApKPcIvTLEMfvJ1yd3R/0DYOjdPYxCDeReMD+UGyuA==
+
 vue-eslint-parser@^7.8.0:
   version "7.8.0"
   resolved "https://registry.yarnpkg.com/vue-eslint-parser/-/vue-eslint-parser-7.8.0.tgz#43850bf856c9a69d62c0e12769609c338423684b"

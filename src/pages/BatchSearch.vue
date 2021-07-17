@@ -33,53 +33,57 @@
       <div class="batch-search__items">
         <v-wait for="load batchSearches">
           <div slot="waiting" class="card py-2">
-            <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
-            <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
-            <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
+            <content-placeholder class="p-2" v-for="index in 3" :key="index" />
           </div>
-          <div class="card">
-            <b-table
-              :empty-text="$t('global.emptyTextTable')"
-              :fields="fields"
-              hover
-              :items="batchSearches"
-              no-sort-reset
-              :responsive="true"
-              :sort-by="sortBy"
-              @sort-changed="sortChanged"
-              :sort-desc="orderBy"
-              striped
-              tbody-tr-class="batch-search__items__item"
-              thead-tr-class="text-nowrap">
-              <template v-slot:cell(name)="{ item }">
-                <router-link
-                  :to="generateTo(item)"
-                  class="batch-search__items__item__link">
-                  {{ item.name }}
-                </router-link>
-                <p class="m-0 text-muted small">
-                  {{ item.description }}
-                </p>
-              </template>
-              <template v-slot:cell(queries)="{ item }">
+          <b-table
+            hover
+            no-sort-reset
+            responsive
+            show-empty
+            striped
+            class="card border-top-0"
+            tbody-tr-class="batch-search__items__item"
+            thead-tr-class="text-nowrap"
+            :fields="fieldsIfAnyItem"
+            :items="batchSearches"
+            :sort-by="sortBy"
+            :sort-desc="orderBy"
+            @sort-changed="sortChanged">
+            <template #empty>
+              <p class="text-center m-0" v-html="$t('batchSearch.empty', { howToLink })"></p>
+            </template>
+            <template v-slot:cell(name)="{ item }">
+              <router-link
+                :to="generateTo(item)"
+                class="batch-search__items__item__link">
+                {{ item.name }}
+              </router-link>
+              <p class="m-0 text-muted small">
+                {{ item.description }}
+              </p>
+            </template>
+            <template v-slot:cell(queries)="{ item }">
+              <span class="batch-search__items__item__queries">
                 {{ $n(item.nbQueries) }}
-              </template>
-              <template v-slot:cell(state)="{ item }">
-                <batch-search-status :batch-search="item" />
-              </template>
-              <template v-slot:cell(date)="{ item }">
-                <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
-                  {{ moment(item.date).locale($i18n.locale).format('LL') }}
-                </span>
-              </template>
-              <template v-slot:cell(nbResults)="{ item }">
+              </span>
+            </template>
+            <template v-slot:cell(state)="{ item }">
+              <batch-search-status :batch-search="item" />
+            </template>
+            <template v-slot:cell(date)="{ item }">
+              <span :title="moment(item.date).locale($i18n.locale).format('LLL')">
+                {{ moment(item.date).locale($i18n.locale).format('LL') }}
+              </span>
+            </template>
+            <template v-slot:cell(nbResults)="{ item }">
+              <span class="batch-search__items__item__results">
                 {{ $n(item.nbResults) }}
-              </template>
-              <template v-slot:cell(published)="{ item }">
-                {{ item.published ? $t('global.yes') : $t('global.no') }}
-              </template>
-            </b-table>
-          </div>
+              </span>
+            </template>
+            <template v-slot:cell(published)="{ item }">
+              {{ item.published ? $t('global.yes') : $t('global.no') }}
+            </template>
+          </b-table>
           <b-pagination-nav
             class="mt-2"
             :link-gen="linkGen"
@@ -117,17 +121,15 @@ export default {
       perPage: settings.batchSearch.size,
       query: '',
       search: '',
-      rows: [
-        {
-          height: '1em',
-          boxes: [['10%', '80%']]
-        }
-      ],
       sort: settings.batchSearch.sort
     }
   },
   computed: {
     ...mapState('batchSearch', ['batchSearches', 'total']),
+    howToLink () {
+      const { href } = this.$router.resolve('/docs/all-batch-search-documents')
+      return href
+    },
     sortResults () {
       return settings.batchSearchResults.sort
     },
@@ -135,28 +137,34 @@ export default {
       return settings.batchSearchResults.order
     },
     projectNameField () {
-      return this.isServer ? {
-        key: 'project.name',
-        label: this.$t('batchSearch.project'),
-        sortable: true,
-        name: 'prj_id'
-      } : null
+      return this.isServer
+        ? {
+          key: 'project.name',
+          label: this.$t('batchSearch.project'),
+          sortable: true,
+          name: 'prj_id'
+        }
+        : null
     },
     authorField () {
-      return this.isServer ? {
-        key: 'user.id',
-        label: this.$t('batchSearch.author'),
-        sortable: true,
-        name: 'user_id'
-      } : null
+      return this.isServer
+        ? {
+          key: 'user.id',
+          label: this.$t('batchSearch.author'),
+          sortable: true,
+          name: 'user_id'
+        }
+        : null
     },
     publishedField () {
-      return this.isServer ? {
-        key: 'published',
-        label: this.$t('batchSearch.published'),
-        sortable: true,
-        name: 'published'
-      } : null
+      return this.isServer
+        ? {
+          key: 'published',
+          label: this.$t('batchSearch.published'),
+          sortable: true,
+          name: 'published'
+        }
+        : null
     },
     fieldOptions () {
       const options = ['all', 'title', 'description']
@@ -165,8 +173,20 @@ export default {
       }
       return options
     },
+    fieldsIfAnyItem () {
+      if (this.batchSearches.length) {
+        return this.fields
+      }
+      return []
+    },
     fields () {
       return compact([
+        {
+          key: 'state',
+          label: this.$t('batchSearch.state'),
+          sortable: true,
+          name: 'state'
+        },
         this.projectNameField,
         {
           key: 'name',
@@ -179,12 +199,6 @@ export default {
           key: 'queries',
           label: this.$t('batchSearch.queries'),
           sortable: false
-        },
-        {
-          key: 'state',
-          label: this.$t('batchSearch.state'),
-          sortable: true,
-          name: 'state'
         },
         {
           key: 'date',
@@ -353,7 +367,6 @@ export default {
         margin: 0;
 
         thead th {
-          border-top: 0;
           white-space: nowrap;
         }
       }

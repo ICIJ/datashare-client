@@ -1,4 +1,7 @@
 import { get } from 'lodash'
+import { faCheck } from '@fortawesome/free-solid-svg-icons/faCheck'
+import { faExclamation } from '@fortawesome/free-solid-svg-icons/faExclamation'
+import { faTimes } from '@fortawesome/free-solid-svg-icons/faTimes'
 
 import settings from '@/utils/settings'
 import { slugger } from '@/utils/strings'
@@ -50,11 +53,29 @@ function toVariant (string = '', defaultVariant = 'darker', prefix = '') {
   return prefix + settings.variantsMap[slugger(string).toLowerCase()] || defaultVariant
 }
 
+function toVariantIcon (string = '', defaultVariant = 'darker') {
+  const variant = toVariant(string, defaultVariant)
+  const icons = {
+    success: faCheck,
+    danger: faTimes,
+    warning: faExclamation
+  }
+  return icons[variant]
+}
+
+function toVariantColor (string = '', defaultVariant = 'darker') {
+  const variant = toVariant(string, defaultVariant)
+  const style = getComputedStyle(document.body)
+  return style.getPropertyValue(`--${variant}`) || '#eee'
+}
+
 export {
   getDocumentTypeLabel,
   getExtractionLevelTranslationKey,
   getOS,
   getShortkeyOS,
   objectIncludes,
-  toVariant
+  toVariant,
+  toVariantIcon,
+  toVariantColor
 }
