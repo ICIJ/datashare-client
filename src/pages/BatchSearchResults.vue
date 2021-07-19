@@ -125,7 +125,7 @@
     <div class="container">
       <v-wait for="load batchSearch results">
         <div slot="waiting" class="card py-2">
-          <content-placeholder class="p-2" v-for="index in 3" :key="index" />
+          <content-placeholder class="py-2 px-3" v-for="index in 3" :key="index" />
         </div>
         <div class="batch-search-results__queries">
           <div class="card">

@@ -33,7 +33,7 @@
       <div class="batch-search__items">
         <v-wait for="load batchSearches">
           <div slot="waiting" class="card py-2">
-            <content-placeholder class="p-2" v-for="index in 3" :key="index" />
+            <content-placeholder class="py-2 px-3" v-for="index in 3" :key="index" />
           </div>
           <b-table
             hover
