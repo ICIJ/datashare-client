@@ -568,7 +568,10 @@
     "name": "Nom",
     "saveSearch": "Sauvergarder cette recherche",
     "submitSuccess": "Votre recherche a été sauvegardée.",
-    "submitError": "Erreur, votre recherche n'a pas pu être ajoutée."
+    "submitError": "Erreur, votre recherche n'a pas pu être ajoutée.",
+    "delete": "Delete search",
+    "deleted": "The search have been deleted.",
+    "notDeleted": "The search has not been deleted."
   },
   "userHistorySaveSearchForm": {
     "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
