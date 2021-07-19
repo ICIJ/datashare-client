@@ -568,7 +568,10 @@
     "name": "crwdns2474:0crwdne2474:0",
     "saveSearch": "crwdns2476:0crwdne2476:0",
     "submitSuccess": "crwdns2478:0crwdne2478:0",
-    "submitError": "crwdns2480:0crwdne2480:0"
+    "submitError": "crwdns2480:0crwdne2480:0",
+    "delete": "crwdns2526:0crwdne2526:0",
+    "deleted": "crwdns2528:0crwdne2528:0",
+    "notDeleted": "crwdns2530:0crwdne2530:0"
   },
   "userHistorySaveSearchForm": {
     "description": "crwdns2510:0{searchHistoryPath}crwdne2510:0"
