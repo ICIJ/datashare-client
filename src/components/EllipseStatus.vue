@@ -142,7 +142,7 @@ export default {
         </template>
       </slot>
     </vue-ellipse-progress>
-    <div v-if="!noBadge" class="ellipse-status__badge mx-2" :class="{ 'ellipse-status__badge--has-error': hasError }">
+    <span v-if="!noBadge" class="ellipse-status__badge mx-2 d-inline-flex" :class="{ 'ellipse-status__badge--has-error': hasError }">
       <b-badge v-b-modal:[errorModalId] v-if="hasError" :variant="statusAsVariant" class="p-0">
         <span class="d-inline-block p-1">
           {{ status }}
@@ -154,7 +154,7 @@ export default {
       <b-badge v-else :variant="statusAsVariant" class="p-1">
         {{ status }}
       </b-badge>
-    </div>
+    </span>
     <b-modal body-class="ellipse-status__modal pb-0"
              hide-header
              ok-only
