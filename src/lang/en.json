@@ -7,7 +7,8 @@
     "no": "No",
     "submit": "Submit",
     "confirmLabel": "Are you sure?",
-    "emptyTextTable": "There are no records to show"
+    "emptyTextTable": "There are no records to show",
+    "you": "You"
   },
   "aggregations": {
     "more": "Explore more",

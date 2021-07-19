@@ -21,10 +21,21 @@ jest.mock('axios', () => {
   }
 })
 
+jest.mock('@/api/resources/Auth', () => {
+  return jest.fn().mockImplementation(() => {
+    return {
+      getUsername: jest.fn().mockImplementation(() => {
+        return Promise.resolve('user_01')
+      })
+    }
+  })
+})
+
 // Mock the refreshRouteAndSearch method to avoid unecessary route update
 FilterRecommendedBy.methods.refreshRouteAndSearch = jest.fn()
 
 describe('FilterRecommendedBy.vue', () => {
+  const flushPromises = () => new Promise(resolve => setImmediate(resolve))
   const { i18n, localVue, router, store, wait } = Core.init(createLocalVue()).useAll()
   const project = toLower('FilterRecommendedBy')
   const filter = store.getters['search/getFilter']({ name: 'recommendedBy' })
@@ -40,7 +51,10 @@ describe('FilterRecommendedBy.vue', () => {
     await wrapper.vm.$nextTick()
   })
 
-  afterAll(() => jest.unmock('axios'))
+  afterAll(() => {
+    jest.unmock('axios')
+    jest.unmock('@/api/resources/Auth')
+  })
 
   it('should build a recommendedBy filter', () => {
     expect(wrapper.findComponent({ ref: 'filter' }).exists()).toBeTruthy()
@@ -59,13 +73,15 @@ describe('FilterRecommendedBy.vue', () => {
     expect(wrapper.vm.recommendedByTotal).toBe(42)
   })
 
-  it('should sort options to have the current user first', () => {
+  it('should sort options to have the current user first', async () => {
+    await flushPromises()
     expect(wrapper.findAll('.filter__items__item__label').at(0).text()).toBe('All')
-    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('you')
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('You')
   })
 
-  it('should sort options by decreasing order', () => {
-    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('you')
+  it('should sort options by decreasing order', async () => {
+    await flushPromises()
+    expect(wrapper.findAll('.filter__items__item__label').at(1).text()).toBe('You')
     expect(wrapper.findAll('.filter__items__item__label').at(2).text()).toBe('user_02')
     expect(wrapper.findAll('.filter__items__item__label').at(3).text()).toBe('user_00')
   })

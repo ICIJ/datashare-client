@@ -3,36 +3,85 @@ import { icon as faIcon } from '@fortawesome/fontawesome-svg-core'
 import { faUserCircle } from '@fortawesome/free-solid-svg-icons/faUserCircle'
 import { mapGetters } from 'vuex'
 
+/**
+ * A component to display usernames.
+ */
 export default {
   name: 'UserDisplay',
   props: {
-    username: {
-      type: String
+    /**
+     * Default height of the avatar
+     */
+    avatarHeight: {
+      type: String,
+      default: '1.75em'
     },
-    tag: {
-      type: [String, Object],
-      default: 'span'
-    },
-    hideAvatar: {
-      type: Boolean
-    },
+    /**
+     * Pipeline name to transform the avatar src
+     */
     avatarPipeline: {
       type: String,
       default: 'user-display-avatar'
     },
-    usernamePipeline: {
-      type: String,
-      default: 'user-display-username'
-    },
+    /**
+     * Color of the fallback avatar
+     */
     fallbackAvatarColor: {
       type: String,
       default: '#aaa'
+    },
+    /**
+     * Fallback of the user link
+     */
+    linkFallback: {
+      type: String,
+      default: null
+    },
+    /**
+     * Pipeline name to transform the user link
+     */
+    linkPipeline: {
+      type: String,
+      default: 'user-display-link'
+    },
+    /**
+     * Hide the avatar
+     */
+    hideAvatar: {
+      type: Boolean
+    },
+    /**
+     * Hide the user link
+     */
+    hideLink: {
+      type: Boolean
+    },
+    /**
+     * Root tag to use for this component
+     */
+    tag: {
+      type: [String, Object],
+      default: 'span'
+    },
+    /**
+     * Username to display
+     */
+    username: {
+      type: String
+    },
+    /**
+     * Pipeline name to transform the username
+     */
+    usernamePipeline: {
+      type: String,
+      default: 'user-display-username'
     }
   },
   data () {
     return {
-      transformedUsername: this.username,
-      transformedAvatar: null
+      transformedAvatar: null,
+      transformedLink: null,
+      transformedUsername: null
     }
   },
   created () {
@@ -41,7 +90,7 @@ export default {
         return this.applyPipelines()
       }
     })
-    return this.applyPipelines()
+    return this.applyPipelinesWithLoader()
   },
   watch: {
     username () {
@@ -64,13 +113,30 @@ export default {
       const base64 = window.btoa(svg)
       return `data:image/svg+xml;base64,${base64}`
     },
+    userDisplayStyle () {
+      return {
+        '--avatar-height': this.avatarHeight
+      }
+    },
+    usernameTag () {
+      return !this.hideLink && this.transformedLink !== null ? 'a' : 'span'
+    },
     showAvatar () {
       return !this.hideAvatar && this.avatarSrc
+    },
+    loader () {
+      return `load-username-${this.username}`
     }
   },
   methods: {
+    async applyPipelinesWithLoader () {
+      this.$wait.start(this.loader)
+      await this.applyPipelines()
+      this.$wait.end(this.loader)
+    },
     async applyPipelines () {
       this.transformedAvatar = await this.applyAvatarPipeline()
+      this.transformedLink = await this.applyLinkPipeline()
       this.transformedUsername = await this.applyUsernamePipeline()
     },
     applyAvatarPipeline () {
@@ -78,29 +144,38 @@ export default {
     },
     applyUsernamePipeline () {
       return this.applyPipelineChain(this.usernamePipeline)(this.username)
+    },
+    applyLinkPipeline () {
+      return this.applyPipelineChain(this.linkPipeline)(this.linkFallback, this.username)
     }
   }
 }
 </script>
 
 <template>
-  <component :is="tag" class="user-display d-inline-flex align-items-center">
-    <template v-if="showAvatar">
-      <img class="user-display__avatar mr-1 rounded-circle" :src="avatarSrc" :alt="avatarAlt"/>
-    </template>
-    <span class="user-display__username">
-      {{ transformedUsername }}
-    </span>
-  </component>
+    <component :is="tag" class="user-display d-inline-flex align-items-center" :style="userDisplayStyle">
+      <template v-if="showAvatar">
+        <img class="user-display__avatar mr-2 rounded-circle" :src="avatarSrc" :alt="avatarAlt"/>
+      </template>
+      <component :is="usernameTag" :href="transformedLink" class="user-display__username" :class="{ 'user-display__username--loading': $wait.is(loader) }">
+        <v-wait :for="loader" class="d-inline">
+          <template #waiting>
+            {{ username }}
+          </template>
+          <template>
+            {{ transformedUsername }}
+          </template>
+        </v-wait>
+      </component>
+    </component>
 </template>
 
 <style lang="scss">
   .user-display {
-    line-height: 1;
+    --avatar-height: 1.75em;
 
     &__avatar {
-      height: 1em;
+      height: var(--avatar-height);
     }
-
   }
 </style>

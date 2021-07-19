@@ -21,7 +21,7 @@
           <div>
             {{ $tc('search.nav.markAsRecommendedBy',  recommendedBy.length, { count: recommendedBy.length }) }}
           </div>
-          <ul class="mb-0 list-unstyled">
+          <ul class="mb-0 mt-2 list-unstyled">
             <li v-for="user in recommendedBy" :key="user">
               <user-display :username="user" />
             </li>

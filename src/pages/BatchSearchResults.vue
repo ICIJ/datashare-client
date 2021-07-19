@@ -114,7 +114,7 @@
                 {{ $t('batchSearch.author') }}
               </dt>
               <dd>
-                {{ batchSearch.user.id }}
+                <user-display :username="batchSearch.user.id" />
               </dd>
             </div>
           </dl>
@@ -125,9 +125,7 @@
     <div class="container">
       <v-wait for="load batchSearch results">
         <div slot="waiting" class="card py-2">
-          <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
-          <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
-          <content-placeholder :rows="rows" class="p-0 my-2"></content-placeholder>
+          <content-placeholder class="p-2" v-for="index in 3" :key="index" />
         </div>
         <div class="batch-search-results__queries">
           <div class="card">
@@ -228,6 +226,7 @@ import BatchSearchStatus from '@/components/BatchSearchStatus'
 import ContentTypeBadge from '@/components/ContentTypeBadge'
 import DocumentNavbar from '@/components/document/DocumentNavbar'
 import QuickItemNav from '@/components/QuickItemNav'
+import UserDisplay from '@/components/UserDisplay'
 import humanSize from '@/filters/humanSize'
 import humanNumber from '@/filters/humanNumber'
 import utils from '@/mixins/utils'
@@ -245,6 +244,7 @@ export default {
     ContentTypeBadge,
     DocumentNavbar,
     DocumentView,
+    UserDisplay,
     QuickItemNav
   },
   mixins: [utils],
@@ -312,12 +312,6 @@ export default {
       page: 1,
       published: false,
       queries: [],
-      rows: [
-        {
-          height: '1em',
-          boxes: [['10%', '80%']]
-        }
-      ],
       sort: settings.batchSearchResults.sort
     }
   },

@@ -5,6 +5,7 @@ import VueRouter from 'vue-router'
 
 import Api from '@/api'
 import { Core } from '@/core'
+import UserDisplay from '@/components/UserDisplay'
 import BatchSearchResults from '@/pages/BatchSearchResults'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
@@ -111,8 +112,8 @@ describe('BatchSearchResults.vue', () => {
     expect(wrapper.findAll('.batch-search-results__info dd')).toHaveLength(7)
   })
 
-  it('should display the author of the BatchSearch in the last info item', () => {
-    expect(wrapper.find('.batch-search-results__info *:last-child dd').text()).toBe('test')
+  it('should display the author of the BatchSearch', async () => {
+    expect(wrapper.findComponent(UserDisplay).attributes('username')).toBe('test')
   })
 
   it('should display the list of the queries of this batch search', () => {
