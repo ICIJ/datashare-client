@@ -15,12 +15,15 @@
           </template>
         </b-tab>
       </template>
-      <template v-if="events.length && !$wait.is(loader)">
-        <confirm-button class="btn btn-primary" :confirmed="deleteUserHistory" :label="$t('global.confirmLabel')" :yes="$t('global.yes')" :no="$t('global.no')">
-          <fa icon="trash-alt" class="mr-1"></fa>
-          {{ $t('userHistory.clear') }}
-        </confirm-button>
-      </template>
+      <confirm-button class="btn btn-primary"
+                      :disabled="!events.length || $wait.is(loader)"
+                      :confirmed="deleteUserHistory"
+                      :label="$t('global.confirmLabel')"
+                      :yes="$t('global.yes')"
+                      :no="$t('global.no')">
+        <fa icon="trash-alt" class="mr-1"></fa>
+        {{ $t('userHistory.clear') }}
+      </confirm-button>
     </page-header>
     <v-wait :for="loader">
       <template #waiting>
