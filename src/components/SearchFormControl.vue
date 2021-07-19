@@ -80,7 +80,7 @@ export default {
 </script>
 
 <template>
-  <b-form @submit="$emit('submit', value)">
+  <b-form @submit.prevent="$emit('submit', value)">
     <b-input-group size="sm" class="search-form-control" :class="searchFormClassAttr">
       <b-form-input :autofocus="autofocus"
                     class="search-form-control__input"
