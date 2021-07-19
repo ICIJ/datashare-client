@@ -109,7 +109,7 @@ export default {
         overflow: hidden;
 
         &:hover, &:hover &__link {
-          background: mix($secondary, white, 5%);
+          background: $table-hover-bg;
           text-decoration: none;
         }
 
