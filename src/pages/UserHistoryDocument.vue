@@ -4,13 +4,13 @@
       <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
         <li v-for="event in events" :key="event.id" class="user-history__list__item">
           <router-link :to="{ path: event.uri }" class="p-2 d-block d-flex">
-            <document-thumbnail :document="eventAsDocument(event)" size="40" crop lazy class="mr-2 user-history__list__item__preview"></document-thumbnail>
+            <document-thumbnail :document="eventAsDocument(event)" size="40" crop lazy class="mr-2 user-history__list__item__preview" />
             <div>
               <div class="user-history__list__item__name font-weight-bold">
                 {{ event.name }}
               </div>
               <div class="user-history__list__item__uri small">
-                <fa icon="link" class="mr-1"></fa>
+                <fa icon="link" class="mr-1" />
                 {{ event.uri }}
               </div>
             </div>
