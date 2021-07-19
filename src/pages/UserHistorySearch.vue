@@ -20,9 +20,8 @@
               {{ event.name }}
             </div>
             <div class="user-history__list__item__query ">
-              <applied-search-filters-item v-for="(filter, index) in createFiltersFromURI(event.uri)"
-                                           is-read-only
-                                           class="pl-2"
+              <applied-search-filters-item v-for="(filter, index) in filtersItems(event)"
+                                           read-only
                                           :key="index"
                                           :filter="filter" />
             </div>
@@ -61,6 +60,10 @@ export default {
     }
   },
   methods: {
+    filtersItems (event) {
+      const items = this.createFiltersFromURI(event.uri)
+      return items
+    },
     createFiltersFromURI (uri) {
       const filters = []
       const notUsed = ['from', 'size', 'sort', 'field']

@@ -1,15 +1,20 @@
 <template>
   <b-badge
-    class="applied-search-filters-item my-1 mr-2 pl-1 mw-100 text-truncate"
-    :class="filter.negation ? 'strikethrough' : ''"
+    class="applied-search-filters-item px-0 my-1 mr-2 mw-100 text-truncate"
+    :class="{
+      'applied-search-filters-item--negation': filter.negation,
+      'applied-search-filters-item--read-only': readOnly
+    }"
     @click.prevent="deleteQueryTerm()"
     :id="id"
     pill
     :title="label"
     v-b-tooltip
     variant="warning">
-    <fa icon="times-circle" v-if="!isReadOnly"></fa>
-    {{ label }}
+    <fa icon="times-circle" class="mx-1" v-if="!readOnly" />
+    <span class="applied-search-filters-item__wrapper">
+      {{ label }}
+    </span>
   </b-badge>
 </template>
 
@@ -30,7 +35,10 @@ export default {
     filter: {
       type: Object
     },
-    isReadOnly: {
+    /**
+     * Should allow to delete the filter or not
+     */
+    readOnly: {
       type: Boolean
     }
   },
@@ -63,8 +71,16 @@ export default {
   .applied-search-filters-item {
     cursor: pointer;
 
-    &.strikethrough {
+    &--negation {
       text-decoration: line-through;
+    }
+
+    &--read-only &__wrapper {
+      padding:0 $spacer * 0.5;
+    }
+
+    &__wrapper {
+      padding-right: $spacer * 0.25;
     }
   }
 </style>
