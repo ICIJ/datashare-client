@@ -74,7 +74,7 @@ describe('UserHistory.vue', () => {
     expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me/history?type=document') })
   })
 
-  it('should call delete user history api function is calledt', async () => {
+  it('should call delete user history api function is called', async () => {
     wrapper = await shallowMount(UserHistory, { i18n, localVue, router, store, wait })
 
     await wrapper.vm.deleteUserHistory()

@@ -1,7 +1,15 @@
+import axios from 'axios'
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { Core } from '@/core'
 
+import Api from '@/api'
 import UserHistorySearch from '@/pages/UserHistorySearch'
+
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: {} })
+  }
+})
 
 describe('UserHistorySearch.vue', () => {
   const { i18n, localVue } = Core.init(createLocalVue()).useAll()
@@ -40,6 +48,8 @@ describe('UserHistorySearch.vue', () => {
     wrapper = await shallowMount(UserHistorySearch, { i18n, localVue, propsData })
   })
 
+  afterAll(() => jest.unmock('axios'))
+
   it('should NOT display a list of search', async () => {
     const propsData = { events: [] }
     wrapper = await shallowMount(UserHistorySearch, { i18n, localVue, propsData })
@@ -58,5 +68,18 @@ describe('UserHistorySearch.vue', () => {
     expect(filters[0]).toHaveProperty('value', 'foo AND bar')
     expect(filters[1]).toHaveProperty('value', 'project')
     expect(filters[2]).toHaveProperty('value', 'baz')
+  })
+
+  it('should call delete user history api function is called', async () => {
+    const event = { id: '1', type: 'SEARCH', name: 'name_01', uri: 'uri_01' }
+
+    await wrapper.vm.deleteUserEvent(event)
+    await wrapper.vm.$nextTick()
+
+    expect(axios.request).toBeCalledTimes(1)
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/users/me/history/event?id=1'),
+      method: 'DELETE'
+    }))
   })
 })

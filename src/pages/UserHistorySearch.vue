@@ -2,8 +2,8 @@
   <div class="user-history">
     <div class="container mt-4">
       <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
-        <li v-for="event in events" :key="event.id" class="user-history__list__item">
-          <router-link :to="{ path: event.uri }" class="p-2 d-block d-flex">
+        <li v-for="event in searches" :key="event.id" class="user-history__list__item d-flex">
+          <router-link :to="{ path: event.uri }" class="p-2 d-block d-flex col-md-11">
             <div>
               <div class="user-history__list__item__name font-weight-bold">
                 {{ event.name }}
@@ -14,6 +14,18 @@
               </div>
             </div>
           </router-link>
+          <confirm-button class="user-history__list__item--delete btn btn-light ml-2 col-md-1"
+              v-b-tooltip.hover
+              :confirmed="() => deleteUserEvent(event)"
+              :label="$t('userHistory.delete')"
+              :no="$t('global.no')"
+              :yes="$t('global.yes')"
+              :title="$t('userHistory.delete')">
+              <fa icon="trash-alt" />
+              <span class="sr-only">
+                {{ $t('userHistory.delete') }}
+              </span>
+          </confirm-button>
         </li>
       </ul>
       <div class="text-muted text-center" v-else>
@@ -24,6 +36,7 @@
 </template>
 
 <script>
+import Api from '@/api'
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 
 export default {
@@ -36,6 +49,16 @@ export default {
       type: Array
     }
   },
+  data () {
+    return {
+      searches: this.events
+    }
+  },
+  computed: {
+    api () {
+      return new Api()
+    }
+  },
   methods: {
     createFiltersFromURI (uri) {
       const filters = []
@@ -44,8 +67,8 @@ export default {
       for (const obj of Array.from(fields.entries()).filter(entry => !notUsed.includes(entry[0]))) {
         const key = obj[0]
         let val = obj[1]
-        if (key === 'f[creationDate]') {
-          val = new Date(parseInt(val)).toISOString().replace(/T/, ' ').replace(/\..+/, '')
+        if (key.includes('Date')) {
+          val = new Date(parseInt(val)).toISOString().substr(0, 10).replace(/T/, ' ').replace(/\..+/, '')
         }
         if (val === '') {
           val = '*'
@@ -53,6 +76,17 @@ export default {
         filters.push({ name: key, label: val, value: val })
       }
       return filters
+    },
+    async deleteUserEvent (event) {
+      try {
+        await this.api.deleteUserEvent(event.id)
+        this.$root.$bvToast.toast(this.$t('userHistory.deleted'), { noCloseButton: true, variant: 'success' })
+      } catch (_) {
+        this.$root.$bvToast.toast(this.$t('userHistory.notDeleted'), { noCloseButton: true, variant: 'warning' })
+      } finally {
+        const searches = this.searches.filter(e => !(e === event))
+        this.$set(this, 'searches', searches)
+      }
     }
   }
 }
@@ -72,15 +106,6 @@ export default {
           text-decoration: none;
           background: $secondary;
           color: white;
-        }
-
-        &__query {
-          color: $text-muted;
-          width: 800px;
-          min-width: 800px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
         }
       }
     }

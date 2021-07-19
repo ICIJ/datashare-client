@@ -6,10 +6,10 @@
           <router-link :to="{ path: event.uri }" class="p-2 d-block d-flex">
             <document-thumbnail :document="eventAsDocument(event)" size="40" crop lazy class="mr-2 user-history__list__item__preview"></document-thumbnail>
             <div>
-              <div class="user-history__list__item__name font-weight-bold">
+              <div class="user-history__list__item__name font-weight-bold col-md-2">
                 {{ event.name }}
               </div>
-              <div class="user-history__list__item__uri small">
+              <div class="user-history__list__item__uri small col-md-auto">
                 <fa icon="link" class="mr-1"></fa>
                 {{ event.uri }}
               </div>
@@ -76,8 +76,7 @@ export default {
 
         &__uri {
           color: $text-muted;
-          width: 800px;
-          min-width: 800px;
+          width: 80%;
           white-space: nowrap;
           overflow: hidden;
           text-overflow: ellipsis;
