@@ -22,7 +22,7 @@
         <b-form-checkbox v-for="{ user, count } in recommendedByUsersSorted" :value="user" class="filter__items__item" :key="user">
           <span class="d-flex">
             <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
-              <user-display :username="user" hide-avatar />
+              <user-display :username="user" hide-avatar hide-link />
             </span>
             <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
               {{ $n(count) }}

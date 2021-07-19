@@ -95,4 +95,15 @@ describe('UserDisplay.vue', () => {
     expect(wrapper.find('.user-display__username').attributes('href')).toBe(src)
     expect(wrapper.find('.user-display__username').element.tagName).toBe('A')
   })
+
+  it('should not display a link if the `hideLink` property is set', async () => {
+    wrapper.setProps({ hideLink: true })
+    store.commit('pipelines/register', {
+      name: 'username-icij-link',
+      category: wrapper.vm.linkPipeline,
+      type: (_, username) => `http://datashare.icij.org/${username}.html`
+    })
+    await flushPromises()
+    expect(wrapper.find('.user-display__username').element.tagName).toBe('SPAN')
+  })
 })
