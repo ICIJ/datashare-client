@@ -1,5 +1,5 @@
 <template>
-  <div class="filter__footer d-flex align-items-center text-nowrap p-1">
+  <div class="filter__footer d-flex align-items-center text-nowrap p-1" v-if="!hideFooter">
     <filter-sort-by-dropdown v-if="!hideSort"
                             :sort-by="sortBy"
                             :sort-by-order="sortByOrder"
@@ -71,6 +71,9 @@ export default {
     }
   },
   computed: {
+    hideFooter () {
+      return this.hideExclude && this.hideSort && this.hideContextualize && !this.shouldDisplayShowMore
+    },
     shouldDisplayShowMore () {
       return !this.hideShowMore
     },
