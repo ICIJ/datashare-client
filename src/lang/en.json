@@ -570,8 +570,9 @@
     "saveSearch": "Save this search",
     "submitSuccess": "Your search has been added.",
     "submitError": "Something went wrong, unable to add your search.",
-    "delete": "Delete search",
+    "delete": "Delete",
     "deleted": "The search have been deleted.",
+    "confirmDelete": "Are you sure you want to delete this saved search?",
     "notDeleted": "The search has not been deleted."
   },
   "userHistorySaveSearchForm": {

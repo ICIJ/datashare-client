@@ -2,30 +2,31 @@
   <div class="user-history">
     <div class="container mt-4">
       <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
-        <li v-for="event in searches" :key="event.id" class="user-history__list__item d-flex">
-          <router-link :to="{ path: event.uri }" class="p-2 d-block d-flex col-md-11">
-            <div>
-              <div class="user-history__list__item__name font-weight-bold">
-                {{ event.name }}
-              </div>
-              <div class="user-history__list__item__query ">
-                <applied-search-filters-item v-for="(filter, index) in createFiltersFromURI(event.uri)" :key="index"
-                  :filter="filter" :isReadOnly="true"></applied-search-filters-item>
-              </div>
+        <li v-for="event in searches" :key="event.id" class="user-history__list__item">
+          <div class="user-history__list__item__delete float-right m-4">
+            <confirm-button
+                class="btn btn-outline-danger"
+                placement="leftbottom"
+                :confirmed="() => deleteUserEvent(event)"
+                :label="$t('userHistory.confirmDelete')"
+                :no="$t('global.no')"
+                :yes="$t('global.yes')">
+                <fa icon="trash-alt" />
+                {{ $t('userHistory.delete') }}
+            </confirm-button>
+          </div>
+          <router-link :to="{ path: event.uri }" class="p-3 d-block">
+            <div class="user-history__list__item__name font-weight-bold">
+              {{ event.name }}
+            </div>
+            <div class="user-history__list__item__query ">
+              <applied-search-filters-item v-for="(filter, index) in createFiltersFromURI(event.uri)"
+                                           is-read-only
+                                           class="pl-2"
+                                          :key="index"
+                                          :filter="filter" />
             </div>
           </router-link>
-          <confirm-button class="user-history__list__item--delete btn btn-light ml-2 col-md-1"
-              v-b-tooltip.hover
-              :confirmed="() => deleteUserEvent(event)"
-              :label="$t('userHistory.delete')"
-              :no="$t('global.no')"
-              :yes="$t('global.yes')"
-              :title="$t('userHistory.delete')">
-              <fa icon="trash-alt" />
-              <span class="sr-only">
-                {{ $t('userHistory.delete') }}
-              </span>
-          </confirm-button>
         </li>
       </ul>
       <div class="text-muted text-center" v-else>
@@ -92,20 +93,20 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .user-history {
     &__list {
 
       &__item {
 
-        &:nth-child(odd) {
-          background: rgba(black, .05)
-        }
-
         a:hover {
           text-decoration: none;
-          background: $secondary;
-          color: white;
+          color: $table-hover-color;
+          background-color: $table-hover-bg;
+        }
+
+        &:nth-child(odd) {
+          background: $table-accent-bg;
         }
       }
     }

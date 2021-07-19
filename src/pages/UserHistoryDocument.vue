@@ -3,13 +3,13 @@
     <div class="container mt-4">
       <ul class="list-unstyled user-history__list card mb-4" v-if="events.length">
         <li v-for="event in events" :key="event.id" class="user-history__list__item">
-          <router-link :to="{ path: event.uri }" class="p-2 d-block d-flex">
-            <document-thumbnail :document="eventAsDocument(event)" size="40" crop lazy class="mr-2 user-history__list__item__preview" />
-            <div>
+          <router-link :to="{ path: event.uri }" class="p-3 d-flex">
+            <document-thumbnail :document="eventAsDocument(event)" size="40" crop lazy class="mr-3 user-history__list__item__preview" />
+            <div class="flex-grow-1">
               <div class="user-history__list__item__name font-weight-bold">
                 {{ event.name }}
               </div>
-              <div class="user-history__list__item__uri small">
+              <div class="user-history__list__item__uri small text-muted" direction="rtl">
                 <fa icon="link" class="mr-1" />
                 {{ event.uri }}
               </div>
@@ -58,34 +58,36 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
   .user-history {
     &__list {
 
       &__item {
 
         &:nth-child(odd) {
-          background: rgba(black, .05)
+          background: $table-accent-bg;
         }
 
         a:hover {
           text-decoration: none;
-          background: $secondary;
-          color: white;
-        }
-
-        &__uri {
-          color: $text-muted;
-          width: 80%;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
+          color: $table-hover-color;
+          background-color: $table-hover-bg;
         }
 
         & &__preview.document-thumbnail--crop {
           width: 40px;
           min-width: 40px;
           height: 40px;
+        }
+
+        a > div {
+          min-width: 0;
+        }
+
+        &__uri {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
         }
       }
     }
