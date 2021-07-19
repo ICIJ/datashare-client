@@ -25,7 +25,7 @@ describe('AppliedSearchFiltersItem.vue', () => {
     it('should display a filter', () => {
       expect(wrapper.findAll('.applied-search-filters-item')).toHaveLength(1)
       expect(wrapper.find('.applied-search-filters-item').text()).toBe('term_01')
-      expect(wrapper.findAll('.applied-search-filters-item.strikethrough')).toHaveLength(0)
+      expect(wrapper.findAll('.applied-search-filters-item--negation')).toHaveLength(0)
     })
 
     it('should display an applied filter as strikethrough if excluded', () => {
@@ -33,7 +33,7 @@ describe('AppliedSearchFiltersItem.vue', () => {
 
       expect(wrapper.findAll('.applied-search-filters-item')).toHaveLength(1)
       expect(wrapper.find('.applied-search-filters-item').text()).toBe('term_01')
-      expect(wrapper.findAll('.applied-search-filters-item.strikethrough')).toHaveLength(1)
+      expect(wrapper.findAll('.applied-search-filters-item--negation')).toHaveLength(1)
     })
   })
 
