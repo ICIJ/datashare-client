@@ -7,7 +7,8 @@
     "no": "Non",
     "submit": "Valider",
     "confirmLabel": "Êtes-vous sûr•e ?",
-    "emptyTextTable": "Il n'y a rien à afficher"
+    "emptyTextTable": "Il n'y a rien à afficher",
+    "you": "You"
   },
   "aggregations": {
     "more": "Explorer plus",
@@ -74,7 +75,7 @@
       "on": "sur",
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
-      "batchDownload": "Download results",
+      "batchDownload": "Télécharger les résultats",
       "sort": {
         "sortLabel": "Trier",
         "sort": "Tri par",
@@ -304,7 +305,7 @@
       "PORTUGUESE": "Portugais",
       "QUECHUA": "Quechua",
       "ROMANSH": "Romanche",
-      "ROMANIAN": "Romanian",
+      "ROMANIAN": "Roumain",
       "RUNDI": "Kirundi",
       "MOLDAVIAN": "Moldave",
       "RUSSIAN": "Russe",
@@ -486,7 +487,7 @@
     "description": "<a href=\"%{howToLink}\" target=\"_blank\">Lire la documentation</a> sur comment ajouter des documents.",
     "go": "Exécuter",
     "tasks": "Tâches",
-    "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
+    "empty": "Vous n'avez pas encore commencé de tâches. <a href=\"%{howToLink}\" target=\"_blank\">En savoir plus.</a>",
     "extractText": "Extraire le texte",
     "extractWithOcrLabel": "Voulez-vous aussi extraire le texte des images et des PDFs ?",
     "extractWithOcrHelp": "Si oui, Datashare exécutera l'OCR (Optical Character Recognition - la reconnaissance de caractère optique). Cela peut prendre jusqu'à 10 fois plus de temps.",
@@ -560,21 +561,22 @@
   },
   "userHistory": {
     "heading": "Votre historique",
-    "description": "On this page you can retreive the documents you opened and the searches you saved.",
+    "description": "Sur cette page, vous retrouvez les documents que vous avez consultés et les recherches que vous avez sauvegardées.",
     "empty": "Votre historique est vide",
     "clear": "Vider l'historique",
     "document": "Documents",
-    "search": "Searches",
+    "search": "Recherches",
     "name": "Nom",
     "saveSearch": "Sauvergarder cette recherche",
     "submitSuccess": "Votre recherche a été sauvegardée.",
     "submitError": "Erreur, votre recherche n'a pas pu être ajoutée.",
-    "delete": "Delete search",
-    "deleted": "The search have been deleted.",
-    "notDeleted": "The search has not been deleted."
+    "delete": "Delete",
+    "deleted": "La recherche a été supprimée.",
+    "confirmDelete": "Are you sure you want to delete this saved search?",
+    "notDeleted": "La recherche n'a pas été supprimée."
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
+    "description": "Vous pouvez consulter toutes vos recherches sauvegardées dans <a href=\"{searchHistoryPath}\">Historique › Recherches </a>."
   },
   "tasks": {
     "title": "Tâches",
@@ -583,7 +585,7 @@
   "batchSearch": {
     "lead": "Rechercher plusieurs termes dans plusieurs documents en même temps.",
     "title": "Recherches en lot",
-    "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
+    "empty": "Vous n'avez pas encore commencé de recherche en lot. <a href=\"%{howToLink}\">En savoir plus.</a>",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
     "fileDescription": "Exportez votre feuille de calcul au format CSV en utilisant l'encodage UTF-8. <ul><li>Seul le format CSV est accepté.</li> <li>Le fichier CSV ne doit pas contenir plus de 60 000 requêtes.</li> <li>La première et seule colonne doit contenir les termes à rechercher.</li> <li>Pas de saut de ligne dans les cellules.</li> <li>Uniquement quand 'Rechercher les termes exacts' n'est pas coché, vous pouvez utiliser AND OR NOT * ? + - et les autres opérateurs de recherche dans votre CSV, et utiliser une Regex entre 2 slashes</li></ul>",
@@ -689,9 +691,9 @@
   },
   "batchDownload": {
     "title": "Téléchargements en lot",
-    "created": "Your download is being prepared",
+    "created": "Votre téléchargement est en cours de préparation",
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
-    "inProgress": "See all pending downloads"
+    "inProgress": "Voir tous les téléchargements en attente"
   },
   "insights": {
     "title": "Aperçu",
