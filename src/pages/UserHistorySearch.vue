@@ -117,6 +117,10 @@ export default {
         &:nth-child(odd) {
           background: $table-accent-bg;
         }
+
+        &:not(:last-of-type) {
+          border-bottom: 1px solid $border-color;
+        }
       }
     }
   }

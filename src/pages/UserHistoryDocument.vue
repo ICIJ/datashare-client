@@ -68,6 +68,10 @@ export default {
           background: $table-accent-bg;
         }
 
+        &:not(:last-of-type) {
+          border-bottom: 1px solid $border-color;
+        }
+
         a:hover {
           text-decoration: none;
           color: $table-hover-color;
