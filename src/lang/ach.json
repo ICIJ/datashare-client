@@ -7,7 +7,8 @@
     "no": "crwdns2188:0crwdne2188:0",
     "submit": "crwdns2354:0crwdne2354:0",
     "confirmLabel": "crwdns2190:0crwdne2190:0",
-    "emptyTextTable": "crwdns2192:0crwdne2192:0"
+    "emptyTextTable": "crwdns2192:0crwdne2192:0",
+    "you": "crwdns2531:0crwdne2531:0"
   },
   "aggregations": {
     "more": "crwdns234:0crwdne234:0",
@@ -569,8 +570,9 @@
     "saveSearch": "crwdns2476:0crwdne2476:0",
     "submitSuccess": "crwdns2478:0crwdne2478:0",
     "submitError": "crwdns2480:0crwdne2480:0",
-    "delete": "crwdns2526:0crwdne2526:0",
+    "delete": "crwdns2533:0crwdne2533:0",
     "deleted": "crwdns2528:0crwdne2528:0",
+    "confirmDelete": "crwdns2535:0crwdne2535:0",
     "notDeleted": "crwdns2530:0crwdne2530:0"
   },
   "userHistorySaveSearchForm": {
