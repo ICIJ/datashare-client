@@ -101,19 +101,20 @@
 </template>
 
 <script>
-import { compact, find, get } from 'lodash'
+import { compact, find, get, random, some } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
 import BatchSearchForm from '@/components/BatchSearchForm'
 import BatchSearchStatus from '@/components/BatchSearchStatus'
 import UserDisplay from '@/components/UserDisplay'
+import polling from '@/mixins/polling'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
 
 export default {
   name: 'BatchSearches',
-  mixins: [utils],
+  mixins: [polling, utils],
   components: {
     BatchSearchForm,
     BatchSearchStatus,
@@ -229,23 +230,24 @@ export default {
     },
     numberOfPages () {
       return Math.ceil(this.total / this.perPage)
+    },
+    hasPendingBatchSearches () {
+      const pendingStates = ['RUNNING', 'QUEUED']
+      return some(this.batchSearches, ({ state }) => pendingStates.includes(state))
     }
   },
   watch: {
     page () {
-      this.fetch()
+      this.fetchWithLoader()
     },
     sort () {
-      this.fetch()
+      this.fetchWithLoader()
     },
     order () {
-      this.fetch()
+      this.fetchWithLoader()
     },
     query () {
-      this.fetch()
-    },
-    search () {
-      this.fetch()
+      this.fetchWithLoader()
     }
   },
   beforeRouteEnter (to, from, next) {
@@ -268,7 +270,7 @@ export default {
     next()
   },
   async mounted () {
-    this.fetch()
+    this.fetchWithLoader()
   },
   methods: {
     generateTo (item) {
@@ -298,14 +300,28 @@ export default {
       return this.$router.push(this.generateLinkToBatchSearch(params))
     },
     async fetch () {
-      this.$wait.start('load batchSearches')
-      this.$Progress.start()
       const from = (this.page - 1) * this.perPage
       const size = this.perPage
       const params = { from, size, sort: this.sort, order: this.order, query: this.query, field: this.field }
       await this.$store.dispatch('batchSearch/getBatchSearches', params)
+    },
+    async fetchWithLoader () {
+      this.$wait.start('load batchSearches')
+      this.$Progress.start()
+      await this.fetchAndRegisterPoll()
       this.$Progress.finish()
       this.$wait.end('load batchSearches')
+    },
+    async fetchForPoll () {
+      await this.fetch()
+      // Continue to poll data if they are pending batch searches and we are on page 1
+      return this.page === 1 && this.hasPendingBatchSearches
+    },
+    async fetchAndRegisterPoll () {
+      await this.fetch()
+      const fn = this.fetchForPoll
+      const timeout = () => random(1000, 4000)
+      this.registerPollOnce({ fn, timeout })
     },
     linkGen (page) {
       return this.generateLinkToBatchSearch({ page })
