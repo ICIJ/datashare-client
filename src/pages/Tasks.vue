@@ -39,7 +39,7 @@ export default {
   },
   data () {
     return {
-      defaultTab: 0
+      defaultTab: null
     }
   },
   computed: {

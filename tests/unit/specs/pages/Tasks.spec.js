@@ -25,7 +25,7 @@ describe('Tasks.vue', () => {
   it('should select the "batch-search" tab by default', () => {
     router.replace({ name: 'tasks' })
     wrapper = shallowMount(Tasks, { i18n, localVue, store, router })
-    expect(wrapper.vm.tab).toBe(0)
+    expect(wrapper.vm.tab).toBe(null)
   })
 
   it('should select the "batch-download" tab when the route is active', () => {

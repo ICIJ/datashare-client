@@ -48,7 +48,7 @@ export default {
   data () {
     return {
       events: [],
-      defaultTab: 0,
+      defaultTab: null,
       defaultType: 'document'
     }
   },
