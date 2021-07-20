@@ -212,7 +212,6 @@ export default {
     },
     searchTerms: throttle(async function () {
       try {
-        this.$set(this, 'activeSuggestionIndex', -1)
         if (this.suggestionsAllowed) {
           const { suggestions, query } = await this.suggestTerms(this.termCandidates())
           // Is the query still valid

@@ -99,12 +99,12 @@
                      :hide-exclude="hideExclude"
                      :hide-show-more="hideShowMore"
                      :hide-sort="hideSort"
-                     @open-filter-search="openFilterSearch"
                      :sort-by-options.sync="sortByOptions"
                      :sort-by-order.sync="sortByOrder"
                      :sort-by.sync="sortBy"
+                     @open-filter-search="openFilterSearch"
                      @toggle-filter="toggleFilter"
-                     v-if="!hideFooter"></filter-footer>
+                     v-if="!hideFooter" />
     </b-collapse>
   </div>
 </template>

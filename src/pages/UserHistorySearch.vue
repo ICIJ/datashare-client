@@ -16,12 +16,12 @@
             </confirm-button>
           </div>
           <router-link :to="{ path: event.uri }" class="p-3 d-block">
-            <div class="user-history__list__item__name font-weight-bold">
+            <div class="user-history__list__item__name font-weight-bold mb-1">
               {{ event.name }}
             </div>
-            <div class="user-history__list__item__query ">
-              <applied-search-filters-item v-for="(filter, index) in filtersItems(event)"
-                                           read-only
+            <div class="user-history__list__item__query">
+              <applied-search-filters-item read-only
+                                           v-for="(filter, index) in filtersItems(event)"
                                           :key="index"
                                           :filter="filter" />
             </div>
@@ -60,26 +60,32 @@ export default {
     }
   },
   methods: {
-    filtersItems (event) {
-      const items = this.createFiltersFromURI(event.uri)
-      return items
+    filtersItems ({ uri }) {
+      return this.createFiltersFromURI(uri)
+    },
+    isIgnoredFilter ({ name, value }) {
+      const ignored = ['from', 'size', 'sort', 'field']
+      return ignored.includes(name) || (name === 'q' && ['', '*'].includes(value))
     },
     createFiltersFromURI (uri) {
-      const filters = []
-      const notUsed = ['from', 'size', 'sort', 'field']
-      const fields = new URLSearchParams(uri)
-      for (const obj of Array.from(fields.entries()).filter(entry => !notUsed.includes(entry[0]))) {
-        const key = obj[0]
-        let val = obj[1]
-        if (key.includes('Date')) {
-          val = new Date(parseInt(val)).toISOString().substr(0, 10).replace(/T/, ' ').replace(/\..+/, '')
+      const urlSearchParams = new URLSearchParams(uri.split('?').slice(1).pop())
+      const params = Object.fromEntries(urlSearchParams.entries())
+      // Reduce params list into an array
+      return Object.keys(params).reduce((filters, name) => {
+        let value = params[name]
+        // Skip ignored param
+        if (this.isIgnoredFilter({ name, value })) {
+          return filters
         }
-        if (val === '') {
-          val = '*'
+        // Filter value is a Date
+        if (name.includes('Date')) {
+          const ts = parseInt(value)
+          value = new Date(ts).toISOString().substr(0, 10).replace(/T/, ' ').replace(/\..+/, '')
         }
-        filters.push({ name: key, label: val, value: val })
-      }
-      return filters
+        // Finally, add the filter to the list of displayed filters
+        filters.push({ name, value, label: value })
+        return filters
+      }, [])
     },
     async deleteUserEvent (event) {
       try {

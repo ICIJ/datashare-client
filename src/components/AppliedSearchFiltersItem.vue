@@ -1,25 +1,35 @@
 <template>
-  <b-badge
-    class="applied-search-filters-item px-0 my-1 mr-2 mw-100 text-truncate"
-    :class="{
-      'applied-search-filters-item--negation': filter.negation,
-      'applied-search-filters-item--read-only': readOnly
-    }"
+  <b-badge class="applied-search-filters-item p-0 my-1 mr-2 mw-100 text-truncate"
+    v-b-tooltip.html
+    variant="warning"
     @click.prevent="deleteQueryTerm()"
-    :id="id"
-    pill
-    :title="label"
-    v-b-tooltip
-    variant="warning">
-    <fa icon="times-circle" class="mx-1" v-if="!readOnly" />
-    <span class="applied-search-filters-item__wrapper">
-      {{ label }}
+    :id="appliedSearchFiltersItemId"
+    :pill="hideFilterLabel"
+    :class="appliedSearchFiltersItemClassList">
+    <span class="applied-search-filters-item__wrapper d-inline-flex flex-column">
+      <span class="applied-search-filters-item__wrapper__label p-1" v-if="!hideFilterLabel">
+        {{ filterName }}
+      </span>
+      <span class="applied-search-filters-item__wrapper__value p-1">
+        <fa icon="times-circle" v-if="!readOnly" />
+        {{ displayedFilterValue }}
+      </span>
     </span>
+    <b-tooltip :target="appliedSearchFiltersItemId" triggers="hover" boundary="window">
+      <dl class="m-0">
+        <dt>
+          {{ filterName }}
+        </dt>
+        <dd class="m-0">
+          {{ displayedFilterValue }}
+        </dd>
+      </dl>
+    </b-tooltip>
   </b-badge>
 </template>
 
 <script>
-import uniqueId from 'lodash/uniqueId'
+import { uniqueId } from 'lodash'
 
 import displayUser from '@/filters/displayUser'
 
@@ -40,28 +50,60 @@ export default {
      */
     readOnly: {
       type: Boolean
+    },
+    /**
+     * Hide the label of the filter
+     */
+    hideFilterLabel: {
+      type: Boolean
     }
   },
   filters: {
     displayUser
   },
   computed: {
-    id () {
-      return uniqueId('applied-search-filters-item')
+    appliedSearchFiltersItemId () {
+      return uniqueId('applied-search-filters-item-')
     },
-    label () {
-      return this.$options.filters.displayUser(this.filter.label)
+    appliedSearchFiltersItemClassList () {
+      return {
+        'applied-search-filters-item--negation': this.filter.negation,
+        'applied-search-filters-item--read-only': this.readOnly
+      }
+    },
+    displayedFilterValue () {
+      return this.filter.label || this.filterValue
+    },
+    filterValue () {
+      return this.$options.filters.displayUser(this.filter.value)
+    },
+    filterName () {
+      if (this.isQueryTerm) {
+        return this.$t('filter.searchTerm')
+      }
+      const name = this.filter.name.split('f[').pop().split(']').shift()
+      const localeKey = `filter.${name}`
+      return this.$te(localeKey) ? this.$t(localeKey) : name
+    },
+    isQueryTerm () {
+      return !('name' in this.filter) || this.filter.name === 'q'
     }
   },
   methods: {
     async deleteQueryTerm () {
-      if ('name' in this.filter) {
+      if (this.readOnly) {
+        return
+      }
+
+      if (this.isQueryTerm) {
+        await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
+      } else {
         await this.$store.dispatch('search/removeFilterValue', this.filter)
         this.$root.$emit('filter::search::update', this.filter.name)
-      } else {
-        await this.$store.dispatch('search/deleteQueryTerm', this.filter.value)
       }
-      this.$router.push({ name: 'search', query: this.$store.getters['search/toRouteQuery']() }).catch(() => {})
+
+      const query = this.$store.getters['search/toRouteQuery']()
+      this.$router.push({ name: 'search', query }).catch(() => {})
     }
   }
 }
@@ -75,12 +117,16 @@ export default {
       text-decoration: line-through;
     }
 
-    &--read-only &__wrapper {
-      padding:0 $spacer * 0.5;
-    }
-
     &__wrapper {
-      padding-right: $spacer * 0.25;
+
+      &__label {
+        font-size: 0.8em;
+        background: #fff;
+        border: 1px solid $warning;
+        border-bottom: 0;
+        text-transform: uppercase;
+        border-radius: $border-radius-sm $border-radius-sm 0 0;
+      }
     }
   }
 </style>
