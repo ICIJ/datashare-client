@@ -106,7 +106,7 @@
 </template>
 
 <script>
-import { filter, sortBy, uniqueId } from 'lodash'
+import { filter, random, sortBy, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 
 import ExtractingForm from '@/components/ExtractingForm'
@@ -114,6 +114,7 @@ import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
 import EllipseStatus from '@/components/EllipseStatus'
 
 import elasticsearch from '@/api/elasticsearch'
+import polling from '@/mixins/polling'
 import settings from '@/utils/settings'
 import { getOS } from '@/utils/utils'
 
@@ -124,6 +125,7 @@ export default {
     ExtractingForm,
     FindNamedEntitiesForm
   },
+  mixins: [polling],
   filters: {
     taskToName (taskName) {
       return taskName.split('.').pop().split('@').shift()
@@ -190,10 +192,6 @@ export default {
     }
     this.$wait.end('load indexing tasks')
   },
-  beforeRouteLeave (to, from, next) {
-    this.stopPollingTasks()
-    next()
-  },
   methods: {
     async countAny () {
       const index = this.index
@@ -222,11 +220,15 @@ export default {
       await this.$store.dispatch('indexing/getTasks')
     },
     async startPollingTasks () {
-      await this.$store.dispatch('indexing/startPollingTasks')
-      return this.$store.dispatch('indexing/getTasks')
+      const fn = this.getTasks
+      const immediate = true
+      const timeout = () => random(1000, 4000)
+      this.registerPollOnce({ fn, immediate, timeout })
     },
-    stopPollingTasks () {
-      return this.$store.dispatch('indexing/stopPollingTasks')
+    async getTasks () {
+      await this.$store.dispatch('indexing/getTasks')
+      // Continue to poll task if they are pending ones
+      return this.hasPendingTasks
     }
   }
 }

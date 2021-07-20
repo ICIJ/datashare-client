@@ -99,12 +99,6 @@ describe('IndexingStore', () => {
     }))
   })
 
-  it('should stop polling jobs', () => {
-    store.commit('indexing/stopPollingTasks')
-
-    expect(store.state.indexing.pollHandle).toBeNull()
-  })
-
   it('should reset the extracting form', () => {
     store.commit('indexing/updateField', { path: 'form.ocr', value: true })
     expect(store.state.indexing.form.ocr).toBeTruthy()

@@ -38,19 +38,6 @@ describe('Indexing.vue', () => {
     jest.unmock('@/api/elasticsearch')
   })
 
-  it('should start polling tasks on mount and stop polling tasks on beforeRouteLeave', async () => {
-    const wrapper = mount(Indexing, { i18n, localVue, store, wait })
-    await flushPromises()
-
-    const url = Api.getFullUrl('/api/task/all')
-    expect(axios.request).toBeCalledTimes(1)
-    expect(axios.request).toBeCalledWith(expect.objectContaining({ url }))
-    expect(store.state.indexing.pollHandle).not.toBeNull()
-
-    Indexing.beforeRouteLeave.call(wrapper.vm, undefined, undefined, jest.fn())
-    expect(store.state.indexing.pollHandle).toBeNull()
-  })
-
   it('should display tasks list', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
@@ -71,7 +58,7 @@ describe('Indexing.vue', () => {
   it('should disable the find named entities button if not task is done or has no documents', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
-    await wrapper.vm.stopPollingTasks()
+    await wrapper.vm.unregisteredPools()
     wrapper.vm.count = 0
     await store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
 
@@ -82,7 +69,7 @@ describe('Indexing.vue', () => {
   it('should disable the "Stop pending tasks" and "Delete done tasks" buttons if no tasks', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
-    await wrapper.vm.stopPollingTasks()
+    await wrapper.vm.unregisteredPools()
     await store.commit('indexing/updateTasks', [])
     expect(wrapper.find('.indexing__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
     expect(wrapper.find('.indexing__actions__delete-done-tasks').attributes('disabled')).toBe('disabled')
@@ -91,7 +78,7 @@ describe('Indexing.vue', () => {
   it('should not disable the "Stop pending tasks" button, if a task is running', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
-    await wrapper.vm.stopPollingTasks()
+    await wrapper.vm.unregisteredPools()
     await store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }])
     expect(wrapper.find('.indexing__actions__stop-pending-tasks').attributes('disabled')).not.toBe('disabled')
   })
@@ -99,7 +86,7 @@ describe('Indexing.vue', () => {
   it('should disable the "Stop pending tasks" if no tasks are running', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
-    await wrapper.vm.stopPollingTasks()
+    await wrapper.vm.unregisteredPools()
     await store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     expect(wrapper.find('.indexing__actions__stop-pending-tasks').attributes('disabled')).toBe('disabled')
   })
@@ -107,7 +94,7 @@ describe('Indexing.vue', () => {
   it('should not disable the "Delete done tasks" if a task is done', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
-    await wrapper.vm.stopPollingTasks()
+    await wrapper.vm.unregisteredPools()
     await store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
     expect(wrapper.find('.indexing__actions__delete-done-tasks').attributes('disabled')).not.toBe('disabled')
   })
@@ -115,7 +102,7 @@ describe('Indexing.vue', () => {
   it('should call backend on click on the "Stop pending tasks" button and delete the pending tasks', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
-    await wrapper.vm.stopPollingTasks()
+    await wrapper.vm.unregisteredPools()
     await store.commit('indexing/updateTasks', [
       { name: 'foo.bar@123', progress: 0.5, state: 'RUNNING' }
     ])
@@ -131,7 +118,7 @@ describe('Indexing.vue', () => {
   it('should call a backend endpoint on click on the "Delete done tasks" button', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
-    await wrapper.vm.stopPollingTasks()
+    await wrapper.vm.unregisteredPools()
     await store.commit('indexing/updateTasks', [
       { name: 'foo.bar@123', progress: 0.5, state: 'DONE' }
     ])
@@ -147,14 +134,14 @@ describe('Indexing.vue', () => {
   it('should display 1 available "Stop task" buttons if 1 tasks are running', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
-    await wrapper.vm.stopPollingTasks()
+    await wrapper.vm.unregisteredPools()
     expect(wrapper.findAll('.indexing__tasks__item__stop')).toHaveLength(1)
   })
 
   it('should call a backend endpoint on click on a "Stop task" icon', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
-    await wrapper.vm.stopPollingTasks()
+    await wrapper.vm.unregisteredPools()
 
     axios.request.mockClear()
     wrapper.find('.indexing__tasks__item__stop').trigger('click')
@@ -168,7 +155,7 @@ describe('Indexing.vue', () => {
   it('should display 1 disabled "Stop task" button if 1 task is done', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
-    await wrapper.vm.stopPollingTasks()
+    await wrapper.vm.unregisteredPools()
 
     await store.commit('indexing/updateTasks', [{ name: 'foo.bar@123', progress: 0.5, state: 'DONE' }])
 
