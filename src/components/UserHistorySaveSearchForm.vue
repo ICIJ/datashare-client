@@ -43,9 +43,12 @@ export default {
     async saveSearch () {
       try {
         await this.api.addHistoryEvent(this.index, 'SEARCH', this.name, this.uriFromStore)
-        this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), { noCloseButton: true, variant: 'success' })
+        const { href } = this.$router.resolve({ name: 'search-history' })
+        const toastParams = { href, noCloseButton: true, variant: 'success' }
+        this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
       } catch (_) {
-        this.$root.$bvToast.toast(this.$t('userHistory.submitError'), { noCloseButton: true, variant: 'danger' })
+        const toastParams = { noCloseButton: true, variant: 'danger' }
+        this.$root.$bvToast.toast(this.$t('userHistory.submitError'), toastParams)
       } finally {
         this.$emit('submit')
       }
