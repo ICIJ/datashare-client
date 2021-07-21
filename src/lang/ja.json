@@ -148,6 +148,7 @@
     "indexingDate": "インデックスの日付",
     "extractionLevel": "抽出レベル",
     "creationDate": "作成日付",
+    "index": "Project",
     "projects": "プロジェクト",
     "deleteNamedEntity": "この固有表現を削除",
     "showMore": "Expand",
@@ -155,6 +156,7 @@
     "starred": "スター付き",
     "notStarred": "スターなし",
     "recommendedBy": "Recommended by",
+    "searchTerm": "Term",
     "sortByDropdown": {
       "toggler": "Sort",
       "options": {
