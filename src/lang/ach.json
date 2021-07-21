@@ -148,6 +148,7 @@
     "indexingDate": "crwdns1375:0crwdne1375:0",
     "extractionLevel": "crwdns1377:0crwdne1377:0",
     "creationDate": "crwdns1379:0crwdne1379:0",
+    "index": "crwdns2536:0crwdne2536:0",
     "projects": "crwdns1381:0crwdne1381:0",
     "deleteNamedEntity": "crwdns1383:0crwdne1383:0",
     "showMore": "crwdns2232:0crwdne2232:0",
@@ -155,6 +156,7 @@
     "starred": "crwdns1391:0crwdne1391:0",
     "notStarred": "crwdns1393:0crwdne1393:0",
     "recommendedBy": "crwdns1848:0crwdne1848:0",
+    "searchTerm": "crwdns2538:0crwdne2538:0",
     "sortByDropdown": {
       "toggler": "crwdns2236:0crwdne2236:0",
       "options": {
