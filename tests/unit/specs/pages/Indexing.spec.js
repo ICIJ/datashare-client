@@ -41,6 +41,7 @@ describe('Indexing.vue', () => {
   it('should display tasks list', async () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromises()
+    await wrapper.vm.$nextTick()
 
     expect(wrapper.findAll('.indexing__tasks__item')).toHaveLength(2)
     expect(wrapper.findAll('.indexing__tasks__item__name').at(0).text()).toContain('baz')
