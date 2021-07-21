@@ -201,11 +201,11 @@ export default {
     },
     closeExtractingForm () {
       this.$bvModal.hide(this.extractingFormId)
-      this.startPollingTasks()
+      return this.startPollingTasks()
     },
     closeFindNamedEntitiesForm () {
       this.$bvModal.hide(this.findNamedEntitiesFormId)
-      this.startPollingTasks()
+      return this.startPollingTasks()
     },
     async stopPendingTasks () {
       await this.$store.dispatch('indexing/stopPendingTasks')
@@ -219,11 +219,13 @@ export default {
       await this.$store.dispatch('indexing/deleteDoneTasks')
       await this.$store.dispatch('indexing/getTasks')
     },
-    async startPollingTasks () {
+    startPollingTasks () {
       const fn = this.getTasks
-      const immediate = true
       const timeout = () => random(1000, 4000)
-      this.registerPollOnce({ fn, immediate, timeout })
+      // Register the `getTasks` for later
+      this.registerPollOnce({ fn, timeout })
+      // Execute the `getTasks` method immediatly
+      return fn()
     },
     async getTasks () {
       await this.$store.dispatch('indexing/getTasks')

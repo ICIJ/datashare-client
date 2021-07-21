@@ -3,8 +3,8 @@ import polling from '@/mixins/polling'
 
 // A few helper functions
 const flushPromises = () => new Promise(resolve => setImmediate(resolve))
-const flushPromisesAndPendingTimers = async () => jest.runOnlyPendingTimers() && await flushPromises()
-const flushPromisesAndAdvanceTimers = async time => jest.advanceTimersByTime(time) && await flushPromises()
+const flushPromisesAndPendingTimers = async () => { jest.runOnlyPendingTimers(); await flushPromises() }
+const flushPromisesAndAdvanceTimers = async time => { jest.advanceTimersByTime(time); await flushPromises() }
 
 // Use fake timers to control times!
 // @see https://jestjs.io/fr/docs/timer-mocks
