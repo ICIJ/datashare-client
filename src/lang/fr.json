@@ -148,6 +148,7 @@
     "indexingDate": "Dates d'indexation",
     "extractionLevel": "Niveaux d'extraction",
     "creationDate": "Dates de création",
+    "index": "Project",
     "projects": "Projets",
     "deleteNamedEntity": "Supprimer cette Entité Nommée",
     "showMore": "Agrandir",
@@ -155,6 +156,7 @@
     "starred": "Favoris",
     "notStarred": "Non favoris",
     "recommendedBy": "Recommandé par",
+    "searchTerm": "Term",
     "sortByDropdown": {
       "toggler": "Trier par",
       "options": {
