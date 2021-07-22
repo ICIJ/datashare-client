@@ -99,8 +99,13 @@ export const router = {
             {
               name: 'batch-download',
               path: 'batch-download',
-              component: {
-                template: '<div class="container p-4 text-muted text-center">{{ $t("batchDownload.warning") }}</div>'
+              component: () => import('@/pages/BatchDownload'),
+              meta: {
+                title: ({ i18n }) => i18n.t('batchDownload.title'),
+                docs: [
+                  '<%- os %>/add-documents-to-datashare-on-<%- os %>.md?mode=LOCAL',
+                  'all/analyze-documents.md?mode=LOCAL'
+                ]
               }
             },
             {
