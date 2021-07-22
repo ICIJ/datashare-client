@@ -25,8 +25,9 @@ export default class Api {
   deleteDoneTasks () {
     return this.sendAction('/api/task/clean', { method: 'POST' })
   }
-  getTasks () {
-    return this.sendAction('/api/task/all')
+  getTasks (filter) {
+    console.log(filter)
+    return this.sendAction('/api/task/all', { params: { filter } })
   }
   createProject (project) {
     return this.sendActionAsText(`/api/index/${project}`, { method: 'PUT' })
