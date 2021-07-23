@@ -939,7 +939,11 @@ describe('SearchStore', () => {
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/recommendations?userids=user_01,user_02`)
+        url: Api.getFullUrl(`/api/${project}/documents/recommendations`),
+        method: 'GET',
+        params: {
+          userids: 'user_01,user_02'
+        }
       }))
       expect(store.state.search.documentsRecommended).toEqual(['document_01', 'document_02', 'document_03'])
     })
@@ -973,7 +977,11 @@ describe('SearchStore', () => {
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/users/recommendations?project=${project}`)
+        url: Api.getFullUrl('/api/users/recommendations'),
+        method: 'GET',
+        params: {
+          project: project
+        }
       }))
       expect(store.state.search.recommendedByUsers)
         .toEqual([{ user: 'user_01', count: 1 }, { user: 'user_02', count: 1 }])
@@ -987,7 +995,11 @@ describe('SearchStore', () => {
 
       expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/users/recommendations?project=${project}`)
+        url: Api.getFullUrl('/api/users/recommendations'),
+        method: 'GET',
+        params: {
+          project: project
+        }
       }))
       expect(store.state.search.recommendedByTotal).toBe(42)
     })

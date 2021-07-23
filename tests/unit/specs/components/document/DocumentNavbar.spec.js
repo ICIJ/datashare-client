@@ -57,7 +57,13 @@ describe('DocumentNavbar.vue', () => {
         data: ['doc_01']
       }))
       expect(wrapper.vm.isRecommended).toBeTruthy()
-      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/users/recommendations?project=${project}`) })
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl('/api/users/recommendations'),
+        method: 'GET',
+        params: {
+          project: project
+        }
+      }))
       expect(store.state.search.recommendedByUsers).toEqual([{ user: 'Jean-Michel', count: 1 }])
     })
 
@@ -75,7 +81,13 @@ describe('DocumentNavbar.vue', () => {
         data: ['doc_01']
       }))
       expect(wrapper.vm.isRecommended).toBeFalsy()
-      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/users/recommendations?project=${project}`) })
+      expect(axios.request).toBeCalledWith(expect.objectContaining({
+        url: Api.getFullUrl('/api/users/recommendations'),
+        method: 'GET',
+        params: {
+          project: project
+        }
+      }))
       expect(store.state.search.recommendedByUsers).toEqual([])
     })
   })

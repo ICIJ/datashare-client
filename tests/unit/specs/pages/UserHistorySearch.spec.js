@@ -78,8 +78,11 @@ describe('UserHistorySearch.vue', () => {
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/users/me/history/event?id=1'),
-      method: 'DELETE'
+      url: Api.getFullUrl('/api/users/me/history/event'),
+      method: 'DELETE',
+      params: {
+        id: event.id
+      }
     }))
   })
 })

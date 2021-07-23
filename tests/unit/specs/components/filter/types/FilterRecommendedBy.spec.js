@@ -63,7 +63,11 @@ describe('FilterRecommendedBy.vue', () => {
   it('should load users who recommended documents in this project', () => {
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/users/recommendations?project=${project}`)
+      url: Api.getFullUrl('/api/users/recommendations'),
+      method: 'GET',
+      params: {
+        project: project
+      }
     }))
     expect(wrapper.vm.recommendedByUsers).toEqual([
       { user: 'user_00', count: 2 },
@@ -93,7 +97,11 @@ describe('FilterRecommendedBy.vue', () => {
     await wrapper.vm.selectUsers(['user_01', 'user_02'])
 
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl(`/api/${project}/documents/recommendations?userids=user_01,user_02`)
+      url: Api.getFullUrl(`/api/${project}/documents/recommendations`),
+      method: 'GET',
+      params: {
+        userids: 'user_01,user_02'
+      }
     }))
     expect(store.state.search.documentsRecommended).toEqual(documents)
     expect(wrapper.vm.selected).toEqual(['user_01', 'user_02'])

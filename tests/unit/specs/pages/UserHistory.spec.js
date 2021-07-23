@@ -71,7 +71,13 @@ describe('UserHistory.vue', () => {
     wrapper = await shallowMount(UserHistory, { i18n, localVue, router, store, wait })
     await wrapper.vm.$nextTick()
     expect(axios.request).toBeCalledTimes(2)
-    expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me/history?type=document') })
+    expect(axios.request).toBeCalledWith(expect.objectContaining({
+      url: Api.getFullUrl('/api/users/me/history'),
+      method: 'GET',
+      params: {
+        type: 'document'
+      }
+    }))
   })
 
   it('should call delete user history api function is called', async () => {
@@ -82,8 +88,11 @@ describe('UserHistory.vue', () => {
 
     expect(axios.request).toBeCalledTimes(2)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
-      url: Api.getFullUrl('/api/users/me/history?type=document'),
-      method: 'DELETE'
+      url: Api.getFullUrl('/api/users/me/history'),
+      method: 'DELETE',
+      params: {
+        type: 'document'
+      }
     }))
   })
 })

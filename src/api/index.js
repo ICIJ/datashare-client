@@ -26,7 +26,6 @@ export default class Api {
     return this.sendAction('/api/task/clean', { method: 'POST' })
   }
   getTasks (filter) {
-    console.log(filter)
     return this.sendAction('/api/task/all', { params: { filter } })
   }
   createProject (project) {
@@ -124,16 +123,16 @@ export default class Api {
     return this.sendAction('/api/users/me')
   }
   getUserHistory (type) {
-    return this.sendAction(`/api/users/me/history?type=${type}`)
+    return this.sendAction('/api/users/me/history', { method: 'GET', params: { type: type } })
   }
   addHistoryEvent (project, type, name, uri) {
     return this.sendActionAsText('/api/users/me/history', { method: 'PUT', data: { project, type, name, uri } })
   }
   deleteUserHistory (type) {
-    return this.sendAction(`/api/users/me/history?type=${type}`, { method: 'DELETE' })
+    return this.sendAction('/api/users/me/history', { method: 'DELETE', params: { type: type } })
   }
   deleteUserEvent (id) {
-    return this.sendAction(`/api/users/me/history/event?id=${id}`, { method: 'DELETE' })
+    return this.sendAction('/api/users/me/history/event', { method: 'DELETE', params: { id: id } })
   }
   setMarkAsRecommended (project, docIds) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/recommend`, { method: 'POST', data: docIds })
@@ -145,10 +144,11 @@ export default class Api {
     return this.sendAction(`/api/users/recommendationsby?project=${project}&docIds=${docId}`)
   }
   getRecommendationsByProject (project) {
-    return this.sendAction(`/api/users/recommendations?project=${project}`)
+    return this.sendAction('/api/users/recommendations', { method: 'GET', params: { project: project } })
   }
   getDocumentsRecommendedBy (project, users) {
-    return this.sendAction(`/api/${project}/documents/recommendations?userids=${join(users)}`)
+    const userIds = join(users)
+    return this.sendAction(`/api/${project}/documents/recommendations`, { method: 'GET', params: { userids: userIds } })
   }
   getNerPipelines () {
     return this.sendAction('/api/ner/pipelines')

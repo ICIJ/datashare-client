@@ -96,7 +96,11 @@ describe('FilterProject.vue', () => {
 
       expect(axios.request).toBeCalledTimes(3)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/users/recommendations?project=${anotherProject}`)
+        url: Api.getFullUrl('/api/users/recommendations'),
+        method: 'GET',
+        params: {
+          project: anotherProject
+        }
       }))
     })
 
