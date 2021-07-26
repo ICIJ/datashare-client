@@ -693,6 +693,7 @@
   },
   "batchDownload": {
     "title": "Batch-Downloads",
+    "empty": "You have not yet started any download tasks.",
     "created": "Your download is being prepared",
     "warning": "Diese Funktion wird derzeit vom Datashare-Team entwickelt.",
     "inProgress": "See all pending downloads"
