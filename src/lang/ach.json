@@ -693,6 +693,7 @@
   },
   "batchDownload": {
     "title": "crwdns2452:0crwdne2452:0",
+    "empty": "crwdns2539:0crwdne2539:0",
     "created": "crwdns2520:0crwdne2520:0",
     "warning": "crwdns2454:0crwdne2454:0",
     "inProgress": "crwdns2518:0crwdne2518:0"
