@@ -693,6 +693,7 @@
   },
   "batchDownload": {
     "title": "Téléchargements en lot",
+    "empty": "You have not yet started any download tasks.",
     "created": "Votre téléchargement est en cours de préparation",
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
     "inProgress": "Voir tous les téléchargements en attente"
