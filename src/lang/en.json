@@ -693,7 +693,7 @@
   },
   "batchDownload": {
     "title": "Batch downloads",
-    "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
+    "empty": "You have not yet started any download tasks.",
     "created": "Your download is being prepared",
     "warning": "This feature is currently being developped by the Datashare team.",
     "inProgress": "See all pending downloads"
