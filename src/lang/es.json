@@ -698,6 +698,10 @@
     "warning": "Esta página está siendo desarrollada actualmente por el equipo de Datashare.",
     "inProgress": "See all pending downloads"
   },
+  "tasksList": {
+    "empty": "You have not yet started any tasks.",
+    "stop": "Stop this task"
+  },
   "insights": {
     "title": "Estadísticas",
     "selectProject": "Seleccione un proyecto"
