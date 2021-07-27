@@ -698,6 +698,10 @@
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
     "inProgress": "Voir tous les téléchargements en attente"
   },
+  "tasksList": {
+    "empty": "You have not yet started any tasks.",
+    "stop": "Stop this task"
+  },
   "insights": {
     "title": "Aperçu",
     "selectProject": "Sélectionner un projet"
