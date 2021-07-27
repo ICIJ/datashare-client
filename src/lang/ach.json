@@ -698,6 +698,10 @@
     "warning": "crwdns2454:0crwdne2454:0",
     "inProgress": "crwdns2518:0crwdne2518:0"
   },
+  "tasksList": {
+    "empty": "crwdns2541:0crwdne2541:0",
+    "stop": "crwdns2543:0crwdne2543:0"
+  },
   "insights": {
     "title": "crwdns2376:0crwdne2376:0",
     "selectProject": "crwdns1854:0crwdne1854:0"
