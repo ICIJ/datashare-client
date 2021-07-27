@@ -1,6 +1,9 @@
 <template>
   <div class="batch-download mt-4 container">
     <v-wait for="load download tasks">
+      <div slot="waiting" class="card py-2">
+        <content-placeholder class="py-2 px-3" v-for="index in 3" :key="index" />
+      </div>
       <tasks-list :tasks="tasks">
         <template v-slot="{ item: { name, properties } }">
           <a :href="downloadResultsUrl(name)" target="_blank">
@@ -17,14 +20,19 @@
 </template>
 
 <script>
+import { some, random } from 'lodash'
 import TasksList from '@/components/TasksList'
+import polling from '@/mixins/polling'
 import Api from '@/api'
+
+const api = new Api()
 
 export default {
   name: 'BatchDownload',
   components: {
     TasksList
   },
+  mixins: [polling],
   data () {
     return {
       tasks: []
@@ -37,13 +45,29 @@ export default {
   },
   async mounted () {
     this.$wait.start('load download tasks')
-    this.tasks = await this.getDownloadTasks()
+    await this.startPollingDownloadTasks()
     this.$wait.end('load download tasks')
   },
+  computed: {
+    hasPendingBatchDownloadTasks () {
+      const pendingStates = ['RUNNING', 'QUEUED']
+      return some(this.tasks, ({ state }) => pendingStates.includes(state))
+    }
+  },
   methods: {
+    startPollingDownloadTasks () {
+      const fn = this.getDownloadTasks
+      const timeout = () => random(1000, 4000)
+      // Register the `getDownloadTasks` for later
+      this.registerPollOnce({ fn, timeout })
+      // Execute the `getDownloadTasks` method immediatly
+      return fn()
+    },
     async getDownloadTasks () {
-      const api = new Api()
-      return api.getTasks('BatchDownloadRunner')
+      this.tasks = await api.getTasks('BatchDownloadRunner')
+      // Return true if it has pending download tasks to tell the
+      // polling function to continue to poll tasks.
+      return this.hasPendingBatchDownloadTasks
     },
     downloadResultsUrl (name) {
       return `/api/task/${name}/result`

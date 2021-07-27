@@ -26,7 +26,7 @@
           <b-badge variant="light" class="tasks-list__tasks__item__id my-1">
             {{ item.name | taskToId }}
           </b-badge>
-          <template v-if="item.state === 'RUNNING'">
+          <template v-if="item.state === 'RUNNING' && stoppable">
             <span class="px-1">
               –
             </span>
@@ -46,20 +46,24 @@
 <script>
 import { sortBy } from 'lodash'
 import EllipseStatus from '@/components/EllipseStatus'
-import polling from '@/mixins/polling'
 
 export default {
   name: 'TasksList',
   components: {
     EllipseStatus
   },
-  mixins: [polling],
   props: {
     /**
       * Object of tasks passed from the parent
       */
     tasks: {
       type: Array
+    },
+    /**
+     * Display a button to stop the task
+     */
+    stoppable: {
+      type: Boolean
     }
   },
   filters: {
