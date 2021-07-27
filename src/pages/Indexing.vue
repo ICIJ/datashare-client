@@ -61,45 +61,11 @@
         </div>
       </div>
       <v-wait for="load indexing tasks">
-        <div slot="waiting" class="card py-2">
-          <content-placeholder class="py-2 px-3" v-for="index in 3" :key="index" />
-        </div>
-        <b-table :fields="tasksFields"
-                 :items="sortedTasks"
-                 responsive
-                 striped
-                 show-empty
-                 thead-tr-class="text-nowrap"
-                 tbody-tr-class="indexing__tasks__item"
-                 class="card border-top-0 indexing__tasks">
+        <tasks-list :tasks="sortedTasks" stoppable>
           <template #empty>
             <p class="text-center m-0" v-html="$t('indexing.empty', { howToLink })"></p>
           </template>
-          <template #cell(state)="{ item: { state, progress } }">
-            <ellipse-status :status="state" :progress="progress * 100" horizontal />
-          </template>
-          <template #cell(name)="{ item: { state, name } }">
-            <div class="indexing__tasks__item__name m-0 font-weight-bold">
-              {{ name | taskToName }}
-            </div>
-            <div class="d-flex align-items-center">
-              <b-badge variant="light" class="indexing__tasks__item__id my-1">
-                {{ name | taskToId }}
-              </b-badge>
-              <template v-if="state === 'RUNNING'">
-                <span class="px-1">
-                  –
-                </span>
-                <b-btn variant="link" size="sm" @click="stopTask(name)" class="indexing__tasks__item__stop text-danger p-0">
-                  Stop this task
-                </b-btn>
-              </template>
-            </div>
-          </template>
-          <template #table-colgroup="{ fields }">
-            <col v-for="{ key } in fields" :key="key" :style="{ width: key === 'state' ? '140px' : 'auto' }">
-          </template>
-        </b-table>
+        </tasks-list>
       </v-wait>
     </div>
   </div>
@@ -111,7 +77,7 @@ import { mapState } from 'vuex'
 
 import ExtractingForm from '@/components/ExtractingForm'
 import FindNamedEntitiesForm from '@/components/FindNamedEntitiesForm'
-import EllipseStatus from '@/components/EllipseStatus'
+import TasksList from '@/components/TasksList'
 
 import elasticsearch from '@/api/elasticsearch'
 import polling from '@/mixins/polling'
@@ -121,19 +87,11 @@ import { getOS } from '@/utils/utils'
 export default {
   name: 'indexing',
   components: {
-    EllipseStatus,
     ExtractingForm,
-    FindNamedEntitiesForm
+    FindNamedEntitiesForm,
+    TasksList
   },
   mixins: [polling],
-  filters: {
-    taskToName (taskName) {
-      return taskName.split('.').pop().split('@').shift()
-    },
-    taskToId (taskName) {
-      return taskName.split('@').pop()
-    }
-  },
   data () {
     return {
       count: 0
@@ -150,7 +108,6 @@ export default {
     hasDoneTasks () {
       return this.tasks.length - this.pendingTasks.length > 0
     },
-
     pendingTasks () {
       return filter(this.tasks, { state: 'RUNNING' })
     },
@@ -178,9 +135,6 @@ export default {
     },
     index () {
       return this.$store.state.search.index
-    },
-    tasksFields () {
-      return this.tasks.length ? ['state', 'name'] : []
     }
   },
   async mounted () {
@@ -209,10 +163,6 @@ export default {
     },
     async stopPendingTasks () {
       await this.$store.dispatch('indexing/stopPendingTasks')
-      await this.$store.dispatch('indexing/getTasks')
-    },
-    async stopTask (name) {
-      await this.$store.dispatch('indexing/stopTask', name)
       await this.$store.dispatch('indexing/getTasks')
     },
     async deleteDoneTasks () {

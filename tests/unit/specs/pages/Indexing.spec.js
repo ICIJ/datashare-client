@@ -48,9 +48,9 @@ describe('Indexing.vue', () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
 
-    expect(wrapper.findAll('.indexing__tasks__item')).toHaveLength(2)
-    expect(wrapper.findAll('.indexing__tasks__item__name').at(0).text()).toContain('baz')
-    expect(wrapper.findAll('.indexing__tasks__item__name').at(1).text()).toContain('bar')
+    expect(wrapper.findAll('.tasks-list__tasks__item')).toHaveLength(2)
+    expect(wrapper.findAll('.tasks-list__tasks__item__name').at(0).text()).toContain('baz')
+    expect(wrapper.findAll('.tasks-list__tasks__item__name').at(1).text()).toContain('bar')
   })
 
   it('should enable the find named entities button by default, and display no tooltip', async () => {
@@ -141,7 +141,7 @@ describe('Indexing.vue', () => {
     const wrapper = mount(Indexing, { i18n, localVue, store, wait })
     await flushPromisesAndPendingTimers()
     await wrapper.vm.unregisteredPools()
-    expect(wrapper.findAll('.indexing__tasks__item__stop')).toHaveLength(1)
+    expect(wrapper.findAll('.tasks-list__tasks__item__stop')).toHaveLength(1)
   })
 
   it('should call a backend endpoint on click on a "Stop task" icon', async () => {
@@ -150,7 +150,7 @@ describe('Indexing.vue', () => {
     await wrapper.vm.unregisteredPools()
 
     axios.request.mockClear()
-    wrapper.find('.indexing__tasks__item__stop').trigger('click')
+    wrapper.find('.tasks-list__tasks__item__stop').trigger('click')
     await flushPromisesAndPendingTimers()
 
     const calledUrls = axios.request.mock.calls.map(call => call[0].url)
