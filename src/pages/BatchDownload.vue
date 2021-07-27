@@ -1,6 +1,9 @@
 <template>
   <div class="batch-download mt-4 container">
-    <v-wait for="load download tasks">
+    <template v-if="!hasFeature('BATCH_DOWNLOAD')">
+      <div class="text-muted text-center">This feature is currently being developped by the Datashare team.</div>
+    </template>
+    <v-wait v-else for="load download tasks">
       <div slot="waiting" class="card py-2">
         <content-placeholder class="py-2 px-3" v-for="index in 3" :key="index" />
       </div>
@@ -22,6 +25,7 @@
 <script>
 import { some, random } from 'lodash'
 import TasksList from '@/components/TasksList'
+import features from '@/mixins/features'
 import polling from '@/mixins/polling'
 import Api from '@/api'
 
@@ -32,7 +36,7 @@ export default {
   components: {
     TasksList
   },
-  mixins: [polling],
+  mixins: [features, polling],
   data () {
     return {
       tasks: []
