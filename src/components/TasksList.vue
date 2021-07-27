@@ -9,27 +9,29 @@
              tbody-tr-class="tasks-list__tasks__item"
              class="card border-top-0 indexing__tasks">
       <template #empty>
-        <p class="text-center m-0" v-html="$t('batchDownload.empty')"></p>
+        <slot name="empty">
+          <p class="text-center m-0" v-html="$t('tasksList.empty')"></p>
+        </slot>
       </template>
       <template #cell(state)="{ item: { state, progress } }">
         <ellipse-status :status="state" :progress="progress * 100" horizontal />
       </template>
-      <template #cell(name)="{ item: { state, name } }">
+      <template #cell(name)="{ item }">
         <div class="tasks-list__tasks__item__name m-0 font-weight-bold">
-          <slot v-bind="{ name }">
-            {{ name | taskToName }}
+          <slot v-bind="{ item }">
+            {{ item.name | taskToName }}
           </slot>
         </div>
         <div class="d-flex align-items-center">
           <b-badge variant="light" class="tasks-list__tasks__item__id my-1">
-            {{ name | taskToId }}
+            {{ item.name | taskToId }}
           </b-badge>
-          <template v-if="state === 'RUNNING'">
+          <template v-if="item.state === 'RUNNING'">
             <span class="px-1">
               –
             </span>
-            <b-btn variant="link" size="sm" @click="stopTask(name)" class="tasks-list__tasks__item__stop text-danger p-0">
-              Stop this task
+            <b-btn variant="link" size="sm" @click="stopTask(item.name)" class="tasks-list__tasks__item__stop text-danger p-0">
+              {{ $t('tasksList.stop') }}
             </b-btn>
           </template>
         </div>

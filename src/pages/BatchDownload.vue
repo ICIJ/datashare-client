@@ -2,13 +2,14 @@
   <div class="batch-download mt-4 container">
     <v-wait for="load download tasks">
       <tasks-list :tasks="tasks">
-        <template v-slot="{ name }">
-          <a
-          :href="fetchDownloadResults(name)"
-          target="_blank">
-          <fa icon="download" fixed-width></fa>
-            {{ cleanName(name) }}
+        <template v-slot="{ item: { name, properties } }">
+          <a :href="downloadResultsUrl(name)" target="_blank">
+            <fa icon="download" fixed-width />
+            {{ properties.batchDownload.filename | basename }}
           </a>
+        </template>
+        <template #empty>
+          <p class="text-center m-0" v-html="$t('batchDownload.empty')"></p>
         </template>
       </tasks-list>
     </v-wait>
@@ -29,6 +30,11 @@ export default {
       tasks: []
     }
   },
+  filters: {
+    basename (str) {
+      return str.split('/').pop()
+    }
+  },
   async mounted () {
     this.$wait.start('load download tasks')
     this.tasks = await this.getDownloadTasks()
@@ -39,7 +45,7 @@ export default {
       const api = new Api()
       return api.getTasks('BatchDownloadRunner')
     },
-    fetchDownloadResults (name) {
+    downloadResultsUrl (name) {
       return `/api/task/${name}/result`
     },
     cleanName (name) {
@@ -48,6 +54,3 @@ export default {
   }
 }
 </script>
-
-<style lang="scss">
-</style>
