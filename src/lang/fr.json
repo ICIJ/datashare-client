@@ -8,7 +8,7 @@
     "submit": "Valider",
     "confirmLabel": "Êtes-vous sûr•e ?",
     "emptyTextTable": "Il n'y a rien à afficher",
-    "you": "You"
+    "you": "Vous"
   },
   "aggregations": {
     "more": "Explorer plus",
@@ -148,7 +148,7 @@
     "indexingDate": "Dates d'indexation",
     "extractionLevel": "Niveaux d'extraction",
     "creationDate": "Dates de création",
-    "index": "Project",
+    "index": "Projet",
     "projects": "Projets",
     "deleteNamedEntity": "Supprimer cette Entité Nommée",
     "showMore": "Agrandir",
@@ -156,7 +156,7 @@
     "starred": "Favoris",
     "notStarred": "Non favoris",
     "recommendedBy": "Recommandé par",
-    "searchTerm": "Term",
+    "searchTerm": "Terme",
     "sortByDropdown": {
       "toggler": "Trier par",
       "options": {
@@ -572,9 +572,9 @@
     "saveSearch": "Sauvergarder cette recherche",
     "submitSuccess": "Votre recherche a été sauvegardée.",
     "submitError": "Erreur, votre recherche n'a pas pu être ajoutée.",
-    "delete": "Delete",
+    "delete": "Supprimer",
     "deleted": "La recherche a été supprimée.",
-    "confirmDelete": "Are you sure you want to delete this saved search?",
+    "confirmDelete": "Êtes-vous sûr(e) de vouloir supprimer cette recherche sauvegardée ?",
     "notDeleted": "La recherche n'a pas été supprimée."
   },
   "userHistorySaveSearchForm": {
@@ -693,14 +693,14 @@
   },
   "batchDownload": {
     "title": "Téléchargements en lot",
-    "empty": "You have not yet started any download tasks.",
+    "empty": "Vous n'avez pas encore lancé de tâches de téléchargement.",
     "created": "Votre téléchargement est en cours de préparation",
     "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
     "inProgress": "Voir tous les téléchargements en attente"
   },
   "tasksList": {
-    "empty": "You have not yet started any tasks.",
-    "stop": "Stop this task"
+    "empty": "Vous n'avez pas encore lancé de tâches.",
+    "stop": "Arrêter cette tâche"
   },
   "insights": {
     "title": "Aperçu",
