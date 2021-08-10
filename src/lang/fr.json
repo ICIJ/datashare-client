@@ -7,7 +7,8 @@
     "no": "Non",
     "submit": "Valider",
     "confirmLabel": "Êtes-vous sûr•e ?",
-    "emptyTextTable": "Il n'y a rien à afficher"
+    "emptyTextTable": "Il n'y a rien à afficher",
+    "you": "Vous"
   },
   "aggregations": {
     "more": "Explorer plus",
@@ -74,7 +75,7 @@
       "on": "sur",
       "perPage": "par page",
       "sortedByPath": "tri par chemin",
-      "batchDownload": "Download results",
+      "batchDownload": "Télécharger les résultats",
       "sort": {
         "sortLabel": "Trier",
         "sort": "Tri par",
@@ -147,6 +148,7 @@
     "indexingDate": "Dates d'indexation",
     "extractionLevel": "Niveaux d'extraction",
     "creationDate": "Dates de création",
+    "index": "Projet",
     "projects": "Projets",
     "deleteNamedEntity": "Supprimer cette Entité Nommée",
     "showMore": "Agrandir",
@@ -154,6 +156,7 @@
     "starred": "Favoris",
     "notStarred": "Non favoris",
     "recommendedBy": "Recommandé par",
+    "searchTerm": "Terme",
     "sortByDropdown": {
       "toggler": "Trier par",
       "options": {
@@ -304,6 +307,7 @@
       "PORTUGUESE": "Portugais",
       "QUECHUA": "Quechua",
       "ROMANSH": "Romanche",
+      "ROMANIAN": "Roumain",
       "RUNDI": "Kirundi",
       "MOLDAVIAN": "Moldave",
       "RUSSIAN": "Russe",
@@ -485,7 +489,7 @@
     "description": "<a href=\"%{howToLink}\" target=\"_blank\">Lire la documentation</a> sur comment ajouter des documents.",
     "go": "Exécuter",
     "tasks": "Tâches",
-    "empty": "Vous n'avez pas encore lancé de tâches.",
+    "empty": "Vous n'avez pas encore commencé de tâches. <a href=\"%{howToLink}\" target=\"_blank\">En savoir plus.</a>",
     "extractText": "Extraire le texte",
     "extractWithOcrLabel": "Voulez-vous aussi extraire le texte des images et des PDFs ?",
     "extractWithOcrHelp": "Si oui, Datashare exécutera l'OCR (Optical Character Recognition - la reconnaissance de caractère optique). Cela peut prendre jusqu'à 10 fois plus de temps.",
@@ -559,18 +563,22 @@
   },
   "userHistory": {
     "heading": "Votre historique",
-    "description": "On this page you can retreive the documents you opened and the searches you saved.",
+    "description": "Sur cette page, vous retrouvez les documents que vous avez consultés et les recherches que vous avez sauvegardées.",
     "empty": "Votre historique est vide",
     "clear": "Vider l'historique",
     "document": "Documents",
-    "search": "Searches",
+    "search": "Recherches",
     "name": "Nom",
     "saveSearch": "Sauvergarder cette recherche",
     "submitSuccess": "Votre recherche a été sauvegardée.",
-    "submitError": "Erreur, votre recherche n'a pas pu être ajoutée."
+    "submitError": "Erreur, votre recherche n'a pas pu être ajoutée.",
+    "delete": "Supprimer",
+    "deleted": "La recherche a été supprimée.",
+    "confirmDelete": "Êtes-vous sûr(e) de vouloir supprimer cette recherche sauvegardée ?",
+    "notDeleted": "La recherche n'a pas été supprimée."
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
+    "description": "Vous pouvez consulter toutes vos recherches sauvegardées dans <a href=\"{searchHistoryPath}\">Historique › Recherches </a>."
   },
   "tasks": {
     "title": "Tâches",
@@ -579,6 +587,7 @@
   "batchSearch": {
     "lead": "Rechercher plusieurs termes dans plusieurs documents en même temps.",
     "title": "Recherches en lot",
+    "empty": "Vous n'avez pas encore commencé de recherche en lot. <a href=\"%{howToLink}\">En savoir plus.</a>",
     "heading": "Nouvelle recherche en lot",
     "fileLabel": "Fichier CSV",
     "fileDescription": "Exportez votre feuille de calcul au format CSV en utilisant l'encodage UTF-8. <ul><li>Seul le format CSV est accepté.</li> <li>Le fichier CSV ne doit pas contenir plus de 60 000 requêtes.</li> <li>La première et seule colonne doit contenir les termes à rechercher.</li> <li>Pas de saut de ligne dans les cellules.</li> <li>Uniquement quand 'Rechercher les termes exacts' n'est pas coché, vous pouvez utiliser AND OR NOT * ? + - et les autres opérateurs de recherche dans votre CSV, et utiliser une Regex entre 2 slashes</li></ul>",
@@ -684,7 +693,14 @@
   },
   "batchDownload": {
     "title": "Téléchargements en lot",
-    "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare."
+    "empty": "Vous n'avez pas encore lancé de tâches de téléchargement.",
+    "created": "Votre téléchargement est en cours de préparation",
+    "warning": "Cette fonctionnalité est actuellement en cours de développement par l'équipe de Datashare.",
+    "inProgress": "Voir tous les téléchargements en attente"
+  },
+  "tasksList": {
+    "empty": "Vous n'avez pas encore lancé de tâches.",
+    "stop": "Arrêter cette tâche"
   },
   "insights": {
     "title": "Aperçu",

@@ -7,7 +7,8 @@
     "no": "No",
     "submit": "Guardar",
     "confirmLabel": "¿Estás seguro/a?",
-    "emptyTextTable": "No hay nada para mostrar"
+    "emptyTextTable": "No hay nada para mostrar",
+    "you": "Tú"
   },
   "aggregations": {
     "more": "Explora más",
@@ -74,7 +75,7 @@
       "on": "sobre",
       "perPage": "por página",
       "sortedByPath": "ordenado por ruta",
-      "batchDownload": "Download results",
+      "batchDownload": "Descargar los resultados",
       "sort": {
         "sortLabel": "Ordenar",
         "sort": "Ordenar por",
@@ -147,6 +148,7 @@
     "indexingDate": "Fechas de indexación",
     "extractionLevel": "Niveles de extracción",
     "creationDate": "Fechas de creación",
+    "index": "Proyecto",
     "projects": "Proyectos",
     "deleteNamedEntity": "Eliminar esta Entidad Identificada",
     "showMore": "Ampliar",
@@ -154,6 +156,7 @@
     "starred": "Favoritos",
     "notStarred": "No favoritos",
     "recommendedBy": "Recomendado por",
+    "searchTerm": "Término",
     "sortByDropdown": {
       "toggler": "Ordenar",
       "options": {
@@ -304,6 +307,7 @@
       "PORTUGUESE": "Portugués",
       "QUECHUA": "Quechua",
       "ROMANSH": "Romanche",
+      "ROMANIAN": "Rumano",
       "RUNDI": "Rundi",
       "MOLDAVIAN": "Moldavo",
       "RUSSIAN": "Ruso",
@@ -392,7 +396,7 @@
     "tabDetails": "Etiquetas y Detalles",
     "namedEntities": "Entidades Identificadas",
     "namedEntityFilter": "Filtrar entidades identificadas",
-    "namedEntitiesOccurences": "0 occurences | One occurence | {count} occurences",
+    "namedEntitiesOccurences": "no hay ocurrencias | una ocurrencia | {count} ocurrencias",
     "extractedText": "Texto Extraído",
     "translations": "Traducciones",
     "preview": "Vista previa",
@@ -485,7 +489,7 @@
     "description": "Por favor, <a href=\"%{howToLink}\" target=\"_blank\">lea la documentación</a> sobre cómo añadir documentos.",
     "go": "Ir",
     "tasks": "Tareas",
-    "empty": "Aún no has iniciado ninguna tarea.",
+    "empty": "Aún no has iniciado ninguna tarea. <a href=\"%{howToLink}\" target=\"_blank\">Lee más.</a>",
     "extractText": "Extraer texto",
     "extractWithOcrLabel": "¿Deseas extraer también el texto de imágenes y archivos PDF?",
     "extractWithOcrHelp": "En caso afirmativo, Datashare ejecutará el proceso de OCR (reconocimiento óptico de caracteres). El proceso puede tardar hasta 10 veces más.",
@@ -559,18 +563,22 @@
   },
   "userHistory": {
     "heading": "Tu historial de navegación",
-    "description": "On this page you can retreive the documents you opened and the searches you saved.",
+    "description": "En esta página puedes recuperar los archivos que has abierto y las búsquedas que has guardado.",
     "empty": "Tu historia está vacía",
     "clear": "Borrar historia",
-    "document": "Documents",
-    "search": "Searches",
-    "name": "Name",
-    "saveSearch": "Save this search",
-    "submitSuccess": "Your search has been added.",
-    "submitError": "Something went wrong, unable to add your search."
+    "document": "Archivos",
+    "search": "Búsquedas",
+    "name": "Nombre",
+    "saveSearch": "Guardar esta búsqueda",
+    "submitSuccess": "Su búsqueda ha sido guardada.",
+    "submitError": "Error, no se puede añadir la búsqueda.",
+    "delete": "Eliminar",
+    "deleted": "La búsqueda ha sido eliminada.",
+    "confirmDelete": "¿Estás seguro que quieres eliminar esta búsqueda guardada?",
+    "notDeleted": "La búsqueda ha sido eliminada."
   },
   "userHistorySaveSearchForm": {
-    "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
+    "description": "Puede recuperar todas las búsquedas guardadas en <a href=\"{searchHistoryPath}\">Historial › Búsquedas</a>."
   },
   "tasks": {
     "title": "Tareas",
@@ -579,6 +587,7 @@
   "batchSearch": {
     "lead": "Buscar múltiples términos y documentos a la vez.",
     "title": "Búsquedas masivas",
+    "empty": "Aún no ha iniciado una búsqueda masiva. <a href=\"%{howToLink}\">Leer más.</a>",
     "heading": "Nueva búsqueda masiva",
     "fileLabel": "Archivo CSV",
     "fileDescription": "Exportar su hoja de cálculo como CSV usando la codificación UTF-8. <ul><li>Solo el formato CSV aceptado.</li> <li>El archivo CSV no debe contener más de 60 000 consultas.</li> <li>La primera y única columna debe contener los términos a buscar.</li> <li>No saltos de línea en las células.</li> <li>Solamente cuando 'Hacer la frase coincide exactamente' no esta marcado, puede utilizar operadores (AND OR NOT * ? ! + - etc), y las Regex entre 2 barras.</li></ul>",
@@ -684,7 +693,14 @@
   },
   "batchDownload": {
     "title": "Descarga en lotes",
-    "warning": "Esta página está siendo desarrollada actualmente por el equipo de Datashare."
+    "empty": "Aún no has iniciado ninguna tarea de descarga.",
+    "created": "Tu descarga está siendo procesada",
+    "warning": "Esta página está siendo desarrollada actualmente por el equipo de Datashare.",
+    "inProgress": "Ver todas las descargas pendientes"
+  },
+  "tasksList": {
+    "empty": "Aún no has iniciado ninguna tarea.",
+    "stop": "Detener esta tarea"
   },
   "insights": {
     "title": "Estadísticas",
@@ -734,15 +750,15 @@
     "apiKey": "Clave API",
     "noAccess": "No tiene acceso a esa página en modo local.",
     "key": {
-      "why": "Creating a key will let you interact with Datashare <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">through the API</a>, using tools like <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> or your own scripts.",
-      "created": "API key created",
-      "warning": "Please copy this key in a safe place, you won't be able to access it again on Datashare.",
-      "unavailable": "You can only access a key when creating it",
-      "regenerate": "Regenerate",
-      "description": "Key you have created that can be used to access the <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">Datashare API</a>.",
+      "why": "Crear una clave le permitirá interactuar con Datashare <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">a través de la API</a>, usando herramientas como <a href=\"https://github.com/ICIJ/datashare-tarentula\" target=\"_blank\">Tarentula</a> o sus propios scripts.",
+      "created": "Se ha creado la clave API",
+      "warning": "Por favor, copie esta clave en un lugar seguro, no podrá volver a acceder a ella en Datashare.",
+      "unavailable": "Sólo puede acceder a una clave al crearla",
+      "regenerate": "Regenerar",
+      "description": "La clave que ha creado puede utilizarse para acceder a la <a href=\"https://github.com/ICIJ/datashare/wiki/Backend-%E2%80%BA-API\" target=\"_blank\">API de Datashare</a>.",
       "delete": {
-        "button": "Delete",
-        "description": "Any applications or scripts using this key will no longer be able to access the Datashare API. You cannot undo this action."
+        "button": "Eliminar",
+        "description": "Cualquier aplicación o script que utilicen esta clave ya no podrá acceder a la API de Datashare. No puede deshacer esta acción."
       }
     }
   },

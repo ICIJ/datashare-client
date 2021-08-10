@@ -7,7 +7,8 @@
     "no": "Nein",
     "submit": "Absenden",
     "confirmLabel": "Sind Sie sicher?",
-    "emptyTextTable": "Es gibt keine Datensätze zum Anzeigen"
+    "emptyTextTable": "Es gibt keine Datensätze zum Anzeigen",
+    "you": "You"
   },
   "aggregations": {
     "more": "Mehr entdecken",
@@ -147,6 +148,7 @@
     "indexingDate": "Indizierungsdatum",
     "extractionLevel": "Extraktionsstufen",
     "creationDate": "Erstellungsdatum",
+    "index": "Project",
     "projects": "Projekte",
     "deleteNamedEntity": "Diese Named Entity löschen",
     "showMore": "Erweitern",
@@ -154,6 +156,7 @@
     "starred": "Favorit",
     "notStarred": "Kein Favorit",
     "recommendedBy": "Empfohlen von",
+    "searchTerm": "Term",
     "sortByDropdown": {
       "toggler": "Sortieren",
       "options": {
@@ -304,6 +307,7 @@
       "PORTUGUESE": "Portugiesisch",
       "QUECHUA": "Quechua",
       "ROMANSH": "Rätoromanisch",
+      "ROMANIAN": "Romanian",
       "RUNDI": "Rundi",
       "MOLDAVIAN": "Moldavisch",
       "RUSSIAN": "Russisch",
@@ -485,7 +489,7 @@
     "description": "Bitte <a href=\"%{howToLink}\" target=\"_blank\">lesen Sie die Dokumentation</a> zum Hinzufügen von Dokumenten.",
     "go": "Los",
     "tasks": "Aufgaben",
-    "empty": "Sie haben noch keine Aufgaben gestartet.",
+    "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
     "extractText": "Text extrahieren",
     "extractWithOcrLabel": "Möchten Sie Text auch aus Bildern und PDFs extrahieren?",
     "extractWithOcrHelp": "Wenn ja, führt Datashare OCR (Optische Zeichenerkennung) durch. Dies kann bis zu zehn Mal länger dauern.",
@@ -567,7 +571,11 @@
     "name": "Name",
     "saveSearch": "Save this search",
     "submitSuccess": "Your search has been added.",
-    "submitError": "Something went wrong, unable to add your search."
+    "submitError": "Something went wrong, unable to add your search.",
+    "delete": "Delete",
+    "deleted": "The search have been deleted.",
+    "confirmDelete": "Are you sure you want to delete this saved search?",
+    "notDeleted": "The search has not been deleted."
   },
   "userHistorySaveSearchForm": {
     "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
@@ -579,6 +587,7 @@
   "batchSearch": {
     "lead": "Mehrere Begriffe und Dokumente auf einmal suchen.",
     "title": "Batch-Suche",
+    "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
     "heading": "Neue Batch-Suche",
     "fileLabel": "CSV-Datei",
     "fileDescription": "Exportieren Sie Ihre Tabelle als CSV mit UTF-8-Kodierung. <ul><li>Nur CSV-Format akzeptiert.</li> <li>CSV-Datei sollte nicht mehr als 60.000 Abfragen enthalten.</li> <li>Die erste und einzige Spalte sollte die Suchbegriffe enthalten.</li> <li>Keine Zeilenumbrüche(n) in Zellen.</li> <li>Ohne 'do phrase match' können Sie die Operatoren AND OR NOT * ? ! + - und weitere Suchoperatoren, sowie reguläre Ausdrücke (RegEx) zwischen zwei Schrägstrichen benutzen</li></ul>",
@@ -684,7 +693,14 @@
   },
   "batchDownload": {
     "title": "Batch-Downloads",
-    "warning": "Diese Funktion wird derzeit vom Datashare-Team entwickelt."
+    "empty": "You have not yet started any download tasks.",
+    "created": "Your download is being prepared",
+    "warning": "Diese Funktion wird derzeit vom Datashare-Team entwickelt.",
+    "inProgress": "See all pending downloads"
+  },
+  "tasksList": {
+    "empty": "You have not yet started any tasks.",
+    "stop": "Stop this task"
   },
   "insights": {
     "title": "Einblicke",

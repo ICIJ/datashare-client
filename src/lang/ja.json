@@ -7,7 +7,8 @@
     "no": "No",
     "submit": "Submit",
     "confirmLabel": "Are you sure?",
-    "emptyTextTable": "There are no records to show"
+    "emptyTextTable": "There are no records to show",
+    "you": "You"
   },
   "aggregations": {
     "more": "さらに調べる",
@@ -147,6 +148,7 @@
     "indexingDate": "インデックスの日付",
     "extractionLevel": "抽出レベル",
     "creationDate": "作成日付",
+    "index": "Project",
     "projects": "プロジェクト",
     "deleteNamedEntity": "この固有表現を削除",
     "showMore": "Expand",
@@ -154,6 +156,7 @@
     "starred": "スター付き",
     "notStarred": "スターなし",
     "recommendedBy": "Recommended by",
+    "searchTerm": "Term",
     "sortByDropdown": {
       "toggler": "Sort",
       "options": {
@@ -304,6 +307,7 @@
       "PORTUGUESE": "ポルトガル語",
       "QUECHUA": "ケチュア語",
       "ROMANSH": "ロマンシュ語",
+      "ROMANIAN": "Romanian",
       "RUNDI": "ルンディ語",
       "MOLDAVIAN": "モルダビア語",
       "RUSSIAN": "ロシア語",
@@ -485,7 +489,7 @@
     "description": "<a href=\"%{howToLink}\" target=\"_blank\">文書追加についての書類を読んでください</a>。",
     "go": "移動",
     "tasks": "作業",
-    "empty": "You have not yet started any tasks.",
+    "empty": "You have not yet started any tasks. <a href=\"%{howToLink}\" target=\"_blank\">Read more.</a>",
     "extractText": "テキストを抽出",
     "extractWithOcrLabel": "画像やPDFからもテキストを抽出しますか？",
     "extractWithOcrHelp": "その場合、データシェアはOCR（光学的文字認識）を作動させます。これは時間が最大10倍かかります",
@@ -567,7 +571,11 @@
     "name": "Name",
     "saveSearch": "Save this search",
     "submitSuccess": "Your search has been added.",
-    "submitError": "Something went wrong, unable to add your search."
+    "submitError": "Something went wrong, unable to add your search.",
+    "delete": "Delete",
+    "deleted": "The search have been deleted.",
+    "confirmDelete": "Are you sure you want to delete this saved search?",
+    "notDeleted": "The search has not been deleted."
   },
   "userHistorySaveSearchForm": {
     "description": "You can retreive all your saved searches in <a href=\"{searchHistoryPath}\">History › Searches</a>."
@@ -579,6 +587,7 @@
   "batchSearch": {
     "lead": "複数の言葉や文書を一度に検索",
     "title": "まとめて検索（バッチサーチ）",
+    "empty": "You have not yet started a batch search. <a href=\"%{howToLink}\">Read more.</a>",
     "heading": "新たなまとめ検索（バッチサーチ）",
     "fileLabel": "CSVファイル",
     "fileDescription": "Export your spreadsheet as a CSV using encoding UTF-8. <ul><li>Only CSV format accepted.</li> <li>CSV file should not contain more than 60,000 queries.</li> <li>The first and only column should contain the terms to search.</li> <li>No line break(s) in cells.</li> <li>Without 'do phrase match' only, you can use AND OR NOT * ? ! + - and other search operators and use Regex between 2 slashes</li></ul>",
@@ -684,7 +693,14 @@
   },
   "batchDownload": {
     "title": "Batch downloads",
-    "warning": "This feature is currently being developped by the Datashare team."
+    "empty": "You have not yet started any download tasks.",
+    "created": "Your download is being prepared",
+    "warning": "This feature is currently being developped by the Datashare team.",
+    "inProgress": "See all pending downloads"
+  },
+  "tasksList": {
+    "empty": "You have not yet started any tasks.",
+    "stop": "Stop this task"
   },
   "insights": {
     "title": "Insights",
