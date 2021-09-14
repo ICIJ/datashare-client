@@ -1,9 +1,6 @@
 <template>
   <div class="batch-download mt-4 container">
-    <template v-if="!hasFeature('BATCH_DOWNLOAD')">
-      <div class="text-muted text-center">This feature is currently being developped by the Datashare team.</div>
-    </template>
-    <v-wait v-else for="load download tasks">
+    <v-wait for="load download tasks">
       <div slot="waiting" class="card py-2">
         <content-placeholder class="py-2 px-3" v-for="index in 3" :key="index" />
       </div>

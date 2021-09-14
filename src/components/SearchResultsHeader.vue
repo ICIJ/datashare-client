@@ -50,7 +50,7 @@
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
-      <b-btn variant="link" v-if="response.total > 0 && hasFeature('BATCH_DOWNLOAD')" class="search-results-header__settings__btn-download text-nowrap ml-auto" @click="batchDownload">
+      <b-btn variant="link" v-if="response.total > 0" class="search-results-header__settings__btn-download text-nowrap ml-auto" @click="batchDownload">
         <fa icon="download"></fa>
         <span v-if="!noLabels" class="ml-2">
           {{ $t('search.results.batchDownload') }}
