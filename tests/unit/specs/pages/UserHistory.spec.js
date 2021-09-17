@@ -75,6 +75,8 @@ describe('UserHistory.vue', () => {
       url: Api.getFullUrl('/api/users/me/history'),
       method: 'GET',
       params: {
+        from: 0,
+        size: 100,
         type: 'document'
       }
     }))

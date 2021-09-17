@@ -16,7 +16,7 @@
         </b-tab>
       </template>
       <confirm-button class="btn btn-primary"
-                      :disabled="!events.length || $wait.is(loader)"
+                      :disabled="!totalEvents || $wait.is(loader)"
                       :confirmed="deleteUserHistory"
                       :label="$t('global.confirmLabel')"
                       :yes="$t('global.yes')"
@@ -33,13 +33,15 @@
       </template>
       <router-view :events="this.events" />
     </v-wait>
+    <custom-pagination v-if="totalEvents > perPage" v-model="currentPage" :per-page="perPage" :total-rows="totalEvents"/>
   </div>
 </template>
 
 <script>
 import Api from '@/api'
-import { findIndex, uniqueId } from 'lodash'
+import { findIndex, uniqueId, isEqual } from 'lodash'
 import PageHeader from '@/components/PageHeader'
+import settings from '@/utils/settings'
 
 export default {
   components: {
@@ -48,6 +50,8 @@ export default {
   data () {
     return {
       events: [],
+      totalEvents: 0,
+      page: 1,
       defaultTab: null,
       defaultType: 'document'
     }
@@ -75,17 +79,47 @@ export default {
     },
     loader () {
       return uniqueId('user-history-load-events-')
+    },
+    perPage () {
+      return settings.userHistory.size
+    },
+    pageOffset () {
+      return (this.page - 1) * this.perPage
+    },
+    currentPage: {
+      get () {
+        return this.page
+      },
+      set (pageNumber) {
+        this.page = pageNumber
+        this.$router.push({ query: { page: this.page, from: this.pageOffset, size: this.perPage } })
+      }
     }
   },
   beforeRouteEnter (to, from, next) {
     return next(vm => {
       const defaultTab = vm.tabRoutes.indexOf(to.name)
+      if (!isEqual(from.path, to.path)) {
+        vm.page = 1
+      }
       if (defaultTab > -1) {
         vm.defaultTab = defaultTab
       } else if (vm.$route.name !== 'document-history') {
         vm.$router.push({ name: 'document-history' })
       }
     })
+  },
+  beforeRouteUpdate (to, from, next) {
+    const defaultTab = this.tabRoutes.indexOf(to.name)
+    if (!isEqual(from.path, to.path)) {
+      this.page = 1
+    }
+    if (defaultTab > -1) {
+      this.defaultTab = defaultTab
+    } else if (this.$route.name !== 'document-history') {
+      this.$router.push({ name: 'document-history' })
+    }
+    next()
   },
   created () {
     this.getUserHistoryWithSpinner()
@@ -103,13 +137,15 @@ export default {
     },
     async getUserHistory () {
       const type = this.getTypeOfCurrentPage()
-      const events = await this.api.getUserHistory(type)
-      this.$set(this, 'events', events)
+      const events = await this.api.getUserHistory(type, this.pageOffset, this.perPage)
+      this.$set(this, 'events', events.items)
+      this.$set(this, 'totalEvents', events.total)
     },
     async deleteUserHistory () {
       const type = this.getTypeOfCurrentPage()
       await this.api.deleteUserHistory(type)
       this.$set(this, 'events', [])
+      this.$set(this, 'totalEvents', 0)
     },
     getTypeOfCurrentPage () {
       const type = this.$route.path.split('/').pop()

@@ -167,6 +167,9 @@ export default {
     size: 100,
     sort: 'doc_nb'
   },
+  userHistory: {
+    size: 100
+  },
   variantsMap: {
     success: 'success',
     ok: 'success',
