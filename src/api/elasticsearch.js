@@ -119,13 +119,20 @@ export function datasharePlugin (Client, config, components) {
     if (field !== 'path') body.sort('path', 'asc')
   }
 
-  Client.prototype._buildBody = function (from, size, filters, query, sort, fields = []) {
-    const body = bodybuilder().from(from).size(size)
+  Client.prototype.rootSearch = function (filters, query, fields = []) {
+    const body = bodybuilder()
     this._addFiltersToBody(filters, body)
     this._addQueryToBody(query, body, fields)
+    body.query('match', 'type', 'Document')
+    return body
+  }
+
+  Client.prototype._buildBody = function (from, size, filters, query, sort, fields = []) {
+    const body = this.rootSearch(filters, query, fields)
+
+    body.from(from).size(size)
     this._addSortToBody(sort, body)
     // Select only the Documents and not the NamedEntities
-    body.query('match', 'type', 'Document')
     // Add an option to exclude the content
     body.rawOption('_source', { includes: ['*'], excludes: ['content', 'content_translated'] })
     // Add an option to highlight fragments in the results

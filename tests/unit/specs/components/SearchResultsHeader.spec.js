@@ -1,4 +1,4 @@
-import { toLower, isEqual } from 'lodash'
+import { toLower } from 'lodash'
 import { createLocalVue, mount } from '@vue/test-utils'
 
 import SearchResultsHeader from '@/components/SearchResultsHeader'
@@ -132,10 +132,9 @@ describe('SearchResultsHeader.vue', () => {
 
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchDownload'),
-      method: 'POST'
+      method: 'POST',
+      data: { options: { project: project, query: { query: { bool: { must: [{ match_all: {} }, { bool: { should: [{ query_string: { query: 'bar' } }] } }, { match: { type: 'Document' } }] } } } } }
     }))
-    const call = axios.request.mock.calls[0][0]
-    expect(findIn(call, { query_string: { query: 'bar', fields: undefined } })).toHaveLength(1)
   })
 
   describe('firstDocument', () => {
@@ -151,17 +150,3 @@ describe('SearchResultsHeader.vue', () => {
     })
   })
 })
-
-function findIn (obj, toFind, result = []) {
-  if (isEqual(obj, toFind)) {
-    result.push(obj)
-  } else {
-    Object.keys(obj).forEach(key => {
-      const value = obj[key]
-      if (typeof value === 'object') {
-        findIn(value, toFind, result)
-      }
-    })
-  }
-  return result
-}
