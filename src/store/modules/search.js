@@ -471,8 +471,10 @@ export const actions = {
     const starredDocuments = await api.getStarredDocuments(state.index)
     commit('starredDocuments', starredDocuments)
   },
-  async runBatchDownload ({ state, commit }) {
-    return api.runBatchDownload({ project: state.index, query: state.query })
+  async runBatchDownload ({ state, commit, getters }) {
+    const query = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
+    const jsonQuery = elasticsearch._buildBody(state.from, state.size, getters.instantiatedFilters, query, state.sort).build()
+    return api.runBatchDownload({ project: state.index, query: jsonQuery })
   },
   async getIsDownloadAllowed ({ state, commit }) {
     try {
