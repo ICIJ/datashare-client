@@ -133,7 +133,7 @@ describe('SearchResultsHeader.vue', () => {
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchDownload'),
       method: 'POST',
-      data: { options: { project: project, query: { query: { bool: { must: [{ match_all: {} }, { bool: { should: [{ query_string: { query: 'bar' } }] } }, { match: { type: 'Document' } }] } } } } }
+      data: { options: { project: project, query: { bool: { must: [{ match_all: {} }, { bool: { should: [{ query_string: { query: 'bar' } }] } }, { match: { type: 'Document' } }] } } } }
     }))
   })
 
