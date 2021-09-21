@@ -1,6 +1,6 @@
 <template>
-  <div>
-     <page-header icon="clock" :title="$t('userHistory.heading')" :description="$t('userHistory.description')" :tab.sync="tab">
+  <div class="user-history">
+    <page-header icon="clock" :title="$t('userHistory.heading')" :description="$t('userHistory.description')" :tab.sync="tab">
       <template #tabs>
         <b-tab :active="defaultTab == 0">
           <template #title>
@@ -25,15 +25,17 @@
         {{ $t('userHistory.clear') }}
       </confirm-button>
     </page-header>
-    <v-wait :for="loader">
+    <v-wait class="container" :for="loader">
       <template #waiting>
         <div class="p-4 text-center">
           <fa icon="circle-notch" spin size="2x"></fa>
         </div>
       </template>
       <router-view :events="this.events" />
+      <div class="user-history__pagination pt-2" v-if="totalEvents > perPage" >
+        <custom-pagination v-model="currentPage" :per-page="perPage" :total-rows="totalEvents"/>
+      </div>
     </v-wait>
-    <custom-pagination v-if="totalEvents > perPage" v-model="currentPage" :per-page="perPage" :total-rows="totalEvents"/>
   </div>
 </template>
 
@@ -171,6 +173,10 @@ export default {
       background: inherit;
       position: sticky;
       top:0;
+    }
+
+    &__pagination {
+      max-width: 40%;
     }
   }
 </style>
