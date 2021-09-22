@@ -112,10 +112,10 @@ describe('SearchResultsHeader.vue', () => {
     await letData(es).have(new IndexedDocument('doc_011.txt', index).withContent('bar')).commit()
     await store.dispatch('search/query', 'bar')
 
-    expect(wrapper.find('.search-results-header__settings__btn-download').text()).toHaveLength(0)
+    expect(wrapper.find('.search-results-header__settings__btn-download').text()).toHaveLength(1) // confirm-button component spans a - character
   })
 
-  it('should call batch download service when the button is clicked', async () => {
+  it('should send api request when batch download method is called', async () => {
     const project = toLower('SearchResultsHeader')
     const query = 'bar'
 
@@ -128,7 +128,7 @@ describe('SearchResultsHeader.vue', () => {
 
     wrapper.vm.tag = 'tag_02'
 
-    await wrapper.find('.search-results-header__settings__btn-download').trigger('click')
+    await wrapper.vm.batchDownload()
 
     expect(axios.request).toBeCalledWith(expect.objectContaining({
       url: Api.getFullUrl('/api/task/batchDownload'),
