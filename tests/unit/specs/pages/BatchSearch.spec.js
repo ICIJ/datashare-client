@@ -10,7 +10,7 @@ jest.mock('@/api', () => {
   return jest.fn(() => {
     return {
       getBatchSearches: jest.fn().mockReturnValue(Promise.resolve({
-        batchSearches: [{
+        items: [{
           uuid: '1',
           project: { name: 'project_01' },
           name: 'name_01',

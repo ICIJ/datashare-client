@@ -54,12 +54,12 @@ export const actions = {
       batchSearches = await api.getBatchSearches(from, size, sort, order, query, field)
     } catch (_) {
       batchSearches = {
-        batchSearches: [],
+        items: [],
         total: 0
       }
     }
     commit('total', batchSearches.total)
-    return commit('batchSearches', batchSearches.batchSearches)
+    return commit('batchSearches', batchSearches.items)
   },
   async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published }) {
     await api.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
