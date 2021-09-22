@@ -50,12 +50,16 @@
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
-      <b-btn variant="link" v-if="response.total > 0" class="search-results-header__settings__btn-download text-nowrap ml-auto" @click="batchDownload">
+      <confirm-button v-if="response.total > 0" class="search-results-header__settings__btn-download btn btn-link text-nowrap ml-auto"
+                      :confirmed="batchDownload"
+                      :label="`${$tc('search.results.batchDownloadSubmit', response.total, { total: $n(response.total) })} ${$t('global.confirmLabel')}`"
+                      :yes="$t('global.yes')"
+                      :no="$t('global.no')">
         <fa icon="download"></fa>
         <span v-if="!noLabels" class="ml-2">
           {{ $t('search.results.batchDownload') }}
         </span>
-      </b-btn>
+      </confirm-button>
       <pagination
         class="search-results-header__settings__pagination justify-content-end text-right mr-3"
         :get-to-template="getToTemplate"

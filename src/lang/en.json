@@ -76,6 +76,7 @@
       "perPage": "per page",
       "sortedByPath": "sorted by path",
       "batchDownload": "Download results",
+      "batchDownloadSubmit": "You are about to download 1 document. | You are about to download %{total} documents.",
       "sort": {
         "sortLabel": "Sort",
         "sort": "Sort by",
