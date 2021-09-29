@@ -59,6 +59,12 @@ export default {
     activeTextTruncate: {
       type: [String, Boolean],
       default: null
+    },
+    /**
+     * Direction for text truncate.
+     */
+    textTruncateRtl: {
+      type: Boolean
     }
   },
   methods: {
@@ -97,6 +103,9 @@ export default {
     baseComponentProps () {
       if (isString(this.activeTextTruncate) && this.activeTextTruncate !== '') {
         return { direction: this.activeTextTruncate }
+      }
+      if (this.textTruncateRtl) {
+        return { direction: 'rtl' }
       }
       return {}
     },
