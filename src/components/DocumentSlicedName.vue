@@ -63,7 +63,7 @@ export default {
     /**
      * Direction for text truncate.
      */
-    textTruncateRtl: {
+    textTruncateRtlAttachments: {
       type: Boolean
     }
   },
@@ -104,7 +104,7 @@ export default {
       if (isString(this.activeTextTruncate) && this.activeTextTruncate !== '') {
         return { direction: this.activeTextTruncate }
       }
-      if (this.textTruncateRtl) {
+      if (this.textTruncateRtlAttachments && this.isSliced()) {
         return { direction: 'rtl' }
       }
       return {}

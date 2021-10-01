@@ -9,7 +9,7 @@
             <document-thumbnail :document="document" size="md" />
           </router-link>
           <router-link class="search-results-grid__items__item__title py-2 px-3 small" :to="{ name: 'document', params: document.routerParams }">
-            <document-sliced-name :document="document" active-text-truncate text-truncate-rtl/>
+            <document-sliced-name :document="document" active-text-truncate text-truncate-rtl-attachments/>
           </router-link>
         </div>
       </div>
