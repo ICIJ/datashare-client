@@ -76,6 +76,7 @@ export default {
         'metadata.tika_metadata_dc_title',
         'metadata.tika_metadata_title',
         'metadata.tika_metadata_subject',
+        'metadata.tika_metadata_resourcename',
         'path'
       ]
     },
