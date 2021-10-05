@@ -211,17 +211,16 @@ describe('DocumentStore', () => {
 
       axios.request.mockClear()
 
-      await store.dispatch('document/toggleAsRecommended')
+      await store.dispatch('document/toggleAsRecommended', userId)
 
-      expect(axios.request).toBeCalledTimes(2)
-      expect(axios.request).toBeCalledWith({ url: Api.getFullUrl('/api/users/me') })
+      expect(axios.request).toBeCalledTimes(1)
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         url: Api.getFullUrl(`/api/${index}/documents/batchUpdate/recommend`),
         method: 'POST',
         data: ['doc_01']
       }))
       expect(store.state.document.isRecommended).toBeTruthy()
-      expect(indexOf(store.state.document.recommendedBy, userId)).toBeGreaterThan(-1)
+      expect(store.state.document.recommendedBy).toEqual([userId])
     })
 
     it('should UNMARK these documents as recommended', async () => {

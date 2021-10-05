@@ -129,47 +129,49 @@ export default {
       return this.$store.getters['pipelines/applyPipelineChainByCategory']('document-view-tabs')
     },
     tabs () {
-      return !this.doc ? [] : [
-        {
-          name: 'extracted-text',
-          label: 'document.extractedText',
-          component: () => import('@/components/document/DocumentTabExtractedText'),
-          icon: 'align-left',
-          props: {
-            document: this.doc,
-            q: this.q
+      return !this.doc
+        ? []
+        : [
+          {
+            name: 'extracted-text',
+            label: 'document.extractedText',
+            component: () => import('@/components/document/DocumentTabExtractedText'),
+            icon: 'align-left',
+            props: {
+              document: this.doc,
+              q: this.q
+            }
+          },
+          {
+            name: 'preview',
+            label: 'document.preview',
+            component: () => import('@/components/document/DocumentTabPreview'),
+            icon: 'eye',
+            props: {
+              document: this.doc
+            }
+          },
+          {
+            name: 'details',
+            label: 'document.tabDetails',
+            component: () => import('@/components/document/DocumentTabDetails'),
+            icon: 'info-circle',
+            props: {
+              document: this.doc,
+              parentDocument: this.parentDocument
+            }
+          },
+          {
+            name: 'named-entities',
+            label: 'document.namedEntities',
+            hidden: this.$config.isnt('manageDocuments') && !this.doc.hasNerTags,
+            component: () => import('@/components/document/DocumentTabNamedEntities'),
+            icon: 'database',
+            props: {
+              document: this.doc
+            }
           }
-        },
-        {
-          name: 'preview',
-          label: 'document.preview',
-          component: () => import('@/components/document/DocumentTabPreview'),
-          icon: 'eye',
-          props: {
-            document: this.doc
-          }
-        },
-        {
-          name: 'details',
-          label: 'document.tabDetails',
-          component: () => import('@/components/document/DocumentTabDetails'),
-          icon: 'info-circle',
-          props: {
-            document: this.doc,
-            parentDocument: this.parentDocument
-          }
-        },
-        {
-          name: 'named-entities',
-          label: 'document.namedEntities',
-          hidden: this.$config.isnt('manageDocuments') && !this.doc.hasNerTags,
-          component: () => import('@/components/document/DocumentTabNamedEntities'),
-          icon: 'database',
-          props: {
-            document: this.doc
-          }
-        }
-      ]
+        ]
     },
     indexActiveTab () {
       return findIndex(this.visibleTabs, tab => tab.name === this.activeTab)
@@ -195,7 +197,7 @@ export default {
       await this.$store.dispatch('document/getParent')
       await this.$store.dispatch('document/getRoot')
       await this.$store.dispatch('document/getTags')
-      await this.$store.dispatch('document/getRecommendationsByDocuments')
+      await this.$store.dispatch('document/getRecommendationsByDocuments', this.$core.auth.getUsername())
       if (this.doc) {
         await this.api.addHistoryEvent(this.doc.index, 'DOCUMENT', this.doc.slicedNameToString, this.doc.route)
         const container = this.$el.closest('.ps-container')

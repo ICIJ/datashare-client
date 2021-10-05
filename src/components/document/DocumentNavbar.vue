@@ -118,7 +118,7 @@ export default {
       this.$root.$el.style.setProperty('--document-navbar-height', height)
     },
     async toggleAsRecommended () {
-      await this.$store.dispatch('document/toggleAsRecommended')
+      await this.$store.dispatch('document/toggleAsRecommended', await this.$core.auth.getUsername())
       await this.$store.dispatch('search/getRecommendationsByProject')
     },
     scrollToTop () {

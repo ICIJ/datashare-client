@@ -64,11 +64,9 @@
 
 <script>
 import Api from '@/api'
-import Auth from '@/api/resources/Auth'
 import utils from '@/mixins/utils'
 
 const api = new Api()
-const auth = new Auth()
 
 /**
  * A page to manage user's API keys.
@@ -95,18 +93,18 @@ export default {
   },
   methods: {
     async getHashedApiKey () {
-      const username = await auth.getUsername()
+      const username = await this.$core.auth.getUsername()
       const { hashedKey } = await api.getApiKey(username)
       this.hashedKey = hashedKey
     },
     async createApiKey () {
-      const username = await auth.getUsername()
+      const username = await this.$core.auth.getUsername()
       const { apiKey } = await api.createApiKey(username)
       this.apiKey = apiKey
       await this.getHashedApiKey()
     },
     async deleteApiKey () {
-      const username = await auth.getUsername()
+      const username = await this.$core.auth.getUsername()
       await api.deleteApiKey(username)
       this.hashedKey = null
     }

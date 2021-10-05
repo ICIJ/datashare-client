@@ -47,10 +47,12 @@ class Core extends Behaviors {
   /**
    * Create an application
    * @param {Object} LocalVue - The Vue class to instantiate the application with.
+   * @param auth - The authentication service
    */
-  constructor (LocalVue = Vue) {
+  constructor (LocalVue = Vue, auth = new Auth(mode('local'))) {
     super(LocalVue)
     this.LocalVue = LocalVue
+    this._auth = auth
     // Disable production tip when not in production
     this.LocalVue.config.productionTip = process.env.NODE_ENV === 'development'
     // Setup deferred state
@@ -178,6 +180,7 @@ class Core extends Behaviors {
       this.config.merge(serverSettings)
       // Create the default project for the current user or redirect to login
       await this.createDefaultProject()
+      this._auth = new Auth(mode(serverSettings.mode))
       // Set the default project
       if (this.store.state.search.index === '') {
         this.store.commit('search/index', this.getDefaultProject())
@@ -304,7 +307,6 @@ class Core extends Behaviors {
    * @type {Auth}
    */
   get auth () {
-    this._auth = this._auth || new Auth()
     return this._auth
   }
   /**

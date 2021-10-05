@@ -1,13 +1,20 @@
 import { createLocalVue, shallowMount } from '@vue/test-utils'
 import { setCookie, removeCookie } from 'tiny-cookie'
-
 import { Core } from '@/core'
 import Error from '@/pages/Error'
+import mode from '@/modes'
+import Auth from '@/api/resources/Auth'
 
-const { i18n, localVue } = Core.init(createLocalVue()).useAll()
-
-describe('Error.vue', () => {
+describe('Error.vue local mode', () => {
   let wrapper
+  let i18n
+  let localVue
+
+  beforeEach(() => {
+    const core = Core.init(createLocalVue()).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+  })
 
   it('should display a custom title', () => {
     const propsData = { title: 'This is wrong!' }
@@ -26,13 +33,22 @@ describe('Error.vue', () => {
     // Render again
     expect(wrapper.find('.error__header').exists()).toBeTruthy()
   })
+})
+
+describe('Error.vue server mode', () => {
+  let wrapper
+  let i18n
+  let localVue
+  beforeEach(() => {
+    const core = Core.init(createLocalVue(), new Auth(mode('server'))).useAll()
+    i18n = core.i18n
+    localVue = core.localVue
+  })
 
   it('should not display a header when user is logged out in server mode', async () => {
-    // Mock the user session
     removeCookie(process.env.VUE_APP_DS_COOKIE_NAME)
     // Mock the isServer property
-    const computed = { isServer: () => true }
-    wrapper = shallowMount(Error, { i18n, localVue, computed })
+    wrapper = shallowMount(Error, { i18n, localVue })
     // Flush promises
     await (new Promise(resolve => setImmediate(resolve)))
     // Render again

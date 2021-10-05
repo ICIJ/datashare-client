@@ -2,7 +2,6 @@
 import { FontAwesomeLayers } from '@fortawesome/vue-fontawesome'
 
 import Api from '@/api'
-import Auth from '@/api/resources/Auth'
 import VersionNumber from '@/components/VersionNumber'
 import utils from '@/mixins/utils'
 import settings from '@/utils/settings'
@@ -34,8 +33,7 @@ export default {
     }
   },
   async mounted () {
-    const auth = new Auth()
-    this.username = await auth.getUsername()
+    this.username = await this.$core.auth.getUsername()
   },
   computed: {
     titleAsString () {
