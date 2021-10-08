@@ -52,7 +52,7 @@
       </b-btn-group>
       <confirm-button v-if="response.total > 0" class="search-results-header__settings__btn-download btn btn-link text-nowrap ml-auto"
                       :confirmed="batchDownload"
-                      :label="`${$tc('search.results.batchDownloadSubmit', response.total, { total: $n(response.total) })} ${$t('global.confirmLabel')}`"
+                      :label="batchDownloadLabel"
                       :yes="$t('global.yes')"
                       :no="$t('global.no')">
         <fa icon="download"></fa>
@@ -81,6 +81,7 @@ import { mapState } from 'vuex'
 import AppliedSearchFilters from '@/components/AppliedSearchFilters'
 import Pagination from '@/components/Pagination'
 import features from '@/mixins/features'
+import byteSize from '@/filters/byteSize'
 
 /**
  * Search results header displaying sorting and page length options.
@@ -130,6 +131,8 @@ export default {
   },
   data () {
     return {
+      batchDownloadMaxNbFiles: this.$config.get('batchDownloadMaxNbFiles'),
+      batchDownloadMaxSize: this.$config.get('batchDownloadMaxSize'),
       sizes: [10, 25, 50, 100],
       sorts: [
         'relevance',
@@ -154,6 +157,27 @@ export default {
     },
     searchWindowTooLarge () {
       return (this.response.total + this.size) >= this.$config.get('search.maxWindowSize', 1e4)
+    },
+    sumContentLength () {
+      let totalLength = 0
+      this.response.hits.forEach(doc => {
+        if (doc.contentLength >= 0) {
+          totalLength += doc.contentLength
+        }
+      })
+      return totalLength
+    },
+    batchDownloadLabel () {
+      let label = ''
+      if (this.batchDownloadMaxNbFiles !== undefined && this.response.total > this.batchDownloadMaxNbFiles) {
+        label += `${this.$tc('search.results.warningNumber', this.batchDownloadMaxNbFiles, { number: this.$n(this.batchDownloadMaxNbFiles) })} `
+      }
+      if (this.batchDownloadMaxSize !== undefined && this.sumContentLength > byteSize(this.batchDownloadMaxSize)) {
+        label += `${this.$tc('search.results.warningSize', this.batchDownloadMaxSize, { size: this.batchDownloadMaxSize })} `
+      }
+      return label === ''
+        ? `${this.$tc('search.results.batchDownloadSubmit', this.response.total, { total: this.$n(this.response.total) })} ${this.$t('global.confirmLabel')}`
+        : `${label} ${this.$t('search.results.warningConfirm')}`
     }
   },
   mounted () {
@@ -198,7 +222,8 @@ export default {
       const variant = 'primary'
       const title = this.$t('batchDownload.created')
       this.$root.$bvToast.toast(this.$t('batchDownload.inProgress'), { to, variant, title })
-    }
+    },
+    byteSize
   }
 }
 </script>
