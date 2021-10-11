@@ -1,7 +1,8 @@
 import local from './local'
 import server from './server'
 
-export default (mode = 'local') => {
+export default (modeName = 'local') => {
   // Return the right values according to the mode or fallback to `local`
-  return { local, server }[mode.toLowerCase()] || local
+  const modes = { local, server }
+  return modes[modeName.toLowerCase()] || local
 }

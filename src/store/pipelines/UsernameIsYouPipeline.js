@@ -1,7 +1,8 @@
 import Auth from '@/api/resources/Auth'
 import IdentityPipeline from './IdentityPipeline'
+import server from '@/modes'
 
-export const auth = new Auth()
+export const auth = new Auth(server())
 
 class UsernameIsYouPipeline extends IdentityPipeline {
   async apply (username) {

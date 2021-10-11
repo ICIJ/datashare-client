@@ -3,11 +3,9 @@ import Vue from 'vue'
 
 import Api from '@/api'
 import elasticsearch from '@/api/elasticsearch'
-import Auth from '@/api/resources/Auth'
 import EsDocList from '@/api/resources/EsDocList'
 
 export const api = new Api()
-export const auth = new Auth()
 
 export function initialState () {
   return {
@@ -235,21 +233,19 @@ export const actions = {
     }
     return state.tags
   },
-  async tag ({ state, dispatch }, { documents, tag }) {
+  async tag ({ state, dispatch }, { documents, tag, userId }) {
     const index = state.doc ? state.doc.index : get(documents, '0.index', null)
     await api.tagDocuments(index, map(documents, 'id'), compact(tag.split(' ')))
-    if (documents.length === 1) await dispatch('addTag', tag)
+    if (documents.length === 1) await dispatch('addTag', tag, userId)
   },
-  async addTag ({ state, commit }, tag) {
-    const userId = await auth.getUsername()
+  async addTag ({ state, commit }, tag, userId) {
     commit('addTag', { tag, userId })
   },
   async deleteTag ({ state, commit }, { documents, tag }) {
     await api.untagDocuments(state.doc.index, map(documents, 'id'), [tag.label])
     if (documents.length === 1) commit('deleteTag', tag)
   },
-  async toggleAsRecommended ({ state, commit }) {
-    const userId = await auth.getUsername()
+  async toggleAsRecommended ({ state, commit }, userId) {
     if (state.isRecommended) {
       await api.setUnmarkAsRecommended(state.doc.index, [state.doc.id])
       commit('unmarkAsRecommended', userId)
@@ -260,11 +256,10 @@ export const actions = {
       commit('isRecommended', true)
     }
   },
-  async getRecommendationsByDocuments ({ state, commit }) {
+  async getRecommendationsByDocuments ({ state, commit }, userId) {
     try {
       const recommendedBy = await api.getRecommendationsByDocuments(state.doc.index, state.doc.id)
       commit('recommendedBy', map(sortBy(get(recommendedBy, 'aggregates', []), 'item.id'), 'item.id'))
-      const userId = await auth.getUsername()
       const index = state.recommendedBy.indexOf(userId)
       if (index > -1) {
         commit('isRecommended', true)

@@ -6,7 +6,8 @@ import { getCookie } from 'tiny-cookie'
 const api = new Api()
 
 export default class Auth {
-  constructor () {
+  constructor (mode) {
+    this.mode = mode
     this.cachedUsername = null
   }
 
@@ -23,8 +24,8 @@ export default class Auth {
 
   async _checkAuthentication () {
     try {
-      if (process.env.NODE_ENV === 'development') {
-        return 'local'
+      if (this.mode.name === 'local') {
+        return 'local' // default username
       }
       return this._getCookieUsername() || await this._getBasicAuthUserName()
     } catch (_) {

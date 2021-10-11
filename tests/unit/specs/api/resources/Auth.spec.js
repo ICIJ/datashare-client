@@ -1,9 +1,9 @@
 import axios from 'axios'
 import { removeCookie, setCookie } from 'tiny-cookie'
-
+import mode from '@/modes'
 import Auth from '@/api/resources/Auth'
 
-const auth = new Auth()
+const auth = new Auth(mode())
 
 jest.mock('axios')
 

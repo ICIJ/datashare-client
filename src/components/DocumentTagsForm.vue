@@ -110,7 +110,7 @@ export default {
     }, 200),
     async addTag () {
       this.$set(this, 'isReady', false)
-      await this.$store.dispatch('document/tag', { documents: this.documents, tag: this.tag })
+      await this.$store.dispatch('document/tag', { documents: this.documents, tag: this.tag, userId: this.$core.auth.getUsername() })
       this.$set(this, 'tag', '')
       this.$set(this, 'suggestions', [])
       this.$set(this, 'isReady', true)
