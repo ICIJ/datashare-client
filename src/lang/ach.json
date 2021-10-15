@@ -76,6 +76,10 @@
       "perPage": "crwdns304:0crwdne304:0",
       "sortedByPath": "crwdns1347:0crwdne1347:0",
       "batchDownload": "crwdns2502:0crwdne2502:0",
+      "batchDownloadSubmit": "crwdns2545:0%{total}crwdne2545:0",
+      "warningNumber": "crwdns2547:0%{number}crwdne2547:0",
+      "warningSize": "crwdns2549:0%{size}crwdne2549:0",
+      "warningConfirm": "crwdns2551:0crwdne2551:0",
       "sort": {
         "sortLabel": "crwdns2158:0crwdne2158:0",
         "sort": "crwdns306:0crwdne306:0",

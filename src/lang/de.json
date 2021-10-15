@@ -76,6 +76,10 @@
       "perPage": "pro Seite",
       "sortedByPath": "nach Pfad sortiert",
       "batchDownload": "Download results",
+      "batchDownloadSubmit": "You are about to download 1 document. | You are about to download %{total} documents.",
+      "warningNumber": "You cannot download more than %{number} documents.",
+      "warningSize": "You cannot download more than %{size}B.",
+      "warningConfirm": "Do you still want to download the first documents of this search?",
       "sort": {
         "sortLabel": "Sortieren",
         "sort": "Sortieren nach",
