@@ -704,7 +704,8 @@
   },
   "tasksList": {
     "empty": "Aún no has iniciado ninguna tarea.",
-    "stop": "Detener esta tarea"
+    "stop": "Detener esta tarea",
+    "encrypted": "This file is encrypted. The password has been sent to you by email."
   },
   "insights": {
     "title": "Estadísticas",
