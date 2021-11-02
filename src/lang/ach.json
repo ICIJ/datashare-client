@@ -704,7 +704,8 @@
   },
   "tasksList": {
     "empty": "crwdns2541:0crwdne2541:0",
-    "stop": "crwdns2543:0crwdne2543:0"
+    "stop": "crwdns2543:0crwdne2543:0",
+    "encrypted": "crwdns2553:0crwdne2553:0"
   },
   "insights": {
     "title": "crwdns2376:0crwdne2376:0",
