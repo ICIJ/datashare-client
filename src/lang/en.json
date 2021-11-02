@@ -704,7 +704,8 @@
   },
   "tasksList": {
     "empty": "You have not yet started any tasks.",
-    "stop": "Stop this task"
+    "stop": "Stop this task",
+    "encrypted": "This file is encrypted. The password has been sent to you by email."
   },
   "insights": {
     "title": "Insights",

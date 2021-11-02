@@ -35,6 +35,10 @@
             </b-btn>
           </template>
         </div>
+        <div v-if="isZipEncrypted" class="d-flex align-items-center">
+          <fa icon="exclamation-triangle" fixed-width />
+          {{ $t('tasksList.encrypted') }}
+        </div>
       </template>
       <template #table-colgroup="{ fields }">
         <col v-for="{ key } in fields" :key="key" :style="{ width: key === 'state' ? '140px' : 'auto' }">
@@ -82,6 +86,9 @@ export default {
     },
     tasksFields () {
       return this.tasks.length ? ['state', 'name'] : []
+    },
+    isZipEncrypted () {
+      return this.$config.get('batchDownloadEncrypt')
     }
   },
   methods: {
