@@ -704,7 +704,8 @@
   },
   "tasksList": {
     "empty": "Vous n'avez pas encore lancé de tâches.",
-    "stop": "Arrêter cette tâche"
+    "stop": "Arrêter cette tâche",
+    "encrypted": "This file is encrypted. The password has been sent to you by email."
   },
   "insights": {
     "title": "Aperçu",
