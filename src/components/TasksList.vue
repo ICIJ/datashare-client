@@ -35,7 +35,7 @@
             </b-btn>
           </template>
         </div>
-        <div v-if="isBatchDownload(item.name) && isZipEncrypted" class="font-italic tasks-list__tasks__item__encrypted">
+        <div v-if="isBatchDownloadEncrypted(item)" class="font-italic tasks-list__tasks__item__encrypted">
           {{ $t('tasksList.encrypted') }}
         </div>
       </template>
@@ -91,8 +91,8 @@ export default {
     }
   },
   methods: {
-    isBatchDownload (itemName) {
-      return itemName.includes('BatchDownload')
+    isBatchDownloadEncrypted (item) {
+      return item.name.includes('BatchDownload') && item.properties.batchDownload.encrypted
     },
     async stopPendingTasks () {
       await this.$store.dispatch('indexing/stopPendingTasks')
