@@ -77,9 +77,9 @@
       "sortedByPath": "tri par chemin",
       "batchDownload": "Télécharger les résultats",
       "batchDownloadSubmit": "Vous êtes sur le point de télécharger 1 document. | Vous êtes sur le point de télécharger %{total} documents.",
-      "warningNumber": "You cannot download more than %{number} documents.",
-      "warningSize": "You cannot download more than %{size}B.",
-      "warningConfirm": "Do you still want to download the first documents of this search?",
+      "warningNumber": "Vous ne pouvez pas télécharger plus de %{number} documents.",
+      "warningSize": "Vous ne pouvez pas télécharger plus de %{size}B.",
+      "warningConfirm": "Voulez-vous toujours télécharger les premiers documents de cette recherche ?",
       "sort": {
         "sortLabel": "Trier",
         "sort": "Tri par",
@@ -705,7 +705,7 @@
   "tasksList": {
     "empty": "Vous n'avez pas encore lancé de tâches.",
     "stop": "Arrêter cette tâche",
-    "encrypted": "This file is encrypted. The password has been sent to you by email."
+    "encrypted": "Ce fichier est chiffré. Le mot de passe vous a été envoyé par e-mail."
   },
   "insights": {
     "title": "Aperçu",
