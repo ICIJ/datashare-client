@@ -77,9 +77,9 @@
       "sortedByPath": "ordenado por ruta",
       "batchDownload": "Descargar los resultados",
       "batchDownloadSubmit": "Está a punto de descargar 1 archivo. | Está a punto de descargar %{total} archivo.",
-      "warningNumber": "You cannot download more than %{number} documents.",
-      "warningSize": "You cannot download more than %{size}B.",
-      "warningConfirm": "Do you still want to download the first documents of this search?",
+      "warningNumber": "No puede descargar más de %{number} archivos.",
+      "warningSize": "No puede descargar más de %{size}B.",
+      "warningConfirm": "¿Quiere descargar los primeros documentos de esta búsqueda?",
       "sort": {
         "sortLabel": "Ordenar",
         "sort": "Ordenar por",
@@ -705,7 +705,7 @@
   "tasksList": {
     "empty": "Aún no has iniciado ninguna tarea.",
     "stop": "Detener esta tarea",
-    "encrypted": "This file is encrypted. The password has been sent to you by email."
+    "encrypted": "Este archivo está cifrado. La contraseña se le ha enviado por correo electrónico."
   },
   "insights": {
     "title": "Estadísticas",
