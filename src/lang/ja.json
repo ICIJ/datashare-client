@@ -406,6 +406,7 @@
     "preview": "プレビュー",
     "downloadButton": "ダウンロード",
     "downloadRootButton": "Download parent",
+    "downloadWithoutMetadata": "Download without metadata",
     "externalWindow": "新しいウインドウで開く",
     "selectAll": "Select all",
     "unselectAll": "Unselect all",
