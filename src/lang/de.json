@@ -406,6 +406,7 @@
     "preview": "Vorschau",
     "downloadButton": "Download",
     "downloadRootButton": "Übergeordnetes Dokument herunterladen",
+    "downloadWithoutMetadata": "Download without metadata",
     "externalWindow": "In neuem Fenster öffnen",
     "selectAll": "Alle auswählen",
     "unselectAll": "Alle abwählen",
