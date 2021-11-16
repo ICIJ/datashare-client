@@ -51,6 +51,7 @@
         :document="doc"
         download-btn-class="btn btn-secondary order-2 btn-sm py-0 ml-1"
         download-btn-label
+        dropdown
         :is-download-allowed="isDownloadAllowed"
         no-btn-group
         popup-btn-class="btn btn-link text-white py-0 px-2 order-1"

@@ -2,72 +2,80 @@
   <div
     class="document-actions"
     :class="{ 'btn-group-vertical': !noBtnGroup && vertical, 'btn-group': !noBtnGroup && !vertical }">
-    <a
-      class="document-actions__star btn"
-      :class="starBtnClassDefinition"
-      @click.prevent="toggleStarDocument(document.id)"
-      href
-      :id="starBtnId">
-      <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fixed-width></fa>
-      <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">
+    <b-button-group class="align-items-center">
+      <a
+        class="document-actions__star btn"
+        :class="starBtnClassDefinition"
+        @click.prevent="toggleStarDocument(document.id)"
+        href
+        :id="starBtnId">
+        <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fixed-width></fa>
+        <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">
         {{ $t('document.starButton') }}
       </span>
-    </a>
-    <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
-      {{ $t('document.starFile') }}
-    </b-tooltip>
-    <a
-      class="document-actions__download btn"
-      :class="downloadBtnClassDefinition"
-      :href="document.fullUrl"
-      :id="downloadBtnId"
-      target="_blank"
-      v-if="canIDownload">
-      <fa icon="download" fixed-width></fa>
-      <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
-        {{ $t('document.downloadButton') }}
-      </span>
-    </a>
-    <a
-      class="document-actions__download-root btn"
-      :class="downloadBtnClassDefinition"
-      :href="document.fullRootUrl"
-      :id="downloadRootBtnId"
-      target="_blank"
-      v-if="canIDownload && hasRoot">
-      <fa icon="download" fixed-width></fa>
-      <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
-        {{ $t('document.downloadRootButton') }}
-      </span>
-    </a>
-    <b-popover
-      :placement="tooltipsPlacement"
-      :target="downloadBtnId"
-      :title="document.contentTypeLabel"
-      triggers="hover focus">
-      <document-type-card :document="document"></document-type-card>
-    </b-popover>
-    <b-popover
-      :placement="tooltipsPlacement"
-      :target="downloadRootBtnId"
-      :title="document.rootContentTypeLabel"
-      triggers="hover focus"
-      v-if="hasRoot">
-      <document-type-card :document="document.root"></document-type-card>
-    </b-popover>
-    <router-link-popup
-      class="document-actions__popup btn"
-      :class="popupBtnClassDefinition"
-      :id="popupBtnId"
-      :to="{ name: 'document-modal', params: document.routerParams }">
-      <fa icon="external-link-alt" fixed-width></fa>
-      <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">
+      </a>
+      <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
+        {{ $t('document.starFile') }}
+      </b-tooltip>
+      <a
+        class="document-actions__download btn"
+        :class="downloadBtnClassDefinition"
+        :href="document.fullUrl"
+        :id="downloadBtnId"
+        target="_blank"
+        v-if="canIDownload">
+        <fa icon="download" fixed-width></fa>
+        <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
+          {{ $t('document.downloadButton') }}
+        </span>
+      </a>
+      <b-dropdown v-if="dropdown && hasCleanableContentType" class="order-2 h-75" size="sm">
+        <b-dropdown-item :href="documentFullUrlWithoutMetadata">{{ $t('document.downloadWithoutMetadata') }}</b-dropdown-item>
+      </b-dropdown>
+      <a
+        class="document-actions__download-root btn"
+        :class="downloadBtnClassDefinition"
+        :href="document.fullRootUrl"
+        :id="downloadRootBtnId"
+        target="_blank"
+        v-if="canIDownload && hasRoot">
+        <fa icon="download" fixed-width></fa>
+        <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
+          {{ $t('document.downloadRootButton') }}
+        </span>
+      </a>
+      <b-dropdown v-if="dropdown && hasRootCleanableContentType" class="order-2 h-75" size="sm">
+        <b-dropdown-item :href="rootDocumentFullUrlWithoutMetadata">{{ $t('document.downloadWithoutMetadata') }}</b-dropdown-item>
+      </b-dropdown>
+      <b-popover
+        :placement="tooltipsPlacement"
+        :target="downloadBtnId"
+        :title="document.contentTypeLabel"
+        triggers="hover focus">
+        <document-type-card :document="document"></document-type-card>
+      </b-popover>
+      <b-popover
+        :placement="tooltipsPlacement"
+        :target="downloadRootBtnId"
+        :title="document.rootContentTypeLabel"
+        triggers="hover focus"
+        v-if="hasRoot">
+        <document-type-card :document="document.root"></document-type-card>
+      </b-popover>
+      <router-link-popup
+        class="document-actions__popup btn"
+        :class="popupBtnClassDefinition"
+        :id="popupBtnId"
+        :to="{ name: 'document-modal', params: document.routerParams }">
+        <fa icon="external-link-alt" fixed-width></fa>
+        <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">
         {{ $t('document.externalWindow') }}
       </span>
-    </router-link-popup>
-    <b-tooltip :target="popupBtnId" :placement="tooltipsPlacement">
-      {{ $t('document.externalWindow') }}
-    </b-tooltip>
+      </router-link-popup>
+      <b-tooltip :target="popupBtnId" :placement="tooltipsPlacement">
+        {{ $t('document.externalWindow') }}
+      </b-tooltip>
+    </b-button-group>
   </div>
 </template>
 
@@ -98,6 +106,12 @@ export default {
      * Use a vertical layout
      */
     vertical: {
+      type: Boolean
+    },
+    /**
+     * Use a dropdown to download document without metadata
+     */
+    dropdown: {
       type: Boolean
     },
     /**
@@ -173,6 +187,14 @@ export default {
       type: Boolean
     }
   },
+  data () {
+    return {
+      cleanableContentTypes: [
+        'application/pdf',
+        'application/msword'
+      ]
+    }
+  },
   computed: {
     ...mapState('search', ['starredDocuments']),
     starBtnClassDefinition () {
@@ -197,11 +219,23 @@ export default {
     popupBtnId () {
       return uniqueId('document-actions-popup-button-')
     },
+    documentFullUrlWithoutMetadata () {
+      return this.document.fullUrl + '&filter_metadata=true'
+    },
+    rootDocumentFullUrlWithoutMetadata () {
+      return this.document.fullRootUrl + '&filter_metadata=true'
+    },
     canIDownload () {
       return this.isDownloadAllowed
     },
     hasRoot () {
       return this.document.root
+    },
+    hasCleanableContentType () {
+      return this.cleanableContentTypes.includes(this.document.contentType)
+    },
+    hasRootCleanableContentType () {
+      return this.hasRoot && this.cleanableContentTypes.includes(this.document.root.contentType)
     }
   },
   methods: {

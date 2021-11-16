@@ -406,6 +406,7 @@
     "preview": "Preview",
     "downloadButton": "Download",
     "downloadRootButton": "Download parent",
+    "downloadWithoutMetadata": "Download without metadata",
     "externalWindow": "Open in a new window",
     "selectAll": "Select all",
     "unselectAll": "Unselect all",
