@@ -406,6 +406,7 @@
     "preview": "crwdns834:0crwdne834:0",
     "downloadButton": "crwdns1932:0crwdne1932:0",
     "downloadRootButton": "crwdns2368:0crwdne2368:0",
+    "downloadWithoutMetadata": "crwdns2555:0crwdne2555:0",
     "externalWindow": "crwdns1934:0crwdne1934:0",
     "selectAll": "crwdns2160:0crwdne2160:0",
     "unselectAll": "crwdns2162:0crwdne2162:0",
