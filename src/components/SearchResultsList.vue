@@ -50,15 +50,17 @@ export default {
   },
   watch: {
     $route (to, from) {
-      const documentId = to.params.id
-      const searchListItems = [...this.$el.querySelectorAll('.search-results-list__items__item')]
+      if (to.name === 'document') {
+        const documentId = to.params.id
+        const searchListItems = [...this.$el.querySelectorAll('.search-results-list__items__item')]
 
-      let target = searchListItems.filter((item) => {
-        return item.dataset.documentId === documentId
-      })
-      target = target[0]
+        let target = searchListItems.filter((item) => {
+          return item.dataset.documentId === documentId
+        })
+        target = target[0]
 
-      target.scrollIntoView({ behavior: 'instant', block: 'nearest' })
+        target.scrollIntoView({ behavior: 'instant', block: 'nearest' })
+      }
     }
   },
   computed: {
@@ -102,7 +104,7 @@ export default {
 
     &__items {
       &__item {
-        direction: row;
+        flex-direction: row;
         display: flex;
         flex-wrap: nowrap;
         max-width: 100%;
