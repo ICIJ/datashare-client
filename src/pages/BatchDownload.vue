@@ -66,6 +66,10 @@ export default {
     },
     async getDownloadTasks () {
       this.tasks = await api.getTasks('BatchDownloadRunner')
+      const dateRegExp = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d/
+      this.tasks.sort(function (a, b) {
+        return new Date(b.properties.batchDownload.filename.match(dateRegExp)[0]) - new Date(a.properties.batchDownload.filename.match(dateRegExp)[0])
+      })
       // Return true if it has pending download tasks to tell the
       // polling function to continue to poll tasks.
       return this.hasPendingBatchDownloadTasks
