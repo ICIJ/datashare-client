@@ -66,13 +66,19 @@ export default {
     },
     async getDownloadTasks () {
       this.tasks = await api.getTasks('BatchDownloadRunner')
-      const dateRegExp = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d/
-      this.tasks.sort(function (a, b) {
-        return new Date(b.properties.batchDownload.filename.match(dateRegExp)[0]) - new Date(a.properties.batchDownload.filename.match(dateRegExp)[0])
-      })
+      this.sortByDateTime(this.tasks)
       // Return true if it has pending download tasks to tell the
       // polling function to continue to poll tasks.
       return this.hasPendingBatchDownloadTasks
+    },
+    sortByDateTime (tasks) {
+      const dateRegExp = /\d{4}-[01]\d-[0-3]\dT[0-2]\d:[0-5]\d:[0-5]\d/
+      if (tasks.length > 0) {
+        this.tasks.sort(function (a, b) {
+          return new Date(b.properties.batchDownload.filename.match(dateRegExp)[0]) - new Date(a.properties.batchDownload.filename.match(dateRegExp)[0])
+        })
+      }
+      return tasks
     },
     downloadResultsUrl (name) {
       return `/api/task/${name}/result`
