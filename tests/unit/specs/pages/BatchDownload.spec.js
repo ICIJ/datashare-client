@@ -25,6 +25,7 @@ jest.mock('axios', () => {
             encrypted: false,
             filename: 'filename_01_2021-01-01T12:45:25',
             query: 'query_01',
+            zipSize: 150,
             project: {
               name: 'project',
               sourcePath: 'source'
@@ -136,5 +137,10 @@ describe('BatchDownload.vue', () => {
     expect(wrapper.find('.tasks-list__tasks__item:nth-child(1)').text()).toContain('BatchDownloadTask_03_name')
     expect(wrapper.find('.tasks-list__tasks__item:nth-child(2)').text()).toContain('BatchDownloadTask_01_name')
     expect(wrapper.find('.tasks-list__tasks__item:nth-child(3)').text()).toContain('BatchDownloadTask_02_name')
+  })
+
+  it('should display the zip size if there is any', async () => {
+    expect(wrapper.find('.tasks-list__tasks__item:nth-child(2) .tasks-list__tasks__item__size').exists()).toBeTruthy()
+    expect(wrapper.find('.tasks-list__tasks__item:nth-child(3) .tasks-list__tasks__item__size').exists()).toBeFalsy()
   })
 })

@@ -38,6 +38,9 @@
         <div v-if="isBatchDownloadEncrypted(item)" class="font-italic tasks-list__tasks__item__encrypted">
           {{ $t('tasksList.encrypted') }}
         </div>
+        <div v-if="hasZipSize(item)" class="tasks-list__tasks__item__size m-0 font-weight-bold">
+          {{ humanSize(item.properties.batchDownload.zipSize, false, $t('human.size')) | taskToId }}
+        </div>
       </template>
       <template #table-colgroup="{ fields }">
         <col v-for="{ key } in fields" :key="key" :style="{ width: key === 'state' ? '140px' : 'auto' }">
@@ -49,6 +52,7 @@
 <script>
 import { sortBy } from 'lodash'
 import EllipseStatus from '@/components/EllipseStatus'
+import humanSize from '@/filters/humanSize'
 
 export default {
   name: 'TasksList',
@@ -94,6 +98,9 @@ export default {
     isBatchDownloadEncrypted (item) {
       return item.name.includes('BatchDownload') && item.properties.batchDownload.encrypted
     },
+    hasZipSize (item) {
+      return item.name.includes('BatchDownload') && item.state !== 'ERROR' && item.properties.batchDownload.zipSize !== undefined
+    },
     async stopPendingTasks () {
       await this.$store.dispatch('indexing/stopPendingTasks')
       await this.$store.dispatch('indexing/getTasks')
@@ -105,7 +112,8 @@ export default {
     async deleteDoneTasks () {
       await this.$store.dispatch('indexing/deleteDoneTasks')
       await this.$store.dispatch('indexing/getTasks')
-    }
+    },
+    humanSize
   }
 }
 </script>
