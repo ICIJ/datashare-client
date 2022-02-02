@@ -13,29 +13,29 @@ You have **2 options:**
 
 ### Standard \(High Sierra and more recent versions\)
 
- 1. Let's first install **Homebrew**, which is needed for installing Tesseract OCR. You can find Homebrew's instructions [here](https://brew.sh/) or follow the next steps. Open your **Finder**:
+1. Let's first install **Homebrew**, which is needed for installing Tesseract OCR. You can find Homebrew's instructions [here](https://brew.sh/) or follow the next steps. Open your **Finder**:
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-16.55.39.png)
 
- 2. Search for '**Terminal**' in your applications and double click on '**Terminal.app**' to open it:
+2. Search for '**Terminal**' in your applications and double click on '**Terminal.app**' to open it:
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-16.54.02.png)
 
- 3. A Terminal window opens:
+3. A Terminal window opens:
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-16.56.50.png)
 
-**Copy and paste** this and press **Enter**: 
+**Copy and paste** this and press **Enter**:
 
 ```text
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install.sh)"
 ```
 
- 4. Press '**Enter**' when it displays this message:
+4. Press '**Enter**' when it displays this message:
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.09.56.png)
 
- 5. **Close the windows** when it displays this:
+5. **Close the windows** when it displays this:
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.10.26.png)
 
@@ -43,7 +43,7 @@ You have **2 options:**
 
 ![](../.gitbook/assets/capture-de-cran-2020-09-24-a-09.59.47.png)
 
-  7. Go to your '**Downloads**' and double-click '**DatashareStandalone.pkg**':
+7. Go to your '**Downloads**' and double-click '**DatashareStandalone.pkg**':
 
 ![](../.gitbook/assets/screenshot-2020-04-03-at-17.34.40.png)
 
@@ -67,7 +67,7 @@ You have **2 options:**
 
 ![](../.gitbook/assets/screenshot-2020-01-09-at-14.42.29%20%281%29.png)
 
- 
+
 
 13. Click '**Continue**', '**Install**', enter your password and '**Close**':
 
@@ -81,7 +81,7 @@ You have **2 options:**
 
 The installation begins. You see a progress bar. It stays a long time on "Running package scripts" because it is installing Tesseract OCR, Java Runtime Environment, Datashare backend and Datashare frontend.
 
-You can see what it actually does by typing command+L, it will open a window which logs every action made. 
+You can see what it actually does by typing command+L, it will open a window which logs every action made.
 
 In the end, you should see this screen:
 
@@ -93,8 +93,8 @@ You can now [open Datashare](https://icij.gitbook.io/datashare/mac/open-datashar
 
 ### Version with Docker installer \(OS X El Capitan 10.11\)
 
-You need **OS X El Capitan 10.11 or a more recent version.**  
-  
+You need **OS X El Capitan 10.11 or a more recent version.**
+
 1. Go to Datashare's website: [**https://datashare.icij.org/**](https://datashare.icij.org/)\*\*\*\*
 
 2. Click '**Other platforms and versions'**:
@@ -109,5 +109,5 @@ You need **OS X El Capitan 10.11 or a more recent version.**
 
 ![](../.gitbook/assets/capture-de-cran-2020-09-24-a-10.11.19.png)
 
- 5. **Follow the steps** starting at point 7 [here](https://icij.gitbook.io/datashare/mac/install-datashare-on-mac#standard-high-sierra-and-more-recent-versions).
+5. **Follow the steps** starting at point 7 [here](https://icij.gitbook.io/datashare/mac/install-datashare-on-mac#standard-high-sierra-and-more-recent-versions).
 
