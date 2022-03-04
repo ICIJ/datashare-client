@@ -29,7 +29,7 @@
           {{ $t('document.downloadButton') }}
         </span>
       </a>
-      <b-dropdown v-if="dropdown && hasCleanableContentType" class="order-2 h-75" size="sm">
+      <b-dropdown v-if="displayDownloadWithoutMetadata && hasCleanableContentType" class="order-2 h-75" size="sm">
         <b-dropdown-item :href="documentFullUrlWithoutMetadata">
           {{ $t('document.downloadWithoutMetadata') }}
         </b-dropdown-item>
@@ -46,7 +46,7 @@
           {{ $t('document.downloadRootButton') }}
         </span>
       </a>
-      <b-dropdown v-if="dropdown && hasRootCleanableContentType" class="order-2 h-75" size="sm">
+      <b-dropdown v-if="displayDownloadWithoutMetadata && hasRootCleanableContentType" class="order-2 h-75" size="sm">
         <b-dropdown-item :href="rootDocumentFullUrlWithoutMetadata">
           {{ $t('document.downloadWithoutMetadata') }}
         </b-dropdown-item>
@@ -113,12 +113,6 @@ export default {
       type: Boolean
     },
     /**
-     * Use a dropdown to download document without metadata
-     */
-    dropdown: {
-      type: Boolean
-    },
-    /**
      * Tooltip's placement on each action
      * @values auto, top, bottom, left, right, topleft, topright, bottomleft, bottomright, lefttop, leftbottom, righttop, rightbottom
      */
@@ -127,9 +121,9 @@ export default {
       default: 'top'
     },
     /**
-     * Show the download button
+     * Use a dropdown to download document without metadata
      */
-    displayDownload: {
+    displayDownloadWithoutMetadata: {
       type: Boolean
     },
     /**
