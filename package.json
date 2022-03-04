@@ -64,7 +64,7 @@
     "vuex": "^3.6.0",
     "vuex-map-fields": "^1.4.1",
     "vuex-persistedstate": "^4.0.0-beta.1",
-    "xlsx": "^0.16.9",
+    "xlsx": "^0.17.0",
     "xss": "^1.0.10"
   },
   "devDependencies": {
