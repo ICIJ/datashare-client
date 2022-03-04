@@ -17,55 +17,69 @@
       <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
         {{ $t('document.starFile') }}
       </b-tooltip>
-      <a
-        class="document-actions__download btn"
-        :class="downloadBtnClassDefinition"
-        :href="document.fullUrl"
-        :id="downloadBtnId"
-        target="_blank"
-        v-if="canIDownload">
-        <fa icon="download" fixed-width></fa>
-        <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
-          {{ $t('document.downloadButton') }}
-        </span>
-      </a>
-      <b-dropdown v-if="displayDownloadWithoutMetadata && hasCleanableContentType" class="order-2 h-75" size="sm">
-        <b-dropdown-item :href="documentFullUrlWithoutMetadata">
-          {{ $t('document.downloadWithoutMetadata') }}
-        </b-dropdown-item>
-      </b-dropdown>
-      <a
-        class="document-actions__download-root btn"
-        :class="downloadBtnClassDefinition"
-        :href="document.fullRootUrl"
-        :id="downloadRootBtnId"
-        target="_blank"
-        v-if="canIDownload && hasRoot">
-        <fa icon="download" fixed-width></fa>
-        <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
-          {{ $t('document.downloadRootButton') }}
-        </span>
-      </a>
-      <b-dropdown v-if="displayDownloadWithoutMetadata && hasRootCleanableContentType" class="order-2 h-75" size="sm">
-        <b-dropdown-item :href="rootDocumentFullUrlWithoutMetadata">
-          {{ $t('document.downloadWithoutMetadata') }}
-        </b-dropdown-item>
-      </b-dropdown>
-      <b-popover
-        :placement="tooltipsPlacement"
-        :target="downloadBtnId"
-        :title="document.contentTypeLabel"
-        triggers="hover focus">
-        <document-type-card :document="document"></document-type-card>
-      </b-popover>
-      <b-popover
-        :placement="tooltipsPlacement"
-        :target="downloadRootBtnId"
-        :title="document.rootContentTypeLabel"
-        triggers="hover focus"
-        v-if="hasRoot">
-        <document-type-card :document="document.root"></document-type-card>
-      </b-popover>
+
+      <template v-if="canIDownload">
+        <a
+          class="document-actions__download btn"
+          :class="downloadBtnClassDefinition"
+          :href="document.fullUrl"
+          :id="downloadBtnId"
+          target="_blank">
+          <fa icon="download" fixed-width></fa>
+          <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
+            {{ $t('document.downloadButton') }}
+          </span>
+        </a>
+        <b-dropdown
+          v-if="displayDownloadWithoutMetadata && hasCleanableContentType"
+          right
+          toggle-class="py-0"
+          class="order-2"
+          size="sm">
+          <b-dropdown-item :href="documentFullUrlWithoutMetadata">
+            {{ $t('document.downloadWithoutMetadata') }}
+          </b-dropdown-item>
+        </b-dropdown>
+        <b-popover
+          :placement="tooltipsPlacement"
+          :target="downloadBtnId"
+          :title="document.contentTypeLabel"
+          triggers="hover focus">
+          <document-type-card :document="document" />
+        </b-popover>
+      </template>
+
+      <template v-if="canIDownload && hasRoot">
+        <a
+          class="document-actions__download-root btn"
+          :class="downloadBtnClassDefinition"
+          :href="document.fullRootUrl"
+          :id="downloadRootBtnId"
+          target="_blank">
+          <fa icon="download" fixed-width></fa>
+          <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
+            {{ $t('document.downloadRootButton') }}
+          </span>
+        </a>
+        <b-dropdown
+          v-if="displayDownloadWithoutMetadata && hasRootCleanableContentType"
+          right
+          toggle-class="py-0"
+          class="order-2"
+          size="sm">
+          <b-dropdown-item :href="rootDocumentFullUrlWithoutMetadata">
+            {{ $t('document.downloadWithoutMetadata') }}
+          </b-dropdown-item>
+        </b-dropdown>
+        <b-popover
+          :placement="tooltipsPlacement"
+          :target="downloadRootBtnId"
+          :title="document.rootContentTypeLabel"
+          triggers="hover focus">
+          <document-type-card :document="document.root" />
+        </b-popover>
+      </template>
+
       <router-link-popup
         class="document-actions__popup btn"
         :class="popupBtnClassDefinition"
