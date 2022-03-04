@@ -57,22 +57,6 @@ export default {
     params () {
       return this.document.routerParams
     }
-  },
-  filters: {
-    truncate (text = '', length = 30, clamp = '...') {
-      if (text.length <= length) return text
-
-      let truncated = text.slice(0, length - clamp.length)
-      let last = truncated.length - 1
-
-      while (last > 0 && truncated[last] !== ' ' && truncated[last] !== clamp[0]) {
-        last -= 1
-      }
-      // Fix for case when text dont have any `space`
-      last = last || length - clamp.length
-      truncated = truncated.slice(0, last)
-      return truncated + clamp
-    }
   }
 }
 </script>
