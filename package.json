@@ -17,7 +17,7 @@
     "doc": "yarn doc:api && yarn doc:hooks && yarn doc:components && yarn doc:components:toc && yarn doc:widgets",
     "doc:api": "npx jsdoc-to-markdown --template bin/DOCS.API.hbs src/core/*.js > 'public/docs/client/Client-›-API.md'",
     "doc:hooks": "node bin/collectHooks.js",
-    "doc:components": "npx vue-docgen-cli",
+    "doc:components": "npm install -g vue@2 vue-docgen-cli@4 && vue-docgen",
     "doc:components:toc": "node bin/collectTocForComponentsDoc.js",
     "doc:widgets": "npx jsdoc-to-markdown src/store/widgets/*.js > 'public/docs/client/Client-›-Widgets.md'"
   },
