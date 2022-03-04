@@ -32,7 +32,7 @@
       <b-dropdown v-if="dropdown && hasCleanableContentType" class="order-2 h-75" size="sm">
         <b-dropdown-item :href="documentFullUrlWithoutMetadata">
           {{ $t('document.downloadWithoutMetadata') }}
-          </b-dropdown-item>
+        </b-dropdown-item>
       </b-dropdown>
       <a
         class="document-actions__download-root btn"
@@ -49,7 +49,7 @@
       <b-dropdown v-if="dropdown && hasRootCleanableContentType" class="order-2 h-75" size="sm">
         <b-dropdown-item :href="rootDocumentFullUrlWithoutMetadata">
           {{ $t('document.downloadWithoutMetadata') }}
-          </b-dropdown-item>
+        </b-dropdown-item>
       </b-dropdown>
       <b-popover
         :placement="tooltipsPlacement"
