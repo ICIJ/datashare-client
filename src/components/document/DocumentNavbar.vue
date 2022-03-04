@@ -47,15 +47,16 @@
         {{ $t('search.nav.share') }}
       </b-tooltip>
       <document-actions
-        class="document-navbar__actions d-flex"
         :document="doc"
-        download-btn-class="btn btn-secondary order-2 btn-sm py-0 ml-1"
+        :is-download-allowed="isDownloadAllowed"
+        class="document-navbar__actions d-flex"
+        download-btn-group-class="order-2"
+        download-btn-class="btn btn-secondary btn-sm py-0 ml-1"
         download-btn-label
         display-download-without-metadata
-        :is-download-allowed="isDownloadAllowed"
         no-btn-group
-        popup-btn-class="btn btn-link text-white py-0 px-2 order-1"
-        star-btn-class="btn btn-link text-white py-0 px-2 order-1"></document-actions>
+        popup-btn-class="btn btn-link text-white py-0 px-2"
+        star-btn-class="btn btn-link text-white py-0 px-2" />
     </div>
   </div>
 </template>

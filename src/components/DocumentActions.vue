@@ -1,31 +1,32 @@
 <template>
-  <div
-    class="document-actions"
-    :class="{ 'btn-group-vertical': !noBtnGroup && vertical, 'btn-group': !noBtnGroup && !vertical }">
-    <b-button-group class="align-items-center">
-      <a
-        class="document-actions__star btn"
-        :class="starBtnClassDefinition"
-        @click.prevent="toggleStarDocument(document.id)"
-        href
-        :id="starBtnId">
-        <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fixed-width></fa>
-        <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">
-        {{ $t('document.starButton') }}
-      </span>
-      </a>
-      <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
-        {{ $t('document.starFile') }}
-      </b-tooltip>
+  <component
+    :is="noBtnGroup ? 'div' : 'b-btn-group'"
+    :vertical="vertical"
+    class="document-actions align-items-center">
+    <a
+      class="document-actions__star btn"
+      :class="starBtnClassDefinition"
+      @click.prevent="toggleStarDocument(document.id)"
+      href
+      :id="starBtnId">
+      <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fixed-width />
+      <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">
+      {{ $t('document.starButton') }}
+    </span>
+    </a>
+    <b-tooltip :target="starBtnId" :placement="tooltipsPlacement">
+      {{ $t('document.starFile') }}
+    </b-tooltip>
 
-      <template v-if="canIDownload">
+    <template v-if="canIDownload">
+      <b-btn-group :class="downloadBtnGroupClass">
         <a
           class="document-actions__download btn"
-          :class="downloadBtnClassDefinition"
+          :class="downloadBtnClass"
           :href="document.fullUrl"
           :id="downloadBtnId"
           target="_blank">
-          <fa icon="download" fixed-width></fa>
+          <fa icon="download" fixed-width />
           <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
             {{ $t('document.downloadButton') }}
           </span>
@@ -34,29 +35,30 @@
           v-if="displayDownloadWithoutMetadata && hasCleanableContentType"
           right
           toggle-class="py-0"
-          class="order-2"
           size="sm">
           <b-dropdown-item :href="documentFullUrlWithoutMetadata">
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
         </b-dropdown>
-        <b-popover
-          :placement="tooltipsPlacement"
-          :target="downloadBtnId"
-          :title="document.contentTypeLabel"
-          triggers="hover focus">
-          <document-type-card :document="document" />
-        </b-popover>
-      </template>
+      </b-btn-group>
+      <b-popover
+        :placement="tooltipsPlacement"
+        :target="downloadBtnId"
+        :title="document.contentTypeLabel"
+        triggers="hover focus">
+        <document-type-card :document="document" />
+      </b-popover>
+    </template>
 
-      <template v-if="canIDownload && hasRoot">
+    <template v-if="canIDownload && hasRoot">
+      <b-btn-group :class="downloadBtnGroupClass">
         <a
           class="document-actions__download-root btn"
-          :class="downloadBtnClassDefinition"
+          :class="downloadBtnClass"
           :href="document.fullRootUrl"
           :id="downloadRootBtnId"
           target="_blank">
-          <fa icon="download" fixed-width></fa>
+          <fa icon="download" fixed-width />
           <span class="ml-2" :class="{ 'sr-only': !downloadBtnLabel }">
             {{ $t('document.downloadRootButton') }}
           </span>
@@ -65,36 +67,35 @@
           v-if="displayDownloadWithoutMetadata && hasRootCleanableContentType"
           right
           toggle-class="py-0"
-          class="order-2"
           size="sm">
           <b-dropdown-item :href="rootDocumentFullUrlWithoutMetadata">
             {{ $t('document.downloadWithoutMetadata') }}
           </b-dropdown-item>
         </b-dropdown>
-        <b-popover
-          :placement="tooltipsPlacement"
-          :target="downloadRootBtnId"
-          :title="document.rootContentTypeLabel"
-          triggers="hover focus">
-          <document-type-card :document="document.root" />
-        </b-popover>
-      </template>
+      </b-btn-group>
+      <b-popover
+        :placement="tooltipsPlacement"
+        :target="downloadRootBtnId"
+        :title="document.rootContentTypeLabel"
+        triggers="hover focus">
+        <document-type-card :document="document.root" />
+      </b-popover>
+    </template>
 
-      <router-link-popup
-        class="document-actions__popup btn"
-        :class="popupBtnClassDefinition"
-        :id="popupBtnId"
-        :to="{ name: 'document-modal', params: document.routerParams }">
-        <fa icon="external-link-alt" fixed-width></fa>
-        <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">
+    <router-link-popup
+      class="document-actions__popup btn"
+      :class="popupBtnClass"
+      :id="popupBtnId"
+      :to="{ name: 'document-modal', params: document.routerParams }">
+      <fa icon="external-link-alt" fixed-width />
+      <span class="ml-2" :class="{ 'sr-only': !popupBtnLabel }">
         {{ $t('document.externalWindow') }}
       </span>
-      </router-link-popup>
-      <b-tooltip :target="popupBtnId" :placement="tooltipsPlacement">
-        {{ $t('document.externalWindow') }}
-      </b-tooltip>
-    </b-button-group>
-  </div>
+    </router-link-popup>
+    <b-tooltip :target="popupBtnId" :placement="tooltipsPlacement">
+      {{ $t('document.externalWindow') }}
+    </b-tooltip>
+  </component>
 </template>
 
 <script>
@@ -168,6 +169,13 @@ export default {
       default: 'btn-link btn-sm'
     },
     /**
+     * Class to apply to the download group button
+     */
+    downloadBtnGroupClass: {
+      type: String,
+      default: ''
+    },
+    /**
      * Class to apply to the popup button
      */
     popupBtnClass: {
@@ -212,12 +220,6 @@ export default {
     starBtnClassDefinition () {
       const starred = this.isStarred(this.document.id)
       return { [this.starredBtnClass]: starred, ...this.classAttributeToObject(this.starBtnClass) }
-    },
-    downloadBtnClassDefinition () {
-      return this.classAttributeToObject(this.downloadBtnClass)
-    },
-    popupBtnClassDefinition () {
-      return this.classAttributeToObject(this.popupBtnClass)
     },
     starBtnId () {
       return uniqueId('document-actions-star-button-')
