@@ -70,6 +70,8 @@ jobs:
   generate_doc:
     docker:
       - image: circleci/node:14.15.5
+        environment:
+          - "NPM_CONFIG_PREFIX=~/.local"
     working_directory: ~/datashare-client
     steps:
       - restore_cache:
