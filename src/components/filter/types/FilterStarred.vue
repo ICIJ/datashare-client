@@ -45,7 +45,7 @@ import utils from '@/mixins/utils'
  * A Filter component to boolean values. Currently used for the "starred" filter but should be made generic in future versions.
  */
 export default {
-  name: 'FilterYesNo',
+  name: 'FilterStarred',
   extends: FilterAbstract,
   components: {
     FilterBoilerplate

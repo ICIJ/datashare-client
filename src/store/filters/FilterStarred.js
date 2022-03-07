@@ -4,7 +4,7 @@ import FilterText from './FilterText'
 export default class FilterStarred extends FilterText {
   constructor (options) {
     super(options)
-    this.component = 'FilterYesNo'
+    this.component = 'FilterStarred'
   }
   addChildIncludeFilter (body, param) {
     if (param.values[0]) {

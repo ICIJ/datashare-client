@@ -10,7 +10,6 @@ export { default as FilterPath } from './FilterPath'
 export { default as FilterRecommendedBy } from './FilterRecommendedBy'
 export { default as FilterStarred } from './FilterStarred'
 export { default as FilterText } from './FilterText'
-export { default as FilterYesNo } from './FilterYesNo'
 
 export default [
   {

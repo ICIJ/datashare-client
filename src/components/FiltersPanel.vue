@@ -41,7 +41,7 @@ import FilterProject from '@/components/filter/types/FilterProject'
 import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
 import FilterSearch from '@/components/filter/FilterSearch'
 import FilterText from '@/components/filter/types/FilterText'
-import FilterYesNo from '@/components/filter/types/FilterYesNo'
+import FilterStarred from '@/components/filter/types/FilterStarred'
 import Hook from '@/components/Hook'
 
 /**
@@ -58,7 +58,7 @@ export default {
     FilterRecommendedBy,
     FilterSearch,
     FilterText,
-    FilterYesNo,
+    FilterStarred,
     Hook
   },
   mounted () {

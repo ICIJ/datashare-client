@@ -4,7 +4,7 @@ import { removeCookie, setCookie } from 'tiny-cookie'
 
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
-import FilterYesNo from '@/components/filter/types/FilterYesNo'
+import FilterStarred from '@/components/filter/types/FilterStarred'
 import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const { i18n, localVue, store, router, wait } = Core.init(createLocalVue()).useAll()
@@ -16,10 +16,10 @@ jest.mock('axios', () => {
 })
 
 // Mock the refreshRouteAndSearch method to avoid unecessary route update
-FilterYesNo.methods.refreshRouteAndSearch = jest.fn()
+FilterStarred.methods.refreshRouteAndSearch = jest.fn()
 
-describe('FilterYesNo.vue', () => {
-  const index = toLower('FilterYesNo')
+describe('FilterStarred.vue', () => {
+  const index = toLower('FilterStarred')
   esConnectionHelper(index)
   const es = esConnectionHelper.es
   const filter = store.getters['search/getFilter']({ name: 'starred' })
@@ -29,7 +29,7 @@ describe('FilterYesNo.vue', () => {
   beforeAll(() => setCookie(process.env.VUE_APP_DS_COOKIE_NAME, { login: 'doe' }, JSON.stringify))
 
   beforeEach(() => {
-    wrapper = mount(FilterYesNo, {
+    wrapper = mount(FilterStarred, {
       i18n,
       localVue,
       router,

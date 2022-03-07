@@ -23,7 +23,7 @@ import FilterNamedEntity from '@/components/filter/types/FilterNamedEntity'
 import FilterPath from '@/components/filter/types/FilterPath'
 import FilterRecommendedBy from '@/components/filter/types/FilterRecommendedBy'
 import FilterText from '@/components/filter/types/FilterText'
-import FilterYesNo from '@/components/filter/types/FilterYesNo'
+import FilterStarred from '@/components/filter/types/FilterStarred'
 
 /**
  * A panel to search into a specific filter.
@@ -37,7 +37,7 @@ export default {
     FilterPath,
     FilterRecommendedBy,
     FilterText,
-    FilterYesNo
+    FilterStarred
   },
   props: {
     modelQuery: {
