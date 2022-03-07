@@ -61,7 +61,7 @@ export default {
     const projects = this.$config.get('groups_by_applications.datashare', defaultProjects)
     const sortedProjects = uniq([...projects, ...legacyProjects]).sort()
     this.$set(this, 'projects', sortedProjects)
-    await this.$store.dispatch('search/getStarredDocuments')
+    await this.$store.dispatch('starred/getStarredDocuments')
     await this.$store.dispatch('search/getIsDownloadAllowed')
     await this.$store.dispatch('search/getRecommendationsByProject')
   },
@@ -71,7 +71,7 @@ export default {
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
       this.$root.$emit('filter::search::reset-filters', false)
-      await this.$store.dispatch('search/getStarredDocuments')
+      await this.$store.dispatch('starred/getStarredDocuments')
       await this.$store.dispatch('search/getIsDownloadAllowed')
       await this.$store.dispatch('search/getRecommendationsByProject')
       this.refreshRouteAndSearch()

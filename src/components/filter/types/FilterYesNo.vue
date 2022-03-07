@@ -53,7 +53,7 @@ export default {
   },
   mixins: [utils],
   computed: {
-    ...mapState('search', ['starredDocuments']),
+    ...mapState('starred', ['starredDocuments']),
     total () {
       return Math.max(get(this, '$refs.filter.total', 0) - this.starredDocuments.length, 0)
     },
@@ -67,7 +67,7 @@ export default {
     }
   },
   mounted () {
-    return this.$store.dispatch('search/getStarredDocuments')
+    return this.$store.dispatch('starred/getStarredDocuments')
   },
   methods: {
     resetFilterValues (_, refresh) {

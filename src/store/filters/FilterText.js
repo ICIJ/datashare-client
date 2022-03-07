@@ -4,7 +4,7 @@ import some from 'lodash/some'
 
 // Private properties keys
 const _VALUES = typeof Symbol === 'function' ? Symbol('_values') : '_values'
-const _STATE = typeof Symbol === 'function' ? Symbol('_state') : '_state'
+const _ROOT_STATE = typeof Symbol === 'function' ? Symbol('_ROOT_state') : '_ROOT_state'
 
 export default class FilterText {
   constructor ({ name, key, icon = null, isSearchable = false, alternativeSearch = () => {}, order = null, fromElasticSearch = true, preference = '_local' } = { }) {
@@ -89,12 +89,16 @@ export default class FilterText {
     this.addFilter(body)
   }
 
-  bindState (state) {
-    this[_STATE] = this[_STATE] || state
+  bindRootState (rootState) {
+    this[_ROOT_STATE] = this[_ROOT_STATE] || rootState
+  }
+
+  get rootState () {
+    return this[_ROOT_STATE]
   }
 
   get state () {
-    return this[_STATE]
+    return this?.rootState?.search
   }
 
   get values () {

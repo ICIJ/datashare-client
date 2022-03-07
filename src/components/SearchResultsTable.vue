@@ -201,11 +201,11 @@ export default {
         }
         break
       case 'star':
-        await this.$store.dispatch('search/starDocuments', this.selected)
+        await this.$store.dispatch('starred/starDocuments', this.selected)
         this.$bvToast.toast(this.$t('document.starred'), { noCloseButton: true, variant: 'success' })
         break
       case 'unstar':
-        await this.$store.dispatch('search/unstarDocuments', this.selected)
+        await this.$store.dispatch('starred/unstarDocuments', this.selected)
         this.$bvToast.toast(this.$t('document.unstarred'), { noCloseButton: true, variant: 'success' })
         break
       default:

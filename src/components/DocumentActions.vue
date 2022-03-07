@@ -216,7 +216,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['starredDocuments']),
+    ...mapState('starred', ['starredDocuments']),
     starBtnClassDefinition () {
       const starred = this.isStarred(this.document.id)
       return { [this.starredBtnClass]: starred, ...this.classAttributeToObject(this.starBtnClass) }
@@ -262,8 +262,9 @@ export default {
     },
     async toggleStarDocument (documentId) {
       try {
-        await this.$store.dispatch('search/toggleStarDocument', documentId)
+        await this.$store.dispatch('starred/toggleStarDocument', documentId)
       } catch (_) {
+        console.log(_)
         this.$bvToast.toast(this.$t('document.starringError'), { noCloseButton: true, variant: 'danger' })
       }
       this.$root.$emit('bv::hide::tooltip')

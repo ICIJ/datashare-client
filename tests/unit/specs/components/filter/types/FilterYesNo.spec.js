@@ -93,14 +93,14 @@ describe('FilterYesNo.vue', () => {
   })
 
   it('should fetch the starred documents', async () => {
-    store.commit('search/starredDocuments', ['document'])
+    store.commit('starred/starredDocuments', ['document'])
     await letData(es).have(new IndexedDocument('document', index)).commit()
 
     expect(wrapper.vm.starredDocuments).toEqual(['document'])
   })
 
   it('should display the results count', async () => {
-    store.commit('search/starredDocuments', ['document_01', 'document_02'])
+    store.commit('starred/starredDocuments', ['document_01', 'document_02'])
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)).commit()
     await letData(es).have(new IndexedDocument('document_03', index)).commit()

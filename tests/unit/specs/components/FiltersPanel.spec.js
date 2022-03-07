@@ -22,10 +22,10 @@ describe('FiltersPanel.vue', () => {
   })
 
   it('should not reset the starredDocuments on filters reset', () => {
-    store.commit('search/starredDocuments', ['doc_01', 'doc_02'])
+    store.commit('starred/starredDocuments', ['doc_01', 'doc_02'])
 
     wrapper.vm.$root.$emit('filter::search::reset-filters')
 
-    expect(store.state.search.starredDocuments).toEqual(['doc_01', 'doc_02'])
+    expect(store.state.starred.starredDocuments).toEqual(['doc_01', 'doc_02'])
   })
 })

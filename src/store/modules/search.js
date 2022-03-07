@@ -1,7 +1,7 @@
 import {
-  castArray, cloneDeep, compact, concat, difference, each, endsWith, escapeRegExp,
-  filter as filterCollection, find, findIndex, get, has, includes, isString, join, keys, map, omit,
-  orderBy, range, random, reduce, toString, uniq, values
+  castArray, compact, concat, cloneDeep, each, endsWith, escapeRegExp,
+  filter as filterCollection, find, findIndex, get, has, includes, isString, join,
+  keys, map, omit, orderBy, range, random, reduce, toString, uniq, values
 } from 'lodash'
 import lucene from 'lucene'
 import Vue from 'vue'
@@ -37,7 +37,6 @@ export function initialState () {
     showFilters: true,
     size: 25,
     sort: settings.defaultSearchSort,
-    starredDocuments: [],
     values: {}
   })
 }
@@ -45,12 +44,12 @@ export function initialState () {
 export const state = initialState()
 
 export const getters = {
-  instantiateFilter (state) {
+  instantiateFilter (state, getters, rootState) {
     return ({ type = 'FilterText', options } = {}) => {
       const Type = filterTypes[type]
       const filter = new Type(options)
       // Bind current state to be able to retrieve its values
-      filter.bindState(state)
+      filter.bindRootState(rootState)
       // Return the instance
       return filter
     }
@@ -246,9 +245,6 @@ export const mutations = {
   isDownloadAllowed (state, isDownloadAllowed) {
     Vue.set(state, 'isDownloadAllowed', isDownloadAllowed)
   },
-  starredDocuments (state, starredDocuments) {
-    Vue.set(state, 'starredDocuments', starredDocuments)
-  },
   buildResponse (state, raw) {
     Vue.set(state, 'isReady', true)
     Vue.set(state, 'response', new EsDocList(raw))
@@ -325,12 +321,6 @@ export const mutations = {
   },
   toggleFilters (state, toggler = !state.showFilters) {
     Vue.set(state, 'showFilters', toggler)
-  },
-  pushFromStarredDocuments (state, documentIds) {
-    Vue.set(state, 'starredDocuments', uniq(concat(state.starredDocuments, documentIds)))
-  },
-  removeFromStarredDocuments (state, documentIds) {
-    Vue.set(state, 'starredDocuments', difference(state.starredDocuments, documentIds))
   },
   documentsRecommended (state, documentsRecommended) {
     Vue.set(state, 'documentsRecommended', documentsRecommended)
@@ -448,28 +438,6 @@ export const actions = {
     const query = deleteQueryTermFromSimpleQuery(lucene.parse(state.query))
     commit('query', lucene.toString(query))
     return dispatch('query')
-  },
-  async starDocuments ({ state, commit }, documents) {
-    const documentIds = map(documents, 'id')
-    await api.starDocuments(state.index, documentIds)
-    commit('pushFromStarredDocuments', documentIds)
-  },
-  async unstarDocuments ({ state, commit }, documents) {
-    const documentIds = map(documents, 'id')
-    await api.unstarDocuments(state.index, documentIds)
-    commit('removeFromStarredDocuments', documentIds)
-  },
-  toggleStarDocument ({ state, commit, dispatch }, documentId) {
-    const documents = [{ id: documentId }]
-    if (state.starredDocuments.indexOf(documentId) >= 0) {
-      return dispatch('unstarDocuments', documents)
-    } else {
-      return dispatch('starDocuments', documents)
-    }
-  },
-  async getStarredDocuments ({ state, commit }) {
-    const starredDocuments = await api.getStarredDocuments(state.index)
-    commit('starredDocuments', starredDocuments)
   },
   async runBatchDownload ({ state, commit, getters }) {
     const query = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'

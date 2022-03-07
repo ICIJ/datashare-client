@@ -13,6 +13,7 @@ import insights from './modules/insights'
 import pipelines from './modules/pipelines'
 import search from './modules/search'
 import settings from './modules/settings'
+import starred from './modules/starred'
 import treeView from './modules/treeView'
 
 Vue.use(Vuex)
@@ -29,6 +30,7 @@ export default new Vuex.Store({
     pipelines,
     search,
     settings,
+    starred,
     treeView
   },
   strict: process.env.NODE_ENV === 'development',
