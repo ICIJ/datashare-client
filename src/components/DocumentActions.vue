@@ -99,7 +99,7 @@
 </template>
 
 <script>
-import { uniqueId } from 'lodash'
+import { findIndex, uniqueId } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentTypeCard from '@/components/DocumentTypeCard'
@@ -218,7 +218,8 @@ export default {
   computed: {
     ...mapState('starred', { starredDocuments: 'documents' }),
     isStarred () {
-      return this.starredDocuments.indexOf(this.document.id) >= 0
+      const { index, id } = this.document
+      return findIndex(this.starredDocuments, { index, id }) > -1
     },
     starBtnClassDefinition () {
       return {
@@ -264,10 +265,8 @@ export default {
     },
     async toggleStarDocument () {
       try {
-        const { index, id } = this.document
-        await this.$store.dispatch('starred/toggleStarDocument', index, id)
+        await this.$store.dispatch('starred/toggleStarDocument', this.document)
       } catch (_) {
-        console.log(_)
         this.$bvToast.toast(this.$t('document.starringError'), { noCloseButton: true, variant: 'danger' })
       }
       this.$root.$emit('bv::hide::tooltip')

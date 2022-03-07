@@ -1,4 +1,4 @@
-import get from 'lodash/get'
+import { get, map } from 'lodash'
 import FilterText from './FilterText'
 
 export default class FilterStarred extends FilterText {
@@ -8,9 +8,9 @@ export default class FilterStarred extends FilterText {
   }
   addChildIncludeFilter (body, param) {
     if (param.values[0]) {
-      return body.addFilter('terms', this.key, this.starredDocuments)
+      return body.addFilter('terms', this.key, this.starredDocumentIds)
     } else {
-      return body.notFilter('terms', this.key, this.starredDocuments)
+      return body.notFilter('terms', this.key, this.starredDocumentIds)
     }
   }
   itemLabel (item) {
@@ -18,6 +18,9 @@ export default class FilterStarred extends FilterText {
   }
   get starredDocuments () {
     return this.rootState.starred.documents
+  }
+  get starredDocumentIds () {
+    return map(this.starredDocuments, 'id')
   }
   static get starredLabels () {
     return {

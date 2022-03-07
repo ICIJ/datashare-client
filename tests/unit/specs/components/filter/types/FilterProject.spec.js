@@ -12,7 +12,7 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('axios', () => {
   return {
-    request: jest.fn().mockResolvedValue({ data: {} })
+    request: jest.fn().mockResolvedValue({ data: [] })
   }
 })
 

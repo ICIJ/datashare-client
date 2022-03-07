@@ -34,7 +34,7 @@ describe('DocumentActions.vue', () => {
 
   it('should display a filled star if document is starred, an empty one otherwise', async () => {
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
-    await store.commit('starred/documents', [document.id])
+    await store.commit('starred/documents', [document])
 
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
@@ -43,19 +43,19 @@ describe('DocumentActions.vue', () => {
     expect(wrapper.vm.starredDocuments).toEqual([])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
 
-    await wrapper.vm.toggleStarDocument(project, wrapper.vm.document.id)
+    await wrapper.vm.toggleStarDocument()
 
-    expect(wrapper.vm.starredDocuments).toEqual([document.id])
+    expect(wrapper.vm.starredDocuments).toEqual([{ id: document.id, index: document.index }])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
 
   it('should replace a filled star by an empty one on click on it', async () => {
-    await store.commit('starred/pushDocuments', document.id)
+    await store.commit('starred/pushDocument', document)
 
-    expect(wrapper.vm.starredDocuments).toEqual([document.id])
+    expect(wrapper.vm.starredDocuments).toEqual([{ id: document.id, index: document.index }])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
 
-    await wrapper.vm.toggleStarDocument(project, wrapper.vm.document.id)
+    await wrapper.vm.toggleStarDocument()
 
     expect(wrapper.vm.starredDocuments).toEqual([])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
@@ -65,7 +65,7 @@ describe('DocumentActions.vue', () => {
     const mockCallback = jest.fn()
     wrapper.vm.$root.$on('filter::starred::refresh', mockCallback)
 
-    await wrapper.vm.toggleStarDocument(project, wrapper.vm.document)
+    await wrapper.vm.toggleStarDocument()
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })

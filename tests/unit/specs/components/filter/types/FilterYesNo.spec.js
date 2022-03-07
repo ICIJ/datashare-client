@@ -9,13 +9,10 @@ import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const { i18n, localVue, store, router, wait } = Core.init(createLocalVue()).useAll()
 
-jest.mock('@/api', () => {
-  const { jsonResp } = require('tests/unit/tests_utils')
-  return jest.fn(() => {
-    return {
-      getStarredDocuments: jest.fn().mockReturnValue(jsonResp())
-    }
-  })
+jest.mock('axios', () => {
+  return {
+    request: jest.fn().mockResolvedValue({ data: [] })
+  }
 })
 
 // Mock the refreshRouteAndSearch method to avoid unecessary route update
@@ -93,14 +90,17 @@ describe('FilterYesNo.vue', () => {
   })
 
   it('should fetch the starred documents', async () => {
-    store.commit('starred/documents', ['document'])
+    store.commit('starred/documents', [{ index, id: 'document' }])
     await letData(es).have(new IndexedDocument('document', index)).commit()
 
-    expect(wrapper.vm.starredDocuments).toEqual(['document'])
+    expect(wrapper.vm.starredDocuments).toEqual([{ index, id: 'document' }])
   })
 
   it('should display the results count', async () => {
-    store.commit('starred/documents', ['document_01', 'document_02'])
+    store.commit('starred/documents', [
+      { index, id: 'document_01' },
+      { index, id: 'document_02' }
+    ])
     await letData(es).have(new IndexedDocument('document_01', index)).commit()
     await letData(es).have(new IndexedDocument('document_02', index)).commit()
     await letData(es).have(new IndexedDocument('document_03', index)).commit()

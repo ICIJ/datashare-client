@@ -36,7 +36,6 @@
 
 <script>
 import get from 'lodash/get'
-import { mapState } from 'vuex'
 
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
@@ -53,7 +52,6 @@ export default {
   },
   mixins: [utils],
   computed: {
-    ...mapState('starred', { starredDocuments: 'documents' }),
     total () {
       return Math.max(get(this, '$refs.filter.total', 0) - this.starredDocuments.length, 0)
     },
@@ -64,6 +62,9 @@ export default {
       set (values) {
         this.changeYesNoValue(values)
       }
+    },
+    starredDocuments () {
+      return this.filter.starredDocuments
     }
   },
   mounted () {
