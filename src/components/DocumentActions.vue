@@ -6,10 +6,10 @@
     <a
       class="document-actions__star btn"
       :class="starBtnClassDefinition"
-      @click.prevent="toggleStarDocument(document.id)"
+      @click.prevent="toggleStarDocument()"
       href
       :id="starBtnId">
-      <fa :icon="[isStarred(document.id) ? 'fa' : 'far', 'star']" fixed-width />
+      <fa :icon="[isStarred ? 'fa' : 'far', 'star']" fixed-width />
       <span class="ml-2" :class="{ 'sr-only': !starBtnLabel }">
       {{ $t('document.starButton') }}
     </span>
@@ -217,9 +217,14 @@ export default {
   },
   computed: {
     ...mapState('starred', { starredDocuments: 'documents' }),
+    isStarred () {
+      return this.starredDocuments.indexOf(this.document.id) >= 0
+    },
     starBtnClassDefinition () {
-      const starred = this.isStarred(this.document.id)
-      return { [this.starredBtnClass]: starred, ...this.classAttributeToObject(this.starBtnClass) }
+      return {
+        [this.starredBtnClass]: this.isStarred,
+        ...this.classAttributeToObject(this.starBtnClass)
+      }
     },
     starBtnId () {
       return uniqueId('document-actions-star-button-')
@@ -257,12 +262,10 @@ export default {
       const list = str.split(' ')
       return Object.assign({}, ...list.map(key => ({ [key]: true })))
     },
-    isStarred (documentId) {
-      return this.starredDocuments.indexOf(documentId) >= 0
-    },
-    async toggleStarDocument (documentId) {
+    async toggleStarDocument () {
       try {
-        await this.$store.dispatch('starred/toggleStarDocument', documentId)
+        const { index, id } = this.document
+        await this.$store.dispatch('starred/toggleStarDocument', index, id)
       } catch (_) {
         console.log(_)
         this.$bvToast.toast(this.$t('document.starringError'), { noCloseButton: true, variant: 'danger' })

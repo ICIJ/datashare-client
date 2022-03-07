@@ -1,4 +1,4 @@
-import { concat, difference, map, uniq } from 'lodash'
+import { castArray, concat, difference, groupBy, map, uniq } from 'lodash'
 import Vue from 'vue'
 import Api from '@/api'
 
@@ -21,27 +21,34 @@ export const mutations = {
 }
 
 export const actions = {
-  async starDocuments ({ commit, rootState }, documents) {
-    const documentIds = map(documents, 'id')
-    await api.starDocuments(rootState.search.index, documentIds)
-    commit('pushDocuments', documentIds)
-  },
-  async unstarDocuments ({ rootState, commit }, documents) {
-    const documentIds = map(documents, 'id')
-    await api.unstarDocuments(rootState.search.index, documentIds)
-    commit('removeDocuments', documentIds)
-  },
-  toggleStarDocument ({ state, dispatch }, documentId) {
-    const documents = [{ id: documentId }]
-    if (state.documents.indexOf(documentId) >= 0) {
-      return dispatch('unstarDocuments', documents)
-    } else {
-      return dispatch('starDocuments', documents)
+  async starDocuments ({ commit }, documents = []) {
+    const documentsByIndex = groupBy(castArray(documents), 'index')
+    for (const [index, documents] of Object.entries(documentsByIndex)) {
+      const documentIds = map(documents, 'id')
+      await api.starDocuments(index, documentIds)
+      commit('pushDocuments', documentIds)
     }
   },
-  async getStarredDocuments ({ rootState, commit }) {
-    const documents = await api.getStarredDocuments(rootState.search.index)
-    commit('documents', documents)
+  async unstarDocuments ({ commit }, documents = []) {
+    const documentsByIndex = groupBy(castArray(documents), 'index')
+    for (const [index, documents] of Object.entries(documentsByIndex)) {
+      const documentIds = map(documents, 'id')
+      await api.unstarDocuments(index, documentIds)
+      commit('removeDocuments', documentIds)
+    }
+  },
+  toggleStarDocument ({ state, dispatch }, document) {
+    if (state.documents.indexOf(document.id) >= 0) {
+      return dispatch('unstarDocuments', document)
+    } else {
+      return dispatch('starDocuments', document)
+    }
+  },
+  async getStarredDocuments ({ commit, rootState }) {
+    for (const index of castArray(rootState.search.index)) {
+      const documents = await api.getStarredDocuments(index)
+      commit('documents', documents)
+    }
   }
 }
 

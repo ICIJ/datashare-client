@@ -43,7 +43,7 @@ describe('DocumentActions.vue', () => {
     expect(wrapper.vm.starredDocuments).toEqual([])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
 
-    await wrapper.vm.toggleStarDocument(wrapper.vm.document.id)
+    await wrapper.vm.toggleStarDocument(project, wrapper.vm.document.id)
 
     expect(wrapper.vm.starredDocuments).toEqual([document.id])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
@@ -55,7 +55,7 @@ describe('DocumentActions.vue', () => {
     expect(wrapper.vm.starredDocuments).toEqual([document.id])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
 
-    await wrapper.vm.toggleStarDocument(wrapper.vm.document.id)
+    await wrapper.vm.toggleStarDocument(project, wrapper.vm.document.id)
 
     expect(wrapper.vm.starredDocuments).toEqual([])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
@@ -65,7 +65,7 @@ describe('DocumentActions.vue', () => {
     const mockCallback = jest.fn()
     wrapper.vm.$root.$on('filter::starred::refresh', mockCallback)
 
-    await wrapper.vm.toggleStarDocument(wrapper.vm.document)
+    await wrapper.vm.toggleStarDocument(project, wrapper.vm.document)
 
     expect(mockCallback.mock.calls).toHaveLength(1)
   })

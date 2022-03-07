@@ -52,7 +52,10 @@ describe('SearchResultsTable.vue', () => {
 
   it('should set each selected document as starred', async () => {
     wrapper = mount(SearchResultsTable, { i18n, localVue, router, store, wait })
-    await wrapper.vm.$set(wrapper.vm, 'selected', [{ id: 'document_01' }, { id: 'document_02' }])
+    await wrapper.vm.$set(wrapper.vm, 'selected', [
+      { id: 'document_01', index: project },
+      { id: 'document_02', index: project }
+    ])
 
     wrapper.findAll('.list-group-item-action').at(1).trigger('click')
 

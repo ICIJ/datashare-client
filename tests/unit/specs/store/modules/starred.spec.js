@@ -73,7 +73,8 @@ describe('SearchStore', () => {
 
   it('should toggle a starred documentId, push it if it is not starred', async () => {
     store.commit('starred/documents', [])
-    await store.dispatch('starred/toggleStarDocument', 45)
+    const document = { index: project, id: 45 }
+    await store.dispatch('starred/toggleStarDocument', document)
 
     expect(store.state.starred.documents).toEqual([45])
     expect(store.getters['search/getFilter']({ name: 'starred' }).starredDocuments).toEqual([45])
@@ -81,7 +82,8 @@ describe('SearchStore', () => {
 
   it('should toggle a starred documentId, remove it if it is starred', async () => {
     store.commit('starred/documents', [48])
-    await store.dispatch('starred/toggleStarDocument', 48)
+    const document = { index: project, id: 48 }
+    await store.dispatch('starred/toggleStarDocument', document)
 
     expect(store.state.starred.documents).toEqual([])
     expect(store.getters['search/getFilter']({ name: 'starred' }).starredDocuments).toEqual([])
