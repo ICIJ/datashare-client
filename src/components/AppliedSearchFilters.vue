@@ -6,11 +6,8 @@
 </template>
 
 <script>
-import { parseInt } from 'lodash'
-
 import AppliedSearchFiltersItem from '@/components/AppliedSearchFiltersItem'
 import ResetFiltersButton from '@/components/ResetFiltersButton'
-import { FilterDate } from '@/store/filters'
 
 /**
  * A list of applied search filters.
@@ -32,7 +29,8 @@ export default {
         filter.values.forEach(value => {
           let label = filter.itemLabel ? filter.itemLabel({ key: value, key_as_string: value }) : value
           label = this.$te(label) ? this.$t(label) : label
-          if (filter.component === new FilterDate().component && parseInt(label)) {
+          // Indexing Date filter is filtering by month
+          if (filter.name === 'indexingDate' && parseInt(label)) {
             const date = new Date(parseInt(label))
             label = date.getFullYear() + '-' + ('0' + (date.getMonth() + 1)).slice(-2)
           }
