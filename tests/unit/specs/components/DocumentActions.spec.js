@@ -24,7 +24,7 @@ describe('DocumentActions.vue', () => {
   beforeAll(() => Murmur.config.merge({ userProjects: [process.env.VUE_APP_ES_INDEX] }))
 
   beforeEach(async () => {
-    store.commit('starred/starredDocuments', [])
+    store.commit('starred/documents', [])
     const indexedDocument = await letData(es).have(new IndexedDocument('document', project)).commit()
     document = indexedDocument.document
     wrapper = shallowMount(DocumentActions, { i18n, localVue, store, propsData: { document }, sync: false })
@@ -34,7 +34,7 @@ describe('DocumentActions.vue', () => {
 
   it('should display a filled star if document is starred, an empty one otherwise', async () => {
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('far,star')
-    await store.commit('starred/starredDocuments', [document.id])
+    await store.commit('starred/documents', [document.id])
 
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')
   })
@@ -50,7 +50,7 @@ describe('DocumentActions.vue', () => {
   })
 
   it('should replace a filled star by an empty one on click on it', async () => {
-    await store.commit('starred/pushFromStarredDocuments', document.id)
+    await store.commit('starred/pushDocuments', document.id)
 
     expect(wrapper.vm.starredDocuments).toEqual([document.id])
     expect(wrapper.find('.document-actions__star fa-stub').attributes('icon')).toBe('fa,star')

@@ -5,18 +5,18 @@ import Api from '@/api'
 export const api = new Api()
 
 export const state = {
-  starredDocuments: []
+  documents: []
 }
 
 export const mutations = {
-  starredDocuments (state, starredDocuments) {
-    Vue.set(state, 'starredDocuments', starredDocuments)
+  documents (state, documents) {
+    Vue.set(state, 'documents', documents)
   },
-  pushFromStarredDocuments (state, documentIds) {
-    Vue.set(state, 'starredDocuments', uniq(concat(state.starredDocuments, documentIds)))
+  pushDocuments (state, documentIds) {
+    Vue.set(state, 'documents', uniq(concat(state.documents, documentIds)))
   },
-  removeFromStarredDocuments (state, documentIds) {
-    Vue.set(state, 'starredDocuments', difference(state.starredDocuments, documentIds))
+  removeDocuments (state, documentIds) {
+    Vue.set(state, 'documents', difference(state.documents, documentIds))
   }
 }
 
@@ -24,24 +24,24 @@ export const actions = {
   async starDocuments ({ commit, rootState }, documents) {
     const documentIds = map(documents, 'id')
     await api.starDocuments(rootState.search.index, documentIds)
-    commit('pushFromStarredDocuments', documentIds)
+    commit('pushDocuments', documentIds)
   },
   async unstarDocuments ({ rootState, commit }, documents) {
     const documentIds = map(documents, 'id')
     await api.unstarDocuments(rootState.search.index, documentIds)
-    commit('removeFromStarredDocuments', documentIds)
+    commit('removeDocuments', documentIds)
   },
   toggleStarDocument ({ state, dispatch }, documentId) {
     const documents = [{ id: documentId }]
-    if (state.starredDocuments.indexOf(documentId) >= 0) {
+    if (state.documents.indexOf(documentId) >= 0) {
       return dispatch('unstarDocuments', documents)
     } else {
       return dispatch('starDocuments', documents)
     }
   },
   async getStarredDocuments ({ rootState, commit }) {
-    const starredDocuments = await api.getStarredDocuments(rootState.search.index)
-    commit('starredDocuments', starredDocuments)
+    const documents = await api.getStarredDocuments(rootState.search.index)
+    commit('documents', documents)
   }
 }
 

@@ -216,7 +216,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('starred', ['starredDocuments']),
+    ...mapState('starred', { starredDocuments: 'documents' }),
     starBtnClassDefinition () {
       const starred = this.isStarred(this.document.id)
       return { [this.starredBtnClass]: starred, ...this.classAttributeToObject(this.starBtnClass) }

@@ -53,7 +53,7 @@ export default {
   },
   mixins: [utils],
   computed: {
-    ...mapState('starred', ['starredDocuments']),
+    ...mapState('starred', { starredDocuments: 'documents' }),
     total () {
       return Math.max(get(this, '$refs.filter.total', 0) - this.starredDocuments.length, 0)
     },

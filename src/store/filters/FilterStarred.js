@@ -17,7 +17,7 @@ export default class FilterStarred extends FilterText {
     return get(FilterStarred.starredLabels, item.key, item.key)
   }
   get starredDocuments () {
-    return this.rootState.starred.starredDocuments
+    return this.rootState.starred.documents
   }
   static get starredLabels () {
     return {

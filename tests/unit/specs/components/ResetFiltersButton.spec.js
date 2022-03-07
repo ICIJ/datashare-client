@@ -66,11 +66,11 @@ describe('ResetFiltersButton.vue', function () {
   })
 
   it('should not change the starredDocuments on filters reset', () => {
-    store.commit('starred/starredDocuments', ['doc_01', 'doc_02'])
+    store.commit('starred/documents', ['doc_01', 'doc_02'])
 
     wrapper.vm.resetFiltersAndQuery()
 
-    expect(store.state.starred.starredDocuments).toEqual(['doc_01', 'doc_02'])
+    expect(store.state.starred.documents).toEqual(['doc_01', 'doc_02'])
   })
 
   it('should emit an event "bv::hide::popover" on filters reset', () => {
