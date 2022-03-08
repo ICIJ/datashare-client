@@ -39,8 +39,8 @@
             {{ $t('search.settings.resultsPerPage') }}
           </b-dropdown-header>
           <b-dropdown-item :active="selectedSize === size"
-                           @click="selectSize(selectedSize)"
                            :key="selectedSize"
+                           @click="selectSize(selectedSize)"
                            v-for="selectedSize in sizes">
             <div class="d-flex align-items-center">
               <span>
@@ -50,26 +50,30 @@
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
-      <confirm-button v-if="response.total > 0" class="search-results-header__settings__btn-download btn btn-link text-nowrap ml-auto"
-                      :confirmed="batchDownload"
-                      :label="batchDownloadLabel"
-                      :yes="$t('global.yes')"
-                      :no="$t('global.no')">
-        <fa icon="download"></fa>
-        <span v-if="!noLabels" class="ml-2">
-          {{ $t('search.results.batchDownload') }}
-        </span>
-      </confirm-button>
+      <span v-b-tooltip.hover :title="batchDownloadTooltip">
+        <confirm-button v-if="response.total > 0"
+                        class="search-results-header__settings__btn-download btn btn-link text-nowrap ml-auto"
+                        :confirmed="batchDownload"
+                        :label="batchDownloadLabel"
+                        :yes="$t('global.yes')"
+                        :no="$t('global.no')"
+                        :disabled="!isBatchDownloadAllowed">
+          <fa icon="download" />
+          <span v-if="!noLabels" class="ml-2">
+            {{ $t('search.results.batchDownload') }}
+          </span>
+        </confirm-button>
+      </span>
       <pagination
         class="search-results-header__settings__pagination justify-content-end text-right mr-3"
         :get-to-template="getToTemplate"
         :is-displayed="isDisplayed"
         :no-last-page-link="searchWindowTooLarge"
         :position="position"
-        :total="response.total"></pagination>
+        :total="response.total" />
     </div>
     <div class="search-results-header__applied-search-filters" v-if="position === 'top' && !noFilters">
-      <applied-search-filters></applied-search-filters>
+      <applied-search-filters />
     </div>
   </div>
 </template>
@@ -167,6 +171,12 @@ export default {
       })
       return totalLength
     },
+    batchDownloadTooltip () {
+      if (!this.isBatchDownloadAllowed) {
+        return this.$t('search.results.batchDownloadNotAllowed')
+      }
+      return null
+    },
     batchDownloadLabel () {
       let label = ''
       if (this.batchDownloadMaxNbFiles !== undefined && this.response.total > this.batchDownloadMaxNbFiles) {
@@ -178,6 +188,9 @@ export default {
       return label === ''
         ? `${this.$tc('search.results.batchDownloadSubmit', this.response.total, { total: this.$n(this.response.total) })} ${this.$t('global.confirmLabel')}`
         : `${label} ${this.$t('search.results.warningConfirm')}`
+    },
+    isBatchDownloadAllowed () {
+      return this.$store.state.search.indices.length === 1
     }
   },
   mounted () {
