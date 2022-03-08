@@ -121,7 +121,6 @@ export default {
   },
   data () {
     return {
-      index: this.$store.state.search.index,
       metadataVisible: false
     }
   },
@@ -251,13 +250,15 @@ export default {
       return filter(this.canonicalFields, field => field.value)
     },
     searchChildrenDocumentParams () {
+      const { index } = this.document
       const q = `_routing:${this.document.id}`
-      const query = { q, index: this.index }
+      const query = { q, index }
       return { name: 'search', query }
     },
     searchDirnameDocumentParams () {
+      const { index } = this.document
       const q = `dirname:"${this.documentDirname}"`
-      const query = { q, index: this.index }
+      const query = { q, index }
       return { name: 'search', query }
     }
   },
