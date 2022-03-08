@@ -46,6 +46,7 @@ export default new Vuex.Store({
         'search.sort',
         'search.field',
         'search.index',
+        'search.indices',
         'search.showFilters',
         'search.layout'
       ],
