@@ -1,9 +1,19 @@
 <template>
-  <b-form-select :options="projects" v-model="selectedProject" :size="size"></b-form-select>
+  <b-form-group class="mb-0">
+    <b-form-checkbox-group
+      :options="projects"
+      v-if="multiple"
+      v-model="selectedProject" />
+    <b-form-select
+      :options="projects"
+      :size="size"
+      v-else
+      v-model="selectedProject" />
+  </b-form-group>
 </template>
 
 <script>
-import { compact, get, isEmpty, uniq, includes, remove } from 'lodash'
+import { compact, castArray, get, uniq } from 'lodash'
 
 /**
  * A single-project selector input.
@@ -16,7 +26,7 @@ export default {
      * @model
      */
     value: {
-      type: String,
+      type: [String, Array],
       required: true
     },
     /**
@@ -26,33 +36,29 @@ export default {
     size: {
       type: String,
       default: 'md'
-    }
-  },
-  methods: {
-    verifyDefaultSelectedProject () {
-      const projectToVerify = this.value
-      const projects = this.$config.get('groups_by_applications.datashare', [])
-
-      return includes(projects, projectToVerify) ? projectToVerify : projects[0]
+    },
+    /**
+     * Allow to select several projects
+     */
+    multiple: {
+      type: Boolean
     }
   },
   computed: {
     projects () {
       const defaultProjects = [this.$config.get('defaultProject')]
-      // @depracated this load the list from a depracated list of project for retro-compatibility
+      // @DEPRECATED this load the list from a depracated list of project for retro-compatibility
       const legacyProjects = this.$config.get('datashare_projects', defaultProjects)
       const projects = this.$config.get('groups_by_applications.datashare', defaultProjects)
-      let sortedProjects = compact(uniq([...projects, ...legacyProjects]).sort())
-      if (!includes(projects, defaultProjects)) {
-        sortedProjects = remove(sortedProjects, (project) => {
-          return includes(projects, project)
-        })
-      }
+      const sortedProjects = compact(uniq([...projects, ...legacyProjects, defaultProjects]).sort())
       return sortedProjects.map(value => ({ value, text: value }))
+    },
+    firstProject () {
+      return get(this.projects, '0.value', null)
     },
     selectedProject: {
       get () {
-        return isEmpty(this.value) ? get(this.projects, [0, 'value'], '') : this.verifyDefaultSelectedProject()
+        return this.multiple ? castArray(this.value) : this.value
       },
       set (value) {
         this.$emit('input', value)
