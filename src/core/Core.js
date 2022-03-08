@@ -182,8 +182,8 @@ class Core extends Behaviors {
       await this.createDefaultProject()
       this._auth = new Auth(mode(serverSettings.mode))
       // Set the default project
-      if (this.store.state.search.index === '') {
-        this.store.commit('search/index', this.getDefaultProject())
+      if (!this.store.state.search.indices.length) {
+        this.store.commit('search/indices', [this.getDefaultProject()])
       }
       // Check if "Download" functionality is available for the selected project
       // Because otherwise, if the FilterPanel is closed, it is never called
