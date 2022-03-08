@@ -75,6 +75,7 @@
       "on": "crwdns302:0crwdne302:0",
       "perPage": "crwdns304:0crwdne304:0",
       "sortedByPath": "crwdns1347:0crwdne1347:0",
+      "batchDownloadNotAllowed": "crwdns2556:0crwdne2556:0",
       "batchDownload": "crwdns2502:0crwdne2502:0",
       "batchDownloadSubmit": "crwdns2545:0%{total}crwdne2545:0",
       "warningNumber": "crwdns2547:0%{number}crwdne2547:0",
