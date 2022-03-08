@@ -1,11 +1,11 @@
 <template>
   <b-form-group class="mb-0">
     <b-form-checkbox-group
-      :options="projects"
+      :options="projectOptions"
       v-if="multiple"
       v-model="selectedProject" />
     <b-form-select
-      :options="projects"
+      :options="projectOptions"
       :size="size"
       v-else
       v-model="selectedProject" />
@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { compact, castArray, get, uniq } from 'lodash'
+import { compact, castArray, isEqual, startCase, uniq } from 'lodash'
 
 /**
  * A single-project selector input.
@@ -46,15 +46,16 @@ export default {
   },
   computed: {
     projects () {
-      const defaultProjects = [this.$config.get('defaultProject')]
-      // @DEPRECATED this load the list from a depracated list of project for retro-compatibility
-      const legacyProjects = this.$config.get('datashare_projects', defaultProjects)
-      const projects = this.$config.get('groups_by_applications.datashare', defaultProjects)
-      const sortedProjects = compact(uniq([...projects, ...legacyProjects, defaultProjects]).sort())
-      return sortedProjects.map(value => ({ value, text: value }))
+      const defaultProject = this.$config.get('defaultProject')
+      const projects = this.$config.get('groups_by_applications.datashare', [])
+      return compact(uniq([...projects, defaultProject]).sort())
     },
-    firstProject () {
-      return get(this.projects, '0.value', null)
+    projectOptions () {
+      return this.projects.map(value => {
+        const text = startCase(value)
+        const disabled = this.multiple && isEqual(this.selectedProject, [value])
+        return { disabled, text, value }
+      })
     },
     selectedProject: {
       get () {
