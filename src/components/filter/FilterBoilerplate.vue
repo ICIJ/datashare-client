@@ -46,7 +46,7 @@
               :sort-by-order="sortByOrder"
               :total-count="totalCount">
           <b-form-checkbox v-model="isAllSelected" class="filter__items__all mb-0" :disabled="isAllSelected">
-            <slot name="all">
+            <slot name="all" v-bind="{ total }">
               <span class="d-flex">
                 <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
                   {{ labelToHuman('all') }}

@@ -889,7 +889,7 @@ describe('SearchStore', () => {
     })
 
     it('should return the total of documents recommended for this project', async () => {
-      axios.request.mockResolvedValue({ data: { totalCount: 42 } })
+      axios.request.mockResolvedValue({ data: { totalCount: 42, aggregates: [] } })
       axios.request.mockClear()
 
       await store.dispatch('search/getRecommendationsByProject')

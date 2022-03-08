@@ -74,7 +74,6 @@ describe('FilterRecommendedBy.vue', () => {
       { user: 'user_01', count: 1 },
       { user: 'user_02', count: 3 }
     ])
-    expect(wrapper.vm.recommendedByTotal).toBe(42)
   })
 
   it('should sort options to have the current user first', async () => {

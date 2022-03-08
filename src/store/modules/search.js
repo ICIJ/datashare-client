@@ -1,7 +1,7 @@
 import {
   castArray, compact, concat, cloneDeep, each, endsWith, escapeRegExp, flatten,
   filter as filterCollection, find, findIndex, get, has, includes, isString, join,
-  keys, map, omit, orderBy, range, random, reduce, toString, uniq, values
+  keys, map, omit, orderBy, range, random, reduce, toString, uniq, values, sumBy
 } from 'lodash'
 import lucene from 'lucene'
 import Vue from 'vue'
@@ -477,11 +477,17 @@ export const actions = {
   },
   async getRecommendationsByProject ({ state, commit }) {
     try {
-      const recommendations = await api.getRecommendationsByProject(state.index)
-      const total = get(recommendations, 'totalCount', 0)
-      const aggregates = get(recommendations, 'aggregates', [])
+      const recommendationsByProject = state.indices.map(index => api.getRecommendationsByProject(index))
+      const recommendations = await Promise.all(recommendationsByProject)
+      const total = sumBy(recommendations, 'totalCount')
+      const aggregates = flatten(map(recommendations, 'aggregates'))
       const byUsers = aggregates.map(({ count, ...user }) => ({ user: user.item.id, count }))
-      commit('recommendedByUsers', byUsers)
+      const sumByUsers = byUsers.reduce((merged, { user, count }) => {
+        merged[user] ||= { user, count: 0 }
+        merged[user].count += count
+        return merged
+      }, {})
+      commit('recommendedByUsers', Object.values(sumByUsers))
       commit('recommendedByTotal', total)
     } catch (_) {
       commit('recommendedByUsers', [])
@@ -489,17 +495,16 @@ export const actions = {
     }
   },
   async getDocumentsRecommendedBy ({ state, commit }, users) {
-    let documentsRecommended
     try {
-      if (users.length === 0) {
-        documentsRecommended = []
+      if (users.length) {
+        const documentsByProject = state.indices.map(index => api.getDocumentsRecommendedBy(index, users))
+        commit('documentsRecommended', flatten(await Promise.all(documentsByProject)))
       } else {
-        documentsRecommended = await api.getDocumentsRecommendedBy(state.index, users)
+        commit('documentsRecommended', [])
       }
     } catch (_) {
-      documentsRecommended = []
+      commit('documentsRecommended', [])
     }
-    commit('documentsRecommended', documentsRecommended)
   }
 }
 

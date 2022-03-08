@@ -146,7 +146,7 @@ export default class Api {
   getRecommendationsByProject (project) {
     return this.sendAction('/api/users/recommendations', { method: 'GET', params: { project: project } })
   }
-  getDocumentsRecommendedBy (project, users) {
+  getDocumentsRecommendedBy (project, users = []) {
     const userIds = join(users)
     return this.sendAction(`/api/${project}/documents/recommendations`, { method: 'GET', params: { userids: userIds } })
   }
