@@ -1,5 +1,5 @@
 import {
-  castArray, compact, concat, cloneDeep, each, endsWith, escapeRegExp,
+  castArray, compact, concat, cloneDeep, each, endsWith, escapeRegExp, flatten,
   filter as filterCollection, find, findIndex, get, has, includes, isString, join,
   keys, map, omit, orderBy, range, random, reduce, toString, uniq, values
 } from 'lodash'
@@ -24,6 +24,7 @@ export function initialState () {
     filters,
     from: 0,
     index: '',
+    indices: [],
     isDownloadAllowed: false,
     isReady: true,
     // Different default layout for narrow screen
@@ -114,6 +115,7 @@ export const getters = {
       size: state.size,
       sort: state.sort,
       index: state.index,
+      indices: state.indices.join(','),
       field: state.field,
       ...getters.filterValuesAsRouteQuery()
     })
@@ -187,7 +189,7 @@ export const getters = {
 }
 
 export const mutations = {
-  reset (state, excludedKeys = ['index', 'showFilters', 'layout', 'size', 'sort']) {
+  reset (state, excludedKeys = ['index', 'indices', 'showFilters', 'layout', 'size', 'sort']) {
     const s = initialState()
     Object.keys(s).forEach(key => {
       if (excludedKeys.indexOf(key) === -1) {
@@ -217,6 +219,9 @@ export const mutations = {
   query (state, query) {
     Vue.set(state, 'query', query)
   },
+  q (state, query) {
+    Vue.set(state, 'query', query)
+  },
   from (state, from) {
     Vue.set(state, 'from', Number(from))
   },
@@ -234,6 +239,15 @@ export const mutations = {
   },
   index (state, index) {
     Vue.set(state, 'index', index)
+    Vue.set(state, 'indices', [index])
+  },
+  indices (state, indices) {
+    // Clean indices list to ensure we received an array. This means
+    // this mutation can also receive a string with a commat separated
+    // list of indices.
+    const cleaned = flatten(castArray(indices).map(str => str.split(',')))
+    Vue.set(state, 'indices', cleaned)
+    Vue.set(state, 'index', cleaned[0])
   },
   layout (state, layout) {
     Vue.set(state, 'layout', layout)
@@ -272,8 +286,8 @@ export const mutations = {
     Vue.set(state.values, filter.name, filterCollection(existingValues, value => value !== filter.value))
   },
   removeFilter (state, name) {
-    const index = findIndex(state.filters, ({ options }) => options.name === name)
-    Vue.delete(state.filters, index)
+    const i = findIndex(state.filters, ({ options }) => options.name === name)
+    Vue.delete(state.filters, i)
     if (name in state.values) {
       Vue.delete(state.values, name)
     }
@@ -296,11 +310,11 @@ export const mutations = {
     Vue.delete(state.contextualized, state.contextualized.indexOf(name))
   },
   toggleContextualizedFilter (state, name) {
-    const index = state.contextualized.indexOf(name)
-    if (index === -1) {
+    const i = state.contextualized.indexOf(name)
+    if (i === -1) {
       state.contextualized.push(name)
     } else {
-      Vue.delete(state.contextualized, index)
+      Vue.delete(state.contextualized, i)
     }
   },
   excludeFilter (state, name) {
@@ -312,11 +326,11 @@ export const mutations = {
     Vue.delete(state.reversed, state.reversed.indexOf(name))
   },
   toggleFilter (state, name) {
-    const index = state.reversed.indexOf(name)
-    if (index === -1) {
+    const i = state.reversed.indexOf(name)
+    if (i === -1) {
       state.reversed.push(name)
-    } else if (index > -1) {
-      Vue.delete(state.reversed, index)
+    } else if (i > -1) {
+      Vue.delete(state.reversed, i)
     }
   },
   toggleFilters (state, toggler = !state.showFilters) {
@@ -338,7 +352,8 @@ export const actions = {
     commit('isReady', !updateIsReady)
     commit('error', null)
     try {
-      const raw = await elasticsearch.searchDocs(state.index, state.query, getters.instantiatedFilters, state.from, state.size, state.sort, getters.getFields())
+      const indices = state.indices.join(',')
+      const raw = await elasticsearch.searchDocs(indices, state.query, getters.instantiatedFilters, state.from, state.size, state.sort, getters.getFields())
       commit('buildResponse', raw)
       return raw
     } catch (error) {
@@ -347,19 +362,52 @@ export const actions = {
       throw error
     }
   },
-  query ({ state, commit, getters, dispatch }, queryOrParams = { index: state.index, query: state.query, from: state.from, size: state.size, sort: state.sort, field: state.field }) {
-    const queryHasntValue = key => typeof queryOrParams === 'string' || queryOrParams instanceof String || typeof queryOrParams[key] === 'undefined'
-    commit('index', queryHasntValue('index') ? state.index : queryOrParams.index)
-    commit('query', queryHasntValue('query') ? queryOrParams : queryOrParams.query)
-    commit('from', queryHasntValue('from') ? state.from : queryOrParams.from)
-    commit('size', queryHasntValue('size') ? state.size : queryOrParams.size)
-    commit('sort', queryHasntValue('sort') ? state.sort : queryOrParams.sort)
-    commit('field', queryHasntValue('field') ? state.field : queryOrParams.field)
+  async updateFromRouteQuery ({ commit, getters }, query) {
+    ['q', 'index', 'indices', 'from', 'size', 'sort', 'field'].forEach(key => {
+      if (key in query) {
+        // Add the query to the state with a mutation to avoid triggering a search
+        commit(key, query[key])
+      }
+    })
+    // Iterate over the list of filter
+    each(getters.instantiatedFilters, filter => {
+      // The filter key are formatted in the URL as follow.
+      // See `query-string` for more info about query string format.
+      each([`f[${filter.name}]`, `f[-${filter.name}]`], (key, isReverse) => {
+        // Add the data if the value exist
+        if (key in query) {
+          // Because the values are grouped for each query parameter and because
+          // the `addFilterValue` also accept an array of value, we can directly
+          // use the query values.
+          commit('addFilterValue', filter.itemParam({ key: query[key] }))
+          // Invert the filter if we are using the second key (for reverse filter)
+          if (isReverse) {
+            commit('excludeFilter', filter.name)
+          }
+        }
+      })
+    })
+  },
+  query ({ state, commit, dispatch }, q = { index: state.index, indices: state.indices, query: state.query, from: state.from, size: state.size, sort: state.sort, field: state.field }) {
+    // Only the "query" parameter must be treaten differently
+    if (has(q, 'query')) {
+      commit('query', q.query)
+    } else if (isString(q)) {
+      commit('query', q)
+    }
+    // Then mutates all values if they are in queryOrParams. The mutation
+    // for "indices" must be after "index" since the two mutations are
+    // updating concurent values.
+    ['index', 'indices', 'from', 'size', 'sort', 'field'].forEach(key => {
+      if (has(q, key)) {
+        commit(key, q[key])
+      }
+    })
     return dispatch('refresh', true)
   },
   queryFilter ({ state, getters }, params) {
     return elasticsearch.searchFilter(
-      state.index,
+      state.indices.join(','),
       getters.getFilter({ name: params.name }),
       state.query,
       getters.instantiatedFilters,
@@ -398,31 +446,6 @@ export const actions = {
     commit('from', state.from + state.size)
     return dispatch('query')
   },
-  async updateFromRouteQuery ({ state, commit, getters }, query) {
-    // Add the query to the state with a mutation to not triggering a search
-    if (has(query, 'q')) commit('query', query.q)
-    if (has(query, 'index')) commit('index', query.index)
-    if (has(query, 'from')) commit('from', query.from)
-    if (has(query, 'size')) commit('size', query.size)
-    if (has(query, 'sort')) commit('sort', query.sort)
-    if (has(query, 'field')) commit('field', query.field)
-    // Iterate over the list of filter
-    each(getters.instantiatedFilters, filter => {
-      // The filter key are formatted in the URL as follow.
-      // See `query-string` for more info about query string format.
-      each([`f[${filter.name}]`, `f[-${filter.name}]`], (key, index) => {
-        // Add the data if the value exist
-        if (key in query) {
-          // Because the values are grouped for each query parameter and because
-          // the `addFilterValue` also accept an array of value, we can directly
-          // use the query values.
-          commit('addFilterValue', filter.itemParam({ key: query[key] }))
-          // Invert the filter if we are using the second key (for reverse filter)
-          if (index) commit('excludeFilter', filter.name)
-        }
-      })
-    })
-  },
   deleteQueryTerm ({ state, commit, dispatch }, term) {
     function deleteQueryTermFromSimpleQuery (query) {
       if (get(query, 'left.term', '') === term) query = omit(query, 'left')
@@ -439,7 +462,7 @@ export const actions = {
     commit('query', lucene.toString(query))
     return dispatch('query')
   },
-  async runBatchDownload ({ state, commit, getters }) {
+  async runBatchDownload ({ state, getters }) {
     const query = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
     const jsonQuery = elasticsearch.rootSearch(getters.instantiatedFilters, query).build()
     return api.runBatchDownload({ project: state.index, query: jsonQuery.query })

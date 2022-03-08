@@ -39,7 +39,7 @@ describe('SearchStore', () => {
 
   it('should reset to initial state', async () => {
     const initialState = cloneDeep(store.state.search)
-    store.commit('search/index', anotherProject)
+    store.commit('search/indices', [anotherProject])
     store.commit('search/query', 'datashare')
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
@@ -51,9 +51,9 @@ describe('SearchStore', () => {
 
     store.commit('search/reset')
 
-    const omittedFields = ['index', 'isReady', 'filters', 'showFilters', 'response', 'size', 'sort']
+    const omittedFields = ['index', 'indices', 'isReady', 'filters', 'showFilters', 'response', 'size', 'sort']
     expect(omit(store.state.search, omittedFields)).toEqual(omit(initialState, omittedFields))
-    expect(store.state.search.index).toBe(anotherProject)
+    expect(store.state.search.indices).toEqual([anotherProject])
     expect(store.state.search.isReady).toBeTruthy()
     expect(find(store.getters['search/instantiatedFilters'], { name: 'contentType' }).values).toHaveLength(0)
 
@@ -102,7 +102,7 @@ describe('SearchStore', () => {
 
   it('should return document from another project', async () => {
     await letData(es).have(new IndexedDocument('document', anotherProject).withContent('bar')).commit()
-    await store.dispatch('search/query', { index: anotherProject, query: 'bar', from: 0, size: 25 })
+    await store.dispatch('search/query', { indices: [anotherProject], query: 'bar', from: 0, size: 25 })
 
     expect(store.state.search.response.hits).toHaveLength(1)
     expect(store.state.search.response.hits[0].basename).toBe('document')
@@ -308,18 +308,18 @@ describe('SearchStore', () => {
 
   it('should return the default query parameters', () => {
     expect(store.getters['search/toRouteQuery']())
-      .toMatchObject({ field: 'all', index: project, q: '', size: 25, from: 0 })
+      .toMatchObject({ field: 'all', indices: project, q: '', size: 25, from: 0 })
   })
 
   it('should return an advanced and filtered query parameters', () => {
-    store.commit('search/index', project)
+    store.commit('search/indices', [project])
     store.commit('search/query', 'datashare')
     store.commit('search/size', 12)
     store.commit('search/sort', 'randomOrder')
     store.commit('search/addFilterValue', { name: 'contentType', value: 'TXT' })
 
     expect(store.getters['search/toRouteQuery']())
-      .toMatchObject({ index: project, q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[contentType]': ['TXT'] })
+      .toMatchObject({ indices: project, q: 'datashare', from: 0, size: 12, sort: 'randomOrder', 'f[contentType]': ['TXT'] })
 
     store.commit('search/size', 25)
   })
@@ -341,7 +341,7 @@ describe('SearchStore', () => {
   describe('updateFromRouteQuery should restore search state from url', () => {
     it('should set the project of the store according to the url', async () => {
       store.commit('search/index', project)
-      await store.dispatch('search/updateFromRouteQuery', { index: process.env.VUE_APP_ES_ANOTHER_INDEX })
+      await store.dispatch('search/updateFromRouteQuery', { indices: process.env.VUE_APP_ES_ANOTHER_INDEX })
 
       expect(store.state.search.index).toBe(process.env.VUE_APP_ES_ANOTHER_INDEX)
     })
