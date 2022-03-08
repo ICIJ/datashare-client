@@ -2,7 +2,7 @@
   <div class="project-cards container-fluid p-0">
     <div class="row">
       <div class="col-4 mb-4" v-for="project in projects" :key="project">
-        <router-link :to="{ name: 'search', query: { index: project, q: '*' } }" class="project-cards__item d-flex justify-content-start text-nowrap" :class="{ 'project-cards__item--active': isActive(project) }">
+        <router-link :to="{ name: 'search', query: { indices: project, q: '*' } }" class="project-cards__item d-flex justify-content-start text-nowrap" :class="{ 'project-cards__item--active': isActive(project) }">
           <div class="project-cards__item__header py-2 px-3 bg-white text-secondary">
             <fa icon="book"></fa>
           </div>
@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     isActive (project) {
-      return project === this.$store.state.search.index
+      return project === this.$store.state.search.indices[0]
     },
     startCase
   },
