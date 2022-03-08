@@ -75,6 +75,7 @@
       "on": "sobre",
       "perPage": "por página",
       "sortedByPath": "ordenado por ruta",
+      "batchDownloadNotAllowed": "Batch downloads are not allowed on multiple projects.",
       "batchDownload": "Descargar los resultados",
       "batchDownloadSubmit": "Está a punto de descargar 1 archivo. | Está a punto de descargar %{total} archivo.",
       "warningNumber": "No puede descargar más de %{number} archivos.",
