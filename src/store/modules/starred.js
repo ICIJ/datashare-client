@@ -65,7 +65,7 @@ export const actions = {
     }
   },
   async getStarredDocuments ({ commit, rootState }, indices = null) {
-    for (const index of castArray(indices || rootState.search.index)) {
+    for (const index of castArray(indices || rootState.search.indices)) {
       const ids = await api.getStarredDocuments(index)
       const documents = castArray(ids).map(id => ({ id, index }))
       commit('documents', documents)
