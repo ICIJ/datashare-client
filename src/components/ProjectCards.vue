@@ -37,29 +37,24 @@
 </style>
 
 <script>
-import { startCase } from 'lodash'
+import { compact, startCase, uniq } from 'lodash'
 
 /**
  * List all the projects with cards linking to the search.
  */
 export default {
-  data () {
-    return {
-      projects: []
-    }
-  },
   methods: {
     isActive (project) {
       return this.$store.state.search.indices.includes(project)
     },
     startCase
   },
-  created () {
-    // @deprecated this load the list from a deprecated list of project for retro-compatibility
-    const legacyProjects = this.$config.get('datashare_projects', [])
-    const projects = this.$config.get('groups_by_applications.datashare', [])
-    const sortedProjects = [...projects, ...legacyProjects].sort()
-    this.$set(this, 'projects', sortedProjects)
+  computed: {
+    projects () {
+      const defaultProject = this.$config.get('defaultProject')
+      const projects = this.$config.get('groups_by_applications.datashare', [])
+      return compact(uniq([...projects, defaultProject]).sort())
+    }
   }
 }
 </script>
