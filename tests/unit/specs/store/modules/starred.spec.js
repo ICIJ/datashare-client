@@ -7,8 +7,8 @@ import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 
 jest.mock('axios')
 
-describe('SearchStore', () => {
-  const index = toLower('SearchStore')
+describe('StarredStore', () => {
+  const index = toLower('StarredStore')
   esConnectionHelper([index])
   const es = esConnectionHelper.es
   const filter = store.getters['search/getFilter']({ name: 'starred' })

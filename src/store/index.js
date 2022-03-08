@@ -11,6 +11,7 @@ import hooks from './modules/hooks'
 import indexing from './modules/indexing'
 import insights from './modules/insights'
 import pipelines from './modules/pipelines'
+import recommended from './modules/recommended'
 import search from './modules/search'
 import settings from './modules/settings'
 import starred from './modules/starred'
@@ -28,6 +29,7 @@ export default new Vuex.Store({
     indexing,
     insights,
     pipelines,
+    recommended,
     search,
     settings,
     starred,
