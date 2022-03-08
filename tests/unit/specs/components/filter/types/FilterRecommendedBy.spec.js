@@ -102,7 +102,7 @@ describe('FilterRecommendedBy.vue', () => {
         userids: 'user_01,user_02'
       }
     }))
-    expect(store.state.search.documentsRecommended).toEqual(documents)
+    expect(store.state.recommended.documents).toEqual(documents)
     expect(wrapper.vm.selected).toEqual(['user_01', 'user_02'])
     expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeFalsy()
   })
@@ -116,7 +116,7 @@ describe('FilterRecommendedBy.vue', () => {
     await wrapper.vm.$nextTick()
 
     expect(axios.request).toBeCalledTimes(0)
-    expect(store.state.search.documentsRecommended).toEqual([])
+    expect(store.state.recommended.documents).toEqual([])
     expect(wrapper.vm.selected).toEqual([])
     expect(wrapper.findComponent({ ref: 'filter' }).vm.isAllSelected).toBeTruthy()
   })

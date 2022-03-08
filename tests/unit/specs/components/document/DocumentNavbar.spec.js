@@ -64,7 +64,7 @@ describe('DocumentNavbar.vue', () => {
           project: project
         }
       }))
-      expect(store.state.search.recommendedByUsers).toEqual([{ user: 'Jean-Michel', count: 1 }])
+      expect(store.state.recommended.byUsers).toEqual([{ user: 'Jean-Michel', count: 1 }])
     })
 
     it('should call batchUpdate api function, UNMARK document as recommended and update recommendedBy in search store', async () => {
@@ -88,7 +88,7 @@ describe('DocumentNavbar.vue', () => {
           project: project
         }
       }))
-      expect(store.state.search.recommendedByUsers).toEqual([])
+      expect(store.state.recommended.byUsers).toEqual([])
     })
   })
 

@@ -52,7 +52,7 @@ export default {
   },
   mixins: [utils],
   computed: {
-    ...mapState('search', ['recommendedByUsers']),
+    ...mapState('recommended', { recommendedByUsers: 'byUsers' }),
     recommendedByUsersSorted () {
       // Sort by count (decreasing) and ensure the current user is first
       return sortBy(this.recommendedByUsers, ({ user, count }) => {
@@ -72,7 +72,7 @@ export default {
     }
   },
   async mounted () {
-    await this.$store.dispatch('search/getRecommendationsByProject')
+    await this.$store.dispatch('recommended/getRecommendationsByProject')
   },
   methods: {
     resetFilterValues (_, refresh) {
@@ -80,7 +80,7 @@ export default {
     },
     async selectUsers (users = [], refresh = true) {
       this.setFilterValue(this.filter, { key: users })
-      await this.$store.dispatch('search/getDocumentsRecommendedBy', users)
+      await this.$store.dispatch('recommended/getDocumentsRecommendedBy', users)
       this.$root.$emit('filter::add-filter-values', this.filter, this.selected)
       if (refresh) {
         this.refreshRouteAndSearch()

@@ -7,10 +7,10 @@ export default class FilterRecommendedBy extends FilterText {
   }
 
   addChildIncludeFilter (body) {
-    return body.addFilter('terms', this.key, this.state.documentsRecommended)
+    return body.addFilter('terms', this.key, this.rootState.recommended.documents)
   }
 
   addChildExcludeFilter (body) {
-    return body.notFilter('terms', this.key, this.state.documentsRecommended)
+    return body.notFilter('terms', this.key, this.rootState.recommended.documents)
   }
 }
