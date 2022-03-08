@@ -49,7 +49,7 @@ export default {
   methods: {
     async loadMore () {
       this.isReady = false
-      const index = this.$store.state.search.index
+      const { index } = this.document
       const body = this.searchBody().build()
       const response = await elasticsearch.search({ index, body })
       this.pages.push(new Response(response))
