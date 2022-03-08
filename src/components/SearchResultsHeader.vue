@@ -2,7 +2,7 @@
   <div class="search-results-header"
        :class="{ 'search-results-header--bordered': bordered, [`search-results-header--${position}`]: true }">
     <div class="search-results-header__settings d-flex align-items-center">
-      <b-btn-group class="flex-grow-1">
+      <b-btn-group class="flex-grow-1" v-if="!noProgress">
         <b-dropdown class="search-results-header__settings__sort"
                     menu-class="search-results-header__settings__sort__dropdown"
                     toggle-class="text-decoration-none py-2 px-2 border search-results-header__settings__sort__toggler"
@@ -25,7 +25,6 @@
                     menu-class="search-results-header__settings__size__dropdown"
                     size="sm"
                     toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__size__toggler"
-                    v-if="!noProgress"
                     variant="link">
           <template v-slot:button-content>
             <span class="search-results-header__settings__size__toggler__slot">
@@ -50,9 +49,9 @@
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
-      <span v-b-tooltip.hover :title="batchDownloadTooltip">
+      <span v-b-tooltip.hover :title="batchDownloadTooltip" class="ml-auto">
         <confirm-button v-if="response.total > 0"
-                        class="search-results-header__settings__btn-download btn btn-link text-nowrap ml-auto"
+                        class="search-results-header__settings__btn-download btn btn-link text-nowrap"
                         :confirmed="batchDownload"
                         :label="batchDownloadLabel"
                         :yes="$t('global.yes')"

@@ -11,7 +11,7 @@
           </b-list-group>
           <document-tags-form class="search-results-table__actions__action mx-2" :document="selected" display-form />
         </div>
-        <search-results-header position="top" class="flex-grow-1 align-self-center" :no-progress="!!selected.length" :no-filters="!!selected.length" />
+        <search-results-header position="top" class="flex-grow-1 align-self-center py-0" :no-progress="!!selected.length" :no-filters="!!selected.length" />
       </div>
       <b-table
         ref="selectableTable"
