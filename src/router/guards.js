@@ -2,17 +2,6 @@ import get from 'lodash/get'
 import isFunction from 'lodash/isFunction'
 
 export default ({ router, auth, store, config, i18n, setPageTitle }) => {
-  function setProjectFromParams (to, from, next) {
-    // Read the current index from the params
-    if (to.params.index && store.state.search.index !== to.params.index) {
-      store.commit('search/index', to.params.index)
-    }
-    if (to.params.indices && store.state.search.indices !== to.params.indices) {
-      store.commit('search/indices', to.params.indices)
-    }
-    next()
-  }
-
   async function checkUserAuthentication (to, from, next) {
     try {
       // This route skip auth
@@ -59,7 +48,6 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
     next()
   }
 
-  router.beforeEach(setProjectFromParams)
   router.beforeEach(checkUserAuthentication)
   router.beforeEach(checkUserProjects)
   router.beforeEach(reduceAppSideBar)
