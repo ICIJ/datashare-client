@@ -15,7 +15,7 @@ export const router = {
             ]
           },
           beforeEnter: (to, from, next) => {
-            if (to.query.index) {
+            if (to.query.index || to.query.indices) {
               next({ name: 'search', query: to.query })
             }
             next()
