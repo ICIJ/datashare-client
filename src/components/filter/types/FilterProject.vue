@@ -11,7 +11,7 @@
     </div>
     <slide-up-down class="list-group list-group-flush filter__items" :active="!collapseItems">
       <div class="p-2">
-        <project-selector v-model="selectedProject" @input="select" class="border-0" />
+        <project-selector multiple v-model="selectedProject" @input="select" class="border-0" />
       </div>
     </slide-up-down>
   </div>
@@ -41,10 +41,12 @@ export default {
   computed: {
     selectedProject: {
       get: function () {
-        return this.$store.state.search.indices[0]
+        return this.$store.state.search.indices
       },
-      set: function (project) {
-        this.$store.commit('search/indices', [project])
+      set: function (indices) {
+        if (indices.length) {
+          this.$store.commit('search/indices', indices)
+        }
       }
     },
     headerIcon () {

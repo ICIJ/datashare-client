@@ -44,7 +44,7 @@ describe('FilterProject.vue', () => {
   })
 
   it('should select the local project as default selected project', () => {
-    expect(wrapper.vm.selectedProject).toBe(project)
+    expect(wrapper.vm.selectedProject).toEqual([project])
   })
 
   describe('on project change', () => {
