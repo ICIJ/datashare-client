@@ -88,8 +88,10 @@ export const actions = {
       commit('updateTasks', [])
     }
   },
-  deleteAll ({ rootState }) {
-    return api.deleteAll(rootState.search.index)
+  async deleteAll ({ rootState }) {
+    for (const index of rootState.search.indices) {
+      await api.deleteAll(index)
+    }
   },
   getNerPipelines () {
     return api.getNerPipelines()
