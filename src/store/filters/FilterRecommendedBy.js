@@ -6,11 +6,11 @@ export default class FilterRecommendedBy extends FilterText {
     this.component = 'FilterRecommendedBy'
   }
 
-  addChildIncludeFilter (body, param) {
+  addChildIncludeFilter (body) {
     return body.addFilter('terms', this.key, this.state.documentsRecommended)
   }
 
-  addChildExcludeFilter (body, param) {
+  addChildExcludeFilter (body) {
     return body.notFilter('terms', this.key, this.state.documentsRecommended)
   }
 }
