@@ -9,12 +9,10 @@
           :path="currentPath"
           no-datadir
           @input="update($event)"
-          v-if="currentPath"
-        ></tree-breadcrumb>
+          v-if="currentPath" />
         <router-link
           :to="{ name: 'search', query: { index: widget.index, 'f[path]': currentPath } }"
-          class="widget__content__search"
-        >
+          class="widget__content__search">
           {{ $t('widget.treemap.seeDocuments') }}
         </router-link>
       </div>
