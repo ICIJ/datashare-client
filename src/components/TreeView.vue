@@ -104,11 +104,11 @@ export default {
       type: String
     },
     /**
-     * The ES index
+     * The ES indices
      */
-    project: {
-      type: String,
-      default: 'local-datashare'
+    projects: {
+      type: Array,
+      default: () => ['local-datashare']
     },
     /**
      * A list of selected paths
@@ -379,7 +379,7 @@ export default {
       return this.loadData(...args)
     }),
     async loadData ({ clearPages = false } = {}) {
-      const index = this.project
+      const index = this.projects.join(',')
       const from = clearPages ? 0 : this.offset
       const size = this.bucketsSize
       const body = this.preBodyBuild(this.bodybuilderBase({ from, size })).build()

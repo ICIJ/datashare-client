@@ -2,23 +2,26 @@
   <filter-boilerplate v-bind="$props" ref="filter" @aggregate="$refs.treeView.reloadDataWithSpinner()">
     <template #items="{ sortBy, sortByOrder }">
       <div class="filter__tree-view">
-        <tree-view v-model="path" ref="treeView"
-                  :project="project"
+        <tree-view
+                  :projects="projects"
                   :selectedPaths.sync="selectedPaths"
                   :pre-body-build="preBodyBuild"
                   :sort-by="sortBy"
                   :sort-by-order="sortByOrder"
-                  selectable
+                  compact
                   count
                   include-children-documents
                   no-bars
-                  compact></tree-view>
+                  ref="treeView"
+                  selectable
+                  v-model="path" />
       </div>
     </template>
   </filter-boilerplate>
 </template>
 
 <script>
+import { isEqual } from 'lodash'
 import elasticsearch from '@/api/elasticsearch'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
@@ -44,9 +47,11 @@ export default {
     this.$set(this, 'path', this.dataDir)
   },
   watch: {
-    project () {
-      this.$set(this, 'path', this.dataDir)
-      this.$set(this, 'selectedPaths', [])
+    projects (value, previousValue) {
+      if (!isEqual(value, previousValue)) {
+        this.$set(this, 'path', this.dataDir)
+        this.$set(this, 'selectedPaths', [])
+      }
     }
   },
   computed: {
@@ -63,8 +68,8 @@ export default {
         this.refreshRouteAndSearch()
       }
     },
-    project () {
-      return this.$store.state.search.index
+    projects () {
+      return this.$store.state.search.indices
     },
     instantiatedFilters () {
       return this.$store.getters['search/instantiatedFilters']

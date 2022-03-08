@@ -13,7 +13,7 @@ describe('TreeView.vue', () => {
 
   const { config, i18n, localVue, store, wait } = Core.init(createLocalVue()).useAll()
   const propsData = {
-    project: index,
+    projects: [index],
     path: '/home/foo',
     selectedPaths: ['path_01', 'path_02'],
     size: true,
