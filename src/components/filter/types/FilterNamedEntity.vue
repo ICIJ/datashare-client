@@ -53,7 +53,9 @@ export default {
   mixins: [ner, utils],
   methods: {
     async deleteNamedEntitiesByMentionNorm (mentionNorm) {
-      await api.deleteNamedEntitiesByMentionNorm(this.$store.state.search.index, mentionNorm)
+      for (const index in this.$store.state.search.indices) {
+        await api.deleteNamedEntitiesByMentionNorm(index, mentionNorm)
+      }
       this.$root.$emit('filter::hide::named-entities')
       if (this.root) {
         this.root.aggregate()

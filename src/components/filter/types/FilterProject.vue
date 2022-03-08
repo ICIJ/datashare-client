@@ -41,10 +41,10 @@ export default {
   computed: {
     selectedProject: {
       get: function () {
-        return this.$store.state.search.index
+        return this.$store.state.search.indices[0]
       },
       set: function (project) {
-        this.$store.commit('search/index', project)
+        this.$store.commit('search/indices', [project])
       }
     },
     headerIcon () {
@@ -67,7 +67,7 @@ export default {
   },
   methods: {
     async select (project) {
-      this.$store.commit('search/index', project)
+      this.$store.commit('search/indices', [project])
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
       this.$root.$emit('filter::search::reset-filters', false)
