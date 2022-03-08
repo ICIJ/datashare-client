@@ -7,6 +7,9 @@ export default ({ router, auth, store, config, i18n, setPageTitle }) => {
     if (to.params.index && store.state.search.index !== to.params.index) {
       store.commit('search/index', to.params.index)
     }
+    if (to.params.indices && store.state.search.indices !== to.params.indices) {
+      store.commit('search/indices', to.params.indices)
+    }
     next()
   }
 
