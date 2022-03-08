@@ -49,7 +49,7 @@
                ref="user-history-save-search-form"
                size="md"
                :title="$t('userHistory.saveSearch')">
-            <user-history-save-search-form :index="$store.state.search.index"
+            <user-history-save-search-form :indices="indices"
                                            :uri="uri"
                                            @submit="$refs['user-history-save-search-form'].hide()"/>
           </b-modal>
@@ -151,7 +151,7 @@ export default {
     },
     async suggestTerms (candidates) {
       const query = this.query
-      const index = this.$store.state.search.index
+      const index = this.$store.state.search.indices.join(',')
       const candidate = last(candidates)
       const fields = castArray(candidate.field === '<implicit>' ? settings.suggestedImplicitFields : candidate.field)
       const include = `.*${escapeRegExp(candidate.term).toLowerCase()}.*`
@@ -234,6 +234,9 @@ export default {
     }
   },
   computed: {
+    indices () {
+      return this.$store.state.search.indices
+    },
     uniqueId () {
       return uniqueId('search-bar-')
     },
