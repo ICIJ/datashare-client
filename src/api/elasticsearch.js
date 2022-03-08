@@ -7,7 +7,7 @@ import settings from '@/utils/settings'
 
 // Custom API for datashare
 // @see https://www.elastic.co/guide/en/elasticsearch/client/javascript-api/16.x/extending_core_components.html
-export function datasharePlugin (Client, config, components) {
+export function datasharePlugin (Client) {
   Client.prototype.getDocument = async function (index, id, routing = null, params = {}) {
     try {
       return await this.get({ index, id, routing, ...params })
