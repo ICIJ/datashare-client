@@ -119,20 +119,26 @@ export default {
       return this.layout === 'list' ? VuePerfectScrollbar : 'div'
     }
   },
-  beforeRouteUpdate (to, from, next) {
+  async beforeRouteUpdate (to, from, next) {
     if (to.name === 'search' && this.isDifferentFromQuery(to.query)) {
-      this.$store.dispatch('search/updateFromRouteQuery', to.query)
-        .catch(this.wrongQuery)
-        .then(this.search)
-        .then(next)
+      try {
+        await this.$store.dispatch('search/updateFromRouteQuery', to.query)
+        await this.search()
+        next()
+      } catch (_) {
+        this.wrongQuery()
+      }
     } else {
       next()
     }
   },
-  created () {
-    this.$store.dispatch('search/updateFromRouteQuery', this.$route.query)
-      .catch(this.wrongQuery)
-      .then(this.search)
+  async created () {
+    try {
+      await this.$store.dispatch('search/updateFromRouteQuery', this.$route.query)
+      await this.search()
+    } catch (_) {
+      this.wrongQuery()
+    }
   },
   mounted () {
     this.$root.$on('index::delete::all', this.search)
@@ -163,7 +169,7 @@ export default {
     handleScroll (e) {
       this.$set(this, 'isShrinked', e.target.scrollTop > 40)
     },
-    search (queryOrParams) {
+    search (queryOrParams = null) {
       try {
         return this.$store.dispatch('search/query', queryOrParams)
       } catch (_) {
@@ -187,12 +193,8 @@ export default {
       return !isEqual(query, this.$store.getters['search/toRouteQuery']())
     },
     updateScrollBars () {
-      const refs = [this.$refs.searchBodyScrollbar]
-      compact(refs).map(ref => {
-        if (ref && ref.ps) {
-          return ref.ps.update()
-        }
-      })
+      compact([this.$refs.searchBodyScrollbar])
+        .forEach(ref => ref?.ps?.update())
     }
   }
 }
