@@ -50,7 +50,7 @@ export default {
   },
   methods: {
     isActive (project) {
-      return project === this.$store.state.search.indices[0]
+      return this.$store.state.search.indices.includes(project)
     },
     startCase
   },
