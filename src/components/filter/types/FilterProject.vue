@@ -65,8 +65,8 @@ export default {
     await this.$store.dispatch('search/getRecommendationsByProject')
   },
   methods: {
-    async select (project) {
-      this.$store.commit('search/indices', [project])
+    async select (projects) {
+      this.$store.commit('search/indices', projects)
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
       this.$root.$emit('filter::search::reset-filters', false)
