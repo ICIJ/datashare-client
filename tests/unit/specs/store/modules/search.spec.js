@@ -1,7 +1,5 @@
 import { cloneDeep, find, omit, toLower } from 'lodash'
-import axios from 'axios'
 
-import Api from '@/api'
 import Document from '@/api/resources/Document'
 import EsDocList from '@/api/resources/EsDocList'
 import NamedEntity from '@/api/resources/NamedEntity'
@@ -46,8 +44,6 @@ describe('SearchStore', () => {
     store.commit('search/addFilterValue', { name: 'contentType', value: 'TXT' })
     store.commit('search/toggleFilters')
     store.commit('search/isDownloadAllowed', true)
-    store.commit('search/recommendedByUsers', ['user_01', 'user_02'])
-    store.commit('search/recommendedByTotal', 42)
 
     store.commit('search/reset')
 
@@ -817,92 +813,5 @@ describe('SearchStore', () => {
     expect(store.state.search.response.hits[0].shortId).toBe('a')
     expect(store.state.search.response.hits[1].shortId).toBe('b')
     expect(store.state.search.response.hits[2].shortId).toBe('c')
-  })
-
-  describe('documentsRecommended state attribute', () => {
-    it('should init documentsRecommended to an empty array', () => {
-      expect(store.state.search).toHaveProperty('documentsRecommended')
-      expect(store.state.search.documentsRecommended).toEqual([])
-    })
-
-    it('should set documentsRecommended to userIds', () => {
-      const userIds = ['user_01', 'user_02', 'user_03']
-      store.commit('search/documentsRecommended', userIds)
-
-      expect(store.state.search.documentsRecommended).toEqual(userIds)
-    })
-
-    it('should set the list of documents recommended by a list of users', async () => {
-      axios.request.mockResolvedValue({ data: ['document_01', 'document_02', 'document_03'] })
-      axios.request.mockClear()
-
-      await store.dispatch('search/getDocumentsRecommendedBy', ['user_01', 'user_02'])
-
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl(`/api/${project}/documents/recommendations`),
-        method: 'GET',
-        params: {
-          userids: 'user_01,user_02'
-        }
-      }))
-      expect(store.state.search.documentsRecommended).toEqual(['document_01', 'document_02', 'document_03'])
-    })
-
-    it('should reset the list of documents recommended if no users', async () => {
-      axios.request.mockClear()
-
-      await store.dispatch('search/getDocumentsRecommendedBy', [])
-
-      expect(axios.request).toBeCalledTimes(0)
-      expect(store.state.search.documentsRecommended).toEqual([])
-    })
-  })
-
-  describe('recommendedByUsers state attribute', () => {
-    it('should init recommendedByUsers to an empty array', () => {
-      expect(store.state.search).toHaveProperty('recommendedByUsers')
-      expect(store.state.search.recommendedByUsers).toEqual([])
-    })
-
-    it('should init recommendedByTotal to zero', () => {
-      expect(store.state.search).toHaveProperty('recommendedByTotal')
-      expect(store.state.search.recommendedByTotal).toBe(0)
-    })
-
-    it('should return users who recommended documents from this project', async () => {
-      axios.request.mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 1 }] } })
-      axios.request.mockClear()
-
-      await store.dispatch('search/getRecommendationsByProject')
-
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/users/recommendations'),
-        method: 'GET',
-        params: {
-          project: project
-        }
-      }))
-      expect(store.state.search.recommendedByUsers)
-        .toEqual([{ user: 'user_01', count: 1 }, { user: 'user_02', count: 1 }])
-    })
-
-    it('should return the total of documents recommended for this project', async () => {
-      axios.request.mockResolvedValue({ data: { totalCount: 42, aggregates: [] } })
-      axios.request.mockClear()
-
-      await store.dispatch('search/getRecommendationsByProject')
-
-      expect(axios.request).toBeCalledTimes(1)
-      expect(axios.request).toBeCalledWith(expect.objectContaining({
-        url: Api.getFullUrl('/api/users/recommendations'),
-        method: 'GET',
-        params: {
-          project: project
-        }
-      }))
-      expect(store.state.search.recommendedByTotal).toBe(42)
-    })
   })
 })
