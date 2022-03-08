@@ -28,10 +28,10 @@ export default {
   name: 'UserHistorySaveSearchForm',
   props: {
     /**
-     * The index of the current item.
+     * The indices of the current item.
      */
-    index: {
-      type: String
+    indices: {
+      type: [String, Array]
     }
   },
   data () {
@@ -42,7 +42,8 @@ export default {
   methods: {
     async saveSearch () {
       try {
-        await this.api.addHistoryEvent(this.index, 'SEARCH', this.name, this.uriFromStore)
+        // @todo use all indices instead of just the first one
+        await this.api.addHistoryEvent(this.indices[0], 'SEARCH', this.name, this.uriFromStore)
         const { href } = this.$router.resolve({ name: 'search-history' })
         const toastParams = { href, noCloseButton: true, variant: 'success' }
         this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
