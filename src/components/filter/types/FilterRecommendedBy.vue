@@ -12,9 +12,6 @@
         <span class="filter__items__item__label px-1 text-truncate w-100 d-inline-block">
           {{ labelToHuman('all') }}
         </span>
-        <span class="filter__items__item__count badge badge-pill badge-light float-right mt-1">
-          {{ $n(recommendedByTotal) }}
-        </span>
       </span>
     </template>
     <template #items-group>
@@ -55,7 +52,7 @@ export default {
   },
   mixins: [utils],
   computed: {
-    ...mapState('search', ['recommendedByUsers', 'recommendedByTotal']),
+    ...mapState('search', ['recommendedByUsers']),
     recommendedByUsersSorted () {
       // Sort by count (decreasing) and ensure the current user is first
       return sortBy(this.recommendedByUsers, ({ user, count }) => {
