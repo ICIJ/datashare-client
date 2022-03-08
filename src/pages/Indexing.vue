@@ -133,8 +133,8 @@ export default {
       const fallback = settings.documentationLinks.indexing.default
       return settings.documentationLinks.indexing[os] || fallback
     },
-    index () {
-      return this.$store.state.search.index
+    indices () {
+      return this.$store.state.search.indices
     }
   },
   async mounted () {
@@ -148,7 +148,7 @@ export default {
   },
   methods: {
     async countAny () {
-      const index = this.index
+      const index = this.indices.join(',')
       const preference = 'indexing'
       const { count = 0 } = await elasticsearch.count({ index, preference })
       return count
