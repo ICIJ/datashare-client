@@ -43,7 +43,7 @@
             {{ field.label }}
           </div>
           <div class="mr-auto document__content__details__item__search">
-            <router-link :to="{ name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value), index } }">
+            <router-link :to="{ name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value), indices } }">
               <fa icon="search" />
             </router-link>
           </div>
@@ -67,7 +67,7 @@
             <var>{{ document.shortMetaName(name) | startCase }}</var>
           </div>
           <div class="mr-auto document__content__details__item__search">
-            <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name), index } }">
+            <router-link :to="{ name: 'search', query: { q: document.metaAsQueryParam(name), indices } }">
               <fa icon="search" />
             </router-link>
           </div>
@@ -88,7 +88,7 @@
 </template>
 
 <script>
-import { filter, get, map, startCase } from 'lodash'
+import { filter, get, map, startCase, uniq } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentTagsForm from '@/components/DocumentTagsForm'
@@ -139,6 +139,12 @@ export default {
       } else {
         return this.document.source.dirname
       }
+    },
+    index () {
+      return this.document.index
+    },
+    indices () {
+      return uniq([this.index, ...this.$store.state.search.indices]).join(',')
     },
     metaFieldsNames () {
       if (this.metadataVisible) {
@@ -250,13 +256,13 @@ export default {
       return filter(this.canonicalFields, field => field.value)
     },
     searchChildrenDocumentParams () {
-      const { index } = this.document
+      const index = this.index
       const q = `_routing:${this.document.id}`
       const query = { q, index }
       return { name: 'search', query }
     },
     searchDirnameDocumentParams () {
-      const { index } = this.document
+      const index = this.index
       const q = `dirname:"${this.documentDirname}"`
       const query = { q, index }
       return { name: 'search', query }
