@@ -392,6 +392,7 @@
     "path": "Dokumentpfad",
     "dirname": "Dokumentenverzeichnis",
     "id": "Dokument-ID",
+    "project": "Project",
     "creationDate": "Erstellungsdatum",
     "size": "Dateigröße",
     "contentLanguage": "Sprache des Inhalts",
