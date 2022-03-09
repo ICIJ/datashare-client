@@ -55,25 +55,14 @@ describe('FilterProject.vue', () => {
 
     afterEach(() => axios.request.mockClear())
 
-    it('should reset search state', async () => {
+    it('should not reset search state', async () => {
       store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
       expect(store.getters['search/toRouteQuery']()['f[contentType]']).not.toBeUndefined()
 
       await wrapper.vm.select(anotherProject)
 
       expect(store.getters['search/toRouteQuery']().indices).toBe(anotherProject)
-      expect(store.getters['search/toRouteQuery']()['f[contentType]']).toBeUndefined()
-    })
-
-    it('should emit an event "filter::search::reset-filters"', async () => {
-      const mockCallback = jest.fn()
-      wrapper.vm.$root.$on('filter::search::reset-filters', mockCallback)
-
-      mockCallback.mockClear()
-
-      await wrapper.vm.select(anotherProject)
-
-      expect(mockCallback.mock.calls).toHaveLength(1)
+      expect(store.getters['search/toRouteQuery']()['f[contentType]']).not.toBeUndefined()
     })
 
     it('should refresh the starred documents', async () => {
