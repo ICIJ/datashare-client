@@ -24,7 +24,7 @@ describe('DocumentStore', () => {
   afterAll(() => jest.unmock('axios'))
 
   it('should define a store module', () => {
-    expect(store.state.document).not.toBeUndefined()
+    expect(store.state.document).toBeDefined()
   })
 
   it('should reset the store state', () => {

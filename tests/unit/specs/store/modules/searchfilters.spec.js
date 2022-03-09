@@ -53,11 +53,11 @@ describe('SearchFilters', () => {
     })
 
     it('should find a "contentType" filter using object', () => {
-      expect(store.getters['search/getFilter']({ name: 'contentType' })).not.toBeUndefined()
+      expect(store.getters['search/getFilter']({ name: 'contentType' })).toBeDefined()
     })
 
     it('should find a "contentType" filter using function', () => {
-      expect(store.getters['search/getFilter'](f => f.name === 'contentType')).not.toBeUndefined()
+      expect(store.getters['search/getFilter'](f => f.name === 'contentType')).toBeDefined()
     })
 
     it('should count 2 documents of type "type_01"', async () => {

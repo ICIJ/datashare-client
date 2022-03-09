@@ -24,7 +24,7 @@ describe('IndexingStore', () => {
   afterAll(() => jest.unmock('axios'))
 
   it('should define a store module', () => {
-    expect(store.state.indexing).not.toBeUndefined()
+    expect(store.state.indexing).toBeDefined()
   })
 
   it('should reset the store state', async () => {

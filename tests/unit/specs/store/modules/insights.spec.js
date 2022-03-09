@@ -10,7 +10,7 @@ describe('InsightsStore', () => {
   beforeAll(() => store.commit('insights/project', project))
 
   it('should define a store module', () => {
-    expect(store.state.insights).not.toBeUndefined()
+    expect(store.state.insights).toBeDefined()
   })
 
   it('should return a list of widget', () => {

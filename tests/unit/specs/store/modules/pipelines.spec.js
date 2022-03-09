@@ -3,7 +3,7 @@ import { SimplePipeline, IdentityPipeline, AddLineBreaksPipeline } from '@/store
 
 describe('PipelinesStore', () => {
   it('should define a store module', () => {
-    expect(store.state.pipelines).not.toBeUndefined()
+    expect(store.state.pipelines).toBeDefined()
   })
 
   it('should found a pipeline by its name', () => {

@@ -21,7 +21,7 @@ describe('StarredStore', () => {
   afterAll(() => jest.unmock('axios'))
 
   it('should define a store module', () => {
-    expect(store.state.starred).not.toBeUndefined()
+    expect(store.state.starred).toBeDefined()
   })
 
   it('should not reset the starredDocuments from the filter', async () => {

@@ -57,12 +57,12 @@ describe('FilterProject.vue', () => {
 
     it('should not reset search state', async () => {
       store.commit('search/addFilterValue', { name: 'contentType', value: 'text/javascript' })
-      expect(store.getters['search/toRouteQuery']()['f[contentType]']).not.toBeUndefined()
+      expect(store.getters['search/toRouteQuery']()['f[contentType]']).toBeDefined()
 
       await wrapper.vm.select(anotherProject)
 
       expect(store.getters['search/toRouteQuery']().indices).toBe(anotherProject)
-      expect(store.getters['search/toRouteQuery']()['f[contentType]']).not.toBeUndefined()
+      expect(store.getters['search/toRouteQuery']()['f[contentType]']).toBeDefined()
     })
 
     it('should refresh the starred documents', async () => {

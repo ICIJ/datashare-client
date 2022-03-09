@@ -15,7 +15,7 @@ describe('RecommendedStore', () => {
   beforeAll(() => store.commit('search/index', index))
 
   it('should define a store module', () => {
-    expect(store.state.recommended).not.toBeUndefined()
+    expect(store.state.recommended).toBeDefined()
   })
 
   it('should init documents to an empty array', () => {

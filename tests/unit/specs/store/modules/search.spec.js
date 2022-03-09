@@ -25,7 +25,7 @@ describe('SearchStore', () => {
   afterAll(() => jest.unmock('axios'))
 
   it('should define a store module', () => {
-    expect(store.state.search).not.toBeUndefined()
+    expect(store.state.search).toBeDefined()
   })
 
   it('should instantiate the default 12 filters, with order', () => {
