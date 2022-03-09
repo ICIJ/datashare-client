@@ -34,6 +34,9 @@
           <fa :icon="item.contentTypeIcon" fixed-width class="search-results-table__items__row__icon"></fa>
           <fa :icon="['far', rowSelected ? 'check-square' : 'square']" fixed-width class="search-results-table__items__row__checkbox"></fa>
         </template>
+        <template v-slot:cell(index)="{ item }">
+          <b-badge variant="light">{{ item.index | startCase }}</b-badge>
+        </template>
         <template v-slot:cell(path)="{ item }">
           <router-link :to="{ name: 'document', params: item.routerParams, query: { q: query } }" class="search-results-table__items__row__title">
             <document-sliced-name :document="item" active-text-truncate />
@@ -46,7 +49,7 @@
           {{ humanSize(value) }}
         </template>
         <template v-slot:cell(actions)="{ item }">
-          <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed" tooltips-placement="rightbottom"></document-actions>
+          <document-actions :document="item" class="float-right btn-group-sm" :is-download-allowed="isDownloadAllowed(item)" tooltips-placement="rightbottom"></document-actions>
         </template>
       </b-table>
       <search-results-header position="bottom" />
@@ -63,7 +66,7 @@
 </template>
 
 <script>
-import { find } from 'lodash'
+import { find, startCase } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentActions from '@/components/DocumentActions'
@@ -90,7 +93,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['isDownloadAllowed', 'query', 'response']),
+    ...mapState('search', ['indices', 'query', 'response']),
     isAllSelected () {
       return this.response.hits.length === this.selected.length
     },
@@ -145,6 +148,11 @@ export default {
           class: 'pr-1'
         },
         {
+          key: 'index',
+          label: this.$t('document.project'),
+          class: this.indices.length > 1 ? '' : 'd-none'
+        },
+        {
           key: 'path',
           sortBy: 'path',
           sortable: true,
@@ -154,9 +162,7 @@ export default {
         {
           key: 'highlight',
           headerTitle: 'highlight',
-          formatter (value) {
-            return value ? value.content.join(' [...] ') : ''
-          }
+          formatter: value => value?.content?.join(' [...] ') || ''
         },
         {
           key: 'creationDateHumanShort',
@@ -170,9 +176,7 @@ export default {
           sortBy: 'contentLength',
           sortable: true,
           label: this.$t('document.size'),
-          formatter (value, name, item) {
-            return item.source.contentLength
-          },
+          formatter: (value, name, item) => item?.source?.contentLength,
           class: 'fit'
         },
         {
@@ -183,6 +187,9 @@ export default {
         }
       ]
     }
+  },
+  filters: {
+    startCase
   },
   methods: {
     onRowSelected (items) {
@@ -230,6 +237,9 @@ export default {
     humanSize (value) {
       const size = humanSize(value)
       return size === 'unknown' ? this.$t('document.unknown') : size
+    },
+    isDownloadAllowed ({ index }) {
+      return !!this.$store.state.downloads.allowedFor[index]
     }
   }
 }

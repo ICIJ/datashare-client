@@ -1,22 +1,29 @@
 <template>
   <router-link class="search-results-list-link d-flex align-self-stretch flex-nowrap"
                :to="{ name: 'document', params, query: { q: query } }">
-    <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy></document-thumbnail>
+    <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy />
     <div class="search-results-list-link__wrapper">
       <span class="search-results-list-link__basename d-block">
-        <document-sliced-name :document="document"></document-sliced-name>
+        <document-sliced-name :document="document" />
       </span>
       <active-text-truncate class="search-results-list-link__location">
-        <fa icon="folder" class="mr-1"></fa>
-        {{ location }}
+        <span class="d-inline-flex align-items-center">
+          <fa icon="folder" class="mr-1" />
+          <b-badge variant="light" class="mr-2" v-if="showIndex">
+            {{ document.index | startCase }}
+          </b-badge>
+          {{ location }}
+        </span>
       </active-text-truncate>
       <div class="search-results-list-link__fragments"
-           v-if="document.highlight" v-html="document.highlight.content.join(' [...] ')"></div>
+           v-if="document.highlight"
+           v-html="document.highlight.content.join(' [...] ')"></div>
     </div>
   </router-link>
 </template>
 
 <script>
+import { startCase } from 'lodash'
 import { mapState } from 'vuex'
 
 import DocumentSlicedName from '@/components/DocumentSlicedName'
@@ -42,7 +49,7 @@ export default {
     DocumentThumbnail
   },
   computed: {
-    ...mapState('search', ['query']),
+    ...mapState('search', ['indices', 'query']),
     folder () {
       const parts = this.document.get('_source.path', '').split('/')
       parts.splice(-1, 1)
@@ -56,7 +63,19 @@ export default {
     },
     params () {
       return this.document.routerParams
+    },
+    index () {
+      return this.document.index
+    },
+    showIndex () {
+      return this.indices.length > 1 && !this.location.startsWith(`./${this.index}`)
     }
+  },
+  filters: {
+    startCase
+  },
+  methods: {
+
   }
 }
 </script>
