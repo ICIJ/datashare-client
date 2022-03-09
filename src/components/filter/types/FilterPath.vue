@@ -50,7 +50,6 @@ export default {
     projects (value, previousValue) {
       if (!isEqual(value, previousValue)) {
         this.$set(this, 'path', this.dataDir)
-        this.$set(this, 'selectedPaths', [])
       }
     }
   },
@@ -58,14 +57,19 @@ export default {
     dataDir () {
       return this.$config.get('mountedDataDir') || this.$config.get('dataDir')
     },
+    filterValues () {
+      return this.getFilterByName(this.filter.name).values
+    },
     selectedPaths: {
       get () {
-        return this.getFilterByName(this.filter.name).values
+        return this.filterValues
       },
       set (key) {
-        this.setFilterValue(this.filter, { key })
-        this.$store.commit('search/from', 0)
-        this.refreshRouteAndSearch()
+        if (!isEqual(key, this.filterValues)) {
+          this.setFilterValue(this.filter, { key })
+          this.$store.commit('search/from', 0)
+          this.refreshRouteAndSearch()
+        }
       }
     },
     projects () {
