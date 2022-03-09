@@ -4,8 +4,7 @@
     <vue-perfect-scrollbar class="app-sidebar__container flex-grow-1 d-flex flex-column">
       <div class="d-flex align-items-center justify-content-center">
         <router-link class="app-sidebar__container__brand align-items-center flex-grow-1" :to="{ name: 'landing' }">
-          <img src="~images/logo-white.svg" alt="Datashare" class="app-sidebar__container__brand__logo">
-          <span class="app-sidebar__container__brand__beta">beta</span>
+          <img src="~images/logo-color.svg" alt="Datashare" class="app-sidebar__container__brand__logo">
         </router-link>
         <div>
           <a @click="hideSidebar()" class="app-sidebar__container__toggle text-white">
@@ -308,7 +307,7 @@ export default {
         font-size: 1.5rem;
         justify-content: flex-start;
         max-width: $app-context-sidebar-width;
-        padding: $spacer;
+        padding: $spacer $spacer * 1.75;
         pointer-events: auto;
         text-decoration: none;
         width: 100%;
@@ -320,22 +319,6 @@ export default {
 
       &__brand__logo {
         height: $app-nav-brand-height;
-      }
-
-      &__brand__beta {
-        background: $saddle-red;
-        color: $app-sidebar-color;
-        display: inline-block;
-        font-size: .6em;
-        height: auto;
-        margin-left: 0.5em;
-        padding: .05em .2em;
-        position: relative;
-        top: -0.5em;+
-
-        .app-sidebar--reduced & {
-          display: none;
-        }
       }
 
       &__toggle {
