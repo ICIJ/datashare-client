@@ -50,6 +50,7 @@ export default {
     projects (value, previousValue) {
       if (!isEqual(value, previousValue)) {
         this.$set(this, 'path', this.dataDir)
+        this.setFilterValue(this.filter, { key: [] })
       }
     }
   },
