@@ -392,6 +392,7 @@
     "path": "Document path",
     "dirname": "Document directory",
     "id": "Document ID",
+    "project": "Project",
     "creationDate": "作成日時",
     "size": "ファイルサイズ",
     "contentLanguage": "内容の言語",
