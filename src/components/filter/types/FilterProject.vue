@@ -1,5 +1,5 @@
 <template>
-  <div class="filter card filter--hide-show-more filter--hide-search" v-if="showSelector">
+  <div class="filter card" v-if="showSelector">
     <div class="card-header px-2">
       <h6 @click="toggleItems" class="pt-0">
         <span class="filter__items__item__icon pl-0 pr-1">
@@ -10,9 +10,7 @@
       </h6>
     </div>
     <slide-up-down class="list-group list-group-flush filter__items" :active="!collapseItems">
-      <div class="p-2">
-        <project-selector multiple v-model="selectedProject" @input="select" class="border-0" />
-      </div>
+      <project-selector multiple v-model="selectedProject" @input="select" class="border-0" />
     </slide-up-down>
   </div>
 </template>
@@ -92,5 +90,12 @@ export default {
     }
   }
 }
-
 </script>
+
+<style scoped lang="scss">
+ .filter {
+   & /deep/ .custom-control-label span {
+     padding: 0 $spacer-xxs;
+   }
+ }
+</style>
