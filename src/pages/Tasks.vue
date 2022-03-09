@@ -66,9 +66,10 @@ export default {
   beforeRouteEnter (to, from, next) {
     return next(vm => {
       const defaultTab = vm.tabRoutes.indexOf(to.name)
+      console.log(vm.$route.name)
       if (defaultTab > -1) {
         vm.defaultTab = defaultTab
-      } else if (vm.$route.name !== 'batch-search') {
+      } else if (!vm.$route.name.includes('batch-search')) {
         vm.$router.push({ name: 'batch-search' })
       }
     })
