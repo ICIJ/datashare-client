@@ -187,7 +187,7 @@ class Core extends Behaviors {
       }
       // Check if "Download" functionality is available for the selected project
       // Because otherwise, if the FilterPanel is closed, it is never called
-      await this.store.dispatch('search/getIsDownloadAllowed')
+      await this.store.dispatch('downloads/fetchIndicesStatus')
       // Old a promise that is resolved when the core is configured
       return this.ready && this._readyResolve(this)
     } catch (error) {

@@ -7,6 +7,7 @@ import app from './modules/app'
 import batchSearch from './modules/batchSearch'
 import document from './modules/document'
 import documentNotes from './modules/documentNotes'
+import downloads from './modules/downloads'
 import hooks from './modules/hooks'
 import indexing from './modules/indexing'
 import insights from './modules/insights'
@@ -25,6 +26,7 @@ export default new Vuex.Store({
     batchSearch,
     document,
     documentNotes,
+    downloads,
     hooks,
     indexing,
     insights,

@@ -50,6 +50,7 @@ describe('FilterProject.vue', () => {
   describe('on project change', () => {
     beforeEach(() => {
       wrapper = shallowMount(FilterProject, { i18n, localVue, store, router: new VueRouter(), wait, propsData: { filter: find(store.getters['search/instantiatedFilters'], { name: 'language' }) } })
+      store.commit('downloads/clear')
     })
 
     afterEach(() => axios.request.mockClear())
@@ -82,7 +83,7 @@ describe('FilterProject.vue', () => {
       expect(axios.request).toBeCalledWith({ url: Api.getFullUrl(`/api/${anotherProject}/documents/starred`) })
     })
 
-    it('should refresh the isDownloadAllowed', async () => {
+    it('should refresh the download store', async () => {
       await wrapper.vm.select(anotherProject)
 
       expect(axios.request).toBeCalledTimes(3)

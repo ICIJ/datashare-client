@@ -48,7 +48,7 @@
       </b-tooltip>
       <document-actions
         :document="doc"
-        :is-download-allowed="isDownloadAllowed"
+        :is-download-allowed="isDownloadAllowed(doc)"
         class="document-navbar__actions d-flex"
         download-btn-group-class="order-2"
         download-btn-class="btn btn-secondary btn-sm py-0 ml-1"
@@ -80,7 +80,6 @@ export default {
   },
   computed: {
     ...mapState('document', ['doc', 'isRecommended', 'recommendedBy']),
-    ...mapState('search', ['isDownloadAllowed']),
     query () {
       return this.$store.getters['search/toRouteQuery']()
     },
@@ -113,6 +112,9 @@ export default {
   methods: {
     back () {
       this.$router.push({ name: 'search', query: this.query })
+    },
+    isDownloadAllowed ({ index }) {
+      return !!this.$store.state.downloads.allowedFor[index]
     },
     saveComponentHeight () {
       const height = `${this.$el.offsetHeight}px`

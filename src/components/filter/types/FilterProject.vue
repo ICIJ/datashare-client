@@ -59,8 +59,8 @@ export default {
   },
   async created () {
     await this.$store.dispatch('starred/getStarredDocuments')
-    await this.$store.dispatch('search/getIsDownloadAllowed')
     await this.$store.dispatch('recommended/getRecommendationsByProject')
+    await this.$store.dispatch('downloads/fetchIndicesStatus')
   },
   methods: {
     async select (projects) {
@@ -69,8 +69,8 @@ export default {
       this.$store.commit('search/resetQuery')
       this.$root.$emit('filter::search::reset-filters', false)
       await this.$store.dispatch('starred/getStarredDocuments')
-      await this.$store.dispatch('search/getIsDownloadAllowed')
       await this.$store.dispatch('recommended/getRecommendationsByProject')
+      await this.$store.dispatch('downloads/fetchIndicesStatus')
       this.refreshRouteAndSearch()
     },
     toggleItems () {

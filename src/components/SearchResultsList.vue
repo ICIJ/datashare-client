@@ -11,7 +11,7 @@
             <document-actions
               class="search-results-list__items__item__actions"
               :document="document"
-              :is-download-allowed="isDownloadAllowed"
+              :is-download-allowed="isDownloadAllowed(document)"
               tooltips-placement="right"
               vertical></document-actions>
           </div>
@@ -64,12 +64,17 @@ export default {
     }
   },
   computed: {
-    ...mapState('search', ['query', 'response', 'isDownloadAllowed']),
+    ...mapState('search', ['query', 'response']),
     hasResults () {
       return this.response.hits.length > 0
     },
     hasFilters () {
       return this.$store.getters['search/activeFilters'].length > 0 || this.$store.state.search.field !== settings.defaultSearchField
+    }
+  },
+  methods: {
+    isDownloadAllowed ({ index }) {
+      return !!this.$store.state.downloads.allowedFor[index]
     }
   }
 }

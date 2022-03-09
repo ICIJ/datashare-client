@@ -24,7 +24,6 @@ export function initialState () {
     from: 0,
     index: '',
     indices: [],
-    isDownloadAllowed: false,
     isReady: true,
     // Different default layout for narrow screen
     layout: isNarrowScreen() ? 'table' : 'list',
@@ -208,7 +207,7 @@ export const mutations = {
     Vue.set(state, 'values', {})
     Vue.set(state, 'from', 0)
   },
-  resetQuery (state, name) {
+  resetQuery (state) {
     Vue.set(state, 'query', '')
     Vue.set(state, 'field', settings.defaultSearchField)
     Vue.set(state, 'from', 0)
@@ -252,9 +251,6 @@ export const mutations = {
   field (state, field) {
     const fields = settings.searchFields.map(field => field.key)
     Vue.set(state, 'field', fields.indexOf(field) > -1 ? field : settings.defaultSearchField)
-  },
-  isDownloadAllowed (state, isDownloadAllowed) {
-    Vue.set(state, 'isDownloadAllowed', isDownloadAllowed)
   },
   buildResponse (state, raw) {
     Vue.set(state, 'isReady', true)
@@ -454,14 +450,6 @@ export const actions = {
     const query = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
     const jsonQuery = elasticsearch.rootSearch(getters.instantiatedFilters, query).build()
     return api.runBatchDownload({ project: state.index, query: jsonQuery.query })
-  },
-  async getIsDownloadAllowed ({ state, commit }) {
-    try {
-      await api.isDownloadAllowed(state.index)
-      commit('isDownloadAllowed', true)
-    } catch (_) {
-      commit('isDownloadAllowed', false)
-    }
   }
 }
 
