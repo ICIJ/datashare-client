@@ -61,7 +61,7 @@ describe('FilterProject.vue', () => {
 
       await wrapper.vm.select(anotherProject)
 
-      expect(store.getters['search/toRouteQuery']().index).toBe(anotherProject)
+      expect(store.getters['search/toRouteQuery']().indices).toBe(anotherProject)
       expect(store.getters['search/toRouteQuery']()['f[contentType]']).toBeUndefined()
     })
 
@@ -112,7 +112,7 @@ describe('FilterProject.vue', () => {
       await wrapper.vm.select(anotherProject)
 
       expect(spyRefreshRoute).toBeCalledTimes(1)
-      expect(store.getters['search/toRouteQuery']().index).toBe(anotherProject)
+      expect(store.getters['search/toRouteQuery']().indices).toBe(anotherProject)
     })
   })
 })
