@@ -392,6 +392,7 @@
     "path": "Chemin du document",
     "dirname": "Dossier du document",
     "id": "ID du document",
+    "project": "Project",
     "creationDate": "Date de création",
     "size": "Taille du ficher",
     "contentLanguage": "Langue",
