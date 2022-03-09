@@ -64,7 +64,7 @@ export const actions = {
       return dispatch('starDocuments', { index, id })
     }
   },
-  async getStarredDocuments ({ commit, rootState }, indices = null) {
+  async fetchIndicesStarredDocuments ({ commit, rootState }, indices = null) {
     for (const index of castArray(indices || rootState.search.indices)) {
       const ids = await api.getStarredDocuments(index)
       const documents = castArray(ids).map(id => ({ id, index }))

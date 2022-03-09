@@ -68,7 +68,7 @@ describe('RecommendedStore', () => {
   it('should return users who recommended documents from this project', async () => {
     axios.request.mockResolvedValue({ data: { aggregates: [{ item: { id: 'user_01' }, count: 1 }, { item: { id: 'user_02' }, count: 1 }] } })
     axios.request.mockClear()
-    await store.dispatch('recommended/getRecommendationsByProject')
+    await store.dispatch('recommended/fetchIndicesRecommendations')
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({
@@ -83,7 +83,7 @@ describe('RecommendedStore', () => {
   it('should return the total of documents recommended for this project', async () => {
     axios.request.mockResolvedValue({ data: { totalCount: 42, aggregates: [] } })
     axios.request.mockClear()
-    await store.dispatch('recommended/getRecommendationsByProject')
+    await store.dispatch('recommended/fetchIndicesRecommendations')
 
     expect(axios.request).toBeCalledTimes(1)
     expect(axios.request).toBeCalledWith(expect.objectContaining({

@@ -72,7 +72,7 @@ export default {
     }
   },
   async mounted () {
-    await this.$store.dispatch('recommended/getRecommendationsByProject')
+    await this.$store.dispatch('recommended/fetchIndicesRecommendations')
   },
   methods: {
     resetFilterValues (_, refresh) {

@@ -13,7 +13,7 @@ jest.mock('@/api', () => {
   return jest.fn(() => {
     return {
       deleteNamedEntitiesByMentionNorm: jest.fn().mockReturnValue(jsonResp()),
-      getStarredDocuments: jest.fn().mockReturnValue(jsonResp())
+      fetchIndicesStarredDocuments: jest.fn().mockReturnValue(jsonResp())
     }
   })
 })

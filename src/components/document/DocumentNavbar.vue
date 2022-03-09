@@ -123,7 +123,7 @@ export default {
     },
     async toggleAsRecommended () {
       await this.$store.dispatch('document/toggleAsRecommended', await this.$core.auth.getUsername())
-      await this.$store.dispatch('recommended/getRecommendationsByProject')
+      await this.$store.dispatch('recommended/fetchIndicesRecommendations')
     },
     scrollToTop () {
       document.getElementById('search__body__document__wrapper').scrollTop = 0

@@ -58,8 +58,8 @@ export default {
     }
   },
   async created () {
-    await this.$store.dispatch('starred/getStarredDocuments')
-    await this.$store.dispatch('recommended/getRecommendationsByProject')
+    await this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+    await this.$store.dispatch('recommended/fetchIndicesRecommendations')
     await this.$store.dispatch('downloads/fetchIndicesStatus')
   },
   methods: {
@@ -68,8 +68,8 @@ export default {
       this.$store.commit('search/resetFilterValues')
       this.$store.commit('search/resetQuery')
       this.$root.$emit('filter::search::reset-filters', false)
-      await this.$store.dispatch('starred/getStarredDocuments')
-      await this.$store.dispatch('recommended/getRecommendationsByProject')
+      await this.$store.dispatch('starred/fetchIndicesStarredDocuments')
+      await this.$store.dispatch('recommended/fetchIndicesRecommendations')
       await this.$store.dispatch('downloads/fetchIndicesStatus')
       this.refreshRouteAndSearch()
     },

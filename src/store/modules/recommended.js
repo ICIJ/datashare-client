@@ -24,7 +24,7 @@ export const mutations = {
 }
 
 export const actions = {
-  async getRecommendationsByProject ({ rootState, commit }) {
+  async fetchIndicesRecommendations ({ rootState, commit }) {
     try {
       const { indices } = rootState.search
       const recommendationsByProject = indices.map(index => api.getRecommendationsByProject(index))

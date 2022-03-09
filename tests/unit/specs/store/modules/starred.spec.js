@@ -60,7 +60,7 @@ describe('StarredStore', () => {
 
   it('should return the list of the starredDocuments', async () => {
     axios.request.mockResolvedValue({ data: [12] })
-    await store.dispatch('starred/getStarredDocuments')
+    await store.dispatch('starred/fetchIndicesStarredDocuments')
     expect(store.state.starred.documents).toEqual([{ index, id: 12 }])
     expect(filter.starredDocuments).toEqual([{ index, id: 12 }])
   })

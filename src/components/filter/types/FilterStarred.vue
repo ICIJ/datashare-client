@@ -68,7 +68,7 @@ export default {
     }
   },
   mounted () {
-    return this.$store.dispatch('starred/getStarredDocuments')
+    return this.$store.dispatch('starred/fetchIndicesStarredDocuments')
   },
   methods: {
     resetFilterValues (_, refresh) {
