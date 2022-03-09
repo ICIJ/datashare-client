@@ -518,9 +518,9 @@ export default {
       if (this.filter.contextualized) {
         // This will allow to watch change on the search only when
         // the aggregation is not global (ie. relative to the search).
-        return pick(search, ['index', 'query', 'values'])
+        return pick(search, ['indices', 'query', 'values'])
       } else {
-        return pick(search, ['index'])
+        return pick(search, ['indices'])
       }
     },
     resetFilterValues (refresh = true) {
