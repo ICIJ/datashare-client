@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import { compact, castArray, isEqual, startCase, uniq } from 'lodash'
+import { castArray, isEqual, startCase } from 'lodash'
 
 /**
  * A single-project selector input.
@@ -46,9 +46,7 @@ export default {
   },
   computed: {
     projects () {
-      const defaultProject = this.$config.get('defaultProject')
-      const projects = this.$config.get('groups_by_applications.datashare', [])
-      return compact(uniq([...projects, defaultProject]).sort())
+      return this.$core.projects
     },
     projectOptions () {
       return this.projects.map(value => {

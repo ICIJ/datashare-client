@@ -14,10 +14,9 @@ describe('ProjectSelector.vue', () => {
       wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { value: 'first-index' } })
     })
 
-    it('should load projects list from config, including the default project', () => {
+    it('should load projects list from config, not including the default project', () => {
       const { projectOptions } = wrapper.vm
-      expect(projectOptions).toHaveLength(3)
-      expect(projectOptions).toEqual(expect.arrayContaining([{ disabled: false, value: 'first-index', text: 'First Index' }]))
+      expect(projectOptions).toHaveLength(2)
       expect(projectOptions).toEqual(expect.arrayContaining([{ disabled: false, value: 'second-index', text: 'Second Index' }]))
       expect(projectOptions).toEqual(expect.arrayContaining([{ disabled: false, value: 'third-index', text: 'Third Index' }]))
     })
@@ -35,7 +34,7 @@ describe('ProjectSelector.vue', () => {
       wrapper = shallowMount(ProjectSelector, { localVue, store, propsData: { value: ['first-index'], multiple: true } })
     })
 
-    it('should load projects list from config with one disable option', () => {
+    it('should load projects list from config with one disabled option', () => {
       const { projectOptions } = wrapper.vm
       expect(projectOptions).toHaveLength(3)
       expect(projectOptions).toEqual(expect.arrayContaining([{ disabled: true, value: 'first-index', text: 'First Index' }]))

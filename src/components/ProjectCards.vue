@@ -37,7 +37,7 @@
 </style>
 
 <script>
-import { compact, startCase, uniq } from 'lodash'
+import { startCase } from 'lodash'
 
 /**
  * List all the projects with cards linking to the search.
@@ -51,9 +51,7 @@ export default {
   },
   computed: {
     projects () {
-      const defaultProject = this.$config.get('defaultProject')
-      const projects = this.$config.get('groups_by_applications.datashare', [])
-      return compact(uniq([...projects, defaultProject]).sort())
+      return this.$core.projects
     }
   }
 }

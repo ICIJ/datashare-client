@@ -52,7 +52,7 @@
             v-if="isServer">
             <b-form-select
               v-model="project"
-              :options="projects"
+              :options="projectOptions"
               required></b-form-select>
           </b-form-group>
           <b-form-group
@@ -189,7 +189,10 @@
 </template>
 
 <script>
-import { compact, concat, each, filter, flatten, get, has, includes, isEmpty, map, range, uniq } from 'lodash'
+import {
+  compact, concat, each, filter, flatten, get, has,
+  includes, isEmpty, map, range, startCase, uniq
+} from 'lodash'
 // In order to be mocked in the test class
 import throttle from 'lodash/throttle'
 import bodybuilder from 'bodybuilder'
@@ -236,7 +239,6 @@ export default {
       paths: [],
       phraseMatch: true,
       project: '',
-      projects: [],
       published: true,
       selectedFileType: '',
       selectedPaths: [],
@@ -247,6 +249,15 @@ export default {
   computed: {
     maxFuzziness () {
       return this.phraseMatch ? 100 : 2
+    },
+    projects () {
+      return this.$core.projects
+    },
+    projectOptions () {
+      return this.projects.map(value => {
+        const text = startCase(value)
+        return { value, text }
+      })
     },
     phraseMatchDescription () {
       return this.$t('batchSearch.phraseMatchDescription') + (this.phraseMatch ? '' : ' ' + this.$t('batchSearch.phraseMatchDescriptionOperators'))
@@ -286,9 +297,7 @@ export default {
     }
   },
   created () {
-    const projects = [...this.$config.get('groups_by_applications.datashare', [])].sort()
-    this.$set(this, 'projects', map(projects, value => { return { value, text: value } }))
-    this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
+    this.$set(this, 'project', this.projects[0] || 'no-index')
   },
   methods: {
     verifyQueryLimit (csv) {
@@ -356,7 +365,7 @@ export default {
       this.$set(this, 'name', '')
       this.$set(this, 'paths', [])
       this.$set(this, 'phraseMatch', true)
-      this.$set(this, 'project', get(this.projects, ['0', 'value'], 'no-index'))
+      this.$set(this, 'project', this.projects[0] || 'no-index')
       this.$set(this, 'published', true)
       this.$set(this, 'showAdvancedFilters', false)
     },

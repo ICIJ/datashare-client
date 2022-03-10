@@ -1,4 +1,4 @@
-import { castArray, get, noop } from 'lodash'
+import { castArray, compact, get, noop, uniq } from 'lodash'
 
 /**
   Mixin class extending the core to add helpers for projects.
@@ -40,6 +40,20 @@ const ProjectsMixin = superclass => class extends superclass {
   createDefaultProject () {
     const defaultProject = this.config.get('defaultProject')
     return this.api.createProject(defaultProject)
+  }
+  /**
+   * List all projects this user has access to.
+   * @returns {Array:String}
+   */
+  get projects () {
+    const projects = this.config.get('groups_by_applications.datashare', [])
+    // In local mode, we ensure the "defaultProject" is included. In server mode,
+    // the list of projects defines what the user can see.
+    if (this.config.get('mode') === 'LOCAL') {
+      const defaultProject = this.config.get('defaultProject')
+      return compact(uniq([...projects, defaultProject]).sort())
+    }
+    return [...projects].sort()
   }
 }
 
