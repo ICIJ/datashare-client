@@ -4,15 +4,17 @@
       <div class="input-group" :class="{ ['input-group-' + size]: true }">
         <input
           v-model="query"
-          :placeholder="$t('search.placeholder')"
           class="form-control search-bar__input"
-          @blur="focused = false ; hideSuggestionsAfterDelay()"
-          @input="searchTerms"
-          @focus="focused = true ; searchTerms">
+          :placeholder="$t('search.placeholder')"
+          @blur="onBlur"
+          @input="onInput"
+          @focus="onFocus">
         <div class="input-group-append">
-          <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }" v-if="!tips" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" :title="$t('search.tips')" v-b-tooltip.bottomleft>
-            <fa icon="question-circle"></fa>
-          </router-link>
+          <template  v-if="!tips">
+            <router-link :to="{ name: 'docs', params: { slug: 'all-search-with-operators' } }" class="search-bar__tips-addon input-group-text px-2" :class="{ 'search-bar__tips-addon--active': showTips }" :title="$t('search.tips')" v-b-tooltip.bottomleft>
+              <fa icon="question-circle" fixed-width />
+            </router-link>
+          </template>
           <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
             <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key">
               {{ $t('search.field.' + key) }}
@@ -214,9 +216,12 @@ export default {
       try {
         if (this.suggestionsAllowed) {
           const { suggestions, query } = await this.suggestTerms(this.termCandidates())
-          // Is the query still valid
-          this.$set(this, 'suggestions', query === this.query ? suggestions : [])
-          this.$refs.suggestions.activeItemIndexes = []
+          // Avoid setting suggestions if user lost the focus on the input
+          if (this.focused) {
+            // Is the query still valid
+            this.$set(this, 'suggestions', query === this.query ? suggestions : [])
+            this.$refs.suggestions.activeItemIndexes = []
+          }
         } else {
           this.$set(this, 'suggestions', [])
         }
@@ -231,6 +236,17 @@ export default {
       setTimeout(() => {
         this.$nextTick(this.hideSuggestions)
       }, 200)
+    },
+    onBlur () {
+      this.focused = false
+      this.hideSuggestionsAfterDelay()
+    },
+    onInput () {
+      this.searchTerms()
+    },
+    onFocus () {
+      this.focused = true
+      this.searchTerms()
     }
   },
   computed: {
