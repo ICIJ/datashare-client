@@ -65,6 +65,7 @@ export default {
   methods: {
     async select (projects) {
       this.$store.commit('search/indices', projects)
+      this.$store.commit('search/isReady', false)
       await this.$store.dispatch('starred/fetchIndicesStarredDocuments')
       await this.$store.dispatch('recommended/fetchIndicesRecommendations')
       await this.$store.dispatch('downloads/fetchIndicesStatus')
