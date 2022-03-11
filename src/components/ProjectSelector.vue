@@ -1,10 +1,12 @@
 <template>
   <b-form-group class="mb-0">
     <b-form-checkbox-group
+      :disabled="disabled"
       :options="projectOptions"
       v-if="multiple"
       v-model="selectedProject" />
     <b-form-select
+      :disabled="disabled"
       :options="projectOptions"
       :size="size"
       v-else
@@ -41,6 +43,12 @@ export default {
      * Allow to select several projects
      */
     multiple: {
+      type: Boolean
+    },
+    /**
+     * Disable the input
+     */
+    disabled: {
       type: Boolean
     }
   },
