@@ -336,35 +336,35 @@ describe('SearchStore', () => {
   describe('updateFromRouteQuery should restore search state from url', () => {
     it('should set the project of the store according to the url', async () => {
       store.commit('search/index', project)
-      await store.dispatch('search/updateFromRouteQuery', { indices: process.env.VUE_APP_ES_ANOTHER_INDEX })
+      store.dispatch('search/updateFromRouteQuery', { indices: process.env.VUE_APP_ES_ANOTHER_INDEX })
 
       expect(store.state.search.index).toBe(process.env.VUE_APP_ES_ANOTHER_INDEX)
     })
 
     it('should set the query of the store according to the url', async () => {
       store.commit('search/query', 'anything')
-      await store.dispatch('search/updateFromRouteQuery', { q: 'new_query' })
+      store.dispatch('search/updateFromRouteQuery', { q: 'new_query' })
 
       expect(store.state.search.query).toBe('new_query')
     })
 
     it('should set the from of the store according to the url', async () => {
       store.commit('search/from', 12)
-      await store.dispatch('search/updateFromRouteQuery', { from: 42 })
+      store.dispatch('search/updateFromRouteQuery', { from: 42 })
 
       expect(store.state.search.from).toBe(42)
     })
 
     it('should RESET the from of the store according to the url', async () => {
       store.commit('search/from', 12)
-      await store.dispatch('search/updateFromRouteQuery', { from: 0 })
+      store.dispatch('search/updateFromRouteQuery', { from: 0 })
 
       expect(store.state.search.from).toBe(0)
     })
 
     it('should set the size of the store according to the url', async () => {
       store.commit('search/size', 12)
-      await store.dispatch('search/updateFromRouteQuery', { size: 24 })
+      store.dispatch('search/updateFromRouteQuery', { size: 24 })
 
       expect(store.state.search.size).toBe(24)
       store.commit('search/size', 25)
@@ -372,19 +372,19 @@ describe('SearchStore', () => {
 
     it('should set the sort of the store according to the url', async () => {
       store.commit('search/sort', 'anything')
-      await store.dispatch('search/updateFromRouteQuery', { sort: 'new_sort' })
+      store.dispatch('search/updateFromRouteQuery', { sort: 'new_sort' })
 
       expect(store.state.search.sort).toBe('new_sort')
     })
 
     it('should set the filter of the store according to the url', async () => {
-      await store.dispatch('search/updateFromRouteQuery', { 'f[contentType]': ['new_type'] })
+      store.dispatch('search/updateFromRouteQuery', { 'f[contentType]': ['new_type'] })
       expect(store.getters['search/getFilter']({ name: 'contentType' }).values[0]).toBe('new_type')
     })
 
     it('should not change the field on updateFromRouteQuery', async () => {
       store.commit('search/field', 'author')
-      await store.dispatch('search/updateFromRouteQuery', {})
+      store.dispatch('search/updateFromRouteQuery', {})
 
       expect(store.state.search.field).toBe('author')
     })

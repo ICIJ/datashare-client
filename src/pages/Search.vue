@@ -122,7 +122,7 @@ export default {
   async beforeRouteUpdate (to, from, next) {
     if (to.name === 'search' && this.isDifferentFromQuery(to.query)) {
       try {
-        await this.$store.dispatch('search/updateFromRouteQuery', to.query)
+        this.$store.dispatch('search/updateFromRouteQuery', to.query)
         await this.search()
         next()
       } catch (_) {
@@ -134,7 +134,7 @@ export default {
   },
   async created () {
     try {
-      await this.$store.dispatch('search/updateFromRouteQuery', this.$route.query)
+      this.$store.dispatch('search/updateFromRouteQuery', this.$route.query)
       await this.search()
     } catch (_) {
       this.wrongQuery()

@@ -252,7 +252,6 @@ export const mutations = {
     Vue.set(state, 'field', fields.indexOf(field) > -1 ? field : settings.defaultSearchField)
   },
   buildResponse (state, raw) {
-    Vue.set(state, 'isReady', true)
     Vue.set(state, 'response', new EsDocList(raw))
   },
   addFilterValue (state, filter) {
@@ -338,6 +337,7 @@ export const actions = {
       const indices = state.indices.join(',')
       const raw = await elasticsearch.searchDocs(indices, state.query, getters.instantiatedFilters, state.from, state.size, state.sort, getters.getFields())
       commit('buildResponse', raw)
+      commit('isReady', true)
       return raw
     } catch (error) {
       commit('isReady', true)
@@ -345,7 +345,7 @@ export const actions = {
       throw error
     }
   },
-  async updateFromRouteQuery ({ commit, getters }, query) {
+  updateFromRouteQuery ({ commit, getters }, query) {
     ['q', 'index', 'indices', 'from', 'size', 'sort', 'field'].forEach(key => {
       if (key in query) {
         // Add the query to the state with a mutation to avoid triggering a search

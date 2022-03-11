@@ -51,7 +51,7 @@ describe('StarredStore', () => {
       { index, id: 'document_01' },
       { index, id: 'document_02' }
     ])
-    await store.dispatch('search/updateFromRouteQuery', {})
+    store.dispatch('search/updateFromRouteQuery', {})
     expect(store.state.starred.documents).toEqual([
       { index, id: 'document_01' },
       { index, id: 'document_02' }
