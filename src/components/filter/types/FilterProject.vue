@@ -10,7 +10,11 @@
       </h6>
     </div>
     <slide-up-down class="list-group list-group-flush filter__items" :active="!collapseItems">
-      <project-selector multiple v-model="selectedProject" @input="select" class="border-0" />
+      <project-selector
+        @input="select"
+        class="border-0"
+        multiple
+        v-model="selectedProject" />
     </slide-up-down>
   </div>
 </template>
