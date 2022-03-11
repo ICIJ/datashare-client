@@ -216,7 +216,7 @@ describe('Extensions.vue', () => {
       method: 'PUT',
       url: Api.getFullUrl('/api/extensions/install?url=this.is.an.url')
     })
-    expect(wrapper.vm.show).toBeTruthy()
+    expect(wrapper.vm.isInstallingFromUrl).toBeTruthy()
   })
 
   it('should call for extension uninstallation', () => {

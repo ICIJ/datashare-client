@@ -7,26 +7,32 @@
             <fa icon="link" class="mr-1"></fa>
             {{ $t('extensions.installFromUrl') }}
           </b-btn>
-          <b-modal ref="installExtensionFromUrl" hide-footer id="extensions__add__modal">
+          <b-modal ref="installExtensionFromUrl" hide-footer lazy>
             <template #modal-title>
-              <fa icon="link" class="mr-1"></fa>
               {{ $t('extensions.installFromUrl') }}
             </template>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text rounded-0 border-0 bg-white">
-                  <fa icon="link"></fa>
-                </span>
+            <b-overlay :show="isInstallingFromUrl">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text bg-white">
+                    <fa icon="link"></fa>
+                  </span>
+                </div>
+                <b-form-input
+                  :state="isFormValid"
+                  placeholder="URL"
+                  type="url"
+                  v-model="url" />
               </div>
-              <b-form-input type="url" class="b-form-control border-0" required placeholder="URL" v-model="url" :state="isUrl(url)"></b-form-input>
-              <b-form-invalid-feedback class="text-secondary mt-2">
-                {{ $t('global.enterCorrectUrl') }}
-              </b-form-invalid-feedback>
-            </div>
-            <b-btn variant="primary" class="float-right" @click="installExtensionFromUrl">
-              {{ $t('extensions.install') }}
-            </b-btn>
-            <b-overlay :show="show" no-wrap></b-overlay>
+              <div class="d-flex align-items-center">
+                <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
+                  {{ $t('global.enterCorrectUrl') }}
+                </b-form-invalid-feedback>
+                <b-btn variant="primary" class="ml-auto text-nowrap" @click="installExtensionFromUrl" :disabled="isFormValid !== true">
+                  {{ $t('extensions.install') }}
+                </b-btn>
+              </div>
+            </b-overlay>
           </b-modal>
         </div>
         <div class="extensions__search ml-auto">
@@ -108,7 +114,7 @@ export default {
     return {
       extensions: [],
       searchTerm: '',
-      show: false,
+      isInstallingFromUrl: false,
       url: ''
     }
   },
@@ -147,7 +153,7 @@ export default {
       extension.show = false
     },
     async installExtensionFromUrl () {
-      this.$set(this, 'show', true)
+      this.$set(this, 'isInstallingFromUrl', true)
       try {
         await api.installExtensionFromUrl(this.url)
         await this.search()
@@ -156,7 +162,7 @@ export default {
         this.$bvToast.toast(this.$t('extensions.submitError'), { noCloseButton: true, variant: 'danger' })
       }
       this.$refs.installExtensionFromUrl.hide()
-      this.$set(this, 'show', false)
+      this.$set(this, 'isInstallingFromUrl', false)
       this.$set(this, 'url', '')
     },
     async uninstallExtension (extensionId) {
@@ -170,8 +176,12 @@ export default {
         this.$bvToast.toast(this.$t('extensions.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
       extension.show = false
-    },
-    isUrl
+    }
+  },
+  computed: {
+    isFormValid () {
+      return this.url === '' ? null : isUrl(this.url)
+    }
   }
 }
 </script>
@@ -184,13 +194,6 @@ export default {
 
   .card-header {
     font-weight: bold;
-  }
-}
-
-#extensions__add__modal {
-  .modal-body {
-    background: darken($primary, 20);
-    color: white;
   }
 }
 </style>

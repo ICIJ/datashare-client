@@ -4,29 +4,36 @@
       <div class="d-flex mb-2">
         <div class="plugins__add ml-2">
           <b-btn variant="outline-primary" @click="$refs.installPluginFromUrl.show()">
-            <fa icon="link" class="mr-1"></fa>
+            <fa icon="link" class="mr-1" />
             {{ $t('plugins.installFromUrl') }}
           </b-btn>
-          <b-modal ref="installPluginFromUrl" hide-footer id="plugins__add__modal">
+          <b-modal ref="installPluginFromUrl" hide-footer lazy>
             <template #modal-title>
-              <fa icon="link" class="mr-1"></fa>
               {{ $t('plugins.installFromUrl') }}
             </template>
-            <div class="input-group mb-3">
-              <div class="input-group-prepend">
-                <span class="input-group-text rounded-0 border-0 bg-white">
-                  <fa icon="link"></fa>
-                </span>
+            <b-overlay :show="isInstallingFromUrl">
+              <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                  <span class="input-group-text">
+                    <fa icon="link" />
+                  </span>
+                </div>
+                <b-form-input
+                  :state="isFormValid"
+                  class="b-form-control"
+                  placeholder="URL"
+                  type="url"
+                  v-model="url" />
               </div>
-              <b-form-input type="url" class="b-form-control border-0" required placeholder="URL" v-model="url" :state="isUrl(url)"></b-form-input>
-              <b-form-invalid-feedback class="text-secondary mt-2">
-                {{ $t('global.enterCorrectUrl') }}
-              </b-form-invalid-feedback>
-            </div>
-            <b-btn variant="primary" class="float-right" @click="installPluginFromUrl">
-              {{ $t('plugins.install') }}
-            </b-btn>
-            <b-overlay :show="show" no-wrap></b-overlay>
+              <div class="d-flex align-items-center">
+                <b-form-invalid-feedback class="text-secondary" :state="isFormValid">
+                  {{ $t('global.enterCorrectUrl') }}
+                </b-form-invalid-feedback>
+                <b-btn variant="primary" class="ml-auto text-nowrap" @click="installPluginFromUrl" :disabled="isFormValid !== true">
+                  {{ $t('plugins.install') }}
+                </b-btn>
+              </div>
+            </b-overlay>
           </b-modal>
         </div>
         <div class="plugins__search ml-auto">
@@ -109,7 +116,7 @@ export default {
     return {
       plugins: [],
       searchTerm: '',
-      show: false,
+      isInstallingFromUrl: false,
       url: ''
     }
   },
@@ -148,7 +155,7 @@ export default {
       plugin.show = false
     },
     async installPluginFromUrl () {
-      this.$set(this, 'show', true)
+      this.$set(this, 'isInstallingFromUrl', true)
       try {
         await api.installPluginFromUrl(this.url)
         await this.search()
@@ -157,7 +164,7 @@ export default {
         this.$bvToast.toast(this.$t('plugins.submitError'), { noCloseButton: true, variant: 'danger' })
       }
       this.$refs.installPluginFromUrl.hide()
-      this.$set(this, 'show', false)
+      this.$set(this, 'isInstallingFromUrl', false)
       this.$set(this, 'url', '')
     },
     async uninstallPlugin (pluginId) {
@@ -171,8 +178,12 @@ export default {
         this.$bvToast.toast(this.$t('plugins.deleteError'), { noCloseButton: true, variant: 'danger' })
       }
       plugin.show = false
-    },
-    isUrl
+    }
+  },
+  computed: {
+    isFormValid () {
+      return this.url === '' ? null : isUrl(this.url)
+    }
   }
 }
 </script>
@@ -182,12 +193,5 @@ export default {
   max-width: calc(50% - 2rem);
   min-width: calc(50% - 2rem);
   width: calc(25% - 2rem);
-}
-
-#plugins__add__modal {
-  .modal-body {
-    background: darken($primary, 20);
-    color: white;
-  }
 }
 </style>
