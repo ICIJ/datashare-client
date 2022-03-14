@@ -30,10 +30,13 @@ export const actions = {
       return false
     }
   },
+  async fetchIndexStatus ({ commit, state }, index) {
+    const allowed = actions.getIndexStatus({ state }, index)
+    commit('allowedFor', { index, allowed })
+  },
   async fetchIndicesStatus ({ commit, rootState, state }) {
     for (const index of rootState.search.indices) {
-      const allowed = actions.getIndexStatus({ state }, index)
-      commit('allowedFor', { index, allowed })
+      actions.fetchIndexStatus({ commit, state }, index)
     }
   }
 }

@@ -117,6 +117,7 @@ export default {
   async mounted () {
     if (!this.$wait.is('load document data')) {
       await this.getDoc()
+      await this.getDownloadStatus()
     }
     await this.setTabs()
   },
@@ -214,6 +215,9 @@ export default {
       } else {
         this.tabsThoughtPipeline = []
       }
+    },
+    getDownloadStatus () {
+      return this.$store.dispatch('downloads/fetchIndexStatus', this.index)
     },
     isTabActive (name) {
       return this.activeTab === name
