@@ -125,8 +125,8 @@ export default class Api {
   getUserHistory (type, from, size) {
     return this.sendAction('/api/users/me/history', { method: 'GET', params: { type: type, from: from, size: size } })
   }
-  addHistoryEvent (project, type, name, uri) {
-    return this.sendActionAsText('/api/users/me/history', { method: 'PUT', data: { project, type, name, uri } })
+  addHistoryEvent (projectIds, type, name, uri) {
+    return this.sendActionAsText('/api/users/me/history', { method: 'PUT', data: { projectIds, type, name, uri } })
   }
   deleteUserHistory (type) {
     return this.sendAction('/api/users/me/history', { method: 'DELETE', params: { type: type } })

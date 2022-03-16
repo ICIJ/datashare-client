@@ -43,7 +43,7 @@ export default {
     async saveSearch () {
       try {
         // @todo use all indices instead of just the first one
-        await this.api.addHistoryEvent(this.indices[0], 'SEARCH', this.name, this.uriFromStore)
+        await this.api.addHistoryEvent(this.indices, 'SEARCH', this.name, this.uriFromStore)
         const { href } = this.$router.resolve({ name: 'search-history' })
         const toastParams = { href, noCloseButton: true, variant: 'success' }
         this.$root.$bvToast.toast(this.$t('userHistory.submitSuccess'), toastParams)
