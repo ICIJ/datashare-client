@@ -82,6 +82,10 @@ export default {
           const ts = parseInt(value)
           value = new Date(ts).toISOString().substr(0, 10).replace(/T/, ' ').replace(/\..+/, '')
         }
+        // Change 'indices' key to 'projects'
+        if (name.includes('indices')) {
+          name = 'projects'
+        }
         // Finally, add the filter to the list of displayed filters
         filters.push({ name, value, label: value })
         return filters
