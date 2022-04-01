@@ -55,8 +55,7 @@
                         :confirmed="batchDownload"
                         :label="batchDownloadLabel"
                         :yes="$t('global.yes')"
-                        :no="$t('global.no')"
-                        :disabled="!isBatchDownloadAllowed">
+                        :no="$t('global.no')">
           <fa icon="download" />
           <span v-if="!noLabels" class="ml-2">
             {{ $t('search.results.batchDownload') }}
@@ -187,9 +186,6 @@ export default {
       return label === ''
         ? `${this.$tc('search.results.batchDownloadSubmit', this.response.total, { total: this.$n(this.response.total) })} ${this.$t('global.confirmLabel')}`
         : `${label} ${this.$t('search.results.warningConfirm')}`
-    },
-    isBatchDownloadAllowed () {
-      return this.$store.state.search.indices.length === 1
     }
   },
   mounted () {

@@ -448,7 +448,7 @@ export const actions = {
   async runBatchDownload ({ state, getters }) {
     const query = ['', null, undefined].indexOf(state.query) === -1 ? state.query : '*'
     const jsonQuery = elasticsearch.rootSearch(getters.instantiatedFilters, query).build()
-    return api.runBatchDownload({ project: state.index, query: jsonQuery.query })
+    return api.runBatchDownload({ projectIds: state.indices, query: jsonQuery.query })
   }
 }
 
