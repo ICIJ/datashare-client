@@ -49,19 +49,16 @@
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
-      <span v-b-tooltip.hover :title="batchDownloadTooltip" class="ml-auto">
-        <confirm-button v-if="response.total > 0"
-                        class="search-results-header__settings__btn-download btn btn-link text-nowrap"
-                        :confirmed="batchDownload"
-                        :label="batchDownloadLabel"
-                        :yes="$t('global.yes')"
-                        :no="$t('global.no')">
-          <fa icon="download" />
-          <span v-if="!noLabels" class="ml-2">
-            {{ $t('search.results.batchDownload') }}
-          </span>
-        </confirm-button>
-      </span>
+      <confirm-button v-if="response.total > 0" class="search-results-header__settings__btn-download btn btn-link text-nowrap ml-auto"
+                      :confirmed="batchDownload"
+                      :label="batchDownloadLabel"
+                      :yes="$t('global.yes')"
+                      :no="$t('global.no')">
+        <fa icon="download"></fa>
+        <span v-if="!noLabels" class="ml-2">
+          {{ $t('search.results.batchDownload') }}
+        </span>
+      </confirm-button>
       <pagination
         class="search-results-header__settings__pagination justify-content-end text-right mr-3"
         :get-to-template="getToTemplate"
@@ -168,12 +165,6 @@ export default {
         }
       })
       return totalLength
-    },
-    batchDownloadTooltip () {
-      if (!this.isBatchDownloadAllowed) {
-        return this.$t('search.results.batchDownloadNotAllowed')
-      }
-      return null
     },
     batchDownloadLabel () {
       let label = ''
