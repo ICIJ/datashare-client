@@ -21,10 +21,10 @@
           <dl class="batch-search-results__info">
             <div v-if="isServer">
               <dt>
-                {{ $t('batchSearch.project') }}
+                {{ $t('batchSearch.projects') }}
               </dt>
               <dd>
-                {{ batchSearch.project.name }}
+                {{ batchSearch.projects.map(project => project.name).join(', ') }}
               </dd>
             </div>
             <div v-if="isServer && isMyBatchSearch">

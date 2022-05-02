@@ -44,9 +44,7 @@ jest.mock('@/api', () => {
       ]),
       getBatchSearch: jest.fn().mockResolvedValue({
         uuid: '12',
-        project: {
-          name: 'batchsearchresults'
-        },
+        projects: [{ name: 'batchsearchresults' }, { name: 'anotherbatchsearchresults' }],
         name: 'BatchSearch Test',
         description: 'This is the description of the batch search',
         state: 'SUCCESS',
@@ -86,15 +84,16 @@ describe('BatchSearchResults.vue', () => {
     ]
   })
   const project = 'batchsearchresults'
-  const propsData = { uuid: '12', project }
-  esConnectionHelper(project)
+  const anotherProject = 'anotherbatchsearchresults'
+  const propsData = { uuid: '12', index: project.concat(',', anotherProject) }
+  esConnectionHelper([project, anotherProject])
 
   beforeAll(() => Murmur.config.merge({ mode: 'SERVER' }))
 
   beforeEach(async () => {
     const es = esConnectionHelper.es
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
-    await letData(es).have(new IndexedDocument('43', project).withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('43', anotherProject).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
     wrapper = shallowMount(BatchSearchResults, { i18n, localVue, propsData, router, store, wait })
     await wrapper.vm.fetch()
@@ -129,7 +128,7 @@ describe('BatchSearchResults.vue', () => {
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({
       name: 'batch-search.results',
-      params: { index: project.name, uuid: '12' },
+      params: { index: project.concat(',', anotherProject), uuid: '12' },
       query: { page: 1, queries: [], sort: 'content_type', order: 'desc' }
     })
   })
@@ -143,7 +142,7 @@ describe('BatchSearchResults.vue', () => {
     expect(router.push).toBeCalled()
     expect(router.push).toBeCalledWith({
       name: 'batch-search.results',
-      params: { index: project.name, uuid: '12' },
+      params: { index: project.concat(',', anotherProject), uuid: '12' },
       query: { page: 1, queries: ['query_01'], sort: 'content_type', order: 'desc', queries_sort: undefined }
     })
   })
@@ -181,7 +180,7 @@ describe('BatchSearchResults.vue', () => {
     wrapper = mount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
     await wrapper.vm.$router.push({
       name: 'batch-search.results',
-      params: { index: project, uuid: '12' },
+      params: { index: project.concat(',', anotherProject), uuid: '12' },
       query: { page: 1 }
     }).catch(() => {})
 
@@ -189,14 +188,14 @@ describe('BatchSearchResults.vue', () => {
 
     expect(wrapper.findAll('.batch-search-results__queries__query')).toHaveLength(3)
     expect(wrapper.find('.batch-search-results__queries__query__link').attributes('href'))
-      .toBe(`#/ds/${project}/42/42?q=query_01`)
+      .toBe(`#/ds/${project.concat(',', anotherProject)}/42/42?q=query_01`)
   })
 
   it('should cast queries param into array on beforeRouteEnter and beforeRouteUpdate', async () => {
     wrapper = await shallowMount(BatchSearchResults, { i18n, localVue, store, router, wait, propsData })
     const toObject = {
       name: 'batch-search.results',
-      params: { index: project, uuid: '12' },
+      params: { index: project.concat(',', anotherProject), uuid: '12' },
       query: { page: 1, queries: 'simple_text' }
     }
 
@@ -214,7 +213,7 @@ describe('BatchSearchResults.vue', () => {
     wrapper = await shallowMount(BatchSearchResults, { i18n, localVue, propsData, router, store, wait })
     const to = {
       name: 'batch-search.results',
-      params: { index: project, uuid: '12' },
+      params: { index: project.concat(',', anotherProject), uuid: '12' },
       query: { page: 1, queries: 'simple_text' }
     }
 
