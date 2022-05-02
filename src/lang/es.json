@@ -605,7 +605,7 @@
     "submitSuccess": "La búsqueda masiva ha sido añadida.",
     "submitError": "Error, no se puede añadir la búsqueda masiva.",
     "submitQueryLimitError": "Error en CSV, su CSV excede 60 000 líneas.",
-    "project": "Proyecto",
+    "projects": "Projects",
     "name": "Nombre",
     "description": "Descripción",
     "fuzziness": "Fuzziness",
