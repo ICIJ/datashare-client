@@ -48,12 +48,15 @@
           </b-form-group>
           <b-form-group
             label-size="sm"
-            :label="`${$t('batchSearch.project')} *`"
+            :label="`${$t('batchSearch.projects')} *`"
             v-if="isServer">
-            <b-form-select
-              v-model="project"
-              :options="projectOptions"
-              required></b-form-select>
+            <div class="batch-search-form__projects container p-0">
+              <b-form-checkbox-group v-model="projects" stacked>
+                <b-form-checkbox v-for="project in availableProjects" :key="project" :value="project" :disabled="isProjectDisabled(project)">
+                  {{ project | startCase }}
+                </b-form-checkbox>
+              </b-form-checkbox-group>
+            </div>
           </b-form-group>
           <b-form-group
             label-size="sm"
@@ -156,7 +159,7 @@
                   count
                   size
                   @checked="selectedPaths = $event"
-                  :project="project"
+                  :projects="projects"
                   selectable
                   :selectedPaths="selectedPaths"
                   v-model="path"></tree-view>
@@ -238,7 +241,7 @@ export default {
       path: this.$config.get('mountedDataDir') || this.$config.get('dataDir'),
       paths: [],
       phraseMatch: true,
-      project: '',
+      projects: [],
       published: true,
       selectedFileType: '',
       selectedPaths: [],
@@ -250,14 +253,8 @@ export default {
     maxFuzziness () {
       return this.phraseMatch ? 100 : 2
     },
-    projects () {
+    availableProjects () {
       return this.$core.projects
-    },
-    projectOptions () {
-      return this.projects.map(value => {
-        const text = startCase(value)
-        return { value, text }
-      })
     },
     phraseMatchDescription () {
       return this.$t('batchSearch.phraseMatchDescription') + (this.phraseMatch ? '' : ' ' + this.$t('batchSearch.phraseMatchDescriptionOperators'))
@@ -284,7 +281,7 @@ export default {
     phraseMatch () {
       this.$set(this, 'fuzziness', 0)
     },
-    project () {
+    projects () {
       this.$set(this, 'fileType', '')
       this.$set(this, 'fileTypes', [])
       this.$set(this, 'paths', [])
@@ -297,7 +294,10 @@ export default {
     }
   },
   created () {
-    this.$set(this, 'project', this.projects[0] || 'no-index')
+    this.$set(this, 'projects', [this.availableProjects[0]] || [])
+  },
+  filters: {
+    startCase
   },
   methods: {
     verifyQueryLimit (csv) {
@@ -365,13 +365,13 @@ export default {
       this.$set(this, 'name', '')
       this.$set(this, 'paths', [])
       this.$set(this, 'phraseMatch', true)
-      this.$set(this, 'project', this.projects[0] || 'no-index')
+      this.$set(this, 'projects', [this.availableProjects[0]] || [])
       this.$set(this, 'published', true)
       this.$set(this, 'showAdvancedFilters', false)
     },
     async onSubmit () {
       try {
-        await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, csvFile: this.csvFile, description: this.description, project: this.project, phraseMatch: this.phraseMatch, fuzziness: this.fuzziness, fileTypes: this.fileTypes, paths: this.paths, published: this.published })
+        await this.$store.dispatch('batchSearch/onSubmit', { name: this.name, csvFile: this.csvFile, description: this.description, projects: this.projects, phraseMatch: this.phraseMatch, fuzziness: this.fuzziness, fileTypes: this.fileTypes, paths: this.paths, published: this.published })
         this.resetForm()
         if (this.$config.is('manageDocuments')) {
           try {
@@ -399,7 +399,7 @@ export default {
       while (responses === undefined || responses.length === 10) {
         options = after ? { after } : {}
         body = bodybuilder().size(0).agg('composite', { sources: [{ field: { terms: { field } } }] }, options, name).build()
-        searchResult = await elasticsearch.search({ index: this.project, body })
+        searchResult = await elasticsearch.search({ index: this.projects.join(','), body })
         after = get(searchResult, ['aggregations', name, 'after_key'], null)
         responses = get(searchResult, ['aggregations', name, 'buckets'], [])
         result = concat(result, map(responses, 'key.field'))
@@ -426,6 +426,9 @@ export default {
       } else {
         this.$root.$bvToast.toast(this.$t('batchSearch.submitError'), { noCloseButton: true, variant: 'danger' })
       }
+    },
+    isProjectDisabled (project) {
+      return this.projects.length === 1 && this.projects[0] === project
     }
   }
 }
@@ -439,6 +442,11 @@ export default {
 
     &__advanced-filters {
       cursor: pointer;
+    }
+
+    .container {
+      max-height: 5vw;
+      overflow-y: scroll;
     }
   }
 </style>

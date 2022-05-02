@@ -55,7 +55,7 @@ describe('BatchSearchForm.vue', () => {
     wrapper.vm.$set(wrapper.vm, 'name', 'Example')
     wrapper.vm.$set(wrapper.vm, 'paths', ['This', 'is', 'a', 'multiple', 'paths'])
     wrapper.vm.$set(wrapper.vm, 'phraseMatch', false)
-    wrapper.vm.$set(wrapper.vm, 'project', 'project-example')
+    wrapper.vm.$set(wrapper.vm, 'projects', ['project-example'])
     wrapper.vm.$set(wrapper.vm, 'published', false)
     wrapper.vm.$set(wrapper.vm, 'showAdvancedFilters', true)
 
@@ -69,7 +69,7 @@ describe('BatchSearchForm.vue', () => {
     expect(wrapper.vm.name).toBe('')
     expect(wrapper.vm.paths).toEqual([])
     expect(wrapper.vm.phraseMatch).toBeTruthy()
-    expect(wrapper.vm.project).toBe(project)
+    expect(wrapper.vm.projects).toContainEqual(project)
     expect(wrapper.vm.published).toBeTruthy()
     expect(wrapper.vm.showAdvancedFilters).toBeFalsy()
   })
@@ -174,7 +174,7 @@ describe('BatchSearchForm.vue', () => {
   describe('On project change', () => {
     it('should reset fileType and path', async () => {
       wrapper.vm.$set(wrapper.vm, 'fileType', 'fileTypeTest')
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.vm.$set(wrapper.vm, 'projects', [anotherProject])
 
       expect(wrapper.vm.fileType).toBe('')
     })
@@ -182,7 +182,7 @@ describe('BatchSearchForm.vue', () => {
     it('should reset fileTypes and paths', async () => {
       wrapper.vm.$set(wrapper.vm, 'fileTypes', ['fileType_01', 'fileType_02'])
       wrapper.vm.$set(wrapper.vm, 'paths', ['path_01', 'path_02'])
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.vm.$set(wrapper.vm, 'projects', [anotherProject])
 
       expect(wrapper.vm.fileTypes).toEqual([])
       expect(wrapper.vm.paths).toEqual([])
@@ -190,21 +190,21 @@ describe('BatchSearchForm.vue', () => {
 
     it('should reset allFileTypes', async () => {
       wrapper.vm.$set(wrapper.vm, 'allFileTypes', ['fileType_01', 'fileType_02'])
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.vm.$set(wrapper.vm, 'projects', [anotherProject])
 
       expect(wrapper.vm.allFileTypes).toEqual([])
     })
 
     it('should call hideSuggestionsFileTypes and hideSuggestionsPaths', async () => {
       jest.spyOn(wrapper.vm, 'hideSuggestionsFileTypes')
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.vm.$set(wrapper.vm, 'projects', [anotherProject])
 
       expect(wrapper.vm.hideSuggestionsFileTypes).toBeCalled()
     })
 
     it('should call retrieveFileTypes', async () => {
       jest.spyOn(wrapper.vm, 'retrieveFileTypes')
-      await wrapper.vm.$set(wrapper.vm, 'project', anotherProject)
+      await wrapper.vm.$set(wrapper.vm, 'projects', [anotherProject])
 
       expect(wrapper.vm.retrieveFileTypes).toBeCalled()
     })
