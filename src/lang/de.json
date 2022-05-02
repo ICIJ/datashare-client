@@ -605,7 +605,7 @@
     "submitSuccess": "Ihre Batch-Suche wurde hinzugefügt.",
     "submitError": "Etwas ist schief gelaufen, die Batch-Suche konnte nicht hinzugefügt werden.",
     "submitQueryLimitError": "Fehler in CSV-Datei: Die CSV-Datei enthält mehr als 60.000 Abfragen.",
-    "project": "Projekt",
+    "projects": "Projects",
     "name": "Name",
     "description": "Beschreibung",
     "fuzziness": "Unscharfe Suche",
