@@ -605,7 +605,7 @@
     "submitSuccess": "Votre recherche en lot a été ajoutée.",
     "submitError": "Il ya eu une erreur, votre recherche en lot n'a pas été ajoutée.",
     "submitQueryLimitError": "Erreur dans le CSV, votre CSV dépasse 60 000 lignes.",
-    "project": "Projet",
+    "projects": "Projects",
     "name": "Nom",
     "description": "Description",
     "fuzziness": "Recherche approximative",
