@@ -12,7 +12,7 @@ jest.mock('@/api', () => {
       getBatchSearches: jest.fn().mockReturnValue(Promise.resolve({
         items: [{
           uuid: '1',
-          project: { name: 'project_01' },
+          projects: [{ name: 'project_01' }, { name: 'project_02' }],
           name: 'name_01',
           description: 'description_01',
           date: '2019-01-01',
@@ -21,7 +21,7 @@ jest.mock('@/api', () => {
           state: 'SUCCESS'
         }, {
           uuid: '2',
-          project: { name: 'project_02' },
+          projects: [{ name: 'project_02' }],
           name: 'name_02',
           description: 'description_02',
           date: '2019-01-01',
@@ -148,9 +148,9 @@ describe('BatchSearch.vue', () => {
       expect(columns).toHaveLength(8)
     })
 
-    it('should display project name in the batch search results url', () => {
+    it('should display projects names in the batch search results url', () => {
       const link = wrapper.findAll('.batch-search__items__item__link').at(0)
-      expect(link.attributes('href')).toContain('/project_01/')
+      expect(link.attributes('href')).toContain('/project_01,project_02/')
     })
   })
 

@@ -57,10 +57,12 @@ describe('BatchSearchStore', () => {
     })
 
     it('should submit the new batchSearch form with complete information', async () => {
-      await store.dispatch('batchSearch/onSubmit', { name: 'name', csvFile: 'csvFile', description: 'description', project: 'project', phraseMatch: false, fuzziness: 2, fileTypes: [{ mime: 'pdf' }, { mime: 'csv' }], paths: ['/a/path/to/home', '/another/path'], published: false })
+      await store.dispatch('batchSearch/onSubmit', { name: 'name', csvFile: 'csvFile', description: 'description', projects: ['project1', 'project2'], phraseMatch: false, fuzziness: 2, fileTypes: [{ mime: 'pdf' }, { mime: 'csv' }], paths: ['/a/path/to/home', '/another/path'], published: false })
 
       const data = new FormData()
       data.append('name', 'name')
+      data.append('projects', 'project1')
+      data.append('projects', 'project2')
       data.append('csvFile', 'csvFile')
       data.append('description', 'description')
       data.append('phrase_matches', false)
@@ -74,7 +76,7 @@ describe('BatchSearchStore', () => {
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         data,
         method: 'POST',
-        url: Api.getFullUrl('/api/batch/search/project')
+        url: Api.getFullUrl('/api/batch/search/project1,project2')
       }))
       expect(axios.request).toBeCalledWith(expect.objectContaining({
         data: { from: 0, size: 100, sort: 'batch_date', order: 'asc', query: '*', field: 'all' },

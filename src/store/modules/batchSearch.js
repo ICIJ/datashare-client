@@ -61,8 +61,8 @@ export const actions = {
     commit('total', batchSearches.total)
     return commit('batchSearches', batchSearches.items)
   },
-  async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published }) {
-    await api.batchSearch(name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published)
+  async onSubmit ({ state, commit, dispatch }, { name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published }) {
+    await api.batchSearch(name, csvFile, description, projects, phraseMatch, fuzziness, fileTypes, paths, published)
     return dispatch('getBatchSearches', {})
   },
   async getBatchSearchResults ({ commit }, { batchId, from, size, queries, sort, order }) {

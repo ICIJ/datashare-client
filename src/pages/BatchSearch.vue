@@ -87,6 +87,11 @@
             <template v-slot:cell(published)="{ item }">
               {{ item.published ? $t('global.yes') : $t('global.no') }}
             </template>
+            <template v-slot:cell(projects)="{ item }">
+              <span class="batch-search__items__item__projects text-truncate" v-b-tooltip.hover :title="getProjectsNames(item)">
+                {{ getProjectsNames(item) }}
+              </span>
+            </template>
           </b-table>
           <b-pagination-nav
             class="mt-2"
@@ -146,10 +151,10 @@ export default {
     projectNameField () {
       return this.isServer
         ? {
-          key: 'project.name',
-          label: this.$t('batchSearch.project'),
+          key: 'projects',
+          label: this.$t('batchSearch.projects'),
           sortable: true,
-          name: 'prj_id'
+          name: 'projects'
         }
         : null
     },
@@ -274,7 +279,7 @@ export default {
   },
   methods: {
     generateTo (item) {
-      const baseTo = { name: 'batch-search.results', params: { index: item.project.name, uuid: item.uuid }, query: { page: 1, sort: this.sortResults, order: this.orderResults } }
+      const baseTo = { name: 'batch-search.results', params: { index: this.getProjectsNames(item).replace(/\s/g, ''), uuid: item.uuid }, query: { page: 1, sort: this.sortResults, order: this.orderResults } }
       const searchQueryExists = this.query
       return {
         ...baseTo,
@@ -330,6 +335,13 @@ export default {
       this.$set(this, 'query', this.search)
       const params = { page: 1, query: this.query }
       return this.$router.push(this.generateLinkToBatchSearch(params))
+    },
+    getProjectsNames (item) {
+      if (item.projects === undefined) {
+        return ''
+      } else {
+        return item.projects.map(project => project.name).join(', ')
+      }
     },
     moment
   }
@@ -390,6 +402,14 @@ export default {
 
         thead th {
           white-space: nowrap;
+        }
+      }
+
+      &__item {
+
+        &__projects {
+          display: block;
+          max-width: 10vw;
         }
       }
     }
