@@ -180,9 +180,7 @@
             </b-table>
           </div>
         </div>
-        <div class="batch-search-results__pagination pt-2" v-if="totalItems > perPage">
-          <custom-pagination v-model="currentPage" :per-page="perPage" :total-rows="totalItems" />
-        </div>
+        <custom-pagination class="batch-search-results__pagination my-4" v-model="currentPage" :per-page="perPage" :total-rows="totalItems" />
       </v-wait>
     </div>
     <b-modal id="document-modal" size="xl" lazy hide-header hide-footer body-class="p-0">
@@ -548,10 +546,6 @@ export default {
       }
     }
 
-  }
-
-  &__pagination {
-    max-width: 40%;
   }
 
   &__queries {
