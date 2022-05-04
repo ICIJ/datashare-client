@@ -198,7 +198,7 @@ export default {
       await this.$store.dispatch('document/getParent')
       await this.$store.dispatch('document/getRoot')
       await this.$store.dispatch('document/getTags')
-      await this.$store.dispatch('document/getRecommendationsByDocuments', this.$core.auth.getUsername())
+      await this.$store.dispatch('document/getRecommendationsByDocuments', await this.$core.auth.getUsername())
       if (this.doc) {
         await this.api.addHistoryEvent([this.doc.index], 'DOCUMENT', this.doc.slicedNameToString, this.doc.route)
         const container = this.$el.closest('.ps-container')
