@@ -146,6 +146,11 @@ export default {
     this.$root.$on('document::content::changed', this.updateScrollBars)
   },
   watch: {
+    showDocument (show) {
+      if (show) {
+        this.isShrinked = false
+      }
+    },
     isReady (isReady) {
       if (isReady) {
         this.$Progress.finish()

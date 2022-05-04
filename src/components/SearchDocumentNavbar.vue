@@ -6,7 +6,7 @@
         :class="{ 'flex-grow-1': !isShrinked }"
         :to="{ name: 'search', query }"
         :title="$t('search.back')"
-        v-b-tooltip.right="{ customClass: isShrinked ? '' : 'd-none' }"
+        v-b-tooltip.right="{ customClass: isShrinked ? 'ml-3' : 'd-none' }"
         v-shortkey="getKeys('backToSearchResults')"
         @shortkey.native="getAction('backToSearchResults')">
         <fa icon="chevron-circle-left"></fa>
