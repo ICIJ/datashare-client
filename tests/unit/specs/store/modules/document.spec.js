@@ -146,6 +146,13 @@ describe('DocumentStore', () => {
         }
       }))
     })
+    it('should tag a single doc with a userId user', async () => {
+      await store.dispatch('document/tag', { documents: [{ id: 'doc_01' }], tag: 'tag_01', userId: 'user' })
+
+      expect(store.state.document.tags).toHaveLength(1)
+      expect(orderBy(store.state.document.tags, ['label'])[0].label).toBe('tag_01')
+      expect(orderBy(store.state.document.tags, ['label'])[0].user.id).toBe('user')
+    })
 
     it('should deleteTag from 1 document', async () => {
       await letData(es).have(new IndexedDocument('doc_01', index)).commit()
@@ -172,7 +179,9 @@ describe('DocumentStore', () => {
 
       expect(store.state.document.tags).toHaveLength(2)
       expect(orderBy(store.state.document.tags, ['label'])[0].label).toBe('tag_01')
+      expect(orderBy(store.state.document.tags, ['label'])[0].user.id).toBe('user')
       expect(orderBy(store.state.document.tags, ['label'])[1].label).toBe('tag_02')
+      expect(orderBy(store.state.document.tags, ['label'])[1].user.id).toBe('user')
     })
   })
 
