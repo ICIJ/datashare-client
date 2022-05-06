@@ -68,11 +68,13 @@ describe('DocumentGlobalSearchTermsTags.vue', () => {
       expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toBe('1')
     })
 
-    it('should stroke the negative query terms', async () => {
-      wrapper = await createView(es, project, 'term_01', '-term_02')
+    it('should not display the negative query terms', async () => {
+      wrapper = await createView(es, project, 'term_01', 'term_01 -term_02')
       await wrapper.vm.getTerms()
 
-      expect(wrapper.findAll('.document-global-search-terms-tags__item--negation')).toHaveLength(1)
+      expect(wrapper.findAll('.document-global-search-terms-tags__item')).toHaveLength(1)
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__label').at(0).text()).toBe('term_01')
+      expect(wrapper.findAll('.document-global-search-terms-tags__item__count').at(0).text()).toBe('1')
     })
 
     it('should highlight the query terms with the same color than in the list', async () => {

@@ -31,12 +31,11 @@ export default {
   methods: {
     getTermIndexClass (index, term) {
       return {
-        'document-global-search-terms-tags__item--negation': term.negation,
         [`document-global-search-terms-tags__item--index-${index}`]: true
       }
     },
     getTerms () {
-      const terms = this.retrieveContentQueryTermsInDocument(this.document)
+      const terms = this.retrieveContentQueryTermsInDocument(this.document).filter(t => !t.negation)
       this.$set(this, 'terms', terms)
     }
   }
@@ -107,9 +106,6 @@ export default {
         font-weight: normal;
       }
 
-      &--negation {
-        text-decoration: line-through;
-      }
     }
   }
 </style>
