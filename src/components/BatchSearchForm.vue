@@ -120,7 +120,7 @@
                 @deactivate="hideSuggestionsFileTypes"
                 :hide="!suggestionFileTypes.length"
                 :items="suggestionFileTypes">
-                <template v-slot:item-label="{ item }">
+                <template v-slot:item-label="{ item: { item } }">
                   <div :id="item.mime">
                     {{ item.label }}
                   </div>
@@ -317,7 +317,7 @@ export default {
       })
       return csvData
     },
-    selectFileType (fileType) {
+    selectFileType ({ item: fileType = null } = { }) {
       this.$set(this, 'selectedFileType', fileType || this.selectedFileType)
     },
     searchFileTypes: throttle(function () {
