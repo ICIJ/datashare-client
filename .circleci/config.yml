@@ -11,6 +11,7 @@ workflows:
       - generate_doc:
           requires:
             - build
+            - test
           filters:
             branches:
               only:
