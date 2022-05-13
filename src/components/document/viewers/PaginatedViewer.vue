@@ -3,7 +3,10 @@
     <div class="p-3 w-100 text-muted" slot="waiting">
       {{ $t('document.fetching') }}
     </div>
-    <div class="paginated-viewer d-flex flex-grow-1" v-if="isPreviewable">
+    <div class="paginated-viewer paginated-viewer--pdf p-3 flex-grow-1" v-if="document.isPdf">
+      <iframe class="paginated-viewer__iframe border shadow" :src="document.inlineFullUrl" width="100%" height="100%"  frameborder="0" allowfullscreen></iframe>
+    </div>
+    <div class="paginated-viewer paginated-viewer--previewable d-flex flex-grow-1" v-else-if="isPreviewable">
       <div class="paginated-viewer__thumbnails">
         <div class="text-center p-2 d-flex align-items-center paginated-viewer__thumbnails__select">
           <select class="form-control form-control-sm" v-model.number="active" @change="scrollToPageAndThumbnail(active)">
@@ -44,7 +47,7 @@
         </div>
       </div>
     </div>
-    <div class="p-3" v-else>
+    <div class="paginated-viewer paginated-viewer--not-available p-3" v-else>
       {{ $t('document.notAvailable') }}
     </div>
   </v-wait>

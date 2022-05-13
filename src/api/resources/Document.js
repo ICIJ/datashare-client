@@ -145,6 +145,11 @@ export default class Document extends EsDoc {
   get fullUrl () {
     return Api.getFullUrl(this.url)
   }
+  get inlineFullUrl () {
+    const url = new URL(this.fullUrl)
+    url.searchParams.set('inline', true)
+    return url.href
+  }
   get rootUrl () {
     return `/api/${this.index}/documents/src/${this.routing}?routing=${this.routing}`
   }
