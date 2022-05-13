@@ -27,7 +27,7 @@
 </template>
 
 <script>
-import XLSX from 'xlsx'
+import { read, utils } from 'xlsx'
 import datashareSourceMixin from '@/mixins/datashareSourceMixin'
 
 /**
@@ -74,10 +74,10 @@ export default {
           for (let i = 0; i !== data.length; ++i) {
             arr += String.fromCharCode(data[i])
           }
-          const workbook = XLSX.read(arr, { type: 'binary' })
+          const workbook = read(arr, { type: 'binary' })
           const result = {}
           workbook.SheetNames.forEach(function (sheetname) {
-            const roa = XLSX.utils.sheet_to_html(workbook.Sheets[sheetname])
+            const roa = utils.sheet_to_html(workbook.Sheets[sheetname])
             if (roa.length > 0) result[sheetname] = roa
           })
           return result
