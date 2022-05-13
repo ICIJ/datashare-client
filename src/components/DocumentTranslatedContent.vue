@@ -11,7 +11,9 @@
             {{ $t(`filter.lang.${translation.source_language}`) }}
           </span>
           <fa icon="angle-right" class="mx-2" />
-          <strong>{{ $t(`filter.lang.${language}`) }}</strong>
+          <strong :title="`Translated with ${translation.translator}`">
+            {{ $t(`filter.lang.${language}`) }}
+          </strong>
           <button class="btn btn-sm btn-link ml-3" @click="toggleOriginalContent">
             {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
           </button>
@@ -69,7 +71,7 @@ export default {
       this.showOriginal = !this.showOriginal
     },
     async loadAvailableTranslations () {
-      const _source = 'content_translated.source_language,content_translated.target_language'
+      const _source = 'content_translated.source_language,content_translated.target_language,content_translated.translator'
       const { index, id, routing } = this.document
       const data = await elasticsearch.getSource({ index, id, routing, _source })
       this.$set(this, 'translations', data.content_translated)
