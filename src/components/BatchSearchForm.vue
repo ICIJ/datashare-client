@@ -120,7 +120,7 @@
                 @deactivate="hideSuggestionsFileTypes"
                 :hide="!suggestionFileTypes.length"
                 :items="suggestionFileTypes">
-                <template v-slot:item-label="{ item: { item } }">
+                <template v-slot:item-label="{ item }">
                   <div :id="item.mime">
                     {{ item.label }}
                   </div>
@@ -317,11 +317,15 @@ export default {
       })
       return csvData
     },
-    selectFileType ({ item: fileType = null } = { }) {
+    selectFileType (fileType = null) {
       this.$set(this, 'selectedFileType', fileType || this.selectedFileType)
     },
     searchFileTypes: throttle(function () {
-      this.$set(this, 'suggestionFileTypes', filter(this.fuse.search(this.fileType), item => !includes(map(this.fileTypes, 'mime'), item.mime)))
+      const fileTypes = this.fuse.search(this.fileType).map(({ item }) => item)
+      const fileTypesWithoutSelection = filter(fileTypes, item => {
+        return !includes(map(this.fileTypes, 'mime'), item.mime)
+      })
+      this.$set(this, 'suggestionFileTypes', fileTypesWithoutSelection)
     }, 200),
     searchFileType () {
       if (this.selectedFileType) {

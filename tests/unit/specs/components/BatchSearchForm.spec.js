@@ -112,8 +112,8 @@ describe('BatchSearchForm.vue', () => {
       wrapper.vm.searchFileTypes()
 
       expect(wrapper.vm.suggestionFileTypes).toHaveLength(2)
-      expect(wrapper.vm.suggestionFileTypes[0].item.label).toBe('Visio document')
-      expect(wrapper.vm.suggestionFileTypes[1].item.label).toBe('StarWriter 5 document')
+      expect(wrapper.vm.suggestionFileTypes[0].label).toBe('Visio document')
+      expect(wrapper.vm.suggestionFileTypes[1].label).toBe('StarWriter 5 document')
     })
 
     it('should filter according to the fileTypes input on label file', () => {
@@ -123,7 +123,7 @@ describe('BatchSearchForm.vue', () => {
       wrapper.vm.searchFileTypes()
 
       expect(wrapper.vm.suggestionFileTypes).toHaveLength(1)
-      expect(wrapper.vm.suggestionFileTypes[0].item.label).toBe('Label PDF')
+      expect(wrapper.vm.suggestionFileTypes[0].label).toBe('Label PDF')
     })
 
     it('should hide already selected file type from suggestions', () => {
