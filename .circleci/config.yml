@@ -11,9 +11,17 @@ workflows:
       - generate_doc:
           requires:
             - build
+          filters:
+            branches:
+              only:
+                - master
       - publish_doc:
           requires:
             - generate_doc
+          filters:
+            branches:
+              only:
+                - master
 jobs:
 
   # This job will build the client environment with the correct dependencies
