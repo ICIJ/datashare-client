@@ -8,7 +8,7 @@
       <div class="m-2">
         <vc-date-picker
           class="date-picker"
-          mode="range"
+          is-range
           v-model="selectedDate"
           show-caps
           :model-config="{ type: 'number' }"
