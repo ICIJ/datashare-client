@@ -18,12 +18,12 @@ export function datasharePlugin (Client) {
   }
 
   Client.prototype.getDocumentWithoutContent = async function (index, id, routing = null) {
-    const sourceExclude = 'content,content_translated'
+    const sourceExclude = 'content'
     return this.getDocument(index, id, routing, { _source_excludes: sourceExclude })
   }
 
   Client.prototype.getDocumentWithContent = async function (index, id, routing = null) {
-    const source = 'content,content_translated'
+    const source = 'content'
     return this.getDocument(index, id, routing, { _source: source })
   }
 
