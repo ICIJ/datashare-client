@@ -91,10 +91,12 @@ export default {
     }
   },
   async mounted () {
-    this.waitFor(async () => {
-      this.$set(this, 'meta', await this.fetchMeta())
-      this.$set(this, 'size', await this.fetchSize())
-    })
+    if (this.hasPreviewHost) {
+      await this.waitFor(async () => {
+        this.$set(this, 'meta', await this.fetchMeta())
+        this.$set(this, 'size', await this.fetchSize())
+      })
+    }
   },
   methods: {
     async waitFor (callback) {
@@ -146,6 +148,9 @@ export default {
     }
   },
   computed: {
+    hasPreviewHost () {
+      return !!this.$config.get('previewHost')
+    },
     ratio () {
       try {
         return this.size.height / this.size.width
@@ -169,7 +174,7 @@ export default {
       return uniqueId('paginated-viewer-load-data-')
     },
     isPreviewable () {
-      return get(this, 'meta.previewable', false) && !this.errored
+      return this.hasPreviewHost && get(this, 'meta.previewable', false) && !this.errored
     }
   }
 }

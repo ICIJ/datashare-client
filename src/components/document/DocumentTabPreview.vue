@@ -51,9 +51,6 @@ export default {
     }
   },
   computed: {
-    isPaginatedViewerActivated () {
-      return !!this.$config.get('previewHost')
-    },
     isPaginated () {
       return this.paginatedTypes.indexOf(this.document.contentType) > -1
     },
@@ -61,10 +58,8 @@ export default {
       switch (true) {
       case this.document.isJson:
         return 'JsonViewer'
-      case this.isPaginatedViewerActivated && this.isPaginated:
+      case this.isPaginated:
         return 'PaginatedViewer'
-      case this.document.isPdf:
-        return 'PdfViewer'
       case this.document.isTiff:
         return 'TiffViewer'
       case this.document.isSpreadsheet && this.hasFeature('SERVER_RENDERING_SPREADSHEET'):

@@ -32,13 +32,13 @@ describe('DocumentTabPreview.vue', () => {
     expect(wrapper.vm.previewComponent).toBe('LegacySpreadsheetViewer')
   })
 
-  it('should call the PdfViewer component for PDF document', async () => {
+  it('should call the PaginatedViewer component for PDF document', async () => {
     const document = await letData(es).have(new IndexedDocument(id, index)
       .withContentType('application/pdf'))
       .commitAndGetLastDocument()
 
     const wrapper = shallowMount(DocumentTabPreview, { localVue, propsData: { document, disabled }, mocks: { $t: msg => msg } })
-    expect(wrapper.vm.previewComponent).toBe('PdfViewer')
+    expect(wrapper.vm.previewComponent).toBe('PaginatedViewer')
   })
 
   it('should call the TiffViewer component for TIFF document', async () => {
