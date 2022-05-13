@@ -43,7 +43,7 @@
             {{ field.label }}
           </div>
           <div class="mr-auto document__content__details__item__search">
-            <router-link :to="{ name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value), indices } }">
+            <router-link :to="field.to || { name: 'search', query: { q: document.valueAsQueryParam(field.name, field.rawValue !== undefined ? field.rawValue : field.value), indices } }">
               <fa icon="search" />
             </router-link>
           </div>
@@ -161,6 +161,13 @@ export default {
           class: 'document__content__id',
           value: this.document.id,
           component: 'code'
+        },
+        {
+          name: '_index',
+          label: this.$t('document.project'),
+          class: 'document__content__project',
+          value: this.document.index,
+          to: { name: 'search', query: { indices: this.document.index, q: '*' } }
         },
         {
           name: 'metadata.tika_metadata_resourcename',
