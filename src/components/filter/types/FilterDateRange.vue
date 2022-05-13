@@ -1,33 +1,32 @@
 <template>
-  <filter-boilerplate ref="filter"
+  <filter-boilerplate class="filter--date-range"
+                      ref="filter"
                       v-bind="$props"
                       hide-show-more
                       hide-contextualize
                       hide-sort>
     <template #items>
       <div class="m-2">
-        <vc-date-picker
+        <date-picker
           class="date-picker"
           is-range
+          is-dark
+          is-expanded
+          color="yellow"
           v-model="selectedDate"
           show-caps
           :model-config="{ type: 'number' }"
           :attributes="attributes"
           :locale="locale"
           :key="locale">
-          <input
-            class="form-control"
-            slot-scope="{ inputProps, inputEvents }"
-            :placeholder="$t('filter.selectDateRange')"
-            v-bind="inputProps"
-            v-on="inputEvents">
-        </vc-date-picker>
+        </date-picker>
       </div>
     </template>
   </filter-boilerplate>
 </template>
 
 <script>
+import DatePicker from 'v-calendar/lib/components/date-picker.umd'
 import FilterAbstract from '@/components/filter/types/FilterAbstract'
 import FilterBoilerplate from '@/components/filter/FilterBoilerplate'
 
@@ -41,6 +40,7 @@ export default {
   name: 'FilterDateRange',
   extends: FilterAbstract,
   components: {
+    DatePicker,
     FilterBoilerplate
   },
   computed: {
@@ -86,33 +86,45 @@ export default {
 </script>
 
 <style lang="scss">
-.date-picker {
-  font-size: 0.8rem;
-  color: inherit;
-  padding: 0;
+.filter.filter--date-range {
+  .date-picker {
+    --yellow-500: #{$tertiary};
+    --yellow-400: #{lighten($tertiary, 5)};
+    --yellow-300: #{lighten($tertiary, 10)};
+    --yellow-200: #{lighten($tertiary, 15)};
+    --yellow-100: #{lighten($tertiary, 20)};
 
-  .vc-popover-content-wrapper {
-    z-index: $zindex-tooltip !important;
-  }
+    font-family: $font-family-base;
+    border: 0;
+    font-size: 0.8rem;
+    color: inherit;
+    padding: 0;
+    margin: 0;
+    background: transparent;
 
-  .vc-grid-cell {
-    .vc-highlights {
-      .vc-day-layer {
-        .vc-highlight-base-start,
-        .vc-highlight-base-middle,
-        .vc-highlight-base-end {
-          background-color: rgba($tertiary, .4);
-        }
-
-        .vc-rounded-full {
-          background-color: $tertiary;
-          border-color: $tertiary;
-        }
-      }
+    .vc-popover-content-wrapper {
+      z-index: $zindex-tooltip !important;
     }
 
-    .vc-day-content:hover {
-      background-color: rgba($tertiary, .1);
+    .vc-grid-cell {
+      .vc-highlights {
+        .vc-day-layer {
+          .vc-highlight-base-start,
+          .vc-highlight-base-middle,
+          .vc-highlight-base-end {
+            background-color: rgba($tertiary, .4);
+          }
+
+          .vc-rounded-full {
+            background-color: $tertiary;
+            border-color: $tertiary;
+          }
+        }
+      }
+
+      .vc-day-content:hover {
+        background-color: rgba($tertiary, .1);
+      }
     }
   }
 }

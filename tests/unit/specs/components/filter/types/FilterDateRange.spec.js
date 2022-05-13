@@ -6,7 +6,6 @@ import VueRouter from 'vue-router'
 import { Core } from '@/core'
 import esConnectionHelper from 'tests/unit/specs/utils/esConnectionHelper'
 import FilterDateRange from '@/components/filter/types/FilterDateRange'
-import { IndexedDocument, letData } from 'tests/unit/es_utils'
 
 const { localVue, i18n, store, wait } = Core.init(createLocalVue()).useAll()
 const router = new VueRouter()
@@ -14,7 +13,6 @@ const router = new VueRouter()
 describe('FilterDateRange.vue', () => {
   const index = toLower('FilterDateRange')
   esConnectionHelper(index)
-  const es = esConnectionHelper.es
   const name = 'creationDate'
   const filter = store.getters['search/getFilter']({ name })
   let wrapper = null
@@ -35,16 +33,6 @@ describe('FilterDateRange.vue', () => {
   })
 
   afterEach(() => store.commit('search/reset'))
-
-  it('should display a date picker', async () => {
-    await letData(es).have(new IndexedDocument('doc_01', index)
-      .withCreationDate('2018-04-01T00:00:00.000Z')).commit()
-
-    await wrapper.findComponent({ ref: 'filter' }).vm.aggregate()
-
-    expect(wrapper.find('.filter__items .date-picker input').exists()).toBeTruthy()
-    expect(wrapper.find('.filter__items .date-picker input').attributes('placeholder')).toBe('Select a date range')
-  })
 
   it('should add selected value to dedicated filter', () => {
     const start = new Date('2019-08-19')
