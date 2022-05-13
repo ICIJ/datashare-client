@@ -12,6 +12,7 @@ export function initialState () {
     doc: null,
     idAndRouting: null,
     isContentLoaded: false,
+    isTranslatedContentLoaded: false,
     isLoadingNamedEntities: false,
     isRecommended: false,
     namedEntitiesPaginatedByCategories: {
@@ -62,6 +63,7 @@ export const mutations = {
     if (raw !== null) {
       Vue.set(state, 'doc', EsDocList.instantiate(raw))
       Vue.set(state, 'isContentLoaded', state.doc.hasContent)
+      Vue.set(state, 'isTranslatedContentLoaded', state.doc.hasTranslatedContent)
       Vue.set(state, 'showContentTextLengthWarning', state.doc.hasBigContentTextLength)
     } else {
       Vue.set(state, 'doc', null)
@@ -79,6 +81,7 @@ export const mutations = {
   translations (state, translations = []) {
     if (state.doc) {
       Vue.set(state.doc, 'translations', translations)
+      Vue.set(state, 'isTranslatedContentLoaded', true)
     }
   },
   tags (state, tags = []) {
@@ -159,10 +162,10 @@ export const actions = {
       const { id, routing } = state.idAndRouting
       const { index } = state.doc
       const doc = await elasticsearch.getDocumentWithContent(index, id, routing)
-      const content = get(doc, '_source.content')
       const translations = get(doc, '_source.content_translated')
-      commit('content', content)
+      const content = get(doc, '_source.content')
       commit('translations', translations)
+      commit('content', content)
       return content
     }
   },

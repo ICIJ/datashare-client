@@ -172,7 +172,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('document', ['isLoadingNamedEntities', 'showContentTextLengthWarning']),
+    ...mapState('document', ['isLoadingNamedEntities', 'isTranslatedContentLoaded', 'showContentTextLengthWarning']),
     ...mapGetters('document', ['namedEntities']),
     ...mapGetters('pipelines', {
       getPipelineChain: 'applyPipelineChainByCategory',
@@ -199,7 +199,7 @@ export default {
       return !this.translatedContent && this.showNamedEntities
     },
     translatedContent () {
-      if (this.contentTranslation !== null) {
+      if (this.isTranslatedContentLoaded && this.contentTranslation !== null) {
         return this.document.translatedContentIn(this.contentTranslation)
       }
       return null

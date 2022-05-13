@@ -29,7 +29,7 @@
 
 <script>
 import { mapState } from 'vuex'
-import find from 'lodash/find'
+import { find, join } from 'lodash'
 import elasticsearch from '@/api/elasticsearch'
 import DocumentContent from '@/components/DocumentContent'
 
@@ -71,7 +71,11 @@ export default {
       this.showOriginal = !this.showOriginal
     },
     async loadAvailableTranslations () {
-      const _source = 'content_translated.source_language,content_translated.target_language,content_translated.translator'
+      const _source = join([
+        'content_translated.source_language',
+        'content_translated.target_language',
+        'content_translated.translator'
+      ])
       const { index, id, routing } = this.document
       const data = await elasticsearch.getSource({ index, id, routing, _source })
       this.$set(this, 'translations', data.content_translated)

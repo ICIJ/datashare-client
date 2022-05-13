@@ -187,6 +187,9 @@ export default class Document extends EsDoc {
   get hasContent () {
     return this.get('_source.content', null) !== null
   }
+  get hasTranslatedContent () {
+    return this.get('_source.content_translated', null) !== null
+  }
   get creationDate () {
     const creationDate = this.source.metadata.tika_metadata_creation_date
     if (creationDate && !isNaN(Date.parse(creationDate))) {
