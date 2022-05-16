@@ -4,7 +4,7 @@
     <document-thumbnail :document="document" class="search-results-list-link__thumbnail" crop lazy />
     <div class="search-results-list-link__wrapper">
       <span class="search-results-list-link__basename d-block">
-        <document-sliced-name :document="document" />
+        <document-sliced-name :document="document" show-subject />
       </span>
       <active-text-truncate class="search-results-list-link__location">
         <span class="d-inline-flex align-items-center">

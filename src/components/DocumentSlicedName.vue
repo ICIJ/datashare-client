@@ -1,7 +1,10 @@
 <template>
   <component :is="baseComponent" v-bind="baseComponentProps">
     <span class="document-sliced-name"
-          :class="{ 'document-sliced-name--sliced': isSliced, 'document-sliced-name--truncate': hasActiveTextTruncate }">
+          :class="{
+            'document-sliced-name--sliced': isSliced(),
+            'document-sliced-name--truncate': hasActiveTextTruncate(),
+            'document-sliced-name--has-subject': hasSubject() }">
       <span class="document-sliced-name__item"
             :class="{ 'document-sliced-name__item--has-content-type': hasContentSlice(slice) }"
             :key="index"
@@ -17,14 +20,17 @@
             {{ contentType }}
           </span>
         </span>
-        <router-link class="document-sliced-name__item__root"
-                     :to="{ name: 'document', params: rootParams }"
-                     v-else-if="hasInteractiveRoot()">
+        <router-link v-else-if="hasInteractiveRoot()"
+                     class="document-sliced-name__item__root"
+                     :to="{ name: 'document', params: rootParams }">
           {{ slice }}
         </router-link>
         <span v-else class="document-sliced-name__item__single" :title="slice">
           {{ slice }}
         </span>
+      </span>
+      <span v-if="hasSubject()" class="document-sliced-name__subject">
+        {{ subject }}
       </span>
     </span>
   </component>
@@ -65,6 +71,12 @@ export default {
      */
     textTruncateRtlAttachments: {
       type: Boolean
+    },
+    /**
+     * Add the document subject (if present)
+     */
+    showSubject: {
+      type: Boolean
     }
   },
   methods: {
@@ -83,6 +95,12 @@ export default {
     hasInteractiveRoot () {
       return this.isSliced && this.interactiveRoot
     },
+    hasActiveTextTruncate () {
+      return this.activeTextTruncate !== null
+    },
+    hasSubject () {
+      return this.showSubject && !this.isSliced() && this.document.hasSubject
+    },
     isSliced () {
       return this.slices.length > 1
     }
@@ -90,6 +108,9 @@ export default {
   computed: {
     slices () {
       return this.document.slicedName
+    },
+    subject () {
+      return this.document.subject
     },
     contentType () {
       return get(types, [this.document.contentType, 'extensions'], [])[0]
@@ -108,9 +129,6 @@ export default {
         return { direction: 'rtl' }
       }
       return {}
-    },
-    hasActiveTextTruncate () {
-      return this.activeTextTruncate !== null
     }
   }
 }
@@ -152,7 +170,8 @@ export default {
         }
       }
 
-      .document-sliced-name--sliced &__root {
+      .document-sliced-name--sliced &__root,
+      .document-sliced-name--has-subject &__single {
         opacity: 0.5;
       }
     }

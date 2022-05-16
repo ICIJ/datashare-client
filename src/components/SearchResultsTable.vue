@@ -38,8 +38,10 @@
           <b-badge variant="light">{{ item.index | startCase }}</b-badge>
         </template>
         <template v-slot:cell(path)="{ item }">
-          <router-link :to="{ name: 'document', params: item.routerParams, query: { q: query } }" class="search-results-table__items__row__title">
-            <document-sliced-name :document="item" active-text-truncate />
+          <router-link
+            :to="{ name: 'document', params: item.routerParams, query: { q: query } }"
+            class="search-results-table__items__row__title">
+            <document-sliced-name :document="item" active-text-truncate show-subject />
           </router-link>
         </template>
         <template v-slot:cell(highlight)="{ value }">
@@ -262,6 +264,10 @@ export default {
 
         td.fit {
           padding-right: 0.85em;
+        }
+
+        table tbody tr &__title:hover {
+          text-decoration: none;
         }
 
         table tbody tr:not(.b-table-row-selected):not(:hover) &__checkbox,

@@ -9,10 +9,10 @@
       @shortkey="getAction('tabNavigation')">
       <div class="document__header">
         <hook name="document.header:before"></hook>
-        <h3 class="document__header__name" :class="{ 'document__header__name--has-subject': hasSubject }">
+        <h3 class="document__header__name" :class="{ 'document__header__name--has-subject': doc.hasSubject }">
           <hook name="document.header.name:before"></hook>
-          <document-sliced-name interactive-root :document="doc"></document-sliced-name>
-          <div class="document__header__name__subject" v-if="hasSubject">
+          <document-sliced-name interactive-root :document="doc" />
+          <div class="document__header__name__subject" v-if="doc.hasSubject">
             {{ doc.subject }}
           </div>
           <hook name="document.header.name:after"></hook>
@@ -179,9 +179,6 @@ export default {
     indexActiveTab () {
       return findIndex(this.visibleTabs, tab => tab.name === this.activeTab)
     },
-    hasSubject () {
-      return this.doc.subject !== this.doc.title
-    },
     isStandalone () {
       return this.$route.name === 'document-standalone'
     },
@@ -310,6 +307,7 @@ export default {
 
       &--has-subject /deep/ .document-sliced-name {
         font-size: 1rem;
+        opacity: 0.5;
       }
     }
 

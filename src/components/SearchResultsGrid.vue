@@ -9,9 +9,13 @@
                        :to="{ name: 'document', params: document.routerParams, query: { q: query } }">
             <document-thumbnail :document="document" size="md" />
           </router-link>
-          <router-link class="search-results-grid__items__item__title py-2 px-3 small" :to="{ name: 'document', params: document.routerParams }"
+          <router-link class="search-results-grid__items__item__title py-2 px-3 small"
+                       :to="{ name: 'document', params: document.routerParams }"
                        :title="document.slicedNameToString" v-b-tooltip>
-            <document-sliced-name :document="document" active-text-truncate text-truncate-rtl-attachments/>
+            <document-sliced-name active-text-truncate
+                                  show-subject
+                                  text-truncate-rtl-attachments
+                                  :document="document" />
           </router-link>
         </div>
       </div>
@@ -149,6 +153,11 @@ export default {
           }
         }
 
+        &__title {
+          display: flex;
+          align-items: center;
+        }
+
         &__title.router-link-active {
           background: $secondary;
           color: white;
@@ -156,6 +165,10 @@ export default {
 
         &__title:visited:not(.router-link-active) {
           color: mix(#609, white, 50%);
+        }
+
+        &__title:hover {
+          text-decoration: none;
         }
       }
     }
