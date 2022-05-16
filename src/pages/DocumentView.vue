@@ -33,7 +33,7 @@
             <template v-for="tab in visibleTabs">
               <hook :name="`document.header.nav.items.${tab.name}:before`" :key="`hook.${tab.name}:before`" tag="li"></hook>
               <li class="document__header__nav__item list-inline-item" :key="tab.name" :title="$t(tab.label)">
-                <a @click="activateTab(tab.name)" :class="{ active: isTabActive(tab.name) }">
+                <a @click="$root.$emit('document::tab', tab.name)" :class="{ active: isTabActive(tab.name) }">
                   <hook :name="`document.header.nav.${tab.name}:before`"></hook>
                   <fa :icon="tab.icon" v-if="tab.icon" class="mr-2"></fa>
                   <component v-if="tab.labelComponent" :is="tab.labelComponent"></component>
@@ -120,6 +120,8 @@ export default {
     }
     await this.getDownloadStatus()
     await this.setTabs()
+    // Listen for event to switch tab
+    this.$root.$on('document::tab', this.activateTab)
   },
   computed: {
     ...mapState('document', ['doc', 'parentDocument', 'tags']),
@@ -223,9 +225,11 @@ export default {
       return this.activeTab === name
     },
     activateTab (name) {
-      this.$set(this, 'activeTab', name)
-      this.$root.$emit('document::content::changed')
-      return name
+      if (findIndex(this.visibleTabs, { name }) > -1) {
+        this.$set(this, 'activeTab', name)
+        this.$root.$emit('document::content::changed')
+        return name
+      }
     },
     tabClass (name) {
       return {
