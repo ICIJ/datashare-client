@@ -258,8 +258,12 @@ export default {
       }
 
       &__row {
-        &__title:visited:not(.router-link-active) {
-          color: mix(#609, white, 50%);
+        &__title {
+          display: flex;
+
+          &:visited:not(.router-link-active) {
+            color: mix(#609, white, 50%);
+          }
         }
 
         td.fit {
