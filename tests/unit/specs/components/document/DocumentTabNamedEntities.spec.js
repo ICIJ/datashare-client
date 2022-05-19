@@ -18,7 +18,10 @@ describe('DocumentTabNamedEntities.vue', () => {
 
   beforeAll(() => Murmur.config.set('manageDocuments', true))
 
-  beforeEach(() => store.commit('document/reset'))
+  beforeEach(() => {
+    store.commit('document/reset')
+    store.commit('document/toggleShowNamedEntities', true)
+  })
 
   it('should display named entities in the dedicated tab', async () => {
     await letData(es).have(new IndexedDocument(id, index)
