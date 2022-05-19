@@ -28,10 +28,15 @@ describe('DocumentStore', () => {
   })
 
   it('should reset the store state', () => {
-    store.commit('document/toggleShowNamedEntities')
+    store.commit('document/isRecommended', true)
     store.commit('document/reset')
 
-    expect(store.state.document).toEqual(initialState())
+    expect(store.state.document.doc).toEqual(initialState().doc)
+    expect(store.state.document.idAndRouting).toEqual(initialState().idAndRouting)
+    expect(store.state.document.isContentLoaded).toEqual(initialState().isContentLoaded)
+    expect(store.state.document.isTranslatedContentLoaded).toEqual(initialState().isTranslatedContentLoaded)
+    expect(store.state.document.isLoadingNamedEntities).toEqual(initialState().isLoadingNamedEntities)
+    expect(store.state.document.isRecommended).toEqual(initialState().isRecommended)
   })
 
   it('should get the document', async () => {
@@ -77,12 +82,20 @@ describe('DocumentStore', () => {
     expect(store.getters['document/namedEntities'][1].raw._routing).toBe(id)
   })
 
-  it('should get the "showNamedEntities" status falsy by default', () => {
+  it('should not reset the "showNamedEntities" status to false', () => {
+    store.commit('document/toggleShowNamedEntities', true)
+    store.commit('document/reset')
+    expect(store.state.document.showNamedEntities).toBeTruthy()
+  })
+
+  it('should not reset the "showNamedEntities" status to true', () => {
+    store.commit('document/toggleShowNamedEntities', false)
+    store.commit('document/reset')
     expect(store.state.document.showNamedEntities).toBeFalsy()
   })
 
   it('should toggle the "showNamedEntities" status', () => {
-    store.commit('document/toggleShowNamedEntities')
+    store.commit('document/toggleShowNamedEntities', true)
     expect(store.state.document.showNamedEntities).toBeTruthy()
     store.commit('document/toggleShowNamedEntities')
     expect(store.state.document.showNamedEntities).toBeFalsy()
