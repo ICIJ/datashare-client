@@ -26,6 +26,7 @@ export function initialState () {
     rootDocument: null,
     showContentTextLengthWarning: false,
     showNamedEntities: false,
+    showTranslatedContent: true,
     tags: []
   }
 }
@@ -53,6 +54,8 @@ export const getters = {
 export const mutations = {
   reset (state) {
     const s = initialState()
+    const persistedFields = ['showNamedEntities', 'showTranslatedContent']
+    persistedFields.forEach(key => delete s[key])
     Object.keys(s).forEach(key => { state[key] = s[key] })
   },
   idAndRouting (state, idAndRouting) {
@@ -118,6 +121,9 @@ export const mutations = {
   },
   toggleShowNamedEntities (state, toggle = null) {
     Vue.set(state, 'showNamedEntities', (toggle !== null ? toggle : !state.showNamedEntities))
+  },
+  toogleShowTransatedContent (state, toggle = null) {
+    Vue.set(state, 'showTranslatedContent', (toggle !== null ? toggle : !state.showTranslatedContent))
   },
   addTag (state, { tag, userId }) {
     const tags = map(compact(tag.split(' ')), tag => {

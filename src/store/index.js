@@ -42,6 +42,8 @@ export default new Vuex.Store({
     createPersistedState({
       paths: [
         'app.redirectAfterLogin',
+        'document.showTranslatedContent',
+        'document.toggleShowNamedEntities',
         'search.query',
         'search.size',
         'search.values',
@@ -56,7 +58,7 @@ export default new Vuex.Store({
       ],
       filter (mutation) {
         // Only for some mutations
-        return some(['search/', 'app/'], k => mutation.type.indexOf(k) === 0)
+        return some(['search/', 'app/', 'doc/'], k => mutation.type.indexOf(k) === 0)
       }
     })
   ]

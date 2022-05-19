@@ -1,12 +1,10 @@
 <template>
-  <div class="document-translated-content" :class="{ 'document-translated-content--original': showOriginal }">
+  <div class="document-translated-content" :class="{ 'document-translated-content--original': !showTranslatedContent }">
     <template v-if="hasTranslations && !showContentTextLengthWarning">
       <div class="document-translated-content__translation m-3">
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />
-          <abbr :title="$t(`filter.lang.${document.source.language}`)" v-if="translation.source_language === document.source.language">
-            {{ $t('documentTranslatedContent.detected') }}
-          </abbr>
+          <abbr :title="$t(`filter.lang.${document.source.language}`)" v-if="translation.source_language === document.source.language">{{ $t('documentTranslatedContent.detected') }}</abbr>
           <span v-else>
             {{ $t(`filter.lang.${translation.source_language}`) }}
           </span>
@@ -14,8 +12,8 @@
           <strong :title="`Translated with ${translation.translator}`">
             {{ $t(`filter.lang.${language}`) }}
           </strong>
-          <button class="btn btn-sm btn-link ml-3" @click="toggleOriginalContent">
-            {{ $t(showOriginal ? 'documentTranslatedContent.viewTranslated' : 'documentTranslatedContent.viewOriginal') }}
+          <button class="btn btn-sm btn-link ml-3" @click="toggleTranslatedContent">
+            {{ $t(showTranslatedContent ? 'documentTranslatedContent.viewOriginal' : 'documentTranslatedContent.viewTranslated') }}
           </button>
         </div>
         <document-content ref="content" class="document-translated-content__translation__header__content" :document="document" :q="q" :content-translation="contentTranslation" />
@@ -59,7 +57,6 @@ export default {
   data () {
     return {
       language: 'ENGLISH',
-      showOriginal: false,
       translations: []
     }
   },
@@ -67,8 +64,8 @@ export default {
     await this.loadAvailableTranslations()
   },
   methods: {
-    toggleOriginalContent () {
-      this.showOriginal = !this.showOriginal
+    toggleTranslatedContent () {
+      this.$store.commit('document/toogleShowTransatedContent')
     },
     async loadAvailableTranslations () {
       const _source = join([
@@ -82,9 +79,12 @@ export default {
     }
   },
   computed: {
-    ...mapState('document', ['showContentTextLengthWarning']),
+    ...mapState('document', [
+      'showContentTextLengthWarning',
+      'showTranslatedContent'
+    ]),
     contentTranslation () {
-      if (!this.showOriginal) {
+      if (this.showTranslatedContent) {
         return this.language
       }
       return null
