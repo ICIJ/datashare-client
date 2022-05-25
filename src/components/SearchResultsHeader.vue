@@ -27,11 +27,11 @@
                     toggle-class="text-decoration-none py-1 px-2 border search-results-header__settings__size__toggler"
                     variant="link">
           <template v-slot:button-content>
-            <span class="search-results-header__settings__size__toggler__slot">
+            <span class="search-results-header__settings__size__toggler__slot" >
               {{ firstDocument }} – {{ lastDocument }}
             </span>
-            <span class="search-results-header__settings__size__toggler__hits text-muted">
-              {{ $t('search.results.on') }} {{ $tc('search.results.results', response.total, { total: $n(response.total) }) }}
+            <span class="search-results-header__settings__size__toggler__hits text-muted" :title="nbDocuments">
+              {{ nbDocuments }}
             </span>
           </template>
           <b-dropdown-header>
@@ -49,18 +49,18 @@
           </b-dropdown-item>
         </b-dropdown>
       </b-btn-group>
-      <confirm-button v-if="response.total > 0" class="search-results-header__settings__btn-download btn btn-link text-nowrap ml-auto"
+      <confirm-button v-if="response.total > 0" class="search-results-header__settings__btn-download btn btn-link text-nowrap "
                       :confirmed="batchDownload"
                       :label="batchDownloadLabel"
                       :yes="$t('global.yes')"
                       :no="$t('global.no')">
         <fa icon="download"></fa>
-        <span v-if="!noLabels" class="ml-2">
+        <span v-if="!noLabels" class="ml-2 d-none d-md-inline">
           {{ $t('search.results.batchDownload') }}
         </span>
       </confirm-button>
       <pagination
-        class="search-results-header__settings__pagination justify-content-end text-right mr-3"
+        class="search-results-header__settings__pagination justify-content-end text-right"
         :get-to-template="getToTemplate"
         :is-displayed="isDisplayed"
         :no-last-page-link="searchWindowTooLarge"
@@ -177,6 +177,9 @@ export default {
       return label === ''
         ? `${this.$tc('search.results.batchDownloadSubmit', this.response.total, { total: this.$n(this.response.total) })} ${this.$t('global.confirmLabel')}`
         : `${label} ${this.$t('search.results.warningConfirm')}`
+    },
+    nbDocuments () {
+      return `${this.$t('search.results.on')} ${this.$tc('search.results.results', this.response.total, { total: this.$n(this.response.total) })}`
     }
   },
   mounted () {
@@ -242,14 +245,27 @@ export default {
 
     &__settings {
       color: $text-muted;
-      display: inline-flex;
       font-size: 0.95em;
-      width: 100%;
 
       &__size, &__sort {
         &__toggler {
           font-size: $font-size-sm;
           line-height: inherit;
+        }
+      }
+
+      &__size  {
+        /deep/ &__toggler {
+          display: flex;
+          align-items: center;
+          gap: 0.5em;
+          width :172px;
+          &__hits{
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            overflow: hidden;
+          }
+
         }
       }
     }

@@ -2,11 +2,11 @@
   <header class="app__nav">
     <hook name="search.nav:before"></hook>
     <div class="app__nav__container">
-      <div class="app__nav__container__main py-3 d-flex align-items-center">
-        <div class="app__nav__container__main__search-bar px-3 py-0 flex-grow-1">
+      <div class="app__nav__container__main p-3 d-flex align-items-center">
+        <div class="app__nav__container__main__search-bar pr-3 py-0 flex-grow-1">
           <search-bar class="p-0" settings animated></search-bar>
         </div>
-        <search-layout-selector class="ml-auto px-3"></search-layout-selector>
+        <search-layout-selector class="ml-auto pl-3"></search-layout-selector>
       </div>
     </div>
     <hook name="search.nav:after"></hook>
