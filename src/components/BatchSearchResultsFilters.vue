@@ -75,10 +75,10 @@ export default {
       type: String
     },
     /**
-     * The batch search index
+     * The batch search indices
      */
-    index: {
-      type: String
+    indices: {
+      type: [String, Array]
     }
   },
   components: {
@@ -145,7 +145,7 @@ export default {
     },
     executeSearch (q) {
       this.$store.commit('search/reset')
-      this.$router.push({ name: 'search', query: { q, index: this.index } }).catch(() => {})
+      this.$router.push({ name: 'search', query: { q, indices: this.indices.join(',') } }).catch(() => {})
     },
     sort (queriesSort) {
       const routeQuery = get(this, '$route.query', {})

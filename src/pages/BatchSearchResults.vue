@@ -153,7 +153,7 @@
                              target="_blank"
                              :to="{
                                name: 'document-standalone',
-                               params: { index: item.project ? item.project.name : $route.params.index, id: item.documentId, routing: item.rootId },
+                               params: { index: item.project.name, id: item.documentId, routing: item.rootId },
                                query: { q: item.query } }">
                   <active-text-truncate class="batch-search-results__queries__query__link__path"
                                         v-b-tooltip.hover :title="item.documentPath">
@@ -254,10 +254,10 @@ export default {
       type: String
     },
     /**
-     * The Elasticsearch index of the batch search
+     * The indices of the current batch search
      */
-    index: {
-      type: String
+    indices: {
+      type: [String, Array]
     }
   },
   filters: {
@@ -400,13 +400,8 @@ export default {
       }
       const document = this.results[this.documentInModalPageIndex]
       const { documentId: id, rootId: routing, query: q, project } = document
-      if (project !== null) {
-        const index = project.name
-        return { index, id, routing, q }
-      } else {
-        const { index } = this.$route.params
-        return { index, id, routing, q }
-      }
+      const index = project.name
+      return { index, id, routing, q }
     },
     documentInModalIndex: {
       get () {
@@ -494,7 +489,7 @@ export default {
       return {
         name: 'batch-search.results',
         params: {
-          index: this.index,
+          indices: this.indices,
           uuid: this.uuid
         },
         query: {

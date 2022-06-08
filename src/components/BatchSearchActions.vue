@@ -16,8 +16,8 @@
                  lazy
                  placement="bottom"
                  target="batch-search-actions-filters-toggle"
-                 triggers="focus">
-        <batch-search-results-filters :uuid="uuid" :index="project" hide-border />
+                 triggers="focus" >
+        <batch-search-results-filters :uuid="uuid" :indices="projects" hide-border />
       </b-popover>
     </b-btn>
 
@@ -115,8 +115,8 @@ export default {
     uuid () {
       return get(this, 'batchSearch.uuid')
     },
-    project () {
-      return get(this, 'batchSearch.project.name')
+    projects () {
+      return get(this, 'batchSearch.projects').map(project => project.name)
     },
     isEnded () {
       return ['SUCCESS', 'FAILURE'].indexOf(this.batchSearch.state) > -1

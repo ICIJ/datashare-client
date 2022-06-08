@@ -11,7 +11,7 @@ jest.mock('@/api', () => {
   const batchSearches = {
     12: {
       uuid: '12',
-      project: { name: 'ProjectName' },
+      projects: [{ name: 'ProjectName' }, { name: 'ProjectName2' }],
       description: 'This is the description of the batch search',
       queries: {
         query_01: 1,
@@ -23,7 +23,7 @@ jest.mock('@/api', () => {
     },
     13: {
       uuid: '13',
-      project: { name: 'ProjectName2' },
+      projects: [{ name: 'ProjectName2' }],
       description: 'Another description',
       queries: {
         query_04: 12
@@ -48,6 +48,7 @@ jest.mock('@/api', () => {
           documentNumber: 0,
           documentPath: 'this/is/a/path/42',
           query: 'query_01',
+          project: 'ProjectName',
           rootId: 42
         }, {
           creationDate: '2011-10-11T04:12:49.000+0000',
@@ -55,6 +56,7 @@ jest.mock('@/api', () => {
           documentNumber: 1,
           documentPath: 'this/is/a/path/43',
           query: 'query_01',
+          project: 'ProjectName2',
           rootId: 43
         }, {
           creationDate: '2011-10-11T04:12:49.000+0000',
@@ -62,6 +64,7 @@ jest.mock('@/api', () => {
           documentNumber: 2,
           documentPath: 'this/is/a/path/44',
           query: 'query_02',
+          project: 'ProjectName',
           rootId: 44
         }
       ])
@@ -72,7 +75,8 @@ jest.mock('@/api', () => {
 describe('BatchSearchResultsFilters.vue', () => {
   const { i18n, localVue, router, store } = Core.init(createLocalVue()).useAll()
   const project = toLower('BatchSearchResultsFilters')
-  esConnectionHelper(project)
+  const anotherProject = toLower('AnotherBatchSearchResultsFilters')
+  esConnectionHelper([project, anotherProject])
   const es = esConnectionHelper.es
   let wrapper = null
 
@@ -80,12 +84,12 @@ describe('BatchSearchResultsFilters.vue', () => {
 
   beforeEach(async () => {
     await letData(es).have(new IndexedDocument('42', project).withContentType('type_01')).commit()
-    await letData(es).have(new IndexedDocument('43', project).withContentType('type_01')).commit()
+    await letData(es).have(new IndexedDocument('43', anotherProject).withContentType('type_01')).commit()
     await letData(es).have(new IndexedDocument('44', project).withContentType('type_01')).commit()
 
     store.commit('batchSearch/batchSearches', [{
       uuid: '12',
-      project: { name: 'ProjectName' },
+      projects: [{ name: 'ProjectName' }, { name: 'ProjectName2' }],
       description: 'This is the description of the batch search',
       queries: {
         query_01: 1,
@@ -96,7 +100,7 @@ describe('BatchSearchResultsFilters.vue', () => {
       date: '2019-07-18T14:45:34.869+0000'
     }, {
       uuid: '13',
-      project: { name: 'ProjectName2' },
+      projects: [{ name: 'ProjectName2' }],
       description: 'Another description',
       queries: {
         query_04: 12
@@ -115,7 +119,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches', {})
     await store.dispatch('batchSearch/getBatchSearch', '13')
-    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
+    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', indices: project } })
 
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown').exists()).toBeTruthy()
@@ -126,7 +130,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches', {})
     await store.dispatch('batchSearch/getBatchSearch', '12')
-    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
+    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', indices: [{ name: project }, { name: anotherProject }] } })
 
     expect(wrapper.find('.batch-search-results-filters__queries').exists()).toBeTruthy()
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown').exists()).toBeTruthy()
@@ -137,7 +141,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '13', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches', {})
     await store.dispatch('batchSearch/getBatchSearch', '13')
-    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', index: project } })
+    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '13', indices: project } })
 
     expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown span.badge')).toHaveLength(1)
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown span.badge').text()).toBe('12')
@@ -147,7 +151,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
     await store.dispatch('batchSearch/getBatchSearches', {})
     await store.dispatch('batchSearch/getBatchSearch', '12')
-    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
+    wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', indices: [project, anotherProject] } })
 
     expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown > span span.badge')).toHaveLength(3)
     expect(wrapper.find('.batch-search-results-filters__queries__dropdown > span span.badge').text()).toBe('3')
@@ -158,7 +162,7 @@ describe('BatchSearchResultsFilters.vue', () => {
       await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
       await store.dispatch('batchSearch/getBatchSearches', {})
       await store.dispatch('batchSearch/getBatchSearch', '12')
-      wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
+      wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', indices: [project, anotherProject] } })
 
       expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__search')).toHaveLength(3)
     })
@@ -167,25 +171,25 @@ describe('BatchSearchResultsFilters.vue', () => {
       await store.dispatch('batchSearch/getBatchSearchResults', '12', 0, 100)
       await store.dispatch('batchSearch/getBatchSearches', {})
       await store.dispatch('batchSearch/getBatchSearch', '12')
-      wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
+      wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', indices: [project, anotherProject] } })
       const spy = jest.spyOn(wrapper.vm.$router, 'push')
       wrapper.find('.batch-search-results-filters__queries__dropdown__item__search').trigger('click')
 
       expect(wrapper.vm.$router.push).toBeCalled()
-      expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'search', query: { q: 'query_02', index: project } })
+      expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'search', query: { q: 'query_02', indices: project.concat(',', anotherProject) } })
       spy.mockClear()
     })
   })
 
   describe('sort queries', () => {
     it('should display a dropdown to sort', () => {
-      wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
+      wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', indices: [project, anotherProject] } })
 
       expect(wrapper.findAll('.batch-search-results-filters__queries__sort .dropdown-menu')).toHaveLength(1)
     })
 
     it('should sort queries in default order ie. by count', () => {
-      wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
+      wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', indices: [project, anotherProject] } })
 
       expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item')).toHaveLength(3)
       expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(0).text()).toBe('query_02')
@@ -194,7 +198,7 @@ describe('BatchSearchResultsFilters.vue', () => {
     })
 
     it('should sort queries by "default" order ie. as in database', async () => {
-      wrapper = await mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', index: project } })
+      wrapper = await mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', indices: [project, anotherProject] } })
       const spy = jest.spyOn(wrapper.vm.$router, 'push')
       spy.mockClear()
 

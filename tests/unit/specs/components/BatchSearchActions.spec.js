@@ -29,9 +29,9 @@ describe('BatchSearchActions.vue', () => {
   const propsData = {
     batchSearch: {
       uuid: '12',
-      project: {
+      projects: [{
         name: 'BatchSearchActions'
-      },
+      }],
       name: 'BatchSearch Test',
       description: 'This is the description of the batch search',
       state: 'SUCCESS',
@@ -111,9 +111,9 @@ describe('BatchSearchActions.vue', () => {
     const propsData = {
       batchSearch: {
         uuid: '155',
-        project: {
+        projects: [{
           name: 'BatchSearchActions'
-        },
+        }],
         description: 'This is the description of the batch search',
         state: 'QUEUED',
         date: '2019-07-18T14:45:34.869+0000',
