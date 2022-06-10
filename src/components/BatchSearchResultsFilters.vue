@@ -111,7 +111,7 @@ export default {
       }
     },
     filteredQueries () {
-      return this.queriesFilter ? this.fuse.search(this.queriesFilter) : this.queries
+      return this.queriesFilter ? this.fuse.search(this.queriesFilter).map(result => result.item) : this.queries
     },
     hasMultipleQueries () {
       return this.queries && this.queries.length > 1

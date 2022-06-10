@@ -209,4 +209,15 @@ describe('BatchSearchResultsFilters.vue', () => {
       expect(wrapper.vm.$router.push).toBeCalledWith({ name: 'batch-search.results', query: { order: undefined, page: undefined, queries_sort: 'default', sort: undefined } })
     })
   })
+
+  describe('filter queries', () => {
+    it('should filter queries when search bar is filled', async () => {
+      wrapper = mount(BatchSearchResultsFilters, { i18n, localVue, router, store, computed: { downloadLink () { return 'mocked-download-link' } }, propsData: { uuid: '12', indices: [project, anotherProject] } })
+      await wrapper.setData({ queriesFilter: '2' })
+      await wrapper.vm.$nextTick()
+
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item')).toHaveLength(1)
+      expect(wrapper.findAll('.batch-search-results-filters__queries__dropdown__item__label').at(0).text()).toBe('query_02')
+    })
+  })
 })
