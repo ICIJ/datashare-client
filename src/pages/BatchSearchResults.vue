@@ -215,7 +215,7 @@
 </template>
 
 <script>
-import { castArray, find, get, isEqual, sumBy } from 'lodash'
+import { castArray, compact, find, get, isEqual, sumBy } from 'lodash'
 import moment from 'moment'
 import { mapState } from 'vuex'
 
@@ -267,44 +267,6 @@ export default {
   data () {
     return {
       documentInModalPageIndex: null,
-      fields: [
-        {
-          key: 'documentNumber',
-          label: this.$t('batchSearchResults.rank'),
-          sortable: false,
-          name: 'doc_nb'
-        },
-        {
-          key: 'query',
-          label: this.$t('batchSearchResults.query'),
-          sortable: true,
-          name: 'query'
-        },
-        {
-          key: 'documentPath',
-          label: this.$t('batchSearchResults.documentPath'),
-          sortable: true,
-          name: 'doc_path'
-        },
-        {
-          key: 'creationDate',
-          label: this.$t('batchSearchResults.creationDate'),
-          sortable: true,
-          name: 'creation_date'
-        },
-        {
-          key: 'contentType',
-          label: this.$t('batchSearchResults.contentType'),
-          sortable: true,
-          name: 'content_type'
-        },
-        {
-          key: 'contentLength',
-          label: this.$t('batchSearchResults.size'),
-          sortable: true,
-          name: 'content_length'
-        }
-      ],
       isMyBatchSearch: false,
       order: settings.batchSearchResults.order,
       page: 1,
@@ -347,6 +309,57 @@ export default {
         this.page = pageNumber
         this.$router.push(this.generateLinkToBatchSearchResults(pageNumber, this.selectedQueries))
       }
+    },
+    projectField () {
+      return this.hasMultipleProjects
+        ? {
+          key: 'project.name',
+          label: this.$t('batchSearchResults.project'),
+          sortable: true,
+          name: 'prj_id'
+        }
+        : null
+    },
+    fields () {
+      return compact([
+        {
+          key: 'documentNumber',
+          label: this.$t('batchSearchResults.rank'),
+          sortable: false,
+          name: 'doc_nb'
+        },
+        {
+          key: 'query',
+          label: this.$t('batchSearchResults.query'),
+          sortable: true,
+          name: 'query'
+        },
+        this.projectField,
+        {
+          key: 'documentPath',
+          label: this.$t('batchSearchResults.documentPath'),
+          sortable: true,
+          name: 'doc_path'
+        },
+        {
+          key: 'creationDate',
+          label: this.$t('batchSearchResults.creationDate'),
+          sortable: true,
+          name: 'creation_date'
+        },
+        {
+          key: 'contentType',
+          label: this.$t('batchSearchResults.contentType'),
+          sortable: true,
+          name: 'content_type'
+        },
+        {
+          key: 'contentLength',
+          label: this.$t('batchSearchResults.size'),
+          sortable: true,
+          name: 'content_length'
+        }
+      ])
     },
     selectedQueries () {
       return get(this, '$store.state.batchSearch.selectedQueries', [])
@@ -425,6 +438,9 @@ export default {
     isLastDocument () {
       const totalResultsIndices = this.results.length - 1
       return this.documentInModalPageIndex === totalResultsIndices
+    },
+    hasMultipleProjects () {
+      return this.batchSearch.projects.length > 1
     }
   },
   beforeRouteEnter (to, from, next) {
