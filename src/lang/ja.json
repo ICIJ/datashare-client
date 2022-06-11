@@ -643,6 +643,7 @@
     "query": "検索語",
     "documentPath": "Document Path",
     "creationDate": "作成日",
+    "project": "Project",
     "contentType": "コンテンツの種類",
     "size": "サイズ",
     "downloadResults": "ダウンロード結果",
