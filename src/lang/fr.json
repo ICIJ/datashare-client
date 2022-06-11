@@ -643,6 +643,7 @@
     "query": "Recherche",
     "documentPath": "Chemin du document",
     "creationDate": "Date de création",
+    "project": "Project",
     "contentType": "Type de contenu",
     "size": "Taille",
     "downloadResults": "Télécharger les résultats",
