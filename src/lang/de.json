@@ -643,6 +643,7 @@
     "query": "Abfrage",
     "documentPath": "Dokumentenpfad",
     "creationDate": "Erstellungsdatum",
+    "project": "Project",
     "contentType": "Inhaltstyp",
     "size": "Größe",
     "downloadResults": "Ergebnisse herunterladen",
