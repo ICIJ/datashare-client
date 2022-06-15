@@ -635,7 +635,13 @@
     "errorTitle": "Error in query",
     "errorQuery": "You have an error on your query <code>%{query}</code>.",
     "errorMessage": "The system encountered a problem. It can be a syntax error that you made in your CSV or another error. Please refer to <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">this help page</a> where most common errors are described.",
-    "placeholder": "Search in batch searches..."
+    "placeholder": "Search in batch searches...",
+    "field": {
+      "all": "All fields",
+      "name": "Name",
+      "user_id": "Author",
+      "description": "Description"
+    }
   },
   "batchSearchResults": {
     "title": "Batch Search Results",
