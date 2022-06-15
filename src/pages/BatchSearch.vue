@@ -14,9 +14,9 @@
                 :placeholder="$t('batchSearch.placeholder')"
                 class="batch-search__search-bar__input form-control">
               <div class="batch-search__search-bar__button input-group-append">
-                <b-dropdown :text="$t('search.field.' + field)" variant="outline-light" class="batch-search__search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
+                <b-dropdown :text="$t('batchSearch.field.' + field)" variant="outline-light" class="batch-search__search-bar__field" right :class="{ 'search-bar__field--selected': field !== 'all' }">
                   <b-dropdown-item v-for="key in fieldOptions" :key="key" @click="field = key" class="batch-search__search-bar__field__items">
-                    {{ $t('search.field.' + key) }}
+                    {{ $t('batchSearch.field.' + key) }}
                   </b-dropdown-item>
                 </b-dropdown>
                 <button type="submit" class="btn btn-dark">
@@ -179,9 +179,9 @@ export default {
         : null
     },
     fieldOptions () {
-      const options = ['all', 'title', 'description']
+      const options = ['all', 'name', 'description']
       if (this.isServer) {
-        options.push('author')
+        options.push('user_id')
       }
       return options
     },
