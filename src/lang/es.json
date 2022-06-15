@@ -635,7 +635,13 @@
     "errorTitle": "Error en la consulta",
     "errorQuery": "Tiene un error en su consulta <code>%{query}</code>.",
     "errorMessage": "El sistema encontró un error. Puede ser un error de sintaxis que hayas escribido en tu CSV u otro error. Por favor, consulte esta <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">página de ayuda</a> donde se describen los errores más comunes.",
-    "placeholder": "Buscar en las búsquedas masivas..."
+    "placeholder": "Buscar en las búsquedas masivas...",
+    "field": {
+      "all": "All fields",
+      "name": "Name",
+      "user_id": "Author",
+      "description": "Description"
+    }
   },
   "batchSearchResults": {
     "title": "Resultados de búsqueda masiva",
