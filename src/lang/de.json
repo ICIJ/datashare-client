@@ -635,7 +635,13 @@
     "errorTitle": "Fehler in der Abfrage",
     "errorQuery": "Sie haben einen Fehler auf Ihrer Abfrage <code>%{query}</code>.",
     "errorMessage": "Das System ist auf ein Problem gestoßen. Es kann ein Syntaxfehler in der CSV-Datei sein oder ein anderer Fehler. Bitte lesen Sie <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">auf dieser Hilfeseite</a>, auf der die häufigsten Fehler beschrieben werden.",
-    "placeholder": "Suche in Batch-Suchen..."
+    "placeholder": "Suche in Batch-Suchen...",
+    "field": {
+      "all": "All fields",
+      "name": "Name",
+      "user_id": "Author",
+      "description": "Description"
+    }
   },
   "batchSearchResults": {
     "title": "Ergebnisse der Batch-Suche",
