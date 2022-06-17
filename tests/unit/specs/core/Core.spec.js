@@ -12,7 +12,7 @@ import { Core } from '@/core'
 jest.mock('axios', () => {
   return {
     get: jest.fn().mockResolvedValue({ data: {} }),
-    request: jest.fn().mockResolvedValue({ data: { userProjects: ['first-index'] } })
+    request: jest.fn().mockResolvedValue({ data: { userProjects: ['first-index'], mode: 'LOCAL' } })
   }
 })
 
