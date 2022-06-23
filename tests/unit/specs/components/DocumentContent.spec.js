@@ -41,8 +41,6 @@ describe('DocumentContent.vue', () => {
         .commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
-      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         i18n,
         localVue,
@@ -62,8 +60,6 @@ describe('DocumentContent.vue', () => {
         .commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
-      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         i18n,
         localVue,
@@ -85,7 +81,6 @@ describe('DocumentContent.vue', () => {
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
       await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         i18n,
         localVue,
@@ -105,8 +100,6 @@ describe('DocumentContent.vue', () => {
         .commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
-      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         i18n,
         localVue,
@@ -160,40 +153,13 @@ describe('DocumentContent.vue', () => {
       await wrapper.vm.transformContent()
       expect(wrapper.exists('.document-content__ner-toggler')).toBeTruthy()
     })
-
-    it('should display a document without named entities', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('content')
-        .withNer('tent', 3, 'PERSON'))
-        .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      store.commit('document/toggleShowNamedEntities', false)
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData: {
-          document: store.state.document.doc
-        }
-      })
-
-      await wrapper.vm.$nextTick()
-      expect(wrapper.findAll('mark')).toHaveLength(0)
-    })
   })
-
   describe('search term', () => {
     it('should not sticky the toolbox by default', async () => {
       await letData(es).have(new IndexedDocument(id, index)
         .withContent('this is a full full content')
         .withNer('ner', 0))
         .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      await store.commit('document/toggleShowNamedEntities', true)
       const wrapper = shallowMount(DocumentContent, {
         i18n,
         localVue,
@@ -376,8 +342,10 @@ describe('DocumentContent.vue', () => {
       await wrapper.vm.loadContent()
       expect(document.content).toBe('this is a content fr')
     })
+
     it('should use Datashare API to lazy load the long text document', async () => {
-      const content = letTextContent().withContent('this is a content lazy loaded from the mocked API')
+      const content = letTextContent()
+        .withContent('this is a content lazy loaded from the mocked API')
         .withMaxOffset(2e5)
       axios.request.mockResolvedValue({ data: content.getResponse() })
 

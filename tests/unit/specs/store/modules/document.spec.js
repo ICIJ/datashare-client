@@ -82,25 +82,6 @@ describe('DocumentStore', () => {
     expect(store.getters['document/namedEntities'][1].raw._routing).toBe(id)
   })
 
-  it('should not reset the "showNamedEntities" status to false', () => {
-    store.commit('document/toggleShowNamedEntities', true)
-    store.commit('document/reset')
-    expect(store.state.document.showNamedEntities).toBeTruthy()
-  })
-
-  it('should not reset the "showNamedEntities" status to true', () => {
-    store.commit('document/toggleShowNamedEntities', false)
-    store.commit('document/reset')
-    expect(store.state.document.showNamedEntities).toBeFalsy()
-  })
-
-  it('should toggle the "showNamedEntities" status', () => {
-    store.commit('document/toggleShowNamedEntities', true)
-    expect(store.state.document.showNamedEntities).toBeTruthy()
-    store.commit('document/toggleShowNamedEntities')
-    expect(store.state.document.showNamedEntities).toBeFalsy()
-  })
-
   describe('Manage tags', () => {
     it('should get the document\'s tags', async () => {
       const tags = ['tag_01', 'tag_02']

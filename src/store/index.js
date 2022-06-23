@@ -43,7 +43,6 @@ export default new Vuex.Store({
       paths: [
         'app.redirectAfterLogin',
         'document.showTranslatedContent',
-        'document.toggleShowNamedEntities',
         'search.query',
         'search.size',
         'search.values',

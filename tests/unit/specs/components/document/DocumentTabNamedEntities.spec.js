@@ -20,7 +20,6 @@ describe('DocumentTabNamedEntities.vue', () => {
 
   beforeEach(() => {
     store.commit('document/reset')
-    store.commit('document/toggleShowNamedEntities', true)
   })
 
   it('should display named entities in the dedicated tab', async () => {
