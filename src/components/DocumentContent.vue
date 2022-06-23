@@ -6,7 +6,6 @@ import DocumentAttachments from '@/components/DocumentAttachments'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 import Hook from '@/components/Hook'
-import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import LocalSearchWorker from '@/utils/local-search.worker'
 import InfiniteLoading from 'vue-infinite-loading'
@@ -23,7 +22,7 @@ export default {
     Hook,
     InfiniteLoading
   },
-  mixins: [ner, utils],
+  mixins: [utils],
   props: {
     /**
      * The selected document
@@ -48,7 +47,6 @@ export default {
   },
   data () {
     return {
-      hasNamedEntities: false,
       hasStickyToolbox: false,
       localSearchIndex: 0,
       localSearchOccurrences: 0,
@@ -64,8 +62,6 @@ export default {
     }
   },
   async mounted () {
-    // Use already loaded named entities (if any) or count them with a promise
-    this.hasNamedEntities = !!this.namedEntities.length || !!await this.getNamedEntitiesTotal()
     // Apply the transformation pipeline once
     await this.transformContent()
     // Initial local query, we need to jump to the result
@@ -82,12 +78,6 @@ export default {
       await this.transformContent()
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     }, 300),
-    async showNamedEntities (value) {
-      if (value && this.hasNamedEntities) {
-        await this.$store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      }
-      return await this.transformContent()
-    },
     contentTranslation () {
       return this.transformContent()
     },
@@ -99,7 +89,6 @@ export default {
     }
   },
   methods: {
-
     replaceBetween (origin, start, end, what) {
       return origin.substring(0, start) + what + origin.substring(end)
     },
@@ -116,6 +105,8 @@ export default {
 
         if (!this.reachedTheEnd && this.offset !== this.actualNextOffset) {
           const content = this.replaceBetween(this.content, this.offset, this.actualNextOffset, slice.content)
+          console.log('hey', this.content, this.offset, this.actualNextOffset, content)
+
           this.$store.dispatch('document/setContent', content)
           this.offset = this.actualNextOffset
         }
@@ -188,9 +179,6 @@ export default {
         activeSearchTerm.scrollIntoView({ block: 'center', inline: 'nearest' })
       }
     },
-    getNamedEntitiesTotal () {
-      return this.$store.dispatch('document/getNamedEntitiesTotal')
-    },
     async nextLoadData ($infiniteLoadingState) {
       await this.transformContent()
       // Did we reach the end?
@@ -200,8 +188,7 @@ export default {
     }
   },
   computed: {
-    ...mapState('document', ['isLoadingNamedEntities', 'isTranslatedContentLoaded', 'useContentTextLazyLoading']),
-    ...mapGetters('document', ['namedEntities']),
+    ...mapState('document', ['isTranslatedContentLoaded', 'useContentTextLazyLoading']),
     ...mapGetters('pipelines', {
       getPipelineChain: 'applyPipelineChainByCategory',
       getFullPipelineChain: 'getFullPipelineChainByCategory'
@@ -209,22 +196,8 @@ export default {
     ...mapGetters('search', {
       globalSearchTerms: 'retrieveContentQueryTerms'
     }),
-    showNamedEntities: {
-      set (toggle) {
-        this.$store.commit('document/toggleShowNamedEntities', toggle)
-      },
-      get () {
-        return this.$store.state.document.showNamedEntities
-      }
-    },
     contentPipelineFunctions () {
       return this.getFullPipelineChain('extracted-text')
-    },
-    showNamedEntitiesToggle () {
-      return !this.translatedContent && this.hasNamedEntities
-    },
-    shouldApplyNamedEntitiesMarks () {
-      return !this.translatedContent && this.showNamedEntities
     },
     translatedContent () {
       if (this.isTranslatedContentLoaded && this.contentTranslation !== null) {
@@ -252,9 +225,7 @@ export default {
         'localSearchIndex',
         'localSearchOccurrences',
         'localSearchTerm',
-        'localSearchWorkerInProgress',
-        'namedEntities',
-        'shouldApplyNamedEntitiesMarks'
+        'localSearchWorkerInProgress'
       ])
     },
     hasLocalSearchTerms () {
@@ -301,19 +272,11 @@ export default {
           :search-worker-in-progress="localSearchWorkerInProgress"></document-local-search-input>
         <hook name="document.content.toolbox:after"></hook>
       </div>
-      <div class="d-flex flex-row justify-content-end align-items-center px-3">
+      <div class="document-content__togglers d-flex flex-row justify-content-end align-items-center px-3">
+        <!-- @deprecated The hooks "document.content.ner" are now deprecated. The "document.content.togglers" hooks should be used instead. -->
         <hook name="document.content.ner:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
-        <div class="document-content__ner-toggler py-1 ml-3 font-weight-bold" id="ner-toggler"
-             v-if="showNamedEntitiesToggle">
-          <div class="custom-control custom-switch">
-            <input type="checkbox" v-model="showNamedEntities" class="custom-control-input" id="input-ner-toggler"
-                   :disabled="isLoadingNamedEntities">
-            <label class="custom-control-label font-weight-bold" for="input-ner-toggler" id="label-ner-toggler">
-              {{ $t('document.showNamedEntities') }}
-            </label>
-          </div>
-          <b-tooltip target="ner-toggler" :title="$t('document.highlightsCaution')"></b-tooltip>
-        </div>
+        <hook name="document.content.togglers:before" class="d-flex flex-row justify-content-end align-items-center"></hook>
+        <hook name="document.content.togglers:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
         <hook name="document.content.ner:after" class="d-flex flex-row justify-content-end align-items-center"></hook>
       </div>
       <hook name="document.content.body:before"></hook>
@@ -349,12 +312,6 @@ export default {
     &__body--rtl {
       direction: rtl;
       text-align: right;
-    }
-
-    &__ner-toggler {
-      & > .custom-control.custom-switch {
-        display: inline-block;
-      }
     }
 
     & /deep/ mark {

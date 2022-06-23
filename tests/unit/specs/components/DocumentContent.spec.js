@@ -35,34 +35,6 @@ describe('DocumentContent.vue', () => {
   afterAll(() => jest.unmock('@/utils/utils'))
 
   describe('the extracted text content', () => {
-    it('should mark named entities in the extracted text tab', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('a ner_01 not a ner_02')
-        .withNer('ner_01', 2, 'PERSON')
-        .withNer('ner_02', 15, 'LOCATION'))
-        .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      await store.commit('document/toggleShowNamedEntities', true)
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData: {
-          document: store.state.document.doc
-        }
-      })
-
-      await wrapper.vm.transformContent()
-
-      expect(wrapper.findAll('mark')).toHaveLength(2)
-      expect(wrapper.findAll('mark').at(0).text()).toEqual('ner_01')
-      expect(wrapper.findAll('mark').at(0).classes()).toContain('ner--category-person')
-      expect(wrapper.findAll('mark').at(1).text()).toEqual('ner_02')
-      expect(wrapper.findAll('mark').at(1).classes()).toContain('ner--category-location')
-    })
-
     it('should sanitize the HTML in the extracted text', async () => {
       await letData(es).have(new IndexedDocument(id, index)
         .withContent('this is a <span>content</span> with some <img src="this.is.a.source" alt="alt" title="title" />images and <a href="this.is.an.href" target="_blank">links</a>'))
@@ -187,29 +159,6 @@ describe('DocumentContent.vue', () => {
 
       await wrapper.vm.transformContent()
       expect(wrapper.exists('.document-content__ner-toggler')).toBeTruthy()
-    })
-
-    it('should change the document state of showNamedEntities', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('content')
-        .withNer('ner', 2, 'PERSON'))
-        .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      await store.dispatch('document/getFirstPageForNamedEntityInCategory', { category: 'PERSON' })
-      store.commit('document/toggleShowNamedEntities', true)
-      const wrapper = await shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData: {
-          document: store.state.document.doc
-        }
-      })
-
-      expect(store.state.document.showNamedEntities).toBeTruthy()
-      wrapper.find('.document-content__ner-toggler label').trigger('click')
-      expect(store.state.document.showNamedEntities).toBeFalsy()
     })
 
     it('should display a document without named entities', async () => {
