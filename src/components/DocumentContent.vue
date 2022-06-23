@@ -1,8 +1,7 @@
 <script>
-import { once, pick, throttle } from 'lodash'
+import { once, pick, throttle, uniqueId, get, noop } from 'lodash'
 import { mapGetters, mapState } from 'vuex'
 
-import ContentTextLengthWarning from '@/components/ContentTextLengthWarning'
 import DocumentAttachments from '@/components/DocumentAttachments'
 import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTermsTags'
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
@@ -10,6 +9,7 @@ import Hook from '@/components/Hook'
 import ner from '@/mixins/ner'
 import utils from '@/mixins/utils'
 import LocalSearchWorker from '@/utils/local-search.worker'
+import InfiniteLoading from 'vue-infinite-loading'
 
 /**
  * Display a document's extract text after applying a series of transformation with a pipeline.
@@ -17,11 +17,11 @@ import LocalSearchWorker from '@/utils/local-search.worker'
 export default {
   name: 'DocumentContent',
   components: {
-    ContentTextLengthWarning,
     DocumentAttachments,
     DocumentGlobalSearchTermsTags,
     DocumentLocalSearchInput,
-    Hook
+    Hook,
+    InfiniteLoading
   },
   mixins: [ner, utils],
   props: {
@@ -56,7 +56,11 @@ export default {
       localSearchWorker: null,
       localSearchWorkerInProgress: false,
       transformedContent: '',
-      rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN']
+      rightToLeftLanguages: ['ARABIC', 'HEBREW', 'PERSIAN'],
+      infiniteScrollId: uniqueId('infinite-scroll-'),
+      offset: 0,
+      maxOffset: 0,
+      pageSize: 250
     }
   },
   async mounted () {
@@ -90,14 +94,31 @@ export default {
     contentPipelineFunctions () {
       return this.transformContent()
     },
-    showContentTextLengthWarning () {
+    useContentTextLazyLoading () {
       this.transformContent()
     }
   },
   methods: {
+
+    replaceBetween (origin, start, end, what) {
+      return origin.substring(0, start) + what + origin.substring(end)
+    },
     async loadContent () {
-      if (!this.showContentTextLengthWarning && !this.document.hasContent) {
+      if (!this.useContentTextLazyLoading && !this.document.hasContent) {
         await this.$store.dispatch('document/getContent')
+      }
+      if (this.useContentTextLazyLoading) {
+        if (!this.document.hasContent) {
+          this.offset = 0
+          this.maxOffset = await this.$store.dispatch('document/getContentMaxOffset')
+        }
+        const slice = await this.$store.dispatch('document/getContentSlice', { offset: this.offset, limit: this.actualPageSize })
+
+        if (!this.reachedTheEnd && this.offset !== this.actualNextOffset) {
+          const content = this.replaceBetween(this.content, this.offset, this.actualNextOffset, slice.content)
+          this.$store.dispatch('document/setContent', content)
+          this.offset = this.actualNextOffset
+        }
       }
       this.$root.$emit('document::content-loaded')
       return this.content
@@ -169,10 +190,17 @@ export default {
     },
     getNamedEntitiesTotal () {
       return this.$store.dispatch('document/getNamedEntitiesTotal')
+    },
+    async nextLoadData ($infiniteLoadingState) {
+      await this.transformContent()
+      // Did we reach the end?
+      const method = this.reachedTheEnd ? 'complete' : 'loaded'
+      // Call the right method (with "noop" as safety net in case the method can't be found)
+      return get($infiniteLoadingState, method, noop)()
     }
   },
   computed: {
-    ...mapState('document', ['isLoadingNamedEntities', 'isTranslatedContentLoaded', 'showContentTextLengthWarning']),
+    ...mapState('document', ['isLoadingNamedEntities', 'isTranslatedContentLoaded', 'useContentTextLazyLoading']),
     ...mapGetters('document', ['namedEntities']),
     ...mapGetters('pipelines', {
       getPipelineChain: 'applyPipelineChainByCategory',
@@ -231,6 +259,24 @@ export default {
     },
     hasLocalSearchTerms () {
       return this.localSearchTerm.label && this.localSearchTerm.label.length > 0
+    },
+    reachedTheEnd () {
+      return this.offset >= this.maxOffset && this.useContentTextLazyLoading
+    },
+    nextOffset () {
+      return this.offset + this.pageSize
+    },
+    actualNextOffset () {
+      return this.nextOffset > this.maxOffset ? this.maxOffset : this.nextOffset
+    },
+    lastPageSize () {
+      return this.maxOffset % this.pageSize
+    },
+    actualPageSize () {
+      return this.nextOffset > this.maxOffset ? this.lastPageSize : this.pageSize
+    },
+    useInfiniteScroll () {
+      return this.infiniteScrollId && this.offset > 0 && !this.reachedTheEnd
     }
   }
 }
@@ -239,8 +285,6 @@ export default {
 <template>
   <div class="document-content">
     <hook name="document.content:before"></hook>
-    <content-text-length-warning v-if="showContentTextLengthWarning"></content-text-length-warning>
-    <template v-else>
       <div class="document-content__toolbox d-flex" :class="{ 'document-content__toolbox--sticky': hasStickyToolbox }">
         <hook name="document.content.toolbox:before"></hook>
         <document-global-search-terms-tags
@@ -274,9 +318,13 @@ export default {
       </div>
       <hook name="document.content.body:before"></hook>
       <div class="document-content__body container-fluid py-3" v-html="transformedContent"></div>
+      <infinite-loading @infinite="nextLoadData" v-if="useInfiniteScroll" :identifier="infiniteScrollId">
+          <span slot="spinner"></span>
+          <span slot="no-more"></span>
+          <span slot="no-results"></span>
+      </infinite-loading>
       <hook name="document.content.body:after"></hook>
       <document-attachments :document="document" class="mx-3 mb-3"></document-attachments>
-    </template>
     <hook name="document.content:after"></hook>
   </div>
 </template>

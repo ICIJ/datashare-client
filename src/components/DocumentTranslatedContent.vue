@@ -1,6 +1,6 @@
 <template>
   <div class="document-translated-content" :class="{ 'document-translated-content--original': !showTranslatedContent }">
-    <template v-if="hasTranslations && !showContentTextLengthWarning">
+    <template v-if="hasTranslations && !useContentTextLazyLoading">
       <div class="document-translated-content__translation m-3">
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />
@@ -80,7 +80,7 @@ export default {
   },
   computed: {
     ...mapState('document', [
-      'showContentTextLengthWarning',
+      'useContentTextLazyLoading',
       'showTranslatedContent'
     ]),
     contentTranslation () {

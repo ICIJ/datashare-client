@@ -75,6 +75,10 @@ export default class Api {
   untagDocuments (project, docIds, tags) {
     return this.sendActionAsText(`/api/${project}/documents/batchUpdate/untag`, { method: 'POST', data: { docIds, tags } })
   }
+  getDocumentSlice (project, documentId, offset, limit, routingId = null) {
+    const routing = routingId ? `routing=${routingId}&` : ''
+    return this.sendAction(`/api/${project}/documents/content/${documentId}?${routing}offset=${offset}&limit=${limit}`)
+  }
   batchSearch (name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published) {
     const data = new FormData()
     data.append('name', name)
