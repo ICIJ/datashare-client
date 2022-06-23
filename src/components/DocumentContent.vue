@@ -104,8 +104,8 @@ export default {
         const slice = await this.$store.dispatch('document/getContentSlice', { offset: this.offset, limit: this.actualPageSize })
 
         if (!this.reachedTheEnd && this.offset !== this.actualNextOffset) {
-          const content = this.replaceBetween(this.content, this.offset, this.actualNextOffset, slice.content)
-          console.log('hey', this.content, this.offset, this.actualNextOffset, content)
+          this.offset = slice.offset
+          const content = this.replaceBetween(this.content, slice.offset, this.actualNextOffset, slice.content)
 
           this.$store.dispatch('document/setContent', content)
           this.offset = this.actualNextOffset
