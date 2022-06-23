@@ -60,7 +60,7 @@ export default {
       infiniteScrollId: uniqueId('infinite-scroll-'),
       offset: 0,
       maxOffset: 0,
-      pageSize: 250
+      pageSize: 2500
     }
   },
   async mounted () {
