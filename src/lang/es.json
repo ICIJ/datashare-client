@@ -75,7 +75,7 @@
       "on": "sobre",
       "perPage": "por página",
       "sortedByPath": "ordenado por ruta",
-      "batchDownloadNotAllowed": "Batch downloads are not allowed on multiple projects.",
+      "batchDownloadNotAllowed": "No se pueden hacer búsquedas masivas en múltiples proyectos.",
       "batchDownload": "Descargar los resultados",
       "batchDownloadSubmit": "Está a punto de descargar 1 archivo. | Está a punto de descargar %{total} archivo.",
       "warningNumber": "No puede descargar más de %{number} archivos.",
@@ -605,7 +605,7 @@
     "submitSuccess": "La búsqueda masiva ha sido añadida.",
     "submitError": "Error, no se puede añadir la búsqueda masiva.",
     "submitQueryLimitError": "Error en CSV, su CSV excede 60 000 líneas.",
-    "projects": "Projects",
+    "projects": "Proyectos",
     "name": "Nombre",
     "description": "Descripción",
     "fuzziness": "Fuzziness",
@@ -637,10 +637,10 @@
     "errorMessage": "El sistema encontró un error. Puede ser un error de sintaxis que hayas escribido en tu CSV u otro error. Por favor, consulte esta <a href=\"https://icij.gitbook.io/datashare/list-of-common-errors-leading-to-failure-in-batch-searches\">página de ayuda</a> donde se describen los errores más comunes.",
     "placeholder": "Buscar en las búsquedas masivas...",
     "field": {
-      "all": "All fields",
-      "name": "Name",
-      "user_id": "Author",
-      "description": "Description"
+      "all": "Todos los campos",
+      "name": "Nombre",
+      "user_id": "Autora",
+      "description": "Descripción"
     }
   },
   "batchSearchResults": {
@@ -649,7 +649,7 @@
     "query": "Consulta",
     "documentPath": "Ruta del archivo",
     "creationDate": "Fecha de creación",
-    "project": "Project",
+    "project": "Proyecto",
     "contentType": "Tipo de contenido",
     "size": "Tamaño",
     "downloadResults": "Descargar los resultados",
