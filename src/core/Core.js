@@ -179,7 +179,7 @@ class Core extends Behaviors {
       // The backend can yet override some configuration
       this.config.merge(serverSettings)
       // Create the default project for the current user or redirect to login
-      if (serverSettings.mode === 'LOCAL') {
+      if (serverSettings.mode === 'LOCAL' || serverSettings.mode === 'EMBEDDED') {
         await this.createDefaultProject()
       }
       this._auth = new Auth(mode(serverSettings.mode))
