@@ -58,6 +58,7 @@ export default {
       infiniteScrollId: uniqueId('infinite-scroll-'),
       offset: 0,
       maxOffset: 0,
+      maxOffsetTranslations: { },
       pageSize: 2500
     }
   },
@@ -78,19 +79,26 @@ export default {
       await this.transformContent()
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     }, 300),
-    contentTranslation () {
+    async contentTranslation (value) {
+      this.offset = 0
+      this.maxOffset = await this.getMaxOffset(value)
       return this.transformContent()
     },
     contentPipelineFunctions () {
       return this.transformContent()
     },
-    useContentTextLazyLoading () {
+    useContentTextLazyLoading (value) {
       this.transformContent()
     }
   },
   methods: {
     replaceBetween (origin, start, end, what) {
       return origin.substring(0, start) + what + origin.substring(end)
+    },
+    async getMaxOffset (contentTranslation) {
+      const currentContent = contentTranslation ?? 'original'
+      this.maxOffsetTranslations[currentContent] ??= await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage: contentTranslation })
+      return this.maxOffsetTranslations[currentContent]
     },
     async loadContent () {
       if (!this.useContentTextLazyLoading && !this.document.hasContent) {
@@ -99,19 +107,19 @@ export default {
       if (this.useContentTextLazyLoading) {
         if (!this.document.hasContent) {
           this.offset = 0
-          this.maxOffset = await this.$store.dispatch('document/getContentMaxOffset')
+          this.maxOffset = await this.getMaxOffset(this.contentTranslation)
         }
-        const slice = await this.$store.dispatch('document/getContentSlice', { offset: this.offset, limit: this.actualPageSize })
+        const slice = await this.$store.dispatch('document/getContentSlice', { offset: this.offset, limit: this.actualPageSize, targetLanguage: this.contentTranslation })
 
         if (!this.reachedTheEnd && this.offset !== this.actualNextOffset) {
-          this.offset = slice.offset
-          const content = this.replaceBetween(this.content, slice.offset, this.actualNextOffset, slice.content)
-
+          const end = slice.offset + slice.limit
+          const content = this.replaceBetween(this.content, slice.offset, end, slice.content)
           this.$store.dispatch('document/setContent', content)
           this.offset = this.actualNextOffset
         }
       }
       this.$root.$emit('document::content-loaded')
+
       return this.content
     },
     async transformContent () {

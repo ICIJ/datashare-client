@@ -168,13 +168,13 @@ export const actions = {
       return content
     }
   },
-  getContentSlice ({ commit, state }, { offset, limit }) {
+  getContentSlice ({ state }, { offset, limit, targetLanguage }) {
     if (state.doc !== null) {
       const { id, routing } = state.idAndRouting
       const { index } = state.doc
       const o = offset ?? 0
       const l = limit ?? 0
-      return api.getDocumentSlice(index, id, o, l, routing)
+      return api.getDocumentSlice(index, id, o, l, targetLanguage, routing)
     }
   },
   async setContent ({ commit, state }, content) {
@@ -182,11 +182,11 @@ export const actions = {
       commit('content', content)
     }
   },
-  async getContentMaxOffset ({ state }) {
+  async getContentMaxOffset ({ state }, { targetLanguage }) {
     if (state.doc !== null) {
       const { id, routing } = state.idAndRouting
       const { index } = state.doc
-      const slice = await api.getDocumentSlice(index, id, 0, 0, routing)
+      const slice = await api.getDocumentSlice(index, id, 0, 0, targetLanguage, routing)
       return slice.maxOffset
     }
   },

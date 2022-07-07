@@ -304,7 +304,7 @@ export default class Document extends EsDoc {
   }
   get hasBigContentTextLength () {
     // 150,000 characters
-    return this.contentTextLength > 1.5e5
+    return this.contentTextLength === undefined || this.contentTextLength > 1.5e5
   }
   static get esName () {
     return 'Document'

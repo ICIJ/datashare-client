@@ -41,6 +41,7 @@ describe('DocumentContent.vue', () => {
         .commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       const wrapper = shallowMount(DocumentContent, {
         i18n,
         localVue,
@@ -60,6 +61,7 @@ describe('DocumentContent.vue', () => {
         .commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       const wrapper = shallowMount(DocumentContent, {
         i18n,
         localVue,
@@ -100,6 +102,7 @@ describe('DocumentContent.vue', () => {
         .commit()
       await store.dispatch('document/get', { id, index })
       await store.dispatch('document/getContent')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       const wrapper = shallowMount(DocumentContent, {
         i18n,
         localVue,
@@ -114,52 +117,15 @@ describe('DocumentContent.vue', () => {
     })
   })
 
-  describe('the "Show named entities" toggle', () => {
-    it('should contain a "Show named entities" toggle', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('content')
-        .withNer('ner', 2, 'PERSON'))
-        .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData: {
-          document: store.state.document.doc
-        }
-      })
-
-      expect(wrapper.exists('.document-content__ner-toggler')).toBeTruthy()
-    })
-
-    it('should not contain a "Show named entities" toggle if there is no named entities', async () => {
-      await letData(es).have(new IndexedDocument(id, index)
-        .withContent('content'))
-        .commit()
-      await store.dispatch('document/get', { id, index })
-      await store.dispatch('document/getContent')
-      const wrapper = shallowMount(DocumentContent, {
-        i18n,
-        localVue,
-        store,
-        propsData: {
-          document: store.state.document.doc
-        }
-      })
-
-      await wrapper.vm.transformContent()
-      expect(wrapper.exists('.document-content__ner-toggler')).toBeTruthy()
-    })
-  })
   describe('search term', () => {
     it('should not sticky the toolbox by default', async () => {
       await letData(es).have(new IndexedDocument(id, index)
         .withContent('this is a full full content')
         .withNer('ner', 0))
         .commit()
+      await store.dispatch('document/get', { id, index })
+      await store.dispatch('document/getContent')
+      await store.dispatch('document/getFirstPageForNamedEntityInAllCategories')
       const wrapper = shallowMount(DocumentContent, {
         i18n,
         localVue,
@@ -330,6 +296,7 @@ describe('DocumentContent.vue', () => {
 
       expect(document.content).toBeFalsy()
       await wrapper.vm.loadContent()
+
       expect(document.content).toBe('this is a ')
 
       const nextSliceContent = letTextContent()
@@ -338,7 +305,6 @@ describe('DocumentContent.vue', () => {
         .withLimit(10)
         .withMaxOffset(2e5)
       axios.request.mockResolvedValue({ data: nextSliceContent.getResponse() })
-
       await wrapper.vm.loadContent()
       expect(document.content).toBe('this is a content fr')
     })
@@ -349,20 +315,18 @@ describe('DocumentContent.vue', () => {
         .withMaxOffset(2e5)
       axios.request.mockResolvedValue({ data: content.getResponse() })
 
-      // Create a document with a huge content text length
-      const indexedDocument = new IndexedDocument(id, index)
-      indexedDocument.withContent('this is a content from Elastic search doc')
-      indexedDocument.setContentTextLength(2e5)
-
+      // Create a document with a huge content text length and
       // Save and get the document from Elasticsearch
-      await letData(es).have(indexedDocument).commit()
+      await letData(es).have(new IndexedDocument(id, index)
+        .withContent('this is a content from Elastic search doc')
+        .setContentTextLength(2e5))
+        .commit()
       await store.dispatch('document/get', { id, index })
 
       // Build the wrapper with the created document
       const document = store.state.document.doc
       const propsData = { document }
       const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
-
       expect(document.content).toBeFalsy()
       await wrapper.vm.loadContent()
       expect(document.content).toBe('this is a content lazy loaded from the mocked API')

@@ -1,6 +1,6 @@
 <template>
   <div class="document-translated-content" :class="{ 'document-translated-content--original': !showTranslatedContent }">
-    <template v-if="hasTranslations && !useContentTextLazyLoading">
+    <template v-if="hasTranslations">
       <div class="document-translated-content__translation m-3">
         <div class="document-translated-content__translation__header px-3 py-2">
           <fa icon="globe" class="mr-2" />

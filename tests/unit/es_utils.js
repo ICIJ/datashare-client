@@ -26,6 +26,7 @@ class IndexedDocuments {
     this.baseName = 'document'
     this.numberOfDocuments = 0
     this.content = 'default content'
+    this.content_translated = null
     this.document = []
     this.index = 'default-index'
     this.extractionLevel = 0
@@ -115,6 +116,17 @@ class IndexedDocument {
   }
   withLanguage (language) {
     this.language = language
+    return this
+  }
+  withNoContentTranslated () {
+    this.content_translated = []
+    return this
+  }
+  withContentTranslated (content, sourceLanguage, targetLanguage) {
+    this.content_translated = [] || this.content_translated
+    this.content_translated.push(
+      { content, source_language: sourceLanguage, target_language: targetLanguage }
+    )
     return this
   }
   withNer (mention, offset = 1, category = 'PERSON', isHidden = false) {
