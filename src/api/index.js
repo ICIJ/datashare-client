@@ -80,6 +80,11 @@ export default class Api {
     const target = targetLanguage ? `targetLanguage=${targetLanguage}&` : ''
     return this.sendAction(`/api/${project}/documents/content/${documentId}?${routing}${target}offset=${offset}&limit=${limit}`)
   }
+  searchDocument (project, documentId, query, targetLanguage, routingId = null) {
+    const routing = routingId ? `routing=${routingId}&` : ''
+    const target = targetLanguage ? `targetLanguage=${targetLanguage}&` : ''
+    return this.sendAction(`/api/${project}/documents/searchContent/${documentId}?${routing}${target}query=${query}`)
+  }
   batchSearch (name, csvFile, description, project, phraseMatch, fuzziness, fileTypes, paths, published) {
     const data = new FormData()
     data.append('name', name)

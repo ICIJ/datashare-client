@@ -190,6 +190,13 @@ export const actions = {
       return slice.maxOffset
     }
   },
+  async searchOccurrences ({ state }, { query, targetLanguage }) {
+    if (state.doc !== null) {
+      const { id, routing } = state.idAndRouting
+      const { index } = state.doc
+      return api.searchDocument(index, id, query, targetLanguage, routing)
+    }
+  },
   async getParent ({ commit, state }) {
     if (state.doc !== null && state.doc.raw._source.extractionLevel > 0) {
       try {

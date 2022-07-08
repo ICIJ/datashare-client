@@ -1,5 +1,5 @@
 <script>
-import { once, pick, throttle, uniqueId, get, noop } from 'lodash'
+import { pick, throttle, uniqueId, get, noop } from 'lodash'
 import { mapGetters, mapState } from 'vuex'
 
 import DocumentAttachments from '@/components/DocumentAttachments'
@@ -7,7 +7,8 @@ import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTerm
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 import Hook from '@/components/Hook'
 import utils from '@/mixins/utils'
-import LocalSearchWorker from '@/utils/local-search.worker'
+import { addLocalSearchMarksClass } from '@/utils/strings.js'
+
 import InfiniteLoading from 'vue-infinite-loading'
 
 /**
@@ -49,6 +50,7 @@ export default {
     return {
       hasStickyToolbox: false,
       localSearchIndex: 0,
+      localSearchIndexes: 0,
       localSearchOccurrences: 0,
       localSearchTerm: { label: this.q },
       localSearchWorker: null,
@@ -72,7 +74,7 @@ export default {
     }
   },
   beforeDestroy () {
-    this.terminateLocalSearchWorker()
+    // this.terminateLocalSearchWorker()
   },
   watch: {
     localSearchTerm: throttle(async function () {
@@ -87,7 +89,7 @@ export default {
     contentPipelineFunctions () {
       return this.transformContent()
     },
-    useContentTextLazyLoading (value) {
+    useContentTextLazyLoading () {
       this.transformContent()
     }
   },
@@ -130,39 +132,20 @@ export default {
       }
       this.$set(this, 'transformedContent', transformedContent)
     },
-    terminateLocalSearchWorker () {
-      if (this.localSearchWorker !== null) {
-        this.localSearchWorker.terminate()
-      }
-    },
-    createLocalSearchWorker () {
-      this.terminateLocalSearchWorker()
-      this.localSearchWorker = new LocalSearchWorker()
-    },
-    addLocalSearchMarks (content) {
+    async addLocalSearchMarks (content) {
       if (!this.hasLocalSearchTerms) {
         return content
       }
-
-      this.createLocalSearchWorker()
       this.localSearchWorkerInProgress = true
+      const data = await this.$store.dispatch('document/searchOccurrences',
+        { query: this.localSearchTerm.label, targetLanguage: this.contentTranslation })
+      const markedSearch = addLocalSearchMarksClass(content, this.localSearchTerm)
+      this.localSearchWorkerInProgress = false
+      this.localSearchOccurrences = data?.count ?? 0
+      this.localSearchIndex = 1
+      this.localSearchIndexes = data?.offsets ?? []
 
-      const workerPromise = new Promise(resolve => {
-        // We receive a content from the worker
-        this.localSearchWorker.addEventListener('message', once(({ data }) => {
-          this.localSearchOccurrences = data.localSearchOccurrences
-          this.localSearchIndex = data.localSearchIndex
-          this.localSearchWorkerInProgress = false
-          this.terminateLocalSearchWorker()
-          resolve(data.content)
-        }))
-        // Ignore errors
-        this.localSearchWorker.onerror = () => { resolve(content) }
-      })
-
-      this.localSearchWorker.postMessage({ content, localSearchTerm: this.localSearchTerm })
-
-      return workerPromise
+      return Promise.resolve(markedSearch.content)
     },
     async applyContentPipeline () {
       const content = await this.loadContent()
@@ -179,6 +162,14 @@ export default {
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     },
     jumpToActiveLocalSearchTerm () {
+      // here
+
+      // get the currentIndex
+      // if currentIndex is in the content no problem
+      // else retrieve slice w/ offset = currentIndex -pagesize/2
+      // add class to element in the slice with their index in the id
+      // query classlist around term with the elected index
+      // scroll to it
       const searchTerms = this.$el.querySelectorAll('.local-search-term')
       const activeSearchTerm = searchTerms[this.localSearchIndex - 1]
       searchTerms.forEach(term => term.classList.remove('local-search-term--active'))
@@ -222,9 +213,11 @@ export default {
       }
     },
     contentPipeline () {
-      return this.getPipelineChain('extracted-text', ...[
+      const res = this.getPipelineChain('extracted-text', ...[
         this.addLocalSearchMarks
       ])
+
+      return res
     },
     contentPipelineParams () {
       return pick(this, [
