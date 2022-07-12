@@ -289,16 +289,14 @@ describe('DocumentContent.vue', () => {
       const document = store.state.document.doc
       const propsData = { document }
 
-      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      const wrapper = await shallowMount(DocumentContent, { i18n, localVue, store, propsData })
       await wrapper.setData({
         pageSize: 10
       })
-
       expect(document.content).toBeFalsy()
-      await wrapper.vm.loadContent()
+      await new Promise(resolve => setTimeout(resolve, 0))
 
       expect(document.content).toBe('this is a ')
-
       const nextSliceContent = letTextContent()
         .withContent('content fr')
         .withOffset(10)
@@ -326,9 +324,9 @@ describe('DocumentContent.vue', () => {
       // Build the wrapper with the created document
       const document = store.state.document.doc
       const propsData = { document }
-      const wrapper = shallowMount(DocumentContent, { i18n, localVue, store, propsData })
+      shallowMount(DocumentContent, { i18n, localVue, store, propsData })
       expect(document.content).toBeFalsy()
-      await wrapper.vm.loadContent()
+      await new Promise(resolve => setTimeout(resolve, 0))
       expect(document.content).toBe('this is a content lazy loaded from the mocked API')
     })
   })

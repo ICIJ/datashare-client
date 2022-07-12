@@ -1,5 +1,5 @@
 <script>
-import { pick, throttle, uniqueId, get, noop } from 'lodash'
+import { once, pick, throttle, uniqueId, get, noop } from 'lodash'
 import { mapGetters, mapState } from 'vuex'
 
 import DocumentAttachments from '@/components/DocumentAttachments'
@@ -7,7 +7,7 @@ import DocumentGlobalSearchTermsTags from '@/components/DocumentGlobalSearchTerm
 import DocumentLocalSearchInput from '@/components/DocumentLocalSearchInput'
 import Hook from '@/components/Hook'
 import utils from '@/mixins/utils'
-import { addLocalSearchMarksClass } from '@/utils/strings.js'
+import LocalSearchWorker from '@/utils/local-search.worker'
 
 import InfiniteLoading from 'vue-infinite-loading'
 
@@ -74,7 +74,7 @@ export default {
     }
   },
   beforeDestroy () {
-    // this.terminateLocalSearchWorker()
+    this.terminateLocalSearchWorker()
   },
   watch: {
     localSearchTerm: throttle(async function () {
@@ -84,6 +84,7 @@ export default {
     async contentTranslation (value) {
       this.offset = 0
       this.maxOffset = await this.getMaxOffset(value)
+      await this.$store.dispatch('document/setContent', '')
       return this.transformContent()
     },
     contentPipelineFunctions () {
@@ -114,9 +115,8 @@ export default {
         const slice = await this.$store.dispatch('document/getContentSlice', { offset: this.offset, limit: this.actualPageSize, targetLanguage: this.contentTranslation })
 
         if (!this.reachedTheEnd && this.offset !== this.actualNextOffset) {
-          const end = slice.offset + slice.limit
-          const content = this.replaceBetween(this.content, slice.offset, end, slice.content)
-          this.$store.dispatch('document/setContent', content)
+          const content = this.replaceBetween(this.content, this.offset, this.actualNextOffset, slice.content)
+          await this.$store.dispatch('document/setContent', content)
           this.offset = this.actualNextOffset
         }
       }
@@ -132,20 +132,51 @@ export default {
       }
       this.$set(this, 'transformedContent', transformedContent)
     },
+    terminateLocalSearchWorker () {
+      if (this.localSearchWorker !== null) {
+        this.localSearchWorker.terminate()
+      }
+    },
+    createLocalSearchWorker () {
+      this.terminateLocalSearchWorker()
+      this.localSearchWorker = new LocalSearchWorker()
+    },
+    retrieveTotalOccurrences () {
+      return this.$store.dispatch('document/searchOccurrences',
+        { query: this.localSearchTerm.label, targetLanguage: this.contentTranslation }).then(({ count }) => {
+        return count
+        // this.localSearchOccurrences = count
+      }).catch(e => {
+        return null
+      })
+    },
     async addLocalSearchMarks (content) {
       if (!this.hasLocalSearchTerms) {
         return content
       }
+      this.createLocalSearchWorker()
       this.localSearchWorkerInProgress = true
-      const data = await this.$store.dispatch('document/searchOccurrences',
-        { query: this.localSearchTerm.label, targetLanguage: this.contentTranslation })
-      const markedSearch = addLocalSearchMarksClass(content, this.localSearchTerm)
-      this.localSearchWorkerInProgress = false
-      this.localSearchOccurrences = data?.count ?? 0
-      this.localSearchIndex = 1
-      this.localSearchIndexes = data?.offsets ?? []
 
-      return Promise.resolve(markedSearch.content)
+      const workerPromise = new Promise(resolve => {
+        // We receive a content from the worker
+        this.localSearchWorker.addEventListener('message', once(async ({ data }) => {
+          if (this.useContentTextLazyLoading) {
+            this.localSearchOccurrences = await this.retrieveTotalOccurrences()
+          } else {
+            this.localSearchOccurrences = data.localSearchOccurrences
+          }
+          this.localSearchIndex = data.localSearchIndex
+          this.localSearchWorkerInProgress = false
+          this.terminateLocalSearchWorker()
+          resolve(data.content)
+        }))
+        // Ignore errors
+        this.localSearchWorker.onerror = () => { resolve(content) }
+      })
+
+      this.localSearchWorker.postMessage({ content, localSearchTerm: this.localSearchTerm })
+
+      return workerPromise
     },
     async applyContentPipeline () {
       const content = await this.loadContent()
@@ -213,11 +244,7 @@ export default {
       }
     },
     contentPipeline () {
-      const res = this.getPipelineChain('extracted-text', ...[
-        this.addLocalSearchMarks
-      ])
-
-      return res
+      return this.getPipelineChain('extracted-text', this.addLocalSearchMarks)
     },
     contentPipelineParams () {
       return pick(this, [
