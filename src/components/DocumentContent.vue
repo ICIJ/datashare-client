@@ -1,5 +1,5 @@
 <script>
-import { once, pick, throttle, uniqueId, get, noop } from 'lodash'
+import { pick, throttle, uniqueId, get, noop } from 'lodash'
 import { mapGetters, mapState } from 'vuex'
 
 import DocumentAttachments from '@/components/DocumentAttachments'
@@ -9,6 +9,7 @@ import Hook from '@/components/Hook'
 import utils from '@/mixins/utils'
 import LocalSearchWorker from '@/utils/local-search.worker'
 
+import { addLocalSearchMarksClassSensitive } from '@/utils/strings.js'
 import InfiniteLoading from 'vue-infinite-loading'
 
 /**
@@ -50,7 +51,7 @@ export default {
     return {
       hasStickyToolbox: false,
       localSearchIndex: 0,
-      localSearchIndexes: 0,
+      localSearchIndexes: [],
       localSearchOccurrences: 0,
       localSearchTerm: { label: this.q },
       localSearchWorker: null,
@@ -78,6 +79,7 @@ export default {
   },
   watch: {
     localSearchTerm: throttle(async function () {
+      await this.retrieveTotalOccurrences()
       await this.transformContent()
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     }, 300),
@@ -103,6 +105,15 @@ export default {
       this.maxOffsetTranslations[currentContent] ??= await this.$store.dispatch('document/getContentMaxOffset', { targetLanguage: contentTranslation })
       return this.maxOffsetTranslations[currentContent]
     },
+    async loadSlice () {
+      const slice = await this.$store.dispatch('document/getContentSlice', { offset: this.offset, limit: this.actualPageSize, targetLanguage: this.contentTranslation })
+
+      if (!this.reachedTheEnd && this.offset !== this.actualNextOffset) {
+        const content = this.replaceBetween(this.content, this.offset, this.actualNextOffset, slice.content)
+        await this.$store.dispatch('document/setContent', content)
+        this.offset = this.actualNextOffset
+      }
+    },
     async loadContent () {
       if (!this.useContentTextLazyLoading && !this.document.hasContent) {
         await this.$store.dispatch('document/getContent')
@@ -112,13 +123,7 @@ export default {
           this.offset = 0
           this.maxOffset = await this.getMaxOffset(this.contentTranslation)
         }
-        const slice = await this.$store.dispatch('document/getContentSlice', { offset: this.offset, limit: this.actualPageSize, targetLanguage: this.contentTranslation })
-
-        if (!this.reachedTheEnd && this.offset !== this.actualNextOffset) {
-          const content = this.replaceBetween(this.content, this.offset, this.actualNextOffset, slice.content)
-          await this.$store.dispatch('document/setContent', content)
-          this.offset = this.actualNextOffset
-        }
+        await this.loadSlice()
       }
       this.$root.$emit('document::content-loaded')
 
@@ -141,42 +146,27 @@ export default {
       this.terminateLocalSearchWorker()
       this.localSearchWorker = new LocalSearchWorker()
     },
-    retrieveTotalOccurrences () {
-      return this.$store.dispatch('document/searchOccurrences',
-        { query: this.localSearchTerm.label, targetLanguage: this.contentTranslation }).then(({ count }) => {
-        return count
-        // this.localSearchOccurrences = count
-      }).catch(e => {
-        return null
-      })
+    async retrieveTotalOccurrences () {
+      try {
+        const { count, offsets } = await this.$store.dispatch('document/searchOccurrences',
+          { query: this.localSearchTerm.label, targetLanguage: this.contentTranslation })
+        this.localSearchIndexes = offsets
+        this.localSearchOccurrences = count
+        this.localSearchIndex = Number(!!count)
+      } catch (error) {
+        this.localSearchIndexes = []
+        this.localSearchOccurrences = 0
+      }
     },
-    async addLocalSearchMarks (content) {
+    addLocalSearchMarks (content) {
       if (!this.hasLocalSearchTerms) {
         return content
       }
-      this.createLocalSearchWorker()
       this.localSearchWorkerInProgress = true
+      const markedSearch = addLocalSearchMarksClassSensitive(content, this.localSearchTerm)
+      this.localSearchWorkerInProgress = false
 
-      const workerPromise = new Promise(resolve => {
-        // We receive a content from the worker
-        this.localSearchWorker.addEventListener('message', once(async ({ data }) => {
-          if (this.useContentTextLazyLoading) {
-            this.localSearchOccurrences = await this.retrieveTotalOccurrences()
-          } else {
-            this.localSearchOccurrences = data.localSearchOccurrences
-          }
-          this.localSearchIndex = data.localSearchIndex
-          this.localSearchWorkerInProgress = false
-          this.terminateLocalSearchWorker()
-          resolve(data.content)
-        }))
-        // Ignore errors
-        this.localSearchWorker.onerror = () => { resolve(content) }
-      })
-
-      this.localSearchWorker.postMessage({ content, localSearchTerm: this.localSearchTerm })
-
-      return workerPromise
+      return Promise.resolve(markedSearch.content)
     },
     async applyContentPipeline () {
       const content = await this.loadContent()
@@ -192,18 +182,19 @@ export default {
       this.$set(this, 'localSearchIndex', localSearchIndex)
       this.$nextTick(this.jumpToActiveLocalSearchTerm)
     },
-    jumpToActiveLocalSearchTerm () {
-      // here
-
-      // get the currentIndex
-      // if currentIndex is in the content no problem
-      // else retrieve slice w/ offset = currentIndex -pagesize/2
-      // add class to element in the slice with their index in the id
-      // query classlist around term with the elected index
-      // scroll to it
+    async jumpToActiveLocalSearchTerm () {
       const searchTerms = this.$el.querySelectorAll('.local-search-term')
       const activeSearchTerm = searchTerms[this.localSearchIndex - 1]
       searchTerms.forEach(term => term.classList.remove('local-search-term--active'))
+      // TODO pb with local search marks is that the pipeline is not applied to
+      // the new loaded slice
+
+      // while (activeSearchTerm === undefined && this.localSearchIndex !== this.localSearchIndexes.length) {
+      //   this.offset = Math.min(this.localSearchIndexes[this.localSearchIndex - 1] - 1000, 0)
+      //   await this.transformContent()
+      //   searchTerms = this.$el.querySelectorAll('.local-search-term')
+      //   activeSearchTerm = searchTerms[this.localSearchIndex - 1]
+      // }
       if (activeSearchTerm) {
         activeSearchTerm.classList.add('local-search-term--active')
         activeSearchTerm.scrollIntoView({ block: 'center', inline: 'nearest' })
@@ -260,7 +251,7 @@ export default {
       return this.localSearchTerm.label && this.localSearchTerm.label.length > 0
     },
     reachedTheEnd () {
-      return this.offset >= this.maxOffset && this.useContentTextLazyLoading
+      return this.useContentTextLazyLoading && (this.document.hasContent && this.offset >= this.maxOffset)
     },
     nextOffset () {
       return this.offset + this.pageSize
